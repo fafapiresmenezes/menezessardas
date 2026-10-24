@@ -1,18 +1,75 @@
 import { useRef, useState } from 'react'
-import { Upload } from 'lucide-react'
+import { Upload, X } from 'lucide-react'
+import { TIPOS_DOCUMENTO, type TipoDocumento } from '@/lib/dominio'
 
 interface Props {
   rotulo: string
-  onArquivo: (arquivo: File) => void
+  /** Tipo fixo (ex.: 'contrato' para o PDF do instrumento). Se vazio, o usuário escolhe. */
+  tipoFixo?: TipoDocumento
+  onArquivo: (arquivo: File, tipo: TipoDocumento) => void
 }
 
-/** Área para arrastar um arquivo ou escolher do computador. Acessível por teclado. */
-export default function ZonaArrastar({ rotulo, onArquivo }: Props) {
+/** Área para arrastar um arquivo ou escolher do computador, perguntando o tipo em seguida. */
+export default function ZonaArrastar({ rotulo, tipoFixo, onArquivo }: Props) {
   const [arrastando, setArrastando] = useState(false)
+  const [pendente, setPendente] = useState<File | null>(null)
+  const [tipo, setTipo] = useState<TipoDocumento>(tipoFixo ?? 'outro')
   const entrada = useRef<HTMLInputElement>(null)
 
   const receber = (lista: FileList | null) => {
-    if (lista && lista.length > 0) onArquivo(lista[0])
+    if (!lista || lista.length === 0) return
+    if (tipoFixo) {
+      onArquivo(lista[0], tipoFixo)
+      return
+    }
+    setPendente(lista[0])
+    setTipo('outro')
+  }
+
+  const confirmar = () => {
+    if (pendente) {
+      onArquivo(pendente, tipo)
+      setPendente(null)
+    }
+  }
+
+  if (pendente) {
+    return (
+      <div className="border-2 border-dourado bg-pergaminho p-5">
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <p className="text-sm text-grafite min-w-0">
+            Arquivo: <span className="font-medium text-navy break-all">{pendente.name}</span>
+          </p>
+          <button type="button" onClick={() => setPendente(null)} className="p-1 text-grafite-claro hover:text-critico" aria-label="Cancelar">
+            <X size={18} aria-hidden="true" />
+          </button>
+        </div>
+        <label htmlFor="tipo-doc" className="block text-xs uppercase tracking-wider text-grafite mb-2">
+          Que documento é este?
+        </label>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <select
+            id="tipo-doc"
+            value={tipo}
+            onChange={e => setTipo(e.target.value as TipoDocumento)}
+            className="flex-1 px-3 py-2.5 border border-grafite-claro/40 rounded-sm bg-white text-grafite"
+          >
+            {TIPOS_DOCUMENTO.map(t => (
+              <option key={t.valor} value={t.valor}>
+                {t.rotulo}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={confirmar}
+            className="bg-navy text-white px-5 py-2.5 rounded-sm uppercase tracking-wider text-sm"
+          >
+            Adicionar
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (

@@ -19,6 +19,7 @@ export default function ContratoPage() {
   const [erro, setErro] = useState('')
   const [aviso, setAviso] = useState('')
   const [compromissos, setCompromissos] = useState<ReturnType<typeof calcularAlertas>>([])
+  const [vinculados, setVinculados] = useState<Contrato[]>([])
 
   const carregar = useCallback(async () => {
     if (!id) return
@@ -26,7 +27,12 @@ export default function ContratoPage() {
     setImovel(i)
     const c = await repositorio.obterContratoPorImovel(id)
     setContrato(c)
-    setDocumentos(c ? c.documentos : i?.documentos ?? [])
+    // O PDF do próprio instrumento (campo arquivo) entra na lista como documento do contrato.
+    const doArquivo: Documento[] = c?.arquivo
+      ? [{ id: `arquivo-${c.id}`, tipo: 'contrato', nome: c.arquivo.nome, enviadoEm: c.criadoEm }]
+      : []
+    setDocumentos(c ? [...doArquivo, ...c.documentos] : i?.documentos ?? [])
+    setVinculados(c ? await repositorio.listarVinculados(c.id) : [])
     const todos = await repositorio.listarContratos()
     const imoveis = await repositorio.listarImoveis()
     setCompromissos(calcularAlertas(imoveis, todos).filter(a => a.imovelId === id))
@@ -38,7 +44,7 @@ export default function ContratoPage() {
     carregar()
   }, [carregar])
 
-  const receberArquivo = async (arquivo: File) => {
+  const receberArquivo = async (arquivo: File, tipo: Documento['tipo']) => {
     setErro('')
     if (arquivo.size > LIMITE_MB * 1024 * 1024) {
       setErro(`O arquivo excede ${LIMITE_MB} MB. Reduza o tamanho e tente novamente.`)
@@ -46,7 +52,7 @@ export default function ContratoPage() {
     }
     if (!id) return
     const alvo = contrato ? { contratoId: contrato.id } : { imovelId: id }
-    await repositorio.anexarDocumento(alvo, { tipo: 'outro', nome: arquivo.name, caminhoStorage: '' })
+    await repositorio.anexarDocumento(alvo, { tipo, nome: arquivo.name, caminhoStorage: '' })
     setAviso(`“${arquivo.name}” adicionado.`)
     setTimeout(() => setAviso(''), 4000)
     carregar()
@@ -154,6 +160,49 @@ export default function ContratoPage() {
           </section>
         )}
 
+        <section className="bg-white p-6 shadow-sm" aria-labelledby="titulo-vinculados">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+            <h3 id="titulo-vinculados" className="text-lg">Aditivos e subcontratos ({vinculados.length})</h3>
+            <div className="flex gap-2">
+              <Link
+                to={`/contrato/novo?imovelId=${imovel.id}&paiId=${contrato.id}&natureza=aditivo`}
+                className="inline-flex items-center gap-1.5 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm hover:bg-pergaminho"
+              >
+                <Plus size={15} aria-hidden="true" /> Aditivo
+              </Link>
+              <Link
+                to={`/contrato/novo?imovelId=${imovel.id}&paiId=${contrato.id}&natureza=subcontrato`}
+                className="inline-flex items-center gap-1.5 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm hover:bg-pergaminho"
+              >
+                <Plus size={15} aria-hidden="true" /> Subcontrato
+              </Link>
+            </div>
+          </div>
+          {vinculados.length === 0 ? (
+            <p className="text-sm text-grafite-claro">Nenhum aditivo ou subcontrato vinculado a este contrato.</p>
+          ) : (
+            <ul className="divide-y divide-navy/10">
+              {vinculados.map(v => {
+                const d = diasAte(v.dataVencimento)
+                return (
+                  <li key={v.id} className="py-3 flex items-center justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="font-medium text-navy">
+                        <span className="text-xs uppercase tracking-wider text-dourado-escuro mr-2">
+                          {v.natureza === 'subcontrato' ? 'Subcontrato' : 'Aditivo'}
+                        </span>
+                        {v.parte}
+                      </p>
+                      <p className="text-sm text-grafite-claro">{rotulosTipoContrato[v.tipo]}</p>
+                    </div>
+                    <SeloSituacao situacao={situacaoPorPrazo(d)} texto={v.dataVencimento ? textoPrazo(d) : 'Sem prazo'} />
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </section>
+
         <section className="bg-white p-6 shadow-sm" aria-labelledby="titulo-documentos">
           <h3 id="titulo-documentos" className="text-lg mb-4">Documentos ({documentos.length})</h3>
 
@@ -178,14 +227,16 @@ export default function ContratoPage() {
                   </div>
                   <div className="flex items-center gap-3 flex-shrink-0">
                     {d.dataVencimento && <SeloSituacao situacao={situacaoPorPrazo(dias)} texto={textoPrazo(dias)} />}
-                    <button
-                      onClick={() => remover(d)}
-                      className="p-1.5 rounded-sm text-critico hover:bg-criticoFundo"
-                      aria-label={`Excluir ${d.nome}`}
-                      title={`Excluir ${d.nome}`}
-                    >
-                      <Trash2 size={17} aria-hidden="true" />
-                    </button>
+                    {!d.id.startsWith('arquivo-') && (
+                      <button
+                        onClick={() => remover(d)}
+                        className="p-1.5 rounded-sm text-critico hover:bg-criticoFundo"
+                        aria-label={`Excluir ${d.nome}`}
+                        title={`Excluir ${d.nome}`}
+                      >
+                        <Trash2 size={17} aria-hidden="true" />
+                      </button>
+                    )}
                   </div>
                 </li>
               )

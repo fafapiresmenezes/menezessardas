@@ -8,6 +8,7 @@ import ImovelListPage from '@/pages/ImovelListPage'
 import NovoImovelPage from '@/pages/NovoImovelPage'
 import ContratoPage from '@/pages/ContratoPage'
 import NovoContratoPage from '@/pages/NovoContratoPage'
+import AgendaPage from '@/pages/AgendaPage'
 import AlertasPage from '@/pages/AlertasPage'
 import RelatóriosPage from '@/pages/RelatóriosPage'
 import ConfiguraçõesPage from '@/pages/ConfiguraçõesPage'
@@ -83,6 +84,10 @@ function App() {
         <Route
           path="/contrato/novo"
           element={isAuthenticated ? <NovoContratoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/agenda"
+          element={isAuthenticated ? <AgendaPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/alertas"

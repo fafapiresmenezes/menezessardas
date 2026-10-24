@@ -13,6 +13,8 @@ export default function NovoContratoPage() {
   const navigate = useNavigate()
   const [sp] = useSearchParams()
   const imovelId = sp.get('imovelId')
+  const paiId = sp.get('paiId')
+  const natureza = (sp.get('natureza') as 'aditivo' | 'subcontrato' | null) ?? null
   const [etapa, setEtapa] = useState(1)
   const [salvando, setSalvando] = useState(false)
   const [imovel, setImovel] = useState<Imovel | null>(null)
@@ -63,6 +65,8 @@ export default function NovoContratoPage() {
     try {
       await repositorio.criarContrato({
         imovelId,
+        contratoPaiId: paiId ?? undefined,
+        natureza: natureza ?? 'principal',
         tipo: tipo as any,
         parte,
         dataInicio,
@@ -95,7 +99,7 @@ export default function NovoContratoPage() {
   if (!imovel) return <Layout title="Novo contrato"><div className="bg-white p-10 shadow-sm">Carregando...</div></Layout>
 
   return (
-    <Layout title={`Novo contrato — ${imovel.endereco}`}>
+    <Layout title={`${natureza === 'aditivo' ? 'Novo aditivo' : natureza === 'subcontrato' ? 'Novo subcontrato' : 'Novo contrato'} — ${imovel.endereco}`}>
       <div className="max-w-2xl mx-auto">
         {etapa === 1 && (
           <Passo
@@ -182,6 +186,7 @@ export default function NovoContratoPage() {
             <div className="space-y-4">
               <ZonaArrastar
                 rotulo="Arraste o PDF do contrato assinado para cá ou"
+                tipoFixo="contrato"
                 onArquivo={arq => setArquivo({ nome: arq.name, tamanho: arq.size })}
               />
               {arquivo && <p className="text-sm text-grafite">Anexado: {arquivo.nome}</p>}

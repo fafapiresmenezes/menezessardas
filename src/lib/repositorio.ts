@@ -35,9 +35,14 @@ export interface Imovel {
   documentos: Documento[]
 }
 
+export type NaturezaContrato = 'principal' | 'aditivo' | 'subcontrato'
+
 export interface Contrato {
   id: string
   imovelId: string
+  /** Vazio no contrato principal; aponta para o contrato-mãe em aditivos e subcontratos. */
+  contratoPaiId?: string
+  natureza?: NaturezaContrato
   tipo: TipoContrato
   parte: string
   dataInicio: string
@@ -62,6 +67,8 @@ export interface Repositorio {
   criarImovel(dados: NovoImovel): Promise<Imovel>
   listarContratos(): Promise<Contrato[]>
   obterContratoPorImovel(imovelId: string): Promise<Contrato | null>
+  obterContrato(id: string): Promise<Contrato | null>
+  listarVinculados(contratoId: string): Promise<Contrato[]>
   criarContrato(dados: NovoContrato): Promise<Contrato>
   anexarDocumento(alvo: { contratoId: string } | { imovelId: string }, doc: Omit<Documento, 'id' | 'enviadoEm'>): Promise<Documento>
   removerDocumento(docId: string): Promise<void>
@@ -142,9 +149,17 @@ class RepositorioLocal implements Repositorio {
   }
 
   async obterContratoPorImovel(imovelId: string) {
-    const contratos = (await this.carregar()).contratos.filter(c => c.imovelId === imovelId)
-    // O contrato mais recente é o vigente.
+    // O contrato principal do imóvel (aditivos e subcontratos ficam vinculados a ele).
+    const contratos = (await this.carregar()).contratos.filter(c => c.imovelId === imovelId && !c.contratoPaiId)
     return contratos.sort((a, b) => b.criadoEm.localeCompare(a.criadoEm))[0] ?? null
+  }
+
+  async obterContrato(id: string) {
+    return (await this.carregar()).contratos.find(c => c.id === id) ?? null
+  }
+
+  async listarVinculados(contratoId: string) {
+    return (await this.carregar()).contratos.filter(c => c.contratoPaiId === contratoId)
   }
 
   async criarContrato(dados: NovoContrato) {
@@ -221,6 +236,8 @@ class RepositorioSupabase implements Repositorio {
   private mapContrato = (r: Record<string, unknown>, docs: Documento[]): Contrato => ({
     id: String(r.id),
     imovelId: String(r.imovel_id),
+    contratoPaiId: r.contrato_pai_id ? String(r.contrato_pai_id) : undefined,
+    natureza: (r.natureza as NaturezaContrato) ?? 'principal',
     tipo: r.tipo as TipoContrato,
     parte: String(r.locatario_fornecedor),
     dataInicio: String(r.data_inicio),
@@ -297,10 +314,21 @@ class RepositorioSupabase implements Repositorio {
       .from('contratos')
       .select('*')
       .eq('imovel_id', imovelId)
+      .is('contrato_pai_id', null)
       .order('criado_em', { ascending: false })
       .limit(1)
       .maybeSingle()
     return data ? this.mapContrato(data, await this.docsDe('contrato_id', String(data.id))) : null
+  }
+
+  async obterContrato(id: string) {
+    const { data } = await supabase.from('contratos').select('*').eq('id', id).maybeSingle()
+    return data ? this.mapContrato(data, await this.docsDe('contrato_id', id)) : null
+  }
+
+  async listarVinculados(contratoId: string) {
+    const { data } = await supabase.from('contratos').select('*').eq('contrato_pai_id', contratoId)
+    return (data ?? []).map(r => this.mapContrato(r, []))
   }
 
   async criarContrato(dados: NovoContrato) {
@@ -308,6 +336,8 @@ class RepositorioSupabase implements Repositorio {
       .from('contratos')
       .insert({
         imovel_id: dados.imovelId,
+        contrato_pai_id: dados.contratoPaiId ?? null,
+        natureza: dados.natureza ?? 'principal',
         tipo: dados.tipo,
         locatario_fornecedor: dados.parte,
         data_inicio: dados.dataInicio,

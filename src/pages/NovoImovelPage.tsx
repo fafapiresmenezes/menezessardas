@@ -171,7 +171,7 @@ export default function NovoImovelPage() {
             <div className="mt-6">
               <ZonaArrastar
                 rotulo="Arraste outros documentos para cá ou"
-                onArquivo={arq => setExtras([...extras, { tipo: 'outro', nome: arq.name }])}
+                onArquivo={(arq, tipo) => setExtras([...extras, { tipo, nome: arq.name }])}
               />
               {extras.length > 0 && (
                 <ul className="mt-3 text-sm text-grafite space-y-1">
