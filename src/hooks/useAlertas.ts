@@ -26,9 +26,8 @@ export function useAlertas() {
     fetch()
   }, [])
 
-  const getNaoLidos = () => 0
-  const getCriticos = () => alertas.filter(a => a.diasRestantes <= 30).length
-  const marcarComoLido = async (_id: string) => {}
+  // Vencidos já contam em outro indicador; aqui só o que ainda vence.
+  const getCriticos = () => alertas.filter(a => a.diasRestantes >= 0 && a.diasRestantes <= 30).length
 
-  return { alertas, loading, error, getNaoLidos, getCriticos, marcarComoLido }
+  return { alertas, loading, error, getCriticos }
 }

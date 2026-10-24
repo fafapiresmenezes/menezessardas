@@ -37,3 +37,8 @@ coverage/
 
 # Misc
 .cache/
+
+# Saída do tsc (os fontes são .ts/.tsx)
+src/**/*.js
+!postcss.config.js
+node_modules

@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { useImoveis } from '@/hooks/useImoveis'
 import { useAlertas } from '@/hooks/useAlertas'
-import { CONTRATOS_MOCK, statusDoContrato } from '@/data/contratosMock'
+import { repositorio, type Contrato, type Documento } from '@/lib/repositorio'
+import { diasAte } from '@/lib/datas'
 import { rotulosTipoAlerta, rotulosTipoImovel } from '@/lib/rotulos'
+import type { Periodicidade } from '@/lib/dominio'
 
 type Periodo = 30 | 90 | 365
 
@@ -16,12 +18,37 @@ const periodos: { dias: Periodo; rotulo: string }[] = [
 const moeda = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v)
 
+/** O status nunca é guardado: é lido da data de vencimento, para não envelhecer. */
+const statusDoContrato = (c: Contrato): 'ativo' | 'vencido' | 'a_renovar' => {
+  const dias = diasAte(c.dataVencimento)
+  if (dias === null) return 'ativo'
+  if (dias < 0) return 'vencido'
+  if (dias <= 60) return 'a_renovar'
+  return 'ativo'
+}
+
+const statusDoDocumento = (d: Documento): 'valido' | 'vencido' | 'a_renovar' => {
+  const dias = diasAte(d.dataVencimento)
+  if (dias === null) return 'valido'
+  if (dias < 0) return 'vencido'
+  if (dias <= 60) return 'a_renovar'
+  return 'valido'
+}
+
+/** Quantos meses cada parcela cobre, para comparar contratos de periodicidades diferentes. */
+const mesesPorPeriodo: Record<Periodicidade, number> = { mensal: 1, trimestral: 3, semestral: 6, anual: 12, unica: 0 }
+
 export default function RelatóriosPage() {
   const [periodo, setPeriodo] = useState<Periodo>(90)
   const { imoveis, loading: carregandoImoveis } = useImoveis()
   const { alertas, loading: carregandoAlertas } = useAlertas()
+  const [contratos, setContratos] = useState<Contrato[] | null>(null)
 
-  if (carregandoImoveis || carregandoAlertas) {
+  useEffect(() => {
+    repositorio.listarContratos().then(setContratos)
+  }, [])
+
+  if (carregandoImoveis || carregandoAlertas || contratos === null) {
     return (
       <Layout title="Relatórios">
         <p className="text-grafite-claro">Preparando relatórios…</p>
@@ -30,20 +57,23 @@ export default function RelatóriosPage() {
   }
 
   // Tudo abaixo é derivado dos mesmos dados que alimentam as outras telas.
-  const contratos = Object.values(CONTRATOS_MOCK)
   const porStatus = { ativo: 0, a_renovar: 0, vencido: 0 }
   contratos.forEach(c => { porStatus[statusDoContrato(c)] += 1 })
 
-  const documentos = contratos.flatMap(c => c.documentos)
+  const documentos = [...imoveis.flatMap(i => i.documentos), ...contratos.flatMap(c => c.documentos)]
   const docs = {
-    validos: documentos.filter(d => d.status === 'valido').length,
-    aRenovar: documentos.filter(d => d.status === 'a_renovar').length,
-    vencidos: documentos.filter(d => d.status === 'vencido').length,
+    validos: documentos.filter(d => statusDoDocumento(d) === 'valido').length,
+    aRenovar: documentos.filter(d => statusDoDocumento(d) === 'a_renovar').length,
+    vencidos: documentos.filter(d => statusDoDocumento(d) === 'vencido').length,
   }
 
+  // Receita equivalente mensal dos contratos vigentes.
   const receitaMensal = contratos
     .filter(c => statusDoContrato(c) !== 'vencido')
-    .reduce((soma, c) => soma + c.valorMensal, 0)
+    .reduce((soma, c) => {
+      const meses = mesesPorPeriodo[c.periodicidade]
+      return soma + (meses ? c.valor / meses : 0)
+    }, 0)
   const receitaNoPeriodo = receitaMensal * (periodo / 30)
 
   const noPeriodo = alertas.filter(a => a.diasRestantes >= 0 && a.diasRestantes <= periodo)

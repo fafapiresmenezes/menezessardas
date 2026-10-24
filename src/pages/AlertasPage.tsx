@@ -3,11 +3,10 @@ import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
 import { useAlertas } from '@/hooks/useAlertas'
 import { formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
-import { rotulosTipoAlerta } from '@/lib/rotulos'
 import { BellOff, Circle } from 'lucide-react'
 
 export default function AlertasPage() {
-  const { alertas, loading, getNaoLidos, getCriticos, marcarComoLido } = useAlertas()
+  const { alertas, loading, getCriticos } = useAlertas()
   const navigate = useNavigate()
 
   if (loading) {
@@ -19,12 +18,13 @@ export default function AlertasPage() {
   }
 
   const vencidos = alertas.filter(a => a.diasRestantes < 0).length
+  const documentos = alertas.filter(a => a.tipo === 'documento').length
 
   const indicadores = [
     { rotulo: 'Total', valor: alertas.length, cor: 'text-navy' },
     { rotulo: 'Vencidos', valor: vencidos, cor: 'text-critico' },
     { rotulo: 'Vencem em 30 dias', valor: getCriticos(), cor: 'text-atencao' },
-    { rotulo: 'Não lidos', valor: getNaoLidos(), cor: 'text-navy' },
+    { rotulo: 'Documentos a vencer', valor: documentos, cor: 'text-navy' },
   ]
 
   return (
@@ -45,18 +45,13 @@ export default function AlertasPage() {
             return (
               <button
                 key={alerta.id}
-                onClick={() => {
-                  marcarComoLido(alerta.id)
-                  navigate(`/contrato/${alerta.imovelId}`)
-                }}
+                onClick={() => navigate(`/contrato/${alerta.imovelId}`)}
                 className="w-full text-left p-5 hover:bg-pergaminho transition flex items-start justify-between gap-4"
               >
                 <div className="flex items-start gap-3 min-w-0">
                   <Circle size={18} className="text-dourado fill-dourado flex-shrink-0 mt-0.5" aria-hidden="true" />
                   <div className="min-w-0">
-                    <p className="font-medium text-navy">
-                      {rotulosTipoAlerta[alerta.tipo]}
-                    </p>
+                    <p className="font-medium text-navy">{alerta.titulo}</p>
                     <p className="text-sm text-grafite-claro mt-1 truncate">{alerta.imovel}</p>
                   </div>
                 </div>

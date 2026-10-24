@@ -4,7 +4,7 @@ import SeloSituacao from '@/components/SeloSituacao'
 import { useImoveis } from '@/hooks/useImoveis'
 import { useAlertas } from '@/hooks/useAlertas'
 import { formatarData, situacaoPorPrazo, textoPrazo, type Situacao } from '@/lib/datas'
-import { rotulosTipoAlerta } from '@/lib/rotulos'
+import { rotulosTipoImovel } from '@/lib/rotulos'
 import { AlertTriangle, CheckCircle2, Clock, Building2 } from 'lucide-react'
 
 const molduraPorSituacao: Record<Situacao, string> = {
@@ -89,7 +89,7 @@ export default function DashboardPage() {
                     <p className="font-medium text-navy leading-snug">{imovel.endereco}</p>
                     <SeloSituacao situacao={situacao} />
                   </div>
-                  <p className="text-sm text-grafite-claro mt-2 capitalize">{imovel.tipo}</p>
+                  <p className="text-sm text-grafite-claro mt-2">{rotulosTipoImovel[imovel.tipo] ?? imovel.tipo}</p>
                   <p className="text-xs text-grafite mt-2">
                     {textoPrazo(dias)}
                     {qtdAlertas > 0 && ` · ${qtdAlertas} ${qtdAlertas === 1 ? 'alerta' : 'alertas'}`}
@@ -122,7 +122,7 @@ export default function DashboardPage() {
                 {proximos.map(alerta => (
                   <tr key={alerta.id} className="hover:bg-pergaminho">
                     <td className="px-5 py-3.5 text-sm whitespace-nowrap">{formatarData(alerta.dataEvento)}</td>
-                    <td className="px-5 py-3.5 text-sm">{rotulosTipoAlerta[alerta.tipo]}</td>
+                    <td className="px-5 py-3.5 text-sm">{alerta.titulo}</td>
                     <td className="px-5 py-3.5 text-sm text-grafite-claro">{alerta.imovel}</td>
                     <td className="px-5 py-3.5 text-sm whitespace-nowrap">{textoPrazo(alerta.diasRestantes)}</td>
                     <td className="px-5 py-3.5">

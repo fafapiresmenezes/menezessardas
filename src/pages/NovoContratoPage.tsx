@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { Passo, Escolha, Campo, classeCampo } from '@/components/Assistente'
+import ZonaArrastar from '@/components/ZonaArrastar'
 import { TIPOS_CONTRATO, GARANTIAS, INDICES_REAJUSTE, PERIODICIDADES, tiposContratoParaUso, type UsoImovel } from '@/lib/dominio'
 import { repositorio, type Imovel } from '@/lib/repositorio'
 import { emDias, formatarData } from '@/lib/datas'
@@ -25,6 +26,7 @@ export default function NovoContratoPage() {
   const [indice, setIndice] = useState('ipca')
   const [garantia, setGarantia] = useState('sem_garantia')
   const [notas] = useState('')
+  const [arquivo, setArquivo] = useState<{ nome: string; tamanho: number } | null>(null)
 
   useEffect(() => {
     if (!imovelId) {
@@ -71,6 +73,7 @@ export default function NovoContratoPage() {
         garantia: garantia as any,
         dataUltimoReajuste: null,
         notas,
+        arquivo: arquivo ? { ...arquivo, caminhoStorage: '' } : undefined,
       })
       navigate(`/contrato/${imovelId}`)
     } catch (err) {
@@ -138,7 +141,7 @@ export default function NovoContratoPage() {
                 />
               </Campo>
               <Campo id="periodicidade" rotulo="Periodicidade de pagamento">
-                <select value={periodicidade} onChange={e => setPeriodicidade(e.target.value)} className={classeCampo}>
+                <select id="periodicidade" value={periodicidade} onChange={e => setPeriodicidade(e.target.value)} className={classeCampo}>
                   {PERIODICIDADES.map(p => (
                     <option key={p.valor} value={p.valor}>
                       {p.rotulo}
@@ -147,7 +150,7 @@ export default function NovoContratoPage() {
                 </select>
               </Campo>
               <Campo id="indice" rotulo="Índice de reajuste">
-                <select value={indice} onChange={e => setIndice(e.target.value)} className={classeCampo}>
+                <select id="indice" value={indice} onChange={e => setIndice(e.target.value)} className={classeCampo}>
                   {INDICES_REAJUSTE.map(i => (
                     <option key={i.valor} value={i.valor}>
                       {i.rotulo}
@@ -177,6 +180,11 @@ export default function NovoContratoPage() {
             rotuloAvancar={salvando ? 'Salvando…' : 'Concluir'}
           >
             <div className="space-y-4">
+              <ZonaArrastar
+                rotulo="Arraste o PDF do contrato assinado para cá ou"
+                onArquivo={arq => setArquivo({ nome: arq.name, tamanho: arq.size })}
+              />
+              {arquivo && <p className="text-sm text-grafite">Anexado: {arquivo.nome}</p>}
               <dl className="grid gap-3">
                 <div>
                   <dt className="text-xs uppercase tracking-wider text-grafite-claro">Imóvel</dt>

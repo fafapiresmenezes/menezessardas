@@ -168,7 +168,7 @@ export function checklistDocumentos(tipo: TipoImovel, uso: UsoImovel, uf: UF): I
 
   const lista: ItemChecklist[] = [
     { tipo: 'matricula_rgi', rotulo: 'Matrícula do RGI', motivo: 'Prova a propriedade e os ônus', obrigatorio: true },
-    { tipo: 'iptu', rotulo: 'IPTU do exercício', motivo: 'Regularidade fiscal municipal', obrigatorio: tipo !== 'terreno' || true },
+    { tipo: 'iptu', rotulo: 'IPTU do exercício', motivo: 'Regularidade fiscal municipal', obrigatorio: true },
   ]
 
   const edificado = tipo !== 'terreno'
