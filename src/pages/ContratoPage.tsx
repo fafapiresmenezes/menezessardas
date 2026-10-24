@@ -5,10 +5,18 @@ import SeloSituacao from '@/components/SeloSituacao'
 import { repositorio, calcularAlertas, type Contrato, type Documento, type Imovel } from '@/lib/repositorio'
 import { diasAte, formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
 import { rotulosStatusContrato, rotulosTipoContrato, rotulosIndice, rotulosTipoDocumento, rotulosGarantia } from '@/lib/rotulos'
-import { FileText, Trash2, Sparkles, ArrowLeft, Plus } from 'lucide-react'
+import { FileText, Trash2, Sparkles, ArrowLeft, Plus, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import ZonaArrastar from '@/components/ZonaArrastar'
+import { analisarContrato, type AnaliseContrato } from '@/lib/agente'
 
 const LIMITE_MB = 50
+
+const corGravidade: Record<string, string> = {
+  alta: 'border-critico text-critico bg-criticoFundo',
+  media: 'border-atencao text-atencao bg-atencaoFundo',
+  baixa: 'border-regular text-regular bg-regularFundo',
+}
+const rotuloGravidade: Record<string, string> = { alta: 'Alta', media: 'Média', baixa: 'Baixa' }
 
 export default function ContratoPage() {
   const { id } = useParams()
@@ -20,6 +28,9 @@ export default function ContratoPage() {
   const [aviso, setAviso] = useState('')
   const [compromissos, setCompromissos] = useState<ReturnType<typeof calcularAlertas>>([])
   const [vinculados, setVinculados] = useState<Contrato[]>([])
+  const [analise, setAnalise] = useState<AnaliseContrato | null>(null)
+  const [analisando, setAnalisando] = useState(false)
+  const [erroAnalise, setErroAnalise] = useState('')
 
   const carregar = useCallback(async () => {
     if (!id) return
@@ -56,6 +67,19 @@ export default function ContratoPage() {
     setAviso(`“${arquivo.name}” adicionado.`)
     setTimeout(() => setAviso(''), 4000)
     carregar()
+  }
+
+  const analisar = async () => {
+    if (!contrato || !imovel) return
+    setAnalisando(true)
+    setErroAnalise('')
+    try {
+      setAnalise(await analisarContrato(contrato, imovel))
+    } catch (e) {
+      setErroAnalise('Não foi possível analisar agora: ' + (e instanceof Error ? e.message : 'erro desconhecido'))
+    } finally {
+      setAnalisando(false)
+    }
   }
 
   const remover = async (doc: Documento) => {
@@ -258,12 +282,86 @@ export default function ContratoPage() {
               </p>
             </div>
             <button
-              onClick={() => window.alert('A análise por inteligência artificial será ativada na próxima etapa.')}
-              className="flex-shrink-0 bg-dourado hover:bg-dourado-claro text-navy font-medium px-5 py-2.5 rounded-sm uppercase tracking-wider text-sm"
+              onClick={analisar}
+              disabled={analisando}
+              className="flex-shrink-0 bg-dourado hover:bg-dourado-claro disabled:opacity-60 text-navy font-medium px-5 py-2.5 rounded-sm uppercase tracking-wider text-sm"
             >
-              Analisar contrato
+              {analisando ? 'Analisando…' : analise ? 'Analisar novamente' : 'Analisar contrato'}
             </button>
           </div>
+
+          {erroAnalise && (
+            <p role="alert" className="mt-4 p-3 bg-criticoFundo border-l-2 border-critico text-critico text-sm">
+              {erroAnalise}
+            </p>
+          )}
+
+          {analise && (
+            <div className="mt-6 bg-white text-grafite p-5 space-y-5 rounded-sm">
+              {analise.exemplo && (
+                <p className="text-xs uppercase tracking-wider text-dourado-escuro">
+                  Análise de exemplo — conecte a chave da Anthropic para a análise real
+                </p>
+              )}
+              <div>
+                <h4 className="text-xs uppercase tracking-wider text-grafite-claro mb-1">Resumo</h4>
+                <p className="text-sm">{analise.resumo}</p>
+              </div>
+
+              {analise.clausulasRisco.length > 0 && (
+                <div>
+                  <h4 className="text-xs uppercase tracking-wider text-grafite-claro mb-2 flex items-center gap-1.5">
+                    <AlertTriangle size={14} aria-hidden="true" /> Cláusulas de risco
+                  </h4>
+                  <ul className="space-y-2">
+                    {analise.clausulasRisco.map((c, i) => (
+                      <li key={i} className={`border-l-2 p-3 text-sm ${corGravidade[c.gravidade]}`}>
+                        <p className="font-medium">
+                          {c.titulo}{' '}
+                          <span className="text-xs uppercase tracking-wider">({rotuloGravidade[c.gravidade]})</span>
+                        </p>
+                        <p className="text-grafite mt-0.5">{c.observacao}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {analise.prazos.length > 0 && (
+                <div>
+                  <h4 className="text-xs uppercase tracking-wider text-grafite-claro mb-2">Prazos</h4>
+                  <ul className="text-sm space-y-1">
+                    {analise.prazos.map((p, i) => (
+                      <li key={i} className="flex gap-2">
+                        <span className="text-dourado">•</span>
+                        <span>{p.descricao}{p.data ? ` — ${p.data}` : ''}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {analise.sugestoes.length > 0 && (
+                <div>
+                  <h4 className="text-xs uppercase tracking-wider text-grafite-claro mb-2 flex items-center gap-1.5">
+                    <CheckCircle2 size={14} aria-hidden="true" /> Sugestões
+                  </h4>
+                  <ul className="text-sm space-y-1">
+                    {analise.sugestoes.map((s, i) => (
+                      <li key={i} className="flex gap-2">
+                        <span className="text-dourado">•</span>
+                        <span>{s}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <p className="text-xs text-grafite-claro pt-2 border-t border-navy/10">
+                Este resultado é um apoio e não substitui a revisão de um advogado inscrito na OAB.
+              </p>
+            </div>
+          )}
         </section>
       </div>
     </Layout>
