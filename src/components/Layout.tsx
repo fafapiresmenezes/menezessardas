@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { sairDemo } from '@/lib/authDemo'
 import Marca from './Marca'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Settings } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -16,6 +16,7 @@ const itensMenu = [
   { icon: CalendarDays, label: 'Agenda', href: '/agenda' },
   { icon: Bell, label: 'Alertas', href: '/alertas' },
   { icon: Truck, label: 'Fornecedores', href: '/fornecedores' },
+  { icon: Scale, label: 'Legislação', href: '/legislacao' },
   { icon: Gauge, label: 'Indicadores', href: '/indicadores' },
   { icon: FileBarChart, label: 'Relatórios', href: '/relatorios' },
   { icon: ShieldCheck, label: 'Trilha', href: '/trilha' },
