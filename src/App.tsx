@@ -18,6 +18,7 @@ import LegislacaoPage from '@/pages/LegislacaoPage'
 import FornecedoresPage from '@/pages/FornecedoresPage'
 import FornecedorPage from '@/pages/FornecedorPage'
 import ConfiguraçõesPage from '@/pages/ConfiguraçõesPage'
+import EquipePage from '@/pages/EquipePage'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -126,6 +127,10 @@ function App() {
         <Route
           path="/trilha"
           element={isAuthenticated ? <TrilhaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/equipe"
+          element={isAuthenticated ? <EquipePage /> : <Navigate to="/login" />}
         />
         <Route
           path="/settings"

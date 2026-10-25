@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
-import { Save, User, Bell, Sparkles, Eye, EyeOff } from 'lucide-react'
-import { supabaseConfigurado } from '@/lib/supabase'
+import { Save, User, Bell, Sparkles, Eye, EyeOff, KeyRound } from 'lucide-react'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { estadoChaveIA, removerChaveIA, salvarChaveIA, testarChaveIA, type EstadoChaveIA } from '@/lib/ia'
+import { perfilAtual, rotuloFuncao, type Funcao } from '@/lib/equipe'
 
 const CHAVE = 'preferencias-usuario'
 
@@ -35,6 +36,11 @@ export default function ConfiguraçõesPage() {
   const [prefs, setPrefs] = useState<Preferencias>(carregar)
   const [aviso, setAviso] = useState('')
   const [erro, setErro] = useState('')
+  const [perfil, setPerfil] = useState<Funcao | null | 'carregando'>('carregando')
+
+  useEffect(() => {
+    perfilAtual().then(setPerfil).catch(() => setPerfil(null))
+  }, [])
 
   const salvar = (e: React.FormEvent) => {
     e.preventDefault()
@@ -102,7 +108,7 @@ export default function ConfiguraçõesPage() {
             <div>
               <span className={rotulo}>Perfil de acesso</span>
               <p className="px-3 py-2.5 bg-pergaminho border border-grafite-claro/30 rounded-sm text-grafite text-sm">
-                Administrador
+                {perfil === 'carregando' ? 'Consultando…' : rotuloFuncao[perfil ?? 'nenhuma']}
               </p>
             </div>
           </div>
@@ -164,8 +170,110 @@ export default function ConfiguraçõesPage() {
         </button>
       </form>
 
+      <SecaoSenha />
       <SecaoChaveIA />
     </Layout>
+  )
+}
+
+function SecaoSenha() {
+  const [nova, setNova] = useState('')
+  const [confirma, setConfirma] = useState('')
+  const [mostrar, setMostrar] = useState(false)
+  const [ocupado, setOcupado] = useState(false)
+  const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+
+  const salvar = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setMsg(null)
+    if (nova.length < 8) {
+      setMsg({ tipo: 'erro', texto: 'A nova senha precisa ter pelo menos 8 caracteres.' })
+      return
+    }
+    if (nova !== confirma) {
+      setMsg({ tipo: 'erro', texto: 'As duas senhas não são iguais.' })
+      return
+    }
+    setOcupado(true)
+    try {
+      const { error } = await supabase.auth.updateUser({ password: nova })
+      if (error) throw new Error(error.message)
+      setNova('')
+      setConfirma('')
+      setMsg({ tipo: 'ok', texto: 'Senha alterada. Use a nova senha no próximo acesso.' })
+    } catch (e) {
+      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível alterar a senha.' })
+    } finally {
+      setOcupado(false)
+    }
+  }
+
+  const campo = 'w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white'
+
+  return (
+    <section aria-labelledby="senha" className="max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado">
+      <h2 id="senha" className="text-lg mb-3 flex items-center gap-2">
+        <KeyRound size={18} className="text-dourado" aria-hidden="true" />
+        Senha
+      </h2>
+      {!supabaseConfigurado ? (
+        <p className="text-sm text-grafite-claro">Na demonstração a senha é fixa. Na produção, cada pessoa troca a própria senha aqui.</p>
+      ) : (
+        <form onSubmit={salvar} noValidate className="space-y-4">
+          {msg && (
+            <p
+              role={msg.tipo === 'erro' ? 'alert' : 'status'}
+              className={`p-3 text-sm border-l-2 ${msg.tipo === 'ok' ? 'bg-regularFundo border-regular text-regular' : 'bg-criticoFundo border-critico text-critico'}`}
+            >
+              {msg.texto}
+            </p>
+          )}
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label htmlFor="nova-senha" className="block text-xs uppercase tracking-wider text-grafite mb-2">Nova senha</label>
+              <input
+                id="nova-senha"
+                type={mostrar ? 'text' : 'password'}
+                autoComplete="new-password"
+                value={nova}
+                onChange={e => setNova(e.target.value)}
+                aria-describedby="ajuda-senha"
+                className={campo}
+              />
+            </div>
+            <div>
+              <label htmlFor="confirma-senha" className="block text-xs uppercase tracking-wider text-grafite mb-2">Repita a nova senha</label>
+              <input
+                id="confirma-senha"
+                type={mostrar ? 'text' : 'password'}
+                autoComplete="new-password"
+                value={confirma}
+                onChange={e => setConfirma(e.target.value)}
+                className={campo}
+              />
+            </div>
+          </div>
+          <p id="ajuda-senha" className="text-xs text-grafite-claro">Pelo menos 8 caracteres. Vale só para o seu acesso.</p>
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="submit"
+              disabled={ocupado || !nova || !confirma}
+              className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider"
+            >
+              {ocupado ? 'Alterando…' : 'Alterar senha'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setMostrar(!mostrar)}
+              aria-pressed={mostrar}
+              className="min-h-[44px] px-4 border border-navy/30 text-navy hover:bg-pergaminho text-sm"
+            >
+              {mostrar ? 'Ocultar senhas' : 'Mostrar senhas'}
+            </button>
+          </div>
+        </form>
+      )}
+    </section>
   )
 }
 

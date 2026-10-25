@@ -21,6 +21,7 @@ export type TipoEvento =
   | 'contrato_editado'
   | 'contrato_encerrado'
   | 'configuracao_alterada'
+  | 'acesso_alterado'
 
 export interface EventoTrilha {
   id: string
