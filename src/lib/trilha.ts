@@ -16,6 +16,7 @@ export type TipoEvento =
   | 'documento_removido'
   | 'contrato_analisado'
   | 'fornecedor_atualizado'
+  | 'trilha_ancorada'
 
 export interface EventoTrilha {
   id: string
