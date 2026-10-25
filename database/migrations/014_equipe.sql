@@ -58,6 +58,12 @@ BEGIN
   INSERT INTO public.usuarios_perfis (id, email, nome_completo, funcao)
   VALUES (p_id, v_email, v_nome, v_funcao)
   ON CONFLICT (id) DO UPDATE SET funcao = EXCLUDED.funcao;
+
+  -- Ao receber uma função, a pessoa já foi reconhecida por um administrador:
+  -- o e-mail fica confirmado sem depender do link do e-mail de cadastro.
+  IF v_funcao IS NOT NULL THEN
+    UPDATE auth.users SET email_confirmed_at = COALESCE(email_confirmed_at, now()) WHERE id = p_id;
+  END IF;
 END;
 $$;
 

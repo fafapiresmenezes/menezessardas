@@ -74,7 +74,7 @@ export default function EquipePage() {
               <ol className="list-decimal pl-5 text-sm text-grafite mt-3 space-y-1">
                 <li>A pessoa abre o link da plataforma e clica em <strong>Primeiro acesso</strong>, com o e-mail dela e uma senha.</li>
                 <li>Ela aparece aqui como <strong>Sem acesso</strong>.</li>
-                <li>Você escolhe a função dela na lista abaixo. Pronto: ela já consegue entrar.</li>
+                <li>Você escolhe a função dela na lista abaixo. Pronto: ela já consegue entrar, mesmo sem clicar no link do e-mail de cadastro.</li>
               </ol>
               {!supabaseConfigurado && (
                 <p className="text-xs text-grafite-claro mt-3">Nesta demonstração a equipe é fictícia e as mudanças valem só nesta tela.</p>
