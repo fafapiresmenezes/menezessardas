@@ -10,6 +10,8 @@ export default function LoginPage() {
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [avisoRecuperacao, setAvisoRecuperacao] = useState(false)
+  const [primeiroAcesso, setPrimeiroAcesso] = useState(false)
+  const [avisoCadastro, setAvisoCadastro] = useState('')
   const navigate = useNavigate()
 
   const entrar = async (e: React.FormEvent) => {
@@ -26,6 +28,27 @@ export default function LoginPage() {
         setErro('E-mail ou senha incorretos.')
       }
       setCarregando(false)
+      return
+    }
+
+    if (primeiroAcesso) {
+      if (senha.length < 8) {
+        setErro('A senha precisa ter pelo menos 8 caracteres.')
+        setCarregando(false)
+        return
+      }
+      try {
+        const { error } = await supabase.auth.signUp({ email, password: senha })
+        if (error) setErro('Não foi possível criar o acesso: ' + error.message)
+        else {
+          setAvisoCadastro('Acesso criado. Se o sistema pedir, confirme pelo e-mail que você vai receber e depois entre normalmente.')
+          setPrimeiroAcesso(false)
+        }
+      } catch {
+        setErro('Não foi possível criar o acesso. Tente novamente.')
+      } finally {
+        setCarregando(false)
+      }
       return
     }
 
@@ -56,6 +79,19 @@ export default function LoginPage() {
           {erro && (
             <div role="alert" className="mb-5 p-3 bg-criticoFundo border-l-2 border-critico text-critico text-sm">
               {erro}
+            </div>
+          )}
+
+          {avisoCadastro && (
+            <div role="status" className="mb-5 p-3 bg-regularFundo border-l-2 border-regular text-regular text-sm">
+              {avisoCadastro}
+            </div>
+          )}
+
+          {primeiroAcesso && (
+            <div role="status" className="mb-5 p-3 bg-atencaoFundo border-l-2 border-atencao text-atencao text-sm">
+              Primeiro acesso: a primeira pessoa a se cadastrar vira administradora. Os demais cadastros
+              só entram depois que a administradora liberar o acesso.
             </div>
           )}
 
@@ -91,7 +127,7 @@ export default function LoginPage() {
                 id="senha"
                 name="senha"
                 type="password"
-                autoComplete="current-password"
+                autoComplete={primeiroAcesso ? 'new-password' : 'current-password'}
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
                 required
@@ -104,7 +140,7 @@ export default function LoginPage() {
               disabled={carregando}
               className="w-full bg-navy hover:bg-navy-700 disabled:bg-grafite-claro text-white tracking-wider uppercase text-sm py-3 rounded-sm transition"
             >
-              {carregando ? 'Entrando…' : 'Entrar'}
+              {carregando ? 'Aguarde…' : primeiroAcesso ? 'Criar acesso' : 'Entrar'}
             </button>
           </form>
 
@@ -119,6 +155,19 @@ export default function LoginPage() {
             >
               Esqueci minha senha
             </button>
+            {supabaseConfigurado && (
+              <button
+                type="button"
+                onClick={() => {
+                  setErro('')
+                  setAvisoCadastro('')
+                  setPrimeiroAcesso(v => !v)
+                }}
+                className="block mx-auto mt-3 min-h-[44px] text-sm text-navy underline underline-offset-4 hover:text-dourado-escuro"
+              >
+                {primeiroAcesso ? 'Já tenho acesso' : 'Primeiro acesso'}
+              </button>
+            )}
           </div>
         </div>
 

@@ -42,3 +42,4 @@ coverage/
 src/**/*.js
 !postcss.config.js
 node_modules
+dist-prod
