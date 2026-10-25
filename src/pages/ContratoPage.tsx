@@ -64,6 +64,16 @@ export default function ContratoPage() {
     if (!id) return
     const alvo = contrato ? { contratoId: contrato.id } : { imovelId: id }
     await repositorio.anexarDocumento(alvo, { tipo, nome: arquivo.name, caminhoStorage: '' })
+    // Se for o PDF do contrato, extrai o texto para o agente analisar o conteúdo real.
+    if (contrato && tipo === 'contrato' && arquivo.type === 'application/pdf') {
+      try {
+        const { extrairTextoPdf } = await import('@/lib/pdf')
+        const texto = await extrairTextoPdf(arquivo)
+        if (texto) await repositorio.atualizarTextoContrato(contrato.id, texto)
+      } catch {
+        // extração é um reforço; o anexo já foi salvo
+      }
+    }
     setAviso(`“${arquivo.name}” adicionado.`)
     setTimeout(() => setAviso(''), 4000)
     carregar()

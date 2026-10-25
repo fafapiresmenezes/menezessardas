@@ -7,6 +7,7 @@ import { supabase, supabaseConfigurado } from './supabase'
 import type { Contrato, Imovel } from './repositorio'
 import { formatarData } from './datas'
 import { rotulosIndice, rotulosTipoContrato, rotulosGarantia } from './rotulos'
+import { registrarEvento } from './trilha'
 
 export interface AnaliseContrato {
   resumo: string
@@ -40,18 +41,25 @@ function resumoCampos(contrato: Contrato, imovel: Imovel): string {
 }
 
 export async function analisarContrato(contrato: Contrato, imovel: Imovel): Promise<AnaliseContrato> {
+  let analise: AnaliseContrato
   if (supabaseConfigurado) {
     const { data, error } = await supabase.functions.invoke('analisar-contrato', {
       body: { texto: textoDoContrato(contrato, imovel), contratoId: contrato.id },
     })
     if (error) throw new Error(error.message)
     if (data?.erro) throw new Error(data.erro)
-    return data as AnaliseContrato
+    analise = data as AnaliseContrato
+  } else {
+    // Modo de exemplo: análise coerente com os dados, marcada como exemplo.
+    await new Promise(r => setTimeout(r, 900))
+    analise = analiseExemplo(contrato, imovel)
   }
-
-  // Modo de exemplo: análise coerente com os dados, marcada como exemplo.
-  await new Promise(r => setTimeout(r, 900))
-  return analiseExemplo(contrato, imovel)
+  await registrarEvento({
+    tipo: 'contrato_analisado',
+    entidade: contrato.id,
+    resumo: `Análise do contrato com ${contrato.parte}: ${analise.clausulasRisco.length} ponto(s) de risco`,
+  })
+  return analise
 }
 
 function analiseExemplo(c: Contrato, imovel: Imovel): AnaliseContrato {

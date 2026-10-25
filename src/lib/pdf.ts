@@ -4,9 +4,10 @@
  * pelo Vite como URL.
  */
 import * as pdfjs from 'pdfjs-dist'
-import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 
-pdfjs.GlobalWorkerOptions.workerSrc = workerUrl
+// O worker vem do cdnjs na mesma versão do pacote. Evita publicar o arquivo do
+// worker (que contém um byte de controle) na hospedagem estática do preview.
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`
 
 const LIMITE_CHARS = 40000
 

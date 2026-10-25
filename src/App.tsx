@@ -13,6 +13,7 @@ import AgendaPage from '@/pages/AgendaPage'
 import AlertasPage from '@/pages/AlertasPage'
 import RelatóriosPage from '@/pages/RelatóriosPage'
 import IndicadoresPage from '@/pages/IndicadoresPage'
+import TrilhaPage from '@/pages/TrilhaPage'
 import ConfiguraçõesPage from '@/pages/ConfiguraçõesPage'
 
 function App() {
@@ -106,6 +107,10 @@ function App() {
         <Route
           path="/indicadores"
           element={isAuthenticated ? <IndicadoresPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/trilha"
+          element={isAuthenticated ? <TrilhaPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/settings"

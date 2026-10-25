@@ -1,5 +1,6 @@
 import { supabase, supabaseConfigurado } from './supabase'
 import { diasAte, emDias } from './datas'
+import { registrarEvento } from './trilha'
 import type {
   Garantia,
   IndiceReajuste,
@@ -72,6 +73,7 @@ export interface Repositorio {
   obterContrato(id: string): Promise<Contrato | null>
   listarVinculados(contratoId: string): Promise<Contrato[]>
   criarContrato(dados: NovoContrato): Promise<Contrato>
+  atualizarTextoContrato(contratoId: string, texto: string): Promise<void>
   anexarDocumento(alvo: { contratoId: string } | { imovelId: string }, doc: Omit<Documento, 'id' | 'enviadoEm'>): Promise<Documento>
   removerDocumento(docId: string): Promise<void>
   limparTudo(): Promise<void>
@@ -143,6 +145,7 @@ class RepositorioLocal implements Repositorio {
     }
     estado.imoveis.push(imovel)
     this.salvar()
+    await registrarEvento({ tipo: 'imovel_criado', entidade: imovel.id, resumo: `Imóvel cadastrado: ${imovel.endereco}, ${imovel.cidade}` })
     return imovel
   }
 
@@ -169,7 +172,17 @@ class RepositorioLocal implements Repositorio {
     const contrato: Contrato = { ...dados, id: novoId(), criadoEm: emDias(0), documentos: [] }
     estado.contratos.push(contrato)
     this.salvar()
+    await registrarEvento({ tipo: 'contrato_criado', entidade: contrato.id, resumo: `Contrato (${contrato.natureza ?? 'principal'}) com ${contrato.parte}` })
     return contrato
+  }
+
+  async atualizarTextoContrato(contratoId: string, texto: string) {
+    const estado = await this.carregar()
+    const c = estado.contratos.find(x => x.id === contratoId)
+    if (c) {
+      c.textoExtraido = texto
+      this.salvar()
+    }
   }
 
   async anexarDocumento(alvo: { contratoId: string } | { imovelId: string }, doc: Omit<Documento, 'id' | 'enviadoEm'>) {
@@ -182,6 +195,7 @@ class RepositorioLocal implements Repositorio {
     if (!dono) throw new Error('Registro não encontrado para anexar o documento.')
     dono.documentos.push(novo)
     this.salvar()
+    await registrarEvento({ tipo: 'documento_anexado', entidade: dono.id, resumo: `Documento anexado: ${novo.nome}` })
     return novo
   }
 
@@ -190,8 +204,9 @@ class RepositorioLocal implements Repositorio {
     for (const lista of [...estado.contratos.map(c => c.documentos), ...estado.imoveis.map(i => i.documentos)]) {
       const idx = lista.findIndex(d => d.id === docId)
       if (idx >= 0) {
-        lista.splice(idx, 1)
+        const [removido] = lista.splice(idx, 1)
         this.salvar()
+        await registrarEvento({ tipo: 'documento_removido', entidade: removido.id, resumo: `Documento removido: ${removido.nome}` })
         return
       }
     }
@@ -296,7 +311,9 @@ class RepositorioSupabase implements Repositorio {
       .select()
       .single()
     if (error) throw error
-    return this.mapImovel(data, [])
+    const imovel = this.mapImovel(data, [])
+    await registrarEvento({ tipo: 'imovel_criado', entidade: imovel.id, resumo: `Imóvel cadastrado: ${imovel.endereco}, ${imovel.cidade}` })
+    return imovel
   }
 
   async listarContratos() {
@@ -357,7 +374,13 @@ class RepositorioSupabase implements Repositorio {
       .select()
       .single()
     if (error) throw error
-    return this.mapContrato(data, [])
+    const contrato = this.mapContrato(data, [])
+    await registrarEvento({ tipo: 'contrato_criado', entidade: contrato.id, resumo: `Contrato (${contrato.natureza ?? 'principal'}) com ${contrato.parte}` })
+    return contrato
+  }
+
+  async atualizarTextoContrato(contratoId: string, texto: string) {
+    await supabase.from('contratos').update({ texto_extraido: texto }).eq('id', contratoId)
   }
 
   async anexarDocumento(alvo: { contratoId: string } | { imovelId: string }, doc: Omit<Documento, 'id' | 'enviadoEm'>) {
@@ -376,12 +399,15 @@ class RepositorioSupabase implements Repositorio {
       .select()
       .single()
     if (error) throw error
-    return this.mapDoc(data)
+    const novo = this.mapDoc(data)
+    await registrarEvento({ tipo: 'documento_anexado', entidade: novo.id, resumo: `Documento anexado: ${novo.nome}` })
+    return novo
   }
 
   async removerDocumento(docId: string) {
     const { error } = await supabase.from('documentos').delete().eq('id', docId)
     if (error) throw error
+    await registrarEvento({ tipo: 'documento_removido', entidade: docId, resumo: 'Documento removido' })
   }
 
   async limparTudo() {
