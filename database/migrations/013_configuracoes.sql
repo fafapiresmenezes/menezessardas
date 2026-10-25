@@ -44,6 +44,8 @@ END;
 $$;
 
 -- Remove uma configuração. Só administradores logados.
+-- A linha fica com valor vazio (não é apagada): preserva quem removeu e quando,
+-- e evita comandos destrutivos no banco. Vazio = "não configurada".
 CREATE OR REPLACE FUNCTION public.remover_configuracao(p_chave TEXT)
 RETURNS VOID
 LANGUAGE plpgsql
@@ -57,7 +59,9 @@ BEGIN
   IF public.perfil_atual() IS DISTINCT FROM 'admin'::usuario_funcao THEN
     RAISE EXCEPTION 'Apenas administradores podem alterar configurações.';
   END IF;
-  DELETE FROM public.configuracoes WHERE chave = p_chave;
+  UPDATE public.configuracoes
+    SET valor = '', atualizado_em = now(), atualizado_por = auth.uid()
+    WHERE chave = p_chave;
 END;
 $$;
 
@@ -76,9 +80,9 @@ BEGIN
   END IF;
   RETURN QUERY
     SELECT true,
-           (c.chave IS NOT NULL),
+           (c.chave IS NOT NULL AND c.valor <> ''),
            c.atualizado_em,
-           right(c.valor, 4)
+           NULLIF(right(c.valor, 4), '')
     FROM (SELECT 1) AS um
     LEFT JOIN public.configuracoes c ON c.chave = p_chave;
 END;

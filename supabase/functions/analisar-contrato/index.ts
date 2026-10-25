@@ -57,7 +57,8 @@ async function obterChave(): Promise<string | null> {
   if (!url || !serviceKey) return null
   const sb = createClient(url, serviceKey)
   const { data } = await sb.from('configuracoes').select('valor').eq('chave', 'anthropic_api_key').maybeSingle()
-  return data?.valor ?? null
+  // Chave removida fica como texto vazio (sem DELETE), por isso `||`.
+  return data?.valor || null
 }
 
 function erroAnthropic(status: number, detalhe: string): Response {
