@@ -14,6 +14,8 @@ import AlertasPage from '@/pages/AlertasPage'
 import RelatóriosPage from '@/pages/RelatóriosPage'
 import IndicadoresPage from '@/pages/IndicadoresPage'
 import TrilhaPage from '@/pages/TrilhaPage'
+import FornecedoresPage from '@/pages/FornecedoresPage'
+import FornecedorPage from '@/pages/FornecedorPage'
 import ConfiguraçõesPage from '@/pages/ConfiguraçõesPage'
 
 function App() {
@@ -107,6 +109,14 @@ function App() {
         <Route
           path="/indicadores"
           element={isAuthenticated ? <IndicadoresPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/fornecedores"
+          element={isAuthenticated ? <FornecedoresPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/fornecedor/:id"
+          element={isAuthenticated ? <FornecedorPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/trilha"

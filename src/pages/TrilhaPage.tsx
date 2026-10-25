@@ -15,6 +15,7 @@ const rotuloTipo: Record<TipoEvento, string> = {
   documento_anexado: 'Documento anexado',
   documento_removido: 'Documento removido',
   contrato_analisado: 'Contrato analisado',
+  fornecedor_atualizado: 'Fornecedor atualizado',
 }
 
 const corTipo: Record<TipoEvento, string> = {
@@ -23,6 +24,7 @@ const corTipo: Record<TipoEvento, string> = {
   documento_anexado: 'bg-regularFundo text-grafite',
   documento_removido: 'bg-criticoFundo text-critico',
   contrato_analisado: 'bg-atencaoFundo text-grafite',
+  fornecedor_atualizado: 'bg-navy/10 text-navy',
 }
 
 const dataHora = (iso: string) =>

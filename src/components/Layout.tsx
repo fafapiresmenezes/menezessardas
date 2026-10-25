@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { sairDemo } from '@/lib/authDemo'
 import Marca from './Marca'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Settings } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Settings } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -15,6 +15,7 @@ const itensMenu = [
   { icon: Building2, label: 'Imóveis', href: '/imoveis' },
   { icon: CalendarDays, label: 'Agenda', href: '/agenda' },
   { icon: Bell, label: 'Alertas', href: '/alertas' },
+  { icon: Truck, label: 'Fornecedores', href: '/fornecedores' },
   { icon: Gauge, label: 'Indicadores', href: '/indicadores' },
   { icon: FileBarChart, label: 'Relatórios', href: '/relatorios' },
   { icon: ShieldCheck, label: 'Trilha', href: '/trilha' },
@@ -67,7 +68,7 @@ export default function Layout({ children, title }: LayoutProps) {
         <nav className="flex-1 overflow-y-auto" aria-label="Menu principal">
           <ul className="space-y-1 p-3">
             {itensMenu.map((item) => {
-              const ativo = pathname.startsWith(item.href)
+              const ativo = pathname.startsWith(item.href) || (item.href === '/fornecedores' && pathname.startsWith('/fornecedor/'))
               return (
                 <li key={item.label}>
                   <button
