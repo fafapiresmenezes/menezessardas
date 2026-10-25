@@ -20,6 +20,7 @@ export type TipoEvento =
   | 'legislacao_acompanhada'
   | 'contrato_editado'
   | 'contrato_encerrado'
+  | 'configuracao_alterada'
 
 export interface EventoTrilha {
   id: string

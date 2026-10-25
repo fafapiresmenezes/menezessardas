@@ -1,7 +1,8 @@
 // Função no servidor: lê o contrato e devolve análise jurídica assistida.
-// A chave da Anthropic fica como segredo da função (ANTHROPIC_API_KEY),
-// nunca no navegador. Deploy: supabase functions deploy analisar-contrato
-// Segredo: supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
+// A chave da Anthropic vem da tabela `configuracoes` (gravada pelo administrador
+// em Configurações → Inteligência artificial) ou, se existir, do segredo
+// ANTHROPIC_API_KEY. Nunca vai ao navegador nem aos logs.
+// Deploy: supabase functions deploy analisar-contrato
 //
 // Limite de custo por clique: modelo econômico e max_tokens baixo.
 
@@ -28,24 +29,88 @@ interface Saida {
   sugestoes: string[]
 }
 
+const json = (corpo: unknown, status = 200) =>
+  new Response(JSON.stringify(corpo), { status, headers: { ...cors, 'Content-Type': 'application/json' } })
+
+// O gateway já validou a assinatura (verify_jwt). Aqui só exigimos usuário logado,
+// para que a chave pública (anon) não consiga gastar créditos da IA.
+function usuarioLogado(req: Request): boolean {
+  try {
+    const auth = req.headers.get('Authorization') ?? ''
+    const token = auth.replace(/^Bearer\s+/i, '')
+    const parte = token.split('.')[1]
+    if (!parte) return false
+    const b64 = parte.replace(/-/g, '+').replace(/_/g, '/')
+    const preenchido = b64 + '='.repeat((4 - (b64.length % 4)) % 4)
+    const payload = JSON.parse(atob(preenchido))
+    return payload?.role === 'authenticated'
+  } catch {
+    return false
+  }
+}
+
+async function obterChave(): Promise<string | null> {
+  const doAmbiente = Deno.env.get('ANTHROPIC_API_KEY')
+  if (doAmbiente) return doAmbiente
+  const url = Deno.env.get('SUPABASE_URL')
+  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+  if (!url || !serviceKey) return null
+  const sb = createClient(url, serviceKey)
+  const { data } = await sb.from('configuracoes').select('valor').eq('chave', 'anthropic_api_key').maybeSingle()
+  return data?.valor ?? null
+}
+
+function erroAnthropic(status: number, detalhe: string): Response {
+  if (status === 401 || status === 403) {
+    return json({ erro: 'Chave recusada pela Anthropic (inválida, revogada ou sem saldo).' }, 502)
+  }
+  if (status === 429) {
+    return json({ erro: 'Limite de uso da Anthropic atingido; tente novamente em instantes.' }, 502)
+  }
+  return json({ erro: 'Falha na API da Anthropic.', detalhe: detalhe.slice(0, 300) }, 502)
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
 
   try {
-    const chave = Deno.env.get('ANTHROPIC_API_KEY')
-    if (!chave) {
-      return new Response(JSON.stringify({ erro: 'Chave da Anthropic não configurada no servidor.' }), {
-        status: 503,
-        headers: { ...cors, 'Content-Type': 'application/json' },
-      })
+    if (!usuarioLogado(req)) {
+      return json({ erro: 'Faça login para usar a análise por IA.' }, 401)
     }
 
-    const { texto, contratoId } = await req.json()
-    if (!texto || typeof texto !== 'string') {
-      return new Response(JSON.stringify({ erro: 'Envie o texto do contrato em "texto".' }), {
-        status: 400,
-        headers: { ...cors, 'Content-Type': 'application/json' },
+    const chave = await obterChave()
+    if (!chave) {
+      return json(
+        { erro: 'Chave da IA não configurada. Um administrador pode informá-la em Configurações → Inteligência artificial.' },
+        503
+      )
+    }
+
+    const { texto, contratoId, teste } = await req.json()
+
+    const cabecalhos = {
+      'x-api-key': chave,
+      'anthropic-version': '2023-06-01',
+      'Content-Type': 'application/json',
+    }
+
+    // Modo teste: confirma que a chave funciona gastando o mínimo possível.
+    if (teste === true) {
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: cabecalhos,
+        body: JSON.stringify({
+          model: MODELO,
+          max_tokens: 8,
+          messages: [{ role: 'user', content: 'Responda apenas OK.' }],
+        }),
       })
+      if (!r.ok) return erroAnthropic(r.status, await r.text())
+      return json({ ok: true, modelo: MODELO })
+    }
+
+    if (!texto || typeof texto !== 'string') {
+      return json({ erro: 'Envie o texto do contrato em "texto".' }, 400)
     }
 
     const ferramenta = {
@@ -83,11 +148,7 @@ Deno.serve(async (req: Request) => {
 
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'x-api-key': chave,
-        'anthropic-version': '2023-06-01',
-        'Content-Type': 'application/json',
-      },
+      headers: cabecalhos,
       body: JSON.stringify({
         model: MODELO,
         max_tokens: MAX_TOKENS,
@@ -98,13 +159,7 @@ Deno.serve(async (req: Request) => {
       }),
     })
 
-    if (!resp.ok) {
-      const detalhe = await resp.text()
-      return new Response(JSON.stringify({ erro: 'Falha na API da Anthropic.', detalhe }), {
-        status: 502,
-        headers: { ...cors, 'Content-Type': 'application/json' },
-      })
-    }
+    if (!resp.ok) return erroAnthropic(resp.status, await resp.text())
 
     const dados = await resp.json()
     const bloco = (dados.content ?? []).find((c: { type: string }) => c.type === 'tool_use')
@@ -126,13 +181,8 @@ Deno.serve(async (req: Request) => {
       // Histórico é melhor-esforço; não derruba a resposta.
     }
 
-    return new Response(JSON.stringify(analise), {
-      headers: { ...cors, 'Content-Type': 'application/json' },
-    })
+    return json(analise)
   } catch (e) {
-    return new Response(JSON.stringify({ erro: String(e) }), {
-      status: 500,
-      headers: { ...cors, 'Content-Type': 'application/json' },
-    })
+    return json({ erro: String(e) }, 500)
   }
 })

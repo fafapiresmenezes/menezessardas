@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
-import { Save, User, Bell } from 'lucide-react'
+import { Save, User, Bell, Sparkles, Eye, EyeOff } from 'lucide-react'
+import { supabaseConfigurado } from '@/lib/supabase'
+import { estadoChaveIA, removerChaveIA, salvarChaveIA, testarChaveIA, type EstadoChaveIA } from '@/lib/ia'
 
 const CHAVE = 'preferencias-usuario'
 
@@ -161,6 +163,178 @@ export default function ConfiguraçõesPage() {
           Salvar preferências
         </button>
       </form>
+
+      <SecaoChaveIA />
     </Layout>
+  )
+}
+
+/**
+ * Chave da IA informada pelo administrador dentro da plataforma. O valor vai
+ * direto ao servidor; o navegador só recebe o estado (definida, data, final).
+ */
+function SecaoChaveIA() {
+  const [estado, setEstado] = useState<EstadoChaveIA | null>(null)
+  const [chave, setChave] = useState('')
+  const [mostrar, setMostrar] = useState(false)
+  const [ocupado, setOcupado] = useState<'' | 'salvando' | 'testando' | 'removendo'>('')
+  const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+
+  const carregar = async () => {
+    try {
+      setEstado(await estadoChaveIA())
+    } catch (e) {
+      setMsg({ tipo: 'erro', texto: 'Não foi possível consultar a chave: ' + (e instanceof Error ? e.message : 'erro desconhecido') })
+    }
+  }
+
+  useEffect(() => {
+    if (supabaseConfigurado) carregar()
+  }, [])
+
+  const salvar = async () => {
+    setOcupado('salvando')
+    setMsg(null)
+    try {
+      await salvarChaveIA(chave)
+      setChave('')
+      setMostrar(false)
+      setMsg({ tipo: 'ok', texto: 'Chave salva no servidor. Clique em "Testar a IA" para confirmar que ela funciona.' })
+      await carregar()
+    } catch (e) {
+      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível salvar a chave.' })
+    } finally {
+      setOcupado('')
+    }
+  }
+
+  const testar = async () => {
+    setOcupado('testando')
+    setMsg(null)
+    try {
+      const r = await testarChaveIA()
+      setMsg({ tipo: 'ok', texto: `A IA respondeu. Tudo certo para analisar contratos (modelo ${r.modelo}).` })
+    } catch (e) {
+      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível testar a IA.' })
+    } finally {
+      setOcupado('')
+    }
+  }
+
+  const remover = async () => {
+    if (!window.confirm('Remover a chave da IA? A análise de contratos ficará indisponível até informar outra.')) return
+    setOcupado('removendo')
+    setMsg(null)
+    try {
+      await removerChaveIA()
+      setMsg({ tipo: 'ok', texto: 'Chave removida.' })
+      await carregar()
+    } catch (e) {
+      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível remover a chave.' })
+    } finally {
+      setOcupado('')
+    }
+  }
+
+  const dataPt = (iso: string) => new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+
+  return (
+    <section aria-labelledby="ia" className="max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado">
+      <h2 id="ia" className="text-lg mb-3 flex items-center gap-2">
+        <Sparkles size={18} className="text-dourado" aria-hidden="true" />
+        Inteligência artificial
+      </h2>
+
+      {!supabaseConfigurado ? (
+        <p className="text-sm text-grafite-claro">
+          Nesta versão de demonstração a análise de contratos usa exemplos. Na versão de produção, o administrador
+          informa aqui a chave da IA.
+        </p>
+      ) : estado && !estado.permitido ? (
+        <p className="text-sm text-grafite-claro">Somente administradores podem configurar a chave da IA.</p>
+      ) : (
+        <div className="space-y-4">
+          <p className="text-sm" aria-live="polite">
+            {estado === null
+              ? 'Consultando…'
+              : estado.definida
+                ? `Chave configurada — termina em ····${estado.sufixo ?? ''}${estado.atualizadoEm ? `, atualizada em ${dataPt(estado.atualizadoEm)}` : ''}.`
+                : 'Nenhuma chave configurada. A análise de contratos por IA fica indisponível até você informar uma.'}
+          </p>
+          <p className="text-xs text-grafite-claro">
+            A chave é criada no site da Anthropic (
+            <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 text-navy">
+              console.anthropic.com
+            </a>
+            {' '}→ API Keys → Create Key). Ela fica guardada só no servidor, nunca aparece de novo e nunca vai para o navegador.
+          </p>
+
+          {msg && (
+            <p
+              role={msg.tipo === 'erro' ? 'alert' : 'status'}
+              className={`p-3 text-sm border-l-2 ${msg.tipo === 'ok' ? 'bg-regularFundo border-regular text-regular' : 'bg-criticoFundo border-critico text-critico'}`}
+            >
+              {msg.texto}
+            </p>
+          )}
+
+          <div>
+            <label htmlFor="chave-ia" className="block text-xs uppercase tracking-wider text-grafite mb-2">
+              Chave da IA
+            </label>
+            <div className="flex gap-2">
+              <input
+                id="chave-ia"
+                type={mostrar ? 'text' : 'password'}
+                value={chave}
+                onChange={e => setChave(e.target.value)}
+                placeholder="sk-ant-…"
+                autoComplete="off"
+                spellCheck={false}
+                className="flex-1 min-w-0 px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white font-mono text-sm"
+              />
+              <button
+                type="button"
+                onClick={() => setMostrar(!mostrar)}
+                aria-pressed={mostrar}
+                aria-label={mostrar ? 'Ocultar chave' : 'Mostrar chave'}
+                className="min-h-[44px] px-3 border border-navy/30 text-navy hover:bg-pergaminho"
+              >
+                {mostrar ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={salvar}
+              disabled={!chave.trim() || ocupado !== ''}
+              className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider"
+            >
+              {ocupado === 'salvando' ? 'Salvando…' : 'Salvar chave'}
+            </button>
+            <button
+              type="button"
+              onClick={testar}
+              disabled={!estado?.definida || ocupado !== ''}
+              className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm"
+            >
+              {ocupado === 'testando' ? 'Testando…' : 'Testar a IA'}
+            </button>
+            {estado?.definida && (
+              <button
+                type="button"
+                onClick={remover}
+                disabled={ocupado !== ''}
+                className="min-h-[44px] px-5 border border-critico text-critico hover:bg-criticoFundo disabled:opacity-50 text-sm"
+              >
+                {ocupado === 'removendo' ? 'Removendo…' : 'Remover'}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </section>
   )
 }

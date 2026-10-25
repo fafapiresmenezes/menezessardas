@@ -30,6 +30,7 @@ const rotuloTipo: Record<TipoEvento, string> = {
   legislacao_acompanhada: 'Legislação acompanhada',
   contrato_editado: 'Contrato editado',
   contrato_encerrado: 'Contrato encerrado',
+  configuracao_alterada: 'Configuração alterada',
 }
 
 const corTipo: Record<TipoEvento, string> = {
@@ -43,6 +44,7 @@ const corTipo: Record<TipoEvento, string> = {
   legislacao_acompanhada: 'bg-navy/10 text-navy',
   contrato_editado: 'bg-atencaoFundo text-grafite',
   contrato_encerrado: 'bg-criticoFundo text-critico',
+  configuracao_alterada: 'bg-navy/10 text-navy',
 }
 
 const dataHora = (iso: string) =>
