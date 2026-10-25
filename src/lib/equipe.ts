@@ -76,3 +76,35 @@ export async function definirFuncao(pessoa: Pessoa, funcao: Funcao | null): Prom
     resumo: `Acesso de ${pessoa.email}: ${rotuloFuncao[funcao ?? 'nenhuma']}`,
   })
 }
+
+const ALFABETO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+
+/** Senha provisória legível (sem 0/O, 1/I), ex.: LSM-7K2M-9QWX. */
+export function gerarSenhaProvisoria(): string {
+  const bloco = () => {
+    const b = new Uint8Array(4)
+    crypto.getRandomValues(b)
+    return Array.from(b, x => ALFABETO[x % ALFABETO.length]).join('')
+  }
+  return `LSM-${bloco()}-${bloco()}`
+}
+
+/** Define uma senha provisória para a pessoa; a senha atual dela deixa de valer. */
+export async function definirSenhaProvisoria(pessoa: Pessoa): Promise<string> {
+  const senha = gerarSenhaProvisoria()
+  if (supabaseConfigurado) {
+    const { data, error } = await supabase.functions.invoke('definir-senha-provisoria', { body: { id: pessoa.id, senha } })
+    if (error) {
+      const ctx = (error as { context?: Response }).context
+      const corpo = ctx && typeof ctx.json === 'function' ? await ctx.json().catch(() => null) : null
+      throw new Error(corpo?.erro ?? error.message)
+    }
+    if (data?.erro) throw new Error(String(data.erro))
+  }
+  await registrarEvento({
+    tipo: 'acesso_alterado',
+    entidade: pessoa.id,
+    resumo: `Senha provisória definida para ${pessoa.email}`,
+  })
+  return senha
+}

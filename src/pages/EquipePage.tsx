@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
-import { Users, UserPlus } from 'lucide-react'
+import { Users, UserPlus, KeyRound } from 'lucide-react'
 import { supabaseConfigurado } from '@/lib/supabase'
 import {
   definirFuncao,
+  definirSenhaProvisoria,
   descricaoFuncao,
   listarPessoas,
   perfilAtual,
@@ -37,6 +38,20 @@ export default function EquipePage() {
   useEffect(() => {
     carregar()
   }, [])
+
+  const senhaProvisoria = async (pessoa: Pessoa) => {
+    if (!window.confirm(`Definir uma senha provisória para ${pessoa.nome}? A senha atual dela deixa de valer.`)) return
+    setOcupado(pessoa.id)
+    setMsg(null)
+    try {
+      const senha = await definirSenhaProvisoria(pessoa)
+      setMsg({ tipo: 'ok', texto: `Senha provisória de ${pessoa.nome}: ${senha} — copie e entregue a ela; ela troca em Configurações → Senha. Esta senha não aparece de novo.` })
+    } catch (e) {
+      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível definir a senha provisória.' })
+    } finally {
+      setOcupado('')
+    }
+  }
 
   const alterar = async (pessoa: Pessoa, valor: string) => {
     const funcao = valor === 'nenhuma' ? null : (valor as Funcao)
@@ -76,6 +91,9 @@ export default function EquipePage() {
                 <li>Ela aparece aqui como <strong>Sem acesso</strong>.</li>
                 <li>Você escolhe a função dela na lista abaixo. Pronto: ela já consegue entrar, mesmo sem clicar no link do e-mail de cadastro.</li>
               </ol>
+              <p className="text-sm text-grafite mt-3">
+                Alguém esqueceu a senha? Use <strong>Senha provisória</strong> na linha da pessoa, entregue a senha gerada e peça para ela trocar em Configurações → Senha.
+              </p>
               {!supabaseConfigurado && (
                 <p className="text-xs text-grafite-claro mt-3">Nesta demonstração a equipe é fictícia e as mudanças valem só nesta tela.</p>
               )}
@@ -84,7 +102,7 @@ export default function EquipePage() {
             {msg && (
               <p
                 role={msg.tipo === 'erro' ? 'alert' : 'status'}
-                className={`p-3 text-sm border-l-2 ${msg.tipo === 'ok' ? 'bg-regularFundo border-regular text-regular' : 'bg-criticoFundo border-critico text-critico'}`}
+                className={`p-3 text-sm border-l-2 select-all ${msg.tipo === 'ok' ? 'bg-regularFundo border-regular text-regular' : 'bg-criticoFundo border-critico text-critico'}`}
               >
                 {msg.texto}
               </p>
@@ -126,6 +144,14 @@ export default function EquipePage() {
                         <p id={`desc-${p.id}`} className="text-xs text-grafite-claro mt-1">
                           {ocupado === p.id ? 'Salvando…' : descricaoFuncao[atual]}
                         </p>
+                        <button
+                          type="button"
+                          onClick={() => senhaProvisoria(p)}
+                          disabled={ocupado !== ''}
+                          className="mt-2 min-h-[44px] inline-flex items-center gap-2 px-3 border border-navy/30 text-navy hover:bg-pergaminho disabled:opacity-50 text-sm"
+                        >
+                          <KeyRound size={14} aria-hidden="true" /> Senha provisória
+                        </button>
                       </div>
                     </li>
                   )

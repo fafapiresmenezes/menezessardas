@@ -97,8 +97,9 @@ export default function LoginPage() {
 
           {avisoRecuperacao && (
             <div role="status" className="mb-5 p-3 bg-atencaoFundo border-l-2 border-atencao text-atencao text-sm">
-              Se este e-mail estiver cadastrado, você receberá as instruções de redefinição em
-              instantes.
+              {supabaseConfigurado
+                ? 'Peça a uma pessoa administradora do escritório uma senha provisória (menu Equipe). Depois de entrar, troque-a em Configurações → Senha.'
+                : 'Na demonstração, entre com admin@exemplo.com e a senha senha123.'}
             </div>
           )}
 
