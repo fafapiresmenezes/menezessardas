@@ -104,7 +104,7 @@ export default function DashboardPage() {
           <h2 id="titulo-compromissos" className="text-xl mb-4">
             Próximos compromissos
           </h2>
-          <div className="relative bg-white shadow-sm overflow-x-auto">
+          <div className="relative bg-white shadow-sm overflow-x-auto" tabIndex={0} role="region" aria-label="Tabela de próximos compromissos">
             <table className="w-full">
               <caption className="sr-only">
                 Compromissos contratuais ordenados do mais urgente para o menos urgente

@@ -64,7 +64,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-navy flex items-center justify-center p-4">
+    <main className="min-h-screen bg-navy flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
           <Marca tamanho="grande" />
@@ -175,6 +175,6 @@ export default function LoginPage() {
           Leticia Sardas &amp; Menezes Advogados Associados
         </p>
       </div>
-    </div>
+    </main>
   )
 }
