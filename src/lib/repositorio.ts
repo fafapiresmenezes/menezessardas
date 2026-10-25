@@ -57,12 +57,18 @@ export interface Contrato {
   criadoEm: string
   /** Texto extraído do PDF do contrato, para o agente analisar o conteúdo real. */
   textoExtraido?: string
+  /** Data em que o contrato foi encerrado; contrato encerrado sai de alertas e indicadores. */
+  encerradoEm?: string
+  motivoEncerramento?: string
   arquivo?: { nome: string; tamanho: number; caminhoStorage?: string }
   documentos: Documento[]
 }
 
 export type NovoImovel = Omit<Imovel, 'id' | 'documentos'> & { documentos?: Omit<Documento, 'id' | 'enviadoEm'>[] }
 export type NovoContrato = Omit<Contrato, 'id' | 'criadoEm' | 'documentos'>
+export type EdicaoContrato = Partial<
+  Pick<Contrato, 'parte' | 'dataVencimento' | 'valor' | 'periodicidade' | 'indice' | 'garantia' | 'notas'>
+>
 
 export interface Repositorio {
   listarImoveis(): Promise<Imovel[]>
@@ -74,6 +80,8 @@ export interface Repositorio {
   listarVinculados(contratoId: string): Promise<Contrato[]>
   criarContrato(dados: NovoContrato): Promise<Contrato>
   atualizarTextoContrato(contratoId: string, texto: string): Promise<void>
+  atualizarContrato(contratoId: string, dados: EdicaoContrato): Promise<void>
+  encerrarContrato(contratoId: string, motivo: string): Promise<void>
   anexarDocumento(alvo: { contratoId: string } | { imovelId: string }, doc: Omit<Documento, 'id' | 'enviadoEm'>): Promise<Documento>
   removerDocumento(docId: string): Promise<void>
   limparTudo(): Promise<void>
@@ -185,6 +193,25 @@ class RepositorioLocal implements Repositorio {
     }
   }
 
+  async atualizarContrato(contratoId: string, dados: EdicaoContrato) {
+    const estado = await this.carregar()
+    const c = estado.contratos.find(x => x.id === contratoId)
+    if (!c) throw new Error('Contrato não encontrado.')
+    Object.assign(c, dados)
+    this.salvar()
+    await registrarEvento({ tipo: 'contrato_editado', entidade: contratoId, resumo: `Contrato com ${c.parte} editado (${Object.keys(dados).join(', ')})` })
+  }
+
+  async encerrarContrato(contratoId: string, motivo: string) {
+    const estado = await this.carregar()
+    const c = estado.contratos.find(x => x.id === contratoId)
+    if (!c) throw new Error('Contrato não encontrado.')
+    c.encerradoEm = emDias(0)
+    c.motivoEncerramento = motivo
+    this.salvar()
+    await registrarEvento({ tipo: 'contrato_encerrado', entidade: contratoId, resumo: `Contrato com ${c.parte} encerrado: ${motivo}` })
+  }
+
   async anexarDocumento(alvo: { contratoId: string } | { imovelId: string }, doc: Omit<Documento, 'id' | 'enviadoEm'>) {
     const estado = await this.carregar()
     const novo: Documento = { ...doc, id: novoId(), enviadoEm: emDias(0) }
@@ -267,6 +294,8 @@ class RepositorioSupabase implements Repositorio {
     notas: String(r.notas ?? ''),
     criadoEm: String(r.criado_em).slice(0, 10),
     textoExtraido: r.texto_extraido ? String(r.texto_extraido) : undefined,
+    encerradoEm: r.encerrado_em ? String(r.encerrado_em) : undefined,
+    motivoEncerramento: r.motivo_encerramento ? String(r.motivo_encerramento) : undefined,
     arquivo: r.caminho_arquivo ? { nome: String(r.caminho_arquivo).split('/').pop() ?? '', tamanho: 0, caminhoStorage: String(r.caminho_arquivo) } : undefined,
     documentos: docs,
   })
@@ -383,6 +412,29 @@ class RepositorioSupabase implements Repositorio {
     await supabase.from('contratos').update({ texto_extraido: texto }).eq('id', contratoId)
   }
 
+  async atualizarContrato(contratoId: string, dados: EdicaoContrato) {
+    const linha: Record<string, unknown> = {}
+    if (dados.parte !== undefined) linha.locatario_fornecedor = dados.parte
+    if (dados.dataVencimento !== undefined) linha.data_vencimento = dados.dataVencimento
+    if (dados.valor !== undefined) linha.valor_periodico = dados.valor
+    if (dados.periodicidade !== undefined) linha.periodicidade = dados.periodicidade
+    if (dados.indice !== undefined) linha.indice_reajuste = dados.indice
+    if (dados.garantia !== undefined) linha.garantia = dados.garantia
+    if (dados.notas !== undefined) linha.notas = dados.notas
+    const { error } = await supabase.from('contratos').update(linha).eq('id', contratoId)
+    if (error) throw error
+    await registrarEvento({ tipo: 'contrato_editado', entidade: contratoId, resumo: `Contrato editado (${Object.keys(dados).join(', ')})` })
+  }
+
+  async encerrarContrato(contratoId: string, motivo: string) {
+    const { error } = await supabase
+      .from('contratos')
+      .update({ encerrado_em: emDias(0), motivo_encerramento: motivo })
+      .eq('id', contratoId)
+    if (error) throw error
+    await registrarEvento({ tipo: 'contrato_encerrado', entidade: contratoId, resumo: `Contrato encerrado: ${motivo}` })
+  }
+
   async anexarDocumento(alvo: { contratoId: string } | { imovelId: string }, doc: Omit<Documento, 'id' | 'enviadoEm'>) {
     const base = 'contratoId' in alvo
       ? { contrato_id: alvo.contratoId, imovel_id: (await supabase.from('contratos').select('imovel_id').eq('id', alvo.contratoId).single()).data?.imovel_id }
@@ -461,6 +513,11 @@ export function calcularAlertas(imoveis: Imovel[], contratos: Contrato[]): Alert
   }
 
   contratos.forEach(c => {
+    if (c.encerradoEm) {
+      // Contrato encerrado não gera vencimento nem reajuste; seus documentos ainda valem.
+      c.documentos.forEach(d => docAlerta(d, c.imovelId, c.id))
+      return
+    }
     if (c.dataVencimento) {
       const dias = diasAte(c.dataVencimento)
       if (dias !== null && dias <= JANELA_DIAS) {

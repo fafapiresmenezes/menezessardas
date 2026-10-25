@@ -18,6 +18,8 @@ export type TipoEvento =
   | 'fornecedor_atualizado'
   | 'trilha_ancorada'
   | 'legislacao_acompanhada'
+  | 'contrato_editado'
+  | 'contrato_encerrado'
 
 export interface EventoTrilha {
   id: string

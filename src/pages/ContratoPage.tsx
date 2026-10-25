@@ -5,7 +5,9 @@ import SeloSituacao from '@/components/SeloSituacao'
 import { repositorio, calcularAlertas, type Contrato, type Documento, type Imovel } from '@/lib/repositorio'
 import { diasAte, formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
 import { rotulosStatusContrato, rotulosTipoContrato, rotulosIndice, rotulosTipoDocumento, rotulosGarantia } from '@/lib/rotulos'
-import { FileText, Trash2, Sparkles, ArrowLeft, Plus, AlertTriangle, CheckCircle2 } from 'lucide-react'
+import { FileText, Trash2, Sparkles, ArrowLeft, Plus, AlertTriangle, CheckCircle2, Pencil, Lock } from 'lucide-react'
+import { Escolha, Campo, classeCampo } from '@/components/Assistente'
+import { GARANTIAS, INDICES_REAJUSTE, PERIODICIDADES, type Garantia, type IndiceReajuste, type Periodicidade } from '@/lib/dominio'
 import ZonaArrastar from '@/components/ZonaArrastar'
 import { analisarContrato, type AnaliseContrato } from '@/lib/agente'
 
@@ -31,6 +33,10 @@ export default function ContratoPage() {
   const [analise, setAnalise] = useState<AnaliseContrato | null>(null)
   const [analisando, setAnalisando] = useState(false)
   const [erroAnalise, setErroAnalise] = useState('')
+  const [modo, setModo] = useState<'ver' | 'editar' | 'encerrar'>('ver')
+  const [ed, setEd] = useState({ parte: '', valor: '', vencimento: '', indice: 'ipca' as IndiceReajuste, garantia: 'sem_garantia' as Garantia, periodicidade: 'mensal' as Periodicidade, notas: '' })
+  const [motivo, setMotivo] = useState<string | null>(null)
+  const [avisoTopo, setAvisoTopo] = useState('')
 
   const carregar = useCallback(async () => {
     if (!id) return
@@ -77,6 +83,60 @@ export default function ContratoPage() {
     setAviso(`“${arquivo.name}” adicionado.`)
     setTimeout(() => setAviso(''), 4000)
     carregar()
+  }
+
+  const abrirEdicao = () => {
+    if (!contrato) return
+    setEd({
+      parte: contrato.parte,
+      valor: String(contrato.valor).replace('.', ','),
+      vencimento: contrato.dataVencimento ?? '',
+      indice: contrato.indice,
+      garantia: contrato.garantia,
+      periodicidade: contrato.periodicidade,
+      notas: contrato.notas,
+    })
+    setErro('')
+    setModo('editar')
+  }
+
+  const salvarEdicao = async () => {
+    if (!contrato) return
+    const valor = Number(ed.valor.replace(/\./g, '').replace(',', '.'))
+    if (!ed.parte.trim()) return setErro('Informe o nome da outra parte do contrato.')
+    if (Number.isNaN(valor) || valor < 0) return setErro('O valor precisa ser um número, por exemplo 4500,00.')
+    try {
+      await repositorio.atualizarContrato(contrato.id, {
+        parte: ed.parte.trim(),
+        valor,
+        dataVencimento: ed.vencimento || null,
+        indice: ed.indice,
+        garantia: ed.garantia,
+        periodicidade: ed.periodicidade,
+        notas: ed.notas,
+      })
+      setModo('ver')
+      setErro('')
+      setAvisoTopo('Contrato atualizado.')
+      setTimeout(() => setAvisoTopo(''), 5000)
+      carregar()
+    } catch (e) {
+      setErro('Não foi possível salvar: ' + (e instanceof Error ? e.message : 'erro desconhecido'))
+    }
+  }
+
+  const confirmarEncerramento = async () => {
+    if (!contrato || !motivo) return
+    try {
+      await repositorio.encerrarContrato(contrato.id, motivo)
+      setModo('ver')
+      setMotivo(null)
+      setAvisoTopo('Contrato encerrado. Ele deixa de gerar alertas e sai dos indicadores.')
+      setTimeout(() => setAvisoTopo(''), 6000)
+      carregar()
+    } catch (e) {
+      setErro('Não foi possível encerrar: ' + (e instanceof Error ? e.message : 'erro desconhecido'))
+    }
   }
 
   const analisar = async () => {
@@ -133,6 +193,7 @@ export default function ContratoPage() {
 
   const dias = diasAte(contrato.dataVencimento)
   const situacaoContrato = situacaoPorPrazo(dias)
+  const encerrado = !!contrato.encerradoEm
   const statusContrato = dias !== null && dias < 0 ? 'vencido' : dias !== null && dias <= 60 ? 'a_renovar' : 'ativo'
   const moeda = (v: number) =>
     v === 0 ? 'Sem contraprestação' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
@@ -140,14 +201,99 @@ export default function ContratoPage() {
   return (
     <Layout title={imovel.endereco}>
       <div className="space-y-6">
+        {avisoTopo && (
+          <p role="status" className="p-3 bg-regularFundo border-l-2 border-regular text-regular text-sm">{avisoTopo}</p>
+        )}
         <section className="bg-white border-t-2 border-dourado p-6 shadow-sm">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>
               <p className="text-xs uppercase tracking-wider text-grafite-claro">{rotulosTipoContrato[contrato.tipo]}</p>
               <h2 className="text-2xl mt-1">{contrato.parte}</h2>
             </div>
-            <SeloSituacao situacao={situacaoContrato} texto={rotulosStatusContrato[statusContrato]} />
+            <div className="flex flex-wrap items-center gap-2">
+              {encerrado ? (
+                <SeloSituacao situacao="sem_prazo" texto={`Encerrado em ${formatarData(contrato.encerradoEm)}`} />
+              ) : (
+                <SeloSituacao situacao={situacaoContrato} texto={rotulosStatusContrato[statusContrato]} />
+              )}
+              {!encerrado && modo === 'ver' && (
+                <>
+                  <button onClick={abrirEdicao} className="inline-flex items-center gap-1.5 min-h-[44px] px-4 border border-navy text-navy hover:bg-pergaminho text-sm">
+                    <Pencil size={14} aria-hidden="true" /> Editar
+                  </button>
+                  <button onClick={() => { setModo('encerrar'); setMotivo(null) }} className="inline-flex items-center gap-1.5 min-h-[44px] px-4 border border-critico text-critico hover:bg-criticoFundo text-sm">
+                    <Lock size={14} aria-hidden="true" /> Encerrar
+                  </button>
+                </>
+              )}
+            </div>
           </div>
+
+          {encerrado && (
+            <p className="mt-4 text-sm bg-pergaminho border-l-2 border-grafite-claro px-4 py-3">
+              Motivo: {contrato.motivoEncerramento}. Este contrato não gera mais alertas nem entra nos indicadores.
+            </p>
+          )}
+
+          {modo === 'editar' && (
+            <div className="mt-6 pt-5 border-t border-navy/10 space-y-4" role="group" aria-label="Editar contrato">
+              <div className="grid md:grid-cols-3 gap-4">
+                <Campo id="ed-parte" rotulo="Outra parte">
+                  <input id="ed-parte" className={classeCampo} value={ed.parte} onChange={e => setEd({ ...ed, parte: e.target.value })} />
+                </Campo>
+                <Campo id="ed-valor" rotulo="Valor (R$)">
+                  <input id="ed-valor" inputMode="decimal" className={classeCampo} value={ed.valor} onChange={e => setEd({ ...ed, valor: e.target.value })} />
+                </Campo>
+                <Campo id="ed-venc" rotulo="Vencimento" ajuda="Deixe vazio se o prazo for indeterminado.">
+                  <input id="ed-venc" type="date" className={classeCampo} value={ed.vencimento} onChange={e => setEd({ ...ed, vencimento: e.target.value })} />
+                </Campo>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wider text-grafite mb-2">Índice de reajuste</p>
+                <Escolha nome="Índice de reajuste" opcoes={INDICES_REAJUSTE} valor={ed.indice} onChange={v => setEd({ ...ed, indice: v })} colunas={3} />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wider text-grafite mb-2">Garantia</p>
+                <Escolha nome="Garantia" opcoes={GARANTIAS} valor={ed.garantia} onChange={v => setEd({ ...ed, garantia: v })} colunas={3} />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wider text-grafite mb-2">Periodicidade do pagamento</p>
+                <Escolha nome="Periodicidade" opcoes={PERIODICIDADES} valor={ed.periodicidade} onChange={v => setEd({ ...ed, periodicidade: v })} colunas={3} />
+              </div>
+              <Campo id="ed-notas" rotulo="Observações">
+                <textarea id="ed-notas" rows={3} className={classeCampo} value={ed.notas} onChange={e => setEd({ ...ed, notas: e.target.value })} />
+              </Campo>
+              {erro && <p role="alert" className="text-sm text-critico">{erro}</p>}
+              <div className="flex gap-3">
+                <button onClick={salvarEdicao} className="min-h-[44px] bg-navy hover:bg-navy-700 text-white px-6 rounded-sm uppercase tracking-wider text-sm">Salvar alterações</button>
+                <button onClick={() => { setModo('ver'); setErro('') }} className="min-h-[44px] px-5 text-navy underline underline-offset-4">Cancelar</button>
+              </div>
+            </div>
+          )}
+
+          {modo === 'encerrar' && (
+            <div className="mt-6 pt-5 border-t border-navy/10 space-y-4" role="group" aria-label="Encerrar contrato">
+              <p className="text-xs uppercase tracking-wider text-grafite">Por que o contrato está sendo encerrado?</p>
+              <Escolha
+                nome="Motivo do encerramento"
+                valor={motivo}
+                onChange={setMotivo}
+                colunas={2}
+                opcoes={[
+                  { valor: 'Fim do prazo', rotulo: 'Fim do prazo' },
+                  { valor: 'Rescisão amigável', rotulo: 'Rescisão amigável' },
+                  { valor: 'Rescisão por inadimplência', rotulo: 'Rescisão por inadimplência' },
+                  { valor: 'Outro motivo', rotulo: 'Outro motivo' },
+                ]}
+              />
+              <p className="text-sm text-grafite-claro">O registro continua guardado no histórico, mas deixa de gerar alertas e de contar nos indicadores.</p>
+              {erro && <p role="alert" className="text-sm text-critico">{erro}</p>}
+              <div className="flex gap-3">
+                <button onClick={confirmarEncerramento} disabled={!motivo} className="min-h-[44px] bg-critico text-white px-6 rounded-sm uppercase tracking-wider text-sm disabled:opacity-40 disabled:cursor-not-allowed">Confirmar encerramento</button>
+                <button onClick={() => { setModo('ver'); setMotivo(null) }} className="min-h-[44px] px-5 text-navy underline underline-offset-4">Cancelar</button>
+              </div>
+            </div>
+          )}
 
           <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
             <div>

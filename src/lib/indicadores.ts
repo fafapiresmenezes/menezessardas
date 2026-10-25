@@ -10,6 +10,7 @@ import type { Periodicidade } from './dominio'
 const mesesPorPeriodo: Record<Periodicidade, number> = { mensal: 1, trimestral: 3, semestral: 6, anual: 12, unica: 0 }
 
 export const contratoAtivo = (c: Contrato): boolean => {
+  if (c.encerradoEm) return false
   const d = diasAte(c.dataVencimento)
   return d === null || d >= 0
 }
