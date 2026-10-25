@@ -29,6 +29,8 @@ export default function NovoContratoPage() {
   const [garantia, setGarantia] = useState('sem_garantia')
   const [notas] = useState('')
   const [arquivo, setArquivo] = useState<{ nome: string; tamanho: number } | null>(null)
+  const [textoExtraido, setTextoExtraido] = useState<string>('')
+  const [lendoPdf, setLendoPdf] = useState(false)
 
   useEffect(() => {
     if (!imovelId) {
@@ -77,6 +79,7 @@ export default function NovoContratoPage() {
         garantia: garantia as any,
         dataUltimoReajuste: null,
         notas,
+        textoExtraido: textoExtraido || undefined,
         arquivo: arquivo ? { ...arquivo, caminhoStorage: '' } : undefined,
       })
       navigate(`/contrato/${imovelId}`)
@@ -187,9 +190,28 @@ export default function NovoContratoPage() {
               <ZonaArrastar
                 rotulo="Arraste o PDF do contrato assinado para cá ou"
                 tipoFixo="contrato"
-                onArquivo={arq => setArquivo({ nome: arq.name, tamanho: arq.size })}
+                onArquivo={async arq => {
+                  setArquivo({ nome: arq.name, tamanho: arq.size })
+                  if (arq.type.includes('pdf') || arq.name.toLowerCase().endsWith('.pdf')) {
+                    setLendoPdf(true)
+                    try {
+                      const { extrairTextoPdf } = await import('@/lib/pdf')
+                      setTextoExtraido(await extrairTextoPdf(arq))
+                    } catch {
+                      setTextoExtraido('')
+                    } finally {
+                      setLendoPdf(false)
+                    }
+                  }
+                }}
               />
-              {arquivo && <p className="text-sm text-grafite">Anexado: {arquivo.nome}</p>}
+              {arquivo && (
+                <p className="text-sm text-grafite">
+                  Anexado: {arquivo.nome}
+                  {lendoPdf && ' — lendo o conteúdo…'}
+                  {!lendoPdf && textoExtraido && ' — conteúdo lido para a análise'}
+                </p>
+              )}
               <dl className="grid gap-3">
                 <div>
                   <dt className="text-xs uppercase tracking-wider text-grafite-claro">Imóvel</dt>

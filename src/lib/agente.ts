@@ -16,8 +16,16 @@ export interface AnaliseContrato {
   exemplo?: boolean
 }
 
-/** Monta um texto do contrato a partir dos dados cadastrados, para enviar ao agente. */
+/** Texto a enviar ao agente: o conteúdo do PDF quando houver, senão os campos. */
 function textoDoContrato(contrato: Contrato, imovel: Imovel): string {
+  const cabecalho = resumoCampos(contrato, imovel)
+  if (contrato.textoExtraido) {
+    return `${cabecalho}\n\n--- Conteúdo do contrato (PDF) ---\n${contrato.textoExtraido}`
+  }
+  return cabecalho
+}
+
+function resumoCampos(contrato: Contrato, imovel: Imovel): string {
   return [
     `Tipo de contrato: ${rotulosTipoContrato[contrato.tipo]}`,
     `Imóvel: ${imovel.endereco}, ${imovel.cidade} - ${imovel.uf} (${imovel.tipo})`,

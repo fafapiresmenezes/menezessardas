@@ -1,0 +1,215 @@
+import { Fragment, useEffect, useMemo, useState } from 'react'
+import Layout from '@/components/Layout'
+import { useImoveis } from '@/hooks/useImoveis'
+import { useAlertas } from '@/hooks/useAlertas'
+import { repositorio, type Contrato } from '@/lib/repositorio'
+import {
+  calcularKPIs,
+  calcularOKRs,
+  matrizRisco,
+  matrizPendencias,
+  type Nivel,
+  type PontoRisco,
+  type PontoPendencia,
+} from '@/lib/indicadores'
+import { Printer, Building2, Percent, FileCheck2, CalendarClock, TrendingUp, AlertOctagon } from 'lucide-react'
+
+const moeda = (v: number) =>
+  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v)
+
+const NIVEIS: Nivel[] = ['baixo', 'medio', 'alto']
+const rotuloNivel: Record<Nivel, string> = { baixo: 'Baixo', medio: 'Médio', alto: 'Alto' }
+
+// Cor da célula conforme a combinação de eixos (quanto mais ao canto alto × alto, mais grave).
+const corCelula = (a: Nivel, b: Nivel): string => {
+  const soma = NIVEIS.indexOf(a) + NIVEIS.indexOf(b)
+  if (soma >= 3) return 'bg-criticoFundo'
+  if (soma === 2) return 'bg-atencaoFundo'
+  return 'bg-regularFundo'
+}
+
+function Matriz<T extends { rotulo: string }>({
+  titulo,
+  eixoX,
+  eixoY,
+  pontos,
+  nivelX,
+  nivelY,
+}: {
+  titulo: string
+  eixoX: string
+  eixoY: string
+  pontos: T[]
+  nivelX: (p: T) => Nivel
+  nivelY: (p: T) => Nivel
+}) {
+  return (
+    <section className="bg-white p-6 shadow-sm" aria-label={titulo}>
+      <h3 className="text-lg mb-1">{titulo}</h3>
+      <p className="text-sm text-grafite-claro mb-4">
+        Eixo horizontal: {eixoX}. Eixo vertical: {eixoY}.
+      </p>
+      <div className="grid grid-cols-[auto_1fr_1fr_1fr] gap-1 text-xs">
+        <div />
+        {NIVEIS.map(x => (
+          <div key={x} className="text-center font-medium text-grafite-claro uppercase tracking-wider py-1">
+            {rotuloNivel[x]}
+          </div>
+        ))}
+        {[...NIVEIS].reverse().map(y => (
+          <Fragment key={`row-${y}`}>
+            <div className="flex items-center justify-end pr-2 font-medium text-grafite-claro uppercase tracking-wider">
+              {rotuloNivel[y]}
+            </div>
+            {NIVEIS.map(x => {
+              const dentro = pontos.filter(p => nivelX(p) === x && nivelY(p) === y)
+              return (
+                <div key={`${x}-${y}`} className={`min-h-[70px] border border-navy/5 p-1.5 ${corCelula(x, y)}`}>
+                  {dentro.slice(0, 4).map((p, i) => (
+                    <p key={i} className="text-[11px] text-grafite truncate" title={p.rotulo}>
+                      {p.rotulo}
+                    </p>
+                  ))}
+                  {dentro.length > 4 && <p className="text-[11px] text-grafite-claro">+{dentro.length - 4}</p>}
+                </div>
+              )
+            })}
+          </Fragment>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+export default function IndicadoresPage() {
+  const { imoveis, loading: li } = useImoveis()
+  const { alertas, loading: la } = useAlertas()
+  const [contratos, setContratos] = useState<Contrato[] | null>(null)
+
+  useEffect(() => {
+    repositorio.listarContratos().then(setContratos)
+  }, [])
+
+  const dados = useMemo(() => {
+    if (!contratos) return null
+    return {
+      kpis: calcularKPIs(imoveis, contratos),
+      okrs: calcularOKRs(imoveis, contratos, alertas),
+      risco: matrizRisco(imoveis, contratos),
+      pendencias: matrizPendencias(alertas),
+    }
+  }, [imoveis, contratos, alertas])
+
+  if (li || la || !dados) {
+    return (
+      <Layout title="Indicadores">
+        <p className="text-grafite-claro">Calculando indicadores…</p>
+      </Layout>
+    )
+  }
+
+  const { kpis, okrs, risco, pendencias } = dados
+  const tiles = [
+    { rotulo: 'Imóveis na carteira', valor: String(kpis.imoveis), icone: Building2, cor: 'text-navy' },
+    { rotulo: 'Taxa de vacância', valor: `${kpis.vacancia}%`, icone: Percent, cor: 'text-navy' },
+    { rotulo: 'Receita contratada / mês', valor: moeda(kpis.receitaContratadaMensal), icone: TrendingUp, cor: 'text-regular' },
+    { rotulo: 'Documentação em dia', valor: `${kpis.documentacaoEmDia}%`, icone: FileCheck2, cor: kpis.documentacaoEmDia >= 95 ? 'text-regular' : 'text-atencao' },
+    { rotulo: 'Prazo médio de vencimento', valor: kpis.prazoMedioDias === null ? '—' : `${kpis.prazoMedioDias} dias`, icone: CalendarClock, cor: 'text-navy' },
+    { rotulo: 'Contratos vencidos', valor: String(kpis.contratosVencidos), icone: AlertOctagon, cor: kpis.contratosVencidos ? 'text-critico' : 'text-regular' },
+  ]
+
+  return (
+    <Layout title="Indicadores">
+      <div className="space-y-8">
+        <div className="flex justify-end -mb-2 print:hidden">
+          <button
+            onClick={() => window.print()}
+            className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 rounded-sm text-sm"
+          >
+            <Printer size={16} aria-hidden="true" /> Exportar PDF
+          </button>
+        </div>
+
+        <section aria-label="Indicadores-chave">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            {tiles.map(t => (
+              <div key={t.rotulo} className="bg-white border-t-2 border-dourado p-5 shadow-sm">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-grafite-claro">{t.rotulo}</p>
+                    <p className={`font-serif text-3xl mt-2 ${t.cor}`}>{t.valor}</p>
+                  </div>
+                  <t.icone className={t.cor} size={20} aria-hidden="true" />
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-grafite-claro mt-3">
+            Receita recebida e inadimplência dependem da integração de pagamentos, ainda não disponível.
+          </p>
+        </section>
+
+        <section className="bg-white p-6 shadow-sm" aria-labelledby="t-okr">
+          <h2 id="t-okr" className="text-xl mb-5">
+            OKRs do trimestre
+          </h2>
+          <div className="space-y-6">
+            {okrs.map((o, i) => (
+              <div key={i}>
+                <h3 className="font-medium text-navy mb-3">{o.titulo}</h3>
+                <div className="space-y-3">
+                  {o.keyResults.map((kr, j) => {
+                    const atingido =
+                      kr.unidade === 'un'
+                        ? kr.atual <= kr.meta
+                        : kr.atual >= kr.meta
+                    const pct =
+                      kr.unidade === '%'
+                        ? Math.min(100, Math.round((kr.atual / kr.meta) * 100))
+                        : atingido
+                          ? 100
+                          : 0
+                    return (
+                      <div key={j}>
+                        <div className="flex items-center justify-between text-sm mb-1">
+                          <span className="text-grafite">{kr.descricao}</span>
+                          <span className={atingido ? 'text-regular font-medium' : 'text-atencao font-medium'}>
+                            {kr.atual}
+                            {kr.unidade === '%' ? '%' : ''} / meta {kr.meta}
+                            {kr.unidade === '%' ? '%' : ''}
+                          </span>
+                        </div>
+                        <div className="h-2 bg-pergaminho rounded-sm overflow-hidden" aria-hidden="true">
+                          <div className={`h-full ${atingido ? 'bg-regular' : 'bg-atencao'}`} style={{ width: `${pct}%` }} />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Matriz<PontoRisco>
+            titulo="Matriz de risco dos contratos"
+            eixoX="impacto (valor do contrato)"
+            eixoY="probabilidade (urgência do prazo)"
+            pontos={risco}
+            nivelX={p => p.impacto}
+            nivelY={p => p.probabilidade}
+          />
+          <Matriz<PontoPendencia>
+            titulo="Matriz de pendências"
+            eixoX="importância"
+            eixoY="urgência"
+            pontos={pendencias}
+            nivelX={p => p.importancia}
+            nivelY={p => p.urgencia}
+          />
+        </div>
+      </div>
+    </Layout>
+  )
+}

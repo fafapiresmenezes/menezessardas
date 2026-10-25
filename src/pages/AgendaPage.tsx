@@ -81,13 +81,13 @@ export default function AgendaPage() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <button onClick={() => mudarMes(-1)} className="p-2 rounded-sm hover:bg-white" aria-label="Mês anterior">
+            <button onClick={() => mudarMes(-1)} className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-sm hover:bg-white" aria-label="Mês anterior">
               <ChevronLeft size={20} aria-hidden="true" />
             </button>
             <h2 className="font-serif text-2xl text-navy capitalize min-w-[11rem] text-center">
               {MESES[mes]} de {ano}
             </h2>
-            <button onClick={() => mudarMes(1)} className="p-2 rounded-sm hover:bg-white" aria-label="Próximo mês">
+            <button onClick={() => mudarMes(1)} className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-sm hover:bg-white" aria-label="Próximo mês">
               <ChevronRight size={20} aria-hidden="true" />
             </button>
           </div>

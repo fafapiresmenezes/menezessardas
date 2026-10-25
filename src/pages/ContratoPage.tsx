@@ -209,17 +209,22 @@ export default function ContratoPage() {
               {vinculados.map(v => {
                 const d = diasAte(v.dataVencimento)
                 return (
-                  <li key={v.id} className="py-3 flex items-center justify-between gap-4">
-                    <div className="min-w-0">
-                      <p className="font-medium text-navy">
-                        <span className="text-xs uppercase tracking-wider text-dourado-escuro mr-2">
-                          {v.natureza === 'subcontrato' ? 'Subcontrato' : 'Aditivo'}
-                        </span>
-                        {v.parte}
-                      </p>
-                      <p className="text-sm text-grafite-claro">{rotulosTipoContrato[v.tipo]}</p>
-                    </div>
-                    <SeloSituacao situacao={situacaoPorPrazo(d)} texto={v.dataVencimento ? textoPrazo(d) : 'Sem prazo'} />
+                  <li key={v.id}>
+                    <button
+                      onClick={() => navigate(`/contrato/vinculo/${v.id}`)}
+                      className="w-full text-left py-3 flex items-center justify-between gap-4 hover:bg-pergaminho"
+                    >
+                      <div className="min-w-0">
+                        <p className="font-medium text-navy">
+                          <span className="text-xs uppercase tracking-wider text-dourado-escuro mr-2">
+                            {v.natureza === 'subcontrato' ? 'Subcontrato' : 'Aditivo'}
+                          </span>
+                          {v.parte}
+                        </p>
+                        <p className="text-sm text-grafite-claro">{rotulosTipoContrato[v.tipo]}</p>
+                      </div>
+                      <SeloSituacao situacao={situacaoPorPrazo(d)} texto={v.dataVencimento ? textoPrazo(d) : 'Sem prazo'} />
+                    </button>
                   </li>
                 )
               })}

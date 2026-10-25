@@ -1,0 +1,6 @@
+# Configuração do Supabase para a plataforma.
+# A função de análise exige usuário autenticado (verify_jwt), para que ninguém
+# com a URL gaste tokens da Anthropic.
+
+[functions.analisar-contrato]
+verify_jwt = true

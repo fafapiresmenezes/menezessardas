@@ -54,6 +54,8 @@ export interface Contrato {
   dataUltimoReajuste: string | null
   notas: string
   criadoEm: string
+  /** Texto extraído do PDF do contrato, para o agente analisar o conteúdo real. */
+  textoExtraido?: string
   arquivo?: { nome: string; tamanho: number; caminhoStorage?: string }
   documentos: Documento[]
 }
@@ -249,6 +251,7 @@ class RepositorioSupabase implements Repositorio {
     dataUltimoReajuste: r.data_ultimo_reajuste ? String(r.data_ultimo_reajuste) : null,
     notas: String(r.notas ?? ''),
     criadoEm: String(r.criado_em).slice(0, 10),
+    textoExtraido: r.texto_extraido ? String(r.texto_extraido) : undefined,
     arquivo: r.caminho_arquivo ? { nome: String(r.caminho_arquivo).split('/').pop() ?? '', tamanho: 0, caminhoStorage: String(r.caminho_arquivo) } : undefined,
     documentos: docs,
   })
@@ -348,6 +351,7 @@ class RepositorioSupabase implements Repositorio {
         garantia: dados.garantia,
         data_ultimo_reajuste: dados.dataUltimoReajuste,
         notas: dados.notas,
+        texto_extraido: dados.textoExtraido ?? null,
         caminho_arquivo: dados.arquivo?.caminhoStorage ?? null,
       })
       .select()
