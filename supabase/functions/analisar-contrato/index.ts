@@ -7,7 +7,7 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const MODELO = 'claude-haiku-4-5'
+const MODELO = 'claude-haiku-5-5'
 const MAX_TOKENS = 1200
 
 const cors = {
