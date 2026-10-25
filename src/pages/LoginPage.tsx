@@ -54,10 +54,11 @@ export default function LoginPage() {
 
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password: senha })
-      if (error) setErro('E-mail ou senha incorretos.')
-      else navigate('/dashboard')
+      if (!error) navigate('/dashboard')
+      else if (error.status === 400 || error.status === 401 || /invalid/i.test(error.message)) setErro('E-mail ou senha incorretos.')
+      else setErro('Não foi possível falar com o servidor (' + error.message + '). Verifique a conexão e tente de novo.')
     } catch {
-      setErro('Não foi possível entrar. Tente novamente.')
+      setErro('Não foi possível falar com o servidor. Verifique a conexão e tente de novo.')
     } finally {
       setCarregando(false)
     }
