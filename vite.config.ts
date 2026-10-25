@@ -5,7 +5,18 @@ import path from 'path'
 export default defineConfig({
   base: './',
   // es2022: o pdfjs-dist usa top-level await; navegadores atuais suportam.
-  build: { target: 'es2022' },
+  build: {
+    target: 'es2022',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          pdfjs: ['pdfjs-dist'],
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
   esbuild: { target: 'es2022' },
   plugins: [react()],
   resolve: {
