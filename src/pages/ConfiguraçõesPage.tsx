@@ -64,24 +64,28 @@ export default function ConfiguraçõesPage() {
 
   return (
     <Layout title="Configurações">
+      <p className="text-sm text-grafite-claro mb-6 max-w-2xl">
+        Gerencie seu perfil, preferências de notificações e acesso à inteligência artificial para análise de contratos.
+      </p>
       <form onSubmit={salvar} className="max-w-2xl space-y-6" noValidate>
         {aviso && (
           <p role="status" className="p-3 bg-regularFundo border-l-2 border-regular text-regular text-sm">
-            {aviso}
+            ✓ {aviso}
           </p>
         )}
         {erro && (
           <p role="alert" className="p-3 bg-criticoFundo border-l-2 border-critico text-critico text-sm">
-            {erro}
+            ⚠ {erro}
           </p>
         )}
 
         <fieldset className="bg-white p-6 shadow-sm border-t-2 border-dourado">
           <legend className="sr-only">Perfil</legend>
-          <h2 className="text-lg mb-5 flex items-center gap-2">
+          <h2 className="text-lg mb-1 flex items-center gap-2">
             <User size={18} className="text-dourado" aria-hidden="true" />
             Perfil
           </h2>
+          <p className="text-sm text-grafite-claro mb-5">Informações pessoais e função na equipe.</p>
           <div className="space-y-5">
             <div>
               <label htmlFor="nome" className={rotulo}>Nome completo</label>
@@ -91,7 +95,7 @@ export default function ConfiguraçõesPage() {
                 autoComplete="name"
                 value={prefs.nomeCompleto}
                 onChange={e => setPrefs({ ...prefs, nomeCompleto: e.target.value })}
-                className={campo}
+                className={`${campo} focus:ring-1 focus:ring-dourado/30 transition`}
               />
             </div>
             <div>
@@ -102,44 +106,47 @@ export default function ConfiguraçõesPage() {
                 autoComplete="email"
                 value={prefs.email}
                 onChange={e => setPrefs({ ...prefs, email: e.target.value })}
-                className={campo}
+                className={`${campo} focus:ring-1 focus:ring-dourado/30 transition`}
               />
+              <p className="text-xs text-grafite-claro mt-1.5">Usado para notificações e recuperação de acesso.</p>
             </div>
             <div>
               <span className={rotulo}>Perfil de acesso</span>
-              <p className="px-3 py-2.5 bg-pergaminho border border-grafite-claro/30 rounded-sm text-grafite text-sm">
+              <p className="px-3 py-2.5 bg-pergaminho border border-grafite-claro/30 rounded-sm text-grafite text-sm min-h-[44px] flex items-center">
                 {perfil === 'carregando' ? 'Consultando…' : rotuloFuncao[perfil ?? 'nenhuma']}
               </p>
+              <p className="text-xs text-grafite-claro mt-1.5">Definido pelo administrador. Controla quem pode fazer o quê na plataforma.</p>
             </div>
           </div>
         </fieldset>
 
         <fieldset className="bg-white p-6 shadow-sm border-t-2 border-dourado">
           <legend className="sr-only">Notificações</legend>
-          <h2 className="text-lg mb-5 flex items-center gap-2">
+          <h2 className="text-lg mb-1 flex items-center gap-2">
             <Bell size={18} className="text-dourado" aria-hidden="true" />
             Notificações
           </h2>
+          <p className="text-sm text-grafite-claro mb-5">Configure como você deseja ser notificada sobre vencimentos e eventos.</p>
           <div className="space-y-4">
-            <label className="flex items-center gap-3 text-sm text-grafite">
+            <label className="flex items-center gap-3 text-sm text-grafite cursor-pointer">
               <input
                 type="checkbox"
                 checked={prefs.notificacoes}
                 onChange={e => setPrefs({ ...prefs, notificacoes: e.target.checked })}
-                className="h-4 w-4 accent-navy"
+                className="h-4 w-4 accent-navy cursor-pointer"
               />
-              Receber notificações na plataforma
+              <span>Mostrar notificações dentro da plataforma</span>
             </label>
-            <label className="flex items-center gap-3 text-sm text-grafite">
+            <label className="flex items-center gap-3 text-sm text-grafite cursor-pointer">
               <input
                 type="checkbox"
                 checked={prefs.alertasEmail}
                 onChange={e => setPrefs({ ...prefs, alertasEmail: e.target.checked })}
-                className="h-4 w-4 accent-navy"
+                className="h-4 w-4 accent-navy cursor-pointer"
               />
-              Receber alertas também por e-mail
+              <span>Enviar alertas também por e-mail</span>
             </label>
-            <div className="pt-4 border-t border-navy/10">
+            <div className="pt-5 border-t border-navy/10">
               <label htmlFor="antecedencia" className={rotulo}>
                 Antecedência dos alertas (dias)
               </label>
@@ -152,10 +159,10 @@ export default function ConfiguraçõesPage() {
                 value={prefs.diasAntecedencia}
                 onChange={e => setPrefs({ ...prefs, diasAntecedencia: Number(e.target.value) })}
                 aria-describedby="ajuda-antecedencia"
-                className="w-28 px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado"
+                className="w-28 px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado focus:ring-1 focus:ring-dourado/30 transition"
               />
               <p id="ajuda-antecedencia" className="text-xs text-grafite-claro mt-2">
-                Você será avisada com esta antecedência antes de cada vencimento. Entre 1 e 180 dias.
+                Você será avisada com antecedência de N dias antes de cada vencimento. Recomendado: 7–30 dias.
               </p>
             </div>
           </div>

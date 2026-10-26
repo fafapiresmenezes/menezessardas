@@ -5,7 +5,7 @@ import { useImoveis } from '@/hooks/useImoveis'
 import { useAlertas } from '@/hooks/useAlertas'
 import { formatarData, situacaoPorPrazo, textoPrazo, type Situacao } from '@/lib/datas'
 import { rotulosTipoImovel } from '@/lib/rotulos'
-import { AlertTriangle, CheckCircle2, Clock, Building2 } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, Clock, Building2, Plus } from 'lucide-react'
 
 // Cartões brancos (padrão premium): a urgência aparece só na borda lateral e no selo.
 const molduraPorSituacao: Record<Situacao, string> = {
@@ -73,67 +73,93 @@ export default function DashboardPage() {
             Carteira de imóveis
           </h2>
           <p className="text-sm text-grafite-claro mb-4">
-            A cor e o rótulo indicam a urgência do compromisso mais próximo de cada imóvel.
+            A cor e o rótulo indicam a urgência do compromisso mais próximo. Clique em um imóvel para gerenciar contratos.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {imoveis.map(imovel => {
-              const dias = prazoDoImovel(imovel.id)
-              const situacao = situacaoPorPrazo(dias)
-              const qtdAlertas = alertas.filter(a => a.imovelId === imovel.id).length
-              return (
-                <button
-                  key={imovel.id}
-                  onClick={() => navigate(`/imoveis/${imovel.id}`)}
-                  className={`bg-white shadow-sm p-5 border-l-[3px] text-left transition hover:shadow-md hover:-translate-y-px ${molduraPorSituacao[situacao]}`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <p className="font-medium text-navy leading-snug">{imovel.endereco}</p>
-                    <SeloSituacao situacao={situacao} />
-                  </div>
-                  <p className="text-sm text-grafite-claro mt-2">{rotulosTipoImovel[imovel.tipo] ?? imovel.tipo}</p>
-                  <p className="text-xs text-grafite mt-2">
-                    {textoPrazo(dias)}
-                    {qtdAlertas > 0 && ` · ${qtdAlertas} ${qtdAlertas === 1 ? 'alerta' : 'alertas'}`}
-                  </p>
-                </button>
-              )
-            })}
-          </div>
+          {imoveis.length === 0 ? (
+            <div className="bg-white p-12 text-center shadow-sm border-l-4 border-grafite-claro/30">
+              <Building2 size={40} className="mx-auto text-grafite-claro/40 mb-3" aria-hidden="true" />
+              <p className="text-grafite-claro font-medium mb-4">Nenhum imóvel cadastrado</p>
+              <p className="text-sm text-grafite-claro mb-6">Comece adicionando um imóvel à sua carteira para rastrear contratos e prazos.</p>
+              <button
+                onClick={() => navigate('/imoveis/novo')}
+                className="inline-flex items-center gap-2 bg-navy text-white px-5 py-3 rounded-sm uppercase tracking-wider text-sm hover:bg-navy-700 transition"
+              >
+                <Plus size={16} aria-hidden="true" /> Novo imóvel
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {imoveis.map(imovel => {
+                const dias = prazoDoImovel(imovel.id)
+                const situacao = situacaoPorPrazo(dias)
+                const qtdAlertas = alertas.filter(a => a.imovelId === imovel.id).length
+                return (
+                  <button
+                    key={imovel.id}
+                    onClick={() => navigate(`/imoveis/${imovel.id}`)}
+                    className={`bg-white shadow-sm p-5 border-l-[3px] text-left transition hover:shadow-md hover:-translate-y-px min-h-[120px] ${molduraPorSituacao[situacao]}`}
+                    aria-label={`${imovel.endereco} - ${textoPrazo(dias)}`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="font-medium text-navy leading-snug">{imovel.endereco}</p>
+                      <SeloSituacao situacao={situacao} />
+                    </div>
+                    <p className="text-sm text-grafite-claro mt-2">{rotulosTipoImovel[imovel.tipo] ?? imovel.tipo}</p>
+                    <p className="text-xs text-grafite mt-2">
+                      {textoPrazo(dias)}
+                      {qtdAlertas > 0 && ` · ${qtdAlertas} ${qtdAlertas === 1 ? 'alerta' : 'alertas'}`}
+                    </p>
+                  </button>
+                )
+              })}
+            </div>
+          )}
         </section>
 
         <section aria-labelledby="titulo-compromissos">
-          <h2 id="titulo-compromissos" className="text-xl mb-4">
+          <h2 id="titulo-compromissos" className="text-xl mb-1">
             Próximos compromissos
           </h2>
-          <div className="relative bg-white shadow-sm overflow-x-auto" tabIndex={0} role="region" aria-label="Tabela de próximos compromissos">
-            <table className="w-full">
-              <caption className="sr-only">
-                Compromissos contratuais ordenados do mais urgente para o menos urgente
-              </caption>
-              <thead className="bg-navy text-white">
-                <tr>
-                  <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Data</th>
-                  <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Compromisso</th>
-                  <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Imóvel</th>
-                  <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Prazo</th>
-                  <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Situação</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-navy/10">
-                {proximos.map(alerta => (
-                  <tr key={alerta.id} className="hover:bg-pergaminho">
-                    <td className="px-5 py-3.5 text-sm whitespace-nowrap">{formatarData(alerta.dataEvento)}</td>
-                    <td className="px-5 py-3.5 text-sm">{alerta.titulo}</td>
-                    <td className="px-5 py-3.5 text-sm text-grafite-claro">{alerta.imovel}</td>
-                    <td className="px-5 py-3.5 text-sm whitespace-nowrap">{textoPrazo(alerta.diasRestantes)}</td>
-                    <td className="px-5 py-3.5">
-                      <SeloSituacao situacao={situacaoPorPrazo(alerta.diasRestantes)} />
-                    </td>
+          <p className="text-sm text-grafite-claro mb-4">
+            Compromissos ordenados por urgência. Clique em um imóvel para gerenciar vencimentos.
+          </p>
+          {proximos.length === 0 ? (
+            <div className="bg-white p-12 text-center shadow-sm border-l-4 border-regular">
+              <CheckCircle2 size={40} className="mx-auto text-regular/40 mb-3" aria-hidden="true" />
+              <p className="text-grafite-claro font-medium mb-2">Nenhum compromisso próximo</p>
+              <p className="text-sm text-grafite-claro">Você está em dia! Todos os vencimentos estão sob controle.</p>
+            </div>
+          ) : (
+            <div className="relative bg-white shadow-sm overflow-x-auto" tabIndex={0} role="region" aria-label="Tabela de próximos compromissos">
+              <table className="w-full">
+                <caption className="sr-only">
+                  Compromissos contratuais ordenados do mais urgente para o menos urgente
+                </caption>
+                <thead className="bg-navy text-white">
+                  <tr>
+                    <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Data</th>
+                    <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Compromisso</th>
+                    <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Imóvel</th>
+                    <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Prazo</th>
+                    <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Situação</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-navy/10">
+                  {proximos.map(alerta => (
+                    <tr key={alerta.id} className="hover:bg-pergaminho">
+                      <td className="px-5 py-3.5 text-sm whitespace-nowrap">{formatarData(alerta.dataEvento)}</td>
+                      <td className="px-5 py-3.5 text-sm">{alerta.titulo}</td>
+                      <td className="px-5 py-3.5 text-sm text-grafite-claro">{alerta.imovel}</td>
+                      <td className="px-5 py-3.5 text-sm whitespace-nowrap">{textoPrazo(alerta.diasRestantes)}</td>
+                      <td className="px-5 py-3.5">
+                        <SeloSituacao situacao={situacaoPorPrazo(alerta.diasRestantes)} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
       </div>
     </Layout>

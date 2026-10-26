@@ -130,14 +130,18 @@ export default function FornecedoresPage() {
         )}
 
         {alertas.length > 0 && (
-          <section className="bg-white shadow-sm p-6" aria-label="Alertas de fornecedores">
-            <h2 className="text-lg mb-3">Atenção agora</h2>
+          <section className="bg-white shadow-sm p-6 border-l-4 border-atencao" aria-label="Alertas de fornecedores">
+            <h2 className="text-lg mb-1 flex items-center gap-2">
+              <AlertTriangle size={18} className="text-atencao" aria-hidden="true" />
+              Atenção agora
+            </h2>
+            <p className="text-sm text-grafite-claro mb-4">Fornecedores com alertas de KYC ou SLA. Clique para gerenciar.</p>
             <ul className="space-y-2">
               {alertas.slice(0, 8).map((a, i) => (
                 <li key={i}>
                   <button
                     onClick={() => navigate(`/fornecedor/${a.fornecedorId}`)}
-                    className="w-full text-left min-h-[44px] flex items-start gap-3 px-3 py-2 hover:bg-pergaminho"
+                    className="w-full text-left min-h-[44px] flex items-start gap-3 px-3 py-2 hover:bg-pergaminho transition"
                   >
                     {a.gravidade === 'critico' ? (
                       <AlertOctagon size={18} className="text-critico flex-shrink-0 mt-0.5" aria-hidden="true" />
@@ -154,46 +158,56 @@ export default function FornecedoresPage() {
           </section>
         )}
 
-        <section aria-label="Lista de fornecedores" className="grid md:grid-cols-2 gap-4">
+        <section aria-labelledby="titulo-lista-fornecedores">
+          <h2 id="titulo-lista-fornecedores" className="text-xl mb-1">
+            Fornecedores
+          </h2>
+          <p className="text-sm text-grafite-claro mb-4">Clique em um fornecedor para gerenciar KYC, certificados e metas de serviço.</p>
           {carregando ? (
             <p className="text-grafite-claro">Carregando…</p>
           ) : lista.length === 0 ? (
-            <p className="text-grafite-claro">Nenhum fornecedor cadastrado.</p>
+            <div className="bg-white p-12 text-center shadow-sm border-l-4 border-grafite-claro/30">
+              <p className="text-grafite-claro font-medium mb-2">Nenhum fornecedor cadastrado</p>
+              <p className="text-sm text-grafite-claro">Comece adicionando um prestador de serviço para rastrear sua conformidade.</p>
+            </div>
           ) : (
-            lista.map(f => {
-              const kyc = resumoKyc(f)
-              const descumpridos = f.slas.filter(s => statusSla(s).status === 'descumprido').length
-              return (
-                <button
-                  key={f.id}
-                  onClick={() => navigate(`/fornecedor/${f.id}`)}
-                  className="text-left bg-white shadow-sm border-t-2 border-transparent hover:border-dourado p-5 transition"
-                >
-                  <p className="text-xs uppercase tracking-wider text-dourado-escuro">{rotuloCategoria[f.categoria]}</p>
-                  <h3 className="text-lg mt-1">{f.nome}</h3>
-                  <p className="text-xs text-grafite-claro mt-0.5 font-mono">{formatarCnpj(f.cnpj)}</p>
-                  <div className="flex flex-wrap items-center gap-2 mt-4">
-                    <span className="inline-flex items-center gap-1 text-xs text-grafite-claro">
-                      <ShieldCheck size={14} aria-hidden="true" /> KYC
-                    </span>
-                    <SeloSituacao
-                      situacao={kyc.nivel === 'critico' ? 'critico' : kyc.nivel === 'atencao' ? 'atencao' : 'regular'}
-                      texto={kyc.nivel === 'critico' ? 'Irregular' : kyc.nivel === 'atencao' ? 'Com pendências' : 'Em dia'}
-                    />
-                    <span className="inline-flex items-center gap-1 text-xs text-grafite-claro ml-2">
-                      <Gauge size={14} aria-hidden="true" /> SLA
-                    </span>
-                    {f.slas.length === 0 ? (
-                      <SeloSituacao situacao="sem_prazo" texto="Sem metas" />
-                    ) : descumpridos > 0 ? (
-                      <SeloSituacao situacao="critico" texto={`${descumpridos} descumprido(s)`} />
-                    ) : (
-                      <SeloSituacao situacao="regular" texto="Metas cumpridas" />
-                    )}
-                  </div>
-                </button>
-              )
-            })
+            <div className="grid md:grid-cols-2 gap-4">
+              {lista.map(f => {
+                const kyc = resumoKyc(f)
+                const descumpridos = f.slas.filter(s => statusSla(s).status === 'descumprido').length
+                return (
+                  <button
+                    key={f.id}
+                    onClick={() => navigate(`/fornecedor/${f.id}`)}
+                    className="text-left bg-white shadow-sm border-t-2 border-transparent hover:border-dourado p-5 transition min-h-[140px]"
+                    aria-label={`${f.nome} - ${rotuloCategoria[f.categoria]}`}
+                  >
+                    <p className="text-xs uppercase tracking-wider text-dourado-escuro">{rotuloCategoria[f.categoria]}</p>
+                    <h3 className="text-lg mt-1">{f.nome}</h3>
+                    <p className="text-xs text-grafite-claro mt-0.5 font-mono">{formatarCnpj(f.cnpj)}</p>
+                    <div className="flex flex-wrap items-center gap-2 mt-4">
+                      <span className="inline-flex items-center gap-1 text-xs text-grafite-claro">
+                        <ShieldCheck size={14} aria-hidden="true" /> KYC
+                      </span>
+                      <SeloSituacao
+                        situacao={kyc.nivel === 'critico' ? 'critico' : kyc.nivel === 'atencao' ? 'atencao' : 'regular'}
+                        texto={kyc.nivel === 'critico' ? 'Irregular' : kyc.nivel === 'atencao' ? 'Com pendências' : 'Em dia'}
+                      />
+                      <span className="inline-flex items-center gap-1 text-xs text-grafite-claro ml-2">
+                        <Gauge size={14} aria-hidden="true" /> SLA
+                      </span>
+                      {f.slas.length === 0 ? (
+                        <SeloSituacao situacao="sem_prazo" texto="Sem metas" />
+                      ) : descumpridos > 0 ? (
+                        <SeloSituacao situacao="critico" texto={`${descumpridos} descumprido(s)`} />
+                      ) : (
+                        <SeloSituacao situacao="regular" texto="Metas cumpridas" />
+                      )}
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
           )}
         </section>
       </div>
