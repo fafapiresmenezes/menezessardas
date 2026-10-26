@@ -136,12 +136,6 @@ export default function ImovelListPage() {
         {filtrados.length === 0 && !busca && imoveis.length === 0 && (
           <div className=”bg-white p-12 text-center shadow-sm”>
             <p className=”text-grafite-claro mb-4”>Nenhum imóvel cadastrado ainda.</p>
-            <button
-              onClick={() => navigate('/imoveis/novo')}
-              className=”inline-flex items-center gap-2 bg-navy text-white px-5 py-2 rounded-sm uppercase tracking-wider text-sm”
-            >
-              <Plus size={16} aria-hidden=”true” /> Novo imóvel
-            </button>
           </div>
         )}
       </div>
