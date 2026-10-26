@@ -83,7 +83,7 @@ export default function GraficoTendencia({ pontos, compacto = false }: { pontos:
         <span>“n doc” = documentos a vencer</span>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Tabela da projeção mês a mês">
         <table className="w-full text-sm">
           <caption className="sr-only">Projeção mês a mês dos próximos 12 meses</caption>
           <thead className="bg-pergaminho">
