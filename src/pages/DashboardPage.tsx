@@ -83,7 +83,7 @@ export default function DashboardPage() {
               return (
                 <button
                   key={imovel.id}
-                  onClick={() => navigate(`/contrato/${imovel.id}`)}
+                  onClick={() => navigate(`/imoveis/${imovel.id}`)}
                   className={`bg-white shadow-sm p-5 border-l-[3px] text-left transition hover:shadow-md hover:-translate-y-px ${molduraPorSituacao[situacao]}`}
                 >
                   <div className="flex items-start justify-between gap-3">

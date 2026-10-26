@@ -223,6 +223,9 @@ export default function ContratoPage() {
         {avisoTopo && (
           <p role="status" className="p-3 bg-regularFundo border-l-2 border-regular text-regular text-sm">{avisoTopo}</p>
         )}
+        <Link to={`/imoveis/${imovel.id}`} className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4 -mb-2">
+          <ArrowLeft size={16} aria-hidden="true" /> Ficha do imóvel
+        </Link>
         <section className="bg-white border-t-2 border-dourado p-6 shadow-sm">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>

@@ -59,6 +59,67 @@ export function calcularKPIs(imoveis: Imovel[], contratos: Contrato[]): KPIs {
   }
 }
 
+/* ------------------- Tendência dos próximos 12 meses ------------------- */
+
+export interface PontoTendencia {
+  /** aaaa-mm */
+  mes: string
+  rotulo: string
+  contratosVigentes: number
+  receitaMensal: number
+  vencimentos: number
+  reajustes: number
+  documentosAVencer: number
+}
+
+const rotuloMes = (d: Date) =>
+  d.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '') + '/' + String(d.getFullYear()).slice(2)
+
+/**
+ * Projeta, mês a mês, o que a carteira terá pela frente: contratos ainda vigentes,
+ * receita contratada, vencimentos, reajustes anuais e documentos a vencer.
+ * Tudo deriva das datas cadastradas; nada é estimado.
+ */
+export function tendencia12Meses(imoveis: Imovel[], contratos: Contrato[], meses = 12): PontoTendencia[] {
+  const hoje = new Date()
+  hoje.setHours(0, 0, 0, 0)
+  // Vigentes e receita seguem o mesmo critério dos KPIs (contratoAtivo); eventos
+  // consideram todo contrato não encerrado, para um vencimento deste mês não sumir.
+  const naoEncerrados = contratos.filter(c => !c.encerradoEm)
+  const ativosHoje = naoEncerrados.filter(contratoAtivo)
+  const docs = [...imoveis.flatMap(i => i.documentos), ...contratos.flatMap(c => c.documentos)]
+
+  return Array.from({ length: meses }, (_, k) => {
+    const inicio = new Date(hoje.getFullYear(), hoje.getMonth() + k, 1)
+    const fim = new Date(hoje.getFullYear(), hoje.getMonth() + k + 1, 0)
+    const iniISO = inicio.toISOString().slice(0, 10)
+    const fimISO = fim.toISOString().slice(0, 10)
+    const noMes = (iso: string | null | undefined) => !!iso && iso >= iniISO && iso <= fimISO
+
+    const vigentes = ativosHoje.filter(c => c.dataInicio <= fimISO && (!c.dataVencimento || c.dataVencimento >= iniISO))
+    const reajustes = naoEncerrados.filter(c => {
+      if (c.indice === 'sem_reajuste' || c.indice === 'fixo') return false
+      const base = new Date((c.dataUltimoReajuste ?? c.dataInicio) + 'T00:00:00')
+      const aniversario = new Date(inicio.getFullYear(), base.getMonth(), base.getDate())
+      return (
+        aniversario.getMonth() === inicio.getMonth() &&
+        aniversario > base &&
+        (!c.dataVencimento || aniversario.toISOString().slice(0, 10) <= c.dataVencimento)
+      )
+    }).length
+
+    return {
+      mes: iniISO.slice(0, 7),
+      rotulo: rotuloMes(inicio),
+      contratosVigentes: vigentes.length,
+      receitaMensal: vigentes.reduce((s, c) => s + valorMensal(c), 0),
+      vencimentos: naoEncerrados.filter(c => noMes(c.dataVencimento)).length,
+      reajustes,
+      documentosAVencer: docs.filter(d => noMes(d.dataVencimento)).length,
+    }
+  })
+}
+
 /* ----------------------------- OKRs ----------------------------- */
 
 export interface KeyResult {

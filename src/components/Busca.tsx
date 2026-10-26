@@ -69,7 +69,7 @@ export default function Busca({ aberta, fechar }: { aberta: boolean; fechar: () 
       ...PAGINAS.filter(p => bate(p.rotulo)),
       ...imoveis
         .filter(i => bate(i.endereco, i.proprietario))
-        .map<Resultado>(i => ({ grupo: 'Imóveis', rotulo: i.endereco, detalhe: i.proprietario, href: `/contrato/${i.id}`, icone: Building2 })),
+        .map<Resultado>(i => ({ grupo: 'Imóveis', rotulo: i.endereco, detalhe: i.proprietario, href: `/imoveis/${i.id}`, icone: Building2 })),
       ...contratos
         .filter(c => bate(c.parte, porImovel.get(c.imovelId)))
         .map<Resultado>(c => ({ grupo: 'Contratos', rotulo: c.parte, detalhe: porImovel.get(c.imovelId), href: `/contrato/${c.imovelId}`, icone: FileText })),

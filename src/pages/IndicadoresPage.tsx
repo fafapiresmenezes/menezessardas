@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
+import GraficoTendencia from '@/components/GraficoTendencia'
 import { useImoveis } from '@/hooks/useImoveis'
 import { useAlertas } from '@/hooks/useAlertas'
 import { repositorio, type Contrato } from '@/lib/repositorio'
@@ -8,6 +9,7 @@ import {
   calcularOKRs,
   matrizRisco,
   matrizPendencias,
+  tendencia12Meses,
   type Nivel,
   type PontoRisco,
   type PontoPendencia,
@@ -97,6 +99,7 @@ export default function IndicadoresPage() {
       okrs: calcularOKRs(imoveis, contratos, alertas),
       risco: matrizRisco(imoveis, contratos),
       pendencias: matrizPendencias(alertas),
+      tendencia: tendencia12Meses(imoveis, contratos),
     }
   }, [imoveis, contratos, alertas])
 
@@ -108,7 +111,7 @@ export default function IndicadoresPage() {
     )
   }
 
-  const { kpis, okrs, risco, pendencias } = dados
+  const { kpis, okrs, risco, pendencias, tendencia } = dados
   const tiles = [
     { rotulo: 'Imóveis na carteira', valor: String(kpis.imoveis), icone: Building2, cor: 'text-navy' },
     { rotulo: 'Taxa de vacância', valor: `${kpis.vacancia}%`, icone: Percent, cor: 'text-navy' },
@@ -147,6 +150,16 @@ export default function IndicadoresPage() {
           <p className="text-xs text-grafite-claro mt-3">
             Receita recebida e inadimplência dependem da integração de pagamentos, ainda não disponível.
           </p>
+        </section>
+
+        <section className="bg-white p-6 shadow-sm" aria-labelledby="t-tend">
+          <h2 id="t-tend" className="text-xl mb-1">
+            Tendência dos próximos 12 meses
+          </h2>
+          <p className="text-sm text-grafite-claro mb-4">
+            Receita contratada, vencimentos, reajustes e documentos a vencer, mês a mês, a partir das datas cadastradas.
+          </p>
+          <GraficoTendencia pontos={tendencia} />
         </section>
 
         <section className="bg-white p-6 shadow-sm" aria-labelledby="t-okr">

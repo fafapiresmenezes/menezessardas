@@ -6,6 +6,7 @@ import LoginPage from '@/pages/LoginPage'
 import DashboardPage from '@/pages/DashboardPage'
 import ImovelListPage from '@/pages/ImovelListPage'
 import NovoImovelPage from '@/pages/NovoImovelPage'
+import ImovelDetailPage from '@/pages/ImovelDetailPage'
 import ContratoPage from '@/pages/ContratoPage'
 import NovoContratoPage from '@/pages/NovoContratoPage'
 import VinculoPage from '@/pages/VinculoPage'
@@ -83,6 +84,10 @@ function App() {
         <Route
           path="/imoveis/novo"
           element={isAuthenticated ? <NovoImovelPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/imoveis/:id"
+          element={isAuthenticated ? <ImovelDetailPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/contrato/:id"
