@@ -111,8 +111,8 @@ export default function ContratoPage() {
   const salvarEdicao = async () => {
     if (!contrato) return
     const valor = Number(ed.valor.replace(/\./g, '').replace(',', '.'))
-    if (!ed.parte.trim()) return setErro('Informe o nome da outra parte do contrato.')
-    if (Number.isNaN(valor) || valor < 0) return setErro('O valor precisa ser um número, por exemplo 4500,00.')
+    if (!ed.parte.trim()) return setErro('⚠ Informe o nome ou empresa da outra parte (ex: João Silva, Empresa X).')
+    if (Number.isNaN(valor) || valor < 0) return setErro('⚠ Valor inválido. Use números com . para milhares e , para centavos (ex: 2.500,00).')
     try {
       await repositorio.atualizarContrato(contrato.id, {
         parte: ed.parte.trim(),
@@ -260,14 +260,14 @@ export default function ContratoPage() {
           {modo === 'editar' && (
             <div className="mt-6 pt-5 border-t border-navy/10 space-y-4" role="group" aria-label="Editar contrato">
               <div className="grid md:grid-cols-3 gap-4">
-                <Campo id="ed-parte" rotulo="Outra parte">
-                  <input id="ed-parte" className={classeCampo} value={ed.parte} onChange={e => setEd({ ...ed, parte: e.target.value })} />
+                <Campo id="ed-parte" rotulo="Outra parte" ajuda="Locador, inquilino, fornecedor ou outra entidade">
+                  <input id="ed-parte" className={classeCampo} value={ed.parte} onChange={e => setEd({ ...ed, parte: e.target.value })} placeholder="Ex: João Silva" aria-describedby="ed-parte-ajuda" />
                 </Campo>
-                <Campo id="ed-valor" rotulo="Valor (R$)">
-                  <input id="ed-valor" inputMode="decimal" className={classeCampo} value={ed.valor} onChange={e => setEd({ ...ed, valor: e.target.value })} />
+                <Campo id="ed-valor" rotulo="Valor mensal (R$)" ajuda="Use . para separar milhares (ex: 2.500,00)">
+                  <input id="ed-valor" inputMode="decimal" className={classeCampo} value={ed.valor} onChange={e => setEd({ ...ed, valor: e.target.value })} placeholder="0,00" aria-describedby="ed-valor-ajuda" />
                 </Campo>
-                <Campo id="ed-venc" rotulo="Vencimento" ajuda="Deixe vazio se o prazo for indeterminado.">
-                  <input id="ed-venc" type="date" className={classeCampo} value={ed.vencimento} onChange={e => setEd({ ...ed, vencimento: e.target.value })} />
+                <Campo id="ed-venc" rotulo="Vencimento" ajuda="Deixe em branco se o prazo for indeterminado.">
+                  <input id="ed-venc" type="date" className={classeCampo} value={ed.vencimento} onChange={e => setEd({ ...ed, vencimento: e.target.value })} aria-describedby="ed-venc-ajuda" />
                 </Campo>
               </div>
               <div>

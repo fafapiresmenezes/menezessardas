@@ -129,16 +129,22 @@ export default function LegislacaoPage() {
         </div>
 
         <section className="bg-white p-6 shadow-sm">
-          <h3 className="text-lg mb-4">Buscar legislação</h3>
+          <h3 className="text-lg mb-1">Buscar legislação</h3>
+          <p className="text-sm text-grafite-claro mb-4">Consulte leis federais, estaduais e decretos sobre imóveis, locação e contratos.</p>
           <div className="flex gap-2 mb-4">
-            <input
-              type="text"
-              value={termoPesquisa}
-              onChange={e => setTermoPesquisa(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && pesquisarLeis()}
-              placeholder="Ex: locação, imóvel, reajuste..."
-              className="flex-1 min-h-[44px] px-3 border border-navy/20 rounded text-sm"
-            />
+            <div className="flex-1">
+              <label htmlFor="termo-busca" className="sr-only">Termo de busca</label>
+              <input
+                id="termo-busca"
+                type="text"
+                value={termoPesquisa}
+                onChange={e => setTermoPesquisa(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && pesquisarLeis()}
+                placeholder="Ex: locação, imóvel, reajuste, inquilino…"
+                className="w-full min-h-[44px] px-3 border border-navy/20 rounded text-sm"
+                aria-label="Termo de busca de legislação"
+              />
+            </div>
             <button
               onClick={pesquisarLeis}
               disabled={buscandoPesquisa || !termoPesquisa.trim()}

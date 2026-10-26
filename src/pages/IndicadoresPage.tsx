@@ -205,14 +205,18 @@ export default function IndicadoresPage() {
 
         <section className="bg-white p-6 shadow-sm" aria-labelledby="t-resumo">
           <div className="flex items-center justify-between mb-4">
-            <h2 id="t-resumo" className="text-xl mb-0 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-dourado" />
-              Resumo do Agente Guardião
-            </h2>
+            <div>
+              <h2 id="t-resumo" className="text-xl mb-0 flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-dourado" />
+                Resumo do Agente Guardião
+              </h2>
+              <p className="text-xs text-grafite-claro mt-1">Eventos esperados nos próximos 30 dias</p>
+            </div>
             <button
               onClick={carregarResumoDiario}
               disabled={carregandoResumo}
-              className="text-sm px-3 py-1 rounded border border-navy/20 text-navy hover:bg-navy/5 disabled:opacity-50"
+              className="min-h-[44px] text-sm px-3 rounded border border-navy/20 text-navy hover:bg-navy/5 disabled:opacity-50"
+              title="Atualizar resumo do Agente Guardião"
             >
               {carregandoResumo ? 'Carregando…' : 'Atualizar'}
             </button>
