@@ -4,6 +4,7 @@ import GraficoTendencia from '@/components/GraficoTendencia'
 import { useImoveis } from '@/hooks/useImoveis'
 import { useAlertas } from '@/hooks/useAlertas'
 import { repositorio, type Contrato } from '@/lib/repositorio'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import {
   calcularKPIs,
   calcularOKRs,
@@ -14,7 +15,7 @@ import {
   type PontoRisco,
   type PontoPendencia,
 } from '@/lib/indicadores'
-import { Printer, Building2, Percent, FileCheck2, CalendarClock, TrendingUp, AlertOctagon } from 'lucide-react'
+import { Printer, Building2, Percent, FileCheck2, CalendarClock, TrendingUp, AlertOctagon, Sparkles } from 'lucide-react'
 
 const moeda = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v)
@@ -83,14 +84,54 @@ function Matriz<T extends { rotulo: string }>({
   )
 }
 
+interface ResumoDiario {
+  data: string
+  periodo: string
+  vencimentos: number
+  reajustes: number
+  documentos: number
+  receitaEmRisco: number
+  proximosPassos: string[]
+}
+
 export default function IndicadoresPage() {
   const { imoveis, loading: li } = useImoveis()
   const { alertas, loading: la } = useAlertas()
   const [contratos, setContratos] = useState<Contrato[] | null>(null)
+  const [resumoDiario, setResumoDiario] = useState<ResumoDiario | null>(null)
+  const [carregandoResumo, setCarregandoResumo] = useState(false)
+  const [erroResumo, setErroResumo] = useState('')
 
   useEffect(() => {
     repositorio.listarContratos().then(setContratos)
+    carregarResumoDiario()
   }, [])
+
+  const carregarResumoDiario = async () => {
+    if (!supabaseConfigurado) {
+      setResumoDiario({
+        data: new Date().toISOString().split('T')[0],
+        periodo: '30 dias',
+        vencimentos: 2,
+        reajustes: 1,
+        documentos: 0,
+        receitaEmRisco: 15000,
+        proximosPassos: ['2 contratos vencem nos próximos 30 dias.', '1 reajuste programado.'],
+      })
+      return
+    }
+    setCarregandoResumo(true)
+    setErroResumo('')
+    try {
+      const { data, error } = await supabase.functions.invoke('agente-guardiao')
+      if (error) throw new Error(error.message)
+      setResumoDiario(data as ResumoDiario)
+    } catch (e) {
+      setErroResumo(e instanceof Error ? e.message : 'Erro ao carregar resumo')
+    } finally {
+      setCarregandoResumo(false)
+    }
+  }
 
   const dados = useMemo(() => {
     if (!contratos) return null
@@ -160,6 +201,59 @@ export default function IndicadoresPage() {
             Receita contratada, vencimentos, reajustes e documentos a vencer, mês a mês, a partir das datas cadastradas.
           </p>
           <GraficoTendencia pontos={tendencia} />
+        </section>
+
+        <section className="bg-white p-6 shadow-sm" aria-labelledby="t-resumo">
+          <div className="flex items-center justify-between mb-4">
+            <h2 id="t-resumo" className="text-xl mb-0 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-dourado" />
+              Resumo do Agente Guardião
+            </h2>
+            <button
+              onClick={carregarResumoDiario}
+              disabled={carregandoResumo}
+              className="text-sm px-3 py-1 rounded border border-navy/20 text-navy hover:bg-navy/5 disabled:opacity-50"
+            >
+              {carregandoResumo ? 'Carregando…' : 'Atualizar'}
+            </button>
+          </div>
+          {erroResumo && <p className="text-sm text-critico mb-3">{erroResumo}</p>}
+          {resumoDiario ? (
+            <div className="space-y-3">
+              <div className="grid grid-cols-4 gap-2 text-sm">
+                <div className="bg-pergaminho p-2 rounded">
+                  <p className="text-grafite-claro text-xs">Vencimentos</p>
+                  <p className="text-lg font-medium text-navy">{resumoDiario.vencimentos}</p>
+                </div>
+                <div className="bg-pergaminho p-2 rounded">
+                  <p className="text-grafite-claro text-xs">Reajustes</p>
+                  <p className="text-lg font-medium text-navy">{resumoDiario.reajustes}</p>
+                </div>
+                <div className="bg-pergaminho p-2 rounded">
+                  <p className="text-grafite-claro text-xs">Documentos</p>
+                  <p className="text-lg font-medium text-navy">{resumoDiario.documentos}</p>
+                </div>
+                <div className="bg-pergaminho p-2 rounded">
+                  <p className="text-grafite-claro text-xs">Receita em risco</p>
+                  <p className="text-sm font-medium text-critico">{moeda(resumoDiario.receitaEmRisco)}</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-sm font-medium mb-2">Próximos passos</p>
+                <ul className="text-sm space-y-1">
+                  {resumoDiario.proximosPassos.map((p, i) => (
+                    <li key={i} className="flex gap-2">
+                      <span className="text-dourado">•</span>
+                      <span>{p}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <p className="text-xs text-grafite-claro mt-3">Período: próximos {resumoDiario.periodo}</p>
+            </div>
+          ) : (
+            <p className="text-sm text-grafite-claro">Clique em "Atualizar" para carregar o resumo diário.</p>
+          )}
         </section>
 
         <section className="bg-white p-6 shadow-sm" aria-labelledby="t-okr">

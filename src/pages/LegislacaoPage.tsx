@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
 import { useImoveis } from '@/hooks/useImoveis'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { formatarData } from '@/lib/datas'
 import {
   CATALOGO,
@@ -15,7 +16,7 @@ import {
   type ResultadoBusca,
   type StatusAcompanhamento,
 } from '@/lib/legislacao'
-import { ExternalLink, RefreshCw, Printer } from 'lucide-react'
+import { ExternalLink, RefreshCw, Printer, Search } from 'lucide-react'
 
 const ESTILO_STATUS: Record<StatusAcompanhamento, 'atencao' | 'critico' | 'regular' | 'sem_prazo'> = {
   nova: 'critico',
@@ -24,12 +25,24 @@ const ESTILO_STATUS: Record<StatusAcompanhamento, 'atencao' | 'critico' | 'regul
   nao_se_aplica: 'sem_prazo',
 }
 
+interface LeiFederal {
+  numero: string
+  titulo: string
+  dataPublicacao: string
+  ementas: string[]
+  relevancia: 'alta' | 'media' | 'baixa'
+  url: string
+}
+
 export default function LegislacaoPage() {
   const { imoveis } = useImoveis()
   const [acomp, setAcomp] = useState<Record<string, StatusAcompanhamento>>({})
   const [busca, setBusca] = useState<ResultadoBusca | null>(null)
   const [buscando, setBuscando] = useState(false)
   const [erro, setErro] = useState('')
+  const [termoPesquisa, setTermoPesquisa] = useState('')
+  const [resultadosPesquisa, setResultadosPesquisa] = useState<LeiFederal[]>([])
+  const [buscandoPesquisa, setBuscandoPesquisa] = useState(false)
 
   useEffect(() => {
     lerAcompanhamento().then(setAcomp)
@@ -46,6 +59,41 @@ export default function LegislacaoPage() {
       setBuscando(false)
     }
   }, [])
+
+  const pesquisarLeis = async () => {
+    if (!termoPesquisa.trim()) return
+    if (!supabaseConfigurado) {
+      setResultadosPesquisa([
+        {
+          numero: '8.245/1991',
+          titulo: 'Lei de Locações Urbanas',
+          dataPublicacao: '18/10/1991',
+          ementas: ['Disciplina a locação dos imóveis urbanos.'],
+          relevancia: 'alta',
+          url: 'https://www.planalto.gov.br/ccivil_03/leis/l8245.htm',
+        },
+      ])
+      return
+    }
+    setBuscandoPesquisa(true)
+    try {
+      const { data, error } = await supabase.functions.invoke('buscar-legislacao', {
+        body: {},
+        headers: { Range: `q=${encodeURIComponent(termoPesquisa)}` },
+      })
+      if (error || !data) {
+        const params = new URLSearchParams({ q: termoPesquisa })
+        const { data: d2, error: e2 } = await supabase.functions.invoke(`buscar-legislacao?${params}`)
+        setResultadosPesquisa((d2?.leis ?? []) as LeiFederal[])
+      } else {
+        setResultadosPesquisa((data.leis ?? []) as LeiFederal[])
+      }
+    } catch (e) {
+      console.error('Erro ao buscar leis:', e)
+    } finally {
+      setBuscandoPesquisa(false)
+    }
+  }
 
   useEffect(() => {
     atualizar()
@@ -87,6 +135,45 @@ export default function LegislacaoPage() {
             </button>
           </div>
         </div>
+
+        <section className="bg-white p-6 shadow-sm">
+          <h3 className="text-lg mb-4">Buscar legislação</h3>
+          <div className="flex gap-2 mb-4">
+            <input
+              type="text"
+              value={termoPesquisa}
+              onChange={e => setTermoPesquisa(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && pesquisarLeis()}
+              placeholder="Ex: locação, imóvel, reajuste..."
+              className="flex-1 min-h-[44px] px-3 border border-navy/20 rounded text-sm"
+            />
+            <button
+              onClick={pesquisarLeis}
+              disabled={buscandoPesquisa || !termoPesquisa.trim()}
+              className="min-h-[44px] inline-flex items-center gap-2 px-4 border border-navy text-navy hover:bg-pergaminho text-sm disabled:opacity-50"
+            >
+              <Search size={16} aria-hidden="true" />
+              {buscandoPesquisa ? 'Buscando…' : 'Buscar'}
+            </button>
+          </div>
+          {resultadosPesquisa.length > 0 && (
+            <div className="space-y-3">
+              <p className="text-sm text-grafite-claro">{resultadosPesquisa.length} resultado(s)</p>
+              {resultadosPesquisa.map(lei => (
+                <div key={lei.numero} className="border-l-4 border-dourado pl-3 py-2">
+                  <a href={lei.url} target="_blank" rel="noopener noreferrer" className="text-navy font-medium hover:underline flex items-center gap-2">
+                    {lei.titulo}
+                    <ExternalLink size={14} aria-hidden="true" />
+                  </a>
+                  <p className="text-xs text-grafite-claro mt-0.5">Lei {lei.numero}</p>
+                  {lei.ementas.length > 0 && (
+                    <p className="text-sm text-grafite mt-1">{lei.ementas[0]}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
 
         {erro && <p role="alert" className="bg-criticoFundo border-l-2 border-critico text-critico px-4 py-3 text-sm">{erro}</p>}
         {busca && (
