@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
+import { SkeletonIndicator, SkeletonTable } from '@/components/Skeleton'
 import { useAlertas } from '@/hooks/useAlertas'
 import { formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
 import { BellOff, Circle } from 'lucide-react'
@@ -12,7 +13,10 @@ export default function AlertasPage() {
   if (loading) {
     return (
       <Layout title="Alertas">
-        <p className="text-grafite-claro">Carregando alertas…</p>
+        <div className="space-y-6">
+          <SkeletonIndicator count={4} />
+          <SkeletonTable />
+        </div>
       </Layout>
     )
   }

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
+import { SkeletonCard, SkeletonTable } from '@/components/Skeleton'
 import { repositorio, calcularAlertas, type Contrato, type Documento, type Imovel } from '@/lib/repositorio'
 import { diasAte, formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
 import { rotulosStatusContrato, rotulosTipoContrato, rotulosIndice, rotulosTipoDocumento, rotulosGarantia } from '@/lib/rotulos'
@@ -180,7 +181,12 @@ export default function ContratoPage() {
   if (imovel === undefined) {
     return (
       <Layout title="Contrato">
-        <p className="text-grafite-claro">Carregando…</p>
+        <div className="space-y-6">
+          <div className="h-4 bg-navy/10 rounded w-32 mb-4 animate-pulse"></div>
+          <SkeletonCard count={1} className="mb-6" />
+          <SkeletonTable />
+          <SkeletonCard count={1} />
+        </div>
       </Layout>
     )
   }

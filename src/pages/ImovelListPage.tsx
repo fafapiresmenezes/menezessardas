@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
+import { SkeletonTable } from '@/components/Skeleton'
 import { useImoveis } from '@/hooks/useImoveis'
 import { useAlertas } from '@/hooks/useAlertas'
 import { situacaoPorPrazo, textoPrazo } from '@/lib/datas'
@@ -28,7 +29,13 @@ export default function ImovelListPage() {
   if (loading) {
     return (
       <Layout title="Imóveis">
-        <p className="text-grafite-claro">Carregando imóveis…</p>
+        <div className="space-y-6">
+          <div className="bg-white p-4 shadow-sm rounded-sm animate-pulse">
+            <div className="h-4 bg-grafite-claro/20 rounded w-40 mb-3"></div>
+            <div className="h-10 bg-navy/10 rounded w-full"></div>
+          </div>
+          <SkeletonTable />
+        </div>
       </Layout>
     )
   }

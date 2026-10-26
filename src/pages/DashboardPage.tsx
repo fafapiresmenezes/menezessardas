@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
+import { SkeletonIndicator, SkeletonCard, SkeletonTable } from '@/components/Skeleton'
 import { useImoveis } from '@/hooks/useImoveis'
 import { useAlertas } from '@/hooks/useAlertas'
 import { formatarData, situacaoPorPrazo, textoPrazo, type Situacao } from '@/lib/datas'
@@ -24,7 +25,17 @@ export default function DashboardPage() {
   if (carregandoImoveis || carregandoAlertas) {
     return (
       <Layout title="Painel">
-        <p className="text-grafite-claro">Carregando painel…</p>
+        <div className="space-y-8">
+          <SkeletonIndicator count={4} />
+          <div>
+            <div className="h-6 bg-navy/10 rounded w-40 mb-4 animate-pulse"></div>
+            <SkeletonCard count={3} className="mb-4" />
+          </div>
+          <div>
+            <div className="h-6 bg-navy/10 rounded w-48 mb-4 animate-pulse"></div>
+            <SkeletonTable />
+          </div>
+        </div>
       </Layout>
     )
   }
@@ -89,7 +100,7 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {imoveis.map(imovel => {
+              {imoveis.map((imovel, idx) => {
                 const dias = prazoDoImovel(imovel.id)
                 const situacao = situacaoPorPrazo(dias)
                 const qtdAlertas = alertas.filter(a => a.imovelId === imovel.id).length
@@ -97,7 +108,8 @@ export default function DashboardPage() {
                   <button
                     key={imovel.id}
                     onClick={() => navigate(`/imoveis/${imovel.id}`)}
-                    className={`bg-white shadow-sm p-5 border-l-[3px] text-left transition hover:shadow-md hover:-translate-y-px min-h-[120px] ${molduraPorSituacao[situacao]}`}
+                    className={`bg-white shadow-sm p-5 border-l-[3px] text-left transition hover:shadow-md hover:-translate-y-px min-h-[120px] animate-fade-in ${molduraPorSituacao[situacao]}`}
+                    style={{ animationDelay: `${idx * 50}ms` }}
                     aria-label={`${imovel.endereco} - ${textoPrazo(dias)}`}
                   >
                     <div className="flex items-start justify-between gap-3">

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { Passo, Escolha, Campo, classeCampo } from '@/components/Assistente'
+import { SkeletonForm } from '@/components/Skeleton'
 import ZonaArrastar from '@/components/ZonaArrastar'
 import { TIPOS_CONTRATO, GARANTIAS, INDICES_REAJUSTE, PERIODICIDADES, tiposContratoParaUso, type UsoImovel } from '@/lib/dominio'
 import { repositorio, type Imovel } from '@/lib/repositorio'
@@ -99,7 +100,7 @@ export default function NovoContratoPage() {
     else navigate('/imoveis')
   }
 
-  if (!imovel) return <Layout title="Novo contrato"><div className="bg-white p-10 shadow-sm">Carregando...</div></Layout>
+  if (!imovel) return <Layout title="Novo contrato"><div className="max-w-2xl mx-auto"><SkeletonForm /></div></Layout>
 
   return (
     <Layout title={`${natureza === 'aditivo' ? 'Novo aditivo' : natureza === 'subcontrato' ? 'Novo subcontrato' : 'Novo contrato'} — ${imovel.endereco}`}>
