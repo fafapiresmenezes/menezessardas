@@ -127,15 +127,9 @@ export default function ImovelListPage() {
           </table>
         </div>
 
-        {filtrados.length === 0 && busca && (
+        {filtrados.length === 0 && (
           <div className=”bg-white p-12 text-center shadow-sm”>
-            <p className=”text-grafite-claro mb-3”>Nenhum imóvel encontrado para <strong>”{busca}”</strong>.</p>
-            <p className=”text-sm text-grafite-claro”>Dica: tente buscar sem caracteres especiais ou use apenas o nome da rua.</p>
-          </div>
-        )}
-        {filtrados.length === 0 && !busca && imoveis.length === 0 && (
-          <div className=”bg-white p-12 text-center shadow-sm”>
-            <p className=”text-grafite-claro mb-4”>Nenhum imóvel cadastrado ainda.</p>
+            <p className=”text-grafite-claro”>{busca ? `Nenhum imóvel encontrado para “${busca}”.` : 'Nenhum imóvel cadastrado.'}</p>
           </div>
         )}
       </div>
