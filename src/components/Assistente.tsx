@@ -127,4 +127,25 @@ export function Campo({ id, rotulo, ajuda, children }: CampoProps) {
 }
 
 export const classeCampo =
-  'w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white text-grafite'
+  'w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado focus:ring-1 focus:ring-dourado/30 bg-white text-grafite transition'
+
+interface ToastProps {
+  tipo: 'sucesso' | 'erro' | 'aviso' | 'info'
+  mensagem: string
+  duracao?: number
+}
+
+/** Toast de feedback: mensagem temporária no canto superior. */
+export function Toast({ tipo, mensagem, duracao = 4000 }: ToastProps) {
+  const cores: Record<typeof tipo, string> = {
+    sucesso: 'bg-regularFundo border-regular text-regular',
+    erro: 'bg-criticoFundo border-critico text-critico',
+    aviso: 'bg-atencaoFundo border-atencao text-atencao',
+    info: 'bg-pergaminho border-navy/10 text-navy',
+  }
+  return (
+    <div className={`fixed top-4 right-4 px-4 py-3 rounded border-l-2 text-sm ${cores[tipo]} z-50 animate-in fade-in slide-in-from-top-2 duration-300`} role="status">
+      {mensagem}
+    </div>
+  )
+}

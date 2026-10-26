@@ -38,22 +38,24 @@ export default function ImovelListPage() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-end gap-4">
           <div className="bg-white p-4 shadow-sm flex-1">
-            <label htmlFor="busca-imovel" className="block text-xs uppercase tracking-wider text-grafite mb-2">
+            <label htmlFor="busca-imovel" className="block text-xs uppercase tracking-wider text-grafite mb-1">
               Buscar imóvel
             </label>
-            <div className="flex items-center gap-2 border border-grafite-claro/40 px-3 py-2 rounded-sm focus-within:border-dourado">
+            <p className="text-xs text-grafite-claro mb-2">Digite o endereço, proprietário ou condomínio</p>
+            <div className="flex items-center gap-2 border border-grafite-claro/40 px-3 py-2.5 rounded-sm focus-within:border-dourado focus-within:ring-1 focus-within:ring-dourado/30 transition">
               <Search size={18} className="text-grafite-claro flex-shrink-0" aria-hidden="true" />
               <input
                 id="busca-imovel"
                 type="search"
-                placeholder="Endereço ou proprietário"
+                placeholder="Ex: Rua das Flores 123, João Silva"
                 value={busca}
                 onChange={e => setBusca(e.target.value)}
                 className="flex-1 bg-transparent outline-none text-grafite"
+                aria-label="Buscar imóvel por endereço ou proprietário"
               />
             </div>
-            <p className="text-xs text-grafite-claro mt-2" role="status">
-              {filtrados.length} {filtrados.length === 1 ? 'imóvel' : 'imóveis'}
+            <p className="text-xs text-grafite-claro mt-2" role="status" aria-live="polite">
+              {filtrados.length} {filtrados.length === 1 ? 'imóvel encontrado' : 'imóveis encontrados'}
             </p>
           </div>
           <Link
@@ -67,17 +69,15 @@ export default function ImovelListPage() {
         <div className="relative bg-white shadow-sm overflow-x-auto">
           <table className="w-full">
             <caption className="sr-only">Imóveis da carteira do escritório</caption>
-            <thead className="bg-navy text-white">
+            <thead className="bg-navy-700 text-white">
               <tr>
-                {['Endereço', 'Tipo', 'Uso', 'Proprietário', 'Documentos', 'Situação', ''].map((h, idx) => (
-                  <th
-                    key={h || `acoes-${idx}`}
-                    scope="col"
-                    className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium whitespace-nowrap"
-                  >
-                    {h || <span className="sr-only">Ações</span>}
-                  </th>
-                ))}
+                <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Endereço</th>
+                <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium whitespace-nowrap">Tipo</th>
+                <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium whitespace-nowrap">Uso</th>
+                <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Proprietário</th>
+                <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium whitespace-nowrap">Documentos</th>
+                <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium whitespace-nowrap">Situação</th>
+                <th scope="col" className="px-5 py-3"><span className="sr-only">Ações</span></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-navy/10">
@@ -127,9 +127,21 @@ export default function ImovelListPage() {
           </table>
         </div>
 
-        {filtrados.length === 0 && (
-          <div className="bg-white p-12 text-center shadow-sm">
-            <p className="text-grafite-claro">Nenhum imóvel encontrado para “{busca}”.</p>
+        {filtrados.length === 0 && busca && (
+          <div className=”bg-white p-12 text-center shadow-sm”>
+            <p className=”text-grafite-claro mb-3”>Nenhum imóvel encontrado para <strong>”{busca}”</strong>.</p>
+            <p className=”text-sm text-grafite-claro”>Dica: tente buscar sem caracteres especiais ou use apenas o nome da rua.</p>
+          </div>
+        )}
+        {filtrados.length === 0 && !busca && imoveis.length === 0 && (
+          <div className=”bg-white p-12 text-center shadow-sm”>
+            <p className=”text-grafite-claro mb-4”>Nenhum imóvel cadastrado ainda.</p>
+            <Link
+              to=”/imoveis/novo”
+              className=”inline-flex items-center gap-2 bg-navy text-white px-5 py-2 rounded-sm uppercase tracking-wider text-sm”
+            >
+              <Plus size={16} aria-hidden=”true” /> Cadastrar primeiro imóvel
+            </Link>
           </div>
         )}
       </div>
