@@ -140,7 +140,8 @@ export default function ImovelListPage() {
               to=”/imoveis/novo”
               className=”inline-flex items-center gap-2 bg-navy text-white px-5 py-2 rounded-sm uppercase tracking-wider text-sm”
             >
-              <Plus size={16} aria-hidden=”true” /> Cadastrar primeiro imóvel
+              <Plus size={16} aria-hidden=”true” />
+              <span>Cadastrar primeiro imóvel</span>
             </Link>
           </div>
         )}
