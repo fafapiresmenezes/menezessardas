@@ -77,17 +77,9 @@ export default function LegislacaoPage() {
     }
     setBuscandoPesquisa(true)
     try {
-      const { data, error } = await supabase.functions.invoke('buscar-legislacao', {
-        body: {},
-        headers: { Range: `q=${encodeURIComponent(termoPesquisa)}` },
-      })
-      if (error || !data) {
-        const params = new URLSearchParams({ q: termoPesquisa })
-        const { data: d2, error: e2 } = await supabase.functions.invoke(`buscar-legislacao?${params}`)
-        setResultadosPesquisa((d2?.leis ?? []) as LeiFederal[])
-      } else {
-        setResultadosPesquisa((data.leis ?? []) as LeiFederal[])
-      }
+      const params = new URLSearchParams({ q: termoPesquisa })
+      const { data: d } = await supabase.functions.invoke(`buscar-legislacao?${params}`)
+      setResultadosPesquisa((d?.leis ?? []) as LeiFederal[])
     } catch (e) {
       console.error('Erro ao buscar leis:', e)
     } finally {
