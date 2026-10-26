@@ -18,7 +18,7 @@ interface PassoProps {
 /** Moldura de cada passo: uma pergunta por tela, progresso visível, botões grandes. */
 export function Passo({ numero, total, titulo, ajuda, children, podeAvancar, ultimo, onVoltar, onAvancar, rotuloAvancar }: PassoProps) {
   return (
-    <section className="bg-white border-t-2 border-dourado shadow-sm p-6 md:p-8 max-w-3xl animate-slide-up" aria-labelledby="titulo-passo">
+    <section className="bg-gradient-to-br from-white to-pergaminho border-t-2 border-dourado shadow-lg p-6 md:p-8 max-w-3xl animate-slide-up" aria-labelledby="titulo-passo">
       <p className="text-xs uppercase tracking-wider text-grafite-claro">
         Passo {numero} de {total}
       </p>
@@ -72,8 +72,8 @@ export function Escolha<T extends string>({ nome, opcoes, valor, onChange, colun
         return (
           <label
             key={o.valor}
-            className={`cursor-pointer border-l-2 p-4 transition duration-200 ${
-              marcada ? 'border-dourado bg-pergaminho shadow-md scale-105' : 'border-navy/10 bg-white hover:bg-pergaminho hover:shadow-sm'
+            className={`cursor-pointer border-l-4 p-4 transition duration-200 rounded-sm ${
+              marcada ? 'border-dourado bg-gradient-to-r from-dourado/5 to-transparent shadow-md scale-105' : 'border-navy/10 bg-white hover:bg-gradient-to-r hover:from-dourado/3 hover:to-transparent hover:shadow-sm'
             }`}
           >
             <input
@@ -127,7 +127,7 @@ export function Campo({ id, rotulo, ajuda, children }: CampoProps) {
 }
 
 export const classeCampo =
-  'w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado focus:ring-1 focus:ring-dourado/30 bg-white text-grafite transition'
+  'w-full px-3 py-2.5 border border-grafite-claro/30 rounded-sm focus:border-dourado focus:ring-1 focus:ring-dourado/40 bg-white text-grafite transition duration-200 hover:border-dourado/30'
 
 interface ToastProps {
   tipo: 'sucesso' | 'erro' | 'aviso' | 'info'

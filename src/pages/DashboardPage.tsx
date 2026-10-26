@@ -66,7 +66,7 @@ export default function DashboardPage() {
         <section aria-label="Indicadores gerais">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {indicadores.map(ind => (
-              <div key={ind.rotulo} className="bg-white border-t-2 border-dourado p-5 shadow-sm">
+              <div key={ind.rotulo} className="bg-gradient-to-br from-white to-pergaminho/50 border-t-2 border-dourado p-5 shadow-md hover:shadow-lg transition duration-300">
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-xs uppercase tracking-wider text-grafite-claro">{ind.rotulo}</p>
@@ -87,7 +87,7 @@ export default function DashboardPage() {
             A cor e o rótulo indicam a urgência do compromisso mais próximo. Clique em um imóvel para gerenciar contratos.
           </p>
           {imoveis.length === 0 ? (
-            <div className="bg-white p-12 text-center shadow-sm border-l-4 border-grafite-claro/30">
+            <div className="bg-gradient-to-br from-white to-pergaminho/30 p-12 text-center shadow-md rounded-sm border-l-4 border-grafite-claro/30">
               <Building2 size={40} className="mx-auto text-grafite-claro/40 mb-3" aria-hidden="true" />
               <p className="text-grafite-claro font-medium mb-4">Nenhum imóvel cadastrado</p>
               <p className="text-sm text-grafite-claro mb-6">Comece adicionando um imóvel à sua carteira para rastrear contratos e prazos.</p>
@@ -108,7 +108,7 @@ export default function DashboardPage() {
                   <button
                     key={imovel.id}
                     onClick={() => navigate(`/imoveis/${imovel.id}`)}
-                    className={`bg-white shadow-sm p-5 border-l-[3px] text-left transition hover:shadow-md hover:-translate-y-px min-h-[120px] animate-fade-in ${molduraPorSituacao[situacao]}`}
+                    className={`bg-gradient-to-br from-white to-pergaminho/30 shadow-md p-5 border-l-[4px] text-left transition hover:shadow-lg hover:-translate-y-1 min-h-[120px] animate-fade-in rounded-sm ${molduraPorSituacao[situacao]}`}
                     style={{ animationDelay: `${idx * 50}ms` }}
                     aria-label={`${imovel.endereco} - ${textoPrazo(dias)}`}
                   >
@@ -142,12 +142,12 @@ export default function DashboardPage() {
               <p className="text-sm text-grafite-claro">Você está em dia! Todos os vencimentos estão sob controle.</p>
             </div>
           ) : (
-            <div className="relative bg-white shadow-sm overflow-x-auto" tabIndex={0} role="region" aria-label="Tabela de próximos compromissos">
+            <div className="relative bg-white shadow-lg overflow-x-auto rounded-sm" tabIndex={0} role="region" aria-label="Tabela de próximos compromissos">
               <table className="w-full">
                 <caption className="sr-only">
                   Compromissos contratuais ordenados do mais urgente para o menos urgente
                 </caption>
-                <thead className="bg-navy text-white">
+                <thead className="bg-gradient-to-r from-navy to-navy-700 text-white">
                   <tr>
                     <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Data</th>
                     <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Compromisso</th>
@@ -158,7 +158,7 @@ export default function DashboardPage() {
                 </thead>
                 <tbody className="divide-y divide-navy/10">
                   {proximos.map(alerta => (
-                    <tr key={alerta.id} className="hover:bg-pergaminho">
+                    <tr key={alerta.id} className="hover:bg-gradient-to-r hover:from-dourado/5 hover:to-transparent transition duration-200">
                       <td className="px-5 py-3.5 text-sm whitespace-nowrap">{formatarData(alerta.dataEvento)}</td>
                       <td className="px-5 py-3.5 text-sm">{alerta.titulo}</td>
                       <td className="px-5 py-3.5 text-sm text-grafite-claro">{alerta.imovel}</td>
