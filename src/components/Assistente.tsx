@@ -18,7 +18,7 @@ interface PassoProps {
 /** Moldura de cada passo: uma pergunta por tela, progresso visível, botões grandes. */
 export function Passo({ numero, total, titulo, ajuda, children, podeAvancar, ultimo, onVoltar, onAvancar, rotuloAvancar }: PassoProps) {
   return (
-    <section className="bg-white border-t-2 border-dourado shadow-sm p-6 md:p-8 max-w-3xl" aria-labelledby="titulo-passo">
+    <section className="bg-white border-t-2 border-dourado shadow-sm p-6 md:p-8 max-w-3xl animate-slide-up" aria-labelledby="titulo-passo">
       <p className="text-xs uppercase tracking-wider text-grafite-claro">
         Passo {numero} de {total}
       </p>
@@ -72,8 +72,8 @@ export function Escolha<T extends string>({ nome, opcoes, valor, onChange, colun
         return (
           <label
             key={o.valor}
-            className={`cursor-pointer border-l-2 p-4 transition ${
-              marcada ? 'border-dourado bg-pergaminho' : 'border-navy/10 bg-white hover:bg-pergaminho'
+            className={`cursor-pointer border-l-2 p-4 transition duration-200 ${
+              marcada ? 'border-dourado bg-pergaminho shadow-md scale-105' : 'border-navy/10 bg-white hover:bg-pergaminho hover:shadow-sm'
             }`}
           >
             <input
