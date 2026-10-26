@@ -116,7 +116,7 @@ export default function ImovelListPage() {
                         onClick={() => navigate(`/imoveis/${imovel.id}`)}
                         className="inline-flex items-center min-h-[44px] px-3 -mx-3 text-navy underline underline-offset-4 hover:text-dourado-escuro text-sm whitespace-nowrap"
                       >
-                        Ver detalhes
+                        <span>Ver detalhes</span>
                         <span className="sr-only"> de {imovel.endereco}</span>
                       </button>
                     </td>
