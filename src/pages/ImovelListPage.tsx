@@ -128,8 +128,8 @@ export default function ImovelListPage() {
         </div>
 
         {filtrados.length === 0 && (
-          <div className=”bg-white p-12 text-center shadow-sm”>
-            <p className=”text-grafite-claro”>
+          <div className="bg-white p-12 text-center shadow-sm">
+            <p className="text-grafite-claro">
               {busca
                 ? 'Nenhum imóvel encontrado.'
                 : 'Nenhum imóvel cadastrado.'}

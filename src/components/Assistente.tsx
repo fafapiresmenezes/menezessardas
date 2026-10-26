@@ -132,11 +132,10 @@ export const classeCampo =
 interface ToastProps {
   tipo: 'sucesso' | 'erro' | 'aviso' | 'info'
   mensagem: string
-  duracao?: number
 }
 
 /** Toast de feedback: mensagem temporária no canto superior. */
-export function Toast({ tipo, mensagem, duracao = 4000 }: ToastProps) {
+export function Toast({ tipo, mensagem }: ToastProps) {
   const cores: Record<typeof tipo, string> = {
     sucesso: 'bg-regularFundo border-regular text-regular',
     erro: 'bg-criticoFundo border-critico text-critico',
