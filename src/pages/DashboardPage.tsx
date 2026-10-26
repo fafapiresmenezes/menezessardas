@@ -7,12 +7,13 @@ import { formatarData, situacaoPorPrazo, textoPrazo, type Situacao } from '@/lib
 import { rotulosTipoImovel } from '@/lib/rotulos'
 import { AlertTriangle, CheckCircle2, Clock, Building2 } from 'lucide-react'
 
+// Cartões brancos (padrão premium): a urgência aparece só na borda lateral e no selo.
 const molduraPorSituacao: Record<Situacao, string> = {
-  vencido: 'bg-criticoFundo border-critico',
-  critico: 'bg-criticoFundo border-critico',
-  atencao: 'bg-atencaoFundo border-atencao',
-  regular: 'bg-regularFundo border-regular',
-  sem_prazo: 'bg-white border-grafite-claro/30',
+  vencido: 'border-critico',
+  critico: 'border-critico',
+  atencao: 'border-atencao',
+  regular: 'border-regular',
+  sem_prazo: 'border-grafite-claro/30',
 }
 
 export default function DashboardPage() {
@@ -83,7 +84,7 @@ export default function DashboardPage() {
                 <button
                   key={imovel.id}
                   onClick={() => navigate(`/contrato/${imovel.id}`)}
-                  className={`p-4 border-l-2 text-left transition hover:shadow-md ${molduraPorSituacao[situacao]}`}
+                  className={`bg-white shadow-sm p-5 border-l-[3px] text-left transition hover:shadow-md hover:-translate-y-px ${molduraPorSituacao[situacao]}`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <p className="font-medium text-navy leading-snug">{imovel.endereco}</p>

@@ -56,7 +56,7 @@ export default function FornecedorPage() {
   if (f === null) {
     return (
       <Layout title="Fornecedor não encontrado">
-        <Link to="/fornecedores" className="inline-flex items-center gap-2 text-navy underline underline-offset-4">
+        <Link to="/fornecedores" className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4">
           <ArrowLeft size={16} aria-hidden="true" /> Voltar aos fornecedores
         </Link>
       </Layout>
@@ -143,7 +143,7 @@ export default function FornecedorPage() {
   return (
     <Layout title={f.nome}>
       <div className="space-y-6">
-        <Link to="/fornecedores" className="inline-flex items-center gap-2 text-navy underline underline-offset-4">
+        <Link to="/fornecedores" className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4">
           <ArrowLeft size={16} aria-hidden="true" /> Voltar aos fornecedores
         </Link>
 
@@ -207,7 +207,7 @@ export default function FornecedorPage() {
                   href={`https://portaldatransparencia.gov.br/sancoes/consulta?cadastro=${lista === 'ceis' ? 1 : 2}&cpfCnpj=${f.cnpj}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-2 inline-flex items-center gap-1 text-sm text-navy underline underline-offset-4 min-h-[24px]"
+                  className="mt-2 inline-flex items-center gap-1 text-sm text-navy underline underline-offset-4 min-h-[44px]"
                 >
                   Consultar no Portal da Transparência <ExternalLink size={13} aria-hidden="true" />
                 </a>

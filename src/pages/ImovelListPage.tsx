@@ -114,7 +114,7 @@ export default function ImovelListPage() {
                     <td className="px-5 py-4 whitespace-nowrap">
                       <button
                         onClick={() => navigate(`/contrato/${imovel.id}`)}
-                        className="text-navy underline underline-offset-4 hover:text-dourado-escuro text-sm"
+                        className="inline-flex items-center min-h-[44px] px-3 -mx-3 text-navy underline underline-offset-4 hover:text-dourado-escuro text-sm whitespace-nowrap"
                       >
                         Ver detalhes
                         <span className="sr-only"> de {imovel.endereco}</span>

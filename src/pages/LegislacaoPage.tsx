@@ -124,7 +124,7 @@ export default function LegislacaoPage() {
                           href={n.link}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1 text-navy underline underline-offset-4 min-h-[24px]"
+                          className="inline-flex items-center gap-1 text-navy underline underline-offset-4 min-h-[44px]"
                         >
                           {n.fonte} <ExternalLink size={12} aria-hidden="true" />
                         </a>

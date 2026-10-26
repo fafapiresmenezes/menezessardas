@@ -5,7 +5,8 @@ import SeloSituacao from '@/components/SeloSituacao'
 import { repositorio, calcularAlertas, type Contrato, type Documento, type Imovel } from '@/lib/repositorio'
 import { diasAte, formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
 import { rotulosStatusContrato, rotulosTipoContrato, rotulosIndice, rotulosTipoDocumento, rotulosGarantia } from '@/lib/rotulos'
-import { FileText, Trash2, Sparkles, ArrowLeft, Plus, AlertTriangle, CheckCircle2, Pencil, Lock } from 'lucide-react'
+import { FileText, Trash2, Sparkles, ArrowLeft, Plus, AlertTriangle, CheckCircle2, Pencil, Lock, Download } from 'lucide-react'
+import { enviarArquivo, urlAssinada, apagarArquivo } from '@/lib/arquivos'
 import { Escolha, Campo, classeCampo } from '@/components/Assistente'
 import { GARANTIAS, INDICES_REAJUSTE, PERIODICIDADES, type Garantia, type IndiceReajuste, type Periodicidade } from '@/lib/dominio'
 import ZonaArrastar from '@/components/ZonaArrastar'
@@ -69,7 +70,14 @@ export default function ContratoPage() {
     }
     if (!id) return
     const alvo = contrato ? { contratoId: contrato.id } : { imovelId: id }
-    await repositorio.anexarDocumento(alvo, { tipo, nome: arquivo.name, caminhoStorage: '' })
+    let caminhoStorage = ''
+    try {
+      caminhoStorage = await enviarArquivo(arquivo, contrato ? `contratos/${contrato.id}` : `imoveis/${id}`)
+    } catch (e) {
+      setErro(e instanceof Error ? e.message : 'Falha ao guardar o arquivo.')
+      return
+    }
+    await repositorio.anexarDocumento(alvo, { tipo, nome: arquivo.name, caminhoStorage })
     // Se for o PDF do contrato, extrai o texto para o agente analisar o conteúdo real.
     if (contrato && tipo === 'contrato' && arquivo.type === 'application/pdf') {
       try {
@@ -155,7 +163,18 @@ export default function ContratoPage() {
   const remover = async (doc: Documento) => {
     if (!window.confirm(`Excluir “${doc.nome}”? Esta ação não pode ser desfeita.`)) return
     await repositorio.removerDocumento(doc.id)
+    await apagarArquivo(doc.caminhoStorage)
     carregar()
+  }
+
+  const abrir = async (doc: Documento) => {
+    if (!doc.caminhoStorage) return
+    setErro('')
+    try {
+      window.open(await urlAssinada(doc.caminhoStorage), '_blank', 'noopener')
+    } catch (e) {
+      setErro(e instanceof Error ? e.message : 'Não foi possível abrir o arquivo.')
+    }
   }
 
   if (imovel === undefined) {
@@ -170,7 +189,7 @@ export default function ContratoPage() {
     return (
       <Layout title="Imóvel não encontrado">
         <div className="bg-white p-10 text-center shadow-sm">
-          <button onClick={() => navigate('/imoveis')} className="inline-flex items-center gap-2 text-navy underline underline-offset-4">
+          <button onClick={() => navigate('/imoveis')} className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4">
             <ArrowLeft size={16} aria-hidden="true" /> Voltar para imóveis
           </button>
         </div>
@@ -412,10 +431,20 @@ export default function ContratoPage() {
                   </div>
                   <div className="flex items-center gap-3 flex-shrink-0">
                     {d.dataVencimento && <SeloSituacao situacao={situacaoPorPrazo(dias)} texto={textoPrazo(dias)} />}
+                    {d.caminhoStorage && (
+                      <button
+                        onClick={() => abrir(d)}
+                        className="min-w-[44px] min-h-[44px] inline-flex items-center justify-center rounded-sm text-navy hover:bg-pergaminho"
+                        aria-label={`Abrir ${d.nome}`}
+                        title={`Abrir ${d.nome}`}
+                      >
+                        <Download size={17} aria-hidden="true" />
+                      </button>
+                    )}
                     {!d.id.startsWith('arquivo-') && (
                       <button
                         onClick={() => remover(d)}
-                        className="p-1.5 rounded-sm text-critico hover:bg-criticoFundo"
+                        className="min-w-[44px] min-h-[44px] inline-flex items-center justify-center rounded-sm text-critico hover:bg-criticoFundo"
                         aria-label={`Excluir ${d.nome}`}
                         title={`Excluir ${d.nome}`}
                       >

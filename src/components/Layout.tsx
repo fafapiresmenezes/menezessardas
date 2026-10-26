@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { sairDemo } from '@/lib/authDemo'
 import Marca from './Marca'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users } from 'lucide-react'
+import Busca from './Busca'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -28,8 +29,21 @@ export default function Layout({ children, title }: LayoutProps) {
   const [menuAberto, setMenuAberto] = useState(
     () => typeof window === 'undefined' || window.innerWidth >= 768
   )
+  const [buscaAberta, setBuscaAberta] = useState(false)
   const navigate = useNavigate()
   const { pathname } = useLocation()
+
+  // Ctrl/⌘ + K abre a busca global em qualquer tela.
+  useEffect(() => {
+    const atalho = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setBuscaAberta(a => !a)
+      }
+    }
+    window.addEventListener('keydown', atalho)
+    return () => window.removeEventListener('keydown', atalho)
+  }, [])
 
   const sair = async () => {
     if (!supabaseConfigurado) {
@@ -107,16 +121,21 @@ export default function Layout({ children, title }: LayoutProps) {
       <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
         <header className="bg-white border-b border-navy/10 px-4 md:px-8 py-5 flex items-center justify-between gap-4">
           <h1 className="font-serif text-2xl md:text-3xl text-navy truncate">{title}</h1>
-          <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
-            <span className="h-8 w-px bg-dourado/40" aria-hidden="true" />
-            <span className="text-xs uppercase tracking-[0.16em] text-grafite-claro">
-              Leticia Sardas &amp; Menezes
-            </span>
-          </div>
+          <button
+            onClick={() => setBuscaAberta(true)}
+            className="flex items-center gap-2 min-h-[44px] px-3 sm:px-4 border border-navy/15 rounded-sm text-sm text-grafite-claro hover:border-dourado hover:text-navy transition flex-shrink-0"
+            aria-label="Abrir busca global (Ctrl+K)"
+            aria-haspopup="dialog"
+          >
+            <Search size={16} aria-hidden="true" />
+            <span className="hidden sm:inline">Buscar</span>
+            <kbd className="hidden md:inline text-[10px] uppercase tracking-wider border border-grafite-claro/30 rounded px-1.5 py-0.5">Ctrl K</kbd>
+          </button>
         </header>
 
         <main className="flex-1 overflow-auto p-4 md:p-8">{children}</main>
       </div>
+      <Busca aberta={buscaAberta} fechar={() => setBuscaAberta(false)} />
     </div>
   )
 }

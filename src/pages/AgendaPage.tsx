@@ -135,7 +135,7 @@ export default function AgendaPage() {
                         <button
                           key={e.id}
                           onClick={() => navigate(`/contrato/${e.imovelId}`)}
-                          className="w-full flex items-center gap-1 text-left min-h-[24px] py-0.5 rounded-sm hover:bg-pergaminho"
+                          className="w-full flex items-center gap-1 text-left min-h-[28px] py-1 rounded-sm hover:bg-pergaminho"
                           title={`${e.titulo} — ${e.imovel}`}
                         >
                           <span className={`h-1.5 w-1.5 rounded-full flex-shrink-0 ${corPonto[sit]}`} aria-hidden="true" />
