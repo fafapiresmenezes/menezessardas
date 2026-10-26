@@ -69,7 +69,7 @@ export default function ImovelListPage() {
         <div className="relative bg-white shadow-sm overflow-x-auto">
           <table className="w-full">
             <caption className="sr-only">Imóveis da carteira do escritório</caption>
-            <thead className="bg-navy-700 text-white">
+            <thead className="bg-navy text-white">
               <tr>
                 <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium">Endereço</th>
                 <th scope="col" className="px-5 py-3 text-left text-xs uppercase tracking-wider font-medium whitespace-nowrap">Tipo</th>
