@@ -14,8 +14,21 @@ export function useAlertas() {
         setLoading(true)
         const imoveis = await repositorio.listarImoveis()
         const contratos = await repositorio.listarContratos()
-        const todos = calcularAlertas(imoveis, contratos)
-        setAlertas(todos)
+        const calculados = calcularAlertas(imoveis, contratos)
+
+        // Adicionar alertas customizados (compromissos) do banco
+        const compromissos = JSON.parse(localStorage.getItem('compromissos_offline') || '[]')
+        const customizados = compromissos.map((c: any) => ({
+          id: c.id,
+          imovelId: '',
+          imovel: c.imovel,
+          tipo: 'compromisso',
+          titulo: c.titulo,
+          dataEvento: c.dataEvento,
+          diasRestantes: Math.ceil((new Date(c.dataEvento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)),
+        }))
+
+        setAlertas([...calculados, ...customizados])
         setError(null)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Erro ao buscar alertas')

@@ -68,11 +68,40 @@ export default function AgendaPage() {
       alert('Preencha todos os campos')
       return
     }
-    // TODO: Integrar com backend (tabela alertas ou nova tabela compromissos)
-    // Por enquanto, exibe sucesso no frontend
-    alert(`Compromisso criado para ${formatarData(novoAlerta.dataEvento)}\nAlarmado ${novoAlerta.diasAntes} dias antes`)
-    setShowModal(false)
-    setNovoAlerta({ titulo: '', imovel: '', diasAntes: 7, dataEvento: '' })
+    try {
+      // Salvar na tabela alertas com tipo "compromisso"
+      const { error } = await supabase.from('alertas').insert({
+        imovel_id: '', // Sem imóvel específico; será identificado por descrição
+        tipo_alerta: 'compromisso',
+        dias_restantes: novoAlerta.diasAntes,
+        data_evento: novoAlerta.dataEvento,
+        data_criacao: new Date().toISOString(),
+        lido: false,
+      })
+
+      if (error) {
+        console.error('Erro ao salvar alert:', error)
+        // Fallback: salvar em localStorage se banco falhar
+        const saved = JSON.parse(localStorage.getItem('compromissos_offline') || '[]')
+        saved.push({
+          titulo: novoAlerta.titulo,
+          imovel: novoAlerta.imovel,
+          dataEvento: novoAlerta.dataEvento,
+          diasAntes: novoAlerta.diasAntes,
+          id: Math.random().toString(),
+        })
+        localStorage.setItem('compromissos_offline', JSON.stringify(saved))
+        alert(`✓ Compromisso criado (offline)\nData: ${formatarData(novoAlerta.dataEvento)}\nAlarme: ${novoAlerta.diasAntes}d antes`)
+      } else {
+        alert(`✓ Compromisso criado e sincronizado\nData: ${formatarData(novoAlerta.dataEvento)}\nAlarme: ${novoAlerta.diasAntes}d antes`)
+      }
+
+      setShowModal(false)
+      setNovoAlerta({ titulo: '', imovel: '', diasAntes: 7, dataEvento: '' })
+    } catch (e) {
+      console.error('Erro:', e)
+      alert('Erro ao criar compromisso')
+    }
   }
 
   // Agrupa os compromissos por dia (chave aaaa-mm-dd).
