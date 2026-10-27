@@ -199,3 +199,29 @@
 * {
   box-sizing: border-box;
 }
+
+/* Modo escuro: classe .dark no <html>. Mantém a identidade navy/dourado com contraste AA. */
+html.dark { color-scheme: dark; }
+.dark body { background: #0B1220; color: #D6DAE1; }
+.dark h1, .dark h2, .dark h3, .dark .text-navy { color: #E8D9BC; }
+.dark .text-grafite { color: #D6DAE1; }
+.dark .text-grafite-claro { color: #A7B0BE; }
+.dark .bg-white { background-color: #131C2E; }
+.dark .bg-pergaminho, .dark .hover\:bg-pergaminho:hover, .dark .hover\:bg-white:hover { background-color: #1B2740; }
+.dark .bg-navy { background-color: #0A101C; }
+.dark .bg-navy.text-white, .dark button.bg-navy { background-color: #2C4474; }
+.dark .hover\:bg-navy-700:hover { background-color: #36528A; }
+.dark .border-navy, .dark .border-navy\/30, .dark .border-navy\/20 { border-color: #3B4A66; }
+.dark .border-navy\/10, .dark .border-navy\/15, .dark .border-navy\/5, .dark .divide-navy\/10 > * + * { border-color: #26324A; }
+.dark .border-grafite-claro\/40, .dark .border-grafite-claro\/30 { border-color: #3B4A66; }
+.dark input, .dark select, .dark textarea { background-color: #0F1726; color: #E5E9F0; }
+.dark input::placeholder, .dark textarea::placeholder { color: #7D8798; }
+.dark .bg-regularFundo { background-color: #12301F; } .dark .text-regular { color: #7CD3A3; }
+.dark .bg-atencaoFundo { background-color: #33270C; } .dark .text-atencao { color: #F0C063; }
+.dark .bg-criticoFundo { background-color: #3A1515; } .dark .text-critico { color: #F2918C; }
+.dark .shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,.5); }
+.dark a:focus-visible, .dark button:focus-visible, .dark input:focus-visible, .dark select:focus-visible, .dark textarea:focus-visible { --tw-ring-offset-color: #0B1220; }
+.dark section { background: #131C2E; border-color: #26324A; }
+.dark .from-white { --tw-gradient-from: #131C2E var(--tw-gradient-from-position); --tw-gradient-to: rgb(19 28 46 / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+.dark .to-pergaminho { --tw-gradient-to: #1B2740 var(--tw-gradient-to-position); }
+.dark .bg-gray-100 { background-color: #0B1220; } .dark .text-gray-600 { color: #A7B0BE; }

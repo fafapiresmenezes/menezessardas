@@ -4,7 +4,9 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { sairDemo } from '@/lib/authDemo'
 import Marca from './Marca'
 import Busca from './Busca'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search } from 'lucide-react'
+import BoasVindas from './BoasVindas'
+import { aplicarTema, temaAtual } from '@/lib/tema'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -30,6 +32,7 @@ export default function Layout({ children, title }: LayoutProps) {
     () => typeof window === 'undefined' || window.innerWidth >= 768
   )
   const [buscaAberta, setBuscaAberta] = useState(false)
+  const [tema, setTema] = useState(temaAtual)
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
@@ -127,6 +130,15 @@ export default function Layout({ children, title }: LayoutProps) {
       <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
         <header className="bg-white border-b border-navy/10 px-4 md:px-8 py-5 flex items-center justify-between gap-4">
           <h1 className="font-serif text-2xl md:text-3xl text-navy truncate">{title}</h1>
+          <div className="flex items-center gap-2 flex-shrink-0">
+          <button
+            onClick={() => { const t = tema === 'escuro' ? 'claro' : 'escuro'; aplicarTema(t); setTema(t) }}
+            className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/15 rounded-sm text-grafite-claro hover:border-dourado hover:text-navy transition"
+            aria-label={tema === 'escuro' ? 'Usar modo claro' : 'Usar modo escuro'}
+            title={tema === 'escuro' ? 'Modo claro' : 'Modo escuro'}
+          >
+            {tema === 'escuro' ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
+          </button>
           <button
             onClick={() => setBuscaAberta(true)}
             className="flex items-center gap-2 min-h-[44px] px-3 sm:px-4 border border-navy/15 rounded-sm text-sm text-grafite-claro hover:border-dourado hover:text-navy transition flex-shrink-0"
@@ -137,11 +149,13 @@ export default function Layout({ children, title }: LayoutProps) {
             <span className="hidden sm:inline">Buscar</span>
             <kbd className="hidden md:inline text-[10px] uppercase tracking-wider border border-grafite-claro/30 rounded px-1.5 py-0.5">Ctrl K</kbd>
           </button>
+          </div>
         </header>
 
         <main className="flex-1 overflow-auto p-4 md:p-8">{children}</main>
       </div>
       <Busca aberta={buscaAberta} fechar={() => setBuscaAberta(false)} />
+      <BoasVindas />
     </div>
   )
 }
