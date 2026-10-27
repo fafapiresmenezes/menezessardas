@@ -6,7 +6,7 @@ import { useAlertas } from '@/hooks/useAlertas'
 import { supabase } from '@/lib/supabase'
 import { baixarICS } from '@/lib/ics'
 import { formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
-import { CalendarDays, ChevronLeft, ChevronRight, Download, Mail, ExternalLink } from 'lucide-react'
+import { CalendarDays, ChevronLeft, ChevronRight, Download, Mail, ExternalLink, Plus, X } from 'lucide-react'
 
 const MESES = [
   'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
@@ -29,6 +29,14 @@ export default function AgendaPage() {
   const [ano, setAno] = useState(hoje.getFullYear())
   const [mes, setMes] = useState(hoje.getMonth())
   const [sincronizando, setSincronizando] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [diaClicado, setDiaClicado] = useState<number | null>(null)
+  const [novoAlerta, setNovoAlerta] = useState({
+    titulo: '',
+    imovel: '',
+    diasAntes: 7,
+    dataEvento: '',
+  })
 
   const sincronizarGoogleCalendar = async () => {
     setSincronizando(true)
@@ -46,6 +54,25 @@ export default function AgendaPage() {
     } finally {
       setSincronizando(false)
     }
+  }
+
+  const abrirModalNovoAlerta = (dia: number) => {
+    const dataEvento = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`
+    setDiaClicado(dia)
+    setNovoAlerta({ ...novoAlerta, dataEvento })
+    setShowModal(true)
+  }
+
+  const criarAlerta = async () => {
+    if (!novoAlerta.titulo || !novoAlerta.imovel) {
+      alert('Preencha título e imóvel')
+      return
+    }
+    // TODO: Salvar alerta no banco (tabela alertas)
+    // Por enquanto, apenas fechar modal e mostrar feedback
+    alert(`Alerta criado para ${formatarData(novoAlerta.dataEvento)}`)
+    setShowModal(false)
+    setNovoAlerta({ titulo: '', imovel: '', diasAntes: 7, dataEvento: '' })
   }
 
   // Agrupa os compromissos por dia (chave aaaa-mm-dd).
@@ -174,6 +201,13 @@ export default function AgendaPage() {
                       <span className="text-[11px] text-grafite-claro">+{eventos.length - 3}</span>
                     )}
                   </div>
+                  <button
+                    onClick={() => abrirModalNovoAlerta(dia)}
+                    className="mt-2 w-full inline-flex items-center justify-center gap-1 min-h-[24px] text-navy hover:bg-pergaminho rounded-sm text-xs"
+                    title="Novo compromisso"
+                  >
+                    <Plus size={14} aria-hidden="true" /> Novo
+                  </button>
                 </div>
               )
             })}
@@ -209,6 +243,99 @@ export default function AgendaPage() {
             </ul>
           )}
         </section>
+
+        {/* Modal: Novo Alerta */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-lg p-6 w-96 max-w-[90vw]">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-serif text-xl text-navy">Novo Compromisso</h3>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] text-grafite hover:text-navy"
+                >
+                  <X size={20} aria-hidden="true" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="titulo" className="block text-sm font-medium text-navy mb-1">
+                    Título do Compromisso
+                  </label>
+                  <input
+                    id="titulo"
+                    type="text"
+                    value={novoAlerta.titulo}
+                    onChange={e => setNovoAlerta({ ...novoAlerta, titulo: e.target.value })}
+                    placeholder="Ex: Revisão de Contrato"
+                    className="w-full min-h-[44px] px-3 border border-navy/20 rounded-sm text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="imovel" className="block text-sm font-medium text-navy mb-1">
+                    Imóvel
+                  </label>
+                  <input
+                    id="imovel"
+                    type="text"
+                    value={novoAlerta.imovel}
+                    onChange={e => setNovoAlerta({ ...novoAlerta, imovel: e.target.value })}
+                    placeholder="Ex: Av. Atlântica, 1000"
+                    className="w-full min-h-[44px] px-3 border border-navy/20 rounded-sm text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="data" className="block text-sm font-medium text-navy mb-1">
+                    Data do Vencimento
+                  </label>
+                  <input
+                    id="data"
+                    type="date"
+                    value={novoAlerta.dataEvento}
+                    onChange={e => setNovoAlerta({ ...novoAlerta, dataEvento: e.target.value })}
+                    className="w-full min-h-[44px] px-3 border border-navy/20 rounded-sm text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="diasAntes" className="block text-sm font-medium text-navy mb-1">
+                    Avisos com (dias antes)
+                  </label>
+                  <select
+                    id="diasAntes"
+                    value={novoAlerta.diasAntes}
+                    onChange={e => setNovoAlerta({ ...novoAlerta, diasAntes: parseInt(e.target.value) })}
+                    className="w-full min-h-[44px] px-3 border border-navy/20 rounded-sm text-sm"
+                  >
+                    <option value={1}>1 dia antes</option>
+                    <option value={3}>3 dias antes</option>
+                    <option value={7}>7 dias antes (padrão)</option>
+                    <option value={14}>14 dias antes</option>
+                    <option value={30}>30 dias antes</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex gap-2 mt-6">
+                <button
+                  onClick={criarAlerta}
+                  className="flex-1 min-h-[44px] bg-navy text-white font-medium rounded-sm hover:bg-navy-700"
+                >
+                  Salvar Compromisso
+                </button>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 min-h-[44px] border border-navy/20 text-navy font-medium rounded-sm hover:bg-pergaminho"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   )
