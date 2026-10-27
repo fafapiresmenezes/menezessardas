@@ -81,8 +81,8 @@ Deno.serve(async (req) => {
   ])]
   const chave = conf.resend_api_key || Deno.env.get('RESEND_API_KEY')
 
-  if (!itens.length) return json({ itens: 0, para, enviado: false, motivo: 'nenhum prazo dentro da janela de aviso' })
-  if (!chave) return json({ itens: itens.length, para, enviado: false, motivo: 'provedor de e-mail ainda não configurado' })
+  if (!itens.length) return json({ itens: 0, destinatarios: para.length, enviado: false, motivo: 'nenhum prazo dentro da janela de aviso' })
+  if (!chave) return json({ itens: itens.length, destinatarios: para.length, enviado: false, motivo: 'provedor de e-mail ainda não configurado' })
   const r = await enviar(chave, para, itens)
   // E-mail informado no próprio compromisso recebe só aquele aviso.
   const avulsos: string[] = []
@@ -90,5 +90,5 @@ Deno.serve(async (req) => {
     const so = (i.extra ?? []).filter(e => !para.includes(e))
     if (so.length && (await enviar(chave, so, [i])).ok) avulsos.push(...so)
   }
-  return json({ itens: itens.length, para, avulsos, enviado: r.ok, detalhe: r })
+  return json({ itens: itens.length, destinatarios: para.length, avulsos: avulsos.length, enviado: r.ok })
 })
