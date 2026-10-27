@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
 import { useAlertas } from '@/hooks/useAlertas'
+import { supabase } from '@/lib/supabase'
 import { baixarICS } from '@/lib/ics'
 import { formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
-import { CalendarDays, ChevronLeft, ChevronRight, Download, Mail } from 'lucide-react'
+import { CalendarDays, ChevronLeft, ChevronRight, Download, Mail, ExternalLink } from 'lucide-react'
 
 const MESES = [
   'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
@@ -27,6 +28,25 @@ export default function AgendaPage() {
   const hoje = new Date()
   const [ano, setAno] = useState(hoje.getFullYear())
   const [mes, setMes] = useState(hoje.getMonth())
+  const [sincronizando, setSincronizando] = useState(false)
+
+  const sincronizarGoogleCalendar = async () => {
+    setSincronizando(true)
+    try {
+      const { data, error } = await supabase.functions.invoke('exportar-calendario', {
+        body: { formato: 'google' },
+      })
+      if (error) throw error
+      if (data?.url) {
+        window.open(data.url, '_blank')
+      }
+    } catch (e) {
+      console.error('Erro ao sincronizar com Google Calendar:', e)
+      alert('Erro ao sincronizar com Google Calendar')
+    } finally {
+      setSincronizando(false)
+    }
+  }
 
   // Agrupa os compromissos por dia (chave aaaa-mm-dd).
   const porDia = useMemo(() => {
@@ -100,9 +120,16 @@ export default function AgendaPage() {
             </a>
             <button
               onClick={() => baixarICS(alertas)}
-              className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 rounded-sm text-sm"
+              className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 rounded-sm text-sm hover:bg-pergaminho"
             >
-              <Download size={16} aria-hidden="true" /> Exportar para o calendário
+              <Download size={16} aria-hidden="true" /> Exportar iCal
+            </button>
+            <button
+              onClick={sincronizarGoogleCalendar}
+              disabled={sincronizando}
+              className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 rounded-sm text-sm hover:bg-navy-700 disabled:opacity-50"
+            >
+              <ExternalLink size={16} aria-hidden="true" /> {sincronizando ? 'Abrindo…' : 'Sincronizar Google'}
             </button>
           </div>
         </div>
