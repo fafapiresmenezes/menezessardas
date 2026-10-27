@@ -3,6 +3,7 @@ import Layout from '@/components/Layout'
 import { Escolha } from '@/components/Assistente'
 import {
   ESPECIALIDADES,
+  MODOS,
   apagarConsulta,
   especialidadePreferida,
   guardarEspecialidade,
@@ -10,8 +11,11 @@ import {
   perguntar,
   type Consulta,
   type Especialidade,
+  type Matriz,
+  type Modo,
 } from '@/lib/assistente'
-import { ExternalLink, Scale, Send, Trash2 } from 'lucide-react'
+import PerfilJulgador from '@/components/PerfilJulgador'
+import { ExternalLink, Scale, Send, Trash2, Copy } from 'lucide-react'
 
 const EXEMPLOS = [
   'O locatário de loja com contrato de 5 anos tem direito à renovação? Qual o prazo para a ação?',
@@ -42,9 +46,60 @@ function render(md: string) {
   return html.join('').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
 }
 
+const CRITERIOS: { chave: keyof Pick<Caminho, 'exito' | 'rapidez' | 'custo' | 'risco'>; rotulo: string }[] = [
+  { chave: 'exito', rotulo: 'Êxito' }, { chave: 'rapidez', rotulo: 'Rapidez' }, { chave: 'custo', rotulo: 'Economia' }, { chave: 'risco', rotulo: 'Segurança' },
+]
+type Caminho = Matriz['caminhos'][number]
+const nota = (c: Caminho) => Math.round(((c.exito * 2 + c.rapidez + c.custo + c.risco) / 5) * 10) / 10
+
+/** Matriz de caminhos: barras por critério e destaque do recomendado. */
+function MatrizCaminhos({ m }: { m: Matriz }) {
+  return (
+    <div className="mt-4 space-y-4">
+      <p className="text-sm text-grafite">{m.sintese}</p>
+      <div className="grid gap-3 md:grid-cols-2">
+        {m.caminhos.map((c, i) => {
+          const rec = i === m.recomendado
+          return (
+            <div key={c.nome} className={`border p-4 ${rec ? 'border-dourado bg-pergaminho/60' : 'border-navy/10'}`} aria-label={`Caminho: ${c.nome}`}>
+              <div className="flex items-start justify-between gap-2">
+                <p className="font-serif text-lg text-navy">{c.nome}</p>
+                <span className="text-xs uppercase tracking-wider text-grafite-claro whitespace-nowrap">{rec ? 'Recomendado · ' : ''}nota {nota(c).toLocaleString('pt-BR')}</span>
+              </div>
+              <p className="text-sm text-grafite mt-1">{c.descricao}</p>
+              <p className="text-xs text-grafite-claro mt-1">Fundamento: {c.fundamento}</p>
+              <dl className="mt-3 space-y-1">
+                {CRITERIOS.map(k => (
+                  <div key={k.chave} className="flex items-center gap-2 text-xs">
+                    <dt className="w-20 text-grafite-claro">{k.rotulo}</dt>
+                    <dd className="flex-1 h-2 bg-navy/10" aria-label={`${k.rotulo}: ${c[k.chave]} de 5`}>
+                      <div className={`h-2 ${rec ? 'bg-dourado' : 'bg-navy/60'}`} style={{ width: `${(c[k.chave] / 5) * 100}%` }} />
+                    </dd>
+                    <span className="w-6 text-right text-grafite">{c[k.chave]}</span>
+                  </div>
+                ))}
+              </dl>
+              {c.zonaCinzenta && <p className="text-xs text-atencao mt-3"><strong>Zona cinzenta:</strong> {c.zonaCinzenta}</p>}
+            </div>
+          )
+        })}
+      </div>
+      <p className="text-sm text-grafite"><strong>Por que o recomendado:</strong> {m.porque}</p>
+      {m.proximosPassos?.length > 0 && (
+        <div>
+          <p className="text-xs uppercase tracking-wider text-grafite-claro mb-1">Próximos passos</p>
+          <ol className="list-decimal pl-5 text-sm text-grafite space-y-1">{m.proximosPassos.map(p => <li key={p}>{p}</li>)}</ol>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function AssistentePage() {
   const [especialidade, setEspecialidade] = useState<Especialidade>('imobiliario')
   const [pergunta, setPergunta] = useState('')
+  const [modo, setModo] = useState<Modo>('responder')
+  const [contexto, setContexto] = useState('')
   const [historico, setHistorico] = useState<Consulta[]>([])
   const [ocupado, setOcupado] = useState(false)
   const [erro, setErro] = useState('')
@@ -66,7 +121,7 @@ export default function AssistentePage() {
     setOcupado(true)
     setErro('')
     try {
-      const c = await perguntar(p, especialidade, historico.filter(h => h.especialidade === especialidade))
+      const c = await perguntar(p, especialidade, historico.filter(h => h.especialidade === especialidade && h.modo === 'responder'), modo, contexto)
       setHistorico(h => [c, ...h])
       setPergunta('')
     } catch (e) {
@@ -102,6 +157,16 @@ export default function AssistentePage() {
           <h3 id="titulo-pergunta" className="text-lg mb-3 flex items-center gap-2">
             <Scale size={18} aria-hidden="true" /> Pergunta ao agente {rotulo.toLowerCase()}
           </h3>
+          <div role="tablist" aria-label="Modo do agente" className="flex flex-wrap gap-2 mb-3">
+            {MODOS.map(m => (
+              <button key={m.valor} role="tab" aria-selected={modo === m.valor} onClick={() => setModo(m.valor)}
+                className={`min-h-[44px] px-4 text-sm border transition ${modo === m.valor ? 'bg-navy text-white border-navy' : 'border-navy/20 text-grafite hover:border-dourado'}`}
+                title={m.descricao}>
+                {m.rotulo}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-grafite-claro mb-2">{MODOS.find(m => m.valor === modo)?.descricao}</p>
           <label htmlFor="pergunta" className="sr-only">Pergunta</label>
           <textarea
             id="pergunta"
@@ -110,16 +175,24 @@ export default function AssistentePage() {
             onChange={e => setPergunta(e.target.value)}
             onKeyDown={e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') enviar() }}
             rows={3}
-            placeholder="Ex.: o fiador responde pelo aluguel depois da prorrogação por prazo indeterminado?"
+            placeholder={modo === 'redigir' ? 'Ex.: notificação extrajudicial ao locatário por atraso de 3 aluguéis, com prazo de 15 dias' : modo === 'caminhos' ? 'Ex.: locatário comercial com contrato de 5 anos a vencer; o locador não quer renovar. O que fazer?' : 'Ex.: o fiador responde pelo aluguel depois da prorrogação por prazo indeterminado?'}
             className="w-full border border-navy/15 p-3 text-sm focus:outline-none focus:border-dourado"
           />
+          {modo !== 'responder' && (
+            <>
+              <label htmlFor="contexto" className="block text-xs uppercase tracking-wider text-grafite-claro mt-3 mb-1">Fatos do caso (opcional)</label>
+              <textarea id="contexto" value={contexto} onChange={e => setContexto(e.target.value)} rows={3}
+                placeholder="Partes, datas, valores, o que já aconteceu. Quanto mais fatos, melhor a peça ou a matriz."
+                className="w-full border border-navy/15 p-3 text-sm focus:outline-none focus:border-dourado" />
+            </>
+          )}
           <div className="flex flex-wrap items-center gap-2 mt-3">
             <button
               onClick={() => enviar()}
               disabled={ocupado || pergunta.trim().length < 5}
               className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 rounded-sm uppercase tracking-wider text-sm disabled:opacity-50"
             >
-              <Send size={16} aria-hidden="true" /> {ocupado ? 'Lendo a lei e respondendo…' : 'Perguntar'}
+              <Send size={16} aria-hidden="true" /> {ocupado ? 'Lendo a lei e preparando…' : MODOS.find(m => m.valor === modo)?.rotulo}
             </button>
             <span className="text-xs text-grafite-claro">Ctrl+Enter também envia.</span>
           </div>
@@ -151,7 +224,7 @@ export default function AssistentePage() {
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-xs uppercase tracking-wider text-grafite-claro">
-                  {ESPECIALIDADES.find(e => e.valor === c.especialidade)?.rotulo ?? 'Geral'} ·{' '}
+                  {MODOS.find(m => m.valor === c.modo)?.rotulo ?? 'Perguntar'} · {ESPECIALIDADES.find(e => e.valor === c.especialidade)?.rotulo ?? 'Geral'} ·{' '}
                   {new Date(c.criadoEm).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}
                 </p>
                 <p className="font-serif text-lg text-navy mt-1">{c.pergunta}</p>
@@ -160,7 +233,14 @@ export default function AssistentePage() {
                 <Trash2 size={16} aria-hidden="true" />
               </button>
             </div>
-            <div className="text-sm text-grafite mt-4 space-y-2" dangerouslySetInnerHTML={{ __html: render(c.resposta) }} />
+            {c.matriz ? <MatrizCaminhos m={c.matriz} /> : (
+              <div className="text-sm text-grafite mt-4 space-y-2" dangerouslySetInnerHTML={{ __html: render(c.resposta) }} />
+            )}
+            {c.modo === 'redigir' && (
+              <button onClick={() => navigator.clipboard.writeText(c.resposta)} className="mt-3 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
+                <Copy size={16} aria-hidden="true" /> Copiar texto da peça
+              </button>
+            )}
             {c.fontes.length > 0 && (
               <div className="mt-4 pt-3 border-t border-navy/10">
                 <p className="text-xs uppercase tracking-wider text-grafite-claro mb-1">Texto oficial consultado</p>
@@ -177,6 +257,8 @@ export default function AssistentePage() {
             )}
           </article>
         ))}
+
+        <PerfilJulgador />
       </div>
     </Layout>
   )

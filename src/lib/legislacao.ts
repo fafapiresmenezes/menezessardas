@@ -179,3 +179,33 @@ export async function buscarNovidades(): Promise<ResultadoBusca> {
     })),
   }
 }
+
+/** Radar dos portais: novidades captadas todo dia pelo servidor (Câmara e notícias dos tribunais). */
+export interface NovidadePortal {
+  id: string
+  fonte: string
+  tipo: 'Projeto' | 'Notícia' | string
+  titulo: string
+  resumo?: string
+  link: string
+  data?: string
+  termo?: string
+  vistoEm: string
+}
+
+export async function radarPortais(): Promise<NovidadePortal[]> {
+  if (!supabaseConfigurado) {
+    return [{
+      id: 'ex-1', fonte: 'Câmara dos Deputados', tipo: 'Projeto', titulo: 'PL 3925/2026',
+      resumo: 'Altera a Lei nº 8.245/1991 para vedar a oferta publicitária de locação residencial com aluguel diferente do contratado (exemplo da demonstração).',
+      link: 'https://www.camara.leg.br/', data: new Date().toISOString().slice(0, 10), termo: 'inquilinato', vistoEm: new Date().toISOString(),
+    }]
+  }
+  const { data, error } = await supabase
+    .from('novidades_portais')
+    .select('id,fonte,tipo,titulo,resumo,link,data,termo,visto_em')
+    .order('data', { ascending: false, nullsFirst: false })
+    .limit(60)
+  if (error) throw new Error(error.message)
+  return (data ?? []).map(r => ({ ...r, resumo: r.resumo ?? undefined, data: r.data ?? undefined, termo: r.termo ?? undefined, vistoEm: r.visto_em }))
+}

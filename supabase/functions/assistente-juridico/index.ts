@@ -168,7 +168,8 @@ Deno.serve(async (req) => {
   const chave = await obterChave()
   if (!chave) return json({ erro: 'Chave da IA não configurada. Um administrador pode informá-la em Configurações → Inteligência artificial.' }, 503)
 
-  const { pergunta, especialidade = 'imobiliario', historico = [] } = corpo
+  const { pergunta, especialidade = 'imobiliario', historico = [], modo = 'responder', contexto: contextoCaso = '' } = corpo
+  if (!['responder', 'redigir', 'caminhos'].includes(modo)) return json({ erro: 'Modo inválido.' }, 400)
   if (!pergunta || typeof pergunta !== 'string' || pergunta.trim().length < 5) return json({ erro: 'Escreva a pergunta.' }, 400)
   const papel = ESPECIALIDADES[especialidade] ?? ESPECIALIDADES.geral
 
@@ -193,7 +194,7 @@ Deno.serve(async (req) => {
       }],
       tool_choice: { type: 'tool', name: 'planejar_pesquisa' },
       system: `${papel}\nCatálogo de leis disponíveis (id: título — temas):\n${catalogoResumo}`,
-      messages: [{ role: 'user', content: `Pergunta do advogado: ${pergunta}` }],
+      messages: [{ role: 'user', content: `Pedido do advogado (${modo}): ${pergunta}${contextoCaso ? `\nContexto do caso: ${contextoCaso}` : ''}` }],
     })
     const plano = triagem.content?.find((c: { type: string }) => c.type === 'tool_use')?.input ?? { leis: ['cc'], termos: [] }
     const leisEscolhidas: string[] = (plano.leis ?? []).filter((id: string) => CATALOGO[id]).slice(0, 3)
@@ -216,30 +217,76 @@ Deno.serve(async (req) => {
       ? escolhidos.map(a => `[${CATALOGO[a.leiId].titulo}] ${a.corpo}`).join('\n\n')
       : '(nenhum artigo localizado automaticamente; responda com base na doutrina e indique a lei a consultar)'
 
-    // 3) Resposta fundamentada.
+    // 3) Resposta por modo: responder (parecer curto), redigir (peça/contrato), caminhos (matriz de opções).
+    const trechos = `TRECHOS DA LEGISLAÇÃO (texto compilado oficial do Planalto, consultado agora):\n\n${contexto}\n\n---\n${contextoCaso ? `CONTEXTO DO CASO: ${contextoCaso}\n` : ''}PEDIDO: ${pergunta}`
+    const regrasComuns = `${papel}
+Escreva em português do Brasil, para advogados do escritório Leticia Sardas & Menezes (Rio de Janeiro), em nível de pós-graduação: preciso, fundamentado e prático.
+Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"), usando os trechos fornecidos; o que não estiver nos trechos deve vir marcado como "a conferir". Não invente artigos, prazos nem jurisprudência; se citar jurisprudência, diga que precisa ser verificada no tribunal.`
     const mensagens = [
       ...historico.slice(-6).map((h: { papel: string; texto: string }) => ({ role: h.papel === 'assistente' ? 'assistant' : 'user', content: h.texto })),
-      { role: 'user', content: `TRECHOS DA LEGISLAÇÃO (texto compilado oficial do Planalto, consultado agora):\n\n${contexto}\n\n---\nPERGUNTA: ${pergunta}` },
+      { role: 'user', content: trechos },
     ]
-    const resposta = await anthropic(chave, {
-      model: MODELO_RESPOSTA,
-      max_tokens: 1400,
-      system: `${papel}
-Responda em português do Brasil, para um advogado do escritório Leticia Sardas & Menezes (Rio de Janeiro).
-Regras:
-- Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"). Use apenas os trechos fornecidos; se o trecho não bastar, diga o que falta conferir e onde.
-- Estrutura: resposta direta em 1–2 frases; fundamentação com os artigos; riscos ou exceções; próximos passos práticos. Use títulos curtos em negrito e listas.
-- Não invente artigos, prazos ou jurisprudência. Se mencionar jurisprudência, deixe claro que precisa ser verificada.
-- Termine com uma linha: "Fontes consultadas: " seguida dos nomes das leis usadas.`,
-      messages: mensagens,
-    })
-    const texto = (resposta.content ?? []).filter((c: { type: string }) => c.type === 'text').map((c: { text: string }) => c.text).join('\n').trim()
+    let texto = ''
+    let dados: unknown = null
+
+    if (modo === 'caminhos') {
+      const ferramenta = {
+        name: 'registrar_caminhos',
+        description: 'Registra a matriz de caminhos possíveis para o caso.',
+        input_schema: {
+          type: 'object',
+          properties: {
+            sintese: { type: 'string', description: 'Duas frases sobre a situação e o que está em jogo.' },
+            caminhos: {
+              type: 'array', minItems: 2, maxItems: 5,
+              items: {
+                type: 'object',
+                properties: {
+                  nome: { type: 'string' },
+                  descricao: { type: 'string', description: 'O que fazer, em 2–3 frases.' },
+                  fundamento: { type: 'string', description: 'Artigos e leis que sustentam este caminho.' },
+                  exito: { type: 'integer', minimum: 1, maximum: 5, description: 'Chance de êxito (1 baixa, 5 alta).' },
+                  rapidez: { type: 'integer', minimum: 1, maximum: 5, description: '5 = resolve mais rápido.' },
+                  custo: { type: 'integer', minimum: 1, maximum: 5, description: '5 = mais barato.' },
+                  risco: { type: 'integer', minimum: 1, maximum: 5, description: '5 = menor risco.' },
+                  zonaCinzenta: { type: 'string', description: 'Onde a lei é ambígua ou há divergência, e como lidar.' },
+                },
+                required: ['nome', 'descricao', 'fundamento', 'exito', 'rapidez', 'custo', 'risco'],
+              },
+            },
+            recomendado: { type: 'integer', description: 'Índice (0-based) do caminho recomendado.' },
+            porque: { type: 'string', description: 'Por que esse é o recomendado, em até 3 frases.' },
+            proximosPassos: { type: 'array', items: { type: 'string' } },
+          },
+          required: ['sintese', 'caminhos', 'recomendado', 'porque', 'proximosPassos'],
+        },
+      }
+      const r = await anthropic(chave, {
+        model: MODELO_RESPOSTA, max_tokens: 2000, tools: [ferramenta], tool_choice: { type: 'tool', name: 'registrar_caminhos' },
+        system: `${regrasComuns}\nMonte de 2 a 5 caminhos (extrajudicial, judicial, negociação, aguardar etc.), pontue cada um em quatro critérios e aponte as zonas cinzentas com honestidade.`,
+        messages: mensagens,
+      })
+      dados = r.content?.find((c: { type: string }) => c.type === 'tool_use')?.input ?? null
+      if (!dados) throw new Error('A IA não devolveu a matriz. Tente novamente.')
+      const d = dados as { sintese: string; caminhos: { nome: string }[]; recomendado: number; porque: string }
+      texto = `${d.sintese}\n\n**Recomendado:** ${d.caminhos[d.recomendado]?.nome ?? d.caminhos[0]?.nome}. ${d.porque}`
+    } else {
+      const sistema = modo === 'redigir'
+        ? `${regrasComuns}
+Redija a peça ou o contrato pedido, completo e pronto para revisão: título; qualificação das partes com [campos entre colchetes] para o que faltar; cláusulas ou tópicos numerados; fundamentação legal embutida no texto (artigo e lei); pedidos ou cláusulas finais; local, data e assinatura. Use o padrão forense brasileiro e linguagem clara. Ao final, acrescente uma seção "Pontos a conferir antes de usar" com o que depende de fatos ou documentos.`
+        : `${regrasComuns}
+Estrutura: resposta direta em 1–2 frases; fundamentação com os artigos; riscos ou exceções (inclusive zonas cinzentas e divergências); próximos passos práticos. Títulos curtos em negrito e listas. Termine com "Fontes consultadas: " e os nomes das leis usadas.`
+      const resposta = await anthropic(chave, { model: MODELO_RESPOSTA, max_tokens: modo === 'redigir' ? 3500 : 1400, system: sistema, messages: mensagens })
+      texto = (resposta.content ?? []).filter((c: { type: string }) => c.type === 'text').map((c: { text: string }) => c.text).join('\n').trim()
+    }
 
     await servico().from('consultas_juridicas').insert({
-      usuario_id: usuario, especialidade, pergunta, resposta: texto, fontes, modelo: MODELO_RESPOSTA,
+      usuario_id: usuario, especialidade, pergunta, resposta: texto, fontes, modelo: MODELO_RESPOSTA, modo, dados,
     })
     return json({
       resposta: texto,
+      dados,
+      modo,
       fontes,
       artigosConsultados: escolhidos.map(a => ({ lei: CATALOGO[a.leiId].titulo, artigo: a.numero })),
       consultadoEm: new Date().toISOString(),

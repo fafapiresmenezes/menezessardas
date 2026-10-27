@@ -12,6 +12,8 @@ import {
   definirStatus,
   imoveisAfetados,
   lerAcompanhamento,
+  radarPortais,
+  type NovidadePortal,
   type Norma,
   type ResultadoBusca,
   type StatusAcompanhamento,
@@ -43,9 +45,12 @@ export default function LegislacaoPage() {
   const [termoPesquisa, setTermoPesquisa] = useState('')
   const [resultadosPesquisa, setResultadosPesquisa] = useState<LeiFederal[]>([])
   const [buscandoPesquisa, setBuscandoPesquisa] = useState(false)
+  const [radar, setRadar] = useState<NovidadePortal[]>([])
+  const [filtroRadar, setFiltroRadar] = useState<'todos' | 'Projeto' | 'Notícia'>('todos')
 
   useEffect(() => {
     lerAcompanhamento().then(setAcomp)
+    radarPortais().then(setRadar).catch(() => undefined)
   }, [])
 
   const atualizar = useCallback(async () => {
@@ -170,6 +175,44 @@ export default function LegislacaoPage() {
                 </div>
               ))}
             </div>
+          )}
+        </section>
+
+        <section className="bg-white p-6 shadow-sm" aria-labelledby="titulo-radar">
+          <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
+            <div>
+              <h3 id="titulo-radar" className="text-lg">Radar dos portais</h3>
+              <p className="text-sm text-grafite-claro">
+                Conexão permanente: todo dia o servidor consulta a Câmara dos Deputados (projetos de lei dos últimos 120 dias) e as notícias dos tribunais sobre locação, condomínio, incorporação e registro.
+                {radar[0] && <> Última captura: {new Date(radar[0].vistoEm).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}.</>}
+              </p>
+            </div>
+            <div role="radiogroup" aria-label="Filtro do radar" className="flex gap-1 print:hidden">
+              {(['todos', 'Projeto', 'Notícia'] as const).map(f => (
+                <button key={f} role="radio" aria-checked={filtroRadar === f} onClick={() => setFiltroRadar(f)}
+                  className={`min-h-[36px] px-3 text-xs uppercase tracking-wider border ${filtroRadar === f ? 'bg-navy text-white border-navy' : 'border-navy/20 text-grafite'}`}>
+                  {f === 'todos' ? 'Tudo' : f === 'Projeto' ? 'Projetos de lei' : 'Notícias'}
+                </button>
+              ))}
+            </div>
+          </div>
+          {radar.length === 0 ? (
+            <p className="text-sm text-grafite-claro">Nada captado ainda. A primeira varredura roda hoje às 8h30.</p>
+          ) : (
+            <ul className="divide-y divide-navy/5">
+              {radar.filter(n => filtroRadar === 'todos' || n.tipo === filtroRadar).slice(0, 25).map(n => (
+                <li key={n.id} className="py-3 flex flex-wrap items-start gap-x-4 gap-y-1">
+                  <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 border ${n.tipo === 'Projeto' ? 'border-dourado text-navy' : 'border-navy/20 text-grafite-claro'}`}>{n.tipo}</span>
+                  <div className="flex-1 min-w-[240px]">
+                    <a href={n.link} target="_blank" rel="noopener noreferrer" className="text-sm text-navy font-medium hover:underline inline-flex items-center gap-1">
+                      {n.titulo} <ExternalLink size={12} aria-hidden="true" />
+                    </a>
+                    {n.resumo && <p className="text-sm text-grafite mt-0.5">{n.resumo}</p>}
+                    <p className="text-xs text-grafite-claro mt-0.5">{n.fonte}{n.data ? ` · ${formatarData(n.data)}` : ''}{n.termo ? ` · tema: ${n.termo}` : ''}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
           )}
         </section>
 

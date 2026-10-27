@@ -15,14 +15,51 @@ export const ESPECIALIDADES: { valor: Especialidade; rotulo: string; descricao: 
 ]
 
 export interface Fonte { id: string; titulo: string; url: string }
+export type Modo = 'responder' | 'redigir' | 'caminhos'
+export const MODOS: { valor: Modo; rotulo: string; descricao: string }[] = [
+  { valor: 'responder', rotulo: 'Perguntar', descricao: 'Parecer curto com artigo e lei' },
+  { valor: 'redigir', rotulo: 'Redigir', descricao: 'Peça, notificação ou contrato pronto para revisão' },
+  { valor: 'caminhos', rotulo: 'Caminhos', descricao: 'Matriz de opções com êxito, rapidez, custo e risco' },
+]
+export interface Caminho {
+  nome: string
+  descricao: string
+  fundamento: string
+  exito: number
+  rapidez: number
+  custo: number
+  risco: number
+  zonaCinzenta?: string
+}
+export interface Matriz {
+  sintese: string
+  caminhos: Caminho[]
+  recomendado: number
+  porque: string
+  proximosPassos: string[]
+}
 export interface Consulta {
   id: string
   especialidade: Especialidade
+  modo: Modo
   pergunta: string
   resposta: string
   fontes: Fonte[]
+  matriz?: Matriz
   artigosConsultados?: { lei: string; artigo: string }[]
   criadoEm: string
+}
+
+const MATRIZ_EXEMPLO: Matriz = {
+  sintese: 'Locatário comercial com contrato de 5 anos a vencer em 10 meses; o locador sinaliza que não renovará (exemplo da demonstração).',
+  caminhos: [
+    { nome: 'Ação renovatória agora', descricao: 'Propor a renovatória dentro da janela legal, com proposta de novo aluguel e prova dos requisitos.', fundamento: 'art. 51 e art. 71 da Lei 8.245/91', exito: 4, rapidez: 2, custo: 2, risco: 4, zonaCinzenta: 'Comprovação do "mesmo ramo" por 3 anos quando houve mudança parcial de atividade.' },
+    { nome: 'Negociar renovação amigável', descricao: 'Notificar o locador propondo renovação com reajuste, preservando o prazo da ação como garantia.', fundamento: 'art. 51 da Lei 8.245/91; art. 421 do Código Civil', exito: 3, rapidez: 4, custo: 5, risco: 3 },
+    { nome: 'Aguardar e desocupar', descricao: 'Planejar a mudança do ponto e eventual indenização por fundo de comércio se houver retomada indevida.', fundamento: 'art. 52, § 3º, da Lei 8.245/91', exito: 2, rapidez: 5, custo: 3, risco: 2 },
+  ],
+  recomendado: 1,
+  porque: 'A negociação preserva a relação e o prazo da ação continua correndo como salvaguarda; se não houver acordo em 60 dias, ajuíza-se a renovatória.',
+  proximosPassos: ['Conferir a data limite da renovatória (entre 1 ano e 6 meses antes do fim).', 'Reunir contratos, comprovantes de pagamento e prova do ramo.', 'Enviar notificação com proposta.'],
 }
 
 const CHAVE_PREF = 'lsm-especialidade'
@@ -51,13 +88,13 @@ export async function historicoConsultas(): Promise<Consulta[]> {
   if (!supabaseConfigurado) return lerLocal()
   const { data, error } = await supabase
     .from('consultas_juridicas')
-    .select('id,especialidade,pergunta,resposta,fontes,criado_em')
+    .select('id,especialidade,modo,dados,pergunta,resposta,fontes,criado_em')
     .order('criado_em', { ascending: false })
     .limit(30)
   if (error) throw new Error(error.message)
   return (data ?? []).map(r => ({
-    id: r.id, especialidade: r.especialidade, pergunta: r.pergunta, resposta: r.resposta,
-    fontes: (r.fontes ?? []) as Fonte[], criadoEm: r.criado_em,
+    id: r.id, especialidade: r.especialidade, modo: (r.modo ?? 'responder') as Modo, pergunta: r.pergunta, resposta: r.resposta,
+    fontes: (r.fontes ?? []) as Fonte[], matriz: r.modo === 'caminhos' && r.dados ? (r.dados as Matriz) : undefined, criadoEm: r.criado_em,
   }))
 }
 
@@ -71,27 +108,29 @@ export async function apagarConsulta(id: string) {
 }
 
 /** Pergunta ao agente da especialidade; a lei é lida ao vivo no Planalto pelo servidor. */
-export async function perguntar(pergunta: string, especialidade: Especialidade, historico: Consulta[]): Promise<Consulta> {
+export async function perguntar(pergunta: string, especialidade: Especialidade, historico: Consulta[], modo: Modo = 'responder', contexto = ''): Promise<Consulta> {
   if (!supabaseConfigurado) {
     const c: Consulta = {
-      id: crypto.randomUUID(), especialidade, pergunta, criadoEm: new Date().toISOString(),
+      id: crypto.randomUUID(), especialidade, modo, pergunta, criadoEm: new Date().toISOString(),
+      matriz: modo === 'caminhos' ? MATRIZ_EXEMPLO : undefined,
       resposta: '**Resposta direta** (exemplo da demonstração)\n\nNa locação comercial com contrato escrito de prazo igual ou superior a cinco anos, o locatário tem direito à renovação, desde que proponha a ação entre um ano e seis meses antes do fim do contrato (art. 51, § 5º, da Lei 8.245/91).\n\nFontes consultadas: Lei do Inquilinato (Lei 8.245/1991)',
       fontes: [{ id: 'inquilinato', titulo: 'Lei do Inquilinato (Lei 8.245/1991)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l8245.htm' }],
     }
     localStorage.setItem(CHAVE_HIST, JSON.stringify([c, ...lerLocal()].slice(0, 30)))
     return c
   }
-  const contexto = historico.slice(0, 3).reverse().flatMap(h => [
+  const contextoConversa = historico.slice(0, 3).reverse().flatMap(h => [
     { papel: 'usuario', texto: h.pergunta },
     { papel: 'assistente', texto: h.resposta },
   ])
   const { data, error } = await supabase.functions.invoke('assistente-juridico', {
-    body: { pergunta, especialidade, historico: contexto },
+    body: { pergunta, especialidade, historico: contextoConversa, modo, contexto },
   })
   if (error) throw new Error(error.message)
   if (data?.erro) throw new Error(data.erro)
   return {
-    id: crypto.randomUUID(), especialidade, pergunta, resposta: data.resposta,
-    fontes: data.fontes ?? [], artigosConsultados: data.artigosConsultados, criadoEm: data.consultadoEm,
+    id: crypto.randomUUID(), especialidade, modo, pergunta, resposta: data.resposta,
+    fontes: data.fontes ?? [], matriz: modo === 'caminhos' ? (data.dados as Matriz) : undefined,
+    artigosConsultados: data.artigosConsultados, criadoEm: data.consultadoEm,
   }
 }
