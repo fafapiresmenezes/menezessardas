@@ -66,6 +66,13 @@ Deno.serve(async (req) => {
     if (dias >= 0 && dias <= k.dias_antes) itens.push({ titulo: k.titulo, local: k.imovel, data: k.data_evento, dias })
   }
   itens.sort((a, b) => a.dias - b.dias)
+  const corpo = await req.json().catch(() => ({}))
+  if (corpo?.teste) {
+    const token = (req.headers.get('Authorization') ?? '').replace('Bearer ', '')
+    const { data: u } = await db.auth.getUser(token)
+    if (!u?.user) return json({ enviado: false, motivo: 'Faça login para enviar o teste.' }, 401)
+  }
+  if (corpo?.teste) itens.splice(0, itens.length, { titulo: 'E-mail de teste — avisos ativos', local: 'Plataforma de contratos', data: new Date().toISOString().slice(0, 10), dias: 0 })
 
   const conf = Object.fromEntries((cfg ?? []).map(x => [x.chave, x.valor]))
   const para = [...new Set([

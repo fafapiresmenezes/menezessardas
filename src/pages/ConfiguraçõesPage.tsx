@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
-import { Save, User, Bell, Sparkles, Eye, EyeOff, KeyRound } from 'lucide-react'
+import { Save, User, Bell, Sparkles, Eye, EyeOff, KeyRound, Mail } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { estadoChaveIA, removerChaveIA, salvarChaveIA, testarChaveIA, type EstadoChaveIA } from '@/lib/ia'
 import { perfilAtual, rotuloFuncao, type Funcao } from '@/lib/equipe'
@@ -179,6 +179,7 @@ export default function ConfiguraçõesPage() {
 
       <SecaoSenha />
       <SecaoChaveIA />
+      <SecaoEmail />
     </Layout>
   )
 }
@@ -450,6 +451,68 @@ function SecaoChaveIA() {
           </div>
         </div>
       )}
+    </section>
+  )
+}
+
+/** Chave do serviço de e-mail (Resend) que entrega os avisos diários. */
+function SecaoEmail() {
+  const [definida, setDefinida] = useState<{ ok: boolean; sufixo: string | null } | null>(null)
+  const [chave, setChave] = useState('')
+  const [ocupado, setOcupado] = useState<'' | 'salvando' | 'testando'>('')
+  const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+
+  const carregar = async () => {
+    const { data } = await supabase.rpc('estado_configuracao', { p_chave: 'resend_api_key' })
+    const l = (Array.isArray(data) ? data[0] : data) as { permitido: boolean; definida: boolean; sufixo: string | null } | undefined
+    setDefinida(l?.permitido ? { ok: l.definida, sufixo: l.sufixo } : null)
+  }
+  useEffect(() => { if (supabaseConfigurado) carregar() }, [])
+  if (!supabaseConfigurado || definida === null) return null
+
+  const salvar = async () => {
+    setOcupado('salvando'); setMsg(null)
+    const { error } = await supabase.rpc('definir_configuracao', { p_chave: 'resend_api_key', p_valor: chave })
+    setOcupado('')
+    if (error) return setMsg({ tipo: 'erro', texto: error.message })
+    setChave(''); setMsg({ tipo: 'ok', texto: 'Chave salva. Clique em "Enviar e-mail de teste".' }); carregar()
+  }
+  const testar = async () => {
+    setOcupado('testando'); setMsg(null)
+    const { data, error } = await supabase.functions.invoke('agendar-notificacoes', { body: { teste: true } })
+    setOcupado('')
+    if (error || !data?.enviado) return setMsg({ tipo: 'erro', texto: 'O e-mail não saiu: ' + (data?.detalhe?.corpo ?? data?.motivo ?? error?.message ?? 'erro desconhecido') })
+    setMsg({ tipo: 'ok', texto: `E-mail de teste enviado para ${(data.para as string[]).join(', ')}.` })
+  }
+
+  return (
+    <section aria-labelledby="notif" className="max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado">
+      <h2 id="notif" className="text-lg mb-3 flex items-center gap-2">
+        <Mail size={18} className="text-dourado" aria-hidden="true" /> Notificações por e-mail
+      </h2>
+      <div className="space-y-4">
+        <p className="text-sm" aria-live="polite">
+          {definida.ok ? `Serviço de e-mail ativo — chave termina em ····${definida.sufixo ?? ''}. Os avisos saem todo dia às 8h.` : 'Os avisos diários estão prontos, mas ainda não há serviço de e-mail ligado.'}
+        </p>
+        <ol className="text-xs text-grafite-claro list-decimal pl-5 space-y-1">
+          <li>Entre em <a href="https://resend.com/signup" target="_blank" rel="noopener noreferrer" className="underline text-navy">resend.com</a> e crie a conta grátis com o seu e-mail.</li>
+          <li>No menu <strong>API Keys</strong>, clique em <strong>Create API Key</strong> e copie a chave (começa com re_).</li>
+          <li>Cole abaixo e clique em Salvar.</li>
+        </ol>
+        {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={`p-3 text-sm border-l-2 ${msg.tipo === 'ok' ? 'bg-regularFundo border-regular text-regular' : 'bg-criticoFundo border-critico text-critico'}`}>{msg.texto}</p>}
+        <label htmlFor="chave-email" className="block text-xs uppercase tracking-wider text-grafite">Chave do serviço de e-mail</label>
+        <input id="chave-email" type="password" value={chave} onChange={e => setChave(e.target.value)} placeholder="re_…" autoComplete="off" spellCheck={false}
+          className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white font-mono text-sm" />
+        <div className="flex flex-wrap gap-3">
+          <button type="button" onClick={salvar} disabled={!chave.trim() || ocupado !== ''} className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider">
+            {ocupado === 'salvando' ? 'Salvando…' : 'Salvar chave'}
+          </button>
+          <button type="button" onClick={testar} disabled={!definida.ok || ocupado !== ''} className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm">
+            {ocupado === 'testando' ? 'Enviando…' : 'Enviar e-mail de teste'}
+          </button>
+        </div>
+        <p className="text-xs text-grafite-claro">No plano grátis, enquanto o domínio do escritório não for verificado no Resend, os e-mails chegam só ao endereço usado para criar a conta.</p>
+      </div>
     </section>
   )
 }
