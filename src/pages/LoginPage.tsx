@@ -41,7 +41,7 @@ export default function LoginPage() {
         const { error } = await supabase.auth.signUp({ email, password: senha })
         if (error) setErro('Não foi possível criar o acesso: ' + error.message)
         else {
-          setAvisoCadastro('Acesso criado. Se o sistema pedir, confirme pelo e-mail que você vai receber e depois entre normalmente.')
+          setAvisoCadastro('Cadastro recebido. Um administrador do escritório vai liberar o seu acesso; depois é só entrar com este e-mail e senha.')
           setPrimeiroAcesso(false)
         }
       } catch {
@@ -91,8 +91,8 @@ export default function LoginPage() {
 
           {primeiroAcesso && (
             <div role="status" className="mb-5 p-3 bg-atencaoFundo border-l-2 border-atencao text-atencao text-sm">
-              Primeiro acesso: a primeira pessoa a se cadastrar vira administradora. Os demais cadastros
-              só entram depois que a administradora liberar o acesso.
+              Crie sua conta com e-mail e senha. O acesso é liberado por um administrador do escritório,
+              que escolhe a sua função (operador ou leitor).
             </div>
           )}
 
@@ -167,7 +167,7 @@ export default function LoginPage() {
                 }}
                 className="block mx-auto mt-3 min-h-[44px] text-sm text-navy underline underline-offset-4 hover:text-dourado-escuro"
               >
-                {primeiroAcesso ? 'Já tenho acesso' : 'Primeiro acesso'}
+                {primeiroAcesso ? 'Já tenho acesso' : 'Criar conta'}
               </button>
             )}
           </div>

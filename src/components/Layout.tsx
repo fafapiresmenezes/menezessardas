@@ -6,7 +6,8 @@ import Marca from './Marca'
 import Busca from './Busca'
 import BoasVindas from './BoasVindas'
 import { aplicarTema, temaAtual } from '@/lib/tema'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare } from 'lucide-react'
+import { listarPessoas, perfilAtual } from '@/lib/equipe'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -34,6 +35,20 @@ export default function Layout({ children, title }: LayoutProps) {
   )
   const [buscaAberta, setBuscaAberta] = useState(false)
   const [tema, setTema] = useState(temaAtual)
+  const [admin, setAdmin] = useState(false)
+  const [pendentes, setPendentes] = useState(0)
+
+  // Área do administrador: só aparece para admin, com o número de cadastros esperando liberação.
+  useEffect(() => {
+    perfilAtual()
+      .then(async f => {
+        if (f !== 'admin') return
+        setAdmin(true)
+        const pessoas = await listarPessoas()
+        setPendentes(pessoas.filter(p => !p.funcao).length)
+      })
+      .catch(() => undefined)
+  }, [])
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
@@ -132,6 +147,19 @@ export default function Layout({ children, title }: LayoutProps) {
         <header className="bg-white border-b border-navy/10 px-4 md:px-8 py-5 flex items-center justify-between gap-4">
           <h1 className="font-serif text-2xl md:text-3xl text-navy truncate">{title}</h1>
           <div className="flex items-center gap-2 flex-shrink-0">
+          {admin && (
+            <button
+              onClick={() => navigate('/equipe')}
+              className="relative flex items-center gap-2 min-h-[44px] px-3 sm:px-4 bg-navy text-white rounded-sm text-sm hover:bg-navy-700 transition"
+              aria-label={pendentes ? `Área do administrador: ${pendentes} cadastro(s) esperando liberação` : 'Área do administrador'}
+            >
+              <UserCog size={16} aria-hidden="true" />
+              <span className="hidden sm:inline">Área do administrador</span>
+              {pendentes > 0 && (
+                <span className="absolute -top-2 -right-2 min-w-[20px] h-5 px-1 rounded-full bg-dourado text-navy text-xs font-semibold flex items-center justify-center" aria-hidden="true">{pendentes}</span>
+              )}
+            </button>
+          )}
           <button
             onClick={() => { const t = tema === 'escuro' ? 'claro' : 'escuro'; aplicarTema(t); setTema(t) }}
             className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/15 rounded-sm text-grafite-claro hover:border-dourado hover:text-navy transition"

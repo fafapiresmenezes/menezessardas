@@ -70,7 +70,7 @@ export default function EquipePage() {
   }
 
   return (
-    <Layout title="Equipe">
+    <Layout title="Área do administrador">
       <div className="max-w-4xl space-y-6">
         {perfil === 'carregando' ? (
           <p className="text-sm text-grafite-claro">Carregando…</p>
@@ -87,7 +87,7 @@ export default function EquipePage() {
                 Como adicionar alguém
               </h2>
               <ol className="list-decimal pl-5 text-sm text-grafite mt-3 space-y-1">
-                <li>A pessoa abre o link da plataforma e clica em <strong>Primeiro acesso</strong>, com o e-mail dela e uma senha.</li>
+                <li>A pessoa abre o link da plataforma e clica em <strong>Criar conta</strong>, com o e-mail dela e uma senha.</li>
                 <li>Ela aparece aqui como <strong>Sem acesso</strong>.</li>
                 <li>Você escolhe a função dela na lista abaixo. Pronto: ela já consegue entrar, mesmo sem clicar no link do e-mail de cadastro.</li>
               </ol>
