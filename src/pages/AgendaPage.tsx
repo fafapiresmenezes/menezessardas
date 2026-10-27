@@ -35,6 +35,7 @@ export default function AgendaPage() {
     imovel: '',
     diasAntes: 7,
     dataEvento: '',
+    email: '',
   })
 
   // Assinatura do calendário: o Google Agenda passa a buscar os prazos sozinho, sem exportar de novo.
@@ -61,7 +62,12 @@ export default function AgendaPage() {
 
   const criarAlerta = async () => {
     if (!novoAlerta.titulo || !novoAlerta.imovel || !novoAlerta.dataEvento) {
-      alert('Preencha todos os campos')
+      alert('Preencha título, imóvel e data')
+      return
+    }
+    const emails = novoAlerta.email.split(/[,;\s]+/).filter(Boolean)
+    if (emails.some(e => !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e))) {
+      alert('Confira o e-mail para aviso. Para mais de um, separe por vírgula.')
       return
     }
     try {
@@ -70,10 +76,11 @@ export default function AgendaPage() {
         imovel: novoAlerta.imovel,
         dataEvento: novoAlerta.dataEvento,
         diasAntes: novoAlerta.diasAntes,
+        email: novoAlerta.email,
       })
       await recarregar()
       setShowModal(false)
-      setNovoAlerta({ titulo: '', imovel: '', diasAntes: 7, dataEvento: '' })
+      setNovoAlerta({ titulo: '', imovel: '', diasAntes: 7, dataEvento: '', email: '' })
     } catch (e) {
       console.error('Erro ao salvar compromisso:', e)
       alert('Não foi possível salvar o compromisso. Tente novamente.')
@@ -321,6 +328,21 @@ export default function AgendaPage() {
                     <option value={14}>14 dias antes</option>
                     <option value={30}>30 dias antes</option>
                   </select>
+                </div>
+                <div>
+                  <label htmlFor="emailAviso" className="block text-sm font-medium text-navy mb-1">
+                    E-mail para aviso <span className="font-normal text-grafite-claro">(opcional)</span>
+                  </label>
+                  <input
+                    id="emailAviso"
+                    type="text"
+                    inputMode="email"
+                    value={novoAlerta.email}
+                    onChange={e => setNovoAlerta({ ...novoAlerta, email: e.target.value })}
+                    placeholder="fatima.menezes@lsm.law"
+                    className="w-full min-h-[44px] px-3 border border-navy/20 rounded-sm text-sm"
+                  />
+                  <p className="text-xs text-grafite-claro mt-1">Para mais de um, separe por vírgula.</p>
                 </div>
               </div>
 

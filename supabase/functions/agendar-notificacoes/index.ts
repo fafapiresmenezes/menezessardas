@@ -21,7 +21,7 @@ function linkGoogle(titulo: string, data: string) {
   return `https://calendar.google.com/calendar/r/eventedit?text=${encodeURIComponent(titulo)}&dates=${ini}/${fim}&ctz=America/Sao_Paulo`
 }
 
-interface Item { titulo: string; local: string; data: string; dias: number }
+interface Item { titulo: string; local: string; data: string; dias: number; extra?: string[] }
 
 async function enviar(chave: string, para: string[], itens: Item[]) {
   const linhas = itens.map(i => `
@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
 
   const [{ data: contratos }, { data: comp }, { data: cfg }, { data: users }] = await Promise.all([
     db.from('contratos').select('locatario_fornecedor,data_vencimento,dias_aviso,encerrado_em,imoveis(endereco)').not('data_vencimento', 'is', null),
-    db.from('compromissos').select('id,titulo,imovel,data_evento,dias_antes'),
+    db.from('compromissos').select('id,titulo,imovel,data_evento,dias_antes,email_aviso'),
     db.from('configuracoes').select('chave,valor').in('chave', ['resend_api_key', 'email_avisos_extra']),
     db.auth.admin.listUsers({ perPage: 200 }),
   ])
@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
   }
   for (const k of comp ?? []) {
     const dias = diasAte(k.data_evento)
-    if (dias >= 0 && dias <= k.dias_antes) itens.push({ titulo: k.titulo, local: k.imovel, data: k.data_evento, dias })
+    if (dias >= 0 && dias <= k.dias_antes) itens.push({ titulo: k.titulo, local: k.imovel, data: k.data_evento, dias, extra: k.email_aviso ? k.email_aviso.split(',') : [] })
   }
   itens.sort((a, b) => a.dias - b.dias)
   const corpo = await req.json().catch(() => ({}))
@@ -84,5 +84,11 @@ Deno.serve(async (req) => {
   if (!itens.length) return json({ itens: 0, para, enviado: false, motivo: 'nenhum prazo dentro da janela de aviso' })
   if (!chave) return json({ itens: itens.length, para, enviado: false, motivo: 'provedor de e-mail ainda não configurado' })
   const r = await enviar(chave, para, itens)
-  return json({ itens: itens.length, para, enviado: r.ok, detalhe: r })
+  // E-mail informado no próprio compromisso recebe só aquele aviso.
+  const avulsos: string[] = []
+  for (const i of itens) {
+    const so = (i.extra ?? []).filter(e => !para.includes(e))
+    if (so.length && (await enviar(chave, so, [i])).ok) avulsos.push(...so)
+  }
+  return json({ itens: itens.length, para, avulsos, enviado: r.ok, detalhe: r })
 })

@@ -10,6 +10,7 @@ export interface NovoCompromisso {
   imovel: string
   dataEvento: string
   diasAntes: number
+  email?: string
 }
 
 const CHAVE_LOCAL = 'compromissos_offline'
@@ -34,6 +35,7 @@ export async function salvarCompromisso(c: NovoCompromisso) {
   }
   const { error } = await supabase.from('compromissos').insert({
     titulo: c.titulo, imovel: c.imovel, data_evento: c.dataEvento, dias_antes: c.diasAntes,
+    email_aviso: c.email?.split(/[,;\s]+/).filter(Boolean).join(',').toLowerCase() || null,
   })
   if (error) throw error
 }
