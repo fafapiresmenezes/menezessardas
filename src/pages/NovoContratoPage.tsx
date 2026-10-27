@@ -1,3 +1,4 @@
+import { enviarArquivo } from '@/lib/arquivos'
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
@@ -29,7 +30,7 @@ export default function NovoContratoPage() {
   const [indice, setIndice] = useState('ipca')
   const [garantia, setGarantia] = useState('sem_garantia')
   const [notas] = useState('')
-  const [arquivo, setArquivo] = useState<{ nome: string; tamanho: number } | null>(null)
+  const [arquivo, setArquivo] = useState<{ nome: string; tamanho: number; arquivo: File } | null>(null)
   const [textoExtraido, setTextoExtraido] = useState<string>('')
   const [lendoPdf, setLendoPdf] = useState(false)
 
@@ -81,7 +82,7 @@ export default function NovoContratoPage() {
         dataUltimoReajuste: null,
         notas,
         textoExtraido: textoExtraido || undefined,
-        arquivo: arquivo ? { ...arquivo, caminhoStorage: '' } : undefined,
+        arquivo: arquivo ? { nome: arquivo.nome, tamanho: arquivo.tamanho, caminhoStorage: await enviarArquivo(arquivo.arquivo, `contratos/${imovelId}`) } : undefined,
       })
       navigate(`/contrato/${imovelId}${textoExtraido && (natureza ?? 'principal') === 'principal' ? '?analisar=1' : ''}`)
     } catch (err) {
@@ -192,7 +193,7 @@ export default function NovoContratoPage() {
                 rotulo="Arraste o PDF do contrato assinado para cá ou"
                 tipoFixo="contrato"
                 onArquivo={async arq => {
-                  setArquivo({ nome: arq.name, tamanho: arq.size })
+                  setArquivo({ nome: arq.name, tamanho: arq.size, arquivo: arq })
                   if (arq.type.includes('pdf') || arq.name.toLowerCase().endsWith('.pdf')) {
                     setLendoPdf(true)
                     try {

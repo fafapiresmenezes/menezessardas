@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import ZonaArrastar from '@/components/ZonaArrastar'
+import { enviarArquivo } from '@/lib/arquivos'
 import { Passo, Escolha, Campo, classeCampo } from '@/components/Assistente'
 import { TIPOS_IMOVEL, USOS_IMOVEL, UFS, checklistDocumentos, type TipoImovel, type UsoImovel, type UF, type TipoDocumento } from '@/lib/dominio'
 import { repositorio } from '@/lib/repositorio'
@@ -11,6 +12,7 @@ const ETAPAS = 6
 interface DocAnexado {
   tipo: TipoDocumento
   nome: string
+  arquivo?: File
 }
 
 export default function NovoImovelPage() {
@@ -56,7 +58,12 @@ export default function NovoImovelPage() {
         ...checklist
           .filter(item => tem[item.tipo])
           .map(item => ({ tipo: item.tipo, nome: item.rotulo })),
-        ...extras,
+        // Os arquivos anexados vão ao armazenamento privado antes de gravar o imóvel.
+        ...(await Promise.all(extras.map(async ({ arquivo, ...d }) => ({
+          ...d,
+          tamanho: arquivo?.size,
+          caminhoStorage: arquivo ? await enviarArquivo(arquivo, 'imoveis') : undefined,
+        })))),
       ]
       await repositorio.criarImovel({
         endereco,
@@ -171,7 +178,7 @@ export default function NovoImovelPage() {
             <div className="mt-6">
               <ZonaArrastar
                 rotulo="Arraste outros documentos para cá ou"
-                onArquivo={(arq, tipo) => setExtras([...extras, { tipo, nome: arq.name }])}
+                onArquivo={(arq, tipo) => setExtras([...extras, { tipo, nome: arq.name, arquivo: arq }])}
               />
               {extras.length > 0 && (
                 <ul className="mt-3 text-sm text-grafite space-y-1">
