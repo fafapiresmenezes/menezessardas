@@ -83,7 +83,7 @@ export default function NovoContratoPage() {
         textoExtraido: textoExtraido || undefined,
         arquivo: arquivo ? { ...arquivo, caminhoStorage: '' } : undefined,
       })
-      navigate(`/contrato/${imovelId}`)
+      navigate(`/contrato/${imovelId}${textoExtraido && (natureza ?? 'principal') === 'principal' ? '?analisar=1' : ''}`)
     } catch (err) {
       alert('Erro ao criar contrato: ' + (err instanceof Error ? err.message : 'desconhecido'))
       setSalvando(false)

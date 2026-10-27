@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
 import { SkeletonCard, SkeletonTable } from '@/components/Skeleton'
@@ -11,7 +11,8 @@ import { enviarArquivo, urlAssinada, apagarArquivo } from '@/lib/arquivos'
 import { Escolha, Campo, classeCampo } from '@/components/Assistente'
 import { GARANTIAS, INDICES_REAJUSTE, PERIODICIDADES, type Garantia, type IndiceReajuste, type Periodicidade } from '@/lib/dominio'
 import ZonaArrastar from '@/components/ZonaArrastar'
-import { analisarContrato, type AnaliseContrato } from '@/lib/agente'
+import Reajuste from '@/components/Reajuste'
+import { analisarContrato, ultimaAnalise, type AnaliseContrato, type OrigemAnalise } from '@/lib/agente'
 
 const LIMITE_MB = 50
 
@@ -33,10 +34,12 @@ export default function ContratoPage() {
   const [compromissos, setCompromissos] = useState<ReturnType<typeof calcularAlertas>>([])
   const [vinculados, setVinculados] = useState<Contrato[]>([])
   const [analise, setAnalise] = useState<AnaliseContrato | null>(null)
+  const [analiseEm, setAnaliseEm] = useState<string | null>(null)
+  const [params, setParams] = useSearchParams()
   const [analisando, setAnalisando] = useState(false)
   const [erroAnalise, setErroAnalise] = useState('')
   const [modo, setModo] = useState<'ver' | 'editar' | 'encerrar'>('ver')
-  const [ed, setEd] = useState({ parte: '', valor: '', vencimento: '', indice: 'ipca' as IndiceReajuste, garantia: 'sem_garantia' as Garantia, periodicidade: 'mensal' as Periodicidade, notas: '' })
+  const [ed, setEd] = useState({ parte: '', valor: '', vencimento: '', indice: 'ipca' as IndiceReajuste, garantia: 'sem_garantia' as Garantia, periodicidade: 'mensal' as Periodicidade, notas: '', diasAviso: 7 })
   const [motivo, setMotivo] = useState<string | null>(null)
   const [avisoTopo, setAvisoTopo] = useState('')
 
@@ -46,6 +49,10 @@ export default function ContratoPage() {
     setImovel(i)
     const c = await repositorio.obterContratoPorImovel(id)
     setContrato(c)
+    if (c) {
+      const guardada = await ultimaAnalise(c.id).catch(() => null)
+      if (guardada) { setAnalise(guardada); setAnaliseEm(guardada.em) }
+    }
     // O PDF do próprio instrumento (campo arquivo) entra na lista como documento do contrato.
     const doArquivo: Documento[] = c?.arquivo
       ? [{ id: `arquivo-${c.id}`, tipo: 'contrato', nome: c.arquivo.nome, enviadoEm: c.criadoEm }]
@@ -84,7 +91,11 @@ export default function ContratoPage() {
       try {
         const { extrairTextoPdf } = await import('@/lib/pdf')
         const texto = await extrairTextoPdf(arquivo)
-        if (texto) await repositorio.atualizarTextoContrato(contrato.id, texto)
+        if (texto) {
+          await repositorio.atualizarTextoContrato(contrato.id, texto)
+          // Uma leitura por PDF anexado; reanálise só pelo botão, para controlar custo.
+          if (imovel) analisar({ ...contrato, textoExtraido: texto }, 'anexo')
+        }
       } catch {
         // extração é um reforço; o anexo já foi salvo
       }
@@ -104,6 +115,7 @@ export default function ContratoPage() {
       garantia: contrato.garantia,
       periodicidade: contrato.periodicidade,
       notas: contrato.notas,
+      diasAviso: contrato.diasAviso ?? 7,
     })
     setErro('')
     setModo('editar')
@@ -123,6 +135,7 @@ export default function ContratoPage() {
         garantia: ed.garantia,
         periodicidade: ed.periodicidade,
         notas: ed.notas,
+        diasAviso: ed.diasAviso,
       })
       setModo('ver')
       setErro('')
@@ -148,18 +161,27 @@ export default function ContratoPage() {
     }
   }
 
-  const analisar = async () => {
-    if (!contrato || !imovel) return
+  const analisar = async (alvo: Contrato | null = contrato, origem: OrigemAnalise = 'botao') => {
+    if (!alvo || !imovel) return
     setAnalisando(true)
     setErroAnalise('')
     try {
-      setAnalise(await analisarContrato(contrato, imovel))
+      setAnalise(await analisarContrato(alvo, imovel, origem))
+      setAnaliseEm(new Date().toISOString())
     } catch (e) {
       setErroAnalise('Não foi possível analisar agora: ' + (e instanceof Error ? e.message : 'erro desconhecido'))
     } finally {
       setAnalisando(false)
     }
   }
+
+  // Contrato recém-criado com PDF: a primeira leitura da IA roda sozinha, uma vez.
+  useEffect(() => {
+    if (params.get('analisar') !== '1' || !contrato || !imovel || analisando) return
+    setParams({}, { replace: true })
+    if (contrato.textoExtraido && !analise) analisar(contrato, 'anexo')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params, contrato, imovel])
 
   const remover = async (doc: Documento) => {
     if (!window.confirm(`Excluir “${doc.nome}”? Esta ação não pode ser desfeita.`)) return
@@ -275,6 +297,11 @@ export default function ContratoPage() {
                 <Campo id="ed-venc" rotulo="Vencimento" ajuda="Deixe em branco se o prazo for indeterminado.">
                   <input id="ed-venc" type="date" className={classeCampo} value={ed.vencimento} onChange={e => setEd({ ...ed, vencimento: e.target.value })} aria-describedby="ed-venc-ajuda" />
                 </Campo>
+                <Campo id="ed-aviso" rotulo="Avisar do vencimento com" ajuda="Vale para o e-mail diário e para o Google Agenda.">
+                  <select id="ed-aviso" className={classeCampo} value={ed.diasAviso} onChange={e => setEd({ ...ed, diasAviso: Number(e.target.value) })} aria-describedby="ed-aviso-ajuda">
+                    {[7, 15, 30, 60, 90, 180].map(d => <option key={d} value={d}>{d} dias de antecedência{d === 7 ? ' (padrão)' : ''}</option>)}
+                  </select>
+                </Campo>
               </div>
               <div>
                 <p className="text-xs uppercase tracking-wider text-grafite mb-2">Índice de reajuste</p>
@@ -350,6 +377,8 @@ export default function ContratoPage() {
             </div>
           )}
         </section>
+
+        {!encerrado && <Reajuste contrato={contrato} imovel={`${imovel.endereco}, ${imovel.cidade}`} />}
 
         {compromissos.length > 0 && (
           <section className="bg-white p-6 shadow-sm" aria-labelledby="titulo-compromissos">
@@ -477,11 +506,16 @@ export default function ContratoPage() {
                 Análise jurídica assistida
               </h3>
               <p className="text-sm text-white/70 mt-1">
-                Revisa cláusulas, prazos e riscos do contrato. Executada apenas quando solicitada, para controlar custos.
+                Revisa cláusulas, prazos e riscos do contrato. Roda sozinha uma vez quando o PDF do contrato é anexado; depois, só pelo botão, para controlar custos.
               </p>
+              {analiseEm && (
+                <p className="text-xs text-white/60 mt-1">
+                  Última análise: {new Date(analiseEm).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}
+                </p>
+              )}
             </div>
             <button
-              onClick={analisar}
+              onClick={() => analisar()}
               disabled={analisando}
               className="flex-shrink-0 bg-dourado hover:bg-dourado-claro disabled:opacity-60 text-navy font-medium px-5 py-2.5 rounded-sm uppercase tracking-wider text-sm"
             >

@@ -270,23 +270,18 @@ export default function IndicadoresPage() {
                 <h3 className="font-medium text-navy mb-3">{o.titulo}</h3>
                 <div className="space-y-3">
                   {o.keyResults.map((kr, j) => {
-                    const atingido =
-                      kr.unidade === 'un'
-                        ? kr.atual <= kr.meta
-                        : kr.atual >= kr.meta
-                    const pct =
-                      kr.unidade === '%'
-                        ? Math.min(100, Math.round((kr.atual / kr.meta) * 100))
-                        : atingido
-                          ? 100
-                          : 0
+                    const teto = kr.unidade === 'un' || kr.menorMelhor
+                    const atingido = teto ? kr.atual <= kr.meta : kr.atual >= kr.meta
+                    const pct = teto
+                      ? atingido ? 100 : Math.max(5, Math.round((kr.meta / Math.max(kr.atual, 1)) * 100))
+                      : Math.min(100, Math.round((kr.atual / kr.meta) * 100))
                     return (
                       <div key={j}>
                         <div className="flex items-center justify-between text-sm mb-1">
                           <span className="text-grafite">{kr.descricao}</span>
                           <span className={atingido ? 'text-regular font-medium' : 'text-atencao font-medium'}>
                             {kr.atual}
-                            {kr.unidade === '%' ? '%' : ''} / meta {kr.meta}
+                            {kr.unidade === '%' ? '%' : ''} / meta {teto && kr.unidade === '%' ? '≤ ' : ''}{kr.meta}
                             {kr.unidade === '%' ? '%' : ''}
                           </span>
                         </div>

@@ -30,3 +30,30 @@ describe('calcularAlertas', () => {
     expect(a.find(x => x.tipo === 'documento')?.diasRestantes).toBe(15)
   })
 })
+
+import { receitaEmRisco } from '@/lib/indicadores'
+
+describe('receitaEmRisco', () => {
+  it('mede a parte da receita que vence em até 90 dias', () => {
+    const perto = { ...base, id: 'a', valor: 3000, dataVencimento: emDias(40) } as Contrato
+    const longe = { ...base, id: 'b', valor: 7000, dataVencimento: emDias(400) } as Contrato
+    expect(receitaEmRisco([perto, longe], 10000)).toBe(30)
+    expect(receitaEmRisco([], 0)).toBe(0)
+  })
+})
+
+describe('renovatória', () => {
+  const comercial = { ...base, tipo: 'locacao_comercial' } as Contrato
+  it('avisa o prazo de 6 meses antes do fim em locação comercial de 5 anos', () => {
+    const c = { ...comercial, dataInicio: emDias(-5 * 365), dataVencimento: emDias(300) } as Contrato
+    const r = calcularAlertas([imovel], [c]).find(a => a.tipo === 'renovatoria')
+    expect(r).toBeTruthy()
+    expect(r!.diasRestantes).toBeGreaterThan(110)
+    expect(r!.diasRestantes).toBeLessThan(130)
+  })
+  it('não avisa em locação comercial curta nem residencial', () => {
+    const curta = { ...comercial, dataInicio: emDias(-300), dataVencimento: emDias(400) } as Contrato
+    const resid = { ...base, dataInicio: emDias(-5 * 365), dataVencimento: emDias(300) } as Contrato
+    expect(calcularAlertas([imovel], [curta, resid]).some(a => a.tipo === 'renovatoria')).toBe(false)
+  })
+})

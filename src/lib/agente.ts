@@ -40,7 +40,41 @@ function resumoCampos(contrato: Contrato, imovel: Imovel): string {
   ].join('\n')
 }
 
-export async function analisarContrato(contrato: Contrato, imovel: Imovel): Promise<AnaliseContrato> {
+export type OrigemAnalise = 'botao' | 'anexo'
+
+const CHAVE_LOCAL = 'lsm-analises-v1'
+
+/** Última análise guardada do contrato, para não pagar a IA de novo ao reabrir a tela. */
+export async function ultimaAnalise(contratoId: string): Promise<(AnaliseContrato & { em: string }) | null> {
+  if (!supabaseConfigurado) {
+    try {
+      const todas = JSON.parse(localStorage.getItem(CHAVE_LOCAL) || '{}')
+      return todas[contratoId] ?? null
+    } catch { return null }
+  }
+  const { data } = await supabase
+    .from('analises_contrato')
+    .select('analise,criado_em')
+    .eq('contrato_id', contratoId)
+    .order('criado_em', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  return data ? { ...(data.analise as AnaliseContrato), em: data.criado_em } : null
+}
+
+async function guardarAnalise(contratoId: string, analise: AnaliseContrato, origem: OrigemAnalise) {
+  if (!supabaseConfigurado) {
+    try {
+      const todas = JSON.parse(localStorage.getItem(CHAVE_LOCAL) || '{}')
+      todas[contratoId] = { ...analise, em: new Date().toISOString() }
+      localStorage.setItem(CHAVE_LOCAL, JSON.stringify(todas))
+    } catch { /* sem armazenamento */ }
+    return
+  }
+  await supabase.from('analises_contrato').insert({ contrato_id: contratoId, analise, origem })
+}
+
+export async function analisarContrato(contrato: Contrato, imovel: Imovel, origem: OrigemAnalise = 'botao'): Promise<AnaliseContrato> {
   let analise: AnaliseContrato
   if (supabaseConfigurado) {
     const { data, error } = await supabase.functions.invoke('analisar-contrato', {
@@ -54,6 +88,7 @@ export async function analisarContrato(contrato: Contrato, imovel: Imovel): Prom
     await new Promise(r => setTimeout(r, 900))
     analise = analiseExemplo(contrato, imovel)
   }
+  await guardarAnalise(contrato.id, analise, origem)
   await registrarEvento({
     tipo: 'contrato_analisado',
     entidade: contrato.id,

@@ -60,6 +60,8 @@ export interface Contrato {
   /** Data em que o contrato foi encerrado; contrato encerrado sai de alertas e indicadores. */
   encerradoEm?: string
   motivoEncerramento?: string
+  /** Antecedência, em dias, do aviso de vencimento (padrão 7). */
+  diasAviso?: number
   arquivo?: { nome: string; tamanho: number; caminhoStorage?: string }
   documentos: Documento[]
 }
@@ -67,7 +69,7 @@ export interface Contrato {
 export type NovoImovel = Omit<Imovel, 'id' | 'documentos'> & { documentos?: Omit<Documento, 'id' | 'enviadoEm'>[] }
 export type NovoContrato = Omit<Contrato, 'id' | 'criadoEm' | 'documentos'>
 export type EdicaoContrato = Partial<
-  Pick<Contrato, 'parte' | 'dataVencimento' | 'valor' | 'periodicidade' | 'indice' | 'garantia' | 'notas'>
+  Pick<Contrato, 'parte' | 'dataVencimento' | 'valor' | 'periodicidade' | 'indice' | 'garantia' | 'notas' | 'diasAviso'>
 >
 
 export interface Repositorio {
@@ -296,6 +298,7 @@ class RepositorioSupabase implements Repositorio {
     textoExtraido: r.texto_extraido ? String(r.texto_extraido) : undefined,
     encerradoEm: r.encerrado_em ? String(r.encerrado_em) : undefined,
     motivoEncerramento: r.motivo_encerramento ? String(r.motivo_encerramento) : undefined,
+    diasAviso: r.dias_aviso != null ? Number(r.dias_aviso) : 7,
     arquivo: r.caminho_arquivo ? { nome: String(r.caminho_arquivo).split('/').pop() ?? '', tamanho: 0, caminhoStorage: String(r.caminho_arquivo) } : undefined,
     documentos: docs,
   })
@@ -421,6 +424,7 @@ class RepositorioSupabase implements Repositorio {
     if (dados.indice !== undefined) linha.indice_reajuste = dados.indice
     if (dados.garantia !== undefined) linha.garantia = dados.garantia
     if (dados.notas !== undefined) linha.notas = dados.notas
+    if (dados.diasAviso !== undefined) linha.dias_aviso = dados.diasAviso
     const { error } = await supabase.from('contratos').update(linha).eq('id', contratoId)
     if (error) throw error
     await registrarEvento({ tipo: 'contrato_editado', entidade: contratoId, resumo: `Contrato editado (${Object.keys(dados).join(', ')})` })
@@ -474,7 +478,7 @@ export const modoFicticio = !supabaseConfigurado
 /* Alertas são sempre calculados, nunca guardados.                      */
 /* ------------------------------------------------------------------ */
 
-export type TipoAlerta = 'vencimento' | 'reajuste' | 'documento' | 'compromisso'
+export type TipoAlerta = 'vencimento' | 'reajuste' | 'documento' | 'compromisso' | 'renovatoria'
 
 export interface Alerta {
   id: string
@@ -551,6 +555,32 @@ export function calcularAlertas(imoveis: Imovel[], contratos: Contrato[]): Alert
           dataEvento: iso,
           diasRestantes: dias,
         })
+      }
+    }
+    // Lei 8.245/91, art. 51: locação comercial de 5 anos ou mais dá direito à renovatória,
+    // que precisa ser proposta até 6 meses antes do fim do contrato, sob pena de decadência.
+    if (c.tipo === 'locacao_comercial' && c.dataVencimento) {
+      const inicio = new Date(c.dataInicio + 'T00:00:00')
+      const fim = new Date(c.dataVencimento + 'T00:00:00')
+      const cincoAnos = new Date(inicio)
+      cincoAnos.setFullYear(cincoAnos.getFullYear() + 5)
+      if (fim >= cincoAnos) {
+        const limite = new Date(fim)
+        limite.setMonth(limite.getMonth() - 6)
+        const iso = limite.toISOString().slice(0, 10)
+        const dias = diasAte(iso)
+        if (dias !== null && dias >= 0 && dias <= JANELA_DIAS) {
+          alertas.push({
+            id: `renov-${c.id}`,
+            imovelId: c.imovelId,
+            contratoId: c.id,
+            imovel: nomeImovel(c.imovelId),
+            tipo: 'renovatoria',
+            titulo: 'Prazo final da ação renovatória (art. 51, Lei 8.245/91)',
+            dataEvento: iso,
+            diasRestantes: dias,
+          })
+        }
       }
     }
     c.documentos.forEach(d => docAlerta(d, c.imovelId, c.id))

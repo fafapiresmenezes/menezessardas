@@ -127,10 +127,22 @@ export interface KeyResult {
   atual: number
   meta: number
   unidade: '%' | 'un'
+  /** Meta é um teto (ex.: vacância ≤ 10%), não um piso. */
+  menorMelhor?: boolean
 }
 export interface Objetivo {
   titulo: string
   keyResults: KeyResult[]
+}
+
+/** Parte da receita mensal ativa cujo contrato vence nos próximos 90 dias. */
+export function receitaEmRisco(contratos: Contrato[], receitaTotal: number): number {
+  if (!receitaTotal) return 0
+  const emRisco = contratos
+    .filter(contratoAtivo)
+    .filter(c => { const d = diasAte(c.dataVencimento); return d !== null && d >= 0 && d <= 90 })
+    .reduce((s, c) => s + valorMensal(c), 0)
+  return Math.round((emRisco / receitaTotal) * 100)
 }
 
 export function calcularOKRs(imoveis: Imovel[], contratos: Contrato[], alertas: Alerta[]): Objetivo[] {
@@ -161,6 +173,13 @@ export function calcularOKRs(imoveis: Imovel[], contratos: Contrato[], alertas: 
       keyResults: [
         { descricao: 'Contratos com mais de 60 dias de prazo', atual: pctAntecip, meta: 80, unidade: '%' },
         { descricao: 'Contratos vencidos sem renovação', atual: kpis.contratosVencidos, meta: 0, unidade: 'un' },
+      ],
+    },
+    {
+      titulo: 'Proteger a receita da carteira',
+      keyResults: [
+        { descricao: 'Vacância (imóveis vagos)', atual: kpis.vacancia, meta: 10, unidade: '%', menorMelhor: true },
+        { descricao: 'Receita mensal que vence em até 90 dias', atual: receitaEmRisco(contratos, kpis.receitaContratadaMensal), meta: 15, unidade: '%', menorMelhor: true },
       ],
     },
   ]
@@ -207,7 +226,7 @@ export interface PontoPendencia {
 }
 
 const importanciaPorTipo = (tipo: Alerta['tipo']): Nivel =>
-  tipo === 'vencimento' ? 'alto' : tipo === 'reajuste' ? 'medio' : 'medio'
+  tipo === 'vencimento' || tipo === 'renovatoria' ? 'alto' : 'medio'
 
 export function matrizPendencias(alertas: Alerta[]): PontoPendencia[] {
   return alertas.map(a => ({
