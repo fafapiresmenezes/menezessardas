@@ -461,8 +461,11 @@ function SecaoEmail() {
   const [chave, setChave] = useState('')
   const [ocupado, setOcupado] = useState<'' | 'salvando' | 'testando'>('')
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+  const [extras, setExtras] = useState('')
 
   const carregar = async () => {
+    const { data: lista } = await supabase.rpc('emails_avisos')
+    setExtras((lista as string | null) ?? '')
     const { data } = await supabase.rpc('estado_configuracao', { p_chave: 'resend_api_key' })
     const l = (Array.isArray(data) ? data[0] : data) as { permitido: boolean; definida: boolean; sufixo: string | null } | undefined
     setDefinida(l?.permitido ? { ok: l.definida, sufixo: l.sufixo } : null)
@@ -476,6 +479,13 @@ function SecaoEmail() {
     setOcupado('')
     if (error) return setMsg({ tipo: 'erro', texto: error.message })
     setChave(''); setMsg({ tipo: 'ok', texto: 'Chave salva. Clique em "Enviar e-mail de teste".' }); carregar()
+  }
+  const salvarExtras = async () => {
+    setOcupado('salvando'); setMsg(null)
+    const { error } = await supabase.rpc('definir_configuracao', { p_chave: 'email_avisos_extra', p_valor: extras })
+    setOcupado('')
+    if (error) return setMsg({ tipo: 'erro', texto: error.message })
+    setMsg({ tipo: 'ok', texto: 'E-mails salvos. Eles recebem os avisos junto com todos os usuários cadastrados.' }); carregar()
   }
   const testar = async () => {
     setOcupado('testando'); setMsg(null)
@@ -510,6 +520,13 @@ function SecaoEmail() {
           <button type="button" onClick={testar} disabled={!definida.ok || ocupado !== ''} className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm">
             {ocupado === 'testando' ? 'Enviando…' : 'Enviar e-mail de teste'}
           </button>
+        </div>
+        <label htmlFor="emails-extra" className="block text-xs uppercase tracking-wider text-grafite pt-2">Outros e-mails que recebem os avisos</label>
+        <p className="text-xs text-grafite-claro">Todos os usuários cadastrados já recebem. Acrescente aqui e-mails do escritório, separados por vírgula.</p>
+        <div className="flex gap-2">
+          <input id="emails-extra" type="text" value={extras} onChange={e => setExtras(e.target.value)} placeholder="fatima.menezes@lsm.law, contato@lsm.law"
+            className="flex-1 min-w-0 px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white text-sm" />
+          <button type="button" onClick={salvarExtras} disabled={ocupado !== ''} className="min-h-[44px] px-4 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm">Salvar</button>
         </div>
         <p className="text-xs text-grafite-claro">No plano grátis, enquanto o domínio do escritório não for verificado no Resend, os e-mails chegam só ao endereço usado para criar a conta.</p>
       </div>

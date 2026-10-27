@@ -37,19 +37,17 @@ export default function AgendaPage() {
     dataEvento: '',
   })
 
+  // Assinatura do calendário: o Google Agenda passa a buscar os prazos sozinho, sem exportar de novo.
   const sincronizarGoogleCalendar = async () => {
     setSincronizando(true)
     try {
-      const { data, error } = await supabase.functions.invoke('exportar-calendario', {
-        body: { formato: 'google' },
-      })
-      if (error) throw error
-      if (data?.url) {
-        window.open(data.url, '_blank')
-      }
+      const { data: token, error } = await supabase.rpc('link_agenda')
+      if (error || !token) throw error ?? new Error('sem link')
+      const feed = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/agenda-feed?t=${token}`.replace(/^https?:/, 'webcal:')
+      window.open(`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(feed)}`, '_blank', 'noopener')
     } catch (e) {
-      console.error('Erro ao sincronizar com Google Calendar:', e)
-      alert('Erro ao sincronizar com Google Calendar')
+      console.error('Erro ao conectar o Google Agenda:', e)
+      alert('Não foi possível gerar o link do Google Agenda. Entre de novo na plataforma e tente outra vez.')
     } finally {
       setSincronizando(false)
     }
@@ -163,7 +161,7 @@ export default function AgendaPage() {
               disabled={sincronizando}
               className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 rounded-sm text-sm hover:bg-navy-700 disabled:opacity-50"
             >
-              <ExternalLink size={16} aria-hidden="true" /> {sincronizando ? 'Abrindo…' : 'Sincronizar Google'}
+              <ExternalLink size={16} aria-hidden="true" /> {sincronizando ? 'Abrindo…' : 'Conectar ao Google Agenda'}
             </button>
           </div>
         </div>
