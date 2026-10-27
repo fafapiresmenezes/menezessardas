@@ -148,15 +148,15 @@ export default function AssistentePage() {
         </p>
 
         <section className="bg-white p-6 shadow-sm" aria-labelledby="titulo-especialidade">
-          <h3 id="titulo-especialidade" className="text-lg mb-1">Seu agente</h3>
+          <h2 id="titulo-especialidade" className="text-lg mb-1">Seu agente</h2>
           <p className="text-sm text-grafite-claro mb-4">A escolha fica guardada para o seu usuário.</p>
           <Escolha nome="Especialidade do agente" opcoes={ESPECIALIDADES} valor={especialidade} onChange={mudarEspecialidade} colunas={3} />
         </section>
 
         <section className="bg-white p-6 shadow-sm" aria-labelledby="titulo-pergunta">
-          <h3 id="titulo-pergunta" className="text-lg mb-3 flex items-center gap-2">
+          <h2 id="titulo-pergunta" className="text-lg mb-3 flex items-center gap-2">
             <Scale size={18} aria-hidden="true" /> Pergunta ao agente {rotulo.toLowerCase()}
-          </h3>
+          </h2>
           <div role="tablist" aria-label="Modo do agente" className="flex flex-wrap gap-2 mb-3">
             {MODOS.map(m => (
               <button key={m.valor} role="tab" aria-selected={modo === m.valor} onClick={() => setModo(m.valor)}

@@ -120,7 +120,7 @@ export default function Layout({ children, title }: LayoutProps) {
             {menuAberto && <span className="text-sm">Sair</span>}
           </button>
           {menuAberto && (
-            <p className="text-[10px] text-white/40 px-4 text-center">
+            <p className="text-[11px] text-white/70 px-4 text-center">
               Desenvolvido pelo<br />
               Instituto THEYE
             </p>

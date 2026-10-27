@@ -88,7 +88,7 @@ export default function PerfilJulgador() {
 
   return (
     <section className="bg-white p-6 shadow-sm" aria-labelledby="titulo-julgador">
-      <h3 id="titulo-julgador" className="text-lg mb-1 flex items-center gap-2"><Gavel size={18} aria-hidden="true" /> Perfil do julgador</h3>
+      <h2 id="titulo-julgador" className="text-lg mb-1 flex items-center gap-2"><Gavel size={18} aria-hidden="true" /> Perfil do julgador</h2>
       <p className="text-sm text-grafite-claro mb-4">
         Padrão decisório do órgão (estatísticas públicas do DataJud/CNJ) e notícias sobre o magistrado, com sugestões de como argumentar no seu tema.
         Só dados públicos: não é perfil psicológico. A consulta ao CNJ leva de 15 a 40 segundos.

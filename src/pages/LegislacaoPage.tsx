@@ -134,7 +134,7 @@ export default function LegislacaoPage() {
         </div>
 
         <section className="bg-white p-6 shadow-sm">
-          <h3 className="text-lg mb-1">Buscar legislação</h3>
+          <h2 className="text-lg mb-1">Buscar legislação</h2>
           <p className="text-sm text-grafite-claro mb-4">Consulte leis federais, estaduais e decretos sobre imóveis, locação e contratos.</p>
           <div className="flex gap-2 mb-4">
             <div className="flex-1">
@@ -181,7 +181,7 @@ export default function LegislacaoPage() {
         <section className="bg-white p-6 shadow-sm" aria-labelledby="titulo-radar">
           <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
             <div>
-              <h3 id="titulo-radar" className="text-lg">Radar dos portais</h3>
+              <h2 id="titulo-radar" className="text-lg">Radar dos portais</h2>
               <p className="text-sm text-grafite-claro">
                 Conexão permanente: todo dia o servidor consulta a Câmara dos Deputados (projetos de lei dos últimos 120 dias) e as notícias dos tribunais sobre locação, condomínio, incorporação e registro.
                 {radar[0] && <> Última captura: {new Date(radar[0].vistoEm).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}.</>}
