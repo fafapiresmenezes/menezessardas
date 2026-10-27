@@ -6,7 +6,7 @@ import Marca from './Marca'
 import Busca from './Busca'
 import BoasVindas from './BoasVindas'
 import { aplicarTema, temaAtual } from '@/lib/tema'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -20,6 +20,7 @@ const itensMenu = [
   { icon: Bell, label: 'Alertas', href: '/alertas' },
   { icon: Truck, label: 'Fornecedores', href: '/fornecedores' },
   { icon: Scale, label: 'Legislação', href: '/legislacao' },
+  { icon: MessageSquare, label: 'Assistente', href: '/assistente' },
   { icon: Gauge, label: 'Indicadores', href: '/indicadores' },
   { icon: FileBarChart, label: 'Relatórios', href: '/relatorios' },
   { icon: ShieldCheck, label: 'Trilha', href: '/trilha' },
