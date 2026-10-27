@@ -474,7 +474,7 @@ export const modoFicticio = !supabaseConfigurado
 /* Alertas são sempre calculados, nunca guardados.                      */
 /* ------------------------------------------------------------------ */
 
-export type TipoAlerta = 'vencimento' | 'reajuste' | 'documento'
+export type TipoAlerta = 'vencimento' | 'reajuste' | 'documento' | 'compromisso'
 
 export interface Alerta {
   id: string

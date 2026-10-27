@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
-import { useAlertas } from '@/hooks/useAlertas'
+import { useAlertas, salvarCompromisso } from '@/hooks/useAlertas'
 import { supabase } from '@/lib/supabase'
 import { baixarICS } from '@/lib/ics'
 import { formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
@@ -23,14 +23,13 @@ const corPonto: Record<string, string> = {
 }
 
 export default function AgendaPage() {
-  const { alertas, loading } = useAlertas()
+  const { alertas, loading, recarregar } = useAlertas()
   const navigate = useNavigate()
   const hoje = new Date()
   const [ano, setAno] = useState(hoje.getFullYear())
   const [mes, setMes] = useState(hoje.getMonth())
   const [sincronizando, setSincronizando] = useState(false)
   const [showModal, setShowModal] = useState(false)
-  const [diaClicado, setDiaClicado] = useState<number | null>(null)
   const [novoAlerta, setNovoAlerta] = useState({
     titulo: '',
     imovel: '',
@@ -58,7 +57,6 @@ export default function AgendaPage() {
 
   const abrirModalNovoAlerta = (dia: number) => {
     const dataEvento = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`
-    setDiaClicado(dia)
     setNovoAlerta({ ...novoAlerta, dataEvento })
     setShowModal(true)
   }
@@ -69,38 +67,18 @@ export default function AgendaPage() {
       return
     }
     try {
-      // Salvar na tabela alertas com tipo "compromisso"
-      const { error } = await supabase.from('alertas').insert({
-        imovel_id: '', // Sem imóvel específico; será identificado por descrição
-        tipo_alerta: 'compromisso',
-        dias_restantes: novoAlerta.diasAntes,
-        data_evento: novoAlerta.dataEvento,
-        data_criacao: new Date().toISOString(),
-        lido: false,
+      await salvarCompromisso({
+        titulo: novoAlerta.titulo,
+        imovel: novoAlerta.imovel,
+        dataEvento: novoAlerta.dataEvento,
+        diasAntes: novoAlerta.diasAntes,
       })
-
-      if (error) {
-        console.error('Erro ao salvar alert:', error)
-        // Fallback: salvar em localStorage se banco falhar
-        const saved = JSON.parse(localStorage.getItem('compromissos_offline') || '[]')
-        saved.push({
-          titulo: novoAlerta.titulo,
-          imovel: novoAlerta.imovel,
-          dataEvento: novoAlerta.dataEvento,
-          diasAntes: novoAlerta.diasAntes,
-          id: Math.random().toString(),
-        })
-        localStorage.setItem('compromissos_offline', JSON.stringify(saved))
-        alert(`✓ Compromisso criado (offline)\nData: ${formatarData(novoAlerta.dataEvento)}\nAlarme: ${novoAlerta.diasAntes}d antes`)
-      } else {
-        alert(`✓ Compromisso criado e sincronizado\nData: ${formatarData(novoAlerta.dataEvento)}\nAlarme: ${novoAlerta.diasAntes}d antes`)
-      }
-
+      await recarregar()
       setShowModal(false)
       setNovoAlerta({ titulo: '', imovel: '', diasAntes: 7, dataEvento: '' })
     } catch (e) {
-      console.error('Erro:', e)
-      alert('Erro ao criar compromisso')
+      console.error('Erro ao salvar compromisso:', e)
+      alert('Não foi possível salvar o compromisso. Tente novamente.')
     }
   }
 
@@ -217,7 +195,7 @@ export default function AgendaPage() {
                       return (
                         <button
                           key={e.id}
-                          onClick={() => navigate(`/contrato/${e.imovelId}`)}
+                          onClick={() => e.imovelId && navigate(`/contrato/${e.imovelId}`)}
                           className="w-full flex items-center gap-1 text-left min-h-[28px] py-1 rounded-sm hover:bg-pergaminho"
                           title={`${e.titulo} — ${e.imovel}`}
                         >
@@ -255,7 +233,7 @@ export default function AgendaPage() {
               {doMes.map(a => (
                 <li key={a.id}>
                   <button
-                    onClick={() => navigate(`/contrato/${a.imovelId}`)}
+                    onClick={() => a.imovelId && navigate(`/contrato/${a.imovelId}`)}
                     className="w-full text-left px-5 py-3 hover:bg-pergaminho flex items-center justify-between gap-4"
                   >
                     <div className="min-w-0">

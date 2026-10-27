@@ -29,6 +29,7 @@ export const rotulosTipoAlerta: Record<string, string> = {
   vencimento: 'Vencimento de contrato',
   reajuste: 'Reajuste contratual',
   documento: 'Vencimento de documento',
+  compromisso: 'Compromisso da agenda',
 }
 
 export const rotulosStatusDocumento: Record<string, string> = {

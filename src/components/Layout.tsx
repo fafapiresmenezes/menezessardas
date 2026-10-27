@@ -118,9 +118,7 @@ export default function Layout({ children, title }: LayoutProps) {
           {menuAberto && (
             <p className="text-[10px] text-white/40 px-4 text-center">
               Desenvolvido pelo<br />
-              <a href="https://theye.com.br" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition">
-                Instituto THEYE
-              </a>
+              Instituto THEYE
             </p>
           )}
         </div>
