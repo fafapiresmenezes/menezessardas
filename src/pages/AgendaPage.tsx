@@ -64,13 +64,13 @@ export default function AgendaPage() {
   }
 
   const criarAlerta = async () => {
-    if (!novoAlerta.titulo || !novoAlerta.imovel) {
-      alert('Preencha título e imóvel')
+    if (!novoAlerta.titulo || !novoAlerta.imovel || !novoAlerta.dataEvento) {
+      alert('Preencha todos os campos')
       return
     }
-    // TODO: Salvar alerta no banco (tabela alertas)
-    // Por enquanto, apenas fechar modal e mostrar feedback
-    alert(`Alerta criado para ${formatarData(novoAlerta.dataEvento)}`)
+    // TODO: Integrar com backend (tabela alertas ou nova tabela compromissos)
+    // Por enquanto, exibe sucesso no frontend
+    alert(`Compromisso criado para ${formatarData(novoAlerta.dataEvento)}\nAlarmado ${novoAlerta.diasAntes} dias antes`)
     setShowModal(false)
     setNovoAlerta({ titulo: '', imovel: '', diasAntes: 7, dataEvento: '' })
   }
