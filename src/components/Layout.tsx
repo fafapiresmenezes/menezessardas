@@ -106,7 +106,7 @@ export default function Layout({ children, title }: LayoutProps) {
           </ul>
         </nav>
 
-        <div className="p-3 border-t border-white/10">
+        <div className="p-3 border-t border-white/10 space-y-3">
           <button
             onClick={sair}
             className="w-full flex items-center gap-3 px-4 py-3 rounded hover:bg-white/5 transition text-white/75 hover:text-white"
@@ -115,6 +115,14 @@ export default function Layout({ children, title }: LayoutProps) {
             <LogOut size={19} className="flex-shrink-0" />
             {menuAberto && <span className="text-sm">Sair</span>}
           </button>
+          {menuAberto && (
+            <p className="text-[10px] text-white/40 px-4 text-center">
+              Desenvolvido pelo<br />
+              <a href="https://theye.com.br" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition">
+                Instituto THEYE
+              </a>
+            </p>
+          )}
         </div>
       </aside>
 
