@@ -1,7 +1,7 @@
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 
 export type Especialidade =
-  | 'imobiliario' | 'condominial' | 'registral' | 'consumidor' | 'tributario' | 'trabalhista' | 'lgpd' | 'geral'
+  | 'imobiliario' | 'condominial' | 'registral' | 'consumidor' | 'tributario' | 'trabalhista' | 'lgpd' | 'inovacao' | 'compliance' | 'geral'
 
 export const ESPECIALIDADES: { valor: Especialidade; rotulo: string; descricao: string }[] = [
   { valor: 'imobiliario', rotulo: 'Imobiliário', descricao: 'Locação, comodato, compra e venda, garantias, despejo' },
@@ -11,6 +11,8 @@ export const ESPECIALIDADES: { valor: Especialidade; rotulo: string; descricao: 
   { valor: 'tributario', rotulo: 'Tributário', descricao: 'IPTU, ITBI, ganho de capital' },
   { valor: 'trabalhista', rotulo: 'Trabalhista', descricao: 'Empregados de condomínio e prestadores' },
   { valor: 'lgpd', rotulo: 'LGPD', descricao: 'Dados de locatários, fiadores e fornecedores' },
+  { valor: 'inovacao', rotulo: 'Inovação e sandboxes', descricao: 'Sandboxes regulatórios, startups, proptechs' },
+  { valor: 'compliance', rotulo: 'ESG e compliance', descricao: 'Integridade, passivo ambiental, due diligence' },
   { valor: 'geral', rotulo: 'Geral', descricao: 'Qualquer tema do direito brasileiro' },
 ]
 

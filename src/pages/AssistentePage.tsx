@@ -106,7 +106,10 @@ export default function AssistentePage() {
   const campo = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
-    especialidadePreferida().then(setEspecialidade)
+    // Links do menu Instituto abrem o agente certo (?agente=inovacao).
+    const pedido = new URLSearchParams(window.location.search).get('agente') as Especialidade | null
+    if (pedido && ESPECIALIDADES.some(e => e.valor === pedido)) setEspecialidade(pedido)
+    else especialidadePreferida().then(setEspecialidade)
     historicoConsultas().then(setHistorico).catch(e => setErro(e instanceof Error ? e.message : 'Não foi possível carregar o histórico.'))
   }, [])
 

@@ -38,6 +38,10 @@ const CATALOGO: Record<string, { titulo: string; url: string; temas: string }> =
   ctn: { titulo: 'Código Tributário Nacional (Lei 5.172/1966)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm', temas: 'IPTU, ITBI, obrigação tributária, responsabilidade do adquirente' },
   licitacoes: { titulo: 'Lei de Licitações (Lei 14.133/2021)', url: 'https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14133.htm', temas: 'contratos com a administração pública, locação pelo poder público' },
   clt: { titulo: 'CLT (Decreto-Lei 5.452/1943)', url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452compilado.htm', temas: 'empregados de condomínio, porteiros, zeladores, terceirização' },
+  startups: { titulo: 'Marco Legal das Startups (Lei Complementar 182/2021)', url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp182.htm', temas: 'startups, ambiente regulatório experimental (sandbox regulatório), investidor-anjo, inovação' },
+  liberdade: { titulo: 'Lei da Liberdade Econômica (Lei 13.874/2019)', url: 'https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/lei/l13874.htm', temas: 'livre iniciativa, intervenção mínima nos contratos, abuso regulatório, análise de impacto regulatório' },
+  anticorrupcao: { titulo: 'Lei Anticorrupção (Lei 12.846/2013)', url: 'https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/lei/l12846.htm', temas: 'compliance, programa de integridade, responsabilidade objetiva da pessoa jurídica, acordo de leniência' },
+  ambiental: { titulo: 'Política Nacional do Meio Ambiente (Lei 6.938/1981)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l6938.htm', temas: 'ESG, responsabilidade ambiental, licenciamento, poluidor-pagador, passivo ambiental de imóveis' },
   usucapiao: { titulo: 'Usucapião extrajudicial e outros (Lei 6.015/1973 art. 216-A)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l6015compilada.htm', temas: 'usucapião em cartório' },
 }
 
@@ -49,6 +53,8 @@ const ESPECIALIDADES: Record<string, string> = {
   tributario: 'Você é especialista em tributação imobiliária: IPTU, ITBI, ganho de capital e responsabilidade do adquirente.',
   trabalhista: 'Você é especialista em direito do trabalho aplicado a condomínios e prestadores de serviço de imóveis.',
   lgpd: 'Você é especialista em proteção de dados (LGPD) aplicada a escritórios de advocacia e gestão de imóveis.',
+  inovacao: 'Você é especialista em inovação e regulação: sandboxes regulatórios (CVM, Banco Central, ANPD, SUSEP, ANEEL), Marco Legal das Startups e Lei da Liberdade Econômica, aplicados a negócios imobiliários e proptechs.',
+  compliance: 'Você é especialista em governança, ESG e compliance: programa de integridade (Lei 12.846/13), LGPD, passivo ambiental e due diligence de imóveis e contrapartes.',
   geral: 'Você é um advogado generalista brasileiro, cuidadoso e didático.',
 }
 
@@ -139,17 +145,31 @@ function selecionar(leiId: string, texto: string, termos: string[], artigosCitad
     .filter(a => a.pontos > 0)
 }
 
-async function anthropic(chave: string, corpo: unknown) {
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'x-api-key': chave, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
-    body: JSON.stringify(corpo),
-  })
-  if (!r.ok) {
-    const s = r.status
-    throw new Error(s === 401 || s === 403 ? 'Chave recusada pela Anthropic (inválida, revogada ou sem saldo).' : s === 429 ? 'Limite de uso da Anthropic atingido; tente de novo em instantes.' : `Anthropic respondeu ${s}.`)
+// Chama a Anthropic com nova tentativa em sobrecarga. Alguns modelos recusam tool_choice forçado:
+// nesse caso repete com tool_choice automático e instrução explícita para usar a ferramenta.
+async function anthropic(chave: string, corpo: Record<string, unknown>) {
+  let atual = corpo
+  for (let tentativa = 0; tentativa < 3; tentativa++) {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'x-api-key': chave, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
+      body: JSON.stringify(atual),
+      signal: AbortSignal.timeout(90000),
+    }).catch(() => null)
+    if (r?.ok) return r.json()
+    const s = r?.status ?? 0
+    const detalhe = r ? await r.text() : 'sem resposta'
+    console.error('assistente anthropic', s, detalhe.slice(0, 300))
+    if (s === 400 && detalhe.includes('tool_choice') && atual.tool_choice) {
+      const nome = (atual.tool_choice as { name?: string }).name
+      atual = { ...atual, tool_choice: { type: 'auto' }, system: `${atual.system ?? ''}\nResponda obrigatoriamente chamando a ferramenta ${nome}, sem texto fora dela.` }
+      continue
+    }
+    if (s === 401 || s === 403) throw new Error('Chave recusada pela Anthropic (inválida, revogada ou sem saldo).')
+    if (s && s < 500 && s !== 429) throw new Error(`Anthropic respondeu ${s}.`)
+    await new Promise(ok => setTimeout(ok, 2000))
   }
-  return r.json()
+  throw new Error('A IA está sobrecarregada agora; tente de novo em instantes.')
 }
 
 Deno.serve(async (req) => {
@@ -164,7 +184,14 @@ Deno.serve(async (req) => {
     return json({ lei: id, tamanho: texto.length, artigos: artigos(texto).length, selecionados: sel.map(a => ({ numero: a.numero, pontos: a.pontos, inicio: a.corpo.slice(0, 160) })) })
   }
   const usuario = usuarioAutenticado(req)
-  if (!usuario) return json({ erro: 'Entre na plataforma para usar o assistente.' }, 401)
+  // Teste automático diário (sem usuário): pergunta fixa definida aqui, nada é gravado.
+  const TESTES: Record<string, { pergunta: string; modo: string }> = {
+    responder: { pergunta: 'Qual o prazo para propor ação renovatória de locação comercial?', modo: 'responder' },
+    caminhos: { pergunta: 'Locatário comercial com 3 aluguéis atrasados e fiador: quais caminhos?', modo: 'caminhos' },
+  }
+  const teste = !usuario && typeof corpo.teste === 'string' ? TESTES[corpo.teste] : null
+  if (teste) Object.assign(corpo, { pergunta: teste.pergunta, modo: teste.modo, especialidade: 'imobiliario', historico: [], contexto: '' })
+  if (!usuario && !teste) return json({ erro: 'Entre na plataforma para usar o assistente.' }, 401)
   const chave = await obterChave()
   if (!chave) return json({ erro: 'Chave da IA não configurada. Um administrador pode informá-la em Configurações → Inteligência artificial.' }, 503)
 
@@ -178,7 +205,7 @@ Deno.serve(async (req) => {
     const catalogoResumo = Object.entries(CATALOGO).map(([id, l]) => `${id}: ${l.titulo} — ${l.temas}`).join('\n')
     const triagem = await anthropic(chave, {
       model: MODELO_TRIAGEM,
-      max_tokens: 400,
+      max_tokens: 2000,
       tools: [{
         name: 'planejar_pesquisa',
         description: 'Escolhe as leis do catálogo e os termos para localizar os artigos pertinentes.',
@@ -262,13 +289,21 @@ Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"
         },
       }
       const r = await anthropic(chave, {
-        model: MODELO_RESPOSTA, max_tokens: 2000, tools: [ferramenta], tool_choice: { type: 'tool', name: 'registrar_caminhos' },
+        model: MODELO_RESPOSTA, max_tokens: 8000, tools: [ferramenta], tool_choice: { type: 'tool', name: 'registrar_caminhos' },
         system: `${regrasComuns}\nMonte de 2 a 5 caminhos (extrajudicial, judicial, negociação, aguardar etc.), pontue cada um em quatro critérios e aponte as zonas cinzentas com honestidade.`,
         messages: mensagens,
       })
-      dados = r.content?.find((c: { type: string }) => c.type === 'tool_use')?.input ?? null
-      if (!dados) throw new Error('A IA não devolveu a matriz. Tente novamente.')
-      const d = dados as { sintese: string; caminhos: { nome: string }[]; recomendado: number; porque: string }
+      const bruto = r.content?.find((c: { type: string }) => c.type === 'tool_use')?.input ?? null
+      // Com tool_choice automático alguns modelos devolvem listas como texto JSON; normalizamos.
+      const lista = (v: unknown) => (typeof v === 'string' ? (() => { try { return JSON.parse(v) } catch { return [] } })() : v)
+      const d = bruto ? { ...bruto, caminhos: lista(bruto.caminhos), proximosPassos: lista(bruto.proximosPassos) ?? [] } : null
+      if (!d || !Array.isArray(d.caminhos) || !d.caminhos.length) {
+        console.error('assistente caminhos sem matriz', JSON.stringify(r.content ?? []).slice(0, 500))
+        throw new Error('A IA não devolveu a matriz. Tente novamente.')
+      }
+      d.recomendado = Math.min(Math.max(0, Number(d.recomendado) || 0), d.caminhos.length - 1)
+      if (!Array.isArray(d.proximosPassos)) d.proximosPassos = []
+      dados = d
       texto = `${d.sintese}\n\n**Recomendado:** ${d.caminhos[d.recomendado]?.nome ?? d.caminhos[0]?.nome}. ${d.porque}`
     } else {
       const sistema = modo === 'redigir'
@@ -276,11 +311,11 @@ Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"
 Redija a peça ou o contrato pedido, completo e pronto para revisão: título; qualificação das partes com [campos entre colchetes] para o que faltar; cláusulas ou tópicos numerados; fundamentação legal embutida no texto (artigo e lei); pedidos ou cláusulas finais; local, data e assinatura. Use o padrão forense brasileiro e linguagem clara. Ao final, acrescente uma seção "Pontos a conferir antes de usar" com o que depende de fatos ou documentos.`
         : `${regrasComuns}
 Estrutura: resposta direta em 1–2 frases; fundamentação com os artigos; riscos ou exceções (inclusive zonas cinzentas e divergências); próximos passos práticos. Títulos curtos em negrito e listas. Termine com "Fontes consultadas: " e os nomes das leis usadas.`
-      const resposta = await anthropic(chave, { model: MODELO_RESPOSTA, max_tokens: modo === 'redigir' ? 3500 : 1400, system: sistema, messages: mensagens })
+      const resposta = await anthropic(chave, { model: MODELO_RESPOSTA, max_tokens: modo === 'redigir' ? 12000 : 6000, system: sistema, messages: mensagens })
       texto = (resposta.content ?? []).filter((c: { type: string }) => c.type === 'text').map((c: { text: string }) => c.text).join('\n').trim()
     }
 
-    await servico().from('consultas_juridicas').insert({
+    if (usuario) await servico().from('consultas_juridicas').insert({
       usuario_id: usuario, especialidade, pergunta, resposta: texto, fontes, modelo: MODELO_RESPOSTA, modo, dados,
     })
     return json({

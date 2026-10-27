@@ -4,6 +4,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const MODELO = 'claude-sonnet-5-5'
+const MODELO_RESERVA = 'claude-haiku-5-5'
 // Chave pública de leitura do DataJud, publicada na documentação do CNJ.
 const DATAJUD_KEY = 'APIKey cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw=='
 const TRIBUNAIS: Record<string, string> = { tjrj: 'TJRJ', tjsp: 'TJSP', tjmg: 'TJMG', tjes: 'TJES', stj: 'STJ', trf2: 'TRF2' }
@@ -91,8 +92,9 @@ async function noticias(nome: string) {
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
   const usuario = usuarioAutenticado(req)
-  if (!usuario) return json({ erro: 'Entre na plataforma para usar o perfil do julgador.' }, 401)
-  const { nome = '', tribunal = 'tjrj', orgao = '', tema = '' } = await req.json().catch(() => ({}))
+  const { nome = '', tribunal = 'tjrj', orgao = '', tema = '', sonda = false } = await req.json().catch(() => ({}))
+  // Modo sonda: teste automático diário sem usuário; não grava nada.
+  if (!usuario && !sonda) return json({ erro: 'Entre na plataforma para usar o perfil do julgador.' }, 401)
   if (!TRIBUNAIS[tribunal]) return json({ erro: 'Tribunal ainda não coberto.' }, 400)
   if (!nome.trim() && !orgao.trim()) return json({ erro: 'Informe o nome do julgador ou o órgão (vara ou câmara).' }, 400)
   const chave = await obterChave()
@@ -120,24 +122,35 @@ Deno.serve(async (req) => {
     },
   }
   const dados = JSON.stringify({ julgador: nome || null, tribunal: TRIBUNAIS[tribunal], orgao: orgao || null, tema: tema || null, estatisticasDataJud: estatisticas, noticias: imprensa })
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'x-api-key': chave, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: MODELO,
-      max_tokens: 1200,
+  const corpo = (modelo: string) => JSON.stringify({
+      model: modelo,
+      max_tokens: 6000,
       tools: [ferramenta],
-      tool_choice: { type: 'tool', name: 'registrar_perfil' },
-      system: `Você é analista de jurimetria para um escritório de advocacia do Rio de Janeiro. Monte um perfil DECISÓRIO (não psicológico) do órgão julgador e, se houver, do magistrado, usando apenas os dados públicos fornecidos: estatísticas do DataJud (CNJ) e manchetes. Em português do Brasil. Nunca atribua características pessoais, opiniões ou intenções ao magistrado; fale de padrões observáveis e diga claramente quando os dados são insuficientes. Se o tema do caso foi informado, direcione as recomendações a ele.`,
+      tool_choice: { type: 'auto' },
+      system: `Você é analista de jurimetria para um escritório de advocacia do Rio de Janeiro. Monte um perfil DECISÓRIO (não psicológico) do órgão julgador e, se houver, do magistrado, usando apenas os dados públicos fornecidos: estatísticas do DataJud (CNJ) e manchetes. Em português do Brasil. Nunca atribua características pessoais, opiniões ou intenções ao magistrado; fale de padrões observáveis e diga claramente quando os dados são insuficientes. Se o tema do caso foi informado, direcione as recomendações a ele. Responda obrigatoriamente chamando a ferramenta registrar_perfil.`,
       messages: [{ role: 'user', content: `DADOS PÚBLICOS:\n${dados}` }],
-    }),
-  })
+    })
+  // Tenta de novo em sobrecarga (429/5xx) e cai para o modelo rápido se o principal falhar.
+  let r: Response | null = null
+  for (const modelo of [MODELO, MODELO, MODELO_RESERVA]) {
+    r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'x-api-key': chave, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
+      body: corpo(modelo),
+      signal: AbortSignal.timeout(60000),
+    }).catch(() => null)
+    if (r?.ok || r?.status === 401 || r?.status === 403 || r?.status === 400) break
+    console.error('perfil-julgador anthropic', modelo, r?.status, r ? await r.clone().text() : 'sem resposta')
+    await new Promise(ok => setTimeout(ok, 1500))
+  }
+  if (!r) return json({ erro: 'A IA não respondeu. Tente novamente em instantes.' }, 502)
+  if (!r.ok) console.error('perfil-julgador final', r.status, await r.clone().text())
   if (!r.ok) return json({ erro: r.status === 401 || r.status === 403 ? 'Chave recusada pela Anthropic.' : `Anthropic respondeu ${r.status}.` }, 502)
   const resposta = await r.json()
   const perfil = resposta.content?.find((c: { type: string }) => c.type === 'tool_use')?.input
   if (!perfil) return json({ erro: 'A IA não devolveu o perfil. Tente novamente.' }, 502)
 
   const resultado = { ...perfil, estatisticas, noticias: imprensa, tribunal: TRIBUNAIS[tribunal], orgao, nome, geradoEm: new Date().toISOString() }
-  await servico().from('perfis_julgador').insert({ usuario_id: usuario, nome: nome || orgao, tribunal: TRIBUNAIS[tribunal], perfil: resultado })
+  if (usuario) await servico().from('perfis_julgador').insert({ usuario_id: usuario, nome: nome || orgao, tribunal: TRIBUNAIS[tribunal], perfil: resultado })
   return json(resultado)
 })

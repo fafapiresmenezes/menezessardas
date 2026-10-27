@@ -16,6 +16,8 @@ import RelatóriosPage from '@/pages/RelatóriosPage'
 import IndicadoresPage from '@/pages/IndicadoresPage'
 import TrilhaPage from '@/pages/TrilhaPage'
 import AssistentePage from '@/pages/AssistentePage'
+import PrevisoesPage from '@/pages/PrevisoesPage'
+import InstitutoPage from '@/pages/InstitutoPage'
 import LegislacaoPage from '@/pages/LegislacaoPage'
 import FornecedoresPage from '@/pages/FornecedoresPage'
 import FornecedorPage from '@/pages/FornecedorPage'
@@ -129,6 +131,14 @@ function App() {
         <Route
           path="/assistente"
           element={isAuthenticated ? <AssistentePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/previsoes"
+          element={isAuthenticated ? <PrevisoesPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/instituto"
+          element={isAuthenticated ? <InstitutoPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/legislacao"

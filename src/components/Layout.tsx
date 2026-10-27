@@ -7,7 +7,7 @@ import Busca from './Busca'
 import BoasVindas from './BoasVindas'
 import { aplicarTema, temaAtual } from '@/lib/tema'
 import { listarPessoas, perfilAtual } from '@/lib/equipe'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -23,6 +23,8 @@ const itensMenu = [
   { icon: Scale, label: 'Legislação', href: '/legislacao' },
   { icon: MessageSquare, label: 'Assistente', href: '/assistente' },
   { icon: Gauge, label: 'Indicadores', href: '/indicadores' },
+  { icon: TrendingUp, label: 'Previsões', href: '/previsoes' },
+  { icon: FlaskConical, label: 'Instituto', href: '/instituto' },
   { icon: FileBarChart, label: 'Relatórios', href: '/relatorios' },
   { icon: ShieldCheck, label: 'Trilha', href: '/trilha' },
   { icon: Users, label: 'Equipe', href: '/equipe' },
