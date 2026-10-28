@@ -15,6 +15,14 @@ await p.click('button[type=submit]'); await p.waitForTimeout(4000)
 for (const t of ['Pular', 'Fechar', 'Agora não']) { const x = p.getByRole('button', { name: t }); if (await x.count()) await x.first().click().catch(() => {}) }
 await p.screenshot({ path: 'painel.png', fullPage: false })
 
+// 0. Tela de entrada com as três áreas
+try {
+  const ok = p.url().includes('#/inicio') && (await p.getByTestId('area-imobiliario').count()) && (await p.getByTestId('area-familia').count()) && (await p.getByTestId('area-trabalhista').count())
+  await p.getByTestId('area-familia').click(); await p.waitForTimeout(2500)
+  const fam = await p.evaluate(() => document.body.innerText.includes('Família'))
+  log('Tela de entrada (3 áreas, Família abre o agente)', !!ok && fam, p.url())
+} catch (e) { log('Tela de entrada', false, String(e)) }
+
 // 1. Testar tudo (Área do administrador)
 try {
   await p.goto(BASE + '#/equipe', { waitUntil: 'networkidle' }); await p.waitForTimeout(1500)

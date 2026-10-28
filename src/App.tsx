@@ -24,6 +24,7 @@ import FornecedoresPage from '@/pages/FornecedoresPage'
 import FornecedorPage from '@/pages/FornecedorPage'
 import ConfiguraçõesPage from '@/pages/ConfiguraçõesPage'
 import EquipePage from '@/pages/EquipePage'
+import InicioPage from '@/pages/InicioPage'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -75,7 +76,11 @@ function App() {
       <Routes>
         <Route
           path="/login"
-          element={isAuthenticated ? <Navigate to="/dashboard" /> : <LoginPage />}
+          element={isAuthenticated ? <Navigate to="/inicio" /> : <LoginPage />}
+        />
+        <Route
+          path="/inicio"
+          element={isAuthenticated ? <InicioPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/dashboard"
@@ -161,7 +166,7 @@ function App() {
           path="/settings"
           element={isAuthenticated ? <ConfiguraçõesPage /> : <Navigate to="/login" />}
         />
-        <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
+        <Route path="/" element={<Navigate to={isAuthenticated ? "/inicio" : "/login"} />} />
       </Routes>
     </HashRouter>
   )

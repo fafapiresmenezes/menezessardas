@@ -22,7 +22,7 @@ export default function LoginPage() {
 
     if (!supabaseConfigurado) {
       if (entrarDemo(email, senha)) {
-        navigate('/dashboard')
+        navigate('/inicio')
         window.location.reload()
       } else {
         setErro('E-mail ou senha incorretos.')
@@ -54,7 +54,7 @@ export default function LoginPage() {
 
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password: senha })
-      if (!error) navigate('/dashboard')
+      if (!error) navigate('/inicio')
       else if (error.status === 400 || error.status === 401 || /invalid/i.test(error.message)) setErro('E-mail ou senha incorretos.')
       else setErro('Não foi possível falar com o servidor (' + error.message + '). Verifique a conexão e tente de novo.')
     } catch {
