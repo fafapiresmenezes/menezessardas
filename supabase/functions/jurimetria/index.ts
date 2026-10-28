@@ -52,7 +52,6 @@ Deno.serve(async (req) => {
       query: { bool: { filter: filtros } },
       aggs: {
         resultados: { terms: { field: 'movimentos.codigo', include: [PROCEDENCIA, IMPROCEDENCIA, PARCIAL, SEM_MERITO, ACORDO], size: 10 } },
-        anos: { date_histogram: { field: 'dataAjuizamento', calendar_interval: 'year', min_doc_count: 1 } },
       },
     }),
   }).catch(() => null)
@@ -75,7 +74,6 @@ Deno.serve(async (req) => {
     taxaSemMerito: encerrados ? Math.round((sem / encerrados) * 100) : null,
     amostra: julgados,
     confianca: julgados >= 200 ? 'alta' : julgados >= 30 ? 'media' : 'baixa',
-    porAno: (d.aggregations?.anos?.buckets ?? []).map((b: { key_as_string?: string; key: number; doc_count: number }) => ({ ano: String(b.key_as_string ?? b.key).slice(0, 4), total: b.doc_count })).slice(-8),
     fonte: 'DataJud — API Pública do CNJ',
     consultadoEm: new Date().toISOString(),
   }

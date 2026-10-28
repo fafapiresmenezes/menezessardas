@@ -60,7 +60,7 @@ async function datajud(tribunal: string, orgao: string): Promise<Estatisticas | 
         classes: { terms: { field: 'classe.nome.keyword', size: 8 } },
         assuntos: { terms: { field: 'assuntos.nome.keyword', size: 10 } },
         resultados: { terms: { field: 'movimentos.codigo', include: Object.keys(MOVIMENTOS).map(Number), size: 10 } },
-        anos: { date_histogram: { field: 'dataAjuizamento', calendar_interval: 'year', min_doc_count: 1 } },
+        anos: { date_histogram: { field: 'dataAjuizamento', calendar_interval: 'year', format: 'yyyy', min_doc_count: 1 } },
       },
     }),
   })
@@ -72,7 +72,8 @@ async function datajud(tribunal: string, orgao: string): Promise<Estatisticas | 
     classes: b('classes').map(x => ({ nome: String(x.key), total: x.doc_count })),
     assuntos: b('assuntos').map(x => ({ nome: String(x.key), total: x.doc_count })),
     resultados: b('resultados').map(x => ({ nome: MOVIMENTOS[Number(x.key)] ?? String(x.key), total: x.doc_count })),
-    porAno: b('anos').map(x => ({ ano: String(x.key_as_string ?? x.key).slice(0, 4), total: x.doc_count })).slice(-8),
+    // Só anos plausíveis: o DataJud tem datas mal formatadas em parte dos processos.
+    porAno: b('anos').map(x => ({ ano: String(x.key_as_string ?? '').slice(0, 4), total: x.doc_count })).filter(a => /^\d{4}$/.test(a.ano) && +a.ano >= 1990 && +a.ano <= new Date().getFullYear()).slice(-8),
   }
 }
 
@@ -147,8 +148,24 @@ Deno.serve(async (req) => {
   if (!r.ok) console.error('perfil-julgador final', r.status, await r.clone().text())
   if (!r.ok) return json({ erro: r.status === 401 || r.status === 403 ? 'Chave recusada pela Anthropic.' : `Anthropic respondeu ${r.status}.` }, 502)
   const resposta = await r.json()
-  const perfil = resposta.content?.find((c: { type: string }) => c.type === 'tool_use')?.input
-  if (!perfil) return json({ erro: 'A IA não devolveu o perfil. Tente novamente.' }, 502)
+  const bruto = resposta.content?.find((c: { type: string }) => c.type === 'tool_use')?.input
+  if (!bruto) return json({ erro: 'A IA não devolveu o perfil. Tente novamente.' }, 502)
+  // Normaliza: listas às vezes chegam como texto JSON ou objeto {"1": ..., "2": ...}.
+  const lista = (v: unknown): string[] => {
+    if (typeof v === 'string') { try { return lista(JSON.parse(v)) } catch { return v.trim() ? [v] : [] } }
+    if (Array.isArray(v)) return v.map(String)
+    if (v && typeof v === 'object') return Object.values(v).map(String)
+    return []
+  }
+  const soltos = Object.entries(bruto).filter(([k]) => /^\d+$/.test(k)).map(([, v]) => String(v))
+  const perfil = {
+    resumo: typeof bruto.resumo === 'string' ? bruto.resumo : 'Dados públicos insuficientes para um perfil confiável.',
+    tendencias: lista(bruto.tendencias),
+    temas: lista(bruto.temas),
+    comoArgumentar: lista(bruto.comoArgumentar),
+    cuidados: [...lista(bruto.cuidados), ...soltos],
+    confianca: ['alta', 'media', 'baixa'].includes(bruto.confianca) ? bruto.confianca : 'baixa',
+  }
 
   const resultado = { ...perfil, estatisticas, noticias: imprensa, tribunal: TRIBUNAIS[tribunal], orgao, nome, geradoEm: new Date().toISOString() }
   if (usuario) await servico().from('perfis_julgador').insert({ usuario_id: usuario, nome: nome || orgao, tribunal: TRIBUNAIS[tribunal], perfil: resultado })
