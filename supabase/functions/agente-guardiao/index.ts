@@ -29,18 +29,20 @@ Deno.serve(async (req: Request) => {
     const _30dStr = _30d.toISOString().split('T')[0]
 
     // Contratos que vencem nos próximos 30 dias
-    const { data: vencimentos } = await sb
+    const { data: vencimentos, error: erroVenc } = await sb
       .from('contratos')
-      .select('id, numero, imovel_id, data_vencimento, valor_mensal')
+      .select('id, locatario_fornecedor, imovel_id, data_vencimento, valor_periodico, periodicidade')
       .gte('data_vencimento', hojeStr)
       .lte('data_vencimento', _30dStr)
-      .is('data_encerramento', null)
+      .is('encerrado_em', null)
+
+    if (erroVenc) throw new Error(erroVenc.message)
 
     // Reajustes (aniversários de data_ultimo_reajuste + 1 ano)
     const { data: contratos } = await sb
       .from('contratos')
-      .select('id, numero, data_ultimo_reajuste, valor_mensal')
-      .is('data_encerramento', null)
+      .select('id, locatario_fornecedor, data_ultimo_reajuste, valor_periodico')
+      .is('encerrado_em', null)
 
     const reajustes = (contratos || []).filter(c => {
       if (!c.data_ultimo_reajuste) return false
@@ -52,14 +54,14 @@ Deno.serve(async (req: Request) => {
     // Documentos que vencem
     const { data: documentos } = await sb
       .from('documentos')
-      .select('id, nome, contrato_id, data_vencimento')
+      .select('id, nome_arquivo, contrato_id, data_vencimento')
       .gte('data_vencimento', hojeStr)
       .lte('data_vencimento', _30dStr)
 
     const totalVencimento = (vencimentos || []).length
     const totalReajuste = reajustes.length
     const totalDocumentos = (documentos || []).length
-    const receitaEmRisco = (vencimentos || []).reduce((sum, c) => sum + (c.valor_mensal || 0), 0)
+    const receitaEmRisco = (vencimentos || []).reduce((sum, c) => sum + (c.valor_periodico || 0), 0)
 
     const resumo = {
       data: hojeStr,
