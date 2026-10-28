@@ -35,8 +35,9 @@ export default function TesteGeral() {
   const [diario, setDiario] = useState<{ verificacao: string; ok: boolean; verificado_em: string; detalhe: string | null }[]>([])
   useEffect(() => {
     if (!supabaseConfigurado) return
-    supabase.from('saude_sistema').select('verificacao,ok,verificado_em,detalhe').order('id', { ascending: false }).limit(6)
-      .then(({ data }) => setDiario(data ?? []))
+    supabase.from('saude_sistema').select('verificacao,ok,verificado_em,detalhe').order('id', { ascending: false }).limit(30)
+      // Fica com o resultado mais recente de cada verificação (o site é conferido a cada hora; o resto, às 8h45).
+      .then(({ data }) => setDiario((data ?? []).filter((d, i, todos) => todos.findIndex(x => x.verificacao === d.verificacao) === i)))
   }, [])
   const rodar = async () => {
     setRodando(true)
@@ -54,7 +55,7 @@ export default function TesteGeral() {
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
         <div>
           <h2 id="t-testes" className="text-lg">Testar todas as funções</h2>
-          <p className="text-sm text-grafite-claro">Roda cada função dentro da plataforma. Além disso, um teste automático confere as funções todo dia às 8h45.</p>
+          <p className="text-sm text-grafite-claro">Roda cada função dentro da plataforma. Além disso, um teste automático confere as funções todo dia às 8h45, e o site a cada hora.</p>
           {diario.length > 0 && (
             <p className="text-sm mt-1" aria-live="polite">
               Último teste automático ({new Date(diario[0].verificado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}): {diario.filter(d => d.ok).length} de {diario.length} funcionando

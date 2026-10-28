@@ -14,9 +14,34 @@ const VERIFICACOES: { nome: string; fn: string; corpo?: unknown; query?: string;
   { nome: 'Consulta de CNPJ', fn: 'consultar-cnpj', query: '?cnpj=00000000000191', espera: j => j.empresa?.status === 'ativa' },
 ]
 
-Deno.serve(async () => {
-  const resultados = []
-  for (const v of VERIFICACOES) {
+const SITE = 'https://menezes-sardas-contratos.vercel.app/'
+
+// Confere se o site abre com visual e código completos: todo arquivo citado na página precisa responder.
+async function verificarSite() {
+  const t0 = Date.now()
+  let ok = false, status = 0, detalhe = ''
+  try {
+    const r = await fetch(`${SITE}?verificacao=${t0}`, { signal: AbortSignal.timeout(30_000) })
+    status = r.status
+    const html = await r.text()
+    const arquivos = [...html.matchAll(/(?:src|href)="(https:\/\/cdn\.jsdelivr\.net\/[^"]+\.(?:js|css))"/g)].map(m => m[1])
+    if (!arquivos.some(a => a.endsWith('.css'))) detalhe = 'página sem arquivo de aparência (CSS)'
+    for (const a of arquivos) {
+      const x = await fetch(a, { signal: AbortSignal.timeout(30_000) })
+      if (!x.ok) detalhe += ` ${x.status} ${a.split('/').pop()}`
+    }
+    ok = r.ok && arquivos.length > 0 && !detalhe
+  } catch (e) {
+    detalhe = String(e).slice(0, 300)
+  }
+  return { verificacao: 'Site no ar (visual completo)', ok, status_http: status, ms: Date.now() - t0, detalhe: detalhe.trim() || null }
+}
+
+Deno.serve(async (req) => {
+  const resultados = [await verificarSite()]
+  // ?so=site roda só a conferência do site (agendada a cada hora).
+  const soSite = new URL(req.url).searchParams.get('so') === 'site'
+  for (const v of soSite ? [] : VERIFICACOES) {
     const t0 = Date.now()
     let ok = false, status = 0, detalhe = ''
     try {
