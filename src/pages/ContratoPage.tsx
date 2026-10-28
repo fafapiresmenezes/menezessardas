@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import EscolhaAvisos from '@/components/EscolhaAvisos'
 import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
@@ -39,7 +40,7 @@ export default function ContratoPage() {
   const [analisando, setAnalisando] = useState(false)
   const [erroAnalise, setErroAnalise] = useState('')
   const [modo, setModo] = useState<'ver' | 'editar' | 'encerrar'>('ver')
-  const [ed, setEd] = useState({ parte: '', valor: '', vencimento: '', indice: 'ipca' as IndiceReajuste, garantia: 'sem_garantia' as Garantia, periodicidade: 'mensal' as Periodicidade, notas: '', diasAviso: 7 })
+  const [ed, setEd] = useState({ parte: '', valor: '', vencimento: '', indice: 'ipca' as IndiceReajuste, garantia: 'sem_garantia' as Garantia, periodicidade: 'mensal' as Periodicidade, notas: '', diasAviso: 7, avisosDias: [7] as number[] })
   const [motivo, setMotivo] = useState<string | null>(null)
   const [avisoTopo, setAvisoTopo] = useState('')
 
@@ -116,6 +117,7 @@ export default function ContratoPage() {
       periodicidade: contrato.periodicidade,
       notas: contrato.notas,
       diasAviso: contrato.diasAviso ?? 7,
+      avisosDias: contrato.avisosDias ?? [contrato.diasAviso ?? 7],
     })
     setErro('')
     setModo('editar')
@@ -135,7 +137,7 @@ export default function ContratoPage() {
         garantia: ed.garantia,
         periodicidade: ed.periodicidade,
         notas: ed.notas,
-        diasAviso: ed.diasAviso,
+        avisosDias: ed.avisosDias,
       })
       setModo('ver')
       setErro('')
@@ -297,10 +299,8 @@ export default function ContratoPage() {
                 <Campo id="ed-venc" rotulo="Vencimento" ajuda="Deixe em branco se o prazo for indeterminado.">
                   <input id="ed-venc" type="date" className={classeCampo} value={ed.vencimento} onChange={e => setEd({ ...ed, vencimento: e.target.value })} aria-describedby="ed-venc-ajuda" />
                 </Campo>
-                <Campo id="ed-aviso" rotulo="Avisar do vencimento com" ajuda="Vale para o e-mail diário e para o Google Agenda.">
-                  <select id="ed-aviso" className={classeCampo} value={ed.diasAviso} onChange={e => setEd({ ...ed, diasAviso: Number(e.target.value) })} aria-describedby="ed-aviso-ajuda">
-                    {[7, 15, 30, 60, 90, 180].map(d => <option key={d} value={d}>{d} dias de antecedência{d === 7 ? ' (padrão)' : ''}</option>)}
-                  </select>
+                <Campo id="ed-aviso" rotulo="Avisar do vencimento com" ajuda="Marque quantos avisos quiser. Valem para o Outlook e o Google Agenda.">
+                  <EscolhaAvisos id="ed-aviso" valor={ed.avisosDias} onChange={v => setEd({ ...ed, avisosDias: v })} />
                 </Campo>
               </div>
               <div>

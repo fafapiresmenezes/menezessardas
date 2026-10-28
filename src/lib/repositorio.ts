@@ -62,6 +62,7 @@ export interface Contrato {
   motivoEncerramento?: string
   /** Antecedência, em dias, do aviso de vencimento (padrão 7). */
   diasAviso?: number
+  avisosDias?: number[]
   arquivo?: { nome: string; tamanho: number; caminhoStorage?: string }
   documentos: Documento[]
 }
@@ -69,7 +70,7 @@ export interface Contrato {
 export type NovoImovel = Omit<Imovel, 'id' | 'documentos'> & { documentos?: Omit<Documento, 'id' | 'enviadoEm'>[] }
 export type NovoContrato = Omit<Contrato, 'id' | 'criadoEm' | 'documentos'>
 export type EdicaoContrato = Partial<
-  Pick<Contrato, 'parte' | 'dataVencimento' | 'valor' | 'periodicidade' | 'indice' | 'garantia' | 'notas' | 'diasAviso'>
+  Pick<Contrato, 'parte' | 'dataVencimento' | 'valor' | 'periodicidade' | 'indice' | 'garantia' | 'notas' | 'diasAviso' | 'avisosDias'>
 >
 
 export interface Repositorio {
@@ -299,6 +300,7 @@ class RepositorioSupabase implements Repositorio {
     encerradoEm: r.encerrado_em ? String(r.encerrado_em) : undefined,
     motivoEncerramento: r.motivo_encerramento ? String(r.motivo_encerramento) : undefined,
     diasAviso: r.dias_aviso != null ? Number(r.dias_aviso) : 7,
+    avisosDias: Array.isArray(r.avisos_dias) && r.avisos_dias.length ? (r.avisos_dias as number[]).map(Number) : [r.dias_aviso != null ? Number(r.dias_aviso) : 7],
     arquivo: r.caminho_arquivo ? { nome: String(r.caminho_arquivo).split('/').pop() ?? '', tamanho: 0, caminhoStorage: String(r.caminho_arquivo) } : undefined,
     documentos: docs,
   })
@@ -425,6 +427,7 @@ class RepositorioSupabase implements Repositorio {
     if (dados.garantia !== undefined) linha.garantia = dados.garantia
     if (dados.notas !== undefined) linha.notas = dados.notas
     if (dados.diasAviso !== undefined) linha.dias_aviso = dados.diasAviso
+    if (dados.avisosDias?.length) { linha.avisos_dias = dados.avisosDias; linha.dias_aviso = Math.max(...dados.avisosDias) }
     const { error } = await supabase.from('contratos').update(linha).eq('id', contratoId)
     if (error) throw error
     await registrarEvento({ tipo: 'contrato_editado', entidade: contratoId, resumo: `Contrato editado (${Object.keys(dados).join(', ')})` })

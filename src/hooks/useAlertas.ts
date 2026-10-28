@@ -10,6 +10,7 @@ export interface NovoCompromisso {
   imovel: string
   dataEvento: string
   diasAntes: number
+  avisosDias?: number[]
   email?: string
 }
 
@@ -23,9 +24,9 @@ function lerLocal(): CompromissoGuardado[] {
 
 async function listarCompromissos(): Promise<CompromissoGuardado[]> {
   if (!supabaseConfigurado) return lerLocal()
-  const { data, error } = await supabase.from('compromissos').select('id,titulo,imovel,data_evento,dias_antes')
+  const { data, error } = await supabase.from('compromissos').select('id,titulo,imovel,data_evento,dias_antes,avisos_dias')
   if (error) throw error
-  return (data ?? []).map(c => ({ id: c.id, titulo: c.titulo, imovel: c.imovel, dataEvento: c.data_evento, diasAntes: c.dias_antes }))
+  return (data ?? []).map(c => ({ id: c.id, titulo: c.titulo, imovel: c.imovel, dataEvento: c.data_evento, diasAntes: c.dias_antes, avisosDias: c.avisos_dias ?? [c.dias_antes] }))
 }
 
 export async function salvarCompromisso(c: NovoCompromisso) {
@@ -34,7 +35,7 @@ export async function salvarCompromisso(c: NovoCompromisso) {
     return
   }
   const { error } = await supabase.from('compromissos').insert({
-    titulo: c.titulo, imovel: c.imovel, data_evento: c.dataEvento, dias_antes: c.diasAntes,
+    titulo: c.titulo, imovel: c.imovel, data_evento: c.dataEvento, dias_antes: c.avisosDias?.length ? Math.max(...c.avisosDias) : c.diasAntes, avisos_dias: c.avisosDias ?? [c.diasAntes],
     email_aviso: c.email?.split(/[,;\s]+/).filter(Boolean).join(',').toLowerCase() || null,
   })
   if (error) throw error

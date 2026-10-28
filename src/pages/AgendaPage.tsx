@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import EscolhaAvisos from '@/components/EscolhaAvisos'
 import { useNavigate } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
@@ -34,6 +35,7 @@ export default function AgendaPage() {
     titulo: '',
     imovel: '',
     diasAntes: 7,
+    avisosDias: [7] as number[],
     dataEvento: '',
     email: '',
   })
@@ -78,11 +80,12 @@ export default function AgendaPage() {
         imovel: novoAlerta.imovel,
         dataEvento: novoAlerta.dataEvento,
         diasAntes: novoAlerta.diasAntes,
+        avisosDias: novoAlerta.avisosDias,
         email: novoAlerta.email,
       })
       await recarregar()
       setShowModal(false)
-      setNovoAlerta({ titulo: '', imovel: '', diasAntes: 7, dataEvento: '', email: '' })
+      setNovoAlerta({ titulo: '', imovel: '', diasAntes: 7, avisosDias: [7], dataEvento: '', email: '' })
     } catch (e) {
       console.error('Erro ao salvar compromisso:', e)
       alert('Não foi possível salvar o compromisso. Tente novamente.')
@@ -322,21 +325,8 @@ export default function AgendaPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="diasAntes" className="block text-sm font-medium text-navy mb-1">
-                    Avisos com (dias antes)
-                  </label>
-                  <select
-                    id="diasAntes"
-                    value={novoAlerta.diasAntes}
-                    onChange={e => setNovoAlerta({ ...novoAlerta, diasAntes: parseInt(e.target.value) })}
-                    className="w-full min-h-[44px] px-3 border border-navy/20 rounded-sm text-sm"
-                  >
-                    <option value={1}>1 dia antes</option>
-                    <option value={3}>3 dias antes</option>
-                    <option value={7}>7 dias antes (padrão)</option>
-                    <option value={14}>14 dias antes</option>
-                    <option value={30}>30 dias antes</option>
-                  </select>
+                  <p id="diasAntes-rotulo" className="block text-sm font-medium text-navy mb-1">Avisos com (dias antes, marque quantos quiser)</p>
+                  <EscolhaAvisos id="diasAntes" valor={novoAlerta.avisosDias} onChange={v => setNovoAlerta({ ...novoAlerta, avisosDias: v, diasAntes: Math.max(...v) })} />
                 </div>
                 <div>
                   <label htmlFor="emailAviso" className="block text-sm font-medium text-navy mb-1">
