@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { repositorio } from '@/lib/repositorio'
 import { radarPortais } from '@/lib/legislacao'
@@ -24,6 +24,7 @@ const TESTES: Teste[] = [
   { nome: 'Índice de reajuste (Banco Central)', rodar: async () => { const d = await funcao('indice-reajuste', { indice: 'igpm' }); return `IGP-M 12 meses: ${d.acumulado12m}%` } },
   { nome: 'Chance de êxito (CNJ)', rodar: async () => { const d = await funcao('jurimetria', { acao: 'despejo', tribunal: 'tjrj' }); return `despejo TJRJ: ${d.chanceExito}% (amostra ${d.amostra})` } },
   { nome: 'Radar dos portais', rodar: async () => { const r = await radarPortais(); if (!r.length) throw new Error('radar vazio'); return `${r.length} itens` } },
+  { nome: 'Consulta de CNPJ (Receita Federal)', rodar: async () => { const { data, error } = await supabase.functions.invoke('consultar-cnpj?cnpj=00000000000191', { method: 'GET' }); if (error) throw new Error(error.message); if (data?.erro) throw new Error(data.erro); return `${data.empresa.nome}: ${data.empresa.situacao}` } },
   { nome: 'Coleta para calibragem', rodar: async () => { const { count, error } = await supabase.from('registro_previsoes').select('id', { count: 'exact', head: true }); if (error) throw new Error(error.message); return `${count ?? 0} previsões guardadas` } },
 ]
 
@@ -31,6 +32,12 @@ const TESTES: Teste[] = [
 export default function TesteGeral() {
   const [estados, setEstados] = useState<Record<string, { e: Estado; msg?: string; ms?: number }>>({})
   const [rodando, setRodando] = useState(false)
+  const [diario, setDiario] = useState<{ verificacao: string; ok: boolean; verificado_em: string; detalhe: string | null }[]>([])
+  useEffect(() => {
+    if (!supabaseConfigurado) return
+    supabase.from('saude_sistema').select('verificacao,ok,verificado_em,detalhe').order('id', { ascending: false }).limit(6)
+      .then(({ data }) => setDiario(data ?? []))
+  }, [])
   const rodar = async () => {
     setRodando(true)
     setEstados(Object.fromEntries(TESTES.map(t => [t.nome, { e: 'rodando' as Estado }])))
@@ -47,7 +54,13 @@ export default function TesteGeral() {
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
         <div>
           <h2 id="t-testes" className="text-lg">Testar todas as funções</h2>
-          <p className="text-sm text-grafite-claro">Roda cada função dentro da plataforma. Além disso, um teste automático confere os agentes todo dia às 8h15.</p>
+          <p className="text-sm text-grafite-claro">Roda cada função dentro da plataforma. Além disso, um teste automático confere as funções todo dia às 8h45.</p>
+          {diario.length > 0 && (
+            <p className="text-sm mt-1" aria-live="polite">
+              Último teste automático ({new Date(diario[0].verificado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}): {diario.filter(d => d.ok).length} de {diario.length} funcionando
+              {diario.some(d => !d.ok) && <span className="block text-xs text-critico">Com falha: {diario.filter(d => !d.ok).map(d => d.verificacao).join(', ')}</span>}
+            </p>
+          )}
         </div>
         <button onClick={rodar} disabled={rodando || !supabaseConfigurado} className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">
           <PlayCircle size={16} aria-hidden="true" /> {rodando ? 'Testando…' : 'Testar tudo'}
