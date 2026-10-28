@@ -26,7 +26,7 @@ try {
   const txt = await p.evaluate(() => document.querySelector('main')?.innerText ?? document.body.innerText)
   log('Consumo mostra gasto em reais', /R\$\s*0,0*[1-9]|R\$\s*[1-9]/.test(total), total)
   log('Consumo por usuário', txt.includes(process.env.EMAIL), txt.slice(0, 900))
-  const bg = await p.evaluate(() => getComputedStyle(document.querySelector('button')).backgroundColor)
+  const bg = await p.evaluate(() => getComputedStyle(document.querySelector('button.bg-navy') ?? document.body).backgroundColor)
   log('Visual (CSS) carregado', bg !== 'rgba(0, 0, 0, 0)' && bg !== 'rgb(239, 239, 239)', bg)
   await p.fill('#teto', '0.0001'); await p.getByRole('button', { name: 'Salvar teto' }).click(); await p.waitForTimeout(2500)
   const t2 = await p.evaluate(() => document.body.innerText)
