@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import EscolhaAvisos from '@/components/EscolhaAvisos'
+import BotaoAuditar from '@/components/BotaoAuditar'
 import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
@@ -479,6 +480,7 @@ export default function ContratoPage() {
                         <Download size={17} aria-hidden="true" />
                       </button>
                     )}
+                    {d.caminhoStorage && !d.id.startsWith('arquivo-') && <BotaoAuditar tabela="documentos" id={d.id} />}
                     {!d.id.startsWith('arquivo-') && (
                       <button
                         onClick={() => remover(d)}

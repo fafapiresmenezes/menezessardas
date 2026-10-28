@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
 import GraficoTendencia from '@/components/GraficoTendencia'
+import AcessoRestrito from '@/components/AcessoRestrito'
 import { repositorio, calcularAlertas, type Alerta, type Contrato, type Imovel } from '@/lib/repositorio'
 import { diasAte, formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
 import { contratoAtivo, tendencia12Meses, valorMensal } from '@/lib/indicadores'
@@ -205,6 +206,8 @@ export default function ImovelDetailPage() {
             <p className="bg-white p-5 shadow-sm text-sm text-grafite-claro">Nenhum compromisso nos próximos 400 dias.</p>
           )}
         </section>
+
+        <AcessoRestrito imovelId={imovel.id} />
 
         <section aria-labelledby="t-docs">
           <h2 id="t-docs" className="text-xl mb-4 flex items-center gap-2">
