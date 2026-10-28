@@ -550,7 +550,8 @@ function SecaoEscavador() {
     setOcupado('testando'); setMsg(null)
     const { data, error } = await supabase.functions.invoke('escavador', { body: { teste: true } })
     setOcupado('')
-    if (error || !data?.ok) return setMsg({ tipo: 'erro', texto: data?.erro ?? 'O Escavador não respondeu ao teste.' })
+    const corpo = error ? await (error as { context?: Response }).context?.json?.().catch(() => null) : data
+    if (error || !corpo?.ok) return setMsg({ tipo: 'erro', texto: corpo?.erro ?? 'O Escavador não respondeu ao teste.' })
     setMsg({ tipo: 'ok', texto: 'Escavador ligado. A busca já funciona em Fontes do advogado.' })
   }
   const salvar = async () => {

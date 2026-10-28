@@ -24,7 +24,9 @@ export default function FontesPage() {
   const buscarEscavador = async () => {
     setBusca({ carregando: true })
     const { data, error } = await supabase.functions.invoke('escavador', { body: { termo } })
-    if (error || data?.erro) return setBusca({ erro: data?.erro ?? 'O Escavador não respondeu. Tente de novo.' })
+    // Respostas de erro (503, 502…) chegam em error.context; mostramos a mensagem do servidor.
+    const corpo = error ? await (error as { context?: Response }).context?.json?.().catch(() => null) : data
+    if (error || corpo?.erro) return setBusca({ erro: corpo?.erro ?? 'O Escavador não respondeu. Tente de novo.' })
     setBusca({ processos: data.processos ?? [] })
   }
   return (
