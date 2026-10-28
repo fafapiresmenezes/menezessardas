@@ -1,7 +1,7 @@
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 
 export type Especialidade =
-  | 'imobiliario' | 'condominial' | 'registral' | 'consumidor' | 'tributario' | 'trabalhista' | 'lgpd' | 'inovacao' | 'compliance' | 'geral'
+  | 'imobiliario' | 'condominial' | 'registral' | 'consumidor' | 'tributario' | 'trabalhista' | 'familia' | 'lgpd' | 'inovacao' | 'compliance' | 'geral'
 
 export const ESPECIALIDADES: { valor: Especialidade; rotulo: string; descricao: string }[] = [
   { valor: 'imobiliario', rotulo: 'Imobiliário', descricao: 'Locação, comodato, compra e venda, garantias, despejo' },
@@ -9,7 +9,8 @@ export const ESPECIALIDADES: { valor: Especialidade; rotulo: string; descricao: 
   { valor: 'registral', rotulo: 'Registral e notarial', descricao: 'Matrícula, averbação, ITBI, usucapião' },
   { valor: 'consumidor', rotulo: 'Consumidor', descricao: 'Incorporadoras, distrato, vícios' },
   { valor: 'tributario', rotulo: 'Tributário', descricao: 'IPTU, ITBI, ganho de capital' },
-  { valor: 'trabalhista', rotulo: 'Trabalhista', descricao: 'Empregados de condomínio e prestadores' },
+  { valor: 'trabalhista', rotulo: 'Trabalhista', descricao: 'Contrato de trabalho, rescisão, verbas e reclamações' },
+  { valor: 'familia', rotulo: 'Família e sucessões', descricao: 'Divórcio, alimentos, guarda, união estável, inventário' },
   { valor: 'lgpd', rotulo: 'LGPD', descricao: 'Dados de locatários, fiadores e fornecedores' },
   { valor: 'inovacao', rotulo: 'Inovação e sandboxes', descricao: 'Sandboxes regulatórios, startups, proptechs' },
   { valor: 'compliance', rotulo: 'ESG e compliance', descricao: 'Integridade, passivo ambiental, due diligence' },

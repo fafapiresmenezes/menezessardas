@@ -23,7 +23,7 @@ const json = (b: unknown, s = 200) =>
 /** Catálogo de leis e códigos federais com texto compilado no Planalto. */
 const CATALOGO: Record<string, { titulo: string; url: string; temas: string }> = {
   cf88: { titulo: 'Constituição Federal de 1988', url: 'https://www.planalto.gov.br/ccivil_03/constituicao/constituicaocompilado.htm', temas: 'direitos fundamentais, propriedade, função social, tributos, competências' },
-  cc: { titulo: 'Código Civil (Lei 10.406/2002)', url: 'https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm', temas: 'contratos, comodato, locação civil, posse, propriedade, condomínio, prescrição, responsabilidade civil, pessoas jurídicas' },
+  cc: { titulo: 'Código Civil (Lei 10.406/2002)', url: 'https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm', temas: 'casamento, divórcio, regime de bens, união estável, alimentos, guarda, sucessões, inventário, testamento, contratos, comodato, locação civil, posse, propriedade, condomínio, prescrição, responsabilidade civil, pessoas jurídicas' },
   cpc: { titulo: 'Código de Processo Civil (Lei 13.105/2015)', url: 'https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm', temas: 'ações, prazos processuais, execução, despejo, tutela, recursos' },
   cdc: { titulo: 'Código de Defesa do Consumidor (Lei 8.078/1990)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm', temas: 'relações de consumo, cláusulas abusivas, incorporadoras e consumidores' },
   inquilinato: { titulo: 'Lei do Inquilinato (Lei 8.245/1991)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l8245.htm', temas: 'locação urbana residencial e comercial, reajuste, garantias, renovatória, despejo, revisional' },
@@ -37,11 +37,17 @@ const CATALOGO: Record<string, { titulo: string; url: string; temas: string }> =
   lgpd: { titulo: 'LGPD (Lei 13.709/2018)', url: 'https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm', temas: 'dados pessoais de locatários, fiadores, fornecedores, consentimento, incidentes' },
   ctn: { titulo: 'Código Tributário Nacional (Lei 5.172/1966)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm', temas: 'IPTU, ITBI, obrigação tributária, responsabilidade do adquirente' },
   licitacoes: { titulo: 'Lei de Licitações (Lei 14.133/2021)', url: 'https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14133.htm', temas: 'contratos com a administração pública, locação pelo poder público' },
-  clt: { titulo: 'CLT (Decreto-Lei 5.452/1943)', url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452compilado.htm', temas: 'empregados de condomínio, porteiros, zeladores, terceirização' },
+  clt: { titulo: 'CLT (Decreto-Lei 5.452/1943)', url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452compilado.htm', temas: 'contrato de trabalho, jornada, horas extras, férias, rescisão, aviso prévio, justa causa, processo do trabalho, terceirização, condomínios' },
   startups: { titulo: 'Marco Legal das Startups (Lei Complementar 182/2021)', url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp182.htm', temas: 'startups, ambiente regulatório experimental (sandbox regulatório), investidor-anjo, inovação' },
   liberdade: { titulo: 'Lei da Liberdade Econômica (Lei 13.874/2019)', url: 'https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/lei/l13874.htm', temas: 'livre iniciativa, intervenção mínima nos contratos, abuso regulatório, análise de impacto regulatório' },
   anticorrupcao: { titulo: 'Lei Anticorrupção (Lei 12.846/2013)', url: 'https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/lei/l12846.htm', temas: 'compliance, programa de integridade, responsabilidade objetiva da pessoa jurídica, acordo de leniência' },
   ambiental: { titulo: 'Política Nacional do Meio Ambiente (Lei 6.938/1981)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l6938.htm', temas: 'ESG, responsabilidade ambiental, licenciamento, poluidor-pagador, passivo ambiental de imóveis' },
+  eca: { titulo: 'Estatuto da Criança e do Adolescente (Lei 8.069/1990)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l8069.htm', temas: 'guarda, convivência, adoção, proteção integral, alimentos a menores' },
+  alimentos: { titulo: 'Lei de Alimentos (Lei 5.478/1968)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l5478.htm', temas: 'ação de alimentos, alimentos provisórios, revisão, execução' },
+  alienacaoparental: { titulo: 'Lei da Alienação Parental (Lei 12.318/2010)', url: 'https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12318.htm', temas: 'alienação parental, guarda compartilhada, medidas' },
+  mariadapenha: { titulo: 'Lei Maria da Penha (Lei 11.340/2006)', url: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11340.htm', temas: 'violência doméstica, medidas protetivas, afastamento do lar' },
+  fgts: { titulo: 'Lei do FGTS (Lei 8.036/1990)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l8036consol.htm', temas: 'FGTS, multa de 40%, saque, depósitos' },
+  domesticas: { titulo: 'Lei das Empregadas Domésticas (LC 150/2015)', url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp150.htm', temas: 'empregado doméstico, jornada, férias, FGTS doméstico' },
   usucapiao: { titulo: 'Usucapião extrajudicial e outros (Lei 6.015/1973 art. 216-A)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l6015compilada.htm', temas: 'usucapião em cartório' },
 }
 
@@ -51,7 +57,8 @@ const ESPECIALIDADES: Record<string, string> = {
   registral: 'Você é especialista em direito registral e notarial: matrícula, averbações, ITBI, usucapião e regularização fundiária.',
   consumidor: 'Você é especialista em direito do consumidor aplicado a imóveis: incorporadoras, distrato, vícios construtivos e publicidade.',
   tributario: 'Você é especialista em tributação imobiliária: IPTU, ITBI, ganho de capital e responsabilidade do adquirente.',
-  trabalhista: 'Você é especialista em direito do trabalho aplicado a condomínios e prestadores de serviço de imóveis.',
+  trabalhista: 'Você é especialista em direito do trabalho e processo do trabalho (CLT, FGTS, empregados domésticos): contratação, jornada, rescisão, verbas, terceirização e reclamações trabalhistas.',
+  familia: 'Você é especialista em direito de família e sucessões (Código Civil, ECA, Lei de Alimentos, alienação parental e Maria da Penha): divórcio, partilha, união estável, alimentos, guarda, convivência e inventário. Trate as partes com sensibilidade.',
   lgpd: 'Você é especialista em proteção de dados (LGPD) aplicada a escritórios de advocacia e gestão de imóveis.',
   inovacao: 'Você é especialista em inovação e regulação: sandboxes regulatórios (CVM, Banco Central, ANPD, SUSEP, ANEEL), Marco Legal das Startups e Lei da Liberdade Econômica, aplicados a negócios imobiliários e proptechs.',
   compliance: 'Você é especialista em governança, ESG e compliance: programa de integridade (Lei 12.846/13), LGPD, passivo ambiental e due diligence de imóveis e contrapartes.',
@@ -191,6 +198,15 @@ async function tetoAtingido(): Promise<boolean> {
   } catch (_) { return false }
 }
 
+// Chamadas automáticas (pg_cron) mandam o segredo guardado em configuracoes.cron_segredo.
+async function segredoCronOk(req: Request): Promise<boolean> {
+  const enviado = req.headers.get('x-cron-secret')
+  if (!enviado) return false
+  const { createClient: cc } = await import('jsr:@supabase/supabase-js@2')
+  const { data } = await cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!).from('configuracoes').select('valor').eq('chave', 'cron_segredo').maybeSingle()
+  return !!data?.valor && data.valor === enviado
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
   const corpo = await req.json().catch(() => ({}))
@@ -208,7 +224,7 @@ Deno.serve(async (req) => {
     responder: { pergunta: 'Qual o prazo para propor ação renovatória de locação comercial?', modo: 'responder' },
     caminhos: { pergunta: 'Locatário comercial com 3 aluguéis atrasados e fiador: quais caminhos?', modo: 'caminhos' },
   }
-  const teste = !usuario && typeof corpo.teste === 'string' ? TESTES[corpo.teste] : null
+  const teste = !usuario && typeof corpo.teste === 'string' && (await segredoCronOk(req)) ? TESTES[corpo.teste] : null
   if (teste) Object.assign(corpo, { pergunta: teste.pergunta, modo: teste.modo, especialidade: 'imobiliario', historico: [], contexto: '' })
   if (!usuario && !teste) return json({ erro: 'Entre na plataforma para usar o assistente.' }, 401)
   const chave = await obterChave()
@@ -308,8 +324,9 @@ Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"
         },
       }
       const r = await anthropic(chave, {
-        model: MODELO_RESPOSTA, max_tokens: 8000, tools: [ferramenta], tool_choice: { type: 'tool', name: 'registrar_caminhos' },
-        system: `${regrasComuns}\nMonte de 2 a 5 caminhos (extrajudicial, judicial, negociação, aguardar etc.), pontue cada um em quatro critérios e aponte as zonas cinzentas com honestidade.`,
+        model: MODELO_RESPOSTA, max_tokens: 8000, tools: [ferramenta], tool_choice: { type: 'auto' }, // Sonnet 5.5 recusa tool_choice forçado
+
+        system: `${regrasComuns}\nMonte de 2 a 5 caminhos (extrajudicial, judicial, negociação, aguardar etc.), pontue cada um em quatro critérios e aponte as zonas cinzentas com honestidade. Responda obrigatoriamente chamando a ferramenta registrar_caminhos, sem texto fora dela.`,
         messages: mensagens,
       }, usuario)
       const bruto = r.content?.find((c: { type: string }) => c.type === 'tool_use')?.input ?? null

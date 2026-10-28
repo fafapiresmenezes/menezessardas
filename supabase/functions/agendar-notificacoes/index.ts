@@ -60,6 +60,15 @@ async function enviar(p: Provedor, para: string[], itens: Item[]) {
   return { ok: r.ok, corpo: r.ok ? undefined : await r.text() }
 }
 
+// Chamadas automáticas (pg_cron) mandam o segredo guardado em configuracoes.cron_segredo.
+async function segredoCronOk(req: Request): Promise<boolean> {
+  const enviado = req.headers.get('x-cron-secret')
+  if (!enviado) return false
+  const { createClient: cc } = await import('jsr:@supabase/supabase-js@2')
+  const { data } = await cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!).from('configuracoes').select('valor').eq('chave', 'cron_segredo').maybeSingle()
+  return !!data?.valor && data.valor === enviado
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
   const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
@@ -87,6 +96,7 @@ Deno.serve(async (req) => {
   }
   itens.sort((a, b) => a.dias - b.dias)
   const corpo = await req.json().catch(() => ({}))
+  if (!corpo?.teste && !(await segredoCronOk(req))) return json({ erro: 'Disparo geral só pelo agendamento automático.' }, 401)
   let emailTeste: string | undefined
   if (corpo?.teste) {
     const token = (req.headers.get('Authorization') ?? '').replace('Bearer ', '')
@@ -115,5 +125,5 @@ Deno.serve(async (req) => {
     const so = (i.extra ?? []).filter(e => !para.includes(e))
     if (so.length && (await enviar(prov, so, [i])).ok) avulsos.push(...so)
   }
-  return json({ itens: itens.length, destinatarios: para.length, avulsos: avulsos.length, enviado: r.ok, para: corpo?.teste ? para : undefined, detalhe: r.ok ? undefined : { corpo: r.corpo } })
+  return json({ itens: itens.length, destinatarios: para.length, avulsos: avulsos.length, enviado: r.ok, detalhe: r.ok ? undefined : { corpo: r.corpo } })
 })

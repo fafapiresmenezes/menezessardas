@@ -108,12 +108,21 @@ async function tetoAtingido(): Promise<boolean> {
   } catch (_) { return false }
 }
 
+// Chamadas automáticas (pg_cron) mandam o segredo guardado em configuracoes.cron_segredo.
+async function segredoCronOk(req: Request): Promise<boolean> {
+  const enviado = req.headers.get('x-cron-secret')
+  if (!enviado) return false
+  const { createClient: cc } = await import('jsr:@supabase/supabase-js@2')
+  const { data } = await cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!).from('configuracoes').select('valor').eq('chave', 'cron_segredo').maybeSingle()
+  return !!data?.valor && data.valor === enviado
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
   const usuario = usuarioAutenticado(req)
   const { nome = '', tribunal = 'tjrj', orgao = '', tema = '', sonda = false } = await req.json().catch(() => ({}))
   // Modo sonda: teste automático diário sem usuário; não grava nada.
-  if (!usuario && !sonda) return json({ erro: 'Entre na plataforma para usar o perfil do julgador.' }, 401)
+  if (!usuario && !(sonda && (await segredoCronOk(req)))) return json({ erro: 'Entre na plataforma para usar o perfil do julgador.' }, 401)
   if (!TRIBUNAIS[tribunal]) return json({ erro: 'Tribunal ainda não coberto.' }, 400)
   if (!nome.trim() && !orgao.trim()) return json({ erro: 'Informe o nome do julgador ou o órgão (vara ou câmara).' }, 400)
   const chave = await obterChave()
