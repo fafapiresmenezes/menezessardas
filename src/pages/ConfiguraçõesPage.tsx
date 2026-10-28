@@ -180,6 +180,7 @@ export default function ConfiguraçõesPage() {
       <SecaoSenha />
       <SecaoChaveIA />
       <SecaoEmail />
+      <SecaoEscavador />
     </Layout>
   )
 }
@@ -531,3 +532,53 @@ function SecaoEmail() {
   )
 }
 
+
+/** Escavador: token da API paga do escritório; a busca aparece em Fontes do advogado. */
+function SecaoEscavador() {
+  const [definida, setDefinida] = useState<boolean | null>(null)
+  const [chave, setChave] = useState('')
+  const [ocupado, setOcupado] = useState('')
+  const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+  const carregar = async () => {
+    const { data } = await supabase.rpc('estado_configuracao', { p_chave: 'escavador_api_key' })
+    const e = (Array.isArray(data) ? data[0] : data) as { permitido: boolean; definida: boolean } | undefined
+    setDefinida(e?.permitido ? e.definida : null)
+  }
+  useEffect(() => { if (supabaseConfigurado) carregar() }, [])
+  if (!supabaseConfigurado || definida === null) return null
+  const testar = async () => {
+    setOcupado('testando'); setMsg(null)
+    const { data, error } = await supabase.functions.invoke('escavador', { body: { teste: true } })
+    setOcupado('')
+    if (error || !data?.ok) return setMsg({ tipo: 'erro', texto: data?.erro ?? 'O Escavador não respondeu ao teste.' })
+    setMsg({ tipo: 'ok', texto: 'Escavador ligado. A busca já funciona em Fontes do advogado.' })
+  }
+  const salvar = async () => {
+    setOcupado('salvando'); setMsg(null)
+    const { error } = await supabase.rpc('definir_configuracao', { p_chave: 'escavador_api_key', p_valor: chave })
+    setOcupado('')
+    if (error) return setMsg({ tipo: 'erro', texto: error.message })
+    setChave(''); await carregar(); testar()
+  }
+  return (
+    <section aria-labelledby="escavador" className="max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado">
+      <h2 id="escavador" className="text-lg mb-3">Escavador</h2>
+      <div className="space-y-3 text-sm">
+        <p><strong>Situação:</strong> {definida ? 'token salvo.' : 'ainda não ligado.'}</p>
+        <ol className="text-xs text-grafite-claro list-decimal pl-5 space-y-1">
+          <li>Entre em <a href="https://api.escavador.com/" target="_blank" rel="noopener noreferrer" className="underline text-navy">api.escavador.com</a>, crie a conta e compre um pacote de créditos.</li>
+          <li>Abra <strong>Tokens de acesso</strong> → <strong>Gerar token</strong> e copie.</li>
+          <li>Cole abaixo e clique em Salvar. Cada consulta aparece no painel Consumo.</li>
+        </ol>
+        {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={`p-3 text-sm border-l-2 ${msg.tipo === 'ok' ? 'bg-regularFundo border-regular text-regular' : 'bg-criticoFundo border-critico text-critico'}`}>{msg.texto}</p>}
+        <label htmlFor="chave-escavador" className="block text-xs uppercase tracking-wider text-grafite">Token do Escavador {definida && <span className="normal-case">(já salvo)</span>}</label>
+        <input id="chave-escavador" type="password" value={chave} onChange={e => setChave(e.target.value)} autoComplete="off" spellCheck={false}
+          className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white font-mono text-sm" />
+        <div className="flex flex-wrap gap-3">
+          <button type="button" onClick={salvar} disabled={!chave.trim() || ocupado !== ''} className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider">{ocupado === 'salvando' ? 'Salvando…' : 'Salvar'}</button>
+          <button type="button" onClick={testar} disabled={!definida || ocupado !== ''} className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm">{ocupado === 'testando' ? 'Testando…' : 'Testar ligação'}</button>
+        </div>
+      </div>
+    </section>
+  )
+}

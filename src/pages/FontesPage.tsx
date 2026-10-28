@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import Layout from '@/components/Layout'
+import { supabase } from '@/lib/supabase'
 import { ExternalLink, Search } from 'lucide-react'
 
 // Fontes que o advogado usa todo dia: digita uma vez (nome, CNPJ, número do processo ou tema)
 // e abre cada site já com a busca feita. As que têm ligação direta estão marcadas.
 const FONTES: { nome: string; para: string; url: (t: string) => string; direta?: string }[] = [
-  { nome: 'Escavador', para: 'Processos e publicações por nome, CPF/CNPJ ou número', url: t => `https://www.escavador.com/busca?q=${encodeURIComponent(t)}` },
+  { nome: 'Escavador', para: 'Processos e publicações por nome, CPF/CNPJ ou número', url: t => `https://www.escavador.com/busca?q=${encodeURIComponent(t)}`, direta: 'Busca acima (com token)' },
   { nome: 'JusBrasil', para: 'Jurisprudência, diários e processos', url: t => `https://www.jusbrasil.com.br/busca?q=${encodeURIComponent(t)}` },
   { nome: 'DataJud (CNJ)', para: 'Estatísticas de varas e câmaras', url: () => 'https://datajud-wiki.cnj.jus.br/', direta: 'Perfil do julgador' },
   { nome: 'TJRJ – consulta processual', para: 'Andamento de processos no Rio', url: () => 'https://www3.tjrj.jus.br/consultaprocessual/' },
@@ -19,6 +20,13 @@ const FONTES: { nome: string; para: string; url: (t: string) => string; direta?:
 
 export default function FontesPage() {
   const [termo, setTermo] = useState('')
+  const [busca, setBusca] = useState<{ carregando?: boolean; erro?: string; processos?: { numero: string; titulo: string; tribunal: string | null; ultimaMovimentacao: string | null; classe: string | null; link: string | null }[] } | null>(null)
+  const buscarEscavador = async () => {
+    setBusca({ carregando: true })
+    const { data, error } = await supabase.functions.invoke('escavador', { body: { termo } })
+    if (error || data?.erro) return setBusca({ erro: data?.erro ?? 'O Escavador não respondeu. Tente de novo.' })
+    setBusca({ processos: data.processos ?? [] })
+  }
   return (
     <Layout title="Fontes do advogado">
       <div className="space-y-6">
@@ -29,6 +37,24 @@ export default function FontesPage() {
             <input id="termo" value={termo} onChange={e => setTermo(e.target.value)} placeholder="Nome, CNPJ, número do processo ou tema" className="flex-1 border px-3 py-2" />
           </div>
           <p className="text-sm text-grafite-claro mt-2">Escreva uma vez e clique na fonte: ela abre já com a busca feita.</p>
+          <button type="button" onClick={buscarEscavador} disabled={termo.trim().length < 3 || !!busca?.carregando} className="mt-3 min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">
+            {busca?.carregando ? 'Buscando…' : 'Buscar processos no Escavador aqui'}
+          </button>
+          {busca?.erro && <p role="alert" className="mt-3 p-3 text-sm border-l-2 bg-criticoFundo border-critico text-critico">{busca.erro}</p>}
+          {busca?.processos && (
+            <div className="mt-4" aria-live="polite">
+              <p className="text-sm mb-2">{busca.processos.length ? `${busca.processos.length} processo(s) encontrado(s):` : 'Nenhum processo encontrado.'}</p>
+              <ul className="divide-y">
+                {busca.processos.map(p => (
+                  <li key={p.numero} className="py-2 text-sm">
+                    <span className="font-mono">{p.numero}</span>{p.tribunal && ` · ${p.tribunal}`}{p.classe && ` · ${p.classe}`}
+                    {p.titulo && <span className="block text-grafite-claro">{p.titulo}</span>}
+                    {p.ultimaMovimentacao && <span className="block text-xs text-grafite-claro">Última movimentação: {new Date(p.ultimaMovimentacao).toLocaleDateString('pt-BR')}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </section>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FONTES.map(f => (
