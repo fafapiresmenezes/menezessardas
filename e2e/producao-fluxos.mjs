@@ -38,7 +38,7 @@ try {
 
 // 3. Contrato: editar avisos 10/7/3
 try {
-  await p.goto(BASE + '#/contrato/be756e84-c20a-48f7-a2bd-48f6ecbe0860', { waitUntil: 'networkidle' }); await p.waitForTimeout(2000)
+  await p.goto(BASE + '#/contrato/bb208c12-2b7f-4aff-839e-cd175d94cbf8', { waitUntil: 'networkidle' }); await p.waitForTimeout(2000)
   const corpo = await p.evaluate(() => document.body.innerText.slice(0, 400))
   if (!(await p.getByRole('button', { name: /Editar/ }).count())) throw new Error('sem botão Editar. Tela: ' + corpo)
   await p.getByRole('button', { name: /Editar/ }).first().click(); await p.waitForTimeout(500)
