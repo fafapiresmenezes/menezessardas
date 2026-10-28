@@ -8,7 +8,7 @@ const PASSOS = [
   { icone: Building2, titulo: 'Boas-vindas à gestão de contratos', texto: 'Aqui ficam todos os imóveis do escritório, com seus contratos, documentos e prazos, num só lugar.', rota: '/dashboard', acao: 'Ver o painel' },
   { icone: FileText, titulo: 'Cadastre arrastando', texto: 'Em Imóveis, arraste o PDF do contrato para a tela. A plataforma lê o arquivo e preenche os campos para você conferir.', rota: '/imoveis', acao: 'Abrir Imóveis' },
   { icone: CalendarDays, titulo: 'Clique no dia para marcar', texto: 'Na Agenda, toque em "Novo" em qualquer dia para criar um compromisso e escolher com quantos dias de antecedência quer o aviso.', rota: '/agenda', acao: 'Abrir a Agenda' },
-  { icone: Bell, titulo: 'Avisos no celular', texto: 'Na Agenda, "Conectar ao Google Agenda" leva todos os prazos para o seu celular, atualizados sozinhos.', rota: '/agenda', acao: 'Conectar agora' },
+  { icone: Bell, titulo: 'Avisos no celular', texto: 'Na Agenda, "Conectar ao Outlook" ou "Conectar ao Google Agenda" leva todos os prazos para o seu computador e celular, atualizados sozinhos.', rota: '/agenda', acao: 'Conectar agora' },
 ]
 
 export function reverBoasVindas() {

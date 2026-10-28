@@ -39,16 +39,18 @@ export default function AgendaPage() {
   })
 
   // Assinatura do calendário: o Google Agenda passa a buscar os prazos sozinho, sem exportar de novo.
-  const sincronizarGoogleCalendar = async () => {
+  // O Outlook para Windows abre o link webcal: e assina o mesmo calendário.
+  const sincronizarGoogleCalendar = async (destino: 'google' | 'outlook' = 'google') => {
     setSincronizando(true)
     try {
       const { data: token, error } = await supabase.rpc('link_agenda')
       if (error || !token) throw error ?? new Error('sem link')
       const feed = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/agenda-feed?t=${token}`.replace(/^https?:/, 'webcal:')
-      window.open(`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(feed)}`, '_blank', 'noopener')
+      if (destino === 'outlook') window.location.href = feed
+      else window.open(`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(feed)}`, '_blank', 'noopener')
     } catch (e) {
-      console.error('Erro ao conectar o Google Agenda:', e)
-      alert('Não foi possível gerar o link do Google Agenda. Entre de novo na plataforma e tente outra vez.')
+      console.error('Erro ao conectar a agenda:', e)
+      alert('Não foi possível gerar o link da agenda. Entre de novo na plataforma e tente outra vez.')
     } finally {
       setSincronizando(false)
     }
@@ -150,7 +152,7 @@ export default function AgendaPage() {
               <ChevronRight size={20} aria-hidden="true" />
             </button>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <a
               href={mailto}
               className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm hover:bg-white"
@@ -164,7 +166,14 @@ export default function AgendaPage() {
               <Download size={16} aria-hidden="true" /> Exportar iCal
             </button>
             <button
-              onClick={sincronizarGoogleCalendar}
+              onClick={() => sincronizarGoogleCalendar('outlook')}
+              disabled={sincronizando}
+              className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 rounded-sm text-sm hover:bg-navy-700 disabled:opacity-50"
+            >
+              <ExternalLink size={16} aria-hidden="true" /> Conectar ao Outlook
+            </button>
+            <button
+              onClick={() => sincronizarGoogleCalendar('google')}
               disabled={sincronizando}
               className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 rounded-sm text-sm hover:bg-navy-700 disabled:opacity-50"
             >
