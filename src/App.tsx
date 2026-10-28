@@ -25,6 +25,7 @@ import FornecedorPage from '@/pages/FornecedorPage'
 import ConfiguraçõesPage from '@/pages/ConfiguraçõesPage'
 import EquipePage from '@/pages/EquipePage'
 import InicioPage from '@/pages/InicioPage'
+import FontesPage from '@/pages/FontesPage'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -153,6 +154,10 @@ function App() {
         <Route
           path="/trilha"
           element={isAuthenticated ? <TrilhaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/fontes"
+          element={isAuthenticated ? <FontesPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/consumo"
