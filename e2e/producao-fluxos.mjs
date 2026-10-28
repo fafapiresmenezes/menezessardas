@@ -12,12 +12,15 @@ p.on('dialog', d => { erros.push('ALERTA: ' + d.message()); d.accept() })
 await p.goto(BASE, { waitUntil: 'networkidle' })
 await p.fill('input[type=email]', process.env.EMAIL); await p.fill('input[type=password]', process.env.SENHA)
 await p.click('button[type=submit]'); await p.waitForTimeout(4000)
+  // login abre a tela de entrada; o tour de boas-vindas aparece no primeiro painel
+  await p.goto(BASE + '#/dashboard', { waitUntil: 'networkidle' }); await p.waitForTimeout(1500)
 for (const t of ['Pular', 'Fechar', 'Agora não']) { const x = p.getByRole('button', { name: t }); if (await x.count()) await x.first().click().catch(() => {}) }
 await p.screenshot({ path: 'painel.png', fullPage: false })
 
 // 0. Tela de entrada com as três áreas
 try {
-  const ok = p.url().includes('#/inicio') && (await p.getByTestId('area-imobiliario').count()) && (await p.getByTestId('area-familia').count()) && (await p.getByTestId('area-trabalhista').count())
+  await p.goto(BASE + '#/inicio', { waitUntil: 'networkidle' }); await p.waitForTimeout(1000)
+  const ok = (await p.getByTestId('area-imobiliario').count()) && (await p.getByTestId('area-familia').count()) && (await p.getByTestId('area-trabalhista').count())
   await p.getByTestId('area-familia').click(); await p.waitForTimeout(2500)
   const fam = await p.evaluate(() => document.body.innerText.includes('Família'))
   log('Tela de entrada (3 áreas, Família abre o agente)', !!ok && fam, p.url())
@@ -95,7 +98,9 @@ for (const [r, re] of [['indicadores', /R\$|%/], ['previsoes', /%/], ['relatorio
 await p.goto(BASE + '#/previsoes', { waitUntil: 'networkidle' }); await p.waitForTimeout(2500); await p.screenshot({ path: 'previsoes.png' })
 const m = await b.newContext({ viewport: { width: 390, height: 844 } }); const pm = await m.newPage()
 await pm.goto(BASE, { waitUntil: 'networkidle' }); await pm.fill('input[type=email]', process.env.EMAIL); await pm.fill('input[type=password]', process.env.SENHA)
-await pm.click('button[type=submit]'); await pm.waitForTimeout(4000); await pm.screenshot({ path: 'celular.png' })
+await pm.click('button[type=submit]'); await pm.waitForTimeout(4000)
+  // login abre a tela de entrada; o tour de boas-vindas aparece no primeiro painel
+  await pm.goto(BASE + '#/dashboard', { waitUntil: 'networkidle' }); await pm.waitForTimeout(1500); await pm.screenshot({ path: 'celular.png' })
 log('Erros de página/HTTP durante os fluxos', erros.length === 0, erros.join(' | '))
 await b.close()
 console.log(JSON.stringify(out, null, 1))

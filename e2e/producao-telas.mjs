@@ -15,6 +15,8 @@ for (const [nome, vw] of [['desktop',{width:1366,height:800}],['celular',{width:
   const css = await p.evaluate(() => getComputedStyle(document.body).fontFamily)
   await p.fill('input[type=email]', process.env.EMAIL); await p.fill('input[type=password]', process.env.SENHA)
   await p.click('button[type=submit]'); await p.waitForTimeout(4000)
+  // login abre a tela de entrada; o tour de boas-vindas aparece no primeiro painel
+  await p.goto(BASE + '#/dashboard', { waitUntil: 'networkidle' }); await p.waitForTimeout(1500)
   res.push({ vista: nome, rota: 'login', url: p.url(), fonte: css, erros }); erros = []
   // fecha boas-vindas se aparecer
   for (const t of ['Pular','Fechar','Agora não']) { const x = p.getByRole('button',{name:t}); if (await x.count()) await x.first().click().catch(()=>{}) }
