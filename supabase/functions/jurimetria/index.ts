@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
   const chaveCache = `${tribunal}|${acao}|${String(orgao).trim().toLowerCase()}`
   const sb = servico()
   const { data: guardado } = await sb.from('jurimetria_cache').select('resultado,criado_em').eq('chave', chaveCache).maybeSingle()
-  if (guardado && Date.now() - new Date(guardado.criado_em).getTime() < CACHE_HORAS * 3600000) return json({ ...guardado.resultado, doCache: true })
+  if (guardado && !('porAno' in (guardado.resultado ?? {})) && Date.now() - new Date(guardado.criado_em).getTime() < CACHE_HORAS * 3600000) return json({ ...guardado.resultado, doCache: true })
 
   const filtros: unknown[] = [{ match_phrase: { 'classe.nome': classe } }]
   if (String(orgao).trim()) filtros.push({ match_phrase: { 'orgaoJulgador.nome': String(orgao).trim() } })
@@ -56,6 +56,10 @@ Deno.serve(async (req) => {
     }),
   }).catch(() => null)
   if (!r?.ok) console.error('jurimetria datajud', r?.status, r ? (await r.text()).slice(0, 300) : 'sem resposta')
+  if (!r?.ok && guardado) {
+    const { porAno: _descartado, ...anterior } = guardado.resultado ?? {}
+    return json({ ...anterior, doCache: true, desatualizado: true, aviso: `CNJ fora do ar agora; mostrando a consulta de ${new Date(guardado.criado_em).toLocaleDateString('pt-BR')}.` })
+  }
   if (!r?.ok) return json({ erro: 'O CNJ (DataJud) não respondeu agora. Tente novamente em instantes.' }, 502)
   const d = await r.json()
   const conta = (cod: number) => (d.aggregations?.resultados?.buckets ?? []).find((b: { key: number }) => b.key === cod)?.doc_count ?? 0
