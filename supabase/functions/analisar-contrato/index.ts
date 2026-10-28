@@ -49,6 +49,13 @@ function usuarioLogado(req: Request): boolean {
   }
 }
 
+function usuarioId(req: Request): string | null {
+  try {
+    const b64 = (req.headers.get('Authorization') ?? '').split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
+    return JSON.parse(atob(b64 + '='.repeat((4 - (b64.length % 4)) % 4))).sub ?? null
+  } catch { return null }
+}
+
 async function obterChave(): Promise<string | null> {
   const doAmbiente = Deno.env.get('ANTHROPIC_API_KEY')
   if (doAmbiente) return doAmbiente
@@ -71,6 +78,24 @@ function erroAnthropic(status: number, detalhe: string): Response {
   return json({ erro: 'Falha na API da Anthropic.', detalhe: detalhe.slice(0, 300) }, 502)
 }
 
+// Registra tokens gastos na Anthropic para a tela de transparência de custos (melhor esforço).
+async function registrarConsumo(funcao: string, usuario: string | null, r: { model?: string; usage?: { input_tokens?: number; output_tokens?: number } }) {
+  try {
+    const { createClient: cc } = await import('jsr:@supabase/supabase-js@2')
+    await cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!).from('consumo_api')
+      .insert({ funcao, usuario_id: usuario, modelo: r.model, tokens_entrada: r.usage?.input_tokens ?? 0, tokens_saida: r.usage?.output_tokens ?? 0 })
+  } catch (_) { /* não derruba a resposta */ }
+}
+
+// Teto mensal de gasto definido pelo escritório (Configurações → Consumo). Sem teto = sem limite.
+async function tetoAtingido(): Promise<boolean> {
+  try {
+    const { createClient: cc } = await import('jsr:@supabase/supabase-js@2')
+    const { data } = await cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!).rpc('teto_consumo_atingido')
+    return data === true
+  } catch (_) { return false }
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
 
@@ -88,6 +113,7 @@ Deno.serve(async (req: Request) => {
     }
 
     const { texto, contratoId, teste } = await req.json()
+    if (!teste && await tetoAtingido()) return json({ erro: 'Teto mensal de gasto com IA atingido. Um administrador pode ajustá-lo em Configurações → Consumo.' }, 429)
 
     const cabecalhos = {
       'x-api-key': chave,
@@ -163,6 +189,7 @@ Deno.serve(async (req: Request) => {
     if (!resp.ok) return erroAnthropic(resp.status, await resp.text())
 
     const dados = await resp.json()
+    await registrarConsumo('analisar-contrato', usuarioId(req), dados)
     const bloco = (dados.content ?? []).find((c: { type: string }) => c.type === 'tool_use')
     const analise: Saida = bloco?.input ?? { resumo: 'Sem resposta.', clausulasRisco: [], prazos: [], sugestoes: [] }
 

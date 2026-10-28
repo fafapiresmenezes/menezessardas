@@ -15,6 +15,7 @@ import AlertasPage from '@/pages/AlertasPage'
 import RelatóriosPage from '@/pages/RelatóriosPage'
 import IndicadoresPage from '@/pages/IndicadoresPage'
 import TrilhaPage from '@/pages/TrilhaPage'
+import ConsumoPage from '@/pages/ConsumoPage'
 import AssistentePage from '@/pages/AssistentePage'
 import PrevisoesPage from '@/pages/PrevisoesPage'
 import InstitutoPage from '@/pages/InstitutoPage'
@@ -147,6 +148,10 @@ function App() {
         <Route
           path="/trilha"
           element={isAuthenticated ? <TrilhaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/consumo"
+          element={isAuthenticated ? <ConsumoPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/equipe"

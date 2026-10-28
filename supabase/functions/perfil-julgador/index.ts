@@ -90,6 +90,24 @@ async function noticias(nome: string) {
   }).filter(n => n.titulo)
 }
 
+// Registra tokens gastos na Anthropic para a tela de transparência de custos (melhor esforço).
+async function registrarConsumo(funcao: string, usuario: string | null, r: { model?: string; usage?: { input_tokens?: number; output_tokens?: number } }) {
+  try {
+    const { createClient: cc } = await import('jsr:@supabase/supabase-js@2')
+    await cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!).from('consumo_api')
+      .insert({ funcao, usuario_id: usuario, modelo: r.model, tokens_entrada: r.usage?.input_tokens ?? 0, tokens_saida: r.usage?.output_tokens ?? 0 })
+  } catch (_) { /* não derruba a resposta */ }
+}
+
+// Teto mensal de gasto definido pelo escritório (Configurações → Consumo). Sem teto = sem limite.
+async function tetoAtingido(): Promise<boolean> {
+  try {
+    const { createClient: cc } = await import('jsr:@supabase/supabase-js@2')
+    const { data } = await cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!).rpc('teto_consumo_atingido')
+    return data === true
+  } catch (_) { return false }
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
   const usuario = usuarioAutenticado(req)
@@ -132,6 +150,7 @@ Deno.serve(async (req) => {
       messages: [{ role: 'user', content: `DADOS PÚBLICOS:\n${dados}` }],
     })
   // Tenta de novo em sobrecarga (429/5xx) e cai para o modelo rápido se o principal falhar.
+  if (await tetoAtingido()) return json({ erro: 'Teto mensal de gasto com IA atingido. Um administrador pode ajustá-lo em Configurações → Consumo.' }, 429)
   let r: Response | null = null
   for (const modelo of [MODELO, MODELO, MODELO_RESERVA]) {
     r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -148,6 +167,7 @@ Deno.serve(async (req) => {
   if (!r.ok) console.error('perfil-julgador final', r.status, await r.clone().text())
   if (!r.ok) return json({ erro: r.status === 401 || r.status === 403 ? 'Chave recusada pela Anthropic.' : `Anthropic respondeu ${r.status}.` }, 502)
   const resposta = await r.json()
+  await registrarConsumo('perfil-julgador', usuario, resposta)
   const bruto = resposta.content?.find((c: { type: string }) => c.type === 'tool_use')?.input
   if (!bruto) return json({ erro: 'A IA não devolveu o perfil. Tente novamente.' }, 502)
   // Normaliza: listas às vezes chegam como texto JSON ou objeto {"1": ..., "2": ...}.

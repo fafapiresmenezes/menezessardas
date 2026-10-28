@@ -147,7 +147,8 @@ function selecionar(leiId: string, texto: string, termos: string[], artigosCitad
 
 // Chama a Anthropic com nova tentativa em sobrecarga. Alguns modelos recusam tool_choice forçado:
 // nesse caso repete com tool_choice automático e instrução explícita para usar a ferramenta.
-async function anthropic(chave: string, corpo: Record<string, unknown>) {
+async function anthropic(chave: string, corpo: Record<string, unknown>, usuario: string | null = null) {
+  if (await tetoAtingido()) throw new Error('Teto mensal de gasto com IA atingido. Um administrador pode ajustá-lo em Configurações → Consumo.')
   let atual = corpo
   for (let tentativa = 0; tentativa < 3; tentativa++) {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -156,7 +157,7 @@ async function anthropic(chave: string, corpo: Record<string, unknown>) {
       body: JSON.stringify(atual),
       signal: AbortSignal.timeout(90000),
     }).catch(() => null)
-    if (r?.ok) return r.json()
+    if (r?.ok) { const j = await r.json(); await registrarConsumo('assistente-juridico', usuario, j); return j }
     const s = r?.status ?? 0
     const detalhe = r ? await r.text() : 'sem resposta'
     console.error('assistente anthropic', s, detalhe.slice(0, 300))
@@ -170,6 +171,24 @@ async function anthropic(chave: string, corpo: Record<string, unknown>) {
     await new Promise(ok => setTimeout(ok, 2000))
   }
   throw new Error('A IA está sobrecarregada agora; tente de novo em instantes.')
+}
+
+// Registra tokens gastos na Anthropic para a tela de transparência de custos (melhor esforço).
+async function registrarConsumo(funcao: string, usuario: string | null, r: { model?: string; usage?: { input_tokens?: number; output_tokens?: number } }) {
+  try {
+    const { createClient: cc } = await import('jsr:@supabase/supabase-js@2')
+    await cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!).from('consumo_api')
+      .insert({ funcao, usuario_id: usuario, modelo: r.model, tokens_entrada: r.usage?.input_tokens ?? 0, tokens_saida: r.usage?.output_tokens ?? 0 })
+  } catch (_) { /* não derruba a resposta */ }
+}
+
+// Teto mensal de gasto definido pelo escritório (Configurações → Consumo). Sem teto = sem limite.
+async function tetoAtingido(): Promise<boolean> {
+  try {
+    const { createClient: cc } = await import('jsr:@supabase/supabase-js@2')
+    const { data } = await cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!).rpc('teto_consumo_atingido')
+    return data === true
+  } catch (_) { return false }
 }
 
 Deno.serve(async (req) => {
@@ -222,7 +241,7 @@ Deno.serve(async (req) => {
       tool_choice: { type: 'tool', name: 'planejar_pesquisa' },
       system: `${papel}\nCatálogo de leis disponíveis (id: título — temas):\n${catalogoResumo}`,
       messages: [{ role: 'user', content: `Pedido do advogado (${modo}): ${pergunta}${contextoCaso ? `\nContexto do caso: ${contextoCaso}` : ''}` }],
-    })
+    }, usuario)
     const plano = triagem.content?.find((c: { type: string }) => c.type === 'tool_use')?.input ?? { leis: ['cc'], termos: [] }
     const leisEscolhidas: string[] = (plano.leis ?? []).filter((id: string) => CATALOGO[id]).slice(0, 3)
     if (!leisEscolhidas.length) leisEscolhidas.push('cc')
@@ -292,7 +311,7 @@ Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"
         model: MODELO_RESPOSTA, max_tokens: 8000, tools: [ferramenta], tool_choice: { type: 'tool', name: 'registrar_caminhos' },
         system: `${regrasComuns}\nMonte de 2 a 5 caminhos (extrajudicial, judicial, negociação, aguardar etc.), pontue cada um em quatro critérios e aponte as zonas cinzentas com honestidade.`,
         messages: mensagens,
-      })
+      }, usuario)
       const bruto = r.content?.find((c: { type: string }) => c.type === 'tool_use')?.input ?? null
       // Com tool_choice automático alguns modelos devolvem listas como texto JSON; normalizamos.
       const lista = (v: unknown) => (typeof v === 'string' ? (() => { try { return JSON.parse(v) } catch { return [] } })() : v)
@@ -311,7 +330,7 @@ Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"
 Redija a peça ou o contrato pedido, completo e pronto para revisão: título; qualificação das partes com [campos entre colchetes] para o que faltar; cláusulas ou tópicos numerados; fundamentação legal embutida no texto (artigo e lei); pedidos ou cláusulas finais; local, data e assinatura. Use o padrão forense brasileiro e linguagem clara. Ao final, acrescente uma seção "Pontos a conferir antes de usar" com o que depende de fatos ou documentos.`
         : `${regrasComuns}
 Estrutura: resposta direta em 1–2 frases; fundamentação com os artigos; riscos ou exceções (inclusive zonas cinzentas e divergências); próximos passos práticos. Títulos curtos em negrito e listas. Termine com "Fontes consultadas: " e os nomes das leis usadas.`
-      const resposta = await anthropic(chave, { model: MODELO_RESPOSTA, max_tokens: modo === 'redigir' ? 12000 : 6000, system: sistema, messages: mensagens })
+      const resposta = await anthropic(chave, { model: MODELO_RESPOSTA, max_tokens: modo === 'redigir' ? 12000 : 6000, system: sistema, messages: mensagens }, usuario)
       texto = (resposta.content ?? []).filter((c: { type: string }) => c.type === 'text').map((c: { text: string }) => c.text).join('\n').trim()
     }
 

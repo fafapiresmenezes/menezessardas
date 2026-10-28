@@ -107,6 +107,8 @@ Deno.serve(async (req) => {
   if (!itens.length) return json({ itens: 0, destinatarios: para.length, enviado: false, motivo: 'nenhum prazo dentro da janela de aviso' })
   if (!chave) return json({ itens: itens.length, destinatarios: para.length, enviado: false, motivo: 'provedor de e-mail ainda não configurado' })
   const r = await enviar(prov, para, itens)
+  // Cada e-mail entra no painel Consumo (Brevo grátis até 300/dia; preço editável em precos_api).
+  if (r.ok) await db.from('consumo_api').insert({ funcao: corpo?.teste ? 'e-mail de teste' : 'avisos por e-mail', modelo: prov.brevo ? 'brevo-email' : 'resend-email', quantidade: para.length })
   // E-mail informado no próprio compromisso recebe só aquele aviso.
   const avulsos: string[] = []
   for (const i of itens) {
