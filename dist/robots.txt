@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /configuracoes
+
+Sitemap: https://menezes-sardas-contratos.vercel.app/sitemap.xml
