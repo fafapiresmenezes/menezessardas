@@ -455,21 +455,77 @@ function SecaoChaveIA() {
   )
 }
 
-/** Avisos de prazo: chegam pelo Outlook ou Google Agenda de cada pessoa, sem serviço de e-mail. */
+/** Avisos de prazo: no Outlook/Google Agenda de cada pessoa e, com o Brevo ligado, também por e-mail. */
 function SecaoEmail() {
+  const [estado, setEstado] = useState<{ chave: boolean; remetente: string | null } | null>(null)
+  const [chave, setChave] = useState('')
+  const [remetente, setRemetente] = useState('')
+  const [ocupado, setOcupado] = useState('')
+  const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+
+  const carregar = async () => {
+    const ler = async (c: string) => {
+      const { data } = await supabase.rpc('estado_configuracao', { p_chave: c })
+      return (Array.isArray(data) ? data[0] : data) as { permitido: boolean; definida: boolean; sufixo: string | null } | undefined
+    }
+    const [k, r] = await Promise.all([ler('brevo_api_key'), ler('email_remetente')])
+    setEstado(k?.permitido ? { chave: k.definida, remetente: r?.definida ? `…${r.sufixo ?? ''}` : null } : null)
+  }
+  useEffect(() => { if (supabaseConfigurado) carregar() }, [])
   if (!supabaseConfigurado) return null
+
+  const salvar = async () => {
+    setOcupado('salvando'); setMsg(null)
+    for (const [c, v] of [['email_remetente', remetente], ['brevo_api_key', chave]] as const) {
+      if (!v.trim()) continue
+      const { error } = await supabase.rpc('definir_configuracao', { p_chave: c, p_valor: v })
+      if (error) { setOcupado(''); return setMsg({ tipo: 'erro', texto: error.message }) }
+    }
+    setOcupado(''); setChave(''); setRemetente('')
+    setMsg({ tipo: 'ok', texto: 'Salvo. Clique em "Enviar e-mail de teste".' }); carregar()
+  }
+  const testar = async () => {
+    setOcupado('testando'); setMsg(null)
+    const { data, error } = await supabase.functions.invoke('agendar-notificacoes', { body: { teste: true } })
+    setOcupado('')
+    if (error || !data?.enviado) return setMsg({ tipo: 'erro', texto: 'O e-mail não saiu: ' + (data?.detalhe?.corpo ?? data?.motivo ?? error?.message ?? 'erro desconhecido') })
+    setMsg({ tipo: 'ok', texto: `E-mail de teste enviado para ${(data.para as string[]).join(', ')}.` })
+  }
+  const ativo = !!(estado?.chave && estado.remetente)
+
   return (
     <section aria-labelledby="notif" className="max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado">
       <h2 id="notif" className="text-lg mb-3 flex items-center gap-2">
         <Mail size={18} className="text-dourado" aria-hidden="true" /> Avisos de prazo
       </h2>
       <div className="space-y-3 text-sm">
-        <p>Os avisos chegam no Outlook ou no Google Agenda de cada pessoa, no computador e no celular. Não é preciso configurar e-mail.</p>
-        <ol className="text-xs text-grafite-claro list-decimal pl-5 space-y-1">
-          <li>Abra a <a href="#/agenda" className="underline text-navy">Agenda</a> e clique em <strong>Conectar ao Outlook</strong> ou <strong>Conectar ao Google Agenda</strong>. Cada pessoa faz isso uma vez.</li>
-          <li>Os prazos dos contratos e compromissos entram sozinhos e se atualizam a cada 6 horas.</li>
-          <li>O lembrete toca com a antecedência escolhida em cada contrato (padrão: 7 dias).</li>
-        </ol>
+        <p>No calendário: na <a href="#/agenda" className="underline text-navy">Agenda</a>, cada pessoa clica uma vez em <strong>Conectar ao Outlook</strong> ou <strong>Conectar ao Google Agenda</strong>. Os avisos entram nos dias marcados em cada contrato.</p>
+        {estado && (
+          <>
+            <p aria-live="polite"><strong>Por e-mail:</strong> {ativo ? 'ativo. Toda manhã, às 8h, cada pessoa da equipe recebe os avisos do dia no próprio e-mail.' : 'falta ligar o serviço de envio (uma vez só, gratuito).'}</p>
+            <ol className="text-xs text-grafite-claro list-decimal pl-5 space-y-1">
+              <li>Crie a conta grátis em <a href="https://www.brevo.com/" target="_blank" rel="noopener noreferrer" className="underline text-navy">brevo.com</a> com o e-mail do escritório que vai enviar os avisos.</li>
+              <li>Confirme o e-mail que o Brevo mandar para essa caixa.</li>
+              <li>No Brevo, abra o menu do seu nome → <strong>SMTP &amp; API</strong> → <strong>API Keys</strong>, clique em <strong>Generate a new API key</strong> e copie (começa com xkeysib-).</li>
+              <li>Cole abaixo, junto com o e-mail do passo 1, e clique em Salvar.</li>
+            </ol>
+            {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={`p-3 text-sm border-l-2 ${msg.tipo === 'ok' ? 'bg-regularFundo border-regular text-regular' : 'bg-criticoFundo border-critico text-critico'}`}>{msg.texto}</p>}
+            <label htmlFor="remetente" className="block text-xs uppercase tracking-wider text-grafite">E-mail que envia os avisos {estado.remetente && <span className="normal-case">(atual: {estado.remetente})</span>}</label>
+            <input id="remetente" type="email" value={remetente} onChange={e => setRemetente(e.target.value)} placeholder="avisos@lsm.law"
+              className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white text-sm" />
+            <label htmlFor="chave-email" className="block text-xs uppercase tracking-wider text-grafite">Chave do Brevo {estado.chave && <span className="normal-case">(já salva)</span>}</label>
+            <input id="chave-email" type="password" value={chave} onChange={e => setChave(e.target.value)} placeholder="xkeysib-…" autoComplete="off" spellCheck={false}
+              className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white font-mono text-sm" />
+            <div className="flex flex-wrap gap-3">
+              <button type="button" onClick={salvar} disabled={(!chave.trim() && !remetente.trim()) || ocupado !== ''} className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider">
+                {ocupado === 'salvando' ? 'Salvando…' : 'Salvar'}
+              </button>
+              <button type="button" onClick={testar} disabled={!ativo || ocupado !== ''} className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm">
+                {ocupado === 'testando' ? 'Enviando…' : 'Enviar e-mail de teste'}
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </section>
   )
