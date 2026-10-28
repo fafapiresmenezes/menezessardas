@@ -18,7 +18,7 @@ git show FETCH_HEAD:robots.txt > dist-prod/robots.txt
 git show FETCH_HEAD:sitemap.xml > dist-prod/sitemap.xml
 touch dist-prod/.nojekyll
 
-INDICE=$(mktemp)
+INDICE=$(mktemp -u)
 GIT_INDEX_FILE=$INDICE git --work-tree=dist-prod add -A
 ARVORE=$(GIT_INDEX_FILE=$INDICE git write-tree)
 rm -f "$INDICE"
