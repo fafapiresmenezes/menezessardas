@@ -40,7 +40,7 @@ async function comunica(nome: string) {
 
 async function queridoDiario(termo: string) {
   const url = `https://api.queridodiario.ok.org.br/gazettes?querystring=${encodeURIComponent(`"${termo}"`)}&size=10&excerpt_size=300&number_of_excerpts=1&sort_by=descending_date`
-  const r = await fetch(url, { signal: AbortSignal.timeout(25000) }).catch(() => null)
+  const r = await fetch(url, { signal: AbortSignal.timeout(40000), headers: { 'User-Agent': 'Mozilla/5.0 (LSM plataforma)' } }).catch(() => null)
   if (!r?.ok) return { ok: false, erro: `Querido Diário ${r?.status ?? 'sem resposta'}` }
   const d = await r.json().catch(() => ({ gazettes: [] }))
   return { ok: true, total: d.total_gazettes ?? 0, itens: (d.gazettes ?? []).map((g: Record<string, any>) => ({
