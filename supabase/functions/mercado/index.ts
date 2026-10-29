@@ -51,7 +51,7 @@ Deno.serve(async (req) => {
   const cfg = AREAS[area]
   if (!cfg) return json({ erro: 'Área não coberta.' }, 400)
   const sb = servico()
-  const chave = `mercado|${area}`
+  const chave = `mercado2|${area}`
   const { data: guardado } = await sb.from('jurimetria_cache').select('resultado,criado_em').eq('chave', chave).maybeSingle()
   if (guardado?.resultado?.previsao && Date.now() - new Date(guardado.criado_em).getTime() < CACHE_DIAS * 86400000) return json({ ...guardado.resultado, doCache: true })
 
@@ -75,15 +75,24 @@ Deno.serve(async (req) => {
     return json({ erro: 'O CNJ (DataJud) não respondeu agora. Tente novamente em instantes.' }, 502)
   }
   const d = await r.json()
-  const pontos = (d.aggregations?.ano?.buckets ?? [])
+  const brutos: { ano: number; n: number }[] = (d.aggregations?.ano?.buckets ?? [])
     .map((b: { key_as_string: string; doc_count: number }) => ({ ano: Number(b.key_as_string), n: b.doc_count }))
     .filter((p: { ano: number }) => p.ano >= 2019 && p.ano <= ultimoAno)
+  // Tribunais demoram a enviar dados ao CNJ: anos finais com menos de 40% da mediana estão incompletos
+  // e distorceriam a tendência; ficam fora do cálculo (e são informados).
+  const ord = brutos.map(p => p.n).sort((a, b) => a - b)
+  const mediana = ord.length ? ord[Math.floor(ord.length / 2)] : 0
+  const pontos = [...brutos]
+  const incompletos: number[] = []
+  while (pontos.length > 3 && pontos[pontos.length - 1].n < 0.4 * mediana) incompletos.unshift(pontos.pop()!.ano)
   const total = pontos.reduce((s: number, p: { n: number }) => s + p.n, 0)
-  const resultado: Record<string, unknown> = { area, nome: cfg.nome, porAno: pontos, amostra: total, fonte: `DataJud — API Pública do CNJ (${cfg.tribunal.toUpperCase()})`, consultadoEm: new Date().toISOString() }
+  const resultado: Record<string, unknown> = { area, nome: cfg.nome, porAno: pontos, anosIncompletos: incompletos, amostra: total, fonte: `DataJud — API Pública do CNJ (${cfg.tribunal.toUpperCase()})`, consultadoEm: new Date().toISOString() }
   if (pontos.length >= 3) {
     const alvo = ultimoAno + 3
     const t = tendencia(pontos, alvo)
-    const base = pontos[pontos.length - 1].n
+    // Variação contra o valor da própria tendência no último ano usado (menos sensível a um ano atípico).
+    const ultimo = pontos[pontos.length - 1].ano
+    const base = tendencia(pontos, ultimo).prev
     resultado.previsao = { ano: alvo, processos: t.prev, margem: t.margem, variacao: base ? Math.round(((t.prev - base) / base) * 100) : null, r2: Math.round(t.r2 * 100) / 100 }
     resultado.confianca = total < 300 ? 'baixa' : t.r2 >= 0.7 ? 'alta' : t.r2 >= 0.4 ? 'media' : 'baixa'
   } else resultado.confianca = 'insuficiente'

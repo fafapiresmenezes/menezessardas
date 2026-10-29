@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase'
 type Area = {
   area: string; nome: string; porAno: { ano: number; n: number }[]; amostra: number; fonte: string; consultadoEm: string
   previsao?: { ano: number; processos: number; margem: number; variacao: number | null; r2: number }
-  confianca: 'alta' | 'media' | 'baixa' | 'insuficiente'; desatualizado?: boolean; erro?: string
+  confianca: 'alta' | 'media' | 'baixa' | 'insuficiente'; desatualizado?: boolean; erro?: string; anosIncompletos?: number[]
 }
 const AREAS = ['imobiliario', 'civel', 'trabalhista', 'familia', 'tributario', 'empresarial', 'consumidor', 'previdenciario', 'penal', 'compliance']
 const fmt = (n: number) => n.toLocaleString('pt-BR')
@@ -21,12 +21,13 @@ export default function MercadoPage() {
     })
   }, [])
   const prontas = AREAS.map(a => dados[a]).filter((d): d is Area => !!d && 'previsao' in d && !!d.previsao)
-  const ranking = [...prontas].sort((x, y) => (y.previsao!.variacao ?? -999) - (x.previsao!.variacao ?? -999))
+  const ranking = [...prontas].filter(x => x.confianca === 'alta' || x.confianca === 'media').sort((x, y) => (y.previsao!.variacao ?? -999) - (x.previsao!.variacao ?? -999))
   return (
     <Layout title="Previsão de mercado jurídico">
       <div className="space-y-6">
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6">
           <p className="text-sm">Quantos processos novos cada área recebe por ano nos tribunais do Rio (dados públicos do CNJ) e a tendência para os próximos 3 anos, com margem de erro de 95%. Mede <strong>demanda</strong>: mais processos significam mais clientes potenciais, não necessariamente honorários maiores.</p>
+          {prontas.length > 0 && !ranking.length && <p className="mt-3 text-sm text-atencao">Nenhuma área tem tendência confiável ainda (os dados do CNJ variam muito de ano para ano). Veja os números brutos abaixo.</p>}
           {ranking.length > 0 && (
             <ol className="mt-4 text-sm list-decimal pl-5 space-y-1" data-testid="ranking">
               {ranking.map(r => (
@@ -55,9 +56,9 @@ export default function MercadoPage() {
                 </div>
                 <p className="text-sm mt-2">
                   {x.porAno.length ? <>Último ano: {fmt(x.porAno[x.porAno.length - 1].n)} processos novos. </> : 'Sem dados no CNJ para esta classe. '}
-                  {x.previsao && <>Previsão {x.previsao.ano}: <strong>{fmt(x.previsao.processos)}</strong> ± {fmt(x.previsao.margem)}.</>}
+                  {x.previsao && (x.confianca === 'baixa' ? <>Sem tendência confiável: os números variam demais para prever.</> : <>Previsão {x.previsao.ano}: <strong>{fmt(x.previsao.processos)}</strong> ± {fmt(x.previsao.margem)}.</>)}
                 </p>
-                <p className="text-xs text-grafite-claro mt-1">Amostra: {fmt(x.amostra)} processos · confiança {x.confianca}{x.previsao && ` (R² ${x.previsao.r2})`}{x.amostra < 300 && ' · amostra pequena, use com cautela'} · {x.fonte}{x.desatualizado && ' · CNJ fora do ar, dado anterior'}</p>
+                <p className="text-xs text-grafite-claro mt-1">Amostra: {fmt(x.amostra)} processos · confiança {x.confianca}{x.previsao && ` (R² ${x.previsao.r2})`}{x.amostra < 300 && ' · amostra pequena, use com cautela'} · {x.fonte}{x.desatualizado && ' · CNJ fora do ar, dado anterior'}{!!x.anosIncompletos?.length && ` · ${x.anosIncompletos.join(', ')} fora do cálculo (dados ainda incompletos no CNJ)`}</p>
               </section>
             )
           })}
