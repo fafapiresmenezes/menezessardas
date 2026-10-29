@@ -51,7 +51,7 @@ Deno.serve(async (req) => {
   const cfg = AREAS[area]
   if (!cfg) return json({ erro: 'Área não coberta.' }, 400)
   const sb = servico()
-  const chave = `mercado2|${area}`
+  const chave = `mercado3|${area}`
   const { data: guardado } = await sb.from('jurimetria_cache').select('resultado,criado_em').eq('chave', chave).maybeSingle()
   if (guardado?.resultado?.previsao && Date.now() - new Date(guardado.criado_em).getTime() < CACHE_DIAS * 86400000) return json({ ...guardado.resultado, doCache: true })
 
@@ -94,7 +94,8 @@ Deno.serve(async (req) => {
     const ultimo = pontos[pontos.length - 1].ano
     const base = tendencia(pontos, ultimo).prev
     resultado.previsao = { ano: alvo, processos: t.prev, margem: t.margem, variacao: base ? Math.round(((t.prev - base) / base) * 100) : null, r2: Math.round(t.r2 * 100) / 100 }
-    resultado.confianca = total < 300 ? 'baixa' : t.r2 >= 0.7 ? 'alta' : t.r2 >= 0.4 ? 'media' : 'baixa'
+    // Poucos anos ou margem maior que metade da previsão = baixa, mesmo com R² alto.
+    resultado.confianca = total < 300 || pontos.length < 5 || t.margem > 0.5 * t.prev ? 'baixa' : t.r2 >= 0.7 ? 'alta' : t.r2 >= 0.4 ? 'media' : 'baixa'
   } else resultado.confianca = 'insuficiente'
   // Resultado vazio (CNJ sobrecarregado ou classe sem registros) não vai para o cache: tenta de novo na próxima visita.
   if (pontos.length >= 3) await sb.from('jurimetria_cache').upsert({ chave, resultado, criado_em: new Date().toISOString() })
