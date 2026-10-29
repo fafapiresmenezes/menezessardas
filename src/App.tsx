@@ -26,6 +26,7 @@ import ConfiguraçõesPage from '@/pages/ConfiguraçõesPage'
 import EquipePage from '@/pages/EquipePage'
 import InicioPage from '@/pages/InicioPage'
 import FontesPage from '@/pages/FontesPage'
+import KycPage from '@/pages/KycPage'
 import ProjetosPage from '@/pages/ProjetosPage'
 import IntimacoesPage from '@/pages/IntimacoesPage'
 
@@ -164,6 +165,10 @@ function App() {
         <Route
           path="/projetos"
           element={isAuthenticated ? <ProjetosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/kyc"
+          element={isAuthenticated ? <KycPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/fontes"
