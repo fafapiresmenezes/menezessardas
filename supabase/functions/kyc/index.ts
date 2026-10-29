@@ -33,7 +33,9 @@ async function tcu(cnpj: string) {
     const certidoes = (d.certidoes ?? []).map((c: Record<string, string>) => ({
       emissor: c.emissor, cadastro: c.tipo, situacao: c.situacao, descricao: c.descricao,
     }))
-    return { ok: true, certidoes, alguma: certidoes.some((c: { situacao: string }) => c.situacao && c.situacao !== 'NADA_CONSTA') }
+    // Só CONSTA é sanção; sistema fora do ar deixa o resultado "a conferir".
+    const sit = (c: { situacao: string }) => String(c.situacao ?? '')
+    return { ok: true, certidoes, alguma: certidoes.some(c => sit(c) === 'CONSTA'), indisponivel: certidoes.some(c => sit(c) !== 'CONSTA' && sit(c) !== 'NADA_CONSTA') }
   } catch (e) { return { ok: false, erro: String(e) } }
 }
 
@@ -67,7 +69,7 @@ Deno.serve(async (req) => {
   if (rf.ok && rf.encontrado && String(rf.situacao).toUpperCase() !== 'ATIVA') alertas.push(`Situação na Receita: ${rf.situacao}.`)
   if (cert.ok && cert.alguma) alertas.push('Consta em cadastro de sanções (veja as certidões).')
   if (conflitos.length) alertas.push('A contraparte já aparece no escritório: verifique conflito de interesses.')
-  const incompleto = !rf.ok || !cert.ok
+  const incompleto = !rf.ok || !cert.ok || !!cert.indisponivel
   const risco = alertas.length ? 'alto' : incompleto ? 'a conferir' : 'baixo'
 
   return json({

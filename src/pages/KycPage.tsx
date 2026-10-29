@@ -62,7 +62,7 @@ export default function KycPage() {
               <h2 className="font-serif text-xl mb-1">Sanções e impedimentos</h2>
               {!r.certidoes.ok ? <p className="text-sm">O serviço do TCU não respondeu ({r.certidoes.erro}); repita mais tarde.</p>
                 : <ul className="text-sm divide-y">{(r.certidoes.certidoes ?? []).map(c => (
-                    <li key={c.emissor + c.cadastro} className="py-1"><strong>{c.emissor}</strong> · {c.descricao || c.cadastro}: {c.situacao === 'NADA_CONSTA' ? 'nada consta' : <span className="text-critico font-medium">{c.situacao}</span>}</li>
+                    <li key={c.emissor + c.cadastro} className="py-1"><strong>{c.emissor}</strong> · {c.descricao || c.cadastro}: {c.situacao === 'NADA_CONSTA' ? 'nada consta' : c.situacao === 'CONSTA' ? <span className="text-critico font-medium">CONSTA</span> : <span className="text-atencao">sistema do órgão fora do ar, repita mais tarde</span>}</li>
                   ))}</ul>}
             </div>
             <div>
