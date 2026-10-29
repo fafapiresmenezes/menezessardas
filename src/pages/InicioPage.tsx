@@ -28,6 +28,7 @@ export default function InicioPage() {
         <p className="font-serif text-dourado text-4xl tracking-widest">LSM</p>
         <h1 className="font-serif text-white text-3xl mt-2">Leticia Sardas &amp; Menezes</h1>
         <p className="text-white/70 mt-3">Escolha a área em que vai trabalhar agora</p>
+        <button type="button" data-testid="ir-meu-dia" onClick={() => navigate('/meu-dia')} className="mt-4 min-h-[44px] px-5 border border-dourado text-dourado text-sm uppercase tracking-wider">Ver meu dia: prazos, tarefas e intimações</button>
       </div>
       <div className="grid gap-4 w-full max-w-6xl sm:grid-cols-2 lg:grid-cols-5">
         {AREAS.map(a => (

@@ -27,6 +27,7 @@ import EquipePage from '@/pages/EquipePage'
 import InicioPage from '@/pages/InicioPage'
 import FontesPage from '@/pages/FontesPage'
 import KycPage from '@/pages/KycPage'
+import MeuDiaPage from '@/pages/MeuDiaPage'
 import MercadoPage from '@/pages/MercadoPage'
 import CompliancePage from '@/pages/CompliancePage'
 import ProjetosPage from '@/pages/ProjetosPage'
@@ -175,6 +176,10 @@ function App() {
         <Route
           path="/mercado"
           element={isAuthenticated ? <MercadoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/meu-dia"
+          element={isAuthenticated ? <MeuDiaPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/kyc"
