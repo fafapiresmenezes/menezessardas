@@ -11,13 +11,13 @@ const PAPEIS: Record<string, { nome: string; foco: string; atalhos: { rotulo: st
   socia: { nome: 'Sócia', foco: 'Visão da carteira, riscos e decisões que só você toma.', atalhos: [
     { rotulo: 'Indicadores e OKRs', href: '/indicadores' }, { rotulo: 'Previsões e riscos', href: '/previsoes' }, { rotulo: 'Consumo e custos', href: '/consumo' }, { rotulo: 'Mercado jurídico', href: '/mercado' }] },
   advogada: { nome: 'Advogada', foco: 'Prazos, intimações e peças do dia.', atalhos: [
-    { rotulo: 'Assistente jurídico (redigir peça)', href: '/assistente' }, { rotulo: 'Intimações', href: '/intimacoes' }, { rotulo: 'Fontes do advogado', href: '/fontes' }, { rotulo: 'Checar contraparte', href: '/kyc' }] },
+    { rotulo: 'Assistente jurídico (redigir peça)', href: '/assistente' }, { rotulo: 'Lançar horas', href: '/horas' }, { rotulo: 'Intimações', href: '/intimacoes' }, { rotulo: 'Fontes do advogado', href: '/fontes' }, { rotulo: 'Checar contraparte', href: '/kyc' }] },
   estagiario: { nome: 'Estagiário ou paralegal', foco: 'Tarefas atribuídas a você e pesquisas.', atalhos: [
     { rotulo: 'Projetos e tarefas', href: '/projetos' }, { rotulo: 'Legislação', href: '/legislacao' }, { rotulo: 'Fontes do advogado', href: '/fontes' }, { rotulo: 'Imóveis e documentos', href: '/imoveis' }] },
   secretaria: { nome: 'Secretária', foco: 'Agenda, vencimentos e documentos a cobrar.', atalhos: [
     { rotulo: 'Agenda', href: '/agenda' }, { rotulo: 'Alertas', href: '/alertas' }, { rotulo: 'Fornecedores', href: '/fornecedores' }, { rotulo: 'Novo imóvel', href: '/imoveis/novo' }] },
   financeiro: { nome: 'Financeiro', foco: 'Reajustes, recebíveis e custos.', atalhos: [
-    { rotulo: 'Relatórios', href: '/relatorios' }, { rotulo: 'Consumo e custos', href: '/consumo' }, { rotulo: 'Indicadores', href: '/indicadores' }, { rotulo: 'Alertas de reajuste', href: '/alertas' }] },
+    { rotulo: 'Horas e honorários', href: '/horas' }, { rotulo: 'Relatórios', href: '/relatorios' }, { rotulo: 'Consumo e custos', href: '/consumo' }, { rotulo: 'Indicadores', href: '/indicadores' }, { rotulo: 'Alertas de reajuste', href: '/alertas' }] },
 }
 const hoje = () => new Date().toISOString().slice(0, 10)
 const fmt = (d: string) => new Date(`${d}T12:00`).toLocaleDateString('pt-BR')
