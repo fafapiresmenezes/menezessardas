@@ -1,7 +1,7 @@
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 
 export type Especialidade =
-  | 'imobiliario' | 'condominial' | 'registral' | 'consumidor' | 'tributario' | 'trabalhista' | 'familia' | 'lgpd' | 'inovacao' | 'compliance' | 'geral'
+  | 'imobiliario' | 'condominial' | 'registral' | 'consumidor' | 'tributario' | 'trabalhista' | 'familia' | 'lgpd' | 'inovacao' | 'compliance' | 'empresarial' | 'previdenciario' | 'penal' | 'civel' | 'ambiental' | 'geral'
 
 export const ESPECIALIDADES: { valor: Especialidade; rotulo: string; descricao: string }[] = [
   { valor: 'imobiliario', rotulo: 'Imobiliário', descricao: 'Locação, comodato, compra e venda, garantias, despejo' },
@@ -14,6 +14,11 @@ export const ESPECIALIDADES: { valor: Especialidade; rotulo: string; descricao: 
   { valor: 'lgpd', rotulo: 'LGPD', descricao: 'Dados de locatários, fiadores e fornecedores' },
   { valor: 'inovacao', rotulo: 'Inovação e sandboxes', descricao: 'Sandboxes regulatórios, startups, proptechs' },
   { valor: 'compliance', rotulo: 'ESG e compliance', descricao: 'Integridade, passivo ambiental, due diligence' },
+  { valor: 'empresarial', rotulo: 'Empresarial e societário', descricao: 'Sociedades, contratos empresariais, recuperação judicial e falência' },
+  { valor: 'previdenciario', rotulo: 'Previdenciário', descricao: 'Aposentadorias, benefícios do INSS, revisões' },
+  { valor: 'penal', rotulo: 'Penal', descricao: 'Crimes, defesa, inquérito, execução penal' },
+  { valor: 'civel', rotulo: 'Cível e contratos', descricao: 'Contratos em geral, responsabilidade civil, cobranças' },
+  { valor: 'ambiental', rotulo: 'Ambiental', descricao: 'Licenciamento, passivo ambiental, áreas protegidas' },
   { valor: 'geral', rotulo: 'Geral', descricao: 'Qualquer tema do direito brasileiro' },
 ]
 

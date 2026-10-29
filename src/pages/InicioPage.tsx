@@ -1,11 +1,19 @@
 import { useNavigate } from 'react-router-dom'
-import { Building2, Users, Briefcase } from 'lucide-react'
+import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck } from 'lucide-react'
 
 // Tela de entrada: o escritório escolhe a área de trabalho antes de entrar na plataforma.
+const agente = (a: string) => `?agente=${a}#/assistente`
 const AREAS = [
   { chave: 'imobiliario', titulo: 'Imobiliário', texto: 'Imóveis, contratos, prazos, reajustes, fornecedores e agenda.', icone: Building2, destino: '/dashboard' },
-  { chave: 'familia', titulo: 'Família', texto: 'Divórcio, partilha, alimentos, guarda e inventário com o agente especialista.', icone: Users, destino: '?agente=familia#/assistente' },
-  { chave: 'trabalhista', titulo: 'Trabalhista', texto: 'Contratação, rescisão, verbas, FGTS e reclamações com o agente especialista.', icone: Briefcase, destino: '?agente=trabalhista#/assistente' },
+  { chave: 'civel', titulo: 'Cível e contratos', texto: 'Contratos, cobranças e responsabilidade civil.', icone: FileSignature, destino: agente('civel') },
+  { chave: 'trabalhista', titulo: 'Trabalhista', texto: 'Contratação, rescisão, verbas, FGTS e reclamações.', icone: Briefcase, destino: agente('trabalhista') },
+  { chave: 'familia', titulo: 'Família e sucessões', texto: 'Divórcio, partilha, alimentos, guarda e inventário.', icone: Users, destino: agente('familia') },
+  { chave: 'tributario', titulo: 'Tributário', texto: 'Impostos, reforma tributária, defesas e planejamento.', icone: Landmark, destino: agente('tributario') },
+  { chave: 'empresarial', titulo: 'Empresarial', texto: 'Sociedades, contratos empresariais e recuperação judicial.', icone: Factory, destino: agente('empresarial') },
+  { chave: 'consumidor', titulo: 'Consumidor', texto: 'Relações de consumo, cláusulas abusivas e indenizações.', icone: ShoppingCart, destino: agente('consumidor') },
+  { chave: 'previdenciario', titulo: 'Previdenciário', texto: 'Aposentadorias, benefícios do INSS e revisões.', icone: HeartPulse, destino: agente('previdenciario') },
+  { chave: 'penal', titulo: 'Penal', texto: 'Defesa, inquérito, crimes e execução penal.', icone: Gavel, destino: agente('penal') },
+  { chave: 'compliance', titulo: 'Compliance e LGPD', texto: 'Integridade, proteção de dados, ESG e due diligence.', icone: ShieldCheck, destino: agente('compliance') },
 ]
 
 export default function InicioPage() {
@@ -21,16 +29,16 @@ export default function InicioPage() {
         <h1 className="font-serif text-white text-3xl mt-2">Leticia Sardas &amp; Menezes</h1>
         <p className="text-white/70 mt-3">Escolha a área em que vai trabalhar agora</p>
       </div>
-      <div className="grid gap-6 w-full max-w-5xl sm:grid-cols-3">
+      <div className="grid gap-4 w-full max-w-6xl sm:grid-cols-2 lg:grid-cols-5">
         {AREAS.map(a => (
           <button
             key={a.chave}
             data-testid={`area-${a.chave}`}
             onClick={() => abrir(a.destino)}
-            className="bg-white text-left p-8 shadow-lg border-t-4 border-dourado hover:-translate-y-1 hover:shadow-xl transition focus:outline-none focus:ring-4 focus:ring-dourado/50"
+            className="bg-white text-left p-5 shadow-lg border-t-4 border-dourado hover:-translate-y-1 hover:shadow-xl transition focus:outline-none focus:ring-4 focus:ring-dourado/50"
           >
-            <a.icone className="w-10 h-10 text-dourado mb-4" aria-hidden />
-            <span className="block font-serif text-2xl text-navy mb-2">{a.titulo}</span>
+            <a.icone className="w-8 h-8 text-dourado mb-3" aria-hidden />
+            <span className="block font-serif text-xl text-navy mb-1">{a.titulo}</span>
             <span className="block text-sm text-gray-600">{a.texto}</span>
           </button>
         ))}

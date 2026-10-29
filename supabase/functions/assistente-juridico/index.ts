@@ -48,6 +48,14 @@ const CATALOGO: Record<string, { titulo: string; url: string; temas: string }> =
   mariadapenha: { titulo: 'Lei Maria da Penha (Lei 11.340/2006)', url: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11340.htm', temas: 'violência doméstica, medidas protetivas, afastamento do lar' },
   fgts: { titulo: 'Lei do FGTS (Lei 8.036/1990)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l8036consol.htm', temas: 'FGTS, multa de 40%, saque, depósitos' },
   domesticas: { titulo: 'Lei das Empregadas Domésticas (LC 150/2015)', url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp150.htm', temas: 'empregado doméstico, jornada, férias, FGTS doméstico' },
+  sa: { titulo: 'Lei das Sociedades por Ações (Lei 6.404/1976)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l6404consol.htm', temas: 'sociedade anônima, acionistas, assembleia, administradores, dividendos' },
+  falencias: { titulo: 'Lei de Recuperação e Falências (Lei 11.101/2005)', url: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2005/lei/l11101.htm', temas: 'recuperação judicial, recuperação extrajudicial, falência, credores' },
+  previdencia: { titulo: 'Lei de Benefícios da Previdência (Lei 8.213/1991)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l8213cons.htm', temas: 'aposentadoria, auxílio, pensão por morte, carência, segurado, INSS' },
+  custeio: { titulo: 'Lei de Custeio da Seguridade (Lei 8.212/1991)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l8212cons.htm', temas: 'contribuições previdenciárias, segurados, empresas' },
+  penal: { titulo: 'Código Penal (Decreto-Lei 2.848/1940)', url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del2848compilado.htm', temas: 'crimes, penas, estelionato, apropriação indébita, crimes contra o patrimônio, prescrição penal' },
+  cpp: { titulo: 'Código de Processo Penal (Decreto-Lei 3.689/1941)', url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del3689compilado.htm', temas: 'inquérito, prisão, fiança, ação penal, recursos criminais, habeas corpus' },
+  florestal: { titulo: 'Código Florestal (Lei 12.651/2012)', url: 'https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/lei/l12651.htm', temas: 'APP, reserva legal, CAR, áreas protegidas' },
+  crimesambientais: { titulo: 'Lei de Crimes Ambientais (Lei 9.605/1998)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l9605.htm', temas: 'infrações ambientais, sanções, responsabilidade da pessoa jurídica' },
   usucapiao: { titulo: 'Usucapião extrajudicial e outros (Lei 6.015/1973 art. 216-A)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l6015compilada.htm', temas: 'usucapião em cartório' },
 }
 
@@ -62,6 +70,11 @@ const ESPECIALIDADES: Record<string, string> = {
   lgpd: 'Você é especialista em proteção de dados (LGPD) aplicada a escritórios de advocacia e gestão de imóveis.',
   inovacao: 'Você é especialista em inovação e regulação: sandboxes regulatórios (CVM, Banco Central, ANPD, SUSEP, ANEEL), Marco Legal das Startups e Lei da Liberdade Econômica, aplicados a negócios imobiliários e proptechs.',
   compliance: 'Você é especialista em governança, ESG e compliance: programa de integridade (Lei 12.846/13), LGPD, passivo ambiental e due diligence de imóveis e contrapartes.',
+  empresarial: 'Você é especialista em direito empresarial e societário (Código Civil, Lei das S.A., Lei 11.101/05): sociedades, acordos de sócios, contratos empresariais, recuperação judicial e falência.',
+  previdenciario: 'Você é especialista em direito previdenciário (Leis 8.213/91 e 8.212/91, CF art. 201): aposentadorias, benefícios por incapacidade, pensão, revisões e planejamento previdenciário.',
+  penal: 'Você é especialista em direito penal e processo penal (Código Penal, CPP, CF): defesa técnica, inquérito, medidas cautelares, recursos e crimes empresariais e patrimoniais.',
+  civel: 'Você é especialista em direito civil e contratos (Código Civil, CPC, CDC quando cabível): obrigações, contratos, responsabilidade civil, cobranças e execuções.',
+  ambiental: 'Você é especialista em direito ambiental (Lei 6.938/81, Código Florestal, Lei 9.605/98): licenciamento, passivo ambiental, áreas protegidas e responsabilidade.',
   geral: 'Você é um advogado generalista brasileiro, cuidadoso e didático.',
 }
 
