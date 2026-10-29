@@ -49,7 +49,7 @@ export default function CompliancePage() {
     const vs = ps.map((_, i) => resp[`${pi}-${i}`]).filter(v => v !== undefined)
     return vs.length ? Math.round((vs.reduce((a, b) => a + b, 0) / (ps.length * 2)) * 100) : null
   }
-  const geral = respondidas ? Math.round((Object.values(resp).reduce((a, b) => a + b, 0) / (total * 2)) * 100) : null
+  const geral = respondidas ? Math.round((Object.values(resp).reduce((a, b) => a + b, 0) / (respondidas * 2)) * 100) : null
   const lacunas = PILARES.flatMap((p, pi) => p.perguntas.map((q, i) => ({ ...q, pilar: p.nome, v: resp[`${pi}-${i}`] })).filter(q => q.v !== undefined && q.v < 2))
   const nivel = geral === null ? '' : geral >= 80 ? 'maduro' : geral >= 50 ? 'em desenvolvimento' : 'inicial'
   return (
