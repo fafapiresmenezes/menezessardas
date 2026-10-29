@@ -29,6 +29,16 @@ export default function FontesPage() {
     if (error || corpo?.erro) return setBusca({ erro: corpo?.erro ?? 'O Escavador não respondeu. Tente de novo.' })
     setBusca({ processos: data.processos ?? [] })
   }
+  // Busca gratuita nas mesmas fontes públicas que o Escavador usa (Comunica PJe, diários oficiais, DataJud).
+  const [gratis, setGratis] = useState<{ carregando?: boolean; erro?: string; r?: any } | null>(null)
+  const buscarGratis = async () => {
+    setGratis({ carregando: true })
+    const { data, error } = await supabase.functions.invoke('buscar-partes', { body: { termo } })
+    const corpo = error ? await (error as { context?: Response }).context?.json?.().catch(() => null) : data
+    if (error || corpo?.erro) return setGratis({ erro: corpo?.erro ?? 'As fontes públicas não responderam. Tente de novo.' })
+    setGratis({ r: data })
+  }
+  const dt = (d?: string) => (d ? new Date(d.length === 10 ? `${d}T12:00` : d).toLocaleDateString('pt-BR') : '')
   return (
     <Layout title="Fontes do advogado">
       <div className="space-y-6">
@@ -39,9 +49,26 @@ export default function FontesPage() {
             <input id="termo" value={termo} onChange={e => setTermo(e.target.value)} placeholder="Nome, CNPJ, número do processo ou tema" className="flex-1 border px-3 py-2" />
           </div>
           <p className="text-sm text-grafite-claro mt-2">Escreva uma vez e clique na fonte: ela abre já com a busca feita.</p>
+          <button type="button" onClick={buscarGratis} data-testid="buscar-gratis" disabled={termo.trim().length < 4 || !!gratis?.carregando} className="mt-3 mr-2 min-h-[44px] bg-dourado text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">
+            {gratis?.carregando ? 'Buscando…' : 'Buscar grátis (fontes públicas)'}
+          </button>
           <button type="button" onClick={buscarEscavador} disabled={termo.trim().length < 3 || !!busca?.carregando} className="mt-3 min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">
             {busca?.carregando ? 'Buscando…' : 'Buscar processos no Escavador aqui'}
           </button>
+          {gratis?.erro && <p role="alert" className="mt-3 p-3 text-sm border-l-2 bg-criticoFundo border-critico text-critico">{gratis.erro}</p>}
+          {gratis?.r && (
+            <div className="mt-4 space-y-4 text-sm" aria-live="polite" data-testid="resultado-gratis">
+              {gratis.r.tipo === 'numero' ? (() => { const d = gratis.r.datajud; return !d.ok ? <p>{d.erro}</p> : !d.encontrado ? <p>Processo não encontrado no DataJud ({d.tribunal}).</p> : (
+                <div><p className="font-medium">{d.tribunal} · {d.classe} · {d.orgao}</p><p className="text-grafite-claro">Ajuizado em {dt(d.ajuizamento)} · {d.assuntos.join(', ')}</p>
+                  <ul className="mt-2 divide-y">{d.movimentos.map((m: any, i: number) => <li key={i} className="py-1">{dt(m.data)} · {m.nome}</li>)}</ul></div>) })() : (<>
+                <div><p className="font-medium">Comunicações processuais (CNJ, últimos 12 meses): {gratis.r.comunica.ok ? gratis.r.comunica.total : gratis.r.comunica.erro}</p>
+                  <ul className="divide-y">{(gratis.r.comunica.itens ?? []).slice(0, 20).map((i: any, k: number) => <li key={k} className="py-2"><span className="font-mono">{i.numero}</span> · {i.tribunal} · {dt(i.data)} · {i.tipo}<span className="block text-grafite-claro">{i.trecho}</span></li>)}</ul></div>
+                <div><p className="font-medium">Diários oficiais municipais (Querido Diário): {gratis.r.queridoDiario.ok ? gratis.r.queridoDiario.total : gratis.r.queridoDiario.erro}</p>
+                  <ul className="divide-y">{(gratis.r.queridoDiario.itens ?? []).map((g: any, k: number) => <li key={k} className="py-2">{dt(g.data)} · {g.municipio} · <a href={g.link} target="_blank" rel="noreferrer" className="underline">abrir diário</a><span className="block text-grafite-claro">{g.trecho}</span></li>)}</ul></div>
+              </>)}
+              <p className="text-xs text-grafite-claro">Fontes públicas e gratuitas: Comunica PJe e DataJud (CNJ) e Querido Diário. Use só para a finalidade do caso (LGPD).</p>
+            </div>
+          )}
           {busca?.erro && <p role="alert" className="mt-3 p-3 text-sm border-l-2 bg-criticoFundo border-critico text-critico">{busca.erro}</p>}
           {busca?.processos && (
             <div className="mt-4" aria-live="polite">
