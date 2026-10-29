@@ -27,6 +27,7 @@ import EquipePage from '@/pages/EquipePage'
 import InicioPage from '@/pages/InicioPage'
 import FontesPage from '@/pages/FontesPage'
 import KycPage from '@/pages/KycPage'
+import CompliancePage from '@/pages/CompliancePage'
 import ProjetosPage from '@/pages/ProjetosPage'
 import IntimacoesPage from '@/pages/IntimacoesPage'
 
@@ -165,6 +166,10 @@ function App() {
         <Route
           path="/projetos"
           element={isAuthenticated ? <ProjetosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/compliance"
+          element={isAuthenticated ? <CompliancePage /> : <Navigate to="/login" />}
         />
         <Route
           path="/kyc"

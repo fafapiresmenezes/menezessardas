@@ -27,6 +27,7 @@ const itensMenu = [
   { icon: MessageSquare, label: 'Assistente', href: '/assistente' },
   { icon: Globe, label: 'Fontes do advogado', href: '/fontes' },
   { icon: UserCheck, label: 'Checagem de contraparte', href: '/kyc' },
+  { icon: ShieldCheck, label: 'Compliance', href: '/compliance' },
   { icon: Gauge, label: 'Indicadores', href: '/indicadores' },
   { icon: TrendingUp, label: 'Previsões', href: '/previsoes' },
   { icon: FlaskConical, label: 'Instituto', href: '/instituto' },
