@@ -1,3 +1,4 @@
+import { FunctionRegion } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
@@ -29,7 +30,7 @@ export default function IntimacoesPage() {
 
   const buscar = async () => {
     setOcupado(true); setMsg(null)
-    const { data, error } = await supabase.functions.invoke('intimacoes', { body: { dias: 30 } })
+    const { data, error } = await supabase.functions.invoke('intimacoes', { body: { dias: 30 }, region: FunctionRegion.SaEast1 })
     setOcupado(false)
     const d = error ? await (error as { context?: Response }).context?.json?.().catch(() => null) : data
     if (!d || d.erro) return setMsg({ ok: false, texto: d?.erro ?? 'O CNJ não respondeu agora. Tente de novo em instantes.' })

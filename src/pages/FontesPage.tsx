@@ -1,3 +1,4 @@
+import { FunctionRegion } from '@supabase/supabase-js'
 import { useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
@@ -33,7 +34,7 @@ export default function FontesPage() {
   const [gratis, setGratis] = useState<{ carregando?: boolean; erro?: string; r?: any } | null>(null)
   const buscarGratis = async () => {
     setGratis({ carregando: true })
-    const { data, error } = await supabase.functions.invoke('buscar-partes', { body: { termo } })
+    const { data, error } = await supabase.functions.invoke('buscar-partes', { body: { termo }, region: FunctionRegion.SaEast1 })
     const corpo = error ? await (error as { context?: Response }).context?.json?.().catch(() => null) : data
     if (error || corpo?.erro) return setGratis({ erro: corpo?.erro ?? 'As fontes públicas não responderam. Tente de novo.' })
     setGratis({ r: data })
