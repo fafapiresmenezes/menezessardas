@@ -6,7 +6,7 @@ import { createClient } from 'jsr:@supabase/supabase-js@2'
 const API = 'https://comunicaapi.pje.jus.br/api/v1/comunicacao'
 const cors = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-cron-secret',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-cron-secret, x-region',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
