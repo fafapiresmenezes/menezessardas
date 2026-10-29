@@ -11,7 +11,7 @@ const PAPEIS: Record<string, { nome: string; foco: string; atalhos: { rotulo: st
   socia: { nome: 'Sócia', foco: 'Visão da carteira, riscos e decisões que só você toma.', atalhos: [
     { rotulo: 'Indicadores e OKRs', href: '/indicadores' }, { rotulo: 'Previsões e riscos', href: '/previsoes' }, { rotulo: 'Consumo e custos', href: '/consumo' }, { rotulo: 'Mercado jurídico', href: '/mercado' }] },
   advogada: { nome: 'Advogada', foco: 'Prazos, intimações e peças do dia.', atalhos: [
-    { rotulo: 'Assistente jurídico (redigir peça)', href: '/assistente' }, { rotulo: 'Lançar horas', href: '/horas' }, { rotulo: 'Intimações', href: '/intimacoes' }, { rotulo: 'Fontes do advogado', href: '/fontes' }, { rotulo: 'Checar contraparte', href: '/kyc' }] },
+    { rotulo: 'Assistente jurídico (redigir peça)', href: '/assistente' }, { rotulo: 'Lançar horas', href: '/horas' }, { rotulo: 'Modelos de peças', href: '/modelos' }, { rotulo: 'Intimações', href: '/intimacoes' }, { rotulo: 'Fontes do advogado', href: '/fontes' }, { rotulo: 'Checar contraparte', href: '/kyc' }] },
   estagiario: { nome: 'Estagiário ou paralegal', foco: 'Tarefas atribuídas a você e pesquisas.', atalhos: [
     { rotulo: 'Projetos e tarefas', href: '/projetos' }, { rotulo: 'Legislação', href: '/legislacao' }, { rotulo: 'Fontes do advogado', href: '/fontes' }, { rotulo: 'Imóveis e documentos', href: '/imoveis' }] },
   secretaria: { nome: 'Secretária', foco: 'Agenda, vencimentos e documentos a cobrar.', atalhos: [

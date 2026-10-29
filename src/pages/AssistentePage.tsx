@@ -110,6 +110,11 @@ export default function AssistentePage() {
     const pedido = new URLSearchParams(window.location.search).get('agente') as Especialidade | null
     if (pedido && ESPECIALIDADES.some(e => e.valor === pedido)) setEspecialidade(pedido)
     else especialidadePreferida().then(setEspecialidade)
+    // A biblioteca de modelos abre já no modo Redigir com o pedido preenchido (?modo=redigir&pedido=...).
+    const qs = new URLSearchParams(window.location.search)
+    if (qs.get('modo') === 'redigir') setModo('redigir')
+    const texto = qs.get('pedido')
+    if (texto) setPergunta(texto.slice(0, 2000))
     historicoConsultas().then(setHistorico).catch(e => setErro(e instanceof Error ? e.message : 'Não foi possível carregar o histórico.'))
   }, [])
 
