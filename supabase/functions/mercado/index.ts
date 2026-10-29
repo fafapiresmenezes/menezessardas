@@ -10,7 +10,7 @@ const CACHE_DIAS = 7
 const AREAS: Record<string, { nome: string; tribunal: string; classes: string[] }> = {
   imobiliario: { nome: 'Imobiliário (despejos e renovatórias, TJRJ)', tribunal: 'tjrj', classes: ['Despejo por Falta de Pagamento', 'Despejo por Falta de Pagamento Cumulado Com Cobrança', 'Renovatória de Locação'] },
   civel: { nome: 'Cível (procedimento comum, TJRJ)', tribunal: 'tjrj', classes: ['Procedimento Comum Cível'] },
-  trabalhista: { nome: 'Trabalhista (ações ordinárias, TRT-1)', tribunal: 'trt1', classes: ['Ação Trabalhista - Rito Ordinário'] },
+  trabalhista: { nome: 'Trabalhista (ações ordinárias, TRT-1)', tribunal: 'trt1', classes: ['Ação Trabalhista - Rito Ordinário', 'Ação Trabalhista - Rito Sumaríssimo'] },
   familia: { nome: 'Família (divórcios e alimentos, TJRJ)', tribunal: 'tjrj', classes: ['Divórcio Litigioso', 'Divórcio Consensual', 'Alimentos - Lei Especial Nº 5.478/68'] },
   tributario: { nome: 'Tributário (execuções fiscais, TJRJ)', tribunal: 'tjrj', classes: ['Execução Fiscal'] },
   empresarial: { nome: 'Empresarial (recuperações e falências, TJRJ)', tribunal: 'tjrj', classes: ['Recuperação Judicial', 'Falência de Empresários, Sociedades Empresáriais, Microempresas e Empresas de Pequeno Porte'] },
@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
   const sb = servico()
   const chave = `mercado|${area}`
   const { data: guardado } = await sb.from('jurimetria_cache').select('resultado,criado_em').eq('chave', chave).maybeSingle()
-  if (guardado && Date.now() - new Date(guardado.criado_em).getTime() < CACHE_DIAS * 86400000) return json({ ...guardado.resultado, doCache: true })
+  if (guardado?.resultado?.previsao && Date.now() - new Date(guardado.criado_em).getTime() < CACHE_DIAS * 86400000) return json({ ...guardado.resultado, doCache: true })
 
   const ultimoAno = new Date().getUTCFullYear() - 1
   const r = await fetch(`https://api-publica.datajud.cnj.jus.br/api_publica_${cfg.tribunal}/_search`, {
@@ -87,6 +87,7 @@ Deno.serve(async (req) => {
     resultado.previsao = { ano: alvo, processos: t.prev, margem: t.margem, variacao: base ? Math.round(((t.prev - base) / base) * 100) : null, r2: Math.round(t.r2 * 100) / 100 }
     resultado.confianca = total < 300 ? 'baixa' : t.r2 >= 0.7 ? 'alta' : t.r2 >= 0.4 ? 'media' : 'baixa'
   } else resultado.confianca = 'insuficiente'
-  await sb.from('jurimetria_cache').upsert({ chave, resultado, criado_em: new Date().toISOString() })
+  // Resultado vazio (CNJ sobrecarregado ou classe sem registros) não vai para o cache: tenta de novo na próxima visita.
+  if (pontos.length >= 3) await sb.from('jurimetria_cache').upsert({ chave, resultado, criado_em: new Date().toISOString() })
   return json(resultado)
 })
