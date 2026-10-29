@@ -30,6 +30,7 @@ import KycPage from '@/pages/KycPage'
 import MeuDiaPage from '@/pages/MeuDiaPage'
 import HorasPage from '@/pages/HorasPage'
 import ModelosPage from '@/pages/ModelosPage'
+import MonitoramentoPage from '@/pages/MonitoramentoPage'
 import MercadoPage from '@/pages/MercadoPage'
 import CompliancePage from '@/pages/CompliancePage'
 import ProjetosPage from '@/pages/ProjetosPage'
@@ -178,6 +179,10 @@ function App() {
         <Route
           path="/mercado"
           element={isAuthenticated ? <MercadoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/monitoramento"
+          element={isAuthenticated ? <MonitoramentoPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/modelos"

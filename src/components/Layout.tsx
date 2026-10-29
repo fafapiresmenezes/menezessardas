@@ -7,7 +7,7 @@ import Busca from './Busca'
 import BoasVindas from './BoasVindas'
 import { aplicarTema, temaAtual } from '@/lib/tema'
 import { listarPessoas, perfilAtual } from '@/lib/equipe'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -29,6 +29,7 @@ const itensMenu = [
   { icon: Timer, label: 'Horas e honorários', href: '/horas' },
   { icon: FileText, label: 'Modelos de peças', href: '/modelos' },
   { icon: Globe, label: 'Fontes do advogado', href: '/fontes' },
+  { icon: Radar, label: 'Monitoramento de processos', href: '/monitoramento' },
   { icon: UserCheck, label: 'Checagem de contraparte', href: '/kyc' },
   { icon: ShieldCheck, label: 'Compliance', href: '/compliance' },
   { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
