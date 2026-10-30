@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { calcularPrazo } from '@/lib/prazos'
-import { CalendarClock, Inbox, ListChecks, FileWarning, Briefcase } from 'lucide-react'
+import { CalendarClock, Inbox, ListChecks, FileWarning, Briefcase, Mail } from 'lucide-react'
 import { render } from '@/pages/AssistentePage'
 
 // "Meu dia": o que cada nível do escritório precisa ver ao abrir a plataforma, num só lugar.
@@ -22,6 +22,18 @@ const PAPEIS: Record<string, { nome: string; foco: string; atalhos: { rotulo: st
   financeiro: { nome: 'Financeiro', foco: 'Reajustes, recebíveis e custos.', atalhos: [
     { rotulo: 'Horas e honorários', href: '/horas' }, { rotulo: 'Relatórios', href: '/relatorios' }, { rotulo: 'Consumo e custos', href: '/consumo' }, { rotulo: 'Indicadores', href: '/indicadores' }, { rotulo: 'Alertas de reajuste', href: '/alertas' }] },
 }
+// Resumo semanal (Passo 14): gerado toda segunda 8h pelo Edge resumo-semanal e enviado por e-mail; aqui cada função vê a sua parte.
+const SECAO_DO_PAPEL: Record<string, 'socia' | 'advogada' | 'secretaria'> = { socia: 'socia', advogada: 'advogada', estagiario: 'advogada', secretaria: 'secretaria', financeiro: 'socia' }
+const ROTULOS_RESUMO: Record<string, string> = {
+  contratos_vencidos: 'Contratos vencidos', contratos_60_dias: 'Contratos vencendo em 60 dias', valor_60_dias: 'Valor mensal em risco (60 dias)',
+  honorarios_em_aberto: 'Honorários em aberto', honorarios_atrasados: 'Honorários atrasados', tarefas_alta: 'Tarefas de prioridade alta abertas',
+  intimacoes_nao_lidas: 'Intimações não lidas', prazos_processuais_semana: 'Prazos processuais nesta semana', prazos_vencidos: 'Prazos processuais vencidos',
+  tarefas_semana: 'Tarefas com prazo nesta semana', tarefas_vencidas: 'Tarefas vencidas', audiencias_compromissos: 'Audiências e compromissos na semana',
+  compromissos_semana: 'Compromissos da semana', compromissos_lista: 'Agenda', contratos_30_dias: 'Contratos vencendo em 30 dias', reajustes_30_dias: 'Reajustes a aplicar em 30 dias',
+}
+const DINHEIRO = new Set(['valor_60_dias', 'honorarios_em_aberto'])
+const brl = (v: number) => 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+type Resumo = { semana: string; socia: Record<string, string | number>; advogada: Record<string, string | number>; secretaria: Record<string, string | number> }
 const hoje = () => new Date().toISOString().slice(0, 10)
 const fmt = (d: string) => new Date(`${d}T12:00`).toLocaleDateString('pt-BR')
 
@@ -32,6 +44,19 @@ export default function MeuDiaPage() {
   const [vencendo, setVencendo] = useState<{ id: string; imovel_id: string; locatario_fornecedor: string; data_vencimento: string }[]>([])
   const [calc, setCalc] = useState({ inicio: hoje(), dias: 15, dobro: false })
   const [diagnostico, setDiagnostico] = useState<{ resposta: string; criado_em: string } | null>(null)
+  const [resumo, setResumo] = useState<{ conteudo: Resumo; criado_em: string; enviado_em: string | null; destinatarios: number } | null>(null)
+  const [msgResumo, setMsgResumo] = useState('')
+  useEffect(() => {
+    if (!supabaseConfigurado) return
+    supabase.from('resumos_semanais').select('conteudo,criado_em,enviado_em,destinatarios').order('semana', { ascending: false }).limit(1).maybeSingle().then(r => setResumo(r.data ?? null))
+  }, [])
+  const testarResumo = async () => {
+    setMsgResumo('Enviando o resumo de teste para o seu e-mail…')
+    const { data, error } = await supabase.functions.invoke('resumo-semanal', { body: { teste: true } })
+    if (error) return setMsgResumo(`Não foi possível enviar: ${error.message}`)
+    if (data?.enviado) { setMsgResumo('Resumo de teste enviado para o seu e-mail. Toda segunda-feira às 8h ele vai para toda a equipe.'); if (data.resumo) setResumo(r => r ?? { conteudo: data.resumo, criado_em: new Date().toISOString(), enviado_em: null, destinatarios: 0 }) }
+    else setMsgResumo(`Não enviado: ${data?.motivo ?? data?.detalhe ?? data?.erro ?? 'erro desconhecido'}.`)
+  }
   useEffect(() => {
     if (!supabaseConfigurado) { setDiagnostico(null); return }
     supabase.from('diagnosticos_semanais').select('resposta,criado_em').eq('nivel', NIVEL_DO_PAPEL[papel] ?? 'nivel_pleno').order('criado_em', { ascending: false }).limit(1).maybeSingle().then(r => setDiagnostico(r.data ?? null))
@@ -89,6 +114,22 @@ export default function MeuDiaPage() {
           </section>
         </div>
 
+        <section className={cartao} data-testid="resumo-semanal">
+          <h2 className="font-serif text-lg flex items-center gap-2"><Mail className="w-5 h-5" aria-hidden />Resumo semanal de alertas</h2>
+          <p className="text-xs text-grafite-claro mt-1">Toda segunda-feira às 8h a plataforma consolida os alertas por função e envia por e-mail a toda a equipe. Aqui está a parte da sua função.</p>
+          {resumo ? (
+            <>
+              <p className="text-xs text-grafite-claro mt-2">Semana de {resumo.conteudo.semana}{resumo.enviado_em ? ` · enviado a ${resumo.destinatarios} pessoa(s) em ${new Date(resumo.enviado_em).toLocaleDateString('pt-BR')}` : ''}</p>
+              <dl className="grid gap-x-6 gap-y-1 sm:grid-cols-2 text-sm mt-2">
+                {Object.entries(resumo.conteudo[SECAO_DO_PAPEL[papel] ?? 'advogada'] ?? {}).map(([k, v]) => (
+                  <div key={k} className="flex justify-between gap-3 border-b border-navy/10 py-1" data-testid={`resumo-${k}`}><dt>{ROTULOS_RESUMO[k] ?? k}</dt><dd className="font-medium text-right">{DINHEIRO.has(k) ? brl(Number(v)) : (v === '' ? '—' : String(v))}</dd></div>
+                ))}
+              </dl>
+            </>
+          ) : <p className="text-sm text-grafite-claro mt-2">O primeiro resumo chega na segunda-feira às 8h.</p>}
+          <button type="button" onClick={testarResumo} data-testid="testar-resumo" className="min-h-[44px] px-4 mt-3 text-sm border border-navy text-navy">Enviar-me o resumo agora (teste)</button>
+          {msgResumo && <p className="text-sm mt-2" role="status" data-testid="msg-resumo">{msgResumo}</p>}
+        </section>
         <section className={cartao} data-testid="consultor-semana">
           <h2 className="font-serif text-lg flex items-center gap-2"><Briefcase className="w-5 h-5" aria-hidden />Consultor da semana</h2>
           {diagnostico ? (
