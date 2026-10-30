@@ -3,14 +3,15 @@ import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { perfilAtual } from '@/lib/equipe'
-import { formatarData } from '@/lib/datas'
+import { formatarData, diasAte } from '@/lib/datas'
+import SeloSituacao from '@/components/SeloSituacao'
 import { Inbox, RefreshCw, ExternalLink } from 'lucide-react'
 
 // Caixa de intimações: publicações do Diário de Justiça Eletrônico Nacional (Comunica PJe, CNJ)
 // para as OABs do escritório. Busca diária automática e botão "Buscar agora". Gratuito.
 interface Intimacao {
   id: number; oab: string; data_disponibilizacao: string; tribunal: string | null; orgao: string | null
-  tipo: string | null; classe: string | null; numero_processo: string | null; texto: string | null; link: string | null; lida: boolean
+  tipo: string | null; classe: string | null; numero_processo: string | null; texto: string | null; link: string | null; lida: boolean; prazo_dias?: number | null; prazo_final?: string | null; tarefa_id?: string | null
 }
 
 export default function IntimacoesPage() {
@@ -23,7 +24,7 @@ export default function IntimacoesPage() {
   const [aberta, setAberta] = useState<number | null>(null)
 
   const carregar = async () => {
-    const { data } = await supabase.from('intimacoes').select('id,oab,data_disponibilizacao,tribunal,orgao,tipo,classe,numero_processo,texto,link,lida').order('data_disponibilizacao', { ascending: false }).limit(300)
+    const { data } = await supabase.from('intimacoes').select('id,oab,data_disponibilizacao,tribunal,orgao,tipo,classe,numero_processo,texto,link,lida,prazo_dias,prazo_final,tarefa_id').order('data_disponibilizacao', { ascending: false }).limit(300)
     setLista((data ?? []) as Intimacao[])
   }
   useEffect(() => { carregar(); perfilAtual().then(f => setAdmin(f === 'admin')) }, [])
@@ -47,7 +48,19 @@ export default function IntimacoesPage() {
     setLista(l => l.map(x => (x.id === i.id ? { ...x, lida: true } : x)))
     await supabase.from('intimacoes').update({ lida: true }).eq('id', i.id)
   }
-  const visiveis = filtro === 'novas' ? lista.filter(i => !i.lida) : lista
+  // Passo 13: urgência pelo prazo estimado (dias úteis, CPC art. 219/224) e tarefa no caso correspondente.
+  const urgencia = (i: Intimacao) => {
+    if (!i.prazo_final) return null
+    const d = diasAte(i.prazo_final) ?? 0
+    return { d, situacao: d < 0 ? 'vencido' : d <= 2 ? 'critico' : d <= 5 ? 'atencao' : 'regular', texto: d < 0 ? 'Prazo vencido' : d === 0 ? 'Vence hoje' : `${d} dia(s) corridos` } as const
+  }
+  const criarTarefa = async (i: Intimacao) => {
+    const { data, error } = await supabase.rpc('criar_tarefa_intimacao', { p_id: i.id })
+    if (error) setMsg({ ok: false, texto: 'Não deu para criar a tarefa: ' + error.message })
+    else { setMsg({ ok: true, texto: 'Tarefa criada em Casos e projetos com o prazo estimado.' }); setLista(l => l.map(x => (x.id === i.id ? { ...x, tarefa_id: String(data) } : x))) }
+  }
+  const ordem = { vencido: 0, critico: 1, atencao: 2, regular: 3 } as const
+  const visiveis = (filtro === 'novas' ? lista.filter(i => !i.lida) : lista).slice().sort((a, b) => (ordem[urgencia(a)?.situacao ?? 'regular'] - ordem[urgencia(b)?.situacao ?? 'regular']) || b.data_disponibilizacao.localeCompare(a.data_disponibilizacao))
 
   return (
     <Layout title="Intimações">
@@ -83,6 +96,12 @@ export default function IntimacoesPage() {
                   <div>
                     <p className="text-sm text-navy font-medium">{i.tipo ?? 'Comunicação'} · {i.tribunal} · {formatarData(i.data_disponibilizacao)}</p>
                     <p className="text-xs text-grafite-claro">Processo {i.numero_processo} · {i.classe} · {i.orgao} · OAB {i.oab}</p>
+                    {(() => { const u = urgencia(i); return u ? (
+                      <p className="flex flex-wrap items-center gap-2 mt-1 text-xs" data-testid={`urgencia-${i.id}`}>
+                        <SeloSituacao situacao={u.situacao} texto={u.texto} />
+                        <span className="text-grafite-claro">prazo estimado até {formatarData(i.prazo_final!)} ({i.prazo_dias} dias úteis; confira nos autos)</span>
+                        {i.tarefa_id ? <a href="#/projetos" className="underline text-navy">tarefa criada no caso</a> : <button type="button" onClick={() => criarTarefa(i)} className="underline text-navy" data-testid={`criar-tarefa-${i.id}`}>criar tarefa no caso</button>}
+                      </p>) : null })()}
                   </div>
                   <div className="flex gap-3 text-sm">
                     <button onClick={() => setAberta(aberta === i.id ? null : i.id)} className="underline text-navy">{aberta === i.id ? 'Fechar' : 'Ler'}</button>
