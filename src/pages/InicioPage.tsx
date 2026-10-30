@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { gravarAreaAtual } from '@/lib/assistente'
 import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck } from 'lucide-react'
+import AceiteTermos from '@/components/AceiteTermos'
 
 // Tela de entrada: o escritório escolhe a área de trabalho antes de entrar na plataforma.
 const agente = (a: string) => `?agente=${a}#/assistente`
@@ -26,6 +27,7 @@ export default function InicioPage() {
   }
   return (
     <main className="min-h-screen bg-navy flex flex-col items-center justify-center px-4 py-12">
+      <AceiteTermos />
       <div className="text-center mb-10">
         <p className="font-serif text-dourado text-4xl tracking-widest">GM</p>
         <h1 className="font-serif text-white text-3xl mt-2">GMenezes Advogados Associados</h1>
