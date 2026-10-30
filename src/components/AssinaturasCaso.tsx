@@ -5,7 +5,7 @@ import { PenLine, Trash2 } from 'lucide-react'
 
 // Assinatura eletrônica simples (Lei 14.063/2020, art. 4º, I): o escritório escreve o documento (contrato de honorários,
 // procuração, termo), o cliente assina pelo link do portal com nome e CPF/CNPJ; fica o hash e a hora.
-type Assinatura = { id: string; titulo: string; hash_texto: string; assinante_nome: string | null; assinante_documento: string | null; assinado_em: string | null; hash_assinatura: string | null; criado_em: string }
+type Assinatura = { id: string; titulo: string; hash_texto: string; assinante_nome: string | null; assinante_documento: string | null; assinado_em: string | null; hash_assinatura: string | null; criado_em: string; selo_id: number | null; selos_blockchain?: { situacao: string; altura_bitcoin: number | null; data_bloco: string | null; criado_em: string } | null }
 const MODELO = (cliente: string | null) => `CONTRATO DE HONORÁRIOS ADVOCATÍCIOS
 
 Contratante: ${cliente ?? '[nome do cliente]'}.
@@ -25,8 +25,8 @@ export default function AssinaturasCaso({ tarefaId, cliente }: { tarefaId: strin
   const [texto, setTexto] = useState(() => MODELO(cliente))
   const [erro, setErro] = useState('')
   const carregar = async () => {
-    const { data, error } = await supabase.from('assinaturas_eletronicas').select('id,titulo,hash_texto,assinante_nome,assinante_documento,assinado_em,hash_assinatura,criado_em').eq('tarefa_id', tarefaId).order('criado_em')
-    if (error) setErro(error.message); else setLista((data ?? []) as Assinatura[])
+    const { data, error } = await supabase.from('assinaturas_eletronicas').select('id,titulo,hash_texto,assinante_nome,assinante_documento,assinado_em,hash_assinatura,criado_em,selo_id,selos_blockchain(situacao,altura_bitcoin,data_bloco,criado_em)').eq('tarefa_id', tarefaId).order('criado_em')
+    if (error) setErro(error.message); else setLista((data ?? []) as unknown as Assinatura[])
   }
   useEffect(() => { carregar() }, [tarefaId])
   const pedir = async () => {
@@ -49,7 +49,7 @@ export default function AssinaturasCaso({ tarefaId, cliente }: { tarefaId: strin
           <li key={a.id} className="py-2 flex items-start justify-between gap-3">
             <span><span className="text-navy font-medium">{a.titulo}</span>
               <span className="block text-xs text-grafite-claro">{a.assinado_em ? `Assinado por ${a.assinante_nome} (${a.assinante_documento}) em ${formatarData(a.assinado_em.slice(0, 10))} · hash ${a.hash_assinatura?.slice(0, 16)}…` : `Aguardando assinatura · pedido em ${formatarData(a.criado_em.slice(0, 10))}`}</span></span>
-            {a.assinado_em ? <span className="text-xs uppercase tracking-wider text-regular whitespace-nowrap" data-testid="assinado">Assinado</span>
+            {a.assinado_em ? <span className="text-xs uppercase tracking-wider text-regular whitespace-nowrap text-right" data-testid="assinado">Assinado{a.selo_id ? <span className="block normal-case tracking-normal text-grafite-claro" data-testid="ancorado">{a.selos_blockchain?.situacao === 'confirmado' && a.selos_blockchain.altura_bitcoin ? `Ancorado no Bitcoin (bloco ${a.selos_blockchain.altura_bitcoin})` : `Ancorado no selo de ${a.selos_blockchain?.criado_em ? formatarData(a.selos_blockchain.criado_em.slice(0, 10)) : 'hoje'} (aguardando bloco)`}</span> : <span className="block normal-case tracking-normal text-grafite-claro" data-testid="aguardando-selo">Entra no selo blockchain do dia</span>}</span>
               : <button onClick={() => apagar(a.id)} aria-label={`Cancelar pedido ${a.titulo}`} className="min-h-[36px] px-2 text-grafite-claro hover:text-critico"><Trash2 size={14} /></button>}
           </li>
         ))}

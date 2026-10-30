@@ -56,6 +56,10 @@ async function selar() {
     const { data } = await s.from(tabela).select('id,sha256').not('sha256', 'is', null).is('selo_id', null).limit(500)
     for (const r of data ?? []) { linhas.push(`${r.sha256}  ${tabela}/${r.id}`); ids[tabela].push(r.id) }
   }
+  // Passo 34: assinaturas eletrônicas concluídas entram no manifesto do dia (hash do texto + hash do aceite).
+  const assinaturas: string[] = []
+  const { data: ass } = await s.from('assinaturas_eletronicas').select('id,hash_texto,hash_assinatura').not('assinado_em', 'is', null).not('hash_assinatura', 'is', null).is('selo_id', null).limit(500)
+  for (const a of ass ?? []) { linhas.push(`${a.hash_assinatura}  assinaturas/${a.id}`); linhas.push(`${a.hash_texto}  assinaturas/${a.id}/texto`); assinaturas.push(a.id) }
   if (!linhas.length) return { selados: 0, mensagem: 'Nada novo para selar.' }
   linhas.sort()
   const manifesto = linhas.join('\n') + '\n'
@@ -75,7 +79,8 @@ async function selar() {
   const { data: selo, error } = await s.from('selos_blockchain').insert({ raiz_merkle: hex(raiz), folhas: linhas, prova_ots: b64(ots), calendarios: usados }).select('id').single()
   if (error) return { selados: 0, erro: error.message }
   for (const tabela of ['documentos', 'contratos'] as const) if (ids[tabela].length) await s.from(tabela).update({ selo_id: selo.id }).in('id', ids[tabela])
-  return { selados: linhas.length, selo: selo.id, raiz: hex(raiz), calendarios: usados }
+  if (assinaturas.length) await s.from('assinaturas_eletronicas').update({ selo_id: selo.id }).in('id', assinaturas)
+  return { selados: linhas.length, assinaturas: assinaturas.length, selo: selo.id, raiz: hex(raiz), calendarios: usados }
 }
 
 // ---- Passo 25: leitura do arquivo .ots e consulta de confirmação no Bitcoin ----

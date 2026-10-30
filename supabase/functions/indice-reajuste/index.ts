@@ -1,4 +1,5 @@
 // Acumulado de 12 meses do índice de reajuste, direto do Banco Central (SGS).
+// Passo 33: devolve também a série mensal (12 valores) para o simulador com gráfico; aceita qualquer índice suportado.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 const SERIES: Record<string, number> = { igpm: 189, ipca: 433, inpc: 188 }
 
@@ -45,6 +46,7 @@ Deno.serve(async (req) => {
     de: meses[0].data,
     ate: meses[meses.length - 1].data,
     fonte: `Banco Central do Brasil, SGS série ${serie}`,
+    meses: meses.map(m => ({ data: m.data, valor: Number(m.valor) })),
   }
   await sb.from('jurimetria_cache').upsert({ chave, resultado, criado_em: new Date().toISOString() })
   return json(resultado)
