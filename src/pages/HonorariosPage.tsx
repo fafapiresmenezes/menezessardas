@@ -2,13 +2,16 @@ import { useEffect, useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { formatarData, diasAte } from '@/lib/datas'
-import { Banknote, Printer, QrCode, TrendingDown, TrendingUp } from 'lucide-react'
+import { Banknote, Printer, QrCode, TrendingDown, TrendingUp, Receipt, Trash2 } from 'lucide-react'
 import CobrancaPix from '@/components/CobrancaPix'
 
 // Honorários e rentabilidade: por caso, o combinado, o recebido, o vencimento e a régua de cobrança;
 // a rentabilidade cruza honorários recebidos com as horas lançadas para o mesmo cliente.
 type Caso = { id: string; titulo: string; cliente: string | null; area: string | null; situacao: string; honorario_previsto: number; honorario_recebido: number; vencimento_honorario: string | null }
 type Hora = { cliente: string; minutos: number; valor_hora: number }
+// Passo 29: baixa de pagamento (data, valor, meio); o recebido do caso é a soma das baixas (gatilho no banco).
+type Pagamento = { id: number; caso_id: string; data: string; valor: number; meio: string; observacao: string | null }
+const MEIOS: Record<string, string> = { pix: 'PIX', transferencia: 'Transferência', boleto: 'Boleto', cartao: 'Cartão', dinheiro: 'Dinheiro', outro: 'Outro' }
 const brl = (v: number) => (v ?? 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
 export default function HonorariosPage() {
@@ -17,14 +20,28 @@ export default function HonorariosPage() {
   const [erro, setErro] = useState('')
   const [editando, setEditando] = useState<Record<string, Partial<Caso>>>({})
   const [pix, setPix] = useState<Caso | null>(null)
+  const [pagamentos, setPagamentos] = useState<Pagamento[]>([])
+  const [baixa, setBaixa] = useState<{ caso: Caso; data: string; valor: string; meio: string; observacao: string } | null>(null)
+  const [msgBaixa, setMsgBaixa] = useState('')
+  const abrirBaixa = (c: Caso) => setBaixa({ caso: c, data: new Date().toISOString().slice(0, 10), valor: String(Math.max(0, Number(c.honorario_previsto) - Number(c.honorario_recebido))), meio: 'pix', observacao: '' })
+  const salvarBaixa = async () => {
+    if (!baixa) return
+    const valor = Number(String(baixa.valor).replace(',', '.'))
+    if (!valor || valor <= 0) return setMsgBaixa('Informe um valor maior que zero.')
+    const { error } = await supabase.from('pagamentos_honorarios').insert({ caso_id: baixa.caso.id, data: baixa.data, valor, meio: baixa.meio, observacao: baixa.observacao.trim() || null })
+    if (error) return setMsgBaixa(error.message)
+    setMsgBaixa(`Pagamento de ${brl(valor)} registrado em ${formatarData(baixa.data)} (${MEIOS[baixa.meio]}).`); setBaixa(null); carregar()
+  }
+  const apagarPagamento = async (p: Pagamento) => { await supabase.from('pagamentos_honorarios').delete().eq('id', p.id); carregar() }
 
   const carregar = async () => {
-    const [c, h] = await Promise.all([
+    const [c, h, pg] = await Promise.all([
       supabase.from('tarefas').select('id,titulo,cliente,area,situacao,honorario_previsto,honorario_recebido,vencimento_honorario').eq('nivel', 'projeto').order('criado_em', { ascending: false }),
       supabase.from('lancamentos_horas').select('cliente,minutos,valor_hora'),
+      supabase.from('pagamentos_honorarios').select('id,caso_id,data,valor,meio,observacao').order('data', { ascending: false }),
     ])
     if (c.error) setErro(c.error.message)
-    setCasos((c.data ?? []) as Caso[]); setHoras((h.data ?? []) as Hora[])
+    setCasos((c.data ?? []) as Caso[]); setHoras((h.data ?? []) as Hora[]); setPagamentos((pg.data ?? []) as Pagamento[])
   }
   useEffect(() => { carregar() }, [])
 
@@ -91,7 +108,8 @@ export default function HonorariosPage() {
                     <td><input aria-label={`Combinado ${c.titulo}`} type="number" className="border px-2 py-1 w-28" value={e.honorario_previsto ?? c.honorario_previsto} onChange={ev => setEditando({ ...editando, [c.id]: { ...e, honorario_previsto: Number(ev.target.value) } })} /></td>
                     <td><input aria-label={`Recebido ${c.titulo}`} type="number" className="border px-2 py-1 w-28" value={e.honorario_recebido ?? c.honorario_recebido} onChange={ev => setEditando({ ...editando, [c.id]: { ...e, honorario_recebido: Number(ev.target.value) } })} /></td>
                     <td><input aria-label={`Vencimento ${c.titulo}`} type="date" className="border px-2 py-1" value={e.vencimento_honorario ?? c.vencimento_honorario ?? ''} onChange={ev => setEditando({ ...editando, [c.id]: { ...e, vencimento_honorario: ev.target.value } })} /></td>
-                    <td className={`${r.cor} whitespace-nowrap`}>{r.rotulo}{r.aberto > 0 && <button onClick={() => carta(c)} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1"><Printer size={12} aria-hidden="true" /> Carta de cobrança</button>}{r.aberto > 0 && <button onClick={() => setPix(c)} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1" data-testid="cobrar-pix"><QrCode size={12} aria-hidden="true" /> Cobrar por PIX</button>}</td>
+                    <td className={`${r.cor} whitespace-nowrap`}>{r.rotulo}{r.aberto > 0 && <button onClick={() => carta(c)} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1"><Printer size={12} aria-hidden="true" /> Carta de cobrança</button>}{r.aberto > 0 && <button onClick={() => setPix(c)} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1" data-testid="cobrar-pix"><QrCode size={12} aria-hidden="true" /> Cobrar por PIX</button>}<button onClick={() => abrirBaixa(c)} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1" data-testid="registrar-pagamento"><Receipt size={12} aria-hidden="true" /> Registrar pagamento</button>
+                      {pagamentos.filter(p => p.caso_id === c.id).length > 0 && <ul className="mt-1 text-[11px] text-grafite-claro" data-testid="pagamentos-caso">{pagamentos.filter(p => p.caso_id === c.id).slice(0, 5).map(p => <li key={p.id} data-testid="pagamento">{formatarData(p.data)} · {brl(Number(p.valor))} · {MEIOS[p.meio] ?? p.meio} <button onClick={() => apagarPagamento(p)} aria-label="Apagar pagamento" className="align-middle"><Trash2 size={10} aria-hidden="true" /></button></li>)}</ul>}</td>
                     <td className={`whitespace-nowrap ${rent < 0 ? 'text-critico' : 'text-navy'}`}>{rent < 0 ? <TrendingDown size={14} className="inline" aria-hidden="true" /> : <TrendingUp size={14} className="inline" aria-hidden="true" />} {brl(rent)}<span className="block text-xs text-grafite-claro">custo {brl(custo)}</span></td>
                     <td>{editando[c.id] && <button onClick={() => salvar(c)} className="min-h-[36px] px-3 bg-navy text-white text-xs uppercase">Salvar</button>}</td>
                   </tr>
@@ -101,6 +119,23 @@ export default function HonorariosPage() {
             </tbody>
           </table>
         </section>
+        {msgBaixa && <p role="status" className="text-sm text-navy" data-testid="msg-baixa">{msgBaixa}</p>}
+        {baixa && (
+          <section className="bg-white shadow-sm border-l-4 border-dourado p-5" aria-label="Registrar pagamento" data-testid="form-baixa">
+            <h2 className="text-lg mb-1">Registrar pagamento · {baixa.caso.titulo}</h2>
+            <p className="text-xs text-grafite-claro mb-3">Em aberto: {brl(Math.max(0, Number(baixa.caso.honorario_previsto) - Number(baixa.caso.honorario_recebido)))}. O recebido do caso e a régua de cobrança são atualizados na hora.</p>
+            <div className="grid gap-3 sm:grid-cols-5">
+              <label className="text-xs">Data<input type="date" value={baixa.data} onChange={e => setBaixa({ ...baixa, data: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="baixa-data" /></label>
+              <label className="text-xs">Valor (R$)<input type="number" min="0.01" step="0.01" value={baixa.valor} onChange={e => setBaixa({ ...baixa, valor: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="baixa-valor" /></label>
+              <label className="text-xs">Meio<select value={baixa.meio} onChange={e => setBaixa({ ...baixa, meio: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="baixa-meio">{Object.entries(MEIOS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></label>
+              <label className="text-xs sm:col-span-2">Observação<input value={baixa.observacao} onChange={e => setBaixa({ ...baixa, observacao: e.target.value })} placeholder="Ex.: comprovante PIX 1234" className="block border px-2 py-2 w-full min-h-[44px]" /></label>
+            </div>
+            <div className="flex gap-2 mt-3">
+              <button onClick={salvarBaixa} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider" data-testid="baixa-salvar">Salvar pagamento</button>
+              <button onClick={() => setBaixa(null)} className="min-h-[44px] px-4 border text-sm">Cancelar</button>
+            </div>
+          </section>
+        )}
         {pix && <CobrancaPix valor={regua(pix).aberto} caso={pix.titulo} cliente={pix.cliente} fechar={() => setPix(null)} />}
       </div>
     </Layout>

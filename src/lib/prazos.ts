@@ -1,6 +1,7 @@
 // Contagem de prazos processuais em dias úteis (CPC, arts. 219, 220 e 224): exclui o dia do começo,
 // conta só dias úteis, suspende de 20/12 a 20/01 (recesso forense) e pula feriados nacionais e do Rio.
-// Feriados locais do tribunal e suspensões por portaria não entram: a tela avisa para conferir.
+// Passo 28: inclui os feriados municipais da cidade do Rio (Lei municipal 5.146/2010 e Decreto Rio) e as datas em que
+// o TJRJ e a Justiça Federal suspendem o expediente (Lei 5.010/66, art. 62). Suspensões por portaria avulsa não entram.
 
 function pascoa(ano: number): Date {
   const a = ano % 19, b = Math.floor(ano / 100), c = ano % 100, d = Math.floor(b / 4), e = b % 4
@@ -17,8 +18,12 @@ export function feriados(ano: number): Map<string, string> {
   const fixos: [string, string][] = [
     ['01-01', 'Confraternização Universal'], ['01-20', 'São Sebastião (Rio)'], ['04-21', 'Tiradentes'], ['04-23', 'São Jorge (RJ)'],
     ['05-01', 'Dia do Trabalho'], ['08-11', 'Dia do Advogado (expediente forense)'], ['09-07', 'Independência'], ['10-12', 'Nossa Senhora Aparecida'],
-    ['11-01', 'Todos os Santos (Lei 5.010/66)'], ['11-02', 'Finados'], ['11-15', 'Proclamação da República'], ['11-20', 'Consciência Negra'], ['12-25', 'Natal'],
+    ['10-28', 'Dia do Servidor Público (expediente forense suspenso)'],
+    ['11-01', 'Todos os Santos (Lei 5.010/66)'], ['11-02', 'Finados'], ['11-15', 'Proclamação da República'], ['11-20', 'Consciência Negra'],
+    ['12-08', 'Nossa Senhora da Conceição (Lei 5.010/66, art. 62)'], ['12-25', 'Natal'],
   ]
+  // Feriados municipais da cidade do Rio de Janeiro além de São Sebastião: terça de Carnaval e Corpus Christi são
+  // municipais (já cobertos pela Páscoa); 1º de março (aniversário da cidade) é data comemorativa, sem suspensão de prazo.
   for (const [md, nome] of fixos) f.set(`${ano}-${md}`, nome)
   const p = pascoa(ano)
   f.set(chave(somaDias(p, -48)), 'Carnaval'); f.set(chave(somaDias(p, -47)), 'Carnaval')
@@ -26,6 +31,11 @@ export function feriados(ano: number): Map<string, string> {
   f.set(chave(somaDias(p, -3)), 'Quinta-feira Santa'); f.set(chave(somaDias(p, -2)), 'Sexta-feira Santa')
   f.set(chave(somaDias(p, 60)), 'Corpus Christi')
   return f
+}
+
+/** Feriados do Rio (município e estado) do ano, para exibição na calculadora. */
+export function feriadosDoRio(ano: number): { data: string; nome: string }[] {
+  return [...feriados(ano)].filter(([, n]) => /Rio|RJ|Carnaval|Corpus|Servidor/.test(n)).map(([data, nome]) => ({ data, nome })).sort((a, b) => a.data.localeCompare(b.data))
 }
 
 export function recesso(d: Date): boolean {

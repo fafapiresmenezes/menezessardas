@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
-import { calcularPrazo } from '@/lib/prazos'
+import { calcularPrazo, feriadosDoRio } from '@/lib/prazos'
 import { CalendarClock, Inbox, ListChecks, FileWarning, Briefcase, Mail } from 'lucide-react'
 import { extrairAcoes } from '@/lib/acoesConsultor'
 import { render } from '@/pages/AssistentePage'
@@ -194,7 +194,9 @@ export default function MeuDiaPage() {
             <div className="mt-3" aria-live="polite">
               <p className="text-lg">Último dia: <strong data-testid="prazo-final">{fmt(prazo.final)}</strong> ({prazo.diasContados} dias úteis)</p>
               {!!prazo.pulados.length && <p className="text-xs text-grafite-claro">Dias não contados: {prazo.pulados.map(x => `${fmt(x.data)} (${x.motivo})`).join('; ')}.</p>}
-              <p className="text-xs text-atencao mt-1">Base: CPC arts. 219, 220 e 224; feriados nacionais e do Rio. Confira feriados locais e suspensões por portaria do tribunal antes de protocolar.</p>
+              <p className="text-xs text-atencao mt-1">Base: CPC arts. 219, 220 e 224; feriados nacionais, do Estado e do Município do Rio e datas de expediente suspenso (TJRJ e Justiça Federal). Confira suspensões por portaria do tribunal antes de protocolar.</p>
+              <details className="text-xs text-grafite-claro mt-1" data-testid="feriados-rio"><summary className="cursor-pointer">Feriados do Rio considerados em {new Date(calc.inicio + 'T12:00').getFullYear()}</summary>
+                <ul className="mt-1 columns-2">{feriadosDoRio(new Date(calc.inicio + 'T12:00').getFullYear()).map(f => <li key={f.data} data-testid="feriado-rio">{fmt(f.data)} · {f.nome}</li>)}</ul></details>
             </div>
           )}
         </section>

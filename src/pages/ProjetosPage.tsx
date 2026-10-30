@@ -6,6 +6,7 @@ import { listarPessoas, type Pessoa } from '@/lib/equipe'
 import { formatarData, diasAte } from '@/lib/datas'
 import { FolderKanban, Plus, ChevronRight } from 'lucide-react'
 import AssinaturasCaso from '@/components/AssinaturasCaso'
+import { caminhoCritico } from '@/lib/caminhoCritico'
 
 // Gestão de projetos do escritório em hierarquia (Projeto → Tarefa → Subtarefa), no estilo Monday:
 // vale para qualquer caso (processo, contrato, consultoria, cliente externo ou projeto interno), com
@@ -16,6 +17,7 @@ interface Tarefa {
   situacao: Situacao; prioridade: 'alta' | 'media' | 'baixa'; responsavel_id: string | null
   imovel_id: string | null; prazo: string | null; horas: number
   cliente: string | null; area: string | null; numero_processo: string | null; tipo: string | null; portal_token?: string | null
+  depende_de: string | null; criado_em?: string
 }
 const TIPOS: Record<string, string> = { caso: 'Processo judicial', contrato: 'Contrato ou consultoria', interno: 'Projeto interno do escritório', externo: 'Gestão para outro escritório ou empresa' }
 const AREAS = ['Imobiliário', 'Cível', 'Trabalhista', 'Família e sucessões', 'Tributário', 'Empresarial', 'Consumidor', 'Previdenciário', 'Penal', 'Compliance', 'Gestão interna']
@@ -46,7 +48,7 @@ export default function ProjetosPage() {
   const [linkPortal, setLinkPortal] = useState('')
 
   const carregar = async () => {
-    const { data, error } = await supabase.from('tarefas').select('id,pai_id,nivel,titulo,situacao,prioridade,responsavel_id,imovel_id,prazo,horas,cliente,area,numero_processo,tipo,portal_token').order('criado_em')
+    const { data, error } = await supabase.from('tarefas').select('id,pai_id,nivel,titulo,situacao,prioridade,responsavel_id,imovel_id,prazo,horas,cliente,area,numero_processo,tipo,portal_token,depende_de,criado_em').order('criado_em')
     if (error) return setErro(error.message)
     setTarefas((data ?? []) as Tarefa[])
   }
@@ -90,11 +92,16 @@ export default function ProjetosPage() {
     }).select('id').single()
     if (error || !data) return setErro(error?.message ?? 'Falha ao criar o caso.')
     const dia = (n: number) => new Date(Date.now() + n * 864e5).toISOString().slice(0, 10)
-    const { error: e2 } = await supabase.from('tarefas').insert(m.etapas.map(([t, d]) => ({
-      titulo: t, nivel: 'tarefa', pai_id: data.id, prioridade: 'media', prazo: dia(d), area: caso.area, cliente: caso.cliente.trim() || null,
-      responsavel_id: caso.responsavel_id || null,
-    })))
-    if (e2) return setErro(e2.message)
+    // Etapas do modelo em sequência: cada uma depende da anterior (Passo 30).
+    let anterior: string | null = null
+    for (const [t, d] of m.etapas) {
+      const res: { data: { id: string } | null; error: { message: string } | null } = await supabase.from('tarefas').insert({
+        titulo: t, nivel: 'tarefa', pai_id: data.id, prioridade: 'media', prazo: dia(d), area: caso.area, cliente: caso.cliente.trim() || null,
+        responsavel_id: caso.responsavel_id || null, depende_de: anterior,
+      }).select('id').single()
+      if (res.error || !res.data) return setErro(res.error?.message ?? 'Falha ao criar etapa.')
+      anterior = res.data.id
+    }
     setCaso({ ...caso, titulo: '', cliente: '', numero: '' }); setProjeto(data.id); carregar()
   }
   // Portal do cliente: gera (ou reaproveita) um código secreto e copia o link público do caso.
@@ -122,6 +129,20 @@ export default function ProjetosPage() {
     await supabase.from('tarefas').update({ horas: Number(t.horas) + h }).eq('id', t.id); carregar()
   }
 
+  const dependerDe = async (t: Tarefa, dep: string) => {
+    if (dep === t.id) return
+    setTarefas(ts => ts.map(x => (x.id === t.id ? { ...x, depende_de: dep || null } : x)))
+    const { error } = await supabase.from('tarefas').update({ depende_de: dep || null }).eq('id', t.id)
+    if (error) { setErro(error.message); carregar() }
+  }
+  // Caminho crítico e previsão de conclusão do projeto escolhido (Passo 30).
+  const cronograma = useMemo(() => {
+    if (!projeto) return null
+    const p = tarefas.find(t => t.id === projeto)
+    const inicio = (p?.criado_em ?? new Date().toISOString()).slice(0, 10)
+    return caminhoCritico(visiveis.map(t => ({ id: t.id, titulo: t.titulo, prazo: t.prazo, situacao: t.situacao, depende_de: t.depende_de })), inicio)
+  }, [projeto, tarefas, visiveis])
+  const critico = new Set(cronograma?.caminho ?? [])
   const feitas = visiveis.filter(t => t.situacao === 'feito').length
   const atrasadas = visiveis.filter(t => t.situacao !== 'feito' && t.prazo && (diasAte(t.prazo) ?? 0) < 0).length
   const horas = visiveis.reduce((s, t) => s + Number(t.horas), 0)
@@ -149,8 +170,12 @@ export default function ProjetosPage() {
               <div><dt className="text-grafite-claro">Concluído</dt><dd className="text-2xl font-serif text-navy" data-testid="progresso">{visiveis.length ? Math.round((feitas / visiveis.length) * 100) : 0}%</dd></div>
               <div><dt className="text-grafite-claro">Atrasadas</dt><dd className={`text-2xl font-serif ${atrasadas ? 'text-critico' : 'text-navy'}`}>{atrasadas}</dd></div>
               <div><dt className="text-grafite-claro">Horas</dt><dd className="text-2xl font-serif text-navy">{horas.toLocaleString('pt-BR')}</dd></div>
+              {cronograma?.fimPrevisto && <div><dt className="text-grafite-claro">Conclusão prevista</dt><dd className={`text-2xl font-serif ${cronograma.atraso ? 'text-critico' : 'text-navy'}`} data-testid="fim-previsto">{formatarData(cronograma.fimPrevisto)}</dd></div>}
             </dl>
           </div>
+          {cronograma && cronograma.caminho.length > 0 && (
+            <p className="text-xs text-grafite mt-3" data-testid="caminho-critico">Caminho crítico ({cronograma.caminho.length} etapas{cronograma.atraso ? `, ${cronograma.atraso} dia(s) além do último prazo` : ', no prazo'}): {cronograma.caminho.map(id => titulo(id)).join(' → ')}. Etapas marcadas com ★ não podem atrasar sem atrasar o caso.</p>
+          )}
           {linkPortal && <p className="text-xs text-grafite mt-3" data-testid="link-portal">Link copiado. O cliente vê só as etapas e os honorários, sem login: <a className="underline text-navy break-all" href={linkPortal} target="_blank" rel="noreferrer">{linkPortal}</a></p>}
         </section>
 
@@ -214,13 +239,17 @@ export default function ProjetosPage() {
                   return (
                     <li key={t.id} draggable onDragStart={e => e.dataTransfer.setData('text/plain', t.id)} className={`bg-white p-3 shadow-sm border-l-4 ${COR_PRIORIDADE[t.prioridade]} cursor-grab`}>
                       {t.pai_id && <p className="text-[11px] text-grafite-claro flex items-center gap-1">{titulo(t.pai_id)} <ChevronRight size={10} aria-hidden="true" /></p>}
-                      <p className="text-sm text-navy font-medium">{t.nivel === 'subtarefa' ? '↳ ' : ''}{t.titulo}</p>
+                      <p className="text-sm text-navy font-medium">{critico.has(t.id) && <span title="Caminho crítico" className="text-dourado" data-testid="estrela-critico">★ </span>}{t.nivel === 'subtarefa' ? '↳ ' : ''}{t.titulo}</p>
+                      {t.depende_de && <p className="text-[11px] text-grafite-claro">depende de: {titulo(t.depende_de)}{cronograma?.fins[t.id] && t.situacao !== 'feito' && cronograma.fins[t.id] !== t.prazo ? ` · previsto ${formatarData(cronograma.fins[t.id])}` : ''}</p>}
                       <p className="text-xs text-grafite-claro mt-1">{nome(t.responsavel_id)}{t.prazo && <> · <span className={dias !== null && dias < 0 && t.situacao !== 'feito' ? 'text-critico' : ''}>{formatarData(t.prazo)}</span></>}{Number(t.horas) > 0 && ` · ${t.horas} h`}</p>
                       <div className="flex flex-wrap gap-1 mt-2">
                         <select aria-label={`Mover ${t.titulo}`} value={t.situacao} onChange={e => mover(t, e.target.value as Situacao)} className="text-xs border px-1 py-0.5">
                           {COLUNAS.map(x => <option key={x.valor} value={x.valor}>{x.rotulo}</option>)}
                         </select>
                         <button onClick={() => somarHoras(t)} className="text-xs underline text-navy">+ horas</button>
+                        {projeto && <select aria-label={`Depende de (${t.titulo})`} value={t.depende_de ?? ''} onChange={e => dependerDe(t, e.target.value)} className="text-xs border px-1 py-0.5 max-w-[150px]" data-testid="depende-de">
+                          <option value="">Não depende</option>{visiveis.filter(x => x.id !== t.id).map(x => <option key={x.id} value={x.id}>{x.titulo}</option>)}
+                        </select>}
                       </div>
                     </li>
                   )
