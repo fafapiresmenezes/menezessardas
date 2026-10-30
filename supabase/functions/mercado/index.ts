@@ -20,6 +20,26 @@ const AREAS: Record<string, { nome: string; tribunal: string; classes: string[] 
   compliance: { nome: 'Compliance (improbidade, TJRJ)', tribunal: 'tjrj', classes: ['Ação Civil de Improbidade Administrativa'] },
 }
 
+
+// Segunda fonte (Passo 01 do plano ferramenta por ferramenta): Justiça em Números 2026, base de dados aberta do CNJ
+// (arquivo JN_23-Jun-2026.csv, publicado em 30/06/2026). Casos novos por ano e tribunal, já consolidados pelo CNJ,
+// sem o problema de envio incompleto do DataJud. Índices: 0 conhecimento 1º grau não criminal; 1 juizados especiais
+// não criminais; 2 conhecimento 1º grau criminal; 3 execução fiscal; 4 execução de título extrajudicial.
+const JEN: Record<string, Record<string, number[]>> = {"TJRJ":{"2017":[470930,588599,90360,459334,30346],"2018":[468233,540554,105847,355531,25954],"2019":[483473,560827,102826,439548,24854],"2020":[365484,401295,98559,327841,23034],"2021":[474969,431719,114665,443857,27456],"2022":[572305,450826,123020,468574,32550],"2023":[591549,463995,137881,387893,34272],"2024":[615328,499205,151470,347254,32506],"2025":[607367,470320,141510,232801,30226]},"TRF2":{"2017":[43673,136464,10107,100319,7928],"2018":[45987,137483,14856,31554,18159],"2019":[64544,165780,11967,28322,7014],"2020":[43688,134893,1904,30113,4438],"2021":[55969,269958,2036,29394,4633],"2022":[55018,175016,1989,29716,6324],"2023":[62393,256440,2391,38468,6346],"2024":[53971,197122,2290,28310,8370],"2025":[59555,220338,2435,38529,7289]},"TRT1":{"2017":[276537,0,0,740,348],"2018":[178901,0,0,618,451],"2019":[177347,0,0,80,474],"2020":[134661,0,0,59,183],"2021":[141684,0,0,187,144],"2022":[143512,0,0,36,139],"2023":[160037,0,0,23,127],"2024":[190617,0,0,20,151],"2025":[216901,0,0,140,297]}}
+const JEN_FONTE = 'Justiça em Números 2026 (CNJ), base de dados aberta de 23/06/2026'
+const JEN_POR_AREA: Record<string, { trib: string; i: number; indicador: string }> = {
+  imobiliario: { trib: 'TJRJ', i: 0, indicador: 'casos novos de conhecimento não criminais, 1º grau' },
+  civel: { trib: 'TJRJ', i: 0, indicador: 'casos novos de conhecimento não criminais, 1º grau' },
+  familia: { trib: 'TJRJ', i: 0, indicador: 'casos novos de conhecimento não criminais, 1º grau' },
+  empresarial: { trib: 'TJRJ', i: 0, indicador: 'casos novos de conhecimento não criminais, 1º grau' },
+  compliance: { trib: 'TJRJ', i: 0, indicador: 'casos novos de conhecimento não criminais, 1º grau' },
+  consumidor: { trib: 'TJRJ', i: 1, indicador: 'casos novos nos juizados especiais cíveis' },
+  penal: { trib: 'TJRJ', i: 2, indicador: 'casos novos de conhecimento criminais, 1º grau' },
+  tributario: { trib: 'TJRJ', i: 3, indicador: 'casos novos de execução fiscal, 1º grau' },
+  trabalhista: { trib: 'TRT1', i: 0, indicador: 'casos novos de conhecimento, 1º grau' },
+  previdenciario: { trib: 'TRF2', i: 1, indicador: 'casos novos nos juizados especiais federais' },
+}
+
 const cors = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -51,7 +71,7 @@ Deno.serve(async (req) => {
   const cfg = AREAS[area]
   if (!cfg) return json({ erro: 'Área não coberta.' }, 400)
   const sb = servico()
-  const chave = `mercado3|${area}`
+  const chave = `mercado4|${area}`
   const { data: guardado } = await sb.from('jurimetria_cache').select('resultado,criado_em').eq('chave', chave).maybeSingle()
   if (guardado?.resultado?.previsao && Date.now() - new Date(guardado.criado_em).getTime() < CACHE_DIAS * 86400000) return json({ ...guardado.resultado, doCache: true })
 
@@ -97,6 +117,23 @@ Deno.serve(async (req) => {
     // Poucos anos ou margem maior que metade da previsão = baixa, mesmo com R² alto.
     resultado.confianca = total < 300 || pontos.length < 5 || t.margem > 0.5 * t.prev ? 'baixa' : t.r2 >= 0.7 ? 'alta' : t.r2 >= 0.4 ? 'media' : 'baixa'
   } else resultado.confianca = 'insuficiente'
+  // Segunda fonte: série consolidada do Justiça em Números para o mesmo tribunal; tendência com o mesmo método.
+  const jcfg = JEN_POR_AREA[area]
+  if (jcfg && JEN[jcfg.trib]) {
+    const serie = Object.entries(JEN[jcfg.trib]).map(([ano, v]) => ({ ano: Number(ano), n: v[jcfg.i] })).filter(p => p.ano >= 2019 && p.n > 0)
+    if (serie.length >= 4) {
+      const alvo = ultimoAno + 3
+      const t = tendencia(serie, alvo)
+      const base = tendencia(serie, serie[serie.length - 1].ano).prev
+      const variacao = base ? Math.round(((t.prev - base) / base) * 100) : null
+      const conf = t.margem > 0.5 * t.prev ? 'baixa' : t.r2 >= 0.7 ? 'alta' : t.r2 >= 0.4 ? 'media' : 'baixa'
+      const v1 = (resultado.previsao as { variacao: number | null } | undefined)?.variacao ?? null
+      const concordam = v1 !== null && variacao !== null && Math.sign(v1) === Math.sign(variacao)
+      resultado.jen = { fonte: JEN_FONTE, tribunal: jcfg.trib, indicador: jcfg.indicador, porAno: serie, previsao: { ano: alvo, processos: Math.round(t.prev), margem: Math.round(t.margem), variacao, r2: Math.round(t.r2 * 100) / 100 }, confianca: conf, concordam }
+      // Duas fontes apontando a mesma direção elevam a confiança combinada; fontes divergentes a rebaixam.
+      resultado.confiancaCombinada = concordam ? (conf === 'alta' || resultado.confianca === 'alta' ? 'alta' : 'media') : v1 === null ? conf : 'baixa'
+    }
+  }
   // Resultado vazio (CNJ sobrecarregado ou classe sem registros) não vai para o cache: tenta de novo na próxima visita.
   if (pontos.length >= 3) await sb.from('jurimetria_cache').upsert({ chave, resultado, criado_em: new Date().toISOString() })
   return json(resultado)
