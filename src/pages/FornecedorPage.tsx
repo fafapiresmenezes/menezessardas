@@ -19,6 +19,7 @@ import {
   type Fornecedor,
   type ResultadoLista,
   type SLA,
+  slaCumprido, rotuloOcorrencia, type Ocorrencia, type TipoOcorrencia,
 } from '@/lib/fornecedores'
 import { ArrowLeft, ExternalLink, Search, Plus, Check, X } from 'lucide-react'
 
@@ -38,6 +39,10 @@ export default function FornecedorPage() {
 
   // Formulários
   const [certNome, setCertNome] = useState(CERTIDOES_PADRAO[0])
+  // Passo 11: ocorrências por fornecedor.
+  const [ocTipo, setOcTipo] = useState<TipoOcorrencia>('atraso')
+  const [ocData, setOcData] = useState(new Date().toISOString().slice(0, 10))
+  const [ocDescricao, setOcDescricao] = useState('')
   const [certValidade, setCertValidade] = useState('')
   const [slaDesc, setSlaDesc] = useState('')
   const [slaMeta, setSlaMeta] = useState('')
@@ -260,6 +265,50 @@ export default function FornecedorPage() {
               <input id="cert-val" type="date" className={classeCampo} value={certValidade} onChange={e => setCertValidade(e.target.value)} />
             </Campo>
             <button onClick={addCertidao} className="min-h-[44px] inline-flex items-center gap-2 bg-navy hover:bg-navy-700 text-white px-5 rounded-sm text-sm uppercase tracking-wider">
+              <Plus size={16} aria-hidden="true" /> Registrar
+            </button>
+          </div>
+        </section>
+
+        {/* Ocorrências (Passo 11) */}
+        <section className={secao} aria-labelledby="ocorrencias" data-testid="ocorrencias">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <h3 id="ocorrencias" className="text-xl">Ocorrências e SLA cumprido</h3>
+            {(() => { const r = slaCumprido(f); return r.pct === null
+              ? <SeloSituacao situacao="sem_prazo" texto="Sem medição de SLA" />
+              : <span data-testid="sla-pct"><SeloSituacao situacao={r.nivel} texto={`${r.pct}% de SLA cumprido`} /></span> })()}
+          </div>
+          <p className="text-sm text-grafite-claro mt-1">% = medições que atingem a meta nos últimos 6 meses ÷ medições feitas, menos 5 pontos por ocorrência negativa sem solução nos últimos 90 dias. Verde ≥ 90%, amarelo 70–89%, vermelho abaixo de 70%.</p>
+          <ul className="mt-4 divide-y divide-navy/10 text-sm" aria-label="Ocorrências registradas">
+            {(f.ocorrencias ?? []).length === 0 && <li className="py-2 text-grafite-claro">Nenhuma ocorrência registrada.</li>}
+            {[...(f.ocorrencias ?? [])].sort((a, b) => b.data.localeCompare(a.data)).map(o => (
+              <li key={o.id} className="py-2 flex flex-wrap items-center gap-2" data-testid="ocorrencia">
+                <span className="text-grafite-claro">{formatarData(o.data)}</span>
+                <span className={`px-2 py-0.5 text-xs ${o.tipo === 'elogio' ? 'bg-regularFundo text-regular' : o.resolvidaEm ? 'bg-pergaminho text-grafite' : 'bg-atencaoFundo text-atencao'}`}>{rotuloOcorrencia[o.tipo]}{o.resolvidaEm && ` · resolvida em ${formatarData(o.resolvidaEm)}`}</span>
+                <span className="flex-1 min-w-[12rem]">{o.descricao}</span>
+                {o.tipo !== 'elogio' && !o.resolvidaEm && (
+                  <button type="button" className="underline text-navy text-xs" onClick={() => salvar({ ...f, ocorrencias: (f.ocorrencias ?? []).map(x => x.id === o.id ? { ...x, resolvidaEm: new Date().toISOString().slice(0, 10) } : x) }, `Ocorrência resolvida: ${f.nome} — ${o.descricao.slice(0, 60)}`, 'Ocorrência marcada como resolvida.')}>marcar como resolvida</button>
+                )}
+              </li>
+            ))}
+          </ul>
+          <div className="grid gap-4 md:grid-cols-[160px_150px_1fr_auto] items-end mt-4">
+            <Campo id="oc-tipo" rotulo="Tipo">
+              <select id="oc-tipo" className={classeCampo} value={ocTipo} onChange={e => setOcTipo(e.target.value as TipoOcorrencia)}>
+                {(Object.keys(rotuloOcorrencia) as TipoOcorrencia[]).map(t => <option key={t} value={t}>{rotuloOcorrencia[t]}</option>)}
+              </select>
+            </Campo>
+            <Campo id="oc-data" rotulo="Data">
+              <input id="oc-data" type="date" className={classeCampo} value={ocData} onChange={e => setOcData(e.target.value)} />
+            </Campo>
+            <Campo id="oc-desc" rotulo="O que aconteceu">
+              <input id="oc-desc" className={classeCampo} value={ocDescricao} onChange={e => setOcDescricao(e.target.value)} placeholder="ex.: vistoria entregue 3 dias depois do combinado" />
+            </Campo>
+            <button data-testid="registrar-ocorrencia" disabled={ocDescricao.trim().length < 5} onClick={() => {
+              const o: Ocorrencia = { id: crypto.randomUUID(), data: ocData, tipo: ocTipo, descricao: ocDescricao.trim() }
+              salvar({ ...f, ocorrencias: [...(f.ocorrencias ?? []), o] }, `Ocorrência registrada: ${f.nome} — ${rotuloOcorrencia[ocTipo]}`, 'Ocorrência registrada.')
+              setOcDescricao('')
+            }} className="min-h-[44px] inline-flex items-center gap-2 bg-navy hover:bg-navy-700 text-white px-5 rounded-sm text-sm uppercase tracking-wider disabled:opacity-50">
               <Plus size={16} aria-hidden="true" /> Registrar
             </button>
           </div>

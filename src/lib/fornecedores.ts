@@ -55,6 +55,17 @@ export interface SLA {
   medicoes: Medicao[]
 }
 
+/** Passo 11: ocorrência registrada pelo escritório sobre o fornecedor (atraso, falha, reclamação ou elogio). */
+export type TipoOcorrencia = 'atraso' | 'falha' | 'reclamacao' | 'elogio'
+export interface Ocorrencia {
+  id: string
+  data: string
+  tipo: TipoOcorrencia
+  descricao: string
+  resolvidaEm?: string
+}
+export const rotuloOcorrencia: Record<TipoOcorrencia, string> = { atraso: 'Atraso', falha: 'Falha no serviço', reclamacao: 'Reclamação', elogio: 'Elogio' }
+
 export interface Fornecedor {
   id: string
   nome: string
@@ -64,7 +75,24 @@ export interface Fornecedor {
   kyc: Kyc
   certidoes: Certidao[]
   slas: SLA[]
+  ocorrencias?: Ocorrencia[]
   notas: string
+}
+
+/** % de SLA cumprido nos últimos 6 meses: medições que atingem a meta / medições feitas,
+ *  menos 5 pontos por ocorrência negativa (atraso, falha, reclamação) sem solução nos últimos 90 dias.
+ *  null quando não há medição. Semáforo: ≥ 90 verde, 70–89 amarelo, < 70 vermelho. */
+export function slaCumprido(f: Fornecedor): { pct: number | null; medicoes: number; ok: number; penalidade: number; nivel: 'regular' | 'atencao' | 'critico' | 'sem_prazo' } {
+  const limite = new Date(); limite.setMonth(limite.getMonth() - 6)
+  const mesLimite = limite.toISOString().slice(0, 7)
+  let medicoes = 0, ok = 0
+  for (const s of f.slas) for (const m of s.medicoes) if (m.mes >= mesLimite) { medicoes++; if (cumpreMeta(s, m.valor)) ok++ }
+  const d90 = new Date(); d90.setDate(d90.getDate() - 90)
+  const abertas = (f.ocorrencias ?? []).filter(o => o.tipo !== 'elogio' && !o.resolvidaEm && o.data >= d90.toISOString().slice(0, 10)).length
+  const penalidade = abertas * 5
+  if (!medicoes) return { pct: null, medicoes, ok, penalidade, nivel: 'sem_prazo' }
+  const pct = Math.max(0, Math.round((ok / medicoes) * 100) - penalidade)
+  return { pct, medicoes, ok, penalidade, nivel: pct >= 90 ? 'regular' : pct >= 70 ? 'atencao' : 'critico' }
 }
 
 export const CERTIDOES_PADRAO = [

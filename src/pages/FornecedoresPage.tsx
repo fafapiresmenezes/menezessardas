@@ -16,6 +16,7 @@ import {
   statusSla,
   type CategoriaFornecedor,
   type Fornecedor,
+  slaCumprido,
 } from '@/lib/fornecedores'
 import { Plus, AlertOctagon, AlertTriangle, ShieldCheck, Gauge } from 'lucide-react'
 
@@ -175,6 +176,7 @@ export default function FornecedoresPage() {
               {lista.map(f => {
                 const kyc = resumoKyc(f)
                 const descumpridos = f.slas.filter(s => statusSla(s).status === 'descumprido').length
+                const sla = slaCumprido(f)
                 return (
                   <button
                     key={f.id}
@@ -198,11 +200,12 @@ export default function FornecedoresPage() {
                       </span>
                       {f.slas.length === 0 ? (
                         <SeloSituacao situacao="sem_prazo" texto="Sem metas" />
-                      ) : descumpridos > 0 ? (
-                        <SeloSituacao situacao="critico" texto={`${descumpridos} descumprido(s)`} />
+                      ) : sla.pct === null ? (
+                        <SeloSituacao situacao="sem_prazo" texto="Sem medição" />
                       ) : (
-                        <SeloSituacao situacao="regular" texto="Metas cumpridas" />
+                        <span data-testid={`sla-${f.id}`}><SeloSituacao situacao={sla.nivel} texto={`${sla.pct}% cumprido`} /></span>
                       )}
+                      {descumpridos > 0 && <span className="text-xs text-critico">{descumpridos} meta(s) descumprida(s)</span>}
                     </div>
                   </button>
                 )
