@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
-import { UserCheck } from 'lucide-react'
+import { UserCheck, History, RefreshCw } from 'lucide-react'
 
 type Certidao = { emissor: string; cadastro: string; situacao: string; descricao: string }
 type Resultado = {
@@ -13,7 +13,14 @@ type Resultado = {
   conflitos: { onde: string; detalhe: string }[]
   fontes: string[]
   consultadoEm: string
+  mudou?: boolean
+  riscoAnterior?: string | null
+  proximaEm?: string
 }
+// Passo 26: histórico de checagens gravado no banco; reconsulta automática a cada 90 dias.
+type Historico = { id: number; cnpj: string; nome: string | null; risco: string; alertas: string[]; consultado_em: string; automatica: boolean; risco_anterior: string | null; mudou: boolean }
+const fmtCnpj = (c: string) => c.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
+const proxima = (iso: string) => new Date(new Date(iso).getTime() + 90 * 86400000)
 
 const COR = { baixo: 'bg-green-50 border-green-700 text-green-800', alto: 'bg-criticoFundo border-critico text-critico', 'a conferir': 'bg-amber-50 border-amber-600 text-amber-800' }
 
@@ -21,12 +28,25 @@ const COR = { baixo: 'bg-green-50 border-green-700 text-green-800', alto: 'bg-cr
 export default function KycPage() {
   const [cnpj, setCnpj] = useState('')
   const [estado, setEstado] = useState<{ carregando?: boolean; erro?: string; r?: Resultado }>({})
+  const [historico, setHistorico] = useState<Historico[]>([])
+  const [msgRecon, setMsgRecon] = useState('')
+  const carregarHistorico = () => supabase.from('checagens_kyc').select('id,cnpj,nome,risco,alertas,consultado_em,automatica,risco_anterior,mudou').order('consultado_em', { ascending: false }).limit(50)
+    .then(({ data }) => setHistorico((data ?? []) as Historico[]))
+  useEffect(() => { carregarHistorico() }, [])
+  const reconsultar = async () => {
+    setMsgRecon('Reconsultando as contrapartes já checadas…')
+    const { data, error } = await supabase.functions.invoke('kyc', { body: { reconsultar: true } })
+    if (error || data?.erro) return setMsgRecon(`Não foi possível reconsultar: ${data?.erro ?? error?.message}`)
+    setMsgRecon(`${data.reconsultados} contraparte(s) reconsultada(s), ${data.mudancas} mudança(s) de status.`)
+    carregarHistorico()
+  }
   const consultar = async () => {
     setEstado({ carregando: true })
     const { data, error } = await supabase.functions.invoke('kyc', { body: { cnpj } })
     const corpo = error ? await (error as { context?: Response }).context?.json?.().catch(() => null) : data
     if (error || corpo?.erro) return setEstado({ erro: corpo?.erro ?? 'A consulta falhou. Tente de novo.' })
     setEstado({ r: data })
+    carregarHistorico()
   }
   const r = estado.r
   return (
@@ -71,9 +91,33 @@ export default function KycPage() {
                 ? <ul className="text-sm list-disc pl-5">{r.conflitos.map((c, i) => <li key={i}>{c.onde}: {c.detalhe}</li>)}</ul>
                 : <p className="text-sm">A empresa não aparece em contratos nem fornecedores do escritório.</p>}
             </div>
-            <p className="text-xs text-grafite-claro">Fontes: {r.fontes.join('; ')}. Consultado em {new Date(r.consultadoEm).toLocaleString('pt-BR')}.</p>
+            {r.mudou && <p role="alert" className="p-3 border-l-4 bg-atencaoFundo border-atencao text-sm" data-testid="kyc-mudou">O status mudou desde a última checagem: era <strong>{r.riscoAnterior}</strong>, agora é <strong>{r.risco}</strong>.</p>}
+            <p className="text-xs text-grafite-claro">Fontes: {r.fontes.join('; ')}. Consultado em {new Date(r.consultadoEm).toLocaleString('pt-BR')}.{r.proximaEm && ` Reconsulta automática em ${new Date(r.proximaEm).toLocaleDateString('pt-BR')}.`}</p>
           </section>
         )}
+        <section className="bg-white shadow-sm p-6" data-testid="kyc-historico">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="font-serif text-xl flex items-center gap-2"><History className="w-5 h-5 text-dourado" aria-hidden />Histórico de checagens</h2>
+            <button type="button" onClick={reconsultar} className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2" data-testid="kyc-reconsultar"><RefreshCw className="w-4 h-4" aria-hidden />Reconsultar agora</button>
+          </div>
+          <p className="text-sm text-grafite-claro mt-1">Cada checagem fica guardada com data e resultado. O robô reconsulta cada contraparte 90 dias depois da última checagem e avisa em Alertas quando o status muda.</p>
+          {msgRecon && <p role="status" className="text-sm mt-2" data-testid="kyc-msg-recon">{msgRecon}</p>}
+          {historico.length === 0 ? <p className="text-sm text-grafite-claro mt-3" data-testid="kyc-historico-vazio">Nenhuma checagem guardada ainda.</p> : (
+            <table className="w-full text-sm mt-3">
+              <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite-claro"><th className="py-1">Data</th><th>Contraparte</th><th>Risco</th><th>Próxima reconsulta</th></tr></thead>
+              <tbody className="divide-y divide-navy/10">
+                {historico.map(h => (
+                  <tr key={h.id} data-testid="kyc-item" className={h.mudou ? 'bg-atencaoFundo' : ''}>
+                    <td className="py-2">{new Date(h.consultado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}{h.automatica && <span className="ml-1 text-xs text-grafite-claro">(robô)</span>}</td>
+                    <td><button type="button" onClick={() => setCnpj(fmtCnpj(h.cnpj))} className="underline text-navy text-left">{h.nome ?? fmtCnpj(h.cnpj)}</button></td>
+                    <td data-testid="kyc-item-risco">{h.risco}{h.mudou && <span className="ml-1 text-xs text-atencao">mudou (era {h.risco_anterior})</span>}</td>
+                    <td>{proxima(h.consultado_em).toLocaleDateString('pt-BR')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </section>
       </div>
     </Layout>
   )

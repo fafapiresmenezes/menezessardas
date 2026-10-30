@@ -28,6 +28,7 @@ const hexDe = (b: ArrayBuffer) => [...new Uint8Array(b)].map(x => x.toString(16)
 
 // Passo 20: aderência às ações do Consultor da semana, por nível (RPC aderencia_consultores).
 const NOME_NIVEL: Record<string, string> = { nivel_socio_gestor: 'Sócia gestora', nivel_senior: 'Advogado sênior', nivel_pleno: 'Advogado pleno', nivel_junior: 'Advogado júnior', nivel_estagiario: 'Estagiário', nivel_secretaria: 'Secretaria', nivel_financeiro: 'Financeiro', nivel_ti: 'TI', nivel_marketing: 'Marketing', nivel_rh: 'Pessoas', nivel_compliance: 'Compliance', nivel_cliente: 'Cliente', nivel_controladoria: 'Controladoria', nivel_recepcao: 'Recepção' }
+type TaxaUtil = { mes: string; respostas: number; avaliadas: number; uteis: number; pct: number | null }
 type Aderencia = { nivel: string; total: number; feitas: number; aderencia: number | null; gerado_em: string }
 
 const moeda = (v: number) =>
@@ -115,6 +116,7 @@ export default function IndicadoresPage() {
   const [carregandoResumo, setCarregandoResumo] = useState(false)
   const [erroResumo, setErroResumo] = useState('')
   const [aderencia, setAderencia] = useState<Aderencia[]>([])
+  const [taxaUtil, setTaxaUtil] = useState<TaxaUtil[]>([])
   const [revisoes, setRevisoes] = useState<RevisaoOkr[]>([])
   const [ata, setAta] = useState('')
   const [msgAta, setMsgAta] = useState('')
@@ -142,7 +144,7 @@ export default function IndicadoresPage() {
   useEffect(() => {
     repositorio.listarContratos().then(setContratos)
     carregarResumoDiario()
-    if (supabaseConfigurado) { supabase.rpc('aderencia_consultores').then(r => setAderencia((r.data as Aderencia[]) ?? [])); carregarRevisoes() }
+    if (supabaseConfigurado) { supabase.rpc('aderencia_consultores').then(r => setAderencia((r.data as Aderencia[]) ?? [])); supabase.rpc('taxa_util_assistente').then(r => setTaxaUtil((r.data as TaxaUtil[]) ?? [])); carregarRevisoes() }
   }, [])
 
   const carregarResumoDiario = async () => {
@@ -278,6 +280,25 @@ export default function IndicadoresPage() {
                 ))}
               </ul>
             )}
+          </section>
+        )}
+
+        {supabaseConfigurado && (
+          <section className="bg-white p-6 shadow-sm" aria-labelledby="t-util" data-testid="utilidade-assistente">
+            <h2 id="t-util" className="text-xl mb-1 flex items-center gap-2"><Sparkles className="w-5 h-5 text-dourado" aria-hidden />Utilidade das respostas do Assistente</h2>
+            <p className="text-sm text-grafite-claro mb-4">Taxa mensal de respostas avaliadas como úteis pela equipe (botões Útil / Não útil em cada resposta).</p>
+            <table className="w-full text-sm">
+              <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite-claro"><th className="py-1">Mês</th><th>Respostas</th><th>Avaliadas</th><th>Úteis</th><th>Taxa</th></tr></thead>
+              <tbody className="divide-y divide-navy/10">
+                {taxaUtil.map(t => (
+                  <tr key={t.mes} data-testid={`util-${t.mes}`}>
+                    <td className="py-2">{new Date(t.mes + '-15').toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' })}</td>
+                    <td>{t.respostas}</td><td>{t.avaliadas}</td><td>{t.uteis}</td>
+                    <td><strong data-testid="util-pct" className={t.pct === null ? 'text-grafite-claro' : t.pct >= 70 ? 'text-regular' : t.pct >= 40 ? 'text-atencao' : 'text-critico'}>{t.pct === null ? 'sem avaliações' : `${t.pct}%`}</strong></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </section>
         )}
 

@@ -16,6 +16,13 @@ export default function AlertasPage() {
   // Passo 06: avisos de 80%/100% do teto mensal de IA (gravados pelo verificador de hora em hora).
   type AvisoTeto = { id: number; mes: string; nivel: number; pct: number; gasto_brl: number; teto_brl: number; criado_em: string; email_enviado_em: string | null }
   const [avisosTeto, setAvisosTeto] = useState<AvisoTeto[]>([])
+  // Passo 26: contrapartes cuja checagem KYC mudou de status na reconsulta e ainda não foi vista.
+  type MudancaKyc = { id: number; cnpj: string; nome: string | null; risco: string; risco_anterior: string | null; consultado_em: string }
+  const [mudancasKyc, setMudancasKyc] = useState<MudancaKyc[]>([])
+  const carregarKyc = () => supabase.from('checagens_kyc').select('id,cnpj,nome,risco,risco_anterior,consultado_em').eq('mudou', true).is('visto_em', null).order('consultado_em', { ascending: false }).limit(20)
+    .then(({ data }) => setMudancasKyc((data ?? []) as MudancaKyc[]))
+  useEffect(() => { carregarKyc() }, [])
+  const verKyc = async (id: number) => { await supabase.from('checagens_kyc').update({ visto_em: new Date().toISOString() }).eq('id', id); carregarKyc() }
   useEffect(() => {
     const mes = new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }).slice(0, 7)
     supabase.from('avisos_teto_ia').select('*').eq('mes', mes).order('nivel', { ascending: false }).limit(2)
@@ -73,6 +80,23 @@ export default function AlertasPage() {
               {avisosTeto[0].email_enviado_em ? ' Administradores avisados por e-mail.' : ' E-mail aos administradores ainda não enviado.'}
             </p>
             <button type="button" onClick={() => navigate('/consumo')} className="mt-2 underline text-navy text-sm">Abrir Consumo</button>
+          </section>
+        )}
+        {mudancasKyc.length > 0 && (
+          <section role="alert" className="shadow-sm border-l-4 border-atencao bg-atencaoFundo p-5" data-testid="kyc-mudancas">
+            <h2 className="font-serif text-lg">Contraparte mudou de status na checagem KYC</h2>
+            <p className="text-sm mt-1">A reconsulta automática (a cada 90 dias) encontrou mudança no risco destas empresas. Confira antes de seguir com o contrato.</p>
+            <ul className="mt-3 divide-y divide-navy/10 text-sm">
+              {mudancasKyc.map(m => (
+                <li key={m.id} className="py-2 flex flex-wrap items-center gap-2" data-testid="kyc-mudanca">
+                  <span className="text-grafite-claro">{formatarData(m.consultado_em.slice(0, 10))}</span>
+                  <span className="font-medium text-navy">{m.nome ?? m.cnpj}</span>
+                  <span>era <strong>{m.risco_anterior}</strong>, agora <strong>{m.risco}</strong></span>
+                  <button type="button" onClick={() => navigate('/kyc')} className="ml-auto underline text-navy">abrir KYC</button>
+                  <button type="button" onClick={() => verKyc(m.id)} className="underline text-navy" data-testid="kyc-visto">marcar como visto</button>
+                </li>
+              ))}
+            </ul>
           </section>
         )}
         {novidades.length > 0 && (

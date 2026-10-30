@@ -15,7 +15,8 @@ import {
   type Modo,
 } from '@/lib/assistente'
 import PerfilJulgador from '@/components/PerfilJulgador'
-import { ExternalLink, Scale, Send, Trash2, Copy } from 'lucide-react'
+import { ExternalLink, Scale, Send, Trash2, Copy, ThumbsUp, ThumbsDown } from 'lucide-react'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
 
 const EXEMPLOS = [
   'O locatário de loja com contrato de 5 anos tem direito à renovação? Qual o prazo para a ação?',
@@ -104,6 +105,18 @@ export default function AssistentePage() {
   const [historico, setHistorico] = useState<Consulta[]>([])
   const [ocupado, setOcupado] = useState(false)
   const [erro, setErro] = useState('')
+  // Passo 27: avaliação útil / não útil de cada resposta, gravada em avaliacoes_assistente (taxa mensal em Indicadores).
+  const [avaliacoes, setAvaliacoes] = useState<Record<string, boolean>>({})
+  useEffect(() => {
+    if (!supabaseConfigurado) return
+    supabase.from('avaliacoes_assistente').select('consulta_id,util').then(({ data }) => setAvaliacoes(Object.fromEntries((data ?? []).map(a => [a.consulta_id, a.util]))))
+  }, [])
+  const avaliar = async (id: string, util: boolean) => {
+    setAvaliacoes(a => ({ ...a, [id]: util }))
+    if (!supabaseConfigurado) return
+    const { data: u } = await supabase.auth.getUser()
+    await supabase.from('avaliacoes_assistente').upsert({ consulta_id: id, usuario_id: u.user?.id, util }, { onConflict: 'consulta_id,usuario_id' })
+  }
   const campo = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
@@ -251,6 +264,12 @@ export default function AssistentePage() {
             {c.matriz ? <MatrizCaminhos m={c.matriz} /> : (
               <div className="text-sm text-grafite mt-4 space-y-2" dangerouslySetInnerHTML={{ __html: render(c.resposta) }} />
             )}
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-sm" data-testid={`avaliacao-${c.id}`}>
+              <span className="text-grafite-claro">Esta resposta foi útil?</span>
+              <button type="button" onClick={() => avaliar(c.id, true)} aria-pressed={avaliacoes[c.id] === true} data-testid="avaliar-util" className={`min-h-[44px] px-3 border inline-flex items-center gap-1 ${avaliacoes[c.id] === true ? 'bg-navy text-white' : 'border-navy/20'}`}><ThumbsUp size={14} aria-hidden="true" /> Útil</button>
+              <button type="button" onClick={() => avaliar(c.id, false)} aria-pressed={avaliacoes[c.id] === false} data-testid="avaliar-inutil" className={`min-h-[44px] px-3 border inline-flex items-center gap-1 ${avaliacoes[c.id] === false ? 'bg-navy text-white' : 'border-navy/20'}`}><ThumbsDown size={14} aria-hidden="true" /> Não útil</button>
+              {avaliacoes[c.id] !== undefined && <span className="text-grafite-claro" data-testid="avaliacao-ok">Obrigado. Sua avaliação entra na taxa mensal em Indicadores.</span>}
+            </div>
             {c.modo === 'redigir' && (
               <button onClick={() => navigator.clipboard.writeText(c.resposta)} className="mt-3 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
                 <Copy size={16} aria-hidden="true" /> Copiar texto da peça
