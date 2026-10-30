@@ -100,6 +100,7 @@ export default function AssistentePage() {
   const [pergunta, setPergunta] = useState('')
   const [modo, setModo] = useState<Modo>('responder')
   const [contexto, setContexto] = useState('')
+  const [usarEstilo, setUsarEstilo] = useState(true)
   const [historico, setHistorico] = useState<Consulta[]>([])
   const [ocupado, setOcupado] = useState(false)
   const [erro, setErro] = useState('')
@@ -129,7 +130,7 @@ export default function AssistentePage() {
     setOcupado(true)
     setErro('')
     try {
-      const c = await perguntar(p, especialidade, historico.filter(h => h.especialidade === especialidade && h.modo === 'responder'), modo, contexto)
+      const c = await perguntar(p, especialidade, historico.filter(h => h.especialidade === especialidade && h.modo === 'responder'), modo, contexto, usarEstilo)
       setHistorico(h => [c, ...h])
       setPergunta('')
     } catch (e) {
@@ -192,6 +193,12 @@ export default function AssistentePage() {
               <textarea id="contexto" value={contexto} onChange={e => setContexto(e.target.value)} rows={3}
                 placeholder="Partes, datas, valores, o que já aconteceu. Quanto mais fatos, melhor a peça ou a matriz."
                 className="w-full border border-navy/15 p-3 text-sm focus:outline-none focus:border-dourado" />
+              {modo === 'redigir' && (
+                <label className="flex items-center gap-2 mt-3 text-sm">
+                  <input type="checkbox" checked={usarEstilo} onChange={e => setUsarEstilo(e.target.checked)} data-testid="usar-estilo" />
+                  Redigir no meu estilo de escrita (peças enviadas em Configurações)
+                </label>
+              )}
             </>
           )}
           <div className="flex flex-wrap items-center gap-2 mt-3">

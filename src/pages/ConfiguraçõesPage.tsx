@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import DoisFatores from '../components/DoisFatores'
+import EstiloEscrita from '../components/EstiloEscrita'
 import AvaliacaoSUS from '../components/AvaliacaoSUS'
 import Layout from '@/components/Layout'
 import { Save, User, Bell, Sparkles, Eye, EyeOff, KeyRound, Mail } from 'lucide-react'
@@ -183,6 +184,7 @@ export default function ConfiguraçõesPage() {
       <SecaoSenha />
       <DoisFatores />
       <SecaoChaveIA />
+      <EstiloEscrita />
       <SecaoEmail />
       <SecaoEscavador />
       <SecaoPix />

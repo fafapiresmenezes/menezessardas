@@ -116,7 +116,7 @@ export async function apagarConsulta(id: string) {
 }
 
 /** Pergunta ao agente da especialidade; a lei é lida ao vivo no Planalto pelo servidor. */
-export async function perguntar(pergunta: string, especialidade: Especialidade, historico: Consulta[], modo: Modo = 'responder', contexto = ''): Promise<Consulta> {
+export async function perguntar(pergunta: string, especialidade: Especialidade, historico: Consulta[], modo: Modo = 'responder', contexto = '', estilo = true): Promise<Consulta> {
   if (!supabaseConfigurado) {
     const c: Consulta = {
       id: crypto.randomUUID(), especialidade, modo, pergunta, criadoEm: new Date().toISOString(),
@@ -132,7 +132,7 @@ export async function perguntar(pergunta: string, especialidade: Especialidade, 
     { papel: 'assistente', texto: h.resposta },
   ])
   const { data, error } = await supabase.functions.invoke('assistente-juridico', {
-    body: { pergunta, especialidade, historico: contextoConversa, modo, contexto },
+    body: { pergunta, especialidade, historico: contextoConversa, modo, contexto, estilo },
   })
   if (error) throw new Error(error.message)
   if (data?.erro) throw new Error(data.erro)

@@ -396,9 +396,25 @@ Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"
       dados = d
       texto = `${d.sintese}\n\n**Recomendado:** ${d.caminhos[d.recomendado]?.nome ?? d.caminhos[0]?.nome}. ${d.porque}`
     } else {
+      // Estilo de escrita próprio: até 10 peças enviadas pelo usuário em Configurações (pedido de M, 30/10/2026).
+      let estiloProprio = ''
+      if (modo === 'redigir' && usuario && corpo.estilo !== false) {
+        try {
+          const { data: pecas } = await servico().from('estilos_escrita').select('titulo, texto').eq('usuario_id', usuario).order('criado_em').limit(10)
+          if (pecas && pecas.length) {
+            let total = 0
+            const amostras: string[] = []
+            for (const p of pecas as { titulo: string; texto: string }[]) {
+              const t = p.texto.slice(0, Math.max(0, 70000 - total)); if (!t) break
+              total += t.length; amostras.push(`### ${p.titulo}\n${t}`)
+            }
+            estiloProprio = `\n\nESTILO DE ESCRITA DO AUTOR (${amostras.length} peças de referência). Imite fielmente vocabulário, extensão das frases, forma de abrir e fechar, tom, modo de numerar e de citar a lei. Nunca copie trechos factuais das amostras; use-as só como modelo de forma.\n${amostras.join('\n\n')}`
+          }
+        } catch { /* sem estilo, segue padrão */ }
+      }
       const sistema = modo === 'redigir'
         ? `${regrasComuns}
-Redija a peça ou o contrato pedido, completo e pronto para revisão: título; qualificação das partes com [campos entre colchetes] para o que faltar; cláusulas ou tópicos numerados; fundamentação legal embutida no texto (artigo e lei); pedidos ou cláusulas finais; local, data e assinatura. Use o padrão forense brasileiro e linguagem clara. Ao final, acrescente uma seção "Pontos a conferir antes de usar" com o que depende de fatos ou documentos.`
+Redija a peça ou o contrato pedido, completo e pronto para revisão: título; qualificação das partes com [campos entre colchetes] para o que faltar; cláusulas ou tópicos numerados; fundamentação legal embutida no texto (artigo e lei); pedidos ou cláusulas finais; local, data e assinatura. Use o padrão forense brasileiro e linguagem clara. Ao final, acrescente uma seção "Pontos a conferir antes de usar" com o que depende de fatos ou documentos.${estiloProprio}`
         : `${regrasComuns}
 Estrutura: resposta direta em 1–2 frases; fundamentação com os artigos; riscos ou exceções (inclusive zonas cinzentas e divergências); próximos passos práticos. Títulos curtos em negrito e listas. Termine com "Fontes consultadas: " e os nomes das leis usadas.`
       const resposta = await anthropic(chave, { model: MODELO_RESPOSTA, max_tokens: modo === 'redigir' ? 12000 : 6000, system: sistema, messages: mensagens }, usuario)
