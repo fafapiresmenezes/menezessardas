@@ -12,11 +12,18 @@ type Etapa = { titulo: string; situacao: string; prazo: string | null }
 type Caso = { titulo: string; cliente: string | null; area: string | null; numero_processo: string | null; situacao: string; atualizado_em: string; honorario_previsto: number; honorario_recebido: number; vencimento_honorario: string | null; etapas: Etapa[] }
 const ROTULO: Record<string, string> = { a_fazer: 'A fazer', fazendo: 'Em andamento', revisao: 'Em revisão', feito: 'Concluída' }
 const brl = (v: number) => (v ?? 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+// Passo 07: resumo de todos os casos do mesmo cliente (só andamento, prazos e honorários).
+type CasoResumo = { titulo: string; area: string | null; numero_processo: string | null; situacao: string; atualizado_em: string; token: string | null; etapas_total: number; etapas_feitas: number; proximo_prazo: string | null; honorario_previsto: number; honorario_recebido: number }
+type Resumo = { cliente: string; casos: CasoResumo[] }
 
 export default function PortalClientePage() {
   const { token = '' } = useParams()
   const [caso, setCaso] = useState<Caso | null | undefined>(undefined)
-  useEffect(() => { supabase.rpc('portal_caso', { p_token: token }).then(r => setCaso((r.data as Caso) ?? null)) }, [token])
+  const [resumo, setResumo] = useState<Resumo | null>(null)
+  useEffect(() => {
+    supabase.rpc('portal_caso', { p_token: token }).then(r => setCaso((r.data as Caso) ?? null))
+    supabase.rpc('portal_cliente', { p_token: token }).then(r => setResumo((r.data as Resumo) ?? null))
+  }, [token])
   const feitas = caso?.etapas.filter(e => e.situacao === 'feito').length ?? 0
   const total = caso?.etapas.length ?? 0
   return (
@@ -51,6 +58,26 @@ export default function PortalClientePage() {
             <AssinarPortal token={token} />
             <p className="text-xs text-grafite-claro mt-6">Atualizado em {formatarData(caso.atualizado_em.slice(0, 10))}. Dúvidas: fale com o escritório. Esta página não substitui a consulta aos autos.</p>
           </article>
+        )}
+        {caso && resumo && (
+          <section data-testid="portal-resumo" className="bg-white border-t-2 border-navy shadow-sm p-6 mt-6" aria-labelledby="titulo-resumo">
+            <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">Painel do cliente</p>
+            <h2 id="titulo-resumo" className="font-serif text-xl text-navy mt-1">{resumo.cliente}: {resumo.casos.length} {resumo.casos.length === 1 ? 'caso' : 'casos'} no escritório</h2>
+            <div className="grid grid-cols-3 gap-3 mt-4 text-center">
+              <div className="bg-pergaminho p-3"><p className="text-xs uppercase tracking-wider text-grafite-claro">Etapas concluídas</p><p className="font-serif text-2xl text-navy">{resumo.casos.reduce((s, c) => s + Number(c.etapas_feitas), 0)} / {resumo.casos.reduce((s, c) => s + Number(c.etapas_total), 0)}</p></div>
+              <div className="bg-pergaminho p-3"><p className="text-xs uppercase tracking-wider text-grafite-claro">Próximo prazo</p><p className="font-serif text-2xl text-navy">{(() => { const d = resumo.casos.map(c => c.proximo_prazo).filter(Boolean).sort()[0]; return d ? formatarData(d) : '—' })()}</p></div>
+              <div className="bg-pergaminho p-3"><p className="text-xs uppercase tracking-wider text-grafite-claro">Honorários em aberto</p><p className="font-serif text-2xl text-navy">{brl(resumo.casos.reduce((s, c) => s + Math.max(0, Number(c.honorario_previsto) - Number(c.honorario_recebido)), 0))}</p></div>
+            </div>
+            <ul className="mt-4 divide-y divide-navy/10 text-sm">
+              {resumo.casos.map((c, i) => (
+                <li key={i} className="py-2 flex flex-wrap items-center gap-2">
+                  <span className="font-medium text-navy flex-1 min-w-[12rem]">{c.titulo}</span>
+                  <span className="text-grafite-claro">{c.etapas_feitas} de {c.etapas_total} etapas{c.proximo_prazo && ` · próximo prazo ${formatarData(c.proximo_prazo)}`}</span>
+                  {c.token === token && <span className="text-xs bg-dourado/20 text-dourado-escuro px-2 py-0.5">este caso</span>}
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
         <p className="text-center text-xs text-grafite-claro mt-8">GMenezes Advogados Associados · Desenvolvido pelo Instituto THEYE</p>
       </div>

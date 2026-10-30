@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
 import { SkeletonTable } from '@/components/Skeleton'
@@ -14,17 +14,27 @@ export default function ImovelListPage() {
   const { imoveis, loading } = useImoveis()
   const { alertas } = useAlertas()
   const navigate = useNavigate()
-
-  const termo = busca.toLowerCase()
-  const filtrados = imoveis.filter(
-    i => i.endereco.toLowerCase().includes(termo) || i.proprietario.toLowerCase().includes(termo)
-  )
+  // Passo 07: filtro por situação vindo do Painel (?situacao=vencido|critico|em_dia).
+  const [params, setParams] = useSearchParams()
+  const situacaoFiltro = params.get('situacao')
+  const ROTULO_FILTRO: Record<string, string> = { vencido: 'Vencidos', critico: 'Vencem em 30 dias', em_dia: 'Em dia' }
 
   // Prazo de cada imóvel é o compromisso mais próximo (contrato ou documento).
   const prazoDoImovel = (imovelId: string): number | null => {
     const prazos = alertas.filter(a => a.imovelId === imovelId).map(a => a.diasRestantes)
     return prazos.length ? Math.min(...prazos) : null
   }
+  const casaSituacao = (imovelId: string) => {
+    if (!situacaoFiltro) return true
+    const s = situacaoPorPrazo(prazoDoImovel(imovelId))
+    if (situacaoFiltro === 'em_dia') return s === 'regular' || s === 'atencao' || s === 'sem_prazo'
+    return s === situacaoFiltro
+  }
+
+  const termo = busca.toLowerCase()
+  const filtrados = imoveis.filter(
+    i => (i.endereco.toLowerCase().includes(termo) || i.proprietario.toLowerCase().includes(termo)) && casaSituacao(i.id)
+  )
 
   if (loading) {
     return (
@@ -43,6 +53,12 @@ export default function ImovelListPage() {
   return (
     <Layout title="Imóveis">
       <div className="space-y-6">
+        {situacaoFiltro && (
+          <p data-testid="filtro-situacao" className="flex items-center gap-3 text-sm bg-white border-l-4 border-dourado px-4 py-3 shadow-sm">
+            <span>Mostrando só: <strong className="text-navy">{ROTULO_FILTRO[situacaoFiltro] ?? situacaoFiltro}</strong> ({filtrados.length})</span>
+            <button type="button" onClick={() => setParams({})} className="underline text-navy">limpar filtro</button>
+          </p>
+        )}
         <div className="flex flex-col sm:flex-row sm:items-end gap-4">
           <div className="bg-white p-4 shadow-sm flex-1">
             <label htmlFor="busca-imovel" className="block text-xs uppercase tracking-wider text-grafite mb-1">

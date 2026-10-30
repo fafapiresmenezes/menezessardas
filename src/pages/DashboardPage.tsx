@@ -52,10 +52,11 @@ export default function DashboardPage() {
   const regulares = situacoes.filter(s => s === 'regular' || s === 'atencao' || s === 'sem_prazo').length
 
   const indicadores = [
-    { rotulo: 'Imóveis', valor: imoveis.length, icone: Building2, cor: 'text-navy' },
-    { rotulo: 'Vencidos', valor: vencidos, icone: AlertTriangle, cor: 'text-critico' },
-    { rotulo: 'Vencem em 30 dias', valor: criticos, icone: Clock, cor: 'text-atencao' },
-    { rotulo: 'Em dia', valor: regulares, icone: CheckCircle2, cor: 'text-regular' },
+    // Passo 07: cada número abre a lista filtrada correspondente.
+    { rotulo: 'Imóveis', valor: imoveis.length, icone: Building2, cor: 'text-navy', destino: '/imoveis', chave: 'todos' },
+    { rotulo: 'Vencidos', valor: vencidos, icone: AlertTriangle, cor: 'text-critico', destino: '/imoveis?situacao=vencido', chave: 'vencido' },
+    { rotulo: 'Vencem em 30 dias', valor: criticos, icone: Clock, cor: 'text-atencao', destino: '/imoveis?situacao=critico', chave: 'critico' },
+    { rotulo: 'Em dia', valor: regulares, icone: CheckCircle2, cor: 'text-regular', destino: '/imoveis?situacao=em_dia', chave: 'em_dia' },
   ]
 
   const proximos = [...alertas].sort((a, b) => a.diasRestantes - b.diasRestantes).slice(0, 10)
@@ -66,15 +67,23 @@ export default function DashboardPage() {
         <section aria-label="Indicadores gerais">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {indicadores.map(ind => (
-              <div key={ind.rotulo} className="bg-gradient-to-br from-white to-pergaminho/50 border-t-2 border-dourado p-5 shadow-md hover:shadow-lg transition duration-300">
+              <button
+                type="button"
+                key={ind.rotulo}
+                data-testid={`indicador-${ind.chave}`}
+                onClick={() => navigate(ind.destino)}
+                aria-label={`${ind.rotulo}: ${ind.valor}. Abrir lista`}
+                className="text-left bg-gradient-to-br from-white to-pergaminho/50 border-t-2 border-dourado p-5 shadow-md hover:shadow-lg hover:border-navy transition duration-300 focus:outline-none focus:ring-2 focus:ring-dourado"
+              >
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-xs uppercase tracking-wider text-grafite-claro">{ind.rotulo}</p>
                     <p className={`font-serif text-4xl mt-2 ${ind.cor}`}>{ind.valor}</p>
+                    <p className="text-xs text-grafite-claro mt-1 underline underline-offset-2">ver lista</p>
                   </div>
                   <ind.icone className={ind.cor} size={22} aria-hidden="true" />
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </section>
