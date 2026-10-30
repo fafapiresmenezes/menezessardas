@@ -5,13 +5,15 @@ import PerfilJulgador from '@/components/PerfilJulgador'
 import { useImoveis } from '@/hooks/useImoveis'
 import { radarPortais, type NovidadePortal } from '@/lib/legislacao'
 import { diasAte } from '@/lib/datas'
-import { FlaskConical, BarChart3, Leaf, ExternalLink, MessageSquare } from 'lucide-react'
+import { FlaskConical, BarChart3, Leaf, ExternalLink, MessageSquare, BookOpen } from 'lucide-react'
+import { MEDICOES, PLANO_M31, DECK_URL } from '@/data/medicoes'
 
-type Aba = 'inovacao' | 'jurimetria' | 'esg'
+type Aba = 'inovacao' | 'jurimetria' | 'esg' | 'case'
 const ABAS: { valor: Aba; rotulo: string; Icone: typeof FlaskConical }[] = [
   { valor: 'inovacao', rotulo: 'Inovação e sandboxes', Icone: FlaskConical },
   { valor: 'jurimetria', rotulo: 'Jurimetria e predição', Icone: BarChart3 },
   { valor: 'esg', rotulo: 'ESG e compliance', Icone: Leaf },
+  { valor: 'case', rotulo: 'Case study desta plataforma', Icone: BookOpen },
 ]
 
 // Programas oficiais de ambiente regulatório experimental (links para as páginas dos próprios reguladores).
@@ -125,6 +127,57 @@ function Esg() {
   )
 }
 
+
+// Case study do Instituto THEYE: a própria plataforma como estudo de caso, com a trajetória das medições
+// e os hashes dos PDFs (cadeia verificável; .ots no Bitcoin via OpenTimestamps).
+function CaseStudy() {
+  const primeira = MEDICOES[0], ultima = MEDICOES[MEDICOES.length - 1]
+  return (
+    <div className="space-y-6" data-testid="case-study">
+      <section className="bg-white p-6 shadow-sm">
+        <h2 className="text-lg mb-1">Case study: de {primeira.nota.toFixed(2).replace('.', ',')} a {ultima.nota.toFixed(2).replace('.', ',')} em {MEDICOES.length} medições</h2>
+        <p className="text-sm text-grafite-claro mb-4">Esta plataforma foi construída pelo Instituto THEYE para o escritório GMenezes Advogados Associados e medida a cada entrega com dez critérios ponderados (funcionalidade, confiabilidade, segurança, usabilidade, desempenho, IA, dados, acessibilidade, documentação e adoção). Cada medição vira um PDF cujo SHA-256 é encadeado ao anterior e carimbado no Bitcoin (OpenTimestamps), de modo que ninguém pode alterar o histórico depois.</p>
+        <div className="flex items-end gap-1 h-32" aria-hidden>
+          {MEDICOES.map(m => <div key={m.n} className={m.n === ultima.n ? 'flex-1 bg-dourado' : 'flex-1 bg-navy'} style={{ height: `${((m.nota - 7) / 3) * 100}%` }} title={`M${m.n}: ${m.nota}`} />)}
+        </div>
+        <div className="flex gap-1 text-[10px] text-grafite-claro mt-1">{MEDICOES.map(m => <span key={m.n} className="flex-1 text-center">{m.n}</span>)}</div>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <a href={DECK_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm">Deck de apresentação <ExternalLink size={14} aria-hidden="true" /></a>
+          <Link to="/testar" className="inline-flex items-center gap-2 border border-navy text-navy min-h-[44px] px-5 uppercase tracking-wider text-sm">Testar tudo agora</Link>
+        </div>
+      </section>
+      <section className="bg-white p-6 shadow-sm">
+        <h2 className="text-lg mb-1">Cadeia de medições (PDFs e hashes)</h2>
+        <p className="text-sm text-grafite-claro mb-3">Os PDFs ficam na Biblioteca do projeto. Para conferir um arquivo, calcule o SHA-256 e compare com a coluna abaixo; o arquivo .ots prova a data no Bitcoin.</p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite-claro"><th className="py-2 pr-3">Medição</th><th className="pr-3">Data</th><th className="pr-3">Nota</th><th className="pr-3">Entregue</th><th>SHA-256</th></tr></thead>
+            <tbody>
+              {[...MEDICOES].reverse().map(m => (
+                <tr key={m.n} className="border-t border-navy/10 align-top">
+                  <td className="py-2 pr-3 font-medium text-navy">M{m.n}{m.ots ? ' ₿' : ''}</td>
+                  <td className="py-2 pr-3 whitespace-nowrap">{m.data.split('-').reverse().join('/')}</td>
+                  <td className="py-2 pr-3">{m.nota.toFixed(2).replace('.', ',')}</td>
+                  <td className="py-2 pr-3 text-xs text-grafite">{m.entregue}</td>
+                  <td className="py-2 font-mono text-[10px] break-all text-grafite-claro">{m.sha256}</td>
+                </tr>
+              ))}
+              <tr className="border-t border-navy/10 align-top">
+                <td className="py-2 pr-3 font-medium text-navy">Plano M31 ₿</td>
+                <td className="py-2 pr-3 whitespace-nowrap">{PLANO_M31.data.split('-').reverse().join('/')}</td>
+                <td className="py-2 pr-3">{PLANO_M31.media.toFixed(2).replace('.', ',')}</td>
+                <td className="py-2 pr-3 text-xs text-grafite">Plano ferramenta por ferramenta: 34 ferramentas × 8 pontos de vista, PROMPT por passo, agente guardião.</td>
+                <td className="py-2 font-mono text-[10px] break-all text-grafite-claro">{PLANO_M31.sha256}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p className="text-xs text-grafite-claro mt-3">₿ = prova OpenTimestamps no Bitcoin. O que falta para a nota 10 depende do uso pela equipe (dados reais, logo, Outlook), não de código.</p>
+      </section>
+    </div>
+  )
+}
+
 export default function InstitutoPage() {
   const [aba, setAba] = useState<Aba>('inovacao')
   return (
@@ -143,7 +196,7 @@ export default function InstitutoPage() {
             </button>
           ))}
         </div>
-        <div role="tabpanel">{aba === 'inovacao' ? <Inovacao /> : aba === 'jurimetria' ? <Jurimetria /> : <Esg />}</div>
+        <div role="tabpanel">{aba === 'inovacao' ? <Inovacao /> : aba === 'jurimetria' ? <Jurimetria /> : aba === 'esg' ? <Esg /> : <CaseStudy />}</div>
       </div>
     </Layout>
   )

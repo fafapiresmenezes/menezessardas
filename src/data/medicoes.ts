@@ -1,0 +1,24 @@
+// Gerado a partir de cadeia-de-medicoes.txt (Biblioteca do projeto). Cada medição é um PDF cujo SHA-256
+// está encadeado ao da anterior e, desde a 18, carimbado no Bitcoin via OpenTimestamps (.ots).
+export type Medicao = { n: number; data: string; nota: number; arquivo: string; sha256: string; ots: boolean; entregue: string }
+export const MEDICOES: Medicao[] = [
+  { n: 14, data: '2026-10-25', nota: 7.85, arquivo: 'medicao-14.pdf', sha256: 'f17d71c1e78d462bb9b83bbb31f08a0b9fec2a495d5e1dc112d1d1e286291b99', ots: false, entregue: 'Medição 14' },
+  { n: 15, data: '2026-10-26', nota: 7.92, arquivo: 'medicao-15.pdf', sha256: 'f29e43978d3ae0d279e62bb5d0239a2f975b889cd6e79ea9f7223f18c7aa8a92', ots: false, entregue: 'Medição 15' },
+  { n: 16, data: '2026-10-26', nota: 7.93, arquivo: 'medicao-16.pdf', sha256: 'd03ebde9923f3584e51419cd2ec05d07352a1a75d4108be6aba805685a782b06', ots: false, entregue: 'Skeleton loading e animações' },
+  { n: 17, data: '2026-10-26', nota: 8.01, arquivo: 'medicao-17.pdf', sha256: '7cf22bba15405547bf5b2e86947677e0f5c48dab40d6ef55b234f6b4ae4ccd21', ots: false, entregue: 'Micro-interações avançadas' },
+  { n: 18, data: '2026-10-27', nota: 8.27, arquivo: 'medicao-18.pdf', sha256: 'd1accb0dfe665865da2abe7b65252f2fcff4340a28d4d73c008b70faae58bc8c', ots: true, entregue: 'Auditoria estruturada (Nielsen, SUS, WCAG, ISO 9241-110, HEART)' },
+  { n: 19, data: '2026-10-27', nota: 8.54, arquivo: 'medicao-19.pdf', sha256: 'b40ee9f62fa3305c261c2995cce2bfc49eeedd5a271bed30deaf016c07979a8c', ots: true, entregue: 'Fechamento S20–S21' },
+  { n: 20, data: '2026-10-27', nota: 8.89, arquivo: 'medicao-20.pdf', sha256: 'fbc84ba54c445dd18e05ea572d767e78ac56f97c7e0e657362c1893329f16da7', ots: true, entregue: 'Agentes jurídicos, reajuste BCB, radar, perfil do julgador' },
+  { n: 21, data: '2026-10-27', nota: 9.03, arquivo: 'medicao-21.pdf', sha256: '7dff1e1fe817dfcf9ba6a75470f32a8888e84cc671975be52d55ae5bb823f2a3', ots: true, entregue: 'Medição 21' },
+  { n: 22, data: '2026-10-28', nota: 9.18, arquivo: 'medicao-22.pdf', sha256: '39edd0ca976af50ea5907607c4d100e58a12b6ff2e136fa1c523f3561e2f5fd4', ots: true, entregue: 'Medição 22' },
+  { n: 23, data: '2026-10-28', nota: 9.31, arquivo: 'medicao-23.pdf', sha256: '8040f9b8605c4672dd8ea474f11d81789f5203237a30a05f51ae4ac92e9ec193', ots: true, entregue: 'Medição 23' },
+  { n: 24, data: '2026-10-28', nota: 9.42, arquivo: 'medicao-24.pdf', sha256: '1eeda1e99b8cdca799e05b4d112a1a87be5012d9c9491c736a63fec2dc29254c', ots: true, entregue: 'Acesso restrito por imóvel, selo blockchain diário dos documentos, Projetos em hierarquia' },
+  { n: 25, data: '2026-10-29', nota: 9.52, arquivo: 'medicao-25.pdf', sha256: '253728fc7d38713c59d83e2f3ccebe59fdff25e68ba8942eda0eaa3214abef1e', ots: true, entregue: '10 áreas na entrada, KYC gratuito, Compliance vendável, Mercado jurídico; avaliação item a item do PROMPT.' },
+  { n: 26, data: '2026-10-30', nota: 9.64, arquivo: 'medicao-26.pdf', sha256: '833d3136260ab18cb3095c13b8d3b3c74fcb6f836ba3fdae0173f05fd1b92b09', ots: true, entregue: 'nome GMenezes Advogados Associados; 14 consultores de IA por nível hierárquico com Diagnóstico agora.' },
+  { n: 27, data: '2026-10-30', nota: 9.7, arquivo: 'medicao-27.pdf', sha256: '86d24264442a3183ef4915239e8407972c3e572b4bbe145acdb8d0761e76c49c', ots: true, entregue: 'endereço gmenezes-advogados; segurança e nuvem; casos e projetos gerais; portal do cliente; honorários e rentabilidade; plano PMO.' },
+  { n: 28, data: '2026-10-30', nota: 9.71, arquivo: 'medicao-28.pdf', sha256: '1d8e222c506eaac2096379bc8ec5a45aa85cf722c3a42f15753e62e3d9912956', ots: true, entregue: 'plano PMO & PMI por função em PDF; teste completo de 31 telas em produção sem defeito bloqueante.' },
+  { n: 29, data: '2026-10-30', nota: 9.77, arquivo: 'medicao-29.pdf', sha256: 'ffa0f92e104f0907bf9116a9624a88bee1320075bd0b4d468e7d454ad17fda3a', ots: true, entregue: '2FA (TOTP); Onda B escritórios parceiros com cobrança por usuário; consultor semanal automático no Meu dia; Onda C (SUS na plataforma + WCAG 2.2 AA zero achados em 12 telas).' },
+  { n: 30, data: '2026-10-30', nota: 9.81, arquivo: 'medicao-30.pdf', sha256: 'ece08f0242ca8773e8f3534d0748c29574251b870b5ee7a4434f54bf7fe246dd', ots: true, entregue: 'Cobrança por PIX (BR Code); assinatura eletrônica no caso e no Portal do cliente com hash; teste de todas as funcionalidades (34 telas, zero erros, Testar tudo 9/9, teste diário 7/7); correção do link de contrato vindo de Previsões; material apresentativo (deck 10 slides).' },
+]
+export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
+export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
