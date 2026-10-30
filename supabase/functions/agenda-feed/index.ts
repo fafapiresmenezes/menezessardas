@@ -9,7 +9,7 @@ const prox = (iso: string) => new Date(Date.parse(iso) + 86400000).toISOString()
 function evento(uid: string, data: string, titulo: string, local: string, avisos: number[], stamp: string) {
   return [
     'BEGIN:VEVENT',
-    `UID:${uid}@lsm-contratos`,
+    `UID:${uid}@gmenezes-contratos`,
     `DTSTAMP:${stamp}`,
     `DTSTART;VALUE=DATE:${d(data)}`,
     `DTEND;VALUE=DATE:${prox(data)}`,
@@ -21,7 +21,7 @@ function evento(uid: string, data: string, titulo: string, local: string, avisos
     // Agendas assinadas costumam ignorar alarmes do arquivo; cada aviso vira também um evento no próprio dia.
     ...[...new Set(avisos)].filter(n => n > 0).flatMap(n => {
       const dia = new Date(Date.parse(data) - n * 86400000).toISOString().slice(0, 10)
-      return ['BEGIN:VEVENT', `UID:${uid}-a${n}@lsm-contratos`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${d(dia)}`, `DTEND;VALUE=DATE:${prox(dia)}`,
+      return ['BEGIN:VEVENT', `UID:${uid}-a${n}@gmenezes-contratos`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${d(dia)}`, `DTEND;VALUE=DATE:${prox(dia)}`,
         `SUMMARY:${esc(`Aviso: faltam ${n} ${n === 1 ? 'dia' : 'dias'} — ${titulo}`)}`, `LOCATION:${esc(local)}`, 'TRANSP:TRANSPARENT', 'END:VEVENT']
     }),
   ].join('\r\n')
@@ -44,8 +44,8 @@ Deno.serve(async (req) => {
     ...(comp ?? []).map(k => evento(`k-${k.id}`, k.data_evento, k.titulo, k.imovel, k.avisos_dias?.length ? k.avisos_dias : [k.dias_antes], stamp)),
   ]
   const ics = [
-    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//LSM//Contratos//PT', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
-    'X-WR-CALNAME:Prazos contratuais — LSM', 'X-WR-TIMEZONE:America/Sao_Paulo', 'REFRESH-INTERVAL;VALUE=DURATION:PT6H',
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//GMenezes//Contratos//PT', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+    'X-WR-CALNAME:Prazos contratuais — GMenezes', 'X-WR-TIMEZONE:America/Sao_Paulo', 'REFRESH-INTERVAL;VALUE=DURATION:PT6H',
     ...eventos, 'END:VCALENDAR',
   ].join('\r\n')
   return new Response(ics, { headers: { 'Content-Type': 'text/calendar; charset=utf-8', 'Cache-Control': 'no-cache' } })

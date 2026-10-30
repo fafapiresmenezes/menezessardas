@@ -46,7 +46,7 @@ async function enviar(p: Provedor, para: string[], itens: Item[]) {
       const r = await fetch('https://api.brevo.com/v3/smtp/email', {
         method: 'POST',
         headers: { 'api-key': p.brevo, 'Content-Type': 'application/json', accept: 'application/json' },
-        body: JSON.stringify({ sender: { name: 'Avisos LSM', email: p.remetente }, to: [{ email }], subject: assunto, htmlContent: html }),
+        body: JSON.stringify({ sender: { name: 'Avisos GMenezes', email: p.remetente }, to: [{ email }], subject: assunto, htmlContent: html }),
       })
       if (!r.ok) falha = `${r.status} ${await r.text()}`
     }
@@ -55,7 +55,7 @@ async function enviar(p: Provedor, para: string[], itens: Item[]) {
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${p.resend}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: 'Avisos LSM <onboarding@resend.dev>', to: para, subject: assunto, html }),
+    body: JSON.stringify({ from: 'Avisos GMenezes <onboarding@resend.dev>', to: para, subject: assunto, html }),
   })
   return { ok: r.ok, corpo: r.ok ? undefined : await r.text() }
 }
