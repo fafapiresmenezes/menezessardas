@@ -263,7 +263,24 @@ Deno.serve(async (req) => {
   }
   const teste = !usuario && typeof corpo.teste === 'string' && (await segredoCronOk(req)) ? TESTES[corpo.teste] : null
   if (teste) Object.assign(corpo, { pergunta: teste.pergunta, modo: teste.modo, especialidade: 'imobiliario', historico: [], contexto: '' })
-  if (!usuario && !teste) return json({ erro: 'Entre na plataforma para usar o assistente.' }, 401)
+  // Consultor semanal (pg_cron, segunda-feira): fotografia do escritório montada aqui e resposta guardada para o Meu dia.
+  const semanal = !usuario && typeof corpo.semanal === 'string' && corpo.semanal.startsWith('nivel_') && ESPECIALIDADES[corpo.semanal] && (await segredoCronOk(req)) ? String(corpo.semanal) : null
+  let fotografiaSemanal = ''
+  if (semanal) {
+    const db = servico(); const hoje = new Date().toISOString().slice(0, 10); const em60 = new Date(Date.now() + 60 * 864e5).toISOString().slice(0, 10)
+    const n = async (q: PromiseLike<{ count: number | null }>) => (await q).count ?? 0
+    const [imoveis, contratos, vencendo, tarefas, atrasadas, intimacoes] = await Promise.all([
+      n(db.from('imoveis').select('id', { count: 'exact', head: true })),
+      n(db.from('contratos').select('id', { count: 'exact', head: true }).is('encerrado_em', null)),
+      n(db.from('contratos').select('id', { count: 'exact', head: true }).is('encerrado_em', null).gte('data_vencimento', hoje).lte('data_vencimento', em60)),
+      n(db.from('tarefas').select('id', { count: 'exact', head: true }).neq('situacao', 'feito')),
+      n(db.from('tarefas').select('id', { count: 'exact', head: true }).neq('situacao', 'feito').lt('prazo', hoje)),
+      n(db.from('intimacoes').select('id', { count: 'exact', head: true }).eq('lida', false)),
+    ])
+    fotografiaSemanal = `Fotografia do escritório em ${hoje}: ${imoveis} imóveis; ${contratos} contratos ativos, ${vencendo} vencendo em 60 dias; ${tarefas} tarefas abertas, ${atrasadas} atrasadas; ${intimacoes} intimações não lidas.`
+    Object.assign(corpo, { pergunta: 'Diagnóstico semanal: 3 forças, 3 fraquezas e as 5 ações da semana para esta função, com dono e indicador. Seja curto.', modo: 'responder', especialidade: semanal, historico: [], contexto: fotografiaSemanal })
+  }
+  if (!usuario && !teste && !semanal) return json({ erro: 'Entre na plataforma para usar o assistente.' }, 401)
   const chave = await obterChave()
   if (!chave) return json({ erro: 'Chave da IA não configurada. Um administrador pode informá-la em Configurações → Inteligência artificial.' }, 503)
 
@@ -388,6 +405,7 @@ Estrutura: resposta direta em 1–2 frases; fundamentação com os artigos; risc
       texto = (resposta.content ?? []).filter((c: { type: string }) => c.type === 'text').map((c: { text: string }) => c.text).join('\n').trim()
     }
 
+    if (semanal) await servico().from('diagnosticos_semanais').insert({ nivel: semanal, resposta: texto, fotografia: fotografiaSemanal })
     if (usuario) await servico().from('consultas_juridicas').insert({
       usuario_id: usuario, especialidade, pergunta, resposta: texto, fontes, modelo: MODELO_RESPOSTA, modo, dados,
     })

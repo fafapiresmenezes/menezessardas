@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { calcularPrazo } from '@/lib/prazos'
-import { CalendarClock, Inbox, ListChecks, FileWarning } from 'lucide-react'
+import { CalendarClock, Inbox, ListChecks, FileWarning, Briefcase } from 'lucide-react'
+import { render } from '@/pages/AssistentePage'
 
 // "Meu dia": o que cada nível do escritório precisa ver ao abrir a plataforma, num só lugar.
 // O papel escolhido define a ordem e os atalhos; os dados são os mesmos para todos (respeitando o sigilo).
+// Consultor da semana: cada papel lê o diagnóstico gerado toda segunda-feira pelo consultor do seu nível.
+const NIVEL_DO_PAPEL: Record<string, string> = { socia: 'nivel_socio_gestor', advogada: 'nivel_pleno', estagiario: 'nivel_estagiario', secretaria: 'nivel_secretaria', financeiro: 'nivel_financeiro' }
 const PAPEIS: Record<string, { nome: string; foco: string; atalhos: { rotulo: string; href: string }[] }> = {
   socia: { nome: 'Sócia', foco: 'Visão da carteira, riscos e decisões que só você toma.', atalhos: [
     { rotulo: 'Indicadores e OKRs', href: '/indicadores' }, { rotulo: 'Previsões e riscos', href: '/previsoes' }, { rotulo: 'Consumo e custos', href: '/consumo' }, { rotulo: 'Mercado jurídico', href: '/mercado' }] },
@@ -28,6 +31,11 @@ export default function MeuDiaPage() {
   const [intimacoes, setIntimacoes] = useState(0)
   const [vencendo, setVencendo] = useState<{ id: string; imovel_id: string; locatario_fornecedor: string; data_vencimento: string }[]>([])
   const [calc, setCalc] = useState({ inicio: hoje(), dias: 15, dobro: false })
+  const [diagnostico, setDiagnostico] = useState<{ resposta: string; criado_em: string } | null>(null)
+  useEffect(() => {
+    if (!supabaseConfigurado) { setDiagnostico(null); return }
+    supabase.from('diagnosticos_semanais').select('resposta,criado_em').eq('nivel', NIVEL_DO_PAPEL[papel] ?? 'nivel_pleno').order('criado_em', { ascending: false }).limit(1).maybeSingle().then(r => setDiagnostico(r.data ?? null))
+  }, [papel])
   const prazo = calc.dias > 0 && calc.inicio ? calcularPrazo(calc.inicio, calc.dias, calc.dobro) : null
 
   useEffect(() => { try { localStorage.setItem('lsm-papel', papel) } catch { /* sem armazenamento */ } }, [papel])
@@ -81,6 +89,17 @@ export default function MeuDiaPage() {
           </section>
         </div>
 
+        <section className={cartao} data-testid="consultor-semana">
+          <h2 className="font-serif text-lg flex items-center gap-2"><Briefcase className="w-5 h-5" aria-hidden />Consultor da semana</h2>
+          {diagnostico ? (
+            <>
+              <p className="text-xs text-grafite-claro mt-1">Gerado em {new Date(diagnostico.criado_em).toLocaleDateString('pt-BR')} pelo consultor do seu nível. <Link to="/consultores" className="underline">Pedir um diagnóstico agora</Link></p>
+              <div className="prose prose-sm max-w-none mt-3">{render(diagnostico.resposta)}</div>
+            </>
+          ) : (
+            <p className="text-sm text-grafite-claro mt-2">O primeiro diagnóstico chega na segunda-feira. Enquanto isso, <Link to="/consultores" className="underline">peça um agora em Consultores</Link>.</p>
+          )}
+        </section>
         <section className={cartao}>
           <h2 className="font-serif text-lg flex items-center gap-2"><CalendarClock className="w-5 h-5" aria-hidden />Calculadora de prazo processual</h2>
           <div className="flex flex-wrap gap-3 items-end mt-3 text-sm">
