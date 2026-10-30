@@ -62,7 +62,7 @@ export default function ConsultoresPage() {
   return (
     <Layout>
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <p className="text-xs uppercase tracking-[0.2em] text-dourado">Consultores do escritório</p>
+        <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">Consultores do escritório</p>
         <h1 className="font-serif text-3xl text-navy mt-1">Um consultor especialista para cada função</h1>
         <p className="text-grafite mt-2 max-w-3xl">Cada consultor reúne o núcleo dos programas de mestrado e doutorado em gestão de serviços profissionais e as normas da OAB. O diagnóstico usa só números agregados do escritório, sem dados de clientes.</p>
         <div className="grid lg:grid-cols-[320px_1fr] gap-6 mt-8">

@@ -26,7 +26,7 @@ export default function PortalClientePage() {
         {caso === null && <p role="alert" className="text-grafite">Este link não é válido ou foi desativado pelo escritório.</p>}
         {caso && (
           <article data-testid="portal-caso" className="bg-white border-t-2 border-dourado shadow-sm p-6">
-            <p className="text-xs uppercase tracking-[0.2em] text-dourado">Acompanhamento do seu caso</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">Acompanhamento do seu caso</p>
             <h1 className="font-serif text-2xl text-navy mt-1">{caso.titulo}</h1>
             <p className="text-sm text-grafite mt-1">{[caso.area, caso.numero_processo && `Processo ${caso.numero_processo}`].filter(Boolean).join(' · ')}</p>
             <div className="mt-5">

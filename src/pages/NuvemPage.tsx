@@ -59,7 +59,7 @@ export default function NuvemPage() {
   return (
     <Layout>
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <p className="text-xs uppercase tracking-[0.2em] text-dourado">Nuvem do escritório</p>
+        <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">Nuvem do escritório</p>
         <h1 className="font-serif text-3xl text-navy mt-1 flex items-center gap-3"><Cloud className="text-dourado" aria-hidden="true" /> Arquivos protegidos</h1>
         <p className="text-grafite mt-2 text-sm flex items-start gap-2"><Lock size={16} className="mt-0.5 shrink-0" aria-hidden="true" />Armazenamento privado no Brasil (São Paulo), criptografado em trânsito e em repouso. Cada download gera um link que expira em 60 segundos. A pasta Pessoal só você vê; a do Escritório, só a equipe liberada.</p>
         <div className="flex gap-2 mt-6" role="tablist">

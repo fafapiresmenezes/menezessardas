@@ -131,7 +131,7 @@ export default function InstitutoPage() {
     <Layout>
       <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-6">
         <header>
-          <p className="text-xs uppercase tracking-[0.2em] text-dourado">Instituto THEYE</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">Instituto THEYE</p>
           <h1 className="text-3xl text-navy">Ferramentas do Instituto</h1>
           <p className="text-sm text-grafite-claro mt-1">Inovação regulatória, jurimetria e ESG aplicados à carteira do escritório.</p>
         </header>

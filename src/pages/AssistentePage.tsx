@@ -68,17 +68,17 @@ function MatrizCaminhos({ m }: { m: Matriz }) {
               </div>
               <p className="text-sm text-grafite mt-1">{c.descricao}</p>
               <p className="text-xs text-grafite-claro mt-1">Fundamento: {c.fundamento}</p>
-              <dl className="mt-3 space-y-1">
+              <ul className="mt-3 space-y-1" aria-label="Critérios de avaliação">
                 {CRITERIOS.map(k => (
-                  <div key={k.chave} className="flex items-center gap-2 text-xs">
-                    <dt className="w-20 text-grafite-claro">{k.rotulo}</dt>
-                    <dd className="flex-1 h-2 bg-navy/10" aria-label={`${k.rotulo}: ${c[k.chave]} de 5`}>
-                      <div className={`h-2 ${rec ? 'bg-dourado' : 'bg-navy/60'}`} style={{ width: `${(c[k.chave] / 5) * 100}%` }} />
-                    </dd>
+                  <li key={k.chave} className="flex items-center gap-2 text-xs">
+                    <span className="w-20 text-grafite-claro">{k.rotulo}</span>
+                    <span className="flex-1 h-2 bg-navy/10" role="img" aria-label={`${k.rotulo}: ${c[k.chave]} de 5`}>
+                      <span className={`block h-2 ${rec ? 'bg-dourado' : 'bg-navy/60'}`} style={{ width: `${(c[k.chave] / 5) * 100}%` }} />
+                    </span>
                     <span className="w-6 text-right text-grafite">{c[k.chave]}</span>
-                  </div>
+                  </li>
                 ))}
-              </dl>
+              </ul>
               {c.zonaCinzenta && <p className="text-xs text-atencao mt-3"><strong>Zona cinzenta:</strong> {c.zonaCinzenta}</p>}
             </div>
           )
