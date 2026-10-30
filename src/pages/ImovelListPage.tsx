@@ -7,7 +7,7 @@ import { useImoveis } from '@/hooks/useImoveis'
 import { useAlertas } from '@/hooks/useAlertas'
 import { situacaoPorPrazo, textoPrazo } from '@/lib/datas'
 import { rotulosTipoImovel, rotulosUso, siglaDocumento } from '@/lib/rotulos'
-import { Search, Plus } from 'lucide-react'
+import { Search, Plus, Upload } from 'lucide-react'
 
 export default function ImovelListPage() {
   const [busca, setBusca] = useState('')
@@ -86,6 +86,9 @@ export default function ImovelListPage() {
             className="inline-flex items-center justify-center gap-2 bg-navy text-white px-5 py-3 rounded-sm uppercase tracking-wider text-sm"
           >
             <Plus size={16} aria-hidden="true" /> Novo imóvel
+          </Link>
+          <Link to="/imoveis/importar" className="inline-flex items-center justify-center gap-2 border border-navy text-navy px-5 py-3 rounded-sm uppercase tracking-wider text-sm" data-testid="importar-csv">
+            <Upload size={16} aria-hidden="true" /> Importar planilha
           </Link>
         </div>
 

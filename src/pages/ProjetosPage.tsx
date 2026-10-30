@@ -17,7 +17,7 @@ interface Tarefa {
   situacao: Situacao; prioridade: 'alta' | 'media' | 'baixa'; responsavel_id: string | null
   imovel_id: string | null; prazo: string | null; horas: number
   cliente: string | null; area: string | null; numero_processo: string | null; tipo: string | null; portal_token?: string | null
-  depende_de: string | null; criado_em?: string
+  depende_de: string | null; criado_em?: string; portal_expira_em?: string | null
 }
 const TIPOS: Record<string, string> = { caso: 'Processo judicial', contrato: 'Contrato ou consultoria', interno: 'Projeto interno do escritório', externo: 'Gestão para outro escritório ou empresa' }
 const AREAS = ['Imobiliário', 'Cível', 'Trabalhista', 'Família e sucessões', 'Tributário', 'Empresarial', 'Consumidor', 'Previdenciário', 'Penal', 'Compliance', 'Gestão interna']
@@ -48,7 +48,7 @@ export default function ProjetosPage() {
   const [linkPortal, setLinkPortal] = useState('')
 
   const carregar = async () => {
-    const { data, error } = await supabase.from('tarefas').select('id,pai_id,nivel,titulo,situacao,prioridade,responsavel_id,imovel_id,prazo,horas,cliente,area,numero_processo,tipo,portal_token,depende_de,criado_em').order('criado_em')
+    const { data, error } = await supabase.from('tarefas').select('id,pai_id,nivel,titulo,situacao,prioridade,responsavel_id,imovel_id,prazo,horas,cliente,area,numero_processo,tipo,portal_token,portal_expira_em,depende_de,criado_em').order('criado_em')
     if (error) return setErro(error.message)
     setTarefas((data ?? []) as Tarefa[])
   }
@@ -108,9 +108,11 @@ export default function ProjetosPage() {
   const linkCliente = async () => {
     const c = tarefas.find(t => t.id === projeto); if (!c) return
     let token = c.portal_token
-    if (!token) {
+    const expirado = !!c.portal_expira_em && new Date(c.portal_expira_em) < new Date()
+    if (!token || expirado) {
+      // Passo 32: todo link do Portal vale 90 dias; link expirado ganha um código novo.
       token = Array.from(crypto.getRandomValues(new Uint8Array(24)), b => b.toString(16).padStart(2, '0')).join('')
-      const { error } = await supabase.from('tarefas').update({ portal_token: token }).eq('id', c.id)
+      const { error } = await supabase.from('tarefas').update({ portal_token: token, portal_expira_em: new Date(Date.now() + 90 * 864e5).toISOString() }).eq('id', c.id)
       if (error) return setErro(error.message)
       carregar()
     }
@@ -118,6 +120,18 @@ export default function ProjetosPage() {
     await navigator.clipboard.writeText(url).catch(() => {})
     setLinkPortal(url)
   }
+  // Passo 32: revogar (apaga o código: o link para de funcionar na hora) e renovar (mais 90 dias com o mesmo link).
+  const revogarLink = async () => {
+    const { error } = await supabase.from('tarefas').update({ portal_token: null, portal_expira_em: null }).eq('id', projeto)
+    if (error) return setErro(error.message)
+    setLinkPortal(''); carregar()
+  }
+  const renovarLink = async () => {
+    const { error } = await supabase.from('tarefas').update({ portal_expira_em: new Date(Date.now() + 90 * 864e5).toISOString() }).eq('id', projeto)
+    if (error) return setErro(error.message)
+    carregar()
+  }
+  const casoAtual = tarefas.find(t => t.id === projeto)
   const mover = async (t: Tarefa, situacao: Situacao) => {
     setTarefas(ts => ts.map(x => (x.id === t.id ? { ...x, situacao } : x)))
     const { error } = await supabase.from('tarefas').update({ situacao, atualizado_em: new Date().toISOString() }).eq('id', t.id)
@@ -177,6 +191,13 @@ export default function ProjetosPage() {
             <p className="text-xs text-grafite mt-3" data-testid="caminho-critico">Caminho crítico ({cronograma.caminho.length} etapas{cronograma.atraso ? `, ${cronograma.atraso} dia(s) além do último prazo` : ', no prazo'}): {cronograma.caminho.map(id => titulo(id)).join(' → ')}. Etapas marcadas com ★ não podem atrasar sem atrasar o caso.</p>
           )}
           {linkPortal && <p className="text-xs text-grafite mt-3" data-testid="link-portal">Link copiado. O cliente vê só as etapas e os honorários, sem login: <a className="underline text-navy break-all" href={linkPortal} target="_blank" rel="noreferrer">{linkPortal}</a></p>}
+          {casoAtual?.portal_token && (
+            <p className="text-xs text-grafite mt-2 flex flex-wrap items-center gap-3" data-testid="portal-validade">
+              <span>Link do Portal {casoAtual.portal_expira_em && new Date(casoAtual.portal_expira_em) < new Date() ? <strong className="text-critico">expirado</strong> : <>válido até <strong>{casoAtual.portal_expira_em ? formatarData(casoAtual.portal_expira_em.slice(0, 10)) : 'sem data'}</strong></>}.</span>
+              <button type="button" onClick={renovarLink} className="underline text-navy" data-testid="renovar-link">Renovar por 90 dias</button>
+              <button type="button" onClick={revogarLink} className="underline text-critico" data-testid="revogar-link">Revogar link</button>
+            </p>
+          )}
         </section>
 
         {projeto && <AssinaturasCaso key={projeto} tarefaId={projeto} cliente={tarefas.find(t => t.id === projeto)?.cliente ?? null} />}

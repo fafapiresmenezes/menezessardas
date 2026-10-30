@@ -31,7 +31,7 @@ export default function PortalClientePage() {
       <header className="bg-navy py-6"><Marca /></header>
       <div className="max-w-2xl mx-auto px-4 py-8">
         {caso === undefined && <p className="text-grafite">Carregando…</p>}
-        {caso === null && <p role="alert" className="text-grafite">Este link não é válido ou foi desativado pelo escritório.</p>}
+        {caso === null && <p role="alert" className="text-grafite">Este link não é válido, expirou (links do Portal valem 90 dias) ou foi desativado pelo escritório. Peça um link novo ao escritório.</p>}
         {caso && (
           <article data-testid="portal-caso" className="bg-white border-t-2 border-dourado shadow-sm p-6">
             <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">Acompanhamento do seu caso</p>

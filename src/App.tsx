@@ -17,6 +17,7 @@ import IndicadoresPage from '@/pages/IndicadoresPage'
 import TrilhaPage from '@/pages/TrilhaPage'
 import ConsumoPage from '@/pages/ConsumoPage'
 import AssistentePage from '@/pages/AssistentePage'
+import ImportarImoveisPage from '@/pages/ImportarImoveisPage'
 import PrevisoesPage from '@/pages/PrevisoesPage'
 import InstitutoPage from '@/pages/InstitutoPage'
 import LegislacaoPage from '@/pages/LegislacaoPage'
@@ -121,6 +122,10 @@ function App() {
         <Route
           path="/imoveis/novo"
           element={isAuthenticated ? <NovoImovelPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/imoveis/importar"
+          element={isAuthenticated ? <ImportarImoveisPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/imoveis/:id"
