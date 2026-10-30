@@ -7,6 +7,7 @@ import { ehSede } from '@/lib/equipe'
 import Busca from './Busca'
 import BoasVindas from './BoasVindas'
 import ExigirDoisFatores from './ExigirDoisFatores'
+import AceiteTermos from './AceiteTermos'
 import { aplicarTema, temaAtual } from '@/lib/tema'
 import { listarPessoas, perfilAtual } from '@/lib/equipe'
 import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote } from 'lucide-react'
@@ -203,7 +204,7 @@ export default function Layout({ children, title }: LayoutProps) {
           </div>
         </header>
 
-        <main className="flex-1 overflow-auto p-4 md:p-8"><ExigirDoisFatores admin={admin} />{children}</main>
+        <main className="flex-1 overflow-auto p-4 md:p-8"><AceiteTermos /><ExigirDoisFatores admin={admin} />{children}</main>
       </div>
       <Busca aberta={buscaAberta} fechar={() => setBuscaAberta(false)} />
       <BoasVindas />

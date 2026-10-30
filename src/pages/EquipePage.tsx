@@ -3,7 +3,7 @@ import Layout from '@/components/Layout'
 import TesteGeral from '@/components/TesteGeral'
 import EscritoriosParceiros from '@/components/EscritoriosParceiros'
 import { Users, UserPlus, KeyRound } from 'lucide-react'
-import { supabaseConfigurado } from '@/lib/supabase'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import {
   definirFuncao,
   definirSenhaProvisoria,
@@ -27,12 +27,18 @@ export default function EquipePage() {
   const [sede, setSede] = useState(false)
   const [ocupado, setOcupado] = useState<string>('')
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+  // Passo 09: aceite de termos de uso e LGPD por pessoa (data, versão e hash).
+  const [aceites, setAceites] = useState<Record<string, { versao: string; hash: string; aceito_em: string }>>({})
 
   const carregar = async () => {
     try {
       const p = await perfilAtual()
       setPerfil(p)
-      if (p === 'admin') { setPessoas(await listarPessoas()); setSede(await ehSede()) }
+      if (p === 'admin') {
+        setPessoas(await listarPessoas()); setSede(await ehSede())
+        const { data } = await supabase.rpc('aceites_equipe')
+        setAceites(Object.fromEntries(((data ?? []) as { usuario_id: string; versao: string; hash: string; aceito_em: string }[]).map(a => [a.usuario_id, a])))
+      }
     } catch (e) {
       setPerfil(null)
       setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível carregar a equipe.' })
@@ -128,6 +134,11 @@ export default function EquipePage() {
                         <p className="text-xs text-grafite-claro truncate">{p.email}</p>
                         <p className="text-xs text-grafite-claro mt-1">
                           {p.confirmado ? 'E-mail confirmado' : 'Aguardando confirmação do e-mail'} · Último acesso: {dataPt(p.ultimoAcesso)}
+                        </p>
+                        <p className="text-xs mt-1" data-testid={`aceite-${p.id}`}>
+                          {aceites[p.id]
+                            ? <span className="text-regular" title={`SHA-256 ${aceites[p.id].hash}`}>Termos e LGPD aceitos em {dataPt(aceites[p.id].aceito_em)} (v{aceites[p.id].versao}) · hash {aceites[p.id].hash.slice(0, 12)}…</span>
+                            : <span className="text-atencao">Termos e LGPD ainda não aceitos (aparecem no próximo acesso)</span>}
                         </p>
                       </div>
                       <div className="md:w-72">

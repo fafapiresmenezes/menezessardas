@@ -62,7 +62,7 @@ function LinhaContrato({ p, aoRegistrar }: { p: PrevisaoContrato; aoRegistrar?: 
     const { data, error } = await supabase.rpc('registrar_desfecho', { p_referencia: p.contrato.id, p_desfecho: d })
     if (error) setMsg('Não deu para registrar: ' + error.message)
     else if (!data) setMsg('Ainda não há previsão gravada para este contrato; volte amanhã, a fotografia é diária.')
-    else { setMsg(`Desfecho registrado (${data} previsão${data > 1 ? 'ões' : ''}). A calibração já considera.`); aoRegistrar?.() }
+    else { setMsg(`Desfecho registrado (${data} ${data > 1 ? 'previsões' : 'previsão'}). A calibração já considera.`); aoRegistrar?.() }
   }
   return (
     <li className="border-b border-navy/10 py-3">
