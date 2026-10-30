@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import Layout from '@/components/Layout'
 import { Printer, MessageSquare, UserCheck } from 'lucide-react'
 
@@ -52,6 +53,33 @@ export default function CompliancePage() {
   const geral = respondidas ? Math.round((Object.values(resp).reduce((a, b) => a + b, 0) / (respondidas * 2)) * 100) : null
   const lacunas = PILARES.flatMap((p, pi) => p.perguntas.map((q, i) => ({ ...q, pilar: p.nome, v: resp[`${pi}-${i}`] })).filter(q => q.v !== undefined && q.v < 2))
   const nivel = geral === null ? '' : geral >= 80 ? 'maduro' : geral >= 50 ? 'em desenvolvimento' : 'inicial'
+  // Passo 12: diagnóstico salvo, plano de ação em Casos e projetos e evolução trimestral da nota.
+  type Diag = { id: string; empresa: string; nota: number; lacunas: number; caso_id: string | null; criado_em: string }
+  const [historico, setHistorico] = useState<Diag[]>([])
+  const [salvando, setSalvando] = useState(false)
+  const [msg, setMsg] = useState<{ ok: boolean; texto: string } | null>(null)
+  const carregarHistorico = () => { if (supabaseConfigurado) supabase.from('diagnosticos_compliance').select('id,empresa,nota,lacunas,caso_id,criado_em').order('criado_em').then(({ data }) => setHistorico((data ?? []) as Diag[])) }
+  useEffect(carregarHistorico, [])
+  const trimestre = (iso: string) => { const d = new Date(iso); return `${Math.floor(d.getMonth() / 3) + 1}T/${d.getFullYear()}` }
+  const doCliente = historico.filter(h => !empresa.trim() || h.empresa.toLowerCase() === empresa.trim().toLowerCase())
+  const porTrimestre = [...new Map(doCliente.map(h => [trimestre(h.criado_em), h])).entries()] // última nota de cada trimestre
+  async function salvarPlano() {
+    if (geral === null) return
+    setSalvando(true); setMsg(null)
+    const nome = empresa.trim() || 'Cliente sem nome'
+    const dia = (n: number) => { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10) }
+    const { data: caso, error } = await supabase.from('tarefas').insert({ titulo: `Plano de ação de compliance · ${nome}`, nivel: 'projeto', prioridade: 'alta', cliente: nome, area: 'Compliance', tipo: 'projeto' }).select('id').single()
+    if (error || !caso) { setSalvando(false); setMsg({ ok: false, texto: 'Não deu para criar o caso: ' + (error?.message ?? 'erro') }); return }
+    const ordenadas = [...lacunas].sort((a, b) => (a.v ?? 0) - (b.v ?? 0))
+    if (ordenadas.length) {
+      const { error: e2 } = await supabase.from('tarefas').insert(ordenadas.map(l => ({ titulo: `${l.pilar}: ${l.acao}`, nivel: 'tarefa', pai_id: caso.id, prioridade: l.v === 0 ? 'alta' : 'media', prazo: dia(l.v === 0 ? 30 : 60), area: 'Compliance', cliente: nome })))
+      if (e2) { setSalvando(false); setMsg({ ok: false, texto: 'Caso criado, mas as tarefas falharam: ' + e2.message }); return }
+    }
+    const { error: e3 } = await supabase.from('diagnosticos_compliance').insert({ empresa: nome, nota: geral, respostas: resp, lacunas: lacunas.length, caso_id: caso.id })
+    setSalvando(false)
+    if (e3) setMsg({ ok: false, texto: 'Plano criado, mas o diagnóstico não foi gravado: ' + e3.message })
+    else { setMsg({ ok: true, texto: `Diagnóstico gravado e plano de ação criado em Casos e projetos com ${ordenadas.length} tarefa(s) (prioridade alta em 30 dias, média em 60).` }); carregarHistorico() }
+  }
   return (
     <Layout title="Compliance: diagnóstico de integridade">
       <div className="space-y-6">
@@ -91,7 +119,29 @@ export default function CompliancePage() {
             <ol className="list-decimal pl-5 text-sm space-y-1">
               {lacunas.sort((a, b) => (a.v ?? 0) - (b.v ?? 0)).map((l, i) => <li key={i}><strong>{l.pilar}:</strong> {l.acao} <span className="text-xs text-grafite-claro">({l.v === 0 ? 'prioridade alta' : 'prioridade média'}; {l.base})</span></li>)}
             </ol>
-            <button type="button" onClick={() => window.print()} className="mt-4 min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2 print:hidden"><Printer className="w-4 h-4" aria-hidden />Imprimir ou salvar em PDF</button>
+            <div className="flex flex-wrap gap-3 mt-4 print:hidden">
+              <button type="button" onClick={() => window.print()} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2"><Printer className="w-4 h-4" aria-hidden />Imprimir ou salvar em PDF</button>
+              {supabaseConfigurado && <button type="button" onClick={salvarPlano} disabled={salvando} data-testid="salvar-plano" className="min-h-[44px] border border-navy text-navy px-5 text-sm uppercase tracking-wider disabled:opacity-50">{salvando ? 'Criando…' : 'Gravar diagnóstico e criar plano em Casos e projetos'}</button>}
+            </div>
+            {msg && <p role="status" data-testid="msg-plano" className={`text-sm mt-3 ${msg.ok ? 'text-regular' : 'text-critico'}`}>{msg.texto}{msg.ok && <> <a className="underline" href="#/projetos">Abrir Casos e projetos</a></>}</p>}
+          </section>
+        )}
+        {doCliente.length > 0 && (
+          <section className="bg-white shadow-sm p-6 print:break-inside-avoid" data-testid="evolucao-trimestral" aria-labelledby="t-evolucao">
+            <h2 id="t-evolucao" className="font-serif text-xl mb-1">Evolução trimestral da nota{empresa.trim() && ` · ${empresa.trim()}`}</h2>
+            <p className="text-sm text-grafite-claro mb-4">Última nota gravada em cada trimestre. Refaça o diagnóstico a cada trimestre para acompanhar o plano de ação.</p>
+            <ul className="flex items-end gap-4 h-32" aria-label="Nota por trimestre">
+              {porTrimestre.map(([t, h]) => (
+                <li key={t} className="flex-1 flex flex-col items-center justify-end gap-1 h-full" data-testid="trimestre">
+                  <span className="text-sm font-medium">{h.nota}%</span>
+                  <span className={`w-full ${h.nota >= 80 ? 'bg-regular' : h.nota >= 50 ? 'bg-atencao' : 'bg-critico'}`} style={{ height: `${Math.max(6, h.nota * 0.8)}%` }} aria-hidden="true" />
+                  <span className="text-xs text-grafite-claro">{t}</span>
+                </li>
+              ))}
+            </ul>
+            <ul className="mt-4 text-sm divide-y divide-navy/10">
+              {[...doCliente].reverse().slice(0, 6).map(h => <li key={h.id} className="py-1 flex flex-wrap gap-2"><span className="text-grafite-claro">{new Date(h.criado_em).toLocaleDateString('pt-BR')}</span><span className="font-medium">{h.empresa}</span><span>{h.nota}% · {h.lacunas} lacuna(s)</span>{h.caso_id && <a className="underline text-navy" href="#/projetos">plano de ação</a>}</li>)}
+            </ul>
           </section>
         )}
       </div>
