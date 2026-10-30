@@ -48,6 +48,11 @@ export default function ContratoPage() {
   const carregar = useCallback(async () => {
     if (!id) return
     const i = await repositorio.obterImovel(id)
+    if (!i) {
+      // O link pode trazer o id do contrato (Previsões, buscas): abre a tela do imóvel dele.
+      const porContrato = await repositorio.obterContrato(id)
+      if (porContrato?.imovelId) { navigate(`/contrato/${porContrato.imovelId}`, { replace: true }); return }
+    }
     setImovel(i)
     const c = await repositorio.obterContratoPorImovel(id)
     setContrato(c)
@@ -64,7 +69,7 @@ export default function ContratoPage() {
     const todos = await repositorio.listarContratos()
     const imoveis = await repositorio.listarImoveis()
     setCompromissos(calcularAlertas(imoveis, todos).filter(a => a.imovelId === id))
-  }, [id])
+  }, [id, navigate])
 
   useEffect(() => {
     setErro('')
