@@ -29,6 +29,7 @@ import FontesPage from '@/pages/FontesPage'
 import KycPage from '@/pages/KycPage'
 import MeuDiaPage from '@/pages/MeuDiaPage'
 import ConsultoresPage from '@/pages/ConsultoresPage'
+import NuvemPage from '@/pages/NuvemPage'
 import HorasPage from '@/pages/HorasPage'
 import ModelosPage from '@/pages/ModelosPage'
 import MonitoramentoPage from '@/pages/MonitoramentoPage'
@@ -192,6 +193,10 @@ function App() {
         <Route
           path="/horas"
           element={isAuthenticated ? <HorasPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/nuvem"
+          element={isAuthenticated ? <NuvemPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/consultores"
