@@ -6,6 +6,7 @@ import { Save, User, Bell, Sparkles, Eye, EyeOff, KeyRound, Mail } from 'lucide-
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { estadoChaveIA, removerChaveIA, salvarChaveIA, testarChaveIA, type EstadoChaveIA } from '@/lib/ia'
 import { perfilAtual, rotuloFuncao, type Funcao } from '@/lib/equipe'
+import SecaoPix from '@/components/SecaoPix'
 
 const CHAVE = 'preferencias-usuario'
 
@@ -184,6 +185,7 @@ export default function ConfiguraçõesPage() {
       <SecaoChaveIA />
       <SecaoEmail />
       <SecaoEscavador />
+      <SecaoPix />
       <AvaliacaoSUS />
     </Layout>
   )
