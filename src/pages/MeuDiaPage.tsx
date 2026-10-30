@@ -79,6 +79,9 @@ export default function MeuDiaPage() {
     if (!error) setAcoes(acoes.map(x => x.id === a.id ? { ...x, feito_em } : x))
   }
   const feitas = acoes.filter(a => a.feito_em).length
+  // Passo 21: aviso quando as horas do mês estão abaixo de 80% do ritmo da meta da função.
+  const [horas, setHoras] = useState<{ meta: number; horas: number; esperado_hoje: number; pct_ritmo: number | null; abaixo: boolean } | null>(null)
+  useEffect(() => { if (!supabaseConfigurado) return; supabase.rpc('progresso_horas', { p_papel: papel }).then(r => setHoras(r.data ?? null)) }, [papel])
   const prazo = calc.dias > 0 && calc.inicio ? calcularPrazo(calc.inicio, calc.dias, calc.dobro) : null
 
   useEffect(() => { try { localStorage.setItem('lsm-papel', papel) } catch { /* sem armazenamento */ } }, [papel])
@@ -114,6 +117,11 @@ export default function MeuDiaPage() {
           </div>
         </section>
 
+        {horas && horas.meta > 0 && (
+          <section className={`${cartao} ${horas.abaixo ? 'border-l-4 border-critico' : ''}`} data-testid="alerta-horas" role={horas.abaixo ? 'alert' : undefined}>
+            <p className="text-sm"><strong>Horas do mês:</strong> {horas.horas}h lançadas, esperado até hoje {horas.esperado_hoje}h (meta {horas.meta}h). {horas.abaixo ? <span className="text-critico font-medium" data-testid="horas-abaixo">Abaixo de 80% do ritmo. </span> : <span data-testid="horas-ok">No ritmo. </span>}<Link to="/horas" className="underline">Lançar horas</Link></p>
+          </section>
+        )}
         <div className="grid gap-4 md:grid-cols-3">
           <section className={cartao}>
             <h2 className="font-serif text-lg flex items-center gap-2"><ListChecks className="w-5 h-5" aria-hidden />Minhas tarefas (7 dias)</h2>

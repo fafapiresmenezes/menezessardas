@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
-import { Play, Square, Download, Printer, Trash2 } from 'lucide-react'
+import { Play, Square, Download, Printer, Trash2, Target } from 'lucide-react'
+
+// Passo 21: meta mensal de horas por função (tabela metas_horas, só admin edita) e progresso da pessoa logada (RPC progresso_horas).
+const PAPEIS: Record<string, string> = { socia: 'Sócia', advogada: 'Advogada', estagiario: 'Estagiário ou paralegal', secretaria: 'Secretária', financeiro: 'Financeiro' }
+type Progresso = { meta: number; horas: number; esperado_hoje: number; pct_mes: number | null; pct_ritmo: number | null; abaixo: boolean; dias_uteis_mes: number; dias_uteis_ate_hoje: number }
 
 // Controle de horas e honorários: cronômetro ou lançamento manual, totais por cliente no mês,
 // exportação CSV para faturar e relatório imprimível para o cliente.
@@ -17,6 +21,23 @@ export default function HorasPage() {
   const [form, setForm] = useState({ data: new Date().toISOString().slice(0, 10), cliente: '', descricao: '', horas: '', valor_hora: '', faturavel: true })
   const [inicio, setInicio] = useState<number | null>(() => { try { const v = localStorage.getItem('lsm-cronometro'); return v ? Number(v) : null } catch { return null } })
   const [agora, setAgora] = useState(Date.now())
+  const [papel, setPapel] = useState(() => { try { return localStorage.getItem('lsm-papel') || 'advogada' } catch { return 'advogada' } })
+  const [metas, setMetas] = useState<Record<string, number>>({})
+  const [progresso, setProgresso] = useState<Progresso | null>(null)
+  const [admin, setAdmin] = useState(false)
+  const [metaEdit, setMetaEdit] = useState('')
+  const [msgMeta, setMsgMeta] = useState('')
+  const carregarMeta = async () => {
+    const [{ data: m }, { data: pr }] = await Promise.all([supabase.from('metas_horas').select('papel,horas_mes'), supabase.rpc('progresso_horas', { p_papel: papel })])
+    setMetas(Object.fromEntries((m ?? []).map(x => [x.papel, Number(x.horas_mes)]))); setProgresso((pr as Progresso) ?? null)
+  }
+  useEffect(() => { carregarMeta(); try { localStorage.setItem('lsm-papel', papel) } catch { /* */ } }, [papel]) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { supabase.auth.getUser().then(async ({ data }) => { if (!data.user) return; const { data: pf } = await supabase.from('usuarios_perfis').select('funcao').eq('id', data.user.id).maybeSingle(); setAdmin(pf?.funcao === 'admin') }) }, [])
+  const salvarMeta = async () => {
+    const v = Number(metaEdit.replace(',', '.')); if (!(v >= 0)) return setMsgMeta('Informe um número de horas.')
+    const { error } = await supabase.from('metas_horas').upsert({ papel, horas_mes: v, atualizado_em: new Date().toISOString() }, { onConflict: 'papel' })
+    setMsgMeta(error ? 'Não foi possível salvar (só administradores definem metas).' : `Meta de ${PAPEIS[papel]} salva: ${v}h por mês.`); setMetaEdit(''); carregarMeta()
+  }
 
   useEffect(() => { if (!inicio) return; const t = setInterval(() => setAgora(Date.now()), 1000); return () => clearInterval(t) }, [inicio])
   const carregar = async () => {
@@ -39,7 +60,7 @@ export default function HorasPage() {
     if (!form.cliente.trim() || !form.descricao.trim() || !(minutos > 0)) return setErro('Preencha cliente, o que foi feito e as horas.')
     const { error } = await supabase.from('lancamentos_horas').insert({ data: form.data, cliente: form.cliente.trim(), descricao: form.descricao.trim(), minutos, valor_hora: Number(form.valor_hora.replace(',', '.')) || 0, faturavel: form.faturavel })
     if (error) return setErro('Não foi possível salvar (leitores não lançam horas).')
-    setForm(f => ({ ...f, descricao: '', horas: '' })); carregar()
+    setForm(f => ({ ...f, descricao: '', horas: '' })); carregar(); carregarMeta()
   }
   const apagar = async (id: string) => { await supabase.from('lancamentos_horas').delete().eq('id', id); carregar() }
 
@@ -60,6 +81,32 @@ export default function HorasPage() {
   return (
     <Layout title="Horas e honorários">
       <div className="space-y-5">
+        <section className="bg-white shadow-sm p-5 print:hidden" data-testid="meta-horas">
+          <h2 className="font-serif text-lg flex items-center gap-2"><Target className="w-5 h-5" aria-hidden />Meta mensal de horas por função</h2>
+          <div className="flex flex-wrap items-center gap-3 mt-2 text-sm">
+            <label>Minha função
+              <select value={papel} onChange={e => setPapel(e.target.value)} className="border px-3 py-2 ml-2 min-h-[44px]" data-testid="meta-papel">
+                {Object.entries(PAPEIS).map(([k, v]) => <option key={k} value={k}>{v} · meta {metas[k] ?? 0}h</option>)}
+              </select>
+            </label>
+            {admin && (
+              <span className="flex items-center gap-2">
+                <input value={metaEdit} onChange={e => setMetaEdit(e.target.value)} placeholder={`nova meta (${metas[papel] ?? 0}h)`} className="border px-3 py-2 w-40 min-h-[44px]" data-testid="meta-valor" aria-label="Nova meta de horas por mês" />
+                <button type="button" onClick={salvarMeta} className="min-h-[44px] px-4 border border-navy text-navy text-sm" data-testid="meta-salvar">Definir meta</button>
+              </span>
+            )}
+            {msgMeta && <span aria-live="polite" data-testid="msg-meta">{msgMeta}</span>}
+          </div>
+          {progresso && (
+            <div className="mt-3">
+              <div className="flex justify-between text-sm"><span>Minhas horas no mês: <strong data-testid="meta-horas-mes">{progresso.horas}h</strong> de {progresso.meta}h</span><span data-testid="meta-pct">{progresso.pct_mes ?? 0}% da meta · ritmo {progresso.pct_ritmo ?? 0}%</span></div>
+              <div className="h-3 bg-pergaminho mt-1" role="progressbar" aria-valuenow={progresso.pct_mes ?? 0} aria-valuemin={0} aria-valuemax={100} aria-label="Progresso da meta de horas">
+                <div className={`h-3 ${progresso.abaixo ? 'bg-critico' : 'bg-regular'}`} style={{ width: `${Math.min(100, progresso.pct_mes ?? 0)}%` }} data-testid="meta-barra" />
+              </div>
+              <p className="text-xs text-grafite-claro mt-1">Esperado até hoje: {progresso.esperado_hoje}h ({progresso.dias_uteis_ate_hoje} de {progresso.dias_uteis_mes} dias úteis). {progresso.abaixo ? <span className="text-critico">Abaixo de 80% do ritmo: o aviso aparece em Meu dia.</span> : progresso.meta ? 'No ritmo da meta.' : 'Sem meta para esta função.'}</p>
+            </div>
+          )}
+        </section>
         <section className="bg-white shadow-sm border-t-2 border-dourado p-5 print:hidden">
           <div className="flex flex-wrap items-center gap-3 mb-3">
             <button type="button" onClick={cronometro} data-testid="cronometro" className={`min-h-[44px] px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2 ${inicio ? 'bg-critico text-white' : 'bg-navy text-white'}`}>
