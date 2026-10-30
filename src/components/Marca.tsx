@@ -16,7 +16,7 @@ export default function Marca({ tamanho = 'pequena', comSubtitulo = true, classN
         className={`font-serif tracking-[0.22em] text-dourado ${grande ? 'text-4xl' : 'text-xl'}`}
         aria-hidden="true"
       >
-        LSM
+        GM
       </div>
       <div className={`h-px bg-dourado/50 ${grande ? 'w-24 my-3' : 'w-12 my-1.5'}`} aria-hidden="true" />
       <div
@@ -24,9 +24,7 @@ export default function Marca({ tamanho = 'pequena', comSubtitulo = true, classN
           grande ? 'text-xl' : 'text-sm'
         }`}
       >
-        Leticia Sardas
-        <span className="text-dourado"> &amp; </span>
-        Menezes
+        <span className="text-dourado">G</span>Menezes
       </div>
       {comSubtitulo && (
         <div

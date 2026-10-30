@@ -7,7 +7,7 @@ import Busca from './Busca'
 import BoasVindas from './BoasVindas'
 import { aplicarTema, temaAtual } from '@/lib/tema'
 import { listarPessoas, perfilAtual } from '@/lib/equipe'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -26,6 +26,7 @@ const itensMenu = [
   { icon: Scale, label: 'Legislação', href: '/legislacao' },
   { icon: MessageSquare, label: 'Assistente', href: '/assistente' },
   { icon: Sunrise, label: 'Meu dia', href: '/meu-dia' },
+  { icon: Briefcase, label: 'Consultores', href: '/consultores' },
   { icon: Timer, label: 'Horas e honorários', href: '/horas' },
   { icon: FileText, label: 'Modelos de peças', href: '/modelos' },
   { icon: Globe, label: 'Fontes do advogado', href: '/fontes' },
@@ -101,7 +102,7 @@ export default function Layout({ children, title }: LayoutProps) {
             <Marca className="flex-1 min-w-0" />
           ) : (
             <span className="font-serif text-dourado tracking-widest text-lg mx-auto" aria-hidden="true">
-              LSM
+              GM
             </span>
           )}
           <button

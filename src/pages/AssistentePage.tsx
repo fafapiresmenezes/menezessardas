@@ -25,7 +25,7 @@ const EXEMPLOS = [
 ]
 
 /** Markdown simples (negrito, listas, títulos) → HTML seguro. */
-function render(md: string) {
+export function render(md: string) {
   const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   const linhas = esc(md).split('\n')
   const html: string[] = []

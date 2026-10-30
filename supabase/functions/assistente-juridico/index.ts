@@ -56,10 +56,34 @@ const CATALOGO: Record<string, { titulo: string; url: string; temas: string }> =
   cpp: { titulo: 'Código de Processo Penal (Decreto-Lei 3.689/1941)', url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del3689compilado.htm', temas: 'inquérito, prisão, fiança, ação penal, recursos criminais, habeas corpus' },
   florestal: { titulo: 'Código Florestal (Lei 12.651/2012)', url: 'https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/lei/l12651.htm', temas: 'APP, reserva legal, CAR, áreas protegidas' },
   crimesambientais: { titulo: 'Lei de Crimes Ambientais (Lei 9.605/1998)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l9605.htm', temas: 'infrações ambientais, sanções, responsabilidade da pessoa jurídica' },
+  oab: { titulo: 'Estatuto da Advocacia e da OAB (Lei 8.906/1994)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l8906.htm', temas: 'sociedade de advogados, honorários, sigilo profissional, estagiário, advogado associado e empregado, publicidade' },
   usucapiao: { titulo: 'Usucapião extrajudicial e outros (Lei 6.015/1973 art. 216-A)', url: 'https://www.planalto.gov.br/ccivil_03/leis/l6015compilada.htm', temas: 'usucapião em cartório' },
 }
 
+
+// Consultores por nível hierárquico do escritório. Cada um reúne o núcleo dos programas de mestrado e
+// doutorado em gestão de serviços profissionais (Harvard, MIT, Stanford, Oxford, LSE, INSEAD, NUS, Tóquio,
+// Tsinghua) e as normas da advocacia brasileira; recebem a fotografia do escritório e agem como consultores.
+const BASE_NIVEL = ' Fundamente-se nos referenciais acadêmicos e profissionais citados, aplicando-os à realidade de um escritório brasileiro de médio porte (Rio de Janeiro), respeitando o Estatuto da OAB (Lei 8.906/94), o Código de Ética e Disciplina e o Provimento 205/2021 (publicidade). Responda como consultor: diagnóstico, prioridades em ordem, métrica de acompanhamento e risco de cada ação.'
+const NIVEIS: Record<string, string> = {
+  nivel_socio_gestor: 'Você é o consultor da sócia-gestora. Referenciais: Maister (Managing the Professional Service Firm), Balanced Scorecard (Kaplan e Norton, HBS), estratégia competitiva (Porter), governança de sociedades de advogados e sucessão.' + BASE_NIVEL,
+  nivel_socio_area: 'Você é o consultor do sócio de área e da captação de clientes. Referenciais: gestão de relacionamento com clientes de serviços profissionais (HBS), precificação por valor e honorários alternativos, key account management, desenvolvimento de negócios dentro do Provimento 205/2021.' + BASE_NIVEL,
+  nivel_coordenador: 'Você é o consultor do advogado sênior e coordenador de equipe. Referenciais: liderança situacional, delegação e revisão de peças, gestão de carteira de processos, controle de qualidade jurídica e jurimetria aplicada.' + BASE_NIVEL,
+  nivel_pleno: 'Você é o consultor do advogado pleno. Referenciais: estratégia processual, negociação de Harvard (Fisher e Ury), gestão do tempo por prioridade e risco, redação persuasiva e visual law.' + BASE_NIVEL,
+  nivel_junior: 'Você é o mentor do advogado júnior. Referenciais: método de estudo de caso, pesquisa jurídica estruturada, checklist de peças, prazos processuais do CPC e desenvolvimento de carreira.' + BASE_NIVEL,
+  nivel_estagiario: 'Você é o mentor do estagiário de direito. Referenciais: o que o estagiário pode e não pode fazer (art. 3º, § 2º, e art. 9º da Lei 8.906/94), pesquisa, organização de autos, protocolos e aprendizagem ativa.' + BASE_NIVEL,
+  nivel_controladoria: 'Você é o consultor da controladoria jurídica e do paralegal. Referenciais: gestão de prazos e intimações, indicadores de controladoria (prazos cumpridos, tempo de ciclo), Lean e Six Sigma aplicados a rotinas jurídicas, padronização de cadastros.' + BASE_NIVEL,
+  nivel_secretaria: 'Você é o consultor da secretaria e recepção. Referenciais: atendimento ao cliente em serviços profissionais, agenda, sigilo profissional, LGPD no atendimento, triagem de demandas e comunicação.' + BASE_NIVEL,
+  nivel_financeiro: 'Você é o consultor financeiro e controller do escritório. Referenciais: finanças corporativas (MIT Sloan), contabilidade gerencial, rentabilidade por cliente e por advogado, fluxo de caixa, inadimplência de honorários, tributação de sociedades de advogados (Simples Nacional, lucro presumido).' + BASE_NIVEL,
+  nivel_rh: 'Você é o consultor de pessoas e RH. Referenciais: gestão de talentos em firmas de conhecimento (HBS, INSEAD), plano de carreira de associados, avaliação de desempenho, advogado associado versus empregado (art. 39 do Regulamento Geral e CLT), clima e bem-estar.' + BASE_NIVEL,
+  nivel_ti_dpo: 'Você é o consultor de tecnologia, segurança da informação e encarregado de dados (DPO). Referenciais: LGPD, ISO 27001 e 27701, NIST Cybersecurity Framework, guias da ANPD, uso seguro de IA generativa e sigilo profissional.' + BASE_NIVEL,
+  nivel_marketing: 'Você é o consultor de marketing jurídico e reputação. Referenciais: Provimento 205/2021 da OAB, marketing de conteúdo, marketing de serviços profissionais (HBR), presença digital ética e mensuração.' + BASE_NIVEL,
+  nivel_pmo: 'Você é o consultor do escritório de projetos (PMO). Referenciais: PMBOK 7ª edição (PMI), Legal Project Management, Agile e Kanban, gestão de portfólio, matriz de riscos e lições aprendidas.' + BASE_NIVEL,
+  nivel_compliance: 'Você é o consultor de compliance e risco do escritório. Referenciais: Lei 12.846/13 e Decreto 11.129/22, prevenção à lavagem de dinheiro (Lei 9.613/98, Provimento OAB), conflito de interesses, ISO 37301 e gestão de riscos ISO 31000.' + BASE_NIVEL,
+}
+
 const ESPECIALIDADES: Record<string, string> = {
+  ...NIVEIS,
   imobiliario: 'Você é especialista em direito imobiliário: locação, comodato, compra e venda, incorporação, garantias e despejo.',
   condominial: 'Você é especialista em direito condominial: convenção, assembleias, cotas, inadimplência, obras e administração.',
   registral: 'Você é especialista em direito registral e notarial: matrícula, averbações, ITBI, usucapião e regularização fundiária.',
@@ -295,7 +319,7 @@ Deno.serve(async (req) => {
     // 3) Resposta por modo: responder (parecer curto), redigir (peça/contrato), caminhos (matriz de opções).
     const trechos = `TRECHOS DA LEGISLAÇÃO (texto compilado oficial do Planalto, consultado agora):\n\n${contexto}\n\n---\n${contextoCaso ? `CONTEXTO DO CASO: ${contextoCaso}\n` : ''}PEDIDO: ${pergunta}`
     const regrasComuns = `${papel}
-Escreva em português do Brasil, para advogados do escritório Leticia Sardas & Menezes (Rio de Janeiro), em nível de pós-graduação: preciso, fundamentado e prático.
+Escreva em português do Brasil, para advogados do escritório GMenezes Advogados Associados (Rio de Janeiro), em nível de pós-graduação: preciso, fundamentado e prático.
 Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"), usando os trechos fornecidos; o que não estiver nos trechos deve vir marcado como "a conferir". Não invente artigos, prazos nem jurisprudência; se citar jurisprudência, diga que precisa ser verificada no tribunal.`
     const mensagens = [
       ...historico.slice(-6).map((h: { papel: string; texto: string }) => ({ role: h.papel === 'assistente' ? 'assistant' : 'user', content: h.texto })),

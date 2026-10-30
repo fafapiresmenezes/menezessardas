@@ -31,7 +31,7 @@ export const CALENDARIOS = [
 const CHAVE = 'lsm-ancoragens-v1'
 
 export function textoDoSelo(seq: number, selo: string): string {
-  return `Plataforma de Gestão de Contratos - Leticia Sardas & Menezes\nSelo da trilha de auditoria\nregistros: ${seq}\nselo: ${selo}\n`
+  return `Plataforma de Gestão de Contratos - GMenezes Advogados Associados\nSelo da trilha de auditoria\nregistros: ${seq}\nselo: ${selo}\n`
 }
 
 async function sha256(bytes: Uint8Array): Promise<Uint8Array> {

@@ -44,7 +44,7 @@ Novo valor: ${brl(novo)}, a partir do próximo vencimento.
 
 Permanecemos à disposição.
 
-Leticia Sardas & Menezes Advogados Associados` : ''
+GMenezes Advogados Associados` : ''
 
   return (
     <section className="bg-white p-6 shadow-sm" aria-labelledby="titulo-reajuste">

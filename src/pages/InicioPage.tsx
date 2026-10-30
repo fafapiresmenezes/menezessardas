@@ -25,10 +25,11 @@ export default function InicioPage() {
   return (
     <main className="min-h-screen bg-navy flex flex-col items-center justify-center px-4 py-12">
       <div className="text-center mb-10">
-        <p className="font-serif text-dourado text-4xl tracking-widest">LSM</p>
-        <h1 className="font-serif text-white text-3xl mt-2">Leticia Sardas &amp; Menezes</h1>
+        <p className="font-serif text-dourado text-4xl tracking-widest">GM</p>
+        <h1 className="font-serif text-white text-3xl mt-2">GMenezes Advogados Associados</h1>
         <p className="text-white/70 mt-3">Escolha a área em que vai trabalhar agora</p>
         <button type="button" data-testid="ir-meu-dia" onClick={() => navigate('/meu-dia')} className="mt-4 min-h-[44px] px-5 border border-dourado text-dourado text-sm uppercase tracking-wider">Ver meu dia: prazos, tarefas e intimações</button>
+        <button type="button" data-testid="ir-consultores" onClick={() => navigate('/consultores')} className="mt-4 ml-3 min-h-[44px] px-5 bg-dourado text-navy text-sm uppercase tracking-wider">Consultores do escritório</button>
       </div>
       <div className="grid gap-4 w-full max-w-6xl sm:grid-cols-2 lg:grid-cols-5">
         {AREAS.map(a => (

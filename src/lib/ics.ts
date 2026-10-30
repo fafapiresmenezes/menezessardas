@@ -38,7 +38,7 @@ export function gerarICS(alertas: Alerta[], nomeCalendario = 'Compromissos contr
   const linhas: string[] = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Leticia Sardas & Menezes//Gestão Contratual//PT-BR',
+    'PRODID:-//GMenezes Advogados Associados//Gestão Contratual//PT-BR',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     dobrar('X-WR-CALNAME:' + escapar(nomeCalendario)),

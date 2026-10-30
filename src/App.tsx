@@ -28,6 +28,7 @@ import InicioPage from '@/pages/InicioPage'
 import FontesPage from '@/pages/FontesPage'
 import KycPage from '@/pages/KycPage'
 import MeuDiaPage from '@/pages/MeuDiaPage'
+import ConsultoresPage from '@/pages/ConsultoresPage'
 import HorasPage from '@/pages/HorasPage'
 import ModelosPage from '@/pages/ModelosPage'
 import MonitoramentoPage from '@/pages/MonitoramentoPage'
@@ -191,6 +192,10 @@ function App() {
         <Route
           path="/horas"
           element={isAuthenticated ? <HorasPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/consultores"
+          element={isAuthenticated ? <ConsultoresPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/meu-dia"

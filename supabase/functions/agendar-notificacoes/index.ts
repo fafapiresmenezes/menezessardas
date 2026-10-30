@@ -37,7 +37,7 @@ async function enviar(p: Provedor, para: string[], itens: Item[]) {
     <div style="background:#14213d;color:#fff;padding:18px"><h2 style="margin:0">Avisos de prazos contratuais</h2></div>
     <table style="width:100%;border-collapse:collapse">${linhas}</table>
     <p style="padding:10px"><a href="${APP}/agenda">Abrir a Agenda</a></p>
-    <p style="font-size:11px;color:#888;padding:10px">Leticia Sardas &amp; Menezes Advogados Associados · aviso automático</p></div>`
+    <p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · aviso automático</p></div>`
   const assunto = `${itens.length} prazo(s) se aproximando`
   if (p.brevo && p.remetente) {
     // Um envio por pessoa, para ninguém ver o e-mail dos outros.

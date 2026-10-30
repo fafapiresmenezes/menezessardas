@@ -1,7 +1,7 @@
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 
 export type Especialidade =
-  | 'imobiliario' | 'condominial' | 'registral' | 'consumidor' | 'tributario' | 'trabalhista' | 'familia' | 'lgpd' | 'inovacao' | 'compliance' | 'empresarial' | 'previdenciario' | 'penal' | 'civel' | 'ambiental' | 'geral'
+  | `nivel_${string}` | 'imobiliario' | 'condominial' | 'registral' | 'consumidor' | 'tributario' | 'trabalhista' | 'familia' | 'lgpd' | 'inovacao' | 'compliance' | 'empresarial' | 'previdenciario' | 'penal' | 'civel' | 'ambiental' | 'geral'
 
 export const ESPECIALIDADES: { valor: Especialidade; rotulo: string; descricao: string }[] = [
   { valor: 'imobiliario', rotulo: 'Imobiliário', descricao: 'Locação, comodato, compra e venda, garantias, despejo' },
