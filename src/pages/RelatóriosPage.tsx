@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { useImoveis } from '@/hooks/useImoveis'
 import { useAlertas } from '@/hooks/useAlertas'
 import { repositorio, type Contrato, type Documento } from '@/lib/repositorio'
@@ -43,10 +44,33 @@ export default function RelatóriosPage() {
   const { imoveis, loading: carregandoImoveis } = useImoveis()
   const { alertas, loading: carregandoAlertas } = useAlertas()
   const [contratos, setContratos] = useState<Contrato[] | null>(null)
+  // Relatório mensal (Passo 16): PDF gerado no servidor e enviado por e-mail à sócia no dia 1; aqui dá para testar e baixar.
+  const [ultimo, setUltimo] = useState<{ mes: string; enviado_em: string | null; destinatarios: number; sha256: string | null } | null>(null)
+  const [msgMensal, setMsgMensal] = useState('')
+  const [ocupado, setOcupado] = useState(false)
 
   useEffect(() => {
     repositorio.listarContratos().then(setContratos)
+    if (supabaseConfigurado) supabase.from('relatorios_mensais').select('mes,enviado_em,destinatarios,sha256').order('mes', { ascending: false }).limit(1).maybeSingle().then(r => setUltimo(r.data ?? null))
   }, [])
+  const testarMensal = async () => {
+    setOcupado(true); setMsgMensal('Gerando o PDF e enviando para o seu e-mail…')
+    const { data, error } = await supabase.functions.invoke('relatorio-mensal', { body: { teste: true } })
+    setOcupado(false)
+    if (error) return setMsgMensal(`Não foi possível enviar: ${error.message}`)
+    if (data?.enviado) setMsgMensal(`Relatório de ${data.mes?.slice(0, 7)} enviado para o seu e-mail (SHA-256 ${String(data.sha256).slice(0, 12)}…). No dia 1 de cada mês ele vai sozinho à sócia.`)
+    else setMsgMensal(`Não enviado: ${data?.motivo ?? data?.detalhe ?? data?.erro ?? 'erro desconhecido'}.`)
+  }
+  const baixarMensal = async () => {
+    setOcupado(true); setMsgMensal('Gerando o PDF…')
+    const { data, error } = await supabase.functions.invoke('relatorio-mensal', { body: { teste: true, baixar: true } })
+    setOcupado(false)
+    if (error || !data?.pdf_base64) return setMsgMensal(`Não foi possível gerar: ${error?.message ?? data?.erro ?? 'erro desconhecido'}`)
+    const bytes = Uint8Array.from(atob(data.pdf_base64), c => c.charCodeAt(0))
+    const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }))
+    const a = document.createElement('a'); a.href = url; a.download = data.arquivo ?? 'relatorio-mensal.pdf'; a.click(); URL.revokeObjectURL(url)
+    setMsgMensal(`PDF gerado (SHA-256 ${String(data.sha256).slice(0, 12)}…).`)
+  }
 
   if (carregandoImoveis || carregandoAlertas || contratos === null) {
     return (
@@ -130,6 +154,16 @@ export default function RelatóriosPage() {
             ))}
           </div>
         </div>
+
+        <section className="bg-white p-5 shadow-sm border-t-2 border-dourado" data-testid="relatorio-mensal" aria-labelledby="t-mensal">
+          <h2 id="t-mensal" className="text-lg">Relatório mensal automático</h2>
+          <p className="text-sm text-grafite mt-1">No dia 1 de cada mês, às 8h, a plataforma gera o relatório do mês anterior em PDF (contratos, imóveis, casos, horas, honorários, intimações, assinaturas, compliance e IA) e envia por e-mail à sócia. {ultimo ? `Último enviado: ${ultimo.mes.slice(5, 7)}/${ultimo.mes.slice(0, 4)}${ultimo.enviado_em ? ` em ${new Date(ultimo.enviado_em).toLocaleDateString('pt-BR')} a ${ultimo.destinatarios} pessoa(s)` : ''}.` : 'O primeiro vai no próximo dia 1.'}</p>
+          <div className="flex flex-wrap gap-2 mt-3">
+            <button type="button" onClick={testarMensal} disabled={ocupado} data-testid="testar-mensal" className="min-h-[44px] px-4 text-sm bg-navy text-white disabled:opacity-60">Enviar-me o relatório agora (teste)</button>
+            <button type="button" onClick={baixarMensal} disabled={ocupado} data-testid="baixar-mensal" className="min-h-[44px] px-4 text-sm border border-navy text-navy disabled:opacity-60">Baixar o PDF deste mês</button>
+          </div>
+          {msgMensal && <p className="text-sm mt-2" role="status" data-testid="msg-mensal">{msgMensal}</p>}
+        </section>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
