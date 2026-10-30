@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { formatarData } from '@/lib/datas'
 import Marca from '@/components/Marca'
+import AssinarPortal from '@/components/AssinarPortal'
 import { CheckCircle2, Circle, Clock, Scale } from 'lucide-react'
 
 // Portal do cliente: página pública, sem login, aberta por um link com código secreto gerado pelo escritório.
@@ -47,6 +48,7 @@ export default function PortalClientePage() {
                 <p className="text-grafite mt-1">Combinado: {brl(caso.honorario_previsto)} · Pago: {brl(caso.honorario_recebido)} · Em aberto: {brl(Math.max(0, caso.honorario_previsto - caso.honorario_recebido))}{caso.vencimento_honorario && ` · vencimento ${formatarData(caso.vencimento_honorario)}`}</p>
               </section>
             )}
+            <AssinarPortal token={token} />
             <p className="text-xs text-grafite-claro mt-6">Atualizado em {formatarData(caso.atualizado_em.slice(0, 10))}. Dúvidas: fale com o escritório. Esta página não substitui a consulta aos autos.</p>
           </article>
         )}

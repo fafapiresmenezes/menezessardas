@@ -5,6 +5,7 @@ import { repositorio, type Imovel } from '@/lib/repositorio'
 import { listarPessoas, type Pessoa } from '@/lib/equipe'
 import { formatarData, diasAte } from '@/lib/datas'
 import { FolderKanban, Plus, ChevronRight } from 'lucide-react'
+import AssinaturasCaso from '@/components/AssinaturasCaso'
 
 // Gestão de projetos do escritório em hierarquia (Projeto → Tarefa → Subtarefa), no estilo Monday:
 // vale para qualquer caso (processo, contrato, consultoria, cliente externo ou projeto interno), com
@@ -152,6 +153,8 @@ export default function ProjetosPage() {
           </div>
           {linkPortal && <p className="text-xs text-grafite mt-3" data-testid="link-portal">Link copiado. O cliente vê só as etapas e os honorários, sem login: <a className="underline text-navy break-all" href={linkPortal} target="_blank" rel="noreferrer">{linkPortal}</a></p>}
         </section>
+
+        {projeto && <AssinaturasCaso key={projeto} tarefaId={projeto} cliente={tarefas.find(t => t.id === projeto)?.cliente ?? null} />}
 
         <section aria-labelledby="t-caso" className="bg-white shadow-sm p-5">
           <h2 id="t-caso" className="text-lg mb-1 flex items-center gap-2"><FolderKanban size={18} className="text-dourado" aria-hidden="true" /> Novo caso pronto (com etapas e prazos)</h2>
