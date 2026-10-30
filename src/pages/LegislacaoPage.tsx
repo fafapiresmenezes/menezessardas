@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { AREAS_DIREITO, gravarAreaAtual, lerAreaAtual } from '@/lib/assistente'
 import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
@@ -48,10 +49,16 @@ export default function LegislacaoPage() {
   const [radar, setRadar] = useState<NovidadePortal[]>([])
   const [filtroRadar, setFiltroRadar] = useState<'todos' | 'Projeto' | 'Notícia'>('todos')
 
+  const [areaRadar, setAreaRadar] = useState<string>('')
   useEffect(() => {
     lerAcompanhamento().then(setAcomp)
-    radarPortais().then(setRadar).catch(() => undefined)
+    lerAreaAtual().then(setAreaRadar)
   }, [])
+  useEffect(() => {
+    if (!areaRadar) return
+    radarPortais(areaRadar === 'todas' ? undefined : areaRadar).then(setRadar).catch(() => undefined)
+  }, [areaRadar])
+  const trocarArea = (a: string) => { setAreaRadar(a); if (a !== 'todas') gravarAreaAtual(a).catch(() => undefined) }
 
   const atualizar = useCallback(async () => {
     setBuscando(true)
@@ -183,10 +190,16 @@ export default function LegislacaoPage() {
             <div>
               <h2 id="titulo-radar" className="text-lg">Radar dos portais</h2>
               <p className="text-sm text-grafite-claro">
-                Conexão permanente: todo dia o servidor consulta a Câmara dos Deputados (projetos de lei dos últimos 120 dias) e as notícias dos tribunais sobre locação, condomínio, incorporação e registro.
+                Conexão permanente: todo dia o servidor consulta a Câmara dos Deputados (projetos de lei dos últimos 120 dias) e as notícias dos tribunais sobre os temas de cada área do direito. A área escolhida na tela de entrada fica guardada para você.
                 {radar[0] && <> Última captura: {new Date(radar[0].vistoEm).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}.</>}
               </p>
             </div>
+            <label className="text-sm print:hidden">Área:
+              <select value={areaRadar} onChange={e => trocarArea(e.target.value)} data-testid="radar-area" className="ml-2 border px-2 min-h-[36px]">
+                {AREAS_DIREITO.map(a => <option key={a.chave} value={a.chave}>{a.nome}</option>)}
+                <option value="todas">Todas as áreas</option>
+              </select>
+            </label>
             <div role="radiogroup" aria-label="Filtro do radar" className="flex gap-1 print:hidden">
               {(['todos', 'Projeto', 'Notícia'] as const).map(f => (
                 <button key={f} role="radio" aria-checked={filtroRadar === f} onClick={() => setFiltroRadar(f)}
@@ -197,7 +210,7 @@ export default function LegislacaoPage() {
             </div>
           </div>
           {radar.length === 0 ? (
-            <p className="text-sm text-grafite-claro">Nada captado ainda. A primeira varredura roda hoje às 8h30.</p>
+            <p className="text-sm text-grafite-claro" data-testid="radar-vazio">Nada captado ainda para esta área. A varredura roda todo dia às 8h30; escolha "Todas as áreas" para ver o que já existe.</p>
           ) : (
             <ul className="divide-y divide-navy/5">
               {radar.filter(n => filtroRadar === 'todos' || n.tipo === filtroRadar).slice(0, 25).map(n => (

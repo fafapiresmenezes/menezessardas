@@ -5,8 +5,19 @@
 // LexML e Senado bloqueiam ou não têm endpoint de busca utilizável a partir do servidor.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const TERMOS = ['inquilinato', 'locação de imóveis', 'condomínio edilício', 'incorporação imobiliária', 'registro de imóveis', 'distrato imobiliário']
-const NOTICIAS = ['STJ locação de imóvel', 'STJ condomínio', 'lei do inquilinato', 'TJRJ despejo', 'incorporação imobiliária decisão']
+// Passo 04 do plano: termos por área do direito (as 10 áreas da tela de entrada). Cada novidade guarda a área.
+const POR_AREA: Record<string, { camara: string[]; noticias: string[] }> = {
+  imobiliario: { camara: ['inquilinato', 'locação de imóveis', 'condomínio edilício', 'incorporação imobiliária', 'registro de imóveis', 'distrato imobiliário'], noticias: ['STJ locação de imóvel', 'STJ condomínio', 'lei do inquilinato', 'TJRJ despejo', 'incorporação imobiliária decisão'] },
+  civel: { camara: ['responsabilidade civil', 'código civil contratos'], noticias: ['STJ responsabilidade civil', 'STJ contratos decisão'] },
+  trabalhista: { camara: ['CLT', 'direito do trabalho'], noticias: ['TST decisão', 'reforma trabalhista'] },
+  familia: { camara: ['alimentos família', 'guarda compartilhada', 'inventário'], noticias: ['STJ divórcio', 'STJ alimentos guarda'] },
+  tributario: { camara: ['reforma tributária', 'imposto de renda', 'ICMS'], noticias: ['STF tributário decisão', 'reforma tributária regulamentação'] },
+  empresarial: { camara: ['recuperação judicial', 'sociedades empresárias'], noticias: ['STJ recuperação judicial', 'falência decisão'] },
+  consumidor: { camara: ['código de defesa do consumidor', 'relações de consumo'], noticias: ['STJ consumidor decisão', 'Procon'] },
+  previdenciario: { camara: ['previdência social', 'aposentadoria INSS'], noticias: ['INSS revisão', 'STJ previdenciário'] },
+  penal: { camara: ['código penal', 'execução penal'], noticias: ['STF penal decisão', 'STJ habeas corpus'] },
+  compliance: { camara: ['proteção de dados pessoais', 'lei anticorrupção'], noticias: ['ANPD decisão', 'LGPD multa'] },
+}
 
 const cors = {
   'Access-Control-Allow-Origin': '*',
@@ -16,7 +27,7 @@ const cors = {
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
 
-interface Novidade { id: string; fonte: string; tipo: string; titulo: string; resumo?: string; link: string; data?: string; termo: string }
+interface Novidade { id: string; fonte: string; tipo: string; titulo: string; resumo?: string; link: string; data?: string; termo: string; area?: string }
 
 const limpa = (s: string) => s.replace(/<!\[CDATA\[|\]\]>/g, '').replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\s+/g, ' ').trim()
 
@@ -56,10 +67,15 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
   const diagnostico: string[] = []
   const tudo: Novidade[] = []
-  await Promise.all([
-    ...TERMOS.map(t => camara(t).then(n => { tudo.push(...n); diagnostico.push(`Câmara "${t}": ${n.length}`) }).catch(e => diagnostico.push(`Câmara "${t}": falha ${String(e).slice(0, 60)}`))),
-    ...NOTICIAS.map(t => noticias(t).then(n => { tudo.push(...n); diagnostico.push(`Notícias "${t}": ${n.length}`) }).catch(e => diagnostico.push(`Notícias "${t}": falha ${String(e).slice(0, 60)}`))),
-  ])
+  const { area: soArea } = await req.json().catch(() => ({}))
+  const areas = Object.keys(POR_AREA).filter(a => !soArea || a === soArea)
+  // Em lotes de áreas para não abrir dezenas de conexões de uma vez.
+  for (let i = 0; i < areas.length; i += 3) {
+    await Promise.all(areas.slice(i, i + 3).flatMap(area => [
+      ...POR_AREA[area].camara.map(t => camara(t).then(n => { tudo.push(...n.map(x => ({ ...x, area }))); diagnostico.push(`Câmara "${t}": ${n.length}`) }).catch(e => diagnostico.push(`Câmara "${t}": falha ${String(e).slice(0, 60)}`))),
+      ...POR_AREA[area].noticias.map(t => noticias(t).then(n => { tudo.push(...n.map(x => ({ ...x, area }))); diagnostico.push(`Notícias "${t}": ${n.length}`) }).catch(e => diagnostico.push(`Notícias "${t}": falha ${String(e).slice(0, 60)}`))),
+    ]))
+  }
   const unicos = [...new Map(tudo.map(n => [n.id, n])).values()]
   const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
   let gravados = 0

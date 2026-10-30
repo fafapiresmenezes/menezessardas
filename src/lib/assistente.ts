@@ -142,3 +142,23 @@ export async function perguntar(pergunta: string, especialidade: Especialidade, 
     artigosConsultados: data.artigosConsultados, criadoEm: data.consultadoEm,
   }
 }
+
+// Área de atuação escolhida na tela de entrada (Passo 04): guardada por usuário e usada para filtrar o radar.
+export const AREAS_DIREITO: { chave: string; nome: string }[] = [
+  { chave: 'imobiliario', nome: 'Imobiliário' }, { chave: 'civel', nome: 'Cível e contratos' }, { chave: 'trabalhista', nome: 'Trabalhista' },
+  { chave: 'familia', nome: 'Família e sucessões' }, { chave: 'tributario', nome: 'Tributário' }, { chave: 'empresarial', nome: 'Empresarial' },
+  { chave: 'consumidor', nome: 'Consumidor' }, { chave: 'previdenciario', nome: 'Previdenciário' }, { chave: 'penal', nome: 'Penal' }, { chave: 'compliance', nome: 'Compliance e LGPD' },
+]
+export async function lerAreaAtual(): Promise<string> {
+  try {
+    const { data } = await supabase.from('preferencias_usuario').select('area').maybeSingle()
+    if (data?.area) return data.area
+  } catch { /* sem banco */ }
+  try { return localStorage.getItem('lsm-area') || 'imobiliario' } catch { return 'imobiliario' }
+}
+export async function gravarAreaAtual(area: string): Promise<void> {
+  try { localStorage.setItem('lsm-area', area) } catch { /* privado */ }
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
+  await supabase.from('preferencias_usuario').upsert({ usuario_id: user.id, area, atualizado_em: new Date().toISOString() })
+}

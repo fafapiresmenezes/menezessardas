@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { gravarAreaAtual } from '@/lib/assistente'
 import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck } from 'lucide-react'
 
 // Tela de entrada: o escritório escolhe a área de trabalho antes de entrar na plataforma.
@@ -18,7 +19,8 @@ const AREAS = [
 
 export default function InicioPage() {
   const navigate = useNavigate()
-  const abrir = (destino: string) => {
+  const abrir = (destino: string, chave?: string) => {
+    if (chave) gravarAreaAtual(chave).catch(() => undefined)
     if (destino.startsWith('?')) window.location.href = `${window.location.pathname}${destino}`
     else navigate(destino)
   }
@@ -36,7 +38,7 @@ export default function InicioPage() {
           <button
             key={a.chave}
             data-testid={`area-${a.chave}`}
-            onClick={() => abrir(a.destino)}
+            onClick={() => abrir(a.destino, a.chave)}
             className="bg-white text-left p-5 shadow-lg border-t-4 border-dourado hover:-translate-y-1 hover:shadow-xl transition focus:outline-none focus:ring-4 focus:ring-dourado/50"
           >
             <a.icone className="w-8 h-8 text-dourado mb-3" aria-hidden />

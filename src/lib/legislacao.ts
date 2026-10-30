@@ -193,7 +193,7 @@ export interface NovidadePortal {
   vistoEm: string
 }
 
-export async function radarPortais(): Promise<NovidadePortal[]> {
+export async function radarPortais(area?: string): Promise<NovidadePortal[]> {
   if (!supabaseConfigurado) {
     return [{
       id: 'ex-1', fonte: 'Câmara dos Deputados', tipo: 'Projeto', titulo: 'PL 3925/2026',
@@ -201,11 +201,13 @@ export async function radarPortais(): Promise<NovidadePortal[]> {
       link: 'https://www.camara.leg.br/', data: new Date().toISOString().slice(0, 10), termo: 'inquilinato', vistoEm: new Date().toISOString(),
     }]
   }
-  const { data, error } = await supabase
+  let q = supabase
     .from('novidades_portais')
     .select('id,fonte,tipo,titulo,resumo,link,data,termo,visto_em')
     .order('data', { ascending: false, nullsFirst: false })
     .limit(60)
+  if (area) q = q.eq('area', area)
+  const { data, error } = await q
   if (error) throw new Error(error.message)
   return (data ?? []).map(r => ({ ...r, resumo: r.resumo ?? undefined, data: r.data ?? undefined, termo: r.termo ?? undefined, vistoEm: r.visto_em }))
 }
