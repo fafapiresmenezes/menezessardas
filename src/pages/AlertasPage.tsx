@@ -13,6 +13,14 @@ export default function AlertasPage() {
   // Novidades das buscas salvas em Fontes (comunicações do Comunica PJe ainda não lidas).
   type Novidade = { id: number; oab: string; data_disponibilizacao: string; tribunal: string | null; tipo: string | null; numero_processo: string | null; link: string | null }
   const [novidades, setNovidades] = useState<Novidade[]>([])
+  // Passo 06: avisos de 80%/100% do teto mensal de IA (gravados pelo verificador de hora em hora).
+  type AvisoTeto = { id: number; mes: string; nivel: number; pct: number; gasto_brl: number; teto_brl: number; criado_em: string; email_enviado_em: string | null }
+  const [avisosTeto, setAvisosTeto] = useState<AvisoTeto[]>([])
+  useEffect(() => {
+    const mes = new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }).slice(0, 7)
+    supabase.from('avisos_teto_ia').select('*').eq('mes', mes).order('nivel', { ascending: false }).limit(2)
+      .then(({ data }) => setAvisosTeto((data ?? []) as AvisoTeto[]))
+  }, [])
   useEffect(() => {
     supabase.from('intimacoes').select('id, oab, data_disponibilizacao, tribunal, tipo, numero_processo, link').like('oab', 'busca:%').eq('lida', false).order('data_disponibilizacao', { ascending: false }).limit(20)
       .then(({ data }) => setNovidades((data ?? []) as Novidade[]))
@@ -57,6 +65,16 @@ export default function AlertasPage() {
           </div>
         </div>
 
+        {avisosTeto.length > 0 && (
+          <section role="alert" className={`shadow-sm border-l-4 p-5 ${avisosTeto[0].nivel >= 100 ? 'bg-criticoFundo border-critico' : 'bg-atencaoFundo border-atencao'}`} data-testid="aviso-teto-ia">
+            <h2 className="font-serif text-lg">{avisosTeto[0].nivel >= 100 ? 'Teto mensal de IA atingido: inteligência artificial pausada' : 'Atenção: 80% do teto mensal de IA já foi usado'}</h2>
+            <p className="text-sm mt-1">
+              {avisosTeto[0].gasto_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} de {avisosTeto[0].teto_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} ({avisosTeto[0].pct}%) em {formatarData(avisosTeto[0].criado_em.slice(0, 10))}.
+              {avisosTeto[0].email_enviado_em ? ' Administradores avisados por e-mail.' : ' E-mail aos administradores ainda não enviado.'}
+            </p>
+            <button type="button" onClick={() => navigate('/consumo')} className="mt-2 underline text-navy text-sm">Abrir Consumo</button>
+          </section>
+        )}
         {novidades.length > 0 && (
           <section className="bg-white shadow-sm border-l-4 border-dourado p-5" data-testid="novidades-buscas">
             <h2 className="font-serif text-lg">Novidades das buscas salvas</h2>

@@ -41,6 +41,15 @@ export default function ConsumoPage() {
   const [faturas, setFaturas] = useState<{ name: string }[]>([])
   const [msg, setMsg] = useState<{ ok: boolean; texto: string } | null>(null)
   const [carregando, setCarregando] = useState(true)
+  const [testandoAviso, setTestandoAviso] = useState(false)
+  // Passo 06: avisos automáticos de 80% e 100% do teto (de hora em hora) e teste pelo administrador.
+  async function testarAviso() {
+    setTestandoAviso(true)
+    const { data, error } = await supabase.functions.invoke('aviso-teto-ia', { body: { teste: true } })
+    setTestandoAviso(false)
+    if (error || !data?.enviado) setMsg({ ok: false, texto: 'Não deu para enviar o e-mail de teste: ' + (data?.motivo ?? data?.detalhe ?? error?.message ?? 'erro') })
+    else setMsg({ ok: true, texto: `E-mail de teste do aviso de teto enviado para você (${data.destinatarios} destinatário).` })
+  }
 
   async function carregar() {
     const [l, p, c, eu] = await Promise.all([
@@ -195,13 +204,14 @@ export default function ConsumoPage() {
         {perfil === 'admin' && (
           <section className="bg-white shadow-sm p-6 print:hidden">
             <h3 className="text-base mb-1">Teto mensal de gasto</h3>
-            <p className="text-sm text-grafite-claro mb-3">Ao chegar a 80% aparece um aviso; ao chegar a 100% a inteligência artificial pausa até o mês seguinte. Deixe em branco para não ter teto.</p>
+            <p className="text-sm text-grafite-claro mb-3">Ao chegar a 80% aparece um aviso em Alertas e os administradores recebem e-mail; ao chegar a 100% a inteligência artificial pausa até o mês seguinte e sai novo e-mail. A verificação roda de hora em hora. Deixe em branco para não ter teto.</p>
             <div className="flex flex-wrap gap-3 items-end">
               <label className="text-sm">
                 <span className="block mb-1">Valor em reais</span>
                 <input id="teto" inputMode="decimal" value={teto} onChange={e => setTeto(e.target.value)} placeholder="ex.: 300" className="border border-navy/20 px-3 min-h-[44px] w-40" />
               </label>
               <button onClick={salvarTeto} className="min-h-[44px] px-5 bg-navy text-white text-sm">Salvar teto</button>
+              <button type="button" onClick={testarAviso} disabled={testandoAviso} data-testid="testar-aviso-teto" className="min-h-[44px] px-5 border border-navy text-navy text-sm disabled:opacity-50">{testandoAviso ? 'Enviando…' : 'Testar e-mail de aviso'}</button>
             </div>
           </section>
         )}
