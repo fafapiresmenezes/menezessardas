@@ -14,7 +14,7 @@ interface Tarefa {
   id: string; pai_id: string | null; nivel: 'projeto' | 'tarefa' | 'subtarefa'; titulo: string
   situacao: Situacao; prioridade: 'alta' | 'media' | 'baixa'; responsavel_id: string | null
   imovel_id: string | null; prazo: string | null; horas: number
-  cliente: string | null; area: string | null; numero_processo: string | null; tipo: string | null
+  cliente: string | null; area: string | null; numero_processo: string | null; tipo: string | null; portal_token?: string | null
 }
 const TIPOS: Record<string, string> = { caso: 'Processo judicial', contrato: 'Contrato ou consultoria', interno: 'Projeto interno do escritório', externo: 'Gestão para outro escritório ou empresa' }
 const AREAS = ['Imobiliário', 'Cível', 'Trabalhista', 'Família e sucessões', 'Tributário', 'Empresarial', 'Consumidor', 'Previdenciário', 'Penal', 'Compliance', 'Gestão interna']
@@ -42,9 +42,10 @@ export default function ProjetosPage() {
   const [erro, setErro] = useState('')
   const [caso, setCaso] = useState({ modelo: 'contencioso', titulo: '', cliente: '', area: 'Cível', numero: '', tipo: 'caso', responsavel_id: '' })
   const [filtroArea, setFiltroArea] = useState('')
+  const [linkPortal, setLinkPortal] = useState('')
 
   const carregar = async () => {
-    const { data, error } = await supabase.from('tarefas').select('id,pai_id,nivel,titulo,situacao,prioridade,responsavel_id,imovel_id,prazo,horas,cliente,area,numero_processo,tipo').order('criado_em')
+    const { data, error } = await supabase.from('tarefas').select('id,pai_id,nivel,titulo,situacao,prioridade,responsavel_id,imovel_id,prazo,horas,cliente,area,numero_processo,tipo,portal_token').order('criado_em')
     if (error) return setErro(error.message)
     setTarefas((data ?? []) as Tarefa[])
   }
@@ -95,6 +96,20 @@ export default function ProjetosPage() {
     if (e2) return setErro(e2.message)
     setCaso({ ...caso, titulo: '', cliente: '', numero: '' }); setProjeto(data.id); carregar()
   }
+  // Portal do cliente: gera (ou reaproveita) um código secreto e copia o link público do caso.
+  const linkCliente = async () => {
+    const c = tarefas.find(t => t.id === projeto); if (!c) return
+    let token = c.portal_token
+    if (!token) {
+      token = Array.from(crypto.getRandomValues(new Uint8Array(24)), b => b.toString(16).padStart(2, '0')).join('')
+      const { error } = await supabase.from('tarefas').update({ portal_token: token }).eq('id', c.id)
+      if (error) return setErro(error.message)
+      carregar()
+    }
+    const url = `${location.origin}${location.pathname}#/portal/${token}`
+    await navigator.clipboard.writeText(url).catch(() => {})
+    setLinkPortal(url)
+  }
   const mover = async (t: Tarefa, situacao: Situacao) => {
     setTarefas(ts => ts.map(x => (x.id === t.id ? { ...x, situacao } : x)))
     const { error } = await supabase.from('tarefas').update({ situacao, atualizado_em: new Date().toISOString() }).eq('id', t.id)
@@ -128,12 +143,14 @@ export default function ProjetosPage() {
                 {projetos.map(p => <option key={p.id} value={p.id}>{p.titulo}{p.numero_processo ? ` · ${p.numero_processo}` : ''}</option>)}
               </select>
             </div>
+            {projeto && <button data-testid="link-cliente" onClick={linkCliente} className="min-h-[44px] px-4 border border-dourado text-navy text-sm uppercase tracking-wider">Link para o cliente</button>}
             <dl className="flex gap-6 text-sm">
               <div><dt className="text-grafite-claro">Concluído</dt><dd className="text-2xl font-serif text-navy" data-testid="progresso">{visiveis.length ? Math.round((feitas / visiveis.length) * 100) : 0}%</dd></div>
               <div><dt className="text-grafite-claro">Atrasadas</dt><dd className={`text-2xl font-serif ${atrasadas ? 'text-critico' : 'text-navy'}`}>{atrasadas}</dd></div>
               <div><dt className="text-grafite-claro">Horas</dt><dd className="text-2xl font-serif text-navy">{horas.toLocaleString('pt-BR')}</dd></div>
             </dl>
           </div>
+          {linkPortal && <p className="text-xs text-grafite mt-3" data-testid="link-portal">Link copiado. O cliente vê só as etapas e os honorários, sem login: <a className="underline text-navy break-all" href={linkPortal} target="_blank" rel="noreferrer">{linkPortal}</a></p>}
         </section>
 
         <section aria-labelledby="t-caso" className="bg-white shadow-sm p-5">

@@ -30,6 +30,8 @@ import KycPage from '@/pages/KycPage'
 import MeuDiaPage from '@/pages/MeuDiaPage'
 import ConsultoresPage from '@/pages/ConsultoresPage'
 import NuvemPage from '@/pages/NuvemPage'
+import PortalClientePage from '@/pages/PortalClientePage'
+import HonorariosPage from '@/pages/HonorariosPage'
 import HorasPage from '@/pages/HorasPage'
 import ModelosPage from '@/pages/ModelosPage'
 import MonitoramentoPage from '@/pages/MonitoramentoPage'
@@ -86,6 +88,11 @@ function App() {
   return (
     <HashRouter>
       <Routes>
+        <Route path="/portal/:token" element={<PortalClientePage />} />
+        <Route
+          path="/honorarios"
+          element={isAuthenticated ? <HonorariosPage /> : <Navigate to="/login" />}
+        />
         <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/inicio" /> : <LoginPage />}

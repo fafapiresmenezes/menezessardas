@@ -11,7 +11,7 @@ const cors = {
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
 
-const APP = 'https://menezes-sardas-contratos.vercel.app'
+const APP = 'https://gmenezes-advogados.vercel.app'
 const diasAte = (d: string) => Math.round((new Date(d + 'T00:00:00Z').getTime() - Date.parse(new Date().toISOString().slice(0, 10))) / 86400000)
 const br = (d: string) => new Date(d + 'T12:00:00Z').toLocaleDateString('pt-BR')
 const esc = (s: string) => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))

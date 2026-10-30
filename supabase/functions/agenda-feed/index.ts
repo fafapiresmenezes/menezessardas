@@ -15,7 +15,7 @@ function evento(uid: string, data: string, titulo: string, local: string, avisos
     `DTEND;VALUE=DATE:${prox(data)}`,
     `SUMMARY:${esc(titulo)}`,
     `LOCATION:${esc(local)}`,
-    'DESCRIPTION:Gestão de Contratos · https://menezes-sardas-contratos.vercel.app/agenda',
+    'DESCRIPTION:Gestão de Contratos · https://gmenezes-advogados.vercel.app/agenda',
     ...[...new Set(avisos)].flatMap(n => ['BEGIN:VALARM', 'ACTION:DISPLAY', `TRIGGER:-P${n}D`, `DESCRIPTION:${esc(titulo)}`, 'END:VALARM']),
     'END:VEVENT',
     // Agendas assinadas costumam ignorar alarmes do arquivo; cada aviso vira também um evento no próprio dia.

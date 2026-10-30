@@ -14,7 +14,7 @@ const VERIFICACOES: { nome: string; fn: string; corpo?: unknown; query?: string;
   { nome: 'Consulta de CNPJ', fn: 'consultar-cnpj', query: '?cnpj=00000000000191', espera: j => j.empresa?.status === 'ativa' },
 ]
 
-const SITE = 'https://menezes-sardas-contratos.vercel.app/'
+const SITE = 'https://gmenezes-advogados.vercel.app/'
 
 // Confere se o site abre com visual e código completos: todo arquivo citado na página precisa responder.
 async function verificarSite() {

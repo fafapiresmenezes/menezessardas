@@ -66,7 +66,7 @@ async function enviarEmailResend(notif: Notificacao): Promise<boolean> {
       </div>
 
       <p>Acesse sua plataforma para visualizar todas as informações e tomar as ações necessárias:</p>
-      <p><a href="https://menezes-sardas-contratos.vercel.app/" style="color: #1a3a3a; font-weight: bold;">Abrir Plataforma</a></p>
+      <p><a href="https://gmenezes-advogados.vercel.app/" style="color: #1a3a3a; font-weight: bold;">Abrir Plataforma</a></p>
 
       <p><em>Esta é uma notificação automática. Não responda a este email.</em></p>
     </div>
