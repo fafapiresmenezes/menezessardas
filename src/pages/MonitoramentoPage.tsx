@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react'
 import { FunctionRegion } from '@supabase/supabase-js'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
-import { Radar, Trash2, RefreshCw } from 'lucide-react'
+import { Radar, Trash2, RefreshCw, History } from 'lucide-react'
+
+// Passo 22: linha do tempo dos andamentos (DataJud) por processo, com filtro por período.
+type Mov = { data: string; nome: string }
+type Linha = { numero: string; tribunal: string | null; encontrado: boolean; classe?: string; orgao?: string; movs: Mov[] }
 
 // Monitoramento de processos e de nomes (como o do Escavador), com fontes públicas do CNJ.
 // O robô verifica todo dia às 7h30 (Brasília); o botão verifica na hora.
@@ -17,6 +21,20 @@ export default function MonitoramentoPage() {
   const [rotulo, setRotulo] = useState('')
   const [msg, setMsg] = useState('')
   const [ocupado, setOcupado] = useState(false)
+  const [numeroLinha, setNumeroLinha] = useState('')
+  const [linha, setLinha] = useState<Linha | null>(null)
+  const [msgLinha, setMsgLinha] = useState('')
+  const [de, setDe] = useState(() => new Date(Date.now() - 365 * 86400000).toISOString().slice(0, 10))
+  const [ate, setAte] = useState(() => new Date().toISOString().slice(0, 10))
+  const linhaDoTempo = async (numero: string) => {
+    const n = numero.replace(/\D/g, '')
+    if (n.length !== 20) return setMsgLinha('O número do processo precisa ter 20 dígitos (padrão CNJ).')
+    setMsgLinha('Consultando o DataJud…'); setLinha(null); setNumeroLinha(numero)
+    const { data, error } = await supabase.functions.invoke('monitorar', { body: { linha_do_tempo: n }, region: FunctionRegion.SaEast1 })
+    if (error || data?.erro) return setMsgLinha(`Não foi possível consultar: ${data?.erro ?? error?.message}`)
+    setLinha(data as Linha); setMsgLinha(data.encontrado ? '' : 'Processo não encontrado no DataJud (pode ser sigiloso ou de tribunal fora da base).')
+  }
+  const movsFiltrados = (linha?.movs ?? []).filter(m => { const d = m.data.slice(0, 10); return (!de || d >= de) && (!ate || d <= ate) })
   const carregar = async () => {
     const { data } = await supabase.from('monitoramentos').select('id,tipo,valor,rotulo,ultimo_estado,novidades,verificado_em,novidade_em').order('novidade_em', { ascending: false, nullsFirst: false })
     setLista((data ?? []) as Mon[])
@@ -59,6 +77,28 @@ export default function MonitoramentoPage() {
           <button type="button" onClick={() => verificar()} disabled={ocupado || !lista.length} className="mt-3 min-h-[44px] px-4 border text-sm inline-flex items-center gap-2 disabled:opacity-50"><RefreshCw className={`w-4 h-4 ${ocupado ? 'animate-spin' : ''}`} aria-hidden />Verificar tudo agora</button>
           {msg && <p role="status" className="mt-3 text-sm" data-testid="mon-msg">{msg}</p>}
         </section>
+        <section className="bg-white shadow-sm p-5" data-testid="linha-do-tempo">
+          <h2 className="font-serif text-lg flex items-center gap-2"><History className="w-5 h-5" aria-hidden />Linha do tempo do processo (DataJud)</h2>
+          <div className="flex flex-wrap items-end gap-3 mt-2 text-sm">
+            <label className="flex-1 min-w-[240px]">Número CNJ<input value={numeroLinha} onChange={e => setNumeroLinha(e.target.value)} placeholder="0000000-00.0000.0.00.0000" className="border px-3 py-2 w-full min-h-[44px]" data-testid="lt-numero" /></label>
+            <label>De<input type="date" value={de} onChange={e => setDe(e.target.value)} className="border px-3 py-2 block min-h-[44px]" data-testid="lt-de" /></label>
+            <label>Até<input type="date" value={ate} onChange={e => setAte(e.target.value)} className="border px-3 py-2 block min-h-[44px]" data-testid="lt-ate" /></label>
+            <button type="button" onClick={() => linhaDoTempo(numeroLinha)} className="min-h-[44px] px-4 bg-navy text-white text-sm" data-testid="lt-consultar">Ver linha do tempo</button>
+          </div>
+          {msgLinha && <p role="status" className="mt-2 text-sm" data-testid="lt-msg">{msgLinha}</p>}
+          {linha?.encontrado && (
+            <div className="mt-3">
+              <p className="text-sm text-grafite-claro">{[linha.classe, linha.orgao].filter(Boolean).join(' · ')} · {linha.movs.length} andamentos no total, <strong data-testid="lt-total">{movsFiltrados.length}</strong> no período.</p>
+              <ol className="mt-2 border-l-2 border-dourado/60 pl-4 space-y-2 text-sm" data-testid="lt-lista">
+                {movsFiltrados.slice(0, 200).map((m, i) => (
+                  <li key={i} className="relative" data-testid="lt-mov"><span className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-dourado" aria-hidden /><span className="text-grafite-claro w-28 inline-block">{dt(m.data)}</span>{m.nome}</li>
+                ))}
+                {!movsFiltrados.length && <li className="text-grafite-claro">Nenhum andamento no período escolhido.</li>}
+              </ol>
+              <p className="text-xs text-grafite-claro mt-2">Fonte: API pública do DataJud (CNJ). Os andamentos seguem a Tabela Processual Unificada e podem chegar com atraso em relação ao sistema do tribunal.</p>
+            </div>
+          )}
+        </section>
         {lista.map(m => (
           <section key={m.id} className="bg-white shadow-sm p-5" data-testid="mon-item">
             <div className="flex items-start gap-3">
@@ -70,6 +110,7 @@ export default function MonitoramentoPage() {
                   <ul className="mt-2 text-sm space-y-1">{m.novidades.slice(0, 8).map((n, i) => <li key={i}><span className="text-xs bg-dourado/20 px-1">novo</span> {dt(n.data)} · {n.texto}</li>)}</ul>
                 ) : <p className="text-sm text-grafite-claro mt-2">Sem novidades desde que começou o monitoramento.</p>}
               </div>
+              {m.tipo === 'processo' && <button type="button" onClick={() => { linhaDoTempo(m.valor); window.scrollTo({ top: 0, behavior: 'smooth' }) }} aria-label="Ver linha do tempo" className="p-2" data-testid="lt-abrir"><History className="w-4 h-4" aria-hidden /></button>}
               <button type="button" onClick={() => verificar(m.id)} disabled={ocupado} aria-label="Verificar este agora" className="p-2"><RefreshCw className="w-4 h-4" aria-hidden /></button>
               <button type="button" onClick={() => remover(m.id)} aria-label="Parar de monitorar" className="p-2"><Trash2 className="w-4 h-4" aria-hidden /></button>
             </div>

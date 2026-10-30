@@ -66,7 +66,27 @@ async function comunicacoes(nome: string) {
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
   if (!(await autorizado(req))) return json({ erro: 'Entre na plataforma.' }, 401)
-  const { id } = await req.json().catch(() => ({}))
+  const { id, linha_do_tempo, amostra } = await req.json().catch(() => ({}))
+  // Passo 22: linha do tempo completa dos andamentos de um processo (DataJud), para filtrar por período na tela.
+  if (linha_do_tempo) {
+    try {
+      const a = await andamentos(String(linha_do_tempo))
+      return json({ numero: String(linha_do_tempo).replace(/\D/g, ''), tribunal: tribunalDoNumero(String(linha_do_tempo)), ...a, movs: a.movs.slice(0, 500) })
+    } catch (e) { return json({ erro: e instanceof Error ? e.message : String(e) }, 502) }
+  }
+  // Devolve um número CNJ real e público do índice pedido (ex.: 'tjrj'), para teste e demonstração.
+  if (amostra) {
+    try {
+      const r = await fetch(`https://api-publica.datajud.cnj.jus.br/api_publica_${String(amostra).replace(/[^a-z0-9]/g, '')}/_search`, {
+        method: 'POST', headers: { Authorization: DATAJUD_KEY, 'Content-Type': 'application/json' }, signal: AbortSignal.timeout(40000),
+        body: JSON.stringify({ size: 3, query: { range: { dataAjuizamento: { gte: '2024-01-01' } } }, sort: [{ '@timestamp': { order: 'desc' } }] }),
+      })
+      if (!r.ok) return json({ erro: `DataJud ${r.status}` }, 502)
+      const hits = (await r.json()).hits?.hits ?? []
+      const h = hits.find((x: any) => (x._source?.movimentos ?? []).length >= 3) ?? hits[0]
+      return json({ numero: h?._source?.numeroProcesso ?? null, classe: h?._source?.classe?.nome ?? null, movimentos: (h?._source?.movimentos ?? []).length })
+    } catch (e) { return json({ erro: e instanceof Error ? e.message : String(e) }, 502) }
+  }
   const s = sb()
   let q = s.from('monitoramentos').select('id,tipo,valor,ultimo_estado,novidades')
   if (id) q = q.eq('id', id)
