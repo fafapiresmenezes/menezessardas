@@ -40,6 +40,14 @@ import CompliancePage from '@/pages/CompliancePage'
 import ProjetosPage from '@/pages/ProjetosPage'
 import IntimacoesPage from '@/pages/IntimacoesPage'
 
+// Com dois fatores ativos, a sessão só libera o sistema depois do código (nível aal2).
+async function segundoFatorOk() {
+  try {
+    const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+    return !(data?.nextLevel === 'aal2' && data.currentLevel !== 'aal2')
+  } catch { return true }
+}
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -54,7 +62,7 @@ function App() {
     const checkAuth = async () => {
       try {
         const { data } = await supabase.auth.getSession()
-        setIsAuthenticated(!!data.session)
+        setIsAuthenticated(!!data.session && await segundoFatorOk())
       } catch (error) {
         console.error('Auth check failed:', error)
         setIsAuthenticated(false)
@@ -66,7 +74,8 @@ function App() {
     checkAuth()
 
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session)
+      if (!session) { setIsAuthenticated(false); return }
+      segundoFatorOk().then(ok => setIsAuthenticated(ok))
     })
 
     return () => {

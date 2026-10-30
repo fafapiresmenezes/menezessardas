@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import DoisFatores from '../components/DoisFatores'
 import Layout from '@/components/Layout'
 import { Save, User, Bell, Sparkles, Eye, EyeOff, KeyRound, Mail } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
@@ -178,6 +179,7 @@ export default function ConfiguraçõesPage() {
       </form>
 
       <SecaoSenha />
+      <DoisFatores />
       <SecaoChaveIA />
       <SecaoEmail />
       <SecaoEscavador />

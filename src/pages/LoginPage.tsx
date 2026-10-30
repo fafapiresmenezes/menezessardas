@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { entrarDemo } from '@/lib/authDemo'
@@ -12,7 +12,28 @@ export default function LoginPage() {
   const [avisoRecuperacao, setAvisoRecuperacao] = useState(false)
   const [primeiroAcesso, setPrimeiroAcesso] = useState(false)
   const [avisoCadastro, setAvisoCadastro] = useState('')
+  const [pedirCodigo, setPedirCodigo] = useState(false)
+  const [codigo, setCodigo] = useState('')
   const navigate = useNavigate()
+
+
+  // Dois fatores: se a conta tem aplicativo autenticador, a sessão só vale depois do código (nível aal2).
+  const precisaCodigo = async () => {
+    const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+    return data?.nextLevel === 'aal2' && data.currentLevel !== 'aal2'
+  }
+  useEffect(() => { if (supabaseConfigurado) precisaCodigo().then(p => { if (p) setPedirCodigo(true) }) }, [])
+  const verificarCodigo = async (e: React.FormEvent) => {
+    e.preventDefault(); setErro(''); setCarregando(true)
+    try {
+      const { data: f } = await supabase.auth.mfa.listFactors()
+      const fator = f?.totp?.find(x => x.status === 'verified')
+      if (!fator) { setErro('Nenhum aplicativo autenticador ativo nesta conta.'); return }
+      const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId: fator.id, code: codigo.replace(/\s/g, '') })
+      if (error) setErro('Código não confere. Tente de novo.')
+      else navigate('/inicio')
+    } finally { setCarregando(false) }
+  }
 
   const entrar = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -54,7 +75,7 @@ export default function LoginPage() {
 
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password: senha })
-      if (!error) navigate('/inicio')
+      if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else navigate('/inicio') }
       else if (error.status === 400 || error.status === 401 || /invalid/i.test(error.message)) setErro('E-mail ou senha incorretos.')
       else setErro('Não foi possível falar com o servidor (' + error.message + '). Verifique a conexão e tente de novo.')
     } catch {
@@ -104,6 +125,15 @@ export default function LoginPage() {
             </div>
           )}
 
+          {pedirCodigo ? (
+            <form onSubmit={verificarCodigo} className="space-y-5" data-testid="form-2fa">
+              <p className="text-sm text-grafite">Digite o código de 6 dígitos do seu aplicativo autenticador.</p>
+              <input aria-label="Código de 6 dígitos" inputMode="numeric" autoFocus maxLength={7} value={codigo} onChange={e => setCodigo(e.target.value)} className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm tracking-widest" />
+              {erro && <p role="alert" className="text-sm text-critico">{erro}</p>}
+              <button type="submit" disabled={carregando} className="w-full bg-navy text-white py-3 rounded-sm uppercase tracking-wider text-sm">Confirmar código</button>
+              <button type="button" onClick={async () => { await supabase.auth.signOut(); setPedirCodigo(false); setCodigo('') }} className="w-full text-sm underline text-grafite">Entrar com outra conta</button>
+            </form>
+          ) : (
           <form onSubmit={entrar} className="space-y-5">
             <div>
               <label htmlFor="email" className="block text-xs uppercase tracking-wider text-grafite mb-2">
@@ -145,6 +175,7 @@ export default function LoginPage() {
               {carregando ? 'Aguarde…' : primeiroAcesso ? 'Criar acesso' : 'Entrar'}
             </button>
           </form>
+          )}
 
           <div className="mt-6 text-center">
             <button
