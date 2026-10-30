@@ -65,6 +65,7 @@ const b64 = (b: Uint8Array) => { let s = ''; for (let i = 0; i < b.length; i += 
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
+  try {
   const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
   const corpo = await req.json().catch(() => ({}))
 
@@ -134,4 +135,8 @@ Deno.serve(async (req) => {
     if (registroId) await db.from('relatorios_mensais').update({ enviado_em: new Date().toISOString(), destinatarios: para.length }).eq('id', registroId)
   }
   return json({ mes, enviado: !falha, destinatarios: para.length, teste, sha256: hash, detalhe: falha, resumo: r })
+  } catch (e) {
+    console.error('relatorio-mensal', e)
+    return json({ erro: e instanceof Error ? `${e.name}: ${e.message}` : String(e) }, 500)
+  }
 })
