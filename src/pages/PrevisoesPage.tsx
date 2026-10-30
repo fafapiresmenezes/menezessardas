@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import CalibracaoPrevisoes from '@/components/CalibracaoPrevisoes'
 import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { useImoveis } from '@/hooks/useImoveis'
@@ -52,8 +53,17 @@ function GraficoReceita({ pontos }: { pontos: { mes: string; contratada: number;
   )
 }
 
-function LinhaContrato({ p }: { p: PrevisaoContrato }) {
+function LinhaContrato({ p, aoRegistrar }: { p: PrevisaoContrato; aoRegistrar?: () => void }) {
   const [aberto, setAberto] = useState(false)
+  const [msg, setMsg] = useState('')
+  // Passo 08: desfecho real para calibrar a previsão (grava em registro_previsoes.desfecho).
+  async function desfecho(d: { inadimplente?: boolean; renovou?: boolean }) {
+    if (!supabaseConfigurado) { setMsg('Disponível só com o banco conectado.'); return }
+    const { data, error } = await supabase.rpc('registrar_desfecho', { p_referencia: p.contrato.id, p_desfecho: d })
+    if (error) setMsg('Não deu para registrar: ' + error.message)
+    else if (!data) setMsg('Ainda não há previsão gravada para este contrato; volte amanhã, a fotografia é diária.')
+    else { setMsg(`Desfecho registrado (${data} previsão${data > 1 ? 'ões' : ''}). A calibração já considera.`); aoRegistrar?.() }
+  }
   return (
     <li className="border-b border-navy/10 py-3">
       <button onClick={() => setAberto(!aberto)} className="w-full text-left grid gap-2 sm:grid-cols-[1fr_180px_140px_24px] items-center" aria-expanded={aberto}>
@@ -79,6 +89,16 @@ function LinhaContrato({ p }: { p: PrevisaoContrato }) {
             <ul className="space-y-1">{p.fatoresRenovacao.map(f => <li key={f.fator} className="flex justify-between gap-2"><span>{f.fator}</span><span className="text-grafite-claro">{f.pontos > 0 ? '+' : ''}{f.pontos}</span></li>)}</ul>
           </div>
           <p className="md:col-span-2 bg-pergaminho border-l-2 border-dourado px-3 py-2"><b>Ação sugerida:</b> {p.acao} <Link className="underline decoration-dourado ml-1" to={`/contrato/${p.contrato.id}`}>Abrir contrato</Link></p>
+          <div className="md:col-span-2 border-t border-navy/10 pt-3" data-testid={`desfecho-${p.contrato.id}`}>
+            <p className="text-xs uppercase tracking-wider text-grafite-claro mb-2">O que aconteceu de fato? (calibra a previsão)</p>
+            <div className="flex flex-wrap gap-2">
+              <button type="button" onClick={() => desfecho({ inadimplente: false })} className="min-h-[40px] px-3 border border-navy text-navy text-xs">Pagou em dia</button>
+              <button type="button" onClick={() => desfecho({ inadimplente: true })} className="min-h-[40px] px-3 border border-critico text-critico text-xs">Ficou inadimplente</button>
+              <button type="button" onClick={() => desfecho({ renovou: true })} className="min-h-[40px] px-3 border border-navy text-navy text-xs">Renovou</button>
+              <button type="button" onClick={() => desfecho({ renovou: false })} className="min-h-[40px] px-3 border border-atencao text-atencao text-xs">Não renovou</button>
+            </div>
+            {msg && <p role="status" className="text-xs mt-2 text-grafite" data-testid="msg-desfecho">{msg}</p>}
+          </div>
         </div>
       )}
     </li>
@@ -180,6 +200,7 @@ export default function PrevisoesPage() {
   const totalEsperada = receita.reduce((s, p) => s + p.esperada, 0)
   const altos = previsoes.filter(p => p.faixaRisco === 'alto').length
   const renovMedia = previsoes.length ? Math.round(previsoes.reduce((s, p) => s + p.renovacao, 0) / previsoes.length) : 0
+  const [versaoCalib, setVersaoCalib] = useState(0)
 
   return (
     <Layout>
@@ -213,8 +234,9 @@ export default function PrevisoesPage() {
         <section className="bg-white p-6 shadow-sm" aria-labelledby="t-risco">
           <h2 id="t-risco" className="text-lg mb-1">Risco de inadimplência e chance de renovação, por contrato</h2>
           <p className="text-sm text-grafite-claro mb-2">Pontuação por regras declaradas (garantia, reajuste, vencimento, documentos, preço por m² frente à carteira). Clique para ver os fatores. Enquanto o escritório não registra pagamentos, é um índice de exposição, não uma probabilidade calibrada.</p>
-          {previsoes.length ? <ul>{previsoes.map(p => <LinhaContrato key={p.contrato.id} p={p} />)}</ul> : <p className="text-sm text-grafite-claro">Nenhum contrato vigente.</p>}
+          {previsoes.length ? <ul>{previsoes.map(p => <LinhaContrato key={p.contrato.id} p={p} aoRegistrar={() => setVersaoCalib(v => v + 1)} />)}</ul> : <p className="text-sm text-grafite-claro">Nenhum contrato vigente.</p>}
         </section>
+        <CalibracaoPrevisoes versao={versaoCalib} />
         <PainelJurimetria />
       </div>
     </Layout>

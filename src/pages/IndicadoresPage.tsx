@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
 import GraficoTendencia from '@/components/GraficoTendencia'
+import CalibracaoPrevisoes from '@/components/CalibracaoPrevisoes'
 import { useImoveis } from '@/hooks/useImoveis'
 import { useAlertas } from '@/hooks/useAlertas'
 import { repositorio, type Contrato } from '@/lib/repositorio'
@@ -192,6 +193,8 @@ export default function IndicadoresPage() {
             Receita recebida e inadimplência dependem da integração de pagamentos, ainda não disponível.
           </p>
         </section>
+
+        <CalibracaoPrevisoes />
 
         <section className="bg-white p-6 shadow-sm" aria-labelledby="t-tend">
           <h2 id="t-tend" className="text-xl mb-1">
