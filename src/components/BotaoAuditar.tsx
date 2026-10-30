@@ -7,6 +7,16 @@ import { ShieldCheck } from 'lucide-react'
 export default function BotaoAuditar({ tabela, id }: { tabela: 'documentos' | 'contratos'; id: string }) {
   const [r, setR] = useState<{ ok: boolean; texto: string; ots?: string; manifesto?: string; seloId?: number } | null>(null)
   const [ocupado, setOcupado] = useState(false)
+  // Passo 25: confere o .ots nos calendários OpenTimestamps e mostra bloco e data no Bitcoin.
+  const [btc, setBtc] = useState<{ confirmado?: boolean; altura?: number; data_bloco?: string | null; bloco_hash?: string | null; mensagem?: string; erro?: string; consultas?: { calendario: string; situacao: string }[] } | null>(null)
+  const [verificando, setVerificando] = useState(false)
+  const verificar = async () => {
+    if (!r?.seloId) return
+    setVerificando(true); setBtc(null)
+    const { data, error } = await supabase.functions.invoke('selar-documentos', { body: { verificar: r.seloId } })
+    setVerificando(false)
+    setBtc(error ? { erro: 'Não foi possível verificar agora.' } : data)
+  }
   const auditar = async () => {
     setOcupado(true)
     const { data, error } = await supabase.functions.invoke('selar-documentos', { body: { auditar: { tabela, id } } })
@@ -37,7 +47,15 @@ export default function BotaoAuditar({ tabela, id }: { tabela: 'documentos' | 'c
             <>
               {' '}<button className="underline" onClick={() => baixar(`lote-${r.seloId}.txt`, r.manifesto!, 'text/plain')}>manifesto</button>
               {' · '}<button className="underline" onClick={() => baixar(`lote-${r.seloId}.txt.ots`, Uint8Array.from(atob(r.ots!), c => c.charCodeAt(0)), 'application/octet-stream')}>prova .ots</button>
+              {' · '}<button className="underline" onClick={verificar} disabled={verificando} data-testid="verificar-ots">{verificando ? 'verificando…' : 'Verificar agora'}</button>
             </>
+          )}
+          {btc && (
+            <span className={`block mt-1 ${btc.confirmado ? 'text-regular' : 'text-atencao'}`} data-testid="resultado-ots">
+              {btc.erro ? btc.erro : btc.confirmado
+                ? `Confirmado no Bitcoin: bloco ${btc.altura}${btc.data_bloco ? `, ${new Date(btc.data_bloco).toLocaleString('pt-BR')}` : ''}${btc.bloco_hash ? ` (${btc.bloco_hash.slice(0, 12)}…)` : ''}.`
+                : `${btc.mensagem ?? 'Ainda pendente.'}${btc.consultas?.length ? ` ${btc.consultas.map(c => `${c.calendario.replace('https://', '')}: ${c.situacao}`).join('; ')}` : ''}`}
+            </span>
           )}
         </span>
       )}

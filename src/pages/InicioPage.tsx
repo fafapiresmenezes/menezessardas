@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gravarAreaAtual } from '@/lib/assistente'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck } from 'lucide-react'
 import AceiteTermos from '@/components/AceiteTermos'
 
@@ -20,11 +22,37 @@ const AREAS = [
 
 export default function InicioPage() {
   const navigate = useNavigate()
+  // Passo 24: lembra a última área por usuário (preferencias_usuario.area) e permite fixar uma como padrão
+  // (area_fixa): com área fixa, a entrada vai direto para ela após 4 s, a não ser que a pessoa escolha outra.
+  const [ultima, setUltima] = useState<string | null>(() => { try { return localStorage.getItem('lsm-area') } catch { return null } })
+  const [fixa, setFixa] = useState<string | null>(null)
+  const [contagem, setContagem] = useState<number | null>(null)
+  const [carregado, setCarregado] = useState(false)
+  useEffect(() => {
+    if (!supabaseConfigurado) { setCarregado(true); return }
+    supabase.from('preferencias_usuario').select('area,area_fixa').maybeSingle().then(r => {
+      if (r.data?.area) setUltima(r.data.area)
+      if (r.data?.area_fixa) { setFixa(r.data.area_fixa); if (!window.location.href.includes('escolher')) setContagem(4) }
+      setCarregado(true)
+    })
+  }, [])
+  useEffect(() => {
+    if (contagem === null) return
+    if (contagem <= 0) { const a = AREAS.find(x => x.chave === fixa); if (a) abrir(a.destino, a.chave); return }
+    const t = setTimeout(() => setContagem(c => (c ?? 1) - 1), 1000); return () => clearTimeout(t)
+  }, [contagem]) // eslint-disable-line react-hooks/exhaustive-deps
+  const fixar = async (chave: string | null) => {
+    setFixa(chave); setContagem(null)
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) await supabase.from('preferencias_usuario').upsert({ usuario_id: user.id, area_fixa: chave, atualizado_em: new Date().toISOString() })
+  }
   const abrir = (destino: string, chave?: string) => {
     if (chave) gravarAreaAtual(chave).catch(() => undefined)
     if (destino.startsWith('?')) window.location.href = `${window.location.pathname}${destino}`
     else navigate(destino)
   }
+  const areaUltima = AREAS.find(a => a.chave === ultima)
+  const areaFixa = AREAS.find(a => a.chave === fixa)
   return (
     <main className="min-h-screen bg-navy flex flex-col items-center justify-center px-4 py-12">
       <AceiteTermos />
@@ -35,6 +63,24 @@ export default function InicioPage() {
         <button type="button" data-testid="ir-meu-dia" onClick={() => navigate('/meu-dia')} className="mt-4 min-h-[44px] px-5 border border-dourado text-dourado text-sm uppercase tracking-wider">Ver meu dia: prazos, tarefas e intimações</button>
         <button type="button" data-testid="ir-consultores" onClick={() => navigate('/consultores')} className="mt-4 ml-3 min-h-[44px] px-5 bg-dourado text-navy text-sm uppercase tracking-wider">Consultores do escritório</button>
       </div>
+      {carregado && (areaFixa || areaUltima) && (
+        <div className="w-full max-w-6xl mb-5 bg-white/10 border border-dourado/50 text-white p-4 flex flex-wrap items-center gap-3 text-sm" data-testid="area-lembrada">
+          {areaFixa ? (
+            <>
+              <span>Sua área padrão é <strong data-testid="area-fixa-nome">{areaFixa.titulo}</strong>{contagem !== null && contagem > 0 ? ` · entrando em ${contagem} s` : ''}.</span>
+              <button type="button" onClick={() => abrir(areaFixa.destino, areaFixa.chave)} className="min-h-[44px] px-4 bg-dourado text-navy uppercase tracking-wider text-xs" data-testid="entrar-fixa">Entrar agora</button>
+              <button type="button" onClick={() => setContagem(null)} className="min-h-[44px] px-4 border border-white/60 uppercase tracking-wider text-xs" data-testid="escolher-outra">Escolher outra área</button>
+              <button type="button" onClick={() => fixar(null)} className="min-h-[44px] px-4 underline text-xs" data-testid="desfixar">Deixar de ser padrão</button>
+            </>
+          ) : areaUltima && (
+            <>
+              <span>Da última vez você trabalhou em <strong data-testid="area-ultima-nome">{areaUltima.titulo}</strong>.</span>
+              <button type="button" onClick={() => abrir(areaUltima.destino, areaUltima.chave)} className="min-h-[44px] px-4 bg-dourado text-navy uppercase tracking-wider text-xs" data-testid="entrar-ultima">Continuar nela</button>
+              <button type="button" onClick={() => fixar(areaUltima.chave)} className="min-h-[44px] px-4 border border-white/60 uppercase tracking-wider text-xs" data-testid="fixar-padrao">Fixar como padrão</button>
+            </>
+          )}
+        </div>
+      )}
       <div className="grid gap-4 w-full max-w-6xl sm:grid-cols-2 lg:grid-cols-5">
         {AREAS.map(a => (
           <button

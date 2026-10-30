@@ -16,7 +16,15 @@ import {
   type PontoRisco,
   type PontoPendencia,
 } from '@/lib/indicadores'
-import { Printer, Building2, Percent, FileCheck2, CalendarClock, TrendingUp, AlertOctagon, Sparkles, ListChecks } from 'lucide-react'
+import { Printer, Building2, Percent, FileCheck2, CalendarClock, TrendingUp, AlertOctagon, Sparkles, ListChecks, CalendarCheck } from 'lucide-react'
+import { selarDigest } from '@/lib/exportarTrilha'
+import { baixarArquivo } from '@/lib/ancoragem'
+
+// Passo 23: ciclo trimestral de OKR (lembrete 15 dias antes do fim do trimestre, revisão e ata com selo).
+const trimestreDe = (d: Date) => `${d.getFullYear()}-T${Math.floor(d.getMonth() / 3) + 1}`
+const fimDoTrimestre = (d: Date) => new Date(d.getFullYear(), Math.floor(d.getMonth() / 3) * 3 + 3, 0)
+type RevisaoOkr = { id: string; trimestre: string; ata: string; sha256: string; ots_b64: string | null; calendario: string | null; criado_em: string }
+const hexDe = (b: ArrayBuffer) => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('')
 
 // Passo 20: aderência às ações do Consultor da semana, por nível (RPC aderencia_consultores).
 const NOME_NIVEL: Record<string, string> = { nivel_socio_gestor: 'Sócia gestora', nivel_senior: 'Advogado sênior', nivel_pleno: 'Advogado pleno', nivel_junior: 'Advogado júnior', nivel_estagiario: 'Estagiário', nivel_secretaria: 'Secretaria', nivel_financeiro: 'Financeiro', nivel_ti: 'TI', nivel_marketing: 'Marketing', nivel_rh: 'Pessoas', nivel_compliance: 'Compliance', nivel_cliente: 'Cliente', nivel_controladoria: 'Controladoria', nivel_recepcao: 'Recepção' }
@@ -107,11 +115,34 @@ export default function IndicadoresPage() {
   const [carregandoResumo, setCarregandoResumo] = useState(false)
   const [erroResumo, setErroResumo] = useState('')
   const [aderencia, setAderencia] = useState<Aderencia[]>([])
+  const [revisoes, setRevisoes] = useState<RevisaoOkr[]>([])
+  const [ata, setAta] = useState('')
+  const [msgAta, setMsgAta] = useState('')
+  const [gravandoAta, setGravandoAta] = useState(false)
+  const hoje = new Date(); const trimestre = trimestreDe(hoje); const fimTri = fimDoTrimestre(hoje)
+  const diasParaFim = Math.ceil((fimTri.getTime() - hoje.getTime()) / 86400000)
+  const dataLembrete = new Date(fimTri.getTime() - 15 * 86400000)
+  const carregarRevisoes = () => supabase.from('revisoes_okr').select('id,trimestre,ata,sha256,ots_b64,calendario,criado_em').order('criado_em', { ascending: false }).limit(12).then(r => setRevisoes((r.data as RevisaoOkr[]) ?? []))
+  const gravarAta = async () => {
+    if (!dados || ata.trim().length < 20) return setMsgAta('Escreva a ata da revisão (pelo menos 20 caracteres).')
+    setGravandoAta(true); setMsgAta('Calculando o hash e pedindo o selo…')
+    try {
+      const snapshot = dados.okrs.map(o => ({ titulo: o.titulo, keyResults: o.keyResults.map(k => ({ descricao: k.descricao, atual: k.atual, meta: k.meta, unidade: k.unidade })) }))
+      const corpo = JSON.stringify({ trimestre, ata: ata.trim(), okrs: snapshot })
+      const sha256 = hexDe(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(corpo)))
+      const selo = await selarDigest(sha256)
+      const { data: u } = await supabase.auth.getUser()
+      const { error } = await supabase.from('revisoes_okr').insert({ trimestre, ata: ata.trim(), okrs: snapshot, sha256, ots_b64: selo ? btoa(String.fromCharCode(...selo.ots)) : null, calendario: selo?.calendario ?? null, criado_por: u.user?.id ?? null })
+      if (error) throw new Error(error.message)
+      setMsgAta(`Ata do ${trimestre} gravada. SHA-256 ${sha256.slice(0, 16)}…${selo ? ` · selo enviado a ${selo.calendario.replace('https://', '')}` : ' · selo não obtido agora'}`)
+      setAta(''); carregarRevisoes()
+    } catch (e) { setMsgAta(`Não foi possível gravar: ${e instanceof Error ? e.message : e}`) } finally { setGravandoAta(false) }
+  }
 
   useEffect(() => {
     repositorio.listarContratos().then(setContratos)
     carregarResumoDiario()
-    if (supabaseConfigurado) supabase.rpc('aderencia_consultores').then(r => setAderencia((r.data as Aderencia[]) ?? []))
+    if (supabaseConfigurado) { supabase.rpc('aderencia_consultores').then(r => setAderencia((r.data as Aderencia[]) ?? [])); carregarRevisoes() }
   }, [])
 
   const carregarResumoDiario = async () => {
@@ -201,6 +232,32 @@ export default function IndicadoresPage() {
         </section>
 
         <CalibracaoPrevisoes />
+
+        {supabaseConfigurado && (
+          <section className="bg-white p-6 shadow-sm" aria-labelledby="t-ciclo-okr" data-testid="ciclo-okr">
+            <h2 id="t-ciclo-okr" className="text-xl mb-1 flex items-center gap-2"><CalendarCheck className="w-5 h-5 text-dourado" aria-hidden />Ciclo trimestral de OKR</h2>
+            <p className="text-sm text-grafite-claro">Trimestre <strong data-testid="okr-trimestre">{trimestre}</strong> termina em {fimTri.toLocaleDateString('pt-BR')} ({diasParaFim} dias). O lembrete de revisão chega por e-mail e vira tarefa em {dataLembrete.toLocaleDateString('pt-BR')} (15 dias antes). A ata gravada recebe SHA-256 e selo OpenTimestamps.</p>
+            <label className="block mt-3 text-sm">Ata da revisão do trimestre (o que foi atingido, o que ficou, metas do próximo)
+              <textarea value={ata} onChange={e => setAta(e.target.value)} rows={4} className="border w-full px-3 py-2 mt-1" data-testid="okr-ata" placeholder="Ex.: Carteira regular ficou em 92% (meta 90%). Documentação em dia 88% (meta 95%): cobrar laudos de incêndio em outubro…" />
+            </label>
+            <div className="flex flex-wrap items-center gap-3 mt-2">
+              <button type="button" onClick={gravarAta} disabled={gravandoAta} className="min-h-[44px] px-4 bg-navy text-white text-sm disabled:opacity-60" data-testid="okr-gravar">{gravandoAta ? 'Gravando…' : 'Gravar ata com selo'}</button>
+              {msgAta && <span className="text-sm" aria-live="polite" data-testid="okr-msg">{msgAta}</span>}
+            </div>
+            {!!revisoes.length && (
+              <ul className="mt-4 divide-y text-sm" data-testid="okr-revisoes">
+                {revisoes.map(r => (
+                  <li key={r.id} className="py-2" data-testid="okr-revisao">
+                    <p><strong>{r.trimestre}</strong> · {new Date(r.criado_em).toLocaleString('pt-BR')} · <span className="font-mono text-xs">{r.sha256.slice(0, 20)}…</span>
+                      {r.ots_b64 && <>{' · '}<button type="button" className="underline" onClick={() => baixarArquivo(`ata-okr-${r.trimestre}.ots`, Uint8Array.from(atob(r.ots_b64!), c => c.charCodeAt(0)) as BlobPart)}>prova .ots</button></>}
+                    </p>
+                    <p className="text-grafite-claro whitespace-pre-wrap">{r.ata.slice(0, 400)}{r.ata.length > 400 ? '…' : ''}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        )}
 
         {supabaseConfigurado && (
           <section className="bg-white p-6 shadow-sm" aria-labelledby="t-aderencia" data-testid="aderencia-consultores">

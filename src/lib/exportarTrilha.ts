@@ -20,7 +20,7 @@ export interface ExportacaoTrilha {
 
 const dataHora = (iso: string) => new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'medium' })
 
-async function provaOts(digestHex: string): Promise<{ prova: Uint8Array; calendario: string } | null> {
+export async function provaOts(digestHex: string): Promise<{ prova: Uint8Array; calendario: string } | null> {
   const digest = Uint8Array.from(digestHex.match(/../g)!.map(h => parseInt(h, 16)))
   for (const cal of CALENDARIOS) {
     try {
@@ -34,6 +34,17 @@ async function provaOts(digestHex: string): Promise<{ prova: Uint8Array; calenda
     if (data?.prova_b64 && data?.calendario) return { prova: Uint8Array.from(atob(data.prova_b64), c => c.charCodeAt(0)), calendario: String(data.calendario) }
   }
   return null
+}
+
+/** Monta um arquivo .ots completo (cabeçalho + digest + prova do calendário) para um SHA-256 em hex. */
+export async function selarDigest(sha256Hex: string): Promise<{ ots: Uint8Array<ArrayBuffer>; calendario: string } | null> {
+  const prova = await provaOts(sha256Hex)
+  if (!prova) return null
+  const ots = new Uint8Array(new ArrayBuffer(MAGIC.length + 2 + 32 + prova.prova.length))
+  ots.set(MAGIC, 0); ots[MAGIC.length] = 0x01; ots[MAGIC.length + 1] = 0x08
+  ots.set(Uint8Array.from(sha256Hex.match(/../g)!.map(h => parseInt(h, 16))), MAGIC.length + 2)
+  ots.set(prova.prova, MAGIC.length + 2 + 32)
+  return { ots, calendario: prova.calendario }
 }
 
 export async function exportarTrilhaPeriodo(de: string, ate: string, rotuloEscritorio = 'GMenezes Advogados Associados'): Promise<ExportacaoTrilha> {
