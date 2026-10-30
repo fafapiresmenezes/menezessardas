@@ -3,6 +3,8 @@
 // - Querido Diário (Open Knowledge Brasil): diários oficiais municipais por termo;
 // - DataJud (CNJ): capa e movimentos do processo pelo número CNJ.
 // Uso restrito à equipe autenticada (finalidade: exercício regular de direitos, LGPD art. 7º, VI).
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+const servico = () => createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
 const cors = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-region',
@@ -63,15 +65,60 @@ async function datajud(numero: string) {
     assuntos: (h.assuntos ?? []).map((a: any) => a.nome).filter(Boolean), movimentos: movs.map((m: any) => ({ data: m.dataHora, nome: m.nome })) }
 }
 
+/** Buscas salvas (Passo 03): repete cada termo no Comunica PJe e grava as comunicações novas em `intimacoes`
+ *  com oab = 'busca:<termo>', para aparecerem em Intimações, Meu dia e Alertas. Roda todo dia (cron) ou a pedido. */
+async function rodarSalvas(soUsuario?: string) {
+  const sb = servico()
+  let q = sb.from('buscas_salvas').select('id, usuario_id, termo')
+  if (soUsuario) q = q.eq('usuario_id', soUsuario)
+  const { data: buscas } = await q
+  const resumo: { termo: string; total: number; novas: number; erro?: string }[] = []
+  for (const b of buscas ?? []) {
+    const c = await comunica(b.termo)
+    if (!c.ok) { resumo.push({ termo: b.termo, total: 0, novas: 0, erro: c.erro }); continue }
+    const itens = (c.itens ?? []) as Record<string, any>[]
+    let novas = 0
+    if (itens.length) {
+      const fim = new Date().toISOString().slice(0, 10)
+      const inicio = new Date(Date.now() - 365 * 86400000).toISOString().slice(0, 10)
+      const url = `https://comunicaapi.pje.jus.br/api/v1/comunicacao?nomeParte=${encodeURIComponent(b.termo)}&dataDisponibilizacaoInicio=${inicio}&dataDisponibilizacaoFim=${fim}&itensPorPagina=50&pagina=1`
+      const r = await fetch(url, { signal: AbortSignal.timeout(25000) }).catch(() => null)
+      const brutos = r?.ok ? ((await r.json().catch(() => ({ items: [] }))).items ?? []) as Record<string, any>[] : []
+      const linhas = brutos.filter(i => i.id).map(i => ({
+        id: i.id, oab: `busca:${b.termo}`, data_disponibilizacao: i.data_disponibilizacao, tribunal: i.siglaTribunal, orgao: i.nomeOrgao,
+        tipo: i.tipoComunicacao, classe: i.nomeClasse, numero_processo: i.numeroprocessocommascara ?? i.numero_processo,
+        texto: limpa(String(i.texto ?? '')).slice(0, 6000), link: i.link, destinatarios: i.destinatarios ?? [],
+      }))
+      if (linhas.length) {
+        const { count } = await sb.from('intimacoes').select('id', { count: 'exact', head: true }).in('id', linhas.map(l => l.id))
+        await sb.from('intimacoes').upsert(linhas, { onConflict: 'id', ignoreDuplicates: true })
+        novas = linhas.length - (count ?? 0)
+      }
+    }
+    await sb.from('buscas_salvas').update({ ultima_execucao: new Date().toISOString(), ultimo_total: c.total ?? itens.length, novas_ultima: novas }).eq('id', b.id)
+    resumo.push({ termo: b.termo, total: c.total ?? itens.length, novas })
+  }
+  return resumo
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
-  // A chave anon é pública: exige sessão de usuário (papel authenticated) no token.
+  // A chave anon é pública: exige sessão de usuário (papel authenticated) no token, ou o segredo do cron.
+  let usuario: string | undefined
   try {
     const parte = (req.headers.get('authorization') ?? '').split('.')[1]
     const b64 = parte.replace(/-/g, '+').replace(/_/g, '/')
-    if (JSON.parse(atob(b64 + '='.repeat((4 - (b64.length % 4)) % 4))).role !== 'authenticated') throw 0
-  } catch { return json({ erro: 'Entre na plataforma para consultar.' }, 401) }
-  const { termo = '' } = await req.json().catch(() => ({}))
+    const claims = JSON.parse(atob(b64 + '='.repeat((4 - (b64.length % 4)) % 4)))
+    if (claims.role !== 'authenticated') throw 0
+    usuario = claims.sub
+  } catch {
+    const enviado = req.headers.get('x-cron-secret')
+    const { data } = enviado ? await servico().from('configuracoes').select('valor').eq('chave', 'cron_segredo').maybeSingle() : { data: null }
+    if (!enviado || !data?.valor || data.valor !== enviado) return json({ erro: 'Entre na plataforma para consultar.' }, 401)
+  }
+  const corpo = await req.json().catch(() => ({}))
+  if (corpo.salvas) return json({ tipo: 'salvas', resumo: await rodarSalvas(usuario), executadoEm: new Date().toISOString() })
+  const { termo = '' } = corpo
   const t = String(termo).trim()
   if (t.length < 4) return json({ erro: 'Digite um nome (mínimo 4 letras) ou o número do processo.' }, 400)
   const ehNumero = t.replace(/\D/g, '').length === 20

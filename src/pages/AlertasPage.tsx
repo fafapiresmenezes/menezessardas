@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { supabase } from '@/lib/supabase'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
 import { SkeletonIndicator, SkeletonTable } from '@/components/Skeleton'
@@ -8,6 +10,13 @@ import { BellOff, Circle } from 'lucide-react'
 
 export default function AlertasPage() {
   const { alertas, loading, getCriticos } = useAlertas()
+  // Novidades das buscas salvas em Fontes (comunicações do Comunica PJe ainda não lidas).
+  type Novidade = { id: number; oab: string; data_disponibilizacao: string; tribunal: string | null; tipo: string | null; numero_processo: string | null; link: string | null }
+  const [novidades, setNovidades] = useState<Novidade[]>([])
+  useEffect(() => {
+    supabase.from('intimacoes').select('id, oab, data_disponibilizacao, tribunal, tipo, numero_processo, link').like('oab', 'busca:%').eq('lida', false).order('data_disponibilizacao', { ascending: false }).limit(20)
+      .then(({ data }) => setNovidades((data ?? []) as Novidade[]))
+  }, [])
   const navigate = useNavigate()
 
   if (loading) {
@@ -48,6 +57,22 @@ export default function AlertasPage() {
           </div>
         </div>
 
+        {novidades.length > 0 && (
+          <section className="bg-white shadow-sm border-l-4 border-dourado p-5" data-testid="novidades-buscas">
+            <h2 className="font-serif text-lg">Novidades das buscas salvas</h2>
+            <p className="text-sm text-grafite-claro mt-1">Comunicações encontradas pelas buscas que você salvou em Fontes do advogado. Marque como lidas em Intimações.</p>
+            <ul className="mt-3 divide-y divide-navy/10 text-sm">
+              {novidades.map(n => (
+                <li key={n.id} className="py-2 flex flex-wrap gap-2">
+                  <span className="text-grafite-claro">{formatarData(n.data_disponibilizacao)}</span>
+                  <span className="font-medium text-navy">{n.oab.slice(6)}</span>
+                  <span>{[n.tribunal, n.tipo, n.numero_processo].filter(Boolean).join(' · ')}</span>
+                  <button type="button" onClick={() => navigate('/intimacoes')} className="ml-auto underline text-navy">ver</button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
         {alertas.length === 0 ? (
           <div className="bg-white p-12 text-center shadow-sm border-l-4 border-regular">
             <BellOff className="mx-auto mb-4 text-regular/40" size={40} aria-hidden="true" />

@@ -1,5 +1,5 @@
 import { FunctionRegion } from '@supabase/supabase-js'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { ExternalLink, Search } from 'lucide-react'
@@ -40,6 +40,22 @@ export default function FontesPage() {
     setGratis({ r: data })
   }
   const dt = (d?: string) => (d ? new Date(d.length === 10 ? `${d}T12:00` : d).toLocaleDateString('pt-BR') : '')
+  // Buscas salvas: repetidas todo dia pelo servidor; novidades vão para Intimações e Alertas.
+  type Salva = { id: string; termo: string; ultima_execucao: string | null; ultimo_total: number; novas_ultima: number }
+  const [salvas, setSalvas] = useState<Salva[]>([])
+  const [msgSalva, setMsgSalva] = useState('')
+  const carregarSalvas = async () => { const { data } = await supabase.from('buscas_salvas').select('id, termo, ultima_execucao, ultimo_total, novas_ultima').order('criado_em'); setSalvas((data ?? []) as Salva[]) }
+  useEffect(() => { carregarSalvas() }, [])
+  const salvarBusca = async () => {
+    setMsgSalva('')
+    const { error } = await supabase.from('buscas_salvas').insert({ termo: termo.trim() })
+    if (error) return setMsgSalva(error.message.includes('duplicate') ? 'Essa busca já está salva.' : error.message)
+    setMsgSalva('Busca salva. Ela será repetida todo dia às 7h15 e as novidades aparecem em Intimações e Alertas.')
+    await carregarSalvas()
+    // Primeira rodada imediata, só para as buscas deste usuário.
+    supabase.functions.invoke('buscar-partes', { body: { salvas: true }, region: FunctionRegion.SaEast1 }).then(carregarSalvas)
+  }
+  const apagarSalva = async (id: string) => { await supabase.from('buscas_salvas').delete().eq('id', id); carregarSalvas() }
   return (
     <Layout title="Fontes do advogado">
       <div className="space-y-6">
@@ -56,6 +72,10 @@ export default function FontesPage() {
           <button type="button" onClick={buscarEscavador} disabled={termo.trim().length < 3 || !!busca?.carregando} className="mt-3 min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">
             {busca?.carregando ? 'Buscando…' : 'Buscar processos no Escavador aqui'}
           </button>
+          <button type="button" onClick={salvarBusca} data-testid="salvar-busca" disabled={termo.trim().length < 4 || termo.replace(/\D/g, '').length === 20} className="mt-3 ml-2 min-h-[44px] border border-navy text-navy px-5 text-sm uppercase tracking-wider disabled:opacity-50">
+            Salvar e repetir todo dia
+          </button>
+          {msgSalva && <p role="status" className="mt-3 p-3 text-sm border-l-2 bg-regularFundo border-regular text-regular" data-testid="msg-salva">{msgSalva}</p>}
           {gratis?.erro && <p role="alert" className="mt-3 p-3 text-sm border-l-2 bg-criticoFundo border-critico text-critico">{gratis.erro}</p>}
           {gratis?.r && (
             <div className="mt-4 space-y-4 text-sm" aria-live="polite" data-testid="resultado-gratis">
@@ -95,6 +115,21 @@ export default function FontesPage() {
             </a>
           ))}
         </div>
+        <section className="bg-white shadow-sm p-6" data-testid="buscas-salvas">
+          <h2 className="font-serif text-lg">Buscas salvas (repetidas todo dia)</h2>
+          <p className="text-sm text-grafite-claro mt-1">O servidor procura cada nome no Comunica PJe (CNJ) todas as manhãs. Comunicações novas entram em Intimações e em Alertas, sem API paga. Até 20 por pessoa.</p>
+          {salvas.length ? (
+            <ul className="mt-3 divide-y divide-navy/10">
+              {salvas.map(s => (
+                <li key={s.id} className="py-2 flex flex-wrap items-center gap-3 text-sm">
+                  <span className="font-medium text-navy">{s.termo}</span>
+                  <span className="text-grafite-claro">{s.ultima_execucao ? `última rodada ${dt(s.ultima_execucao)} · ${s.ultimo_total} comunicação(ões) no ano · ${s.novas_ultima} nova(s)` : 'ainda não rodou'}</span>
+                  <button type="button" onClick={() => apagarSalva(s.id)} aria-label={`Apagar busca ${s.termo}`} className="ml-auto text-xs underline text-critico min-h-[44px] px-2">Apagar</button>
+                </li>
+              ))}
+            </ul>
+          ) : <p className="text-sm text-grafite-claro mt-3">Nenhuma busca salva ainda. Digite um nome acima e clique em "Salvar e repetir todo dia".</p>}
+        </section>
       </div>
     </Layout>
   )
