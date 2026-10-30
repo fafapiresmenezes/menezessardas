@@ -1,7 +1,7 @@
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 
 export type Especialidade =
-  | `nivel_${string}` | 'imobiliario' | 'condominial' | 'registral' | 'consumidor' | 'tributario' | 'trabalhista' | 'familia' | 'lgpd' | 'inovacao' | 'compliance' | 'empresarial' | 'previdenciario' | 'penal' | 'civel' | 'ambiental' | 'geral'
+  | `nivel_${string}` | 'imobiliario' | 'condominial' | 'registral' | 'consumidor' | 'tributario' | 'trabalhista' | 'familia' | 'lgpd' | 'inovacao' | 'compliance' | 'empresarial' | 'previdenciario' | 'penal' | 'civel' | 'ambiental' | 'pesquisa' | 'geral'
 
 export const ESPECIALIDADES: { valor: Especialidade; rotulo: string; descricao: string }[] = [
   { valor: 'imobiliario', rotulo: 'Imobiliário', descricao: 'Locação, comodato, compra e venda, garantias, despejo' },
@@ -19,6 +19,7 @@ export const ESPECIALIDADES: { valor: Especialidade; rotulo: string; descricao: 
   { valor: 'penal', rotulo: 'Penal', descricao: 'Crimes, defesa, inquérito, execução penal' },
   { valor: 'civel', rotulo: 'Cível e contratos', descricao: 'Contratos em geral, responsabilidade civil, cobranças' },
   { valor: 'ambiental', rotulo: 'Ambiental', descricao: 'Licenciamento, passivo ambiental, áreas protegidas' },
+  { valor: 'pesquisa', rotulo: 'Pesquisador do Instituto', descricao: 'Jurisprudência brasileira, direito comparado e propostas para o direito brasileiro' },
   { valor: 'geral', rotulo: 'Geral', descricao: 'Qualquer tema do direito brasileiro' },
 ]
 
