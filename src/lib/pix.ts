@@ -1,6 +1,6 @@
 // PIX estático (BR Code, padrão EMV do Banco Central) gerado na hora, sem API bancária.
 // O cliente paga lendo o QR ou colando o código "copia e cola" no aplicativo do banco.
-const semAcento = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9 .-]/g, '').trim()
+const semAcento = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9 .-]/g, '').replace(/\s+/g, ' ').trim()
 const campo = (id: string, v: string) => id + String(v.length).padStart(2, '0') + v
 
 export function crc16(s: string): string {
