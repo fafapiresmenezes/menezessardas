@@ -16,6 +16,34 @@ const VERIFICACOES: { nome: string; fn: string; corpo?: unknown; query?: string;
 
 const SITE = 'https://gmenezes-advogados.vercel.app/'
 
+async function avisarFalhas(falhas: { verificacao: string; status_http: number; detalhe: string | null }[]): Promise<number> {
+  const [{ data: cfg }, { data: admins }] = await Promise.all([
+    db.from('configuracoes').select('chave,valor').in('chave', ['brevo_api_key', 'email_remetente']),
+    db.from('usuarios_perfis').select('email').eq('funcao', 'admin'),
+  ])
+  const conf = Object.fromEntries((cfg ?? []).map(x => [x.chave, x.valor]))
+  const para = [...new Set((admins ?? []).map(a => a.email).filter(e => !!e && !e.endsWith('@exemplo.com')) as string[])]
+  if (!conf.brevo_api_key || !conf.email_remetente || !para.length) return 0
+  const quando = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+  const lista = falhas.map(f => `<li><strong>${f.verificacao}</strong>${f.status_http ? ` (HTTP ${f.status_http})` : ''}${f.detalhe ? `<br><span style="color:#666;font-size:12px">${f.detalhe.replace(/</g, '&lt;').slice(0, 200)}</span>` : ''}</li>`).join('')
+  const html = `<div style="font-family:Georgia,serif;max-width:620px;margin:auto">
+    <div style="background:#8b1a1a;color:#fff;padding:18px"><h2 style="margin:0">Teste automático: ${falhas.length} falha(s) em ${quando}</h2></div>
+    <div style="padding:16px;line-height:1.5"><p>O teste automático da plataforma encontrou problema em:</p><ul>${lista}</ul>
+    <p>Na maioria das vezes é instabilidade de uma fonte externa (Banco Central, CNJ, Planalto) e se resolve sozinho no próximo teste. Se a falha repetir dois dias seguidos, avise o Instituto THEYE.</p>
+    <p><a href="https://gmenezes-advogados.vercel.app/#/equipe">Abrir Área do administrador (histórico de 30 dias)</a></p></div>
+    <p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · aviso automático</p></div>`
+  let enviados = 0
+  for (const email of para) {
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
+      body: JSON.stringify({ sender: { name: 'Avisos GMenezes', email: conf.email_remetente }, to: [{ email }], subject: `Teste automático com falha: ${falhas.map(f => f.verificacao).join(', ').slice(0, 120)}`, htmlContent: html }),
+    })
+    if (r.ok) enviados++
+  }
+  if (enviados) await db.from('consumo_api').insert({ funcao: 'aviso de falha do teste automático', modelo: 'brevo-email', quantidade: enviados })
+  return enviados
+}
+
 // Confere se o site abre com visual e código completos: todo arquivo citado na página precisa responder.
 async function verificarSite() {
   const t0 = Date.now()
@@ -62,7 +90,18 @@ Deno.serve(async (req) => {
   }
   await db.from('saude_sistema').insert(resultados)
   const falhas = resultados.filter(r => !r.ok)
-  return new Response(JSON.stringify({ total: resultados.length, falhas: falhas.length, resultados }), {
+  // Passo 18: e-mail às administradoras quando algo falha. Na conferência horária do site só avisa
+  // quando o estado muda (estava no ar e caiu), para não repetir o aviso a cada hora.
+  let avisadas = 0
+  if (falhas.length) {
+    let avisar = true
+    if (soSite) {
+      const { data: ant } = await db.from('saude_sistema').select('ok').eq('verificacao', 'Site no ar (visual completo)').order('id', { ascending: false }).range(1, 1)
+      avisar = ant?.[0]?.ok !== false
+    }
+    if (avisar) avisadas = await avisarFalhas(falhas)
+  }
+  return new Response(JSON.stringify({ total: resultados.length, falhas: falhas.length, avisadas, resultados }), {
     headers: { 'Content-Type': 'application/json' },
   })
 })

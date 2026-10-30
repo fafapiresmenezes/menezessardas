@@ -2,7 +2,7 @@
 // no dia 1 de cada mês (pg_cron) ou a pedido de quem está logado ({teste:true} manda só para a própria pessoa;
 // {mes:'2026-10-01'} escolhe o mês). Números vêm de relatorio_mensal(); o PDF é gerado aqui (pdf-lib), sem IA.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { PDFDocument, StandardFonts, rgb } from 'https://esm.sh/pdf-lib@1.17.1'
+import { PDFDocument, rgb } from 'https://esm.sh/pdf-lib@1.17.1'
 const cors = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-cron-secret',
@@ -32,7 +32,7 @@ const ansi = (s: string) => s.replace(/—/g, '-').replace(/[^\x00-\xff]/g, '?')
 async function gerarPdf(r: Relatorio, geradoEm: string): Promise<Uint8Array> {
   const pdf = await PDFDocument.create()
   pdf.setTitle(`Relatório mensal ${r.mes} - GMenezes Advogados Associados`); pdf.setAuthor('Plataforma GMenezes')
-  const serif = await pdf.embedFont(StandardFonts.TimesRoman), serifB = await pdf.embedFont(StandardFonts.TimesBold), sans = await pdf.embedFont(StandardFonts.Helvetica)
+  const serif = await pdf.embedFont('Times-Roman'), serifB = await pdf.embedFont('Times-Bold'), sans = await pdf.embedFont('Helvetica')
   const navy = rgb(0.078, 0.129, 0.239), dourado = rgb(0.69, 0.553, 0.341), cinza = rgb(0.4, 0.4, 0.4)
   let page = pdf.addPage([595.28, 841.89]); let y = 800
   const nova = () => { page = pdf.addPage([595.28, 841.89]); y = 800 }
