@@ -227,6 +227,7 @@ function App() {
           element={isAuthenticated ? <ConfiguraçõesPage /> : <Navigate to="/login" />}
         />
         <Route path="/" element={<Navigate to={isAuthenticated ? "/inicio" : "/login"} />} />
+        <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />
       </Routes>
     </HashRouter>
   )
