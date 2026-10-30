@@ -4,6 +4,7 @@ import Layout from '@/components/Layout'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { calcularPrazo } from '@/lib/prazos'
 import { CalendarClock, Inbox, ListChecks, FileWarning, Briefcase, Mail } from 'lucide-react'
+import { extrairAcoes } from '@/lib/acoesConsultor'
 import { render } from '@/pages/AssistentePage'
 
 // "Meu dia": o que cada nível do escritório precisa ver ao abrir a plataforma, num só lugar.
@@ -43,7 +44,9 @@ export default function MeuDiaPage() {
   const [intimacoes, setIntimacoes] = useState(0)
   const [vencendo, setVencendo] = useState<{ id: string; imovel_id: string; locatario_fornecedor: string; data_vencimento: string }[]>([])
   const [calc, setCalc] = useState({ inicio: hoje(), dias: 15, dobro: false })
-  const [diagnostico, setDiagnostico] = useState<{ resposta: string; criado_em: string } | null>(null)
+  const [diagnostico, setDiagnostico] = useState<{ id: string; resposta: string; criado_em: string } | null>(null)
+  // Passo 20: ações do Consultor da semana marcáveis como feitas (tabela acoes_consultor).
+  const [acoes, setAcoes] = useState<{ id: string; indice: number; texto: string; feito_em: string | null }[]>([])
   const [resumo, setResumo] = useState<{ conteudo: Resumo; criado_em: string; enviado_em: string | null; destinatarios: number } | null>(null)
   const [msgResumo, setMsgResumo] = useState('')
   useEffect(() => {
@@ -59,8 +62,23 @@ export default function MeuDiaPage() {
   }
   useEffect(() => {
     if (!supabaseConfigurado) { setDiagnostico(null); return }
-    supabase.from('diagnosticos_semanais').select('resposta,criado_em').eq('nivel', NIVEL_DO_PAPEL[papel] ?? 'nivel_pleno').order('criado_em', { ascending: false }).limit(1).maybeSingle().then(r => setDiagnostico(r.data ?? null))
+    supabase.from('diagnosticos_semanais').select('id,resposta,criado_em').eq('nivel', NIVEL_DO_PAPEL[papel] ?? 'nivel_pleno').order('criado_em', { ascending: false }).limit(1).maybeSingle().then(async r => {
+      setDiagnostico(r.data ?? null); setAcoes([])
+      if (!r.data) return
+      // Garante as ações do diagnóstico na tabela (só na primeira vez) e carrega o estado de cada uma.
+      const textos = extrairAcoes(r.data.resposta)
+      if (textos.length) await supabase.from('acoes_consultor').upsert(textos.map((texto, i) => ({ diagnostico_id: r.data!.id, indice: i + 1, texto })), { onConflict: 'diagnostico_id,indice', ignoreDuplicates: true })
+      const { data } = await supabase.from('acoes_consultor').select('id,indice,texto,feito_em').eq('diagnostico_id', r.data.id).order('indice')
+      setAcoes(data ?? [])
+    })
   }, [papel])
+  const marcarAcao = async (a: { id: string; feito_em: string | null }) => {
+    const feito_em = a.feito_em ? null : new Date().toISOString()
+    const { data: u } = await supabase.auth.getUser()
+    const { error } = await supabase.from('acoes_consultor').update({ feito_em, usuario_id: feito_em ? u.user?.id ?? null : null }).eq('id', a.id)
+    if (!error) setAcoes(acoes.map(x => x.id === a.id ? { ...x, feito_em } : x))
+  }
+  const feitas = acoes.filter(a => a.feito_em).length
   const prazo = calc.dias > 0 && calc.inicio ? calcularPrazo(calc.inicio, calc.dias, calc.dobro) : null
 
   useEffect(() => { try { localStorage.setItem('lsm-papel', papel) } catch { /* sem armazenamento */ } }, [papel])
@@ -136,6 +154,22 @@ export default function MeuDiaPage() {
             <>
               <p className="text-xs text-grafite-claro mt-1">Gerado em {new Date(diagnostico.criado_em).toLocaleDateString('pt-BR')} pelo consultor do seu nível. <Link to="/consultores" className="underline">Pedir um diagnóstico agora</Link></p>
               <div className="prose prose-sm max-w-none mt-3">{render(diagnostico.resposta)}</div>
+              {!!acoes.length && (
+                <div className="mt-4 border-t border-navy/10 pt-3" data-testid="acoes-consultor">
+                  <p className="text-sm font-semibold flex items-center justify-between">Ações da semana <span data-testid="aderencia-semana">{feitas} de {acoes.length} feitas ({Math.round(100 * feitas / acoes.length)}%)</span></p>
+                  <ul className="mt-2 space-y-1">
+                    {acoes.map(a => (
+                      <li key={a.id}>
+                        <label className="flex items-start gap-2 text-sm min-h-[44px] cursor-pointer">
+                          <input type="checkbox" checked={!!a.feito_em} onChange={() => marcarAcao(a)} className="mt-1" data-testid={`acao-${a.indice}`} />
+                          <span className={a.feito_em ? 'line-through text-grafite-claro' : ''}>{a.indice}. {a.texto}{a.feito_em && <span className="text-xs ml-2">feita em {new Date(a.feito_em).toLocaleDateString('pt-BR')}</span>}</span>
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="text-xs text-grafite-claro mt-1">A aderência por nível aparece em <Link to="/indicadores" className="underline">Indicadores</Link>.</p>
+                </div>
+              )}
             </>
           ) : (
             <p className="text-sm text-grafite-claro mt-2">O primeiro diagnóstico chega na segunda-feira. Enquanto isso, <Link to="/consultores" className="underline">peça um agora em Consultores</Link>.</p>

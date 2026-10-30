@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import EscolhaAvisos from '@/components/EscolhaAvisos'
 import { useNavigate } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
 import { useAlertas, salvarCompromisso } from '@/hooks/useAlertas'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { baixarICS } from '@/lib/ics'
 import { formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
 import { CalendarDays, ChevronLeft, ChevronRight, Download, Mail, ExternalLink, Plus, X } from 'lucide-react'
@@ -30,6 +30,28 @@ export default function AgendaPage() {
   const [ano, setAno] = useState(hoje.getFullYear())
   const [mes, setMes] = useState(hoje.getMonth())
   const [sincronizando, setSincronizando] = useState(false)
+  // Passo 19: roteiro do Outlook por e-mail e resultado do teste (configuracoes.teste_outlook, só admin lê e grava).
+  const [testeOutlook, setTesteOutlook] = useState<{ enviado_em?: string; para?: string[]; resultado?: string; em?: string } | null>(null)
+  const [msgRoteiro, setMsgRoteiro] = useState('')
+  const [enviandoRoteiro, setEnviandoRoteiro] = useState(false)
+  useEffect(() => {
+    if (!supabaseConfigurado) return
+    supabase.from('configuracoes').select('valor').eq('chave', 'teste_outlook').maybeSingle().then(r => { try { setTesteOutlook(r.data ? JSON.parse(r.data.valor) : null) } catch { setTesteOutlook(null) } })
+  }, [])
+  const enviarRoteiro = async (para: 'fatima' | 'eu') => {
+    setEnviandoRoteiro(true); setMsgRoteiro('')
+    try {
+      const { data, error } = await supabase.functions.invoke('roteiro-outlook', { body: para === 'eu' ? { teste: true } : { para: 'fatima' } })
+      if (error || data?.erro) throw new Error(data?.erro ?? error?.message)
+      setMsgRoteiro(`Roteiro enviado para ${(data.para as string[]).join(', ')}.`)
+      if (para === 'fatima') setTesteOutlook({ enviado_em: new Date().toISOString(), para: data.para, resultado: 'pendente' })
+    } catch (e) { setMsgRoteiro(`Não foi possível enviar: ${e instanceof Error ? e.message : e}`) } finally { setEnviandoRoteiro(false) }
+  }
+  const marcarTesteOutlook = async (resultado: 'funcionou' | 'nao_funcionou') => {
+    const novo = { ...(testeOutlook ?? {}), resultado, em: new Date().toISOString() }
+    const { error } = await supabase.from('configuracoes').upsert({ chave: 'teste_outlook', valor: JSON.stringify(novo) }, { onConflict: 'chave' })
+    if (!error) setTesteOutlook(novo)
+  }
   const [showModal, setShowModal] = useState(false)
   const [novoAlerta, setNovoAlerta] = useState({
     titulo: '',
@@ -183,6 +205,22 @@ export default function AgendaPage() {
               <ExternalLink size={16} aria-hidden="true" /> {sincronizando ? 'Abrindo…' : 'Conectar ao Google Agenda'}
             </button>
           </div>
+          {supabaseConfigurado && (
+            <div className="mt-3 text-sm flex flex-wrap items-center gap-3" data-testid="roteiro-outlook">
+              <span className="text-grafite-claro">Roteiro do Outlook (5 passos com imagens):</span>
+              <button type="button" onClick={() => enviarRoteiro('fatima')} disabled={enviandoRoteiro} className="underline text-navy disabled:opacity-50 min-h-[44px]" data-testid="enviar-roteiro-fatima">Enviar para a Fátima</button>
+              <button type="button" onClick={() => enviarRoteiro('eu')} disabled={enviandoRoteiro} className="underline text-navy disabled:opacity-50 min-h-[44px]" data-testid="enviar-roteiro-eu">Enviar para mim (teste)</button>
+              {msgRoteiro && <span aria-live="polite" data-testid="msg-roteiro">{msgRoteiro}</span>}
+              {testeOutlook && (
+                <span className="flex items-center gap-2" data-testid="teste-outlook">
+                  Teste da Fátima: <strong data-testid="resultado-outlook">{testeOutlook.resultado === 'funcionou' ? 'funcionou' : testeOutlook.resultado === 'nao_funcionou' ? 'não funcionou' : 'pendente'}</strong>
+                  {testeOutlook.enviado_em && <span className="text-grafite-claro">(roteiro enviado em {new Date(testeOutlook.enviado_em).toLocaleDateString('pt-BR')})</span>}
+                  <button type="button" onClick={() => marcarTesteOutlook('funcionou')} className="border border-regular text-regular px-2 py-1 rounded-sm" data-testid="outlook-funcionou">Funcionou</button>
+                  <button type="button" onClick={() => marcarTesteOutlook('nao_funcionou')} className="border border-critico text-critico px-2 py-1 rounded-sm" data-testid="outlook-nao-funcionou">Não funcionou</button>
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="bg-white shadow-sm p-4">

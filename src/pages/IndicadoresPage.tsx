@@ -16,7 +16,11 @@ import {
   type PontoRisco,
   type PontoPendencia,
 } from '@/lib/indicadores'
-import { Printer, Building2, Percent, FileCheck2, CalendarClock, TrendingUp, AlertOctagon, Sparkles } from 'lucide-react'
+import { Printer, Building2, Percent, FileCheck2, CalendarClock, TrendingUp, AlertOctagon, Sparkles, ListChecks } from 'lucide-react'
+
+// Passo 20: aderência às ações do Consultor da semana, por nível (RPC aderencia_consultores).
+const NOME_NIVEL: Record<string, string> = { nivel_socio_gestor: 'Sócia gestora', nivel_senior: 'Advogado sênior', nivel_pleno: 'Advogado pleno', nivel_junior: 'Advogado júnior', nivel_estagiario: 'Estagiário', nivel_secretaria: 'Secretaria', nivel_financeiro: 'Financeiro', nivel_ti: 'TI', nivel_marketing: 'Marketing', nivel_rh: 'Pessoas', nivel_compliance: 'Compliance', nivel_cliente: 'Cliente', nivel_controladoria: 'Controladoria', nivel_recepcao: 'Recepção' }
+type Aderencia = { nivel: string; total: number; feitas: number; aderencia: number | null; gerado_em: string }
 
 const moeda = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v)
@@ -102,10 +106,12 @@ export default function IndicadoresPage() {
   const [resumoDiario, setResumoDiario] = useState<ResumoDiario | null>(null)
   const [carregandoResumo, setCarregandoResumo] = useState(false)
   const [erroResumo, setErroResumo] = useState('')
+  const [aderencia, setAderencia] = useState<Aderencia[]>([])
 
   useEffect(() => {
     repositorio.listarContratos().then(setContratos)
     carregarResumoDiario()
+    if (supabaseConfigurado) supabase.rpc('aderencia_consultores').then(r => setAderencia((r.data as Aderencia[]) ?? []))
   }, [])
 
   const carregarResumoDiario = async () => {
@@ -195,6 +201,28 @@ export default function IndicadoresPage() {
         </section>
 
         <CalibracaoPrevisoes />
+
+        {supabaseConfigurado && (
+          <section className="bg-white p-6 shadow-sm" aria-labelledby="t-aderencia" data-testid="aderencia-consultores">
+            <h2 id="t-aderencia" className="text-xl mb-1 flex items-center gap-2"><ListChecks className="w-5 h-5 text-dourado" aria-hidden />Aderência às ações dos Consultores da semana</h2>
+            <p className="text-sm text-grafite-claro mb-4">Percentual das ações do último diagnóstico de cada nível marcadas como feitas em Meu dia.</p>
+            {aderencia.length === 0 ? (
+              <p className="text-sm text-grafite-claro" data-testid="aderencia-vazia">Nenhum diagnóstico semanal ainda. Eles chegam toda segunda-feira, ou peça um em Consultores.</p>
+            ) : (
+              <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {aderencia.map(a => (
+                  <li key={a.nivel} className="border border-navy/10 p-3" data-testid={`aderencia-${a.nivel}`}>
+                    <div className="flex items-center justify-between text-sm"><span>{NOME_NIVEL[a.nivel] ?? a.nivel}</span><strong data-testid="aderencia-pct">{a.aderencia === null ? 'sem ações abertas' : `${a.aderencia}%`}</strong></div>
+                    <div className="h-2 bg-pergaminho mt-2" role="progressbar" aria-valuenow={a.aderencia ?? 0} aria-valuemin={0} aria-valuemax={100} aria-label={`Aderência ${NOME_NIVEL[a.nivel] ?? a.nivel}`}>
+                      <div className={`h-2 ${(a.aderencia ?? 0) >= 80 ? 'bg-regular' : (a.aderencia ?? 0) >= 40 ? 'bg-atencao' : 'bg-critico'}`} style={{ width: `${a.aderencia ?? 0}%` }} />
+                    </div>
+                    <p className="text-xs text-grafite-claro mt-1">{a.feitas} de {a.total} ações · diagnóstico de {new Date(a.gerado_em).toLocaleDateString('pt-BR')}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        )}
 
         <section className="bg-white p-6 shadow-sm" aria-labelledby="t-tend">
           <h2 id="t-tend" className="text-xl mb-1">
