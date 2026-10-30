@@ -7,12 +7,25 @@ import { formatarData, diasAte } from '@/lib/datas'
 import { FolderKanban, Plus, ChevronRight } from 'lucide-react'
 
 // Gestão de projetos do escritório em hierarquia (Projeto → Tarefa → Subtarefa), no estilo Monday:
-// quadro por situação, dono de cada tarefa, prazo, prioridade, horas e ligação com imóvel.
+// vale para qualquer caso (processo, contrato, consultoria, cliente externo ou projeto interno), com
+// quadro por situação, dono, prazo, prioridade, horas e ligação opcional com imóvel.
 type Situacao = 'a_fazer' | 'fazendo' | 'revisao' | 'feito'
 interface Tarefa {
   id: string; pai_id: string | null; nivel: 'projeto' | 'tarefa' | 'subtarefa'; titulo: string
   situacao: Situacao; prioridade: 'alta' | 'media' | 'baixa'; responsavel_id: string | null
   imovel_id: string | null; prazo: string | null; horas: number
+  cliente: string | null; area: string | null; numero_processo: string | null; tipo: string | null
+}
+const TIPOS: Record<string, string> = { caso: 'Processo judicial', contrato: 'Contrato ou consultoria', interno: 'Projeto interno do escritório', externo: 'Gestão para outro escritório ou empresa' }
+const AREAS = ['Imobiliário', 'Cível', 'Trabalhista', 'Família e sucessões', 'Tributário', 'Empresarial', 'Consumidor', 'Previdenciário', 'Penal', 'Compliance', 'Gestão interna']
+// Modelos de caso: etapas típicas e em quantos dias, a partir de hoje, cada uma deve estar pronta.
+const MODELOS: Record<string, { nome: string; etapas: [string, number][] }> = {
+  contencioso: { nome: 'Ação judicial (contencioso)', etapas: [['Reunião com o cliente e documentos', 3], ['Análise de viabilidade e honorários', 7], ['Petição inicial ou contestação', 15], ['Acompanhar citação e intimações', 30], ['Audiência de conciliação', 60], ['Provas e réplica', 90], ['Sentença e análise de recurso', 180]] },
+  contrato: { nome: 'Elaboração ou revisão de contrato', etapas: [['Entender o negócio e as partes', 2], ['Checagem de contraparte (KYC)', 4], ['Minuta', 7], ['Revisão interna', 9], ['Negociação com a outra parte', 15], ['Assinatura e arquivo', 20]] },
+  trabalhista: { nome: 'Reclamação trabalhista', etapas: [['Documentos do contrato de trabalho', 3], ['Cálculo das verbas', 7], ['Petição inicial ou defesa', 15], ['Audiência', 45], ['Perícia, se houver', 90], ['Sentença e recurso', 150]] },
+  familia: { nome: 'Divórcio, alimentos ou inventário', etapas: [['Acolhimento e documentos', 3], ['Levantamento de bens', 10], ['Proposta de acordo', 20], ['Petição ou escritura', 30], ['Acompanhamento até a homologação', 90]] },
+  consultoria: { nome: 'Parecer ou consultoria', etapas: [['Delimitar a pergunta do cliente', 1], ['Pesquisa de lei e jurisprudência', 5], ['Rascunho do parecer', 8], ['Revisão pela sócia', 10], ['Entrega e reunião', 12]] },
+  interno: { nome: 'Projeto interno do escritório', etapas: [['Objetivo e meta (OKR)', 3], ['Plano e responsáveis', 7], ['Execução', 30], ['Revisão de resultados', 45], ['Lições aprendidas', 50]] },
 }
 const COLUNAS: { valor: Situacao; rotulo: string }[] = [
   { valor: 'a_fazer', rotulo: 'A fazer' }, { valor: 'fazendo', rotulo: 'Fazendo' },
@@ -27,9 +40,11 @@ export default function ProjetosPage() {
   const [projeto, setProjeto] = useState<string>('')
   const [novo, setNovo] = useState({ titulo: '', nivel: 'tarefa', responsavel_id: '', prazo: '', prioridade: 'media', imovel_id: '' })
   const [erro, setErro] = useState('')
+  const [caso, setCaso] = useState({ modelo: 'contencioso', titulo: '', cliente: '', area: 'Cível', numero: '', tipo: 'caso', responsavel_id: '' })
+  const [filtroArea, setFiltroArea] = useState('')
 
   const carregar = async () => {
-    const { data, error } = await supabase.from('tarefas').select('id,pai_id,nivel,titulo,situacao,prioridade,responsavel_id,imovel_id,prazo,horas').order('criado_em')
+    const { data, error } = await supabase.from('tarefas').select('id,pai_id,nivel,titulo,situacao,prioridade,responsavel_id,imovel_id,prazo,horas,cliente,area,numero_processo,tipo').order('criado_em')
     if (error) return setErro(error.message)
     setTarefas((data ?? []) as Tarefa[])
   }
@@ -39,7 +54,7 @@ export default function ProjetosPage() {
     repositorio.listarImoveis().then(setImoveis).catch(() => {})
   }, [])
 
-  const projetos = tarefas.filter(t => t.nivel === 'projeto')
+  const projetos = tarefas.filter(t => t.nivel === 'projeto' && (!filtroArea || t.area === filtroArea))
   // Tarefas do projeto escolhido, incluindo subtarefas (descendentes em qualquer nível).
   const visiveis = useMemo(() => {
     if (!projeto) return tarefas.filter(t => t.nivel !== 'projeto')
@@ -62,6 +77,24 @@ export default function ProjetosPage() {
     if (error) return setErro(error.message)
     setNovo({ ...novo, titulo: '', prazo: '' }); carregar()
   }
+  // Cria o caso inteiro de uma vez: o projeto e as etapas do modelo, com prazos já calculados.
+  const criarCaso = async () => {
+    setErro('')
+    const m = MODELOS[caso.modelo]
+    const tituloCaso = caso.titulo.trim() || `${m.nome}${caso.cliente ? ` · ${caso.cliente}` : ''}`
+    const { data, error } = await supabase.from('tarefas').insert({
+      titulo: tituloCaso, nivel: 'projeto', prioridade: 'media', cliente: caso.cliente.trim() || null, area: caso.area,
+      numero_processo: caso.numero.trim() || null, tipo: caso.tipo, responsavel_id: caso.responsavel_id || null,
+    }).select('id').single()
+    if (error || !data) return setErro(error?.message ?? 'Falha ao criar o caso.')
+    const dia = (n: number) => new Date(Date.now() + n * 864e5).toISOString().slice(0, 10)
+    const { error: e2 } = await supabase.from('tarefas').insert(m.etapas.map(([t, d]) => ({
+      titulo: t, nivel: 'tarefa', pai_id: data.id, prioridade: 'media', prazo: dia(d), area: caso.area, cliente: caso.cliente.trim() || null,
+      responsavel_id: caso.responsavel_id || null,
+    })))
+    if (e2) return setErro(e2.message)
+    setCaso({ ...caso, titulo: '', cliente: '', numero: '' }); setProjeto(data.id); carregar()
+  }
   const mover = async (t: Tarefa, situacao: Situacao) => {
     setTarefas(ts => ts.map(x => (x.id === t.id ? { ...x, situacao } : x)))
     const { error } = await supabase.from('tarefas').update({ situacao, atualizado_em: new Date().toISOString() }).eq('id', t.id)
@@ -83,10 +116,16 @@ export default function ProjetosPage() {
         <section className="bg-white shadow-sm border-t-2 border-dourado p-5">
           <div className="flex flex-wrap items-end gap-4">
             <div>
+              <label htmlFor="filtro-area" className="block text-xs uppercase tracking-wider text-grafite mb-1">Área</label>
+              <select id="filtro-area" value={filtroArea} onChange={e => { setFiltroArea(e.target.value); setProjeto('') }} className="border px-3 py-2">
+                <option value="">Todas</option>{AREAS.map(a => <option key={a}>{a}</option>)}
+              </select>
+            </div>
+            <div>
               <label htmlFor="projeto" className="block text-xs uppercase tracking-wider text-grafite mb-1">Projeto</label>
               <select id="projeto" value={projeto} onChange={e => setProjeto(e.target.value)} className="border px-3 py-2 min-w-[220px]">
                 <option value="">Todas as tarefas</option>
-                {projetos.map(p => <option key={p.id} value={p.id}>{p.titulo}</option>)}
+                {projetos.map(p => <option key={p.id} value={p.id}>{p.titulo}{p.numero_processo ? ` · ${p.numero_processo}` : ''}</option>)}
               </select>
             </div>
             <dl className="flex gap-6 text-sm">
@@ -97,8 +136,31 @@ export default function ProjetosPage() {
           </div>
         </section>
 
+        <section aria-labelledby="t-caso" className="bg-white shadow-sm p-5">
+          <h2 id="t-caso" className="text-lg mb-1 flex items-center gap-2"><FolderKanban size={18} className="text-dourado" aria-hidden="true" /> Novo caso pronto (com etapas e prazos)</h2>
+          <p className="text-xs text-grafite-claro mb-3">Para cada processo, contrato, consultoria ou cliente que o escritório ganhar. Escolha o modelo e a plataforma cria o projeto com todas as etapas.</p>
+          <div className="grid gap-3 sm:grid-cols-6">
+            <select aria-label="Modelo" value={caso.modelo} onChange={e => setCaso({ ...caso, modelo: e.target.value })} className="border px-3 py-2 sm:col-span-2">
+              {Object.entries(MODELOS).map(([k, m]) => <option key={k} value={k}>{m.nome}</option>)}
+            </select>
+            <select aria-label="Tipo" value={caso.tipo} onChange={e => setCaso({ ...caso, tipo: e.target.value })} className="border px-3 py-2 sm:col-span-2">
+              {Object.entries(TIPOS).map(([k, t]) => <option key={k} value={k}>{t}</option>)}
+            </select>
+            <select aria-label="Área do caso" value={caso.area} onChange={e => setCaso({ ...caso, area: e.target.value })} className="border px-3 py-2 sm:col-span-2">
+              {AREAS.map(a => <option key={a}>{a}</option>)}
+            </select>
+            <input aria-label="Cliente" placeholder="Cliente" value={caso.cliente} onChange={e => setCaso({ ...caso, cliente: e.target.value })} className="border px-3 py-2 sm:col-span-2" />
+            <input aria-label="Número do processo" placeholder="Nº do processo (se houver)" value={caso.numero} onChange={e => setCaso({ ...caso, numero: e.target.value })} className="border px-3 py-2 sm:col-span-2" />
+            <select aria-label="Responsável pelo caso" value={caso.responsavel_id} onChange={e => setCaso({ ...caso, responsavel_id: e.target.value })} className="border px-3 py-2 sm:col-span-2">
+              <option value="">Responsável</option>{pessoas.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
+            </select>
+            <input aria-label="Nome do caso" placeholder="Nome do caso (opcional)" value={caso.titulo} onChange={e => setCaso({ ...caso, titulo: e.target.value })} className="border px-3 py-2 sm:col-span-4" />
+            <button data-testid="criar-caso" onClick={criarCaso} className="min-h-[44px] bg-dourado text-navy px-5 text-sm uppercase tracking-wider sm:col-span-2">Criar caso</button>
+          </div>
+        </section>
+
         <section aria-labelledby="t-novo" className="bg-white shadow-sm p-5">
-          <h2 id="t-novo" className="text-lg mb-3 flex items-center gap-2"><Plus size={18} className="text-dourado" aria-hidden="true" /> Novo item</h2>
+          <h2 id="t-novo" className="text-lg mb-3 flex items-center gap-2"><Plus size={18} className="text-dourado" aria-hidden="true" /> Novo item avulso</h2>
           <div className="grid gap-3 sm:grid-cols-6">
             <input aria-label="Título" placeholder="Ex.: Renovatória da loja 3" value={novo.titulo} onChange={e => setNovo({ ...novo, titulo: e.target.value })} className="border px-3 py-2 sm:col-span-2" />
             <select aria-label="Nível" value={novo.nivel} onChange={e => setNovo({ ...novo, nivel: e.target.value })} className="border px-3 py-2">

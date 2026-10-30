@@ -17,7 +17,7 @@ interface LayoutProps {
 const itensMenu = [
   { icon: Home, label: 'Trocar de área', href: '/inicio' },
   { icon: LayoutGrid, label: 'Painel', href: '/dashboard' },
-  { icon: FolderKanban, label: 'Projetos', href: '/projetos' },
+  { icon: FolderKanban, label: 'Casos e projetos', href: '/projetos' },
   { icon: Inbox, label: 'Intimações', href: '/intimacoes' },
   { icon: Building2, label: 'Imóveis', href: '/imoveis' },
   { icon: CalendarDays, label: 'Agenda', href: '/agenda' },
