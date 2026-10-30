@@ -69,7 +69,7 @@ export default function ConsultoresPage() {
           <nav aria-label="Funções" className="space-y-5">
             {grupos.map(g => (
               <div key={g}>
-                <p className="text-[11px] uppercase tracking-[0.18em] text-grafite/70 mb-2">{g}</p>
+                <p className="text-[11px] uppercase tracking-[0.18em] text-grafite-claro mb-2">{g}</p>
                 <div className="space-y-1">
                   {NIVEIS.filter(n => n.nivel === g).map(n => (
                     <button key={n.chave} type="button" data-testid={`consultor-${n.chave}`} onClick={() => { setSel(n); setResposta(null); setErro('') }}
