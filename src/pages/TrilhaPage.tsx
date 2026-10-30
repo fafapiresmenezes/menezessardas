@@ -17,7 +17,8 @@ import {
   type Ancoragem,
   type Lastro,
 } from '@/lib/ancoragem'
-import { Printer, ShieldCheck, ShieldAlert, Link2, Anchor, Download } from 'lucide-react'
+import { Printer, ShieldCheck, ShieldAlert, Link2, Anchor, Download, FileDown } from 'lucide-react'
+import { exportarTrilhaPeriodo } from '@/lib/exportarTrilha'
 
 const rotuloTipo: Record<TipoEvento, string> = {
   imovel_criado: 'Imóvel cadastrado',
@@ -60,6 +61,23 @@ export default function TrilhaPage() {
   const [lastros, setLastros] = useState<Lastro[] | null>(null)
   const [ancorando, setAncorando] = useState(false)
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+  // Exportação por período (Passo 17): PDF + SHA-256 + selo .ots.
+  const hojeIso = new Date().toISOString().slice(0, 10)
+  const [periodo, setPeriodo] = useState({ de: new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10), ate: hojeIso })
+  const [exportando, setExportando] = useState(false)
+  const [exportacao, setExportacao] = useState<{ sha256: string; total: number; calendario: string | null } | null>(null)
+  const exportarPeriodo = async () => {
+    setExportando(true); setMsg(null); setExportacao(null)
+    try {
+      const r = await exportarTrilhaPeriodo(periodo.de, periodo.ate)
+      baixarArquivo(`${r.nomeBase}.pdf`, r.pdf, 'application/pdf')
+      if (r.ots) setTimeout(() => baixarArquivo(`${r.nomeBase}.pdf.ots`, r.ots!), 400)
+      setExportacao({ sha256: r.sha256, total: r.total, calendario: r.calendario })
+      await carregar()
+    } catch (e) {
+      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Falha ao exportar.' })
+    } finally { setExportando(false) }
+  }
 
   const carregar = async () => {
     const [lista, v, ancs] = await Promise.all([listarTrilha(), verificarTrilha(), listarAncoragens()])
@@ -127,6 +145,21 @@ export default function TrilhaPage() {
             </div>
           </section>
         )}
+
+        <section className="bg-white shadow-sm border-t-2 border-dourado p-6 print:hidden" aria-labelledby="t-exportar" data-testid="exportar-periodo">
+          <h2 id="t-exportar" className="text-lg flex items-center gap-2"><FileDown size={18} className="text-dourado" aria-hidden="true" />Exportar período para auditoria externa</h2>
+          <p className="text-sm text-grafite-claro mt-1">Gera um PDF com todos os registros do período (hash e elo de cada um), calcula o SHA-256 do arquivo e baixa junto o selo OpenTimestamps (.ots), que prova no Bitcoin a data do documento. Entregue os dois arquivos ao auditor.</p>
+          <div className="flex flex-wrap items-end gap-3 mt-3 text-sm">
+            <label>De<input type="date" value={periodo.de} max={periodo.ate} onChange={e => setPeriodo({ ...periodo, de: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="exportar-de" /></label>
+            <label>Até<input type="date" value={periodo.ate} min={periodo.de} max={hojeIso} onChange={e => setPeriodo({ ...periodo, ate: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="exportar-ate" /></label>
+            <button type="button" onClick={exportarPeriodo} disabled={exportando || !periodo.de || !periodo.ate} data-testid="exportar-pdf-selo" className="min-h-[44px] px-4 bg-navy text-white disabled:opacity-60 inline-flex items-center gap-2"><Download size={16} aria-hidden="true" />{exportando ? 'Gerando e selando…' : 'Baixar PDF + selo'}</button>
+          </div>
+          {exportacao && (
+            <p className="text-xs mt-3 break-all" role="status" data-testid="msg-exportacao">
+              {exportacao.total} registro(s) exportado(s). SHA-256 do PDF: <span className="font-mono">{exportacao.sha256}</span>. {exportacao.calendario ? `Selo enviado a ${exportacao.calendario.replace('https://', '')}; a confirmação no Bitcoin leva algumas horas.` : 'Selo não obtido agora (calendários fora do ar); o PDF e o hash valem, tente selar de novo mais tarde.'}
+            </p>
+          )}
+        </section>
 
         <div className="flex justify-end print:hidden">
           <button
