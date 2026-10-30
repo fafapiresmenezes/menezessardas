@@ -108,3 +108,43 @@ export async function definirSenhaProvisoria(pessoa: Pessoa): Promise<string> {
   })
   return senha
 }
+
+// Onda B: vários escritórios na mesma plataforma. A sede (GMenezes) administra os parceiros e vê a cobrança por usuário.
+export const SEDE_ID = '00000000-0000-0000-0000-000000000001'
+export interface Escritorio { id: string; nome: string; plano: string; criadoEm: string; operadores: number; leitores: number; mensal: number; mensal1Ano: number }
+
+export async function ehSede(): Promise<boolean> {
+  if (!supabaseConfigurado) return true
+  try { const k = sessionStorage.getItem('gm-sede'); if (k) return k === '1' } catch { /* sem sessionStorage */ }
+  const { data } = await supabase.rpc('eh_sede')
+  const v = data !== false
+  try { sessionStorage.setItem('gm-sede', v ? '1' : '0') } catch { /* ignora */ }
+  return v
+}
+
+export async function listarEscritorios(): Promise<Escritorio[]> {
+  if (!supabaseConfigurado) return [{ id: SEDE_ID, nome: 'GMenezes Advogados Associados', plano: 'sede', criadoEm: '2026-10-30', operadores: 3, leitores: 1, mensal: 1290, mensal1Ano: 903 }]
+  const { data, error } = await supabase.rpc('cobranca_escritorios')
+  if (error) throw new Error(error.message)
+  return ((data ?? []) as Record<string, unknown>[]).map(r => ({ id: String(r.id), nome: String(r.nome), plano: String(r.plano), criadoEm: String(r.criado_em), operadores: Number(r.operadores), leitores: Number(r.leitores), mensal: Number(r.mensal), mensal1Ano: Number(r.mensal_1ano) }))
+}
+
+export async function criarEscritorio(nome: string): Promise<void> {
+  if (!supabaseConfigurado) return
+  const { error } = await supabase.rpc('criar_escritorio', { p_nome: nome })
+  if (error) throw new Error(error.message)
+}
+
+export async function moverParaEscritorio(pessoaId: string, escritorioId: string): Promise<void> {
+  if (!supabaseConfigurado) return
+  const { error } = await supabase.rpc('mover_para_escritorio', { p_id: pessoaId, p_escritorio: escritorioId })
+  if (error) throw new Error(error.message)
+}
+
+export async function escritorioDasPessoas(): Promise<Record<string, string>> {
+  if (!supabaseConfigurado) return {}
+  const { data } = await supabase.rpc('listar_usuarios_v2')
+  const m: Record<string, string> = {}
+  for (const r of (data ?? []) as Record<string, unknown>[]) if (r.escritorio_id) m[String(r.id)] = String(r.escritorio_id)
+  return m
+}

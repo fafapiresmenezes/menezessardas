@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import TesteGeral from '@/components/TesteGeral'
+import EscritoriosParceiros from '@/components/EscritoriosParceiros'
 import { Users, UserPlus, KeyRound } from 'lucide-react'
 import { supabaseConfigurado } from '@/lib/supabase'
 import {
@@ -9,6 +10,7 @@ import {
   descricaoFuncao,
   listarPessoas,
   perfilAtual,
+  ehSede,
   rotuloFuncao,
   type Funcao,
   type Pessoa,
@@ -22,6 +24,7 @@ const dataPt = (iso: string | null) =>
 export default function EquipePage() {
   const [perfil, setPerfil] = useState<Funcao | null | 'carregando'>('carregando')
   const [pessoas, setPessoas] = useState<Pessoa[]>([])
+  const [sede, setSede] = useState(false)
   const [ocupado, setOcupado] = useState<string>('')
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
 
@@ -29,7 +32,7 @@ export default function EquipePage() {
     try {
       const p = await perfilAtual()
       setPerfil(p)
-      if (p === 'admin') setPessoas(await listarPessoas())
+      if (p === 'admin') { setPessoas(await listarPessoas()); setSede(await ehSede()) }
     } catch (e) {
       setPerfil(null)
       setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível carregar a equipe.' })
@@ -160,6 +163,7 @@ export default function EquipePage() {
                 })}
               </ul>
             </section>
+            {sede && <EscritoriosParceiros pessoas={pessoas} aoMudar={carregar} />}
           </>
         )}
       </div>

@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { sairDemo } from '@/lib/authDemo'
 import Marca from './Marca'
+import { ehSede } from '@/lib/equipe'
 import Busca from './Busca'
 import BoasVindas from './BoasVindas'
 import { aplicarTema, temaAtual } from '@/lib/tema'
@@ -14,6 +15,7 @@ interface LayoutProps {
   title?: string
 }
 
+const SO_SEDE = ['/imoveis', '/fornecedores', '/alertas', '/instituto', '/consumo']
 const itensMenu = [
   { icon: Home, label: 'Trocar de área', href: '/inicio' },
   { icon: LayoutGrid, label: 'Painel', href: '/dashboard' },
@@ -47,6 +49,8 @@ const itensMenu = [
 ]
 
 export default function Layout({ children, title }: LayoutProps) {
+  const [sede, setSede] = useState(true)
+  useEffect(() => { ehSede().then(setSede).catch(() => setSede(true)) }, [])
   const [menuAberto, setMenuAberto] = useState(
     () => typeof window === 'undefined' || window.innerWidth >= 768
   )
@@ -119,7 +123,7 @@ export default function Layout({ children, title }: LayoutProps) {
 
         <nav className="flex-1 overflow-y-auto" aria-label="Menu principal">
           <ul className="space-y-1 p-3">
-            {itensMenu.map((item) => {
+            {itensMenu.filter(item => sede || !SO_SEDE.includes(item.href)).map((item) => {
               const ativo = pathname.startsWith(item.href) || (item.href === '/fornecedores' && pathname.startsWith('/fornecedor/'))
               return (
                 <li key={item.label}>
