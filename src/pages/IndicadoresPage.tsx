@@ -195,12 +195,12 @@ export default function IndicadoresPage() {
 
   const { kpis, okrs, risco, pendencias, tendencia } = dados
   const tiles = [
-    { rotulo: 'Imóveis na carteira', valor: String(kpis.imoveis), icone: Building2, cor: 'text-navy' },
-    { rotulo: 'Taxa de vacância', valor: `${kpis.vacancia}%`, icone: Percent, cor: 'text-navy' },
-    { rotulo: 'Receita contratada / mês', valor: moeda(kpis.receitaContratadaMensal), icone: TrendingUp, cor: 'text-regular' },
-    { rotulo: 'Documentação em dia', valor: `${kpis.documentacaoEmDia}%`, icone: FileCheck2, cor: kpis.documentacaoEmDia >= 95 ? 'text-regular' : 'text-atencao' },
-    { rotulo: 'Prazo médio de vencimento', valor: kpis.prazoMedioDias === null ? '—' : `${kpis.prazoMedioDias} dias`, icone: CalendarClock, cor: 'text-navy' },
-    { rotulo: 'Contratos vencidos', valor: String(kpis.contratosVencidos), icone: AlertOctagon, cor: kpis.contratosVencidos ? 'text-critico' : 'text-regular' },
+    { rotulo: 'Imóveis na carteira', valor: String(kpis.imoveis), icone: Building2, cor: 'text-navy', explica: 'Quantos imóveis o escritório administra hoje.', para: '/imoveis' },
+    { rotulo: 'Taxa de vacância', valor: `${kpis.vacancia}%`, icone: Percent, cor: 'text-navy', explica: 'Parte dos imóveis sem contrato ativo. Quanto menor, melhor.', para: '/imoveis' },
+    { rotulo: 'Receita contratada / mês', valor: moeda(kpis.receitaContratadaMensal), icone: TrendingUp, cor: 'text-regular', explica: 'Soma dos aluguéis dos contratos ativos. Não é o valor recebido.', para: '/honorarios' },
+    { rotulo: 'Documentação em dia', valor: `${kpis.documentacaoEmDia}%`, icone: FileCheck2, cor: kpis.documentacaoEmDia >= 95 ? 'text-regular' : 'text-atencao', explica: 'Documentos válidos sobre o total. Meta: 95%.', para: '/alertas' },
+    { rotulo: 'Prazo médio de vencimento', valor: kpis.prazoMedioDias === null ? '—' : `${kpis.prazoMedioDias} dias`, icone: CalendarClock, cor: 'text-navy', explica: 'Em média, quantos dias faltam para os contratos ativos vencerem.', para: '/agenda' },
+    { rotulo: 'Contratos vencidos', valor: String(kpis.contratosVencidos), icone: AlertOctagon, cor: kpis.contratosVencidos ? 'text-critico' : 'text-regular', explica: 'Contratos com data final passada e sem renovação registrada.', para: '/alertas' },
   ]
 
   return (
@@ -218,7 +218,7 @@ export default function IndicadoresPage() {
         <section aria-label="Indicadores-chave">
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
             {tiles.map(t => (
-              <div key={t.rotulo} className="bg-white border-t-2 border-dourado p-5 shadow-sm">
+              <a key={t.rotulo} href={`#${t.para}`} className="block bg-white border-t-2 border-dourado p-5 shadow-sm hover:shadow-md transition" aria-label={`${t.rotulo}: ${t.valor}. ${t.explica} Abrir tela relacionada.`} data-testid="kpi-tile">
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-xs uppercase tracking-wider text-grafite-claro">{t.rotulo}</p>
@@ -226,7 +226,8 @@ export default function IndicadoresPage() {
                   </div>
                   <t.icone className={t.cor} size={20} aria-hidden="true" />
                 </div>
-              </div>
+                <p className="text-xs text-grafite-claro mt-2" data-testid="kpi-explica">{t.explica}</p>
+              </a>
             ))}
           </div>
           <p className="text-xs text-grafite-claro mt-3">
