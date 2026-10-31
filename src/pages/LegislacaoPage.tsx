@@ -222,6 +222,9 @@ export default function LegislacaoPage() {
                     </a>
                     {n.resumo && <p className="text-sm text-grafite mt-0.5">{n.resumo}</p>}
                     <p className="text-xs text-grafite-claro mt-0.5">{n.fonte}{n.data ? ` · ${formatarData(n.data)}` : ''}{n.termo ? ` · tema: ${n.termo}` : ''}</p>
+                    {!!n.afetados?.length && (
+                      <p className="text-xs mt-1 text-navy" data-testid="radar-afetados">Possivelmente afetados: {n.afetados.map(a => <Link key={a.id} to={a.tipo === 'caso' ? '/projetos' : `/contrato/${a.id}`} className="underline mr-2">{a.tipo === 'caso' ? 'caso' : 'contrato'} {a.nome} ({a.palavras} palavra{a.palavras > 1 ? 's' : ''} em comum)</Link>)} · o responsável recebeu uma tarefa.</p>
+                    )}
                   </div>
                 </li>
               ))}
