@@ -30,6 +30,7 @@ Deno.serve(async (req) => {
   const corpo = await req.json().catch(() => ({}))
 
   let pessoa: { email: string } | null = null
+  let escritorioId: string | null = null
   const segredo = req.headers.get('x-cron-secret')
   const { data: cfgSeg } = await db.from('configuracoes').select('valor').eq('chave', 'cron_segredo').maybeSingle()
   const cronOk = !!segredo && !!cfgSeg?.valor && segredo === cfgSeg.valor
@@ -37,9 +38,10 @@ Deno.serve(async (req) => {
     const token = (req.headers.get('Authorization') ?? '').replace('Bearer ', '')
     const { data: u } = await db.auth.getUser(token)
     if (!u?.user) return json({ erro: 'Entre na plataforma.' }, 401)
-    const { data: perfil } = await db.from('usuarios_perfis').select('funcao').eq('id', u.user.id).maybeSingle()
+    const { data: perfil } = await db.from('usuarios_perfis').select('funcao,escritorio_id').eq('id', u.user.id).maybeSingle()
     if (!perfil) return json({ erro: 'Conta ainda não liberada.' }, 403)
     pessoa = { email: u.user.email! }
+    escritorioId = (perfil as { escritorio_id?: string }).escritorio_id ?? null
   }
   const teste = !!corpo?.teste && !!pessoa
 
@@ -64,10 +66,16 @@ Deno.serve(async (req) => {
   const para = pessoa ? [pessoa.email] : [...new Set((equipe ?? []).map(a => a.email).filter(e => !!e && !e.endsWith('@exemplo.com')) as string[])]
   if (!conf.brevo_api_key || !conf.email_remetente) return json({ resumo: r, enviado: false, motivo: 'provedor de e-mail não configurado', destinatarios: para.length })
 
+  // Passo 39: marca do escritório dono (nome de exibição, cor e logo) no cabeçalho e rodapé do e-mail.
+  const { data: marcaBruta } = await db.rpc('marca_escritorio', { p_id: escritorioId })
+  const marca = (marcaBruta ?? {}) as { nome?: string; cor?: string; logo_url?: string | null; sede?: boolean }
+  const corMarca = /^#[0-9A-Fa-f]{6}$/.test(marca.cor ?? '') ? marca.cor! : '#14213d'
+  const nomeMarca = (marca.nome ?? 'GMenezes Advogados Associados').replace(/[<>&]/g, '')
+  const logoMarca = marca.logo_url && /^https:\/\//.test(marca.logo_url) ? `<img src="${marca.logo_url}" alt="" style="max-height:40px;margin-bottom:8px">` : ''
   const titulo = `Resumo semanal do escritório · semana de ${r.semana}`
   const bloco = (nome: string, s: Secao, rota: string) => `<h3 style="margin:18px 0 6px;color:#14213d">${nome}</h3><table style="width:100%;border-collapse:collapse;font-size:14px">${linhas(s)}</table><p style="margin:6px 0 0"><a href="${APP}${rota}">Abrir</a></p>`
   const html = `<div style="font-family:Georgia,serif;max-width:620px;margin:auto">
-    <div style="background:#14213d;color:#fff;padding:18px"><h2 style="margin:0">${titulo}</h2></div>
+    <div style="background:${corMarca};color:#fff;padding:18px">${logoMarca}<div style="font-size:12px;opacity:.85">${nomeMarca}</div><h2 style="margin:0">${titulo}</h2></div>
     <div style="padding:16px;line-height:1.5">
       <p>Bom dia. Este é o resumo consolidado dos alertas da plataforma, organizado por função. Os números são de hoje, ${r.semana}.</p>
       ${bloco('Para a sócia', r.socia, '/indicadores')}
@@ -76,12 +84,12 @@ Deno.serve(async (req) => {
       ${teste ? '<p style="color:#888">Este é um envio de teste pedido por você em Meu dia.</p>' : ''}
       <p><a href="${APP}/meu-dia">Abrir Meu dia</a> · <a href="${APP}/alertas">Abrir Alertas</a></p>
     </div>
-    <p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · resumo automático de segunda-feira</p></div>`
+    <p style="font-size:11px;color:#888;padding:10px">${nomeMarca} · resumo automático de segunda-feira${marca.sede === false ? ' · plataforma GMenezes, desenvolvida pelo Instituto THEYE' : ''}</p></div>`
   let falha: string | undefined
   for (const email of para) {
     const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify({ sender: { name: 'Avisos GMenezes', email: conf.email_remetente }, to: [{ email }], subject: titulo, htmlContent: html }),
+      body: JSON.stringify({ sender: { name: `Avisos ${nomeMarca}`.slice(0, 60), email: conf.email_remetente }, to: [{ email }], subject: titulo, htmlContent: html }),
     })
     if (!resp.ok) falha = `${resp.status} ${await resp.text()}`
   }

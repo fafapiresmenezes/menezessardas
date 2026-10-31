@@ -15,20 +15,29 @@ const brl = (v: number) => (v ?? 0).toLocaleString('pt-BR', { style: 'currency',
 // Passo 07: resumo de todos os casos do mesmo cliente (só andamento, prazos e honorários).
 type CasoResumo = { titulo: string; area: string | null; numero_processo: string | null; situacao: string; atualizado_em: string; token: string | null; etapas_total: number; etapas_feitas: number; proximo_prazo: string | null; honorario_previsto: number; honorario_recebido: number }
 type Resumo = { cliente: string; casos: CasoResumo[] }
+// Passo 39: marca do escritório dono do caso (parceiros veem a própria marca; a sede, o lockup GMenezes).
+type MarcaEscritorio = { nome: string; cor: string; logo_url: string | null; sede: boolean }
 
 export default function PortalClientePage() {
   const { token = '' } = useParams()
   const [caso, setCaso] = useState<Caso | null | undefined>(undefined)
   const [resumo, setResumo] = useState<Resumo | null>(null)
+  const [marca, setMarca] = useState<MarcaEscritorio | null>(null)
   useEffect(() => {
     supabase.rpc('portal_caso', { p_token: token }).then(r => setCaso((r.data as Caso) ?? null))
     supabase.rpc('portal_cliente', { p_token: token }).then(r => setResumo((r.data as Resumo) ?? null))
+    supabase.rpc('portal_marca', { p_token: token }).then(r => setMarca((r.data as MarcaEscritorio) ?? null))
   }, [token])
   const feitas = caso?.etapas.filter(e => e.situacao === 'feito').length ?? 0
   const total = caso?.etapas.length ?? 0
   return (
     <main className="min-h-screen bg-pergaminho">
-      <header className="bg-navy py-6"><Marca /></header>
+      {marca && !marca.sede ? (
+        <header className="py-6 text-white text-center" style={{ backgroundColor: /^#[0-9A-Fa-f]{6}$/.test(marca.cor) ? marca.cor : '#14213D' }} data-testid="portal-marca-parceiro">
+          {marca.logo_url && /^https:\/\//.test(marca.logo_url) && <img src={marca.logo_url} alt="" className="mx-auto max-h-12 mb-2" />}
+          <p className="font-serif text-xl">{marca.nome}</p>
+        </header>
+      ) : <header className="bg-navy py-6"><Marca /></header>}
       <div className="max-w-2xl mx-auto px-4 py-8">
         {caso === undefined && <p className="text-grafite">Carregando…</p>}
         {caso === null && <p role="alert" className="text-grafite">Este link não é válido, expirou (links do Portal valem 90 dias) ou foi desativado pelo escritório. Peça um link novo ao escritório.</p>}
@@ -79,7 +88,7 @@ export default function PortalClientePage() {
             </ul>
           </section>
         )}
-        <p className="text-center text-xs text-grafite-claro mt-8">GMenezes Advogados Associados · Desenvolvido pelo Instituto THEYE</p>
+        <p className="text-center text-xs text-grafite-claro mt-8" data-testid="portal-rodape">{marca && !marca.sede ? `${marca.nome} · plataforma GMenezes, desenvolvida pelo Instituto THEYE` : 'GMenezes Advogados Associados · Desenvolvido pelo Instituto THEYE'}</p>
       </div>
     </main>
   )

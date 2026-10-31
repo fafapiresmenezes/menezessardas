@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Building, Plus } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import FaturasParceiros from '@/components/FaturasParceiros'
+import MarcaParceiros from '@/components/MarcaParceiros'
 import { criarEscritorio, escritorioDasPessoas, listarEscritorios, moverParaEscritorio, SEDE_ID, type Escritorio, type Pessoa } from '@/lib/equipe'
 
 const brl = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -91,6 +92,7 @@ export default function EscritoriosParceiros({ pessoas, aoMudar }: { pessoas: Pe
         </ul>
       )}
       {msg && <p role="status" className="text-sm mt-3">{msg}</p>}
+      <MarcaParceiros escritorios={lista.filter(e => e.id !== SEDE_ID).map(e => ({ id: e.id, nome: e.nome }))} />
       <FaturasParceiros nomes={Object.fromEntries(lista.map(e => [e.id, e.nome]))} />
     </section>
   )
