@@ -4,6 +4,8 @@ import { supabase } from '@/lib/supabase'
 import { formatarData } from '@/lib/datas'
 import Marca from '@/components/Marca'
 import AssinarPortal from '@/components/AssinarPortal'
+import { TextoComTermos } from '@/components/Termo'
+import { GLOSSARIO } from '@/data/glossario'
 import { CheckCircle2, Circle, Clock, Scale } from 'lucide-react'
 
 // Portal do cliente: página pública, sem login, aberta por um link com código secreto gerado pelo escritório.
@@ -54,17 +56,25 @@ export default function PortalClientePage() {
               {caso.etapas.map((e, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm">
                   {e.situacao === 'feito' ? <CheckCircle2 size={18} className="text-dourado shrink-0" aria-hidden="true" /> : e.situacao === 'fazendo' ? <Clock size={18} className="text-navy shrink-0" aria-hidden="true" /> : <Circle size={18} className="text-grafite-claro shrink-0" aria-hidden="true" />}
-                  <span className="flex-1"><span className={e.situacao === 'feito' ? 'line-through text-grafite-claro' : 'text-navy'}>{e.titulo}</span><span className="block text-xs text-grafite-claro">{ROTULO[e.situacao] ?? e.situacao}{e.prazo && ` · previsto para ${formatarData(e.prazo)}`}</span></span>
+                  <span className="flex-1"><span className={e.situacao === 'feito' ? 'line-through text-grafite-claro' : 'text-navy'}><TextoComTermos texto={e.titulo} /></span><span className="block text-xs text-grafite-claro">{ROTULO[e.situacao] ?? e.situacao}{e.prazo && ` · previsto para ${formatarData(e.prazo)}`}</span></span>
                 </li>
               ))}
             </ol>
             {Number(caso.honorario_previsto) > 0 && (
               <section className="mt-6 border-t border-navy/10 pt-4 text-sm">
-                <h2 className="font-medium text-navy flex items-center gap-2"><Scale size={16} className="text-dourado" aria-hidden="true" /> Honorários</h2>
+                <h2 className="font-medium text-navy flex items-center gap-2"><Scale size={16} className="text-dourado" aria-hidden="true" /> <TextoComTermos texto="Honorários" /></h2>
                 <p className="text-grafite mt-1">Combinado: {brl(caso.honorario_previsto)} · Pago: {brl(caso.honorario_recebido)} · Em aberto: {brl(Math.max(0, caso.honorario_previsto - caso.honorario_recebido))}{caso.vencimento_honorario && ` · vencimento ${formatarData(caso.vencimento_honorario)}`}</p>
               </section>
             )}
             <AssinarPortal token={token} />
+            <details className="mt-6 border-t border-navy/10 pt-4 text-sm" data-testid="portal-glossario">
+              <summary className="cursor-pointer font-medium text-navy min-h-[44px] flex items-center">Não entendeu algum termo? Veja o glossário em linguagem simples</summary>
+              <dl className="mt-2 grid gap-2 max-h-72 overflow-auto">
+                {Object.entries(GLOSSARIO).sort((a, b) => a[0].localeCompare(b[0], 'pt-BR')).map(([t, d]) => (
+                  <div key={t}><dt className="font-medium text-navy capitalize">{t}</dt><dd className="text-grafite">{d}</dd></div>
+                ))}
+              </dl>
+            </details>
             <p className="text-xs text-grafite-claro mt-6">Atualizado em {formatarData(caso.atualizado_em.slice(0, 10))}. Dúvidas: fale com o escritório. Esta página não substitui a consulta aos autos.</p>
           </article>
         )}

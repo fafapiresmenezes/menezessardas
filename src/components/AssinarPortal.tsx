@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { formatarData } from '@/lib/datas'
+import { TextoComTermos } from './Termo'
 import { PenLine, CheckCircle2 } from 'lucide-react'
 
 // Lado do cliente no portal: lê o documento, informa nome e CPF/CNPJ, aceita e assina.
@@ -22,13 +23,14 @@ export default function AssinarPortal({ token }: { token: string }) {
   return (
     <section className="mt-6 border-t border-navy/10 pt-4 text-sm" data-testid="portal-assinaturas">
       <h2 className="font-medium text-navy flex items-center gap-2"><PenLine size={16} className="text-dourado" aria-hidden="true" /> Documentos para assinar</h2>
+      <p className="text-xs text-grafite-claro mt-1">Termos sublinhados têm explicação: toque ou passe o mouse.</p>
       {erro && <p role="alert" className="text-critico mt-2">{erro}</p>}
       {docs.map(d => {
         const f = form[d.id] ?? { nome: '', doc: '', aceite: false }
         return (
           <article key={d.id} className="mt-4 border border-navy/10 p-4">
             <h3 className="font-serif text-lg text-navy">{d.titulo}</h3>
-            <pre className="whitespace-pre-wrap font-sans text-sm text-grafite mt-2 max-h-72 overflow-auto bg-pergaminho p-3">{d.texto}</pre>
+            <pre className="whitespace-pre-wrap font-sans text-sm text-grafite mt-2 max-h-72 overflow-auto bg-pergaminho p-3"><TextoComTermos texto={d.texto} /></pre>
             <p className="text-xs text-grafite-claro mt-2">Impressão digital do texto (SHA-256): {d.hash_texto.slice(0, 24)}…</p>
             {d.assinado_em ? (
               <p className="mt-3 flex items-center gap-2 text-regular" data-testid="portal-assinado"><CheckCircle2 size={16} aria-hidden="true" /> Assinado por {d.assinante_nome} em {formatarData(d.assinado_em.slice(0, 10))}. Comprovante: {d.hash_assinatura?.slice(0, 24)}…</p>
