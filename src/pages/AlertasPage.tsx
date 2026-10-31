@@ -33,6 +33,16 @@ export default function AlertasPage() {
       .then(({ data }) => setNovidades((data ?? []) as Novidade[]))
   }, [])
   const navigate = useNavigate()
+  // Passo 88: os indicadores viram filtros e a página mostra a preferência de e-mail da pessoa.
+  const [filtro, setFiltro] = useState<'todos' | 'vencidos' | '30dias' | 'documentos'>('todos')
+  const [prefEmail, setPrefEmail] = useState<{ alertas_email: boolean; dias_antecedencia: number } | null>(null)
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) return
+      supabase.from('preferencias_usuario').select('alertas_email,dias_antecedencia').eq('usuario_id', data.user.id).maybeSingle()
+        .then(({ data: pr }) => setPrefEmail(pr ?? { alertas_email: true, dias_antecedencia: 30 }))
+    }).catch(() => undefined)
+  }, [])
 
   if (loading) {
     return (
@@ -48,12 +58,17 @@ export default function AlertasPage() {
   const vencidos = alertas.filter(a => a.diasRestantes < 0).length
   const documentos = alertas.filter(a => a.tipo === 'documento').length
 
-  const indicadores = [
-    { rotulo: 'Total', valor: alertas.length, cor: 'text-navy' },
-    { rotulo: 'Vencidos', valor: vencidos, cor: 'text-critico' },
-    { rotulo: 'Vencem em 30 dias', valor: getCriticos(), cor: 'text-atencao' },
-    { rotulo: 'Documentos a vencer', valor: documentos, cor: 'text-navy' },
+  const indicadores: { rotulo: string; valor: number; cor: string; chave: typeof filtro }[] = [
+    { rotulo: 'Total', valor: alertas.length, cor: 'text-navy', chave: 'todos' },
+    { rotulo: 'Vencidos', valor: vencidos, cor: 'text-critico', chave: 'vencidos' },
+    { rotulo: 'Vencem em 30 dias', valor: getCriticos(), cor: 'text-atencao', chave: '30dias' },
+    { rotulo: 'Documentos a vencer', valor: documentos, cor: 'text-navy', chave: 'documentos' },
   ]
+  const visiveis = alertas.filter(a =>
+    filtro === 'vencidos' ? a.diasRestantes < 0
+    : filtro === '30dias' ? a.diasRestantes >= 0 && a.diasRestantes <= 30
+    : filtro === 'documentos' ? a.tipo === 'documento'
+    : true)
 
   return (
     <Layout title="Alertas">
@@ -64,12 +79,22 @@ export default function AlertasPage() {
           </p>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {indicadores.map(ind => (
-              <div key={ind.rotulo} className="bg-white border-t-2 border-dourado p-5 shadow-sm">
+              <button type="button" key={ind.rotulo} onClick={() => setFiltro(ind.chave)} aria-pressed={filtro === ind.chave} data-testid={`filtro-${ind.chave}`}
+                className={`text-left bg-white border-t-2 p-5 shadow-sm hover:bg-pergaminho transition ${filtro === ind.chave ? 'border-navy ring-1 ring-navy' : 'border-dourado'}`}>
                 <p className="text-xs uppercase tracking-wider text-grafite-claro">{ind.rotulo}</p>
                 <p className={`font-serif text-4xl mt-2 ${ind.cor}`}>{ind.valor}</p>
-              </div>
+              </button>
             ))}
           </div>
+          <p className="text-xs text-grafite-claro mt-2" data-testid="filtro-ativo">
+            {filtro === 'todos' ? 'Clique em um número para filtrar a lista.' : <>Mostrando {visiveis.length} de {alertas.length}. <button type="button" onClick={() => setFiltro('todos')} className="underline text-navy">ver todos</button></>}
+          </p>
+          {prefEmail && (
+            <p className="text-sm mt-3 p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="pref-email">
+              {prefEmail.alertas_email ? `Você recebe estes avisos por e-mail com até ${prefEmail.dias_antecedencia} dias de antecedência.` : 'Você escolheu não receber estes avisos por e-mail.'}{' '}
+              <button type="button" onClick={() => navigate('/settings')} className="underline text-navy">alterar em Configurações</button>
+            </p>
+          )}
         </div>
 
         {avisosTeto.length > 0 && (
@@ -115,15 +140,15 @@ export default function AlertasPage() {
             </ul>
           </section>
         )}
-        {alertas.length === 0 ? (
+        {visiveis.length === 0 ? (
           <div className="bg-white p-12 text-center shadow-sm border-l-4 border-regular">
             <BellOff className="mx-auto mb-4 text-regular/40" size={40} aria-hidden="true" />
-            <p className="text-grafite-claro font-medium mb-2">Nenhum alerta no momento</p>
-            <p className="text-sm text-grafite-claro">Você está em dia com todos os compromissos.</p>
+            <p className="text-grafite-claro font-medium mb-2">{filtro === 'todos' ? 'Nenhum alerta no momento' : 'Nenhum alerta neste filtro'}</p>
+            <p className="text-sm text-grafite-claro">{filtro === 'todos' ? 'Você está em dia com todos os compromissos.' : 'Clique em "Total" para ver todos.'}</p>
           </div>
         ) : (
           <div className="bg-white shadow-sm divide-y divide-navy/10">
-            {alertas.map(alerta => {
+            {visiveis.map(alerta => {
               const situacao = situacaoPorPrazo(alerta.diasRestantes)
               return (
                 <button
