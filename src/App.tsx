@@ -1,46 +1,46 @@
-import { useEffect, useState } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { sessaoDemoAtiva } from '@/lib/authDemo'
 import LoginPage from '@/pages/LoginPage'
 import DashboardPage from '@/pages/DashboardPage'
-import ImovelListPage from '@/pages/ImovelListPage'
-import NovoImovelPage from '@/pages/NovoImovelPage'
-import ImovelDetailPage from '@/pages/ImovelDetailPage'
-import ContratoPage from '@/pages/ContratoPage'
-import NovoContratoPage from '@/pages/NovoContratoPage'
-import VinculoPage from '@/pages/VinculoPage'
-import AgendaPage from '@/pages/AgendaPage'
-import AlertasPage from '@/pages/AlertasPage'
-import RelatóriosPage from '@/pages/RelatóriosPage'
-import IndicadoresPage from '@/pages/IndicadoresPage'
-import TrilhaPage from '@/pages/TrilhaPage'
-import ConsumoPage from '@/pages/ConsumoPage'
-import AssistentePage from '@/pages/AssistentePage'
-import ImportarImoveisPage from '@/pages/ImportarImoveisPage'
-import PrevisoesPage from '@/pages/PrevisoesPage'
-import InstitutoPage from '@/pages/InstitutoPage'
-import LegislacaoPage from '@/pages/LegislacaoPage'
-import FornecedoresPage from '@/pages/FornecedoresPage'
-import FornecedorPage from '@/pages/FornecedorPage'
-import ConfiguraçõesPage from '@/pages/ConfiguraçõesPage'
-import EquipePage from '@/pages/EquipePage'
+const ImovelListPage = lazy(() => import('@/pages/ImovelListPage'))
+const NovoImovelPage = lazy(() => import('@/pages/NovoImovelPage'))
+const ImovelDetailPage = lazy(() => import('@/pages/ImovelDetailPage'))
+const ContratoPage = lazy(() => import('@/pages/ContratoPage'))
+const NovoContratoPage = lazy(() => import('@/pages/NovoContratoPage'))
+const VinculoPage = lazy(() => import('@/pages/VinculoPage'))
+const AgendaPage = lazy(() => import('@/pages/AgendaPage'))
+const AlertasPage = lazy(() => import('@/pages/AlertasPage'))
+const RelatóriosPage = lazy(() => import('@/pages/RelatóriosPage'))
+const IndicadoresPage = lazy(() => import('@/pages/IndicadoresPage'))
+const TrilhaPage = lazy(() => import('@/pages/TrilhaPage'))
+const ConsumoPage = lazy(() => import('@/pages/ConsumoPage'))
+const AssistentePage = lazy(() => import('@/pages/AssistentePage'))
+const ImportarImoveisPage = lazy(() => import('@/pages/ImportarImoveisPage'))
+const PrevisoesPage = lazy(() => import('@/pages/PrevisoesPage'))
+const InstitutoPage = lazy(() => import('@/pages/InstitutoPage'))
+const LegislacaoPage = lazy(() => import('@/pages/LegislacaoPage'))
+const FornecedoresPage = lazy(() => import('@/pages/FornecedoresPage'))
+const FornecedorPage = lazy(() => import('@/pages/FornecedorPage'))
+const ConfiguraçõesPage = lazy(() => import('@/pages/ConfiguraçõesPage'))
+const EquipePage = lazy(() => import('@/pages/EquipePage'))
 import InicioPage from '@/pages/InicioPage'
-import FontesPage from '@/pages/FontesPage'
-import KycPage from '@/pages/KycPage'
-import MeuDiaPage from '@/pages/MeuDiaPage'
-import ConsultoresPage from '@/pages/ConsultoresPage'
-import NuvemPage from '@/pages/NuvemPage'
-import PortalClientePage from '@/pages/PortalClientePage'
-import ConviteParceiroPage from '@/pages/ConviteParceiroPage'
-import HonorariosPage from '@/pages/HonorariosPage'
-import HorasPage from '@/pages/HorasPage'
-import ModelosPage from '@/pages/ModelosPage'
-import MonitoramentoPage from '@/pages/MonitoramentoPage'
-import MercadoPage from '@/pages/MercadoPage'
-import CompliancePage from '@/pages/CompliancePage'
-import ProjetosPage from '@/pages/ProjetosPage'
-import IntimacoesPage from '@/pages/IntimacoesPage'
+const FontesPage = lazy(() => import('@/pages/FontesPage'))
+const KycPage = lazy(() => import('@/pages/KycPage'))
+const MeuDiaPage = lazy(() => import('@/pages/MeuDiaPage'))
+const ConsultoresPage = lazy(() => import('@/pages/ConsultoresPage'))
+const NuvemPage = lazy(() => import('@/pages/NuvemPage'))
+const PortalClientePage = lazy(() => import('@/pages/PortalClientePage'))
+const ConviteParceiroPage = lazy(() => import('@/pages/ConviteParceiroPage'))
+const HonorariosPage = lazy(() => import('@/pages/HonorariosPage'))
+const HorasPage = lazy(() => import('@/pages/HorasPage'))
+const ModelosPage = lazy(() => import('@/pages/ModelosPage'))
+const MonitoramentoPage = lazy(() => import('@/pages/MonitoramentoPage'))
+const MercadoPage = lazy(() => import('@/pages/MercadoPage'))
+const CompliancePage = lazy(() => import('@/pages/CompliancePage'))
+const ProjetosPage = lazy(() => import('@/pages/ProjetosPage'))
+const IntimacoesPage = lazy(() => import('@/pages/IntimacoesPage'))
 
 // Com dois fatores ativos, a sessão só libera o sistema depois do código (nível aal2).
 async function segundoFatorOk() {
@@ -48,6 +48,18 @@ async function segundoFatorOk() {
     const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
     return !(data?.nextLevel === 'aal2' && data.currentLevel !== 'aal2')
   } catch { return true }
+}
+
+// Passo 57: telas pesadas carregam sob demanda (React.lazy); o pacote inicial fica menor e a primeira tela abre mais rápido.
+function Carregando() {
+  return (
+    <div className="flex items-center justify-center min-h-[40vh]" role="status" aria-live="polite">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-dourado mx-auto mb-3" aria-hidden="true"></div>
+        <p className="text-sm text-grafite">Abrindo a tela…</p>
+      </div>
+    </div>
+  )
 }
 
 function App() {
@@ -98,6 +110,7 @@ function App() {
 
   return (
     <HashRouter>
+      <Suspense fallback={<Carregando />}>
       <Routes>
         <Route path="/portal/:token" element={<PortalClientePage />} />
         <Route path="/convite/:token" element={<ConviteParceiroPage />} />
@@ -252,6 +265,7 @@ function App() {
         <Route path="/" element={<Navigate to={isAuthenticated ? "/inicio" : "/login"} />} />
         <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />
       </Routes>
+      </Suspense>
     </HashRouter>
   )
 }
