@@ -215,6 +215,10 @@ function CaseStudy() {
 
 export default function InstitutoPage() {
   const [aba, setAba] = useState<Aba>('inovacao')
+  // Passo 93: a última medição em uma linha, com o hash copiável para conferência externa.
+  const ult = MEDICOES[MEDICOES.length - 1]
+  const [hashCopiado, setHashCopiado] = useState(false)
+  const copiarHash = async () => { try { await navigator.clipboard.writeText(`${ult.arquivo} SHA-256 ${ult.sha256}`); setHashCopiado(true); setTimeout(() => setHashCopiado(false), 2500) } catch { /* sem área de transferência */ } }
   return (
     <Layout title="Instituto THEYE">
       <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-6">
@@ -222,6 +226,11 @@ export default function InstitutoPage() {
           <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">Instituto THEYE</p>
           <h2 className="text-3xl text-navy">Ferramentas do Instituto</h2>
           <p className="text-sm text-grafite-claro mt-1">Inovação regulatória, jurimetria, ESG e pesquisa jurídica (Brasil e mundo) para o desenvolvimento do direito brasileiro.</p>
+          <p className="text-sm mt-3 p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="estado-medicao">
+            Última medição: <strong>M{ult.n}</strong>, nota <strong>{ult.nota.toFixed(2).replace('.', ',')}</strong>, em {new Date(ult.data + 'T12:00:00').toLocaleDateString('pt-BR')}{ult.ots ? ', selada em blockchain (OpenTimestamps)' : ''}.{' '}
+            <button type="button" onClick={copiarHash} data-testid="copiar-hash" className="underline text-navy">{hashCopiado ? 'hash copiado' : 'copiar hash'}</button>
+            {' · '}<button type="button" onClick={() => setAba('case')} className="underline text-navy">ver a cadeia completa</button>
+          </p>
         </header>
         <div role="tablist" aria-label="Temas do Instituto" className="flex flex-wrap gap-2">
           {ABAS.map(({ valor, rotulo, Icone }) => (

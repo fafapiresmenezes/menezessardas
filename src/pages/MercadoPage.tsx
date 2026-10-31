@@ -25,6 +25,8 @@ export default function MercadoPage() {
   }, [])
   const prontas = AREAS.map(a => dados[a]).filter((d): d is Area => !!d && 'previsao' in d && !!d.previsao)
   const nivel = (x: Area) => x.confiancaCombinada ?? x.confianca
+  // Passo 96: ranking copiável para a reunião de sócios.
+  const [copiado, setCopiado] = useState(false)
   const ranking = [...prontas].filter(x => nivel(x) === 'alta' || nivel(x) === 'media').sort((x, y) => (y.previsao!.variacao ?? -999) - (x.previsao!.variacao ?? -999))
   return (
     <Layout title="Previsão de mercado jurídico">
@@ -33,11 +35,16 @@ export default function MercadoPage() {
           <p className="text-sm">Quantos processos novos cada área recebe por ano nos tribunais do Rio, em duas fontes públicas do CNJ (DataJud por classe processual e Justiça em Números por tribunal), e a tendência para os próximos 3 anos, com margem de erro de 95%. Mede <strong>demanda</strong>: mais processos significam mais clientes potenciais, não necessariamente honorários maiores.</p>
           {prontas.length > 0 && !ranking.length && <p className="mt-3 text-sm text-atencao">Nenhuma área tem tendência confiável ainda (os dados do CNJ variam muito de ano para ano). Veja os números brutos abaixo.</p>}
           {ranking.length > 0 && (
-            <ol className="mt-4 text-sm list-decimal pl-5 space-y-1" data-testid="ranking">
+            <>
+            <p className="mt-3 text-sm"><strong>Leitura rápida:</strong> a área que mais cresce é <strong>{ranking[0].nome}</strong>{ranking.length > 1 && <>, e a que menos cresce é <strong>{ranking[ranking.length - 1].nome}</strong></>}. Só entram áreas com confiança alta ou média.{' '}
+              <button type="button" onClick={async () => { const t = ['Previsão de demanda judicial por área (CNJ, tribunais do RJ)', ...ranking.map((r, i) => `${i + 1}. ${r.nome}: ${r.previsao!.variacao !== null && r.previsao!.variacao >= 0 ? '+' : ''}${r.previsao!.variacao}% até ${r.previsao!.ano} (confiança ${nivel(r)})`), `Gerado em ${new Date().toLocaleDateString('pt-BR')} · GMenezes Advogados Associados`].join('\n'); try { await navigator.clipboard.writeText(t); setCopiado(true); setTimeout(() => setCopiado(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-ranking" className="underline text-navy">{copiado ? 'ranking copiado' : 'copiar ranking'}</button>
+            </p>
+            <ol className="mt-2 text-sm list-decimal pl-5 space-y-1" data-testid="ranking">
               {ranking.map(r => (
                 <li key={r.area}><strong>{r.nome}</strong>: {r.previsao!.variacao !== null && (r.previsao!.variacao >= 0 ? '+' : '')}{r.previsao!.variacao}% até {r.previsao!.ano} <span className="text-grafite-claro">(confiança {nivel(r)}{r.jen?.concordam ? ', duas fontes concordam' : ''})</span></li>
               ))}
             </ol>
+            </>
           )}
         </section>
         <div className="grid gap-4 md:grid-cols-2">

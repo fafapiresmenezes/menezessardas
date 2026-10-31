@@ -50,6 +50,18 @@ export default function KycPage() {
     carregarHistorico()
   }
   const r = estado.r
+  // Passo 95: procurar no histórico e copiar o resultado da checagem para o parecer.
+  const [buscaHist, setBuscaHist] = useState('')
+  const [copiado, setCopiado] = useState(false)
+  const histVisivel = historico.filter(h => !buscaHist || (h.nome ?? '').toLowerCase().includes(buscaHist.toLowerCase()) || h.cnpj.includes(buscaHist.replace(/\D/g, '')))
+  const copiarResultado = async () => {
+    if (!r) return
+    const texto = [`Checagem de contraparte — CNPJ ${fmtCnpj(r.cnpj)}${r.receita.nome ? ` — ${r.receita.nome}` : ''}`, `Risco: ${r.risco}${r.alertas.length ? ` — ${r.alertas.join(' ')}` : ' — nenhum alerta'}`,
+      r.receita.situacao ? `Receita Federal: ${r.receita.situacao}${r.receita.abertura ? `, abertura ${r.receita.abertura}` : ''}${r.receita.municipio ? `, ${r.receita.municipio}/${r.receita.uf}` : ''}` : '',
+      r.conflitos.length ? `Conflito de interesses: ${r.conflitos.map(c => `${c.onde}: ${c.detalhe}`).join('; ')}` : 'Conflito de interesses: nenhum na base do escritório',
+      `Consultado em ${new Date(r.consultadoEm).toLocaleString('pt-BR')} · fontes: ${r.fontes.join(', ')}`].filter(Boolean).join('\n')
+    try { await navigator.clipboard.writeText(texto); setCopiado(true); setTimeout(() => setCopiado(false), 2500) } catch { /* sem área de transferência */ }
+  }
   return (
     <Layout title="Checagem de contraparte">
       <div className="space-y-6">
@@ -66,6 +78,7 @@ export default function KycPage() {
         </section>
         {r && (
           <section className="bg-white shadow-sm p-6 space-y-4" aria-live="polite">
+            <button type="button" onClick={copiarResultado} data-testid="kyc-copiar" className="min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiado ? 'Resultado copiado' : 'Copiar resultado para o parecer'}</button>
             <p data-testid="kyc-risco" className={`p-3 border-l-4 font-medium ${COR[r.risco]}`}>
               Risco {r.risco}{r.alertas.length ? `: ${r.alertas.join(' ')}` : '. Nenhum alerta encontrado.'}
             </p>
@@ -103,11 +116,12 @@ export default function KycPage() {
           </div>
           <p className="text-sm text-grafite-claro mt-1">Cada checagem fica guardada com data e resultado. O robô reconsulta cada contraparte 90 dias depois da última checagem e avisa em Alertas quando o status muda.</p>
           {msgRecon && <p role="status" className="text-sm mt-2" data-testid="kyc-msg-recon">{msgRecon}</p>}
+          {historico.length > 0 && <input value={buscaHist} onChange={e => setBuscaHist(e.target.value)} placeholder="Procurar no histórico (nome ou CNPJ)" aria-label="Procurar no histórico" data-testid="kyc-busca" className="mt-3 border px-3 py-2 min-h-[44px] w-full max-w-md" />}
           {historico.length === 0 ? <Vazio testid="kyc-historico-vazio" titulo="Nenhuma checagem guardada ainda" texto="Digite um CPF ou CNPJ acima e clique em Checar: o resultado fica guardado aqui com data." /> : (
             <table className="w-full text-sm mt-3">
               <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite-claro"><th className="py-1">Data</th><th>Contraparte</th><th>Risco</th><th>Próxima reconsulta</th></tr></thead>
               <tbody className="divide-y divide-navy/10">
-                {historico.map(h => (
+                {histVisivel.map(h => (
                   <tr key={h.id} data-testid="kyc-item" className={h.mudou ? 'bg-atencaoFundo' : ''}>
                     <td className="py-2">{new Date(h.consultado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}{h.automatica && <span className="ml-1 text-xs text-grafite-claro">(robô)</span>}</td>
                     <td><button type="button" onClick={() => setCnpj(fmtCnpj(h.cnpj))} className="underline text-navy text-left">{h.nome ?? fmtCnpj(h.cnpj)}</button></td>

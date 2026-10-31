@@ -202,6 +202,9 @@ export default function AgendaPage() {
   const corpoEmail = proximos
     .map(a => `• ${formatarData(a.dataEvento)} — ${a.titulo} (${a.imovel})`)
     .join('\n')
+  // Passo 94: resumo dos próximos 7 dias e botão "Hoje".
+  const semana = proximos.filter(a => a.diasRestantes <= 7)
+  const irParaHoje = () => { setAno(hoje.getFullYear()); setMes(hoje.getMonth()) }
   const mailto = `mailto:?subject=${encodeURIComponent('Próximos compromissos contratuais')}&body=${encodeURIComponent('Próximos compromissos:\n\n' + corpoEmail)}`
 
   return (
@@ -218,6 +221,7 @@ export default function AgendaPage() {
             <button onClick={() => mudarMes(1)} className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-sm hover:bg-white" aria-label="Próximo mês">
               <ChevronRight size={20} aria-hidden="true" />
             </button>
+            {(ano !== hoje.getFullYear() || mes !== hoje.getMonth()) && <button type="button" onClick={irParaHoje} data-testid="agenda-hoje" className="min-h-[44px] px-3 text-sm border border-navy text-navy rounded-sm hover:bg-white">Hoje</button>}
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <a
@@ -258,6 +262,9 @@ export default function AgendaPage() {
             </button>
           </div>
           {msgSemana && <p role="status" className="text-sm mt-2" data-testid="semana-msg">{msgSemana}</p>}
+          <p className="w-full text-sm p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="resumo-semana">
+            {semana.length === 0 ? 'Próximos 7 dias: nenhum compromisso.' : <>Próximos 7 dias: <strong>{semana.length}</strong> compromisso{semana.length > 1 ? 's' : ''}; o primeiro é <strong>{semana[0].titulo}</strong> {semana[0].diasRestantes === 0 ? 'hoje' : semana[0].diasRestantes === 1 ? 'amanhã' : `em ${semana[0].diasRestantes} dias`} ({formatarData(semana[0].dataEvento)}).</>}
+          </p>
           {supabaseConfigurado && (
             <div className="mt-3 text-sm flex flex-wrap items-center gap-3" data-testid="roteiro-outlook">
               <span className="text-grafite-claro">Roteiro do Outlook (5 passos com imagens):</span>

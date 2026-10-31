@@ -41,6 +41,8 @@ export default function ConsumoPage() {
   const [teto, setTeto] = useState('')
   const [faturas, setFaturas] = useState<{ name: string }[]>([])
   const [msg, setMsg] = useState<{ ok: boolean; texto: string } | null>(null)
+  // Passo 97: resumo do mês em texto para a sócia.
+  const [copiadoResumo, setCopiadoResumo] = useState(false)
   const [carregando, setCarregando] = useState(true)
   const [testandoAviso, setTestandoAviso] = useState(false)
   // Passo 06: avisos automáticos de 80% e 100% do teto (de hora em hora) e teste pelo administrador.
@@ -125,6 +127,7 @@ export default function ConsumoPage() {
             </label>
           </div>
           <p className="text-4xl font-serif text-navy mt-4" data-testid="total-mes">{carregando ? '…' : brl(totalBrl)}</p>
+          {!carregando && <button type="button" onClick={async () => { const t = [`Consumo de IA e e-mails — ${nomeMes(mes)}`, `Total: ${brl(totalBrl)} em ${doMes.reduce((s, l) => s + Number(l.usos), 0)} uso(s)`, ...(mes === mesAtual() ? [`Projeção para o fim do mês: ${brl(projetarMes(totalBrl, new Date()).projecao)}`] : []), cot ? `Cotação: US$ 1 = ${brl(taxa)} (${cot.data})` : '', 'GMenezes Advogados Associados'].filter(Boolean).join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoResumo(true); setTimeout(() => setCopiadoResumo(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-consumo" className="mt-2 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo do mês'}</button>}
           <p className="text-sm text-grafite-claro capitalize">{nomeMes(mes)} · {doMes.reduce((s, l) => s + Number(l.usos), 0)} uso(s)</p>
           {cot && <p className="text-xs text-grafite-claro mt-2">Cotação usada: US$ 1 = {brl(taxa)} ({cot.data}).</p>}
           {mes === mesAtual() && !carregando && (() => {
