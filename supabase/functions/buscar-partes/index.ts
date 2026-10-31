@@ -69,10 +69,10 @@ async function datajud(numero: string) {
  *  com oab = 'busca:<termo>', para aparecerem em Intimações, Meu dia e Alertas. Roda todo dia (cron) ou a pedido. */
 async function rodarSalvas(soUsuario?: string) {
   const sb = servico()
-  let q = sb.from('buscas_salvas').select('id, usuario_id, termo')
+  let q = sb.from('buscas_salvas').select('id, usuario_id, termo, caso_id')
   if (soUsuario) q = q.eq('usuario_id', soUsuario)
   const { data: buscas } = await q
-  const resumo: { termo: string; total: number; novas: number; erro?: string }[] = []
+  const resumo: { termo: string; total: number; novas: number; erro?: string; caso?: string }[] = []
   for (const b of buscas ?? []) {
     const c = await comunica(b.termo)
     if (!c.ok) { resumo.push({ termo: b.termo, total: 0, novas: 0, erro: c.erro }); continue }
@@ -96,7 +96,12 @@ async function rodarSalvas(soUsuario?: string) {
       }
     }
     await sb.from('buscas_salvas').update({ ultima_execucao: new Date().toISOString(), ultimo_total: c.total ?? itens.length, novas_ultima: novas }).eq('id', b.id)
-    resumo.push({ termo: b.termo, total: c.total ?? itens.length, novas })
+    // Passo 46: busca ligada a um caso → comunicação nova vira tarefa do responsável (aparece em Meu dia e em Alertas).
+    if (novas > 0 && b.caso_id) {
+      const { data: caso } = await sb.from('tarefas').select('id, titulo, responsavel_id, criado_por, escritorio_id, area, cliente').eq('id', b.caso_id).maybeSingle()
+      if (caso) await sb.from('tarefas').insert({ nivel: 'tarefa', pai_id: caso.id, titulo: `Nova comunicação no Comunica PJe: ${b.termo} (${novas} nova(s))`, descricao: `A busca salva "${b.termo}" encontrou ${novas} comunicação(ões) nova(s). Confira em Intimações (filtro busca:${b.termo}) e junte ao caso "${caso.titulo}".`, situacao: 'a_fazer', prioridade: 'alta', responsavel_id: caso.responsavel_id ?? caso.criado_por, criado_por: caso.criado_por, escritorio_id: caso.escritorio_id, area: caso.area, cliente: caso.cliente, prazo: new Date(Date.now() + 2 * 86400000).toISOString().slice(0, 10) })
+    }
+    resumo.push({ termo: b.termo, total: c.total ?? itens.length, novas, caso: b.caso_id ?? undefined })
   }
   return resumo
 }

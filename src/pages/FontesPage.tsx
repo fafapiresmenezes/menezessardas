@@ -41,11 +41,14 @@ export default function FontesPage() {
   }
   const dt = (d?: string) => (d ? new Date(d.length === 10 ? `${d}T12:00` : d).toLocaleDateString('pt-BR') : '')
   // Buscas salvas: repetidas todo dia pelo servidor; novidades vão para Intimações e Alertas.
-  type Salva = { id: string; termo: string; ultima_execucao: string | null; ultimo_total: number; novas_ultima: number }
+  type Salva = { id: string; termo: string; ultima_execucao: string | null; ultimo_total: number; novas_ultima: number; caso_id: string | null }
+  const [casos, setCasos] = useState<{ id: string; titulo: string }[]>([])
   const [salvas, setSalvas] = useState<Salva[]>([])
   const [msgSalva, setMsgSalva] = useState('')
-  const carregarSalvas = async () => { const { data } = await supabase.from('buscas_salvas').select('id, termo, ultima_execucao, ultimo_total, novas_ultima').order('criado_em'); setSalvas((data ?? []) as Salva[]) }
-  useEffect(() => { carregarSalvas() }, [])
+  const carregarSalvas = async () => { const { data } = await supabase.from('buscas_salvas').select('id, termo, ultima_execucao, ultimo_total, novas_ultima, caso_id').order('criado_em'); setSalvas((data ?? []) as Salva[]) }
+  // Passo 46: ligar a busca a um caso; comunicação nova vira tarefa do responsável (Meu dia e Alertas).
+  const ligarCaso = async (id: string, caso_id: string) => { await supabase.from('buscas_salvas').update({ caso_id: caso_id || null }).eq('id', id); carregarSalvas() }
+  useEffect(() => { carregarSalvas(); supabase.from('tarefas').select('id, titulo').eq('nivel', 'projeto').neq('situacao', 'feito').order('criado_em', { ascending: false }).limit(100).then(({ data }) => setCasos((data ?? []) as { id: string; titulo: string }[])) }, [])
   const salvarBusca = async () => {
     setMsgSalva('')
     const { error } = await supabase.from('buscas_salvas').insert({ termo: termo.trim() })
@@ -117,13 +120,14 @@ export default function FontesPage() {
         </div>
         <section className="bg-white shadow-sm p-6" data-testid="buscas-salvas">
           <h2 className="font-serif text-lg">Buscas salvas (repetidas todo dia)</h2>
-          <p className="text-sm text-grafite-claro mt-1">O servidor procura cada nome no Comunica PJe (CNJ) todas as manhãs. Comunicações novas entram em Intimações e em Alertas, sem API paga. Até 20 por pessoa.</p>
+          <p className="text-sm text-grafite-claro mt-1">O servidor procura cada nome no Comunica PJe (CNJ) todas as manhãs. Comunicações novas entram em Intimações e em Alertas, sem API paga. Até 20 por pessoa. Ligue a busca a um caso para que cada novidade vire tarefa do responsável em Meu dia.</p>
           {salvas.length ? (
             <ul className="mt-3 divide-y divide-navy/10">
               {salvas.map(s => (
                 <li key={s.id} className="py-2 flex flex-wrap items-center gap-3 text-sm">
                   <span className="font-medium text-navy">{s.termo}</span>
                   <span className="text-grafite-claro">{s.ultima_execucao ? `última rodada ${dt(s.ultima_execucao)} · ${s.ultimo_total} comunicação(ões) no ano · ${s.novas_ultima} nova(s)` : 'ainda não rodou'}</span>
+                  <label className="text-xs text-grafite-claro">Caso: <select value={s.caso_id ?? ''} onChange={e => ligarCaso(s.id, e.target.value)} data-testid="busca-caso" aria-label={`Ligar a busca ${s.termo} a um caso`} className="border border-navy/20 rounded-sm px-2 py-1 text-xs max-w-[220px]"><option value="">nenhum</option>{casos.map(c => <option key={c.id} value={c.id}>{c.titulo}</option>)}</select></label>
                   <button type="button" onClick={() => apagarSalva(s.id)} aria-label={`Apagar busca ${s.termo}`} className="ml-auto text-xs underline text-critico min-h-[44px] px-2">Apagar</button>
                 </li>
               ))}
