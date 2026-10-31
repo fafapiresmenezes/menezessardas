@@ -16,7 +16,7 @@ begin
   if auth.uid() is null or not exists (select 1 from public.usuarios_perfis where id = auth.uid()) then
     return jsonb_build_object('erro', 'Acesso só para a equipe do escritório.');
   end if;
-  if coalesce(p_tribunal,'') !~* '^TJ[A-Z]{2}$' or coalesce(p_classe,'') = '' then
+  if coalesce(p_tribunal,'') !~* '^TJ[A-Z]{2,3}$' or coalesce(p_classe,'') = '' then
     return jsonb_build_object('erro', 'Informe tribunal (ex.: TJRJ) e classe.');
   end if;
   r := public.instituto_prever(p_tribunal, p_classe, nullif(p_orgao,''), p_assunto);
