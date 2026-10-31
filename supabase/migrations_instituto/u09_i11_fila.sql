@@ -1,0 +1,3 @@
+-- Orquestração da rodada I-11 (pg_cron, uma tarefa por minuto). Escolha de lambda: menor Brier médio na validação temporal (blocos 1..k -> k+1), empate fica com o maior lambda.
+-- Grade: 0,1; 1; 10; 100; 1000. Depois: ajuste final em blocos 1..5 para B e C e avaliação única no bloco 6.
+-- Texto integral aplicado no banco em 2026-10-31T20:08Z (função instituto.i11_trabalhar, tabela instituto.i11_fila, cron 'instituto-i11-rodada').
