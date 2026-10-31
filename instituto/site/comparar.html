@@ -79,6 +79,21 @@ dt{color:var(--apagado)} dd{color:var(--tinta)}
 </div></section>
 
 <section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Experimento I-11 · pré-registrado · 31/10/2026</div><h2>Segunda rodada, amostra 4 vezes maior: ainda empate.</h2></div>
+  <p>21.147 processos de 6 tribunais. As regras e o código foram registrados e carimbados no Bitcoin antes de olharmos o teste. Teste = 977 casos mais recentes, nunca vistos no ajuste.</p></div>
+  <div class="cards">
+    <div><div class="sm">Base simples (A)</div><div class="num">0,1046</div><div class="sm">taxa de êxito por tribunal e classe · AUC 0,52</div></div>
+    <div><div class="sm">Convencional (B)</div><div class="num">0,1010</div><div class="sm">regressão com variáveis do processo · AUC 0,75 · 3,4% melhor que A</div></div>
+    <div><div class="sm">Grafo de normas (C)</div><div class="num">0,1026</div><div class="sm">B + normas, teses e precedentes · AUC 0,76 · 1,9% melhor que A</div></div>
+    <div><div class="sm">Calibração do grafo</div><div class="num">1,4%</div><div class="sm">erro médio de calibração (ECE) · meta ≤ 5%</div></div>
+  </div>
+  <div class="eixo" aria-hidden="true"><div class="z"></div><div class="ic" style="left:48.5%;width:11%"></div><div class="pt" style="left:54.1%"></div></div>
+  <div class="rot"><span>grafo melhor ←</span><span>0</span><span>→ convencional melhor</span></div>
+  <p style="margin-top:18px;font-size:15px;color:var(--tinta-2);max-width:72ch">Diferença C − B: <b>+0,0016</b>, intervalo de confiança de 95% de <b>−0,0006 a +0,0038</b> (bootstrap de 2.000 reamostras). <span class="veredito">Inconclusivo: o IC cruza zero</span></p>
+  <p style="margin-top:12px;font-size:15px;color:var(--tinta-2);max-width:72ch">Em palavras simples: os dois modelos acertam bem mais que a base simples, e o grafo é bem calibrado, mas ele ainda não superou o modelo convencional. Publicamos assim mesmo. Uma correção de digitação no código de avaliação (nome de coluna ambíguo) foi feita e registrada antes de qualquer número do teste existir.</p>
+</div></section>
+
+<section><div class="w">
   <div class="sec-h"><div><div class="kicker">Como ler</div><h2>Por que um empate também é resultado.</h2></div></div>
   <ol class="passos">
     <li><b>A taxa-base já é forte.</b> Em locação, o autor ganha no mérito em cerca de 84% dos casos. Dizer “84%” para tudo já erra pouco, e qualquer modelo precisa bater isso fora da amostra.</li>
