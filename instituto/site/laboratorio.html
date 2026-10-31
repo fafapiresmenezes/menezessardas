@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratório · Instituto THEYE</title>
+<meta name="description" content="Faça uma consulta gratuita ao laboratório de predição de ações de locação do Instituto THEYE, com dados abertos do CNJ.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+.lab{display:grid;grid-template-columns:1.1fr .9fr;gap:1px;background:var(--linha);border:1px solid var(--linha)}
+@media(max-width:860px){.lab{grid-template-columns:1fr}}
+.lab>div{background:var(--papel);padding:32px}
+.abas{display:flex;gap:0;border-bottom:1px solid var(--linha);margin-bottom:22px}
+.abas button{font:inherit;font-size:14.5px;background:none;border:0;border-bottom:2px solid transparent;padding:10px 16px 10px 0;margin-right:18px;color:var(--apagado);cursor:pointer}
+.abas button[aria-selected="true"]{color:var(--tinta);border-bottom-color:var(--ouro)}
+form{display:grid;gap:14px}
+label{display:grid;gap:6px;font-size:13.5px;color:var(--tinta-2)}
+input[type=email],input[type=text],select{font:inherit;font-size:15px;padding:11px 12px;border:1px solid var(--linha);background:#fff;color:var(--tinta);border-radius:0;width:100%}
+input:focus,select:focus{outline:2px solid var(--ouro);outline-offset:1px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px}
+.check input{margin-top:3px}
+.armadilha{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+button.btn{cursor:pointer;border:0;font:inherit}
+.msg{font-size:14px;padding:12px 14px;border-left:2px solid var(--ouro);background:var(--papel-2);color:var(--tinta-2)}
+.msg.erro{border-left-color:#a33}
+.res{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--linha);border:1px solid var(--linha);margin-top:20px}
+@media(max-width:520px){.res{grid-template-columns:1fr}}
+.res>div{background:#fff;padding:20px}
+.num{font-family:var(--serif);font-size:44px;line-height:1.05}
+.sm{font-size:13px;color:var(--apagado)}
+.passos3{counter-reset:p;list-style:none;padding:0;margin:0;display:grid;gap:14px}
+.passos3 li{counter-increment:p;padding-left:36px;position:relative;font-size:14.5px;color:var(--tinta-2)}
+.passos3 li::before{content:counter(p);position:absolute;left:0;top:-2px;font-family:var(--serif);font-size:22px;color:var(--ouro)}
+dl{display:grid;grid-template-columns:200px 1fr;gap:8px 24px;font-size:14.5px;margin-top:16px}
+@media(max-width:600px){dl{grid-template-columns:1fr}}
+dt{color:var(--apagado)} dd{color:var(--tinta)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/laboratorio.html" aria-current="page">Laboratório</a><a href="/comparar.html">Grafo x convencional</a><a href="/placar.html">Placar</a><a href="/estudar.html">Estudar</a><a href="/precos.html">Preços</a></nav>
+</div></header>
+<main>
+<div class="hero"><div class="w">
+  <div class="kicker">Laboratório · ações de locação · TJRJ, TJSP e TJMG</div>
+  <h1>Qual a chance de o autor ganhar?</h1>
+  <p class="lead">Escolha o tribunal, o tipo de ação e, se quiser, a vara e o assunto. O laboratório calcula a probabilidade pelo método convencional e pelo grafo, com intervalo de confiança e tamanho da amostra. Cada pessoa tem uma consulta grátis.</p>
+</div></div>
+
+<section><div class="w">
+  <div class="lab">
+    <div>
+      <div id="painel-entrada">
+        <div class="abas" role="tablist">
+          <button type="button" role="tab" id="aba-cad" aria-selected="true" aria-controls="form-cad">Criar cadastro</button>
+          <button type="button" role="tab" id="aba-ent" aria-selected="false" aria-controls="form-ent">Já tenho cadastro</button>
+        </div>
+        <form id="form-cad" novalidate>
+          <label>E-mail<input type="email" name="email" autocomplete="email" required></label>
+          <label>CPF<input type="text" name="cpf" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" required></label>
+          <div class="armadilha" aria-hidden="true"><label>Site<input type="text" name="site" tabindex="-1" autocomplete="off"></label></div>
+          <label class="check"><input type="checkbox" name="aceite" required><span>Li e aceito os termos de uso e a <a href="#privacidade">política de privacidade</a>. Meu CPF serve só para garantir uma consulta grátis por pessoa e é guardado como código irreversível.</span></label>
+          <button class="btn" type="submit">Criar cadastro</button>
+        </form>
+        <form id="form-ent" novalidate hidden>
+          <label>E-mail do cadastro<input type="email" name="email" autocomplete="email" required></label>
+          <div class="armadilha" aria-hidden="true"><label>Site<input type="text" name="site" tabindex="-1" autocomplete="off"></label></div>
+          <button class="btn" type="submit">Receber link de entrada</button>
+        </form>
+      </div>
+      <div id="painel-consulta" hidden>
+        <p class="sm" id="quem"></p>
+        <form id="form-consulta">
+          <label>Tribunal<select name="tribunal" required></select></label>
+          <label>Tipo de ação<select name="classe" required></select></label>
+          <label>Vara ou câmara (opcional)<select name="orgao"><option value="">Qualquer uma</option></select></label>
+          <label>Assunto (opcional)<select name="assunto"><option value="">Qualquer um</option></select></label>
+          <button class="btn" type="submit">Calcular a probabilidade</button>
+        </form>
+        <p class="sm" style="margin-top:12px"><a href="#" id="sair">Sair</a></p>
+      </div>
+      <div id="aviso" class="msg" role="status" aria-live="polite" hidden style="margin-top:18px"></div>
+      <div id="resultado" hidden>
+        <div class="res">
+          <div><div class="sm">Convencional (taxa-base)</div><div class="num" id="r-a"></div><div class="sm" id="r-a2"></div></div>
+          <div><div class="sm">Por grafo (vara e assunto)</div><div class="num" id="r-b"></div><div class="sm" id="r-b2"></div></div>
+        </div>
+        <p class="sm" id="r-nota" style="margin-top:12px"></p>
+      </div>
+    </div>
+    <div>
+      <div class="kicker">Como funciona</div>
+      <h3 style="font-size:26px;margin:8px 0 16px">Três passos, uma consulta grátis.</h3>
+      <ol class="passos3">
+        <li><b>Cadastro.</b> E-mail e CPF. O CPF não fica guardado: vira um código irreversível que impede uma segunda consulta grátis.</li>
+        <li><b>Confirmação.</b> Você recebe um link por e-mail, válido por 24 horas. Ele abre o laboratório já com acesso.</li>
+        <li><b>Consulta.</b> Uma previsão completa, com intervalo de confiança, amostra e o placar atual entre os dois métodos. Depois, as consultas são para <a href="/precos.html">membros</a>.</li>
+      </ol>
+      <p class="nota" style="margin-top:22px">A previsão vem de dados públicos agregados do CNJ. Não é garantia de resultado e não substitui a análise de um advogado.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="privacidade"><div class="w">
+  <div class="sec-h"><div><div class="kicker">Privacidade · LGPD</div><h2>O que guardamos e por quê.</h2></div>
+  <p>Versão termos-lab-v1, de 31/10/2026.</p></div>
+  <dl>
+    <dt>E-mail</dt><dd>Para enviar o link de entrada e avisos sobre a sua conta. Não é compartilhado nem usado para publicidade de terceiros.</dd>
+    <dt>CPF</dt><dd>Não é armazenado. Guardamos só um código irreversível (HMAC-SHA-256 com chave secreta), usado para garantir uma consulta grátis por pessoa.</dd>
+    <dt>Consultas</dt><dd>Guardamos o que você perguntou e o resultado, para limitar a consulta grátis e medir a calibragem do modelo em agregado.</dd>
+    <dt>Rede</dt><dd>O endereço de internet vira um código irreversível usado só para limitar tentativas automáticas.</dd>
+    <dt>Base legal</dt><dd>Execução do serviço pedido por você e legítimo interesse na prevenção de fraude (LGPD, art. 7º, V e IX).</dd>
+    <dt>Seus direitos</dt><dd>Acesso, correção e exclusão: responda ao e-mail de confirmação pedindo o que precisa. Atendemos em até 15 dias.</dd>
+  </dl>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · Laboratório v1</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="laboratorio.js"></script>
+</body>
+</html>
