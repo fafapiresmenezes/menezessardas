@@ -1,4 +1,7 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
+import { ehSede } from '@/lib/equipe'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
 import { SkeletonIndicator, SkeletonCard, SkeletonTable } from '@/components/Skeleton'
@@ -17,8 +20,16 @@ const molduraPorSituacao: Record<Situacao, string> = {
   sem_prazo: 'border-grafite-claro/30',
 }
 
+// Passo 37 (Onda D): a sede vê o consolidado por escritório; um parceiro vê só os próprios números (regras do banco).
+type LinhaEscritorio = { id: string; nome: string; pessoas: number; imoveis: number; contratos_ativos: number; casos_abertos: number; horas_mes: number }
+
 export default function DashboardPage() {
   const navigate = useNavigate()
+  const [porEscritorio, setPorEscritorio] = useState<LinhaEscritorio[]>([])
+  useEffect(() => {
+    if (!supabaseConfigurado) return
+    ehSede().then(sede => { if (sede) supabase.rpc('painel_escritorios').then(r => setPorEscritorio((r.data as LinhaEscritorio[]) ?? [])) })
+  }, [])
   const { imoveis, loading: carregandoImoveis } = useImoveis()
   const { alertas, loading: carregandoAlertas } = useAlertas()
 
@@ -87,6 +98,22 @@ export default function DashboardPage() {
             ))}
           </div>
         </section>
+
+        {porEscritorio.length > 1 && (
+          <section aria-labelledby="titulo-escritorios" data-testid="painel-escritorios">
+            <h2 id="titulo-escritorios" className="text-xl mb-1">Por escritório</h2>
+            <p className="text-sm text-grafite-claro mb-3">Só a sede vê esta tabela. Cada escritório parceiro vê apenas os próprios imóveis, contratos, casos e horas.</p>
+            <div className="overflow-x-auto bg-white shadow-sm">
+              <table className="w-full text-sm">
+                <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite border-b"><th className="p-3">Escritório</th><th>Pessoas</th><th>Imóveis</th><th>Contratos ativos</th><th>Casos abertos</th><th>Horas no mês</th></tr></thead>
+                <tbody>{porEscritorio.map(e => (
+                  <tr key={e.id} className="border-b border-navy/5" data-testid="linha-escritorio"><td className="p-3">{e.nome}</td><td>{e.pessoas}</td><td>{e.imoveis}</td><td>{e.contratos_ativos}</td><td>{e.casos_abertos}</td><td>{Number(e.horas_mes).toLocaleString('pt-BR')}</td></tr>
+                ))}</tbody>
+                <tfoot><tr className="font-medium"><td className="p-3">Consolidado</td><td>{porEscritorio.reduce((s, e) => s + e.pessoas, 0)}</td><td>{porEscritorio.reduce((s, e) => s + e.imoveis, 0)}</td><td>{porEscritorio.reduce((s, e) => s + e.contratos_ativos, 0)}</td><td>{porEscritorio.reduce((s, e) => s + e.casos_abertos, 0)}</td><td>{porEscritorio.reduce((s, e) => s + Number(e.horas_mes), 0).toLocaleString('pt-BR')}</td></tr></tfoot>
+              </table>
+            </div>
+          </section>
+        )}
 
         <section aria-labelledby="titulo-carteira">
           <h2 id="titulo-carteira" className="text-xl mb-1">
