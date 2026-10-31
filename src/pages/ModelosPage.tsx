@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { FileText, Search, Plus, Trash2 } from 'lucide-react'
+import { preencherModelo, VARIAVEIS_MODELO, type CasoParaModelo } from '@/lib/modelos'
 
 // Biblioteca de modelos: cada modelo abre o agente da área no modo Redigir com o pedido pronto.
 // O advogado completa os dados do caso entre colchetes e o agente redige citando a lei do Planalto.
@@ -33,11 +34,14 @@ export default function ModelosPage() {
   const [form, setForm] = useState({ titulo: '', area: 'Escritório', agente: 'civel', pedido: '' })
   const [aberto, setAberto] = useState(false)
   const [msg, setMsg] = useState('')
+  // Passo 48: escolher um caso preenche as variáveis do modelo ({{cliente}}, {{processo}}, …) e os colchetes dos rótulos conhecidos.
+  const [casos, setCasos] = useState<(CasoParaModelo & { id: string })[]>([])
+  const [casoId, setCasoId] = useState('')
   const carregar = async () => {
     const { data } = await supabase.from('modelos_escritorio').select('id, titulo, area, agente, pedido').order('criado_em')
     setProprios((data ?? []).map(d => ({ ...d, proprio: true })) as Modelo[])
   }
-  useEffect(() => { carregar() }, [])
+  useEffect(() => { carregar(); supabase.from('tarefas').select('id, titulo, cliente, area, numero_processo, imovel:imoveis(endereco), contrato:contratos(locatario_fornecedor)').eq('nivel', 'projeto').neq('situacao', 'feito').order('criado_em', { ascending: false }).limit(100).then(({ data }) => setCasos(((data ?? []) as unknown as { id: string; titulo: string; cliente: string | null; area: string | null; numero_processo: string | null; imovel: { endereco: string } | null; contrato: { locatario_fornecedor: string } | null }[]).map(c => ({ id: c.id, titulo: c.titulo, cliente: c.cliente, area: c.area, numero_processo: c.numero_processo, imovel: c.imovel?.endereco ?? null, contrato: c.contrato?.locatario_fornecedor ?? null })))) }, [])
   const salvar = async () => {
     setMsg('')
     const { error } = await supabase.from('modelos_escritorio').insert({ titulo: form.titulo.trim(), area: form.area.trim() || 'Escritório', agente: form.agente, pedido: form.pedido.trim() })
@@ -53,7 +57,12 @@ export default function ModelosPage() {
   const n = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
   const lista = todos.filter(m => (area === 'Todas' || m.area === area) && n(m.titulo + ' ' + m.pedido).includes(n(busca)))
   const AGENTES = ['imobiliario', 'civel', 'trabalhista', 'familia', 'tributario', 'empresarial', 'consumidor', 'previdenciario', 'penal', 'compliance', 'lgpd']
-  const abrir = (m: Modelo) => { window.location.href = `${window.location.pathname}?agente=${m.agente}&modo=redigir&pedido=${encodeURIComponent(m.pedido)}#/assistente` }
+  const abrir = (m: Modelo) => {
+    const caso = casos.find(c => c.id === casoId)
+    const pedido = caso ? preencherModelo(m.pedido, caso).texto : m.pedido
+    window.location.href = `${window.location.pathname}?agente=${m.agente}&modo=redigir&pedido=${encodeURIComponent(pedido)}#/assistente`
+  }
+  const previa = (m: Modelo) => { const caso = casos.find(c => c.id === casoId); return caso ? preencherModelo(m.pedido, caso) : null }
   return (
     <Layout title="Modelos de peças e contratos">
       <div className="space-y-5">
@@ -74,6 +83,14 @@ export default function ModelosPage() {
             </form>
           )}
           {msg && <p role="status" data-testid="msg-modelo" className="mt-3 p-3 text-sm border-l-2 bg-regularFundo border-regular text-regular">{msg}</p>}
+          <label className="block mt-3 text-sm" data-testid="preencher-com-caso-rotulo">
+            <span className="text-grafite-claro">Preencher com o caso</span>
+            <select value={casoId} onChange={e => setCasoId(e.target.value)} data-testid="preencher-com-caso" className="mt-1 border border-navy/20 px-2 py-2 w-full max-w-md bg-white">
+              <option value="">nenhum (modelo em branco)</option>
+              {casos.map(c => <option key={c.id} value={c.id}>{c.titulo}{c.cliente ? ` · ${c.cliente}` : ''}</option>)}
+            </select>
+            <span className="block text-xs text-grafite-claro mt-1">Nos seus modelos use {VARIAVEIS_MODELO.join(', ')}; rótulos como "Cliente: [ ]" e "Imóvel: [ ]" também são preenchidos.</span>
+          </label>
           <div className="flex flex-wrap gap-2 mt-3">
             {areas.map(a => <button key={a} type="button" onClick={() => setArea(a)} aria-pressed={area === a} className={`min-h-[36px] px-3 text-sm border ${area === a ? 'bg-navy text-white' : ''}`}>{a}</button>)}
           </div>
@@ -84,6 +101,7 @@ export default function ModelosPage() {
               <button type="button" onClick={() => abrir(m)} data-testid={m.proprio ? 'modelo-proprio' : 'modelo'} className="w-full text-left bg-white shadow-sm p-4 hover:border-dourado border border-transparent">
                 <p className="font-medium flex items-center gap-2"><FileText className="w-4 h-4 text-dourado" aria-hidden />{m.titulo}</p>
                 <p className="text-xs text-grafite-claro mt-1">{m.area}{m.proprio && ' · modelo do escritório'}</p>
+                {casoId && (() => { const pv = previa(m); return pv ? <p className="text-xs text-navy mt-1" data-testid="previa-preenchida">{pv.preenchidas.length ? `Preenche: ${pv.preenchidas.join(', ')}` : 'Só anexa os dados do caso'} · {pv.texto.slice(0, 110)}…</p> : null })()}
               </button>
               {m.proprio && m.id && <button type="button" onClick={() => apagar(m.id!)} aria-label={`Apagar modelo ${m.titulo}`} className="absolute top-2 right-2 p-2 text-critico"><Trash2 size={16} aria-hidden /></button>}
             </div>
