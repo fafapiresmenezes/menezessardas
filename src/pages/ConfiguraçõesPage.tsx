@@ -187,6 +187,7 @@ export default function ConfiguraçõesPage() {
       <EstiloEscrita />
       <SecaoEmail />
       <SecaoEscavador />
+      <SecaoIcs />
       <SecaoPix />
       <AvaliacaoSUS />
     </Layout>
@@ -588,6 +589,28 @@ function SecaoEscavador() {
           <button type="button" onClick={testar} disabled={!definida || ocupado !== ''} className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm">{ocupado === 'testando' ? 'Testando…' : 'Testar ligação'}</button>
         </div>
       </div>
+    </section>
+  )
+}
+
+// Passo 41 (Onda D): convite .ics por e-mail a cada prazo/compromisso novo ou alterado (REQUEST, mesmo UID).
+function SecaoIcs() {
+  const [ligado, setLigado] = useState(false)
+  const [msg, setMsg] = useState('')
+  useEffect(() => { supabase.rpc('ics_por_email').then(({ data }) => setLigado(data === true)) }, [])
+  const mudar = async (v: boolean) => {
+    setLigado(v)
+    const { error } = await supabase.rpc('definir_ics_por_email', { p_ligado: v })
+    setMsg(error ? error.message : v ? 'Ligado: você recebe o convite .ics a cada prazo ou compromisso novo ou alterado.' : 'Desligado.')
+  }
+  return (
+    <section aria-labelledby="ics" className="max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado" data-testid="secao-ics">
+      <h2 id="ics" className="text-lg mb-3">Convite .ics por e-mail</h2>
+      <label className="flex items-center gap-3 text-sm">
+        <input type="checkbox" checked={ligado} onChange={e => mudar(e.target.checked)} className="h-5 w-5" data-testid="ics-por-email" />
+        Receber por e-mail um convite de calendário (.ics) a cada prazo ou compromisso novo ou alterado em que eu seja responsável. O Outlook e o Google Agenda atualizam o evento pelo mesmo código (sem duplicar).
+      </label>
+      {msg && <p role="status" className="text-sm mt-2" data-testid="ics-msg">{msg}</p>}
     </section>
   )
 }
