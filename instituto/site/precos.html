@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preços · Instituto THEYE</title>
+<meta name="description" content="Preço com margem de 300% sobre o custo medido e ponto de equilíbrio em membros, com premissas públicas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--linha);border:1px solid var(--linha)}
+@media(max-width:820px){.cards{grid-template-columns:1fr}}
+.cards>div{background:var(--papel);padding:28px}
+.cards .k{font-family:var(--mono);font-size:12px;color:var(--ouro);letter-spacing:.1em;text-transform:uppercase}
+.num{font-family:var(--serif);font-size:44px;line-height:1.1;margin:8px 0}
+.sm{font-size:13.5px;color:var(--apagado)}
+#calc{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+@media(max-width:820px){#calc{grid-template-columns:1fr}}
+#calc label{display:block;font-size:14px;color:var(--tinta-2);margin-bottom:16px}
+#calc input{display:block;width:100%;margin-top:6px;min-height:44px;padding:0 12px;border:1px solid var(--linha);background:var(--papel-2);color:var(--tinta);font:inherit;font-family:var(--mono)}
+#calc dl{display:grid;grid-template-columns:1fr auto;gap:12px 24px;font-size:15px;align-content:start;border-top:1px solid var(--tinta);padding-top:16px}
+#calc dt{color:var(--tinta-2)} #calc dd{font-family:var(--mono);text-align:right}
+#calc dd.ok{color:var(--grafo)} #calc dd.alerta{color:var(--conv)}
+</style>
+<script src="precos.js" defer></script>
+</head><body>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/#laboratorio">Laboratório</a><a href="/placar.html">Placar</a><a href="/ontologia.html">Ontologia</a><a href="/estudar.html">Estudar</a><a href="/precos.html" aria-current="page">Preços</a></nav>
+</div></header>
+<main>
+<div class="hero"><div class="w">
+  <div class="kicker">Preço aberto · custo medido × 4</div>
+  <h1>Quanto custa, quanto cobramos e quando empata.</h1>
+  <p class="lead">O preço do Instituto é o custo real de cada consulta multiplicado por quatro, uma margem de 300%. O custo vem de chamadas medidas na plataforma do escritório, da tabela oficial de preços da Anthropic e da PTAX do Banco Central.</p>
+</div></div>
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">01 · Resultado</div><h2>Plano Membro: R$ 79 por mês, com 20 consultas.</h2></div>
+  <p>Consulta avulsa: R$ 3,94. Cada cadastro tem uma consulta grátis, e esse custo entra no custo fixo. Os três cenários abaixo testam o mesmo preço contra premissas piores e melhores.</p></div>
+  <div class="cards">
+    <div><div class="k">Pessimista</div><div class="num">18</div><div class="sm">membros para empatar · tokens +50%, PTAX R$ 5,50, 300 tentativas grátis/mês · margem cai para 2,6×</div></div>
+    <div><div class="k">Base</div><div class="num">7</div><div class="sm">membros para empatar · custo de R$ 0,98 por consulta · margem de 4,0×</div></div>
+    <div><div class="k">Otimista</div><div class="num">4</div><div class="sm">membros para empatar · tokens −30%, uso médio de 8 consultas · margem de 14×</div></div>
+  </div>
+  <p class="nota">Regra de reajuste: se o custo medido por consulta subir a ponto de a margem ficar abaixo de 4×, o preço é revisto no mês seguinte. A tela Consumo já mede o gasto real de IA a cada hora.</p>
+</div></section>
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">02 · Calculadora</div><h2>Mude as premissas e veja o empate.</h2></div><p>Os valores iniciais são os do cenário base.</p></div>
+  <form id="calc">
+    <div>
+      <label>Preço do plano Membro (R$/mês)<input name="preco" inputmode="decimal" value="79"></label>
+      <label>Consultas usadas por membro no mês<input name="uso" inputmode="decimal" value="20"></label>
+      <label>Multiplicador de tokens (1 = medido)<input name="tok" inputmode="decimal" value="1"></label>
+      <label>PTAX (R$ por US$)<input name="ptax" inputmode="decimal" value="5,4212"></label>
+      <label>Nuvem fixa (US$/mês)<input name="nuvem" inputmode="decimal" value="45"></label>
+      <label>Tentativas grátis por mês<input name="gratis" inputmode="decimal" value="100"></label>
+    </div>
+    <dl aria-live="polite">
+      <dt>Custo por consulta</dt><dd id="r-consulta">R$ 0,98</dd>
+      <dt>Custo fixo no mês</dt><dd id="r-fixo">R$ 345,70</dd>
+      <dt>Contribuição por membro</dt><dd id="r-contrib">R$ 54,58</dd>
+      <dt>Ponto de equilíbrio</dt><dd id="r-be">7 membros</dd>
+      <dt>Preço ÷ custo variável (meta ≥ 4×)</dt><dd id="r-mk" class="ok">4,0×</dd>
+    </dl>
+  </form>
+</div></section>
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">03 · Premissas</div><h2>De onde vem cada número.</h2></div><p></p></div>
+  <table>
+    <thead><tr><th>Premissa</th><th>Valor</th><th>Fonte</th></tr></thead>
+    <tbody>
+      <tr><td>Tokens por chamada</td><td>13.121 de entrada e 4.619 de saída</td><td>Média de 18 chamadas reais do Assistente jurídico com Claude Sonnet 5.5, medidas em 31/10/2026</td></tr>
+      <tr><td>Chamadas por consulta</td><td>2 Sonnet e 1 Haiku</td><td>Uma leitura convencional, uma pelo grafo e uma triagem</td></tr>
+      <tr><td>Preço do modelo</td><td>US$ 2 e US$ 10 por milhão de tokens</td><td><a href="https://platform.claude.com/docs/en/about-claude/pricing" rel="noopener">Tabela oficial da Anthropic</a></td></tr>
+      <tr><td>Câmbio</td><td>R$ 5,4212</td><td>PTAX de venda do Banco Central em 30/10/2026</td></tr>
+      <tr><td>Nuvem</td><td>US$ 45 por mês</td><td><a href="https://vercel.com/pricing" rel="noopener">Vercel Pro</a> (o plano grátis não permite uso comercial) e <a href="https://supabase.com/pricing" rel="noopener">Supabase Pro</a></td></tr>
+      <tr><td>Imposto</td><td>6% da receita</td><td>Simples Nacional, Anexo III, 1ª faixa (LC 123/2006)</td></tr>
+      <tr><td>Folga</td><td>25% sobre o custo</td><td>Reserva para repetições e respostas mais longas</td></tr>
+    </tbody>
+  </table>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · Preços v1 (31/10/2026) · planilha com fórmulas disponível</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
+</body>
+</html>
