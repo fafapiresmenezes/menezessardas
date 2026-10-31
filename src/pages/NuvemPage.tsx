@@ -20,6 +20,7 @@ export default function NuvemPage() {
   const [ocupado, setOcupado] = useState(false)
   const [versoesDe, setVersoesDe] = useState<string | null>(null)
   const [versoes, setVersoes] = useState<Item[]>([])
+  const [filtroNome, setFiltroNome] = useState('')
   const base = area === 'escritorio' ? 'escritorio' : `pessoal/${uid}`
   const pasta = sub ? `${base}/${sub}` : base
 
@@ -128,10 +129,14 @@ export default function NuvemPage() {
               </label>
             </div>
           </div>
+          <div className="flex flex-wrap items-center gap-3 mt-3 text-xs text-grafite">
+            <input type="search" value={filtroNome} onChange={e => setFiltroNome(e.target.value)} placeholder="Filtrar por nome" aria-label="Filtrar arquivos desta pasta por nome" className="border px-3 py-2 text-sm w-56" data-testid="nuvem-filtro" />
+            <span data-testid="nuvem-total">{itens.filter(i => i.id !== null).length} arquivo(s) nesta pasta · {kb(itens.reduce((t, i) => t + (i.metadata?.size ?? 0), 0))}</span>
+          </div>
           {msg && <p role="alert" className="text-sm text-red-700 mt-3">{msg}</p>}
           <ul className="mt-4 divide-y divide-navy/10" data-testid="nuvem-lista">
             {!itens.length && <li className="py-6 text-sm text-grafite">Pasta vazia. Arraste ou envie arquivos (até 50 MB cada).</li>}
-            {itens.map(i => i.id === null ? (
+            {itens.filter(i => !filtroNome.trim() || i.name.toLowerCase().includes(filtroNome.trim().toLowerCase())).map(i => i.id === null ? (
               <li key={i.name} className="py-3"><button onClick={() => setSub(sub ? `${sub}/${i.name}` : i.name)} className="inline-flex items-center gap-2 text-navy font-medium"><Folder size={18} className="text-dourado" aria-hidden="true" />{i.name}</button></li>
             ) : (
               <li key={i.name} className="py-3 flex items-center justify-between gap-3">

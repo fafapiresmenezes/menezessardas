@@ -23,6 +23,7 @@ export default function IntimacoesPage() {
   const [ocupado, setOcupado] = useState(false)
   const [filtro, setFiltro] = useState<'novas' | 'todas'>('novas')
   const [aberta, setAberta] = useState<number | null>(null)
+  const [busca, setBusca] = useState('')
 
   const carregar = async () => {
     const { data } = await supabase.from('intimacoes').select('id,oab,data_disponibilizacao,tribunal,orgao,tipo,classe,numero_processo,texto,link,lida,prazo_dias,prazo_final,tarefa_id').order('data_disponibilizacao', { ascending: false }).limit(300)
@@ -61,7 +62,10 @@ export default function IntimacoesPage() {
     else { setMsg({ ok: true, texto: 'Tarefa criada em Casos e projetos com o prazo estimado.' }); setLista(l => l.map(x => (x.id === i.id ? { ...x, tarefa_id: String(data) } : x))) }
   }
   const ordem = { vencido: 0, critico: 1, atencao: 2, regular: 3 } as const
-  const visiveis = (filtro === 'novas' ? lista.filter(i => !i.lida) : lista).slice().sort((a, b) => (ordem[urgencia(a)?.situacao ?? 'regular'] - ordem[urgencia(b)?.situacao ?? 'regular']) || b.data_disponibilizacao.localeCompare(a.data_disponibilizacao))
+  const visiveis = (filtro === 'novas' ? lista.filter(i => !i.lida) : lista).filter(i => !busca.trim() || [i.numero_processo, i.tribunal, i.classe, i.orgao, i.texto, i.tipo].join(' ').toLowerCase().includes(busca.trim().toLowerCase())).sort((a, b) => (ordem[urgencia(a)?.situacao ?? 'regular'] - ordem[urgencia(b)?.situacao ?? 'regular']) || b.data_disponibilizacao.localeCompare(a.data_disponibilizacao))
+
+  // Resumo por urgência das não lidas: o advogado vê de cara quantas vencem primeiro.
+  const resumo = lista.filter(i => !i.lida).reduce((r, i) => { const s = urgencia(i)?.situacao; if (s) r[s]++; return r }, { vencido: 0, critico: 0, atencao: 0, regular: 0 })
 
   return (
     <Layout title="Intimações">
@@ -78,7 +82,14 @@ export default function IntimacoesPage() {
                 <option value="todas">Todas ({lista.length})</option>
               </select>
             </label>
+            <input type="search" value={busca} onChange={e => setBusca(e.target.value)} placeholder="Buscar processo, tribunal ou texto" aria-label="Buscar nas intimações" className="border px-3 py-2 text-sm w-64" data-testid="busca-intimacoes" />
           </div>
+          <p className="flex flex-wrap gap-3 text-xs" data-testid="resumo-urgencia">
+            <span><strong>{resumo.vencido}</strong> vencida(s)</span>
+            <span><strong>{resumo.critico}</strong> crítica(s)</span>
+            <span><strong>{resumo.atencao}</strong> em atenção</span>
+            <span><strong>{resumo.regular}</strong> no prazo</span>
+          </p>
           {msg && <p role={msg.ok ? 'status' : 'alert'} className={`p-3 text-sm border-l-2 ${msg.ok ? 'bg-regularFundo border-regular text-regular' : 'bg-atencaoFundo border-atencao text-atencao'}`}>{msg.texto}</p>}
           {admin && (
             <div className="flex flex-wrap gap-2 items-end">
