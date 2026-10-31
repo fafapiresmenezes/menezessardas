@@ -6,6 +6,7 @@ import SeloSituacao from '@/components/SeloSituacao'
 import { useAlertas, salvarCompromisso } from '@/hooks/useAlertas'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { baixarICS } from '@/lib/ics'
+import { gerarPdfTexto, quebrar } from '@/lib/pdfSimples'
 import { formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
 import { CalendarDays, ChevronLeft, ChevronRight, Download, Mail, ExternalLink, Plus, X } from 'lucide-react'
 
@@ -30,6 +31,33 @@ export default function AgendaPage() {
   const [ano, setAno] = useState(hoje.getFullYear())
   const [mes, setMes] = useState(hoje.getMonth())
   const [sincronizando, setSincronizando] = useState(false)
+  // Passo 42: Semana em PDF (prazos e compromissos dos próximos 7 dias por dia e responsável) e envio de teste por e-mail.
+  const [msgSemana, setMsgSemana] = useState('')
+  const semanaEmPdf = async () => {
+    setMsgSemana('')
+    const inicio = new Date(Date.now() + 86400000).toISOString().slice(0, 10)
+    const { data, error } = await supabase.rpc('semana_agenda', { p_inicio: inicio, p_dias: 7 })
+    if (error) { setMsgSemana(error.message); return }
+    const sem = data as { inicio: string; fim: string; total: number; dias: { dia: string; itens: { tipo: string; titulo: string; detalhe: string; responsavel: string }[] }[] }
+    const br = (d: string) => d.split('-').reverse().join('/')
+    const L: { texto: string; tamanho?: number; negrito?: boolean }[] = [{ texto: `Semana de ${br(sem.inicio)} a ${br(sem.fim)}`, tamanho: 16, negrito: true }, { texto: `${sem.total} item(ns): prazos de casos e compromissos, por dia e responsável.`, tamanho: 9 }, { texto: ' ' }]
+    if (!sem.dias.length) L.push({ texto: 'Nenhum prazo ou compromisso nos próximos 7 dias.', tamanho: 11 })
+    for (const d of sem.dias) {
+      L.push({ texto: br(d.dia), tamanho: 12, negrito: true })
+      for (const i of d.itens) for (const q of quebrar(`- [${i.tipo === 'prazo' ? 'Prazo' : 'Compromisso'}] ${i.titulo}${i.detalhe ? ' · ' + i.detalhe : ''}${i.responsavel ? ' · resp.: ' + i.responsavel : ''}`, 9.5)) L.push({ texto: q, tamanho: 9.5 })
+      L.push({ texto: ' ' })
+    }
+    const pdf = gerarPdfTexto(`Semana ${sem.inicio}`, L)
+    const url = URL.createObjectURL(new Blob([pdf], { type: 'application/pdf' }))
+    const a = document.createElement('a'); a.href = url; a.download = `semana-${sem.inicio}.pdf`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 2000)
+    setMsgSemana(`PDF da semana gerado (${sem.total} item(ns)). A secretaria recebe este PDF por e-mail toda sexta às 17h.`)
+  }
+  const enviarSemanaTeste = async () => {
+    setMsgSemana('Enviando…')
+    const { data, error } = await supabase.functions.invoke('semana-pdf', { body: { teste: true } })
+    const r = (data ?? {}) as { enviado?: boolean; total?: number; motivo?: string; detalhe?: string }
+    setMsgSemana(error ? error.message : r.enviado ? `E-mail de teste enviado para você com ${r.total} item(ns).` : `Não enviado: ${r.motivo ?? r.detalhe ?? 'erro'}`)
+  }
   // Passo 19: roteiro do Outlook por e-mail e resultado do teste (configuracoes.teste_outlook, só admin lê e grava).
   const [testeOutlook, setTesteOutlook] = useState<{ enviado_em?: string; para?: string[]; resultado?: string; em?: string } | null>(null)
   const [msgRoteiro, setMsgRoteiro] = useState('')
@@ -184,6 +212,12 @@ export default function AgendaPage() {
             >
               <Mail size={16} aria-hidden="true" /> Enviar por e-mail
             </a>
+            <button onClick={semanaEmPdf} data-testid="semana-pdf" className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 rounded-sm text-sm hover:bg-pergaminho">
+              <Download size={16} aria-hidden="true" /> Semana em PDF
+            </button>
+            <button onClick={enviarSemanaTeste} data-testid="semana-email-teste" className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm hover:bg-white">
+              <Mail size={16} aria-hidden="true" /> Testar e-mail de sexta
+            </button>
             <button
               onClick={() => baixarICS(alertas)}
               className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 rounded-sm text-sm hover:bg-pergaminho"
@@ -205,6 +239,7 @@ export default function AgendaPage() {
               <ExternalLink size={16} aria-hidden="true" /> {sincronizando ? 'Abrindo…' : 'Conectar ao Google Agenda'}
             </button>
           </div>
+          {msgSemana && <p role="status" className="text-sm mt-2" data-testid="semana-msg">{msgSemana}</p>}
           {supabaseConfigurado && (
             <div className="mt-3 text-sm flex flex-wrap items-center gap-3" data-testid="roteiro-outlook">
               <span className="text-grafite-claro">Roteiro do Outlook (5 passos com imagens):</span>
