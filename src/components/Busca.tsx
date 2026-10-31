@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
+import { ROTAS_TELAS } from '@/data/rotas'
 import { useNavigate } from 'react-router-dom'
 import { repositorio, type Imovel, type Contrato } from '@/lib/repositorio'
 import { listarFornecedores, type Fornecedor } from '@/lib/fornecedores'
-import { Search, Building2, FileText, Truck, LayoutGrid, CalendarDays, Bell, Gauge, FileBarChart, ShieldCheck, Scale, Users, Settings, HelpCircle, X } from 'lucide-react'
+import { Search, Building2, FileText, Truck, LayoutGrid, CalendarDays, Bell, Gauge, FileBarChart, ShieldCheck, Scale, Users, Settings, HelpCircle, X, FolderKanban, FileCheck2 } from 'lucide-react'
 
 interface Resultado {
-  grupo: 'Páginas' | 'Imóveis' | 'Contratos' | 'Fornecedores'
+  grupo: 'Páginas' | 'Imóveis' | 'Contratos' | 'Fornecedores' | 'Casos e projetos' | 'Documentos'
   rotulo: string
   detalhe?: string
   href: string
@@ -29,6 +31,13 @@ const PAGINAS: Resultado[] = [
   { grupo: 'Páginas', rotulo: 'Ajuda', href: '/ajuda', icone: HelpCircle },
 ]
 
+// Passo 58: todas as telas do mapa de rotas entram na busca, sem repetir as já listadas.
+const TODAS_PAGINAS: Resultado[] = [
+  ...PAGINAS,
+  ...ROTAS_TELAS.filter(r => !PAGINAS.some(p => p.href === r.rota)).map<Resultado>(r => ({ grupo: 'Páginas', rotulo: r.nome, href: r.rota, icone: LayoutGrid })),
+]
+const ICONES: Record<string, typeof Search> = { 'Imóveis': Building2, 'Contratos': FileText, 'Fornecedores': Truck, 'Casos e projetos': FolderKanban, 'Documentos': FileCheck2 }
+
 const normalizar = (s: string) =>
   s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
 
@@ -42,6 +51,8 @@ export default function Busca({ aberta, fechar }: { aberta: boolean; fechar: () 
   const [imoveis, setImoveis] = useState<Imovel[]>([])
   const [contratos, setContratos] = useState<Contrato[]>([])
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([])
+  const [servidor, setServidor] = useState<Resultado[]>([])
+  const [buscando, setBuscando] = useState(false)
   const campo = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
 
@@ -61,12 +72,27 @@ export default function Busca({ aberta, fechar }: { aberta: boolean; fechar: () 
       })
   }, [aberta])
 
+  // Passo 58: com 2+ letras, a busca_global do servidor procura imóveis, contratos, casos, fornecedores e documentos (só o que a pessoa pode ver).
+  useEffect(() => {
+    const t = termo.trim()
+    if (!aberta || !supabaseConfigurado || t.length < 2) { setServidor([]); return }
+    setBuscando(true)
+    const id = setTimeout(() => {
+      supabase.rpc('busca_global', { termo: t }).then(({ data }) => {
+        setServidor(((data ?? []) as { tipo: string; id: string; rotulo: string; detalhe: string | null; rota: string }[]).map(r => ({ grupo: r.tipo as Resultado['grupo'], rotulo: r.rotulo, detalhe: r.detalhe ?? undefined, href: r.rota, icone: ICONES[r.tipo] ?? Search })))
+        setBuscando(false)
+      })
+    }, 250)
+    return () => clearTimeout(id)
+  }, [termo, aberta])
+
   const resultados = useMemo<Resultado[]>(() => {
     const t = normalizar(termo.trim())
+    if (supabaseConfigurado && t.length >= 2) return [...TODAS_PAGINAS.filter(p => normalizar(p.rotulo).includes(t)).slice(0, 4), ...servidor].slice(0, 20)
     const bate = (...campos: (string | undefined)[]) => !t || campos.some(c => c && normalizar(c).includes(t))
     const porImovel = new Map(imoveis.map(i => [i.id, i.endereco]))
     const lista: Resultado[] = [
-      ...PAGINAS.filter(p => bate(p.rotulo)),
+      ...TODAS_PAGINAS.filter(p => bate(p.rotulo)),
       ...imoveis
         .filter(i => bate(i.endereco, i.proprietario))
         .map<Resultado>(i => ({ grupo: 'Imóveis', rotulo: i.endereco, detalhe: i.proprietario, href: `/imoveis/${i.id}`, icone: Building2 })),
@@ -78,7 +104,7 @@ export default function Busca({ aberta, fechar }: { aberta: boolean; fechar: () 
         .map<Resultado>(f => ({ grupo: 'Fornecedores', rotulo: f.nome, detalhe: f.cnpj, href: `/fornecedor/${f.id}`, icone: Truck })),
     ]
     return lista.slice(0, t ? 12 : 8)
-  }, [termo, imoveis, contratos, fornecedores])
+  }, [termo, imoveis, contratos, fornecedores, servidor])
 
   useEffect(() => setAtivo(0), [resultados.length])
 
@@ -126,7 +152,7 @@ export default function Busca({ aberta, fechar }: { aberta: boolean; fechar: () 
             type="search"
             value={termo}
             onChange={e => setTermo(e.target.value)}
-            placeholder="Buscar imóvel, contrato, fornecedor ou página…"
+            placeholder="Buscar imóvel, contrato, caso, fornecedor, documento ou tela…"
             aria-label="Buscar na plataforma"
             aria-controls="resultados-busca"
             className="flex-1 py-4 bg-transparent outline-none text-grafite"
@@ -136,9 +162,9 @@ export default function Busca({ aberta, fechar }: { aberta: boolean; fechar: () 
             <X size={18} />
           </button>
         </div>
-        <ul id="resultados-busca" role="listbox" className="max-h-[60vh] overflow-y-auto py-2">
+        <ul id="resultados-busca" role="listbox" data-testid="busca-resultados" className="max-h-[60vh] overflow-y-auto py-2">
           {resultados.length === 0 && (
-            <li className="px-4 py-6 text-sm text-grafite-claro text-center">Nada encontrado para “{termo}”.</li>
+            <li className="px-4 py-6 text-sm text-grafite-claro text-center" data-testid="busca-vazia">{buscando ? 'Procurando…' : <>Nada encontrado para “{termo}”.</>}</li>
           )}
           {resultados.map((r, i) => {
             const cabecalho = r.grupo !== grupoAnterior

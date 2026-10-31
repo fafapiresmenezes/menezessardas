@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { mensagemAmigavel } from '@/lib/erros'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
@@ -41,7 +42,9 @@ export default function ProjetosPage() {
   const [tarefas, setTarefas] = useState<Tarefa[]>([])
   const [pessoas, setPessoas] = useState<Pessoa[]>([])
   const [imoveis, setImoveis] = useState<Imovel[]>([])
-  const [projeto, setProjeto] = useState<string>('')
+  // Passo 58: a busca global abre o caso direto por /projetos?caso=<id>.
+  const [params] = useSearchParams()
+  const [projeto, setProjeto] = useState<string>(params.get('caso') ?? '')
   const [novo, setNovo] = useState({ titulo: '', nivel: 'tarefa', responsavel_id: '', prazo: '', prioridade: 'media', imovel_id: '' })
   const [erro, setErro] = useState('')
   const [caso, setCaso] = useState({ modelo: 'contencioso', titulo: '', cliente: '', area: 'Cível', numero: '', tipo: 'caso', responsavel_id: '' })
