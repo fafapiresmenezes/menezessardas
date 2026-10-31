@@ -22,12 +22,12 @@ async function segredoOk(req: Request) {
   return !!data?.valor && data.valor === enviado
 }
 
-async function datajud(tribunal: string, classe: string) {
+async function datajud(tribunal: string, classe: string, por = POR_CONSULTA, pular = 0) {
   const r = await fetch(`https://api-publica.datajud.cnj.jus.br/api_publica_${tribunal}/_search`, {
     method: 'POST', headers: { Authorization: DATAJUD_KEY, 'Content-Type': 'application/json' },
     signal: AbortSignal.timeout(60000),
     body: JSON.stringify({
-      size: POR_CONSULTA, sort: [{ dataHoraUltimaAtualizacao: { order: 'desc' } }],
+      size: por, from: pular, sort: [{ dataHoraUltimaAtualizacao: { order: 'desc' } }],
       _source: ['numeroProcesso', 'classe', 'orgaoJulgador.nome', 'assuntos', 'dataAjuizamento', 'movimentos.codigo', 'movimentos.dataHora', 'dataHoraUltimaAtualizacao'],
       query: { bool: { filter: [{ match_phrase: { 'classe.nome': classe } }] } },
     }),
@@ -61,13 +61,15 @@ async function djen(tribunal: string, d: string) {
 
 Deno.serve(async (req) => {
   if (!(await segredoOk(req))) return json({ erro: 'Acesso só pela coleta agendada.' }, 401)
-  const { tribunais = TRIBUNAIS, classes = CLASSES } = await req.json().catch(() => ({}))
+  const { tribunais = TRIBUNAIS, classes = CLASSES, por = POR_CONSULTA, pular = 0 } = await req.json().catch(() => ({}))
+  // Carga histórica opcional: até 400 por consulta, saltando os mais recentes já coletados.
+  const tam = Math.min(400, Math.max(1, Number(por) || POR_CONSULTA)), salto = Math.min(9000, Math.max(0, Number(pular) || 0))
   const falhas: string[] = []
   const tarefas = (tribunais as string[]).flatMap(t => (classes as string[]).map(c => ({ t, c })))
   const processos: unknown[] = []
   // Até 6 consultas ao mesmo tempo para caber no tempo da função.
   for (let i = 0; i < tarefas.length; i += 6) {
-    const lote = await Promise.allSettled(tarefas.slice(i, i + 6).map(x => datajud(x.t, x.c)))
+    const lote = await Promise.allSettled(tarefas.slice(i, i + 6).map(x => datajud(x.t, x.c, tam, salto)))
     lote.forEach((r, k) => r.status === 'fulfilled' ? processos.push(...r.value) : falhas.push(String(r.reason?.message ?? tarefas[i + k].t)))
   }
   const ontem = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
@@ -75,7 +77,13 @@ Deno.serve(async (req) => {
   const djenOk = vol.flatMap(r => r.status === 'fulfilled' ? [r.value] : (falhas.push(String(r.reason?.message)), []))
   // O mesmo processo pode vir em duas consultas; o banco recusa atualizar a mesma linha duas vezes.
   const unicos = [...new Map((processos as { id: string }[]).map(p => [p.id, p])).values()]
-  const { data, error } = await sb().rpc('instituto_gravar_coleta', { p_processos: unicos, p_djen: djenOk, p_falhas: falhas })
-  if (error) return json({ erro: error.message, falhas }, 500)
-  return json({ ok: true, vistos: unicos.length, ...data, djen: djenOk, falhas })
+  // Grava em blocos de 200 para não estourar o tempo limite de cada comando no banco.
+  let data: Record<string, unknown> = {}, novos = 0
+  for (let i = 0; i < Math.max(1, unicos.length); i += 200) {
+    const ultimo = i + 200 >= unicos.length
+    const r = await sb().rpc('instituto_gravar_coleta', { p_processos: unicos.slice(i, i + 200), p_djen: ultimo ? djenOk : [], p_falhas: ultimo ? falhas : null })
+    if (r.error) return json({ erro: r.error.message, gravados_ate: i, falhas }, 500)
+    data = r.data ?? {}; novos += Number(data.novos ?? 0)
+  }
+  return json({ ok: true, vistos: unicos.length, ...data, novos, djen: djenOk, falhas })
 })
