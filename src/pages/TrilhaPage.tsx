@@ -180,8 +180,19 @@ export default function TrilhaPage() {
           </h2>
           <p className="text-sm text-grafite-claro mt-1 max-w-2xl">
             Envia só o selo (um código, nunca dados de clientes) a um registro público de datas. Depois disso,
-            ninguém consegue provar que a trilha foi reescrita depois daquele momento.
+            ninguém consegue provar que a trilha foi reescrita depois daquele momento. Para conferir por fora, baixe o selo (.ots) e abra em opentimestamps.org.
           </p>
+          {ancoragens.length > 0 && (() => {
+            const ult = ancoragens.reduce((m, a) => (a.em > m.em ? a : m), ancoragens[0])
+            const horas = Math.max(0, Math.round((Date.now() - new Date(ult.em).getTime()) / 3600000))
+            const atrasado = horas > 36
+            return (
+              <p className={`text-sm mt-3 ${atrasado ? 'text-atencao' : 'text-regular'}`} data-testid="estado-selo">
+                {ancoragens.length} selo(s) ancorado(s). Último há {horas < 1 ? 'menos de 1 hora' : `${horas} hora(s)`} ({dataHora(ult.em)}){atrasado ? '. O selo diário deveria ter rodado; use "Ancorar selo agora".' : '. O selo diário está em dia.'}
+              </p>
+            )
+          })()}
+          {ancoragens.length === 0 && <p className="text-sm text-grafite-claro mt-3" data-testid="estado-selo">Nenhum selo ainda. O primeiro é feito automaticamente todo dia, ou agora pelo botão.</p>}
           <div className="flex flex-wrap gap-3 mt-4">
             <button
               onClick={ancorar}
