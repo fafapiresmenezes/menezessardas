@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import TesteGeral from '@/components/TesteGeral'
+import TesteTelas from '@/components/TesteTelas'
 import EscritoriosParceiros from '@/components/EscritoriosParceiros'
 import { Users, UserPlus, KeyRound } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
@@ -82,7 +83,7 @@ export default function EquipePage() {
   return (
     <Layout title="Área do administrador">
       <div className="max-w-4xl space-y-6">
-        {perfil === 'admin' && <TesteGeral />}
+        {perfil === 'admin' && <><TesteGeral /><TesteTelas /></>}
         {perfil === 'carregando' ? (
           <p className="text-sm text-grafite-claro">Carregando…</p>
         ) : perfil !== 'admin' ? (

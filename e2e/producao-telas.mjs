@@ -1,7 +1,8 @@
 // Teste no navegador contra a produção, com login real (EMAIL e SENHA no ambiente). Roda fora do sandbox do Claude, que não alcança o site.
 import { chromium } from 'playwright'
-const BASE = 'https://menezes-sardas-contratos.vercel.app/'
-const ROTAS = ['inicio','dashboard','projetos','intimacoes','imoveis','imoveis/novo','contrato/novo','agenda','alertas','relatorios','indicadores','fornecedores','assistente','previsoes','instituto','legislacao','fontes','trilha','equipe','settings']
+const BASE = process.env.BASE || 'https://gmenezes-advogados.vercel.app/'
+// Passo 53: todas as telas (mesma lista de src/data/rotas.ts)
+const ROTAS = ['inicio','dashboard','meu-dia','imoveis','imoveis/novo','imoveis/importar','contrato/novo','projetos','agenda','intimacoes','alertas','monitoramento','assistente','consultores','modelos','legislacao','fontes','previsoes','indicadores','relatorios','mercado','horas','honorarios','consumo','fornecedores','kyc','compliance','nuvem','trilha','instituto','equipe','settings']
 const res = []
 const b = await chromium.launch()
 for (const [nome, vw] of [['desktop',{width:1366,height:800}],['celular',{width:390,height:844}]]) {

@@ -24,7 +24,7 @@ export const TOURS: Record<string, { nome: string; passos: PassoTour[] }> = {
   '/intimacoes': { nome: 'Intimações', passos: [
     { titulo: 'Chegam às 7h', texto: 'Todo dia a plataforma busca as intimações das OABs cadastradas no DJEN/CNJ e calcula o prazo em dias úteis.' },
     { titulo: 'Urgência primeiro', texto: 'A lista vem por urgência; cada intimação já cria uma tarefa para o responsável.' },
-    { titulo: 'Faltam OABs?', texto: 'Cadastre as OABs da equipe em Configurações para a busca funcionar para todos.', seletor: 'a[href="/configuracoes"]' } ] },
+    { titulo: 'Faltam OABs?', texto: 'Cadastre as OABs da equipe em Configurações para a busca funcionar para todos.', seletor: 'a[href="/settings"]' } ] },
   '/assistente': { nome: 'Assistente jurídico', passos: [
     { titulo: 'Escolha o agente', texto: 'Cada botão é um especialista (pesquisa, peças, cálculo…). Modo Redigir usa o seu estilo de escrita.', seletor: '[role=tablist], [data-testid=agentes]' },
     { titulo: 'Avalie a resposta', texto: 'Marque útil ou não útil: isso entra em Indicadores e melhora o acompanhamento.' },
@@ -37,7 +37,7 @@ export const TOURS: Record<string, { nome: string; passos: PassoTour[] }> = {
     { titulo: 'Régua de cobrança', texto: 'Cada caso mostra previsto, recebido e atraso; a carta de cobrança sai pronta.' },
     { titulo: 'Cobrar por PIX', texto: 'Gera QR e copia e cola com a chave do escritório (Configurações); a baixa concilia sozinha.' },
     { titulo: 'Rentabilidade', texto: 'Horas lançadas × valor-hora contra o honorário: veja quais casos dão lucro.' } ] },
-  '/configuracoes': { nome: 'Configurações', passos: [
+  '/settings': { nome: 'Configurações', passos: [
     { titulo: 'Chave de IA e PIX', texto: 'A chave Anthropic liga o Assistente; a chave PIX liga a cobrança. Só administradores editam.' },
     { titulo: 'Segurança', texto: 'Ative o 2FA (obrigatório para administradores a partir de 06/11/2026) e revise os acessos.' },
     { titulo: 'Seu estilo', texto: 'Envie até 10 peças suas: o Assistente passa a redigir no seu estilo.' } ] },
