@@ -92,7 +92,7 @@ export default function TesteGeral() {
           <p className="text-xs text-grafite-claro mb-2">Cada quadrado é um dia: verde funcionou, vermelho falhou, cinza sem teste. Quando algo falha, as administradoras recebem e-mail na hora.</p>
           <div className="overflow-x-auto">
             <table className="text-xs border-separate border-spacing-0.5" role="grid" aria-label="Resultado diário por verificação">
-              <thead><tr><th scope="col" className="text-left pr-2 font-normal text-grafite-claro">Verificação</th>{dias.map(d => <th key={d} scope="col" className="font-normal text-grafite-claro w-4" title={d.split('-').reverse().join('/')}>{d.slice(8) === '01' || d === dias[0] ? d.slice(8) : ''}</th>)}</tr></thead>
+              <thead><tr><th scope="col" className="text-left pr-2 font-normal text-grafite-claro">Verificação</th>{dias.map(d => <th key={d} scope="col" className="font-normal text-grafite-claro w-4" title={d.split('-').reverse().join('/')}>{d.slice(8) === '01' || d === dias[0] ? d.slice(8) : <span className="sr-only">{d.split('-').reverse().join('/')}</span>}</th>)}</tr></thead>
               <tbody>
                 {verificacoes.map(v => (
                   <tr key={v} data-testid="linha-historico">

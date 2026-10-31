@@ -216,11 +216,11 @@ function CaseStudy() {
 export default function InstitutoPage() {
   const [aba, setAba] = useState<Aba>('inovacao')
   return (
-    <Layout>
+    <Layout title="Instituto THEYE">
       <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-6">
         <header>
           <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">Instituto THEYE</p>
-          <h1 className="text-3xl text-navy">Ferramentas do Instituto</h1>
+          <h2 className="text-3xl text-navy">Ferramentas do Instituto</h2>
           <p className="text-sm text-grafite-claro mt-1">Inovação regulatória, jurimetria, ESG e pesquisa jurídica (Brasil e mundo) para o desenvolvimento do direito brasileiro.</p>
         </header>
         <div role="tablist" aria-label="Temas do Instituto" className="flex flex-wrap gap-2">

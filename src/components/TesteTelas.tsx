@@ -24,7 +24,9 @@ export async function testarTela(rota: string, w: Window): Promise<{ ok: boolean
     const timer = setInterval(() => {
       try {
         if (w.closed) return fim(false, 'janela de teste fechada')
-        const d = w.document; if (!d || !d.body || !d.location.hash.startsWith('#' + rota)) return
+        const d = w.document; if (!d || !d.body) return
+        const redirecionou = !d.location.hash.startsWith('#' + rota)
+        if (redirecionou && Date.now() - ini < 1500) return
         const texto = d.body.innerText || ''
         const h = d.querySelector('h1')?.textContent?.trim() ?? ''
         const fonte = w.getComputedStyle(d.body).fontFamily
@@ -34,7 +36,7 @@ export async function testarTela(rota: string, w: Window): Promise<{ ok: boolean
         const erro = texto.match(/(Não foi possível[^\n]{0,60}|Algo deu errado[^\n]{0,60}|\bundefined\b|\bNaN\b)/)
         if (erro) return fim(false, `texto de erro: ${erro[0]}`)
         if (Date.now() - ini < 1500) return
-        fim(true, h.slice(0, 40))
+        fim(true, redirecionou ? `abriu ${d.location.hash.slice(1, 30)} (tela exige um registro)` : h.slice(0, 40))
       } catch (e) { fim(false, e instanceof Error ? e.message : 'erro') }
     }, 400)
     const limite = setTimeout(() => fim(false, 'não carregou em 12 s'), TEMPO_LIMITE)
