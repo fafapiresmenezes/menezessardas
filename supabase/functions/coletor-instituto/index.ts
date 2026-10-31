@@ -2,10 +2,11 @@
 // DataJud (CNJ): processos de locação por tribunal, gravados anonimizados (número vira sha256; só códigos e datas de movimentos).
 // DJEN (Comunica PJe): só o volume diário de comunicações por tribunal (agregado, sem nomes).
 // Chamado pelo pg_cron com x-cron-secret; não é aberto ao público.
+// U08 (31/10/2026): 6 tribunais. Amostragem: por classe, os processos mais recentemente atualizados no DataJud (sort desc), com carga histórica por saltos (pular) de 400.
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 const sb = () => createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
 const DATAJUD_KEY = 'APIKey cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw=='
-const TRIBUNAIS = ['tjrj', 'tjsp', 'tjmg']
+const TRIBUNAIS = ['tjrj', 'tjsp', 'tjmg', 'tjrs', 'tjpr', 'tjdft']
 const CLASSES = ['Despejo por Falta de Pagamento', 'Despejo por Falta de Pagamento Cumulado Com Cobrança', 'Despejo',
   'Renovatória de Locação', 'Revisional de Aluguel', 'Consignação em Pagamento']
 const DESFECHOS: Record<number, string> = { 219: 'procedencia', 221: 'parcial', 220: 'improcedencia', 466: 'sem_merito', 385: 'acordo' }
