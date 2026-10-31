@@ -1,0 +1,188 @@
+[
+ {
+  "pagina": "/",
+  "http": 200,
+  "overflow_390": 0,
+  "fonte": "\"IBM Plex Sans\"",
+  "erros_js": [],
+  "erros_rede_esperados": 0,
+  "axe": [],
+  "lighthouse": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp_ms": 1492,
+  "cls": 0.00758866258179419,
+  "falhas_lh": []
+ },
+ {
+  "pagina": "/laboratorio.html",
+  "http": 200,
+  "overflow_390": 0,
+  "fonte": "\"IBM Plex Sans\"",
+  "erros_js": [],
+  "erros_rede_esperados": 0,
+  "axe": [],
+  "lighthouse": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp_ms": 1523,
+  "cls": 0.01223500691687496,
+  "falhas_lh": []
+ },
+ {
+  "pagina": "/placar.html",
+  "http": 200,
+  "overflow_390": 0,
+  "fonte": "\"IBM Plex Sans\"",
+  "erros_js": [],
+  "erros_rede_esperados": 1,
+  "axe": [],
+  "lighthouse": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 96,
+   "seo": 100
+  },
+  "lcp_ms": 1483,
+  "cls": 0.03742543419442506,
+  "falhas_lh": [
+   "errors-in-console"
+  ]
+ },
+ {
+  "pagina": "/comparar.html",
+  "http": 200,
+  "overflow_390": 0,
+  "fonte": "\"IBM Plex Sans\"",
+  "erros_js": [],
+  "erros_rede_esperados": 2,
+  "axe": [],
+  "lighthouse": {
+   "performance": 99,
+   "accessibility": 100,
+   "best-practices": 96,
+   "seo": 100
+  },
+  "lcp_ms": 1638,
+  "cls": 0.009111617101881065,
+  "falhas_lh": [
+   "errors-in-console"
+  ]
+ },
+ {
+  "pagina": "/ontologia.html",
+  "http": 200,
+  "overflow_390": 0,
+  "fonte": "\"IBM Plex Sans\"",
+  "erros_js": [],
+  "erros_rede_esperados": 0,
+  "axe": [],
+  "lighthouse": {
+   "performance": 99,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp_ms": 1650,
+  "cls": 0.02619709212565628,
+  "falhas_lh": []
+ },
+ {
+  "pagina": "/locacao.html",
+  "http": 200,
+  "overflow_390": 0,
+  "fonte": "\"IBM Plex Sans\"",
+  "erros_js": [],
+  "erros_rede_esperados": 0,
+  "axe": [],
+  "lighthouse": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp_ms": 1484,
+  "cls": 0.01442849305410614,
+  "falhas_lh": []
+ },
+ {
+  "pagina": "/agentes.html",
+  "http": 200,
+  "overflow_390": 0,
+  "fonte": "\"IBM Plex Sans\"",
+  "erros_js": [],
+  "erros_rede_esperados": 1,
+  "axe": [],
+  "lighthouse": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 96,
+   "seo": 100
+  },
+  "lcp_ms": 1488,
+  "cls": 0.02381700894176178,
+  "falhas_lh": [
+   "errors-in-console"
+  ]
+ },
+ {
+  "pagina": "/estudar.html",
+  "http": 200,
+  "overflow_390": 0,
+  "fonte": "\"IBM Plex Sans\"",
+  "erros_js": [],
+  "erros_rede_esperados": 0,
+  "axe": [],
+  "lighthouse": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp_ms": 1487,
+  "cls": 0.0003236131657104239,
+  "falhas_lh": []
+ },
+ {
+  "pagina": "/precos.html",
+  "http": 200,
+  "overflow_390": 0,
+  "fonte": "\"IBM Plex Sans\"",
+  "erros_js": [],
+  "erros_rede_esperados": 0,
+  "axe": [],
+  "lighthouse": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp_ms": 1491,
+  "cls": 0.01095802409168956,
+  "falhas_lh": []
+ },
+ {
+  "pagina": "/servicos.html",
+  "http": 200,
+  "overflow_390": 0,
+  "fonte": "\"IBM Plex Sans\"",
+  "erros_js": [],
+  "erros_rede_esperados": 0,
+  "axe": [],
+  "lighthouse": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp_ms": 1467,
+  "cls": 0.00005400997782738471,
+  "falhas_lh": []
+ }
+]

@@ -1,6 +1,6 @@
 :root{
-  --papel:#F6F3EC; --papel-2:#EFEADF; --tinta:#0F1A2B; --tinta-2:#3A4556; --apagado:#6B7380;
-  --linha:#D8D1C2; --ouro:#9A7535; --ouro-claro:#C9A96A; --grafo:#2F5D62; --conv:#8A4B3A;
+  --papel:#F6F3EC; --papel-2:#EFEADF; --tinta:#0F1A2B; --tinta-2:#3A4556; --apagado:#5B6371;
+  --linha:#D8D1C2; --ouro:#7A5A22; --ouro-claro:#C9A96A; --grafo:#2F5D62; --conv:#8A4B3A;
   --serif:'Newsreader',Georgia,serif; --sans:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
@@ -72,3 +72,4 @@ td:nth-child(2){color:var(--tinta-2)}
 footer{padding:48px 0 64px;font-size:13.5px;color:var(--apagado)}
 footer .w{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
 :focus-visible{outline:2px solid var(--ouro);outline-offset:3px}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
