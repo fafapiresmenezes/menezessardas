@@ -6,6 +6,7 @@ import Marca from './Marca'
 import { ehSede } from '@/lib/equipe'
 import Busca from './Busca'
 import BoasVindas from './BoasVindas'
+import TourTela from './TourTela'
 import ExigirDoisFatores from './ExigirDoisFatores'
 import AceiteContratoSaas from './AceiteContratoSaas'
 import AceiteTermos from './AceiteTermos'
@@ -171,6 +172,7 @@ export default function Layout({ children, title }: LayoutProps) {
         <header className="bg-white border-b border-navy/10 px-4 md:px-8 py-5 flex items-center justify-between gap-4">
           <h1 className="font-serif text-2xl md:text-3xl text-navy truncate">{title}</h1>
           <div className="flex items-center gap-2 flex-shrink-0">
+          <TourTela />
           {admin && (
             <button
               onClick={() => navigate('/equipe')}

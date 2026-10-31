@@ -225,3 +225,6 @@ html.dark { color-scheme: dark; }
 .dark .from-white { --tw-gradient-from: #131C2E var(--tw-gradient-from-position); --tw-gradient-to: rgb(19 28 46 / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
 .dark .to-pergaminho { --tw-gradient-to: #1B2740 var(--tw-gradient-to-position); }
 .dark .bg-gray-100 { background-color: #0B1220; } .dark .text-gray-600 { color: #A7B0BE; }
+
+/* Passo 52: destaque do tour guiado */
+.tour-destaque { outline: 3px solid #B08D57 !important; outline-offset: 3px; box-shadow: 0 0 0 6px rgba(176, 141, 87, 0.25); transition: outline-color .2s; }
