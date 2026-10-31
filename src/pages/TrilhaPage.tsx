@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { mensagemAmigavel } from '@/lib/erros'
 import Layout from '@/components/Layout'
 import {
   listarTrilha,
@@ -75,7 +76,7 @@ export default function TrilhaPage() {
       setExportacao({ sha256: r.sha256, total: r.total, calendario: r.calendario })
       await carregar()
     } catch (e) {
-      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Falha ao exportar.' })
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
     } finally { setExportando(false) }
   }
 
@@ -100,7 +101,7 @@ export default function TrilhaPage() {
       setLastros(null)
       await carregar()
     } catch (e) {
-      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Falha ao ancorar.' })
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
     } finally {
       setAncorando(false)
     }

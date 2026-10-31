@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Vazio from '@/components/Vazio'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { UserCheck, History, RefreshCw } from 'lucide-react'
@@ -102,7 +103,7 @@ export default function KycPage() {
           </div>
           <p className="text-sm text-grafite-claro mt-1">Cada checagem fica guardada com data e resultado. O robô reconsulta cada contraparte 90 dias depois da última checagem e avisa em Alertas quando o status muda.</p>
           {msgRecon && <p role="status" className="text-sm mt-2" data-testid="kyc-msg-recon">{msgRecon}</p>}
-          {historico.length === 0 ? <p className="text-sm text-grafite-claro mt-3" data-testid="kyc-historico-vazio">Nenhuma checagem guardada ainda.</p> : (
+          {historico.length === 0 ? <Vazio testid="kyc-historico-vazio" titulo="Nenhuma checagem guardada ainda" texto="Digite um CPF ou CNPJ acima e clique em Checar: o resultado fica guardado aqui com data." /> : (
             <table className="w-full text-sm mt-3">
               <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite-claro"><th className="py-1">Data</th><th>Contraparte</th><th>Risco</th><th>Próxima reconsulta</th></tr></thead>
               <tbody className="divide-y divide-navy/10">

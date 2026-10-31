@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import Vazio from '@/components/Vazio'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
@@ -203,7 +204,7 @@ export default function ImovelDetailPage() {
               ))}
             </ul>
           ) : (
-            <p className="bg-white p-5 shadow-sm text-sm text-grafite-claro">Nenhum compromisso nos próximos 400 dias.</p>
+            <div className="bg-white shadow-sm"><Vazio titulo="Nenhum compromisso nos próximos 400 dias" texto="Os prazos aparecem aqui quando o imóvel tiver contrato com datas." acao={{ rotulo: 'Ver agenda', para: '/agenda' }} /></div>
           )}
         </section>
 

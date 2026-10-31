@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { mensagemAmigavel } from '@/lib/erros'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import Marca from '@/components/Marca'
@@ -24,7 +25,7 @@ export default function ConviteParceiroPage() {
       const { error: e2 } = await supabase.auth.signInWithPassword({ email: data.email, password: senha })
       if (e2) throw new Error('Acesso criado. Entre com seu e-mail e senha.')
       setMsg('Acesso criado. Entrando…'); navigate('/inicio')
-    } catch (e) { setMsg(e instanceof Error ? e.message : 'Erro') } finally { setOcupado(false) }
+    } catch (e) { setMsg(mensagemAmigavel(e)) } finally { setOcupado(false) }
   }
   return (
     <main className="min-h-screen bg-pergaminho">

@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useMemo, useState } from 'react'
+import { mensagemAmigavel } from '@/lib/erros'
 import Layout from '@/components/Layout'
 import GraficoTendencia from '@/components/GraficoTendencia'
 import CalibracaoPrevisoes from '@/components/CalibracaoPrevisoes'
@@ -135,10 +136,10 @@ export default function IndicadoresPage() {
       const selo = await selarDigest(sha256)
       const { data: u } = await supabase.auth.getUser()
       const { error } = await supabase.from('revisoes_okr').insert({ trimestre, ata: ata.trim(), okrs: snapshot, sha256, ots_b64: selo ? btoa(String.fromCharCode(...selo.ots)) : null, calendario: selo?.calendario ?? null, criado_por: u.user?.id ?? null })
-      if (error) throw new Error(error.message)
+      if (error) throw new Error(mensagemAmigavel(error))
       setMsgAta(`Ata do ${trimestre} gravada. SHA-256 ${sha256.slice(0, 16)}…${selo ? ` · selo enviado a ${selo.calendario.replace('https://', '')}` : ' · selo não obtido agora'}`)
       setAta(''); carregarRevisoes()
-    } catch (e) { setMsgAta(`Não foi possível gravar: ${e instanceof Error ? e.message : e}`) } finally { setGravandoAta(false) }
+    } catch (e) { setMsgAta(`Não foi possível gravar: ${e instanceof Error ? mensagemAmigavel(e) : e}`) } finally { setGravandoAta(false) }
   }
 
   useEffect(() => {
@@ -164,10 +165,10 @@ export default function IndicadoresPage() {
     setErroResumo('')
     try {
       const { data, error } = await supabase.functions.invoke('agente-guardiao')
-      if (error) throw new Error(error.message)
+      if (error) throw new Error(mensagemAmigavel(error))
       setResumoDiario(data as ResumoDiario)
     } catch (e) {
-      setErroResumo(e instanceof Error ? e.message : 'Erro ao carregar resumo')
+      setErroResumo(mensagemAmigavel(e))
     } finally {
       setCarregandoResumo(false)
     }

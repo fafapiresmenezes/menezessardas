@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Vazio from '@/components/Vazio'
 import Layout from '@/components/Layout'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { useImoveis } from '@/hooks/useImoveis'
@@ -185,7 +186,7 @@ export default function RelatóriosPage() {
               Compromissos por natureza
             </h2>
             {porTipoAlerta.length === 0 ? (
-              <p className="text-sm text-grafite-claro">Nenhum compromisso neste horizonte.</p>
+              <Vazio titulo="Nenhum compromisso neste horizonte" texto="Escolha um horizonte maior ou cadastre prazos nos contratos." />
             ) : (
               <div className="space-y-3">
                 {porTipoAlerta.map(([tipo, n]) => (

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { mensagemAmigavel } from '@/lib/erros'
 import { useNavigate } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { entrarDemo } from '@/lib/authDemo'
@@ -60,7 +61,7 @@ export default function LoginPage() {
       }
       try {
         const { error } = await supabase.auth.signUp({ email, password: senha })
-        if (error) setErro('Não foi possível criar o acesso: ' + error.message)
+        if (error) setErro('Não foi possível criar o acesso: ' + mensagemAmigavel(error))
         else {
           setAvisoCadastro('Cadastro recebido. Um administrador do escritório vai liberar o seu acesso; depois é só entrar com este e-mail e senha.')
           setPrimeiroAcesso(false)
@@ -76,8 +77,8 @@ export default function LoginPage() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password: senha })
       if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else navigate('/inicio') }
-      else if (error.status === 400 || error.status === 401 || /invalid/i.test(error.message)) setErro('E-mail ou senha incorretos.')
-      else setErro('Não foi possível falar com o servidor (' + error.message + '). Verifique a conexão e tente de novo.')
+      else if (error.status === 400 || error.status === 401 || /invalid/i.test(mensagemAmigavel(error))) setErro('E-mail ou senha incorretos.')
+      else setErro('Não foi possível falar com o servidor (' + mensagemAmigavel(error) + '). Verifique a conexão e tente de novo.')
     } catch {
       setErro('Não foi possível falar com o servidor. Verifique a conexão e tente de novo.')
     } finally {

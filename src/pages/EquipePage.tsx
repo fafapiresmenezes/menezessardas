@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { mensagemAmigavel } from '@/lib/erros'
 import Layout from '@/components/Layout'
 import TesteGeral from '@/components/TesteGeral'
 import TesteTelas from '@/components/TesteTelas'
@@ -42,7 +43,7 @@ export default function EquipePage() {
       }
     } catch (e) {
       setPerfil(null)
-      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível carregar a equipe.' })
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
     }
   }
 
@@ -58,7 +59,7 @@ export default function EquipePage() {
       const senha = await definirSenhaProvisoria(pessoa)
       setMsg({ tipo: 'ok', texto: `Senha provisória de ${pessoa.nome}: ${senha} — copie e entregue a ela; ela troca em Configurações → Senha. Esta senha não aparece de novo.` })
     } catch (e) {
-      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível definir a senha provisória.' })
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
     } finally {
       setOcupado('')
     }
@@ -74,7 +75,7 @@ export default function EquipePage() {
       setMsg({ tipo: 'ok', texto: `${pessoa.nome}: ${rotuloFuncao[funcao ?? 'nenhuma']}.` })
       setPessoas(await listarPessoas())
     } catch (e) {
-      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível alterar o acesso.' })
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
     } finally {
       setOcupado('')
     }

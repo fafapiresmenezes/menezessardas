@@ -1,11 +1,12 @@
 import { FunctionRegion } from '@supabase/supabase-js'
+import Vazio from '@/components/Vazio'
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { perfilAtual } from '@/lib/equipe'
 import { formatarData, diasAte } from '@/lib/datas'
 import SeloSituacao from '@/components/SeloSituacao'
-import { Inbox, RefreshCw, ExternalLink } from 'lucide-react'
+import { RefreshCw, ExternalLink } from 'lucide-react'
 
 // Caixa de intimações: publicações do Diário de Justiça Eletrônico Nacional (Comunica PJe, CNJ)
 // para as OABs do escritório. Busca diária automática e botão "Buscar agora". Gratuito.
@@ -114,7 +115,7 @@ export default function IntimacoesPage() {
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-grafite-claro flex items-center gap-2"><Inbox size={16} aria-hidden="true" /> Nenhuma intimação {filtro === 'novas' ? 'não lida' : 'guardada'}.</p>
+          <Vazio titulo={`Nenhuma intimação ${filtro === 'novas' ? 'não lida' : 'guardada'}`} texto="A busca roda todo dia às 7h para as OABs cadastradas. Se faltar alguma OAB, cadastre em Configurações." acao={{ rotulo: 'Cadastrar OABs', para: '/settings' }} />
         )}
       </div>
     </Layout>

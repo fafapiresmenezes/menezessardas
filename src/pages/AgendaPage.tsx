@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
+import Vazio from '@/components/Vazio'
+import { mensagemAmigavel } from '@/lib/erros'
 import EscolhaAvisos from '@/components/EscolhaAvisos'
 import { useNavigate } from 'react-router-dom'
 import Layout from '@/components/Layout'
@@ -37,7 +39,7 @@ export default function AgendaPage() {
     setMsgSemana('')
     const inicio = new Date(Date.now() + 86400000).toISOString().slice(0, 10)
     const { data, error } = await supabase.rpc('semana_agenda', { p_inicio: inicio, p_dias: 7 })
-    if (error) { setMsgSemana(error.message); return }
+    if (error) { setMsgSemana(mensagemAmigavel(error)); return }
     const sem = data as { inicio: string; fim: string; total: number; dias: { dia: string; itens: { tipo: string; titulo: string; detalhe: string; responsavel: string }[] }[] }
     const br = (d: string) => d.split('-').reverse().join('/')
     const L: { texto: string; tamanho?: number; negrito?: boolean }[] = [{ texto: `Semana de ${br(sem.inicio)} a ${br(sem.fim)}`, tamanho: 16, negrito: true }, { texto: `${sem.total} item(ns): prazos de casos e compromissos, por dia e responsável.`, tamanho: 9 }, { texto: ' ' }]
@@ -62,13 +64,13 @@ export default function AgendaPage() {
       const r = await importarCompromissosIcs(eventos)
       await recarregar()
       setMsgSemana(`Importação concluída: ${r.criados} compromisso(s) criado(s), ${r.repetidos} já existia(m) e foram pulados.`)
-    } catch (e) { setMsgSemana('Não foi possível importar: ' + (e instanceof Error ? e.message : String(e))) }
+    } catch (e) { setMsgSemana('Não foi possível importar: ' + (e instanceof Error ? mensagemAmigavel(e) : String(e))) }
   }
   const enviarSemanaTeste = async () => {
     setMsgSemana('Enviando…')
     const { data, error } = await supabase.functions.invoke('semana-pdf', { body: { teste: true } })
     const r = (data ?? {}) as { enviado?: boolean; total?: number; motivo?: string; detalhe?: string }
-    setMsgSemana(error ? error.message : r.enviado ? `E-mail de teste enviado para você com ${r.total} item(ns).` : `Não enviado: ${r.motivo ?? r.detalhe ?? 'erro'}`)
+    setMsgSemana(error ? mensagemAmigavel(error) : r.enviado ? `E-mail de teste enviado para você com ${r.total} item(ns).` : `Não enviado: ${r.motivo ?? r.detalhe ?? 'erro'}`)
   }
   // Passo 19: roteiro do Outlook por e-mail e resultado do teste (configuracoes.teste_outlook, só admin lê e grava).
   const [testeOutlook, setTesteOutlook] = useState<{ enviado_em?: string; para?: string[]; resultado?: string; em?: string } | null>(null)
@@ -85,7 +87,7 @@ export default function AgendaPage() {
       if (error || data?.erro) throw new Error(data?.erro ?? error?.message)
       setMsgRoteiro(`Roteiro enviado para ${(data.para as string[]).join(', ')}.`)
       if (para === 'fatima') setTesteOutlook({ enviado_em: new Date().toISOString(), para: data.para, resultado: 'pendente' })
-    } catch (e) { setMsgRoteiro(`Não foi possível enviar: ${e instanceof Error ? e.message : e}`) } finally { setEnviandoRoteiro(false) }
+    } catch (e) { setMsgRoteiro(`Não foi possível enviar: ${e instanceof Error ? mensagemAmigavel(e) : e}`) } finally { setEnviandoRoteiro(false) }
   }
   const marcarTesteOutlook = async (resultado: 'funcionou' | 'nao_funcionou') => {
     const novo = { ...(testeOutlook ?? {}), resultado, em: new Date().toISOString() }
@@ -333,7 +335,7 @@ export default function AgendaPage() {
             Compromissos de {MESES[mes]}
           </h3>
           {doMes.length === 0 ? (
-            <p className="text-sm text-grafite-claro p-5">Nenhum compromisso neste mês.</p>
+            <Vazio titulo="Nenhum compromisso neste mês" texto="Toque em um dia para criar o primeiro, ou importe um .ics do Outlook." />
           ) : (
             <ul className="divide-y divide-navy/10 mt-3">
               {doMes.map(a => (

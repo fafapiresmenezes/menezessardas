@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { mensagemAmigavel } from '@/lib/erros'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { repositorio, type Imovel } from '@/lib/repositorio'
@@ -49,7 +50,7 @@ export default function ProjetosPage() {
 
   const carregar = async () => {
     const { data, error } = await supabase.from('tarefas').select('id,pai_id,nivel,titulo,situacao,prioridade,responsavel_id,imovel_id,prazo,horas,cliente,area,numero_processo,tipo,portal_token,portal_expira_em,depende_de,criado_em').order('criado_em')
-    if (error) return setErro(error.message)
+    if (error) return setErro(mensagemAmigavel(error))
     setTarefas((data ?? []) as Tarefa[])
   }
   useEffect(() => {
@@ -78,7 +79,7 @@ export default function ProjetosPage() {
       titulo: novo.titulo.trim(), nivel: novo.nivel, pai_id: pai, prioridade: novo.prioridade,
       responsavel_id: novo.responsavel_id || null, prazo: novo.prazo || null, imovel_id: novo.imovel_id || null,
     })
-    if (error) return setErro(error.message)
+    if (error) return setErro(mensagemAmigavel(error))
     setNovo({ ...novo, titulo: '', prazo: '' }); carregar()
   }
   // Cria o caso inteiro de uma vez: o projeto e as etapas do modelo, com prazos já calculados.
@@ -113,7 +114,7 @@ export default function ProjetosPage() {
       // Passo 32: todo link do Portal vale 90 dias; link expirado ganha um código novo.
       token = Array.from(crypto.getRandomValues(new Uint8Array(24)), b => b.toString(16).padStart(2, '0')).join('')
       const { error } = await supabase.from('tarefas').update({ portal_token: token, portal_expira_em: new Date(Date.now() + 90 * 864e5).toISOString() }).eq('id', c.id)
-      if (error) return setErro(error.message)
+      if (error) return setErro(mensagemAmigavel(error))
       carregar()
     }
     const url = `${location.origin}${location.pathname}#/portal/${token}`
@@ -123,19 +124,19 @@ export default function ProjetosPage() {
   // Passo 32: revogar (apaga o código: o link para de funcionar na hora) e renovar (mais 90 dias com o mesmo link).
   const revogarLink = async () => {
     const { error } = await supabase.from('tarefas').update({ portal_token: null, portal_expira_em: null }).eq('id', projeto)
-    if (error) return setErro(error.message)
+    if (error) return setErro(mensagemAmigavel(error))
     setLinkPortal(''); carregar()
   }
   const renovarLink = async () => {
     const { error } = await supabase.from('tarefas').update({ portal_expira_em: new Date(Date.now() + 90 * 864e5).toISOString() }).eq('id', projeto)
-    if (error) return setErro(error.message)
+    if (error) return setErro(mensagemAmigavel(error))
     carregar()
   }
   const casoAtual = tarefas.find(t => t.id === projeto)
   const mover = async (t: Tarefa, situacao: Situacao) => {
     setTarefas(ts => ts.map(x => (x.id === t.id ? { ...x, situacao } : x)))
     const { error } = await supabase.from('tarefas').update({ situacao, atualizado_em: new Date().toISOString() }).eq('id', t.id)
-    if (error) { setErro(error.message); carregar() }
+    if (error) { setErro(mensagemAmigavel(error)); carregar() }
   }
   const somarHoras = async (t: Tarefa) => {
     const h = Number(prompt('Quantas horas trabalhou nesta tarefa agora?', '1')?.replace(',', '.'))
@@ -147,7 +148,7 @@ export default function ProjetosPage() {
     if (dep === t.id) return
     setTarefas(ts => ts.map(x => (x.id === t.id ? { ...x, depende_de: dep || null } : x)))
     const { error } = await supabase.from('tarefas').update({ depende_de: dep || null }).eq('id', t.id)
-    if (error) { setErro(error.message); carregar() }
+    if (error) { setErro(mensagemAmigavel(error)); carregar() }
   }
   // Caminho crítico e previsão de conclusão do projeto escolhido (Passo 30).
   const cronograma = useMemo(() => {

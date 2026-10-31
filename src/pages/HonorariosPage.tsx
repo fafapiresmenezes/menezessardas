@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { mensagemAmigavel } from '@/lib/erros'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { formatarData, diasAte } from '@/lib/datas'
@@ -29,7 +30,7 @@ export default function HonorariosPage() {
     const valor = Number(String(baixa.valor).replace(',', '.'))
     if (!valor || valor <= 0) return setMsgBaixa('Informe um valor maior que zero.')
     const { error } = await supabase.from('pagamentos_honorarios').insert({ caso_id: baixa.caso.id, data: baixa.data, valor, meio: baixa.meio, observacao: baixa.observacao.trim() || null })
-    if (error) return setMsgBaixa(error.message)
+    if (error) return setMsgBaixa(mensagemAmigavel(error))
     setMsgBaixa(`Pagamento de ${brl(valor)} registrado em ${formatarData(baixa.data)} (${MEIOS[baixa.meio]}).`); setBaixa(null); carregar()
   }
   const apagarPagamento = async (p: Pagamento) => { await supabase.from('pagamentos_honorarios').delete().eq('id', p.id); carregar() }
@@ -40,7 +41,7 @@ export default function HonorariosPage() {
       supabase.from('lancamentos_horas').select('cliente,minutos,valor_hora'),
       supabase.from('pagamentos_honorarios').select('id,caso_id,data,valor,meio,observacao').order('data', { ascending: false }),
     ])
-    if (c.error) setErro(c.error.message)
+    if (c.error) setErro(mensagemAmigavel(c.error))
     setCasos((c.data ?? []) as Caso[]); setHoras((h.data ?? []) as Hora[]); setPagamentos((pg.data ?? []) as Pagamento[])
   }
   useEffect(() => { carregar() }, [])
@@ -54,7 +55,7 @@ export default function HonorariosPage() {
   const salvar = async (c: Caso) => {
     const e = editando[c.id]; if (!e) return
     const { error } = await supabase.from('tarefas').update({ honorario_previsto: Number(e.honorario_previsto ?? c.honorario_previsto) || 0, honorario_recebido: Number(e.honorario_recebido ?? c.honorario_recebido) || 0, vencimento_honorario: e.vencimento_honorario === '' ? null : (e.vencimento_honorario ?? c.vencimento_honorario) }).eq('id', c.id)
-    if (error) return setErro(error.message)
+    if (error) return setErro(mensagemAmigavel(error))
     setEditando(x => { const y = { ...x }; delete y[c.id]; return y }); carregar()
   }
   // Régua de cobrança: situação do honorário pelo vencimento e saldo em aberto.

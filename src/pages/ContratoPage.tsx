@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
+import Vazio from '@/components/Vazio'
+import { mensagemAmigavel } from '@/lib/erros'
 import EscolhaAvisos from '@/components/EscolhaAvisos'
 import BotaoAuditar from '@/components/BotaoAuditar'
 import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom'
@@ -89,7 +91,7 @@ export default function ContratoPage() {
     try {
       caminhoStorage = await enviarArquivo(arquivo, contrato ? `contratos/${contrato.id}` : `imoveis/${id}`)
     } catch (e) {
-      setErro(e instanceof Error ? e.message : 'Falha ao guardar o arquivo.')
+      setErro(mensagemAmigavel(e))
       return
     }
     await repositorio.anexarDocumento(alvo, { tipo, nome: arquivo.name, caminhoStorage })
@@ -151,7 +153,7 @@ export default function ContratoPage() {
       setTimeout(() => setAvisoTopo(''), 5000)
       carregar()
     } catch (e) {
-      setErro('Não foi possível salvar: ' + (e instanceof Error ? e.message : 'erro desconhecido'))
+      setErro('Não foi possível salvar: ' + (mensagemAmigavel(e)))
     }
   }
 
@@ -165,7 +167,7 @@ export default function ContratoPage() {
       setTimeout(() => setAvisoTopo(''), 6000)
       carregar()
     } catch (e) {
-      setErro('Não foi possível encerrar: ' + (e instanceof Error ? e.message : 'erro desconhecido'))
+      setErro('Não foi possível encerrar: ' + (mensagemAmigavel(e)))
     }
   }
 
@@ -177,7 +179,7 @@ export default function ContratoPage() {
       setAnalise(await analisarContrato(alvo, imovel, origem))
       setAnaliseEm(new Date().toISOString())
     } catch (e) {
-      setErroAnalise('Não foi possível analisar agora: ' + (e instanceof Error ? e.message : 'erro desconhecido'))
+      setErroAnalise('Não foi possível analisar agora: ' + (mensagemAmigavel(e)))
     } finally {
       setAnalisando(false)
     }
@@ -204,7 +206,7 @@ export default function ContratoPage() {
     try {
       window.open(await urlAssinada(doc.caminhoStorage), '_blank', 'noopener')
     } catch (e) {
-      setErro(e instanceof Error ? e.message : 'Não foi possível abrir o arquivo.')
+      setErro(mensagemAmigavel(e))
     }
   }
 
@@ -422,7 +424,7 @@ export default function ContratoPage() {
             </div>
           </div>
           {vinculados.length === 0 ? (
-            <p className="text-sm text-grafite-claro">Nenhum aditivo ou subcontrato vinculado a este contrato.</p>
+            <Vazio titulo="Nenhum aditivo ou subcontrato" texto="Quando houver um aditivo, vincule-o aqui para manter a cadeia do contrato." />
           ) : (
             <ul className="divide-y divide-navy/10">
               {vinculados.map(v => {

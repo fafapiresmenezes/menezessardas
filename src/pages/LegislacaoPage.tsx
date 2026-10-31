@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { mensagemAmigavel } from '@/lib/erros'
 import { AREAS_DIREITO, gravarAreaAtual, lerAreaAtual } from '@/lib/assistente'
 import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
@@ -66,7 +67,7 @@ export default function LegislacaoPage() {
     try {
       setBusca(await buscarNovidades())
     } catch (e) {
-      setErro('Não foi possível consultar o LexML agora: ' + (e instanceof Error ? e.message : 'erro desconhecido'))
+      setErro('Não foi possível consultar o LexML agora: ' + (mensagemAmigavel(e)))
     } finally {
       setBuscando(false)
     }
@@ -108,7 +109,7 @@ export default function LegislacaoPage() {
     try {
       await definirStatus(n, status)
     } catch (e) {
-      setErro('Não foi possível salvar o acompanhamento: ' + (e instanceof Error ? e.message : 'erro desconhecido'))
+      setErro('Não foi possível salvar o acompanhamento: ' + (mensagemAmigavel(e)))
     }
   }
 

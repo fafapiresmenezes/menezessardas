@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
+import Vazio from '@/components/Vazio'
+import { mensagemAmigavel } from '@/lib/erros'
 import CalibracaoPrevisoes from '@/components/CalibracaoPrevisoes'
 import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
@@ -60,7 +62,7 @@ function LinhaContrato({ p, aoRegistrar }: { p: PrevisaoContrato; aoRegistrar?: 
   async function desfecho(d: { inadimplente?: boolean; renovou?: boolean }) {
     if (!supabaseConfigurado) { setMsg('Disponível só com o banco conectado.'); return }
     const { data, error } = await supabase.rpc('registrar_desfecho', { p_referencia: p.contrato.id, p_desfecho: d })
-    if (error) setMsg('Não deu para registrar: ' + error.message)
+    if (error) setMsg('Não deu para registrar: ' + mensagemAmigavel(error))
     else if (!data) setMsg('Ainda não há previsão gravada para este contrato; volte amanhã, a fotografia é diária.')
     else { setMsg(`Desfecho registrado (${data} ${data > 1 ? 'previsões' : 'previsão'}). A calibração já considera.`); aoRegistrar?.() }
   }
@@ -120,11 +122,11 @@ function PainelJurimetria() {
         return
       }
       const { data, error } = await supabase.functions.invoke('jurimetria', { body: { acao, tribunal, orgao } })
-      if (error) throw new Error(error.message)
+      if (error) throw new Error(mensagemAmigavel(error))
       if (data?.erro) throw new Error(data.erro)
       setRes(data)
       registrarPrevisoes([{ tipo: 'jurimetria', referencia: `${data.tribunal}|${data.acao}|${data.orgao ?? ''}`, previsto: { chanceExito: data.chanceExito, resultados: data.resultados, taxaAcordo: data.taxaAcordo }, amostra: data.amostra, fonte: data.fonte }])
-    } catch (e) { setErro(e instanceof Error ? e.message : 'Falha na consulta ao CNJ.') } finally { setOcupado(false) }
+    } catch (e) { setErro(mensagemAmigavel(e)) } finally { setOcupado(false) }
   }
   const ic = res ? intervaloWilson(res.resultados.procedencia + res.resultados.parcial / 2, res.amostra) : null
   const campo = 'w-full min-h-[44px] border border-navy/15 px-3 text-sm bg-white focus:outline-none focus:border-dourado'
@@ -234,7 +236,7 @@ export default function PrevisoesPage() {
         <section className="bg-white p-6 shadow-sm" aria-labelledby="t-risco">
           <h2 id="t-risco" className="text-lg mb-1">Risco de inadimplência e chance de renovação, por contrato</h2>
           <p className="text-sm text-grafite-claro mb-2">Pontuação por regras declaradas (garantia, reajuste, vencimento, documentos, preço por m² frente à carteira). Clique para ver os fatores. Enquanto o escritório não registra pagamentos, é um índice de exposição, não uma probabilidade calibrada.</p>
-          {previsoes.length ? <ul>{previsoes.map(p => <LinhaContrato key={p.contrato.id} p={p} aoRegistrar={() => setVersaoCalib(v => v + 1)} />)}</ul> : <p className="text-sm text-grafite-claro">Nenhum contrato vigente.</p>}
+          {previsoes.length ? <ul>{previsoes.map(p => <LinhaContrato key={p.contrato.id} p={p} aoRegistrar={() => setVersaoCalib(v => v + 1)} />)}</ul> : <Vazio titulo="Nenhum contrato vigente" texto="As previsões aparecem assim que houver um contrato com datas e valor." acao={{ rotulo: 'Cadastrar contrato', para: '/contrato/novo' }} />}
         </section>
         <CalibracaoPrevisoes versao={versaoCalib} />
         <PainelJurimetria />

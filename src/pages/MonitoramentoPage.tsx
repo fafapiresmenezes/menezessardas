@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Vazio from '@/components/Vazio'
 import { FunctionRegion } from '@supabase/supabase-js'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
@@ -93,7 +94,7 @@ export default function MonitoramentoPage() {
                 {movsFiltrados.slice(0, 200).map((m, i) => (
                   <li key={i} className="relative" data-testid="lt-mov"><span className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-dourado" aria-hidden /><span className="text-grafite-claro w-28 inline-block">{dt(m.data)}</span>{m.nome}</li>
                 ))}
-                {!movsFiltrados.length && <li className="text-grafite-claro">Nenhum andamento no período escolhido.</li>}
+                {!movsFiltrados.length && <li><Vazio titulo="Nenhum andamento no período" texto="Amplie o período ou consulte a linha do tempo completa do processo." /></li>}
               </ol>
               <p className="text-xs text-grafite-claro mt-2">Fonte: API pública do DataJud (CNJ). Os andamentos seguem a Tabela Processual Unificada e podem chegar com atraso em relação ao sistema do tribunal.</p>
             </div>

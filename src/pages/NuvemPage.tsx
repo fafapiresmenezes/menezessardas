@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { mensagemAmigavel } from '@/lib/erros'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { Cloud, Download, Folder, FolderPlus, History, Lock, Trash2, Upload } from 'lucide-react'
@@ -26,7 +27,7 @@ export default function NuvemPage() {
   const carregar = useCallback(async () => {
     if (area === 'pessoal' && !uid) return
     const { data, error } = await supabase.storage.from('nuvem').list(pasta, { limit: 500, sortBy: { column: 'name', order: 'asc' } })
-    if (error) setMsg(error.message)
+    if (error) setMsg(mensagemAmigavel(error))
     setItens((data ?? []).filter(i => i.name !== '.pasta' && i.name !== '.versoes') as Item[])
   }, [area, uid, pasta])
   useEffect(() => { carregar() }, [carregar])
@@ -41,7 +42,7 @@ export default function NuvemPage() {
     if (!atual) return
     const carimbo = new Date().toISOString().replace(/[:.]/g, '-')
     const { error } = await supabase.storage.from('nuvem').move(`${pasta}/${n}`, `${pasta}/.versoes/${n}/${carimbo}`)
-    if (error) throw new Error(`não foi possível guardar a versão anterior: ${error.message}`)
+    if (error) throw new Error(`não foi possível guardar a versão anterior: ${mensagemAmigavel(error)}`)
     const todas = await listarVersoes(n)
     const sobras = todas.slice(MAX_VERSOES).map(v => `${pasta}/.versoes/${n}/${v.name}`)
     if (sobras.length) await supabase.storage.from('nuvem').remove(sobras)
@@ -56,10 +57,10 @@ export default function NuvemPage() {
     try {
       await arquivarVersao(n)
       const { error } = await supabase.storage.from('nuvem').copy(`${pasta}/.versoes/${n}/${versao}`, `${pasta}/${n}`)
-      if (error) throw new Error(error.message)
+      if (error) throw new Error(mensagemAmigavel(error))
       setMsg(`Versão de ${fmtCarimbo(versao)} restaurada.`)
       await carregar(); setVersoes(await listarVersoes(n))
-    } catch (e) { setMsg(e instanceof Error ? e.message : String(e)) }
+    } catch (e) { setMsg(e instanceof Error ? mensagemAmigavel(e) : String(e)) }
     setOcupado(false)
   }
   const fmtCarimbo = (c: string) => {
@@ -75,28 +76,28 @@ export default function NuvemPage() {
       const nome = a.name.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\w.\- ]/g, '_')
       try {
         if (itens.some(i => i.name === nome && i.id !== null)) await arquivarVersao(nome)
-      } catch (e) { setMsg(`${a.name}: ${e instanceof Error ? e.message : String(e)}`); continue }
+      } catch (e) { setMsg(`${a.name}: ${e instanceof Error ? mensagemAmigavel(e) : String(e)}`); continue }
       const { error } = await supabase.storage.from('nuvem').upload(`${pasta}/${nome}`, a, { upsert: false })
-      if (error) setMsg(`${a.name}: ${error.message.includes('row-level') ? 'sem permissão para enviar aqui' : error.message}`)
+      if (error) setMsg(`${a.name}: ${mensagemAmigavel(error).includes('row-level') ? 'sem permissão para enviar aqui' : mensagemAmigavel(error)}`)
     }
     setOcupado(false); setVersoesDe(null); carregar()
   }
   const baixar = async (n: string) => {
     const { data, error } = await supabase.storage.from('nuvem').createSignedUrl(`${pasta}/${n}`, 60, { download: n })
-    if (error) return setMsg(error.message)
+    if (error) return setMsg(mensagemAmigavel(error))
     window.location.href = data.signedUrl
   }
   const apagar = async (n: string) => {
     if (!confirm(`Apagar ${n}?`)) return
     const { data, error } = await supabase.storage.from('nuvem').remove([`${pasta}/${n}`])
-    setMsg(error ? error.message : data?.length ? '' : 'Sem permissão para apagar.')
+    setMsg(error ? mensagemAmigavel(error) : data?.length ? '' : 'Sem permissão para apagar.')
     carregar()
   }
   const novaPasta = async () => {
     const n = prompt('Nome da nova pasta')?.trim().replace(/[^\w\- ]/g, '_')
     if (!n) return
     const { error } = await supabase.storage.from('nuvem').upload(`${pasta}/${n}/.pasta`, new Blob(['']))
-    if (error) setMsg(error.message)
+    if (error) setMsg(mensagemAmigavel(error))
     carregar()
   }
   const kb = (b?: number) => (b == null ? '' : b > 1048576 ? `${(b / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1024))} KB`)

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { mensagemAmigavel } from '@/lib/erros'
 import DoisFatores from '../components/DoisFatores'
 import EstiloEscrita from '../components/EstiloEscrita'
 import AvaliacaoSUS from '../components/AvaliacaoSUS'
@@ -215,12 +216,12 @@ function SecaoSenha() {
     setOcupado(true)
     try {
       const { error } = await supabase.auth.updateUser({ password: nova })
-      if (error) throw new Error(error.message)
+      if (error) throw new Error(mensagemAmigavel(error))
       setNova('')
       setConfirma('')
       setMsg({ tipo: 'ok', texto: 'Senha alterada. Use a nova senha no próximo acesso.' })
     } catch (e) {
-      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível alterar a senha.' })
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
     } finally {
       setOcupado(false)
     }
@@ -310,7 +311,7 @@ function SecaoChaveIA() {
     try {
       setEstado(await estadoChaveIA())
     } catch (e) {
-      setMsg({ tipo: 'erro', texto: 'Não foi possível consultar a chave: ' + (e instanceof Error ? e.message : 'erro desconhecido') })
+      setMsg({ tipo: 'erro', texto: 'Não foi possível consultar a chave: ' + (mensagemAmigavel(e)) })
     }
   }
 
@@ -328,7 +329,7 @@ function SecaoChaveIA() {
       setMsg({ tipo: 'ok', texto: 'Chave salva no servidor. Clique em "Testar a IA" para confirmar que ela funciona.' })
       await carregar()
     } catch (e) {
-      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível salvar a chave.' })
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
     } finally {
       setOcupado('')
     }
@@ -341,7 +342,7 @@ function SecaoChaveIA() {
       const r = await testarChaveIA()
       setMsg({ tipo: 'ok', texto: `A IA respondeu. Tudo certo para analisar contratos (modelo ${r.modelo}).` })
     } catch (e) {
-      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível testar a IA.' })
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
     } finally {
       setOcupado('')
     }
@@ -356,7 +357,7 @@ function SecaoChaveIA() {
       setMsg({ tipo: 'ok', texto: 'Chave removida.' })
       await carregar()
     } catch (e) {
-      setMsg({ tipo: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível remover a chave.' })
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
     } finally {
       setOcupado('')
     }
@@ -489,7 +490,7 @@ function SecaoEmail() {
     for (const [c, v] of [['email_remetente', remetente], ['brevo_api_key', chave]] as const) {
       if (!v.trim()) continue
       const { error } = await supabase.rpc('definir_configuracao', { p_chave: c, p_valor: v })
-      if (error) { setOcupado(''); return setMsg({ tipo: 'erro', texto: error.message }) }
+      if (error) { setOcupado(''); return setMsg({ tipo: 'erro', texto: mensagemAmigavel(error) }) }
     }
     setOcupado(''); setChave(''); setRemetente('')
     setMsg({ tipo: 'ok', texto: 'Salvo. Clique em "Enviar e-mail de teste".' }); carregar()
@@ -567,7 +568,7 @@ function SecaoEscavador() {
     setOcupado('salvando'); setMsg(null)
     const { error } = await supabase.rpc('definir_configuracao', { p_chave: 'escavador_api_key', p_valor: chave })
     setOcupado('')
-    if (error) return setMsg({ tipo: 'erro', texto: error.message })
+    if (error) return setMsg({ tipo: 'erro', texto: mensagemAmigavel(error) })
     setChave(''); await carregar(); testar()
   }
   return (
@@ -601,7 +602,7 @@ function SecaoIcs() {
   const mudar = async (v: boolean) => {
     setLigado(v)
     const { error } = await supabase.rpc('definir_ics_por_email', { p_ligado: v })
-    setMsg(error ? error.message : v ? 'Ligado: você recebe o convite .ics a cada prazo ou compromisso novo ou alterado.' : 'Desligado.')
+    setMsg(error ? mensagemAmigavel(error) : v ? 'Ligado: você recebe o convite .ics a cada prazo ou compromisso novo ou alterado.' : 'Desligado.')
   }
   return (
     <section aria-labelledby="ics" className="max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado" data-testid="secao-ics">
