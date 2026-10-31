@@ -27,6 +27,7 @@ export default function EquipePage() {
   const [perfil, setPerfil] = useState<Funcao | null | 'carregando'>('carregando')
   const [pessoas, setPessoas] = useState<Pessoa[]>([])
   const [sede, setSede] = useState(false)
+  const [busca, setBusca] = useState('')
   const [ocupado, setOcupado] = useState<string>('')
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
   // Passo 09: aceite de termos de uso e LGPD por pessoa (data, versão e hash).
@@ -126,8 +127,21 @@ export default function EquipePage() {
                 <Users size={18} className="text-dourado" aria-hidden="true" />
                 Pessoas com acesso ({pessoas.length})
               </h2>
+              <div className="px-6 pb-3 flex flex-wrap items-center gap-3">
+                <input type="search" value={busca} onChange={e => setBusca(e.target.value)} placeholder="Buscar por nome ou e-mail" aria-label="Buscar pessoa por nome ou e-mail" className="border px-3 py-2 text-sm w-64" data-testid="busca-equipe" />
+                <p className="text-xs text-grafite flex flex-wrap gap-3" data-testid="resumo-funcoes">
+                  <span><strong>{pessoas.filter(p => !p.funcao).length}</strong> esperando liberação</span>
+                  <span><strong>{pessoas.filter(p => p.funcao === 'admin').length}</strong> admin</span>
+                  <span><strong>{pessoas.filter(p => p.funcao === 'operador').length}</strong> operador(es)</span>
+                  <span><strong>{pessoas.filter(p => p.funcao === 'leitor').length}</strong> leitor(es)</span>
+                </p>
+              </div>
               <ul className="divide-y divide-navy/5">
-                {pessoas.map(p => {
+                {pessoas
+                  .filter(p => !busca.trim() || `${p.nome} ${p.email}`.toLowerCase().includes(busca.trim().toLowerCase()))
+                  // quem ainda espera liberação aparece primeiro
+                  .sort((a, b) => Number(Boolean(a.funcao)) - Number(Boolean(b.funcao)))
+                  .map(p => {
                   const atual = p.funcao ?? 'nenhuma'
                   return (
                     <li key={p.id} className="p-4 md:px-6 flex flex-col md:flex-row md:items-center gap-3 md:gap-6">
