@@ -3,9 +3,9 @@ import EscolhaAvisos from '@/components/EscolhaAvisos'
 import { useNavigate } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
-import { useAlertas, salvarCompromisso } from '@/hooks/useAlertas'
+import { useAlertas, salvarCompromisso, importarCompromissosIcs } from '@/hooks/useAlertas'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
-import { baixarICS } from '@/lib/ics'
+import { baixarICS, lerIcs } from '@/lib/ics'
 import { gerarPdfTexto, quebrar } from '@/lib/pdfSimples'
 import { formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
 import { CalendarDays, ChevronLeft, ChevronRight, Download, Mail, ExternalLink, Plus, X } from 'lucide-react'
@@ -51,6 +51,18 @@ export default function AgendaPage() {
     const url = URL.createObjectURL(new Blob([pdf], { type: 'application/pdf' }))
     const a = document.createElement('a'); a.href = url; a.download = `semana-${sem.inicio}.pdf`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 2000)
     setMsgSemana(`PDF da semana gerado (${sem.total} item(ns)). A secretaria recebe este PDF por e-mail toda sexta às 17h.`)
+  }
+  // Passo 43: importar um .ics exportado do Outlook (sem duplicar pelo UID).
+  const importarIcs = async (arquivo: File | undefined) => {
+    if (!arquivo) return
+    setMsgSemana('Lendo o arquivo…')
+    try {
+      const eventos = lerIcs(await arquivo.text())
+      if (!eventos.length) { setMsgSemana('Nenhum compromisso com data encontrado no arquivo .ics.'); return }
+      const r = await importarCompromissosIcs(eventos)
+      await recarregar()
+      setMsgSemana(`Importação concluída: ${r.criados} compromisso(s) criado(s), ${r.repetidos} já existia(m) e foram pulados.`)
+    } catch (e) { setMsgSemana('Não foi possível importar: ' + (e instanceof Error ? e.message : String(e))) }
   }
   const enviarSemanaTeste = async () => {
     setMsgSemana('Enviando…')
@@ -218,6 +230,10 @@ export default function AgendaPage() {
             <button onClick={enviarSemanaTeste} data-testid="semana-email-teste" className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm hover:bg-white">
               <Mail size={16} aria-hidden="true" /> Testar e-mail de sexta
             </button>
+            <label className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm hover:bg-white cursor-pointer" data-testid="importar-ics">
+              <Plus size={16} aria-hidden="true" /> Importar .ics
+              <input type="file" accept=".ics,text/calendar" className="sr-only" data-testid="importar-ics-input" onChange={e => { importarIcs(e.target.files?.[0]); e.target.value = '' }} />
+            </label>
             <button
               onClick={() => baixarICS(alertas)}
               className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 rounded-sm text-sm hover:bg-pergaminho"

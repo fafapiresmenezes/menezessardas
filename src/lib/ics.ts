@@ -78,3 +78,31 @@ export function baixarICS(alertas: Alerta[], nomeArquivo = 'compromissos.ics') {
   document.body.removeChild(a)
   URL.revokeObjectURL(url)
 }
+
+// Passo 43: leitura de um .ics exportado do Outlook/Google. Lê cada VEVENT (UID, SUMMARY, DTSTART, LOCATION, DESCRIPTION);
+// linhas "dobradas" (continuação com espaço) são desdobradas; DTSTART pode ser data pura ou data-hora (usa só a data).
+export type EventoIcs = { uid: string; titulo: string; data: string; local: string }
+function desescapar(s: string): string {
+  return s.replace(/\\n/gi, ' ').replace(/\\,/g, ',').replace(/\;/g, ';').replace(/\\\\/g, '\\').trim()
+}
+export function lerIcs(texto: string): EventoIcs[] {
+  const linhas = texto.replace(/\r\n/g, '\n').replace(/\n[ \t]/g, '').split('\n')
+  const eventos: EventoIcs[] = []
+  let atual: Partial<EventoIcs> | null = null
+  for (const linha of linhas) {
+    if (linha === 'BEGIN:VEVENT') { atual = {}; continue }
+    if (linha === 'END:VEVENT') {
+      if (atual && atual.data && /^\d{4}-\d{2}-\d{2}$/.test(atual.data)) eventos.push({ uid: atual.uid || `${atual.data}-${atual.titulo || 'sem-titulo'}`, titulo: atual.titulo || 'Compromisso importado', data: atual.data, local: atual.local || '' })
+      atual = null; continue
+    }
+    if (!atual) continue
+    const i = linha.indexOf(':'); if (i < 0) continue
+    const nome = linha.slice(0, i).split(';')[0].toUpperCase(); const valor = linha.slice(i + 1)
+    if (nome === 'UID') atual.uid = valor.trim()
+    else if (nome === 'SUMMARY') atual.titulo = desescapar(valor).slice(0, 200)
+    else if (nome === 'LOCATION' && !atual.local) atual.local = desescapar(valor).slice(0, 200)
+    else if (nome === 'DESCRIPTION' && !atual.local) atual.local = desescapar(valor).slice(0, 200)
+    else if (nome === 'DTSTART') { const m = valor.match(/^(\d{4})(\d{2})(\d{2})/); if (m) atual.data = `${m[1]}-${m[2]}-${m[3]}` }
+  }
+  return eventos
+}

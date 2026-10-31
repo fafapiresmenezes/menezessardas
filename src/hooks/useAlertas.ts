@@ -41,6 +41,22 @@ export async function salvarCompromisso(c: NovoCompromisso) {
   if (error) throw error
 }
 
+// Passo 43: importa eventos de um .ics; pula os que já existem (mesmo UID no escritório) e devolve a contagem.
+export async function importarCompromissosIcs(eventos: { uid: string; titulo: string; data: string; local: string }[]): Promise<{ criados: number; repetidos: number }> {
+  if (!eventos.length) return { criados: 0, repetidos: 0 }
+  const uids = eventos.map(e => e.uid)
+  const { data: existentes, error: e1 } = await supabase.from('compromissos').select('uid_externo').in('uid_externo', uids)
+  if (e1) throw e1
+  const ja = new Set((existentes ?? []).map(x => x.uid_externo as string))
+  const vistos = new Set<string>()
+  const novos = eventos.filter(e => { if (ja.has(e.uid) || vistos.has(e.uid)) return false; vistos.add(e.uid); return true })
+  if (novos.length) {
+    const { error } = await supabase.from('compromissos').insert(novos.map(e => ({ titulo: e.titulo, imovel: e.local || 'Importado do calendário', data_evento: e.data, dias_antes: 1, avisos_dias: [1], uid_externo: e.uid })))
+    if (error) throw error
+  }
+  return { criados: novos.length, repetidos: eventos.length - novos.length }
+}
+
 export function useAlertas() {
   const [alertas, setAlertas] = useState<Alerta[]>([])
   const [loading, setLoading] = useState(true)
