@@ -80,9 +80,20 @@ export default function CompliancePage() {
     if (e3) setMsg({ ok: false, texto: 'Plano criado, mas o diagnóstico não foi gravado: ' + e3.message })
     else { setMsg({ ok: true, texto: `Diagnóstico gravado e plano de ação criado em Casos e projetos com ${ordenadas.length} tarefa(s) (prioridade alta em 30 dias, média em 60).` }); carregarHistorico() }
   }
+  // Passo 69: código de integridade (SHA-256 das respostas, empresa e data) impresso no relatório entregue ao cliente.
+  const [codigo, setCodigo] = useState('')
+  useEffect(() => {
+    if (geral === null) { setCodigo(''); return }
+    const texto = JSON.stringify({ empresa: empresa.trim(), resp, geral, data: new Date().toISOString().slice(0, 10) })
+    crypto.subtle?.digest('SHA-256', new TextEncoder().encode(texto)).then(b => setCodigo(Array.from(new Uint8Array(b), x => x.toString(16).padStart(2, '0')).join(''))).catch(() => setCodigo(''))
+  }, [resp, empresa, geral])
   return (
     <Layout title="Compliance: diagnóstico de integridade">
       <div className="space-y-6">
+        <header className="hidden print:block border-b-2 border-dourado pb-3" data-testid="cabecalho-relatorio">
+          <p className="font-serif text-2xl text-navy">GMenezes Advogados Associados</p>
+          <p className="text-sm">Relatório de diagnóstico de integridade{empresa.trim() && ` · ${empresa.trim()}`} · {new Date().toLocaleDateString('pt-BR')}</p>
+        </header>
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6 print:shadow-none">
           <p className="text-sm text-grafite-claro mb-3">Serviço para clientes do escritório: responda com o cliente e entregue o relatório. Baseado no Decreto 11.129/2022 (art. 57) e na LGPD.</p>
           <label htmlFor="empresa" className="block font-medium mb-1">Empresa avaliada</label>
@@ -119,6 +130,7 @@ export default function CompliancePage() {
             <ol className="list-decimal pl-5 text-sm space-y-1">
               {lacunas.sort((a, b) => (a.v ?? 0) - (b.v ?? 0)).map((l, i) => <li key={i}><strong>{l.pilar}:</strong> {l.acao} <span className="text-xs text-grafite-claro">({l.v === 0 ? 'prioridade alta' : 'prioridade média'}; {l.base})</span></li>)}
             </ol>
+            {codigo && <p className="text-xs text-grafite-claro mt-4 break-all" data-testid="codigo-integridade">Código de integridade (SHA-256 das respostas, empresa e data): {codigo}. Qualquer alteração nas respostas muda este código.</p>}
             <div className="flex flex-wrap gap-3 mt-4 print:hidden">
               <button type="button" onClick={() => window.print()} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2"><Printer className="w-4 h-4" aria-hidden />Imprimir ou salvar em PDF</button>
               {supabaseConfigurado && <button type="button" onClick={salvarPlano} disabled={salvando} data-testid="salvar-plano" className="min-h-[44px] border border-navy text-navy px-5 text-sm uppercase tracking-wider disabled:opacity-50">{salvando ? 'Criando…' : 'Gravar diagnóstico e criar plano em Casos e projetos'}</button>}

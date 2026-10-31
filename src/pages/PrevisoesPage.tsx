@@ -72,12 +72,13 @@ function LinhaContrato({ p, aoRegistrar }: { p: PrevisaoContrato; aoRegistrar?: 
         <span>
           <span className="block text-sm text-navy font-medium">{p.contrato.parte}</span>
           <span className="block text-xs text-grafite-claro truncate">{p.imovel?.endereco ?? 'Imóvel'}</span>
+          {p.fatoresRisco.length > 0 && <span className="block text-xs text-grafite mt-0.5" data-testid="motivos">Pesou mais: {[...p.fatoresRisco].sort((a, b) => b.pontos - a.pontos).slice(0, 3).map(f => f.fator.toLowerCase()).join('; ')}</span>}
         </span>
         <span className="flex items-center gap-2 text-xs">
           <span className="flex-1 h-2 bg-navy/10"><span className={`block h-2 ${COR[p.faixaRisco]}`} style={{ width: `${p.risco}%` }} /></span>
           <span className="w-20">Risco {ROTULO[p.faixaRisco].toLowerCase()} ({p.risco})</span>
         </span>
-        <span className="text-xs text-grafite">Renovação ~{p.renovacao}%</span>
+        <span className="text-xs text-grafite" title="Estimativa por regras declaradas; vira probabilidade calibrada quando houver desfechos registrados">Renovação ~{p.renovacao}% <span className="text-grafite-claro">(por regras)</span></span>
         {aberto ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
       </button>
       {aberto && (

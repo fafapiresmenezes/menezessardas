@@ -67,6 +67,10 @@ export default function FornecedoresPage() {
   const alternarImovel = (id: string) =>
     setImovelIds(atual => (atual.includes(id) ? atual.filter(x => x !== id) : [...atual, id]))
 
+  // Passo 70: ranking de fornecedores por SLA cumprido (sem medição vai para o fim) e por metas descumpridas.
+  const [ordem, setOrdem] = useState<'nome' | 'sla' | 'descumpridas'>('nome')
+  const nDesc = (f: (typeof lista)[number]) => f.slas.filter(x => statusSla(x).status === 'descumprido').length
+  const ordenados = [...lista].sort((a, b) => ordem === 'sla' ? (slaCumprido(b).pct ?? -1) - (slaCumprido(a).pct ?? -1) || nDesc(a) - nDesc(b) : ordem === 'descumpridas' ? nDesc(b) - nDesc(a) : a.nome.localeCompare(b.nome, 'pt-BR'))
   return (
     <Layout title="Fornecedores">
       <div className="space-y-6">
@@ -163,7 +167,16 @@ export default function FornecedoresPage() {
           <h2 id="titulo-lista-fornecedores" className="text-xl mb-1">
             Fornecedores
           </h2>
-          <p className="text-sm text-grafite-claro mb-4">Clique em um fornecedor para gerenciar KYC, certificados e metas de serviço.</p>
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <p className="text-sm text-grafite-claro">Clique em um fornecedor para gerenciar KYC, certificados e metas de serviço.</p>
+            <label className="text-sm flex items-center gap-2">Ordenar por
+              <select value={ordem} onChange={e => setOrdem(e.target.value as typeof ordem)} className="border px-2 py-2 min-h-[44px]" data-testid="ordem-fornecedores">
+                <option value="nome">Nome</option>
+                <option value="sla">Ranking de SLA (melhor primeiro)</option>
+                <option value="descumpridas">Mais metas descumpridas</option>
+              </select>
+            </label>
+          </div>
           {carregando ? (
             <p className="text-grafite-claro">Carregando…</p>
           ) : lista.length === 0 ? (
@@ -173,7 +186,7 @@ export default function FornecedoresPage() {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 gap-4">
-              {lista.map(f => {
+              {ordenados.map((f, pos) => {
                 const kyc = resumoKyc(f)
                 const descumpridos = f.slas.filter(s => statusSla(s).status === 'descumprido').length
                 const sla = slaCumprido(f)
@@ -184,7 +197,7 @@ export default function FornecedoresPage() {
                     className="text-left bg-white shadow-sm border-t-2 border-transparent hover:border-dourado p-5 transition min-h-[140px]"
                     aria-label={`${f.nome} - ${rotuloCategoria[f.categoria]}`}
                   >
-                    <p className="text-xs uppercase tracking-wider text-dourado-escuro">{rotuloCategoria[f.categoria]}</p>
+                    <p className="text-xs uppercase tracking-wider text-dourado-escuro">{ordem === 'sla' && slaCumprido(f).pct !== null && <span data-testid="posicao-sla">{pos + 1}º · </span>}{rotuloCategoria[f.categoria]}</p>
                     <h3 className="text-lg mt-1">{f.nome}</h3>
                     <p className="text-xs text-grafite-claro mt-0.5 font-mono">{formatarCnpj(f.cnpj)}</p>
                     <div className="flex flex-wrap items-center gap-2 mt-4">
