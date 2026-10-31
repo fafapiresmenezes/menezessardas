@@ -8,7 +8,8 @@ import { useImoveis } from '@/hooks/useImoveis'
 import { repositorio, type Contrato } from '@/lib/repositorio'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { preverCarteira, preverReceita, intervaloWilson, registrarPrevisoes, type Faixa, type PrevisaoContrato } from '@/lib/predicao'
-import { TrendingUp, ShieldAlert, Repeat, Scale, ChevronDown, ChevronUp, Info } from 'lucide-react'
+import { TrendingUp, ShieldAlert, Repeat, Scale, ChevronDown, ChevronUp, Info, FlaskConical } from 'lucide-react'
+import { CLASSES_LOCACAO, consultarPrevisaoInstituto, resumirPrevisaoInstituto, type PrevisaoInstituto } from '@/lib/previsaoInstituto'
 
 const moeda = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v)
 const COR: Record<Faixa, string> = { baixo: 'bg-regular', moderado: 'bg-atencao', alto: 'bg-critico' }
@@ -177,6 +178,49 @@ function PainelJurimetria() {
   )
 }
 
+// U13: cartão "Probabilidade do Instituto THEYE", ao lado das regras internas. Só lê a API do Instituto; nada do escritório é enviado.
+function PainelInstituto() {
+  const [classe, setClasse] = useState(CLASSES_LOCACAO[0])
+  const [tribunal, setTribunal] = useState('TJRJ')
+  const [res, setRes] = useState<PrevisaoInstituto | null>(null)
+  const [ocupado, setOcupado] = useState(false)
+  const [erro, setErro] = useState('')
+  const consultar = async () => {
+    setOcupado(true); setErro('')
+    try {
+      if (!supabaseConfigurado) { setRes({ convencional: { p: 0.974, ic95: [0.958, 0.986], n: 490 }, grafo: { p: 0.97 }, confianca: 'alta', placar_atual: 'inconclusivo', aviso: 'Exemplo da demonstração. Não é garantia de resultado.', fonte: 'Instituto THEYE (demonstração)' }); return }
+      setRes(await consultarPrevisaoInstituto({ tribunal, classe }))
+    } catch (e) { setErro(mensagemAmigavel(e)) } finally { setOcupado(false) }
+  }
+  const r = res ? resumirPrevisaoInstituto(res) : null
+  const campo = 'w-full min-h-[44px] border border-navy/15 px-3 text-sm bg-white focus:outline-none focus:border-dourado'
+  return (
+    <section className="bg-white p-6 shadow-sm border-t-2 border-dourado" aria-labelledby="t-instituto" data-testid="painel-instituto">
+      <h2 id="t-instituto" className="text-lg flex items-center gap-2 mb-1"><FlaskConical size={18} aria-hidden="true" /> Probabilidade do Instituto THEYE</h2>
+      <p className="text-sm text-grafite-claro mb-4">Ações de locação em seis tribunais, pela base do Instituto (DataJud anonimizado). Mostra o modelo convencional com margem de erro e o modelo por grafo, que está em teste pré-registrado. Nada do escritório é enviado ao Instituto.</p>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <label className="text-xs uppercase tracking-wider text-grafite-claro sm:col-span-2">Tipo de ação
+          <select value={classe} onChange={e => setClasse(e.target.value)} className={campo} data-testid="instituto-classe">{CLASSES_LOCACAO.map(c => <option key={c} value={c}>{c}</option>)}</select>
+        </label>
+        <label className="text-xs uppercase tracking-wider text-grafite-claro">Tribunal
+          <select value={tribunal} onChange={e => setTribunal(e.target.value)} className={campo} data-testid="instituto-tribunal">{['TJRJ', 'TJSP', 'TJMG', 'TJRS', 'TJPR', 'TJDFT'].map(t => <option key={t} value={t}>{t}</option>)}</select>
+        </label>
+      </div>
+      <button onClick={consultar} disabled={ocupado} data-testid="instituto-calcular" className="mt-3 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">{ocupado ? 'Consultando o Instituto…' : 'Calcular'}</button>
+      {erro && <p role="alert" className="text-sm text-critico mt-3" data-testid="instituto-erro">{erro}</p>}
+      {res && r && (
+        <div className="mt-5 border-t border-navy/10 pt-4 space-y-2" data-testid="instituto-resultado">
+          <p className="font-serif text-3xl text-navy">{r.titulo}</p>
+          <p className="text-sm text-grafite">{r.detalhe} · confiança {r.confianca}</p>
+          {r.grafo && <p className="text-sm text-grafite" data-testid="instituto-grafo">{r.grafo}</p>}
+          <p className="text-sm p-3 bg-atencaoFundo border-l-4 border-atencao" role="note" data-testid="instituto-aviso">{res.aviso}</p>
+          <p className="text-xs text-grafite-claro">Fonte: {res.fonte} · {tribunal} · {classe}. Mede tendência do tribunal, não o seu processo.</p>
+        </div>
+      )}
+    </section>
+  )
+}
+
 export default function PrevisoesPage() {
   const { imoveis } = useImoveis()
   const [contratos, setContratos] = useState<Contrato[]>([])
@@ -241,6 +285,7 @@ export default function PrevisoesPage() {
         </section>
         <CalibracaoPrevisoes versao={versaoCalib} />
         <PainelJurimetria />
+        <PainelInstituto />
       </div>
     </Layout>
   )
