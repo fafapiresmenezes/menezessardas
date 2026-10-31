@@ -69,8 +69,11 @@ export default function FornecedoresPage() {
 
   // Passo 70: ranking de fornecedores por SLA cumprido (sem medição vai para o fim) e por metas descumpridas.
   const [ordem, setOrdem] = useState<'nome' | 'sla' | 'descumpridas'>('nome')
+  // Passo 104: busca por nome, CNPJ ou categoria; contador "mostrando N de M".
+  const [buscaF, setBuscaF] = useState('')
+  const semAcento = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
   const nDesc = (f: (typeof lista)[number]) => f.slas.filter(x => statusSla(x).status === 'descumprido').length
-  const ordenados = [...lista].sort((a, b) => ordem === 'sla' ? (slaCumprido(b).pct ?? -1) - (slaCumprido(a).pct ?? -1) || nDesc(a) - nDesc(b) : ordem === 'descumpridas' ? nDesc(b) - nDesc(a) : a.nome.localeCompare(b.nome, 'pt-BR'))
+  const ordenados = lista.filter(f => !buscaF.trim() || semAcento([f.nome, f.cnpj ?? '', rotuloCategoria[f.categoria]].join(' ')).includes(semAcento(buscaF.trim()))).sort((a, b) => ordem === 'sla' ? (slaCumprido(b).pct ?? -1) - (slaCumprido(a).pct ?? -1) || nDesc(a) - nDesc(b) : ordem === 'descumpridas' ? nDesc(b) - nDesc(a) : a.nome.localeCompare(b.nome, 'pt-BR'))
   return (
     <Layout title="Fornecedores">
       <div className="space-y-6">
@@ -169,6 +172,7 @@ export default function FornecedoresPage() {
           </h2>
           <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <p className="text-sm text-grafite-claro">Clique em um fornecedor para gerenciar KYC, certificados e metas de serviço.</p>
+            <input type="search" value={buscaF} onChange={e => setBuscaF(e.target.value)} placeholder="Buscar nome, CNPJ ou categoria" aria-label="Buscar fornecedor" className="border px-3 py-2 text-sm w-64 min-h-[44px]" data-testid="busca-fornecedores" />
             <label className="text-sm flex items-center gap-2">Ordenar por
               <select value={ordem} onChange={e => setOrdem(e.target.value as typeof ordem)} className="border px-2 py-2 min-h-[44px]" data-testid="ordem-fornecedores">
                 <option value="nome">Nome</option>
@@ -177,6 +181,7 @@ export default function FornecedoresPage() {
               </select>
             </label>
           </div>
+          {!carregando && lista.length > 0 && <p className="text-xs text-grafite-claro mb-3" data-testid="contador-fornecedores">Mostrando {ordenados.length} de {lista.length} fornecedor(es).</p>}
           {carregando ? (
             <p className="text-grafite-claro">Carregando…</p>
           ) : lista.length === 0 ? (

@@ -163,6 +163,11 @@ export default function AssistentePage() {
   }
 
   const rotulo = ESPECIALIDADES.find(e => e.valor === especialidade)?.rotulo ?? 'Geral'
+  // Passo 107: histórico inteiro em texto (pergunta e resposta), para anexar ao caso ou enviar ao cliente.
+  const copiarHistorico = () => {
+    const blocos = historico.map(c => `[${new Date(c.criadoEm).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })} · ${ESPECIALIDADES.find(e => e.valor === c.especialidade)?.rotulo ?? 'Geral'}]\nPergunta: ${c.pergunta}\nResposta: ${c.resposta}`)
+    navigator.clipboard?.writeText(`Assistente jurídico · ${historico.length} consulta(s)\n\n${blocos.join('\n\n')}`).catch(() => undefined)
+  }
 
   return (
     <Layout title="Assistente jurídico">
@@ -251,6 +256,11 @@ export default function AssistentePage() {
           </div>
         )}
 
+        {historico.length > 0 && (
+          <div className="flex justify-end">
+            <button type="button" onClick={copiarHistorico} data-testid="copiar-historico" className="inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm"><Copy size={14} aria-hidden="true" /> Copiar histórico ({historico.length})</button>
+          </div>
+        )}
         {historico.map(c => (
           <article key={c.id} className="bg-white p-6 shadow-sm border-l-2 border-dourado" aria-label={`Consulta: ${c.pergunta}`}>
             <div className="flex items-start justify-between gap-3">

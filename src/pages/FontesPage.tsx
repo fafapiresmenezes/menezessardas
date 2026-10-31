@@ -64,10 +64,11 @@ export default function FontesPage() {
       <div className="space-y-6">
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6">
           <label htmlFor="termo" className="block font-medium mb-2">O que você quer procurar?</label>
-          <div className="flex items-center gap-2">
+          {/* Passo 106: Enter no campo dispara a busca gratuita; os cartões abaixo mostram quantas fontes atendem ao termo. */}
+          <form className="flex items-center gap-2" data-testid="form-termo" onSubmit={e => { e.preventDefault(); if (termo.trim().length >= 4 && !gratis?.carregando) buscarGratis() }}>
             <Search className="w-5 h-5 text-grafite-claro" aria-hidden />
             <input id="termo" value={termo} onChange={e => setTermo(e.target.value)} placeholder="Nome, CNPJ, número do processo ou tema" className="flex-1 border px-3 py-2" />
-          </div>
+          </form>
           <p className="text-sm text-grafite-claro mt-2">Escreva uma vez e clique na fonte: ela abre já com a busca feita.</p>
           <button type="button" onClick={buscarGratis} data-testid="buscar-gratis" disabled={termo.trim().length < 4 || !!gratis?.carregando} className="mt-3 mr-2 min-h-[44px] bg-dourado text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">
             {gratis?.carregando ? 'Buscando…' : 'Buscar grátis (fontes públicas)'}
@@ -111,6 +112,7 @@ export default function FontesPage() {
             </div>
           )}
         </section>
+        <p className="text-xs text-grafite-claro" data-testid="contador-fontes">{FONTES.length} fontes públicas e gratuitas{termo.trim() ? `, todas prontas para "${termo.trim()}"` : ''}; cada cartão abre a fonte já com o termo.</p>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FONTES.map(f => (
             <a key={f.nome} data-testid="fonte" href={f.url(termo.trim())} target="_blank" rel="noopener noreferrer" className="bg-white shadow-sm p-5 border-l-4 border-navy hover:border-dourado block">

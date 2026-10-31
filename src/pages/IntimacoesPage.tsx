@@ -64,6 +64,10 @@ export default function IntimacoesPage() {
   const ordem = { vencido: 0, critico: 1, atencao: 2, regular: 3 } as const
   const visiveis = (filtro === 'novas' ? lista.filter(i => !i.lida) : lista).filter(i => !busca.trim() || [i.numero_processo, i.tribunal, i.classe, i.orgao, i.texto, i.tipo].join(' ').toLowerCase().includes(busca.trim().toLowerCase())).sort((a, b) => (ordem[urgencia(a)?.situacao ?? 'regular'] - ordem[urgencia(b)?.situacao ?? 'regular']) || b.data_disponibilizacao.localeCompare(a.data_disponibilizacao))
 
+  const copiarResumo = () => {
+    const linhas = visiveis.map(i => { const u = urgencia(i); return `${u?.situacao === 'vencido' ? 'VENCIDA' : u?.situacao === 'critico' ? 'CRÍTICA' : u?.situacao === 'atencao' ? 'ATENÇÃO' : 'no prazo'} · ${i.numero_processo} · ${i.tribunal ?? ''} · publicada ${formatarData(i.data_disponibilizacao)}${i.lida ? '' : ' · não lida'}` })
+    navigator.clipboard?.writeText(`Intimações (${visiveis.length}) · ${new Date().toLocaleDateString('pt-BR')}\n${linhas.join('\n')}`).catch(() => undefined)
+  }
   // Resumo por urgência das não lidas: o advogado vê de cara quantas vencem primeiro.
   const resumo = lista.filter(i => !i.lida).reduce((r, i) => { const s = urgencia(i)?.situacao; if (s) r[s]++; return r }, { vencido: 0, critico: 0, atencao: 0, regular: 0 })
 
@@ -83,6 +87,8 @@ export default function IntimacoesPage() {
               </select>
             </label>
             <input type="search" value={busca} onChange={e => setBusca(e.target.value)} placeholder="Buscar processo, tribunal ou texto" aria-label="Buscar nas intimações" className="border px-3 py-2 text-sm w-64" data-testid="busca-intimacoes" />
+            {/* Passo 105: resumo das intimações visíveis em texto (processo, tribunal, prazo), para colar na agenda ou no e-mail do cliente. */}
+            {visiveis.length > 0 && <button type="button" onClick={copiarResumo} data-testid="copiar-intimacoes" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar resumo</button>}
           </div>
           <p className="flex flex-wrap gap-3 text-xs" data-testid="resumo-urgencia">
             <span><strong>{resumo.vencido}</strong> vencida(s)</span>

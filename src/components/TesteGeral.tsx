@@ -75,6 +75,11 @@ export default function TesteGeral() {
     setRodando(false)
   }
   const oks = Object.values(estados).filter(s => s.e === 'ok').length
+  const copiarRelatorio = () => {
+    const linhas = TESTES.map(t => { const r = estados[t.nome]; return `${r?.e === 'ok' ? 'OK' : r?.e === 'falhou' ? 'FALHOU' : '—'} · ${t.nome}${r?.msg ? ' · ' + r.msg : ''}${r?.ms ? ` (${r.ms} ms)` : ''}` })
+    const ok = TESTES.filter(t => estados[t.nome]?.e === 'ok').length
+    navigator.clipboard?.writeText(`Teste geral da plataforma · ${new Date().toLocaleString('pt-BR')}\n${ok} de ${TESTES.length} funções funcionando\n${linhas.join('\n')}`).catch(() => undefined)
+  }
   return (
     <section className="bg-white p-6 shadow-sm" aria-labelledby="t-testes">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
@@ -88,9 +93,17 @@ export default function TesteGeral() {
             </p>
           )}
         </div>
-        <button onClick={rodar} disabled={rodando || !supabaseConfigurado} className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">
-          <PlayCircle size={16} aria-hidden="true" /> {rodando ? 'Testando…' : 'Testar tudo'}
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button onClick={rodar} disabled={rodando || !supabaseConfigurado} className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">
+            <PlayCircle size={16} aria-hidden="true" /> {rodando ? 'Testando…' : 'Testar tudo'}
+          </button>
+          {/* Passo 103: relatório do último teste em texto, para colar num e-mail ou no Compliance. */}
+          {Object.keys(estados).length > 0 && (
+            <button type="button" onClick={copiarRelatorio} data-testid="copiar-relatorio" className="inline-flex items-center gap-2 border border-navy/20 text-navy min-h-[44px] px-4 text-sm">
+              Copiar relatório
+            </button>
+          )}
+        </div>
       </div>
       {!supabaseConfigurado && <p className="text-sm text-grafite-claro">Disponível na versão de produção.</p>}
       {historico.length > 0 && (
