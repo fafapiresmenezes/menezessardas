@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
+import ComparacaoJustica from '@/components/ComparacaoJustica'
 
 type Area = {
   area: string; nome: string; porAno: { ano: number; n: number }[]; amostra: number; fonte: string; consultadoEm: string
@@ -71,6 +72,7 @@ export default function MercadoPage() {
             )
           })}
         </div>
+        <ComparacaoJustica />
         <p className="text-xs text-grafite-claro">Método: contagem anual de processos novos (data de ajuizamento) na classe processual que representa cada área; tendência linear com intervalo de previsão de 95%. Anos recentes podem estar incompletos se o tribunal ainda não enviou tudo ao CNJ. Atualizado a cada 7 dias. Segunda fonte: Justiça em Números 2026 (base aberta do CNJ, 23/06/2026), série anual consolidada por tribunal, mesma tendência linear; a confiança combinada sobe quando as duas fontes concordam e cai quando divergem.</p>
       </div>
     </Layout>
