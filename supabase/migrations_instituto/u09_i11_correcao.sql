@@ -1,0 +1,8 @@
+-- U09 · correção de escopo em i11_avaliar (2026-10-31 20:56Z), registrada ANTES de qualquer resultado do teste.
+-- Erro: "column reference pa is ambiguous" (variável PL/pgSQL x coluna da tabela temporária _pr).
+-- A tarefa 102 falhou sem calcular nada; nenhuma métrica do bloco 6 foi vista.
+-- Mudança: só qualificar as colunas com o apelido t. Método, modelos, pesos, semente e regra do veredito ficam iguais.
+-- Original (linha 97 de u09_i11.sql):
+--   select array_agg(y order by id), array_agg(pa order by id), array_agg(pb order by id), array_agg(pc order by id), count(*) into ya, pa, pb, pc, n from _pr;
+-- Novo:
+--   select array_agg(t.y order by t.id), array_agg(t.pa order by t.id), array_agg(t.pb order by t.id), array_agg(t.pc order by t.id), count(*) into ya, pa, pb, pc, n from _pr t;

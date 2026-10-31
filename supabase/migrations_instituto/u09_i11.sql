@@ -94,7 +94,7 @@ begin
     coalesce((select (sum(t.y)+1)/(count(*)+2) from instituto.i11_base t where t.bloco<=5 and t.tribunal=b.tribunal and t.classe=b.classe),
              (select (sum(y)+1)/(count(*)+2) from instituto.i11_base where bloco<=5)) pa, qb.p pb, qc.p pc
     from instituto.i11_base b join instituto.i11_prever('B',6) qb on qb.id=b.id join instituto.i11_prever('C',6) qc on qc.id=b.id where b.bloco=6;
-  select array_agg(y order by id), array_agg(pa order by id), array_agg(pb order by id), array_agg(pc order by id), count(*) into ya, pa, pb, pc, n from _pr;
+  select array_agg(t.y order by t.id), array_agg(t.pa order by t.id), array_agg(t.pb order by t.id), array_agg(t.pc order by t.id), count(*) into ya, pa, pb, pc, n from _pr t;
   ma := instituto.i11_metricas(ya,pa); mb := instituto.i11_metricas(ya,pb); mc := instituto.i11_metricas(ya,pc);
   perform setseed(0.11);
   for i in 1..2000 loop
