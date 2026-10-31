@@ -1,0 +1,206 @@
+{
+ "passo": "U14",
+ "data": "2026-10-31",
+ "ontologia": "v0.5 + v0.6 locação",
+ "tipos_escritorio": [
+  "Contrato",
+  "Imovel",
+  "Locatario",
+  "Caso",
+  "Prazo"
+ ],
+ "valores_mapeados": 70,
+ "valores_existentes": 70,
+ "cobertura_pct": 100.0,
+ "propostas_v07": [
+  "Prazo",
+  "Garantia",
+  "Documento",
+  "TipoDeParte.fiador",
+  "relação aditiva_de",
+  "relação sublocacao_de"
+ ],
+ "mapa": {
+  "Contrato": {
+   "classe": "Contrato",
+   "relacoes": [
+    "regula (Norma→Contrato)",
+    "indexado_a (Contrato→Indicador)",
+    "objeto_de (Imovel→Contrato)"
+   ],
+   "campos": {
+    "tipo": {
+     "locacao_residencial": "Contrato[tipo=locacao_residencial] · regula N-8245-46/47 · ClasseProcessual Despejo",
+     "locacao_comercial": "Contrato[tipo=locacao_nao_residencial] · regula N-8245-51/56/57 · ClasseProcessual Renovatória",
+     "locacao_temporada": "Contrato[tipo=temporada] · regula N-8245-48/49/50",
+     "built_to_suit": "Contrato[tipo=built_to_suit] · regula N-8245-54-A",
+     "comodato": "Contrato[tipo=comodato] · fora da Lei 8.245 (Código Civil 579); fora do nicho preditivo",
+     "arrendamento": "Contrato[tipo=arrendamento] · excluído pelo N-8245-1; fora do nicho preditivo",
+     "sla": "Contrato[tipo=prestacao_servico] · fora do nicho locação",
+     "sla_fornecedor": "Contrato[tipo=prestacao_servico] · fora do nicho locação"
+    },
+    "natureza": {
+     "principal": "Contrato",
+     "aditivo": "Contrato + relação aditiva_de (P-STJ-S214: fiador só responde se anuiu)",
+     "subcontrato": "Contrato + relação sublocacao_de (N-8245-14/15/16)"
+    },
+    "status": {
+     "ativo": "Contrato[situacao=vigente]",
+     "vencido": "Contrato[situacao=prazo_indeterminado|encerrado] · T03 denúncia vazia",
+     "a_renovar": "Contrato[situacao=a_renovar] · T06 renovatória"
+    },
+    "garantia": {
+     "caucao": "Garantia[caucao] · N-8245-37-I/38",
+     "fiador": "Garantia[fianca] · N-8245-37-II · T10",
+     "seguro_fianca": "Garantia[seguro] · N-8245-37-III",
+     "titulo_capitalizacao": "Garantia[cessao_fiduciaria] · N-8245-37-IV",
+     "sem_garantia": "Garantia[ausente] · permite cobrança antecipada N-8245-42 e liminar N-8245-59-IX"
+    },
+    "indice_reajuste": {
+     "ipca": "Indicador[IPCA, BCB SGS 433]",
+     "igpm": "Indicador[IGP-M, BCB SGS 189]",
+     "inpc": "Indicador[INPC, IBGE]",
+     "fixo": "Indicador[nenhum]",
+     "sem_reajuste": "Indicador[nenhum]",
+     "outro": "Indicador[outro] · exige revisão manual"
+    },
+    "periodicidade": {
+     "mensal": "Contrato.periodicidade",
+     "trimestral": "Contrato.periodicidade",
+     "semestral": "Contrato.periodicidade",
+     "anual": "Contrato.periodicidade",
+     "unica": "Contrato.periodicidade"
+    }
+   },
+   "nao_exportado": [
+    "locatario_fornecedor",
+    "valor_periodico (só faixa agregada)",
+    "texto_extraido",
+    "caminho_arquivo",
+    "notas"
+   ]
+  },
+  "Imovel": {
+   "classe": "Imovel",
+   "relacoes": [
+    "localizado_em (Imovel→UF)",
+    "objeto_de (Imovel→Contrato)"
+   ],
+   "campos": {
+    "tipo": {
+     "residencial": "Imovel[uso=residencial, subtipo=residencial]",
+     "apartamento": "Imovel[uso=residencial, subtipo=apartamento]",
+     "casa": "Imovel[uso=residencial, subtipo=casa]",
+     "comercial": "Imovel[uso=nao_residencial, subtipo=comercial]",
+     "hotel": "Imovel[uso=nao_residencial, subtipo=hotel]",
+     "garagem": "Imovel[uso=nao_residencial, subtipo=garagem]",
+     "terreno": "Imovel[uso=nao_residencial, subtipo=terreno]",
+     "loja": "Imovel[uso=nao_residencial, subtipo=loja]",
+     "sala_comercial": "Imovel[uso=nao_residencial, subtipo=sala_comercial]",
+     "conjunto_comercial": "Imovel[uso=nao_residencial, subtipo=conjunto_comercial]",
+     "edificio": "Imovel[uso=nao_residencial, subtipo=edificio]",
+     "galpao": "Imovel[uso=nao_residencial, subtipo=galpao]"
+    },
+    "uso_atual": {
+     "locado": "Imovel[situacao=locado] · objeto_de Contrato",
+     "vago": "Imovel[situacao=vago]",
+     "proprio": "Imovel[situacao=uso_proprio]",
+     "uso_proprio": "Imovel[situacao=uso_proprio] · T04 retomada",
+     "comodato": "Imovel[situacao=comodato]",
+     "em_construcao": "Imovel[situacao=obra]",
+     "em_desenvolvimento": "Imovel[situacao=obra]",
+     "em_construcao_sem_contrato": "Imovel[situacao=obra]"
+    },
+    "documentos": {
+     "iptu_valid": "Documento[IPTU] · Prazo iptu_vencimento",
+     "habite_se": "Documento[Habite-se]",
+     "alvara": "Documento[Alvará]",
+     "avcb": "Documento[AVCB]"
+    }
+   },
+   "nao_exportado": [
+    "endereco",
+    "proprietario_nome",
+    "matricula_rgi",
+    "notas"
+   ],
+   "agregavel": [
+    "uf",
+    "cidade",
+    "area_m2 (faixa)"
+   ]
+  },
+  "Locatario": {
+   "classe": "TipoDeParte",
+   "campos": {
+    "papel": {
+     "locatario": "TipoDeParte[locatario]",
+     "locador": "TipoDeParte[locador]",
+     "fiador": "TipoDeParte[fiador] (novo valor proposto v0.7)"
+    }
+   },
+   "nao_exportado": [
+    "nome",
+    "CPF/CNPJ",
+    "contato"
+   ],
+   "nota": "Só o tipo da parte; nunca a pessoa (LGPD)."
+  },
+  "Caso": {
+   "classe": "Processo",
+   "relacoes": [
+    "tem_classe",
+    "tramita_em",
+    "trata_de",
+    "resulta_em Decisao",
+    "invoca Tese"
+   ],
+   "campos": {
+    "tipo": {
+     "caso": "Processo (número só como hash, via numero_processo)",
+     "projeto": "fora da ontologia (gestão interna)"
+    },
+    "nivel": {
+     "projeto": "agrupador interno, sem classe",
+     "tarefa": "Movimento interno, sem classe"
+    },
+    "area": {
+     "Cível": "Processo[ramo=civel] · nicho locação quando classe ∈ mapa_classe",
+     "Trabalhista": "Processo[ramo=trabalho] · fora do nicho",
+     "Compliance": "fora da ontologia (consultivo)"
+    }
+   },
+   "nao_exportado": [
+    "cliente",
+    "titulo",
+    "descricao",
+    "honorários",
+    "portal_token"
+   ]
+  },
+  "Prazo": {
+   "classe": "Prazo (tipo novo proposto v0.7: data-limite com Norma de origem)",
+   "relacoes": [
+    "prazo_de (Prazo→Contrato|Imovel|Processo)",
+    "fixado_por (Prazo→Norma)"
+   ],
+   "campos": {
+    "alerta_tipo": {
+     "vencimento": "Prazo[fim_contrato] · fixado_por N-8245-46/56",
+     "reajuste": "Prazo[reajuste] · Indicador do contrato; revisional N-8245-19 após 3 anos",
+     "avcb_vencimento": "Prazo[documento AVCB]",
+     "iptu_vencimento": "Prazo[documento IPTU]",
+     "alvara_vencimento": "Prazo[documento Alvará]"
+    },
+    "intimacao": {
+     "prazo_final": "Prazo[processual] · registra Movimento do Processo (DJEN)"
+    }
+   },
+   "nao_exportado": [
+    "texto da intimação",
+    "destinatários",
+    "OAB"
+   ]
+  }
+ }
+}
