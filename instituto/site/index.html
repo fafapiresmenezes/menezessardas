@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instituto THEYE</title>
+<meta name="description" content="Pesquisa aplicada em predição jurídica, ontologia do direito e desenvolvimento do direito brasileiro.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --papel:#F6F3EC; --papel-2:#EFEADF; --tinta:#0F1A2B; --tinta-2:#3A4556; --apagado:#6B7380;
+  --linha:#D8D1C2; --ouro:#9A7535; --ouro-claro:#C9A96A; --grafo:#2F5D62; --conv:#8A4B3A;
+  --serif:'Newsreader',Georgia,serif; --sans:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --papel:#0D131D; --papel-2:#141C28; --tinta:#ECE7DC; --tinta-2:#C4C0B6; --apagado:#9198A3;
+  --linha:#2A3342; --ouro:#C9A96A; --ouro-claro:#9A7535; --grafo:#6FA7A9; --conv:#D08C76;}}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--papel);color:var(--tinta);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.w{max-width:1160px;margin:0 auto;padding:0 24px}
+@media(max-width:600px){.w{padding:0 16px}}
+header.top{border-bottom:1px solid var(--linha);position:sticky;top:0;background:color-mix(in srgb,var(--papel) 92%,transparent);backdrop-filter:blur(8px);z-index:10}
+.top .w{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.marca{display:flex;align-items:center;gap:12px;text-decoration:none}
+.selo{width:34px;height:34px;border:1px solid var(--ouro);display:grid;place-items:center;font-family:var(--serif);font-size:15px;color:var(--ouro);letter-spacing:.04em}
+.marca b{font-family:var(--serif);font-weight:500;font-size:19px;letter-spacing:.02em}
+nav a{font-size:14px;text-decoration:none;color:var(--tinta-2);margin-left:24px}
+nav a:hover{color:var(--tinta)}
+@media(max-width:820px){nav{display:none}}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 20px;border:1px solid var(--tinta);background:var(--tinta);color:var(--papel);font-size:14px;font-weight:500;text-decoration:none;letter-spacing:.01em}
+.btn.sec{background:transparent;color:var(--tinta)}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ouro)}
+h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:-.01em}
+.hero{padding:96px 0 72px;border-bottom:1px solid var(--linha)}
+.hero h1{font-size:clamp(38px,6vw,72px);line-height:1.04;max-width:16ch;margin:18px 0 24px}
+.hero p.lead{font-size:clamp(17px,2vw,20px);color:var(--tinta-2);max-width:60ch}
+.hero .acoes{display:flex;gap:12px;flex-wrap:wrap;margin-top:36px}
+section{padding:80px 0;border-bottom:1px solid var(--linha)}
+.sec-h{display:grid;grid-template-columns:1fr 2fr;gap:48px;margin-bottom:48px}
+@media(max-width:820px){.sec-h{grid-template-columns:1fr;gap:12px}}
+.sec-h h2{font-size:clamp(28px,3.4vw,40px);line-height:1.12}
+.sec-h p{color:var(--tinta-2);max-width:62ch}
+.grade{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--linha)}
+@media(max-width:980px){.grade{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.grade{grid-template-columns:1fr}}
+.cel{padding:28px 24px 32px 0;border-bottom:1px solid var(--linha)}
+.cel .n{font-family:var(--mono);font-size:12px;color:var(--apagado)}
+.cel h3{font-size:22px;margin:10px 0 8px}
+.cel p{font-size:14.5px;color:var(--tinta-2)}
+.comp{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--linha);border:1px solid var(--linha)}
+@media(max-width:820px){.comp{grid-template-columns:1fr}}
+.comp>div{background:var(--papel);padding:32px}
+.comp h3{font-size:24px;margin:8px 0 12px}
+.comp ul{list-style:none}
+.comp li{padding:10px 0;border-top:1px solid var(--linha);font-size:14.5px;color:var(--tinta-2)}
+.comp svg{width:100%;height:auto;display:block;margin:8px 0 20px}
+.tag-c{color:var(--conv)} .tag-g{color:var(--grafo)}
+.nota{margin-top:24px;padding:20px 24px;border-left:2px solid var(--ouro);background:var(--papel-2);font-size:14.5px;color:var(--tinta-2);max-width:80ch}
+.princ{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--linha)}
+@media(max-width:820px){.princ{grid-template-columns:1fr}}
+.princ div{padding:24px 24px 24px 0;border-bottom:1px solid var(--linha)}
+.princ b{display:block;font-family:var(--serif);font-weight:500;font-size:19px;margin-bottom:6px}
+.princ span{font-size:14.5px;color:var(--tinta-2)}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th{text-align:left;font-family:var(--mono);font-weight:400;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--apagado);padding:0 16px 12px 0;border-bottom:1px solid var(--tinta)}
+td{padding:14px 16px 14px 0;border-bottom:1px solid var(--linha);vertical-align:top}
+td:first-child{font-family:var(--serif);font-size:17px;width:34%}
+td:nth-child(2){color:var(--tinta-2)}
+@media(max-width:700px){thead{display:none}tr,td{display:block;width:100%!important}td{border:0;padding:2px 0}tr{padding:14px 0;border-bottom:1px solid var(--linha)}}
+.acesso{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--linha);border:1px solid var(--linha)}
+@media(max-width:820px){.acesso{grid-template-columns:1fr}}
+.acesso div{background:var(--papel);padding:28px}
+.acesso .k{font-family:var(--mono);font-size:12px;color:var(--ouro);letter-spacing:.1em;text-transform:uppercase}
+.acesso h3{font-size:24px;margin:8px 0}
+.acesso p{font-size:14.5px;color:var(--tinta-2)}
+.prog{height:6px;background:var(--papel-2);border:1px solid var(--linha);margin:12px 0 8px;max-width:520px}
+.prog i{display:block;height:100%;background:var(--ouro)}
+.hash{font-family:var(--mono);font-size:12.5px;word-break:break-all;color:var(--tinta-2)}
+footer{padding:48px 0 64px;font-size:13.5px;color:var(--apagado)}
+footer .w{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+:focus-visible{outline:2px solid var(--ouro);outline-offset:3px}
+</style>
+</head>
+<body>
+<header class="top"><div class="w">
+  <a class="marca" href="#"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="#linhas">Linhas</a><a href="#laboratorio">Laboratório</a><a href="#metodo">Método</a><a href="#servicos">Serviços</a><a href="#transparencia">Transparência</a></nav>
+</div></header>
+
+<main>
+<div class="hero"><div class="w">
+  <div class="kicker">Pesquisa aplicada · Direito brasileiro</div>
+  <h1>Predição jurídica com método, dados abertos e incerteza declarada.</h1>
+  <p class="lead">O Instituto THEYE estuda como prever desfechos judiciais com honestidade estatística, comparando a estatística convencional com modelos que leem o direito como um grafo de conceitos: processos, teses, precedentes, normas e órgãos julgadores.</p>
+  <div class="acoes"><a class="btn" href="#laboratorio">Conhecer o laboratório</a><a class="btn sec" href="#acesso">Como participar</a></div>
+</div></div>
+
+<section id="linhas"><div class="w">
+  <div class="sec-h"><div><div class="kicker">01 · Linhas de pesquisa</div><h2>Quatro frentes, um mesmo rigor.</h2></div>
+  <p>Cada linha publica método, fonte e limites. Nenhum número sai sem o tamanho da amostra e o intervalo de confiança.</p></div>
+  <div class="grade">
+    <div class="cel"><div class="n">I</div><h3>Predição jurídica</h3><p>Probabilidade de desfecho por classe, assunto e órgão julgador, com calibragem medida.</p></div>
+    <div class="cel"><div class="n">II</div><h3>Ontologia do direito</h3><p>Modelo formal de conceitos alinhado às Tabelas Processuais Unificadas do CNJ e ao LexML.</p></div>
+    <div class="cel"><div class="n">III</div><h3>Desenvolvimento do direito</h3><p>Jurisprudência brasileira e direito comparado aplicados a perguntas reais.</p></div>
+    <div class="cel"><div class="n">IV</div><h3>Jurimetria setorial</h3><p>Locação, bancário, consumidor e trabalhista, sempre em dados agregados.</p></div>
+  </div>
+</div></section>
+
+<section id="laboratorio"><div class="w">
+  <div class="sec-h"><div><div class="kicker">02 · Primeiro laboratório</div><h2>Estatística convencional × predição ontológica por grafo.</h2></div>
+  <p>Mesma pergunta, mesmo corte no tempo, mesmas métricas. A diferença entre as abordagens é medida, não presumida, e o resultado é publicado mesmo quando o grafo não vence.</p></div>
+  <div class="comp">
+    <div>
+      <div class="kicker tag-c">Convencional</div><h3>Taxa base e regressão</h3>
+      <svg viewBox="0 0 320 120" role="img" aria-label="Barras de taxa base por categoria">
+        <g fill="var(--conv)"><rect x="10" y="40" width="44" height="70"/><rect x="74" y="20" width="44" height="90" opacity=".85"/><rect x="138" y="58" width="44" height="52" opacity=".7"/><rect x="202" y="30" width="44" height="80" opacity=".85"/><rect x="266" y="70" width="44" height="40" opacity=".6"/></g>
+        <line x1="0" y1="110" x2="320" y2="110" stroke="var(--linha)"/>
+      </svg>
+      <ul><li>Lê cada processo como uma linha de tabela: classe, assunto, tribunal, valor, ano.</li><li>Intervalo de Wilson a 95% para cada proporção.</li><li>Forte quando há muita amostra; cego para relações entre casos.</li></ul>
+    </div>
+    <div>
+      <div class="kicker tag-g">Ontológica</div><h3>Grafo de conhecimento</h3>
+      <svg viewBox="0 0 320 120" role="img" aria-label="Grafo ligando processo, tese, precedente, norma e órgão julgador">
+        <g stroke="var(--grafo)" stroke-width="1.2" opacity=".7"><line x1="160" y1="60" x2="60" y2="25"/><line x1="160" y1="60" x2="70" y2="100"/><line x1="160" y1="60" x2="260" y2="22"/><line x1="160" y1="60" x2="270" y2="98"/><line x1="60" y1="25" x2="260" y2="22"/><line x1="70" y1="100" x2="270" y2="98"/></g>
+        <g fill="var(--papel)" stroke="var(--grafo)" stroke-width="1.5"><circle cx="160" cy="60" r="13"/><circle cx="60" cy="25" r="9"/><circle cx="70" cy="100" r="9"/><circle cx="260" cy="22" r="9"/><circle cx="270" cy="98" r="9"/></g>
+        <g font-family="IBM Plex Mono,monospace" font-size="9" fill="var(--tinta-2)"><text x="140" y="88">processo</text><text x="20" y="12">tese</text><text x="28" y="118">órgão</text><text x="232" y="10">precedente</text><text x="250" y="118">norma</text></g>
+      </svg>
+      <ul><li>Lê o processo pelas ligações: tese invocada, precedente vinculante, norma, órgão julgador.</li><li>Variáveis de grafo só com o que se sabia antes da decisão.</li><li>Promete mais contexto; precisa provar que calibra melhor.</li></ul>
+    </div>
+  </div>
+  <p class="nota">Como comparamos: backtest temporal, Brier score, log-loss, AUC e curva de calibração, com diferenças e intervalos de 95% por bootstrap pareado. Os primeiros resultados serão publicados aqui com fonte, data da coleta e tamanho da amostra.</p>
+</div></section>
+
+<section id="metodo"><div class="w">
+  <div class="sec-h"><div><div class="kicker">03 · Método</div><h2>Princípios que não se negociam.</h2></div>
+  <p>Rigor acadêmico com linguagem para quem não é estatístico.</p></div>
+  <div class="princ">
+    <div><b>Fonte pública</b><span>DataJud, DJEN, LexML e portais dos tribunais. Sem bases pagas.</span></div>
+    <div><b>Incerteza declarada</b><span>Amostra, intervalo de 95% e nível de confiança em todo número.</span></div>
+    <div><b>Calibragem medida</b><span>Toda previsão é confrontada com o desfecho real e pontuada.</span></div>
+    <div><b>LGPD por desenho</b><span>Somente dados públicos e agregados. Nenhum perfil pessoal de julgador.</span></div>
+    <div><b>Resultado negativo publicado</b><span>Se um modelo não supera a linha de base, isso é dito.</span></div>
+    <div><b>Rastro em blockchain</b><span>Planos e medições com SHA-256 carimbado no Bitcoin (OpenTimestamps).</span></div>
+  </div>
+</div></section>
+
+<section id="servicos"><div class="w">
+  <div class="sec-h"><div><div class="kicker">04 · Serviços</div><h2>Para quem decide com base no direito.</h2></div>
+  <p>Advogados, escritórios, departamentos jurídicos, investidores, seguradoras, imprensa e academia.</p></div>
+  <table>
+    <thead><tr><th>Serviço</th><th>Para quem</th><th>Entrega</th></tr></thead>
+    <tbody>
+      <tr><td>Relatório preditivo de caso</td><td>Advogados e escritórios</td><td>Probabilidade com intervalo, comparação das duas abordagens e fontes.</td></tr>
+      <tr><td>Radar agregado de órgão julgador</td><td>Escritórios e jurídicos internos</td><td>Padrões decisórios agregados, sem dado pessoal.</td></tr>
+      <tr><td>Due diligence processual</td><td>Imobiliárias, investidores, KYC</td><td>Processos públicos da contraparte e risco agregado.</td></tr>
+      <tr><td>Monitoramento de publicações</td><td>Advogados autônomos</td><td>Alerta diário do DJEN com prazo em dias úteis.</td></tr>
+      <tr><td>Jurimetria setorial</td><td>Associações, imprensa, academia</td><td>Séries por setor com metodologia aberta.</td></tr>
+      <tr><td>Parecer de direito comparado</td><td>Escritórios e legisladores</td><td>Brasil e exterior a partir de fontes gratuitas.</td></tr>
+      <tr><td>Curso e certificação</td><td>Estudantes e advogados</td><td>Trilha de seis módulos sobre predição, calibragem e ontologia.</td></tr>
+      <tr><td>Dados abertos para pesquisa</td><td>Universidades</td><td>Base agregada com licença aberta.</td></tr>
+      <tr><td>Painel de carteira</td><td>Fundos de litígio e seguradoras</td><td>Probabilidade por processo e calibragem da carteira.</td></tr>
+      <tr><td>Sandboxes regulatórios</td><td>Startups e reguladores</td><td>Assessoria com base na LC 182/2021 e nos sandboxes setoriais.</td></tr>
+    </tbody>
+  </table>
+</div></section>
+
+<section id="acesso"><div class="w">
+  <div class="sec-h"><div><div class="kicker">05 · Acesso</div><h2>Experimente uma vez. Continue como membro.</h2></div>
+  <p>O cadastro libera uma consulta completa ao laboratório. A partir da segunda, o acesso é para membros. Cada pessoa tem uma única tentativa gratuita.</p></div>
+  <div class="acesso">
+    <div><div class="k">Passo 1</div><h3>Cadastro</h3><p>E-mail confirmado e verificação de pessoa real.</p></div>
+    <div><div class="k">Passo 2</div><h3>Uma consulta grátis</h3><p>Uma previsão completa, com intervalo e fontes.</p></div>
+    <div><div class="k">Passo 3</div><h3>Membro</h3><p>Consultas, relatórios e cursos conforme o plano escolhido.</p></div>
+  </div>
+  <p class="nota">Abertura das inscrições: em breve. O laboratório entra no ar assim que os primeiros resultados passarem pela revisão de calibragem.</p>
+</div></section>
+
+<section id="transparencia"><div class="w">
+  <div class="sec-h"><div><div class="kicker">06 · Transparência</div><h2>Plano público, progresso medido.</h2></div>
+  <p>O Instituto segue um plano de 30 passos (I-00 e adendo I-01). Cada passo concluído deixa evidência e um elo verificável.</p></div>
+  <p style="font-size:14.5px;color:var(--tinta-2)">Plano I-00 · progresso atual</p>
+  <div class="prog" role="progressbar" aria-valuenow="13" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do plano"><i style="width:13%"></i></div>
+  <p style="font-size:14.5px;color:var(--tinta-2)">4 de 30 passos concluídos</p>
+  <p style="margin-top:20px;font-size:13px;color:var(--apagado)">SHA-256 do plano I-00 (prova OpenTimestamps no Bitcoin)</p>
+  <p class="hash">7cd8a5c2fa67993a15bfd71a53f68cc63fbe2e12b33a29bf93ae3a04dd03eb80</p>
+</div></section>
+</main>
+
+<footer><div class="w"><span>© 2026 Instituto THEYE · Rio de Janeiro</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
+</body>
+</html>
