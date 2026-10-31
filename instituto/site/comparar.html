@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grafo x convencional · Instituto THEYE</title>
+<meta name="description" content="Comparação pré-registrada entre predição jurídica convencional e predição por grafo de conhecimento, com dados abertos do CNJ.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--linha);border:1px solid var(--linha)}
+@media(max-width:820px){.duo{grid-template-columns:1fr}}
+.duo>div{background:var(--papel);padding:32px}
+.duo h3{font-size:28px;margin:8px 0 12px}
+.duo p{font-size:15px;color:var(--tinta-2);margin-bottom:12px;max-width:60ch}
+.exemplo{border-left:2px solid var(--ouro);background:var(--papel-2);padding:14px 18px;font-size:14.5px;color:var(--tinta-2);margin-top:14px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--linha);border:1px solid var(--linha)}
+@media(max-width:900px){.cards{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.cards{grid-template-columns:1fr}}
+.cards>div{background:var(--papel);padding:24px}
+.num{font-family:var(--serif);font-size:40px;line-height:1.1}
+.sm{font-size:13.5px;color:var(--apagado)}
+.veredito{display:inline-block;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border:1px solid var(--ouro);color:var(--ouro);margin-top:10px}
+.eixo{position:relative;height:56px;margin:28px 0 8px;border-bottom:1px solid var(--linha)}
+.eixo .z{position:absolute;left:50%;top:0;bottom:-6px;width:1px;background:var(--tinta)}
+.eixo .ic{position:absolute;top:22px;height:10px;background:var(--grafo);opacity:.35}
+.eixo .pt{position:absolute;top:16px;width:2px;height:22px;background:var(--grafo)}
+.rot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11.5px;color:var(--apagado)}
+.passos{counter-reset:p;list-style:none;margin:0;padding:0;display:grid;gap:1px;background:var(--linha);border:1px solid var(--linha)}
+.passos li{counter-increment:p;background:var(--papel);padding:20px 24px 20px 64px;position:relative;font-size:15px;color:var(--tinta-2)}
+.passos li::before{content:counter(p);position:absolute;left:24px;top:18px;font-family:var(--serif);font-size:24px;color:var(--ouro)}
+.passos b{color:var(--tinta)}
+dl{display:grid;grid-template-columns:220px 1fr;gap:8px 24px;font-size:14.5px;margin-top:16px}
+@media(max-width:600px){dl{grid-template-columns:1fr}}
+dt{color:var(--apagado)} dd{color:var(--tinta)}
+</style>
+</head>
+<body>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/placar.html">Placar</a><a href="/comparar.html" aria-current="page">Grafo x convencional</a><a href="/ontologia.html">Ontologia</a><a href="/estudar.html">Estudar</a><a href="/servicos.html">Serviços</a></nav>
+</div></header>
+<main>
+<div class="hero"><div class="w">
+  <div class="kicker">Experimento aberto · regras fixadas antes do resultado</div>
+  <h1>Um grafo prevê melhor que uma tabela?</h1>
+  <p class="lead">Colocamos lado a lado duas formas de estimar a chance de o autor ganhar uma ação de locação: a estatística convencional e a predição por grafo de conhecimento. Mesmos dados, mesma régua, teste no futuro. Aqui está o placar, atualizado todos os dias com dados abertos do CNJ.</p>
+</div></div>
+
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">As duas abordagens</div><h2>Mesma pergunta, dois jeitos de olhar.</h2></div>
+  <p>A pergunta é sempre a mesma: num processo que chegou ao julgamento de mérito, qual a probabilidade de o pedido do autor ser acolhido, total ou parcialmente?</p></div>
+  <div class="duo">
+    <div><div class="kicker">Modelo A</div><h3>Convencional: a taxa-base</h3>
+      <p>Olha o processo como uma linha numa tabela. Agrupa todos os casos do mesmo tribunal e da mesma classe e conta quantas vezes o autor ganhou. Essa proporção, levemente suavizada para não dar 0% nem 100%, é a previsão.</p>
+      <p>É simples, transparente e difícil de bater. Por isso é a linha de base obrigatória de qualquer estudo sério.</p>
+      <div class="exemplo"><b>Exemplo.</b> Se 84 de cada 100 renovatórias julgadas no TJSP foram procedentes, a previsão para a próxima renovatória no TJSP é cerca de 84%.</div></div>
+    <div><div class="kicker">Modelo B</div><h3>Ontológico: caminhar no grafo</h3>
+      <p>Olha o processo como um nó ligado a outros: o órgão julgador que vai decidir, os assuntos discutidos, a classe e o tribunal. Parte da taxa-base e a ajusta pelo histórico de cada vizinho, dando mais peso a quem tem mais casos.</p>
+      <p>A ideia é que o grafo capture o que a tabela não vê, como a forma de decidir de uma vara num assunto específico, usando só o que se sabia antes da decisão.</p>
+      <div class="exemplo"><b>Exemplo.</b> A mesma renovatória cai numa vara que acolheu 18 de 30 pedidos parecidos. Com peso 10 para a taxa-base, o grafo puxa a previsão de 84% para (18 + 10 × 0,84) ÷ 40, cerca de 66%.</div></div>
+  </div>
+</div></section>
+
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Resultado · <span data-k="calculado_em">31/10/2026</span></div><h2>Quem errou menos?</h2></div>
+  <p>Brier é o erro médio ao quadrado entre a probabilidade dita e o que aconteceu. 0 é perfeito. Quanto menor, melhor. A diferença só vale se o intervalo de confiança não cruzar o zero.</p></div>
+  <div class="cards">
+    <div><div class="sm">Processos coletados</div><div class="num" data-k="processos">5.350</div><div class="sm">TJRJ, TJSP e TJMG · 6 classes de locação</div></div>
+    <div><div class="sm">Treino · teste</div><div class="num"><span data-k="treino">1.173</span> · <span data-k="teste">292</span></div><div class="sm">teste = decididos depois de <span data-k="corte_temporal">16/07/2026</span></div></div>
+    <div><div class="sm">Brier convencional (A)</div><div class="num" data-k="brier_convencional">0,1266</div><div class="sm">taxa de êxito no teste: <span data-k="taxa_teste">84,2%</span></div></div>
+    <div><div class="sm">Brier por grafo (B)</div><div class="num" data-k="brier_grafo">0,1270</div><div class="sm"><span data-k="com_vizinho_no_grafo">275</span> casos de teste com vizinho no grafo</div></div>
+  </div>
+  <div class="eixo" aria-hidden="true"><div class="z"></div><div class="ic" data-ic style="left:47.5%;width:7.25%"></div><div class="pt" data-pt style="left:51%"></div></div>
+  <div class="rot"><span>grafo melhor ←</span><span>0</span><span>→ convencional melhor</span></div>
+  <p style="margin-top:18px;font-size:15px;color:var(--tinta-2);max-width:72ch">Diferença B − A: <b data-k="dif">+0,0004</b>, intervalo de confiança de 95% de <b data-k="ic">−0,0010 a +0,0019</b>. <span class="veredito" data-k="veredito">Inconclusivo: o IC cruza zero</span></p>
+</div></section>
+
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Como ler</div><h2>Por que um empate também é resultado.</h2></div></div>
+  <ol class="passos">
+    <li><b>A taxa-base já é forte.</b> Em locação, o autor ganha no mérito em cerca de 84% dos casos. Dizer “84%” para tudo já erra pouco, e qualquer modelo precisa bater isso fora da amostra.</li>
+    <li><b>O grafo ainda é raso.</b> Hoje ele liga processo, órgão julgador, assunto, classe e tribunal. Faltam precedentes, teses e normas, que a ontologia v0.5 prevê e a coleta ainda não traz.</li>
+    <li><b>Muitos vizinhos têm poucos casos.</b> São 1.523 órgãos julgadores para 5.350 processos. Com poucos casos por vara, o ajuste do grafo fica pequeno, e o resultado tende a colar na taxa-base.</li>
+    <li><b>Não mexemos nas regras depois de ver o número.</b> O peso m = 10, o corte no percentil 80 e as 2.000 reamostras foram fixados antes. Ajustar agora para o grafo “ganhar” seria enganar o leitor.</li>
+  </ol>
+</div></section>
+
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Método</div><h2>Exatamente o que foi feito.</h2></div></div>
+  <dl>
+    <dt>Fonte</dt><dd>DataJud, API Pública do CNJ, coletada todo dia às 06h40 (Brasília). Volume do DJEN registrado só como total diário por tribunal.</dd>
+    <dt>Privacidade</dt><dd>Número do processo guardado só como código irreversível (SHA-256). Nenhum nome de parte, advogado ou juiz. Só agregados são publicados.</dd>
+    <dt>Alvo</dt><dd>Êxito do autor no mérito: procedência total ou parcial = 1; improcedência = 0. Acordo e extinção sem mérito ficam fora.</dd>
+    <dt>Divisão no tempo</dt><dd>Treino com decisões até o percentil 80 das datas; teste com as posteriores. O teste nunca alimenta o treino.</dd>
+    <dt>Modelo A</dt><dd>Taxa por tribunal e classe, suavizada como (acertos + 1) / (casos + 2).</dd>
+    <dt>Modelo B</dt><dd>Cada vizinho no grafo (órgão julgador da mesma classe e cada assunto) vira uma estimativa encolhida para A com peso m = 10; as estimativas são combinadas pela quantidade de casos de cada vizinho.</dd>
+    <dt>Comparação</dt><dd>Brier no teste e diferença pareada B − A, com intervalo de 95% por bootstrap de 2.000 reamostras.</dd>
+    <dt>Limites</dt><dd>A amostra é dos processos atualizados mais recentemente no DataJud, não um sorteio. O desfecho vem do código do movimento de sentença. O intervalo varia levemente a cada recálculo por ser reamostragem.</dd>
+  </dl>
+  <p class="nota">Para aprender a ler este experimento, veja os módulos 1 e 4 da <a href="/estudar.html">trilha de estudo</a>. O placar das demais previsões está em <a href="/placar.html">Placar</a>.</p>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · Experimento I-10, regras fixadas em 31/10/2026</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="comparar.js"></script>
+</body>
+</html>
