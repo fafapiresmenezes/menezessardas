@@ -18,6 +18,8 @@ export default function EscritoriosParceiros({ pessoas, aoMudar }: { pessoas: Pe
   const [conv, setConv] = useState({ nome_escritorio: '', email: '', funcao: 'operador' })
   const [convites, setConvites] = useState<{ id: string; nome_escritorio: string; email: string; funcao: string; criado_em: string; expira_em: string; aceito_em: string | null }[]>([])
   const [linkConvite, setLinkConvite] = useState('')
+  // Passo 40: aceites do contrato de adesão SaaS por escritório parceiro.
+  const [aceitesSaas, setAceitesSaas] = useState<{ escritorio_id: string; nome: string; versao: string; hash: string; aceito_em: string }[]>([])
   const carregarConvites = async () => { const { data } = await supabase.from('convites_escritorio').select('id,nome_escritorio,email,funcao,criado_em,expira_em,aceito_em').order('criado_em', { ascending: false }).limit(20); setConvites(data ?? []) }
   const convidar = async () => {
     setMsg(''); setLinkConvite(''); setOcupado(true)
@@ -32,7 +34,7 @@ export default function EscritoriosParceiros({ pessoas, aoMudar }: { pessoas: Pe
   const carregar = async () => {
     try { setLista(await listarEscritorios()); setOnde(await escritorioDasPessoas()) } catch (e) { setMsg(e instanceof Error ? e.message : 'Erro') }
   }
-  useEffect(() => { carregar(); carregarConvites() }, [pessoas.length])
+  useEffect(() => { carregar(); carregarConvites(); supabase.rpc('aceites_contrato_saas').then(({ data }) => setAceitesSaas((data ?? []) as typeof aceitesSaas)) }, [pessoas.length])
 
   const criar = async () => {
     setMsg(''); setOcupado(true)
@@ -92,6 +94,13 @@ export default function EscritoriosParceiros({ pessoas, aoMudar }: { pessoas: Pe
         </ul>
       )}
       {msg && <p role="status" className="text-sm mt-3">{msg}</p>}
+      <div className="border border-navy/10 p-4 mt-4 text-sm" data-testid="aceites-saas">
+        <h3 className="font-semibold">Contrato de adesão SaaS (Value Pas)</h3>
+        <p className="text-xs text-grafite-claro mt-1 mb-2">Cada administrador de escritório parceiro aceita o contrato no primeiro acesso; fica registrado com data, versão e hash do texto.</p>
+        {aceitesSaas.length === 0 ? <p className="text-grafite-claro" data-testid="sem-aceites-saas">Nenhum aceite ainda.</p> : (
+          <ul className="divide-y divide-navy/5">{aceitesSaas.map(a => <li key={a.escritorio_id + a.versao} className="py-1" data-testid="aceite-saas-item">{a.nome} · aceito em {new Date(a.aceito_em).toLocaleDateString('pt-BR')} (v{a.versao}) · hash {a.hash.slice(0, 12)}…</li>)}</ul>
+        )}
+      </div>
       <MarcaParceiros escritorios={lista.filter(e => e.id !== SEDE_ID).map(e => ({ id: e.id, nome: e.nome }))} />
       <FaturasParceiros nomes={Object.fromEntries(lista.map(e => [e.id, e.nome]))} />
     </section>
