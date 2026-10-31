@@ -8,6 +8,7 @@ import Busca from './Busca'
 import BoasVindas from './BoasVindas'
 import TourTela from './TourTela'
 import PerguntarTela from './PerguntarTela'
+import SinoNotificacoes from './SinoNotificacoes'
 import ExigirDoisFatores from './ExigirDoisFatores'
 import AceiteContratoSaas from './AceiteContratoSaas'
 import AceiteTermos from './AceiteTermos'
@@ -175,6 +176,7 @@ export default function Layout({ children, title }: LayoutProps) {
           <div className="flex items-center gap-2 flex-shrink-0">
           <TourTela />
           <PerguntarTela />
+          <SinoNotificacoes />
           {admin && (
             <button
               onClick={() => navigate('/equipe')}
