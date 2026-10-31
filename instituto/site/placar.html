@@ -25,6 +25,13 @@
 dl{display:grid;grid-template-columns:220px 1fr;gap:8px 24px;font-size:14.5px;margin-top:16px}
 @media(max-width:600px){dl{grid-template-columns:1fr}}
 dt{color:var(--apagado)} dd{color:var(--tinta)}
+.tab{width:100%;min-width:860px;border-collapse:collapse;font-size:13.5px;margin-top:8px}
+.tab th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--apagado);text-align:left;padding:8px 10px;border-bottom:1px solid var(--linha);font-weight:500}
+.tab td{padding:10px;border-bottom:1px solid var(--linha);vertical-align:top;color:var(--tinta)}
+.tab td.nu{font-variant-numeric:tabular-nums;white-space:nowrap}
+.tab td.mono{font-family:var(--mono);font-size:12px;white-space:nowrap}
+.tab th:nth-child(1){width:110px}.tab th:nth-child(2){width:26%}
+.rolar{overflow-x:auto;-webkit-overflow-scrolling:touch}
 </style>
 </head>
 <body>
@@ -47,6 +54,19 @@ dt{color:var(--apagado)} dd{color:var(--tinta)}
     <div><div class="sm">Previsões de nicho resolvidas</div><div class="num">2 / 100</div><div class="sm">28 emitidas e seladas · meta de 100 resoluções</div></div>
     <div><div class="sm">Próxima resolução</div><div class="num">05/11</div><div class="sm">Copom: corta, mantém ou sobe (pré-registro de 16/10)</div></div>
   </div>
+</div></section>
+
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Placar único · mesma régua para tudo</div><h2>Previsões gerais e jurídicas, lado a lado.</h2></div>
+  <p>Cada linha usa a mesma régua: Brier do modelo contra a melhor linha de base, ganho relativo (BSS) e intervalo de 95% da diferença. Cada protocolo tem um selo no Bitcoin com a impressão digital do seu registro.</p></div>
+  <div class="rolar"><table class="tab">
+    <thead><tr><th>Protocolo</th><th>O que prevê</th><th>Área</th><th>Brier modelo</th><th>Brier base</th><th>Ganho (BSS)</th><th>IC 95% da diferença</th><th>Veredito</th><th>Selo</th></tr></thead>
+    <tbody id="placar-unico">
+      <tr><td class="mono">I-11</td><td>Grafo de normas x convencional (DataJud, 6 tribunais)</td><td>jurídico (locação)</td><td class="nu">0,1026</td><td class="nu">0,1010</td><td class="nu">−1,6%</td><td class="nu">−0,0006 a 0,0038</td><td>inconclusivo</td><td class="mono">selado b62fc88e</td></tr>
+      <tr><td class="mono">P-001-C</td><td>Focos de calor INPE, diário</td><td>geral (motor THE EYE)</td><td class="nu">0,2292</td><td class="nu">0,2429</td><td class="nu">+5,6%</td><td class="nu">−0,0466 a 0,0221</td><td>favorável, interino, inconclusivo</td><td class="mono">selado 615bbdaf</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sm" style="margin-top:10px">BSS positivo = o modelo errou menos que a base. Só vale como vitória quando o intervalo da diferença não cruza o zero. A Selic de 05/11 fica pendente até o resultado oficial.</p>
 </div></section>
 
 <section><div class="w">
@@ -122,5 +142,6 @@ dt{color:var(--apagado)} dd{color:var(--tinta)}
 </div></section>
 </main>
 <footer><div class="w"><span>© 2026 Instituto THEYE · Dados do motor THE EYE, leitura de 31/10/2026</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="placar.js"></script>
 </body>
 </html>
