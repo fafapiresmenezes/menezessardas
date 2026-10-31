@@ -84,7 +84,7 @@ export default function MeuDiaPage() {
   useEffect(() => { if (!supabaseConfigurado) return; supabase.rpc('progresso_horas', { p_papel: papel }).then(r => setHoras(r.data ?? null)) }, [papel])
   const prazo = calc.dias > 0 && calc.inicio ? calcularPrazo(calc.inicio, calc.dias, calc.dobro) : null
 
-  useEffect(() => { try { localStorage.setItem('lsm-papel', papel) } catch { /* sem armazenamento */ } }, [papel])
+  useEffect(() => { try { localStorage.setItem('lsm-papel', papel) } catch { /* sem armazenamento */ } if (supabaseConfigurado) supabase.rpc('definir_papel', { p_papel: papel }).then(() => undefined, () => undefined) }, [papel])
   useEffect(() => {
     (async () => {
       const { data: u } = await supabase.auth.getUser()

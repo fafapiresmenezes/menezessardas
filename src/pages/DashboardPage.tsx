@@ -4,6 +4,7 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { ehSede } from '@/lib/equipe'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
+import MetasDoMes from '@/components/MetasDoMes'
 import { SkeletonIndicator, SkeletonCard, SkeletonTable } from '@/components/Skeleton'
 import { useImoveis } from '@/hooks/useImoveis'
 import { useAlertas } from '@/hooks/useAlertas'
@@ -98,6 +99,8 @@ export default function DashboardPage() {
             ))}
           </div>
         </section>
+
+        {supabaseConfigurado && <MetasDoMes />}
 
         {porEscritorio.length > 1 && (
           <section aria-labelledby="titulo-escritorios" data-testid="painel-escritorios">

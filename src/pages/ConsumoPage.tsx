@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
+import { projetarMes, sugerirTeto } from '@/lib/projecaoConsumo'
 import { supabase } from '@/lib/supabase'
 import { perfilAtual, type Funcao } from '@/lib/equipe'
 import { Printer, Wallet, AlertTriangle, Paperclip, Download } from 'lucide-react'
@@ -126,6 +127,19 @@ export default function ConsumoPage() {
           <p className="text-4xl font-serif text-navy mt-4" data-testid="total-mes">{carregando ? '…' : brl(totalBrl)}</p>
           <p className="text-sm text-grafite-claro capitalize">{nomeMes(mes)} · {doMes.reduce((s, l) => s + Number(l.usos), 0)} uso(s)</p>
           {cot && <p className="text-xs text-grafite-claro mt-2">Cotação usada: US$ 1 = {brl(taxa)} ({cot.data}).</p>}
+          {mes === mesAtual() && !carregando && (() => {
+            // Passo 49: projeção do mês e sugestão de teto a partir do que já foi gasto.
+            const pj = projetarMes(totalBrl, new Date())
+            const anteriores = Object.entries(linhas.filter(l => l.mes.slice(0, 7) < mes).reduce<Record<string, number>>((acc, l) => { const k = l.mes.slice(0, 7); acc[k] = (acc[k] ?? 0) + Number(l.custo_usd) * taxa; return acc }, {})).map(([m, v]) => ({ mes: m, brl: v }))
+            const sg = sugerirTeto(pj.projecao, anteriores)
+            return (
+              <div className="mt-4 border-t border-navy/10 pt-3 text-sm" data-testid="projecao-mes">
+                <p>Projeção para o fim do mês: <strong data-testid="projecao-valor">{brl(pj.projecao)}</strong> <span className="text-grafite-claro">({pj.diasDecorridos} de {pj.diasMes} dias decorridos, ritmo linear{anteriores.length ? `; média dos últimos ${Math.min(3, anteriores.length)} mês(es): ${brl(sg.media)}` : ''})</span>.</p>
+                {cot?.teto_brl ? <p className="text-grafite-claro mt-1">{pj.projecao > cot.teto_brl ? `Nesse ritmo o teto de ${brl(cot.teto_brl)} será ultrapassado.` : `Nesse ritmo o teto de ${brl(cot.teto_brl)} é suficiente.`}</p> : <p className="text-grafite-claro mt-1">Ainda não há teto mensal definido.</p>}
+                {perfil === 'admin' && <button type="button" onClick={() => { setTeto(String(sg.teto)); setMsg({ ok: true, texto: `Teto sugerido: ${brl(sg.teto)} (${sg.base} com folga de 20%). Confira o valor e clique em Salvar teto.` }); document.getElementById('teto')?.focus() }} data-testid="sugerir-teto" className="mt-2 min-h-[44px] border border-navy text-navy px-4 text-sm uppercase tracking-wider">Sugerir teto ({brl(sg.teto)})</button>}
+              </div>
+            )
+          })()}
         </section>
 
         {pctTeto !== null && (
