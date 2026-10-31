@@ -45,7 +45,8 @@ export default function ProjetosPage() {
   // Passo 58: a busca global abre o caso direto por /projetos?caso=<id>.
   const [params] = useSearchParams()
   const [projeto, setProjeto] = useState<string>(params.get('caso') ?? '')
-  const [novo, setNovo] = useState({ titulo: '', nivel: 'tarefa', responsavel_id: '', prazo: '', prioridade: 'media', imovel_id: '' })
+  // ?novo=<título> pré-preenche a nova tarefa (vem dos Consultores).
+  const [novo, setNovo] = useState({ titulo: params.get('novo') ?? '', nivel: 'tarefa', responsavel_id: '', prazo: '', prioridade: 'media', imovel_id: '' })
   const [erro, setErro] = useState('')
   const [caso, setCaso] = useState({ modelo: 'contencioso', titulo: '', cliente: '', area: 'Cível', numero: '', tipo: 'caso', responsavel_id: '' })
   const [filtroArea, setFiltroArea] = useState('')

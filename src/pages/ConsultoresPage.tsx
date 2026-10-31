@@ -48,12 +48,14 @@ export default function ConsultoresPage() {
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [resposta, setResposta] = useState<Consulta | null>(null)
+  const [respondidoEm, setRespondidoEm] = useState<Date | null>(null)
+  const [copiado, setCopiado] = useState(false)
 
   const consultar = async (texto: string) => {
     setCarregando(true); setErro(''); setResposta(null)
     try {
       const ctx = await fotografia()
-      setResposta(await perguntar(texto, sel.chave, [], 'responder', ctx))
+      setResposta(await perguntar(texto, sel.chave, [], 'responder', ctx)); setRespondidoEm(new Date()); setCopiado(false)
     } catch (e) { setErro(e instanceof Error ? e.message : 'Falha ao consultar.') } finally { setCarregando(false) }
   }
   const diagnostico = () => consultar(`Faça o diagnóstico do escritório do ponto de vista de ${sel.titulo.toLowerCase()}: as 5 ações prioritárias para os próximos 30 dias, a métrica de cada uma e o principal risco.`)
@@ -98,6 +100,13 @@ export default function ConsultoresPage() {
             {carregando && <p className="text-sm text-grafite mt-6">O consultor está analisando o escritório…</p>}
             {erro && <p role="alert" className="text-sm text-red-700 mt-6">{erro}</p>}
             {resposta && <div data-testid="resposta-consultor" className="text-sm text-grafite mt-6 space-y-2" dangerouslySetInnerHTML={{ __html: render(resposta.resposta) }} />}
+            {resposta && (
+              <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-grafite-claro" data-testid="acoes-consultor">
+                {respondidoEm && <span>Respondido em {respondidoEm.toLocaleString('pt-BR')} pelo {sel.titulo}.</span>}
+                <button type="button" onClick={() => navigator.clipboard?.writeText(resposta.resposta).then(() => setCopiado(true)).catch(() => undefined)} className="underline text-navy" data-testid="copiar-resposta">{copiado ? 'Copiado' : 'Copiar resposta'}</button>
+                <a href={`#/projetos?novo=${encodeURIComponent(`Ação do ${sel.titulo}: ${resposta.resposta.replace(/\s+/g, ' ').slice(0, 120)}`)}`} className="underline text-navy" data-testid="virar-tarefa">Virar tarefa em Casos e projetos</a>
+              </div>
+            )}
           </section>
         </div>
       </div>
