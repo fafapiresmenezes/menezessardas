@@ -101,6 +101,8 @@ export default function FontesPage() {
                 {busca.processos.map(p => (
                   <li key={p.numero} className="py-2 text-sm">
                     <span className="font-mono">{p.numero}</span>{p.tribunal && ` · ${p.tribunal}`}{p.classe && ` · ${p.classe}`}
+                    <button type="button" onClick={() => navigator.clipboard?.writeText(p.numero).catch(() => undefined)} className="ml-2 underline text-navy text-xs" data-testid="copiar-numero" aria-label={`Copiar o número ${p.numero}`}>copiar número</button>
+                    {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" className="ml-2 underline text-navy text-xs">abrir no tribunal</a>}
                     {p.titulo && <span className="block text-grafite-claro">{p.titulo}</span>}
                     {p.ultimaMovimentacao && <span className="block text-xs text-grafite-claro">Última movimentação: {new Date(p.ultimaMovimentacao).toLocaleDateString('pt-BR')}</span>}
                   </li>

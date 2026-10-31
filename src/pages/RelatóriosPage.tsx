@@ -154,6 +154,9 @@ export default function RelatóriosPage() {
               </button>
             ))}
           </div>
+          <p className="text-xs text-grafite-claro mt-3" data-testid="datas-periodo">
+            Este relatório cobre de {new Date().toLocaleDateString('pt-BR')} até {new Date(Date.now() + periodo * 86400000).toLocaleDateString('pt-BR')}, gerado em {new Date().toLocaleString('pt-BR')}.
+          </p>
         </div>
 
         <section className="bg-white p-5 shadow-sm border-t-2 border-dourado" data-testid="relatorio-mensal" aria-labelledby="t-mensal">
