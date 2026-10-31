@@ -9,6 +9,10 @@ import BoasVindas from './BoasVindas'
 import TourTela from './TourTela'
 import PerguntarTela from './PerguntarTela'
 import SinoNotificacoes from './SinoNotificacoes'
+import BotaoExportar from './BotaoExportar'
+import Atalhos from './Atalhos'
+import FaixaConexao from './FaixaConexao'
+import ErroTela from './ErroTela'
 import ExigirDoisFatores from './ExigirDoisFatores'
 import AceiteContratoSaas from './AceiteContratoSaas'
 import AceiteTermos from './AceiteTermos'
@@ -176,6 +180,7 @@ export default function Layout({ children, title }: LayoutProps) {
           <div className="flex items-center gap-2 flex-shrink-0">
           <TourTela />
           <PerguntarTela />
+          <BotaoExportar />
           <SinoNotificacoes />
           {admin && (
             <button
@@ -211,7 +216,9 @@ export default function Layout({ children, title }: LayoutProps) {
           </div>
         </header>
 
-        <main className="flex-1 overflow-auto p-4 md:p-8"><AceiteTermos /><AceiteContratoSaas admin={admin} sede={sede} /><ExigirDoisFatores admin={admin} />{children}</main>
+        <FaixaConexao />
+        <main className="flex-1 overflow-auto p-4 md:p-8"><AceiteTermos /><AceiteContratoSaas admin={admin} sede={sede} /><ExigirDoisFatores admin={admin} /><ErroTela chave={pathname}>{children}</ErroTela></main>
+        <Atalhos />
       </div>
       <Busca aberta={buscaAberta} fechar={() => setBuscaAberta(false)} />
       <BoasVindas />

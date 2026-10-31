@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { fetchComRepeticao } from '@/lib/rede'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -8,7 +9,8 @@ export const supabaseConfigurado = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY)
 
 export const supabase = createClient(
   SUPABASE_URL || 'https://placeholder.supabase.co',
-  SUPABASE_ANON_KEY || 'placeholder-anon-key'
+  SUPABASE_ANON_KEY || 'placeholder-anon-key',
+  { global: { fetch: fetchComRepeticao((...a) => fetch(...a)) } }
 )
 
 export type Database = {

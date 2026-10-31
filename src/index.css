@@ -240,3 +240,6 @@ html.dark { color-scheme: dark; }
 @media (max-width: 640px) {
   table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
 }
+
+/* Passo 62: foco visível padronizado (anel dourado) em tudo que recebe teclado. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 3px solid #B08D57 !important; outline-offset: 2px; }
