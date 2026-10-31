@@ -8,6 +8,7 @@ import { diasAte } from '@/lib/datas'
 import { FlaskConical, BarChart3, Leaf, ExternalLink, MessageSquare, BookOpen, Scale } from 'lucide-react'
 import { MEDICOES, PLANO_M31, DECK_URL } from '@/data/medicoes'
 import PesquisaDireito from '@/components/PesquisaDireito'
+import { gerarPdfTexto, quebrar } from '@/lib/pdfSimples'
 
 type Aba = 'inovacao' | 'jurimetria' | 'esg' | 'case' | 'pesquisa'
 const ABAS: { valor: Aba; rotulo: string; Icone: typeof FlaskConical }[] = [
@@ -132,8 +133,38 @@ function Esg() {
 
 // Case study do Instituto THEYE: a própria plataforma como estudo de caso, com a trajetória das medições
 // e os hashes dos PDFs (cadeia verificável; .ots no Bitcoin via OpenTimestamps).
+// Passo 45: o case study em PDF (trajetória, tabela de medições com SHA-256 e .ots, nota de método), gerado no navegador.
+export function linhasCaseStudy(): { texto: string; tamanho?: number; negrito?: boolean }[] {
+  const primeira = MEDICOES[0], ultima = MEDICOES[MEDICOES.length - 1]
+  const nota = (n: number) => n.toFixed(2).replace('.', ',')
+  const L: { texto: string; tamanho?: number; negrito?: boolean }[] = [
+    { texto: 'Case study: plataforma GMenezes Advogados Associados', tamanho: 16, negrito: true },
+    { texto: `Instituto THEYE · de ${nota(primeira.nota)} a ${nota(ultima.nota)} em ${MEDICOES.length} medições (M${primeira.n} a M${ultima.n}) · gerado em ${new Date().toLocaleDateString('pt-BR')}`, tamanho: 9 }, { texto: ' ' },
+    { texto: '1. Trajetória de notas', tamanho: 12, negrito: true },
+  ]
+  for (const m of MEDICOES) L.push({ texto: `M${m.n} · ${m.data.split('-').reverse().join('/')} · ${nota(m.nota)} ${'#'.repeat(Math.max(1, Math.round((m.nota - 7) * 10)))}`, tamanho: 8.5 })
+  L.push({ texto: ' ' }, { texto: '2. Tabela de medições (PDF, SHA-256 e prova OpenTimestamps)', tamanho: 12, negrito: true })
+  for (const m of MEDICOES) {
+    L.push({ texto: `M${m.n} · ${m.data.split('-').reverse().join('/')} · nota ${nota(m.nota)} · ${m.arquivo} · .ots: ${m.ots ? 'sim (Bitcoin)' : 'não'}`, tamanho: 8.5, negrito: true })
+    L.push({ texto: `SHA-256 ${m.sha256}`, tamanho: 7.5 })
+    for (const q of quebrar(`Entregue: ${m.entregue}`, 8)) L.push({ texto: q, tamanho: 8 })
+  }
+  L.push({ texto: `Plano M31 · ${PLANO_M31.data.split('-').reverse().join('/')} · média ${nota(PLANO_M31.media)} · ${PLANO_M31.arquivo} · .ots: sim`, tamanho: 8.5, negrito: true }, { texto: `SHA-256 ${PLANO_M31.sha256}`, tamanho: 7.5 })
+  L.push({ texto: ' ' }, { texto: '3. Nota de método', tamanho: 12, negrito: true })
+  for (const q of quebrar('Cada entrega é medida em dez critérios ponderados: funcionalidade, confiabilidade, segurança, usabilidade, desempenho, inteligência artificial, dados, acessibilidade, documentação e adoção. A nota é a média ponderada, de 0 a 10, atribuída pelo agente de medição com base em testes em produção (navegador real, zero erros de JavaScript, CSS carregado) e nos critérios de Nielsen, SUS, WCAG 2.2 AA, ISO 9241-110 e HEART. Cada medição gera um PDF cujo SHA-256 é encadeado ao da medição anterior (cadeia-de-medicoes.txt) e carimbado no Bitcoin pelo OpenTimestamps (.ots), o que impede alterar o histórico sem que se perceba. Para conferir: calcule o SHA-256 do PDF e compare com a tabela; verifique o .ots em opentimestamps.org. Limite: a nota mede a plataforma, não o uso pela equipe; o que falta para 10 depende de dados reais, logo oficial e adoção.', 9)) L.push({ texto: q, tamanho: 9 })
+  L.push({ texto: ' ' }, { texto: 'Instituto THEYE · plataforma desenvolvida para GMenezes Advogados Associados · dados fictícios até a equipe cadastrar os reais.', tamanho: 8 })
+  return L
+}
+
 function CaseStudy() {
   const primeira = MEDICOES[0], ultima = MEDICOES[MEDICOES.length - 1]
+  const [msgPdf, setMsgPdf] = useState('')
+  const caseEmPdf = () => {
+    const pdf = gerarPdfTexto('Case study GMenezes', linhasCaseStudy())
+    const url = URL.createObjectURL(new Blob([pdf], { type: 'application/pdf' }))
+    const a = document.createElement('a'); a.href = url; a.download = `case-study-gmenezes-M${ultima.n}.pdf`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 2000)
+    setMsgPdf(`Case study em PDF gerado com ${MEDICOES.length} medições, SHA-256 e provas .ots.`)
+  }
   return (
     <div className="space-y-6" data-testid="case-study">
       <section className="bg-white p-6 shadow-sm">
@@ -146,7 +177,9 @@ function CaseStudy() {
         <div className="mt-4 flex flex-wrap gap-3">
           <a href={DECK_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm">Deck de apresentação <ExternalLink size={14} aria-hidden="true" /></a>
           <Link to="/testar" className="inline-flex items-center gap-2 border border-navy text-navy min-h-[44px] px-5 uppercase tracking-wider text-sm">Testar tudo agora</Link>
+          <button type="button" onClick={caseEmPdf} data-testid="case-study-pdf" className="inline-flex items-center gap-2 border border-navy text-navy min-h-[44px] px-5 uppercase tracking-wider text-sm">Case study em PDF</button>
         </div>
+        {msgPdf && <p role="status" className="text-sm mt-2" data-testid="case-study-msg">{msgPdf}</p>}
       </section>
       <section className="bg-white p-6 shadow-sm">
         <h2 className="text-lg mb-1">Cadeia de medições (PDFs e hashes)</h2>
