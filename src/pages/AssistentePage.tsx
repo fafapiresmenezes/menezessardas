@@ -121,14 +121,18 @@ export default function AssistentePage() {
 
   useEffect(() => {
     // Links do menu Instituto abrem o agente certo (?agente=inovacao).
-    const pedido = new URLSearchParams(window.location.search).get('agente') as Especialidade | null
+    // Com HashRouter os parâmetros ficam depois do "#/assistente?"; lê dos dois lugares.
+    const qs = new URLSearchParams(window.location.search || window.location.hash.split('?')[1] || '')
+    const pedido = qs.get('agente') as Especialidade | null
     if (pedido && ESPECIALIDADES.some(e => e.valor === pedido)) setEspecialidade(pedido)
     else especialidadePreferida().then(setEspecialidade)
     // A biblioteca de modelos abre já no modo Redigir com o pedido preenchido (?modo=redigir&pedido=...).
-    const qs = new URLSearchParams(window.location.search)
     if (qs.get('modo') === 'redigir') setModo('redigir')
     const texto = qs.get('pedido')
     if (texto) setPergunta(texto.slice(0, 2000))
+    // Passo 59: "Perguntar sobre esta tela" traz a tela e o que está visível como fatos do caso.
+    const sobre = qs.get('contexto')
+    if (sobre) { setContexto(sobre.slice(0, 3000)); if (!qs.get('modo')) setModo('caminhos') }
     historicoConsultas().then(setHistorico).catch(e => setErro(e instanceof Error ? e.message : 'Não foi possível carregar o histórico.'))
   }, [])
 

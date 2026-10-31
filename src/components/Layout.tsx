@@ -7,6 +7,7 @@ import { ehSede } from '@/lib/equipe'
 import Busca from './Busca'
 import BoasVindas from './BoasVindas'
 import TourTela from './TourTela'
+import PerguntarTela from './PerguntarTela'
 import ExigirDoisFatores from './ExigirDoisFatores'
 import AceiteContratoSaas from './AceiteContratoSaas'
 import AceiteTermos from './AceiteTermos'
@@ -173,6 +174,7 @@ export default function Layout({ children, title }: LayoutProps) {
           <h1 className="font-serif text-2xl md:text-3xl text-navy truncate">{title}</h1>
           <div className="flex items-center gap-2 flex-shrink-0">
           <TourTela />
+          <PerguntarTela />
           {admin && (
             <button
               onClick={() => navigate('/equipe')}
