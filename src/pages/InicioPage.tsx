@@ -28,6 +28,10 @@ export default function InicioPage() {
   const [fixa, setFixa] = useState<string | null>(null)
   const [contagem, setContagem] = useState<number | null>(null)
   const [carregado, setCarregado] = useState(false)
+  // Passo 98: busca rápida ("para onde quer ir?") filtra as 10 áreas por título ou descrição; Enter abre a primeira.
+  const [buscaArea, setBuscaArea] = useState('')
+  const norm = (t: string) => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  const areasVisiveis = AREAS.filter(a => !buscaArea || norm(a.titulo + ' ' + a.texto).includes(norm(buscaArea)))
   useEffect(() => {
     if (!supabaseConfigurado) { setCarregado(true); return }
     supabase.from('preferencias_usuario').select('area,area_fixa').maybeSingle().then(r => {
@@ -81,8 +85,14 @@ export default function InicioPage() {
           )}
         </div>
       )}
+      <form className="w-full max-w-6xl mb-4" onSubmit={e => { e.preventDefault(); const a = areasVisiveis[0]; if (a) abrir(a.destino, a.chave) }}>
+        <label className="block text-white/80 text-sm">Para onde quer ir?
+          <input value={buscaArea} onChange={e => setBuscaArea(e.target.value)} placeholder="Ex.: contrato, despejo, trabalhista, INSS…" data-testid="busca-area" className="mt-1 w-full max-w-md block border border-dourado/60 bg-white/95 text-navy px-3 min-h-[44px]" />
+        </label>
+        {buscaArea && <p className="text-white/70 text-xs mt-1" data-testid="busca-area-resultado">{areasVisiveis.length ? `${areasVisiveis.length} área(s); Enter abre ${areasVisiveis[0].titulo}.` : 'Nenhuma área com esse termo. Tente "contrato" ou "cível".'}</p>}
+      </form>
       <div className="grid gap-4 w-full max-w-6xl sm:grid-cols-2 lg:grid-cols-5">
-        {AREAS.map(a => (
+        {areasVisiveis.map(a => (
           <button
             key={a.chave}
             data-testid={`area-${a.chave}`}

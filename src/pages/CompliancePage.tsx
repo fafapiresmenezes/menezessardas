@@ -53,6 +53,8 @@ export default function CompliancePage() {
   const geral = respondidas ? Math.round((Object.values(resp).reduce((a, b) => a + b, 0) / (respondidas * 2)) * 100) : null
   const lacunas = PILARES.flatMap((p, pi) => p.perguntas.map((q, i) => ({ ...q, pilar: p.nome, v: resp[`${pi}-${i}`] })).filter(q => q.v !== undefined && q.v < 2))
   const nivel = geral === null ? '' : geral >= 80 ? 'maduro' : geral >= 50 ? 'em desenvolvimento' : 'inicial'
+  // Passo 100: resultado e plano de ação em texto para o e-mail ao cliente.
+  const [copiadoDiag, setCopiadoDiag] = useState(false)
   // Passo 12: diagnóstico salvo, plano de ação em Casos e projetos e evolução trimestral da nota.
   type Diag = { id: string; empresa: string; nota: number; lacunas: number; caso_id: string | null; criado_em: string }
   const [historico, setHistorico] = useState<Diag[]>([])
@@ -130,6 +132,7 @@ export default function CompliancePage() {
             <ol className="list-decimal pl-5 text-sm space-y-1">
               {lacunas.sort((a, b) => (a.v ?? 0) - (b.v ?? 0)).map((l, i) => <li key={i}><strong>{l.pilar}:</strong> {l.acao} <span className="text-xs text-grafite-claro">({l.v === 0 ? 'prioridade alta' : 'prioridade média'}; {l.base})</span></li>)}
             </ol>
+            <button type="button" onClick={async () => { const t = [`Diagnóstico de compliance${empresa.trim() ? ` — ${empresa.trim()}` : ''} — ${new Date().toLocaleDateString('pt-BR')}`, `Nota geral: ${geral}% (${nivel}) · ${respondidas} de ${total} perguntas`, '', `Plano de ação (${lacunas.length} lacunas):`, ...[...lacunas].sort((a, b) => (a.v ?? 0) - (b.v ?? 0)).map((l, i) => `${i + 1}. ${l.pilar}: ${l.acao} (${l.v === 0 ? 'prioridade alta' : 'prioridade média'})`), codigo ? `\nCódigo de integridade: ${codigo}` : '', 'GMenezes Advogados Associados'].filter(x => x !== '' || true).join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoDiag(true); setTimeout(() => setCopiadoDiag(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-diagnostico" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoDiag ? 'Diagnóstico copiado' : 'Copiar diagnóstico para o cliente'}</button>
             {codigo && <p className="text-xs text-grafite-claro mt-4 break-all" data-testid="codigo-integridade">Código de integridade (SHA-256 das respostas, empresa e data): {codigo}. Qualquer alteração nas respostas muda este código.</p>}
             <div className="flex flex-wrap gap-3 mt-4 print:hidden">
               <button type="button" onClick={() => window.print()} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2"><Printer className="w-4 h-4" aria-hidden />Imprimir ou salvar em PDF</button>

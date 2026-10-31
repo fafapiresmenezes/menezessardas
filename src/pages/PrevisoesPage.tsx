@@ -248,6 +248,13 @@ export default function PrevisoesPage() {
   const altos = previsoes.filter(p => p.faixaRisco === 'alto').length
   const renovMedia = previsoes.length ? Math.round(previsoes.reduce((s, p) => s + p.renovacao, 0) / previsoes.length) : 0
   const [versaoCalib, setVersaoCalib] = useState(0)
+  // Passo 99: resumo da carteira em texto para a reunião ou o e-mail.
+  const [copiadoResumo, setCopiadoResumo] = useState(false)
+  const copiarResumo = async () => {
+    const t = [`Previsões da carteira — ${new Date().toLocaleDateString('pt-BR')}`, `Receita contratada (12 meses): ${moeda(totalContratada)}`, `Receita esperada (12 meses): ${moeda(totalEsperada)}`, `Contratos com risco alto: ${altos} de ${previsoes.length}`, `Chance média de renovação: ${renovMedia}%`,
+      ...previsoes.filter(p => p.faixaRisco === 'alto').map(p => `• risco alto: ${p.contrato.parte || 'contrato'} (${p.risco} pontos)`), 'Regras declaradas v1 · GMenezes Advogados Associados'].join('\n')
+    try { await navigator.clipboard.writeText(t); setCopiadoResumo(true); setTimeout(() => setCopiadoResumo(false), 2500) } catch { /* sem área de transferência */ }
+  }
 
   return (
     <Layout title="Previsões">
@@ -255,6 +262,7 @@ export default function PrevisoesPage() {
         <header>
           <h2 className="text-3xl text-navy">Desfechos, calibração e carteira</h2>
           <p className="text-sm text-grafite-claro mt-1">Risco, renovação e receita da carteira, e chance de êxito na Justiça. Cada número mostra de onde vem; nada é estimado sem dado.</p>
+          <button type="button" onClick={copiarResumo} data-testid="copiar-previsoes" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo da carteira'}</button>
         </header>
         <div className="grid gap-4 sm:grid-cols-4">
           {[
