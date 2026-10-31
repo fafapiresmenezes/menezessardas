@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Placar de previsões · Instituto THEYE</title>
+<meta name="description" content="Pesquisa aplicada em predição jurídica, ontologia do direito e desenvolvimento do direito brasileiro.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --papel:#F6F3EC; --papel-2:#EFEADF; --tinta:#0F1A2B; --tinta-2:#3A4556; --apagado:#6B7380;
+  --linha:#D8D1C2; --ouro:#9A7535; --ouro-claro:#C9A96A; --grafo:#2F5D62; --conv:#8A4B3A;
+  --serif:'Newsreader',Georgia,serif; --sans:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --papel:#0D131D; --papel-2:#141C28; --tinta:#ECE7DC; --tinta-2:#C4C0B6; --apagado:#9198A3;
+  --linha:#2A3342; --ouro:#C9A96A; --ouro-claro:#9A7535; --grafo:#6FA7A9; --conv:#D08C76;}}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--papel);color:var(--tinta);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.w{max-width:1160px;margin:0 auto;padding:0 24px}
+@media(max-width:600px){.w{padding:0 16px}}
+header.top{border-bottom:1px solid var(--linha);position:sticky;top:0;background:color-mix(in srgb,var(--papel) 92%,transparent);backdrop-filter:blur(8px);z-index:10}
+.top .w{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.marca{display:flex;align-items:center;gap:12px;text-decoration:none}
+.selo{width:34px;height:34px;border:1px solid var(--ouro);display:grid;place-items:center;font-family:var(--serif);font-size:15px;color:var(--ouro);letter-spacing:.04em}
+.marca b{font-family:var(--serif);font-weight:500;font-size:19px;letter-spacing:.02em}
+nav a{font-size:14px;text-decoration:none;color:var(--tinta-2);margin-left:24px}
+nav a:hover{color:var(--tinta)}
+@media(max-width:820px){nav{display:none}}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 20px;border:1px solid var(--tinta);background:var(--tinta);color:var(--papel);font-size:14px;font-weight:500;text-decoration:none;letter-spacing:.01em}
+.btn.sec{background:transparent;color:var(--tinta)}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ouro)}
+h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:-.01em}
+.hero{padding:96px 0 72px;border-bottom:1px solid var(--linha)}
+.hero h1{font-size:clamp(38px,6vw,72px);line-height:1.04;max-width:16ch;margin:18px 0 24px}
+.hero p.lead{font-size:clamp(17px,2vw,20px);color:var(--tinta-2);max-width:60ch}
+.hero .acoes{display:flex;gap:12px;flex-wrap:wrap;margin-top:36px}
+section{padding:80px 0;border-bottom:1px solid var(--linha)}
+.sec-h{display:grid;grid-template-columns:1fr 2fr;gap:48px;margin-bottom:48px}
+@media(max-width:820px){.sec-h{grid-template-columns:1fr;gap:12px}}
+.sec-h h2{font-size:clamp(28px,3.4vw,40px);line-height:1.12}
+.sec-h p{color:var(--tinta-2);max-width:62ch}
+.grade{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--linha)}
+@media(max-width:980px){.grade{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.grade{grid-template-columns:1fr}}
+.cel{padding:28px 24px 32px 0;border-bottom:1px solid var(--linha)}
+.cel .n{font-family:var(--mono);font-size:12px;color:var(--apagado)}
+.cel h3{font-size:22px;margin:10px 0 8px}
+.cel p{font-size:14.5px;color:var(--tinta-2)}
+.comp{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--linha);border:1px solid var(--linha)}
+@media(max-width:820px){.comp{grid-template-columns:1fr}}
+.comp>div{background:var(--papel);padding:32px}
+.comp h3{font-size:24px;margin:8px 0 12px}
+.comp ul{list-style:none}
+.comp li{padding:10px 0;border-top:1px solid var(--linha);font-size:14.5px;color:var(--tinta-2)}
+.comp svg{width:100%;height:auto;display:block;margin:8px 0 20px}
+.tag-c{color:var(--conv)} .tag-g{color:var(--grafo)}
+.nota{margin-top:24px;padding:20px 24px;border-left:2px solid var(--ouro);background:var(--papel-2);font-size:14.5px;color:var(--tinta-2);max-width:80ch}
+.princ{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--linha)}
+@media(max-width:820px){.princ{grid-template-columns:1fr}}
+.princ div{padding:24px 24px 24px 0;border-bottom:1px solid var(--linha)}
+.princ b{display:block;font-family:var(--serif);font-weight:500;font-size:19px;margin-bottom:6px}
+.princ span{font-size:14.5px;color:var(--tinta-2)}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th{text-align:left;font-family:var(--mono);font-weight:400;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--apagado);padding:0 16px 12px 0;border-bottom:1px solid var(--tinta)}
+td{padding:14px 16px 14px 0;border-bottom:1px solid var(--linha);vertical-align:top}
+td:first-child{font-family:var(--serif);font-size:17px;width:34%}
+td:nth-child(2){color:var(--tinta-2)}
+@media(max-width:700px){thead{display:none}tr,td{display:block;width:100%!important}td{border:0;padding:2px 0}tr{padding:14px 0;border-bottom:1px solid var(--linha)}}
+.acesso{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--linha);border:1px solid var(--linha)}
+@media(max-width:820px){.acesso{grid-template-columns:1fr}}
+.acesso div{background:var(--papel);padding:28px}
+.acesso .k{font-family:var(--mono);font-size:12px;color:var(--ouro);letter-spacing:.1em;text-transform:uppercase}
+.acesso h3{font-size:24px;margin:8px 0}
+.acesso p{font-size:14.5px;color:var(--tinta-2)}
+.prog{height:6px;background:var(--papel-2);border:1px solid var(--linha);margin:12px 0 8px;max-width:520px}
+.prog i{display:block;height:100%;background:var(--ouro)}
+.hash{font-family:var(--mono);font-size:12.5px;word-break:break-all;color:var(--tinta-2)}
+footer{padding:48px 0 64px;font-size:13.5px;color:var(--apagado)}
+footer .w{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+:focus-visible{outline:2px solid var(--ouro);outline-offset:3px}
+</style><style>
+.bar{position:relative;height:28px;border-left:1px solid var(--linha);margin:6px 0}
+.bar .z{position:absolute;top:-4px;bottom:-4px;width:1px;background:var(--tinta)}
+.bar .ic{position:absolute;top:10px;height:8px;background:var(--grafo);opacity:.35}
+.bar .pt{position:absolute;top:6px;width:2px;height:16px;background:var(--grafo)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--linha);border:1px solid var(--linha)}
+@media(max-width:820px){.cards{grid-template-columns:1fr}}
+.cards>div{background:var(--papel);padding:24px}
+.num{font-family:var(--serif);font-size:40px;line-height:1.1}
+.sm{font-size:13.5px;color:var(--apagado)}
+.veredito{display:inline-block;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border:1px solid var(--ouro);color:var(--ouro);margin-top:8px}
+.prot{border-top:1px solid var(--linha);padding:40px 0}
+.prot h3{font-size:28px;margin:6px 0 10px}
+dl{display:grid;grid-template-columns:220px 1fr;gap:8px 24px;font-size:14.5px;margin-top:16px}
+@media(max-width:600px){dl{grid-template-columns:1fr}}
+dt{color:var(--apagado)} dd{color:var(--tinta)}
+</style>
+</head>
+<body>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/#laboratorio">Laboratório</a><a href="/placar.html" aria-current="page">Placar</a><a href="/#metodo">Método</a><a href="/#servicos">Serviços</a></nav>
+</div></header>
+<main>
+<div class="hero"><div class="w">
+  <div class="kicker">Placar público · atualizado em 31/10/2026</div>
+  <h1>Toda previsão é registrada antes. Toda nota sai depois.</h1>
+  <p class="lead">Cada previsão do Instituto é pré-registrada, carimbada no Bitcoin antes do desfecho e pontuada contra a melhor linha de base. Quando o resultado não é conclusivo, dizemos que não é.</p>
+</div></div>
+
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Resumo</div><h2>Onde estamos, sem arredondar a nosso favor.</h2></div>
+  <p>O Brier mede o erro de uma probabilidade: 0 é perfeito e 0,25 é o que se obtém dizendo 50% para tudo. Quanto menor, melhor.</p></div>
+  <div class="cards">
+    <div><div class="sm">Previsões diárias pontuadas (queimadas)</div><div class="num">116</div><div class="sm">6 blocos independentes · amostra efetiva pequena</div></div>
+    <div><div class="sm">Previsões de nicho resolvidas</div><div class="num">2 / 100</div><div class="sm">28 emitidas e seladas · meta de 100 resoluções</div></div>
+    <div><div class="sm">Próxima resolução</div><div class="num">05/11</div><div class="sm">Copom: corta, mantém ou sobe (pré-registro de 16/10)</div></div>
+  </div>
+</div></section>
+
+<section><div class="w">
+  <div class="prot">
+    <div class="kicker">Protocolo P-001-C</div>
+    <h3>Focos de calor do INPE, diário</h3>
+    <p style="color:var(--tinta-2);max-width:70ch">116 previsões de “vai ou não passar do limiar” por unidade territorial, entre 12 e 16/10/2026, resolvidas na própria série do INPE.</p>
+    <dl>
+      <dt>Brier do modelo</dt><dd>0,229</dd>
+      <dt>Melhor linha de base</dt><dd>0,243 (persistência: amanhã repete o padrão recente)</dd>
+      <dt>Climatologia (50%)</dt><dd>0,250</dd>
+      <dt>Diferença contra a melhor base</dt><dd>−0,014, intervalo de 95% de −0,047 a +0,022</dd>
+    </dl>
+    <div class="bar" role="img" aria-label="Diferença -0.0137 com intervalo de -0.0466 a +0.0221"><span class="z" style="left:60.0%"></span><span class="ic" style="left:13.4%;width:68.7%"></span><span class="pt" style="left:46.3%"></span></div>
+    <p class="sm">A linha vertical escura é o zero. Como a faixa verde cruza o zero, ainda não se pode dizer que o modelo é melhor.</p>
+    <span class="veredito">Favorável · interino · inconclusivo</span>
+    <p class="nota">Uma revisão adversária (19/10/2026) refez todas as contas e confirmou os números, mas derrubou a frase “modelo melhor que a linha de base”: o intervalo cruza zero, a comparação deve ser com a melhor base e a leitura foi intermediária. Publicamos o veredito da revisão, não o do autor.</p>
+  </div>
+
+  <div class="prot">
+    <div class="kicker">Nichos pré-registrados</div>
+    <h3>28 previsões emitidas, 2 resolvidas</h3>
+    <dl>
+      <dt>Brier do motor</dt><dd>0,053 contra 0,211 do naive</dd>
+      <dt>Leitura</dt><dd>Com 2 resoluções, qualquer número é anedota. O placar só ganha sentido com dezenas.</dd>
+    </dl>
+    <span class="veredito">Amostra insuficiente</span>
+  </div>
+
+  <div class="prot">
+    <div class="kicker">Eventos operacionais</div>
+    <h3>Disponibilidade de APIs públicas: 216 resoluções</h3>
+    <dl>
+      <dt>Log score (menor é melhor)</dt><dd>1,03 do motor contra 3,54 do naive</dd>
+      <dt>Brier</dt><dd>0,508 contra 0,550 (escala multiclasse, 0 a 2)</dd>
+      <dt>Leitura</dt><dd>Quase tudo acontece como previsto; o log score é a medida que separa os métodos. Fica fora do contador de previsões.</dd>
+    </dl>
+  </div>
+
+  <div class="prot">
+    <div class="kicker">Em aberto</div>
+    <h3>Copom de 4 de novembro de 2026</h3>
+    <dl>
+      <dt>Pergunta</dt><dd>A meta Selic fica menor, igual ou maior que 13,75%?</dd>
+      <dt>Fonte que resolve</dt><dd>Banco Central, série SGS 432, lida no 1º dia útil após o comunicado</dd>
+      <dt>Referências registradas</dt><dd>Persistência: mantém. Mediana do Focus de 09/10: 13,50%.</dd>
+      <dt>Pré-registro</dt><dd>16/10/2026, antes do resultado existir</dd>
+    </dl>
+  </div>
+</div></section>
+
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Como ler</div><h2>Três ideias para não se enganar com previsões.</h2></div><p></p></div>
+  <div class="princ">
+    <div><b>Compare com a base certa</b><span>Ganhar de “50% para tudo” é fácil. O teste honesto é contra a melhor regra simples disponível.</span></div>
+    <div><b>Olhe o intervalo, não o ponto</b><span>Um número favorável com intervalo cruzando zero ainda não é evidência.</span></div>
+    <div><b>Registre antes</b><span>Previsão anotada depois do fato não vale. Por isso cada uma é carimbada no Bitcoin antes.</span></div>
+  </div>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · Dados do motor THE EYE, leitura de 31/10/2026</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
+</body>
+</html>
