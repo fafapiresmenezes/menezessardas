@@ -8,7 +8,7 @@ type Area = {
   previsao?: { ano: number; processos: number; margem: number; variacao: number | null; r2: number }
   confianca: 'alta' | 'media' | 'baixa' | 'insuficiente'; desatualizado?: boolean; erro?: string; anosIncompletos?: number[]
   jen?: { fonte: string; tribunal: string; indicador: string; porAno: { ano: number; n: number }[]; previsao: { ano: number; processos: number; margem: number; variacao: number | null; r2: number }; confianca: 'alta' | 'media' | 'baixa'; concordam: boolean }
-  confiancaCombinada?: 'alta' | 'media' | 'baixa'
+  confiancaCombinada?: 'alta' | 'media' | 'baixa'; fontePrevisao?: string
 }
 const AREAS = ['imobiliario', 'civel', 'trabalhista', 'familia', 'tributario', 'empresarial', 'consumidor', 'previdenciario', 'penal', 'compliance']
 const fmt = (n: number) => n.toLocaleString('pt-BR')
@@ -59,15 +59,15 @@ export default function MercadoPage() {
                   {x.previsao && <span className="flex-1 text-center">{String(x.previsao.ano).slice(2)}*</span>}
                 </div>
                 <p className="text-sm mt-2">
-                  {x.porAno.length ? <>Último ano: {fmt(x.porAno[x.porAno.length - 1].n)} processos novos. </> : 'Sem dados no CNJ para esta classe. '}
+                  {x.porAno.length ? <>Último ano: {fmt(x.porAno[x.porAno.length - 1].n)} processos novos. </> : (x.fontePrevisao ? 'O DataJud não tem esta classe; a previsão usa só o Justiça em Números. ' : 'Sem dados no CNJ para esta classe. ')}
                   {x.previsao && (x.confianca === 'baixa' ? <>Sem tendência confiável: os números variam demais para prever.</> : <>Previsão {x.previsao.ano}: <strong>{fmt(x.previsao.processos)}</strong> ± {fmt(x.previsao.margem)}.</>)}
                 </p>
                 {x.jen && (
                   <p className="text-sm mt-2 border-t border-navy/10 pt-2" data-testid={`jen-${a}`}>
-                    <strong>Justiça em Números</strong> ({x.jen.tribunal}, {x.jen.indicador}): último ano {fmt(x.jen.porAno[x.jen.porAno.length - 1].n)}; previsão {x.jen.previsao.ano}: <strong>{fmt(x.jen.previsao.processos)}</strong> ± {fmt(x.jen.previsao.margem)} ({x.jen.previsao.variacao !== null && (x.jen.previsao.variacao >= 0 ? '+' : '')}{x.jen.previsao.variacao}%, confiança {x.jen.confianca}). {x.previsao && (x.jen.concordam ? 'As duas fontes apontam a mesma direção.' : 'As fontes divergem: use com cautela.')}
+                    <strong>Justiça em Números</strong> ({x.jen.tribunal}, {x.jen.indicador}): último ano {fmt(x.jen.porAno[x.jen.porAno.length - 1].n)}; previsão {x.jen.previsao.ano}: <strong>{fmt(x.jen.previsao.processos)}</strong> ± {fmt(x.jen.previsao.margem)} ({x.jen.previsao.variacao !== null && (x.jen.previsao.variacao >= 0 ? '+' : '')}{x.jen.previsao.variacao}%, confiança {x.jen.confianca}). {x.previsao && !x.fontePrevisao && (x.jen.concordam ? 'As duas fontes apontam a mesma direção.' : 'As fontes divergem: use com cautela.')}
                   </p>
                 )}
-                <p className="text-xs text-grafite-claro mt-1">Amostra: {fmt(x.amostra)} processos · confiança {x.confianca}{x.previsao && ` (R² ${x.previsao.r2})`}{x.amostra < 300 && ' · amostra pequena, use com cautela'} · {x.fonte}{x.desatualizado && ' · CNJ fora do ar, dado anterior'}{!!x.anosIncompletos?.length && ` · ${x.anosIncompletos.join(', ')} fora do cálculo (dados ainda incompletos no CNJ)`}</p>
+                {x.fontePrevisao ? <p className="text-xs text-grafite-claro mt-1" data-testid={`fonte-unica-${a}`}>Fonte única: {x.fontePrevisao} · confiança {x.confiancaCombinada}{x.previsao && ` (R² ${x.previsao.r2})`}</p> : <p className="text-xs text-grafite-claro mt-1">Amostra: {fmt(x.amostra)} processos · confiança {x.confianca}{x.previsao && ` (R² ${x.previsao.r2})`}{x.amostra < 300 && ' · amostra pequena, use com cautela'} · {x.fonte}{x.desatualizado && ' · CNJ fora do ar, dado anterior'}{!!x.anosIncompletos?.length && ` · ${x.anosIncompletos.join(', ')} fora do cálculo (dados ainda incompletos no CNJ)`}</p>}
               </section>
             )
           })}

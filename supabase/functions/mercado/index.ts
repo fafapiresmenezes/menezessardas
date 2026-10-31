@@ -10,7 +10,7 @@ const CACHE_DIAS = 7
 const AREAS: Record<string, { nome: string; tribunal: string; classes: string[] }> = {
   imobiliario: { nome: 'Imobiliário (despejos e renovatórias, TJRJ)', tribunal: 'tjrj', classes: ['Despejo por Falta de Pagamento', 'Despejo por Falta de Pagamento Cumulado Com Cobrança', 'Renovatória de Locação'] },
   civel: { nome: 'Cível (procedimento comum, TJRJ)', tribunal: 'tjrj', classes: ['Procedimento Comum Cível'] },
-  trabalhista: { nome: 'Trabalhista (ações ordinárias, TRT-1)', tribunal: 'trt1', classes: ['Ação Trabalhista - Rito Ordinário', 'Ação Trabalhista - Rito Sumaríssimo'] },
+  trabalhista: { nome: 'Trabalhista (ações ordinárias, TRT-1)', tribunal: 'trt1', classes: ['Ação Trabalhista - Rito Ordinário', 'Ação Trabalhista - Rito Sumaríssimo'], codigos: [985, 1125] },
   familia: { nome: 'Família (divórcios e alimentos, TJRJ)', tribunal: 'tjrj', classes: ['Divórcio Litigioso', 'Divórcio Consensual', 'Alimentos - Lei Especial Nº 5.478/68'] },
   tributario: { nome: 'Tributário (execuções fiscais, TJRJ)', tribunal: 'tjrj', classes: ['Execução Fiscal'] },
   empresarial: { nome: 'Empresarial (recuperações e falências, TJRJ)', tribunal: 'tjrj', classes: ['Recuperação Judicial', 'Falência de Empresários, Sociedades Empresáriais, Microempresas e Empresas de Pequeno Porte'] },
@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
       size: 0,
       query: { bool: {
         filter: [{ range: { dataAjuizamento: { gte: '2019-01-01', lte: `${ultimoAno}-12-31` } } }],
-        should: cfg.classes.map(c => ({ match_phrase: { 'classe.nome': c } })), minimum_should_match: 1,
+        should: [...cfg.classes.map((c: string) => ({ match_phrase: { 'classe.nome': c } })), ...((cfg as { codigos?: number[] }).codigos ?? []).map(c => ({ term: { 'classe.codigo': c } }))], minimum_should_match: 1,
       } },
       aggs: { ano: { date_histogram: { field: 'dataAjuizamento', calendar_interval: 'year', format: 'yyyy' } } },
     }),
@@ -134,7 +134,12 @@ Deno.serve(async (req) => {
       resultado.confiancaCombinada = concordam ? (conf === 'alta' || resultado.confianca === 'alta' ? 'alta' : 'media') : v1 === null ? conf : 'baixa'
     }
   }
+  // Passo 67: DataJud sem registros para a classe (caso do TRT-1): a previsão principal passa a ser a do Justiça em Números, com a fonte dita.
+  if (!resultado.previsao && resultado.jen) {
+    const j = resultado.jen as { previsao: unknown; confianca: string; fonte: string; tribunal: string }
+    resultado.previsao = j.previsao; resultado.confiancaCombinada = j.confianca; resultado.fontePrevisao = `${j.fonte} (${j.tribunal})`
+  }
   // Resultado vazio (CNJ sobrecarregado ou classe sem registros) não vai para o cache: tenta de novo na próxima visita.
-  if (pontos.length >= 3) await sb.from('jurimetria_cache').upsert({ chave, resultado, criado_em: new Date().toISOString() })
+  if (resultado.previsao) await sb.from('jurimetria_cache').upsert({ chave, resultado, criado_em: new Date().toISOString() })
   return json(resultado)
 })
