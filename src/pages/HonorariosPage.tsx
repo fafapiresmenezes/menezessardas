@@ -82,6 +82,17 @@ export default function HonorariosPage() {
 
   const totais = casos.reduce((s, c) => ({ previsto: s.previsto + Number(c.honorario_previsto), recebido: s.recebido + Number(c.honorario_recebido) }), { previsto: 0, recebido: 0 })
   const custoTotal = Object.values(custoPorCliente).reduce((a, b) => a + b, 0)
+  // Passo 114: resumo da cobrança em texto (totais e casos com saldo em aberto), para a reunião de sócios.
+  const copiarCobranca = () => {
+    const abertos = casos.map(c => ({ c, r: regua(c) })).filter(x => x.r.aberto > 0).sort((a, b) => b.r.aberto - a.r.aberto)
+    const linhas = [
+      `Honorários · ${new Date().toLocaleDateString('pt-BR')}`,
+      `Combinado ${brl(totais.previsto)} · Recebido ${brl(totais.recebido)} · Em aberto ${brl(totais.previsto - totais.recebido)} · Custo das horas ${brl(custoTotal)}`,
+      `Casos com saldo em aberto: ${abertos.length}`,
+      ...abertos.map(({ c, r }) => `  ${c.titulo}${c.cliente ? ' · ' + c.cliente : ''} · ${brl(r.aberto)} · ${r.rotulo}`),
+    ]
+    navigator.clipboard?.writeText(linhas.join('\n')).catch(() => undefined)
+  }
 
   return (
     <Layout title="Honorários e rentabilidade">
@@ -93,7 +104,10 @@ export default function HonorariosPage() {
         </section>
         {erro && <p role="alert" className="text-sm text-critico">{erro}</p>}
         <section className="bg-white shadow-sm p-5 overflow-x-auto">
-          <h2 className="text-lg mb-3 flex items-center gap-2"><Banknote size={18} className="text-dourado" aria-hidden="true" /> Por caso</h2>
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+            <h2 className="text-lg flex items-center gap-2"><Banknote size={18} className="text-dourado" aria-hidden="true" /> Por caso</h2>
+            {casos.length > 0 && <button type="button" onClick={copiarCobranca} data-testid="copiar-cobranca" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar resumo da cobrança</button>}
+          </div>
           <p className="text-xs text-grafite-claro mb-3">Rentabilidade = honorários recebidos menos o custo das horas lançadas para o mesmo cliente (tela Horas). Edite os valores e toque em Salvar.</p>
           <table className="w-full text-sm" data-testid="tabela-honorarios">
             <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite border-b"><th className="py-2">Caso</th><th>Combinado</th><th>Recebido</th><th>Vencimento</th><th>Cobrança</th><th>Rentabilidade</th><th><span className="sr-only">Ações</span></th></tr></thead>

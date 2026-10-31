@@ -165,6 +165,17 @@ export default function ProjetosPage() {
   const feitas = visiveis.filter(t => t.situacao === 'feito').length
   const atrasadas = visiveis.filter(t => t.situacao !== 'feito' && t.prazo && (diasAte(t.prazo) ?? 0) < 0).length
   const horas = visiveis.reduce((s, t) => s + Number(t.horas), 0)
+  // Passo 115: andamento em texto (progresso, atrasadas, cada tarefa com prazo e situação), para o cliente ou a sócia.
+  const copiarAndamento = () => {
+    const p = tarefas.find(t => t.id === projeto)
+    const linhas = [
+      `${p ? p.titulo : 'Todas as tarefas'} · ${new Date().toLocaleDateString('pt-BR')}`,
+      `Concluído ${visiveis.length ? Math.round((feitas / visiveis.length) * 100) : 0}% · ${feitas} de ${visiveis.length} tarefas · ${atrasadas} atrasada(s) · ${horas}h lançadas`,
+      ...(cronograma?.fimPrevisto ? [`Conclusão prevista: ${formatarData(cronograma.fimPrevisto)}`] : []),
+      ...visiveis.map(t => `  [${t.situacao === 'feito' ? 'x' : ' '}] ${t.titulo}${t.prazo ? ' · ' + formatarData(t.prazo) : ''}${critico.has(t.id) ? ' ★' : ''}`),
+    ]
+    navigator.clipboard?.writeText(linhas.join('\n')).catch(() => undefined)
+  }
 
   return (
     <Layout title="Projetos">
@@ -185,6 +196,7 @@ export default function ProjetosPage() {
               </select>
             </div>
             {projeto && <button data-testid="link-cliente" onClick={linkCliente} className="min-h-[44px] px-4 border border-dourado text-navy text-sm uppercase tracking-wider">Link para o cliente</button>}
+            {visiveis.length > 0 && <button type="button" data-testid="copiar-andamento" onClick={copiarAndamento} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar andamento</button>}
             <dl className="flex gap-6 text-sm">
               <div><dt className="text-grafite-claro">Concluído</dt><dd className="text-2xl font-serif text-navy" data-testid="progresso">{visiveis.length ? Math.round((feitas / visiveis.length) * 100) : 0}%</dd></div>
               <div><dt className="text-grafite-claro">Atrasadas</dt><dd className={`text-2xl font-serif ${atrasadas ? 'text-critico' : 'text-navy'}`}>{atrasadas}</dd></div>

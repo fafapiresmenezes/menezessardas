@@ -193,6 +193,8 @@ export default function TrilhaPage() {
             return (
               <p className={`text-sm mt-3 ${atrasado ? 'text-atencao' : 'text-regular'}`} data-testid="estado-selo">
                 {ancoragens.length} selo(s) ancorado(s). Último há {horas < 1 ? 'menos de 1 hora' : `${horas} hora(s)`} ({dataHora(ult.em)}){atrasado ? '. O selo diário deveria ter rodado; use "Ancorar selo agora".' : '. O selo diário está em dia.'}
+                {/* Passo 113: o último selo em texto (data e código), para colar no e-mail do auditor. */}
+                <button type="button" data-testid="copiar-selo" onClick={() => navigator.clipboard?.writeText(`Selo blockchain da trilha · GMenezes Advogados Associados\nAncorado em: ${dataHora(ult.em)}\nSelo (SHA-256): ${ult.selo}\nTotal de selos ancorados: ${ancoragens.length}\nConferência pública: opentimestamps.org`).catch(() => undefined)} className="ml-3 underline text-navy">copiar último selo</button>
               </p>
             )
           })()}
