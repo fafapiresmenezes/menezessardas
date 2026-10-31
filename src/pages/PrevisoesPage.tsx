@@ -203,10 +203,10 @@ export default function PrevisoesPage() {
   const [versaoCalib, setVersaoCalib] = useState(0)
 
   return (
-    <Layout>
+    <Layout title="Previsões">
       <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-6">
         <header>
-          <h1 className="text-3xl text-navy">Previsões</h1>
+          <h2 className="text-3xl text-navy">Desfechos, calibração e carteira</h2>
           <p className="text-sm text-grafite-claro mt-1">Risco, renovação e receita da carteira, e chance de êxito na Justiça. Cada número mostra de onde vem; nada é estimado sem dado.</p>
         </header>
         <div className="grid gap-4 sm:grid-cols-4">

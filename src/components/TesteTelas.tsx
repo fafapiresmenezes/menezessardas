@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { MonitorCheck, Loader2 } from 'lucide-react'
 import { ROTAS_TELAS } from '@/data/rotas'
 
@@ -37,6 +38,9 @@ export async function testarTela(rota: string): Promise<{ ok: boolean; detalhe: 
 export default function TesteTelas() {
   const [res, setRes] = useState<ResultadoTela[]>([])
   const [rodando, setRodando] = useState(false)
+  // Passo 54: última auditoria WCAG (axe-core em todas as telas), gravada em configuracoes.wcag_ultima pelo roteiro E2E.
+  const [wcag, setWcag] = useState<{ data: string; telas: number; serias: number; menores: number; detalhe: string[] } | null>(null)
+  useEffect(() => { if (supabaseConfigurado) supabase.from('configuracoes').select('valor').eq('chave', 'wcag_ultima').maybeSingle().then(({ data }) => { try { if (data?.valor) setWcag(JSON.parse(data.valor)) } catch { /* sem auditoria */ } }) }, [])
   const rodar = async () => {
     setRodando(true); setRes([])
     for (const t of ROTAS_TELAS) {
@@ -57,6 +61,9 @@ export default function TesteTelas() {
           {rodando ? <Loader2 size={16} className="animate-spin" aria-hidden="true" /> : <MonitorCheck size={16} aria-hidden="true" />} {rodando ? `Testando ${res.length + 1} de ${ROTAS_TELAS.length}…` : 'Testar telas'}
         </button>
       </div>
+      {wcag && (
+        <p className="text-sm mb-3" data-testid="wcag-resumo">Acessibilidade (WCAG 2.2 AA, axe-core) em {new Date(wcag.data).toLocaleDateString('pt-BR')}: {wcag.telas} telas auditadas, <b>{wcag.serias} violação(ões) séria(s) ou crítica(s)</b>, {wcag.menores} menor(es).{wcag.detalhe.length ? ` Pendentes: ${wcag.detalhe.join('; ')}` : ' Nenhuma pendência.'}</p>
+      )}
       {res.length > 0 && (
         <>
           <p className="text-sm mb-2" aria-live="polite" data-testid="telas-resumo">{oks} de {res.length} telas funcionando{!rodando && res.length === ROTAS_TELAS.length ? ' · concluído' : ''}</p>

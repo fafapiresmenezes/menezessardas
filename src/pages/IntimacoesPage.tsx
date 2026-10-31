@@ -72,7 +72,7 @@ export default function IntimacoesPage() {
               <RefreshCw size={16} aria-hidden="true" className={ocupado ? 'animate-spin' : ''} /> {ocupado ? 'Buscando…' : 'Buscar agora'}
             </button>
             <label className="text-sm flex items-center gap-2">
-              <select value={filtro} onChange={e => setFiltro(e.target.value as 'novas' | 'todas')} className="border px-2 py-2">
+              <select aria-label="Quais intimações mostrar" value={filtro} onChange={e => setFiltro(e.target.value as 'novas' | 'todas')} className="border px-2 py-2">
                 <option value="novas">Só as não lidas ({lista.filter(i => !i.lida).length})</option>
                 <option value="todas">Todas ({lista.length})</option>
               </select>

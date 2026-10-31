@@ -95,7 +95,7 @@ export default function HonorariosPage() {
           <h2 className="text-lg mb-3 flex items-center gap-2"><Banknote size={18} className="text-dourado" aria-hidden="true" /> Por caso</h2>
           <p className="text-xs text-grafite-claro mb-3">Rentabilidade = honorários recebidos menos o custo das horas lançadas para o mesmo cliente (tela Horas). Edite os valores e toque em Salvar.</p>
           <table className="w-full text-sm" data-testid="tabela-honorarios">
-            <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite border-b"><th className="py-2">Caso</th><th>Combinado</th><th>Recebido</th><th>Vencimento</th><th>Cobrança</th><th>Rentabilidade</th><th></th></tr></thead>
+            <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite border-b"><th className="py-2">Caso</th><th>Combinado</th><th>Recebido</th><th>Vencimento</th><th>Cobrança</th><th>Rentabilidade</th><th><span className="sr-only">Ações</span></th></tr></thead>
             <tbody>
               {casos.map(c => {
                 const e = editando[c.id] ?? {}

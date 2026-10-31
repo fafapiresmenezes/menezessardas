@@ -102,10 +102,10 @@ export default function NuvemPage() {
   const kb = (b?: number) => (b == null ? '' : b > 1048576 ? `${(b / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1024))} KB`)
 
   return (
-    <Layout>
+    <Layout title="Nuvem do escritório">
       <div className="max-w-5xl mx-auto px-4 py-8">
         <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">Nuvem do escritório</p>
-        <h1 className="font-serif text-3xl text-navy mt-1 flex items-center gap-3"><Cloud className="text-dourado" aria-hidden="true" /> Arquivos protegidos</h1>
+        <h2 className="font-serif text-3xl text-navy mt-1 flex items-center gap-3"><Cloud className="text-dourado" aria-hidden="true" /> Arquivos protegidos</h2>
         <p className="text-grafite mt-2 text-sm flex items-start gap-2"><Lock size={16} className="mt-0.5 shrink-0" aria-hidden="true" />Armazenamento privado no Brasil (São Paulo), criptografado em trânsito e em repouso. Cada download gera um link que expira em 60 segundos. A pasta Pessoal só você vê; a do Escritório, só a equipe liberada. Ao enviar um arquivo com o mesmo nome, a versão anterior fica guardada (últimas {MAX_VERSOES}) e pode ser restaurada.</p>
         <div className="flex gap-2 mt-6" role="tablist">
           {(['escritorio', 'pessoal'] as const).map(a => (
