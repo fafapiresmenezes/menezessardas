@@ -1,0 +1,1307 @@
+{
+ "ontologia": "Instituto THEYE · locação (v0.6, núcleo comum escritório + Instituto)",
+ "versao": "0.6.0-locacao",
+ "data": "2026-10-31",
+ "base": {
+  "arquivo": "ontologia-juridica-v05.json",
+  "sha256": "5cd8f4379477a782ca2789ba171ff3035bae66b37f9565178a5ff1abe2ae8d94"
+ },
+ "regras": [
+  "Toda relação tem qualificador com fonte e vigência (padrão Wikidata; validação no estilo SHACL).",
+  "Evento e Hipótese são objetos próprios, criados só por ação com data de pré-registro.",
+  "'afeta' exige mecanismo; 'correlaciona_com' exige teste e correção de Benjamini-Hochberg.",
+  "Defasagem como distribuição com banda.",
+  "Previsão com probabilidade, intervalo e Brier contra a melhor linha de base.",
+  "Todo nó Norma, Precedente e Tese cita fonte oficial (Planalto, STJ, STF).",
+  "Tese é tipo típico de argumento; não é decisão de caso concreto.",
+  "Só metadados públicos e agregados (LGPD)."
+ ],
+ "tipos_novos": {
+  "Norma": [
+   "id",
+   "artigo",
+   "ementa",
+   "capitulo",
+   "fonte"
+  ],
+  "Precedente": [
+   "id",
+   "orgao",
+   "especie",
+   "tese",
+   "normas",
+   "fonte"
+  ],
+  "Tese": [
+   "id",
+   "tese",
+   "normas"
+  ]
+ },
+ "relacoes_novas": {
+  "assunto_remete_a": [
+   "Assunto",
+   "Norma"
+  ],
+  "classe_remete_a": [
+   "ClasseProcessual",
+   "Norma"
+  ],
+  "tese_funda_em": [
+   "Tese",
+   "Norma"
+  ],
+  "precedente_interpreta": [
+   "Precedente",
+   "Norma"
+  ],
+  "assunto_invoca_tese": [
+   "Assunto",
+   "Tese"
+  ]
+ },
+ "normas": [
+  {
+   "id": "N-8245-1",
+   "tipo": "Norma",
+   "artigo": "1",
+   "ementa": "Abrangência; exclusões (bens públicos, vagas, espaços publicitários, apart-hotéis, arrendamento mercantil)",
+   "capitulo": "Geral",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art1",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-2",
+   "tipo": "Norma",
+   "artigo": "2",
+   "ementa": "Solidariedade entre locadores e entre locatários",
+   "capitulo": "Geral",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art2",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-3",
+   "tipo": "Norma",
+   "artigo": "3",
+   "ementa": "Prazo; vênia conjugal acima de 10 anos",
+   "capitulo": "Geral",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art3",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-4",
+   "tipo": "Norma",
+   "artigo": "4",
+   "ementa": "Devolução antecipada pelo locatário; multa proporcional",
+   "capitulo": "Geral",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art4",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-5",
+   "tipo": "Norma",
+   "artigo": "5",
+   "ementa": "Retomada do imóvel só por ação de despejo",
+   "capitulo": "Geral",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art5",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-6",
+   "tipo": "Norma",
+   "artigo": "6",
+   "ementa": "Denúncia pelo locatário no prazo indeterminado (aviso de 30 dias)",
+   "capitulo": "Geral",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art6",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-7",
+   "tipo": "Norma",
+   "artigo": "7",
+   "ementa": "Extinção de usufruto ou fideicomisso",
+   "capitulo": "Geral",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art7",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-8",
+   "tipo": "Norma",
+   "artigo": "8",
+   "ementa": "Alienação do imóvel durante a locação; cláusula de vigência",
+   "capitulo": "Geral",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art8",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-9",
+   "tipo": "Norma",
+   "artigo": "9",
+   "ementa": "Hipóteses de desfazimento: acordo, infração, falta de pagamento, reparos urgentes",
+   "capitulo": "Geral",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art9",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-10",
+   "tipo": "Norma",
+   "artigo": "10",
+   "ementa": "Morte do locador",
+   "capitulo": "Geral",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art10",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-11",
+   "tipo": "Norma",
+   "artigo": "11",
+   "ementa": "Morte do locatário",
+   "capitulo": "Geral",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art11",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-12",
+   "tipo": "Norma",
+   "artigo": "12",
+   "ementa": "Separação, divórcio ou dissolução de união estável",
+   "capitulo": "Geral",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art12",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-13",
+   "tipo": "Norma",
+   "artigo": "13",
+   "ementa": "Cessão, sublocação e empréstimo dependem de consentimento",
+   "capitulo": "Geral",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art13",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-14",
+   "tipo": "Norma",
+   "artigo": "14",
+   "ementa": "Sublocações: regras aplicáveis",
+   "capitulo": "Sublocação",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art14",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-15",
+   "tipo": "Norma",
+   "artigo": "15",
+   "ementa": "Rescisão da locação extingue a sublocação",
+   "capitulo": "Sublocação",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art15",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-16",
+   "tipo": "Norma",
+   "artigo": "16",
+   "ementa": "Responsabilidade subsidiária do sublocatário",
+   "capitulo": "Sublocação",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art16",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-17",
+   "tipo": "Norma",
+   "artigo": "17",
+   "ementa": "Livre convenção do aluguel; vedada moeda estrangeira e vinculação cambial",
+   "capitulo": "Aluguel",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art17",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-18",
+   "tipo": "Norma",
+   "artigo": "18",
+   "ementa": "Novo valor e cláusula de reajuste por acordo",
+   "capitulo": "Aluguel",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art18",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-19",
+   "tipo": "Norma",
+   "artigo": "19",
+   "ementa": "Revisão judicial do aluguel após três anos",
+   "capitulo": "Aluguel",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art19",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-20",
+   "tipo": "Norma",
+   "artigo": "20",
+   "ementa": "Vedada cobrança antecipada (salvo temporada ou sem garantia)",
+   "capitulo": "Aluguel",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art20",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-21",
+   "tipo": "Norma",
+   "artigo": "21",
+   "ementa": "Aluguel da sublocação não excede o da locação",
+   "capitulo": "Aluguel",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art21",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-22",
+   "tipo": "Norma",
+   "artigo": "22",
+   "ementa": "Deveres do locador (inclui despesas extraordinárias de condomínio)",
+   "capitulo": "Deveres",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art22",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-23",
+   "tipo": "Norma",
+   "artigo": "23",
+   "ementa": "Deveres do locatário (pagar aluguel e encargos, conservar, despesas ordinárias)",
+   "capitulo": "Deveres",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art23",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-24",
+   "tipo": "Norma",
+   "artigo": "24",
+   "ementa": "Depósito judicial em imóvel com habitação coletiva irregular",
+   "capitulo": "Deveres",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art24",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-25",
+   "tipo": "Norma",
+   "artigo": "25",
+   "ementa": "Impostos e taxas cobrados junto com o aluguel",
+   "capitulo": "Deveres",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art25",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-26",
+   "tipo": "Norma",
+   "artigo": "26",
+   "ementa": "Reparos urgentes e abatimento do aluguel",
+   "capitulo": "Deveres",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art26",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-27",
+   "tipo": "Norma",
+   "artigo": "27",
+   "ementa": "Direito de preferência do locatário na venda",
+   "capitulo": "Preferência",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art27",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-28",
+   "tipo": "Norma",
+   "artigo": "28",
+   "ementa": "Prazo de 30 dias para exercer a preferência",
+   "capitulo": "Preferência",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art28",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-29",
+   "tipo": "Norma",
+   "artigo": "29",
+   "ementa": "Responsabilidade do locador que desiste da venda",
+   "capitulo": "Preferência",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art29",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-30",
+   "tipo": "Norma",
+   "artigo": "30",
+   "ementa": "Preferência do sublocatário",
+   "capitulo": "Preferência",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art30",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-31",
+   "tipo": "Norma",
+   "artigo": "31",
+   "ementa": "Venda de mais de uma unidade",
+   "capitulo": "Preferência",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art31",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-32",
+   "tipo": "Norma",
+   "artigo": "32",
+   "ementa": "Exclusões da preferência (judicial, permuta, doação, incorporação)",
+   "capitulo": "Preferência",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art32",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-33",
+   "tipo": "Norma",
+   "artigo": "33",
+   "ementa": "Preterição: perdas e danos ou adjudicação (contrato averbado)",
+   "capitulo": "Preferência",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art33",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-34",
+   "tipo": "Norma",
+   "artigo": "34",
+   "ementa": "Preferência do condômino sobre o locatário",
+   "capitulo": "Preferência",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art34",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-35",
+   "tipo": "Norma",
+   "artigo": "35",
+   "ementa": "Benfeitorias necessárias e úteis: indenização e retenção",
+   "capitulo": "Benfeitorias",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art35",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-36",
+   "tipo": "Norma",
+   "artigo": "36",
+   "ementa": "Benfeitorias voluptuárias",
+   "capitulo": "Benfeitorias",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art36",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-37",
+   "tipo": "Norma",
+   "artigo": "37",
+   "ementa": "Modalidades de garantia (caução, fiança, seguro-fiança, cessão de quotas)",
+   "capitulo": "Garantias",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art37",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-38",
+   "tipo": "Norma",
+   "artigo": "38",
+   "ementa": "Caução (limite de três aluguéis em dinheiro)",
+   "capitulo": "Garantias",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art38",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-39",
+   "tipo": "Norma",
+   "artigo": "39",
+   "ementa": "Garantia se estende até a devolução do imóvel",
+   "capitulo": "Garantias",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art39",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-40",
+   "tipo": "Norma",
+   "artigo": "40",
+   "ementa": "Substituição da garantia (inclui exoneração do fiador)",
+   "capitulo": "Garantias",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art40",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-41",
+   "tipo": "Norma",
+   "artigo": "41",
+   "ementa": "Seguro-fiança",
+   "capitulo": "Garantias",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art41",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-42",
+   "tipo": "Norma",
+   "artigo": "42",
+   "ementa": "Locação sem garantia: aluguel antecipado",
+   "capitulo": "Garantias",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art42",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-43",
+   "tipo": "Norma",
+   "artigo": "43",
+   "ementa": "Contravenções penais",
+   "capitulo": "Penalidades",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art43",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-44",
+   "tipo": "Norma",
+   "artigo": "44",
+   "ementa": "Crimes de ação pública",
+   "capitulo": "Penalidades",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art44",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-45",
+   "tipo": "Norma",
+   "artigo": "45",
+   "ementa": "Nulidade de cláusulas que frustrem a lei",
+   "capitulo": "Nulidades",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art45",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-46",
+   "tipo": "Norma",
+   "artigo": "46",
+   "ementa": "Residencial ≥ 30 meses: fim do prazo e denúncia vazia",
+   "capitulo": "Residencial",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art46",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-47",
+   "tipo": "Norma",
+   "artigo": "47",
+   "ementa": "Residencial < 30 meses: hipóteses de retomada",
+   "capitulo": "Residencial",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art47",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-48",
+   "tipo": "Norma",
+   "artigo": "48",
+   "ementa": "Temporada: conceito (até 90 dias)",
+   "capitulo": "Temporada",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art48",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-49",
+   "tipo": "Norma",
+   "artigo": "49",
+   "ementa": "Temporada: pagamento antecipado",
+   "capitulo": "Temporada",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art49",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-50",
+   "tipo": "Norma",
+   "artigo": "50",
+   "ementa": "Temporada: prorrogação",
+   "capitulo": "Temporada",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art50",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-51",
+   "tipo": "Norma",
+   "artigo": "51",
+   "ementa": "Não residencial: direito à renovação (5 anos, 3 no ramo)",
+   "capitulo": "Não residencial",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art51",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-52",
+   "tipo": "Norma",
+   "artigo": "52",
+   "ementa": "Exceções à renovação (obras, uso próprio, fundo de comércio)",
+   "capitulo": "Não residencial",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art52",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-53",
+   "tipo": "Norma",
+   "artigo": "53",
+   "ementa": "Hospitais, escolas e entidades: retomada restrita",
+   "capitulo": "Não residencial",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art53",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-54",
+   "tipo": "Norma",
+   "artigo": "54",
+   "ementa": "Shopping center: condições livremente pactuadas",
+   "capitulo": "Não residencial",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art54",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-54-A",
+   "tipo": "Norma",
+   "artigo": "54-A",
+   "ementa": "Built to suit (Lei 12.744/2012)",
+   "capitulo": "Não residencial",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art54-A",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-55",
+   "tipo": "Norma",
+   "artigo": "55",
+   "ementa": "Locação a pessoa jurídica para residência de sócios/empregados",
+   "capitulo": "Não residencial",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art55",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-56",
+   "tipo": "Norma",
+   "artigo": "56",
+   "ementa": "Não residencial: fim do prazo",
+   "capitulo": "Não residencial",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art56",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-57",
+   "tipo": "Norma",
+   "artigo": "57",
+   "ementa": "Não residencial por prazo indeterminado: denúncia com 30 dias",
+   "capitulo": "Não residencial",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art57",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-58",
+   "tipo": "Norma",
+   "artigo": "58",
+   "ementa": "Disposições processuais gerais (férias, foro, valor da causa, citação, efeito devolutivo)",
+   "capitulo": "Processo",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art58",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-59",
+   "tipo": "Norma",
+   "artigo": "59",
+   "ementa": "Ação de despejo; liminar de 15 dias com caução de 3 aluguéis (§1º)",
+   "capitulo": "Despejo",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art59",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-60",
+   "tipo": "Norma",
+   "artigo": "60",
+   "ementa": "Despejo para obras: prova da obra",
+   "capitulo": "Despejo",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art60",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-61",
+   "tipo": "Norma",
+   "artigo": "61",
+   "ementa": "Despejo: desocupação voluntária em 6 meses",
+   "capitulo": "Despejo",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art61",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-62",
+   "tipo": "Norma",
+   "artigo": "62",
+   "ementa": "Despejo por falta de pagamento; cobrança cumulada e purgação da mora",
+   "capitulo": "Despejo",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art62",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-63",
+   "tipo": "Norma",
+   "artigo": "63",
+   "ementa": "Prazo de desocupação da sentença",
+   "capitulo": "Despejo",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art63",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-64",
+   "tipo": "Norma",
+   "artigo": "64",
+   "ementa": "Execução provisória do despejo com caução",
+   "capitulo": "Despejo",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art64",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-65",
+   "tipo": "Norma",
+   "artigo": "65",
+   "ementa": "Despejo coercitivo",
+   "capitulo": "Despejo",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art65",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-66",
+   "tipo": "Norma",
+   "artigo": "66",
+   "ementa": "Imóvel abandonado: imissão na posse",
+   "capitulo": "Despejo",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art66",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-67",
+   "tipo": "Norma",
+   "artigo": "67",
+   "ementa": "Consignação em pagamento de aluguel e encargos",
+   "capitulo": "Consignação",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art67",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-68",
+   "tipo": "Norma",
+   "artigo": "68",
+   "ementa": "Revisional: rito e aluguel provisório",
+   "capitulo": "Revisional",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art68",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-69",
+   "tipo": "Norma",
+   "artigo": "69",
+   "ementa": "Revisional: vigência do novo aluguel desde a citação",
+   "capitulo": "Revisional",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art69",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-70",
+   "tipo": "Norma",
+   "artigo": "70",
+   "ementa": "Revisional com despejo",
+   "capitulo": "Revisional",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art70",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-71",
+   "tipo": "Norma",
+   "artigo": "71",
+   "ementa": "Renovatória: requisitos da petição inicial",
+   "capitulo": "Renovatória",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art71",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-72",
+   "tipo": "Norma",
+   "artigo": "72",
+   "ementa": "Renovatória: matéria de defesa",
+   "capitulo": "Renovatória",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art72",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-73",
+   "tipo": "Norma",
+   "artigo": "73",
+   "ementa": "Renovatória: diferenças de aluguel",
+   "capitulo": "Renovatória",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art73",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-74",
+   "tipo": "Norma",
+   "artigo": "74",
+   "ementa": "Renovatória improcedente: desocupação",
+   "capitulo": "Renovatória",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art74",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-75",
+   "tipo": "Norma",
+   "artigo": "75",
+   "ementa": "Renovatória: indenização",
+   "capitulo": "Renovatória",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art75",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-8245-76–90",
+   "tipo": "Norma",
+   "artigo": "76–90",
+   "ementa": "Disposições finais e transitórias",
+   "capitulo": "Finais",
+   "urn": "urn:lex:br:federal:lei:1991-10-18;8245!art76–90",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm"
+  },
+  {
+   "id": "N-CC-565",
+   "tipo": "Norma",
+   "artigo": "565 a 578",
+   "ementa": "Locação de coisas (móveis) no Código Civil",
+   "capitulo": "Código Civil",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm"
+  },
+  {
+   "id": "N-CC-334",
+   "tipo": "Norma",
+   "artigo": "334 a 345",
+   "ementa": "Pagamento em consignação",
+   "capitulo": "Código Civil",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm"
+  },
+  {
+   "id": "N-CPC-539",
+   "tipo": "Norma",
+   "artigo": "539 a 549",
+   "ementa": "Ação de consignação em pagamento",
+   "capitulo": "CPC",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm"
+  },
+  {
+   "id": "N-CPC-784-VIII",
+   "tipo": "Norma",
+   "artigo": "784, VIII",
+   "ementa": "Crédito de aluguel documentado é título executivo",
+   "capitulo": "CPC",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm"
+  },
+  {
+   "id": "N-8009-3-VII",
+   "tipo": "Norma",
+   "artigo": "3º, VII",
+   "ementa": "Penhora do bem de família do fiador de locação",
+   "capitulo": "Lei 8.009/90",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/leis/l8009.htm"
+  },
+  {
+   "id": "N-14010-9",
+   "tipo": "Norma",
+   "artigo": "9º",
+   "ementa": "RJET/COVID-19: suspensão de liminares de despejo em 2020",
+   "capitulo": "Lei 14.010/2020",
+   "fonte": "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/lei/l14010.htm"
+  }
+ ],
+ "precedentes": [
+  {
+   "id": "P-STJ-S214",
+   "tipo": "Precedente",
+   "orgao": "STJ",
+   "especie": "Súmula 214",
+   "tese": "O fiador na locação não responde por obrigações resultantes de aditamento ao qual não anuiu.",
+   "normas": [
+    "N-8245-39",
+    "N-8245-40"
+   ],
+   "fonte": "https://scon.stj.jus.br/SCON/sumstj/"
+  },
+  {
+   "id": "P-STJ-S268",
+   "tipo": "Precedente",
+   "orgao": "STJ",
+   "especie": "Súmula 268",
+   "tese": "O fiador que não integrou a relação processual na ação de despejo não responde pela execução do julgado.",
+   "normas": [
+    "N-8245-62"
+   ],
+   "fonte": "https://scon.stj.jus.br/SCON/sumstj/"
+  },
+  {
+   "id": "P-STJ-S335",
+   "tipo": "Precedente",
+   "orgao": "STJ",
+   "especie": "Súmula 335",
+   "tese": "Nos contratos de locação, é válida a cláusula de renúncia à indenização das benfeitorias e ao direito de retenção.",
+   "normas": [
+    "N-8245-35"
+   ],
+   "fonte": "https://scon.stj.jus.br/SCON/sumstj/"
+  },
+  {
+   "id": "P-STJ-S549",
+   "tipo": "Precedente",
+   "orgao": "STJ",
+   "especie": "Súmula 549",
+   "tese": "É válida a penhora de bem de família pertencente a fiador de contrato de locação.",
+   "normas": [
+    "N-8009-3-VII",
+    "N-8245-37"
+   ],
+   "fonte": "https://scon.stj.jus.br/SCON/sumstj/"
+  },
+  {
+   "id": "P-STF-T295",
+   "tipo": "Precedente",
+   "orgao": "STF",
+   "especie": "Tema 295 (RE 612.360)",
+   "tese": "Constitucional a penhora do bem de família do fiador de locação.",
+   "normas": [
+    "N-8009-3-VII"
+   ],
+   "fonte": "https://portal.stf.jus.br/jurisprudenciaRepercussao/"
+  },
+  {
+   "id": "P-STF-T1127",
+   "tipo": "Precedente",
+   "orgao": "STF",
+   "especie": "Tema 1127 (RE 1.307.334)",
+   "tese": "É constitucional a penhora de bem de família do fiador de contrato de locação comercial.",
+   "normas": [
+    "N-8009-3-VII",
+    "N-8245-51"
+   ],
+   "fonte": "https://portal.stf.jus.br/jurisprudenciaRepercussao/"
+  }
+ ],
+ "teses": [
+  {
+   "id": "T01",
+   "tese": "Falta de pagamento autoriza despejo; purgação da mora evita a rescisão",
+   "normas": [
+    "N-8245-9",
+    "N-8245-62"
+   ]
+  },
+  {
+   "id": "T02",
+   "tese": "Liminar de desocupação em 15 dias mediante caução de três aluguéis",
+   "normas": [
+    "N-8245-59"
+   ]
+  },
+  {
+   "id": "T03",
+   "tese": "Denúncia vazia após 30 meses (residencial) ou fim do prazo (não residencial)",
+   "normas": [
+    "N-8245-46",
+    "N-8245-56",
+    "N-8245-57"
+   ]
+  },
+  {
+   "id": "T04",
+   "tese": "Retomada para uso próprio ou de familiar",
+   "normas": [
+    "N-8245-47",
+    "N-8245-52"
+   ]
+  },
+  {
+   "id": "T05",
+   "tese": "Aluguel revisto ao preço de mercado após três anos",
+   "normas": [
+    "N-8245-19",
+    "N-8245-68",
+    "N-8245-69"
+   ]
+  },
+  {
+   "id": "T06",
+   "tese": "Renovação compulsória da locação empresarial",
+   "normas": [
+    "N-8245-51",
+    "N-8245-71",
+    "N-8245-72"
+   ]
+  },
+  {
+   "id": "T07",
+   "tese": "Consignação do aluguel ou das chaves libera o locatário",
+   "normas": [
+    "N-8245-67",
+    "N-8245-6",
+    "N-CC-334",
+    "N-CPC-539"
+   ]
+  },
+  {
+   "id": "T08",
+   "tese": "Indenização ou retenção por benfeitorias (renunciável)",
+   "normas": [
+    "N-8245-35",
+    "N-8245-36"
+   ],
+   "precedentes": [
+    "P-STJ-S335"
+   ]
+  },
+  {
+   "id": "T09",
+   "tese": "Preterição da preferência gera perdas e danos ou adjudicação",
+   "normas": [
+    "N-8245-27",
+    "N-8245-33"
+   ]
+  },
+  {
+   "id": "T10",
+   "tese": "Fiança: alcance, exoneração e penhora do bem de família do fiador",
+   "normas": [
+    "N-8245-39",
+    "N-8245-40",
+    "N-8009-3-VII"
+   ],
+   "precedentes": [
+    "P-STJ-S214",
+    "P-STJ-S549",
+    "P-STF-T295",
+    "P-STF-T1127"
+   ]
+  },
+  {
+   "id": "T11",
+   "tese": "Multa por devolução antecipada proporcional ao prazo restante",
+   "normas": [
+    "N-8245-4"
+   ]
+  },
+  {
+   "id": "T12",
+   "tese": "Encargos de condomínio: ordinárias do locatário, extraordinárias do locador",
+   "normas": [
+    "N-8245-22",
+    "N-8245-23"
+   ]
+  },
+  {
+   "id": "T13",
+   "tese": "Cobrança de aluguéis por execução de título",
+   "normas": [
+    "N-CPC-784-VIII",
+    "N-8245-62"
+   ]
+  }
+ ],
+ "mapa_assunto_tpu": {
+  "9593": {
+   "normas": [
+    "N-8245-1"
+   ],
+   "teses": [],
+   "natureza": "raiz"
+  },
+  "14915": {
+   "normas": [
+    "N-8245-9",
+    "N-8245-59",
+    "N-8245-62"
+   ],
+   "teses": [
+    "T01",
+    "T02"
+   ],
+   "natureza": "locacao"
+  },
+  "11000": {
+   "normas": [
+    "N-8245-23",
+    "N-8245-62",
+    "N-CPC-784-VIII"
+   ],
+   "teses": [
+    "T13"
+   ],
+   "natureza": "locacao"
+  },
+  "9612": {
+   "normas": [
+    "N-8245-46",
+    "N-8245-56",
+    "N-8245-57",
+    "N-8245-59"
+   ],
+   "teses": [
+    "T03"
+   ],
+   "natureza": "locacao"
+  },
+  "9610": {
+   "normas": [
+    "N-8245-47",
+    "N-8245-52"
+   ],
+   "teses": [
+    "T04"
+   ],
+   "natureza": "locacao"
+  },
+  "9611": {
+   "normas": [
+    "N-8245-47"
+   ],
+   "teses": [
+    "T04"
+   ],
+   "natureza": "locacao"
+  },
+  "7704": {
+   "normas": [
+    "N-8245-67",
+    "N-CC-334",
+    "N-CPC-539"
+   ],
+   "teses": [
+    "T07"
+   ],
+   "natureza": "locacao"
+  },
+  "11001": {
+   "normas": [
+    "N-8245-6",
+    "N-8245-67"
+   ],
+   "teses": [
+    "T07"
+   ],
+   "natureza": "locacao"
+  },
+  "9614": {
+   "normas": [
+    "N-8245-35",
+    "N-8245-36"
+   ],
+   "teses": [
+    "T08"
+   ],
+   "natureza": "locacao"
+  },
+  "9615": {
+   "normas": [
+    "N-8245-27",
+    "N-8245-33"
+   ],
+   "teses": [
+    "T09"
+   ],
+   "natureza": "locacao"
+  },
+  "7770": {
+   "normas": [
+    "N-8245-18",
+    "N-8245-19",
+    "N-8245-68"
+   ],
+   "teses": [
+    "T05"
+   ],
+   "natureza": "locacao"
+  },
+  "10582": {
+   "normas": [
+    "N-8245-4",
+    "N-8245-9"
+   ],
+   "teses": [
+    "T11",
+    "T01"
+   ],
+   "natureza": "locacao"
+  },
+  "7700": {
+   "normas": [
+    "N-8245-4"
+   ],
+   "teses": [
+    "T11"
+   ],
+   "natureza": "locacao"
+  },
+  "10467": {
+   "normas": [
+    "N-8245-22",
+    "N-8245-23"
+   ],
+   "teses": [
+    "T12"
+   ],
+   "natureza": "locacao"
+  },
+  "9609": {
+   "normas": [
+    "N-CC-565"
+   ],
+   "teses": [],
+   "natureza": "locacao_movel"
+  },
+  "12416": {
+   "normas": [
+    "N-8245-59"
+   ],
+   "teses": [
+    "T02"
+   ],
+   "natureza": "processual"
+  },
+  "9196": {
+   "normas": [
+    "N-8245-59"
+   ],
+   "teses": [
+    "T02"
+   ],
+   "natureza": "processual"
+  },
+  "8961": {
+   "normas": [
+    "N-8245-59"
+   ],
+   "teses": [
+    "T02"
+   ],
+   "natureza": "processual"
+  },
+  "12417": {
+   "normas": [
+    "N-8245-59"
+   ],
+   "teses": [
+    "T02"
+   ],
+   "natureza": "processual"
+  },
+  "12612": {
+   "normas": [
+    "N-14010-9"
+   ],
+   "teses": [],
+   "natureza": "conjuntural"
+  },
+  "7691": {
+   "normas": [
+    "N-8245-9",
+    "N-8245-23"
+   ],
+   "teses": [
+    "T01"
+   ],
+   "natureza": "obrigacional"
+  },
+  "7690": {
+   "normas": [
+    "N-8245-9"
+   ],
+   "teses": [],
+   "natureza": "obrigacional"
+  },
+  "7703": {
+   "normas": [
+    "N-8245-23"
+   ],
+   "teses": [],
+   "natureza": "obrigacional"
+  },
+  "7697": {
+   "normas": [
+    "N-8245-17",
+    "N-8245-18"
+   ],
+   "teses": [
+    "T05"
+   ],
+   "natureza": "obrigacional"
+  },
+  "7706": {
+   "normas": [
+    "N-8245-62"
+   ],
+   "teses": [],
+   "natureza": "obrigacional"
+  },
+  "9580": {
+   "normas": [
+    "N-8245-1"
+   ],
+   "teses": [],
+   "natureza": "generico"
+  },
+  "899": {
+   "normas": [
+    "N-8245-1"
+   ],
+   "teses": [],
+   "natureza": "generico"
+  },
+  "10090": {
+   "normas": [
+    "N-8245-1"
+   ],
+   "teses": [],
+   "natureza": "fora_art1"
+  },
+  "10073": {
+   "normas": [
+    "N-8245-1"
+   ],
+   "teses": [],
+   "natureza": "fora_art1"
+  }
+ },
+ "mapa_classe": {
+  "Despejo por Falta de Pagamento": [
+   "N-8245-9",
+   "N-8245-59",
+   "N-8245-62"
+  ],
+  "Despejo por Falta de Pagamento Cumulado Com Cobrança": [
+   "N-8245-62"
+  ],
+  "Despejo": [
+   "N-8245-5",
+   "N-8245-59"
+  ],
+  "Renovatória de Locação": [
+   "N-8245-51",
+   "N-8245-71"
+  ],
+  "Revisional de Aluguel": [
+   "N-8245-19",
+   "N-8245-68"
+  ],
+  "Consignação em Pagamento": [
+   "N-CPC-539",
+   "N-CC-334"
+  ]
+ },
+ "cobertura": {
+  "processos": 5350,
+  "assuntos_distintos": 166,
+  "assuntos_locacao_tpu_observados": 14,
+  "assuntos_locacao_mapeados": 14,
+  "pct_assuntos_locacao": 100.0,
+  "assuntos_mapeados_total": 29,
+  "processos_com_aresta_norma_por_assunto": 4823,
+  "pct_por_assunto": 90.1,
+  "nota": "Com o mapa por classe, todo processo de locação ganha ao menos uma norma; U06 materializa as arestas no banco."
+ },
+ "fontes": [
+  "https://www.planalto.gov.br/ccivil_03/leis/l8245.htm",
+  "https://scon.stj.jus.br/SCON/sumstj/",
+  "https://portal.stf.jus.br/jurisprudenciaRepercussao/",
+  "https://www.cnj.jus.br/sgt/consulta_publica_assuntos.php"
+ ],
+ "limites": [
+  "Temas repetitivos do STJ sobre locação além das súmulas listadas ficam para revisão em U14 (só entram com número conferido na fonte).",
+  "Artigos 76–90 agrupados (disposições finais)."
+ ]
+}
