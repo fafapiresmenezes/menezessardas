@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
-import { FileText, Search, Plus, Trash2 } from 'lucide-react'
+import { FileText, Search, Plus, Trash2, Copy } from 'lucide-react'
 import { preencherModelo, VARIAVEIS_MODELO, type CasoParaModelo } from '@/lib/modelos'
 
 // Biblioteca de modelos: cada modelo abre o agente da área no modo Redigir com o pedido pronto.
@@ -52,6 +52,8 @@ export default function ModelosPage() {
     carregar()
   }
   const apagar = async (id: string) => { await supabase.from('modelos_escritorio').delete().eq('id', id); carregar() }
+  // Passo 90: duplicar um modelo (do catálogo ou do escritório) abre o formulário já preenchido para ajustar e salvar.
+  const duplicar = (m: Modelo) => { setForm({ titulo: `${m.titulo} (cópia)`, area: m.area, agente: m.agente, pedido: m.pedido }); setAberto(true); setMsg(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
   const todos = [...proprios, ...MODELOS]
   const areas = ['Todas', ...new Set(todos.map(m => m.area))]
   const n = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
@@ -91,7 +93,8 @@ export default function ModelosPage() {
             </select>
             <span className="block text-xs text-grafite-claro mt-1">Nos seus modelos use {VARIAVEIS_MODELO.join(', ')}; rótulos como "Cliente: [ ]" e "Imóvel: [ ]" também são preenchidos.</span>
           </label>
-          <div className="flex flex-wrap gap-2 mt-3">
+          <p className="text-xs text-grafite-claro mt-3" data-testid="contador-modelos">{lista.length} modelo{lista.length === 1 ? '' : 's'}{area !== 'Todas' ? ` em ${area}` : ''} · {proprios.length} do escritório · {MODELOS.length} do catálogo</p>
+          <div className="flex flex-wrap gap-2 mt-2">
             {areas.map(a => <button key={a} type="button" onClick={() => setArea(a)} aria-pressed={area === a} className={`min-h-[36px] px-3 text-sm border ${area === a ? 'bg-navy text-white' : ''}`}>{a}</button>)}
           </div>
         </section>
@@ -103,6 +106,7 @@ export default function ModelosPage() {
                 <p className="text-xs text-grafite-claro mt-1">{m.area}{m.proprio && ' · modelo do escritório'}</p>
                 {casoId && (() => { const pv = previa(m); return pv ? <p className="text-xs text-navy mt-1" data-testid="previa-preenchida">{pv.preenchidas.length ? `Preenche: ${pv.preenchidas.join(', ')}` : 'Só anexa os dados do caso'} · {pv.texto.slice(0, 110)}…</p> : null })()}
               </button>
+              <button type="button" onClick={() => duplicar(m)} aria-label={`Duplicar modelo ${m.titulo}`} data-testid="duplicar-modelo" className={`absolute top-2 ${m.proprio ? 'right-10' : 'right-2'} p-2 text-navy`}><Copy size={16} aria-hidden /></button>
               {m.proprio && m.id && <button type="button" onClick={() => apagar(m.id!)} aria-label={`Apagar modelo ${m.titulo}`} className="absolute top-2 right-2 p-2 text-critico"><Trash2 size={16} aria-hidden /></button>}
             </div>
           ))}

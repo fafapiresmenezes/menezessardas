@@ -35,7 +35,17 @@ export default function MonitoramentoPage() {
     if (error || data?.erro) return setMsgLinha(`Não foi possível consultar: ${data?.erro ?? error?.message}`)
     setLinha(data as Linha); setMsgLinha(data.encontrado ? '' : 'Processo não encontrado no DataJud (pode ser sigiloso ou de tribunal fora da base).')
   }
-  const movsFiltrados = (linha?.movs ?? []).filter(m => { const d = m.data.slice(0, 10); return (!de || d >= de) && (!ate || d <= ate) })
+  // Passo 92: busca por texto nos andamentos e cópia da linha do tempo filtrada.
+  const [textoMov, setTextoMov] = useState('')
+  const [copiado, setCopiado] = useState(false)
+  const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  const movsFiltrados = (linha?.movs ?? []).filter(m => { const d = m.data.slice(0, 10); return (!de || d >= de) && (!ate || d <= ate) && (!textoMov || norm(m.nome).includes(norm(textoMov))) })
+  const copiarLinha = async () => {
+    if (!linha) return
+    const texto = [`Processo ${linha.numero}${linha.classe ? ` — ${linha.classe}` : ''}${linha.orgao ? ` — ${linha.orgao}` : ''}`, `${movsFiltrados.length} andamento(s) de ${dt(de)} a ${dt(ate)}${textoMov ? ` com "${textoMov}"` : ''}`, '',
+      ...movsFiltrados.map(m => `${dt(m.data)} — ${m.nome}`), '', 'Fonte: DataJud (CNJ)'].join('\n')
+    try { await navigator.clipboard.writeText(texto); setCopiado(true); setTimeout(() => setCopiado(false), 2500) } catch { setMsgLinha('Não foi possível copiar; selecione o texto e copie à mão.') }
+  }
   const carregar = async () => {
     const { data } = await supabase.from('monitoramentos').select('id,tipo,valor,rotulo,ultimo_estado,novidades,verificado_em,novidade_em').order('novidade_em', { ascending: false, nullsFirst: false })
     setLista((data ?? []) as Mon[])
@@ -90,6 +100,10 @@ export default function MonitoramentoPage() {
           {linha?.encontrado && (
             <div className="mt-3">
               <p className="text-sm text-grafite-claro">{[linha.classe, linha.orgao].filter(Boolean).join(' · ')} · {linha.movs.length} andamentos no total, <strong data-testid="lt-total">{movsFiltrados.length}</strong> no período.</p>
+              <div className="flex flex-wrap gap-2 mt-2 print:hidden">
+                <input value={textoMov} onChange={e => setTextoMov(e.target.value)} placeholder="Procurar nos andamentos (ex.: sentença, citação)" aria-label="Procurar nos andamentos" data-testid="lt-busca" className="border px-3 py-2 min-h-[44px] flex-1 min-w-[220px]" />
+                <button type="button" onClick={copiarLinha} data-testid="lt-copiar" className="min-h-[44px] px-4 border border-navy text-navy text-sm">{copiado ? 'Linha do tempo copiada' : 'Copiar linha do tempo'}</button>
+              </div>
               <ol className="mt-2 border-l-2 border-dourado/60 pl-4 space-y-2 text-sm" data-testid="lt-lista">
                 {movsFiltrados.slice(0, 200).map((m, i) => (
                   <li key={i} className="relative" data-testid="lt-mov"><span className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-dourado" aria-hidden /><span className="text-grafite-claro w-28 inline-block">{dt(m.data)}</span>{m.nome}</li>

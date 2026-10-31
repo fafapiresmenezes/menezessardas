@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
-import { Play, Square, Download, Printer, Trash2, Target } from 'lucide-react'
+import { Play, Square, Download, Printer, Trash2, Target, ClipboardCopy } from 'lucide-react'
 
 // Passo 21: meta mensal de horas por função (tabela metas_horas, só admin edita) e progresso da pessoa logada (RPC progresso_horas).
 const PAPEIS: Record<string, string> = { socia: 'Sócia', advogada: 'Advogada', estagiario: 'Estagiário ou paralegal', secretaria: 'Secretária', financeiro: 'Financeiro' }
@@ -78,6 +78,16 @@ export default function HorasPage() {
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `horas-${mes}.csv`; a.click()
   }
   const campo = 'border px-3 py-2 w-full'
+  // Passo 91: resumo do mês em texto para colar no e-mail de cobrança.
+  const [copiado, setCopiado] = useState(false)
+  const copiarResumo = async () => {
+    const [a, m] = mes.split('-')
+    const nomeMes = new Date(Number(a), Number(m) - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
+    const texto = [`Resumo de horas — ${nomeMes}`, `Total: ${hm(totalMin)} (${hm(totalFat)} faturáveis) · a faturar: ${brl(totalValor)}`, '',
+      ...porCliente.map(c => `• ${c.cliente}: ${hm(c.min)} faturáveis = ${brl(c.valor)}${c.naoFat ? ` (+ ${hm(c.naoFat)} não faturáveis)` : ''}`),
+      '', 'GMenezes Advogados Associados'].join('\n')
+    try { await navigator.clipboard.writeText(texto); setCopiado(true); setTimeout(() => setCopiado(false), 2500) } catch { setErro('Não foi possível copiar; use a planilha ou o relatório.') }
+  }
   return (
     <Layout title="Horas e honorários">
       <div className="space-y-5">
@@ -131,6 +141,7 @@ export default function HorasPage() {
           <div className="flex flex-wrap items-center gap-3 justify-between">
             <label className="text-sm print:hidden">Mês <input type="month" value={mes} onChange={e => setMes(e.target.value)} className="border px-3 py-2 ml-2" /></label>
             <div className="flex gap-2 print:hidden">
+              <button type="button" onClick={copiarResumo} disabled={!lista.length} data-testid="copiar-resumo" className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2 disabled:opacity-50"><ClipboardCopy className="w-4 h-4" aria-hidden />{copiado ? 'Resumo copiado' : 'Copiar resumo do mês'}</button>
               <button type="button" onClick={csv} className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2"><Download className="w-4 h-4" aria-hidden />Planilha (CSV)</button>
               <button type="button" onClick={() => window.print()} className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2"><Printer className="w-4 h-4" aria-hidden />Relatório para o cliente</button>
             </div>

@@ -114,6 +114,21 @@ export default function LegislacaoPage() {
   }
 
   const linhas: Norma[] = [...(busca?.novidades ?? []), ...CATALOGO]
+  // Passo 89: estado do radar em uma linha e botão "copiar citação" em cada lei encontrada.
+  const [copiado, setCopiado] = useState('')
+  const copiarCitacao = async (lei: LeiFederal) => {
+    const texto = `BRASIL. Lei nº ${lei.numero}. ${lei.titulo}. ${lei.ementas[0] ? lei.ementas[0] + ' ' : ''}Disponível em: ${lei.url}. Acesso em: ${new Date().toLocaleDateString('pt-BR')}.`
+    try { await navigator.clipboard.writeText(texto); setCopiado(lei.numero); setTimeout(() => setCopiado(''), 2500) } catch { setErro('Não foi possível copiar; selecione o texto e copie à mão.') }
+  }
+  const estadoRadar = (() => {
+    if (!radar.length) return ''
+    const hoje = new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' })
+    const deHoje = radar.filter(n => (n.vistoEm ?? '').slice(0, 10) === hoje).length
+    const ultimo = Math.max(...radar.map(n => Date.parse(n.vistoEm) || 0))
+    const horas = Math.round((Date.now() - ultimo) / 36e5)
+    const quando = horas < 1 ? 'há menos de 1 hora' : horas < 48 ? `há ${horas} h` : `há ${Math.round(horas / 24)} dias`
+    return `${deHoje ? `${deHoje} novidade${deHoje > 1 ? 's' : ''} captada${deHoje > 1 ? 's' : ''} hoje` : 'Nada novo hoje'}; última varredura ${quando}${horas > 36 ? ' (atrasada: o esperado é todo dia às 8h30)' : ''}.`
+  })()
 
   return (
     <Layout title="Legislação">
@@ -176,7 +191,9 @@ export default function LegislacaoPage() {
                     {lei.titulo}
                     <ExternalLink size={14} aria-hidden="true" />
                   </a>
-                  <p className="text-xs text-grafite-claro mt-0.5">Lei {lei.numero}</p>
+                  <p className="text-xs text-grafite-claro mt-0.5">Lei {lei.numero}
+                    <button type="button" onClick={() => copiarCitacao(lei)} data-testid="copiar-citacao" className="ml-3 underline text-navy">{copiado === lei.numero ? 'citação copiada' : 'copiar citação'}</button>
+                  </p>
                   {lei.ementas.length > 0 && (
                     <p className="text-sm text-grafite mt-1">{lei.ementas[0]}</p>
                   )}
@@ -210,6 +227,7 @@ export default function LegislacaoPage() {
               ))}
             </div>
           </div>
+          {estadoRadar && <p className={`text-sm mb-3 p-2 border-l-4 ${estadoRadar.includes('atrasada') ? 'border-atencao bg-atencaoFundo' : 'border-dourado bg-pergaminho'}`} data-testid="estado-radar">{estadoRadar}</p>}
           {radar.length === 0 ? (
             <p className="text-sm text-grafite-claro" data-testid="radar-vazio">Nada captado ainda para esta área. A varredura roda todo dia às 8h30; escolha "Todas as áreas" para ver o que já existe.</p>
           ) : (
