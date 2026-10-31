@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estudar · Instituto THEYE</title>
+<meta name="description" content="Trilha de seis módulos sobre predição jurídica, calibragem, jurimetria, ontologias, avaliação de modelos, ética e uso no escritório.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+.mods{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--linha);border:1px solid var(--linha)}
+@media(max-width:820px){.mods{grid-template-columns:1fr}}
+.mod{background:var(--papel);padding:32px}
+.mod h3{font-size:28px;margin:8px 0 14px}
+.mod p{font-size:15px;color:var(--tinta-2);margin-bottom:12px;max-width:62ch}
+.mod .obj{color:var(--tinta)}
+.exe{border-left:2px solid var(--ouro);background:var(--papel-2);padding:14px 18px;margin:16px 0 20px;font-size:14.5px}
+.exe b{display:block;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ouro);margin-bottom:4px;font-weight:400}
+.exe span{color:var(--tinta-2)}
+.lt{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--apagado);font-weight:400}
+.mod ol{margin:8px 0 0 18px;font-size:14.5px}
+.mod li{padding:4px 0}
+.mod li a{color:var(--grafo);text-underline-offset:3px}
+.ix{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;margin-top:28px}
+.ix a{color:var(--tinta-2);text-decoration:none;border-bottom:1px solid var(--linha)}
+</style>
+</head>
+<body>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/#laboratorio">Laboratório</a><a href="/placar.html">Placar</a><a href="/ontologia.html">Ontologia</a><a href="/estudar.html" aria-current="page">Estudar</a><a href="/#servicos">Serviços</a></nav>
+</div></header>
+<main>
+<div class="hero"><div class="w">
+  <div class="kicker">Trilha de estudo · 6 módulos</div>
+  <h1>Prever o direito sem se enganar.</h1>
+  <p class="lead">Uma trilha curta para advogados, estudantes e gestores: do que significa uma probabilidade até como explicá-la a um cliente. Cada módulo traz objetivo, texto, exercício e leituras de universidades e periódicos de referência, com links conferidos um a um.</p>
+  <div class="ix"><a href="#m1">1 · Probabilidade e calibragem</a><a href="#m2">2 · Jurimetria</a><a href="#m3">3 · Ontologias e grafos</a><a href="#m4">4 · Avaliação de modelos</a><a href="#m5">5 · Ética e LGPD</a><a href="#m6">6 · Uso no escritório</a></div>
+</div></div>
+<section><div class="w">
+  <div class="mods">
+<article class="mod" id="m1"><div class="kicker">Módulo 1</div><h3>Probabilidade e calibragem</h3>
+<p class="obj"><b>Objetivo.</b> Entender o que significa dizer “70% de chance” e como saber se quem diz isso merece confiança.</p><p>Uma probabilidade é uma promessa de frequência: entre todas as vezes em que alguém diz 70%, o fato deve acontecer em cerca de 7 de cada 10. Isso é calibragem. O Brier score mede a distância média entre a probabilidade dita e o que aconteceu (0 é perfeito; 0,25 é o que se obtém dizendo 50% para tudo). Regras de pontuação “próprias”, como Brier e log score, premiam quem diz o que realmente acredita.</p>
+<div class="exe"><b>Exercício</b><span>Anote 10 previsões suas sobre a próxima semana, com uma probabilidade em cada. Depois do prazo, calcule o seu Brier: média de (probabilidade − resultado)², com resultado 1 se aconteceu e 0 se não.</span></div>
+<b class="lt">Leituras (3)</b><ol><li><a href="https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/" rel="noopener" target="_blank">MIT OpenCourseWare 18.05: Introduction to Probability and Statistics</a></li><li><a href="https://scikit-learn.org/stable/modules/calibration.html" rel="noopener" target="_blank">scikit-learn, Probability calibration (guia prático)</a></li><li><a href="https://sites.stat.washington.edu/raftery/Research/PDF/Gneiting2007jasa.pdf" rel="noopener" target="_blank">Gneiting e Raftery (2007), Strictly Proper Scoring Rules, Prediction, and Estimation, JASA</a></li></ol></article>
+<article class="mod" id="m2"><div class="kicker">Módulo 2</div><h3>Jurimetria</h3>
+<p class="obj"><b>Objetivo.</b> Aplicar estatística ao direito com perguntas bem formuladas e dados públicos.</p><p>Jurimetria é medir o direito: quanto tempo leva, quanto se ganha, onde se decide diferente. O ponto de partida é sempre a taxa base, a proporção histórica de um desfecho numa classe de casos. Só depois se pergunta se algum fator move essa taxa. O CNJ publica todos os anos o Justiça em Números, e o DataJud abre os metadados dos processos.</p>
+<div class="exe"><b>Exercício</b><span>No Justiça em Números, escolha um tribunal e anote o tempo médio até a sentença. Escreva uma hipótese sobre o que explicaria esse tempo e qual dado a refutaria.</span></div>
+<b class="lt">Leituras (3)</b><ol><li><a href="https://abj.org.br/" rel="noopener" target="_blank">Associação Brasileira de Jurimetria (ABJ)</a></li><li><a href="https://www.cnj.jus.br/pesquisas-judiciarias/justica-em-numeros/" rel="noopener" target="_blank">CNJ, Justiça em Números</a></li><li><a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0174698" rel="noopener" target="_blank">Katz, Bommarito e Blackman (2017), A general approach for predicting the behavior of the Supreme Court of the United States, PLOS ONE</a></li></ol></article>
+<article class="mod" id="m3"><div class="kicker">Módulo 3</div><h3>Ontologias e grafos</h3>
+<p class="obj"><b>Objetivo.</b> Representar o direito como coisas ligadas por relações, e saber quando isso ajuda a prever.</p><p>Uma ontologia define os tipos de coisa (processo, tese, precedente, norma) e as relações permitidas entre eles. Um grafo de conhecimento é a ontologia preenchida com casos reais. Para prever, o grafo oferece variáveis que uma tabela não vê, como a distância entre um processo e um precedente vinculante, desde que só use o que se sabia antes da decisão.</p>
+<div class="exe"><b>Exercício</b><span>Desenhe à mão o grafo de um caso que você conhece: o processo, duas teses, um precedente e uma norma. Marque quais ligações já existiam antes da sentença.</span></div>
+<b class="lt">Leituras (3)</b><ol><li><a href="https://web.stanford.edu/class/cs224w/" rel="noopener" target="_blank">Stanford CS224W: Machine Learning with Graphs</a></li><li><a href="https://arxiv.org/abs/2003.02320" rel="noopener" target="_blank">Hogan et al. (2021), Knowledge Graphs, ACM Computing Surveys (arXiv 2003.02320)</a></li><li><a href="https://www.w3.org/TR/owl2-primer/" rel="noopener" target="_blank">W3C, OWL 2 Web Ontology Language Primer</a></li></ol></article>
+<article class="mod" id="m4"><div class="kicker">Módulo 4</div><h3>Avaliação de modelos</h3>
+<p class="obj"><b>Objetivo.</b> Comparar dois modelos de forma honesta, sem se enganar com sorte ou vazamento de dados.</p><p>Um modelo só vale se ganhar da melhor regra simples disponível, fora da amostra e respeitando o tempo: treina-se no passado e testa-se no futuro. A comparação usa Brier, log-loss, AUC e curva de calibragem, e a diferença entre os modelos vem com intervalo de confiança por bootstrap pareado. Se o intervalo cruza zero, ainda não há vencedor.</p>
+<div class="exe"><b>Exercício</b><span>Pegue o placar público do Instituto e explique, em três frases, por que o resultado do protocolo P-001-C é considerado inconclusivo.</span></div>
+<b class="lt">Leituras (3)</b><ol><li><a href="https://www.cs.cornell.edu/~alexn/papers/calibration.icml05.crc.rev3.pdf" rel="noopener" target="_blank">Niculescu-Mizil e Caruana (2005), Predicting good probabilities with supervised learning, ICML</a></li><li><a href="https://otexts.com/fpp3/" rel="noopener" target="_blank">Hyndman e Athanasopoulos, Forecasting: Principles and Practice, 3ª ed.</a></li><li><a href="https://hastie.su.domains/ElemStatLearn/" rel="noopener" target="_blank">Hastie, Tibshirani e Friedman, The Elements of Statistical Learning</a></li></ol></article>
+<article class="mod" id="m5"><div class="kicker">Módulo 5</div><h3>Ética e LGPD</h3>
+<p class="obj"><b>Objetivo.</b> Usar dados judiciais sem expor pessoas e sem criar perfis de julgadores.</p><p>Dados públicos não são dados livres. A LGPD exige finalidade, necessidade e transparência, e a regulação de IA no Judiciário pede supervisão humana e explicabilidade. Por isso o Instituto só publica agregados, não perfila juízes individualmente e registra a fonte de cada número.</p>
+<div class="exe"><b>Exercício</b><span>Leia o art. 6º da LGPD e liste quais princípios se aplicam a um relatório preditivo de caso. Para cada um, diga o que o relatório precisa conter.</span></div>
+<b class="lt">Leituras (3)</b><ol><li><a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" rel="noopener" target="_blank">Lei 13.709/2018, Lei Geral de Proteção de Dados (Planalto)</a></li><li><a href="https://atos.cnj.jus.br/atos/detalhar/3429" rel="noopener" target="_blank">CNJ, Resolução 332/2020 sobre ética e uso de inteligência artificial no Judiciário</a></li><li><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj" rel="noopener" target="_blank">União Europeia, Regulamento (UE) 2024/1689, AI Act</a></li></ol></article>
+<article class="mod" id="m6"><div class="kicker">Módulo 6</div><h3>Uso no escritório</h3>
+<p class="obj"><b>Objetivo.</b> Levar a predição para o dia a dia sem substituir o julgamento do advogado.</p><p>Uma previsão serve para decidir melhor: aceitar um acordo, provisionar um risco, priorizar uma carteira. Ela entra como mais um elemento da conversa com o cliente, nunca como garantia. Centros acadêmicos de direito e tecnologia estudam exatamente essa passagem da pesquisa para a prática.</p>
+<div class="exe"><b>Exercício</b><span>Escolha um caso real (anonimizado) e escreva como você explicaria ao cliente uma probabilidade de 62% com intervalo de 48% a 74%.</span></div>
+<b class="lt">Leituras (3)</b><ol><li><a href="https://law.stanford.edu/codex-the-stanford-center-for-legal-informatics/" rel="noopener" target="_blank">Stanford CodeX, Center for Legal Informatics</a></li><li><a href="https://law.mit.edu/" rel="noopener" target="_blank">MIT Computational Law Report (arquivo)</a></li><li><a href="https://law.nus.edu.sg/trail/" rel="noopener" target="_blank">NUS, Centre for Technology, Robotics, AI and the Law (TRAIL)</a></li></ol></article>
+  </div>
+  <p class="nota">18 leituras, todas abertas e conferidas em 31/10/2026. O Instituto não é afiliado às instituições citadas: elas aparecem como referência de estudo. A certificação, com avaliação por módulo, abre com o cadastro de membros.</p>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · Trilha de estudo v1 (31/10/2026)</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
+</body>
+</html>
