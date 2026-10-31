@@ -57,6 +57,13 @@ export default function TesteGeral() {
     const porVerif = [...new Set(do_dia.map(h => h.verificacao))]
     return { total: porVerif.length, ok: porVerif.filter(v => do_dia.filter(h => h.verificacao === v).every(h => h.ok)).length }
   }
+  // Passo 74: tendência — % de verificações que funcionaram nos últimos 7 dias contra os 7 anteriores.
+  const taxa = (de: number, ate: number) => {
+    const ini = new Date(Date.now() - de * 86400000).toISOString(), fim = new Date(Date.now() - ate * 86400000).toISOString()
+    const h = historico.filter(x => x.verificado_em >= ini && x.verificado_em < fim)
+    return h.length ? Math.round((h.filter(x => x.ok).length / h.length) * 1000) / 10 : null
+  }
+  const recente = taxa(7, 0), anterior = taxa(14, 7)
   const rodar = async () => {
     setRodando(true)
     setEstados(Object.fromEntries(TESTES.map(t => [t.nome, { e: 'rodando' as Estado }])))
@@ -89,6 +96,7 @@ export default function TesteGeral() {
       {historico.length > 0 && (
         <section className="mb-4" aria-labelledby="t-historico" data-testid="historico-30-dias">
           <h3 id="t-historico" className="text-sm font-medium">Histórico do teste automático (30 dias)</h3>
+          {recente !== null && <p className="text-sm my-1" data-testid="tendencia-testes">Últimos 7 dias: <strong>{recente.toLocaleString('pt-BR')}%</strong> das verificações funcionaram{anterior !== null && <> ({recente > anterior ? 'melhor' : recente < anterior ? 'pior' : 'igual'} que os 7 dias anteriores, {anterior.toLocaleString('pt-BR')}%)</>}.</p>}
           <p className="text-xs text-grafite-claro mb-2">Cada quadrado é um dia: verde funcionou, vermelho falhou, cinza sem teste. Quando algo falha, as administradoras recebem e-mail na hora.</p>
           <div className="overflow-x-auto">
             <table className="text-xs border-separate border-spacing-0.5" role="grid" aria-label="Resultado diário por verificação">

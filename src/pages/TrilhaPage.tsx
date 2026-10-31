@@ -66,6 +66,8 @@ export default function TrilhaPage() {
   const hojeIso = new Date().toISOString().slice(0, 10)
   const [periodo, setPeriodo] = useState({ de: new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10), ate: hojeIso })
   const [exportando, setExportando] = useState(false)
+  // Passo 73: filtros da lista (tipo de ação, texto e dia); a verificação da cadeia continua sobre todos os registros.
+  const [filtro, setFiltro] = useState({ tipo: '', texto: '', dia: '' })
   const [exportacao, setExportacao] = useState<{ sha256: string; total: number; calendario: string | null } | null>(null)
   const exportarPeriodo = async () => {
     setExportando(true); setMsg(null); setExportacao(null)
@@ -111,6 +113,7 @@ export default function TrilhaPage() {
     setLastros(await verificarLastro())
   }
 
+  const filtrados = eventos.filter(e => (!filtro.tipo || e.tipo === filtro.tipo) && (!filtro.texto || e.resumo.toLowerCase().includes(filtro.texto.toLowerCase())) && (!filtro.dia || e.em.slice(0, 10) === filtro.dia))
   return (
     <Layout title="Trilha de auditoria">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -245,6 +248,15 @@ export default function TrilhaPage() {
           )}
         </section>
 
+        {eventos.length > 0 && (
+          <section className="bg-white shadow-sm p-4 flex flex-wrap items-end gap-3 text-sm print:hidden" aria-label="Filtrar registros" data-testid="filtros-trilha">
+            <label>Ação<select value={filtro.tipo} onChange={e => setFiltro({ ...filtro, tipo: e.target.value })} className="block border px-2 py-2 mt-1 min-h-[44px]" data-testid="filtro-tipo"><option value="">Todas</option>{Object.entries(rotuloTipo).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></label>
+            <label>Contém<input value={filtro.texto} onChange={e => setFiltro({ ...filtro, texto: e.target.value })} placeholder="nome, endereço, parte…" className="block border px-3 py-2 mt-1 min-h-[44px]" data-testid="filtro-texto" /></label>
+            <label>Dia<input type="date" value={filtro.dia} onChange={e => setFiltro({ ...filtro, dia: e.target.value })} className="block border px-3 py-2 mt-1 min-h-[44px]" data-testid="filtro-dia" /></label>
+            {(filtro.tipo || filtro.texto || filtro.dia) && <button type="button" onClick={() => setFiltro({ tipo: '', texto: '', dia: '' })} className="min-h-[44px] px-3 border">Limpar</button>}
+            <p className="text-grafite-claro" data-testid="contagem-trilha">{filtrados.length} de {eventos.length} registros</p>
+          </section>
+        )}
         <section className="bg-white shadow-sm" aria-label="Registros da trilha">
           {carregando ? (
             <p className="p-6 text-sm text-grafite-claro">Verificando a cadeia…</p>
@@ -254,7 +266,7 @@ export default function TrilhaPage() {
             </p>
           ) : (
             <ol className="divide-y divide-navy/5">
-              {eventos.map(e => (
+              {filtrados.map(e => (
                 <li key={e.id} className="p-4 md:p-5 flex items-start gap-4">
                   <span className="font-mono text-xs text-grafite-claro mt-1 w-10 flex-shrink-0 text-right">
                     nº {e.seq}
