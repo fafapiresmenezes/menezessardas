@@ -228,3 +228,15 @@ html.dark { color-scheme: dark; }
 
 /* Passo 52: destaque do tour guiado */
 .tour-destaque { outline: 3px solid #B08D57 !important; outline-offset: 3px; box-shadow: 0 0 0 6px rgba(176, 141, 87, 0.25); transition: outline-color .2s; }
+
+/* Passo 56: no celular (toque), botões, listas e campos ganham alvo mínimo de 44 px (WCAG 2.5.5/2.5.8).
+   Links dentro de frases ficam isentos pela própria regra WCAG. */
+@media (pointer: coarse) {
+  button:not(.sr-only), select, [role=button],
+  input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]):not(.sr-only) { min-height: 44px; }
+  td a, li > a, nav a, p > a:only-child { display: inline-flex; align-items: center; min-height: 44px; }
+}
+/* Tabelas largas rolam dentro do próprio quadro, nunca empurram a página. */
+@media (max-width: 640px) {
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+}

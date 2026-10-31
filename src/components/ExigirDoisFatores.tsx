@@ -43,7 +43,7 @@ export default function ExigirDoisFatores({ admin }: { admin: boolean }) {
     <div role="status" data-testid="aviso-2fa" className="mb-4 flex flex-wrap items-center gap-3 rounded-lg border border-dourado-escuro/40 bg-dourado/10 px-4 py-3 text-sm">
       <ShieldAlert className="text-dourado-escuro" size={18} aria-hidden="true" />
       <span>Administradores precisam ativar a verificação em dois fatores até 6 de novembro ({dias} {dias === 1 ? 'dia' : 'dias'}).</span>
-      <Link to="/settings" className="font-medium underline text-azul-marinho dark:text-dourado">Ativar agora</Link>
+      <Link to="/settings" className="inline-flex items-center min-h-[44px] px-2 font-medium underline text-azul-marinho dark:text-dourado">Ativar agora</Link>
     </div>
   )
 }
