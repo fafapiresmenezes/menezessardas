@@ -1,0 +1,306 @@
+{
+ "plano": "I-03 (ciclo 2 até nota 10)",
+ "origem": "U20 / medição I-M4",
+ "passos": [
+  {
+   "n": "C01",
+   "tema": "Ontologia preditiva de grafo",
+   "titulo": "Exportar ontologia em OWL/Turtle",
+   "prompt": "Publique ontologia-locacao-v07.ttl com as propostas do U14 (Prazo, Garantia, Documento, fiador, aditiva_de, sublocacao_de).",
+   "kpi": "Arquivo .ttl válido no site",
+   "status": "aberto",
+   "elo_anterior": "4abbe630c67a5826c55bd88c5ee1c8c3bc8abd4cb8284bc3256a2be34a7fed8a",
+   "sha256_prompt": "4706c70ef62d54f5d91966f43f6c3ae43871be594e315f366e9310d5c7dfe337"
+  },
+  {
+   "n": "C02",
+   "tema": "Ontologia preditiva de grafo",
+   "titulo": "URIs persistentes",
+   "prompt": "Dê URI estável a cada classe e nó de norma (https://theye.club/o/...) e publique página por URI.",
+   "kpi": "100% dos nós com URI que resolve",
+   "status": "aberto",
+   "elo_anterior": "4706c70ef62d54f5d91966f43f6c3ae43871be594e315f366e9310d5c7dfe337",
+   "sha256_prompt": "d366083f471b992d0b742ed145a6cc04fc748f450452c47805976784ae4de4c4"
+  },
+  {
+   "n": "C03",
+   "tema": "Ontologia preditiva de grafo",
+   "titulo": "Raciocinador e changelog",
+   "prompt": "Rode HermiT/ELK (ou pySHACL) e publique o relatório de consistência e o changelog v0.4→v0.7.",
+   "kpi": "0 inconsistência",
+   "status": "aberto",
+   "elo_anterior": "d366083f471b992d0b742ed145a6cc04fc748f450452c47805976784ae4de4c4",
+   "sha256_prompt": "d6d3658b89cb8e892ce8c7333b8ad13fbf2da5eba8e127c48148cb14d232d7dc"
+  },
+  {
+   "n": "C04",
+   "tema": "Privacidade e LGPD",
+   "titulo": "RIPD publicado",
+   "prompt": "Escreva o Relatório de Impacto do laboratório e dos agentes e publique em /privacidade.html.",
+   "kpi": "RIPD no ar",
+   "status": "aberto",
+   "elo_anterior": "d6d3658b89cb8e892ce8c7333b8ad13fbf2da5eba8e127c48148cb14d232d7dc",
+   "sha256_prompt": "c45070cd82610676aa9774ec7bc98e0ff269e2199af57b284a8fdc967bcdf561"
+  },
+  {
+   "n": "C05",
+   "tema": "Privacidade e LGPD",
+   "titulo": "Encarregado",
+   "prompt": "Prepare cartão para M nomear o encarregado (DPO) e publique o canal.",
+   "kpi": "Encarregado nomeado",
+   "status": "aberto",
+   "elo_anterior": "c45070cd82610676aa9774ec7bc98e0ff269e2199af57b284a8fdc967bcdf561",
+   "sha256_prompt": "0fe57dbe8b498bbf642d58dafe9927af1592355719d896dd638caa0cf71588e5"
+  },
+  {
+   "n": "C06",
+   "tema": "Privacidade e LGPD",
+   "titulo": "Retenção",
+   "prompt": "Defina e implemente prazo de retenção (cron que apaga consultas antigas).",
+   "kpi": "Prazo publicado e cron ativo",
+   "status": "aberto",
+   "elo_anterior": "0fe57dbe8b498bbf642d58dafe9927af1592355719d896dd638caa0cf71588e5",
+   "sha256_prompt": "8d4ee29fb5357d2bb7bb964ae8ebd32895143ad97530c515dedf69dad0176bf1"
+  },
+  {
+   "n": "C07",
+   "tema": "IA responsável",
+   "titulo": "Cartão do modelo",
+   "prompt": "Publique /modelo.html: dados, métricas (Brier, ECE), limites e uso indevido do modelo e dos agentes.",
+   "kpi": "Cartão no ar",
+   "status": "aberto",
+   "elo_anterior": "8d4ee29fb5357d2bb7bb964ae8ebd32895143ad97530c515dedf69dad0176bf1",
+   "sha256_prompt": "fc48926ac4462f7076163a2d6dfc83cc03d70141450a68275da0814c5a39a278"
+  },
+  {
+   "n": "C08",
+   "tema": "IA responsável",
+   "titulo": "Registro de incidentes",
+   "prompt": "Crie tabela e botão \"relatar resposta errada\" nos agentes.",
+   "kpi": "Botão no ar e testado",
+   "status": "aberto",
+   "elo_anterior": "fc48926ac4462f7076163a2d6dfc83cc03d70141450a68275da0814c5a39a278",
+   "sha256_prompt": "53f2bd5c35d251bbb7cf97a95d34ade8681d6f94ea3c30f9e3b0c7aa25222887"
+  },
+  {
+   "n": "C09",
+   "tema": "IA responsável",
+   "titulo": "Revisão humana",
+   "prompt": "Amostre 20 respostas dos agentes por semana para revisão humana registrada.",
+   "kpi": "1ª amostra revisada",
+   "status": "aberto",
+   "elo_anterior": "53f2bd5c35d251bbb7cf97a95d34ade8681d6f94ea3c30f9e3b0c7aa25222887",
+   "sha256_prompt": "45aed3fffd9515cadb1c555a67068c96368a0ae16c4e2714c28d27d3f594f0f4"
+  },
+  {
+   "n": "C10",
+   "tema": "Desempenho web",
+   "titulo": "Medição de campo",
+   "prompt": "Ative Vercel Speed Insights/Web Analytics (sem cookies).",
+   "kpi": "Dados de campo de 7 dias",
+   "status": "aberto",
+   "elo_anterior": "45aed3fffd9515cadb1c555a67068c96368a0ae16c4e2714c28d27d3f594f0f4",
+   "sha256_prompt": "9256d64e00d939d21c84621d651e8d8af77126796c9a7ea932c92fec13b86365"
+  },
+  {
+   "n": "C11",
+   "tema": "Desempenho web",
+   "titulo": "INP",
+   "prompt": "Meça INP com interações reais (laboratório e agentes).",
+   "kpi": "INP < 200 ms",
+   "status": "aberto",
+   "elo_anterior": "9256d64e00d939d21c84621d651e8d8af77126796c9a7ea932c92fec13b86365",
+   "sha256_prompt": "d1119e1eaccd07d7e741671f9f2f4956b5162a7f514e5a61c700e65a3500e630"
+  },
+  {
+   "n": "C12",
+   "tema": "Desempenho web",
+   "titulo": "Orçamento de desempenho",
+   "prompt": "Teste diário Lighthouse com alerta < 95.",
+   "kpi": "Alerta ativo",
+   "status": "aberto",
+   "elo_anterior": "d1119e1eaccd07d7e741671f9f2f4956b5162a7f514e5a61c700e65a3500e630",
+   "sha256_prompt": "882a9bb9e70fcc032a8d38668189a4dd6d30e2a36aaba1af30847d8e75c1e341"
+  },
+  {
+   "n": "C13",
+   "tema": "Acessibilidade e experiência",
+   "titulo": "Leitor de tela",
+   "prompt": "Teste NVDA/VoiceOver (ou emulação) nas 10 páginas e corrija.",
+   "kpi": "Roteiro aprovado",
+   "status": "aberto",
+   "elo_anterior": "882a9bb9e70fcc032a8d38668189a4dd6d30e2a36aaba1af30847d8e75c1e341",
+   "sha256_prompt": "6eccdd7c562e71a56843cd482b288afd02f59704007069ec3c5c47568b237943"
+  },
+  {
+   "n": "C14",
+   "tema": "Acessibilidade e experiência",
+   "titulo": "SUS",
+   "prompt": "Monte formulário SUS e peça 5 avaliações.",
+   "kpi": "SUS ≥ 80",
+   "status": "aberto",
+   "elo_anterior": "6eccdd7c562e71a56843cd482b288afd02f59704007069ec3c5c47568b237943",
+   "sha256_prompt": "f7661da45bb6be571ffa3922915f3e3b6e38c8e9b78a085427bc68a3b0bd26dc"
+  },
+  {
+   "n": "C15",
+   "tema": "Acessibilidade e experiência",
+   "titulo": "Modo escuro auditado",
+   "prompt": "Rode axe no tema escuro.",
+   "kpi": "0 violação no escuro",
+   "status": "aberto",
+   "elo_anterior": "f7661da45bb6be571ffa3922915f3e3b6e38c8e9b78a085427bc68a3b0bd26dc",
+   "sha256_prompt": "0d8a6c67ff99d871f46d4e39e8b204d1eb1f75560d8dcb7a0ff914e2f81b9957"
+  },
+  {
+   "n": "C16",
+   "tema": "Dados abertos e qualidade",
+   "titulo": "Licença e download",
+   "prompt": "Publique base agregada em CSV com licença CC BY 4.0.",
+   "kpi": "Download no ar",
+   "status": "aberto",
+   "elo_anterior": "0d8a6c67ff99d871f46d4e39e8b204d1eb1f75560d8dcb7a0ff914e2f81b9957",
+   "sha256_prompt": "68b0148f7bd1c29d4e34f14b9b417686e88ebde72f37d8110cf6df5c101d95bb"
+  },
+  {
+   "n": "C17",
+   "tema": "Dados abertos e qualidade",
+   "titulo": "Catálogo/DOI",
+   "prompt": "Registre a base em Zenodo ou dados.gov.br.",
+   "kpi": "DOI emitido",
+   "status": "aberto",
+   "elo_anterior": "68b0148f7bd1c29d4e34f14b9b417686e88ebde72f37d8110cf6df5c101d95bb",
+   "sha256_prompt": "91cde2002abfaffe613b614c32e4651df85a388cf1e28a495097e68d8d10253c"
+  },
+  {
+   "n": "C18",
+   "tema": "Dados abertos e qualidade",
+   "titulo": "30 dias a 99%",
+   "prompt": "Painel de sucesso da coleta por 30 dias.",
+   "kpi": "≥ 99%",
+   "status": "aberto",
+   "elo_anterior": "91cde2002abfaffe613b614c32e4651df85a388cf1e28a495097e68d8d10253c",
+   "sha256_prompt": "b6d56b88a5ed4401a1d91d8b2674b38c6659318f323436b5abb7525c542bcf19"
+  },
+  {
+   "n": "C19",
+   "tema": "Predição jurídica",
+   "titulo": "Validação externa",
+   "prompt": "Rode o protocolo I-11 em período posterior (rodada 30/11).",
+   "kpi": "Resultado publicado",
+   "status": "aberto",
+   "elo_anterior": "b6d56b88a5ed4401a1d91d8b2674b38c6659318f323436b5abb7525c542bcf19",
+   "sha256_prompt": "0457b9c17c607c6664382a1de4b3f7489d9b6ca94d3cfe902ea554ba846e4a41"
+  },
+  {
+   "n": "C20",
+   "tema": "Predição jurídica",
+   "titulo": "Subgrupos",
+   "prompt": "Brier por tribunal e tipo de parte.",
+   "kpi": "Tabela publicada",
+   "status": "aberto",
+   "elo_anterior": "0457b9c17c607c6664382a1de4b3f7489d9b6ca94d3cfe902ea554ba846e4a41",
+   "sha256_prompt": "9a0e17ad9ff53efc73485a2cabc881f7f422ffdfcedfbbdecfc7a43485185efd"
+  },
+  {
+   "n": "C21",
+   "tema": "Predição jurídica",
+   "titulo": "Modelo C2",
+   "prompt": "Pré-registre grafo com precedentes e órgão (novo protocolo).",
+   "kpi": "Pré-registro selado",
+   "status": "aberto",
+   "elo_anterior": "9a0e17ad9ff53efc73485a2cabc881f7f422ffdfcedfbbdecfc7a43485185efd",
+   "sha256_prompt": "54043395e65928ed49938d918a1b10ba02169e56f108ebaf7782cd8ad94e9d1f"
+  },
+  {
+   "n": "C22",
+   "tema": "Gestão do projeto",
+   "titulo": "SPI/CPI",
+   "prompt": "Atribua data-alvo e custo a cada passo e calcule SPI e CPI.",
+   "kpi": "SPI ≥ 1,0",
+   "status": "aberto",
+   "elo_anterior": "54043395e65928ed49938d918a1b10ba02169e56f108ebaf7782cd8ad94e9d1f",
+   "sha256_prompt": "e4f7b70531065e994c62460b8b6b370524723879bd04cd0f7873336f21fa1f6f"
+  },
+  {
+   "n": "C23",
+   "tema": "Gestão do projeto",
+   "titulo": "Destravar U16/U19",
+   "prompt": "Cartões a M: hospedagem e conta de teste leitora.",
+   "kpi": "Decisões registradas",
+   "status": "aberto",
+   "elo_anterior": "e4f7b70531065e994c62460b8b6b370524723879bd04cd0f7873336f21fa1f6f",
+   "sha256_prompt": "ba7a28ab6674d5700dab308bceeac136e8a8cf5eace8b92fd4ed2176f4ba9308"
+  },
+  {
+   "n": "C24",
+   "tema": "Gestão do projeto",
+   "titulo": "Relatório semanal",
+   "prompt": "Resumo semanal automático em PDF selado.",
+   "kpi": "1º relatório",
+   "status": "aberto",
+   "elo_anterior": "ba7a28ab6674d5700dab308bceeac136e8a8cf5eace8b92fd4ed2176f4ba9308",
+   "sha256_prompt": "aab4852fc249d6f015db8a223a3f9a820396d69df1cac9e511f573a0fcfe0184"
+  },
+  {
+   "n": "C25",
+   "tema": "Segurança",
+   "titulo": "Security review",
+   "prompt": "Rode /security-review no Instituto e corrija achados altos.",
+   "kpi": "0 alto/crítico",
+   "status": "aberto",
+   "elo_anterior": "aab4852fc249d6f015db8a223a3f9a820396d69df1cac9e511f573a0fcfe0184",
+   "sha256_prompt": "a9b0a84fb411ccb8d99c44f36fa7859879a65d8d02ba4c07fa0cd396287790e1"
+  },
+  {
+   "n": "C26",
+   "tema": "Segurança",
+   "titulo": "Injeção de prompt",
+   "prompt": "Filtro e testes adversariais nos agentes (20 casos).",
+   "kpi": "20/20 bloqueados",
+   "status": "aberto",
+   "elo_anterior": "a9b0a84fb411ccb8d99c44f36fa7859879a65d8d02ba4c07fa0cd396287790e1",
+   "sha256_prompt": "8b60493085343e9e46d2aff08f2909bbb0497dc5f1fcf9f55dec42b98389f17b"
+  },
+  {
+   "n": "C27",
+   "tema": "Segurança",
+   "titulo": "ASVS L2 formal",
+   "prompt": "Planilha ASVS L2 item a item.",
+   "kpi": "Planilha completa",
+   "status": "aberto",
+   "elo_anterior": "8b60493085343e9e46d2aff08f2909bbb0497dc5f1fcf9f55dec42b98389f17b",
+   "sha256_prompt": "b80f5be7ac7f6b25080188f00affc286d8a9ad59a3b39f4318e50223dcea2743"
+  },
+  {
+   "n": "C28",
+   "tema": "Engenharia de software",
+   "titulo": "Testes unitários",
+   "prompt": "Testes para cada Edge function do Instituto.",
+   "kpi": "100% das funções",
+   "status": "aberto",
+   "elo_anterior": "b80f5be7ac7f6b25080188f00affc286d8a9ad59a3b39f4318e50223dcea2743",
+   "sha256_prompt": "64ab39e15a20c7893cf7317823d5eaacdc22e4fedec2198e9191748165010264"
+  },
+  {
+   "n": "C29",
+   "tema": "Engenharia de software",
+   "titulo": "SLO",
+   "prompt": "Monitor de disponibilidade com SLO 99,5% por 30 dias.",
+   "kpi": "SLO medido",
+   "status": "aberto",
+   "elo_anterior": "64ab39e15a20c7893cf7317823d5eaacdc22e4fedec2198e9191748165010264",
+   "sha256_prompt": "fb9c420d0948a45000faddf544b4ca97a273a5e6c042c6d37f108ca9005a14b5"
+  },
+  {
+   "n": "C30",
+   "tema": "Engenharia de software",
+   "titulo": "CI",
+   "prompt": "GitHub Action roda u17-teste.mjs a cada push.",
+   "kpi": "CI verde",
+   "status": "aberto",
+   "elo_anterior": "fb9c420d0948a45000faddf544b4ca97a273a5e6c042c6d37f108ca9005a14b5",
+   "sha256_prompt": "2849e320ec981df093765c60bbde1d899eb85ab0713a84d32eb9bed67ab5f748"
+  }
+ ]
+}
