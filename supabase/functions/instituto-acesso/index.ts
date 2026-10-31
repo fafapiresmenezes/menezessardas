@@ -4,11 +4,13 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 const db = () => createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { db: { schema: 'public' } })
 const SITE = 'https://instituto-theye.vercel.app'
+// Origens aceitas: endereço próprio (theye.club) e o endereço antigo na Vercel.
+const ORIGENS = ['https://theye.club', 'https://www.theye.club', SITE]
 const ACEITE = 'termos-lab-v1-2026-10-31'
 const BITS = 16 // prova de trabalho: 4 zeros hexadecimais
 const DESCARTAVEIS = ['mailinator.com', 'yopmail.com', 'guerrillamail.com', '10minutemail.com', 'tempmail.com', 'temp-mail.org', 'trashmail.com', 'sharklasers.com', 'getnada.com', 'dispostable.com', 'maildrop.cc', 'throwawaymail.com', 'emailondeck.com', 'mohmal.com', 'tempmailo.com']
 
-const cors = { 'Access-Control-Allow-Origin': SITE, 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' }
+const cors = { 'Vary': 'Origin', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' }
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
 const hex = (b: ArrayBuffer) => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('')
 const sha = async (t: string) => hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)))
@@ -40,11 +42,11 @@ function normalizarEmail(e: string) {
   if (dom === 'gmail.com') u = u.replace(/\./g, '')
   return /^[a-z0-9._%-]+$/.test(u) && /^[a-z0-9.-]+\.[a-z]{2,}$/.test(dom) ? `${u}@${dom}` : null
 }
-async function enviarLink(email: string, token: string, primeiro: boolean) {
+async function enviarLink(email: string, token: string, primeiro: boolean, site = SITE) {
   const { data: conf } = await db().from('configuracoes').select('chave,valor').in('chave', ['brevo_api_key', 'email_remetente'])
   const c = Object.fromEntries((conf ?? []).map((x: { chave: string; valor: string }) => [x.chave, x.valor]))
   if (!c.brevo_api_key || !c.email_remetente) return false
-  const link = `${SITE}/laboratorio.html#t=${token}`
+  const link = `${site}/laboratorio.html#t=${token}`
   const html = `<div style="font-family:Georgia,serif;max-width:520px;color:#151a22"><p style="font-family:monospace;font-size:11px;letter-spacing:.1em;color:#9a7a3c">INSTITUTO THEYE</p>
 <h2 style="font-weight:500">${primeiro ? 'Confirme seu e-mail' : 'Seu link de entrada'}</h2>
 <p style="font-family:Arial,sans-serif;font-size:15px;color:#3a4250">${primeiro ? 'Falta um passo para liberar sua consulta gratuita ao laboratório de predição jurídica.' : 'Use o botão abaixo para entrar no laboratório.'} O link vale por 24 horas.</p>
@@ -64,6 +66,14 @@ async function membroPorSessao(sessao: string) {
 }
 
 Deno.serve(async (req) => {
+  const origem = req.headers.get('origin') ?? ''
+  const permitida = ORIGENS.includes(origem) ? origem : SITE
+  const r = await tratar(req, permitida)
+  r.headers.set('Access-Control-Allow-Origin', permitida)
+  return r
+})
+
+async function tratar(req: Request, site: string): Promise<Response> {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
   const b = await req.json().catch(() => ({}))
   const acao = String(b.acao ?? '')
@@ -92,7 +102,7 @@ Deno.serve(async (req) => {
     const token = aleatorio()
     if (acao === 'entrar') {
       const { data: ok } = await db().rpc('instituto_novo_token', { p_email: email, p_token_hash: await sha(token) })
-      if (ok) await enviarLink(email, token, false)
+      if (ok) await enviarLink(email, token, false, site)
       return json({ ok: true, mensagem: 'Se houver cadastro com esse e-mail, enviamos um link de entrada.' })
     }
     if (!b.aceite) return json({ erro: 'É preciso aceitar os termos e a política de privacidade.' }, 400)
@@ -100,7 +110,7 @@ Deno.serve(async (req) => {
     const cpfHmac = await hmac(await segredo('pimenta_cpf'), String(b.cpf).replace(/\D/g, ''))
     const { data: r } = await db().rpc('instituto_cadastrar', { p_email: email, p_cpf_hmac: cpfHmac, p_aceite: ACEITE, p_token_hash: await sha(token), p_rede: rede })
     if (r?.erro) return json({ erro: r.erro }, 409)
-    const enviado = await enviarLink(email, token, true)
+    const enviado = await enviarLink(email, token, true, site)
     return json({ ok: true, enviado, mensagem: enviado ? `Enviamos um link de confirmação para ${email}. Ele vale por 24 horas.` : 'Cadastro feito, mas o e-mail não saiu agora. Use "Já tenho cadastro" daqui a pouco.' })
   }
 
@@ -133,4 +143,4 @@ Deno.serve(async (req) => {
   }
 
   return json({ erro: 'Ação desconhecida.' }, 400)
-})
+}
