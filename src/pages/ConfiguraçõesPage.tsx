@@ -46,27 +46,32 @@ export default function ConfiguraçõesPage() {
   useEffect(() => {
     perfilAtual().then(setPerfil).catch(() => setPerfil(null))
     if (!supabaseConfigurado) return
-    supabase.auth.getUser().then(({ data }) => {
+    supabase.auth.getUser().then(async ({ data }) => {
       const u = data.user
-      if (u) setPrefs(p => ({ ...p, email: p.email || u.email || '', nomeCompleto: p.nomeCompleto || String(u.user_metadata?.nome ?? '') }))
+      if (!u) return
+      // Passo 83: as preferências de alerta vêm do banco; o navegador é só reserva.
+      const { data: pr } = await supabase.from('preferencias_usuario').select('alertas_email,dias_antecedencia').eq('usuario_id', u.id).maybeSingle()
+      setPrefs(p => ({ ...p, email: p.email || u.email || '', nomeCompleto: p.nomeCompleto || String(u.user_metadata?.nome ?? ''), ...(pr ? { alertasEmail: pr.alertas_email, diasAntecedencia: pr.dias_antecedencia } : {}) }))
     }).catch(() => undefined)
   }, [])
 
-  const salvar = (e: React.FormEvent) => {
+  const salvar = async (e: React.FormEvent) => {
     e.preventDefault()
     setErro('')
     if (prefs.diasAntecedencia < 1 || prefs.diasAntecedencia > 180) {
       setErro('A antecedência deve ficar entre 1 e 180 dias.')
       return
     }
-    try {
-      // Guardado neste navegador; a gravação no banco (alertas_email, dias_antecedencia) depende de migração aprovada por M.
-      localStorage.setItem(CHAVE, JSON.stringify(prefs))
-      setAviso('Preferências salvas.')
-      setTimeout(() => setAviso(''), 4000)
-    } catch {
-      setErro('Não foi possível salvar neste navegador.')
+    try { localStorage.setItem(CHAVE, JSON.stringify(prefs)) } catch { /* sem localStorage, segue só o banco */ }
+    if (supabaseConfigurado) {
+      const { data } = await supabase.auth.getUser()
+      if (data.user) {
+        const { error } = await supabase.from('preferencias_usuario').upsert({ usuario_id: data.user.id, alertas_email: prefs.alertasEmail, dias_antecedencia: prefs.diasAntecedencia, atualizado_em: new Date().toISOString() })
+        if (error) { setErro('Não foi possível salvar no banco: ' + mensagemAmigavel(error)); return }
+      }
     }
+    setAviso('Preferências salvas. Os avisos por e-mail passam a respeitar estas escolhas.')
+    setTimeout(() => setAviso(''), 4000)
   }
 
   const campo = 'w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white'

@@ -78,8 +78,11 @@ Deno.serve(async (req) => {
     db.from('compromissos').select('id,titulo,imovel,data_evento,dias_antes,avisos_dias,email_aviso'),
     db.from('configuracoes').select('chave,valor').in('chave', ['resend_api_key', 'brevo_api_key', 'email_remetente', 'email_avisos_extra']),
     // Só quem foi liberado na Equipe recebe os avisos.
-    db.from('usuarios_perfis').select('email'),
+    db.from('usuarios_perfis').select('id,email'),
   ])
+  // Passo 83: cada pessoa escolhe em Configurações se quer e-mail e com quantos dias de antecedência.
+  const { data: prefs } = await db.from('preferencias_usuario').select('usuario_id,alertas_email,dias_antecedencia')
+  const prefDe = new Map((prefs ?? []).map(p => [p.usuario_id, p]))
   const avisaHoje = (dias: number, lista: number[] | null, padrao: number) =>
     dias === 0 || (lista?.length ? lista : [padrao]).includes(dias)
 
@@ -107,16 +110,26 @@ Deno.serve(async (req) => {
   if (corpo?.teste) itens.splice(0, itens.length, { titulo: 'E-mail de teste — avisos ativos', local: 'Plataforma de contratos', data: new Date().toISOString().slice(0, 10), dias: 0 })
 
   const conf = Object.fromEntries((cfg ?? []).map(x => [x.chave, x.valor]))
+  const equipeAtiva = (equipe ?? []).filter(u => u.email && (prefDe.get(u.id)?.alertas_email ?? true))
   const para = emailTeste ? [emailTeste] : [...new Set([
-    ...(equipe ?? []).map(u => u.email).filter(Boolean) as string[],
+    ...equipeAtiva.map(u => u.email as string),
     ...String(conf.email_avisos_extra ?? '').split(/[,;\s]+/).filter(e => e.includes('@')),
   ])]
+  // Quem pediu antecedência menor que a do item não recebe aquele aviso.
+  const antecedenciaDe = (email: string) => prefDe.get(equipeAtiva.find(u => u.email === email)?.id ?? '')?.dias_antecedencia ?? 180
   const prov: Provedor = { brevo: conf.brevo_api_key || undefined, remetente: conf.email_remetente || undefined, resend: conf.resend_api_key || Deno.env.get('RESEND_API_KEY') || undefined }
   const chave = (prov.brevo && prov.remetente) || prov.resend
 
   if (!itens.length) return json({ itens: 0, destinatarios: para.length, enviado: false, motivo: 'nenhum prazo dentro da janela de aviso' })
   if (!chave) return json({ itens: itens.length, destinatarios: para.length, enviado: false, motivo: 'provedor de e-mail ainda não configurado' })
-  const r = await enviar(prov, para, itens)
+  let r = { ok: true, corpo: '' } as { ok: boolean; corpo?: string }
+  const grupos = new Map<string, string[]>()
+  for (const e of para) { const k = itens.filter(i => i.dias <= antecedenciaDe(e)).map(i => i.titulo + i.data).join('|'); grupos.set(k, [...(grupos.get(k) ?? []), e]) }
+  for (const [, dest] of grupos) {
+    const meus = itens.filter(i => i.dias <= antecedenciaDe(dest[0]))
+    if (!meus.length) continue
+    const rr = await enviar(prov, dest, meus); if (!rr.ok) r = rr
+  }
   // Cada e-mail entra no painel Consumo (Brevo grátis até 300/dia; preço editável em precos_api).
   if (r.ok) await db.from('consumo_api').insert({ funcao: corpo?.teste ? 'e-mail de teste' : 'avisos por e-mail', modelo: prov.brevo ? 'brevo-email' : 'resend-email', quantidade: para.length })
   // E-mail informado no próprio compromisso recebe só aquele aviso.
