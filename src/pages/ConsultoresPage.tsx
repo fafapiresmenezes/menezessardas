@@ -43,7 +43,8 @@ async function fotografia(): Promise<string> {
 }
 
 export default function ConsultoresPage() {
-  const [sel, setSel] = useState(NIVEIS[0])
+  // Passo 112: lembra o último consultor escolhido neste navegador e permite limpar a conversa.
+  const [sel, setSel] = useState(() => { try { const c = localStorage.getItem('lsm-consultor'); return NIVEIS.find(n => n.chave === c) ?? NIVEIS[0] } catch { return NIVEIS[0] } })
   const [pergunta, setPergunta] = useState('')
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
@@ -74,7 +75,7 @@ export default function ConsultoresPage() {
                 <p className="text-[11px] uppercase tracking-[0.18em] text-grafite-claro mb-2">{g}</p>
                 <div className="space-y-1">
                   {NIVEIS.filter(n => n.nivel === g).map(n => (
-                    <button key={n.chave} type="button" data-testid={`consultor-${n.chave}`} onClick={() => { setSel(n); setResposta(null); setErro('') }}
+                    <button key={n.chave} type="button" data-testid={`consultor-${n.chave}`} onClick={() => { setSel(n); setResposta(null); setErro(''); try { localStorage.setItem('lsm-consultor', n.chave) } catch { /* sem memória local */ } }}
                       className={`w-full text-left px-4 py-3 border min-h-[44px] ${sel.chave === n.chave ? 'bg-navy text-white border-navy' : 'bg-white border-navy/10 hover:border-dourado'}`}>
                       <span className="block font-medium text-sm">{n.titulo}</span>
                       <span className={`block text-xs ${sel.chave === n.chave ? 'text-white/70' : 'text-grafite'}`}>{n.foco}</span>
@@ -104,6 +105,7 @@ export default function ConsultoresPage() {
               <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-grafite-claro" data-testid="acoes-consultor">
                 {respondidoEm && <span>Respondido em {respondidoEm.toLocaleString('pt-BR')} pelo {sel.titulo}.</span>}
                 <button type="button" onClick={() => navigator.clipboard?.writeText(resposta.resposta).then(() => setCopiado(true)).catch(() => undefined)} className="underline text-navy" data-testid="copiar-resposta">{copiado ? 'Copiado' : 'Copiar resposta'}</button>
+                <button type="button" onClick={() => { setResposta(null); setPergunta(''); setErro('') }} className="underline text-navy" data-testid="nova-consulta">Nova consulta</button>
                 <a href={`#/projetos?novo=${encodeURIComponent(`Ação do ${sel.titulo}: ${resposta.resposta.replace(/\s+/g, ' ').slice(0, 120)}`)}`} className="underline text-navy" data-testid="virar-tarefa">Virar tarefa em Casos e projetos</a>
               </div>
             )}

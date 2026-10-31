@@ -100,6 +100,18 @@ export default function MeuDiaPage() {
   }, [])
   const p = PAPEIS[papel]
   const cartao = 'bg-white shadow-sm p-5'
+  // Passo 109: o dia em texto (tarefas, intimações, contratos vencendo), para colar na agenda ou mandar à sócia.
+  const copiarDia = () => {
+    const linhas = [
+      `Meu dia · ${new Date().toLocaleDateString('pt-BR')} · ${p.nome}`,
+      `Tarefas (7 dias): ${tarefas.length}`,
+      ...tarefas.map(t => `  ${t.prazo ? fmt(t.prazo) + ' · ' : ''}${t.titulo}`),
+      `Intimações não lidas: ${intimacoes}`,
+      `Contratos vencendo (60 dias): ${vencendo.length}`,
+      ...vencendo.map(c => `  ${fmt(c.data_vencimento)} · ${c.locatario_fornecedor}`),
+    ]
+    navigator.clipboard?.writeText(linhas.join('\n')).catch(() => undefined)
+  }
   return (
     <Layout title="Meu dia">
       <div className="space-y-5">
@@ -114,6 +126,7 @@ export default function MeuDiaPage() {
           <p className="text-sm text-grafite-claro mt-2">{p.foco}</p>
           <div className="flex flex-wrap gap-2 mt-3">
             {p.atalhos.map(a => <Link key={a.href + a.rotulo} to={a.href} className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy text-navy">{a.rotulo}</Link>)}
+            <button type="button" onClick={copiarDia} data-testid="copiar-dia" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy">Copiar meu dia</button>
           </div>
         </section>
 

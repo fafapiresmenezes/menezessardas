@@ -132,6 +132,8 @@ export default function NuvemPage() {
           <div className="flex flex-wrap items-center gap-3 mt-3 text-xs text-grafite">
             <input type="search" value={filtroNome} onChange={e => setFiltroNome(e.target.value)} placeholder="Filtrar por nome" aria-label="Filtrar arquivos desta pasta por nome" className="border px-3 py-2 text-sm w-56" data-testid="nuvem-filtro" />
             <span data-testid="nuvem-total">{itens.filter(i => i.id !== null).length} arquivo(s) nesta pasta · {kb(itens.reduce((t, i) => t + (i.metadata?.size ?? 0), 0))}</span>
+            {/* Passo 110: lista da pasta em texto (nome, tamanho, data), para conferência ou inventário. */}
+            {itens.some(i => i.id !== null) && <button type="button" data-testid="nuvem-copiar" onClick={() => navigator.clipboard?.writeText(`Nuvem · ${area === 'escritorio' ? 'Escritório' : 'Pessoal'}${sub ? '/' + sub : ''} · ${new Date().toLocaleDateString('pt-BR')}\n` + itens.filter(i => i.id !== null).map(i => `${i.name} · ${kb(i.metadata?.size)}${i.updated_at ? ' · ' + new Date(i.updated_at).toLocaleDateString('pt-BR') : ''}`).join('\n')).catch(() => undefined)} className="min-h-[44px] px-3 border border-navy/20 text-navy">Copiar lista</button>}
           </div>
           {msg && <p role="alert" className="text-sm text-red-700 mt-3">{msg}</p>}
           <ul className="mt-4 divide-y divide-navy/10" data-testid="nuvem-lista">

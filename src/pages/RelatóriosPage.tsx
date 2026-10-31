@@ -119,6 +119,18 @@ export default function RelatóriosPage() {
   ).sort((a, b) => b[1] - a[1])
 
   const maiorTipo = Math.max(1, ...porTipoAlerta.map(([, n]) => n))
+  // Passo 108: resumo do período em texto, para colar no e-mail da sócia.
+  const copiarResumoPeriodo = () => {
+    const ate = new Date(Date.now() + periodo * 86400000).toLocaleDateString('pt-BR')
+    const linhas = [
+      `Relatório · ${new Date().toLocaleDateString('pt-BR')} a ${ate} (${periodo} dias)`,
+      `Imóveis: ${imoveis.length} · Contratos: ${(contratos ?? []).length}`,
+      `Alertas no período: ${noPeriodo.length} · Vencidos em aberto: ${vencidosAbertos.length}`,
+      `Receita estimada no período: ${receitaNoPeriodo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`,
+      ...porTipoAlerta.map(([t, n]) => `  ${rotulosTipoAlerta[t as keyof typeof rotulosTipoAlerta] ?? t}: ${n}`),
+    ]
+    navigator.clipboard?.writeText(linhas.join('\n')).catch(() => undefined)
+  }
   const maiorImovel = Math.max(1, ...porTipoImovel.map(([, n]) => n))
 
   const Barra = ({ rotulo, valor, maximo }: { rotulo: string; valor: number; maximo: number }) => (
@@ -154,6 +166,7 @@ export default function RelatóriosPage() {
               </button>
             ))}
           </div>
+          <button type="button" onClick={copiarResumoPeriodo} data-testid="copiar-periodo" className="mt-3 min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar resumo do período</button>
           <p className="text-xs text-grafite-claro mt-3" data-testid="datas-periodo">
             Este relatório cobre de {new Date().toLocaleDateString('pt-BR')} até {new Date(Date.now() + periodo * 86400000).toLocaleDateString('pt-BR')}, gerado em {new Date().toLocaleString('pt-BR')}.
           </p>
