@@ -21,8 +21,8 @@ interface Preferencias {
 }
 
 const padrao: Preferencias = {
-  nomeCompleto: 'Leticia Sardas',
-  email: 'leticia@sardasmenezes.adv.br',
+  nomeCompleto: '',
+  email: '',
   notificacoes: true,
   alertasEmail: true,
   diasAntecedencia: 30,
@@ -45,6 +45,11 @@ export default function ConfiguraçõesPage() {
 
   useEffect(() => {
     perfilAtual().then(setPerfil).catch(() => setPerfil(null))
+    if (!supabaseConfigurado) return
+    supabase.auth.getUser().then(({ data }) => {
+      const u = data.user
+      if (u) setPrefs(p => ({ ...p, email: p.email || u.email || '', nomeCompleto: p.nomeCompleto || String(u.user_metadata?.nome ?? '') }))
+    }).catch(() => undefined)
   }, [])
 
   const salvar = (e: React.FormEvent) => {
@@ -55,7 +60,7 @@ export default function ConfiguraçõesPage() {
       return
     }
     try {
-      // TODO: gravar em supabase.from('preferencias') quando houver banco
+      // Guardado neste navegador; a gravação no banco (alertas_email, dias_antecedencia) depende de migração aprovada por M.
       localStorage.setItem(CHAVE, JSON.stringify(prefs))
       setAviso('Preferências salvas.')
       setTimeout(() => setAviso(''), 4000)

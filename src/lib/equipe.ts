@@ -33,10 +33,10 @@ export const descricaoFuncao: Record<Funcao | 'nenhuma', string> = {
 }
 
 const DEMO: Pessoa[] = [
-  { id: 'd1', email: 'leticia@sardasmenezes.adv.br', nome: 'Leticia Sardas', funcao: 'admin', criadoEm: '2026-09-01T12:00:00Z', confirmado: true, ultimoAcesso: '2026-10-25T13:10:00Z' },
-  { id: 'd2', email: 'paulo@sardasmenezes.adv.br', nome: 'Paulo Menezes', funcao: 'operador', criadoEm: '2026-09-03T12:00:00Z', confirmado: true, ultimoAcesso: '2026-10-24T18:40:00Z' },
-  { id: 'd3', email: 'carla@sardasmenezes.adv.br', nome: 'Carla Nunes', funcao: 'leitor', criadoEm: '2026-09-10T12:00:00Z', confirmado: true, ultimoAcesso: '2026-10-20T09:05:00Z' },
-  { id: 'd4', email: 'estagio@sardasmenezes.adv.br', nome: 'Rafael Lima', funcao: null, criadoEm: '2026-10-24T15:30:00Z', confirmado: false, ultimoAcesso: null },
+  { id: 'd1', email: 'leticia@gmenezes.com', nome: 'Letícia Sardas', funcao: 'admin', criadoEm: '2026-09-01T12:00:00Z', confirmado: true, ultimoAcesso: '2026-10-25T13:10:00Z' },
+  { id: 'd2', email: 'paulo@gmenezes.com', nome: 'Paulo Menezes', funcao: 'operador', criadoEm: '2026-09-03T12:00:00Z', confirmado: true, ultimoAcesso: '2026-10-24T18:40:00Z' },
+  { id: 'd3', email: 'carla@gmenezes.com', nome: 'Carla Nunes', funcao: 'leitor', criadoEm: '2026-09-10T12:00:00Z', confirmado: true, ultimoAcesso: '2026-10-20T09:05:00Z' },
+  { id: 'd4', email: 'estagio@gmenezes.com', nome: 'Rafael Lima', funcao: null, criadoEm: '2026-10-24T15:30:00Z', confirmado: false, ultimoAcesso: null },
 ]
 
 let demoAtual: Pessoa[] = DEMO.map(p => ({ ...p }))

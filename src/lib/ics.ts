@@ -46,7 +46,7 @@ export function gerarICS(alertas: Alerta[], nomeCalendario = 'Compromissos contr
 
   alertas.forEach(a => {
     linhas.push('BEGIN:VEVENT')
-    linhas.push(`UID:${a.id}@sardasmenezes`)
+    linhas.push(`UID:${a.id}@gmenezes`)
     linhas.push(`DTSTAMP:${agora}`)
     linhas.push(`DTSTART;VALUE=DATE:${soData(a.dataEvento)}`)
     linhas.push(`DTEND;VALUE=DATE:${proximoDia(a.dataEvento)}`)

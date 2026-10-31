@@ -8,6 +8,8 @@ import Marca from '@/components/Marca'
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
+  const [armadilha, setArmadilha] = useState('')
+  const [abertoEm] = useState(() => Date.now())
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [avisoRecuperacao, setAvisoRecuperacao] = useState(false)
@@ -54,6 +56,12 @@ export default function LoginPage() {
     }
 
     if (primeiroAcesso) {
+      // Anti-robô simples: campo invisível preenchido ou formulário enviado em menos de 3 s = robô.
+      if (armadilha || Date.now() - abertoEm < 3000) {
+        setErro('Não foi possível criar o acesso. Tente novamente em alguns segundos.')
+        setCarregando(false)
+        return
+      }
       if (senha.length < 8) {
         setErro('A senha precisa ter pelo menos 8 caracteres.')
         setCarregando(false)
@@ -136,6 +144,7 @@ export default function LoginPage() {
             </form>
           ) : (
           <form onSubmit={entrar} className="space-y-5">
+            <input type="text" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" value={armadilha} onChange={e => setArmadilha(e.target.value)} className="absolute opacity-0 h-0 w-0 pointer-events-none" />
             <div>
               <label htmlFor="email" className="block text-xs uppercase tracking-wider text-grafite mb-2">
                 E-mail
