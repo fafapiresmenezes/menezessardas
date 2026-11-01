@@ -40,6 +40,12 @@ function carregar(): Preferencias {
 export default function ConfiguraçõesPage() {
   const [prefs, setPrefs] = useState<Preferencias>(carregar)
   const [aviso, setAviso] = useState('')
+  // Passo 136: resumo das preferências em texto (sem chaves nem senhas) para conferir com a administradora.
+  const [resumoCopiado, setResumoCopiado] = useState(false)
+  const copiarResumoPrefs = async () => {
+    const t = ['Minhas preferências — GMenezes Advogados Associados', `Nome: ${prefs.nomeCompleto || '(em branco)'}`, `E-mail: ${prefs.email || '(em branco)'}`, `Avisos na plataforma: ${prefs.notificacoes ? 'ligados' : 'desligados'}`, `Alertas por e-mail: ${prefs.alertasEmail ? 'ligados' : 'desligados'}`, `Antecedência dos alertas: ${prefs.diasAntecedencia} dia(s)`].join('\n')
+    try { await navigator.clipboard.writeText(t); setResumoCopiado(true); setTimeout(() => setResumoCopiado(false), 2500) } catch { /* sem área de transferência */ }
+  }
   const [erro, setErro] = useState('')
   const [perfil, setPerfil] = useState<Funcao | null | 'carregando'>('carregando')
 
@@ -83,6 +89,7 @@ export default function ConfiguraçõesPage() {
         Gerencie seu perfil, preferências de notificações e acesso à inteligência artificial para análise de contratos.
       </p>
       <form onSubmit={salvar} className="max-w-2xl space-y-6" noValidate>
+        <button type="button" onClick={copiarResumoPrefs} data-testid="copiar-preferencias" className="min-h-[44px] px-4 border border-navy text-navy text-sm">{resumoCopiado ? 'Resumo copiado' : 'Copiar resumo das preferências'}</button>
         {aviso && (
           <p role="status" className="p-3 bg-regularFundo border-l-2 border-regular text-regular text-sm">
             ✓ {aviso}

@@ -44,6 +44,12 @@ export default function FontesPage() {
   type Salva = { id: string; termo: string; ultima_execucao: string | null; ultimo_total: number; novas_ultima: number; caso_id: string | null }
   const [casos, setCasos] = useState<{ id: string; titulo: string }[]>([])
   const [salvas, setSalvas] = useState<Salva[]>([])
+  // Passo 137: buscas salvas copiáveis (termo, última rodada, total, novas) para o relatório semanal.
+  const [salvasCopiadas, setSalvasCopiadas] = useState(false)
+  const copiarSalvas = async () => {
+    const t = [`Buscas salvas no Comunica PJe — ${salvas.length}`, ...salvas.map(s => `${s.termo}: ${s.ultima_execucao ? `última rodada ${dt(s.ultima_execucao)} · ${s.ultimo_total} no ano · ${s.novas_ultima} nova(s)` : 'ainda não rodou'}`)].join('\n')
+    try { await navigator.clipboard.writeText(t); setSalvasCopiadas(true); setTimeout(() => setSalvasCopiadas(false), 2500) } catch { /* sem área de transferência */ }
+  }
   const [msgSalva, setMsgSalva] = useState('')
   const carregarSalvas = async () => { const { data } = await supabase.from('buscas_salvas').select('id, termo, ultima_execucao, ultimo_total, novas_ultima, caso_id').order('criado_em'); setSalvas((data ?? []) as Salva[]) }
   // Passo 46: ligar a busca a um caso; comunicação nova vira tarefa do responsável (Meu dia e Alertas).
@@ -125,6 +131,7 @@ export default function FontesPage() {
         <section className="bg-white shadow-sm p-6" data-testid="buscas-salvas">
           <h2 className="font-serif text-lg">Buscas salvas (repetidas todo dia)</h2>
           <p className="text-sm text-grafite-claro mt-1">O servidor procura cada nome no Comunica PJe (CNJ) todas as manhãs. Comunicações novas entram em Intimações e em Alertas, sem API paga. Até 20 por pessoa. Ligue a busca a um caso para que cada novidade vire tarefa do responsável em Meu dia.</p>
+          {salvas.length > 0 && <button type="button" onClick={copiarSalvas} data-testid="copiar-salvas" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm">{salvasCopiadas ? 'Buscas copiadas' : 'Copiar buscas salvas'}</button>}
           {salvas.length ? (
             <ul className="mt-3 divide-y divide-navy/10">
               {salvas.map(s => (

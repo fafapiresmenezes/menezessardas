@@ -73,6 +73,12 @@ export default function FornecedoresPage() {
   const [buscaF, setBuscaF] = useState('')
   const semAcento = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
   const nDesc = (f: (typeof lista)[number]) => f.slas.filter(x => statusSla(x).status === 'descumprido').length
+  // Passo 133: lista ordenada copiável (nome, CNPJ, categoria, SLA) para a reunião de compras.
+  const [listaCopiada, setListaCopiada] = useState(false)
+  const copiarLista = async () => {
+    const t = [`Fornecedores — ${ordenados.length} de ${lista.length}`, ...ordenados.map((f, i) => { const s = slaCumprido(f).pct; return `${i + 1}. ${f.nome} · ${formatarCnpj(f.cnpj)} · ${rotuloCategoria[f.categoria]}${s !== null ? ` · SLA ${s}%` : ''}` })].join('\n')
+    try { await navigator.clipboard.writeText(t); setListaCopiada(true); setTimeout(() => setListaCopiada(false), 2500) } catch { /* sem área de transferência */ }
+  }
   const ordenados = lista.filter(f => !buscaF.trim() || semAcento([f.nome, f.cnpj ?? '', rotuloCategoria[f.categoria]].join(' ')).includes(semAcento(buscaF.trim()))).sort((a, b) => ordem === 'sla' ? (slaCumprido(b).pct ?? -1) - (slaCumprido(a).pct ?? -1) || nDesc(a) - nDesc(b) : ordem === 'descumpridas' ? nDesc(b) - nDesc(a) : a.nome.localeCompare(b.nome, 'pt-BR'))
   return (
     <Layout title="Fornecedores">
@@ -181,7 +187,7 @@ export default function FornecedoresPage() {
               </select>
             </label>
           </div>
-          {!carregando && lista.length > 0 && <p className="text-xs text-grafite-claro mb-3" data-testid="contador-fornecedores">Mostrando {ordenados.length} de {lista.length} fornecedor(es).</p>}
+          {!carregando && lista.length > 0 && <p className="text-xs text-grafite-claro mb-3" data-testid="contador-fornecedores">Mostrando {ordenados.length} de {lista.length} fornecedor(es). <button type="button" onClick={copiarLista} data-testid="copiar-fornecedores" className="underline text-navy">{listaCopiada ? 'lista copiada' : 'copiar lista'}</button></p>}
           {carregando ? (
             <p className="text-grafite-claro">Carregando…</p>
           ) : lista.length === 0 ? (

@@ -21,7 +21,8 @@ export default function IntimacoesPage() {
   const [oabs, setOabs] = useState('')
   const [msg, setMsg] = useState<{ ok: boolean; texto: string } | null>(null)
   const [ocupado, setOcupado] = useState(false)
-  const [filtro, setFiltro] = useState<'novas' | 'todas'>('novas')
+  // Passo 135: opção "só urgentes" (vencidas e críticas) no filtro.
+  const [filtro, setFiltro] = useState<'novas' | 'todas' | 'urgentes'>('novas')
   const [aberta, setAberta] = useState<number | null>(null)
   const [busca, setBusca] = useState('')
 
@@ -62,7 +63,7 @@ export default function IntimacoesPage() {
     else { setMsg({ ok: true, texto: 'Tarefa criada em Casos e projetos com o prazo estimado.' }); setLista(l => l.map(x => (x.id === i.id ? { ...x, tarefa_id: String(data) } : x))) }
   }
   const ordem = { vencido: 0, critico: 1, atencao: 2, regular: 3 } as const
-  const visiveis = (filtro === 'novas' ? lista.filter(i => !i.lida) : lista).filter(i => !busca.trim() || [i.numero_processo, i.tribunal, i.classe, i.orgao, i.texto, i.tipo].join(' ').toLowerCase().includes(busca.trim().toLowerCase())).sort((a, b) => (ordem[urgencia(a)?.situacao ?? 'regular'] - ordem[urgencia(b)?.situacao ?? 'regular']) || b.data_disponibilizacao.localeCompare(a.data_disponibilizacao))
+  const visiveis = (filtro === 'novas' ? lista.filter(i => !i.lida) : filtro === 'urgentes' ? lista.filter(i => { const s = urgencia(i)?.situacao; return s === 'vencido' || s === 'critico' }) : lista).filter(i => !busca.trim() || [i.numero_processo, i.tribunal, i.classe, i.orgao, i.texto, i.tipo].join(' ').toLowerCase().includes(busca.trim().toLowerCase())).sort((a, b) => (ordem[urgencia(a)?.situacao ?? 'regular'] - ordem[urgencia(b)?.situacao ?? 'regular']) || b.data_disponibilizacao.localeCompare(a.data_disponibilizacao))
 
   const copiarResumo = () => {
     const linhas = visiveis.map(i => { const u = urgencia(i); return `${u?.situacao === 'vencido' ? 'VENCIDA' : u?.situacao === 'critico' ? 'CRÍTICA' : u?.situacao === 'atencao' ? 'ATENÇÃO' : 'no prazo'} · ${i.numero_processo} · ${i.tribunal ?? ''} · publicada ${formatarData(i.data_disponibilizacao)}${i.lida ? '' : ' · não lida'}` })
@@ -81,7 +82,8 @@ export default function IntimacoesPage() {
               <RefreshCw size={16} aria-hidden="true" className={ocupado ? 'animate-spin' : ''} /> {ocupado ? 'Buscando…' : 'Buscar agora'}
             </button>
             <label className="text-sm flex items-center gap-2">
-              <select aria-label="Quais intimações mostrar" value={filtro} onChange={e => setFiltro(e.target.value as 'novas' | 'todas')} className="border px-2 py-2">
+              <select aria-label="Quais intimações mostrar" value={filtro} onChange={e => setFiltro(e.target.value as 'novas' | 'todas' | 'urgentes')} className="border px-2 py-2" data-testid="filtro-intimacoes">
+                <option value="urgentes">Só urgentes ({lista.filter(i => { const s = urgencia(i)?.situacao; return s === 'vencido' || s === 'critico' }).length})</option>
                 <option value="novas">Só as não lidas ({lista.filter(i => !i.lida).length})</option>
                 <option value="todas">Todas ({lista.length})</option>
               </select>
