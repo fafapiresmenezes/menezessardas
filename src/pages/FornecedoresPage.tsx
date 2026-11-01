@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useBaixado } from '@/hooks/useBaixado'
 import { useNavigate } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
@@ -78,7 +79,7 @@ export default function FornecedoresPage() {
   // Passo 133: lista ordenada copiável (nome, CNPJ, categoria, SLA) para a reunião de compras.
   const [listaCopiada, setListaCopiada] = useState(false)
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 283
-  const [baixado, setBaixado] = useState(false) // Passo 328
+  const [baixado, marcarBaixado] = useBaixado() // Passo 386
   const copiarLista = async () => {
     const t = [`Fornecedores — ${ordenados.length} de ${lista.length}`, ...ordenados.map((f, i) => { const s = slaCumprido(f).pct; return `${i + 1}. ${f.nome} · ${formatarCnpj(f.cnpj)} · ${rotuloCategoria[f.categoria]}${s !== null ? ` · SLA ${s}%` : ''}` })].join('\n')
     try { await navigator.clipboard.writeText(t); setListaCopiada(true); setTimeout(() => setListaCopiada(false), 2500) } catch { /* sem área de transferência */ }
@@ -192,7 +193,7 @@ export default function FornecedoresPage() {
             </label>
           </div>
           {!carregando && lista.length > 0 && <p className="text-xs text-grafite-claro mb-3" data-testid="contador-fornecedores">Mostrando {ordenados.length} de {lista.length} fornecedor(es). <button type="button" onClick={copiarLista} data-testid="copiar-fornecedores" className="underline text-navy">{listaCopiada ? 'lista copiada' : 'copiar lista'}</button> <button type="button" onClick={() => window.print()} data-testid="imprimir-fornecedores" className="underline text-navy print:hidden">imprimir</button>{/* Passo 221 */} <button type="button" data-testid="copiar-link-fornecedores" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 255 */}</p>}
-          {!carregando && ordenados.length > 0 && <button type="button" data-testid="baixar-fornecedores" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['nome;CNPJ;categoria;imóveis;certidões;SLAs', ...ordenados.map(f => `${f.nome.replace(/;/g, ',')};${f.cnpj};${f.categoria};${f.imovelIds.length};${f.certidoes.length};${f.slas.length}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'fornecedores.csv'; a.click(); setBaixado(true); setTimeout(() => setBaixado(false), 3000); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mb-3 ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 319 */}
+          {!carregando && ordenados.length > 0 && <button type="button" data-testid="baixar-fornecedores" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['nome;CNPJ;categoria;imóveis;certidões;SLAs', ...ordenados.map(f => `${f.nome.replace(/;/g, ',')};${f.cnpj};${f.categoria};${f.imovelIds.length};${f.certidoes.length};${f.slas.length}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'fornecedores.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mb-3 ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 319 */}
           {carregando ? (
             <p className="text-grafite-claro">Carregando…</p>
           ) : lista.length === 0 ? (
