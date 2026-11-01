@@ -12,7 +12,9 @@ const MAX_VERSOES = 5
 type Item = { name: string; id: string | null; metadata: { size?: number } | null; updated_at?: string }
 
 export default function NuvemPage() {
-  const [area, setArea] = useState<'escritorio' | 'pessoal'>('escritorio')
+  // Passo 142: a área aberta (escritório ou pessoal) fica guardada neste navegador.
+  const [area, setArea] = useState<'escritorio' | 'pessoal'>(() => { try { return localStorage.getItem('lsm-nuvem-area') === 'pessoal' ? 'pessoal' : 'escritorio' } catch { return 'escritorio' } })
+  useEffect(() => { try { localStorage.setItem('lsm-nuvem-area', area) } catch { /* sem armazenamento */ } }, [area])
   const [uid, setUid] = useState('')
   const [sub, setSub] = useState('')
   const [itens, setItens] = useState<Item[]>([])

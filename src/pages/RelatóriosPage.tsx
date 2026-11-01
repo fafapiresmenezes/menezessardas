@@ -41,7 +41,9 @@ const statusDoDocumento = (d: Documento): 'valido' | 'vencido' | 'a_renovar' => 
 const mesesPorPeriodo: Record<Periodicidade, number> = { mensal: 1, trimestral: 3, semestral: 6, anual: 12, unica: 0 }
 
 export default function RelatóriosPage() {
-  const [periodo, setPeriodo] = useState<Periodo>(90)
+  // Passo 139: o período escolhido fica guardado neste navegador.
+  const [periodo, setPeriodo] = useState<Periodo>(() => { try { const v = Number(localStorage.getItem('lsm-relatorio-periodo')); return ([30, 90, 180, 365] as number[]).includes(v) ? (v as Periodo) : 90 } catch { return 90 } })
+  useEffect(() => { try { localStorage.setItem('lsm-relatorio-periodo', String(periodo)) } catch { /* sem armazenamento */ } }, [periodo])
   const { imoveis, loading: carregandoImoveis } = useImoveis()
   const { alertas, loading: carregandoAlertas } = useAlertas()
   const [contratos, setContratos] = useState<Contrato[] | null>(null)

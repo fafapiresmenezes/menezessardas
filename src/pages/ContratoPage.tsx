@@ -254,6 +254,11 @@ export default function ContratoPage() {
   const statusContrato = dias !== null && dias < 0 ? 'vencido' : dias !== null && dias <= 60 ? 'a_renovar' : 'ativo'
   const moeda = (v: number) =>
     v === 0 ? 'Sem contraprestação' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
+  // Passo 141: resumo do contrato em uma linha por campo, para o e-mail ou o parecer.
+  const copiarResumoContrato = () => {
+    const t = [`${rotulosTipoContrato[contrato.tipo]} — ${contrato.parte}`, `Imóvel: ${imovel.endereco}`, `Início: ${formatarData(contrato.dataInicio)}${contrato.dataVencimento ? ` · Vencimento: ${formatarData(contrato.dataVencimento)}` : ''}`, `Valor: ${moeda(contrato.valor)}`, `Situação: ${encerrado ? `encerrado em ${formatarData(contrato.encerradoEm)}` : rotulosStatusContrato[statusContrato]}`, 'GMenezes Advogados Associados'].join('\n')
+    navigator.clipboard?.writeText(t).catch(() => undefined)
+  }
 
   return (
     <Layout title={imovel.endereco}>
@@ -276,6 +281,7 @@ export default function ContratoPage() {
               ) : (
                 <SeloSituacao situacao={situacaoContrato} texto={rotulosStatusContrato[statusContrato]} />
               )}
+              <button type="button" onClick={copiarResumoContrato} data-testid="copiar-contrato" className="inline-flex items-center gap-1.5 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar resumo</button>
               {!encerrado && modo === 'ver' && (
                 <>
                   <button onClick={abrirEdicao} className="inline-flex items-center gap-1.5 min-h-[44px] px-4 border border-navy text-navy hover:bg-pergaminho text-sm">

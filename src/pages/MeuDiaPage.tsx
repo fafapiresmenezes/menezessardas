@@ -127,6 +127,8 @@ export default function MeuDiaPage() {
           <div className="flex flex-wrap gap-2 mt-3">
             {p.atalhos.map(a => <Link key={a.href + a.rotulo} to={a.href} className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy text-navy">{a.rotulo}</Link>)}
             <button type="button" onClick={copiarDia} data-testid="copiar-dia" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy">Copiar meu dia</button>
+            {/* Passo 140: imprimir o dia em uma página. */}
+            <button type="button" onClick={() => window.print()} data-testid="imprimir-dia" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy print:hidden">Imprimir</button>
           </div>
         </section>
 

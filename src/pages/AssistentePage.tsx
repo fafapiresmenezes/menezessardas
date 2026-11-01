@@ -284,11 +284,10 @@ export default function AssistentePage() {
               <button type="button" onClick={() => avaliar(c.id, false)} aria-pressed={avaliacoes[c.id] === false} data-testid="avaliar-inutil" className={`min-h-[44px] px-3 border inline-flex items-center gap-1 ${avaliacoes[c.id] === false ? 'bg-navy text-white' : 'border-navy/20'}`}><ThumbsDown size={14} aria-hidden="true" /> Não útil</button>
               {avaliacoes[c.id] !== undefined && <span className="text-grafite-claro" data-testid="avaliacao-ok">Obrigado. Sua avaliação entra na taxa mensal em Indicadores.</span>}
             </div>
-            {c.modo === 'redigir' && (
-              <button onClick={() => navigator.clipboard.writeText(c.resposta)} className="mt-3 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
-                <Copy size={16} aria-hidden="true" /> Copiar texto da peça
-              </button>
-            )}
+            {/* Passo 138: toda resposta é copiável (pergunta + resposta + fontes), não só as peças. */}
+            <button type="button" onClick={() => navigator.clipboard?.writeText(c.modo === 'redigir' ? c.resposta : `Pergunta: ${c.pergunta}\n\n${c.resposta}${c.fontes.length ? `\n\nFontes: ${c.fontes.map(f => f.titulo || f.url).join('; ')}` : ''}`).catch(() => undefined)} data-testid="copiar-resposta" className="mt-3 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
+              <Copy size={16} aria-hidden="true" /> {c.modo === 'redigir' ? 'Copiar texto da peça' : 'Copiar resposta'}
+            </button>
             {c.fontes.length > 0 && (
               <div className="mt-4 pt-3 border-t border-navy/10">
                 <p className="text-xs uppercase tracking-wider text-grafite-claro mb-1">Texto oficial consultado</p>
