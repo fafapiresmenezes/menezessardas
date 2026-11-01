@@ -121,6 +121,7 @@ export const MEDICOES: Medicao[] = [
   { n: 131, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-131.pdf', sha256: '85374463aacff7be0838cce3fe7d5ce0ff3e5f4973c7abc1f85782fae7e3ce98', ots: true, entregue: 'Onda CM (Passos 443–444): testes de tela da cobrança por PIX e das boas-vindas; 188 testes' },
   { n: 132, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-132.pdf', sha256: 'f5360c354ea99d2f5f469f335dae00086237f25dc733105d09a976dfc5f79752', ots: true, entregue: 'Onda CN (Passos 445–446): testes de tela da proteção contra página branca, glossário, vazio e Sem conexão; 195 testes' },
   { n: 133, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-133.pdf', sha256: '64b5fb4b97a902bed2d6571b36205808538e5cd14652106314b3037790c17228', ots: true, entregue: 'Onda CO (Passos 447–448): testes de tela dos dias de aviso, Perguntar sobre esta tela e chave PIX; 201 testes' },
+  { n: 134, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-134.pdf', sha256: '872800d95a7a92780e52cfac231aee5c6673c0cb9f4c9220af13ad681b3fd801', ots: true, entregue: 'Onda CP (Passos 449–450): testes de tela do aceite dos termos e da marca; 205 testes' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
