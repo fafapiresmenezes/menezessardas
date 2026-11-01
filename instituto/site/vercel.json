@@ -1,112 +1,189 @@
 {
-  "headers": [
+ "headers": [
+  {
+   "source": "/",
+   "headers": [
     {
-      "source": "/fonts/(.*)\\.woff2",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "font/woff2"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
+     "key": "Content-Type",
+     "value": "text/html; charset=utf-8"
     },
     {
-      "source": "/(.*)\\.ttl",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/turtle; charset=utf-8"
-        }
-      ]
-    },
-    {
-      "source": "/consistencia-v07.json",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/json; charset=utf-8"
-        }
-      ]
-    },
-    {
-      "source": "/ontologia-changelog.txt",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain; charset=utf-8"
-        }
-      ]
-    },
-    {
-      "source": "/o.json",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/json; charset=utf-8"
-        }
-      ]
-    },
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Strict-Transport-Security",
-          "value": "max-age=63072000; includeSubDomains"
-        },
-        {
-          "key": "Content-Security-Policy",
-          "value": "default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; script-src 'self'; connect-src 'self' https://hlraekzvgxdpiiigdxdo.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
-        }
-      ]
+     "key": "Cache-Control",
+     "value": "public, max-age=300, s-maxage=86400"
     }
-  ],
-  "rewrites": [
+   ]
+  },
+  {
+   "source": "/o/:id*",
+   "headers": [
     {
-      "source": "/fonts/:f",
-      "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/59cee3010be6a2426e9b0832289e2efca34bcb33/instituto/site/fonts/:f"
+     "key": "Content-Type",
+     "value": "text/html; charset=utf-8"
     },
     {
-      "source": "/ontologia-locacao-v07.ttl",
-      "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/e6649ce8fae8da1ec7ef98db218ea1096d1e6c6c/instituto/site/ontologia-locacao-v07.ttl"
-    },
-    {
-      "source": "/o.json",
-      "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/7fce8330f35ebb71f024dcf14db8a6ecd8691de4/instituto/site/o.json"
-    },
-    {
-      "source": "/ontologia-changelog.txt",
-      "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/2ca4e316265fdb83ca35ed1a2e5927b7e5fc3db9/instituto/site/ontologia-changelog.txt"
-    },
-    {
-      "source": "/consistencia-v07.json",
-      "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/2ca4e316265fdb83ca35ed1a2e5927b7e5fc3db9/instituto/site/consistencia-v07.json"
-    },
-    {
-      "source": "/o",
-      "destination": "/o.html"
-    },
-    {
-      "source": "/o/",
-      "destination": "/o.html"
-    },
-    {
-      "source": "/o/:id",
-      "destination": "/o.html"
+     "key": "Cache-Control",
+     "value": "public, max-age=300, s-maxage=86400"
     }
-  ]
+   ]
+  },
+  {
+   "source": "/o",
+   "headers": [
+    {
+     "key": "Content-Type",
+     "value": "text/html; charset=utf-8"
+    },
+    {
+     "key": "Cache-Control",
+     "value": "public, max-age=300, s-maxage=86400"
+    }
+   ]
+  },
+  {
+   "source": "/(.*)\\.html",
+   "headers": [
+    {
+     "key": "Content-Type",
+     "value": "text/html; charset=utf-8"
+    },
+    {
+     "key": "Cache-Control",
+     "value": "public, max-age=300, s-maxage=86400"
+    }
+   ]
+  },
+  {
+   "source": "/(.*)\\.js",
+   "headers": [
+    {
+     "key": "Content-Type",
+     "value": "application/javascript; charset=utf-8"
+    },
+    {
+     "key": "Cache-Control",
+     "value": "public, max-age=300, s-maxage=86400"
+    }
+   ]
+  },
+  {
+   "source": "/(.*)\\.css",
+   "headers": [
+    {
+     "key": "Content-Type",
+     "value": "text/css; charset=utf-8"
+    },
+    {
+     "key": "Cache-Control",
+     "value": "public, max-age=300, s-maxage=86400"
+    }
+   ]
+  },
+  {
+   "source": "/fonts/(.*)\\.woff2",
+   "headers": [
+    {
+     "key": "Content-Type",
+     "value": "font/woff2"
+    },
+    {
+     "key": "Cache-Control",
+     "value": "public, max-age=31536000, s-maxage=31536000, immutable"
+    }
+   ]
+  },
+  {
+   "source": "/(.*)\\.ttl",
+   "headers": [
+    {
+     "key": "Content-Type",
+     "value": "text/turtle; charset=utf-8"
+    },
+    {
+     "key": "Cache-Control",
+     "value": "public, max-age=300, s-maxage=86400"
+    }
+   ]
+  },
+  {
+   "source": "/(.*)\\.json",
+   "headers": [
+    {
+     "key": "Content-Type",
+     "value": "application/json; charset=utf-8"
+    },
+    {
+     "key": "Cache-Control",
+     "value": "public, max-age=300, s-maxage=86400"
+    }
+   ]
+  },
+  {
+   "source": "/(.*)\\.txt",
+   "headers": [
+    {
+     "key": "Content-Type",
+     "value": "text/plain; charset=utf-8"
+    },
+    {
+     "key": "Cache-Control",
+     "value": "public, max-age=300, s-maxage=86400"
+    }
+   ]
+  },
+  {
+   "source": "/(.*)",
+   "headers": [
+    {
+     "key": "X-Frame-Options",
+     "value": "DENY"
+    },
+    {
+     "key": "X-Content-Type-Options",
+     "value": "nosniff"
+    },
+    {
+     "key": "Referrer-Policy",
+     "value": "strict-origin-when-cross-origin"
+    },
+    {
+     "key": "Strict-Transport-Security",
+     "value": "max-age=63072000; includeSubDomains"
+    },
+    {
+     "key": "Content-Security-Policy",
+     "value": "default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; script-src 'self'; connect-src 'self' https://hlraekzvgxdpiiigdxdo.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    },
+    {
+     "key": "Access-Control-Allow-Origin",
+     "value": "https://instituto-theye.vercel.app"
+    }
+   ]
+  }
+ ],
+ "rewrites": [
+  {
+   "source": "/",
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/fe2d101b7f3bbf5786c6d06c1e8b0a311a1dff5a/instituto/site/index.html"
+  },
+  {
+   "source": "/o",
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/fe2d101b7f3bbf5786c6d06c1e8b0a311a1dff5a/instituto/site/o.html"
+  },
+  {
+   "source": "/o/",
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/fe2d101b7f3bbf5786c6d06c1e8b0a311a1dff5a/instituto/site/o.html"
+  },
+  {
+   "source": "/o/:id",
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/fe2d101b7f3bbf5786c6d06c1e8b0a311a1dff5a/instituto/site/o.html"
+  },
+  {
+   "source": "/fonts/:f",
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/fe2d101b7f3bbf5786c6d06c1e8b0a311a1dff5a/instituto/site/fonts/:f"
+  },
+  {
+   "source": "/:f([a-z0-9-]+\\.(?:html|js|css|ttl|json|txt))",
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/fe2d101b7f3bbf5786c6d06c1e8b0a311a1dff5a/instituto/site/:f"
+  }
+ ]
 }
