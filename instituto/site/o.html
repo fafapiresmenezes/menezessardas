@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Termo da ontologia · Instituto THEYE</title>
+<meta name="description" content="Página permanente de cada classe, relação e nó da ontologia de locação do Instituto THEYE.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/base.css">
+<style>
+dl{display:grid;grid-template-columns:180px 1fr;gap:8px 24px;font-size:14.5px;margin-top:20px}
+@media(max-width:600px){dl{grid-template-columns:1fr}}
+dt{color:var(--apagado)} dd{color:var(--tinta);overflow-wrap:anywhere}
+dd a{color:var(--grafo)}
+.busca{font:inherit;font-size:15px;padding:11px 12px;border:1px solid var(--linha);background:var(--papel);color:var(--tinta);width:100%;max-width:520px;margin:12px 0 20px}
+.lista{columns:3 220px;font-size:14px}
+.lista a{display:block;padding:3px 0;color:var(--tinta-2)}
+</style>
+</head>
+<body>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/ontologia.html">Ontologia</a><a href="/locacao.html">Locação</a><a href="/o/">Termos</a></nav>
+</div></header>
+<main>
+<section><div class="w">
+  <div class="kicker" id="tipo">Ontologia de locação v0.7</div>
+  <h1 id="titulo" style="font-size:clamp(28px,4vw,44px);line-height:1.1;margin:10px 0">Termos da ontologia</h1>
+  <p class="hash" id="uri"></p>
+  <div id="corpo"></div>
+  <p class="nota">Cada termo tem um endereço permanente no formato /o/identificador. O arquivo completo, em OWL/Turtle, está em <a href="/ontologia-locacao-v07.ttl">ontologia-locacao-v07.ttl</a> (licença CC BY 4.0).</p>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · URIs persistentes v0.7 (01/11/2026)</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="/o.js"></script>
+</body>
+</html>
