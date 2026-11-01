@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useBaixado } from '@/hooks/useBaixado'
 import { useNavigate } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { ehSede } from '@/lib/equipe'
@@ -29,7 +30,7 @@ export default function DashboardPage() {
   const [painelCopiado, setPainelCopiado] = useState(false) // Passo 182
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 250
   const [porEscritorio, setPorEscritorio] = useState<LinhaEscritorio[]>([])
-  const [baixado, setBaixado] = useState(false) // Passo 323
+  const [baixado, marcarBaixado] = useBaixado() // Passo 394
   useEffect(() => {
     if (!supabaseConfigurado) return
     ehSede().then(sede => { if (sede) supabase.rpc('painel_escritorios').then(r => setPorEscritorio((r.data as LinhaEscritorio[]) ?? [])) })
@@ -87,7 +88,7 @@ export default function DashboardPage() {
             {imoveis.length > 0 && <button type="button" data-testid="imprimir-painel" onClick={() => window.print()} className="underline text-navy print:hidden">imprimir</button>}
             {imoveis.length > 0 && <button type="button" data-testid="copiar-painel" onClick={() => navigator.clipboard?.writeText(`Painel · ${new Date().toLocaleDateString('pt-BR')}\n` + indicadores.map(i => `${i.rotulo}: ${i.valor}`).join('\n')).then(() => setPainelCopiado(true)).catch(() => undefined)} className="underline text-navy">{painelCopiado ? 'copiado' : 'copiar'}</button>}
             {imoveis.length > 0 && <button type="button" data-testid="copiar-link-painel" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 216 */}
-            {imoveis.length > 0 && <button type="button" data-testid="baixar-painel" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Painel · ${new Date().toLocaleDateString('pt-BR')}\n` + indicadores.map(i => `${i.rotulo}: ${i.valor}`).join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'painel.txt'; a.click(); setBaixado(true); setTimeout(() => setBaixado(false), 3000); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="underline text-navy print:hidden ml-2">{baixado ? 'baixado' : 'baixar'}</button>}{/* Passo 288 */}
+            {imoveis.length > 0 && <button type="button" data-testid="baixar-painel" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Painel · ${new Date().toLocaleDateString('pt-BR')}\n` + indicadores.map(i => `${i.rotulo}: ${i.valor}`).join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'painel.txt'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="underline text-navy print:hidden ml-2">{baixado ? 'baixado' : 'baixar'}</button>}{/* Passo 288 */}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {indicadores.map(ind => (

@@ -1,4 +1,5 @@
 import { FunctionRegion } from '@supabase/supabase-js'
+import { useBaixado } from '@/hooks/useBaixado'
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
@@ -52,7 +53,7 @@ export default function FontesPage() {
     try { await navigator.clipboard.writeText(t); setSalvasCopiadas(true); setTimeout(() => setSalvasCopiadas(false), 2500) } catch { /* sem área de transferência */ }
   }
   const [msgSalva, setMsgSalva] = useState('')
-  const [baixado, setBaixado] = useState(false) // Passo 336
+  const [baixado, marcarBaixado] = useBaixado() // Passo 392
   const carregarSalvas = async () => { const { data } = await supabase.from('buscas_salvas').select('id, termo, ultima_execucao, ultimo_total, novas_ultima, caso_id').order('criado_em'); setSalvas((data ?? []) as Salva[]) }
   // Passo 46: ligar a busca a um caso; comunicação nova vira tarefa do responsável (Meu dia e Alertas).
   const ligarCaso = async (id: string, caso_id: string) => { await supabase.from('buscas_salvas').update({ caso_id: caso_id || null }).eq('id', id); carregarSalvas() }
@@ -136,7 +137,7 @@ export default function FontesPage() {
           {/* Passo 169: imprimir as buscas salvas. */}
           {salvas.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-salvas" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}
           {salvas.length > 0 && <button type="button" data-testid="copiar-link-fontes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 227 */}
-          {salvas.length > 0 && <button type="button" data-testid="baixar-fontes" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['termo;última execução;total;novas', ...salvas.map(s => `${s.termo};${s.ultima_execucao ?? ''};${s.ultimo_total};${s.novas_ultima}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'buscas-salvas.csv'; a.click(); setBaixado(true); setTimeout(() => setBaixado(false), 3000); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 296 */}
+          {salvas.length > 0 && <button type="button" data-testid="baixar-fontes" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['termo;última execução;total;novas', ...salvas.map(s => `${s.termo};${s.ultima_execucao ?? ''};${s.ultimo_total};${s.novas_ultima}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'buscas-salvas.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 296 */}
           {salvas.length > 0 && <button type="button" onClick={copiarSalvas} data-testid="copiar-salvas" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm">{salvasCopiadas ? 'Buscas copiadas' : 'Copiar buscas salvas'}</button>}
           {salvas.length ? (
             <ul className="mt-3 divide-y divide-navy/10">
