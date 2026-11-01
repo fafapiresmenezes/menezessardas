@@ -105,6 +105,7 @@ export const MEDICOES: Medicao[] = [
   { n: 115, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-115.pdf', sha256: '3584409d56a5e2aa4315d9c9f1f073f5f6a3e224e51eff80e5deb97efe2ea483', ots: true, entregue: 'Onda BW (Passos 411–412): testes unitários de fornecedores.ts (CNPJ, SLA, KYC; 81 testes no total)' },
   { n: 116, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-116.pdf', sha256: '07b1dbff8bf8fe9141e63f080a8aeef79639ccb52342aa809bb816c0c7038abe', ots: true, entregue: 'Onda BX (Passos 413–414): testes unitários de indicadores.ts (KPIs, OKRs, matrizes; 89 testes no total)' },
   { n: 117, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-117.pdf', sha256: '8acf09913812c803d0fc779dc0a866817cfce2e6eef0a4da173e8c836278a727', ots: true, entregue: 'Onda BY (Passos 415–416): testes unitários de predicao.ts (previsões explicáveis, Wilson; 97 testes no total)' },
+  { n: 118, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-118.pdf', sha256: '4f1b8995ebb187eca0ee93ae6e9643819e1bfdb60d785e86af285da1df3ecb29', ots: true, entregue: 'Onda BZ (Passos 417–418): testes unitários de dominio.ts e legislacao.ts (109 testes no total)' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
