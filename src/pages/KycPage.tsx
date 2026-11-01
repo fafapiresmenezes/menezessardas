@@ -87,6 +87,7 @@ export default function KycPage() {
         {r && (
           <section className="bg-white shadow-sm p-6 space-y-4" aria-live="polite">
             <button type="button" onClick={copiarResultado} data-testid="kyc-copiar" className="min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiado ? 'Resultado copiado' : 'Copiar resultado para o parecer'}</button>
+            <button type="button" data-testid="copiar-link-kyc" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">Copiar link</button>{/* Passo 237 */}
             <p data-testid="kyc-risco" className={`p-3 border-l-4 font-medium ${COR[r.risco]}`}>
               Risco {r.risco}{r.alertas.length ? `: ${r.alertas.join(' ')}` : '. Nenhum alerta encontrado.'}
             </p>

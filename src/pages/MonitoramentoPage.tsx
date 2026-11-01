@@ -90,6 +90,7 @@ export default function MonitoramentoPage() {
           {/* Passo 122: lista do que está monitorado em texto (tipo, valor, rótulo, classe e órgão), para conferência. */}
           {/* Passo 154: imprimir a lista de monitoramentos e a linha do tempo. */}
           {lista.length > 0 && <button type="button" data-testid="mon-imprimir" onClick={() => window.print()} className="mt-3 mr-3 underline text-navy text-sm print:hidden">imprimir</button>}
+          {lista.length > 0 && <button type="button" data-testid="copiar-link-monitoramento" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-3 mr-3 underline text-navy text-sm print:hidden">copiar link</button>}{/* Passo 234 */}
           {lista.length > 0 && <button type="button" data-testid="mon-copiar" onClick={() => navigator.clipboard?.writeText(`Monitoramentos · ${new Date().toLocaleDateString('pt-BR')} · ${lista.length}\n` + lista.map(m => `${m.tipo === 'processo' ? 'Processo' : 'Nome'} · ${m.valor}${m.rotulo ? ' · ' + m.rotulo : ''}${m.ultimo_estado?.classe ? ' · ' + m.ultimo_estado.classe : ''}${m.ultimo_estado?.orgao ? ' · ' + m.ultimo_estado.orgao : ''}`).join('\n')).catch(() => undefined)} className="mt-3 min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar monitorados</button>}
         </section>
         <section className="bg-white shadow-sm p-5" data-testid="linha-do-tempo">

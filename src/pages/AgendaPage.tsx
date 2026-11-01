@@ -273,6 +273,7 @@ export default function AgendaPage() {
             {' '}<button type="button" onClick={copiarSemana} data-testid="copiar-semana" className="underline text-navy">{semanaCopiada ? 'semana copiada' : 'copiar os 7 dias'}</button>
             {/* Passo 156: imprimir a agenda do mês. */}
             {' '}<button type="button" onClick={() => window.print()} data-testid="imprimir-agenda" className="underline text-navy print:hidden">imprimir</button>
+            {' '}<button type="button" data-testid="copiar-link-agenda" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="underline text-navy print:hidden">copiar link</button>{/* Passo 236 */}
             {' '}<button type="button" onClick={() => { setAno(hoje.getFullYear()); setMes(hoje.getMonth()) }} data-testid="agenda-hoje" className="underline text-navy print:hidden">hoje</button>{/* Passo 190 */}
           </p>
           {supabaseConfigurado && (
