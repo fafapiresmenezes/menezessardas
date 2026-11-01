@@ -165,6 +165,7 @@ export const MEDICOES: Medicao[] = [
   { n: 175, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-175.pdf', sha256: 'dabc1d840b3cf52d1de89beebf7bb181c519fd483322c94e24d5de1d07c4bb0e', ots: true, entregue: 'Onda EE (Passos 530–531): agente de análise e fornecedores com Supabase; 445 testes' },
   { n: 176, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-176.pdf', sha256: 'be830b27556e2cf0a5f1e3f5727b8a9e697c2a09ca263845be01f815dd3e8e49', ots: true, entregue: 'Onda EF (Passos 532–533): legislação e coleta de previsões com Supabase; 450 testes' },
   { n: 177, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-177.pdf', sha256: '697d818b3d6cbe560b72bd7082c8435b688e54e39cd1ef4b14bf221c16e54276', ots: true, entregue: 'Onda EG (Passos 534–535): Edge Functions consultar-cnpj, buscar-legislacao e exportar-calendario; 459 testes' },
+  { n: 178, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-178.pdf', sha256: '8be3e78fa465beb6182c2a22d724a7bd05a7f5e5bd9532ca9afe2b95f7411c53', ots: true, entregue: 'Onda EH (Passos 536–537): Edge Functions ancorar-hash, agenda-feed e enviar-ics; 469 testes' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'

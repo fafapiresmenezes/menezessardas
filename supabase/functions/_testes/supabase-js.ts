@@ -1,10 +1,10 @@
 // Dublê do supabase-js para as Edge Functions nos testes: tabelas em memória, encadeável, com registro das escritas.
 export interface Tabelas { [tabela: string]: Record<string, unknown>[] }
-export const estado: { tabelas: Tabelas; inseridos: { tabela: string; linha: unknown }[]; upserts: { tabela: string; linha: unknown }[]; atualizados: { tabela: string; valores: unknown; filtros: [string, string, unknown][] }[]; rpcs: { nome: string; args: unknown }[]; rpcResposta: Record<string, unknown> } = {
-  tabelas: {}, inseridos: [], upserts: [], atualizados: [], rpcs: [], rpcResposta: {},
+export const estado: { tabelas: Tabelas; inseridos: { tabela: string; linha: unknown }[]; upserts: { tabela: string; linha: unknown }[]; atualizados: { tabela: string; valores: unknown; filtros: [string, string, unknown][] }[]; rpcs: { nome: string; args: unknown }[]; rpcResposta: Record<string, unknown>; usuario: { id: string } | null } = {
+  tabelas: {}, inseridos: [], upserts: [], atualizados: [], rpcs: [], rpcResposta: {}, usuario: null,
 }
 export function zerar(tabelas: Tabelas = {}) {
-  estado.tabelas = tabelas; estado.inseridos = []; estado.upserts = []; estado.atualizados = []; estado.rpcs = []; estado.rpcResposta = {}
+  estado.tabelas = tabelas; estado.inseridos = []; estado.upserts = []; estado.atualizados = []; estado.rpcs = []; estado.rpcResposta = {}; estado.usuario = null
 }
 
 const pega = (r: Record<string, unknown>, c: string) => r[c]
@@ -27,6 +27,7 @@ function consulta(tabela: string) {
     eq(c: string, v: unknown) { filtros.push(r => pega(r, c) === v); filtrosDesc.push([c, 'eq', v]); return q },
     neq(c: string, v: unknown) { filtros.push(r => pega(r, c) !== v); return q },
     in(c: string, vs: unknown[]) { filtros.push(r => vs.includes(pega(r, c))); return q },
+    ilike(c: string, padrao: string) { const p = padrao.replace(/%/g, '').toLowerCase(); filtros.push(r => String(pega(r, c) ?? '').toLowerCase().includes(p)); return q },
     is(c: string, v: unknown) { filtros.push(r => (pega(r, c) ?? null) === v); return q },
     not(c: string, op: string, v: unknown) { if (op === 'is') filtros.push(r => (pega(r, c) ?? null) !== v); return q },
     gte(c: string, v: unknown) { filtros.push(r => String(pega(r, c)) >= String(v)); return q },
@@ -56,6 +57,6 @@ export function createClient() {
   return {
     from: (tabela: string) => consulta(tabela),
     rpc: async (nome: string, args?: unknown) => { estado.rpcs.push({ nome, args }); return { data: estado.rpcResposta[nome] ?? null, error: null } },
-    auth: { getUser: async () => ({ data: { user: null } }) },
+    auth: { getUser: async () => ({ data: { user: estado.usuario } }) },
   }
 }
