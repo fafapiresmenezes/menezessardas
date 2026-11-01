@@ -1,0 +1,936 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix theye: <https://instituto-theye.vercel.app/o/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://instituto-theye.vercel.app/o> a owl:Ontology ;
+    dcterms:created "2026-11-01"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:source "v0.6 sha256 f2460af52dce4c8e815f44284e1566e2d39fb7829af76f61115594d0e2cf8246" ;
+    dcterms:title "Ontologia de locação do Instituto THEYE"@pt ;
+    owl:versionInfo "0.7.0-locacao" .
+
+theye:Movimento a owl:Class ;
+    rdfs:label "Movimento processual"@pt .
+
+theye:N-8245-10 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 10"@pt ;
+    dcterms:description "Morte do locador"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art10" .
+
+theye:N-8245-11 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 11"@pt ;
+    dcterms:description "Morte do locatário"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art11" .
+
+theye:N-8245-12 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 12"@pt ;
+    dcterms:description "Separação, divórcio ou dissolução de união estável"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art12" .
+
+theye:N-8245-13 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 13"@pt ;
+    dcterms:description "Cessão, sublocação e empréstimo dependem de consentimento"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art13" .
+
+theye:N-8245-14 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 14"@pt ;
+    dcterms:description "Sublocações: regras aplicáveis"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art14" .
+
+theye:N-8245-15 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 15"@pt ;
+    dcterms:description "Rescisão da locação extingue a sublocação"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art15" .
+
+theye:N-8245-16 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 16"@pt ;
+    dcterms:description "Responsabilidade subsidiária do sublocatário"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art16" .
+
+theye:N-8245-2 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 2"@pt ;
+    dcterms:description "Solidariedade entre locadores e entre locatários"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art2" .
+
+theye:N-8245-20 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 20"@pt ;
+    dcterms:description "Vedada cobrança antecipada (salvo temporada ou sem garantia)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art20" .
+
+theye:N-8245-21 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 21"@pt ;
+    dcterms:description "Aluguel da sublocação não excede o da locação"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art21" .
+
+theye:N-8245-24 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 24"@pt ;
+    dcterms:description "Depósito judicial em imóvel com habitação coletiva irregular"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art24" .
+
+theye:N-8245-25 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 25"@pt ;
+    dcterms:description "Impostos e taxas cobrados junto com o aluguel"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art25" .
+
+theye:N-8245-26 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 26"@pt ;
+    dcterms:description "Reparos urgentes e abatimento do aluguel"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art26" .
+
+theye:N-8245-28 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 28"@pt ;
+    dcterms:description "Prazo de 30 dias para exercer a preferência"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art28" .
+
+theye:N-8245-29 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 29"@pt ;
+    dcterms:description "Responsabilidade do locador que desiste da venda"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art29" .
+
+theye:N-8245-3 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 3"@pt ;
+    dcterms:description "Prazo; vênia conjugal acima de 10 anos"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art3" .
+
+theye:N-8245-30 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 30"@pt ;
+    dcterms:description "Preferência do sublocatário"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art30" .
+
+theye:N-8245-31 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 31"@pt ;
+    dcterms:description "Venda de mais de uma unidade"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art31" .
+
+theye:N-8245-32 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 32"@pt ;
+    dcterms:description "Exclusões da preferência (judicial, permuta, doação, incorporação)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art32" .
+
+theye:N-8245-34 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 34"@pt ;
+    dcterms:description "Preferência do condômino sobre o locatário"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art34" .
+
+theye:N-8245-38 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 38"@pt ;
+    dcterms:description "Caução (limite de três aluguéis em dinheiro)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art38" .
+
+theye:N-8245-41 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 41"@pt ;
+    dcterms:description "Seguro-fiança"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art41" .
+
+theye:N-8245-42 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 42"@pt ;
+    dcterms:description "Locação sem garantia: aluguel antecipado"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art42" .
+
+theye:N-8245-43 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 43"@pt ;
+    dcterms:description "Contravenções penais"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art43" .
+
+theye:N-8245-44 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 44"@pt ;
+    dcterms:description "Crimes de ação pública"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art44" .
+
+theye:N-8245-45 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 45"@pt ;
+    dcterms:description "Nulidade de cláusulas que frustrem a lei"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art45" .
+
+theye:N-8245-48 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 48"@pt ;
+    dcterms:description "Temporada: conceito (até 90 dias)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art48" .
+
+theye:N-8245-49 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 49"@pt ;
+    dcterms:description "Temporada: pagamento antecipado"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art49" .
+
+theye:N-8245-5 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 5"@pt ;
+    dcterms:description "Retomada do imóvel só por ação de despejo"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art5" .
+
+theye:N-8245-50 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 50"@pt ;
+    dcterms:description "Temporada: prorrogação"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art50" .
+
+theye:N-8245-53 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 53"@pt ;
+    dcterms:description "Hospitais, escolas e entidades: retomada restrita"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art53" .
+
+theye:N-8245-54 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 54"@pt ;
+    dcterms:description "Shopping center: condições livremente pactuadas"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art54" .
+
+theye:N-8245-54-A a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 54-A"@pt ;
+    dcterms:description "Built to suit (Lei 12.744/2012)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art54-A" .
+
+theye:N-8245-55 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 55"@pt ;
+    dcterms:description "Locação a pessoa jurídica para residência de sócios/empregados"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art55" .
+
+theye:N-8245-58 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 58"@pt ;
+    dcterms:description "Disposições processuais gerais (férias, foro, valor da causa, citação, efeito devolutivo)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art58" .
+
+theye:N-8245-60 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 60"@pt ;
+    dcterms:description "Despejo para obras: prova da obra"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art60" .
+
+theye:N-8245-61 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 61"@pt ;
+    dcterms:description "Despejo: desocupação voluntária em 6 meses"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art61" .
+
+theye:N-8245-63 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 63"@pt ;
+    dcterms:description "Prazo de desocupação da sentença"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art63" .
+
+theye:N-8245-64 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 64"@pt ;
+    dcterms:description "Execução provisória do despejo com caução"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art64" .
+
+theye:N-8245-65 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 65"@pt ;
+    dcterms:description "Despejo coercitivo"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art65" .
+
+theye:N-8245-66 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 66"@pt ;
+    dcterms:description "Imóvel abandonado: imissão na posse"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art66" .
+
+theye:N-8245-7 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 7"@pt ;
+    dcterms:description "Extinção de usufruto ou fideicomisso"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art7" .
+
+theye:N-8245-70 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 70"@pt ;
+    dcterms:description "Revisional com despejo"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art70" .
+
+theye:N-8245-73 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 73"@pt ;
+    dcterms:description "Renovatória: diferenças de aluguel"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art73" .
+
+theye:N-8245-74 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 74"@pt ;
+    dcterms:description "Renovatória improcedente: desocupação"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art74" .
+
+theye:N-8245-75 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 75"@pt ;
+    dcterms:description "Renovatória: indenização"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art75" .
+
+<https://instituto-theye.vercel.app/o/N-8245-76–90> a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 76–90"@pt ;
+    dcterms:description "Disposições finais e transitórias"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art76–90" .
+
+theye:N-8245-8 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 8"@pt ;
+    dcterms:description "Alienação do imóvel durante a locação; cláusula de vigência"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art8" .
+
+theye:P-STF-T1127 a theye:Precedente ;
+    rdfs:label "STF Tema 1127 (RE 1.307.334)"@pt ;
+    dcterms:description "É constitucional a penhora de bem de família do fiador de contrato de locação comercial."@pt ;
+    dcterms:source <https://portal.stf.jus.br/jurisprudenciaRepercussao/> ;
+    theye:precedente_interpreta theye:N-8009-3-VII,
+        theye:N-8245-51 .
+
+theye:P-STF-T295 a theye:Precedente ;
+    rdfs:label "STF Tema 295 (RE 612.360)"@pt ;
+    dcterms:description "Constitucional a penhora do bem de família do fiador de locação."@pt ;
+    dcterms:source <https://portal.stf.jus.br/jurisprudenciaRepercussao/> ;
+    theye:precedente_interpreta theye:N-8009-3-VII .
+
+theye:P-STJ-S214 a theye:Precedente ;
+    rdfs:label "STJ Súmula 214"@pt ;
+    dcterms:description "O fiador na locação não responde por obrigações resultantes de aditamento ao qual não anuiu."@pt ;
+    dcterms:source <https://scon.stj.jus.br/SCON/sumstj/> ;
+    rdfs:comment "Usada na relação aditiva_de: o fiador só responde pelo aditivo a que anuiu."@pt ;
+    theye:precedente_interpreta theye:N-8245-39,
+        theye:N-8245-40 .
+
+theye:P-STJ-S268 a theye:Precedente ;
+    rdfs:label "STJ Súmula 268"@pt ;
+    dcterms:description "O fiador que não integrou a relação processual na ação de despejo não responde pela execução do julgado."@pt ;
+    dcterms:source <https://scon.stj.jus.br/SCON/sumstj/> ;
+    theye:precedente_interpreta theye:N-8245-62 .
+
+theye:P-STJ-S335 a theye:Precedente ;
+    rdfs:label "STJ Súmula 335"@pt ;
+    dcterms:description "Nos contratos de locação, é válida a cláusula de renúncia à indenização das benfeitorias e ao direito de retenção."@pt ;
+    dcterms:source <https://scon.stj.jus.br/SCON/sumstj/> ;
+    theye:precedente_interpreta theye:N-8245-35 .
+
+theye:P-STJ-S549 a theye:Precedente ;
+    rdfs:label "STJ Súmula 549"@pt ;
+    dcterms:description "É válida a penhora de bem de família pertencente a fiador de contrato de locação."@pt ;
+    dcterms:source <https://scon.stj.jus.br/SCON/sumstj/> ;
+    theye:precedente_interpreta theye:N-8009-3-VII,
+        theye:N-8245-37 .
+
+theye:T01 a theye:Tese ;
+    rdfs:label "Falta de pagamento autoriza despejo; purgação da mora evita a rescisão"@pt ;
+    theye:tese_funda_em theye:N-8245-62,
+        theye:N-8245-9 .
+
+theye:T02 a theye:Tese ;
+    rdfs:label "Liminar de desocupação em 15 dias mediante caução de três aluguéis"@pt ;
+    theye:tese_funda_em theye:N-8245-59 .
+
+theye:T03 a theye:Tese ;
+    rdfs:label "Denúncia vazia após 30 meses (residencial) ou fim do prazo (não residencial)"@pt ;
+    theye:tese_funda_em theye:N-8245-46,
+        theye:N-8245-56,
+        theye:N-8245-57 .
+
+theye:T04 a theye:Tese ;
+    rdfs:label "Retomada para uso próprio ou de familiar"@pt ;
+    theye:tese_funda_em theye:N-8245-47,
+        theye:N-8245-52 .
+
+theye:T05 a theye:Tese ;
+    rdfs:label "Aluguel revisto ao preço de mercado após três anos"@pt ;
+    theye:tese_funda_em theye:N-8245-19,
+        theye:N-8245-68,
+        theye:N-8245-69 .
+
+theye:T06 a theye:Tese ;
+    rdfs:label "Renovação compulsória da locação empresarial"@pt ;
+    theye:tese_funda_em theye:N-8245-51,
+        theye:N-8245-71,
+        theye:N-8245-72 .
+
+theye:T07 a theye:Tese ;
+    rdfs:label "Consignação do aluguel ou das chaves libera o locatário"@pt ;
+    theye:tese_funda_em theye:N-8245-6,
+        theye:N-8245-67,
+        theye:N-CC-334,
+        theye:N-CPC-539 .
+
+theye:T08 a theye:Tese ;
+    rdfs:label "Indenização ou retenção por benfeitorias (renunciável)"@pt ;
+    theye:tese_funda_em theye:N-8245-35,
+        theye:N-8245-36 .
+
+theye:T09 a theye:Tese ;
+    rdfs:label "Preterição da preferência gera perdas e danos ou adjudicação"@pt ;
+    theye:tese_funda_em theye:N-8245-27,
+        theye:N-8245-33 .
+
+theye:T10 a theye:Tese ;
+    rdfs:label "Fiança: alcance, exoneração e penhora do bem de família do fiador"@pt ;
+    theye:tese_funda_em theye:N-8009-3-VII,
+        theye:N-8245-39,
+        theye:N-8245-40 .
+
+theye:T11 a theye:Tese ;
+    rdfs:label "Multa por devolução antecipada proporcional ao prazo restante"@pt ;
+    theye:tese_funda_em theye:N-8245-4 .
+
+theye:T12 a theye:Tese ;
+    rdfs:label "Encargos de condomínio: ordinárias do locatário, extraordinárias do locador"@pt ;
+    theye:tese_funda_em theye:N-8245-22,
+        theye:N-8245-23 .
+
+theye:T13 a theye:Tese ;
+    rdfs:label "Cobrança de aluguéis por execução de título"@pt ;
+    theye:tese_funda_em theye:N-8245-62,
+        theye:N-CPC-784-VIII .
+
+theye:aditiva_de a owl:ObjectProperty ;
+    rdfs:domain theye:Contrato ;
+    rdfs:range theye:Contrato .
+
+theye:aplica a owl:ObjectProperty ;
+    rdfs:domain theye:Decisao ;
+    rdfs:range theye:Precedente .
+
+theye:assunto_remete_a a owl:ObjectProperty ;
+    rdfs:domain theye:Assunto ;
+    rdfs:range theye:Norma .
+
+theye:doc-AVCB a owl:Class ;
+    rdfs:subClassOf theye:Documento .
+
+theye:doc-Alvara a owl:Class ;
+    rdfs:subClassOf theye:Documento .
+
+theye:doc-Habite-se a owl:Class ;
+    rdfs:subClassOf theye:Documento .
+
+theye:doc-IPTU a owl:Class ;
+    rdfs:subClassOf theye:Documento .
+
+theye:documento_de a owl:ObjectProperty ;
+    rdfs:comment "Alvo: Contrato ou Imovel"@pt ;
+    rdfs:domain theye:Documento .
+
+theye:envolve a owl:ObjectProperty ;
+    rdfs:domain theye:Processo ;
+    rdfs:range theye:TipoDeParte .
+
+theye:fixado_por a owl:ObjectProperty ;
+    rdfs:domain theye:Prazo ;
+    rdfs:range theye:Norma .
+
+theye:fundamenta a owl:ObjectProperty ;
+    rdfs:domain theye:Norma ;
+    rdfs:range theye:Tese .
+
+theye:garantia-caucao a theye:Garantia ;
+    rdfs:label "caucao" ;
+    rdfs:seeAlso theye:N-8245-37 .
+
+theye:garantia-cessao_fiduciaria a theye:Garantia ;
+    rdfs:label "cessao_fiduciaria" ;
+    rdfs:seeAlso theye:N-8245-37 .
+
+theye:garantia-fianca a theye:Garantia ;
+    rdfs:label "fianca" ;
+    rdfs:seeAlso theye:N-8245-37 .
+
+theye:garantia-seguro a theye:Garantia ;
+    rdfs:label "seguro" ;
+    rdfs:seeAlso theye:N-8245-37 .
+
+theye:garantido_por a owl:ObjectProperty ;
+    rdfs:domain theye:Contrato ;
+    rdfs:range theye:Garantia .
+
+theye:invoca a owl:ObjectProperty ;
+    rdfs:domain theye:Processo ;
+    rdfs:range theye:Tese .
+
+theye:objeto_de a owl:ObjectProperty ;
+    rdfs:domain theye:Imovel ;
+    rdfs:range theye:Contrato .
+
+theye:parte-fiador a theye:TipoDeParte ;
+    rdfs:label "fiador" .
+
+theye:parte-locador a theye:TipoDeParte ;
+    rdfs:label "locador" .
+
+theye:parte-locatario a theye:TipoDeParte ;
+    rdfs:label "locatario" .
+
+theye:parte-sublocatario a theye:TipoDeParte ;
+    rdfs:label "sublocatario" .
+
+theye:pertence_a a owl:ObjectProperty ;
+    rdfs:domain theye:OrgaoJulgador ;
+    rdfs:range theye:Tribunal .
+
+theye:prazo_de a owl:ObjectProperty ;
+    rdfs:comment "Alvo: Contrato, Imovel ou Processo"@pt ;
+    rdfs:domain theye:Prazo .
+
+theye:precedente_interpreta a owl:ObjectProperty ;
+    rdfs:domain theye:Precedente ;
+    rdfs:range theye:Norma .
+
+theye:preve a owl:ObjectProperty ;
+    rdfs:domain theye:PrevisaoJuridica ;
+    rdfs:range theye:Decisao .
+
+theye:regula a owl:ObjectProperty ;
+    rdfs:domain theye:Norma ;
+    rdfs:range theye:Contrato .
+
+theye:resulta_em a owl:ObjectProperty ;
+    rdfs:domain theye:Processo ;
+    rdfs:range theye:Decisao .
+
+theye:sublocacao_de a owl:ObjectProperty ;
+    rdfs:domain theye:Contrato ;
+    rdfs:range theye:Contrato .
+
+theye:tem_classe a owl:ObjectProperty ;
+    rdfs:domain theye:Processo ;
+    rdfs:range theye:ClasseProcessual .
+
+theye:tese_funda_em a owl:ObjectProperty ;
+    rdfs:domain theye:Tese ;
+    rdfs:range theye:Norma .
+
+theye:testa a owl:ObjectProperty ;
+    rdfs:domain theye:HipoteseJuridica ;
+    rdfs:range theye:PrevisaoJuridica .
+
+theye:tpu-assunto-10073 a theye:Assunto ;
+    skos:notation "10073" ;
+    theye:assunto_remete_a theye:N-8245-1 .
+
+theye:tpu-assunto-10090 a theye:Assunto ;
+    skos:notation "10090" ;
+    theye:assunto_remete_a theye:N-8245-1 .
+
+theye:tpu-assunto-10467 a theye:Assunto ;
+    skos:notation "10467" ;
+    theye:assunto_remete_a theye:N-8245-22,
+        theye:N-8245-23 .
+
+theye:tpu-assunto-10582 a theye:Assunto ;
+    skos:notation "10582" ;
+    theye:assunto_remete_a theye:N-8245-4,
+        theye:N-8245-9 .
+
+theye:tpu-assunto-11000 a theye:Assunto ;
+    skos:notation "11000" ;
+    theye:assunto_remete_a theye:N-8245-23,
+        theye:N-8245-62,
+        theye:N-CPC-784-VIII .
+
+theye:tpu-assunto-11001 a theye:Assunto ;
+    skos:notation "11001" ;
+    theye:assunto_remete_a theye:N-8245-6,
+        theye:N-8245-67 .
+
+theye:tpu-assunto-12416 a theye:Assunto ;
+    skos:notation "12416" ;
+    theye:assunto_remete_a theye:N-8245-59 .
+
+theye:tpu-assunto-12417 a theye:Assunto ;
+    skos:notation "12417" ;
+    theye:assunto_remete_a theye:N-8245-59 .
+
+theye:tpu-assunto-12612 a theye:Assunto ;
+    skos:notation "12612" ;
+    theye:assunto_remete_a theye:N-14010-9 .
+
+theye:tpu-assunto-14915 a theye:Assunto ;
+    skos:notation "14915" ;
+    theye:assunto_remete_a theye:N-8245-59,
+        theye:N-8245-62,
+        theye:N-8245-9 .
+
+theye:tpu-assunto-7690 a theye:Assunto ;
+    skos:notation "7690" ;
+    theye:assunto_remete_a theye:N-8245-9 .
+
+theye:tpu-assunto-7691 a theye:Assunto ;
+    skos:notation "7691" ;
+    theye:assunto_remete_a theye:N-8245-23,
+        theye:N-8245-9 .
+
+theye:tpu-assunto-7697 a theye:Assunto ;
+    skos:notation "7697" ;
+    theye:assunto_remete_a theye:N-8245-17,
+        theye:N-8245-18 .
+
+theye:tpu-assunto-7700 a theye:Assunto ;
+    skos:notation "7700" ;
+    theye:assunto_remete_a theye:N-8245-4 .
+
+theye:tpu-assunto-7703 a theye:Assunto ;
+    skos:notation "7703" ;
+    theye:assunto_remete_a theye:N-8245-23 .
+
+theye:tpu-assunto-7704 a theye:Assunto ;
+    skos:notation "7704" ;
+    theye:assunto_remete_a theye:N-8245-67,
+        theye:N-CC-334,
+        theye:N-CPC-539 .
+
+theye:tpu-assunto-7706 a theye:Assunto ;
+    skos:notation "7706" ;
+    theye:assunto_remete_a theye:N-8245-62 .
+
+theye:tpu-assunto-7770 a theye:Assunto ;
+    skos:notation "7770" ;
+    theye:assunto_remete_a theye:N-8245-18,
+        theye:N-8245-19,
+        theye:N-8245-68 .
+
+theye:tpu-assunto-8961 a theye:Assunto ;
+    skos:notation "8961" ;
+    theye:assunto_remete_a theye:N-8245-59 .
+
+theye:tpu-assunto-899 a theye:Assunto ;
+    skos:notation "899" ;
+    theye:assunto_remete_a theye:N-8245-1 .
+
+theye:tpu-assunto-9196 a theye:Assunto ;
+    skos:notation "9196" ;
+    theye:assunto_remete_a theye:N-8245-59 .
+
+theye:tpu-assunto-9580 a theye:Assunto ;
+    skos:notation "9580" ;
+    theye:assunto_remete_a theye:N-8245-1 .
+
+theye:tpu-assunto-9593 a theye:Assunto ;
+    skos:notation "9593" ;
+    theye:assunto_remete_a theye:N-8245-1 .
+
+theye:tpu-assunto-9609 a theye:Assunto ;
+    skos:notation "9609" ;
+    theye:assunto_remete_a theye:N-CC-565 .
+
+theye:tpu-assunto-9610 a theye:Assunto ;
+    skos:notation "9610" ;
+    theye:assunto_remete_a theye:N-8245-47,
+        theye:N-8245-52 .
+
+theye:tpu-assunto-9611 a theye:Assunto ;
+    skos:notation "9611" ;
+    theye:assunto_remete_a theye:N-8245-47 .
+
+theye:tpu-assunto-9612 a theye:Assunto ;
+    skos:notation "9612" ;
+    theye:assunto_remete_a theye:N-8245-46,
+        theye:N-8245-56,
+        theye:N-8245-57,
+        theye:N-8245-59 .
+
+theye:tpu-assunto-9614 a theye:Assunto ;
+    skos:notation "9614" ;
+    theye:assunto_remete_a theye:N-8245-35,
+        theye:N-8245-36 .
+
+theye:tpu-assunto-9615 a theye:Assunto ;
+    skos:notation "9615" ;
+    theye:assunto_remete_a theye:N-8245-27,
+        theye:N-8245-33 .
+
+theye:tramita_em a owl:ObjectProperty ;
+    rdfs:domain theye:Processo ;
+    rdfs:range theye:OrgaoJulgador .
+
+theye:trata_de a owl:ObjectProperty ;
+    rdfs:domain theye:Processo ;
+    rdfs:range theye:Assunto .
+
+theye:vincula a owl:ObjectProperty ;
+    rdfs:domain theye:Precedente ;
+    rdfs:range theye:Tese .
+
+theye:ClasseProcessual a owl:Class ;
+    rdfs:label "Classe processual (TPU-CNJ)"@pt .
+
+theye:HipoteseJuridica a owl:Class ;
+    rdfs:label "Hipótese jurídica pré-registrada"@pt .
+
+theye:Imovel a owl:Class ;
+    rdfs:label "Imóvel"@pt .
+
+theye:N-14010-9 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 9º"@pt ;
+    dcterms:description "RJET/COVID-19: suspensão de liminares de despejo em 2020"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/lei/l14010.htm> .
+
+theye:N-8245-17 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 17"@pt ;
+    dcterms:description "Livre convenção do aluguel; vedada moeda estrangeira e vinculação cambial"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art17" .
+
+theye:N-8245-69 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 69"@pt ;
+    dcterms:description "Revisional: vigência do novo aluguel desde a citação"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art69" .
+
+theye:N-8245-71 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 71"@pt ;
+    dcterms:description "Renovatória: requisitos da petição inicial"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art71" .
+
+theye:N-8245-72 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 72"@pt ;
+    dcterms:description "Renovatória: matéria de defesa"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art72" .
+
+theye:N-CC-565 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 565 a 578"@pt ;
+    dcterms:description "Locação de coisas (móveis) no Código Civil"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm> .
+
+theye:Tribunal a owl:Class ;
+    rdfs:label "Tribunal"@pt .
+
+theye:N-8245-18 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 18"@pt ;
+    dcterms:description "Novo valor e cláusula de reajuste por acordo"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art18" .
+
+theye:N-8245-19 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 19"@pt ;
+    dcterms:description "Revisão judicial do aluguel após três anos"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art19" .
+
+theye:N-8245-22 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 22"@pt ;
+    dcterms:description "Deveres do locador (inclui despesas extraordinárias de condomínio)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art22" .
+
+theye:N-8245-27 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 27"@pt ;
+    dcterms:description "Direito de preferência do locatário na venda"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art27" .
+
+theye:N-8245-33 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 33"@pt ;
+    dcterms:description "Preterição: perdas e danos ou adjudicação (contrato averbado)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art33" .
+
+theye:N-8245-36 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 36"@pt ;
+    dcterms:description "Benfeitorias voluptuárias"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art36" .
+
+theye:N-8245-39 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 39"@pt ;
+    dcterms:description "Garantia se estende até a devolução do imóvel"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art39" .
+
+theye:N-8245-40 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 40"@pt ;
+    dcterms:description "Substituição da garantia (inclui exoneração do fiador)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art40" .
+
+theye:N-8245-46 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 46"@pt ;
+    dcterms:description "Residencial ≥ 30 meses: fim do prazo e denúncia vazia"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art46" .
+
+theye:N-8245-51 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 51"@pt ;
+    dcterms:description "Não residencial: direito à renovação (5 anos, 3 no ramo)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art51" .
+
+theye:N-8245-52 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 52"@pt ;
+    dcterms:description "Exceções à renovação (obras, uso próprio, fundo de comércio)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art52" .
+
+theye:N-8245-56 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 56"@pt ;
+    dcterms:description "Não residencial: fim do prazo"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art56" .
+
+theye:N-8245-57 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 57"@pt ;
+    dcterms:description "Não residencial por prazo indeterminado: denúncia com 30 dias"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art57" .
+
+theye:N-8245-6 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 6"@pt ;
+    dcterms:description "Denúncia pelo locatário no prazo indeterminado (aviso de 30 dias)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art6" .
+
+theye:N-8245-68 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 68"@pt ;
+    dcterms:description "Revisional: rito e aluguel provisório"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art68" .
+
+theye:N-CC-334 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 334 a 345"@pt ;
+    dcterms:description "Pagamento em consignação"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm> .
+
+theye:N-CPC-539 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 539 a 549"@pt ;
+    dcterms:description "Ação de consignação em pagamento"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm> .
+
+theye:N-CPC-784-VIII a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 784, VIII"@pt ;
+    dcterms:description "Crédito de aluguel documentado é título executivo"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm> .
+
+theye:OrgaoJulgador a owl:Class ;
+    rdfs:label "Órgão julgador"@pt .
+
+theye:Prazo a owl:Class ;
+    rdfs:label "Prazo (data-limite com norma de origem) [v0.7]"@pt .
+
+theye:PrevisaoJuridica a owl:Class ;
+    rdfs:label "Previsão jurídica selada"@pt .
+
+theye:Decisao a owl:Class ;
+    rdfs:label "Decisão"@pt .
+
+theye:N-8245-35 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 35"@pt ;
+    dcterms:description "Benfeitorias necessárias e úteis: indenização e retenção"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art35" .
+
+theye:N-8245-4 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 4"@pt ;
+    dcterms:description "Devolução antecipada pelo locatário; multa proporcional"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art4" .
+
+theye:N-8245-47 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 47"@pt ;
+    dcterms:description "Residencial < 30 meses: hipóteses de retomada"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art47" .
+
+theye:N-8245-67 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 67"@pt ;
+    dcterms:description "Consignação em pagamento de aluguel e encargos"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art67" .
+
+theye:N-8009-3-VII a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 3º, VII"@pt ;
+    dcterms:description "Penhora do bem de família do fiador de locação"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8009.htm> .
+
+theye:Documento a owl:Class ;
+    rdfs:label "Documento do imóvel ou contrato [v0.7]"@pt .
+
+theye:Garantia a owl:Class ;
+    rdfs:label "Garantia locatícia (art. 37) [v0.7]"@pt .
+
+theye:N-8245-1 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 1"@pt ;
+    dcterms:description "Abrangência; exclusões (bens públicos, vagas, espaços publicitários, apart-hotéis, arrendamento mercantil)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art1" .
+
+theye:N-8245-23 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 23"@pt ;
+    dcterms:description "Deveres do locatário (pagar aluguel e encargos, conservar, despesas ordinárias)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art23" .
+
+theye:N-8245-37 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 37"@pt ;
+    dcterms:description "Modalidades de garantia (caução, fiança, seguro-fiança, cessão de quotas)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art37" .
+
+theye:N-8245-9 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 9"@pt ;
+    dcterms:description "Hipóteses de desfazimento: acordo, infração, falta de pagamento, reparos urgentes"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art9" .
+
+theye:TipoDeParte a owl:Class ;
+    rdfs:label "Tipo de parte"@pt .
+
+theye:N-8245-62 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 62"@pt ;
+    dcterms:description "Despejo por falta de pagamento; cobrança cumulada e purgação da mora"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art62" .
+
+theye:Processo a owl:Class ;
+    rdfs:label "Processo judicial"@pt .
+
+theye:Contrato a owl:Class ;
+    rdfs:label "Contrato de locação"@pt .
+
+theye:N-8245-59 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 59"@pt ;
+    dcterms:description "Ação de despejo; liminar de 15 dias com caução de 3 aluguéis (§1º)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art59" .
+
+theye:Precedente a owl:Class ;
+    rdfs:label "Precedente (súmula ou tema)"@pt .
+
+theye:Tese a owl:Class ;
+    rdfs:label "Tese jurídica"@pt .
+
+theye:Assunto a owl:Class ;
+    rdfs:label "Assunto (TPU-CNJ)"@pt .
+
+theye:Norma a owl:Class ;
+    rdfs:label "Dispositivo normativo"@pt .
+

@@ -1,5 +1,6 @@
 {
   "headers": [
+    { "source": "/(.*)\\.ttl", "headers": [ { "key": "Content-Type", "value": "text/turtle; charset=utf-8" } ] },
     { "source": "/(.*)", "headers": [
       { "key": "X-Frame-Options", "value": "DENY" },
       { "key": "X-Content-Type-Options", "value": "nosniff" },
