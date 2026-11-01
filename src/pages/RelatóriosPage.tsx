@@ -171,6 +171,7 @@ export default function RelatóriosPage() {
           </div>
           {/* Passo 172: imprimir o relatório do período. */}
           <button type="button" onClick={() => window.print()} data-testid="imprimir-periodo" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
+          <button type="button" data-testid="copiar-link-relatorios" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar link</button>{/* Passo 228 */}
           <button type="button" onClick={() => { copiarResumoPeriodo(); setPeriodoCopiado(true) }} data-testid="copiar-periodo" className="mt-3 min-h-[44px] px-4 border border-navy/20 text-navy text-sm">{periodoCopiado ? 'Resumo copiado' : 'Copiar resumo do período'}</button>
           <p className="text-xs text-grafite-claro mt-3" data-testid="datas-periodo">
             Este relatório cobre de {new Date().toLocaleDateString('pt-BR')} até {new Date(Date.now() + periodo * 86400000).toLocaleDateString('pt-BR')}, gerado em {new Date().toLocaleString('pt-BR')}.
