@@ -124,6 +124,7 @@ export default function IndicadoresPage() {
   const [ata, setAta] = useState('')
   const [msgAta, setMsgAta] = useState('')
   const [gravandoAta, setGravandoAta] = useState(false)
+  const [baixado, setBaixado] = useState(false) // Passo 340
   const hoje = new Date(); const trimestre = trimestreDe(hoje); const fimTri = fimDoTrimestre(hoje)
   const diasParaFim = Math.ceil((fimTri.getTime() - hoje.getTime()) / 86400000)
   const dataLembrete = new Date(fimTri.getTime() - 15 * 86400000)
@@ -213,7 +214,7 @@ export default function IndicadoresPage() {
           {/* Passo 177: imprimir os indicadores. */}
           <button type="button" data-testid="imprimir-indicadores" onClick={() => window.print()} className="mr-3 underline text-navy text-sm print:hidden">imprimir</button>
           <button type="button" data-testid="copiar-link-indicadores" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mr-3 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 245 */}
-          <button type="button" data-testid="baixar-indicadores" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['objetivo;resultado-chave;atual;meta;unidade', ...okrs.flatMap(o => o.keyResults.map(k => `${o.titulo};${k.descricao};${k.atual};${k.meta};${k.unidade}`))].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'okrs.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Baixar CSV</button>{/* Passo 307 */}
+          <button type="button" data-testid="baixar-indicadores" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['objetivo;resultado-chave;atual;meta;unidade', ...okrs.flatMap(o => o.keyResults.map(k => `${o.titulo};${k.descricao};${k.atual};${k.meta};${k.unidade}`))].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'okrs.csv'; a.click(); setBaixado(true); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>{/* Passo 307 */}
           <button type="button" data-testid="copiar-indicadores" onClick={() => navigator.clipboard?.writeText(`Indicadores · ${new Date().toLocaleDateString('pt-BR')}\n` + tiles.map(t => `${t.rotulo}: ${t.valor} — ${t.explica}`).join('\n')).then(() => setIndCopiado(true)).catch(() => undefined)} className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm mr-2">{indCopiado ? 'Indicadores copiados' : 'Copiar indicadores'}</button>
           <button
             onClick={() => window.print()}
