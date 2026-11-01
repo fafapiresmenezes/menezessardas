@@ -76,6 +76,7 @@ export const MEDICOES: Medicao[] = [
   { n: 86, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-86.pdf', sha256: '57f391f43cf6c9585deebf78e354dbeb42d7d7f1b0779e16dad02d3921f209c5', ots: true, entregue: 'Onda AT (Passos 273–277): Instituto, Agenda, KYC, Início e Assistente confirmam o link copiado.' },
   { n: 87, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-87.pdf', sha256: 'fc24d16c2a854680c6684ef7a2fbf36e5f25530f5d23f12fe41c86e11aad55f8', ots: true, entregue: 'Onda AU (Passos 278–282): Meu dia, Honorários, Projetos, Imóveis e Assinaturas confirmam o link copiado.' },
   { n: 88, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-88.pdf', sha256: 'ef1969e2a4be2407df6f15bbd7e2a8b98b8910f8c00e07d1e08236cfadf4b5e4', ots: true, entregue: 'Onda AV (Passos 283–287): Fornecedores e Equipe confirmam o link; vínculo, ficha do fornecedor e ficha do imóvel copiam o link.' },
+  { n: 89, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-89.pdf', sha256: '4ec4a8227693ab879915b2e9ed49bb185a86cdf823b2f6d8f31cee3052d1da2d', ots: true, entregue: 'Onda AW (Passos 288–292): Painel, Portal do cliente, Mercado, Previsões e Compliance ganham botão para baixar o conteúdo (texto ou CSV).' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
