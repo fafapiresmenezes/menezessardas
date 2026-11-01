@@ -30,6 +30,7 @@ export default function MercadoPage() {
   // Passo 126: relatório completo por área (amostra, confiança, tendência) copiável.
   const [areasCopiadas, setAreasCopiadas] = useState(false)
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 252
+  const [baixado, setBaixado] = useState(false) // Passo 325
   const copiarAreas = async () => {
     const t = ['Demanda judicial por área — CNJ, tribunais do RJ', ...prontas.map(x => `${x.nome}: ${x.previsao!.variacao !== null && x.previsao!.variacao >= 0 ? '+' : ''}${x.previsao!.variacao}% até ${x.previsao!.ano} · confiança ${nivel(x)} · amostra ${fmt(x.amostra)} · ${x.fontePrevisao ?? x.fonte}`), `Gerado em ${new Date().toLocaleDateString('pt-BR')} · GMenezes Advogados Associados`].join('\n')
     try { await navigator.clipboard.writeText(t); setAreasCopiadas(true); setTimeout(() => setAreasCopiadas(false), 2500) } catch { /* sem área de transferência */ }
@@ -44,7 +45,7 @@ export default function MercadoPage() {
           {prontas.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-mercado" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}
           {prontas.length > 0 && <button type="button" onClick={copiarAreas} data-testid="copiar-areas" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{areasCopiadas ? 'Áreas copiadas' : 'Copiar todas as áreas'}</button>}
           {prontas.length > 0 && <button type="button" data-testid="copiar-link-mercado" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 218 */}
-              <button type="button" data-testid="baixar-ranking" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['posição;área;variação;ano', ...ranking.map((r, i) => `${i + 1};${r.nome};${r.previsao?.variacao ?? ''};${r.previsao?.ano ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'ranking-mercado.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Baixar CSV</button>{/* Passo 290 */}
+              <button type="button" data-testid="baixar-ranking" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['posição;área;variação;ano', ...ranking.map((r, i) => `${i + 1};${r.nome};${r.previsao?.variacao ?? ''};${r.previsao?.ano ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'ranking-mercado.csv'; a.click(); setBaixado(true); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>{/* Passo 290 */}
           {prontas.length > 0 && !ranking.length && <p className="mt-3 text-sm text-atencao">Nenhuma área tem tendência confiável ainda (os dados do CNJ variam muito de ano para ano). Veja os números brutos abaixo.</p>}
           {ranking.length > 0 && (
             <>

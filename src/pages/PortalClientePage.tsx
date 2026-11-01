@@ -26,6 +26,7 @@ export default function PortalClientePage() {
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 243
   const [resumo, setResumo] = useState<Resumo | null>(null)
   const [marca, setMarca] = useState<MarcaEscritorio | null>(null)
+  const [baixado, setBaixado] = useState(false) // Passo 324
   useEffect(() => {
     supabase.rpc('portal_caso', { p_token: token }).then(r => setCaso((r.data as Caso) ?? null))
     supabase.rpc('portal_cliente', { p_token: token }).then(r => setResumo((r.data as Resumo) ?? null))
@@ -51,7 +52,7 @@ export default function PortalClientePage() {
             {/* Passo 174: o cliente imprime o andamento do caso. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-portal" className="mt-2 underline text-navy text-sm print:hidden">imprimir este andamento</button>
             <button type="button" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} data-testid="copiar-link-portal" className="mt-2 ml-3 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link desta página'}</button>{/* Passo 205 */}
-            <button type="button" data-testid="baixar-andamento" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([[caso.titulo, `Andamento: ${feitas} de ${total} etapas`, ...caso.etapas.map(e => `${e.situacao === 'feito' ? '✓' : '○'} ${e.titulo}`), `Gerado em ${new Date().toLocaleDateString('pt-BR')} · GMenezes Advogados Associados`].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'andamento.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-2 ml-3 underline text-navy text-sm print:hidden">baixar andamento</button>{/* Passo 289 */}
+            <button type="button" data-testid="baixar-andamento" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([[caso.titulo, `Andamento: ${feitas} de ${total} etapas`, ...caso.etapas.map(e => `${e.situacao === 'feito' ? '✓' : '○'} ${e.titulo}`), `Gerado em ${new Date().toLocaleDateString('pt-BR')} · GMenezes Advogados Associados`].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'andamento.txt'; a.click(); setBaixado(true); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-2 ml-3 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar andamento'}</button>{/* Passo 289 */}
             <p className="text-sm text-grafite mt-1">{[caso.area, caso.numero_processo && `Processo ${caso.numero_processo}`].filter(Boolean).join(' · ')}</p>
             <div className="mt-5">
               <div className="flex justify-between text-sm text-grafite"><span>Andamento</span><span>{feitas} de {total} etapas</span></div>
