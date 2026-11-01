@@ -86,6 +86,7 @@ export const MEDICOES: Medicao[] = [
   { n: 96, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-96.pdf', sha256: '2c1256cb7e265041cfec6c48278ba622b1d15061911339eb961e778d9b19727a', ots: true, entregue: 'Onda BD (Passos 323–327): Painel, Portal, Mercado, Previsões e Compliance confirmam o download com o rótulo Baixado.' },
   { n: 97, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-97.pdf', sha256: 'a63d8375f9033214413e4f8687899bda2aaf0aeafe762cdd622e1616486e1243', ots: true, entregue: 'Onda BE (Passos 328–332): retorno Baixado em Fornecedores, Equipe, Trilha, Testar tudo e Consumo' },
   { n: 98, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-98.pdf', sha256: '691239155aa4e0f5a54a9c226cb7e0db072d5acfc1231c9531baa81feaadca40', ots: true, entregue: 'Onda BF (Passos 333–337): retorno Baixado em Intimações, Agenda, Alertas, Fontes e Honorários' },
+  { n: 99, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-99.pdf', sha256: '664458249d6283893f1f077a582ff6875d2228c27511bd483093f6f1be86f4b1', ots: true, entregue: 'Onda BG (Passos 338–342): retorno Baixado em Horas, Imóveis, Indicadores, KYC e Meu dia' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
