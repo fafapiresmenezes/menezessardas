@@ -260,6 +260,7 @@ export default function AssistentePage() {
           <div className="flex justify-end">
             {/* Passo 171: imprimir o histórico da conversa. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-historico" className="inline-flex items-center gap-2 min-h-[44px] px-3 border text-sm mr-2 print:hidden">Imprimir</button>
+            <button type="button" data-testid="copiar-link-assistente" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar link</button>{/* Passo 239 */}
             <button type="button" onClick={copiarHistorico} data-testid="copiar-historico" className="inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm"><Copy size={14} aria-hidden="true" /> Copiar histórico ({historico.length})</button>
           </div>
         )}

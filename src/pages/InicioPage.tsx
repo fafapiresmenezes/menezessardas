@@ -99,6 +99,7 @@ export default function InicioPage() {
         </label>
         <button type="button" onClick={copiarMapa} data-testid="copiar-mapa-areas" className="mt-2 underline text-white/80 text-xs">{mapaCopiado ? 'mapa copiado' : 'copiar mapa das áreas'}</button>
         <button type="button" onClick={() => window.print()} data-testid="imprimir-mapa" className="mt-2 ml-3 underline text-white/80 text-xs print:hidden">imprimir</button>{/* Passo 204 */}
+        <button type="button" data-testid="copiar-link-inicio" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-2 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar link</button>{/* Passo 238 */}
         {buscaArea && <p className="text-white/70 text-xs mt-1" data-testid="busca-area-resultado">{areasVisiveis.length ? `${areasVisiveis.length} área(s); Enter abre ${areasVisiveis[0].titulo}.` : 'Nenhuma área com esse termo. Tente "contrato" ou "cível".'}</p>}
       </form>
       <div className="grid gap-4 w-full max-w-6xl sm:grid-cols-2 lg:grid-cols-5">

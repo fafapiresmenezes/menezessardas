@@ -82,6 +82,7 @@ export default function ImovelListPage() {
               {/* Passo 121: lista filtrada em texto (endereço, proprietário, prazo mais próximo), para a reunião com o cliente. */}
               {/* Passo 158: imprimir a lista de imóveis filtrada. */}
               {filtrados.length > 0 && <button type="button" data-testid="imprimir-imoveis" onClick={() => window.print()} className="mr-3 underline text-navy print:hidden">imprimir</button>}
+              {filtrados.length > 0 && <button type="button" data-testid="copiar-link-imoveis" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="ml-2 underline text-navy print:hidden">copiar link</button>}{/* Passo 241 */}
               {filtrados.length > 0 && <button type="button" data-testid="copiar-imoveis" onClick={() => navigator.clipboard?.writeText(`Imóveis · ${new Date().toLocaleDateString('pt-BR')} · ${filtrados.length}\n` + filtrados.map(i => { const d = prazoDoImovel(i.id); return `${i.endereco} · ${i.proprietario} · ${d === null ? 'sem prazo' : textoPrazo(d)}` }).join('\n')).catch(() => undefined)} className="ml-3 underline text-navy">copiar lista</button>}
             </p>
           </div>
