@@ -223,7 +223,8 @@ function CaseStudy() {
 }
 
 export default function InstitutoPage() {
-  const [aba, setAba] = useState<Aba>('inovacao')
+  const [aba, setAba] = useState<Aba>(() => { try { return (localStorage.getItem('lsm-instituto-aba') as Aba | null) ?? 'inovacao' } catch { return 'inovacao' } }) // Passo 189
+  useEffect(() => { try { localStorage.setItem('lsm-instituto-aba', aba) } catch { /* sem memória local */ } }, [aba])
   // Passo 93: a última medição em uma linha, com o hash copiável para conferência externa.
   const ult = MEDICOES[MEDICOES.length - 1]
   const [hashCopiado, setHashCopiado] = useState(false)

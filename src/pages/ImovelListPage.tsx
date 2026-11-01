@@ -10,7 +10,7 @@ import { rotulosTipoImovel, rotulosUso, siglaDocumento } from '@/lib/rotulos'
 import { Search, Plus, Upload } from 'lucide-react'
 
 export default function ImovelListPage() {
-  const [busca, setBusca] = useState('')
+  const [busca, setBusca] = useState(() => { try { return localStorage.getItem('lsm-imoveis-busca') ?? '' } catch { return '' } }) // Passo 192
   const { imoveis, loading } = useImoveis()
   const { alertas } = useAlertas()
   const navigate = useNavigate()
@@ -72,7 +72,7 @@ export default function ImovelListPage() {
                 type="search"
                 placeholder="Ex: Rua das Flores 123, João Silva"
                 value={busca}
-                onChange={e => setBusca(e.target.value)}
+                onChange={e => { setBusca(e.target.value); try { localStorage.setItem('lsm-imoveis-busca', e.target.value) } catch { /* sem memória local */ } }}
                 className="flex-1 bg-transparent outline-none text-grafite"
                 aria-label="Buscar imóvel por endereço ou proprietário"
               />

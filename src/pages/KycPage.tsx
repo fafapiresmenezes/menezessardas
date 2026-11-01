@@ -27,7 +27,7 @@ const COR = { baixo: 'bg-green-50 border-green-700 text-green-800', alto: 'bg-cr
 
 // Checagem de contraparte antes de fechar contrato: Receita, sanções (via TCU) e conflito de interesses.
 export default function KycPage() {
-  const [cnpj, setCnpj] = useState('')
+  const [cnpj, setCnpj] = useState(() => { try { return localStorage.getItem('lsm-kyc-cnpj') ?? '' } catch { return '' } }) // Passo 191
   const [estado, setEstado] = useState<{ carregando?: boolean; erro?: string; r?: Resultado }>({})
   const [historico, setHistorico] = useState<Historico[]>([])
   const [msgRecon, setMsgRecon] = useState('')
@@ -76,7 +76,7 @@ export default function KycPage() {
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6">
           <label htmlFor="cnpj" className="block font-medium mb-2">CNPJ da empresa</label>
           <div className="flex flex-wrap items-center gap-2">
-            <input id="cnpj" value={cnpj} onChange={e => setCnpj(e.target.value)} placeholder="00.000.000/0000-00" className="flex-1 min-w-[200px] border px-3 py-2" />
+            <input id="cnpj" value={cnpj} onChange={e => { setCnpj(e.target.value); try { localStorage.setItem('lsm-kyc-cnpj', e.target.value) } catch { /* sem memória local */ } }} placeholder="00.000.000/0000-00" className="flex-1 min-w-[200px] border px-3 py-2" />
             <button type="button" onClick={consultar} disabled={cnpj.replace(/\D/g, '').length !== 14 || !!estado.carregando} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50 inline-flex items-center gap-2">
               <UserCheck className="w-4 h-4" aria-hidden />{estado.carregando ? 'Consultando…' : 'Checar'}
             </button>

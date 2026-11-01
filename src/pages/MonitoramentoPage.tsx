@@ -18,7 +18,7 @@ const dt = (d?: string | null) => (d ? new Date(d.length === 10 ? `${d}T12:00` :
 export default function MonitoramentoPage() {
   const [lista, setLista] = useState<Mon[]>([])
   const [tipo, setTipo] = useState<'processo' | 'nome'>('processo')
-  const [valor, setValor] = useState('')
+  const [valor, setValor] = useState(() => { try { return localStorage.getItem('lsm-mon-valor') ?? '' } catch { return '' } }) // Passo 188
   const [rotulo, setRotulo] = useState('')
   const [msg, setMsg] = useState('')
   const [ocupado, setOcupado] = useState(false)
@@ -81,7 +81,7 @@ export default function MonitoramentoPage() {
             {(['processo', 'nome'] as const).map(t => <button key={t} type="button" role="radio" aria-checked={tipo === t} onClick={() => setTipo(t)} className={`min-h-[44px] px-4 text-sm border ${tipo === t ? 'bg-navy text-white' : ''}`}>{t === 'processo' ? 'Processo (número)' : 'Nome de parte'}</button>)}
           </div>
           <div className="grid gap-2 md:grid-cols-5">
-            <input value={valor} onChange={e => setValor(e.target.value)} placeholder={tipo === 'processo' ? '0000000-00.0000.8.19.0000' : 'Nome completo ou razão social'} className="border px-3 py-2 md:col-span-2" aria-label="Valor a monitorar" data-testid="mon-valor" />
+            <input value={valor} onChange={e => { setValor(e.target.value); try { localStorage.setItem('lsm-mon-valor', e.target.value) } catch { /* sem memória local */ } }} placeholder={tipo === 'processo' ? '0000000-00.0000.8.19.0000' : 'Nome completo ou razão social'} className="border px-3 py-2 md:col-span-2" aria-label="Valor a monitorar" data-testid="mon-valor" />
             <input value={rotulo} onChange={e => setRotulo(e.target.value)} placeholder="Apelido (opcional)" className="border px-3 py-2 md:col-span-2" aria-label="Apelido" />
             <button type="button" onClick={adicionar} disabled={ocupado} data-testid="mon-adicionar" className="min-h-[44px] bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-50">Monitorar</button>
           </div>
