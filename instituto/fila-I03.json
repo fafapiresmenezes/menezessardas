@@ -112,9 +112,10 @@
    "titulo": "Revisão humana",
    "prompt": "Amostre 20 respostas dos agentes por semana para revisão humana registrada.",
    "kpi": "1ª amostra revisada",
-   "status": "aberto",
+   "status": "aguardando M",
    "elo_anterior": "53f2bd5c35d251bbb7cf97a95d34ade8681d6f94ea3c30f9e3b0c7aa25222887",
-   "sha256_prompt": "45aed3fffd9515cadb1c555a67068c96368a0ae16c4e2714c28d27d3f594f0f4"
+   "sha256_prompt": "45aed3fffd9515cadb1c555a67068c96368a0ae16c4e2714c28d27d3f594f0f4",
+   "evidencia_parcial": "Tabela instituto.agentes_amostra + sorteio 50% até 20/semana na função instituto-agentes v5 (guarda só a resposta); 1ª amostra 2026-W44 com 2 respostas em i03/revisao-humana-2026-W44.xlsx (sha256 71f07de9…); pré-análise da IA achou contexto citando ontologia v0.6 e foi corrigido para v0.7 (função v5). Falta a revisão humana (M ou Fátima)."
   },
   {
    "n": "C10",

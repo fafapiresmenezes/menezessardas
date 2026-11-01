@@ -23,7 +23,8 @@ Deno.serve(async (req) => {
 
 const SITE_INFO = `SOBRE O INSTITUTO (fatos do site):
 - Dados: 5.350 ações de locação anonimizadas do DataJud/CNJ (TJRJ, TJSP, TJMG e outros), coleta diária; só agregados (LGPD).
-- Ontologia v0.6 (locação): classes Tribunal, OrgaoJulgador, ClasseProcessual, Assunto, Processo, TipoDeParte (locador, locatário…), Movimento, Decisao, Tese, Precedente, Norma, Contrato, Imovel, HipoteseJuridica, PrevisaoJuridica. Relações: tramita_em, pertence_a, tem_classe, trata_de, envolve, resulta_em, invoca, aplica, vincula, fundamenta, regula, indexado_a, objeto_de, afeta, testa, preve, assunto_remete_a, tese_funda_em. 77 nós de norma da Lei 8.245/91, 13 teses típicas, 6 precedentes (STJ Súmulas 214, 268, 335, 549; STF Temas 295 e 1127). 90,1% dos processos ligam a pelo menos um artigo.
+- Ontologia v0.7 (locação), publicada em OWL/Turtle em /ontologia-locacao-v07.ttl, com endereço permanente para cada termo em /o/ e 0 inconsistência no raciocinador OWL RL: classes Tribunal, OrgaoJulgador, ClasseProcessual, Assunto, Processo, TipoDeParte (locador, locatário…), Movimento, Decisao, Tese, Precedente, Norma, Contrato, Imovel, Prazo, Garantia, Documento, HipoteseJuridica, PrevisaoJuridica. Relações: tramita_em, pertence_a, tem_classe, trata_de, envolve, resulta_em, invoca, aplica, vincula, fundamenta, regula, indexado_a, objeto_de, afeta, testa, preve, assunto_remete_a, tese_funda_em, aditiva_de, sublocacao_de, garantido_por, prazo_de, fixado_por, documento_de.
+- Transparência: cartão do modelo em /modelo.html, relatório de privacidade em /privacidade.html; quem vê resposta errada pode relatar pelo botão "Relatar resposta errada", e uma amostra semanal é revisada por pessoas. 77 nós de norma da Lei 8.245/91, 13 teses típicas, 6 precedentes (STJ Súmulas 214, 268, 335, 549; STF Temas 295 e 1127). 90,1% dos processos ligam a pelo menos um artigo.
 - Laboratório: cadastro com e-mail e CPF (guardado só como código irreversível), 1 consulta grátis. Membro: R$ 79/mês com 20 consultas; consulta avulsa R$ 3,94.
 - Serviços: relatório preditivo de caso, radar agregado de órgão julgador, due diligence processual, monitoramento de publicações, jurimetria setorial, parecer de direito comparado, curso e certificação, dados abertos para pesquisa, painel de carteira, assessoria em sandboxes regulatórios.
 - Escritório parceiro: GMenezes Advogados Associados usa a previsão do Instituto na tela Previsões.
@@ -89,5 +90,7 @@ ${await contexto()}`
   await s.rpc('instituto_agente_registrar', { p_agente: ag.id, p_in: tin, p_out: tout, p_usd: usd })
   await s.from('consumo_api').insert({ funcao: `Instituto: agente ${ag.id}`, modelo, tokens_entrada: tin, tokens_saida: tout })
   if (!texto) return json({ erro: 'O agente não conseguiu responder agora. Tente de novo.' }, 502)
+  // Passo C09: sorteia até 20 respostas por semana para revisão humana (guarda só a resposta, nunca a pergunta).
+  await s.rpc('instituto_agente_amostrar', { p_agente: ag.id, p_modelo: modelo, p_resposta: texto })
   return json({ ok: true, agente: ag.nome, resposta: texto, modelo, tokens: { entrada: tin, saida: tout }, custo_usd: Number(usd.toFixed(6)) })
 }
