@@ -42,6 +42,7 @@ export default function MercadoPage() {
           {/* Passo 159: imprimir o mercado jurídico por área. */}
           {prontas.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-mercado" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}
           {prontas.length > 0 && <button type="button" onClick={copiarAreas} data-testid="copiar-areas" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{areasCopiadas ? 'Áreas copiadas' : 'Copiar todas as áreas'}</button>}
+          {prontas.length > 0 && <button type="button" data-testid="copiar-link-mercado" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar link</button>}{/* Passo 218 */}
           {prontas.length > 0 && !ranking.length && <p className="mt-3 text-sm text-atencao">Nenhuma área tem tendência confiável ainda (os dados do CNJ variam muito de ano para ano). Veja os números brutos abaixo.</p>}
           {ranking.length > 0 && (
             <>

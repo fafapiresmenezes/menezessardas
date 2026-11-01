@@ -273,6 +273,7 @@ export default function PrevisoesPage() {
           {/* Passo 160: imprimir as previsões com as fontes. */}
           <button type="button" onClick={() => window.print()} data-testid="imprimir-previsoes" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
           <button type="button" onClick={copiarResumo} data-testid="copiar-previsoes" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo da carteira'}</button>
+          <button type="button" data-testid="copiar-link-previsoes" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar link</button>{/* Passo 219 */}
         </header>
         <div className="grid gap-4 sm:grid-cols-4">
           {[
