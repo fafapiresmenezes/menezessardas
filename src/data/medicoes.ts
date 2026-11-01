@@ -109,6 +109,7 @@ export const MEDICOES: Medicao[] = [
   { n: 119, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-119.pdf', sha256: '2b3c676608cf2864f1d657025131c29a00490f2a2841937ae880063e81d45cd6', ots: true, entregue: 'Onda CA (Passos 419–420): testes unitários de ancoragem.ts e equipe.ts (115 testes no total)' },
   { n: 120, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-120.pdf', sha256: '4de89347a7fa29f04008bb0b3be7ceed45ff373ef51f14f8d5459d9485ec8e4e', ots: true, entregue: 'Onda CB (Passos 421–422): testes unitários de acoesConsultor, previsaoInstituto e contratoSaas (123 testes no total)' },
   { n: 121, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-121.pdf', sha256: '62343db450ca6a28d7ab2ab8c1bc1e3032238c7482f87c012f400d35b987ce3c', ots: true, entregue: 'Onda CC (Passos 423–424): testes unitários de pdfSimples, termos e authDemo (130 testes no total)' },
+  { n: 122, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-122.pdf', sha256: '5efe7960c51ddaba994b402139f3276e6336cd867ce8c49db5da1849db43a24b', ots: true, entregue: 'Onda CD (Passos 425–426): testes unitários de trilha.ts e rotulos.ts (142 testes no total)' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
