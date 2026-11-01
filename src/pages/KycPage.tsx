@@ -58,6 +58,7 @@ export default function KycPage() {
   const histVisivel = historico.filter(h => !buscaHist || (h.nome ?? '').toLowerCase().includes(buscaHist.toLowerCase()) || h.cnpj.includes(buscaHist.replace(/\D/g, '')))
   // Passo 125: histórico de checagens copiável (data, contraparte, risco, próxima reconsulta).
   const [histCopiado, setHistCopiado] = useState(false)
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 275
   const copiarHistorico = async () => {
     const t = ['Histórico de checagens de contraparte — GMenezes Advogados Associados', ...histVisivel.map(h => `${new Date(h.consultado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })} · ${h.nome ?? fmtCnpj(h.cnpj)} · risco ${h.risco}${h.mudou ? ` (era ${h.risco_anterior})` : ''} · reconsulta ${proxima(h.consultado_em).toLocaleDateString('pt-BR')}`)].join('\n')
     try { await navigator.clipboard.writeText(t); setHistCopiado(true); setTimeout(() => setHistCopiado(false), 2500) } catch { /* sem área de transferência */ }
@@ -87,7 +88,7 @@ export default function KycPage() {
         {r && (
           <section className="bg-white shadow-sm p-6 space-y-4" aria-live="polite">
             <button type="button" onClick={copiarResultado} data-testid="kyc-copiar" className="min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiado ? 'Resultado copiado' : 'Copiar resultado para o parecer'}</button>
-            <button type="button" data-testid="copiar-link-kyc" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">Copiar link</button>{/* Passo 237 */}
+            <button type="button" data-testid="copiar-link-kyc" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 237 */}
             <p data-testid="kyc-risco" className={`p-3 border-l-4 font-medium ${COR[r.risco]}`}>
               Risco {r.risco}{r.alertas.length ? `: ${r.alertas.join(' ')}` : '. Nenhum alerta encontrado.'}
             </p>

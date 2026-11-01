@@ -36,6 +36,7 @@ export default function InicioPage() {
   const areasVisiveis = AREAS.filter(a => !buscaArea || norm(a.titulo + ' ' + a.texto).includes(norm(buscaArea)))
   // Passo 128: mapa das 10 áreas em texto, para orientar quem entra na equipe.
   const [mapaCopiado, setMapaCopiado] = useState(false)
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 276
   const copiarMapa = async () => {
     const t = ['Áreas da plataforma — GMenezes Advogados Associados', ...AREAS.map((a, i) => `${i + 1}. ${a.titulo}: ${a.texto}`)].join('\n')
     try { await navigator.clipboard.writeText(t); setMapaCopiado(true); setTimeout(() => setMapaCopiado(false), 2500) } catch { /* sem área de transferência */ }
@@ -99,7 +100,7 @@ export default function InicioPage() {
         </label>
         <button type="button" onClick={copiarMapa} data-testid="copiar-mapa-areas" className="mt-2 underline text-white/80 text-xs">{mapaCopiado ? 'mapa copiado' : 'copiar mapa das áreas'}</button>
         <button type="button" onClick={() => window.print()} data-testid="imprimir-mapa" className="mt-2 ml-3 underline text-white/80 text-xs print:hidden">imprimir</button>{/* Passo 204 */}
-        <button type="button" data-testid="copiar-link-inicio" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-2 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar link</button>{/* Passo 238 */}
+        <button type="button" data-testid="copiar-link-inicio" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-2 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 238 */}
         {buscaArea && <p className="text-white/70 text-xs mt-1" data-testid="busca-area-resultado">{areasVisiveis.length ? `${areasVisiveis.length} área(s); Enter abre ${areasVisiveis[0].titulo}.` : 'Nenhuma área com esse termo. Tente "contrato" ou "cível".'}</p>}
       </form>
       <div className="grid gap-4 w-full max-w-6xl sm:grid-cols-2 lg:grid-cols-5">

@@ -165,6 +165,7 @@ function CaseStudy() {
   }
   const primeira = MEDICOES[0], ultima = MEDICOES[MEDICOES.length - 1]
   const [msgPdf, setMsgPdf] = useState('')
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 273
   const caseEmPdf = () => {
     const pdf = gerarPdfTexto('Case study GMenezes', linhasCaseStudy())
     const url = URL.createObjectURL(new Blob([pdf], { type: 'application/pdf' }))
@@ -192,7 +193,7 @@ function CaseStudy() {
         <p className="text-sm text-grafite-claro mb-3">Os PDFs ficam na Biblioteca do projeto. Para conferir um arquivo, calcule o SHA-256 e compare com a coluna abaixo; o arquivo .ots prova a data no Bitcoin.</p>
         {/* Passo 155: imprimir a cadeia de medições em papel. */}
         <button type="button" onClick={() => window.print()} data-testid="imprimir-cadeia" className="mb-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
-        <button type="button" data-testid="copiar-link-instituto" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mb-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar link</button>{/* Passo 235 */}
+        <button type="button" data-testid="copiar-link-instituto" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mb-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 235 */}
         <button type="button" onClick={copiarCadeia} data-testid="copiar-cadeia" className="mb-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{cadeiaCopiada ? 'Cadeia copiada' : 'Copiar cadeia completa'}</button>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

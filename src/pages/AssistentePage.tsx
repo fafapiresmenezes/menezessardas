@@ -107,6 +107,7 @@ export default function AssistentePage() {
   const [erro, setErro] = useState('')
   // Passo 27: avaliação útil / não útil de cada resposta, gravada em avaliacoes_assistente (taxa mensal em Indicadores).
   const [avaliacoes, setAvaliacoes] = useState<Record<string, boolean>>({})
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 277
   useEffect(() => {
     if (!supabaseConfigurado) return
     supabase.from('avaliacoes_assistente').select('consulta_id,util').then(({ data }) => setAvaliacoes(Object.fromEntries((data ?? []).map(a => [a.consulta_id, a.util]))))
@@ -260,7 +261,7 @@ export default function AssistentePage() {
           <div className="flex justify-end">
             {/* Passo 171: imprimir o histórico da conversa. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-historico" className="inline-flex items-center gap-2 min-h-[44px] px-3 border text-sm mr-2 print:hidden">Imprimir</button>
-            <button type="button" data-testid="copiar-link-assistente" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar link</button>{/* Passo 239 */}
+            <button type="button" data-testid="copiar-link-assistente" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 239 */}
             <button type="button" onClick={copiarHistorico} data-testid="copiar-historico" className="inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm"><Copy size={14} aria-hidden="true" /> Copiar histórico ({historico.length})</button>
           </div>
         )}
