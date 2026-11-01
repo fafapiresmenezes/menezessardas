@@ -93,7 +93,10 @@ export default function ModelosPage() {
             </select>
             <span className="block text-xs text-grafite-claro mt-1">Nos seus modelos use {VARIAVEIS_MODELO.join(', ')}; rótulos como "Cliente: [ ]" e "Imóvel: [ ]" também são preenchidos.</span>
           </label>
-          <p className="text-xs text-grafite-claro mt-3" data-testid="contador-modelos">{lista.length} modelo{lista.length === 1 ? '' : 's'}{area !== 'Todas' ? ` em ${area}` : ''} · {proprios.length} do escritório · {MODELOS.length} do catálogo</p>
+          <p className="text-xs text-grafite-claro mt-3" data-testid="contador-modelos">{lista.length} modelo{lista.length === 1 ? '' : 's'}{area !== 'Todas' ? ` em ${area}` : ''} · {proprios.length} do escritório · {MODELOS.length} do catálogo
+            {/* Passo 118: catálogo em texto (título, área, origem), para o manual do escritório. */}
+            {lista.length > 0 && <button type="button" data-testid="copiar-catalogo" onClick={() => navigator.clipboard?.writeText(`Modelos de peças · ${new Date().toLocaleDateString('pt-BR')} · ${lista.length} modelo(s)\n` + lista.map(m => `${m.titulo} · ${m.area} · ${m.proprio ? 'do escritório' : 'catálogo'}`).join('\n')).catch(() => undefined)} className="ml-3 underline text-navy">copiar catálogo</button>}
+          </p>
           <div className="flex flex-wrap gap-2 mt-2">
             {areas.map(a => <button key={a} type="button" onClick={() => setArea(a)} aria-pressed={area === a} className={`min-h-[36px] px-3 text-sm border ${area === a ? 'bg-navy text-white' : ''}`}>{a}</button>)}
           </div>

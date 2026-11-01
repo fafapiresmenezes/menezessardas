@@ -133,6 +133,8 @@ export default function HorasPage() {
             <label className="flex items-center gap-2 min-h-[44px] mt-5"><input type="checkbox" checked={form.faturavel} onChange={e => setForm({ ...form, faturavel: e.target.checked })} />Faturável</label>
             <label className="md:col-span-5">O que foi feito<input value={form.descricao} onChange={e => setForm({ ...form, descricao: e.target.value })} className={campo} data-testid="h-desc" /></label>
             <button type="button" onClick={salvar} data-testid="h-salvar" className="min-h-[44px] bg-navy text-white text-sm uppercase tracking-wider mt-5">Lançar</button>
+            {/* Passo 120: repete o último lançamento (cliente, descrição, valor da hora) com a data de hoje; só falta ajustar as horas. */}
+            {lista.length > 0 && <button type="button" data-testid="h-repetir" onClick={() => { const u = lista[0]; setForm({ data: new Date().toISOString().slice(0, 10), cliente: u.cliente, descricao: u.descricao, horas: '', valor_hora: String(u.valor_hora), faturavel: u.faturavel }) }} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm mt-5 ml-2">Repetir último</button>}
           </div>
           {erro && <p role="alert" className="mt-3 p-3 text-sm border-l-2 bg-criticoFundo border-critico text-critico">{erro}</p>}
         </section>
