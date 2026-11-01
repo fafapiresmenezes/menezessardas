@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useBaixado } from '@/hooks/useBaixado'
 import Vazio from '@/components/Vazio'
 import Layout from '@/components/Layout'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
@@ -53,7 +54,7 @@ export default function RelatóriosPage() {
   const [periodoCopiado, setPeriodoCopiado] = useState(false) // Passo 202
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 265
   const [ocupado, setOcupado] = useState(false)
-  const [baixado, setBaixado] = useState(false) // Passo 349
+  const [baixado, marcarBaixado] = useBaixado() // Passo 405
 
   useEffect(() => {
     repositorio.listarContratos().then(setContratos)
@@ -174,7 +175,7 @@ export default function RelatóriosPage() {
           {/* Passo 172: imprimir o relatório do período. */}
           <button type="button" onClick={() => window.print()} data-testid="imprimir-periodo" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
           <button type="button" data-testid="copiar-link-relatorios" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 228 */}
-          <button type="button" data-testid="baixar-relatorio" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['indicador;valor', `imóveis;${imoveis.length}`, `contratos;${(contratos ?? []).length}`, `alertas no período (${periodo} dias);${noPeriodo.length}`, `vencidos em aberto;${vencidosAbertos.length}`, `receita estimada no período;${receitaNoPeriodo.toFixed(2)}`, ...porTipoAlerta.map(([t, n]) => `alertas ${t};${n}`), ...porTipoImovel.map(([t, n]) => `imóveis ${t};${n}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'relatorio-periodo.csv'; a.click(); setBaixado(true); setTimeout(() => setBaixado(false), 3000); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>{/* Passo 305 */}
+          <button type="button" data-testid="baixar-relatorio" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['indicador;valor', `imóveis;${imoveis.length}`, `contratos;${(contratos ?? []).length}`, `alertas no período (${periodo} dias);${noPeriodo.length}`, `vencidos em aberto;${vencidosAbertos.length}`, `receita estimada no período;${receitaNoPeriodo.toFixed(2)}`, ...porTipoAlerta.map(([t, n]) => `alertas ${t};${n}`), ...porTipoImovel.map(([t, n]) => `imóveis ${t};${n}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'relatorio-periodo.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>{/* Passo 305 */}
           <button type="button" onClick={() => { copiarResumoPeriodo(); setPeriodoCopiado(true) }} data-testid="copiar-periodo" className="mt-3 min-h-[44px] px-4 border border-navy/20 text-navy text-sm">{periodoCopiado ? 'Resumo copiado' : 'Copiar resumo do período'}</button>
           <p className="text-xs text-grafite-claro mt-3" data-testid="datas-periodo">
             Este relatório cobre de {new Date().toLocaleDateString('pt-BR')} até {new Date(Date.now() + periodo * 86400000).toLocaleDateString('pt-BR')}, gerado em {new Date().toLocaleString('pt-BR')}.

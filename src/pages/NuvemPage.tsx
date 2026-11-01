@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useBaixado } from '@/hooks/useBaixado'
 import { mensagemAmigavel } from '@/lib/erros'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
@@ -25,7 +26,7 @@ export default function NuvemPage() {
   const [versoes, setVersoes] = useState<Item[]>([])
   // Passo 176: o filtro por nome é lembrado neste navegador.
   const [filtroNome, setFiltroNome] = useState(() => { try { return localStorage.getItem('lsm-nuvem-filtro') || '' } catch { return '' } })
-  const [baixado, setBaixado] = useState(false) // Passo 347
+  const [baixado, marcarBaixado] = useBaixado() // Passo 403
   useEffect(() => { try { localStorage.setItem('lsm-nuvem-filtro', filtroNome) } catch { /* sem armazenamento */ } }, [filtroNome])
   const base = area === 'escritorio' ? 'escritorio' : `pessoal/${uid}`
   const pasta = sub ? `${base}/${sub}` : base
@@ -139,7 +140,7 @@ export default function NuvemPage() {
             <input type="search" value={filtroNome} onChange={e => { setFiltroNome(e.target.value); try { localStorage.setItem('lsm-nuvem-filtro', e.target.value) } catch { /* sem memória local */ } }} placeholder="Filtrar por nome" aria-label="Filtrar arquivos desta pasta por nome" className="border px-3 py-2 text-sm w-56" data-testid="nuvem-filtro" />
             <button type="button" onClick={() => window.print()} data-testid="imprimir-nuvem" className="ml-2 underline text-navy text-sm print:hidden">imprimir lista</button>{/* Passo 210 */}
             <button type="button" data-testid="copiar-link-nuvem" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 242 */}
-            {itens.length > 0 && <button type="button" data-testid="baixar-nuvem" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['arquivo;tamanho (bytes);atualizado em', ...itens.map(i => `${i.name};${i.metadata?.size ?? ''};${i.updated_at ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'nuvem-arquivos.csv'; a.click(); setBaixado(true); setTimeout(() => setBaixado(false), 3000); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar lista'}</button>}{/* Passo 297 */}
+            {itens.length > 0 && <button type="button" data-testid="baixar-nuvem" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['arquivo;tamanho (bytes);atualizado em', ...itens.map(i => `${i.name};${i.metadata?.size ?? ''};${i.updated_at ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'nuvem-arquivos.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar lista'}</button>}{/* Passo 297 */}
             <span data-testid="nuvem-total">{itens.filter(i => i.id !== null).length} arquivo(s) nesta pasta · {kb(itens.reduce((t, i) => t + (i.metadata?.size ?? 0), 0))}</span>
             {/* Passo 110: lista da pasta em texto (nome, tamanho, data), para conferência ou inventário. */}
             {itens.some(i => i.id !== null) && <button type="button" data-testid="nuvem-copiar" onClick={() => navigator.clipboard?.writeText(`Nuvem · ${area === 'escritorio' ? 'Escritório' : 'Pessoal'}${sub ? '/' + sub : ''} · ${new Date().toLocaleDateString('pt-BR')}\n` + itens.filter(i => i.id !== null).map(i => `${i.name} · ${kb(i.metadata?.size)}${i.updated_at ? ' · ' + new Date(i.updated_at).toLocaleDateString('pt-BR') : ''}`).join('\n')).catch(() => undefined)} className="min-h-[44px] px-3 border border-navy/20 text-navy">Copiar lista</button>}
