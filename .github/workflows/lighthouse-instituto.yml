@@ -1,0 +1,31 @@
+# Plano I-03, passo C12: teste diário de desempenho do site do Instituto THEYE com alerta abaixo de 95.
+name: Lighthouse diário do Instituto
+on:
+  schedule:
+    - cron: '17 9 * * *'   # 06:17 em Brasília
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['instituto/site/**', 'instituto/testes/lighthouse-diario.mjs', '.github/workflows/lighthouse-instituto.yml']
+permissions:
+  contents: read
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Lighthouse nas páginas principais
+        run: node instituto/testes/lighthouse-diario.mjs
+      - name: Guardar relatórios
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse
+          path: |
+            lighthouse-resumo.json
+            lh*.json
+          retention-days: 30
