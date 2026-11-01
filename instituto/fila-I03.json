@@ -8,9 +8,13 @@
    "titulo": "Exportar ontologia em OWL/Turtle",
    "prompt": "Publique ontologia-locacao-v07.ttl com as propostas do U14 (Prazo, Garantia, Documento, fiador, aditiva_de, sublocacao_de).",
    "kpi": "Arquivo .ttl válido no site",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "4abbe630c67a5826c55bd88c5ee1c8c3bc8abd4cb8284bc3256a2be34a7fed8a",
-   "sha256_prompt": "4706c70ef62d54f5d91966f43f6c3ae43871be594e315f366e9310d5c7dfe337"
+   "sha256_prompt": "4706c70ef62d54f5d91966f43f6c3ae43871be594e315f366e9310d5c7dfe337",
+   "feito_em": "2026-11-01T1035Z",
+   "evidencia": "Ontologia v0.7 em OWL/Turtle publicada: https://instituto-theye.vercel.app/ontologia-locacao-v07.ttl (text/turtle, 744 triplas, 22 classes, 23 relações; inclui Prazo, Garantia, Documento, fiador, aditiva_de, sublocacao_de). Validada com rdflib 7.6 (parse ok, 0 nós referenciados sem tipo); md5 de produção a52178024cd7… igual ao local; deploy dpl_3QNB4aCHtKZ6L82uN8UJp52GLrKE; commit e6649ce.",
+   "elo_ev_anterior": "4abbe630c67a5826c55bd88c5ee1c8c3bc8abd4cb8284bc3256a2be34a7fed8a",
+   "sha256_evidencia": "5ba195b9d6f6de64b261b6d2d2f0b905b3b50d73da2844fa181f7f2ec504bb51"
   },
   {
    "n": "C02",
@@ -18,9 +22,13 @@
    "titulo": "URIs persistentes",
    "prompt": "Dê URI estável a cada classe e nó de norma (https://theye.club/o/...) e publique página por URI.",
    "kpi": "100% dos nós com URI que resolve",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "4706c70ef62d54f5d91966f43f6c3ae43871be594e315f366e9310d5c7dfe337",
-   "sha256_prompt": "d366083f471b992d0b742ed145a6cc04fc748f450452c47805976784ae4de4c4"
+   "sha256_prompt": "d366083f471b992d0b742ed145a6cc04fc748f450452c47805976784ae4de4c4",
+   "feito_em": "2026-11-01T1038Z",
+   "evidencia": "184 termos da ontologia v0.7 (22 classes, 23 relações, 83 normas, 6 precedentes, 13 teses, 29 assuntos TPU e valores) com endereço permanente https://instituto-theye.vercel.app/o/<id> e índice com busca em /o/. Teste local Playwright: 184/184 páginas resolvem, 0 violações axe (termo e índice), sem rolagem lateral em 390 px. Produção: o.html, o.js, o.json e locacao.html com md5 igual ao local (dpl_HgooBvpLFZLE57T6zEoBbwVYMHgx). TTL v0.7 selado no Bitcoin (i03/ontologia-locacao-v07.ttl.ots). Domínio theye.club fica para quando M aprovar o cartão.",
+   "elo_ev_anterior": "5ba195b9d6f6de64b261b6d2d2f0b905b3b50d73da2844fa181f7f2ec504bb51",
+   "sha256_evidencia": "e4f23e05123f7813c11477d7d043e3c388e1899af157d165088ab42040e77a31"
   },
   {
    "n": "C03",
@@ -28,9 +36,13 @@
    "titulo": "Raciocinador e changelog",
    "prompt": "Rode HermiT/ELK (ou pySHACL) e publique o relatório de consistência e o changelog v0.4→v0.7.",
    "kpi": "0 inconsistência",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "d366083f471b992d0b742ed145a6cc04fc748f450452c47805976784ae4de4c4",
-   "sha256_prompt": "d6d3658b89cb8e892ce8c7333b8ad13fbf2da5eba8e127c48148cb14d232d7dc"
+   "sha256_prompt": "d6d3658b89cb8e892ce8c7333b8ad13fbf2da5eba8e127c48148cb14d232d7dc",
+   "feito_em": "2026-11-01T1040Z",
+   "evidencia": "Consistência da ontologia v0.7: raciocinador OWL RL (owlrl) 744→1.704 triplas inferidas, 0 owl:Nothing, 0 violação de domínio/alcance; SHACL (pyshacl) conforme para Norma, Precedente, Tese e Assunto. Publicados /consistencia-v07.json e /ontologia-changelog.txt (v0.4→v0.7), md5 de produção igual ao local (dpl_EwwMRNcavPCHmyJW7RU44Ayg9gxL).",
+   "elo_ev_anterior": "e4f23e05123f7813c11477d7d043e3c388e1899af157d165088ab42040e77a31",
+   "sha256_evidencia": "8eb38357e42dc18d7c267b502560bd9083801011023b0829fc088b70a32a9088"
   },
   {
    "n": "C04",
@@ -38,9 +50,13 @@
    "titulo": "RIPD publicado",
    "prompt": "Escreva o Relatório de Impacto do laboratório e dos agentes e publique em /privacidade.html.",
    "kpi": "RIPD no ar",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "d6d3658b89cb8e892ce8c7333b8ad13fbf2da5eba8e127c48148cb14d232d7dc",
-   "sha256_prompt": "c45070cd82610676aa9774ec7bc98e0ff269e2199af57b284a8fdc967bcdf561"
+   "sha256_prompt": "c45070cd82610676aa9774ec7bc98e0ff269e2199af57b284a8fdc967bcdf561",
+   "feito_em": "2026-11-01T1042Z",
+   "evidencia": "RIPD-v1 publicado em https://instituto-theye.vercel.app/privacidade.html: finalidades, 6 categorias de dado com forma de guarda e base legal (art. 7º), operadores (Supabase, Vercel, Brevo, Anthropic) e transferência internacional (art. 33), 5 riscos com nível antes e depois, direitos do titular (art. 18). axe 0 violações em 390 e 1280 px; md5 de produção igual ao local (dpl_2Nb5GCDbqtydAC2eDW1zHpRUH3BH).",
+   "elo_ev_anterior": "8eb38357e42dc18d7c267b502560bd9083801011023b0829fc088b70a32a9088",
+   "sha256_evidencia": "ee212130f1d3163d559bae7f418e58b02e15cc861c6f4094d70a9f2d73a23362"
   },
   {
    "n": "C05",
@@ -48,7 +64,7 @@
    "titulo": "Encarregado",
    "prompt": "Prepare cartão para M nomear o encarregado (DPO) e publique o canal.",
    "kpi": "Encarregado nomeado",
-   "status": "aberto",
+   "status": "aguardando M",
    "elo_anterior": "c45070cd82610676aa9774ec7bc98e0ff269e2199af57b284a8fdc967bcdf561",
    "sha256_prompt": "0fe57dbe8b498bbf642d58dafe9927af1592355719d896dd638caa0cf71588e5"
   },
@@ -58,7 +74,7 @@
    "titulo": "Retenção",
    "prompt": "Defina e implemente prazo de retenção (cron que apaga consultas antigas).",
    "kpi": "Prazo publicado e cron ativo",
-   "status": "aberto",
+   "status": "aguardando M",
    "elo_anterior": "0fe57dbe8b498bbf642d58dafe9927af1592355719d896dd638caa0cf71588e5",
    "sha256_prompt": "8d4ee29fb5357d2bb7bb964ae8ebd32895143ad97530c515dedf69dad0176bf1"
   },
@@ -68,9 +84,13 @@
    "titulo": "Cartão do modelo",
    "prompt": "Publique /modelo.html: dados, métricas (Brier, ECE), limites e uso indevido do modelo e dos agentes.",
    "kpi": "Cartão no ar",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "8d4ee29fb5357d2bb7bb964ae8ebd32895143ad97530c515dedf69dad0176bf1",
-   "sha256_prompt": "fc48926ac4462f7076163a2d6dfc83cc03d70141450a68275da0814c5a39a278"
+   "sha256_prompt": "fc48926ac4462f7076163a2d6dfc83cc03d70141450a68275da0814c5a39a278",
+   "feito_em": "2026-11-01T1044Z",
+   "evidencia": "Cartão do modelo MC-v1 publicado em https://instituto-theye.vercel.app/modelo.html: pergunta, modelos A/B/C, dados (21.147 ações, 6 tribunais), validação temporal pré-registrada, Brier e IC (inconclusivo), ECE 1,4%, agentes (Sonnet 5.5 + Haiku 5.5, custo, cotas), limites e usos indevidos. axe 0 violações em 390 e 1280 px; md5 de produção igual ao local (dpl_9qZPDAuhDTubRo4ZbtAmxseh7M6s).",
+   "elo_ev_anterior": "ee212130f1d3163d559bae7f418e58b02e15cc861c6f4094d70a9f2d73a23362",
+   "sha256_evidencia": "f2fdaa2996c7b6de82d06975ecb2a9003c7a535de5413f455f93c345000d872b"
   },
   {
    "n": "C08",
@@ -78,9 +98,13 @@
    "titulo": "Registro de incidentes",
    "prompt": "Crie tabela e botão \"relatar resposta errada\" nos agentes.",
    "kpi": "Botão no ar e testado",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "fc48926ac4462f7076163a2d6dfc83cc03d70141450a68275da0814c5a39a278",
-   "sha256_prompt": "53f2bd5c35d251bbb7cf97a95d34ade8681d6f94ea3c30f9e3b0c7aa25222887"
+   "sha256_prompt": "53f2bd5c35d251bbb7cf97a95d34ade8681d6f94ea3c30f9e3b0c7aa25222887",
+   "feito_em": "2026-11-01T1049Z",
+   "evidencia": "Tabela instituto.agentes_incidentes + RPC anon instituto_relatar_incidente (limite 200/dia, sem e-mail/pergunta, sha256 da resposta) + resumo público; botão 'Relatar resposta errada' em /agentes.html no ar (deploy dpl_BGXKfXva4WREhqUZBeAEK5oHzt27, md5 produção = local: agentes.js 58a3c284…, agentes.html da6b9e53…, base.css ab911c03…); teste e2e Playwright OK (protocolo INC); RPC real via pg_net criou INC-00001 (marcado improcedente: teste); axe 0 violações 390/1280.",
+   "elo_ev_anterior": "f2fdaa2996c7b6de82d06975ecb2a9003c7a535de5413f455f93c345000d872b",
+   "sha256_evidencia": "c357461262a1ace0a1b389a79a49dca11477efa432d43e25eb1e309cac2bcb74"
   },
   {
    "n": "C09",

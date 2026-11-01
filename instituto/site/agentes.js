@@ -4,7 +4,13 @@
   var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhscmFla3p2Z3hkcGlpaWdkeGRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4ODEzOTksImV4cCI6MjEwODQ1NzM5OX0.yCNPEGDb7tdf1JIY30WKUbE-xZwjQFwygJFJnvBeyrs';
   var $ = function (id) { return document.getElementById(id); };
   var NOMES = { 1: 'Locação e núcleo', 2: 'Dados e predição', 3: 'Direito e normas', 4: 'Mercado e gestão', 5: 'Pesquisa e ensino' };
-  var todos = [], lote = 1;
+  var todos = [], lote = 1, ultimo = null;
+  var REST = 'https://hlraekzvgxdpiiigdxdo.supabase.co/rest/v1/rpc/';
+  function rpc(fn, corpo) {
+    return fetch(REST + fn, { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' }, body: JSON.stringify(corpo || {}) })
+      .then(function (r) { return r.json(); }).catch(function () { return { erro: 'Sem conexão agora. Tente de novo em instantes.' }; });
+  }
+  function resumo() { rpc('instituto_incidentes_resumo').then(function (x) { if (x && x.total !== undefined) $('incres').textContent = 'Relatos até hoje: ' + x.total + ' (' + x.abertos + ' em revisão, ' + x.corrigidos + ' corrigidos).'; }); }
   function chamar(corpo) {
     return fetch(FN, { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) })
       .then(function (r) { return r.json(); })
@@ -24,14 +30,24 @@
     Array.prototype.forEach.call($('lotes').children, function (b) { b.setAttribute('aria-pressed', String(Number(b.dataset.l) === lote)); });
   }
   function perguntar(a, bt) {
-    var r = $('resp'); r.hidden = false; r.textContent = a.nome + ' está pensando…'; bt.disabled = true;
+    var r = $('resp'); r.hidden = false; $('rel').hidden = true; ultimo = null; r.textContent = a.nome + ' está pensando…'; bt.disabled = true;
     r.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     chamar({ acao: 'perguntar', agente: a.id, sessao: sessao(), pergunta: $('pergunta').value }).then(function (j) {
       bt.disabled = false;
       if (j.erro) { r.textContent = j.erro; return; }
+      ultimo = { agente: a.id, resposta: String(j.resposta || '') }; $('rel').hidden = false; $('rel').open = false; $('relmsg').textContent = ''; resumo();
       r.textContent = j.agente + '\n\n' + j.resposta + '\n\n— custo desta resposta: US$ ' + Number(j.custo_usd).toFixed(4);
     });
   }
+  $('relf').onsubmit = function (ev) {
+    ev.preventDefault(); if (!ultimo) return;
+    var m = $('relmsg'), b = ev.target.querySelector('button'); b.disabled = true; m.textContent = 'Enviando…';
+    rpc('instituto_relatar_incidente', { p_agente: ultimo.agente, p_motivo: $('motivo').value, p_comentario: $('coment').value, p_resposta: ultimo.resposta }).then(function (x) {
+      b.disabled = false;
+      if (x && x.ok) { m.textContent = 'Obrigado. Protocolo ' + x.protocolo + '. Uma pessoa vai revisar.'; $('coment').value = ''; ultimo = null; resumo(); }
+      else m.textContent = (x && (x.erro || x.message)) || 'Não foi possível enviar agora.';
+    });
+  };
   chamar({ acao: 'listar' }).then(function (j) {
     todos = j.agentes || [];
     if (!todos.length) { $('ags').textContent = 'Não foi possível carregar os agentes agora.'; return; }
