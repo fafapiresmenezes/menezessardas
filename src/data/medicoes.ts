@@ -172,6 +172,7 @@ export const MEDICOES: Medicao[] = [
   { n: 182, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-182.pdf', sha256: 'c38039c87b856df42fcc1b267c3e238c1cf533d7bc52585fcc111d58450764c6', ots: true, entregue: 'Onda EL (Passos 544–545): Edge Functions escavador, coletor-motor e roteiro-outlook; 513 testes' },
   { n: 183, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-183.pdf', sha256: 'a03aa32adb3382a6854a6c034dbe9f4cdbbdb3967bed49b43a2dd92e21bd1f94', ots: true, entregue: 'Onda EM (Passos 546–547): Edge Functions previsao-locacao, monitor-portais e alerta-teste-agentes; fonte da notícia corrigida; 521 testes' },
   { n: 184, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-184.pdf', sha256: 'd6e59474d2d15de1d69159337dff93f9ca46d63a9cc69cb18d45d943760d57c0', ots: true, entregue: 'Onda EN (Passos 548–549): Edge Functions agendar-notificacoes, monitorar e resumo-semanal; dublê de upsert encadeável; 536 testes' },
+  { n: 185, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-185.pdf', sha256: 'f7ad1c6bed98083255b17658ff3fcff91a6e719360ba7de0af873fc453eff3c7', ots: true, entregue: 'Onda EO (Passos 550–551): Edge Functions agente-guardiao, coletor-instituto e instituto-agentes; 549 testes' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
