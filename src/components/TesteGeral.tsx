@@ -104,13 +104,13 @@ export default function TesteGeral() {
             <PlayCircle size={16} aria-hidden="true" /> {rodando ? 'Testando…' : 'Testar tudo'}
           </button>
           {/* Passo 103: relatório do último teste em texto, para colar num e-mail ou no Compliance. */}
-          {Object.keys(estados).length > 0 && (
+          {Object.keys(estados).length > 0 && (<>
             {/* Passo 165: imprimir o relatório do Testar tudo. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-relatorio" className="inline-flex items-center gap-2 border px-3 min-h-[44px] text-sm mr-2 print:hidden">Imprimir</button>
             <button type="button" onClick={copiarRelatorio} data-testid="copiar-relatorio" className="inline-flex items-center gap-2 border border-navy/20 text-navy min-h-[44px] px-4 text-sm">
               Copiar relatório
             </button>
-          )}
+          </>)}
         </div>
       </div>
       {!supabaseConfigurado && <p className="text-sm text-grafite-claro">Disponível na versão de produção.</p>}
