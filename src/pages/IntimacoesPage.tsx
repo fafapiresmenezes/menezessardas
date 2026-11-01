@@ -93,6 +93,7 @@ export default function IntimacoesPage() {
             <input type="search" value={busca} onChange={e => setBusca(e.target.value)} placeholder="Buscar processo, tribunal ou texto" aria-label="Buscar nas intimações" className="border px-3 py-2 text-sm w-64" data-testid="busca-intimacoes" />
             {/* Passo 105: resumo das intimações visíveis em texto (processo, tribunal, prazo), para colar na agenda ou no e-mail do cliente. */}
             {visiveis.length > 0 && <button type="button" onClick={copiarResumo} data-testid="copiar-intimacoes" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar resumo</button>}
+            {visiveis.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-intimacoes" className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}{/* Passo 200 */}
           </div>
           <p className="flex flex-wrap gap-3 text-xs" data-testid="resumo-urgencia">
             <span><strong>{resumo.vencido}</strong> vencida(s)</span>

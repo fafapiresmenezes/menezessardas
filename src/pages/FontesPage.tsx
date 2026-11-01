@@ -20,7 +20,7 @@ const FONTES: { nome: string; para: string; url: (t: string) => string; direta?:
 ]
 
 export default function FontesPage() {
-  const [termo, setTermo] = useState('')
+  const [termo, setTermo] = useState(() => { try { return localStorage.getItem('lsm-fontes-termo') ?? '' } catch { return '' } }) // Passo 201
   const [busca, setBusca] = useState<{ carregando?: boolean; erro?: string; processos?: { numero: string; titulo: string; tribunal: string | null; ultimaMovimentacao: string | null; classe: string | null; link: string | null }[] } | null>(null)
   const buscarEscavador = async () => {
     setBusca({ carregando: true })
@@ -73,7 +73,7 @@ export default function FontesPage() {
           {/* Passo 106: Enter no campo dispara a busca gratuita; os cartões abaixo mostram quantas fontes atendem ao termo. */}
           <form className="flex items-center gap-2" data-testid="form-termo" onSubmit={e => { e.preventDefault(); if (termo.trim().length >= 4 && !gratis?.carregando) buscarGratis() }}>
             <Search className="w-5 h-5 text-grafite-claro" aria-hidden />
-            <input id="termo" value={termo} onChange={e => setTermo(e.target.value)} placeholder="Nome, CNPJ, número do processo ou tema" className="flex-1 border px-3 py-2" />
+            <input id="termo" value={termo} onChange={e => { setTermo(e.target.value); try { localStorage.setItem('lsm-fontes-termo', e.target.value) } catch { /* sem memória local */ } }} placeholder="Nome, CNPJ, número do processo ou tema" className="flex-1 border px-3 py-2" />
           </form>
           <p className="text-sm text-grafite-claro mt-2">Escreva uma vez e clique na fonte: ela abre já com a busca feita.</p>
           <button type="button" onClick={buscarGratis} data-testid="buscar-gratis" disabled={termo.trim().length < 4 || !!gratis?.carregando} className="mt-3 mr-2 min-h-[44px] bg-dourado text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">

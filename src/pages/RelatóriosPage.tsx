@@ -50,6 +50,7 @@ export default function RelatóriosPage() {
   // Relatório mensal (Passo 16): PDF gerado no servidor e enviado por e-mail à sócia no dia 1; aqui dá para testar e baixar.
   const [ultimo, setUltimo] = useState<{ mes: string; enviado_em: string | null; destinatarios: number; sha256: string | null } | null>(null)
   const [msgMensal, setMsgMensal] = useState('')
+  const [periodoCopiado, setPeriodoCopiado] = useState(false) // Passo 202
   const [ocupado, setOcupado] = useState(false)
 
   useEffect(() => {
@@ -170,7 +171,7 @@ export default function RelatóriosPage() {
           </div>
           {/* Passo 172: imprimir o relatório do período. */}
           <button type="button" onClick={() => window.print()} data-testid="imprimir-periodo" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
-          <button type="button" onClick={copiarResumoPeriodo} data-testid="copiar-periodo" className="mt-3 min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar resumo do período</button>
+          <button type="button" onClick={() => { copiarResumoPeriodo(); setPeriodoCopiado(true) }} data-testid="copiar-periodo" className="mt-3 min-h-[44px] px-4 border border-navy/20 text-navy text-sm">{periodoCopiado ? 'Resumo copiado' : 'Copiar resumo do período'}</button>
           <p className="text-xs text-grafite-claro mt-3" data-testid="datas-periodo">
             Este relatório cobre de {new Date().toLocaleDateString('pt-BR')} até {new Date(Date.now() + periodo * 86400000).toLocaleDateString('pt-BR')}, gerado em {new Date().toLocaleString('pt-BR')}.
           </p>
