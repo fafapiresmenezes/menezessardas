@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useBaixado } from '@/hooks/useBaixado'
 import Vazio from '@/components/Vazio'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
@@ -59,7 +60,7 @@ export default function KycPage() {
   // Passo 125: histórico de checagens copiável (data, contraparte, risco, próxima reconsulta).
   const [histCopiado, setHistCopiado] = useState(false)
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 275
-  const [baixado, setBaixado] = useState(false) // Passo 341
+  const [baixado, marcarBaixado] = useBaixado() // Passo 381
   const copiarHistorico = async () => {
     const t = ['Histórico de checagens de contraparte — GMenezes Advogados Associados', ...histVisivel.map(h => `${new Date(h.consultado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })} · ${h.nome ?? fmtCnpj(h.cnpj)} · risco ${h.risco}${h.mudou ? ` (era ${h.risco_anterior})` : ''} · reconsulta ${proxima(h.consultado_em).toLocaleDateString('pt-BR')}`)].join('\n')
     try { await navigator.clipboard.writeText(t); setHistCopiado(true); setTimeout(() => setHistCopiado(false), 2500) } catch { /* sem área de transferência */ }
@@ -90,7 +91,7 @@ export default function KycPage() {
           <section className="bg-white shadow-sm p-6 space-y-4" aria-live="polite">
             <button type="button" onClick={copiarResultado} data-testid="kyc-copiar" className="min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiado ? 'Resultado copiado' : 'Copiar resultado para o parecer'}</button>
             <button type="button" data-testid="copiar-link-kyc" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 237 */}
-            {historico.length > 0 && <button type="button" data-testid="baixar-kyc" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['cnpj;nome;risco;alertas;consultado em;automática', ...historico.map(h => `${h.cnpj};${h.nome ?? ''};${h.risco};${h.alertas.length};${h.consultado_em};${h.automatica ? 'sim' : 'não'}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'kyc-historico.csv'; a.click(); setBaixado(true); setTimeout(() => setBaixado(false), 3000); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 306 */}
+            {historico.length > 0 && <button type="button" data-testid="baixar-kyc" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['cnpj;nome;risco;alertas;consultado em;automática', ...historico.map(h => `${h.cnpj};${h.nome ?? ''};${h.risco};${h.alertas.length};${h.consultado_em};${h.automatica ? 'sim' : 'não'}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'kyc-historico.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 306 */}
             <p data-testid="kyc-risco" className={`p-3 border-l-4 font-medium ${COR[r.risco]}`}>
               Risco {r.risco}{r.alertas.length ? `: ${r.alertas.join(' ')}` : '. Nenhum alerta encontrado.'}
             </p>

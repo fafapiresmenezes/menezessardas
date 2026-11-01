@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useBaixado } from '@/hooks/useBaixado'
 import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
@@ -85,7 +86,7 @@ export default function MeuDiaPage() {
   // Passo 21: aviso quando as horas do mês estão abaixo de 80% do ritmo da meta da função.
   const [horas, setHoras] = useState<{ meta: number; horas: number; esperado_hoje: number; pct_ritmo: number | null; abaixo: boolean } | null>(null)
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 278
-  const [baixado, setBaixado] = useState(false) // Passo 342
+  const [baixado, marcarBaixado] = useBaixado() // Passo 385
   useEffect(() => { if (!supabaseConfigurado) return; supabase.rpc('progresso_horas', { p_papel: papel }).then(r => setHoras(r.data ?? null)) }, [papel])
   const prazo = calc.dias > 0 && calc.inicio ? calcularPrazo(calc.inicio, calc.dias, calc.dobro) : null
 
@@ -135,7 +136,7 @@ export default function MeuDiaPage() {
             {/* Passo 140: imprimir o dia em uma página. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-dia" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy print:hidden">Imprimir</button>
             <button type="button" data-testid="copiar-link-meu-dia" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 240 */}
-            {tarefas.length + vencendo.length > 0 && <button type="button" data-testid="baixar-meu-dia" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['tipo;título;prazo;prioridade', ...tarefas.map(t => `tarefa;${t.titulo.replace(/;/g, ',')};${t.prazo ?? ''};${t.prioridade}`), ...vencendo.map(v => `vencimento;${v.locatario_fornecedor};${v.data_vencimento};`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'meu-dia.csv'; a.click(); setBaixado(true); setTimeout(() => setBaixado(false), 3000); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 309 */}
+            {tarefas.length + vencendo.length > 0 && <button type="button" data-testid="baixar-meu-dia" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['tipo;título;prazo;prioridade', ...tarefas.map(t => `tarefa;${t.titulo.replace(/;/g, ',')};${t.prazo ?? ''};${t.prioridade}`), ...vencendo.map(v => `vencimento;${v.locatario_fornecedor};${v.data_vencimento};`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'meu-dia.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 309 */}
           </div>
         </section>
 

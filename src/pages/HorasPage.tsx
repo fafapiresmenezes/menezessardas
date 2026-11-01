@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useBaixado } from '@/hooks/useBaixado'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { Play, Square, Download, Printer, Trash2, Target, ClipboardCopy } from 'lucide-react'
@@ -83,7 +84,7 @@ export default function HorasPage() {
   // Passo 91: resumo do mês em texto para colar no e-mail de cobrança.
   const [copiado, setCopiado] = useState(false)
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 271
-  const [baixado, setBaixado] = useState(false) // Passo 338
+  const [baixado, marcarBaixado] = useBaixado() // Passo 382
   const copiarResumo = async () => {
     const [a, m] = mes.split('-')
     const nomeMes = new Date(Number(a), Number(m) - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
@@ -150,7 +151,7 @@ export default function HorasPage() {
               <button type="button" onClick={copiarResumo} disabled={!lista.length} data-testid="copiar-resumo" className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2 disabled:opacity-50"><ClipboardCopy className="w-4 h-4" aria-hidden />{copiado ? 'Resumo copiado' : 'Copiar resumo do mês'}</button>
               <button type="button" onClick={() => window.print()} disabled={!lista.length} data-testid="imprimir-horas" className="min-h-[44px] px-4 border text-sm print:hidden disabled:opacity-50">Imprimir mês</button>{/* Passo 187 */}
               <button type="button" data-testid="copiar-link-horas" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 232 */}
-              {lista.length > 0 && <button type="button" data-testid="baixar-horas" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['data;cliente;descrição;minutos;valor hora;faturável', ...lista.map(l => `${l.data};${l.cliente};${l.descricao.replace(/;/g, ',')};${l.minutos};${l.valor_hora};${l.faturavel ? 'sim' : 'não'}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'horas.csv'; a.click(); setBaixado(true); setTimeout(() => setBaixado(false), 3000); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 300 */}
+              {lista.length > 0 && <button type="button" data-testid="baixar-horas" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['data;cliente;descrição;minutos;valor hora;faturável', ...lista.map(l => `${l.data};${l.cliente};${l.descricao.replace(/;/g, ',')};${l.minutos};${l.valor_hora};${l.faturavel ? 'sim' : 'não'}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'horas.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 300 */}
               <button type="button" onClick={csv} className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2"><Download className="w-4 h-4" aria-hidden />Planilha (CSV)</button>
               <button type="button" onClick={() => window.print()} className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2"><Printer className="w-4 h-4" aria-hidden />Relatório para o cliente</button>
             </div>
