@@ -27,6 +27,7 @@ type LinhaEscritorio = { id: string; nome: string; pessoas: number; imoveis: num
 export default function DashboardPage() {
   const navigate = useNavigate()
   const [painelCopiado, setPainelCopiado] = useState(false) // Passo 182
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 250
   const [porEscritorio, setPorEscritorio] = useState<LinhaEscritorio[]>([])
   useEffect(() => {
     if (!supabaseConfigurado) return
@@ -84,7 +85,7 @@ export default function DashboardPage() {
             {/* Passo 148: imprimir o painel em uma página para a reunião. */}
             {imoveis.length > 0 && <button type="button" data-testid="imprimir-painel" onClick={() => window.print()} className="underline text-navy print:hidden">imprimir</button>}
             {imoveis.length > 0 && <button type="button" data-testid="copiar-painel" onClick={() => navigator.clipboard?.writeText(`Painel · ${new Date().toLocaleDateString('pt-BR')}\n` + indicadores.map(i => `${i.rotulo}: ${i.valor}`).join('\n')).then(() => setPainelCopiado(true)).catch(() => undefined)} className="underline text-navy">{painelCopiado ? 'copiado' : 'copiar'}</button>}
-            {imoveis.length > 0 && <button type="button" data-testid="copiar-link-painel" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="underline text-navy print:hidden">copiar link</button>}{/* Passo 216 */}
+            {imoveis.length > 0 && <button type="button" data-testid="copiar-link-painel" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 216 */}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {indicadores.map(ind => (

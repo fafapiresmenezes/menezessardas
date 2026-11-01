@@ -67,6 +67,7 @@ export const MEDICOES: Medicao[] = [
   { n: 77, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-77.pdf', sha256: 'deac6119bbd26c98df0380b47a6840d7ee213bf9c12bedbb93be41e63bd6deb3', ots: true, entregue: 'Onda AK: Relatórios, Legislação, Modelos, Alertas, Horas (Passos 228–232)' },
   { n: 78, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-78.pdf', sha256: '558cc58d1498a961c4d2528a1c2bf603535e528cb4f83a7c18303d7d0237225f', ots: true, entregue: 'Onda AL: Configurações, Monitoramento, Instituto, Agenda, KYC (Passos 233–237)' },
   { n: 79, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-79.pdf', sha256: 'c934dfee02ac3111b9bacdb7fa2e0fbfcc2ecd5c72cb0deb3529b88110a03c46', ots: true, entregue: 'Onda AM: Início, Assistente, Meu dia, Imóveis, Nuvem (Passos 238–242)' },
+  { n: 80, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-80.pdf', sha256: 'b10bd22415432e377f1c24e23e8f2062f382a6994e7ff72da3d3185bc57621ea', ots: true, entregue: 'Onda AN: Portal, Contratos, Indicadores, Consultores, Projetos (Passos 243–247)' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
