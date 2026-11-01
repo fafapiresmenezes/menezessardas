@@ -210,5 +210,6 @@ export async function radarPortais(area?: string): Promise<NovidadePortal[]> {
   if (area) q = q.eq('area', area)
   const { data, error } = await q
   if (error) throw new Error(error.message)
-  return (data ?? []).map(r => ({ ...r, resumo: r.resumo ?? undefined, data: r.data ?? undefined, termo: r.termo ?? undefined, vistoEm: r.visto_em, afetados: (r.afetados ?? undefined) as NovidadePortal['afetados'] }))
+  // sem a coluna crua visto_em no objeto da tela (só vistoEm)
+  return (data ?? []).map(({ visto_em, ...r }) => ({ ...r, resumo: r.resumo ?? undefined, data: r.data ?? undefined, termo: r.termo ?? undefined, vistoEm: visto_em, afetados: (r.afetados ?? undefined) as NovidadePortal['afetados'] }))
 }
