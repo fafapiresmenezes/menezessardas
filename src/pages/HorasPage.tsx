@@ -15,7 +15,9 @@ const hm = (m: number) => `${Math.floor(m / 60)}h${String(m % 60).padStart(2, '0
 const mesAtual = () => new Date().toISOString().slice(0, 7)
 
 export default function HorasPage() {
-  const [mes, setMes] = useState(mesAtual())
+  // Passo 153: o mês escolhido é lembrado neste navegador.
+  const [mes, setMes] = useState(() => { try { return localStorage.getItem('lsm-horas-mes') || mesAtual() } catch { return mesAtual() } })
+  useEffect(() => { try { localStorage.setItem('lsm-horas-mes', mes) } catch { /* sem armazenamento */ } }, [mes])
   const [lista, setLista] = useState<Lanc[]>([])
   const [erro, setErro] = useState('')
   const [form, setForm] = useState({ data: new Date().toISOString().slice(0, 10), cliente: '', descricao: '', horas: '', valor_hora: '', faturavel: true })

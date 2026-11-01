@@ -51,7 +51,9 @@ export default function KycPage() {
   }
   const r = estado.r
   // Passo 95: procurar no histórico e copiar o resultado da checagem para o parecer.
-  const [buscaHist, setBuscaHist] = useState('')
+  // Passo 157: a busca no histórico é lembrada neste navegador.
+  const [buscaHist, setBuscaHist] = useState(() => { try { return localStorage.getItem('lsm-kyc-busca') || '' } catch { return '' } })
+  useEffect(() => { try { localStorage.setItem('lsm-kyc-busca', buscaHist) } catch { /* sem armazenamento */ } }, [buscaHist])
   const [copiado, setCopiado] = useState(false)
   const histVisivel = historico.filter(h => !buscaHist || (h.nome ?? '').toLowerCase().includes(buscaHist.toLowerCase()) || h.cnpj.includes(buscaHist.replace(/\D/g, '')))
   // Passo 125: histórico de checagens copiável (data, contraparte, risco, próxima reconsulta).
