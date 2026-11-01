@@ -73,7 +73,8 @@ export async function listarTrilha(): Promise<EventoTrilha[]> {
     return (data ?? []).map(r => ({
       id: String(r.id),
       seq: Number(r.seq),
-      em: String(r.criado_em),
+      // O hash foi calculado com o instante ISO do navegador; o banco devolve o mesmo instante em outro formato.
+      em: new Date(String(r.criado_em)).toISOString(),
       tipo: r.tipo as TipoEvento,
       entidade: String(r.entidade ?? ''),
       resumo: String(r.resumo ?? ''),
@@ -104,6 +105,7 @@ export async function registrarEvento(parcial: { tipo: TipoEvento; entidade: str
     if (supabaseConfigurado) {
       await supabase.from('trilha_auditoria').insert({
         seq: base.seq,
+        criado_em: base.em, // o mesmo instante que entrou no hash; sem isto a verificação quebra
         tipo: base.tipo,
         entidade: base.entidade,
         resumo: base.resumo,
