@@ -98,7 +98,7 @@ function MatrizCaminhos({ m }: { m: Matriz }) {
 
 export default function AssistentePage() {
   const [especialidade, setEspecialidade] = useState<Especialidade>('imobiliario')
-  const [pergunta, setPergunta] = useState('')
+  const [pergunta, setPergunta] = useState(() => { try { return localStorage.getItem('lsm-assistente-pergunta') ?? '' } catch { return '' } }) // Passo 203
   const [modo, setModo] = useState<Modo>('responder')
   const [contexto, setContexto] = useState('')
   const [usarEstilo, setUsarEstilo] = useState(true)
@@ -203,7 +203,7 @@ export default function AssistentePage() {
             id="pergunta"
             ref={campo}
             value={pergunta}
-            onChange={e => setPergunta(e.target.value)}
+            onChange={e => { setPergunta(e.target.value); try { localStorage.setItem('lsm-assistente-pergunta', e.target.value) } catch { /* sem memória local */ } }}
             onKeyDown={e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') enviar() }}
             rows={3}
             placeholder={modo === 'redigir' ? 'Ex.: notificação extrajudicial ao locatário por atraso de 3 aluguéis, com prazo de 15 dias' : modo === 'caminhos' ? 'Ex.: locatário comercial com contrato de 5 anos a vencer; o locador não quer renovar. O que fazer?' : 'Ex.: o fiador responde pelo aluguel depois da prorrogação por prazo indeterminado?'}
