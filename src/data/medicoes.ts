@@ -97,6 +97,7 @@ export const MEDICOES: Medicao[] = [
   { n: 107, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-107.pdf', sha256: '8e229fd7f7a10e5f5636115c23f4c1dd7d4fed9b12e984c565dc9523c982e9c1', ots: true, entregue: 'Onda BO (Passos 377–380): rótulo Baixado volta ao normal em 3 s e é anunciado por leitor de tela em Casos e projetos, Relatórios, Selos e Assinaturas; fecha o tema dos 29 botões de download' },
   { n: 108, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-108.pdf', sha256: '6c34e707b300b23304f59e0ce082436d11767154b9081cb27233b584936ca23f', ots: true, entregue: 'Onda BP (Passos 381–385): gancho único useBaixado com temporizador cancelado ao sair da tela + 3 testes; KYC, Horas, Imóveis, Indicadores e Meu dia migrados' },
   { n: 109, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-109.pdf', sha256: '00e306252599ebbe7c3dc3377a5e9016f29c109f59506edc7be404f6a23ee080', ots: true, entregue: 'Onda BQ (Passos 386–390): Fornecedores, Equipe, Consumo, Intimações e Agenda migradas para o gancho único useBaixado' },
+  { n: 110, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-110.pdf', sha256: '9254a8369f4de36bcfc23e8dd651e1646badf3ecf72dd25ffeb5ee9c111cebaa', ots: true, entregue: 'Onda BR (Passos 391–395): Alertas, Fontes, Honorários, Painel e Portal migradas para o gancho único useBaixado' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'

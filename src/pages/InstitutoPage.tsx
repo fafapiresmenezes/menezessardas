@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useBaixado } from '@/hooks/useBaixado'
 import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import PerfilJulgador from '@/components/PerfilJulgador'
@@ -166,7 +167,7 @@ function CaseStudy() {
   const primeira = MEDICOES[0], ultima = MEDICOES[MEDICOES.length - 1]
   const [msgPdf, setMsgPdf] = useState('')
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 273
-  const [baixado, setBaixado] = useState(false) // Passo 343
+  const [baixado, marcarBaixado] = useBaixado() // Passo 399
   const caseEmPdf = () => {
     const pdf = gerarPdfTexto('Case study GMenezes', linhasCaseStudy())
     const url = URL.createObjectURL(new Blob([pdf], { type: 'application/pdf' }))
@@ -195,7 +196,7 @@ function CaseStudy() {
         {/* Passo 155: imprimir a cadeia de medições em papel. */}
         <button type="button" onClick={() => window.print()} data-testid="imprimir-cadeia" className="mb-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
         <button type="button" data-testid="copiar-link-instituto" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mb-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 235 */}
-        <button type="button" data-testid="baixar-medicoes" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['medição;data;nota;arquivo;sha256', ...MEDICOES.map(m => `M${m.n};${m.data};${m.nota};${m.arquivo};${m.sha256}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'medicoes.csv'; a.click(); setBaixado(true); setTimeout(() => setBaixado(false), 3000); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mb-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>{/* Passo 314 */}
+        <button type="button" data-testid="baixar-medicoes" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['medição;data;nota;arquivo;sha256', ...MEDICOES.map(m => `M${m.n};${m.data};${m.nota};${m.arquivo};${m.sha256}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'medicoes.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mb-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>{/* Passo 314 */}
         <button type="button" onClick={copiarCadeia} data-testid="copiar-cadeia" className="mb-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{cadeiaCopiada ? 'Cadeia copiada' : 'Copiar cadeia completa'}</button>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
