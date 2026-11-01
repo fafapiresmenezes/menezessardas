@@ -133,7 +133,7 @@ describe('Trilha de auditoria', () => {
     expect(baixar).toHaveBeenCalledWith('trilha-2026-10.pdf', new Uint8Array([1]), 'application/pdf')
     await waitFor(() => expect(baixar).toHaveBeenCalledWith('trilha-2026-10.pdf.ots', new Uint8Array([2]), undefined), { timeout: 1500 })
     expect(screen.getByTestId('msg-exportacao').textContent).toContain(`2 registro(s) exportado(s). SHA-256 do PDF: ${'f'.repeat(64)}. Selo enviado a alice.btc.calendar.opentimestamps.org; a confirmação no Bitcoin leva algumas horas.`)
-    exportar.mockResolvedValueOnce({ nomeBase: 'trilha-x', pdf: new Uint8Array([1]), ots: null as unknown as Uint8Array, sha256: 'e'.repeat(64), total: 0, calendario: null })
+    exportar.mockResolvedValueOnce({ nomeBase: 'trilha-x', pdf: new Uint8Array([1]), ots: null as unknown as Uint8Array<ArrayBuffer>, sha256: 'e'.repeat(64), total: 0, calendario: null as unknown as string })
     fireEvent.click(screen.getByTestId('exportar-pdf-selo'))
     await waitFor(() => expect(screen.getByTestId('msg-exportacao').textContent).toContain('Selo não obtido agora (calendários fora do ar); o PDF e o hash valem, tente selar de novo mais tarde.'))
     exportar.mockRejectedValueOnce(new Error('Não há registros no período.'))
