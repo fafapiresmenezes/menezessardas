@@ -275,6 +275,7 @@ export default function PrevisoesPage() {
           <button type="button" onClick={() => window.print()} data-testid="imprimir-previsoes" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
           <button type="button" onClick={copiarResumo} data-testid="copiar-previsoes" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo da carteira'}</button>
           <button type="button" data-testid="copiar-link-previsoes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 219 */}
+          <button type="button" data-testid="baixar-previsoes" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['contrato;risco;faixa', ...previsoes.map(p => `${p.contrato.parte || 'contrato'};${p.risco};${p.faixaRisco}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'previsoes.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Baixar CSV</button>{/* Passo 291 */}
         </header>
         <div className="grid gap-4 sm:grid-cols-4">
           {[
