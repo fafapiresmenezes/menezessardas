@@ -186,9 +186,13 @@
    "titulo": "Modo escuro auditado",
    "prompt": "Rode axe no tema escuro.",
    "kpi": "0 violação no escuro",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "f7661da45bb6be571ffa3922915f3e3b6e38c8e9b78a085427bc68a3b0bd26dc",
-   "sha256_prompt": "0d8a6c67ff99d871f46d4e39e8b204d1eb1f75560d8dcb7a0ff914e2f81b9957"
+   "sha256_prompt": "0d8a6c67ff99d871f46d4e39e8b204d1eb1f75560d8dcb7a0ff914e2f81b9957",
+   "feito_em": "2026-11-01T2246Z",
+   "evidencia": "axe-core (WCAG 2A/2AA/2.1AA/2.2AA) com prefers-color-scheme: dark em 14 rotas × 2 larguras (390 e 1280 px): achou 2 campos do laboratório com fundo branco fixo (contraste insuficiente no escuro) e cartões de resultado também brancos; trocados por var(--papel). Depois: 0 violação no escuro e no claro, inclusive com os painéis escondidos abertos. Publicado pelo novo método (vercel.json fixado em 929f3ba, deploy dpl_9MQGU4VFurTWYiQ7SD9LQwjNEDTQ); md5 de produção = local (laboratorio.html 64e68db3…, base.css aaed2179… como text/css).",
+   "elo_ev_anterior": "31603f7cb7b600ebaa54282a6cdc174cccc366c5f3bd5fd8556adee98c6fccca",
+   "sha256_evidencia": "07cbe80faa2a330cbd35d978e454b86a5e0fb5a80b1a191d996664beacbe1950"
   },
   {
    "n": "C16",
