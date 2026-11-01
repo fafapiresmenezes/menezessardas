@@ -39,6 +39,7 @@ export default function AlertasPage() {
   useEffect(() => { try { localStorage.setItem('lsm-alertas-filtro', filtro) } catch { /* sem armazenamento */ } }, [filtro])
   const [prefEmail, setPrefEmail] = useState<{ alertas_email: boolean; dias_antecedencia: number } | null>(null)
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 270
+  const [baixado, setBaixado] = useState(false) // Passo 335
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) return
@@ -95,7 +96,7 @@ export default function AlertasPage() {
             {visiveis.length > 0 && <button type="button" data-testid="copiar-alertas" onClick={() => navigator.clipboard?.writeText(`Alertas · ${new Date().toLocaleDateString('pt-BR')} · ${visiveis.length} de ${alertas.length}\n` + visiveis.map(a => `${a.diasRestantes < 0 ? 'VENCIDO há ' + (-a.diasRestantes) + ' dia(s)' : a.diasRestantes === 0 ? 'HOJE' : 'em ' + a.diasRestantes + ' dia(s)'} · ${a.imovel} · ${a.titulo} · ${formatarData(a.dataEvento)}`).join('\n')).catch(() => undefined)} className="ml-3 underline text-navy">copiar lista</button>}
             {visiveis.length > 0 && <button type="button" data-testid="imprimir-alertas" onClick={() => window.print()} className="ml-3 underline text-navy print:hidden">imprimir</button>}{/* Passo 186 */}
             {visiveis.length > 0 && <button type="button" data-testid="copiar-link-alertas" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-3 underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 231 */}
-            {visiveis.length > 0 && <button type="button" data-testid="baixar-alertas" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['imóvel;tipo;título;data do evento;dias restantes', ...visiveis.map(a => `${a.imovel};${a.tipo};${a.titulo.replace(/;/g, ',')};${a.dataEvento};${a.diasRestantes}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'alertas.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">baixar CSV</button>}{/* Passo 298 */}
+            {visiveis.length > 0 && <button type="button" data-testid="baixar-alertas" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['imóvel;tipo;título;data do evento;dias restantes', ...visiveis.map(a => `${a.imovel};${a.tipo};${a.titulo.replace(/;/g, ',')};${a.dataEvento};${a.diasRestantes}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'alertas.csv'; a.click(); setBaixado(true); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 298 */}
           </p>
           {prefEmail && (
             <p className="text-sm mt-3 p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="pref-email">

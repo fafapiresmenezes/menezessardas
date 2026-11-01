@@ -28,6 +28,7 @@ export default function IntimacoesPage() {
   useEffect(() => { try { localStorage.setItem('lsm-intimacoes-filtro', filtro) } catch { /* sem armazenamento */ } }, [filtro])
   const [aberta, setAberta] = useState<number | null>(null)
   const [busca, setBusca] = useState('')
+  const [baixado, setBaixado] = useState(false) // Passo 333
 
   const carregar = async () => {
     const { data } = await supabase.from('intimacoes').select('id,oab,data_disponibilizacao,tribunal,orgao,tipo,classe,numero_processo,texto,link,lida,prazo_dias,prazo_final,tarefa_id').order('data_disponibilizacao', { ascending: false }).limit(300)
@@ -96,7 +97,7 @@ export default function IntimacoesPage() {
             {visiveis.length > 0 && <button type="button" onClick={copiarResumo} data-testid="copiar-intimacoes" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar resumo</button>}
             {visiveis.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-intimacoes" className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}{/* Passo 200 */}
             {visiveis.length > 0 && <button type="button" data-testid="copiar-link-intimacoes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 226 */}
-            {visiveis.length > 0 && <button type="button" data-testid="baixar-intimacoes" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['processo;tribunal;órgão;tipo;disponibilizada em', ...visiveis.map(i => `${i.numero_processo ?? ''};${i.tribunal ?? ''};${i.orgao ?? ''};${i.tipo ?? ''};${i.data_disponibilizacao}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'intimacoes.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Baixar CSV</button>}{/* Passo 294 */}
+            {visiveis.length > 0 && <button type="button" data-testid="baixar-intimacoes" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['processo;tribunal;órgão;tipo;disponibilizada em', ...visiveis.map(i => `${i.numero_processo ?? ''};${i.tribunal ?? ''};${i.orgao ?? ''};${i.tipo ?? ''};${i.data_disponibilizacao}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'intimacoes.csv'; a.click(); setBaixado(true); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 294 */}
           </div>
           <p className="flex flex-wrap gap-3 text-xs" data-testid="resumo-urgencia">
             <span><strong>{resumo.vencido}</strong> vencida(s)</span>
