@@ -10,6 +10,15 @@
       ]
     },
     {
+      "source": "/o.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json; charset=utf-8"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
@@ -39,6 +48,22 @@
     {
       "source": "/ontologia-locacao-v07.ttl",
       "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/e6649ce8fae8da1ec7ef98db218ea1096d1e6c6c/instituto/site/ontologia-locacao-v07.ttl"
+    },
+    {
+      "source": "/o.json",
+      "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/7fce8330f35ebb71f024dcf14db8a6ecd8691de4/instituto/site/o.json"
+    },
+    {
+      "source": "/o",
+      "destination": "/o.html"
+    },
+    {
+      "source": "/o/",
+      "destination": "/o.html"
+    },
+    {
+      "source": "/o/:id",
+      "destination": "/o.html"
     }
   ]
 }
