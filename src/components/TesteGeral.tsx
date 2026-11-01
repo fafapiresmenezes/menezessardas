@@ -110,6 +110,7 @@ export default function TesteGeral() {
             {/* Passo 165: imprimir o relatório do Testar tudo. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-relatorio" className="inline-flex items-center gap-2 border px-3 min-h-[44px] text-sm mr-2 print:hidden">Imprimir</button>
             <button type="button" data-testid="copiar-link-testes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="inline-flex items-center gap-2 border px-3 min-h-[44px] text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 224 */}
+            {Object.keys(estados).length > 0 && <button type="button" data-testid="baixar-testes" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['teste;estado;mensagem;ms', ...Object.entries(estados).map(([n, s]) => `${n};${s.e};${(s.msg ?? '').replace(/[;\n]/g, ' ')};${s.ms ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'testar-tudo.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">baixar CSV</button>}{/* Passo 313 */}
             <button type="button" onClick={() => { copiarRelatorio(); setRelCopiado(true) }} data-testid="copiar-relatorio" className="inline-flex items-center gap-2 border border-navy/20 text-navy min-h-[44px] px-4 text-sm">
               {relCopiado ? 'Relatório copiado' : 'Copiar relatório'}
             </button>
