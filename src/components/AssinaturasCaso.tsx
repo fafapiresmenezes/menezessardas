@@ -24,6 +24,7 @@ export default function AssinaturasCaso({ tarefaId, cliente }: { tarefaId: strin
   const [titulo, setTitulo] = useState('Contrato de honorários')
   const [texto, setTexto] = useState(() => MODELO(cliente))
   const [erro, setErro] = useState('')
+  const [compCopiados, setCompCopiados] = useState(false) // Passo 217
   const carregar = async () => {
     const { data, error } = await supabase.from('assinaturas_eletronicas').select('id,titulo,hash_texto,assinante_nome,assinante_documento,assinado_em,hash_assinatura,criado_em,selo_id,selos_blockchain(situacao,altura_bitcoin,data_bloco,criado_em)').eq('tarefa_id', tarefaId).order('criado_em')
     if (error) setErro(error.message); else setLista((data ?? []) as unknown as Assinatura[])
@@ -55,7 +56,7 @@ export default function AssinaturasCaso({ tarefaId, cliente }: { tarefaId: strin
         ))}
         {!lista.length && <li className="py-2 text-grafite-claro">Nenhum documento para assinar ainda.</li>}
         {/* Passo 149: comprovantes copiáveis (título, assinante, data, hashes) para o processo. */}
-        {lista.length > 0 && <li className="py-2"><button type="button" onClick={() => navigator.clipboard?.writeText(['Assinaturas eletrônicas — GMenezes Advogados Associados', ...lista.map(a => `${a.titulo} · hash do texto ${a.hash_texto} · ${a.assinado_em ? `assinado por ${a.assinante_nome} (${a.assinante_documento}) em ${formatarData(a.assinado_em.slice(0, 10))} · hash da assinatura ${a.hash_assinatura}` : 'aguardando assinatura'}`)].join('\n')).catch(() => undefined)} data-testid="copiar-assinaturas" className="underline text-navy text-xs">copiar comprovantes</button></li>}
+        {lista.length > 0 && <li className="py-2"><button type="button" onClick={() => navigator.clipboard?.writeText(['Assinaturas eletrônicas — GMenezes Advogados Associados', ...lista.map(a => `${a.titulo} · hash do texto ${a.hash_texto} · ${a.assinado_em ? `assinado por ${a.assinante_nome} (${a.assinante_documento}) em ${formatarData(a.assinado_em.slice(0, 10))} · hash da assinatura ${a.hash_assinatura}` : 'aguardando assinatura'}`)].join('\n')).then(() => setCompCopiados(true)).catch(() => undefined)} data-testid="copiar-assinaturas" className="underline text-navy text-xs">{compCopiados ? 'comprovantes copiados' : 'copiar comprovantes'}</button></li>}
         {lista.length > 0 && <li className="py-2 print:hidden"><button type="button" onClick={() => window.print()} data-testid="imprimir-assinaturas" className="underline text-navy text-xs">imprimir comprovantes</button></li>}{/* Passo 183 */}
       </ul>
       {!aberto ? <button onClick={() => setAberto(true)} className="min-h-[44px] px-4 border border-dourado text-navy text-sm uppercase tracking-wider" data-testid="pedir-assinatura">Pedir assinatura</button> : (

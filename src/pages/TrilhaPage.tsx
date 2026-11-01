@@ -115,6 +115,7 @@ export default function TrilhaPage() {
 
   // Passo 131: registros filtrados copiáveis (nº, data, ação, resumo, hash) para o relatório.
   const [registrosCopiados, setRegistrosCopiados] = useState(false)
+  const [selosCopiados, setSelosCopiados] = useState(false) // Passo 214
   const copiarRegistros = async () => {
     const t = [`Trilha de auditoria — ${filtrados.length} registro(s)`, ...filtrados.map(e => `nº ${e.seq} · ${dataHora(e.em)} · ${rotuloTipo[e.tipo]} · ${e.resumo} · hash ${e.hash.slice(0, 16)}…`)].join('\n')
     try { await navigator.clipboard.writeText(t); setRegistrosCopiados(true); setTimeout(() => setRegistrosCopiados(false), 2500) } catch { /* sem área de transferência */ }
@@ -230,7 +231,7 @@ export default function TrilhaPage() {
             </p>
           )}
           {/* Passo 145: lista de selos copiável (registro, data, selo) para conferência externa. */}
-          {ancoragens.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Selos blockchain da trilha — ${ancoragens.length}`, ...ancoragens.map(a => `nº ${a.seq} · ${dataHora(a.em)} · ${a.selo}`)].join('\n')).catch(() => undefined)} data-testid="copiar-selos" className="mt-3 min-h-[44px] px-3 border text-sm print:hidden">Copiar lista de selos</button>}
+          {ancoragens.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Selos blockchain da trilha — ${ancoragens.length}`, ...ancoragens.map(a => `nº ${a.seq} · ${dataHora(a.em)} · ${a.selo}`)].join('\n')).then(() => setSelosCopiados(true)).catch(() => undefined)} data-testid="copiar-selos" className="mt-3 min-h-[44px] px-3 border text-sm print:hidden">{selosCopiados ? 'Lista de selos copiada' : 'Copiar lista de selos'}</button>}
           {ancoragens.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-selos" className="mt-3 ml-2 min-h-[44px] px-3 border text-sm print:hidden">Imprimir selos</button>}{/* Passo 179 */}
           {ancoragens.length > 0 && (
             <ul className="divide-y divide-navy/5 mt-4">

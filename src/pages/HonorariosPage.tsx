@@ -24,6 +24,7 @@ export default function HonorariosPage() {
   const [pagamentos, setPagamentos] = useState<Pagamento[]>([])
   const [baixa, setBaixa] = useState<{ caso: Caso; data: string; valor: string; meio: string; observacao: string } | null>(null)
   const [msgBaixa, setMsgBaixa] = useState('')
+  const [tabelaCopiada, setTabelaCopiada] = useState(false) // Passo 215
   const abrirBaixa = (c: Caso) => setBaixa({ caso: c, data: new Date().toISOString().slice(0, 10), valor: String(Math.max(0, Number(c.honorario_previsto) - Number(c.honorario_recebido))), meio: 'pix', observacao: '' })
   const salvarBaixa = async () => {
     if (!baixa) return
@@ -109,7 +110,7 @@ export default function HonorariosPage() {
             <div className="flex flex-wrap gap-2">
             {casos.length > 0 && <button type="button" onClick={copiarCobranca} data-testid="copiar-cobranca" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar resumo da cobrança</button>}
             {/* Passo 146: tabela por caso copiável (caso, combinado, recebido, vencimento). */}
-            {casos.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Honorários por caso — ${casos.length} caso(s)`, ...casos.map(c => `${c.titulo}${c.cliente ? ` (${c.cliente})` : ''}: combinado ${brl(Number(c.honorario_previsto))} · recebido ${brl(Number(c.honorario_recebido))}${c.vencimento_honorario ? ` · vence ${formatarData(c.vencimento_honorario)}` : ''}`), `Total: combinado ${brl(totais.previsto)} · recebido ${brl(totais.recebido)}`].join('\n')).catch(() => undefined)} data-testid="copiar-tabela-honorarios" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar tabela</button>}
+            {casos.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Honorários por caso — ${casos.length} caso(s)`, ...casos.map(c => `${c.titulo}${c.cliente ? ` (${c.cliente})` : ''}: combinado ${brl(Number(c.honorario_previsto))} · recebido ${brl(Number(c.honorario_recebido))}${c.vencimento_honorario ? ` · vence ${formatarData(c.vencimento_honorario)}` : ''}`), `Total: combinado ${brl(totais.previsto)} · recebido ${brl(totais.recebido)}`].join('\n')).then(() => setTabelaCopiada(true)).catch(() => undefined)} data-testid="copiar-tabela-honorarios" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">{tabelaCopiada ? 'Tabela copiada' : 'Copiar tabela'}</button>}
             {casos.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-honorarios" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}{/* Passo 180 */}
             </div>
           </div>
