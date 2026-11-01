@@ -55,6 +55,7 @@ export default function TesteGeral() {
   const [histCopiado, setHistCopiado] = useState(false)
   const [relCopiado, setRelCopiado] = useState(false) // Passo 207
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 258
+  const [baixado, setBaixado] = useState(false) // Passo 331
   const copiarHistorico = async () => {
     const t = ['Teste automático — últimos 30 dias (funcionando/total por dia)', ...dias.map(d => { const r = resumoDia(d); return `${d.split('-').reverse().join('/')}: ${r ? `${r.ok}/${r.total}` : 'sem teste'}` })].join('\n')
     try { await navigator.clipboard.writeText(t); setHistCopiado(true); setTimeout(() => setHistCopiado(false), 2500) } catch { /* sem área de transferência */ }
@@ -110,7 +111,7 @@ export default function TesteGeral() {
             {/* Passo 165: imprimir o relatório do Testar tudo. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-relatorio" className="inline-flex items-center gap-2 border px-3 min-h-[44px] text-sm mr-2 print:hidden">Imprimir</button>
             <button type="button" data-testid="copiar-link-testes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="inline-flex items-center gap-2 border px-3 min-h-[44px] text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 224 */}
-            {Object.keys(estados).length > 0 && <button type="button" data-testid="baixar-testes" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['teste;estado;mensagem;ms', ...Object.entries(estados).map(([n, s]) => `${n};${s.e};${(s.msg ?? '').replace(/[;\n]/g, ' ')};${s.ms ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'testar-tudo.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">baixar CSV</button>}{/* Passo 313 */}
+            {Object.keys(estados).length > 0 && <button type="button" data-testid="baixar-testes" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['teste;estado;mensagem;ms', ...Object.entries(estados).map(([n, s]) => `${n};${s.e};${(s.msg ?? '').replace(/[;\n]/g, ' ')};${s.ms ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'testar-tudo.csv'; a.click(); setBaixado(true); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 313 */}
             <button type="button" onClick={() => { copiarRelatorio(); setRelCopiado(true) }} data-testid="copiar-relatorio" className="inline-flex items-center gap-2 border border-navy/20 text-navy min-h-[44px] px-4 text-sm">
               {relCopiado ? 'Relatório copiado' : 'Copiar relatório'}
             </button>
