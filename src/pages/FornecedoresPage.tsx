@@ -189,7 +189,7 @@ export default function FornecedoresPage() {
               </select>
             </label>
           </div>
-          {!carregando && lista.length > 0 && <p className="text-xs text-grafite-claro mb-3" data-testid="contador-fornecedores">Mostrando {ordenados.length} de {lista.length} fornecedor(es). <button type="button" onClick={copiarLista} data-testid="copiar-fornecedores" className="underline text-navy">{listaCopiada ? 'lista copiada' : 'copiar lista'}</button> <button type="button" onClick={() => window.print()} data-testid="imprimir-fornecedores" className="underline text-navy print:hidden">imprimir</button>{/* Passo 221 */}</p>}
+          {!carregando && lista.length > 0 && <p className="text-xs text-grafite-claro mb-3" data-testid="contador-fornecedores">Mostrando {ordenados.length} de {lista.length} fornecedor(es). <button type="button" onClick={copiarLista} data-testid="copiar-fornecedores" className="underline text-navy">{listaCopiada ? 'lista copiada' : 'copiar lista'}</button> <button type="button" onClick={() => window.print()} data-testid="imprimir-fornecedores" className="underline text-navy print:hidden">imprimir</button>{/* Passo 221 */} <button type="button" data-testid="copiar-link-fornecedores" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="underline text-navy print:hidden">copiar link</button>{/* Passo 255 */}</p>}
           {carregando ? (
             <p className="text-grafite-claro">Carregando…</p>
           ) : lista.length === 0 ? (

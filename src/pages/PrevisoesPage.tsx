@@ -258,6 +258,7 @@ export default function PrevisoesPage() {
   const [versaoCalib, setVersaoCalib] = useState(0)
   // Passo 99: resumo da carteira em texto para a reunião ou o e-mail.
   const [copiadoResumo, setCopiadoResumo] = useState(false)
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 253
   const copiarResumo = async () => {
     const t = [`Previsões da carteira — ${new Date().toLocaleDateString('pt-BR')}`, `Receita contratada (12 meses): ${moeda(totalContratada)}`, `Receita esperada (12 meses): ${moeda(totalEsperada)}`, `Contratos com risco alto: ${altos} de ${previsoes.length}`, `Chance média de renovação: ${renovMedia}%`,
       ...previsoes.filter(p => p.faixaRisco === 'alto').map(p => `• risco alto: ${p.contrato.parte || 'contrato'} (${p.risco} pontos)`), 'Regras declaradas v1 · GMenezes Advogados Associados'].join('\n')
@@ -273,7 +274,7 @@ export default function PrevisoesPage() {
           {/* Passo 160: imprimir as previsões com as fontes. */}
           <button type="button" onClick={() => window.print()} data-testid="imprimir-previsoes" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
           <button type="button" onClick={copiarResumo} data-testid="copiar-previsoes" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo da carteira'}</button>
-          <button type="button" data-testid="copiar-link-previsoes" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar link</button>{/* Passo 219 */}
+          <button type="button" data-testid="copiar-link-previsoes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 219 */}
         </header>
         <div className="grid gap-4 sm:grid-cols-4">
           {[

@@ -116,6 +116,7 @@ export default function TrilhaPage() {
   // Passo 131: registros filtrados copiáveis (nº, data, ação, resumo, hash) para o relatório.
   const [registrosCopiados, setRegistrosCopiados] = useState(false)
   const [selosCopiados, setSelosCopiados] = useState(false) // Passo 214
+  const [trilhaLinkCopiado, setTrilhaLinkCopiado] = useState(false) // Passo 257
   const copiarRegistros = async () => {
     const t = [`Trilha de auditoria — ${filtrados.length} registro(s)`, ...filtrados.map(e => `nº ${e.seq} · ${dataHora(e.em)} · ${rotuloTipo[e.tipo]} · ${e.resumo} · hash ${e.hash.slice(0, 16)}…`)].join('\n')
     try { await navigator.clipboard.writeText(t); setRegistrosCopiados(true); setTimeout(() => setRegistrosCopiados(false), 2500) } catch { /* sem área de transferência */ }
@@ -285,7 +286,7 @@ export default function TrilhaPage() {
             <p className="text-grafite-claro" data-testid="contagem-trilha">{filtrados.length} de {eventos.length} registros</p>
             {/* Passo 164: imprimir os registros filtrados da trilha. */}
             {filtrados.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-registros" className="min-h-[44px] px-3 border text-sm mr-2 print:hidden">Imprimir</button>}
-            {filtrados.length > 0 && <button type="button" data-testid="copiar-link-trilha" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="min-h-[44px] px-3 border print:hidden">Copiar link</button>}{/* Passo 223 */}
+            {filtrados.length > 0 && <button type="button" data-testid="copiar-link-trilha" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setTrilhaLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-3 border print:hidden">{trilhaLinkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 223 */}
             {filtrados.length > 0 && <button type="button" onClick={copiarRegistros} data-testid="copiar-registros" className="min-h-[44px] px-3 border">{registrosCopiados ? 'Copiados' : 'Copiar registros'}</button>}
           </section>
         )}
