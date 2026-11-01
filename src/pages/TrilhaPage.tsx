@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useBaixado } from '@/hooks/useBaixado'
 import { mensagemAmigavel } from '@/lib/erros'
 import Layout from '@/components/Layout'
 import {
@@ -118,8 +119,8 @@ export default function TrilhaPage() {
   const [selosCopiados, setSelosCopiados] = useState(false) // Passo 214
   const [selosLinkCopiado, setSelosLinkCopiado] = useState(false) // Passo 267
   const [trilhaLinkCopiado, setTrilhaLinkCopiado] = useState(false) // Passo 257
-  const [baixado, setBaixado] = useState(false) // Passo 330
-  const [baixadoSelos, setBaixadoSelos] = useState(false) // Passo 350
+  const [baixado, marcarBaixado] = useBaixado() // Passo 408
+  const [baixadoSelos, marcarBaixadoSelos] = useBaixado() // Passo 408
   const copiarRegistros = async () => {
     const t = [`Trilha de auditoria — ${filtrados.length} registro(s)`, ...filtrados.map(e => `nº ${e.seq} · ${dataHora(e.em)} · ${rotuloTipo[e.tipo]} · ${e.resumo} · hash ${e.hash.slice(0, 16)}…`)].join('\n')
     try { await navigator.clipboard.writeText(t); setRegistrosCopiados(true); setTimeout(() => setRegistrosCopiados(false), 2500) } catch { /* sem área de transferência */ }
@@ -238,7 +239,7 @@ export default function TrilhaPage() {
           {ancoragens.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Selos blockchain da trilha — ${ancoragens.length}`, ...ancoragens.map(a => `nº ${a.seq} · ${dataHora(a.em)} · ${a.selo}`)].join('\n')).then(() => setSelosCopiados(true)).catch(() => undefined)} data-testid="copiar-selos" className="mt-3 min-h-[44px] px-3 border text-sm print:hidden">{selosCopiados ? 'Lista de selos copiada' : 'Copiar lista de selos'}</button>}
           {ancoragens.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-selos" className="mt-3 ml-2 min-h-[44px] px-3 border text-sm print:hidden">Imprimir selos</button>}{/* Passo 179 */}
           {ancoragens.length > 0 && <button type="button" data-testid="copiar-link-selos" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setSelosLinkCopiado(true)).catch(() => undefined)} className="mt-3 ml-2 min-h-[44px] px-3 border text-sm print:hidden">{selosLinkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 248 */}
-          {ancoragens.length > 0 && <button type="button" data-testid="baixar-selos" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['sequência;selo;digest;calendário;em', ...ancoragens.map(s => `${s.seq};${s.selo};${s.digest};${s.calendario};${s.em}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'selos-blockchain.csv'; a.click(); setBaixadoSelos(true); setTimeout(() => setBaixadoSelos(false), 3000); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-3 border print:hidden">{baixadoSelos ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 302 */}
+          {ancoragens.length > 0 && <button type="button" data-testid="baixar-selos" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['sequência;selo;digest;calendário;em', ...ancoragens.map(s => `${s.seq};${s.selo};${s.digest};${s.calendario};${s.em}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'selos-blockchain.csv'; a.click(); marcarBaixadoSelos(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-3 border print:hidden">{baixadoSelos ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 302 */}
           {ancoragens.length > 0 && (
             <ul className="divide-y divide-navy/5 mt-4">
               {ancoragens.map(a => {
@@ -291,7 +292,7 @@ export default function TrilhaPage() {
             {/* Passo 164: imprimir os registros filtrados da trilha. */}
             {filtrados.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-registros" className="min-h-[44px] px-3 border text-sm mr-2 print:hidden">Imprimir</button>}
             {filtrados.length > 0 && <button type="button" data-testid="copiar-link-trilha" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setTrilhaLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-3 border print:hidden">{trilhaLinkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 223 */}
-            {filtrados.length > 0 && <button type="button" data-testid="baixar-trilha" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['sequência;data;tipo;resumo;hash', ...filtrados.map(e => `${e.seq};${e.em};${e.tipo};${e.resumo.replace(/;/g, ',')};${e.hash}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'trilha-auditoria.csv'; a.click(); setBaixado(true); setTimeout(() => setBaixado(false), 3000); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-3 border print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 293 */}
+            {filtrados.length > 0 && <button type="button" data-testid="baixar-trilha" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['sequência;data;tipo;resumo;hash', ...filtrados.map(e => `${e.seq};${e.em};${e.tipo};${e.resumo.replace(/;/g, ',')};${e.hash}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'trilha-auditoria.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-3 border print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 293 */}
             {filtrados.length > 0 && <button type="button" onClick={copiarRegistros} data-testid="copiar-registros" className="min-h-[44px] px-3 border">{registrosCopiados ? 'Copiados' : 'Copiar registros'}</button>}
           </section>
         )}
