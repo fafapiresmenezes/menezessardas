@@ -163,27 +163,27 @@
  "rewrites": [
   {
    "source": "/",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/fe2d101b7f3bbf5786c6d06c1e8b0a311a1dff5a/instituto/site/index.html"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/929f3ba6fd9fdf002a0095f627eb92e79eda6983/instituto/site/index.html"
   },
   {
    "source": "/o",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/fe2d101b7f3bbf5786c6d06c1e8b0a311a1dff5a/instituto/site/o.html"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/929f3ba6fd9fdf002a0095f627eb92e79eda6983/instituto/site/o.html"
   },
   {
    "source": "/o/",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/fe2d101b7f3bbf5786c6d06c1e8b0a311a1dff5a/instituto/site/o.html"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/929f3ba6fd9fdf002a0095f627eb92e79eda6983/instituto/site/o.html"
   },
   {
    "source": "/o/:id",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/fe2d101b7f3bbf5786c6d06c1e8b0a311a1dff5a/instituto/site/o.html"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/929f3ba6fd9fdf002a0095f627eb92e79eda6983/instituto/site/o.html"
   },
   {
    "source": "/fonts/:f",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/fe2d101b7f3bbf5786c6d06c1e8b0a311a1dff5a/instituto/site/fonts/:f"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/929f3ba6fd9fdf002a0095f627eb92e79eda6983/instituto/site/fonts/:f"
   },
   {
    "source": "/:f([a-z0-9-]+\\.(?:html|js|css|ttl|json|txt))",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/fe2d101b7f3bbf5786c6d06c1e8b0a311a1dff5a/instituto/site/:f"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/929f3ba6fd9fdf002a0095f627eb92e79eda6983/instituto/site/:f"
   }
  ]
 }
