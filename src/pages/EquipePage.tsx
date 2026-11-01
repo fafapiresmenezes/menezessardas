@@ -29,7 +29,7 @@ export default function EquipePage() {
   // Passo 102: lista de pessoas em texto para o controle de acessos.
   const [copiadoLista, setCopiadoLista] = useState(false)
   const [sede, setSede] = useState(false)
-  const [busca, setBusca] = useState('')
+  const [busca, setBusca] = useState(() => { try { return localStorage.getItem('lsm-equipe-busca') ?? '' } catch { return '' } }) // Passo 197
   // Passo 134: filtrar a lista por função (ou só quem espera liberação).
   // Passo 163: o filtro por função é lembrado neste navegador.
   const [filtroFuncao, setFiltroFuncao] = useState(() => { try { return localStorage.getItem('lsm-equipe-funcao') || '' } catch { return '' } })
@@ -135,7 +135,7 @@ export default function EquipePage() {
               </h2>
               <div className="px-6 pb-3 flex flex-wrap items-center gap-3">
                 <button type="button" onClick={async () => { const rot = (f: string | null) => f === 'admin' ? 'administrador' : f === 'operador' ? 'operador' : f === 'leitor' ? 'leitor' : 'esperando liberação'; const t = [`Equipe com acesso — ${new Date().toLocaleDateString('pt-BR')}`, ...pessoas.map(p => `• ${p.nome || p.email} <${p.email}> — ${rot(p.funcao)}`), 'GMenezes Advogados Associados'].join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoLista(true); setTimeout(() => setCopiadoLista(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-equipe" className="min-h-[44px] px-3 border border-navy text-navy text-xs">{copiadoLista ? 'Lista copiada' : 'Copiar lista'}</button>
-                <input type="search" value={busca} onChange={e => setBusca(e.target.value)} placeholder="Buscar por nome ou e-mail" aria-label="Buscar pessoa por nome ou e-mail" className="border px-3 py-2 text-sm w-64" data-testid="busca-equipe" />
+                <input type="search" value={busca} onChange={e => { setBusca(e.target.value); try { localStorage.setItem('lsm-equipe-busca', e.target.value) } catch { /* sem memória local */ } }} placeholder="Buscar por nome ou e-mail" aria-label="Buscar pessoa por nome ou e-mail" className="border px-3 py-2 text-sm w-64" data-testid="busca-equipe" />
                 <select value={filtroFuncao} onChange={e => setFiltroFuncao(e.target.value)} aria-label="Filtrar por função" data-testid="filtro-funcao" className="border px-2 py-2 text-sm min-h-[44px]">
                   <option value="">Todas as funções</option>
                   <option value="pendente">Esperando liberação</option>

@@ -47,6 +47,7 @@ export default function MercadoPage() {
             <>
             <p className="mt-3 text-sm"><strong>Leitura rápida:</strong> a área que mais cresce é <strong>{ranking[0].nome}</strong>{ranking.length > 1 && <>, e a que menos cresce é <strong>{ranking[ranking.length - 1].nome}</strong></>}. Só entram áreas com confiança alta ou média.{' '}
               <button type="button" onClick={async () => { const t = ['Previsão de demanda judicial por área (CNJ, tribunais do RJ)', ...ranking.map((r, i) => `${i + 1}. ${r.nome}: ${r.previsao!.variacao !== null && r.previsao!.variacao >= 0 ? '+' : ''}${r.previsao!.variacao}% até ${r.previsao!.ano} (confiança ${nivel(r)})`), `Gerado em ${new Date().toLocaleDateString('pt-BR')} · GMenezes Advogados Associados`].join('\n'); try { await navigator.clipboard.writeText(t); setCopiado(true); setTimeout(() => setCopiado(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-ranking" className="underline text-navy">{copiado ? 'ranking copiado' : 'copiar ranking'}</button>
+              <button type="button" onClick={() => window.print()} data-testid="imprimir-ranking" className="ml-2 underline text-navy text-sm print:hidden">imprimir ranking</button>{/* Passo 193 */}
             </p>
             <ol className="mt-2 text-sm list-decimal pl-5 space-y-1" data-testid="ranking">
               {ranking.map(r => (

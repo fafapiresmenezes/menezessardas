@@ -112,7 +112,7 @@ function LinhaContrato({ p, aoRegistrar }: { p: PrevisaoContrato; aoRegistrar?: 
 function PainelJurimetria() {
   const [acao, setAcao] = useState('despejo')
   const [tribunal, setTribunal] = useState('tjrj')
-  const [orgao, setOrgao] = useState('')
+  const [orgao, setOrgao] = useState(() => { try { return localStorage.getItem('lsm-previsoes-orgao') ?? '' } catch { return '' } }) // Passo 194
   const [res, setRes] = useState<Jurimetria | null>(null)
   const [ocupado, setOcupado] = useState(false)
   const [erro, setErro] = useState('')
@@ -144,7 +144,7 @@ function PainelJurimetria() {
           <select value={tribunal} onChange={e => setTribunal(e.target.value)} className={campo}>{TRIBUNAIS.map(t => <option key={t} value={t}>{t.toUpperCase()}</option>)}</select>
         </label>
         <label className="text-xs uppercase tracking-wider text-grafite-claro">Vara (opcional)
-          <input value={orgao} onChange={e => setOrgao(e.target.value)} className={campo} placeholder="Ex.: 10ª Vara Cível" />
+          <input value={orgao} onChange={e => { setOrgao(e.target.value); try { localStorage.setItem('lsm-previsoes-orgao', e.target.value) } catch { /* sem memória local */ } }} className={campo} placeholder="Ex.: 10ª Vara Cível" />
         </label>
       </div>
       <button onClick={consultar} disabled={ocupado} className="mt-3 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">{ocupado ? 'Consultando o CNJ…' : 'Calcular'}</button>

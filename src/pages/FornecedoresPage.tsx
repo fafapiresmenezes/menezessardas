@@ -72,7 +72,7 @@ export default function FornecedoresPage() {
   const [ordem, setOrdem] = useState<'nome' | 'sla' | 'descumpridas'>(() => { try { const v = localStorage.getItem('lsm-fornecedores-ordem'); return v === 'sla' || v === 'descumpridas' ? v : 'nome' } catch { return 'nome' } })
   useEffect(() => { try { localStorage.setItem('lsm-fornecedores-ordem', ordem) } catch { /* sem armazenamento */ } }, [ordem])
   // Passo 104: busca por nome, CNPJ ou categoria; contador "mostrando N de M".
-  const [buscaF, setBuscaF] = useState('')
+  const [buscaF, setBuscaF] = useState(() => { try { return localStorage.getItem('lsm-fornecedores-busca') ?? '' } catch { return '' } }) // Passo 196
   const semAcento = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
   const nDesc = (f: (typeof lista)[number]) => f.slas.filter(x => statusSla(x).status === 'descumprido').length
   // Passo 133: lista ordenada copiável (nome, CNPJ, categoria, SLA) para a reunião de compras.
@@ -180,7 +180,7 @@ export default function FornecedoresPage() {
           </h2>
           <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <p className="text-sm text-grafite-claro">Clique em um fornecedor para gerenciar KYC, certificados e metas de serviço.</p>
-            <input type="search" value={buscaF} onChange={e => setBuscaF(e.target.value)} placeholder="Buscar nome, CNPJ ou categoria" aria-label="Buscar fornecedor" className="border px-3 py-2 text-sm w-64 min-h-[44px]" data-testid="busca-fornecedores" />
+            <input type="search" value={buscaF} onChange={e => { setBuscaF(e.target.value); try { localStorage.setItem('lsm-fornecedores-busca', e.target.value) } catch { /* sem memória local */ } }} placeholder="Buscar nome, CNPJ ou categoria" aria-label="Buscar fornecedor" className="border px-3 py-2 text-sm w-64 min-h-[44px]" data-testid="busca-fornecedores" />
             <label className="text-sm flex items-center gap-2">Ordenar por
               <select value={ordem} onChange={e => setOrdem(e.target.value as typeof ordem)} className="border px-2 py-2 min-h-[44px]" data-testid="ordem-fornecedores">
                 <option value="nome">Nome</option>

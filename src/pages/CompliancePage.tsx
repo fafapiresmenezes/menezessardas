@@ -42,7 +42,7 @@ const PILARES: { nome: string; perguntas: Pergunta[] }[] = [
 const OPCOES = [{ v: 0, r: 'Não' }, { v: 1, r: 'Em parte' }, { v: 2, r: 'Sim' }]
 
 export default function CompliancePage() {
-  const [empresa, setEmpresa] = useState('')
+  const [empresa, setEmpresa] = useState(() => { try { return localStorage.getItem('lsm-compliance-empresa') ?? '' } catch { return '' } }) // Passo 195
   const [resp, setResp] = useState<Record<string, number>>({})
   const total = PILARES.reduce((s, p) => s + p.perguntas.length, 0)
   const respondidas = Object.keys(resp).length
@@ -102,7 +102,7 @@ export default function CompliancePage() {
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6 print:shadow-none">
           <p className="text-sm text-grafite-claro mb-3">Serviço para clientes do escritório: responda com o cliente e entregue o relatório. Baseado no Decreto 11.129/2022 (art. 57) e na LGPD.</p>
           <label htmlFor="empresa" className="block font-medium mb-1">Empresa avaliada</label>
-          <input id="empresa" value={empresa} onChange={e => setEmpresa(e.target.value)} className="w-full border px-3 py-2" placeholder="Nome do cliente" />
+          <input id="empresa" value={empresa} onChange={e => { setEmpresa(e.target.value); try { localStorage.setItem('lsm-compliance-empresa', e.target.value) } catch { /* sem memória local */ } }} className="w-full border px-3 py-2" placeholder="Nome do cliente" />
           <div className="flex flex-wrap gap-2 mt-3 print:hidden">
             <a href="#/kyc" className="min-h-[44px] inline-flex items-center gap-2 border px-4 text-sm"><UserCheck className="w-4 h-4" aria-hidden />Checar contraparte</a>
             <a href="?agente=compliance#/assistente" className="min-h-[44px] inline-flex items-center gap-2 border px-4 text-sm"><MessageSquare className="w-4 h-4" aria-hidden />Perguntar ao agente de compliance</a>
