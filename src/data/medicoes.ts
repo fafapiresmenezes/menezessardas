@@ -174,6 +174,7 @@ export const MEDICOES: Medicao[] = [
   { n: 184, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-184.pdf', sha256: 'd6e59474d2d15de1d69159337dff93f9ca46d63a9cc69cb18d45d943760d57c0', ots: true, entregue: 'Onda EN (Passos 548–549): Edge Functions agendar-notificacoes, monitorar e resumo-semanal; dublê de upsert encadeável; 536 testes' },
   { n: 185, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-185.pdf', sha256: 'f7ad1c6bed98083255b17658ff3fcff91a6e719360ba7de0af873fc453eff3c7', ots: true, entregue: 'Onda EO (Passos 550–551): Edge Functions agente-guardiao, coletor-instituto e instituto-agentes; 549 testes' },
   { n: 186, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-186.pdf', sha256: '8a5879922549bab7a1a83d23bd44a2b0fae07beed273a0013d9c875d16d66c55', ots: true, entregue: 'Onda EP (Passos 552–553): Edge Functions buscar-partes, instituto-acesso e mercado; 568 testes' },
+  { n: 187, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-187.pdf', sha256: '6367da768bef8bd0bdd0ee6cc10b8bb666b434781af282b7c538c172b63110df', ots: true, entregue: 'Onda EQ (Passos 554–555): Edge Functions notificar-email, relatorio-mensal e semana-pdf; 580 testes' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'

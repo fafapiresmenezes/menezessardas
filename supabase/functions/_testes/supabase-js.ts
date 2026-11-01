@@ -1,10 +1,10 @@
 // Dublê do supabase-js para as Edge Functions nos testes: tabelas em memória, encadeável, com registro das escritas.
 export interface Tabelas { [tabela: string]: Record<string, unknown>[] }
-export const estado: { tabelas: Tabelas; inseridos: { tabela: string; linha: unknown }[]; upserts: { tabela: string; linha: unknown }[]; atualizados: { tabela: string; valores: unknown; filtros: [string, string, unknown][] }[]; rpcs: { nome: string; args: unknown }[]; rpcResposta: Record<string, unknown>; usuario: { id: string; email?: string } | null; rpcErro: Record<string, string>; sequencia: number; authAdmin: { criados: unknown[]; atualizados: { id: string; attrs: unknown }[]; erro: string | null } } = {
-  tabelas: {}, inseridos: [], upserts: [], atualizados: [], rpcs: [], rpcResposta: {}, usuario: null, rpcErro: {}, sequencia: 0, authAdmin: { criados: [], atualizados: [], erro: null },
+export const estado: { tabelas: Tabelas; inseridos: { tabela: string; linha: unknown }[]; upserts: { tabela: string; linha: unknown }[]; atualizados: { tabela: string; valores: unknown; filtros: [string, string, unknown][] }[]; rpcs: { nome: string; args: unknown }[]; rpcResposta: Record<string, unknown>; usuario: { id: string; email?: string } | null; rpcErro: Record<string, string>; sequencia: number; arquivos: Record<string, string>; authAdmin: { criados: unknown[]; atualizados: { id: string; attrs: unknown }[]; erro: string | null } } = {
+  tabelas: {}, inseridos: [], upserts: [], atualizados: [], rpcs: [], rpcResposta: {}, usuario: null, rpcErro: {}, sequencia: 0, arquivos: {}, authAdmin: { criados: [], atualizados: [], erro: null },
 }
 export function zerar(tabelas: Tabelas = {}) {
-  estado.tabelas = tabelas; estado.inseridos = []; estado.upserts = []; estado.atualizados = []; estado.rpcs = []; estado.rpcResposta = {}; estado.usuario = null; estado.rpcErro = {}; estado.sequencia = 0; estado.authAdmin = { criados: [], atualizados: [], erro: null }
+  estado.tabelas = tabelas; estado.inseridos = []; estado.upserts = []; estado.atualizados = []; estado.rpcs = []; estado.rpcResposta = {}; estado.usuario = null; estado.rpcErro = {}; estado.sequencia = 0; estado.arquivos = {}; estado.authAdmin = { criados: [], atualizados: [], erro: null }
 }
 
 const pega = (r: Record<string, unknown>, c: string) => r[c]
@@ -70,6 +70,8 @@ function consulta(tabela: string) {
 export function createClient() {
   return {
     from: (tabela: string) => consulta(tabela),
+    // Arquivos guardados: estado.arquivos[caminho] = conteúdo (texto); download devolve um Blob ou data null.
+    storage: { from: (_balde: string) => ({ download: async (caminho: string) => { const c = estado.arquivos[caminho]; return c == null ? { data: null, error: { message: 'não encontrado' } } : { data: new Blob([c]), error: null } } }) },
     rpc: async (nome: string, args?: unknown) => { estado.rpcs.push({ nome, args }); return estado.rpcErro[nome] ? { data: null, error: { message: estado.rpcErro[nome] } } : { data: estado.rpcResposta[nome] ?? null, error: null } },
     auth: {
       getUser: async () => ({ data: { user: estado.usuario } }),

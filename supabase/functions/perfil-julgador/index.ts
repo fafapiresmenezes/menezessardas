@@ -85,7 +85,8 @@ async function noticias(nome: string) {
   if (!r.ok) return []
   const xml = await r.text()
   return [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].slice(0, 10).map(m => {
-    const pega = (tag: string) => limpa(m[1].match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`))?.[1] ?? '')
+    // <source url="…"> vem com atributo no RSS do Google: a etiqueta pode ter atributos.
+    const pega = (tag: string) => limpa(m[1].match(new RegExp(`<${tag}(?:\\s[^>]*)?>([\\s\\S]*?)</${tag}>`))?.[1] ?? '')
     return { titulo: pega('title'), link: pega('link'), fonte: pega('source'), data: pega('pubDate').slice(0, 16) }
   }).filter(n => n.titulo)
 }
