@@ -34,7 +34,9 @@ export default function AlertasPage() {
   }, [])
   const navigate = useNavigate()
   // Passo 88: os indicadores viram filtros e a página mostra a preferência de e-mail da pessoa.
-  const [filtro, setFiltro] = useState<'todos' | 'vencidos' | '30dias' | 'documentos'>('todos')
+  // Passo 152: o filtro escolhido é lembrado neste navegador.
+  const [filtro, setFiltro] = useState<'todos' | 'vencidos' | '30dias' | 'documentos'>(() => { try { const v = localStorage.getItem('lsm-alertas-filtro'); return v === 'vencidos' || v === '30dias' || v === 'documentos' ? v : 'todos' } catch { return 'todos' } })
+  useEffect(() => { try { localStorage.setItem('lsm-alertas-filtro', filtro) } catch { /* sem armazenamento */ } }, [filtro])
   const [prefEmail, setPrefEmail] = useState<{ alertas_email: boolean; dias_antecedencia: number } | null>(null)
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {

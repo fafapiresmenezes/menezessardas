@@ -48,7 +48,9 @@ export default function LegislacaoPage() {
   const [resultadosPesquisa, setResultadosPesquisa] = useState<LeiFederal[]>([])
   const [buscandoPesquisa, setBuscandoPesquisa] = useState(false)
   const [radar, setRadar] = useState<NovidadePortal[]>([])
-  const [filtroRadar, setFiltroRadar] = useState<'todos' | 'Projeto' | 'Notícia'>('todos')
+  // Passo 150: o filtro do radar (tudo, projetos, notícias) é lembrado neste navegador.
+  const [filtroRadar, setFiltroRadar] = useState<'todos' | 'Projeto' | 'Notícia'>(() => { try { const v = localStorage.getItem('lsm-radar-filtro'); return v === 'Projeto' || v === 'Notícia' ? v : 'todos' } catch { return 'todos' } })
+  useEffect(() => { try { localStorage.setItem('lsm-radar-filtro', filtroRadar) } catch { /* sem armazenamento */ } }, [filtroRadar])
 
   const [areaRadar, setAreaRadar] = useState<string>('')
   useEffect(() => {

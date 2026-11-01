@@ -28,7 +28,9 @@ const MODELOS: Modelo[] = [
 
 export default function ModelosPage() {
   const [busca, setBusca] = useState('')
-  const [area, setArea] = useState('Todas')
+  // Passo 151: a área escolhida é lembrada neste navegador.
+  const [area, setArea] = useState(() => { try { return localStorage.getItem('lsm-modelos-area') || 'Todas' } catch { return 'Todas' } })
+  useEffect(() => { try { localStorage.setItem('lsm-modelos-area', area) } catch { /* sem armazenamento */ } }, [area])
   // Modelos próprios do escritório (Passo 05): cadastrados pela equipe, visíveis para todo o escritório.
   const [proprios, setProprios] = useState<Modelo[]>([])
   const [form, setForm] = useState({ titulo: '', area: 'Escritório', agente: 'civel', pedido: '' })
