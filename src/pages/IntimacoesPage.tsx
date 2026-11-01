@@ -22,7 +22,9 @@ export default function IntimacoesPage() {
   const [msg, setMsg] = useState<{ ok: boolean; texto: string } | null>(null)
   const [ocupado, setOcupado] = useState(false)
   // Passo 135: opção "só urgentes" (vencidas e críticas) no filtro.
-  const [filtro, setFiltro] = useState<'novas' | 'todas' | 'urgentes'>('novas')
+  // Passo 167: o filtro escolhido é lembrado neste navegador.
+  const [filtro, setFiltro] = useState<'novas' | 'todas' | 'urgentes'>(() => { try { const v = localStorage.getItem('lsm-intimacoes-filtro'); return v === 'todas' || v === 'urgentes' ? v : 'novas' } catch { return 'novas' } })
+  useEffect(() => { try { localStorage.setItem('lsm-intimacoes-filtro', filtro) } catch { /* sem armazenamento */ } }, [filtro])
   const [aberta, setAberta] = useState<number | null>(null)
   const [busca, setBusca] = useState('')
 

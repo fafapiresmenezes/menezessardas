@@ -280,6 +280,8 @@ export default function TrilhaPage() {
             <label>Dia<input type="date" value={filtro.dia} onChange={e => setFiltro({ ...filtro, dia: e.target.value })} className="block border px-3 py-2 mt-1 min-h-[44px]" data-testid="filtro-dia" /></label>
             {(filtro.tipo || filtro.texto || filtro.dia) && <button type="button" onClick={() => setFiltro({ tipo: '', texto: '', dia: '' })} className="min-h-[44px] px-3 border">Limpar</button>}
             <p className="text-grafite-claro" data-testid="contagem-trilha">{filtrados.length} de {eventos.length} registros</p>
+            {/* Passo 164: imprimir os registros filtrados da trilha. */}
+            {filtrados.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-registros" className="min-h-[44px] px-3 border text-sm mr-2 print:hidden">Imprimir</button>}
             {filtrados.length > 0 && <button type="button" onClick={copiarRegistros} data-testid="copiar-registros" className="min-h-[44px] px-3 border">{registrosCopiados ? 'Copiados' : 'Copiar registros'}</button>}
           </section>
         )}

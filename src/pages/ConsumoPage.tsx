@@ -36,7 +36,9 @@ export default function ConsumoPage() {
   const [linhas, setLinhas] = useState<Linha[]>([])
   const [precos, setPrecos] = useState<Preco[]>([])
   const [cot, setCot] = useState<Cotacao | null>(null)
-  const [mes, setMes] = useState(mesAtual())
+  // Passo 166: o mês escolhido é lembrado neste navegador.
+  const [mes, setMes] = useState(() => { try { return localStorage.getItem('lsm-consumo-mes') || mesAtual() } catch { return mesAtual() } })
+  useEffect(() => { try { localStorage.setItem('lsm-consumo-mes', mes) } catch { /* sem armazenamento */ } }, [mes])
   const [perfil, setPerfil] = useState<Funcao | null>(null)
   const [teto, setTeto] = useState('')
   const [faturas, setFaturas] = useState<{ name: string }[]>([])

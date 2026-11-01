@@ -31,7 +31,9 @@ export default function EquipePage() {
   const [sede, setSede] = useState(false)
   const [busca, setBusca] = useState('')
   // Passo 134: filtrar a lista por função (ou só quem espera liberação).
-  const [filtroFuncao, setFiltroFuncao] = useState('')
+  // Passo 163: o filtro por função é lembrado neste navegador.
+  const [filtroFuncao, setFiltroFuncao] = useState(() => { try { return localStorage.getItem('lsm-equipe-funcao') || '' } catch { return '' } })
+  useEffect(() => { try { localStorage.setItem('lsm-equipe-funcao', filtroFuncao) } catch { /* sem armazenamento */ } }, [filtroFuncao])
   const [ocupado, setOcupado] = useState<string>('')
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
   // Passo 09: aceite de termos de uso e LGPD por pessoa (data, versão e hash).
