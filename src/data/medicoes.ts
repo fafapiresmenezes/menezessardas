@@ -62,6 +62,7 @@ export const MEDICOES: Medicao[] = [
   { n: 72, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-72.pdf', sha256: 'b2e7e43c96b160cbc6e8f2a0c73740d5c8c3482d109247383427961c87f875cf', ots: true, entregue: 'Onda AF, Passos 203–207: rascunho lembrado no Assistente; imprimir mapa de áreas; copiar link no Portal e no Contrato; retorno de cópia no Testar tudo; reavaliação 9,93 → 9,94' },
   { n: 73, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-73.pdf', sha256: 'c4a07ce66c40e72d33a536d98b92910da80bc15369b1b1566dcf6899f46e4f5d', ots: true, entregue: 'Onda AG: Consultores, Meu dia, Nuvem, Indicadores, Casos e projetos (Passos 208–212)' },
   { n: 74, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-74.pdf', sha256: 'b65d6178d07bab39b8febcbe334dcadd1e8245ff485b636d7c57ad8438881851', ots: true, entregue: 'Onda AH: Configurações, Selo blockchain, Honorários, Painel, Assinatura eletrônica (Passos 213–217)' },
+  { n: 75, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-75.pdf', sha256: '37a5987f5742555074467adb8409e46ffc27990f9960bc174d3e3348a8253870', ots: true, entregue: 'Onda AI: Mercado, Previsões, Compliance, Fornecedores, Equipe (Passos 218–222)' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'

@@ -284,6 +284,7 @@ export default function TrilhaPage() {
             <p className="text-grafite-claro" data-testid="contagem-trilha">{filtrados.length} de {eventos.length} registros</p>
             {/* Passo 164: imprimir os registros filtrados da trilha. */}
             {filtrados.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-registros" className="min-h-[44px] px-3 border text-sm mr-2 print:hidden">Imprimir</button>}
+            {filtrados.length > 0 && <button type="button" data-testid="copiar-link-trilha" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="min-h-[44px] px-3 border print:hidden">Copiar link</button>}{/* Passo 223 */}
             {filtrados.length > 0 && <button type="button" onClick={copiarRegistros} data-testid="copiar-registros" className="min-h-[44px] px-3 border">{registrosCopiados ? 'Copiados' : 'Copiar registros'}</button>}
           </section>
         )}

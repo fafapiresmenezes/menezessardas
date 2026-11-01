@@ -108,6 +108,7 @@ export default function TesteGeral() {
           {Object.keys(estados).length > 0 && (<>
             {/* Passo 165: imprimir o relatório do Testar tudo. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-relatorio" className="inline-flex items-center gap-2 border px-3 min-h-[44px] text-sm mr-2 print:hidden">Imprimir</button>
+            <button type="button" data-testid="copiar-link-testes" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="inline-flex items-center gap-2 border px-3 min-h-[44px] text-sm print:hidden">Copiar link</button>{/* Passo 224 */}
             <button type="button" onClick={() => { copiarRelatorio(); setRelCopiado(true) }} data-testid="copiar-relatorio" className="inline-flex items-center gap-2 border border-navy/20 text-navy min-h-[44px] px-4 text-sm">
               {relCopiado ? 'Relatório copiado' : 'Copiar relatório'}
             </button>

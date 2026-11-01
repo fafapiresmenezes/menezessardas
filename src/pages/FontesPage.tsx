@@ -133,6 +133,7 @@ export default function FontesPage() {
           <p className="text-sm text-grafite-claro mt-1">O servidor procura cada nome no Comunica PJe (CNJ) todas as manhãs. Comunicações novas entram em Intimações e em Alertas, sem API paga. Até 20 por pessoa. Ligue a busca a um caso para que cada novidade vire tarefa do responsável em Meu dia.</p>
           {/* Passo 169: imprimir as buscas salvas. */}
           {salvas.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-salvas" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}
+          {salvas.length > 0 && <button type="button" data-testid="copiar-link-fontes" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar link</button>}{/* Passo 227 */}
           {salvas.length > 0 && <button type="button" onClick={copiarSalvas} data-testid="copiar-salvas" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm">{salvasCopiadas ? 'Buscas copiadas' : 'Copiar buscas salvas'}</button>}
           {salvas.length ? (
             <ul className="mt-3 divide-y divide-navy/10">
