@@ -1,10 +1,10 @@
 // Dublê do supabase-js para as Edge Functions nos testes: tabelas em memória, encadeável, com registro das escritas.
 export interface Tabelas { [tabela: string]: Record<string, unknown>[] }
-export const estado: { tabelas: Tabelas; inseridos: { tabela: string; linha: unknown }[]; upserts: { tabela: string; linha: unknown }[]; atualizados: { tabela: string; valores: unknown; filtros: [string, string, unknown][] }[]; rpcs: { nome: string; args: unknown }[]; rpcResposta: Record<string, unknown>; usuario: { id: string; email?: string } | null; rpcErro: Record<string, string> } = {
-  tabelas: {}, inseridos: [], upserts: [], atualizados: [], rpcs: [], rpcResposta: {}, usuario: null, rpcErro: {},
+export const estado: { tabelas: Tabelas; inseridos: { tabela: string; linha: unknown }[]; upserts: { tabela: string; linha: unknown }[]; atualizados: { tabela: string; valores: unknown; filtros: [string, string, unknown][] }[]; rpcs: { nome: string; args: unknown }[]; rpcResposta: Record<string, unknown>; usuario: { id: string; email?: string } | null; rpcErro: Record<string, string>; sequencia: number; authAdmin: { criados: unknown[]; atualizados: { id: string; attrs: unknown }[]; erro: string | null } } = {
+  tabelas: {}, inseridos: [], upserts: [], atualizados: [], rpcs: [], rpcResposta: {}, usuario: null, rpcErro: {}, sequencia: 0, authAdmin: { criados: [], atualizados: [], erro: null },
 }
 export function zerar(tabelas: Tabelas = {}) {
-  estado.tabelas = tabelas; estado.inseridos = []; estado.upserts = []; estado.atualizados = []; estado.rpcs = []; estado.rpcResposta = {}; estado.usuario = null; estado.rpcErro = {}
+  estado.tabelas = tabelas; estado.inseridos = []; estado.upserts = []; estado.atualizados = []; estado.rpcs = []; estado.rpcResposta = {}; estado.usuario = null; estado.rpcErro = {}; estado.sequencia = 0; estado.authAdmin = { criados: [], atualizados: [], erro: null }
 }
 
 const pega = (r: Record<string, unknown>, c: string) => r[c]
@@ -36,7 +36,13 @@ function consulta(tabela: string) {
     limit(n: number) { limite = n; return q },
     single() { modoUm = 'single'; return q },
     maybeSingle() { modoUm = 'maybe'; return q },
-    insert: async (linha: unknown) => { for (const l of Array.isArray(linha) ? linha : [linha]) { estado.inseridos.push({ tabela, linha: l }); (estado.tabelas[tabela] ??= []).push(l as Record<string, unknown>) } return { data: null, error: null } },
+    insert(linha: unknown) {
+      const lista = (Array.isArray(linha) ? linha : [linha]) as Record<string, unknown>[]
+      for (const l of lista) { if (l.id === undefined) l.id = `novo-${++estado.sequencia}`; estado.inseridos.push({ tabela, linha: l }); (estado.tabelas[tabela] ??= []).push(l) }
+      const r = { data: null as unknown, error: null }
+      const sel = { select: () => sel, single: async () => ({ data: lista[0] ?? null, error: null }), maybeSingle: async () => ({ data: lista[0] ?? null, error: null }), then: (res: (v: unknown) => void) => res({ data: lista, error: null }) }
+      return Object.assign(sel, r)
+    },
     upsert: async (linha: unknown) => { for (const l of Array.isArray(linha) ? linha : [linha]) estado.upserts.push({ tabela, linha: l }); return { data: null, error: null } },
     update(valores: unknown) { escrita = { tipo: 'update', valores }; return q },
     delete() { return q },
@@ -57,6 +63,12 @@ export function createClient() {
   return {
     from: (tabela: string) => consulta(tabela),
     rpc: async (nome: string, args?: unknown) => { estado.rpcs.push({ nome, args }); return estado.rpcErro[nome] ? { data: null, error: { message: estado.rpcErro[nome] } } : { data: estado.rpcResposta[nome] ?? null, error: null } },
-    auth: { getUser: async () => ({ data: { user: estado.usuario } }) },
+    auth: {
+      getUser: async () => ({ data: { user: estado.usuario } }),
+      admin: {
+        createUser: async (attrs: Record<string, unknown>) => { if (estado.authAdmin.erro) return { data: null, error: { message: estado.authAdmin.erro } }; estado.authAdmin.criados.push(attrs); return { data: { user: { id: `auth-${estado.authAdmin.criados.length}`, email: attrs.email } }, error: null } },
+        updateUserById: async (id: string, attrs: unknown) => { if (estado.authAdmin.erro) return { data: null, error: { message: estado.authAdmin.erro } }; estado.authAdmin.atualizados.push({ id, attrs }); return { data: null, error: null } },
+      },
+    },
   }
 }

@@ -25,7 +25,8 @@ Deno.serve(async (req) => {
       if (perfil !== 'admin' || sede !== true) return json({ erro: 'Apenas a administração da sede convida escritórios parceiros.' }, 403)
       const { nome_escritorio, email, funcao } = corpo.convidar as { nome_escritorio: string; email: string; funcao: string }
       if (!nome_escritorio || nome_escritorio.trim().length < 3) return json({ erro: 'Informe o nome do escritório.' }, 400)
-      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email ?? '')) return json({ erro: 'E-mail inválido.' }, 400)
+      // Espaços colados do e-mail não invalidam o convite: limpa antes de conferir.
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(email ?? '').trim())) return json({ erro: 'E-mail inválido.' }, 400)
       if (!['operador', 'leitor'].includes(funcao)) return json({ erro: 'Função inválida (operador ou leitor).' }, 400)
       const { data: quem } = await comoUsuario.auth.getUser()
       const { data: conv, error } = await db.from('convites_escritorio').insert({ nome_escritorio: nome_escritorio.trim(), email: email.trim().toLowerCase(), funcao, criado_por: quem?.user?.id ?? null }).select('id,token,expira_em').single()
