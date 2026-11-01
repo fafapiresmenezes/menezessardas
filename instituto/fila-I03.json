@@ -148,9 +148,13 @@
    "titulo": "Orçamento de desempenho",
    "prompt": "Teste diário Lighthouse com alerta < 95.",
    "kpi": "Alerta ativo",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "d1119e1eaccd07d7e741671f9f2f4956b5162a7f514e5a61c700e65a3500e630",
-   "sha256_prompt": "882a9bb9e70fcc032a8d38668189a4dd6d30e2a36aaba1af30847d8e75c1e341"
+   "sha256_prompt": "882a9bb9e70fcc032a8d38668189a4dd6d30e2a36aaba1af30847d8e75c1e341",
+   "feito_em": "2026-11-01T2243Z",
+   "evidencia": "GitHub Actions 'Lighthouse diário do Instituto' (.github/workflows/lighthouse-instituto.yml + instituto/testes/lighthouse-diario.mjs): todo dia 06:17 BRT e a cada push no site, Lighthouse celular em 5 páginas; falha (e-mail do GitHub ao dono do repositório) se qualquer categoria < 95. 1ª execução 41357956435 disparou o alerta: agentes.html desempenho 86 (demais 95–99). Causa medida: deslocamento de layout 0,19–0,26 ao carregar os lotes; corrigido com botões estáticos (CLS 0,008/0,000) e fontes servidas pelo próprio site (Lighthouse local 99 em todas). Publicação passou a ser por reescrita para commit fixo fe2d101 (deploy dpl_GuhqXx4caUReyxAyoPwNDqFzEFKp; md5 de produção = local em 9 arquivos, base.css como text/css).",
+   "elo_ev_anterior": "727c67d6bcd14056b94ae5046877ead6ebe09268577b584435596e35a310013a",
+   "sha256_evidencia": "13102994446c3762794e466e10d5fa47233ddcd11a2cf0991073ad058906a51f"
   },
   {
    "n": "C13",
@@ -158,9 +162,13 @@
    "titulo": "Leitor de tela",
    "prompt": "Teste NVDA/VoiceOver (ou emulação) nas 10 páginas e corrija.",
    "kpi": "Roteiro aprovado",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "882a9bb9e70fcc032a8d38668189a4dd6d30e2a36aaba1af30847d8e75c1e341",
-   "sha256_prompt": "6eccdd7c562e71a56843cd482b288afd02f59704007069ec3c5c47568b237943"
+   "sha256_prompt": "6eccdd7c562e71a56843cd482b288afd02f59704007069ec3c5c47568b237943",
+   "feito_em": "2026-11-01T2243Z",
+   "evidencia": "Emulação de leitor de tela (Playwright, árvore de acessibilidade) nas 13 páginas: 1 h1 por página, sem salto de nível de título, main/lang/title presentes, nav com nome, links e SVGs com nome, sem links vagos. Achados e corrigidos: falta de link 'Pular para o conteúdo' (13 páginas), h1 ausente em agentes e locação, salto h1→h3 em locação, alvos de toque < 24 px no menu (WCAG 2.5.8). Depois: 0 problema no roteiro e axe 0 violações em 390 e 1280 px. Em produção desde fe2d101 (md5 conferido).",
+   "elo_ev_anterior": "13102994446c3762794e466e10d5fa47233ddcd11a2cf0991073ad058906a51f",
+   "sha256_evidencia": "31603f7cb7b600ebaa54282a6cdc174cccc366c5f3bd5fd8556adee98c6fccca"
   },
   {
    "n": "C14",
