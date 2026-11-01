@@ -54,6 +54,12 @@ export default function KycPage() {
   const [buscaHist, setBuscaHist] = useState('')
   const [copiado, setCopiado] = useState(false)
   const histVisivel = historico.filter(h => !buscaHist || (h.nome ?? '').toLowerCase().includes(buscaHist.toLowerCase()) || h.cnpj.includes(buscaHist.replace(/\D/g, '')))
+  // Passo 125: histórico de checagens copiável (data, contraparte, risco, próxima reconsulta).
+  const [histCopiado, setHistCopiado] = useState(false)
+  const copiarHistorico = async () => {
+    const t = ['Histórico de checagens de contraparte — GMenezes Advogados Associados', ...histVisivel.map(h => `${new Date(h.consultado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })} · ${h.nome ?? fmtCnpj(h.cnpj)} · risco ${h.risco}${h.mudou ? ` (era ${h.risco_anterior})` : ''} · reconsulta ${proxima(h.consultado_em).toLocaleDateString('pt-BR')}`)].join('\n')
+    try { await navigator.clipboard.writeText(t); setHistCopiado(true); setTimeout(() => setHistCopiado(false), 2500) } catch { /* sem área de transferência */ }
+  }
   const copiarResultado = async () => {
     if (!r) return
     const texto = [`Checagem de contraparte — CNPJ ${fmtCnpj(r.cnpj)}${r.receita.nome ? ` — ${r.receita.nome}` : ''}`, `Risco: ${r.risco}${r.alertas.length ? ` — ${r.alertas.join(' ')}` : ' — nenhum alerta'}`,
@@ -112,7 +118,10 @@ export default function KycPage() {
         <section className="bg-white shadow-sm p-6" data-testid="kyc-historico">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="font-serif text-xl flex items-center gap-2"><History className="w-5 h-5 text-dourado" aria-hidden />Histórico de checagens</h2>
+            <div className="flex flex-wrap gap-2">
+            {historico.length > 0 && <button type="button" onClick={copiarHistorico} className="min-h-[44px] px-4 border text-sm" data-testid="kyc-copiar-historico">{histCopiado ? 'Histórico copiado' : 'Copiar histórico'}</button>}
             <button type="button" onClick={reconsultar} className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2" data-testid="kyc-reconsultar"><RefreshCw className="w-4 h-4" aria-hidden />Reconsultar agora</button>
+            </div>
           </div>
           <p className="text-sm text-grafite-claro mt-1">Cada checagem fica guardada com data e resultado. O robô reconsulta cada contraparte 90 dias depois da última checagem e avisa em Alertas quando o status muda.</p>
           {msgRecon && <p role="status" className="text-sm mt-2" data-testid="kyc-msg-recon">{msgRecon}</p>}

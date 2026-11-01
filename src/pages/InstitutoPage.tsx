@@ -157,6 +157,12 @@ export function linhasCaseStudy(): { texto: string; tamanho?: number; negrito?: 
 }
 
 function CaseStudy() {
+  // Passo 123: a cadeia inteira copiável (medição, data, nota, hash) para auditoria externa.
+  const [cadeiaCopiada, setCadeiaCopiada] = useState(false)
+  const copiarCadeia = async () => {
+    const t = ['Cadeia de medições — GMenezes Advogados Associados', ...MEDICOES.map(m => `M${m.n} · ${m.data.split('-').reverse().join('/')} · nota ${m.nota.toFixed(2).replace('.', ',')}${m.ots ? ' · OTS' : ''} · ${m.arquivo} · SHA-256 ${m.sha256}`), `Plano M31 · ${PLANO_M31.arquivo} · SHA-256 ${PLANO_M31.sha256}`].join('\n')
+    try { await navigator.clipboard.writeText(t); setCadeiaCopiada(true); setTimeout(() => setCadeiaCopiada(false), 2500) } catch { /* sem área de transferência */ }
+  }
   const primeira = MEDICOES[0], ultima = MEDICOES[MEDICOES.length - 1]
   const [msgPdf, setMsgPdf] = useState('')
   const caseEmPdf = () => {
@@ -184,6 +190,7 @@ function CaseStudy() {
       <section className="bg-white p-6 shadow-sm">
         <h2 className="text-lg mb-1">Cadeia de medições (PDFs e hashes)</h2>
         <p className="text-sm text-grafite-claro mb-3">Os PDFs ficam na Biblioteca do projeto. Para conferir um arquivo, calcule o SHA-256 e compare com a coluna abaixo; o arquivo .ots prova a data no Bitcoin.</p>
+        <button type="button" onClick={copiarCadeia} data-testid="copiar-cadeia" className="mb-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{cadeiaCopiada ? 'Cadeia copiada' : 'Copiar cadeia completa'}</button>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite-claro"><th className="py-2 pr-3">Medição</th><th className="pr-3">Data</th><th className="pr-3">Nota</th><th className="pr-3">Entregue</th><th>SHA-256</th></tr></thead>

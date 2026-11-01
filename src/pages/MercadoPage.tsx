@@ -27,12 +27,19 @@ export default function MercadoPage() {
   const nivel = (x: Area) => x.confiancaCombinada ?? x.confianca
   // Passo 96: ranking copiável para a reunião de sócios.
   const [copiado, setCopiado] = useState(false)
+  // Passo 126: relatório completo por área (amostra, confiança, tendência) copiável.
+  const [areasCopiadas, setAreasCopiadas] = useState(false)
+  const copiarAreas = async () => {
+    const t = ['Demanda judicial por área — CNJ, tribunais do RJ', ...prontas.map(x => `${x.nome}: ${x.previsao!.variacao !== null && x.previsao!.variacao >= 0 ? '+' : ''}${x.previsao!.variacao}% até ${x.previsao!.ano} · confiança ${nivel(x)} · amostra ${fmt(x.amostra)} · ${x.fontePrevisao ?? x.fonte}`), `Gerado em ${new Date().toLocaleDateString('pt-BR')} · GMenezes Advogados Associados`].join('\n')
+    try { await navigator.clipboard.writeText(t); setAreasCopiadas(true); setTimeout(() => setAreasCopiadas(false), 2500) } catch { /* sem área de transferência */ }
+  }
   const ranking = [...prontas].filter(x => nivel(x) === 'alta' || nivel(x) === 'media').sort((x, y) => (y.previsao!.variacao ?? -999) - (x.previsao!.variacao ?? -999))
   return (
     <Layout title="Previsão de mercado jurídico">
       <div className="space-y-6">
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6">
           <p className="text-sm">Quantos processos novos cada área recebe por ano nos tribunais do Rio, em duas fontes públicas do CNJ (DataJud por classe processual e Justiça em Números por tribunal), e a tendência para os próximos 3 anos, com margem de erro de 95%. Mede <strong>demanda</strong>: mais processos significam mais clientes potenciais, não necessariamente honorários maiores.</p>
+          {prontas.length > 0 && <button type="button" onClick={copiarAreas} data-testid="copiar-areas" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{areasCopiadas ? 'Áreas copiadas' : 'Copiar todas as áreas'}</button>}
           {prontas.length > 0 && !ranking.length && <p className="mt-3 text-sm text-atencao">Nenhuma área tem tendência confiável ainda (os dados do CNJ variam muito de ano para ano). Veja os números brutos abaixo.</p>}
           {ranking.length > 0 && (
             <>

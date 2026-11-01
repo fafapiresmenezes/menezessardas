@@ -43,6 +43,8 @@ export default function ConsumoPage() {
   const [msg, setMsg] = useState<{ ok: boolean; texto: string } | null>(null)
   // Passo 97: resumo do mês em texto para a sócia.
   const [copiadoResumo, setCopiadoResumo] = useState(false)
+  // Passo 127: tabelas "por função" e "por usuário" copiáveis para a reunião de custos.
+  const [tabelaCopiada, setTabelaCopiada] = useState<'funcao' | 'usuario' | null>(null)
   const [carregando, setCarregando] = useState(true)
   const [testandoAviso, setTestandoAviso] = useState(false)
   // Passo 06: avisos automáticos de 80% e 100% do teto (de hora em hora) e teste pelo administrador.
@@ -167,7 +169,9 @@ export default function ConsumoPage() {
         <div className="grid md:grid-cols-2 gap-6">
           {(['funcao', 'usuario'] as const).map(chave => (
             <section key={chave} className="bg-white shadow-sm p-6">
-              <h3 className="text-base mb-3">{chave === 'funcao' ? 'Por função' : 'Por usuário'}</h3>
+              <div className="flex items-center justify-between gap-2 mb-3"><h3 className="text-base">{chave === 'funcao' ? 'Por função' : 'Por usuário'}</h3>
+                {somar(chave).length > 0 && <button type="button" onClick={async () => { const t = [`Consumo ${chave === 'funcao' ? 'por função' : 'por usuário'} — ${nomeMes(mes)}`, ...somar(chave).map(([k, v]) => `${k}: ${v.usos} uso(s) · ${brl(v.brl)}`)].join('\n'); try { await navigator.clipboard.writeText(t); setTabelaCopiada(chave); setTimeout(() => setTabelaCopiada(null), 2500) } catch { /* sem área de transferência */ } }} data-testid={`copiar-${chave}`} className="underline text-navy text-sm print:hidden">{tabelaCopiada === chave ? 'copiado' : 'copiar'}</button>}
+              </div>
               {somar(chave).length === 0 ? (
                 <p className="text-sm text-grafite-claro">Nenhum uso registrado neste mês.</p>
               ) : (

@@ -204,6 +204,12 @@ export default function AgendaPage() {
     .join('\n')
   // Passo 94: resumo dos próximos 7 dias e botão "Hoje".
   const semana = proximos.filter(a => a.diasRestantes <= 7)
+  // Passo 124: os próximos 7 dias em texto, para colar no Outlook ou no WhatsApp.
+  const [semanaCopiada, setSemanaCopiada] = useState(false)
+  const copiarSemana = async () => {
+    const t = ['Próximos 7 dias — GMenezes Advogados Associados', ...(semana.length ? semana.map(a => `• ${formatarData(a.dataEvento)} — ${a.titulo} (${a.imovel})`) : ['Nenhum compromisso.'])].join('\n')
+    try { await navigator.clipboard.writeText(t); setSemanaCopiada(true); setTimeout(() => setSemanaCopiada(false), 2500) } catch { /* sem área de transferência */ }
+  }
   const irParaHoje = () => { setAno(hoje.getFullYear()); setMes(hoje.getMonth()) }
   const mailto = `mailto:?subject=${encodeURIComponent('Próximos compromissos contratuais')}&body=${encodeURIComponent('Próximos compromissos:\n\n' + corpoEmail)}`
 
@@ -264,6 +270,7 @@ export default function AgendaPage() {
           {msgSemana && <p role="status" className="text-sm mt-2" data-testid="semana-msg">{msgSemana}</p>}
           <p className="w-full text-sm p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="resumo-semana">
             {semana.length === 0 ? 'Próximos 7 dias: nenhum compromisso.' : <>Próximos 7 dias: <strong>{semana.length}</strong> compromisso{semana.length > 1 ? 's' : ''}; o primeiro é <strong>{semana[0].titulo}</strong> {semana[0].diasRestantes === 0 ? 'hoje' : semana[0].diasRestantes === 1 ? 'amanhã' : `em ${semana[0].diasRestantes} dias`} ({formatarData(semana[0].dataEvento)}).</>}
+            {' '}<button type="button" onClick={copiarSemana} data-testid="copiar-semana" className="underline text-navy">{semanaCopiada ? 'semana copiada' : 'copiar os 7 dias'}</button>
           </p>
           {supabaseConfigurado && (
             <div className="mt-3 text-sm flex flex-wrap items-center gap-3" data-testid="roteiro-outlook">
