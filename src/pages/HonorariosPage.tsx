@@ -106,7 +106,11 @@ export default function HonorariosPage() {
         <section className="bg-white shadow-sm p-5 overflow-x-auto">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
             <h2 className="text-lg flex items-center gap-2"><Banknote size={18} className="text-dourado" aria-hidden="true" /> Por caso</h2>
+            <div className="flex flex-wrap gap-2">
             {casos.length > 0 && <button type="button" onClick={copiarCobranca} data-testid="copiar-cobranca" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar resumo da cobrança</button>}
+            {/* Passo 146: tabela por caso copiável (caso, combinado, recebido, vencimento). */}
+            {casos.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Honorários por caso — ${casos.length} caso(s)`, ...casos.map(c => `${c.titulo}${c.cliente ? ` (${c.cliente})` : ''}: combinado ${brl(Number(c.honorario_previsto))} · recebido ${brl(Number(c.honorario_recebido))}${c.vencimento_honorario ? ` · vence ${formatarData(c.vencimento_honorario)}` : ''}`), `Total: combinado ${brl(totais.previsto)} · recebido ${brl(totais.recebido)}`].join('\n')).catch(() => undefined)} data-testid="copiar-tabela-honorarios" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar tabela</button>}
+            </div>
           </div>
           <p className="text-xs text-grafite-claro mb-3">Rentabilidade = honorários recebidos menos o custo das horas lançadas para o mesmo cliente (tela Horas). Edite os valores e toque em Salvar.</p>
           <table className="w-full text-sm" data-testid="tabela-honorarios">
