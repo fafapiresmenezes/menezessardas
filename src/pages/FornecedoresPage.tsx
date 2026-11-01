@@ -68,7 +68,9 @@ export default function FornecedoresPage() {
     setImovelIds(atual => (atual.includes(id) ? atual.filter(x => x !== id) : [...atual, id]))
 
   // Passo 70: ranking de fornecedores por SLA cumprido (sem medição vai para o fim) e por metas descumpridas.
-  const [ordem, setOrdem] = useState<'nome' | 'sla' | 'descumpridas'>('nome')
+  // Passo 162: a ordem escolhida é lembrada neste navegador.
+  const [ordem, setOrdem] = useState<'nome' | 'sla' | 'descumpridas'>(() => { try { const v = localStorage.getItem('lsm-fornecedores-ordem'); return v === 'sla' || v === 'descumpridas' ? v : 'nome' } catch { return 'nome' } })
+  useEffect(() => { try { localStorage.setItem('lsm-fornecedores-ordem', ordem) } catch { /* sem armazenamento */ } }, [ordem])
   // Passo 104: busca por nome, CNPJ ou categoria; contador "mostrando N de M".
   const [buscaF, setBuscaF] = useState('')
   const semAcento = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()

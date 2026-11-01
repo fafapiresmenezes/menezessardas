@@ -270,6 +270,8 @@ export default function PrevisoesPage() {
         <header>
           <h2 className="text-3xl text-navy">Desfechos, calibração e carteira</h2>
           <p className="text-sm text-grafite-claro mt-1">Risco, renovação e receita da carteira, e chance de êxito na Justiça. Cada número mostra de onde vem; nada é estimado sem dado.</p>
+          {/* Passo 160: imprimir as previsões com as fontes. */}
+          <button type="button" onClick={() => window.print()} data-testid="imprimir-previsoes" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
           <button type="button" onClick={copiarResumo} data-testid="copiar-previsoes" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo da carteira'}</button>
         </header>
         <div className="grid gap-4 sm:grid-cols-4">

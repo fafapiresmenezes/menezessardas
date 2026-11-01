@@ -39,6 +39,8 @@ export default function MercadoPage() {
       <div className="space-y-6">
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6">
           <p className="text-sm">Quantos processos novos cada área recebe por ano nos tribunais do Rio, em duas fontes públicas do CNJ (DataJud por classe processual e Justiça em Números por tribunal), e a tendência para os próximos 3 anos, com margem de erro de 95%. Mede <strong>demanda</strong>: mais processos significam mais clientes potenciais, não necessariamente honorários maiores.</p>
+          {/* Passo 159: imprimir o mercado jurídico por área. */}
+          {prontas.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-mercado" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}
           {prontas.length > 0 && <button type="button" onClick={copiarAreas} data-testid="copiar-areas" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{areasCopiadas ? 'Áreas copiadas' : 'Copiar todas as áreas'}</button>}
           {prontas.length > 0 && !ranking.length && <p className="mt-3 text-sm text-atencao">Nenhuma área tem tendência confiável ainda (os dados do CNJ variam muito de ano para ano). Veja os números brutos abaixo.</p>}
           {ranking.length > 0 && (

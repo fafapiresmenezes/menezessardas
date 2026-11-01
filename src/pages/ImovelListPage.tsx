@@ -80,6 +80,8 @@ export default function ImovelListPage() {
             <p className="text-xs text-grafite-claro mt-2" role="status" aria-live="polite">
               {filtrados.length} {filtrados.length === 1 ? 'imóvel encontrado' : 'imóveis encontrados'}
               {/* Passo 121: lista filtrada em texto (endereço, proprietário, prazo mais próximo), para a reunião com o cliente. */}
+              {/* Passo 158: imprimir a lista de imóveis filtrada. */}
+              {filtrados.length > 0 && <button type="button" data-testid="imprimir-imoveis" onClick={() => window.print()} className="mr-3 underline text-navy print:hidden">imprimir</button>}
               {filtrados.length > 0 && <button type="button" data-testid="copiar-imoveis" onClick={() => navigator.clipboard?.writeText(`Imóveis · ${new Date().toLocaleDateString('pt-BR')} · ${filtrados.length}\n` + filtrados.map(i => { const d = prazoDoImovel(i.id); return `${i.endereco} · ${i.proprietario} · ${d === null ? 'sem prazo' : textoPrazo(d)}` }).join('\n')).catch(() => undefined)} className="ml-3 underline text-navy">copiar lista</button>}
             </p>
           </div>
