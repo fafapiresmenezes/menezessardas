@@ -123,9 +123,10 @@
    "titulo": "Medição de campo",
    "prompt": "Ative Vercel Speed Insights/Web Analytics (sem cookies).",
    "kpi": "Dados de campo de 7 dias",
-   "status": "aberto",
+   "status": "em coleta",
    "elo_anterior": "45aed3fffd9515cadb1c555a67068c96368a0ae16c4e2714c28d27d3f594f0f4",
-   "sha256_prompt": "9256d64e00d939d21c84621d651e8d8af77126796c9a7ea932c92fec13b86365"
+   "sha256_prompt": "9256d64e00d939d21c84621d651e8d8af77126796c9a7ea932c92fec13b86365",
+   "evidencia_parcial": "Medição de campo própria sem cookies (vitais.js: LCP, INP, CLS, TTFB; sem IP/id; respeita Do Not Track) no ar em index, agentes, placar, comparar e /o/ (deploy dpl_3bjn9uEwCU1iTk6BHTSJGCjbcSEp, md5 produção = local). Tabela instituto.web_vitais + RPC instituto_vitais_resumo (p75). Coleta iniciada 01/11/2026; KPI de 7 dias fecha em 08/11/2026."
   },
   {
    "n": "C11",
@@ -133,9 +134,13 @@
    "titulo": "INP",
    "prompt": "Meça INP com interações reais (laboratório e agentes).",
    "kpi": "INP < 200 ms",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "9256d64e00d939d21c84621d651e8d8af77126796c9a7ea932c92fec13b86365",
-   "sha256_prompt": "d1119e1eaccd07d7e741671f9f2f4956b5162a7f514e5a61c700e65a3500e630"
+   "sha256_prompt": "d1119e1eaccd07d7e741671f9f2f4956b5162a7f514e5a61c700e65a3500e630",
+   "feito_em": "2026-11-01T1059Z",
+   "evidencia": "INP de laboratório (Playwright, Event Timing API, p98 das interações) em agentes.html (troca dos 5 lotes + digitação) e laboratorio.html (abas + formulário): 0–24 ms em 390 px com CPU 4x mais lenta e 24 ms em 1280 px; meta < 200 ms atingida com folga. INP de campo passa a ser coletado por vitais.js (C10) e publicado como p75 por página via instituto_vitais_resumo.",
+   "elo_ev_anterior": "c357461262a1ace0a1b389a79a49dca11477efa432d43e25eb1e309cac2bcb74",
+   "sha256_evidencia": "727c67d6bcd14056b94ae5046877ead6ebe09268577b584435596e35a310013a"
   },
   {
    "n": "C12",

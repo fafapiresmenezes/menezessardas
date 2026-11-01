@@ -32,3 +32,4 @@
     if (pt) pt.style.left = esc(c.dif_grafo_menos_conv) + '%';
   });
 })();
+(function () { var s = document.createElement('script'); s.src = '/vitais.js'; s.defer = true; document.head.appendChild(s); })();
