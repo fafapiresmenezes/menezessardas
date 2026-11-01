@@ -102,6 +102,7 @@ export const MEDICOES: Medicao[] = [
   { n: 112, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-112.pdf', sha256: 'eef8ff7c3c4387d6e6a4d11526fb7ca02d37e543332babdeec739b98a7f0a3c4', ots: true, entregue: 'Onda BT (Passos 401–405): Modelos, Monitoramento, Nuvem, Casos e projetos e Relatórios migradas para o gancho único useBaixado' },
   { n: 113, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-113.pdf', sha256: 'b463310ee578c7b758e579e961ce986c63d3463d64f8f4ca186f940fa33816fa', ots: true, entregue: 'Onda BU: Assinaturas, Testar tudo e Trilha migradas; tema do gancho único useBaixado fechado (29 telas, zero cópias)' },
   { n: 114, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-114.pdf', sha256: '3ca412c14b822ccee9311c03f26c395689f2ad77bf519eea801dd65ee1602df8', ots: true, entregue: 'Onda BV (Passos 409–410): testes unitários de pix.ts e datas.ts (13 testes; 72 no total)' },
+  { n: 115, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-115.pdf', sha256: '3584409d56a5e2aa4315d9c9f1f073f5f6a3e224e51eff80e5deb97efe2ea483', ots: true, entregue: 'Onda BW (Passos 411–412): testes unitários de fornecedores.ts (CNPJ, SLA, KYC; 81 testes no total)' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
