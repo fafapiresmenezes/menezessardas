@@ -1,0 +1,61 @@
+// Dublê do supabase-js para as Edge Functions nos testes: tabelas em memória, encadeável, com registro das escritas.
+export interface Tabelas { [tabela: string]: Record<string, unknown>[] }
+export const estado: { tabelas: Tabelas; inseridos: { tabela: string; linha: unknown }[]; upserts: { tabela: string; linha: unknown }[]; atualizados: { tabela: string; valores: unknown; filtros: [string, string, unknown][] }[]; rpcs: { nome: string; args: unknown }[]; rpcResposta: Record<string, unknown> } = {
+  tabelas: {}, inseridos: [], upserts: [], atualizados: [], rpcs: [], rpcResposta: {},
+}
+export function zerar(tabelas: Tabelas = {}) {
+  estado.tabelas = tabelas; estado.inseridos = []; estado.upserts = []; estado.atualizados = []; estado.rpcs = []; estado.rpcResposta = {}
+}
+
+const pega = (r: Record<string, unknown>, c: string) => r[c]
+function consulta(tabela: string) {
+  const filtros: ((r: Record<string, unknown>) => boolean)[] = []
+  const filtrosDesc: [string, string, unknown][] = []
+  let limite: number | null = null
+  let ordem: { col: string; asc: boolean } | null = null
+  let cabeca = false
+  let modoUm: 'single' | 'maybe' | null = null
+  let escrita: { tipo: 'update'; valores: unknown } | null = null
+  const linhas = () => {
+    let l = (estado.tabelas[tabela] ?? []).filter(r => filtros.every(f => f(r)))
+    if (ordem) { const { col, asc } = ordem; l = [...l].sort((a, b) => (String(pega(a, col)) < String(pega(b, col)) ? -1 : 1) * (asc ? 1 : -1)) }
+    if (limite != null) l = l.slice(0, limite)
+    return l
+  }
+  const q = {
+    select() { return q },
+    eq(c: string, v: unknown) { filtros.push(r => pega(r, c) === v); filtrosDesc.push([c, 'eq', v]); return q },
+    neq(c: string, v: unknown) { filtros.push(r => pega(r, c) !== v); return q },
+    in(c: string, vs: unknown[]) { filtros.push(r => vs.includes(pega(r, c))); return q },
+    is(c: string, v: unknown) { filtros.push(r => (pega(r, c) ?? null) === v); return q },
+    not(c: string, op: string, v: unknown) { if (op === 'is') filtros.push(r => (pega(r, c) ?? null) !== v); return q },
+    gte(c: string, v: unknown) { filtros.push(r => String(pega(r, c)) >= String(v)); return q },
+    lte(c: string, v: unknown) { filtros.push(r => String(pega(r, c)) <= String(v)); return q },
+    order(c: string, o?: { ascending?: boolean }) { ordem = { col: c, asc: o?.ascending !== false }; return q },
+    limit(n: number) { limite = n; return q },
+    single() { modoUm = 'single'; return q },
+    maybeSingle() { modoUm = 'maybe'; return q },
+    insert: async (linha: unknown) => { for (const l of Array.isArray(linha) ? linha : [linha]) { estado.inseridos.push({ tabela, linha: l }); (estado.tabelas[tabela] ??= []).push(l as Record<string, unknown>) } return { data: null, error: null } },
+    upsert: async (linha: unknown) => { for (const l of Array.isArray(linha) ? linha : [linha]) estado.upserts.push({ tabela, linha: l }); return { data: null, error: null } },
+    update(valores: unknown) { escrita = { tipo: 'update', valores }; return q },
+    delete() { return q },
+    then(res: (v: unknown) => void) {
+      if (escrita) { estado.atualizados.push({ tabela, valores: escrita.valores, filtros: filtrosDesc }); for (const r of linhas()) Object.assign(r, escrita.valores as object); return res({ data: null, error: null }) }
+      const l = linhas()
+      if (cabeca) return res({ data: null, count: l.length, error: null })
+      if (modoUm) return res({ data: l[0] ?? null, error: modoUm === 'single' && !l[0] ? { message: 'sem linha' } : null })
+      return res({ data: l, count: l.length, error: null })
+    },
+  }
+  const selectOrig = q.select
+  q.select = ((_c?: string, o?: { head?: boolean; count?: string }) => { if (o?.head) cabeca = true; return selectOrig() }) as typeof q.select
+  return q
+}
+
+export function createClient() {
+  return {
+    from: (tabela: string) => consulta(tabela),
+    rpc: async (nome: string, args?: unknown) => { estado.rpcs.push({ nome, args }); return { data: estado.rpcResposta[nome] ?? null, error: null } },
+    auth: { getUser: async () => ({ data: { user: null } }) },
+  }
+}
