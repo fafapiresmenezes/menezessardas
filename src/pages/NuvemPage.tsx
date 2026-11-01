@@ -22,7 +22,9 @@ export default function NuvemPage() {
   const [ocupado, setOcupado] = useState(false)
   const [versoesDe, setVersoesDe] = useState<string | null>(null)
   const [versoes, setVersoes] = useState<Item[]>([])
-  const [filtroNome, setFiltroNome] = useState('')
+  // Passo 176: o filtro por nome é lembrado neste navegador.
+  const [filtroNome, setFiltroNome] = useState(() => { try { return localStorage.getItem('lsm-nuvem-filtro') || '' } catch { return '' } })
+  useEffect(() => { try { localStorage.setItem('lsm-nuvem-filtro', filtroNome) } catch { /* sem armazenamento */ } }, [filtroNome])
   const base = area === 'escritorio' ? 'escritorio' : `pessoal/${uid}`
   const pasta = sub ? `${base}/${sub}` : base
 

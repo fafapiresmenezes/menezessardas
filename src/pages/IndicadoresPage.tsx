@@ -208,6 +208,8 @@ export default function IndicadoresPage() {
       <div className="space-y-8">
         <div className="flex justify-end -mb-2 print:hidden">
           {/* Passo 111: indicadores em texto, para a reunião de OKR ou o e-mail da sócia. */}
+          {/* Passo 177: imprimir os indicadores. */}
+          <button type="button" data-testid="imprimir-indicadores" onClick={() => window.print()} className="mr-3 underline text-navy text-sm print:hidden">imprimir</button>
           <button type="button" data-testid="copiar-indicadores" onClick={() => navigator.clipboard?.writeText(`Indicadores · ${new Date().toLocaleDateString('pt-BR')}\n` + tiles.map(t => `${t.rotulo}: ${t.valor} — ${t.explica}`).join('\n')).catch(() => undefined)} className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm mr-2">Copiar indicadores</button>
           <button
             onClick={() => window.print()}

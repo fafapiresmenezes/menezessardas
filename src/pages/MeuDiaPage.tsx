@@ -43,7 +43,9 @@ export default function MeuDiaPage() {
   const [tarefas, setTarefas] = useState<{ id: string; titulo: string; prazo: string | null; prioridade: string }[]>([])
   const [intimacoes, setIntimacoes] = useState(0)
   const [vencendo, setVencendo] = useState<{ id: string; imovel_id: string; locatario_fornecedor: string; data_vencimento: string }[]>([])
-  const [calc, setCalc] = useState({ inicio: hoje(), dias: 15, dobro: false })
+  // Passo 173: prazo e "em dobro" da calculadora lembrados neste navegador.
+  const [calc, setCalc] = useState(() => { try { const v = JSON.parse(localStorage.getItem('lsm-meudia-calc') || '{}'); return { inicio: hoje(), dias: Number(v.dias) > 0 ? Number(v.dias) : 15, dobro: v.dobro === true } } catch { return { inicio: hoje(), dias: 15, dobro: false } } })
+  useEffect(() => { try { localStorage.setItem('lsm-meudia-calc', JSON.stringify({ dias: calc.dias, dobro: calc.dobro })) } catch { /* sem armazenamento */ } }, [calc.dias, calc.dobro])
   const [diagnostico, setDiagnostico] = useState<{ id: string; resposta: string; criado_em: string } | null>(null)
   // Passo 20: ações do Consultor da semana marcáveis como feitas (tabela acoes_consultor).
   const [acoes, setAcoes] = useState<{ id: string; indice: number; texto: string; feito_em: string | null }[]>([])

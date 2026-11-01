@@ -281,6 +281,8 @@ export default function ContratoPage() {
               ) : (
                 <SeloSituacao situacao={situacaoContrato} texto={rotulosStatusContrato[statusContrato]} />
               )}
+              {/* Passo 175: imprimir o contrato com o resumo. */}
+              <button type="button" onClick={() => window.print()} data-testid="imprimir-contrato" className="inline-flex items-center gap-2 min-h-[44px] px-3 border text-sm mr-2 print:hidden">Imprimir</button>
               <button type="button" onClick={copiarResumoContrato} data-testid="copiar-contrato" className="inline-flex items-center gap-1.5 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar resumo</button>
               {!encerrado && modo === 'ver' && (
                 <>

@@ -47,6 +47,8 @@ export default function PortalClientePage() {
           <article data-testid="portal-caso" className="bg-white border-t-2 border-dourado shadow-sm p-6">
             <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">Acompanhamento do seu caso</p>
             <h1 className="font-serif text-2xl text-navy mt-1">{caso.titulo}</h1>
+            {/* Passo 174: o cliente imprime o andamento do caso. */}
+            <button type="button" onClick={() => window.print()} data-testid="imprimir-portal" className="mt-2 underline text-navy text-sm print:hidden">imprimir este andamento</button>
             <p className="text-sm text-grafite mt-1">{[caso.area, caso.numero_processo && `Processo ${caso.numero_processo}`].filter(Boolean).join(' · ')}</p>
             <div className="mt-5">
               <div className="flex justify-between text-sm text-grafite"><span>Andamento</span><span>{feitas} de {total} etapas</span></div>
