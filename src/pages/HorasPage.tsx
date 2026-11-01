@@ -146,6 +146,7 @@ export default function HorasPage() {
             <label className="text-sm print:hidden">Mês <input type="month" value={mes} onChange={e => setMes(e.target.value)} className="border px-3 py-2 ml-2" /></label>
             <div className="flex gap-2 print:hidden">
               <button type="button" onClick={copiarResumo} disabled={!lista.length} data-testid="copiar-resumo" className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2 disabled:opacity-50"><ClipboardCopy className="w-4 h-4" aria-hidden />{copiado ? 'Resumo copiado' : 'Copiar resumo do mês'}</button>
+              <button type="button" onClick={() => window.print()} disabled={!lista.length} data-testid="imprimir-horas" className="min-h-[44px] px-4 border text-sm print:hidden disabled:opacity-50">Imprimir mês</button>{/* Passo 187 */}
               <button type="button" onClick={csv} className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2"><Download className="w-4 h-4" aria-hidden />Planilha (CSV)</button>
               <button type="button" onClick={() => window.print()} className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2"><Printer className="w-4 h-4" aria-hidden />Relatório para o cliente</button>
             </div>

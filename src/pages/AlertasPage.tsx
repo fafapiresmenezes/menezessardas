@@ -92,6 +92,7 @@ export default function AlertasPage() {
             {filtro === 'todos' ? 'Clique em um número para filtrar a lista.' : <>Mostrando {visiveis.length} de {alertas.length}. <button type="button" onClick={() => setFiltro('todos')} className="underline text-navy">ver todos</button></>}
             {/* Passo 119: alertas visíveis em texto (imóvel, compromisso, data, dias), para a reunião ou o e-mail da sócia. */}
             {visiveis.length > 0 && <button type="button" data-testid="copiar-alertas" onClick={() => navigator.clipboard?.writeText(`Alertas · ${new Date().toLocaleDateString('pt-BR')} · ${visiveis.length} de ${alertas.length}\n` + visiveis.map(a => `${a.diasRestantes < 0 ? 'VENCIDO há ' + (-a.diasRestantes) + ' dia(s)' : a.diasRestantes === 0 ? 'HOJE' : 'em ' + a.diasRestantes + ' dia(s)'} · ${a.imovel} · ${a.titulo} · ${formatarData(a.dataEvento)}`).join('\n')).catch(() => undefined)} className="ml-3 underline text-navy">copiar lista</button>}
+            {visiveis.length > 0 && <button type="button" data-testid="imprimir-alertas" onClick={() => window.print()} className="ml-3 underline text-navy print:hidden">imprimir</button>}{/* Passo 186 */}
           </p>
           {prefEmail && (
             <p className="text-sm mt-3 p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="pref-email">
