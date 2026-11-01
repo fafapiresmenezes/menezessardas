@@ -1,6 +1,19 @@
 {
   "headers": [
     {
+      "source": "/fonts/(.*)\\.woff2",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "font/woff2"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
       "source": "/(.*)\\.ttl",
       "headers": [
         {
@@ -57,12 +70,16 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self'; connect-src 'self' https://hlraekzvgxdpiiigdxdo.supabase.co; frame-ancestors 'none'"
+          "value": "default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; script-src 'self'; connect-src 'self' https://hlraekzvgxdpiiigdxdo.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
         }
       ]
     }
   ],
   "rewrites": [
+    {
+      "source": "/fonts/:f",
+      "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/59cee3010be6a2426e9b0832289e2efca34bcb33/instituto/site/fonts/:f"
+    },
     {
       "source": "/ontologia-locacao-v07.ttl",
       "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/e6649ce8fae8da1ec7ef98db218ea1096d1e6c6c/instituto/site/ontologia-locacao-v07.ttl"

@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Termo da ontologia · Instituto THEYE</title>
 <meta name="description" content="Página permanente de cada classe, relação e nó da ontologia de locação do Instituto THEYE.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/base.css">
 <style>
 dl{display:grid;grid-template-columns:180px 1fr;gap:8px 24px;font-size:14.5px;margin-top:20px}
@@ -20,11 +19,12 @@ dd a{color:var(--grafo)}
 </style>
 </head>
 <body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
 <header class="top"><div class="w">
   <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
   <nav aria-label="Seções"><a href="/ontologia.html">Ontologia</a><a href="/locacao.html">Locação</a><a href="/o/">Termos</a></nav>
 </div></header>
-<main>
+<main id="conteudo">
 <section><div class="w">
   <div class="kicker" id="tipo">Ontologia de locação v0.7</div>
   <h1 id="titulo" style="font-size:clamp(28px,4vw,44px);line-height:1.1;margin:10px 0">Termos da ontologia</h1>

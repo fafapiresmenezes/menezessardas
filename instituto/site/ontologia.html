@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ontologia · Instituto THEYE</title>
 <meta name="description" content="Pesquisa aplicada em predição jurídica, ontologia do direito e desenvolvimento do direito brasileiro.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="base.css">
 <style>
 .fig{border:1px solid var(--linha);background:var(--papel);padding:16px;overflow-x:auto}
@@ -20,11 +19,12 @@
 </style>
 </head>
 <body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
 <header class="top"><div class="w">
   <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
   <nav aria-label="Seções"><a href="/#laboratorio">Laboratório</a><a href="/placar.html">Placar</a><a href="/ontologia.html" aria-current="page">Ontologia</a><a href="/#servicos">Serviços</a></nav>
 </div></header>
-<main>
+<main id="conteudo">
 <div class="hero"><div class="w">
   <div class="kicker">Ontologia preditiva · v0.4 e extensão jurídica v0.5</div>
   <h1>O direito e a economia no mesmo grafo.</h1>
@@ -66,5 +66,6 @@
 </div></section>
 </main>
 <footer><div class="w"><span>© 2026 Instituto THEYE · Ontologia THE EYE v0.4 (17/10/2026) e extensão jurídica v0.5 (31/10/2026)</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="/vitais.js" defer></script>
 </body>
 </html>

@@ -3,7 +3,6 @@
   var FN = 'https://hlraekzvgxdpiiigdxdo.supabase.co/functions/v1/instituto-agentes';
   var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhscmFla3p2Z3hkcGlpaWdkeGRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4ODEzOTksImV4cCI6MjEwODQ1NzM5OX0.yCNPEGDb7tdf1JIY30WKUbE-xZwjQFwygJFJnvBeyrs';
   var $ = function (id) { return document.getElementById(id); };
-  var NOMES = { 1: 'Locação e núcleo', 2: 'Dados e predição', 3: 'Direito e normas', 4: 'Mercado e gestão', 5: 'Pesquisa e ensino' };
   var todos = [], lote = 1, ultimo = null;
   var REST = 'https://hlraekzvgxdpiiigdxdo.supabase.co/rest/v1/rpc/';
   function rpc(fn, corpo) {
@@ -51,9 +50,8 @@
   chamar({ acao: 'listar' }).then(function (j) {
     todos = j.agentes || [];
     if (!todos.length) { $('ags').textContent = 'Não foi possível carregar os agentes agora.'; return; }
-    [1, 2, 3, 4, 5].forEach(function (l) {
-      var b = el('button', 'Lote ' + l + ' · ' + NOMES[l]); b.type = 'button'; b.dataset.l = l;
-      b.onclick = function () { lote = l; desenhar(); }; $('lotes').appendChild(b);
+    Array.prototype.forEach.call($('lotes').children, function (b) {
+      b.onclick = function () { lote = Number(b.dataset.l); desenhar(); };
     });
     var c = j.custo || {};
     $('custo').textContent = c.chamadas ? ('Custo medido: ' + c.chamadas + ' respostas, média de US$ ' + Number(c.custo_medio_usd).toFixed(4) + ' (cerca de ' + c.tokens_medios + ' tokens) por resposta.') : 'Custo medido aparece aqui após as primeiras respostas.';

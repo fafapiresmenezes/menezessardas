@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Laboratório · Instituto THEYE</title>
 <meta name="description" content="Faça uma consulta gratuita ao laboratório de predição de ações de locação do Instituto THEYE, com dados abertos do CNJ.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="base.css">
 <style>
 .lab{display:grid;grid-template-columns:1.1fr .9fr;gap:1px;background:var(--linha);border:1px solid var(--linha)}
@@ -41,11 +40,12 @@ dt{color:var(--apagado)} dd{color:var(--tinta)}
 </style>
 </head>
 <body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
 <header class="top"><div class="w">
   <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
   <nav aria-label="Seções"><a href="/laboratorio.html" aria-current="page">Laboratório</a><a href="/comparar.html">Grafo x convencional</a><a href="/placar.html">Placar</a><a href="/estudar.html">Estudar</a><a href="/precos.html">Preços</a></nav>
 </div></header>
-<main>
+<main id="conteudo">
 <div class="hero"><div class="w">
   <div class="kicker">Laboratório · ações de locação · TJRJ, TJSP e TJMG</div>
   <h1>Qual a chance de o autor ganhar?</h1>
@@ -121,5 +121,6 @@ dt{color:var(--apagado)} dd{color:var(--tinta)}
 </main>
 <footer><div class="w"><span>© 2026 Instituto THEYE · Laboratório v1</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
 <script src="laboratorio.js"></script>
+<script src="/vitais.js" defer></script>
 </body>
 </html>

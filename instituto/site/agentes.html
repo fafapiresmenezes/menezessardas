@@ -5,15 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Agentes do Instituto · Instituto THEYE</title>
 <meta name="description" content="50 agentes de IA do Instituto THEYE, acionados por botão, que explicam previsões, ontologia, método e locação em linguagem simples.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="base.css">
 <style>
 .lotes{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
 .lotes button{min-height:40px;padding:0 14px;border:1px solid var(--linha);background:var(--papel);color:var(--tinta);font:500 13px var(--sans);cursor:pointer}
 .lotes button[aria-pressed="true"]{background:var(--tinta);color:var(--papel);border-color:var(--tinta)}
-.ags{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.ags{min-height:100vh;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
 .ag{border:1px solid var(--linha);background:var(--papel);padding:16px;display:flex;flex-direction:column;gap:6px}
 .ag b{font-family:var(--serif);font-weight:500;font-size:19px}
 .ag small{color:var(--tinta-2);font-size:12.5px}
@@ -32,16 +31,17 @@
 </style>
 </head>
 <body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
 <header class="top"><div class="w">
   <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
   <nav aria-label="Seções"><a href="/#laboratorio">Laboratório</a><a href="/placar.html">Placar</a><a href="/ontologia.html">Ontologia</a><a href="/agentes.html" aria-current="page">Agentes</a><a href="/#servicos">Serviços</a></nav>
 </div></header>
-<main>
+<main id="conteudo">
 <section><div class="w">
-  <div class="sec-h"><div><div class="kicker">50 agentes · acionados por botão</div><h2>Pergunte a quem estuda o assunto.</h2></div>
+  <div class="sec-h"><div><div class="kicker">50 agentes · acionados por botão</div><h1>Pergunte a quem estuda o assunto.</h1></div>
   <p>Cada botão faz uma pergunta pronta a um agente de inteligência artificial (Claude). A IA só é usada quando você aperta, o que mantém o custo baixo e visível. Os agentes têm roteiro inspirado em currículos de doutorado de universidades de referência, mas não são pessoas nem falam em nome dessas universidades. Respostas são educativas e não substituem um advogado.</p></div>
   <p class="custo" id="custo">Carregando custo medido…</p>
-  <div class="lotes" id="lotes" role="group" aria-label="Lotes de agentes"></div>
+  <div class="lotes" id="lotes" role="group" aria-label="Lotes de agentes"><button type="button" data-l="1" aria-pressed="true">Lote 1 · Locação e núcleo</button><button type="button" data-l="2" aria-pressed="false">Lote 2 · Dados e predição</button><button type="button" data-l="3" aria-pressed="false">Lote 3 · Direito e normas</button><button type="button" data-l="4" aria-pressed="false">Lote 4 · Mercado e gestão</button><button type="button" data-l="5" aria-pressed="false">Lote 5 · Pesquisa e ensino</button></div>
   <div class="livre"><label for="pergunta" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Sua pergunta (opcional)</label><input id="pergunta" maxlength="500" placeholder="Opcional: escreva sua pergunta e escolha o agente abaixo"></div>
   <div id="resp" class="resp" hidden aria-live="polite"></div>
   <details class="rel" id="rel" hidden><summary>Relatar resposta errada</summary>
