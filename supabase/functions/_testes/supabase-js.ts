@@ -1,10 +1,10 @@
 // Dublê do supabase-js para as Edge Functions nos testes: tabelas em memória, encadeável, com registro das escritas.
 export interface Tabelas { [tabela: string]: Record<string, unknown>[] }
-export const estado: { tabelas: Tabelas; inseridos: { tabela: string; linha: unknown }[]; upserts: { tabela: string; linha: unknown }[]; atualizados: { tabela: string; valores: unknown; filtros: [string, string, unknown][] }[]; rpcs: { nome: string; args: unknown }[]; rpcResposta: Record<string, unknown>; usuario: { id: string } | null } = {
-  tabelas: {}, inseridos: [], upserts: [], atualizados: [], rpcs: [], rpcResposta: {}, usuario: null,
+export const estado: { tabelas: Tabelas; inseridos: { tabela: string; linha: unknown }[]; upserts: { tabela: string; linha: unknown }[]; atualizados: { tabela: string; valores: unknown; filtros: [string, string, unknown][] }[]; rpcs: { nome: string; args: unknown }[]; rpcResposta: Record<string, unknown>; usuario: { id: string; email?: string } | null; rpcErro: Record<string, string> } = {
+  tabelas: {}, inseridos: [], upserts: [], atualizados: [], rpcs: [], rpcResposta: {}, usuario: null, rpcErro: {},
 }
 export function zerar(tabelas: Tabelas = {}) {
-  estado.tabelas = tabelas; estado.inseridos = []; estado.upserts = []; estado.atualizados = []; estado.rpcs = []; estado.rpcResposta = {}; estado.usuario = null
+  estado.tabelas = tabelas; estado.inseridos = []; estado.upserts = []; estado.atualizados = []; estado.rpcs = []; estado.rpcResposta = {}; estado.usuario = null; estado.rpcErro = {}
 }
 
 const pega = (r: Record<string, unknown>, c: string) => r[c]
@@ -56,7 +56,7 @@ function consulta(tabela: string) {
 export function createClient() {
   return {
     from: (tabela: string) => consulta(tabela),
-    rpc: async (nome: string, args?: unknown) => { estado.rpcs.push({ nome, args }); return { data: estado.rpcResposta[nome] ?? null, error: null } },
+    rpc: async (nome: string, args?: unknown) => { estado.rpcs.push({ nome, args }); return estado.rpcErro[nome] ? { data: null, error: { message: estado.rpcErro[nome] } } : { data: estado.rpcResposta[nome] ?? null, error: null } },
     auth: { getUser: async () => ({ data: { user: estado.usuario } }) },
   }
 }
