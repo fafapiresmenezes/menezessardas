@@ -1,0 +1,22 @@
+Ontologia do Instituto THEYE · histórico de versões
+====================================================
+
+v0.7.0-locacao (01/11/2026)
+- Publicada em OWL/Turtle (padrão W3C), licença CC BY 4.0: /ontologia-locacao-v07.ttl (744 triplas).
+- Novas classes: Prazo (data-limite com norma de origem), Garantia (art. 37: caução, fiança, seguro, cessão fiduciária), Documento (IPTU, Habite-se, Alvará, AVCB).
+- Novas relações: aditiva_de e sublocacao_de (Contrato → Contrato), garantido_por, prazo_de, fixado_por, documento_de.
+- Novo valor de TipoDeParte: fiador (e sublocatario).
+- Endereço permanente para os 184 termos: /o/<identificador>.
+- Consistência: OWL RL sem owl:Nothing, 0 violação de domínio/alcance, SHACL conforme (/consistencia-v07.json).
+- Origem: alinhamento com os 70 valores do escritório GMenezes (passo U14 do plano I-02).
+
+v0.6.0-locacao (31/10/2026)
+- Lei 8.245/91 modelada artigo por artigo (77 nós de norma + 6 de outras leis), 13 teses típicas, 6 precedentes (STJ Súmulas 214, 268, 335, 549; STF Temas 295 e 1127).
+- 14 de 14 assuntos de locação da TPU-CNJ mapeados a artigos; 90,1% dos 5.350 processos ligados a pelo menos uma norma.
+- Formato: JSON próprio (ontologia-locacao-v06.json).
+
+v0.5 (31/10/2026)
+- Extensão jurídica: Processo, OrgaoJulgador, Tribunal, ClasseProcessual, Assunto, TipoDeParte, Decisao, Tese, Precedente, Norma, PrevisaoJuridica, Contrato, Imovel.
+
+v0.4 (17/10/2026)
+- Ontologia THE EYE: 120 objetos e 66 relações (indicadores, empresas, setores, eventos, hipóteses pré-registradas).
