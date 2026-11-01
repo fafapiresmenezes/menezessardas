@@ -10,6 +10,24 @@
       ]
     },
     {
+      "source": "/consistencia-v07.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/ontologia-changelog.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        }
+      ]
+    },
+    {
       "source": "/o.json",
       "headers": [
         {
@@ -52,6 +70,14 @@
     {
       "source": "/o.json",
       "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/7fce8330f35ebb71f024dcf14db8a6ecd8691de4/instituto/site/o.json"
+    },
+    {
+      "source": "/ontologia-changelog.txt",
+      "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/2ca4e316265fdb83ca35ed1a2e5927b7e5fc3db9/instituto/site/ontologia-changelog.txt"
+    },
+    {
+      "source": "/consistencia-v07.json",
+      "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/2ca4e316265fdb83ca35ed1a2e5927b7e5fc3db9/instituto/site/consistencia-v07.json"
     },
     {
       "source": "/o",
