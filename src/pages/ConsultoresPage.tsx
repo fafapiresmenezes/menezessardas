@@ -45,7 +45,7 @@ async function fotografia(): Promise<string> {
 export default function ConsultoresPage() {
   // Passo 112: lembra o último consultor escolhido neste navegador e permite limpar a conversa.
   const [sel, setSel] = useState(() => { try { const c = localStorage.getItem('lsm-consultor'); return NIVEIS.find(n => n.chave === c) ?? NIVEIS[0] } catch { return NIVEIS[0] } })
-  const [pergunta, setPergunta] = useState('')
+  const [pergunta, setPergunta] = useState(() => { try { return localStorage.getItem('lsm-consultor-pergunta') ?? '' } catch { return '' } }) // Passo 178: rascunho lembrado
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [resposta, setResposta] = useState<Consulta | null>(null)
@@ -94,7 +94,7 @@ export default function ConsultoresPage() {
             </button>
             <form className="mt-5 flex gap-2" onSubmit={e => { e.preventDefault(); if (pergunta.trim().length >= 5) consultar(pergunta) }}>
               <label className="sr-only" htmlFor="perg-consultor">Pergunta ao consultor</label>
-              <input id="perg-consultor" value={pergunta} onChange={e => setPergunta(e.target.value)} placeholder="Ou pergunte algo específico a este consultor"
+              <input id="perg-consultor" value={pergunta} onChange={e => { setPergunta(e.target.value); try { localStorage.setItem('lsm-consultor-pergunta', e.target.value) } catch { /* sem memória local */ } }} placeholder="Ou pergunte algo específico a este consultor"
                 className="flex-1 min-h-[44px] border border-navy/20 px-3 text-sm" />
               <button type="submit" disabled={carregando} className="min-h-[44px] px-4 border border-navy text-navy" aria-label="Enviar"><Send size={16} /></button>
             </form>

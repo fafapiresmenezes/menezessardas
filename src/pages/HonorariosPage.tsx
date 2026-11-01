@@ -110,6 +110,7 @@ export default function HonorariosPage() {
             {casos.length > 0 && <button type="button" onClick={copiarCobranca} data-testid="copiar-cobranca" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar resumo da cobrança</button>}
             {/* Passo 146: tabela por caso copiável (caso, combinado, recebido, vencimento). */}
             {casos.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Honorários por caso — ${casos.length} caso(s)`, ...casos.map(c => `${c.titulo}${c.cliente ? ` (${c.cliente})` : ''}: combinado ${brl(Number(c.honorario_previsto))} · recebido ${brl(Number(c.honorario_recebido))}${c.vencimento_honorario ? ` · vence ${formatarData(c.vencimento_honorario)}` : ''}`), `Total: combinado ${brl(totais.previsto)} · recebido ${brl(totais.recebido)}`].join('\n')).catch(() => undefined)} data-testid="copiar-tabela-honorarios" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar tabela</button>}
+            {casos.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-honorarios" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}{/* Passo 180 */}
             </div>
           </div>
           <p className="text-xs text-grafite-claro mb-3">Rentabilidade = honorários recebidos menos o custo das horas lançadas para o mesmo cliente (tela Horas). Edite os valores e toque em Salvar.</p>

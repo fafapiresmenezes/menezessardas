@@ -231,6 +231,7 @@ export default function TrilhaPage() {
           )}
           {/* Passo 145: lista de selos copiável (registro, data, selo) para conferência externa. */}
           {ancoragens.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Selos blockchain da trilha — ${ancoragens.length}`, ...ancoragens.map(a => `nº ${a.seq} · ${dataHora(a.em)} · ${a.selo}`)].join('\n')).catch(() => undefined)} data-testid="copiar-selos" className="mt-3 min-h-[44px] px-3 border text-sm print:hidden">Copiar lista de selos</button>}
+          {ancoragens.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-selos" className="mt-3 ml-2 min-h-[44px] px-3 border text-sm print:hidden">Imprimir selos</button>}{/* Passo 179 */}
           {ancoragens.length > 0 && (
             <ul className="divide-y divide-navy/5 mt-4">
               {ancoragens.map(a => {

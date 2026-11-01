@@ -26,6 +26,7 @@ type LinhaEscritorio = { id: string; nome: string; pessoas: number; imoveis: num
 
 export default function DashboardPage() {
   const navigate = useNavigate()
+  const [painelCopiado, setPainelCopiado] = useState(false) // Passo 182
   const [porEscritorio, setPorEscritorio] = useState<LinhaEscritorio[]>([])
   useEffect(() => {
     if (!supabaseConfigurado) return
@@ -82,7 +83,7 @@ export default function DashboardPage() {
             <span>{imoveis.length === 0 ? 'Nenhum imóvel cadastrado ainda.' : vencidos > 0 ? `Atenção: ${vencidos} imóvel(is) com documento ou contrato vencido e ${criticos} vencendo em 30 dias.` : criticos > 0 ? `Carteira em ordem: nada vencido; ${criticos} imóvel(is) vencem em 30 dias.` : 'Carteira em ordem: nada vencido nem vencendo nos próximos 30 dias.'}</span>
             {/* Passo 148: imprimir o painel em uma página para a reunião. */}
             {imoveis.length > 0 && <button type="button" data-testid="imprimir-painel" onClick={() => window.print()} className="underline text-navy print:hidden">imprimir</button>}
-            {imoveis.length > 0 && <button type="button" data-testid="copiar-painel" onClick={() => navigator.clipboard?.writeText(`Painel · ${new Date().toLocaleDateString('pt-BR')}\n` + indicadores.map(i => `${i.rotulo}: ${i.valor}`).join('\n')).catch(() => undefined)} className="underline text-navy">copiar</button>}
+            {imoveis.length > 0 && <button type="button" data-testid="copiar-painel" onClick={() => navigator.clipboard?.writeText(`Painel · ${new Date().toLocaleDateString('pt-BR')}\n` + indicadores.map(i => `${i.rotulo}: ${i.valor}`).join('\n')).then(() => setPainelCopiado(true)).catch(() => undefined)} className="underline text-navy">{painelCopiado ? 'copiado' : 'copiar'}</button>}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {indicadores.map(ind => (

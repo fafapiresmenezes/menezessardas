@@ -189,6 +189,7 @@ export default function ProjetosPage() {
               </select>
               {/* Passo 147: lista de projetos copiável (título, área, cliente, situação, prazo). */}
               {projetos.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Casos e projetos — ${projetos.length}${filtroArea ? ` (${filtroArea})` : ''}`, ...projetos.map(t => `${t.titulo} · ${t.area ?? 'sem área'}${t.cliente ? ` · ${t.cliente}` : ''} · ${t.situacao}${t.prazo ? ` · prazo ${t.prazo.split('-').reverse().join('/')}` : ''}`)].join('\n')).catch(() => undefined)} data-testid="copiar-projetos" className="ml-2 underline text-navy text-sm">copiar lista</button>}
+              {projetos.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-projetos" className="ml-2 underline text-navy text-sm print:hidden">imprimir</button>}{/* Passo 181 */}
             </div>
             <div>
               <label htmlFor="projeto" className="block text-xs uppercase tracking-wider text-grafite mb-1">Projeto</label>
