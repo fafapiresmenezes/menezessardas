@@ -157,6 +157,7 @@ export const MEDICOES: Medicao[] = [
   { n: 167, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-167.pdf', sha256: 'db3079c9a1c0982d6bae350dcbf565c3c83af89a08a8efcaec781689b97b2122', ots: true, entregue: 'Onda DW (Passos 515–516): testes da agenda e de configurações; 387 testes' },
   { n: 168, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-168.pdf', sha256: 'ba0c2c505868cabcf7f25ffcaf17c8b9f993ef99223fb806dc40dfbae2982961', ots: true, entregue: 'Onda DX (Passo 517): teste da página do contrato; 39 de 39 páginas com teste; 390 testes' },
   { n: 169, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-169.pdf', sha256: '225f6feee2dc3e5ad8eafa31ae039ab674826f22f4d4b1b3e7f115049a026a4c', ots: true, entregue: 'Onda DY (Passos 518–519): testes dos ganchos useAlertas, useImoveis e useBaixado; 397 testes' },
+  { n: 170, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-170.pdf', sha256: '7d63c6acc3263e915e3a686112addeb9debb1ec175d0aaea41eadd1e0f6d5599', ots: true, entregue: 'Onda DZ (Passos 520–521): testes dos 7 componentes restantes; todos os componentes com teste; 406 testes' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
