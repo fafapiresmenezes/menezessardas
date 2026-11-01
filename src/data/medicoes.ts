@@ -88,6 +88,7 @@ export const MEDICOES: Medicao[] = [
   { n: 98, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-98.pdf', sha256: '691239155aa4e0f5a54a9c226cb7e0db072d5acfc1231c9531baa81feaadca40', ots: true, entregue: 'Onda BF (Passos 333–337): retorno Baixado em Intimações, Agenda, Alertas, Fontes e Honorários' },
   { n: 99, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-99.pdf', sha256: '664458249d6283893f1f077a582ff6875d2228c27511bd483093f6f1be86f4b1', ots: true, entregue: 'Onda BG (Passos 338–342): retorno Baixado em Horas, Imóveis, Indicadores, KYC e Meu dia' },
   { n: 100, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-100.pdf', sha256: '1f836390231061b409143f3ee778fae467289b4d7ba71905bfccba36d4e79be9', ots: true, entregue: 'Onda BH (Passos 343–347): retorno Baixado em Instituto, Legislação, Modelos, Monitoramento e Nuvem' },
+  { n: 101, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-101.pdf', sha256: '0dbc0efd8f1344bf6fdbf128b6c3b0910099bd7afbee45891811ce786a120fe7', ots: true, entregue: 'Onda BI (Passos 348–351): retorno Baixado em Projetos, Relatórios, Selos e Assinaturas; todos os downloads com retorno' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
