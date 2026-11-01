@@ -113,6 +113,7 @@ export default function IndicadoresPage() {
   const { imoveis, loading: li } = useImoveis()
   const { alertas, loading: la } = useAlertas()
   const [contratos, setContratos] = useState<Contrato[] | null>(null)
+  const [indCopiado, setIndCopiado] = useState(false) // Passo 211
   const [resumoDiario, setResumoDiario] = useState<ResumoDiario | null>(null)
   const [carregandoResumo, setCarregandoResumo] = useState(false)
   const [erroResumo, setErroResumo] = useState('')
@@ -210,7 +211,7 @@ export default function IndicadoresPage() {
           {/* Passo 111: indicadores em texto, para a reunião de OKR ou o e-mail da sócia. */}
           {/* Passo 177: imprimir os indicadores. */}
           <button type="button" data-testid="imprimir-indicadores" onClick={() => window.print()} className="mr-3 underline text-navy text-sm print:hidden">imprimir</button>
-          <button type="button" data-testid="copiar-indicadores" onClick={() => navigator.clipboard?.writeText(`Indicadores · ${new Date().toLocaleDateString('pt-BR')}\n` + tiles.map(t => `${t.rotulo}: ${t.valor} — ${t.explica}`).join('\n')).catch(() => undefined)} className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm mr-2">Copiar indicadores</button>
+          <button type="button" data-testid="copiar-indicadores" onClick={() => navigator.clipboard?.writeText(`Indicadores · ${new Date().toLocaleDateString('pt-BR')}\n` + tiles.map(t => `${t.rotulo}: ${t.valor} — ${t.explica}`).join('\n')).then(() => setIndCopiado(true)).catch(() => undefined)} className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm mr-2">{indCopiado ? 'Indicadores copiados' : 'Copiar indicadores'}</button>
           <button
             onClick={() => window.print()}
             className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 rounded-sm text-sm"

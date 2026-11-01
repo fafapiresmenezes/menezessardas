@@ -134,7 +134,8 @@ export default function NuvemPage() {
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-3 mt-3 text-xs text-grafite">
-            <input type="search" value={filtroNome} onChange={e => setFiltroNome(e.target.value)} placeholder="Filtrar por nome" aria-label="Filtrar arquivos desta pasta por nome" className="border px-3 py-2 text-sm w-56" data-testid="nuvem-filtro" />
+            <input type="search" value={filtroNome} onChange={e => { setFiltroNome(e.target.value); try { localStorage.setItem('lsm-nuvem-filtro', e.target.value) } catch { /* sem memória local */ } }} placeholder="Filtrar por nome" aria-label="Filtrar arquivos desta pasta por nome" className="border px-3 py-2 text-sm w-56" data-testid="nuvem-filtro" />
+            <button type="button" onClick={() => window.print()} data-testid="imprimir-nuvem" className="ml-2 underline text-navy text-sm print:hidden">imprimir lista</button>{/* Passo 210 */}
             <span data-testid="nuvem-total">{itens.filter(i => i.id !== null).length} arquivo(s) nesta pasta · {kb(itens.reduce((t, i) => t + (i.metadata?.size ?? 0), 0))}</span>
             {/* Passo 110: lista da pasta em texto (nome, tamanho, data), para conferência ou inventário. */}
             {itens.some(i => i.id !== null) && <button type="button" data-testid="nuvem-copiar" onClick={() => navigator.clipboard?.writeText(`Nuvem · ${area === 'escritorio' ? 'Escritório' : 'Pessoal'}${sub ? '/' + sub : ''} · ${new Date().toLocaleDateString('pt-BR')}\n` + itens.filter(i => i.id !== null).map(i => `${i.name} · ${kb(i.metadata?.size)}${i.updated_at ? ' · ' + new Date(i.updated_at).toLocaleDateString('pt-BR') : ''}`).join('\n')).catch(() => undefined)} className="min-h-[44px] px-3 border border-navy/20 text-navy">Copiar lista</button>}

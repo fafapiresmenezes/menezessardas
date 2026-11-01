@@ -51,6 +51,7 @@ export default function ProjetosPage() {
   const [caso, setCaso] = useState({ modelo: 'contencioso', titulo: '', cliente: '', area: 'Cível', numero: '', tipo: 'caso', responsavel_id: '' })
   const [filtroArea, setFiltroArea] = useState('')
   const [linkPortal, setLinkPortal] = useState('')
+  const [listaCopiada, setListaCopiada] = useState(false) // Passo 212
 
   const carregar = async () => {
     const { data, error } = await supabase.from('tarefas').select('id,pai_id,nivel,titulo,situacao,prioridade,responsavel_id,imovel_id,prazo,horas,cliente,area,numero_processo,tipo,portal_token,portal_expira_em,depende_de,criado_em').order('criado_em')
@@ -188,7 +189,7 @@ export default function ProjetosPage() {
                 <option value="">Todas</option>{AREAS.map(a => <option key={a}>{a}</option>)}
               </select>
               {/* Passo 147: lista de projetos copiável (título, área, cliente, situação, prazo). */}
-              {projetos.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Casos e projetos — ${projetos.length}${filtroArea ? ` (${filtroArea})` : ''}`, ...projetos.map(t => `${t.titulo} · ${t.area ?? 'sem área'}${t.cliente ? ` · ${t.cliente}` : ''} · ${t.situacao}${t.prazo ? ` · prazo ${t.prazo.split('-').reverse().join('/')}` : ''}`)].join('\n')).catch(() => undefined)} data-testid="copiar-projetos" className="ml-2 underline text-navy text-sm">copiar lista</button>}
+              {projetos.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Casos e projetos — ${projetos.length}${filtroArea ? ` (${filtroArea})` : ''}`, ...projetos.map(t => `${t.titulo} · ${t.area ?? 'sem área'}${t.cliente ? ` · ${t.cliente}` : ''} · ${t.situacao}${t.prazo ? ` · prazo ${t.prazo.split('-').reverse().join('/')}` : ''}`)].join('\n')).then(() => setListaCopiada(true)).catch(() => undefined)} data-testid="copiar-projetos" className="ml-2 underline text-navy text-sm">{listaCopiada ? 'lista copiada' : 'copiar lista'}</button>}
               {projetos.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-projetos" className="ml-2 underline text-navy text-sm print:hidden">imprimir</button>}{/* Passo 181 */}
             </div>
             <div>

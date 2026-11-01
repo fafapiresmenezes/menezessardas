@@ -51,6 +51,7 @@ export default function MeuDiaPage() {
   const [acoes, setAcoes] = useState<{ id: string; indice: number; texto: string; feito_em: string | null }[]>([])
   const [resumo, setResumo] = useState<{ conteudo: Resumo; criado_em: string; enviado_em: string | null; destinatarios: number } | null>(null)
   const [msgResumo, setMsgResumo] = useState('')
+  const [diaCopiado, setDiaCopiado] = useState(false) // Passo 209
   useEffect(() => {
     if (!supabaseConfigurado) return
     supabase.from('resumos_semanais').select('conteudo,criado_em,enviado_em,destinatarios').order('semana', { ascending: false }).limit(1).maybeSingle().then(r => setResumo(r.data ?? null))
@@ -128,7 +129,7 @@ export default function MeuDiaPage() {
           <p className="text-sm text-grafite-claro mt-2">{p.foco}</p>
           <div className="flex flex-wrap gap-2 mt-3">
             {p.atalhos.map(a => <Link key={a.href + a.rotulo} to={a.href} className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy text-navy">{a.rotulo}</Link>)}
-            <button type="button" onClick={copiarDia} data-testid="copiar-dia" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy">Copiar meu dia</button>
+            <button type="button" onClick={() => { copiarDia(); setDiaCopiado(true) }} data-testid="copiar-dia" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy">{diaCopiado ? 'Dia copiado' : 'Copiar meu dia'}</button>
             {/* Passo 140: imprimir o dia em uma página. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-dia" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy print:hidden">Imprimir</button>
           </div>
