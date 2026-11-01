@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cartão do modelo · Instituto THEYE</title>
+<meta name="description" content="Cartão do modelo de previsão de ações de locação e dos agentes de IA do Instituto THEYE: dados, métricas, limites e usos indevidos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+.doc h2{font-size:26px;margin:40px 0 12px}
+.doc p,.doc li{font-size:15px;color:var(--tinta-2);max-width:75ch}
+.doc ul{margin:8px 0 0 20px}
+.doc li{padding:3px 0}
+dl{display:grid;grid-template-columns:220px 1fr;gap:8px 24px;font-size:14.5px;margin-top:12px}
+@media(max-width:600px){dl{grid-template-columns:1fr}}
+dt{color:var(--apagado)} dd{color:var(--tinta)}
+</style>
+</head>
+<body>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/laboratorio.html">Laboratório</a><a href="/comparar.html">Grafo x convencional</a><a href="/agentes.html">Agentes</a><a href="/modelo.html" aria-current="page">Cartão do modelo</a></nav>
+</div></header>
+<main>
+<div class="hero"><div class="w">
+  <div class="kicker">Transparência · NIST AI RMF · Resolução CNJ 615/2025</div>
+  <h1>Cartão do modelo.</h1>
+  <p class="lead">O que o modelo de previsão e os agentes de IA do Instituto fazem, com que dados foram feitos, quão bem acertam e quando não devem ser usados. Versão MC-v1, de 01/11/2026.</p>
+</div></div>
+<section class="doc"><div class="w">
+  <h2>1. Modelo de previsão de ações de locação</h2>
+  <dl>
+    <dt>Pergunta</dt><dd>Probabilidade de o autor ter o pedido julgado procedente, no todo ou em parte.</dd>
+    <dt>Modelos</dt><dd>A: taxa-base por tribunal e classe. B: regressão logística com regularização L2 (convencional). C: B mais variáveis do grafo de normas (artigos da Lei 8.245/91 ligados ao assunto).</dd>
+    <dt>Dados</dt><dd>21.147 ações de locação do DataJud/CNJ em 6 tribunais (TJRJ, TJSP, TJMG, TJRS, TJPR, TJDFT); 4.901 com mérito. Só metadados públicos; número do processo em código irreversível.</dd>
+    <dt>Validação</dt><dd>Corte no tempo: treino no passado, teste em 977 casos posteriores. Regras pré-registradas e seladas no Bitcoin antes de rodar (protocolo I-11).</dd>
+    <dt>Brier (menor é melhor)</dt><dd>A 0,1046 · B 0,1010 · C 0,1026.</dd>
+    <dt>Diferença C − B</dt><dd>+0,0016, intervalo de 95% de −0,0006 a +0,0038: inconclusivo. O grafo ainda não venceu o convencional.</dd>
+    <dt>Calibragem</dt><dd>Erro de calibração esperado (ECE) do modelo C: 1,4%. <a href="/comparar.html">Curva de confiabilidade</a>.</dd>
+  </dl>
+
+  <h2>2. Agentes de IA por botão</h2>
+  <dl>
+    <dt>Modelo</dt><dd>Claude Sonnet 5.5 (Anthropic), com Claude Haiku 5.5 como reserva.</dd>
+    <dt>O que fazem</dt><dd>50 agentes com roteiros temáticos explicam locação e os números do Instituto em linguagem simples, citando lei e súmulas.</dd>
+    <dt>Contexto</dt><dd>Só fatos publicados no site e o placar público; não acessam dados de pessoas.</dd>
+    <dt>Custo médio</dt><dd>US$ 0,0148 por resposta (cerca de R$ 0,08), medido em 14 respostas de teste.</dd>
+    <dt>Limites de uso</dt><dd>3 perguntas por dia grátis, 20 para membros, teto de 300 por dia no total.</dd>
+  </dl>
+
+  <h2>3. Limites conhecidos</h2>
+  <ul>
+    <li>Metadados não leem a petição nem as provas: a previsão é sobre a classe de casos, não sobre o seu caso.</li>
+    <li>Só 23% dos processos coletados têm desfecho de mérito; casos em andamento ficam de fora.</li>
+    <li>Tribunais fora dos 6 coletados não têm previsão própria.</li>
+    <li>Agentes de IA podem errar ou inventar detalhes; sempre confira a lei citada.</li>
+  </ul>
+
+  <h2>4. Usos indevidos</h2>
+  <ul>
+    <li>Tratar a probabilidade como garantia de resultado ou substituto de advogado.</li>
+    <li>Usar os números para avaliar ou ranquear juízes individualmente.</li>
+    <li>Colar dados pessoais de terceiros nas perguntas aos agentes.</li>
+  </ul>
+
+  <h2>5. Supervisão e contato</h2>
+  <p>Toda previsão nova é pré-registrada e pontuada depois, com resultado negativo publicado. Erros podem ser relatados pelo e-mail de confirmação do cadastro. Veja também o <a href="/privacidade.html">relatório de impacto à proteção de dados</a>.</p>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · Cartão do modelo MC-v1 (01/11/2026)</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
+</body>
+</html>
