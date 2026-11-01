@@ -275,6 +275,7 @@ export default function AgendaPage() {
             {/* Passo 156: imprimir a agenda do mês. */}
             {' '}<button type="button" onClick={() => window.print()} data-testid="imprimir-agenda" className="underline text-navy print:hidden">imprimir</button>
             {' '}<button type="button" data-testid="copiar-link-agenda" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 236 */}
+            {alertas.length > 0 && <button type="button" data-testid="baixar-agenda" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['data;imóvel;tipo;título;dias restantes', ...alertas.map(a => `${a.dataEvento};${a.imovel};${a.tipo};${a.titulo.replace(/;/g, ',')};${a.diasRestantes}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'agenda.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">baixar CSV</button>}{/* Passo 308 */}
             {' '}<button type="button" onClick={() => { setAno(hoje.getFullYear()); setMes(hoje.getMonth()) }} data-testid="agenda-hoje" className="underline text-navy print:hidden">hoje</button>{/* Passo 190 */}
           </p>
           {supabaseConfigurado && (

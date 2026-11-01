@@ -134,6 +134,7 @@ export default function MeuDiaPage() {
             {/* Passo 140: imprimir o dia em uma página. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-dia" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy print:hidden">Imprimir</button>
             <button type="button" data-testid="copiar-link-meu-dia" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 240 */}
+            {tarefas.length + vencendo.length > 0 && <button type="button" data-testid="baixar-meu-dia" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['tipo;título;prazo;prioridade', ...tarefas.map(t => `tarefa;${t.titulo.replace(/;/g, ',')};${t.prazo ?? ''};${t.prioridade}`), ...vencendo.map(v => `vencimento;${v.locatario_fornecedor};${v.data_vencimento};`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'meu-dia.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">baixar CSV</button>}{/* Passo 309 */}
           </div>
         </section>
 
