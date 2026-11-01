@@ -78,6 +78,7 @@ export const MEDICOES: Medicao[] = [
   { n: 88, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-88.pdf', sha256: 'ef1969e2a4be2407df6f15bbd7e2a8b98b8910f8c00e07d1e08236cfadf4b5e4', ots: true, entregue: 'Onda AV (Passos 283–287): Fornecedores e Equipe confirmam o link; vínculo, ficha do fornecedor e ficha do imóvel copiam o link.' },
   { n: 89, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-89.pdf', sha256: '4ec4a8227693ab879915b2e9ed49bb185a86cdf823b2f6d8f31cee3052d1da2d', ots: true, entregue: 'Onda AW (Passos 288–292): Painel, Portal do cliente, Mercado, Previsões e Compliance ganham botão para baixar o conteúdo (texto ou CSV).' },
   { n: 90, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-90.pdf', sha256: 'b39d9914a8c979db84bb440dab1d4ef6daeb4b8de124ffa77a9f2498e4073ea2', ots: true, entregue: 'Onda AX (Passos 293–297): Trilha, Intimações, Consumo, Fontes e Nuvem ganham botão para baixar os dados em CSV.' },
+  { n: 91, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-91.pdf', sha256: 'c1682c914a281de206a5f60397a07b0db603084ecd35e63df108adbe6c1948be', ots: true, entregue: 'Onda AY (Passos 298–302): Alertas, Radar de legislação, Horas, Modelos e Selos ganham botão para baixar os dados em CSV.' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
