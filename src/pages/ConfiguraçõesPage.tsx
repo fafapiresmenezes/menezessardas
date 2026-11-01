@@ -89,6 +89,8 @@ export default function ConfiguraçõesPage() {
         Gerencie seu perfil, preferências de notificações e acesso à inteligência artificial para análise de contratos.
       </p>
       <form onSubmit={salvar} className="max-w-2xl space-y-6" noValidate>
+        {/* Passo 168: imprimir o resumo das preferências (sem segredos). */}
+        <button type="button" onClick={() => window.print()} data-testid="imprimir-preferencias" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm mr-2 print:hidden">Imprimir</button>
         <button type="button" onClick={copiarResumoPrefs} data-testid="copiar-preferencias" className="min-h-[44px] px-4 border border-navy text-navy text-sm">{resumoCopiado ? 'Resumo copiado' : 'Copiar resumo das preferências'}</button>
         {aviso && (
           <p role="status" className="p-3 bg-regularFundo border-l-2 border-regular text-regular text-sm">

@@ -29,7 +29,9 @@ export default function InicioPage() {
   const [contagem, setContagem] = useState<number | null>(null)
   const [carregado, setCarregado] = useState(false)
   // Passo 98: busca rápida ("para onde quer ir?") filtra as 10 áreas por título ou descrição; Enter abre a primeira.
-  const [buscaArea, setBuscaArea] = useState('')
+  // Passo 170: a busca de área é lembrada neste navegador.
+  const [buscaArea, setBuscaArea] = useState(() => { try { return localStorage.getItem('lsm-inicio-busca') || '' } catch { return '' } })
+  useEffect(() => { try { localStorage.setItem('lsm-inicio-busca', buscaArea) } catch { /* sem armazenamento */ } }, [buscaArea])
   const norm = (t: string) => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   const areasVisiveis = AREAS.filter(a => !buscaArea || norm(a.titulo + ' ' + a.texto).includes(norm(buscaArea)))
   // Passo 128: mapa das 10 áreas em texto, para orientar quem entra na equipe.
