@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacidade e RIPD · Instituto THEYE</title>
+<meta name="description" content="Relatório de Impacto à Proteção de Dados Pessoais do laboratório e dos agentes do Instituto THEYE.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+.doc h2{font-size:26px;margin:40px 0 12px}
+.doc p,.doc li{font-size:15px;color:var(--tinta-2);max-width:75ch}
+.doc ul{margin:8px 0 0 20px}
+.doc li{padding:3px 0}
+.rolar{overflow-x:auto}
+.doc table{min-width:640px}
+</style>
+</head>
+<body>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/laboratorio.html">Laboratório</a><a href="/agentes.html">Agentes</a><a href="/privacidade.html" aria-current="page">Privacidade</a></nav>
+</div></header>
+<main>
+<div class="hero"><div class="w">
+  <div class="kicker">LGPD · art. 5º, XVII e art. 38</div>
+  <h1>Relatório de Impacto à Proteção de Dados.</h1>
+  <p class="lead">O que o laboratório e os agentes do Instituto fazem com dados pessoais, quais riscos isso cria e como cada risco é reduzido. Versão RIPD-v1, de 01/11/2026, revista a cada mudança relevante ou uma vez por ano.</p>
+</div></div>
+<section class="doc"><div class="w">
+  <h2>1. Quem trata e para quê</h2>
+  <p>Controlador: Instituto THEYE, Rio de Janeiro. Encarregado (DPO): em nomeação; até lá, os pedidos seguem pelo e-mail de confirmação do cadastro, com resposta em até 15 dias.</p>
+  <ul>
+    <li><b>Laboratório:</b> liberar uma consulta grátis por pessoa e impedir abuso por robôs.</li>
+    <li><b>Agentes por botão:</b> responder perguntas sobre locação com IA, com cota diária por pessoa e teto de custo.</li>
+    <li><b>Pesquisa:</b> medir a calibragem do modelo apenas em agregado.</li>
+  </ul>
+
+  <h2>2. Dados tratados</h2>
+  <div class="rolar" tabindex="0" role="region" aria-label="Tabela de dados tratados (role para o lado)"><table>
+    <thead><tr><th>Dado</th><th>Como fica guardado</th><th>Base legal</th></tr></thead>
+    <tbody>
+      <tr><td>E-mail</td><td>Em texto, para enviar o link de entrada</td><td>Execução do serviço pedido (art. 7º, V)</td></tr>
+      <tr><td>CPF</td><td>Nunca guardado: vira código irreversível HMAC-SHA-256 com chave secreta</td><td>Prevenção de fraude (art. 7º, IX)</td></tr>
+      <tr><td>Endereço de internet</td><td>Código irreversível, só para limitar tentativas por rede</td><td>Prevenção de fraude (art. 7º, IX)</td></tr>
+      <tr><td>Consultas ao laboratório</td><td>Parâmetros escolhidos e resultado, ligados ao cadastro</td><td>Execução do serviço (art. 7º, V)</td></tr>
+      <tr><td>Perguntas aos agentes</td><td>Não guardadas: só a contagem diária por pessoa e o total de tokens</td><td>Execução do serviço (art. 7º, V)</td></tr>
+      <tr><td>Processos judiciais (DataJud)</td><td>Número em código irreversível; só metadados públicos e agregados; nenhum nome de parte ou perfil de julgador</td><td>Dados tornados públicos, pesquisa (art. 7º, IV e §4º)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>3. Com quem os dados circulam</h2>
+  <ul>
+    <li>Supabase (banco de dados e funções), Vercel (hospedagem) e Brevo (e-mail de entrada).</li>
+    <li>Anthropic (modelo Claude): recebe o texto da pergunta feita a um agente, sem e-mail nem CPF, e não o usa para treinar modelos pela política comercial da API.</li>
+    <li>Esses operadores ficam fora do Brasil; a transferência se apoia em cláusulas contratuais dos provedores (art. 33, II).</li>
+  </ul>
+
+  <h2>4. Riscos e medidas</h2>
+  <div class="rolar" tabindex="0" role="region" aria-label="Tabela de riscos (role para o lado)"><table>
+    <thead><tr><th>Risco</th><th>Nível antes</th><th>Medidas</th><th>Nível depois</th></tr></thead>
+    <tbody>
+      <tr><td>Vazamento do cadastro</td><td>Médio</td><td>CPF e endereço de internet só como código irreversível; acesso ao banco só pelo servidor (RLS); HTTPS e CSP estrita</td><td>Baixo</td></tr>
+      <tr><td>Uso de CPF de terceiros para ganhar consultas</td><td>Médio</td><td>Um CPF, uma consulta grátis; desafio anti-robô de uso único; limite por rede</td><td>Baixo</td></tr>
+      <tr><td>Pessoa colar dado pessoal numa pergunta ao agente</td><td>Médio</td><td>Aviso na tela; pergunta limitada a 500 caracteres; texto não fica guardado; agente instruído a não comentar dados pessoais</td><td>Baixo</td></tr>
+      <tr><td>Reidentificação de partes ou julgadores</td><td>Alto</td><td>Somente agregados; número do processo em código; nenhum ranking individual de juiz</td><td>Baixo</td></tr>
+      <tr><td>Decisão automatizada que afete a pessoa</td><td>Baixo</td><td>Previsão é informativa, com intervalo e aviso de que não substitui advogado (art. 20)</td><td>Baixo</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>5. Direitos do titular</h2>
+  <p>Acesso, correção, exclusão, portabilidade e informação sobre compartilhamento (art. 18): responda ao e-mail de confirmação do cadastro. Atendimento em até 15 dias. O prazo de guarda dos dados será publicado nesta página.</p>
+
+  <h2>6. Conclusão</h2>
+  <p>Com as medidas acima, o risco residual é baixo. Pendências registradas no plano do Instituto: nomear o encarregado e publicar o prazo de retenção.</p>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · RIPD-v1 (01/11/2026)</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
+</body>
+</html>
