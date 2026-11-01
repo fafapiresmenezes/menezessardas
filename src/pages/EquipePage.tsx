@@ -38,6 +38,7 @@ export default function EquipePage() {
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
   // Passo 09: aceite de termos de uso e LGPD por pessoa (data, versão e hash).
   const [aceites, setAceites] = useState<Record<string, { versao: string; hash: string; aceito_em: string }>>({})
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 284
 
   const carregar = async () => {
     try {
@@ -136,7 +137,7 @@ export default function EquipePage() {
               <div className="px-6 pb-3 flex flex-wrap items-center gap-3">
                 <button type="button" onClick={async () => { const rot = (f: string | null) => f === 'admin' ? 'administrador' : f === 'operador' ? 'operador' : f === 'leitor' ? 'leitor' : 'esperando liberação'; const t = [`Equipe com acesso — ${new Date().toLocaleDateString('pt-BR')}`, ...pessoas.map(p => `• ${p.nome || p.email} <${p.email}> — ${rot(p.funcao)}`), 'GMenezes Advogados Associados'].join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoLista(true); setTimeout(() => setCopiadoLista(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-equipe" className="min-h-[44px] px-3 border border-navy text-navy text-xs">{copiadoLista ? 'Lista copiada' : 'Copiar lista'}</button>
                 <button type="button" onClick={() => window.print()} data-testid="imprimir-equipe" className="min-h-[44px] px-3 border border-navy/20 text-navy text-xs ml-2 print:hidden">Imprimir</button>{/* Passo 222 */}
-                <button type="button" data-testid="copiar-link-equipe" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="min-h-[44px] px-3 border border-navy/20 text-navy text-xs ml-2 print:hidden">Copiar link</button>{/* Passo 256 */}
+                <button type="button" data-testid="copiar-link-equipe" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-3 border border-navy/20 text-navy text-xs ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 256 */}
                 <input type="search" value={busca} onChange={e => { setBusca(e.target.value); try { localStorage.setItem('lsm-equipe-busca', e.target.value) } catch { /* sem memória local */ } }} placeholder="Buscar por nome ou e-mail" aria-label="Buscar pessoa por nome ou e-mail" className="border px-3 py-2 text-sm w-64" data-testid="busca-equipe" />
                 <select value={filtroFuncao} onChange={e => setFiltroFuncao(e.target.value)} aria-label="Filtrar por função" data-testid="filtro-funcao" className="border px-2 py-2 text-sm min-h-[44px]">
                   <option value="">Todas as funções</option>

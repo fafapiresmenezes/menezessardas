@@ -57,6 +57,7 @@ export default function VinculoPage() {
               <p className="text-xs uppercase tracking-wider text-dourado-escuro">{titulo}</p>
               <h2 className="text-2xl mt-1">{contrato.parte}</h2>
               <p className="text-sm text-grafite-claro mt-1">{rotulosTipoContrato[contrato.tipo]}</p>
+              <button type="button" data-testid="copiar-link-vinculo" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-2 min-h-[44px] px-3 border border-navy/20 text-navy text-xs print:hidden">Copiar link</button>{/* Passo 285 */}
             </div>
             <SeloSituacao
               situacao={situacaoPorPrazo(dias)}

@@ -115,6 +115,7 @@ export default function ImovelDetailPage() {
             <div>
               <p className="text-[11px] uppercase tracking-[0.18em] text-dourado-escuro">Ficha do imóvel</p>
               <h2 id="t-ficha" className="text-2xl mt-1">{imovel.endereco}</h2>
+              <button type="button" data-testid="copiar-link-imovel" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-2 min-h-[44px] px-3 border border-navy/20 text-navy text-xs print:hidden">Copiar link</button>{/* Passo 287 */}
             </div>
             <Building2 size={28} className="text-navy/30 flex-shrink-0" aria-hidden="true" />
           </div>

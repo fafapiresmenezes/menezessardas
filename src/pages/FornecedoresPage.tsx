@@ -77,6 +77,7 @@ export default function FornecedoresPage() {
   const nDesc = (f: (typeof lista)[number]) => f.slas.filter(x => statusSla(x).status === 'descumprido').length
   // Passo 133: lista ordenada copiável (nome, CNPJ, categoria, SLA) para a reunião de compras.
   const [listaCopiada, setListaCopiada] = useState(false)
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 283
   const copiarLista = async () => {
     const t = [`Fornecedores — ${ordenados.length} de ${lista.length}`, ...ordenados.map((f, i) => { const s = slaCumprido(f).pct; return `${i + 1}. ${f.nome} · ${formatarCnpj(f.cnpj)} · ${rotuloCategoria[f.categoria]}${s !== null ? ` · SLA ${s}%` : ''}` })].join('\n')
     try { await navigator.clipboard.writeText(t); setListaCopiada(true); setTimeout(() => setListaCopiada(false), 2500) } catch { /* sem área de transferência */ }
@@ -189,7 +190,7 @@ export default function FornecedoresPage() {
               </select>
             </label>
           </div>
-          {!carregando && lista.length > 0 && <p className="text-xs text-grafite-claro mb-3" data-testid="contador-fornecedores">Mostrando {ordenados.length} de {lista.length} fornecedor(es). <button type="button" onClick={copiarLista} data-testid="copiar-fornecedores" className="underline text-navy">{listaCopiada ? 'lista copiada' : 'copiar lista'}</button> <button type="button" onClick={() => window.print()} data-testid="imprimir-fornecedores" className="underline text-navy print:hidden">imprimir</button>{/* Passo 221 */} <button type="button" data-testid="copiar-link-fornecedores" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="underline text-navy print:hidden">copiar link</button>{/* Passo 255 */}</p>}
+          {!carregando && lista.length > 0 && <p className="text-xs text-grafite-claro mb-3" data-testid="contador-fornecedores">Mostrando {ordenados.length} de {lista.length} fornecedor(es). <button type="button" onClick={copiarLista} data-testid="copiar-fornecedores" className="underline text-navy">{listaCopiada ? 'lista copiada' : 'copiar lista'}</button> <button type="button" onClick={() => window.print()} data-testid="imprimir-fornecedores" className="underline text-navy print:hidden">imprimir</button>{/* Passo 221 */} <button type="button" data-testid="copiar-link-fornecedores" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 255 */}</p>}
           {carregando ? (
             <p className="text-grafite-claro">Carregando…</p>
           ) : lista.length === 0 ? (
