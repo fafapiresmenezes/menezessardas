@@ -46,7 +46,12 @@ function consulta(tabela: string) {
       const sel = { select: () => sel, single: async () => ({ data: lista[0] ?? null, error: null }), maybeSingle: async () => ({ data: lista[0] ?? null, error: null }), then: (res: (v: unknown) => void) => res({ data: lista, error: null }) }
       return Object.assign(sel, r)
     },
-    upsert: async (linha: unknown) => { const lista = Array.isArray(linha) ? linha : [linha]; for (const l of lista) estado.upserts.push({ tabela, linha: l }); return { data: null, error: null, count: lista.length } },
+    upsert(linha: unknown) {
+      const lista = (Array.isArray(linha) ? linha : [linha]) as Record<string, unknown>[]
+      for (const l of lista) { if (l.id === undefined) l.id = `novo-${++estado.sequencia}`; estado.upserts.push({ tabela, linha: l }) }
+      const sel = { select: () => sel, single: async () => ({ data: lista[0] ?? null, error: null }), maybeSingle: async () => ({ data: lista[0] ?? null, error: null }), then: (res: (v: unknown) => void) => res({ data: null, error: null, count: lista.length }) }
+      return sel
+    },
     update(valores: unknown) { escrita = { tipo: 'update', valores }; return q },
     delete() { return q },
     then(res: (v: unknown) => void) {
