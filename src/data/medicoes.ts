@@ -150,6 +150,7 @@ export const MEDICOES: Medicao[] = [
   { n: 160, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-160.pdf', sha256: '7b2fc3b00d7df248cc376e926022a8db7d444797eefa741271032d79c962b09b', ots: true, entregue: 'Onda DP (Passos 501–502): testes do novo imóvel e do painel; 345 testes' },
   { n: 161, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-161.pdf', sha256: '02915c2bc841eb7a4d2bf0b46956f0b55430179b30121db86e5e6e20d317f477', ots: true, entregue: 'Onda DQ (Passos 503–504): testes de fornecedores e novo contrato; 351 testes' },
   { n: 162, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-162.pdf', sha256: 'c5cb200240b5e779fb685fb9ed18123275bd3813f17dfc892f7db39b8953ea27', ots: true, entregue: 'Onda DR (Passos 505–506): testes do Instituto e da ficha do imóvel; 357 testes' },
+  { n: 163, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-163.pdf', sha256: '0ce23145728600ea144403010a5a19856e65ba606d31637a43a3de294ea5c7e5', ots: true, entregue: 'Onda DS (Passos 507–508): testes de relatórios e de casos e projetos; 363 testes' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
