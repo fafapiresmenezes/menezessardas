@@ -71,6 +71,7 @@ export const MEDICOES: Medicao[] = [
   { n: 81, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-81.pdf', sha256: '275592e4aff0230cee796d9db7cd8e6bc0a05b233964b9fa485447fb24d4fee8', ots: true, entregue: 'Onda AO (Passos 248–252): selos, honorários e assinaturas copiam o link; painel e mercado confirmam o link copiado.' },
   { n: 82, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-82.pdf', sha256: 'e8df984f2a8a97e4859f8358e2f6023cb398b45edd7ec6206dc468cb509a3273', ots: true, entregue: 'Onda AP (Passos 253–257): previsões, compliance e trilha confirmam o link copiado; fornecedores e equipe copiam o link.' },
   { n: 83, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-83.pdf', sha256: '07eb4070914b745a788f897dd87ecc029b72ed4c58fd116c96d401fae32530a6', ots: true, entregue: 'Onda AQ (Passos 258–262): Testar tudo, Consumo, Intimações, Configurações e Fontes confirmam o link copiado.' },
+  { n: 84, data: '2026-11-01', nota: 9.99, arquivo: 'medicao-84.pdf', sha256: 'a7919cb8d6cdecc0ed5171364812e40212079f4cc88521a39adeec4a83e0e554', ots: true, entregue: 'Onda AR (Passos 263–267): Nuvem, Indicadores, Relatórios, Consultores e Selos confirmam o link copiado.' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'

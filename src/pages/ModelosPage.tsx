@@ -35,6 +35,7 @@ export default function ModelosPage() {
   const [proprios, setProprios] = useState<Modelo[]>([])
   const [form, setForm] = useState({ titulo: '', area: 'Escritório', agente: 'civel', pedido: '' })
   const [aberto, setAberto] = useState(false)
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 269
   const [msg, setMsg] = useState('')
   // Passo 48: escolher um caso preenche as variáveis do modelo ({{cliente}}, {{processo}}, …) e os colchetes dos rótulos conhecidos.
   const [casos, setCasos] = useState<(CasoParaModelo & { id: string })[]>([])
@@ -99,7 +100,7 @@ export default function ModelosPage() {
             {/* Passo 118: catálogo em texto (título, área, origem), para o manual do escritório. */}
             {lista.length > 0 && <button type="button" data-testid="copiar-catalogo" onClick={() => navigator.clipboard?.writeText(`Modelos de peças · ${new Date().toLocaleDateString('pt-BR')} · ${lista.length} modelo(s)\n` + lista.map(m => `${m.titulo} · ${m.area} · ${m.proprio ? 'do escritório' : 'catálogo'}`).join('\n')).catch(() => undefined)} className="ml-3 underline text-navy">copiar catálogo</button>}
             {lista.length > 0 && <button type="button" data-testid="imprimir-catalogo" onClick={() => window.print()} className="ml-3 underline text-navy print:hidden">imprimir catálogo</button>}{/* Passo 185 */}
-            {lista.length > 0 && <button type="button" data-testid="copiar-link-modelos" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="ml-3 underline text-navy print:hidden">copiar link</button>}{/* Passo 230 */}
+            {lista.length > 0 && <button type="button" data-testid="copiar-link-modelos" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-3 underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 230 */}
           </p>
           <div className="flex flex-wrap gap-2 mt-2">
             {areas.map(a => <button key={a} type="button" onClick={() => setArea(a)} aria-pressed={area === a} className={`min-h-[36px] px-3 text-sm border ${area === a ? 'bg-navy text-white' : ''}`}>{a}</button>)}

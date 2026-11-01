@@ -47,6 +47,7 @@ export default function LegislacaoPage() {
   const [termoPesquisa, setTermoPesquisa] = useState('')
   const [resultadosPesquisa, setResultadosPesquisa] = useState<LeiFederal[]>([])
   const [buscandoPesquisa, setBuscandoPesquisa] = useState(false)
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 268
   const [radar, setRadar] = useState<NovidadePortal[]>([])
   // Passo 150: o filtro do radar (tudo, projetos, notícias) é lembrado neste navegador.
   const [filtroRadar, setFiltroRadar] = useState<'todos' | 'Projeto' | 'Notícia'>(() => { try { const v = localStorage.getItem('lsm-radar-filtro'); return v === 'Projeto' || v === 'Notícia' ? v : 'todos' } catch { return 'todos' } })
@@ -233,7 +234,7 @@ export default function LegislacaoPage() {
           {/* Passo 117: o radar em texto (tipo, título, fonte, data, link), para o boletim do escritório. */}
           {radar.length > 0 && <button type="button" data-testid="copiar-radar" onClick={() => navigator.clipboard?.writeText(`Radar de legislação · ${new Date().toLocaleDateString('pt-BR')} · ${radar.length} novidade(s)\n` + radar.map(n => `${n.tipo} · ${n.titulo} · ${n.fonte}${n.data ? ' · ' + formatarData(n.data) : ''}\n  ${n.link}`).join('\n')).catch(() => undefined)} className="mb-3 min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar radar</button>}
           {radar.length > 0 && <button type="button" data-testid="imprimir-radar" onClick={() => window.print()} className="mb-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir radar</button>}{/* Passo 184 */}
-          {radar.length > 0 && <button type="button" data-testid="copiar-link-radar" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mb-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar link</button>}{/* Passo 229 */}
+          {radar.length > 0 && <button type="button" data-testid="copiar-link-radar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mb-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 229 */}
           {radar.length === 0 ? (
             <p className="text-sm text-grafite-claro" data-testid="radar-vazio">Nada captado ainda para esta área. A varredura roda todo dia às 8h30; escolha "Todas as áreas" para ver o que já existe.</p>
           ) : (
