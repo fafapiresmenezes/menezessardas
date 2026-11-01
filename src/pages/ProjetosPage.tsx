@@ -191,6 +191,7 @@ export default function ProjetosPage() {
               {/* Passo 147: lista de projetos copiável (título, área, cliente, situação, prazo). */}
               {projetos.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Casos e projetos — ${projetos.length}${filtroArea ? ` (${filtroArea})` : ''}`, ...projetos.map(t => `${t.titulo} · ${t.area ?? 'sem área'}${t.cliente ? ` · ${t.cliente}` : ''} · ${t.situacao}${t.prazo ? ` · prazo ${t.prazo.split('-').reverse().join('/')}` : ''}`)].join('\n')).then(() => setListaCopiada(true)).catch(() => undefined)} data-testid="copiar-projetos" className="ml-2 underline text-navy text-sm">{listaCopiada ? 'lista copiada' : 'copiar lista'}</button>}
               {projetos.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-projetos" className="ml-2 underline text-navy text-sm print:hidden">imprimir</button>}{/* Passo 181 */}
+              {projetos.length > 0 && <button type="button" data-testid="copiar-link-projetos" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="ml-2 underline text-navy text-sm print:hidden">copiar link</button>}{/* Passo 247 */}
             </div>
             <div>
               <label htmlFor="projeto" className="block text-xs uppercase tracking-wider text-grafite mb-1">Projeto</label>

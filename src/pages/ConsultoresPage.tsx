@@ -107,6 +107,7 @@ export default function ConsultoresPage() {
                 <button type="button" onClick={() => navigator.clipboard?.writeText(resposta.resposta).then(() => setCopiado(true)).catch(() => undefined)} className="underline text-navy" data-testid="copiar-resposta">{copiado ? 'Copiado' : 'Copiar resposta'}</button>
                 {/* Passo 144: imprimir a resposta do consultor em uma página. */}
                 <button type="button" onClick={() => window.print()} className="underline text-navy print:hidden" data-testid="imprimir-consultor">Imprimir</button>
+                <button type="button" data-testid="copiar-link-consultores" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="ml-2 underline text-navy print:hidden">Copiar link</button>{/* Passo 246 */}
                 <button type="button" onClick={() => { setResposta(null); setPergunta(''); setErro(''); try { localStorage.removeItem('lsm-consultor-pergunta') } catch { /* sem memória local */ } }} className="underline text-navy" data-testid="nova-consulta">Nova consulta</button>
                 <a href={`#/projetos?novo=${encodeURIComponent(`Ação do ${sel.titulo}: ${resposta.resposta.replace(/\s+/g, ' ').slice(0, 120)}`)}`} className="underline text-navy" data-testid="virar-tarefa">Virar tarefa em Casos e projetos</a>
               </div>

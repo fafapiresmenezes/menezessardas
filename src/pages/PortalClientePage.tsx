@@ -23,6 +23,7 @@ type MarcaEscritorio = { nome: string; cor: string; logo_url: string | null; sed
 export default function PortalClientePage() {
   const { token = '' } = useParams()
   const [caso, setCaso] = useState<Caso | null | undefined>(undefined)
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 243
   const [resumo, setResumo] = useState<Resumo | null>(null)
   const [marca, setMarca] = useState<MarcaEscritorio | null>(null)
   useEffect(() => {
@@ -49,7 +50,7 @@ export default function PortalClientePage() {
             <h1 className="font-serif text-2xl text-navy mt-1">{caso.titulo}</h1>
             {/* Passo 174: o cliente imprime o andamento do caso. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-portal" className="mt-2 underline text-navy text-sm print:hidden">imprimir este andamento</button>
-            <button type="button" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} data-testid="copiar-link-portal" className="mt-2 ml-3 underline text-navy text-sm print:hidden">copiar link desta página</button>{/* Passo 205 */}
+            <button type="button" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} data-testid="copiar-link-portal" className="mt-2 ml-3 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link desta página'}</button>{/* Passo 205 */}
             <p className="text-sm text-grafite mt-1">{[caso.area, caso.numero_processo && `Processo ${caso.numero_processo}`].filter(Boolean).join(' · ')}</p>
             <div className="mt-5">
               <div className="flex justify-between text-sm text-grafite"><span>Andamento</span><span>{feitas} de {total} etapas</span></div>
