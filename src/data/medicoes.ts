@@ -139,6 +139,7 @@ export const MEDICOES: Medicao[] = [
   { n: 149, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-149.pdf', sha256: '5413d064b9afaddb851e51ab5ba6690ba245ff8201135ed7d90c8811bb3633c2', ots: true, entregue: 'Onda DE (Passos 479–480): testes das páginas de login e de convite de parceiro; 282 testes' },
   { n: 150, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-150.pdf', sha256: '7521baa13777131f517258632a16f9cb268e8e14b9c159d532c1bbb227cb6321', ots: true, entregue: 'Onda DF (Passos 481–482): testes da importação por planilha e da previsão de mercado; 287 testes' },
   { n: 151, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-151.pdf', sha256: 'da58c6d820ca3789a23f764af14602ad880c31503c618ddca6fb0e6b39dad4ad', ots: true, entregue: 'Onda DG (Passos 483–484): testes do vínculo e do Portal do cliente; 291 testes' },
+  { n: 152, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-152.pdf', sha256: 'e1ad84ba4982a73f332b9481441dfbf632d59a6b166d4faa42b15e8f9d4e6015', ots: true, entregue: 'Onda DH (Passos 485–486): testes da entrada por área e dos consultores; 297 testes' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
