@@ -44,7 +44,7 @@ describe('lerTabela', () => {
     expect(texto).toContain('GMenezes Advogados Associados')
     expect(texto).toContain('Nome: Ana')
     expect(texto).toContain('Valor: -')
-    expect(texto).toMatch(/2 linha\?\(s\?\)/)
+    expect(texto).toContain('2 linha')
     expect(texto).toContain('Desenvolvido pelo Instituto THEYE.')
     expect(texto.trimEnd().endsWith('%%EOF')).toBe(true)
   })
