@@ -32,6 +32,12 @@ export default function InicioPage() {
   const [buscaArea, setBuscaArea] = useState('')
   const norm = (t: string) => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   const areasVisiveis = AREAS.filter(a => !buscaArea || norm(a.titulo + ' ' + a.texto).includes(norm(buscaArea)))
+  // Passo 128: mapa das 10 áreas em texto, para orientar quem entra na equipe.
+  const [mapaCopiado, setMapaCopiado] = useState(false)
+  const copiarMapa = async () => {
+    const t = ['Áreas da plataforma — GMenezes Advogados Associados', ...AREAS.map((a, i) => `${i + 1}. ${a.titulo}: ${a.texto}`)].join('\n')
+    try { await navigator.clipboard.writeText(t); setMapaCopiado(true); setTimeout(() => setMapaCopiado(false), 2500) } catch { /* sem área de transferência */ }
+  }
   useEffect(() => {
     if (!supabaseConfigurado) { setCarregado(true); return }
     supabase.from('preferencias_usuario').select('area,area_fixa').maybeSingle().then(r => {
@@ -89,6 +95,7 @@ export default function InicioPage() {
         <label className="block text-white/80 text-sm">Para onde quer ir?
           <input value={buscaArea} onChange={e => setBuscaArea(e.target.value)} placeholder="Ex.: contrato, despejo, trabalhista, INSS…" data-testid="busca-area" className="mt-1 w-full max-w-md block border border-dourado/60 bg-white/95 text-navy px-3 min-h-[44px]" />
         </label>
+        <button type="button" onClick={copiarMapa} data-testid="copiar-mapa-areas" className="mt-2 underline text-white/80 text-xs">{mapaCopiado ? 'mapa copiado' : 'copiar mapa das áreas'}</button>
         {buscaArea && <p className="text-white/70 text-xs mt-1" data-testid="busca-area-resultado">{areasVisiveis.length ? `${areasVisiveis.length} área(s); Enter abre ${areasVisiveis[0].titulo}.` : 'Nenhuma área com esse termo. Tente "contrato" ou "cível".'}</p>}
       </form>
       <div className="grid gap-4 w-full max-w-6xl sm:grid-cols-2 lg:grid-cols-5">

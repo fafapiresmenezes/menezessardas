@@ -51,6 +51,12 @@ export default function TesteGeral() {
     if (!do_dia.length) return null
     return do_dia.every(h => h.ok)
   }
+  // Passo 132: histórico de 30 dias em texto (funcionando por dia) para o relatório mensal.
+  const [histCopiado, setHistCopiado] = useState(false)
+  const copiarHistorico = async () => {
+    const t = ['Teste automático — últimos 30 dias (funcionando/total por dia)', ...dias.map(d => { const r = resumoDia(d); return `${d.split('-').reverse().join('/')}: ${r ? `${r.ok}/${r.total}` : 'sem teste'}` })].join('\n')
+    try { await navigator.clipboard.writeText(t); setHistCopiado(true); setTimeout(() => setHistCopiado(false), 2500) } catch { /* sem área de transferência */ }
+  }
   const resumoDia = (dia: string) => {
     const do_dia = historico.filter(h => h.verificado_em.slice(0, 10) === dia)
     if (!do_dia.length) return null
@@ -110,7 +116,7 @@ export default function TesteGeral() {
         <section className="mb-4" aria-labelledby="t-historico" data-testid="historico-30-dias">
           <h3 id="t-historico" className="text-sm font-medium">Histórico do teste automático (30 dias)</h3>
           {recente !== null && <p className="text-sm my-1" data-testid="tendencia-testes">Últimos 7 dias: <strong>{recente.toLocaleString('pt-BR')}%</strong> das verificações funcionaram{anterior !== null && <> ({recente > anterior ? 'melhor' : recente < anterior ? 'pior' : 'igual'} que os 7 dias anteriores, {anterior.toLocaleString('pt-BR')}%)</>}.</p>}
-          <p className="text-xs text-grafite-claro mb-2">Cada quadrado é um dia: verde funcionou, vermelho falhou, cinza sem teste. Quando algo falha, as administradoras recebem e-mail na hora.</p>
+          <p className="text-xs text-grafite-claro mb-2">Cada quadrado é um dia: verde funcionou, vermelho falhou, cinza sem teste. Quando algo falha, as administradoras recebem e-mail na hora. <button type="button" onClick={copiarHistorico} data-testid="copiar-historico-testes" className="underline text-navy">{histCopiado ? 'histórico copiado' : 'copiar histórico'}</button></p>
           <div className="overflow-x-auto">
             <table className="text-xs border-separate border-spacing-0.5" role="grid" aria-label="Resultado diário por verificação">
               <thead><tr><th scope="col" className="text-left pr-2 font-normal text-grafite-claro">Verificação</th>{dias.map(d => <th key={d} scope="col" className="font-normal text-grafite-claro w-4" title={d.split('-').reverse().join('/')}>{d.slice(8) === '01' || d === dias[0] ? d.slice(8) : <span className="sr-only">{d.split('-').reverse().join('/')}</span>}</th>)}</tr></thead>

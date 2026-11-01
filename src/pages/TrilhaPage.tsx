@@ -113,6 +113,12 @@ export default function TrilhaPage() {
     setLastros(await verificarLastro())
   }
 
+  // Passo 131: registros filtrados copiáveis (nº, data, ação, resumo, hash) para o relatório.
+  const [registrosCopiados, setRegistrosCopiados] = useState(false)
+  const copiarRegistros = async () => {
+    const t = [`Trilha de auditoria — ${filtrados.length} registro(s)`, ...filtrados.map(e => `nº ${e.seq} · ${dataHora(e.em)} · ${rotuloTipo[e.tipo]} · ${e.resumo} · hash ${e.hash.slice(0, 16)}…`)].join('\n')
+    try { await navigator.clipboard.writeText(t); setRegistrosCopiados(true); setTimeout(() => setRegistrosCopiados(false), 2500) } catch { /* sem área de transferência */ }
+  }
   const filtrados = eventos.filter(e => (!filtro.tipo || e.tipo === filtro.tipo) && (!filtro.texto || e.resumo.toLowerCase().includes(filtro.texto.toLowerCase())) && (!filtro.dia || e.em.slice(0, 10) === filtro.dia))
   return (
     <Layout title="Trilha de auditoria">
@@ -272,6 +278,7 @@ export default function TrilhaPage() {
             <label>Dia<input type="date" value={filtro.dia} onChange={e => setFiltro({ ...filtro, dia: e.target.value })} className="block border px-3 py-2 mt-1 min-h-[44px]" data-testid="filtro-dia" /></label>
             {(filtro.tipo || filtro.texto || filtro.dia) && <button type="button" onClick={() => setFiltro({ tipo: '', texto: '', dia: '' })} className="min-h-[44px] px-3 border">Limpar</button>}
             <p className="text-grafite-claro" data-testid="contagem-trilha">{filtrados.length} de {eventos.length} registros</p>
+            {filtrados.length > 0 && <button type="button" onClick={copiarRegistros} data-testid="copiar-registros" className="min-h-[44px] px-3 border">{registrosCopiados ? 'Copiados' : 'Copiar registros'}</button>}
           </section>
         )}
         <section className="bg-white shadow-sm" aria-label="Registros da trilha">

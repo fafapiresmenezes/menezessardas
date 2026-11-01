@@ -193,6 +193,13 @@ function PainelInstituto() {
     } catch (e) { setErro(mensagemAmigavel(e)) } finally { setOcupado(false) }
   }
   const r = res ? resumirPrevisaoInstituto(res) : null
+  // Passo 129: resultado do Instituto copiável para o parecer, com fonte e aviso.
+  const [resCopiado, setResCopiado] = useState(false)
+  const copiarInstituto = async () => {
+    if (!res || !r) return
+    const t = [`Probabilidade do Instituto THEYE — ${tribunal} · ${classe}`, `${r.titulo} — ${r.detalhe} · confiança ${r.confianca}`, r.grafo ?? '', `Aviso: ${res.aviso}`, `Fonte: ${res.fonte} · mede tendência do tribunal, não o processo concreto`].filter(Boolean).join('\n')
+    try { await navigator.clipboard.writeText(t); setResCopiado(true); setTimeout(() => setResCopiado(false), 2500) } catch { /* sem área de transferência */ }
+  }
   const campo = 'w-full min-h-[44px] border border-navy/15 px-3 text-sm bg-white focus:outline-none focus:border-dourado'
   return (
     <section className="bg-white p-6 shadow-sm border-t-2 border-dourado" aria-labelledby="t-instituto" data-testid="painel-instituto">
@@ -215,6 +222,7 @@ function PainelInstituto() {
           {r.grafo && <p className="text-sm text-grafite" data-testid="instituto-grafo">{r.grafo}</p>}
           <p className="text-sm p-3 bg-atencaoFundo border-l-4 border-atencao" role="note" data-testid="instituto-aviso">{res.aviso}</p>
           <p className="text-xs text-grafite-claro">Fonte: {res.fonte} · {tribunal} · {classe}. Mede tendência do tribunal, não o seu processo.</p>
+          <button type="button" onClick={copiarInstituto} data-testid="instituto-copiar" className="min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{resCopiado ? 'Resultado copiado' : 'Copiar para o parecer'}</button>
         </div>
       )}
     </section>

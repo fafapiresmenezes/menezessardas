@@ -84,6 +84,9 @@ export default function CompliancePage() {
   }
   // Passo 69: código de integridade (SHA-256 das respostas, empresa e data) impresso no relatório entregue ao cliente.
   const [codigo, setCodigo] = useState('')
+  // Passo 130: código de integridade copiável para o e-mail ao cliente.
+  const [codigoCopiado, setCodigoCopiado] = useState(false)
+  const copiarCodigo = async () => { try { await navigator.clipboard.writeText(`Diagnóstico de compliance${empresa.trim() ? ` — ${empresa.trim()}` : ''} · ${new Date().toLocaleDateString('pt-BR')} · código de integridade SHA-256 ${codigo}`); setCodigoCopiado(true); setTimeout(() => setCodigoCopiado(false), 2500) } catch { /* sem área de transferência */ } }
   useEffect(() => {
     if (geral === null) { setCodigo(''); return }
     const texto = JSON.stringify({ empresa: empresa.trim(), resp, geral, data: new Date().toISOString().slice(0, 10) })
@@ -133,7 +136,7 @@ export default function CompliancePage() {
               {lacunas.sort((a, b) => (a.v ?? 0) - (b.v ?? 0)).map((l, i) => <li key={i}><strong>{l.pilar}:</strong> {l.acao} <span className="text-xs text-grafite-claro">({l.v === 0 ? 'prioridade alta' : 'prioridade média'}; {l.base})</span></li>)}
             </ol>
             <button type="button" onClick={async () => { const t = [`Diagnóstico de compliance${empresa.trim() ? ` — ${empresa.trim()}` : ''} — ${new Date().toLocaleDateString('pt-BR')}`, `Nota geral: ${geral}% (${nivel}) · ${respondidas} de ${total} perguntas`, '', `Plano de ação (${lacunas.length} lacunas):`, ...[...lacunas].sort((a, b) => (a.v ?? 0) - (b.v ?? 0)).map((l, i) => `${i + 1}. ${l.pilar}: ${l.acao} (${l.v === 0 ? 'prioridade alta' : 'prioridade média'})`), codigo ? `\nCódigo de integridade: ${codigo}` : '', 'GMenezes Advogados Associados'].filter(x => x !== '' || true).join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoDiag(true); setTimeout(() => setCopiadoDiag(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-diagnostico" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoDiag ? 'Diagnóstico copiado' : 'Copiar diagnóstico para o cliente'}</button>
-            {codigo && <p className="text-xs text-grafite-claro mt-4 break-all" data-testid="codigo-integridade">Código de integridade (SHA-256 das respostas, empresa e data): {codigo}. Qualquer alteração nas respostas muda este código.</p>}
+            {codigo && <p className="text-xs text-grafite-claro mt-4 break-all" data-testid="codigo-integridade">Código de integridade (SHA-256 das respostas, empresa e data): {codigo}. Qualquer alteração nas respostas muda este código. <button type="button" onClick={copiarCodigo} data-testid="copiar-codigo" className="underline text-navy print:hidden">{codigoCopiado ? 'código copiado' : 'copiar código'}</button></p>}
             <div className="flex flex-wrap gap-3 mt-4 print:hidden">
               <button type="button" onClick={() => window.print()} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2"><Printer className="w-4 h-4" aria-hidden />Imprimir ou salvar em PDF</button>
               {supabaseConfigurado && <button type="button" onClick={salvarPlano} disabled={salvando} data-testid="salvar-plano" className="min-h-[44px] border border-navy text-navy px-5 text-sm uppercase tracking-wider disabled:opacity-50">{salvando ? 'Criando…' : 'Gravar diagnóstico e criar plano em Casos e projetos'}</button>}
