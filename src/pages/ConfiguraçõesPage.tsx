@@ -42,6 +42,7 @@ export default function ConfiguraçõesPage() {
   const [aviso, setAviso] = useState('')
   // Passo 136: resumo das preferências em texto (sem chaves nem senhas) para conferir com a administradora.
   const [resumoCopiado, setResumoCopiado] = useState(false)
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 261
   const copiarResumoPrefs = async () => {
     const t = ['Minhas preferências — GMenezes Advogados Associados', `Nome: ${prefs.nomeCompleto || '(em branco)'}`, `E-mail: ${prefs.email || '(em branco)'}`, `Avisos na plataforma: ${prefs.notificacoes ? 'ligados' : 'desligados'}`, `Alertas por e-mail: ${prefs.alertasEmail ? 'ligados' : 'desligados'}`, `Antecedência dos alertas: ${prefs.diasAntecedencia} dia(s)`].join('\n')
     try { await navigator.clipboard.writeText(t); setResumoCopiado(true); setTimeout(() => setResumoCopiado(false), 2500) } catch { /* sem área de transferência */ }
@@ -93,7 +94,7 @@ export default function ConfiguraçõesPage() {
         <button type="button" onClick={() => window.print()} data-testid="imprimir-preferencias" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm mr-2 print:hidden">Imprimir</button>
         <button type="button" onClick={copiarResumoPrefs} data-testid="copiar-preferencias" className="min-h-[44px] px-4 border border-navy text-navy text-sm">{resumoCopiado ? 'Resumo copiado' : 'Copiar resumo das preferências'}</button>
         <button type="button" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(prefs, null, 2)], { type: 'application/json' })); a.download = 'preferencias-gmenezes.json'; a.click(); URL.revokeObjectURL(a.href) }} data-testid="baixar-preferencias" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">Baixar preferências (JSON)</button>{/* Passo 213 */}
-        <button type="button" data-testid="copiar-link-configuracoes" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">Copiar link</button>{/* Passo 233 */}
+        <button type="button" data-testid="copiar-link-configuracoes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 233 */}
         {aviso && (
           <p role="status" className="p-3 bg-regularFundo border-l-2 border-regular text-regular text-sm">
             ✓ {aviso}

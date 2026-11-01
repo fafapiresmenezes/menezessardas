@@ -54,6 +54,7 @@ export default function TesteGeral() {
   // Passo 132: histórico de 30 dias em texto (funcionando por dia) para o relatório mensal.
   const [histCopiado, setHistCopiado] = useState(false)
   const [relCopiado, setRelCopiado] = useState(false) // Passo 207
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 258
   const copiarHistorico = async () => {
     const t = ['Teste automático — últimos 30 dias (funcionando/total por dia)', ...dias.map(d => { const r = resumoDia(d); return `${d.split('-').reverse().join('/')}: ${r ? `${r.ok}/${r.total}` : 'sem teste'}` })].join('\n')
     try { await navigator.clipboard.writeText(t); setHistCopiado(true); setTimeout(() => setHistCopiado(false), 2500) } catch { /* sem área de transferência */ }
@@ -108,7 +109,7 @@ export default function TesteGeral() {
           {Object.keys(estados).length > 0 && (<>
             {/* Passo 165: imprimir o relatório do Testar tudo. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-relatorio" className="inline-flex items-center gap-2 border px-3 min-h-[44px] text-sm mr-2 print:hidden">Imprimir</button>
-            <button type="button" data-testid="copiar-link-testes" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="inline-flex items-center gap-2 border px-3 min-h-[44px] text-sm print:hidden">Copiar link</button>{/* Passo 224 */}
+            <button type="button" data-testid="copiar-link-testes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="inline-flex items-center gap-2 border px-3 min-h-[44px] text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 224 */}
             <button type="button" onClick={() => { copiarRelatorio(); setRelCopiado(true) }} data-testid="copiar-relatorio" className="inline-flex items-center gap-2 border border-navy/20 text-navy min-h-[44px] px-4 text-sm">
               {relCopiado ? 'Relatório copiado' : 'Copiar relatório'}
             </button>

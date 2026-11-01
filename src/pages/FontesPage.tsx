@@ -46,6 +46,7 @@ export default function FontesPage() {
   const [salvas, setSalvas] = useState<Salva[]>([])
   // Passo 137: buscas salvas copiáveis (termo, última rodada, total, novas) para o relatório semanal.
   const [salvasCopiadas, setSalvasCopiadas] = useState(false)
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 262
   const copiarSalvas = async () => {
     const t = [`Buscas salvas no Comunica PJe — ${salvas.length}`, ...salvas.map(s => `${s.termo}: ${s.ultima_execucao ? `última rodada ${dt(s.ultima_execucao)} · ${s.ultimo_total} no ano · ${s.novas_ultima} nova(s)` : 'ainda não rodou'}`)].join('\n')
     try { await navigator.clipboard.writeText(t); setSalvasCopiadas(true); setTimeout(() => setSalvasCopiadas(false), 2500) } catch { /* sem área de transferência */ }
@@ -133,7 +134,7 @@ export default function FontesPage() {
           <p className="text-sm text-grafite-claro mt-1">O servidor procura cada nome no Comunica PJe (CNJ) todas as manhãs. Comunicações novas entram em Intimações e em Alertas, sem API paga. Até 20 por pessoa. Ligue a busca a um caso para que cada novidade vire tarefa do responsável em Meu dia.</p>
           {/* Passo 169: imprimir as buscas salvas. */}
           {salvas.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-salvas" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}
-          {salvas.length > 0 && <button type="button" data-testid="copiar-link-fontes" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar link</button>}{/* Passo 227 */}
+          {salvas.length > 0 && <button type="button" data-testid="copiar-link-fontes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 227 */}
           {salvas.length > 0 && <button type="button" onClick={copiarSalvas} data-testid="copiar-salvas" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm">{salvasCopiadas ? 'Buscas copiadas' : 'Copiar buscas salvas'}</button>}
           {salvas.length ? (
             <ul className="mt-3 divide-y divide-navy/10">

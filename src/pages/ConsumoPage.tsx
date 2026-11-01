@@ -45,6 +45,7 @@ export default function ConsumoPage() {
   const [msg, setMsg] = useState<{ ok: boolean; texto: string } | null>(null)
   // Passo 97: resumo do mês em texto para a sócia.
   const [copiadoResumo, setCopiadoResumo] = useState(false)
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 259
   // Passo 127: tabelas "por função" e "por usuário" copiáveis para a reunião de custos.
   const [tabelaCopiada, setTabelaCopiada] = useState<'funcao' | 'usuario' | null>(null)
   const [carregando, setCarregando] = useState(true)
@@ -133,7 +134,7 @@ export default function ConsumoPage() {
           <p className="text-4xl font-serif text-navy mt-4" data-testid="total-mes">{carregando ? '…' : brl(totalBrl)}</p>
           {!carregando && <button type="button" onClick={async () => { const t = [`Consumo de IA e e-mails — ${nomeMes(mes)}`, `Total: ${brl(totalBrl)} em ${doMes.reduce((s, l) => s + Number(l.usos), 0)} uso(s)`, ...(mes === mesAtual() ? [`Projeção para o fim do mês: ${brl(projetarMes(totalBrl, new Date()).projecao)}`] : []), cot ? `Cotação: US$ 1 = ${brl(taxa)} (${cot.data})` : '', 'GMenezes Advogados Associados'].filter(Boolean).join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoResumo(true); setTimeout(() => setCopiadoResumo(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-consumo" className="mt-2 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo do mês'}</button>}
           {!carregando && <button type="button" onClick={() => window.print()} data-testid="imprimir-consumo" className="ml-2 underline text-navy text-sm print:hidden">imprimir</button>}{/* Passo 199 */}
-          {!carregando && <button type="button" data-testid="copiar-link-consumo" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="ml-2 underline text-navy text-sm print:hidden">copiar link</button>}{/* Passo 225 */}
+          {!carregando && <button type="button" data-testid="copiar-link-consumo" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 225 */}
           <p className="text-sm text-grafite-claro capitalize">{nomeMes(mes)} · {doMes.reduce((s, l) => s + Number(l.usos), 0)} uso(s)</p>
           {cot && <p className="text-xs text-grafite-claro mt-2">Cotação usada: US$ 1 = {brl(taxa)} ({cot.data}).</p>}
           {mes === mesAtual() && !carregando && (() => {

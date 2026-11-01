@@ -21,6 +21,7 @@ export default function IntimacoesPage() {
   const [oabs, setOabs] = useState('')
   const [msg, setMsg] = useState<{ ok: boolean; texto: string } | null>(null)
   const [ocupado, setOcupado] = useState(false)
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 260
   // Passo 135: opção "só urgentes" (vencidas e críticas) no filtro.
   // Passo 167: o filtro escolhido é lembrado neste navegador.
   const [filtro, setFiltro] = useState<'novas' | 'todas' | 'urgentes'>(() => { try { const v = localStorage.getItem('lsm-intimacoes-filtro'); return v === 'todas' || v === 'urgentes' ? v : 'novas' } catch { return 'novas' } })
@@ -94,7 +95,7 @@ export default function IntimacoesPage() {
             {/* Passo 105: resumo das intimações visíveis em texto (processo, tribunal, prazo), para colar na agenda ou no e-mail do cliente. */}
             {visiveis.length > 0 && <button type="button" onClick={copiarResumo} data-testid="copiar-intimacoes" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar resumo</button>}
             {visiveis.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-intimacoes" className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}{/* Passo 200 */}
-            {visiveis.length > 0 && <button type="button" data-testid="copiar-link-intimacoes" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar link</button>}{/* Passo 226 */}
+            {visiveis.length > 0 && <button type="button" data-testid="copiar-link-intimacoes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 226 */}
           </div>
           <p className="flex flex-wrap gap-3 text-xs" data-testid="resumo-urgencia">
             <span><strong>{resumo.vencido}</strong> vencida(s)</span>
