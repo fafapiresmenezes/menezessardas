@@ -52,7 +52,8 @@ async function noticias(termo: string): Promise<Novidade[]> {
   const itens = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].slice(0, 8)
   return itens.map(m => {
     const bloco = m[1]
-    const pega = (tag: string) => limpa(bloco.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`))?.[1] ?? '')
+    // <source url="…"> vem com atributo no RSS do Google: a etiqueta pode ter atributos.
+    const pega = (tag: string) => limpa(bloco.match(new RegExp(`<${tag}(?:\\s[^>]*)?>([\\s\\S]*?)</${tag}>`))?.[1] ?? '')
     const link = pega('link')
     const data = new Date(pega('pubDate'))
     return {

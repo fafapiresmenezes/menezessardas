@@ -12,6 +12,7 @@ function consulta(tabela: string) {
   const filtros: ((r: Record<string, unknown>) => boolean)[] = []
   const filtrosDesc: [string, string, unknown][] = []
   let limite: number | null = null
+  let salto = 0
   let ordem: { col: string; asc: boolean } | null = null
   let cabeca = false
   let modoUm: 'single' | 'maybe' | null = null
@@ -19,6 +20,7 @@ function consulta(tabela: string) {
   const linhas = () => {
     let l = (estado.tabelas[tabela] ?? []).filter(r => filtros.every(f => f(r)))
     if (ordem) { const { col, asc } = ordem; l = [...l].sort((a, b) => (String(pega(a, col)) < String(pega(b, col)) ? -1 : 1) * (asc ? 1 : -1)) }
+    if (salto) l = l.slice(salto)
     if (limite != null) l = l.slice(0, limite)
     return l
   }
@@ -34,6 +36,7 @@ function consulta(tabela: string) {
     lte(c: string, v: unknown) { filtros.push(r => String(pega(r, c)) <= String(v)); return q },
     order(c: string, o?: { ascending?: boolean }) { ordem = { col: c, asc: o?.ascending !== false }; return q },
     limit(n: number) { limite = n; return q },
+    range(de: number, ate: number) { salto = de; limite = ate - de + 1; return q },
     single() { modoUm = 'single'; return q },
     maybeSingle() { modoUm = 'maybe'; return q },
     insert(linha: unknown) {
@@ -43,7 +46,7 @@ function consulta(tabela: string) {
       const sel = { select: () => sel, single: async () => ({ data: lista[0] ?? null, error: null }), maybeSingle: async () => ({ data: lista[0] ?? null, error: null }), then: (res: (v: unknown) => void) => res({ data: lista, error: null }) }
       return Object.assign(sel, r)
     },
-    upsert: async (linha: unknown) => { for (const l of Array.isArray(linha) ? linha : [linha]) estado.upserts.push({ tabela, linha: l }); return { data: null, error: null } },
+    upsert: async (linha: unknown) => { const lista = Array.isArray(linha) ? linha : [linha]; for (const l of lista) estado.upserts.push({ tabela, linha: l }); return { data: null, error: null, count: lista.length } },
     update(valores: unknown) { escrita = { tipo: 'update', valores }; return q },
     delete() { return q },
     then(res: (v: unknown) => void) {
