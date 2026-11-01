@@ -171,6 +171,7 @@ export const MEDICOES: Medicao[] = [
   { n: 181, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-181.pdf', sha256: '10996530bd5bbe76c0500fad8bbf63c619a5f08422b05dad579791516dbb3212', ots: true, entregue: 'Onda EK (Passos 542–543): Edge Functions lembrete-okr, convidar-parceiro e definir-senha-provisoria; 504 testes' },
   { n: 182, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-182.pdf', sha256: 'c38039c87b856df42fcc1b267c3e238c1cf533d7bc52585fcc111d58450764c6', ots: true, entregue: 'Onda EL (Passos 544–545): Edge Functions escavador, coletor-motor e roteiro-outlook; 513 testes' },
   { n: 183, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-183.pdf', sha256: 'a03aa32adb3382a6854a6c034dbe9f4cdbbdb3967bed49b43a2dd92e21bd1f94', ots: true, entregue: 'Onda EM (Passos 546–547): Edge Functions previsao-locacao, monitor-portais e alerta-teste-agentes; fonte da notícia corrigida; 521 testes' },
+  { n: 184, data: '2026-11-02', nota: 9.99, arquivo: 'medicao-184.pdf', sha256: 'd6e59474d2d15de1d69159337dff93f9ca46d63a9cc69cb18d45d943760d57c0', ots: true, entregue: 'Onda EN (Passos 548–549): Edge Functions agendar-notificacoes, monitorar e resumo-semanal; dublê de upsert encadeável; 536 testes' },
 ]
 export const PLANO_M31 = { data: '2026-10-30', arquivo: 'plano-ferramentas-m31.pdf', sha256: 'b60c477ff478f00ae853a49145fcaf2503ebd7a9a447d614e1bac963540e62d6', media: 8.87 }
 export const DECK_URL = 'https://claude.ai/artifact/8HBHbCZbTx2vXEBAqmWSu5'
