@@ -127,7 +127,10 @@ describe('instituto-acesso', () => {
     const ok = await (await chamar({ acao: 'consultar', sessao: 's', tribunal: 'TJRJ', classe: 'Despejo', orgao: '', assunto: '9' })).json()
     expect(ok).toEqual({ ok: true, resultado: { probabilidade: 0.71 } })
     expect(rpc('instituto_prever')[0]).toEqual({ p_tribunal: 'TJRJ', p_classe: 'Despejo', p_orgao: null, p_assunto: 9 })
-    expect(rpc('instituto_registrar_consulta')[0]).toEqual({ p_membro: 'm1', p_gratuita: true, p_entrada: { tribunal: 'TJRJ', classe: 'Despejo', orgao: null, assunto: 9 }, p_resultado: { probabilidade: 0.71 } })
+    expect(rpc('instituto_registrar_consulta_v2')[0]).toEqual({ p_membro: 'm1', p_gratuita: true, p_entrada: { tribunal: 'TJRJ', classe: 'Despejo', orgao: null, assunto: 9 }, p_resultado: { probabilidade: 0.71 } })
+    // C25: dois pedidos simultâneos; o segundo encontra a consulta grátis já gravada e recebe 402.
+    estado.rpcResposta.instituto_registrar_consulta_v2 = false
+    expect((await chamar({ acao: 'consultar', sessao: 's', tribunal: 'TJRJ', classe: 'Despejo' })).status).toBe(402)
     estado.rpcResposta.instituto_prever = { erro: 'Sem amostra suficiente.' }
     expect((await chamar({ acao: 'consultar', sessao: 's' })).status).toBe(400)
     estado.rpcResposta.instituto_membro_por_sessao = { id: 'm1', plano: 'gratis', pode_consultar: false }

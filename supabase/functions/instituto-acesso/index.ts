@@ -19,6 +19,12 @@ async function hmac(chave: string, t: string) {
   const k = await crypto.subtle.importKey('raw', new TextEncoder().encode(chave), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
   return hex(await crypto.subtle.sign('HMAC', k, new TextEncoder().encode(t)))
 }
+// Comparação em tempo constante (não revela por tempo quantos caracteres batem).
+function iguais(a: string, b: string) {
+  if (a.length !== b.length) return false
+  let d = 0; for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i)
+  return d === 0
+}
 let cacheSegredos: Record<string, string> | null = null
 async function segredo(nome: string) {
   if (!cacheSegredos) {
@@ -90,7 +96,7 @@ async function tratar(req: Request, site: string): Promise<Response> {
     if (DESCARTAVEIS.includes(email.split('@')[1])) return json({ erro: 'E-mails temporários não são aceitos.' }, 400)
     // Anti-robô: armadilha vazia, tempo mínimo de 3 s e prova de trabalho assinada pelo servidor e com menos de 10 min.
     const p = b.prova ?? {}
-    const okAssin = p.sal && p.assinatura === await hmac(await segredo('assinatura_desafio'), `${p.sal}|${p.emitido}`)
+    const okAssin = !!p.sal && iguais(String(p.assinatura ?? ''), await hmac(await segredo('assinatura_desafio'), `${p.sal}|${p.emitido}`))
     const okTempo = Date.now() - Number(p.emitido) < 600000 && Number(b.ms) >= 3000
     const okPow = (await sha(`${p.sal}:${p.nonce}`)).startsWith('0'.repeat(BITS / 4))
     if (b.site || !okAssin || !okTempo || !okPow) return json({ erro: 'Não conseguimos confirmar que você é uma pessoa. Recarregue a página e tente de novo.' }, 400)
@@ -138,7 +144,9 @@ async function tratar(req: Request, site: string): Promise<Response> {
     const entrada = { tribunal: String(b.tribunal ?? ''), classe: String(b.classe ?? ''), orgao: b.orgao ? String(b.orgao) : null, assunto: b.assunto ? Number(b.assunto) : null }
     const { data: res } = await db().rpc('instituto_prever', { p_tribunal: entrada.tribunal, p_classe: entrada.classe, p_orgao: entrada.orgao, p_assunto: entrada.assunto })
     if (!res || res.erro) return json({ erro: res?.erro ?? 'Não foi possível calcular agora.' }, 400)
-    await db().rpc('instituto_registrar_consulta', { p_membro: m.id, p_gratuita: m.plano !== 'membro', p_entrada: entrada, p_resultado: res })
+    // Passo C25: grava antes de responder; a consulta grátis é única mesmo com pedidos simultâneos.
+    const { data: gravou } = await db().rpc('instituto_registrar_consulta_v2', { p_membro: m.id, p_gratuita: m.plano !== 'membro', p_entrada: entrada, p_resultado: res })
+    if (gravou === false) return json({ erro: 'Sua consulta gratuita já foi usada. Para continuar, torne-se membro.', membro: false }, 402)
     return json({ ok: true, resultado: res })
   }
 
