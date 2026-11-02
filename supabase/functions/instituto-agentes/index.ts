@@ -3,6 +3,7 @@
 // Só gasta IA quando alguém aperta o botão; cota por pessoa e teto diário protegem o custo.
 // Os agentes são IA com roteiro inspirado em currículos de doutorado; não são pessoas.
 import { createClient } from 'jsr:@supabase/supabase-js@2'
+import { verificarPergunta, MSG_BLOQUEIO, REGRA_SISTEMA, embrulhar, respostaSegura } from './filtro.ts'
 const SITE = 'https://instituto-theye.vercel.app'
 const ORIGENS = ['https://theye.club', 'https://www.theye.club', SITE]
 const MODELO = 'claude-sonnet-5-5'
@@ -47,6 +48,11 @@ async function tratar(req: Request): Promise<Response> {
   }
   if (b.acao !== 'perguntar') return json({ erro: 'Ação desconhecida.' }, 400)
 
+  // Passo C26: pergunta que tenta mudar as regras é barrada antes de gastar cota ou IA.
+  const livre = String(b.pergunta ?? '').trim().slice(0, 500)
+  const v = verificarPergunta(livre)
+  if (!v.ok) { await s.rpc('instituto_injecao_registrar', { p_motivo: v.motivo }); return json({ erro: MSG_BLOQUEIO, bloqueado: v.motivo }, 422) }
+
   // Quem pergunta: pessoa cadastrada no laboratório (sessão) ou o teste automático (segredo do cron).
   const { data: conf } = await s.from('configuracoes').select('chave,valor').in('chave', ['anthropic_api_key', 'cron_segredo'])
   const c = Object.fromEntries((conf ?? []).map((x: { chave: string; valor: string }) => [x.chave, x.valor]))
@@ -61,12 +67,13 @@ async function tratar(req: Request): Promise<Response> {
   const { data: ag } = await s.rpc('instituto_agente_def', { p_id: String(b.agente ?? '') })
   if (!ag?.id) return json({ erro: 'Agente não encontrado.' }, 404)
   if (!c.anthropic_api_key) return json({ erro: 'IA indisponível agora.' }, 503)
-  const pergunta = (String(b.pergunta ?? '').trim().slice(0, 500)) || ag.botao
+  const pergunta = livre || ag.botao
 
   const sistema = `Você é "${ag.nome}", agente de IA do Instituto THEYE (pesquisa em predição jurídica e ontologia do direito, nicho locação no Brasil).
 Área: ${ag.area}. Roteiro inspirado no currículo de doutorado de referência: ${ag.formacao}. Você não é uma pessoa nem tem vínculo com essas universidades; se perguntarem, diga isso.
 Papel: ${ag.papel}
 Regras: responda em português do Brasil, simples, para leigos, em no máximo 200 palavras, sempre terminando a resposta; cite artigo de lei ou súmula quando usar (Lei 8.245/91, STJ, STF); use só os números do contexto abaixo quando falar de dados do Instituto, e diga quando não houver dado; nunca dê garantia de resultado nem substitua um advogado; nunca peça nem comente dados pessoais; termine com uma linha "Para aprofundar:" indicando uma página do site (/placar.html, /ontologia.html, /locacao.html, /comparar.html, /laboratorio.html, /precos.html, /estudar.html).
+${REGRA_SISTEMA}
 
 ${await contexto()}`
 
@@ -76,7 +83,7 @@ ${await contexto()}`
     resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST', headers: { 'x-api-key': c.anthropic_api_key, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
       // Resposta curta e explicativa: sem raciocínio estendido (Sonnet 5.5 usa between_tools; Haiku 5.5 aceita disabled) e esforço baixo.
-      body: JSON.stringify({ model: mod, max_tokens: 1500, system: sistema, messages: [{ role: 'user', content: pergunta }],
+      body: JSON.stringify({ model: mod, max_tokens: 1500, system: sistema, messages: [{ role: 'user', content: embrulhar(pergunta) }],
         thinking: { type: mod === MODELO ? 'between_tools' : 'disabled' }, output_config: { effort: 'low' } }),
     }).catch(() => null)
     if (resp?.ok) break
@@ -90,6 +97,7 @@ ${await contexto()}`
   await s.rpc('instituto_agente_registrar', { p_agente: ag.id, p_in: tin, p_out: tout, p_usd: usd })
   await s.from('consumo_api').insert({ funcao: `Instituto: agente ${ag.id}`, modelo, tokens_entrada: tin, tokens_saida: tout })
   if (!texto) return json({ erro: 'O agente não conseguiu responder agora. Tente de novo.' }, 502)
+  if (!respostaSegura(texto)) return json({ erro: MSG_BLOQUEIO, bloqueado: 'vazamento na resposta' }, 422)
   // Passo C09: sorteia até 20 respostas por semana para revisão humana (guarda só a resposta, nunca a pergunta).
   await s.rpc('instituto_agente_amostrar', { p_agente: ag.id, p_modelo: modelo, p_resposta: texto })
   return json({ ok: true, agente: ag.nome, resposta: texto, modelo, tokens: { entrada: tin, saida: tout }, custo_usd: Number(usd.toFixed(6)) })
