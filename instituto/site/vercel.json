@@ -131,6 +131,19 @@
    ]
   },
   {
+   "source": "/(.*)\\.csv",
+   "headers": [
+    {
+     "key": "Content-Type",
+     "value": "text/csv; charset=utf-8"
+    },
+    {
+     "key": "Cache-Control",
+     "value": "public, max-age=300, s-maxage=86400"
+    }
+   ]
+  },
+  {
    "source": "/(.*)",
    "headers": [
     {
@@ -182,7 +195,7 @@
    "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/929f3ba6fd9fdf002a0095f627eb92e79eda6983/instituto/site/fonts/:f"
   },
   {
-   "source": "/:f([a-z0-9-]+\\.(?:html|js|css|ttl|json|txt))",
+   "source": "/:f([a-z0-9-]+\\.(?:html|js|css|ttl|json|txt|csv))",
    "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/929f3ba6fd9fdf002a0095f627eb92e79eda6983/instituto/site/:f"
   }
  ]

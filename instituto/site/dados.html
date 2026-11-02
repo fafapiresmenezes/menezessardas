@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dados abertos · Instituto THEYE</title>
+<meta name="description" content="Base agregada de ações de locação (DataJud/CNJ) do Instituto THEYE em CSV, com licença CC BY 4.0, dicionário de dados e método.">
+<link rel="preload" href="/fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="base.css">
+<style>
+.doc h2{font-size:26px;margin:40px 0 12px}
+.doc p,.doc li{font-size:15px;color:var(--tinta-2);max-width:75ch}
+.doc ul{margin:8px 0 0 20px}
+.doc li{padding:3px 0}
+dl{display:grid;grid-template-columns:220px 1fr;gap:8px 24px;font-size:14.5px;margin-top:12px}
+@media(max-width:600px){dl{grid-template-columns:1fr}}
+dt{color:var(--apagado)} dd{color:var(--tinta)}
+.btn{display:inline-block;margin-top:16px}
+</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/comparar.html">Grafo x convencional</a><a href="/ontologia.html">Ontologia</a><a href="/modelo.html">Cartão do modelo</a><a href="/dados.html" aria-current="page">Dados abertos</a></nav>
+</div></header>
+<main id="conteudo">
+<div class="hero"><div class="w">
+  <div class="kicker">Dados abertos · CC BY 4.0 · FAIR</div>
+  <h1>Base agregada de ações de locação.</h1>
+  <p class="lead">Contagens de ações de locação por tribunal, classe processual, ano de ajuizamento e desfecho, com o tempo mediano até o desfecho. Versão v1, de 02/11/2026. Livre para uso, inclusive comercial, desde que o Instituto THEYE seja citado.</p>
+  <a class="btn" href="/dados-locacao-agregados-v1.csv" download>Baixar CSV (748 linhas, 50 KB)</a>
+</div></div>
+<section class="doc"><div class="w">
+  <h2>Ficha da base</h2>
+  <dl>
+    <dt>Arquivo</dt><dd><a href="/dados-locacao-agregados-v1.csv">dados-locacao-agregados-v1.csv</a> (UTF-8, separador vírgula, texto entre aspas)</dd>
+    <dt>SHA-256</dt><dd class="hash">958f64cfff87ec85344444c11d2b544ec451210e853d8372729cf33ff90df9c4</dd>
+    <dt>Licença</dt><dd><a href="https://creativecommons.org/licenses/by/4.0/deed.pt-br">Creative Commons Atribuição 4.0 Internacional (CC BY 4.0)</a></dd>
+    <dt>Como citar</dt><dd>Instituto THEYE. Base agregada de ações de locação v1 (DataJud/CNJ). Rio de Janeiro, 02/11/2026. Disponível em https://instituto-theye.vercel.app/dados.html</dd>
+    <dt>Fonte</dt><dd>API pública do DataJud (Conselho Nacional de Justiça), metadados de processos das classes de locação (Lei 8.245/91) em TJRJ, TJSP, TJMG, TJRS, TJPR e TJDFT, coletados diariamente.</dd>
+    <dt>Cobertura</dt><dd>21.147 processos na base; 18.408 aparecem no arquivo. Os 2.739 restantes estão em combinações com menos de 5 processos, que foram suprimidas.</dd>
+    <dt>Privacidade</dt><dd>Só contagens agregadas. Nenhum número de processo, nome de parte, advogado, juiz ou órgão julgador. Células com menos de 5 processos são suprimidas (LGPD, art. 12; ver <a href="/privacidade.html">relatório de impacto</a>).</dd>
+  </dl>
+  <h2>Dicionário de dados</h2>
+  <dl>
+    <dt>tribunal</dt><dd>Sigla do tribunal de justiça estadual (ou do DF).</dd>
+    <dt>classe_processual</dt><dd>Classe da Tabela Processual Unificada do CNJ (por exemplo, Despejo por Falta de Pagamento, Renovatória).</dd>
+    <dt>ano_ajuizamento</dt><dd>Ano em que a ação foi proposta.</dd>
+    <dt>desfecho</dt><dd>procedencia, parcial, improcedencia, sem_merito (extinção sem julgar o pedido), acordo, ou em_andamento_ou_sem_desfecho. Classificado pelos movimentos processuais da TPU.</dd>
+    <dt>n_processos</dt><dd>Quantidade de processos na combinação (sempre 5 ou mais).</dd>
+    <dt>mediana_dias_ate_desfecho</dt><dd>Mediana de dias entre o ajuizamento e o desfecho. Vazio quando não há desfecho.</dd>
+  </dl>
+  <h2>Limites</h2>
+  <ul>
+    <li>Os metadados do DataJud podem ter atraso e erros de cadastro dos tribunais.</li>
+    <li>A classificação do desfecho é automática, a partir dos movimentos; erros possíveis estão descritos no <a href="/modelo.html">cartão do modelo</a>.</li>
+    <li>Ações recentes tendem a aparecer sem desfecho porque ainda tramitam.</li>
+  </ul>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · Dados abertos v1 (C16, 02/11/2026)</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="/vitais.js" defer></script>
+</body>
+</html>

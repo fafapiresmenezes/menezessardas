@@ -1,0 +1,749 @@
+tribunal,classe_processual,ano_ajuizamento,desfecho,n_processos,mediana_dias_ate_desfecho
+TJDFT,"Consignação em Pagamento",2017,em_andamento_ou_sem_desfecho,9,
+TJDFT,"Consignação em Pagamento",2019,procedencia,7,164
+TJDFT,"Consignação em Pagamento",2020,em_andamento_ou_sem_desfecho,11,
+TJDFT,"Consignação em Pagamento",2020,procedencia,6,489
+TJDFT,"Consignação em Pagamento",2021,procedencia,7,324
+TJDFT,"Consignação em Pagamento",2022,em_andamento_ou_sem_desfecho,5,
+TJDFT,"Consignação em Pagamento",2022,procedencia,6,111
+TJDFT,"Consignação em Pagamento",2023,em_andamento_ou_sem_desfecho,7,
+TJDFT,"Consignação em Pagamento",2024,em_andamento_ou_sem_desfecho,19,
+TJDFT,"Consignação em Pagamento",2024,procedencia,11,531
+TJDFT,"Consignação em Pagamento",2025,em_andamento_ou_sem_desfecho,55,
+TJDFT,"Consignação em Pagamento",2025,improcedencia,9,252
+TJDFT,"Consignação em Pagamento",2025,parcial,11,374
+TJDFT,"Consignação em Pagamento",2025,procedencia,23,249
+TJDFT,"Consignação em Pagamento",2026,em_andamento_ou_sem_desfecho,140,
+TJDFT,"Consignação em Pagamento",2026,improcedencia,6,65
+TJDFT,"Consignação em Pagamento",2026,procedencia,12,103
+TJDFT,"Consignação em Pagamento",2026,sem_merito,6,97
+TJDFT,"Despejo",2025,em_andamento_ou_sem_desfecho,10,
+TJDFT,"Despejo",2026,em_andamento_ou_sem_desfecho,100,
+TJDFT,"Despejo por Falta de Pagamento",2025,em_andamento_ou_sem_desfecho,10,
+TJDFT,"Despejo por Falta de Pagamento",2026,em_andamento_ou_sem_desfecho,179,
+TJDFT,"Despejo por Falta de Pagamento",2026,procedencia,16,70
+TJDFT,"Despejo por Falta de Pagamento",2026,sem_merito,6,36
+TJDFT,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,em_andamento_ou_sem_desfecho,12,
+TJDFT,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,parcial,7,672
+TJDFT,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,procedencia,11,471
+TJDFT,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,em_andamento_ou_sem_desfecho,92,
+TJDFT,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,parcial,26,314
+TJDFT,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,procedencia,26,323
+TJDFT,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,sem_merito,7,343
+TJDFT,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,em_andamento_ou_sem_desfecho,520,
+TJDFT,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,parcial,19,158
+TJDFT,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,procedencia,29,108
+TJDFT,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,sem_merito,21,92
+TJDFT,"Renovatória de Locação",2021,em_andamento_ou_sem_desfecho,5,
+TJDFT,"Renovatória de Locação",2024,em_andamento_ou_sem_desfecho,11,
+TJDFT,"Renovatória de Locação",2025,em_andamento_ou_sem_desfecho,32,
+TJDFT,"Renovatória de Locação",2026,em_andamento_ou_sem_desfecho,70,
+TJDFT,"Renovatória de Locação",2026,procedencia,6,113
+TJDFT,"Revisional de Aluguel",2025,em_andamento_ou_sem_desfecho,7,
+TJDFT,"Revisional de Aluguel",2026,em_andamento_ou_sem_desfecho,13,
+TJMG,"Consignação em Pagamento",2010,em_andamento_ou_sem_desfecho,5,
+TJMG,"Consignação em Pagamento",2011,em_andamento_ou_sem_desfecho,6,
+TJMG,"Consignação em Pagamento",2013,procedencia,5,4026
+TJMG,"Consignação em Pagamento",2014,em_andamento_ou_sem_desfecho,6,
+TJMG,"Consignação em Pagamento",2015,improcedencia,5,2888
+TJMG,"Consignação em Pagamento",2016,em_andamento_ou_sem_desfecho,7,
+TJMG,"Consignação em Pagamento",2016,procedencia,5,2665
+TJMG,"Consignação em Pagamento",2017,em_andamento_ou_sem_desfecho,12,
+TJMG,"Consignação em Pagamento",2017,procedencia,7,1599
+TJMG,"Consignação em Pagamento",2018,em_andamento_ou_sem_desfecho,10,
+TJMG,"Consignação em Pagamento",2018,procedencia,7,2310
+TJMG,"Consignação em Pagamento",2019,em_andamento_ou_sem_desfecho,13,
+TJMG,"Consignação em Pagamento",2019,improcedencia,6,1792
+TJMG,"Consignação em Pagamento",2019,procedencia,11,2039
+TJMG,"Consignação em Pagamento",2020,em_andamento_ou_sem_desfecho,24,
+TJMG,"Consignação em Pagamento",2020,improcedencia,7,1261
+TJMG,"Consignação em Pagamento",2020,procedencia,12,1855
+TJMG,"Consignação em Pagamento",2021,em_andamento_ou_sem_desfecho,33,
+TJMG,"Consignação em Pagamento",2021,improcedencia,7,1174
+TJMG,"Consignação em Pagamento",2021,parcial,9,1232
+TJMG,"Consignação em Pagamento",2021,procedencia,15,1052
+TJMG,"Consignação em Pagamento",2021,sem_merito,8,1739
+TJMG,"Consignação em Pagamento",2022,em_andamento_ou_sem_desfecho,47,
+TJMG,"Consignação em Pagamento",2022,improcedencia,9,778
+TJMG,"Consignação em Pagamento",2022,procedencia,20,994
+TJMG,"Consignação em Pagamento",2023,em_andamento_ou_sem_desfecho,44,
+TJMG,"Consignação em Pagamento",2023,improcedencia,6,293
+TJMG,"Consignação em Pagamento",2023,procedencia,24,887
+TJMG,"Consignação em Pagamento",2023,sem_merito,13,683
+TJMG,"Consignação em Pagamento",2024,em_andamento_ou_sem_desfecho,80,
+TJMG,"Consignação em Pagamento",2024,improcedencia,12,464
+TJMG,"Consignação em Pagamento",2024,procedencia,24,502
+TJMG,"Consignação em Pagamento",2024,sem_merito,22,185
+TJMG,"Consignação em Pagamento",2025,em_andamento_ou_sem_desfecho,100,
+TJMG,"Consignação em Pagamento",2025,improcedencia,8,343
+TJMG,"Consignação em Pagamento",2025,procedencia,13,319
+TJMG,"Consignação em Pagamento",2026,em_andamento_ou_sem_desfecho,47,
+TJMG,"Consignação em Pagamento",2026,procedencia,7,114
+TJMG,"Despejo",1986,em_andamento_ou_sem_desfecho,7,
+TJMG,"Despejo",2022,em_andamento_ou_sem_desfecho,7,
+TJMG,"Despejo",2023,em_andamento_ou_sem_desfecho,9,
+TJMG,"Despejo",2023,procedencia,5,887
+TJMG,"Despejo",2024,em_andamento_ou_sem_desfecho,12,
+TJMG,"Despejo",2024,procedencia,8,587
+TJMG,"Despejo",2025,em_andamento_ou_sem_desfecho,41,
+TJMG,"Despejo",2025,procedencia,7,377
+TJMG,"Despejo",2026,em_andamento_ou_sem_desfecho,36,
+TJMG,"Despejo por Falta de Pagamento",1983,em_andamento_ou_sem_desfecho,11,
+TJMG,"Despejo por Falta de Pagamento",1984,em_andamento_ou_sem_desfecho,7,
+TJMG,"Despejo por Falta de Pagamento",1985,em_andamento_ou_sem_desfecho,5,
+TJMG,"Despejo por Falta de Pagamento",1986,em_andamento_ou_sem_desfecho,16,
+TJMG,"Despejo por Falta de Pagamento",1987,em_andamento_ou_sem_desfecho,18,
+TJMG,"Despejo por Falta de Pagamento",1988,em_andamento_ou_sem_desfecho,9,
+TJMG,"Despejo por Falta de Pagamento",1990,em_andamento_ou_sem_desfecho,11,
+TJMG,"Despejo por Falta de Pagamento",1991,em_andamento_ou_sem_desfecho,20,
+TJMG,"Despejo por Falta de Pagamento",1992,em_andamento_ou_sem_desfecho,16,
+TJMG,"Despejo por Falta de Pagamento",1993,em_andamento_ou_sem_desfecho,18,
+TJMG,"Despejo por Falta de Pagamento",1994,em_andamento_ou_sem_desfecho,8,
+TJMG,"Despejo por Falta de Pagamento",1995,em_andamento_ou_sem_desfecho,23,
+TJMG,"Despejo por Falta de Pagamento",1996,em_andamento_ou_sem_desfecho,34,
+TJMG,"Despejo por Falta de Pagamento",1997,em_andamento_ou_sem_desfecho,23,
+TJMG,"Despejo por Falta de Pagamento",1998,em_andamento_ou_sem_desfecho,16,
+TJMG,"Despejo por Falta de Pagamento",1999,em_andamento_ou_sem_desfecho,25,
+TJMG,"Despejo por Falta de Pagamento",2000,em_andamento_ou_sem_desfecho,7,
+TJMG,"Despejo por Falta de Pagamento",2002,acordo,5,138
+TJMG,"Despejo por Falta de Pagamento",2002,procedencia,5,160
+TJMG,"Despejo por Falta de Pagamento",2003,em_andamento_ou_sem_desfecho,6,
+TJMG,"Despejo por Falta de Pagamento",2003,procedencia,6,112
+TJMG,"Despejo por Falta de Pagamento",2005,acordo,5,259
+TJMG,"Despejo por Falta de Pagamento",2005,em_andamento_ou_sem_desfecho,5,
+TJMG,"Despejo por Falta de Pagamento",2005,procedencia,6,140
+TJMG,"Despejo por Falta de Pagamento",2007,acordo,8,104
+TJMG,"Despejo por Falta de Pagamento",2022,em_andamento_ou_sem_desfecho,6,
+TJMG,"Despejo por Falta de Pagamento",2023,em_andamento_ou_sem_desfecho,13,
+TJMG,"Despejo por Falta de Pagamento",2024,em_andamento_ou_sem_desfecho,13,
+TJMG,"Despejo por Falta de Pagamento",2025,em_andamento_ou_sem_desfecho,16,
+TJMG,"Despejo por Falta de Pagamento",2025,procedencia,8,287
+TJMG,"Despejo por Falta de Pagamento",2025,sem_merito,6,61
+TJMG,"Despejo por Falta de Pagamento",2026,em_andamento_ou_sem_desfecho,21,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2010,em_andamento_ou_sem_desfecho,5,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2011,em_andamento_ou_sem_desfecho,5,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2015,em_andamento_ou_sem_desfecho,6,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2016,em_andamento_ou_sem_desfecho,7,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2016,parcial,5,3312
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2017,em_andamento_ou_sem_desfecho,7,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2017,procedencia,5,907
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2018,em_andamento_ou_sem_desfecho,13,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2019,em_andamento_ou_sem_desfecho,15,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2019,parcial,5,2514
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2019,procedencia,6,1807
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2020,em_andamento_ou_sem_desfecho,35,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2020,parcial,7,1977
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2020,procedencia,11,1996
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2021,em_andamento_ou_sem_desfecho,38,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2021,parcial,8,1483
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2021,procedencia,8,1501
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2022,em_andamento_ou_sem_desfecho,45,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2022,parcial,11,1293
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2022,procedencia,11,1260
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,em_andamento_ou_sem_desfecho,69,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,parcial,14,987
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,procedencia,31,855
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,sem_merito,7,614
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,em_andamento_ou_sem_desfecho,135,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,parcial,20,661
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,procedencia,34,593
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,sem_merito,13,258
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,em_andamento_ou_sem_desfecho,168,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,parcial,22,419
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,procedencia,47,312
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,sem_merito,13,260
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,em_andamento_ou_sem_desfecho,141,
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,procedencia,9,128
+TJMG,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,sem_merito,10,106
+TJMG,"Renovatória de Locação",1983,em_andamento_ou_sem_desfecho,5,
+TJMG,"Renovatória de Locação",1986,em_andamento_ou_sem_desfecho,5,
+TJMG,"Renovatória de Locação",1987,em_andamento_ou_sem_desfecho,8,
+TJMG,"Renovatória de Locação",1988,em_andamento_ou_sem_desfecho,9,
+TJMG,"Renovatória de Locação",1989,em_andamento_ou_sem_desfecho,5,
+TJMG,"Renovatória de Locação",1990,em_andamento_ou_sem_desfecho,6,
+TJMG,"Renovatória de Locação",1991,em_andamento_ou_sem_desfecho,5,
+TJMG,"Renovatória de Locação",1994,em_andamento_ou_sem_desfecho,10,
+TJMG,"Renovatória de Locação",1996,em_andamento_ou_sem_desfecho,8,
+TJMG,"Renovatória de Locação",1999,em_andamento_ou_sem_desfecho,5,
+TJMG,"Renovatória de Locação",2014,parcial,8,2417
+TJMG,"Renovatória de Locação",2015,sem_merito,5,3060
+TJMG,"Renovatória de Locação",2016,em_andamento_ou_sem_desfecho,5,
+TJMG,"Renovatória de Locação",2017,em_andamento_ou_sem_desfecho,7,
+TJMG,"Renovatória de Locação",2018,em_andamento_ou_sem_desfecho,7,
+TJMG,"Renovatória de Locação",2018,sem_merito,7,1975
+TJMG,"Renovatória de Locação",2019,em_andamento_ou_sem_desfecho,14,
+TJMG,"Renovatória de Locação",2019,parcial,7,2146
+TJMG,"Renovatória de Locação",2019,sem_merito,15,1554
+TJMG,"Renovatória de Locação",2020,em_andamento_ou_sem_desfecho,35,
+TJMG,"Renovatória de Locação",2020,parcial,6,1193
+TJMG,"Renovatória de Locação",2020,sem_merito,20,1267
+TJMG,"Renovatória de Locação",2021,em_andamento_ou_sem_desfecho,28,
+TJMG,"Renovatória de Locação",2021,sem_merito,23,1128
+TJMG,"Renovatória de Locação",2022,em_andamento_ou_sem_desfecho,57,
+TJMG,"Renovatória de Locação",2022,parcial,8,1264
+TJMG,"Renovatória de Locação",2022,sem_merito,23,636
+TJMG,"Renovatória de Locação",2023,em_andamento_ou_sem_desfecho,91,
+TJMG,"Renovatória de Locação",2023,parcial,5,946
+TJMG,"Renovatória de Locação",2023,sem_merito,45,399
+TJMG,"Renovatória de Locação",2024,em_andamento_ou_sem_desfecho,59,
+TJMG,"Renovatória de Locação",2024,parcial,5,819
+TJMG,"Renovatória de Locação",2024,sem_merito,13,227
+TJMG,"Renovatória de Locação",2025,em_andamento_ou_sem_desfecho,69,
+TJMG,"Renovatória de Locação",2026,em_andamento_ou_sem_desfecho,40,
+TJMG,"Revisional de Aluguel",1985,em_andamento_ou_sem_desfecho,9,
+TJMG,"Revisional de Aluguel",1986,em_andamento_ou_sem_desfecho,24,
+TJMG,"Revisional de Aluguel",1987,em_andamento_ou_sem_desfecho,74,
+TJMG,"Revisional de Aluguel",1988,em_andamento_ou_sem_desfecho,25,
+TJMG,"Revisional de Aluguel",1989,em_andamento_ou_sem_desfecho,28,
+TJMG,"Revisional de Aluguel",1990,em_andamento_ou_sem_desfecho,63,
+TJMG,"Revisional de Aluguel",1991,em_andamento_ou_sem_desfecho,127,
+TJMG,"Revisional de Aluguel",1992,em_andamento_ou_sem_desfecho,42,
+TJMG,"Revisional de Aluguel",1993,em_andamento_ou_sem_desfecho,12,
+TJMG,"Revisional de Aluguel",1994,em_andamento_ou_sem_desfecho,25,
+TJMG,"Revisional de Aluguel",1995,em_andamento_ou_sem_desfecho,88,
+TJMG,"Revisional de Aluguel",1996,em_andamento_ou_sem_desfecho,7,
+TJMG,"Revisional de Aluguel",1997,em_andamento_ou_sem_desfecho,7,
+TJMG,"Revisional de Aluguel",2018,em_andamento_ou_sem_desfecho,6,
+TJMG,"Revisional de Aluguel",2020,em_andamento_ou_sem_desfecho,8,
+TJMG,"Revisional de Aluguel",2020,parcial,6,1669
+TJMG,"Revisional de Aluguel",2020,sem_merito,6,213
+TJMG,"Revisional de Aluguel",2021,em_andamento_ou_sem_desfecho,16,
+TJMG,"Revisional de Aluguel",2021,improcedencia,5,807
+TJMG,"Revisional de Aluguel",2021,parcial,5,1561
+TJMG,"Revisional de Aluguel",2021,sem_merito,10,1213
+TJMG,"Revisional de Aluguel",2022,em_andamento_ou_sem_desfecho,14,
+TJMG,"Revisional de Aluguel",2023,em_andamento_ou_sem_desfecho,22,
+TJMG,"Revisional de Aluguel",2024,em_andamento_ou_sem_desfecho,17,
+TJMG,"Revisional de Aluguel",2025,em_andamento_ou_sem_desfecho,22,
+TJMG,"Revisional de Aluguel",2026,em_andamento_ou_sem_desfecho,7,
+TJPR,"Consignação em Pagamento",2013,em_andamento_ou_sem_desfecho,5,
+TJPR,"Consignação em Pagamento",2015,em_andamento_ou_sem_desfecho,5,
+TJPR,"Consignação em Pagamento",2019,em_andamento_ou_sem_desfecho,10,
+TJPR,"Consignação em Pagamento",2019,procedencia,6,1491
+TJPR,"Consignação em Pagamento",2020,em_andamento_ou_sem_desfecho,9,
+TJPR,"Consignação em Pagamento",2020,procedencia,7,469
+TJPR,"Consignação em Pagamento",2021,em_andamento_ou_sem_desfecho,21,
+TJPR,"Consignação em Pagamento",2021,procedencia,12,1409
+TJPR,"Consignação em Pagamento",2022,em_andamento_ou_sem_desfecho,24,
+TJPR,"Consignação em Pagamento",2022,improcedencia,5,917
+TJPR,"Consignação em Pagamento",2022,procedencia,7,1146
+TJPR,"Consignação em Pagamento",2023,em_andamento_ou_sem_desfecho,34,
+TJPR,"Consignação em Pagamento",2023,improcedencia,5,757
+TJPR,"Consignação em Pagamento",2023,procedencia,14,688
+TJPR,"Consignação em Pagamento",2024,em_andamento_ou_sem_desfecho,61,
+TJPR,"Consignação em Pagamento",2024,improcedencia,10,469
+TJPR,"Consignação em Pagamento",2024,procedencia,25,515
+TJPR,"Consignação em Pagamento",2024,sem_merito,13,554
+TJPR,"Consignação em Pagamento",2025,em_andamento_ou_sem_desfecho,159,
+TJPR,"Consignação em Pagamento",2025,improcedencia,10,316
+TJPR,"Consignação em Pagamento",2025,parcial,6,460
+TJPR,"Consignação em Pagamento",2025,procedencia,21,357
+TJPR,"Consignação em Pagamento",2025,sem_merito,11,308
+TJPR,"Consignação em Pagamento",2026,em_andamento_ou_sem_desfecho,196,
+TJPR,"Consignação em Pagamento",2026,procedencia,5,168
+TJPR,"Consignação em Pagamento",2026,sem_merito,9,68
+TJPR,"Despejo",2023,em_andamento_ou_sem_desfecho,10,
+TJPR,"Despejo",2024,em_andamento_ou_sem_desfecho,11,
+TJPR,"Despejo",2025,em_andamento_ou_sem_desfecho,43,
+TJPR,"Despejo",2025,sem_merito,5,386
+TJPR,"Despejo",2026,em_andamento_ou_sem_desfecho,218,
+TJPR,"Despejo",2026,sem_merito,5,107
+TJPR,"Despejo por Falta de Pagamento",2023,em_andamento_ou_sem_desfecho,12,
+TJPR,"Despejo por Falta de Pagamento",2024,em_andamento_ou_sem_desfecho,14,
+TJPR,"Despejo por Falta de Pagamento",2024,procedencia,5,658
+TJPR,"Despejo por Falta de Pagamento",2025,em_andamento_ou_sem_desfecho,30,
+TJPR,"Despejo por Falta de Pagamento",2025,procedencia,9,317
+TJPR,"Despejo por Falta de Pagamento",2025,sem_merito,7,42
+TJPR,"Despejo por Falta de Pagamento",2026,em_andamento_ou_sem_desfecho,115,
+TJPR,"Despejo por Falta de Pagamento",2026,sem_merito,28,42
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2020,em_andamento_ou_sem_desfecho,9,
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2020,procedencia,6,1940
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2021,em_andamento_ou_sem_desfecho,11,
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2022,em_andamento_ou_sem_desfecho,22,
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2022,procedencia,5,1429
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,em_andamento_ou_sem_desfecho,51,
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,parcial,5,1266
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,procedencia,12,553
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,em_andamento_ou_sem_desfecho,46,
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,parcial,8,587
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,procedencia,12,518
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,sem_merito,5,548
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,em_andamento_ou_sem_desfecho,150,
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,parcial,8,346
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,procedencia,27,312
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,sem_merito,14,291
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,em_andamento_ou_sem_desfecho,317,
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,procedencia,10,166
+TJPR,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,sem_merito,13,67
+TJPR,"Renovatória de Locação",2017,em_andamento_ou_sem_desfecho,7,
+TJPR,"Renovatória de Locação",2017,sem_merito,5,1950
+TJPR,"Renovatória de Locação",2019,em_andamento_ou_sem_desfecho,6,
+TJPR,"Renovatória de Locação",2019,sem_merito,9,1399
+TJPR,"Renovatória de Locação",2020,em_andamento_ou_sem_desfecho,5,
+TJPR,"Renovatória de Locação",2021,em_andamento_ou_sem_desfecho,16,
+TJPR,"Renovatória de Locação",2021,sem_merito,10,566
+TJPR,"Renovatória de Locação",2022,em_andamento_ou_sem_desfecho,58,
+TJPR,"Renovatória de Locação",2022,improcedencia,5,1467
+TJPR,"Renovatória de Locação",2022,parcial,6,1150
+TJPR,"Renovatória de Locação",2022,sem_merito,41,436
+TJPR,"Renovatória de Locação",2023,em_andamento_ou_sem_desfecho,83,
+TJPR,"Renovatória de Locação",2023,parcial,6,930
+TJPR,"Renovatória de Locação",2023,procedencia,7,901
+TJPR,"Renovatória de Locação",2023,sem_merito,40,234
+TJPR,"Renovatória de Locação",2024,em_andamento_ou_sem_desfecho,56,
+TJPR,"Renovatória de Locação",2024,sem_merito,20,253
+TJPR,"Renovatória de Locação",2025,em_andamento_ou_sem_desfecho,141,
+TJPR,"Renovatória de Locação",2025,sem_merito,22,249
+TJPR,"Renovatória de Locação",2026,em_andamento_ou_sem_desfecho,166,
+TJPR,"Renovatória de Locação",2026,sem_merito,5,71
+TJPR,"Revisional de Aluguel",2002,em_andamento_ou_sem_desfecho,5,
+TJPR,"Revisional de Aluguel",2008,em_andamento_ou_sem_desfecho,7,
+TJPR,"Revisional de Aluguel",2009,em_andamento_ou_sem_desfecho,7,
+TJPR,"Revisional de Aluguel",2009,sem_merito,6,3499
+TJPR,"Revisional de Aluguel",2016,improcedencia,5,2212
+TJPR,"Revisional de Aluguel",2017,sem_merito,5,759
+TJPR,"Revisional de Aluguel",2019,em_andamento_ou_sem_desfecho,7,
+TJPR,"Revisional de Aluguel",2020,em_andamento_ou_sem_desfecho,26,
+TJPR,"Revisional de Aluguel",2020,improcedencia,7,1084
+TJPR,"Revisional de Aluguel",2020,parcial,5,1451
+TJPR,"Revisional de Aluguel",2020,sem_merito,17,346
+TJPR,"Revisional de Aluguel",2021,em_andamento_ou_sem_desfecho,31,
+TJPR,"Revisional de Aluguel",2021,sem_merito,26,343
+TJPR,"Revisional de Aluguel",2022,em_andamento_ou_sem_desfecho,16,
+TJPR,"Revisional de Aluguel",2022,sem_merito,7,557
+TJPR,"Revisional de Aluguel",2023,em_andamento_ou_sem_desfecho,8,
+TJPR,"Revisional de Aluguel",2024,em_andamento_ou_sem_desfecho,14,
+TJPR,"Revisional de Aluguel",2025,em_andamento_ou_sem_desfecho,33,
+TJPR,"Revisional de Aluguel",2026,em_andamento_ou_sem_desfecho,20,
+TJRJ,"Consignação em Pagamento",2008,sem_merito,7,792
+TJRJ,"Consignação em Pagamento",2010,em_andamento_ou_sem_desfecho,10,
+TJRJ,"Consignação em Pagamento",2010,improcedencia,5,2261
+TJRJ,"Consignação em Pagamento",2012,improcedencia,6,758
+TJRJ,"Consignação em Pagamento",2014,em_andamento_ou_sem_desfecho,5,
+TJRJ,"Consignação em Pagamento",2015,em_andamento_ou_sem_desfecho,5,
+TJRJ,"Consignação em Pagamento",2015,procedencia,6,2301
+TJRJ,"Consignação em Pagamento",2016,procedencia,6,2526
+TJRJ,"Consignação em Pagamento",2018,em_andamento_ou_sem_desfecho,8,
+TJRJ,"Consignação em Pagamento",2018,improcedencia,5,1681
+TJRJ,"Consignação em Pagamento",2019,em_andamento_ou_sem_desfecho,11,
+TJRJ,"Consignação em Pagamento",2019,procedencia,9,1419
+TJRJ,"Consignação em Pagamento",2020,em_andamento_ou_sem_desfecho,16,
+TJRJ,"Consignação em Pagamento",2020,procedencia,5,1260
+TJRJ,"Consignação em Pagamento",2021,em_andamento_ou_sem_desfecho,25,
+TJRJ,"Consignação em Pagamento",2021,improcedencia,5,1534
+TJRJ,"Consignação em Pagamento",2021,procedencia,6,1240
+TJRJ,"Consignação em Pagamento",2022,em_andamento_ou_sem_desfecho,25,
+TJRJ,"Consignação em Pagamento",2022,improcedencia,6,790
+TJRJ,"Consignação em Pagamento",2022,sem_merito,5,853
+TJRJ,"Consignação em Pagamento",2023,em_andamento_ou_sem_desfecho,51,
+TJRJ,"Consignação em Pagamento",2023,improcedencia,16,850
+TJRJ,"Consignação em Pagamento",2023,procedencia,12,737
+TJRJ,"Consignação em Pagamento",2023,sem_merito,6,685
+TJRJ,"Consignação em Pagamento",2024,em_andamento_ou_sem_desfecho,91,
+TJRJ,"Consignação em Pagamento",2024,improcedencia,13,601
+TJRJ,"Consignação em Pagamento",2024,parcial,6,448
+TJRJ,"Consignação em Pagamento",2024,procedencia,13,659
+TJRJ,"Consignação em Pagamento",2024,sem_merito,6,526
+TJRJ,"Consignação em Pagamento",2025,em_andamento_ou_sem_desfecho,117,
+TJRJ,"Consignação em Pagamento",2025,improcedencia,14,346
+TJRJ,"Consignação em Pagamento",2025,parcial,5,379
+TJRJ,"Consignação em Pagamento",2025,procedencia,7,402
+TJRJ,"Consignação em Pagamento",2025,sem_merito,5,323
+TJRJ,"Consignação em Pagamento",2026,em_andamento_ou_sem_desfecho,101,
+TJRJ,"Despejo",2023,em_andamento_ou_sem_desfecho,13,
+TJRJ,"Despejo",2024,em_andamento_ou_sem_desfecho,18,
+TJRJ,"Despejo",2024,procedencia,6,492
+TJRJ,"Despejo",2025,em_andamento_ou_sem_desfecho,33,
+TJRJ,"Despejo",2025,procedencia,6,390
+TJRJ,"Despejo",2026,em_andamento_ou_sem_desfecho,38,
+TJRJ,"Despejo por Falta de Pagamento",1997,em_andamento_ou_sem_desfecho,6,
+TJRJ,"Despejo por Falta de Pagamento",1998,em_andamento_ou_sem_desfecho,6,
+TJRJ,"Despejo por Falta de Pagamento",1999,em_andamento_ou_sem_desfecho,6,
+TJRJ,"Despejo por Falta de Pagamento",2007,procedencia,6,613
+TJRJ,"Despejo por Falta de Pagamento",2020,procedencia,6,811
+TJRJ,"Despejo por Falta de Pagamento",2021,procedencia,5,442
+TJRJ,"Despejo por Falta de Pagamento",2022,em_andamento_ou_sem_desfecho,12,
+TJRJ,"Despejo por Falta de Pagamento",2022,procedencia,6,839
+TJRJ,"Despejo por Falta de Pagamento",2023,em_andamento_ou_sem_desfecho,20,
+TJRJ,"Despejo por Falta de Pagamento",2023,procedencia,11,883
+TJRJ,"Despejo por Falta de Pagamento",2024,em_andamento_ou_sem_desfecho,27,
+TJRJ,"Despejo por Falta de Pagamento",2024,sem_merito,10,122
+TJRJ,"Despejo por Falta de Pagamento",2025,em_andamento_ou_sem_desfecho,51,
+TJRJ,"Despejo por Falta de Pagamento",2025,sem_merito,8,64
+TJRJ,"Despejo por Falta de Pagamento",2026,em_andamento_ou_sem_desfecho,81,
+TJRJ,"Despejo por Falta de Pagamento",2026,sem_merito,5,83
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2009,procedencia,8,683
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2010,procedencia,11,616
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2011,parcial,6,1615
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2011,procedencia,18,684
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2012,parcial,5,2399
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2012,procedencia,13,817
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2013,parcial,9,1779
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2013,procedencia,19,1090
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2014,parcial,5,947
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2014,procedencia,24,805
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2015,em_andamento_ou_sem_desfecho,9,
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2015,procedencia,21,1232
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2016,parcial,7,1274
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2016,procedencia,22,1002
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2016,sem_merito,7,1726
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2017,em_andamento_ou_sem_desfecho,16,
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2017,parcial,8,1148
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2017,procedencia,21,1183
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2018,em_andamento_ou_sem_desfecho,16,
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2018,parcial,8,893
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2018,procedencia,25,754
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2018,sem_merito,5,1046
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2019,em_andamento_ou_sem_desfecho,20,
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2019,procedencia,38,650
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2020,em_andamento_ou_sem_desfecho,22,
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2020,parcial,11,1288
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2020,procedencia,26,648
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2021,em_andamento_ou_sem_desfecho,21,
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2021,procedencia,21,516
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2022,em_andamento_ou_sem_desfecho,53,
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2022,procedencia,25,776
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,em_andamento_ou_sem_desfecho,78,
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,parcial,8,707
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,procedencia,30,740
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,em_andamento_ou_sem_desfecho,130,
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,parcial,11,701
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,procedencia,32,546
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,sem_merito,9,452
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,em_andamento_ou_sem_desfecho,144,
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,parcial,5,370
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,procedencia,17,310
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,sem_merito,7,312
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,em_andamento_ou_sem_desfecho,193,
+TJRJ,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,sem_merito,6,75
+TJRJ,"Renovatória de Locação",2012,em_andamento_ou_sem_desfecho,8,
+TJRJ,"Renovatória de Locação",2013,em_andamento_ou_sem_desfecho,7,
+TJRJ,"Renovatória de Locação",2013,parcial,5,1513
+TJRJ,"Renovatória de Locação",2014,sem_merito,6,3627
+TJRJ,"Renovatória de Locação",2015,em_andamento_ou_sem_desfecho,5,
+TJRJ,"Renovatória de Locação",2015,parcial,5,1415
+TJRJ,"Renovatória de Locação",2015,sem_merito,5,3048
+TJRJ,"Renovatória de Locação",2016,em_andamento_ou_sem_desfecho,8,
+TJRJ,"Renovatória de Locação",2016,parcial,8,1701
+TJRJ,"Renovatória de Locação",2016,sem_merito,8,2551
+TJRJ,"Renovatória de Locação",2017,em_andamento_ou_sem_desfecho,9,
+TJRJ,"Renovatória de Locação",2017,parcial,5,1892
+TJRJ,"Renovatória de Locação",2017,procedencia,6,1501
+TJRJ,"Renovatória de Locação",2017,sem_merito,12,2218
+TJRJ,"Renovatória de Locação",2018,em_andamento_ou_sem_desfecho,15,
+TJRJ,"Renovatória de Locação",2018,procedencia,7,1953
+TJRJ,"Renovatória de Locação",2018,sem_merito,14,2019
+TJRJ,"Renovatória de Locação",2019,em_andamento_ou_sem_desfecho,17,
+TJRJ,"Renovatória de Locação",2019,parcial,7,1445
+TJRJ,"Renovatória de Locação",2019,procedencia,10,1277
+TJRJ,"Renovatória de Locação",2019,sem_merito,18,1666
+TJRJ,"Renovatória de Locação",2020,em_andamento_ou_sem_desfecho,31,
+TJRJ,"Renovatória de Locação",2020,improcedencia,7,1053
+TJRJ,"Renovatória de Locação",2020,parcial,9,1636
+TJRJ,"Renovatória de Locação",2020,procedencia,11,942
+TJRJ,"Renovatória de Locação",2020,sem_merito,22,1395
+TJRJ,"Renovatória de Locação",2021,em_andamento_ou_sem_desfecho,73,
+TJRJ,"Renovatória de Locação",2021,parcial,8,1113
+TJRJ,"Renovatória de Locação",2021,sem_merito,32,971
+TJRJ,"Renovatória de Locação",2022,em_andamento_ou_sem_desfecho,46,
+TJRJ,"Renovatória de Locação",2022,parcial,5,1111
+TJRJ,"Renovatória de Locação",2022,procedencia,5,1047
+TJRJ,"Renovatória de Locação",2022,sem_merito,19,912
+TJRJ,"Renovatória de Locação",2023,em_andamento_ou_sem_desfecho,35,
+TJRJ,"Renovatória de Locação",2024,em_andamento_ou_sem_desfecho,47,
+TJRJ,"Renovatória de Locação",2024,sem_merito,5,676
+TJRJ,"Renovatória de Locação",2025,em_andamento_ou_sem_desfecho,75,
+TJRJ,"Renovatória de Locação",2026,em_andamento_ou_sem_desfecho,86,
+TJRJ,"Revisional de Aluguel",1981,em_andamento_ou_sem_desfecho,20,
+TJRJ,"Revisional de Aluguel",1982,em_andamento_ou_sem_desfecho,17,
+TJRJ,"Revisional de Aluguel",1983,em_andamento_ou_sem_desfecho,30,
+TJRJ,"Revisional de Aluguel",1984,em_andamento_ou_sem_desfecho,14,
+TJRJ,"Revisional de Aluguel",1985,em_andamento_ou_sem_desfecho,22,
+TJRJ,"Revisional de Aluguel",1986,em_andamento_ou_sem_desfecho,22,
+TJRJ,"Revisional de Aluguel",1987,em_andamento_ou_sem_desfecho,114,
+TJRJ,"Revisional de Aluguel",1988,em_andamento_ou_sem_desfecho,28,
+TJRJ,"Revisional de Aluguel",1989,em_andamento_ou_sem_desfecho,17,
+TJRJ,"Revisional de Aluguel",1990,em_andamento_ou_sem_desfecho,23,
+TJRJ,"Revisional de Aluguel",1991,em_andamento_ou_sem_desfecho,17,
+TJRJ,"Revisional de Aluguel",1992,em_andamento_ou_sem_desfecho,7,
+TJRJ,"Revisional de Aluguel",1995,em_andamento_ou_sem_desfecho,52,
+TJRJ,"Revisional de Aluguel",1996,em_andamento_ou_sem_desfecho,19,
+TJRJ,"Revisional de Aluguel",1997,em_andamento_ou_sem_desfecho,9,
+TJRJ,"Revisional de Aluguel",2020,em_andamento_ou_sem_desfecho,19,
+TJRJ,"Revisional de Aluguel",2020,parcial,7,1259
+TJRJ,"Revisional de Aluguel",2020,procedencia,8,1175
+TJRJ,"Revisional de Aluguel",2021,em_andamento_ou_sem_desfecho,27,
+TJRJ,"Revisional de Aluguel",2021,improcedencia,6,1066
+TJRJ,"Revisional de Aluguel",2022,em_andamento_ou_sem_desfecho,22,
+TJRJ,"Revisional de Aluguel",2023,em_andamento_ou_sem_desfecho,33,
+TJRJ,"Revisional de Aluguel",2024,em_andamento_ou_sem_desfecho,34,
+TJRJ,"Revisional de Aluguel",2025,em_andamento_ou_sem_desfecho,42,
+TJRJ,"Revisional de Aluguel",2026,em_andamento_ou_sem_desfecho,51,
+TJRS,"Consignação em Pagamento",2013,em_andamento_ou_sem_desfecho,9,
+TJRS,"Consignação em Pagamento",2015,em_andamento_ou_sem_desfecho,7,
+TJRS,"Consignação em Pagamento",2016,em_andamento_ou_sem_desfecho,11,
+TJRS,"Consignação em Pagamento",2017,em_andamento_ou_sem_desfecho,9,
+TJRS,"Consignação em Pagamento",2018,em_andamento_ou_sem_desfecho,21,
+TJRS,"Consignação em Pagamento",2018,procedencia,5,1957
+TJRS,"Consignação em Pagamento",2019,em_andamento_ou_sem_desfecho,27,
+TJRS,"Consignação em Pagamento",2020,em_andamento_ou_sem_desfecho,5,
+TJRS,"Consignação em Pagamento",2020,parcial,5,2022
+TJRS,"Consignação em Pagamento",2020,procedencia,5,1413
+TJRS,"Consignação em Pagamento",2021,em_andamento_ou_sem_desfecho,18,
+TJRS,"Consignação em Pagamento",2021,improcedencia,6,956
+TJRS,"Consignação em Pagamento",2021,procedencia,14,587
+TJRS,"Consignação em Pagamento",2022,em_andamento_ou_sem_desfecho,30,
+TJRS,"Consignação em Pagamento",2022,parcial,6,1332
+TJRS,"Consignação em Pagamento",2022,procedencia,9,1112
+TJRS,"Consignação em Pagamento",2023,em_andamento_ou_sem_desfecho,41,
+TJRS,"Consignação em Pagamento",2023,parcial,6,816
+TJRS,"Consignação em Pagamento",2023,procedencia,21,892
+TJRS,"Consignação em Pagamento",2024,em_andamento_ou_sem_desfecho,68,
+TJRS,"Consignação em Pagamento",2024,improcedencia,14,532
+TJRS,"Consignação em Pagamento",2024,procedencia,27,622
+TJRS,"Consignação em Pagamento",2024,sem_merito,5,746
+TJRS,"Consignação em Pagamento",2025,em_andamento_ou_sem_desfecho,102,
+TJRS,"Consignação em Pagamento",2025,improcedencia,14,374
+TJRS,"Consignação em Pagamento",2025,parcial,10,291
+TJRS,"Consignação em Pagamento",2025,procedencia,18,386
+TJRS,"Consignação em Pagamento",2025,sem_merito,8,294
+TJRS,"Consignação em Pagamento",2026,em_andamento_ou_sem_desfecho,181,
+TJRS,"Consignação em Pagamento",2026,procedencia,6,202
+TJRS,"Consignação em Pagamento",2026,sem_merito,6,141
+TJRS,"Despejo",2016,em_andamento_ou_sem_desfecho,5,
+TJRS,"Despejo",2019,em_andamento_ou_sem_desfecho,5,
+TJRS,"Despejo",2024,em_andamento_ou_sem_desfecho,13,
+TJRS,"Despejo",2025,em_andamento_ou_sem_desfecho,43,
+TJRS,"Despejo",2026,em_andamento_ou_sem_desfecho,87,
+TJRS,"Despejo por Falta de Pagamento",2008,em_andamento_ou_sem_desfecho,5,
+TJRS,"Despejo por Falta de Pagamento",2014,em_andamento_ou_sem_desfecho,6,
+TJRS,"Despejo por Falta de Pagamento",2014,procedencia,5,3636
+TJRS,"Despejo por Falta de Pagamento",2015,em_andamento_ou_sem_desfecho,11,
+TJRS,"Despejo por Falta de Pagamento",2016,em_andamento_ou_sem_desfecho,9,
+TJRS,"Despejo por Falta de Pagamento",2017,em_andamento_ou_sem_desfecho,15,
+TJRS,"Despejo por Falta de Pagamento",2017,procedencia,7,3071
+TJRS,"Despejo por Falta de Pagamento",2018,em_andamento_ou_sem_desfecho,34,
+TJRS,"Despejo por Falta de Pagamento",2018,procedencia,5,385
+TJRS,"Despejo por Falta de Pagamento",2019,em_andamento_ou_sem_desfecho,40,
+TJRS,"Despejo por Falta de Pagamento",2023,em_andamento_ou_sem_desfecho,6,
+TJRS,"Despejo por Falta de Pagamento",2024,em_andamento_ou_sem_desfecho,8,
+TJRS,"Despejo por Falta de Pagamento",2025,em_andamento_ou_sem_desfecho,29,
+TJRS,"Despejo por Falta de Pagamento",2025,procedencia,16,339
+TJRS,"Despejo por Falta de Pagamento",2026,em_andamento_ou_sem_desfecho,85,
+TJRS,"Despejo por Falta de Pagamento",2026,sem_merito,8,61
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2019,em_andamento_ou_sem_desfecho,10,
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2020,em_andamento_ou_sem_desfecho,13,
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2020,parcial,8,1932
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2021,em_andamento_ou_sem_desfecho,24,
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2022,em_andamento_ou_sem_desfecho,23,
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2022,procedencia,17,1219
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,em_andamento_ou_sem_desfecho,56,
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,parcial,5,893
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,procedencia,18,822
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,em_andamento_ou_sem_desfecho,77,
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,parcial,7,717
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,procedencia,21,629
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,em_andamento_ou_sem_desfecho,147,
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,parcial,10,322
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,procedencia,27,335
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,em_andamento_ou_sem_desfecho,271,
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,procedencia,8,163
+TJRS,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,sem_merito,15,77
+TJRS,"Renovatória de Locação",2014,em_andamento_ou_sem_desfecho,5,
+TJRS,"Renovatória de Locação",2017,em_andamento_ou_sem_desfecho,12,
+TJRS,"Renovatória de Locação",2018,em_andamento_ou_sem_desfecho,10,
+TJRS,"Renovatória de Locação",2018,sem_merito,6,1820
+TJRS,"Renovatória de Locação",2019,em_andamento_ou_sem_desfecho,15,
+TJRS,"Renovatória de Locação",2019,sem_merito,8,473
+TJRS,"Renovatória de Locação",2020,em_andamento_ou_sem_desfecho,29,
+TJRS,"Renovatória de Locação",2020,improcedencia,6,1393
+TJRS,"Renovatória de Locação",2020,parcial,10,983
+TJRS,"Renovatória de Locação",2020,procedencia,7,332
+TJRS,"Renovatória de Locação",2020,sem_merito,20,433
+TJRS,"Renovatória de Locação",2021,em_andamento_ou_sem_desfecho,39,
+TJRS,"Renovatória de Locação",2021,improcedencia,7,715
+TJRS,"Renovatória de Locação",2021,parcial,6,1419
+TJRS,"Renovatória de Locação",2021,sem_merito,26,797
+TJRS,"Renovatória de Locação",2022,em_andamento_ou_sem_desfecho,42,
+TJRS,"Renovatória de Locação",2022,sem_merito,11,652
+TJRS,"Renovatória de Locação",2023,em_andamento_ou_sem_desfecho,65,
+TJRS,"Renovatória de Locação",2023,parcial,8,887
+TJRS,"Renovatória de Locação",2023,procedencia,5,790
+TJRS,"Renovatória de Locação",2023,sem_merito,16,535
+TJRS,"Renovatória de Locação",2024,em_andamento_ou_sem_desfecho,87,
+TJRS,"Renovatória de Locação",2024,sem_merito,10,413
+TJRS,"Renovatória de Locação",2025,em_andamento_ou_sem_desfecho,119,
+TJRS,"Renovatória de Locação",2025,sem_merito,17,279
+TJRS,"Renovatória de Locação",2026,em_andamento_ou_sem_desfecho,138,
+TJRS,"Revisional de Aluguel",1991,em_andamento_ou_sem_desfecho,5,
+TJRS,"Revisional de Aluguel",2019,em_andamento_ou_sem_desfecho,13,
+TJRS,"Revisional de Aluguel",2019,parcial,6,2016
+TJRS,"Revisional de Aluguel",2019,sem_merito,10,390
+TJRS,"Revisional de Aluguel",2020,em_andamento_ou_sem_desfecho,67,
+TJRS,"Revisional de Aluguel",2020,improcedencia,29,951
+TJRS,"Revisional de Aluguel",2020,parcial,24,868
+TJRS,"Revisional de Aluguel",2020,procedencia,11,488
+TJRS,"Revisional de Aluguel",2020,sem_merito,41,437
+TJRS,"Revisional de Aluguel",2021,em_andamento_ou_sem_desfecho,65,
+TJRS,"Revisional de Aluguel",2021,improcedencia,26,975
+TJRS,"Revisional de Aluguel",2021,parcial,8,592
+TJRS,"Revisional de Aluguel",2021,procedencia,7,989
+TJRS,"Revisional de Aluguel",2021,sem_merito,38,316
+TJRS,"Revisional de Aluguel",2022,em_andamento_ou_sem_desfecho,27,
+TJRS,"Revisional de Aluguel",2022,procedencia,5,1393
+TJRS,"Revisional de Aluguel",2022,sem_merito,14,413
+TJRS,"Revisional de Aluguel",2023,em_andamento_ou_sem_desfecho,27,
+TJRS,"Revisional de Aluguel",2023,sem_merito,9,319
+TJRS,"Revisional de Aluguel",2024,em_andamento_ou_sem_desfecho,26,
+TJRS,"Revisional de Aluguel",2025,em_andamento_ou_sem_desfecho,22,
+TJRS,"Revisional de Aluguel",2025,sem_merito,5,199
+TJRS,"Revisional de Aluguel",2026,em_andamento_ou_sem_desfecho,27,
+TJSP,"Consignação em Pagamento",2006,em_andamento_ou_sem_desfecho,5,
+TJSP,"Consignação em Pagamento",2011,em_andamento_ou_sem_desfecho,5,
+TJSP,"Consignação em Pagamento",2012,procedencia,7,650
+TJSP,"Consignação em Pagamento",2013,em_andamento_ou_sem_desfecho,5,
+TJSP,"Consignação em Pagamento",2014,em_andamento_ou_sem_desfecho,8,
+TJSP,"Consignação em Pagamento",2016,em_andamento_ou_sem_desfecho,5,
+TJSP,"Consignação em Pagamento",2016,parcial,6,579
+TJSP,"Consignação em Pagamento",2016,procedencia,7,243
+TJSP,"Consignação em Pagamento",2018,em_andamento_ou_sem_desfecho,5,
+TJSP,"Consignação em Pagamento",2018,procedencia,6,1937
+TJSP,"Consignação em Pagamento",2019,em_andamento_ou_sem_desfecho,13,
+TJSP,"Consignação em Pagamento",2019,procedencia,11,1210
+TJSP,"Consignação em Pagamento",2020,em_andamento_ou_sem_desfecho,22,
+TJSP,"Consignação em Pagamento",2020,procedencia,13,1158
+TJSP,"Consignação em Pagamento",2021,em_andamento_ou_sem_desfecho,28,
+TJSP,"Consignação em Pagamento",2021,improcedencia,6,1010
+TJSP,"Consignação em Pagamento",2021,procedencia,15,1109
+TJSP,"Consignação em Pagamento",2022,em_andamento_ou_sem_desfecho,33,
+TJSP,"Consignação em Pagamento",2022,improcedencia,6,836
+TJSP,"Consignação em Pagamento",2022,parcial,9,600
+TJSP,"Consignação em Pagamento",2022,procedencia,29,1231
+TJSP,"Consignação em Pagamento",2023,em_andamento_ou_sem_desfecho,37,
+TJSP,"Consignação em Pagamento",2023,improcedencia,9,598
+TJSP,"Consignação em Pagamento",2023,procedencia,39,566
+TJSP,"Consignação em Pagamento",2024,em_andamento_ou_sem_desfecho,51,
+TJSP,"Consignação em Pagamento",2024,improcedencia,7,399
+TJSP,"Consignação em Pagamento",2024,parcial,9,207
+TJSP,"Consignação em Pagamento",2024,procedencia,46,494
+TJSP,"Consignação em Pagamento",2024,sem_merito,6,430
+TJSP,"Consignação em Pagamento",2025,em_andamento_ou_sem_desfecho,65,
+TJSP,"Consignação em Pagamento",2025,improcedencia,18,385
+TJSP,"Consignação em Pagamento",2025,parcial,11,266
+TJSP,"Consignação em Pagamento",2025,procedencia,41,274
+TJSP,"Consignação em Pagamento",2025,sem_merito,5,328
+TJSP,"Consignação em Pagamento",2026,em_andamento_ou_sem_desfecho,93,
+TJSP,"Consignação em Pagamento",2026,improcedencia,5,95
+TJSP,"Consignação em Pagamento",2026,procedencia,10,92
+TJSP,"Despejo",2025,em_andamento_ou_sem_desfecho,17,
+TJSP,"Despejo",2025,procedencia,6,213
+TJSP,"Despejo",2026,em_andamento_ou_sem_desfecho,112,
+TJSP,"Despejo",2026,procedencia,14,131
+TJSP,"Despejo por Falta de Pagamento",2023,em_andamento_ou_sem_desfecho,6,
+TJSP,"Despejo por Falta de Pagamento",2024,em_andamento_ou_sem_desfecho,18,
+TJSP,"Despejo por Falta de Pagamento",2024,procedencia,6,526
+TJSP,"Despejo por Falta de Pagamento",2024,sem_merito,8,28
+TJSP,"Despejo por Falta de Pagamento",2025,em_andamento_ou_sem_desfecho,41,
+TJSP,"Despejo por Falta de Pagamento",2025,procedencia,20,211
+TJSP,"Despejo por Falta de Pagamento",2025,sem_merito,9,46
+TJSP,"Despejo por Falta de Pagamento",2026,em_andamento_ou_sem_desfecho,60,
+TJSP,"Despejo por Falta de Pagamento",2026,procedencia,11,138
+TJSP,"Despejo por Falta de Pagamento",2026,sem_merito,19,48
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2012,procedencia,5,884
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2013,em_andamento_ou_sem_desfecho,5,
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2013,procedencia,11,534
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2014,procedencia,6,114
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2015,procedencia,7,412
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2015,sem_merito,5,175
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2016,em_andamento_ou_sem_desfecho,5,
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2016,procedencia,11,234
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2018,em_andamento_ou_sem_desfecho,8,
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2018,procedencia,12,158
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2018,sem_merito,5,455
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2019,em_andamento_ou_sem_desfecho,11,
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2019,procedencia,11,350
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2020,em_andamento_ou_sem_desfecho,13,
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2020,procedencia,11,1367
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2021,em_andamento_ou_sem_desfecho,14,
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2021,parcial,6,1359
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2021,procedencia,17,1051
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2022,em_andamento_ou_sem_desfecho,25,
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2022,procedencia,15,532
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,em_andamento_ou_sem_desfecho,58,
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,parcial,10,760
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2023,procedencia,31,568
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,em_andamento_ou_sem_desfecho,99,
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,parcial,26,550
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,procedencia,55,532
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2024,sem_merito,12,174
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,em_andamento_ou_sem_desfecho,231,
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,parcial,31,265
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,procedencia,106,265
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2025,sem_merito,22,289
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,em_andamento_ou_sem_desfecho,259,
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,parcial,14,125
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,procedencia,40,123
+TJSP,"Despejo por Falta de Pagamento Cumulado Com Cobrança",2026,sem_merito,26,72
+TJSP,"Renovatória de Locação",2019,parcial,9,1833
+TJSP,"Renovatória de Locação",2020,em_andamento_ou_sem_desfecho,7,
+TJSP,"Renovatória de Locação",2020,parcial,6,1165
+TJSP,"Renovatória de Locação",2020,procedencia,5,1169
+TJSP,"Renovatória de Locação",2021,em_andamento_ou_sem_desfecho,17,
+TJSP,"Renovatória de Locação",2021,parcial,17,1139
+TJSP,"Renovatória de Locação",2021,procedencia,7,999
+TJSP,"Renovatória de Locação",2021,sem_merito,10,1806
+TJSP,"Renovatória de Locação",2022,em_andamento_ou_sem_desfecho,41,
+TJSP,"Renovatória de Locação",2022,parcial,27,1116
+TJSP,"Renovatória de Locação",2022,procedencia,12,1180
+TJSP,"Renovatória de Locação",2022,sem_merito,8,1344
+TJSP,"Renovatória de Locação",2023,em_andamento_ou_sem_desfecho,62,
+TJSP,"Renovatória de Locação",2023,parcial,15,998
+TJSP,"Renovatória de Locação",2023,procedencia,11,790
+TJSP,"Renovatória de Locação",2023,sem_merito,7,1099
+TJSP,"Renovatória de Locação",2024,em_andamento_ou_sem_desfecho,105,
+TJSP,"Renovatória de Locação",2024,improcedencia,7,175
+TJSP,"Renovatória de Locação",2024,parcial,18,650
+TJSP,"Renovatória de Locação",2024,procedencia,9,636
+TJSP,"Renovatória de Locação",2024,sem_merito,21,538
+TJSP,"Renovatória de Locação",2025,em_andamento_ou_sem_desfecho,133,
+TJSP,"Renovatória de Locação",2025,improcedencia,8,335
+TJSP,"Renovatória de Locação",2025,parcial,7,469
+TJSP,"Renovatória de Locação",2025,procedencia,15,297
+TJSP,"Renovatória de Locação",2025,sem_merito,17,307
+TJSP,"Renovatória de Locação",2026,em_andamento_ou_sem_desfecho,106,
+TJSP,"Revisional de Aluguel",1990,em_andamento_ou_sem_desfecho,6,
+TJSP,"Revisional de Aluguel",1991,em_andamento_ou_sem_desfecho,10,
+TJSP,"Revisional de Aluguel",1992,em_andamento_ou_sem_desfecho,26,
+TJSP,"Revisional de Aluguel",1993,em_andamento_ou_sem_desfecho,8,
+TJSP,"Revisional de Aluguel",1995,em_andamento_ou_sem_desfecho,21,
+TJSP,"Revisional de Aluguel",2010,em_andamento_ou_sem_desfecho,5,
+TJSP,"Revisional de Aluguel",2010,procedencia,6,1385
+TJSP,"Revisional de Aluguel",2018,em_andamento_ou_sem_desfecho,5,
+TJSP,"Revisional de Aluguel",2018,sem_merito,5,1173
+TJSP,"Revisional de Aluguel",2019,em_andamento_ou_sem_desfecho,7,
+TJSP,"Revisional de Aluguel",2020,em_andamento_ou_sem_desfecho,63,
+TJSP,"Revisional de Aluguel",2020,improcedencia,21,226
+TJSP,"Revisional de Aluguel",2020,parcial,17,308
+TJSP,"Revisional de Aluguel",2020,procedencia,5,650
+TJSP,"Revisional de Aluguel",2020,sem_merito,23,224
+TJSP,"Revisional de Aluguel",2021,em_andamento_ou_sem_desfecho,59,
+TJSP,"Revisional de Aluguel",2021,improcedencia,24,186
+TJSP,"Revisional de Aluguel",2021,parcial,19,773
+TJSP,"Revisional de Aluguel",2021,procedencia,7,279
+TJSP,"Revisional de Aluguel",2021,sem_merito,36,233
+TJSP,"Revisional de Aluguel",2022,em_andamento_ou_sem_desfecho,28,
+TJSP,"Revisional de Aluguel",2022,improcedencia,8,542
+TJSP,"Revisional de Aluguel",2022,parcial,10,985
+TJSP,"Revisional de Aluguel",2022,procedencia,8,897
+TJSP,"Revisional de Aluguel",2022,sem_merito,10,88
+TJSP,"Revisional de Aluguel",2023,em_andamento_ou_sem_desfecho,15,
+TJSP,"Revisional de Aluguel",2023,parcial,6,934
+TJSP,"Revisional de Aluguel",2023,procedencia,5,634
+TJSP,"Revisional de Aluguel",2024,em_andamento_ou_sem_desfecho,57,
+TJSP,"Revisional de Aluguel",2024,improcedencia,5,573
+TJSP,"Revisional de Aluguel",2024,parcial,10,552
+TJSP,"Revisional de Aluguel",2024,procedencia,6,523
+TJSP,"Revisional de Aluguel",2024,sem_merito,6,696
+TJSP,"Revisional de Aluguel",2025,em_andamento_ou_sem_desfecho,87,
+TJSP,"Revisional de Aluguel",2025,sem_merito,5,343
+TJSP,"Revisional de Aluguel",2026,em_andamento_ou_sem_desfecho,40,
