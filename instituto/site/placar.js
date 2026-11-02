@@ -22,4 +22,17 @@
       });
     }).catch(function () {});
 })();
+// C18 e C29: painel ao vivo de sucesso da coleta e disponibilidade (SLO).
+(function () {
+  var B = 'https://hlraekzvgxdpiiigdxdo.supabase.co/rest/v1/rpc/';
+  var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhscmFla3p2Z3hkcGlpaWdkeGRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4ODEzOTksImV4cCI6MjEwODQ1NzM5OX0.yCNPEGDb7tdf1JIY30WKUbE-xZwjQFwygJFJnvBeyrs';
+  var pc = function (x) { return x == null ? '—' : Number(x).toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + '%'; };
+  function rpc(n, cb) {
+    fetch(B + n, { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' }, body: '{}' })
+      .then(function (r) { return r.ok ? r.json() : null; }).then(function (d) { if (d) cb(d); }).catch(function () {});
+  }
+  var c = document.getElementById('s-coleta'), s = document.getElementById('s-slo');
+  if (c) rpc('instituto_coleta_sucesso', function (d) { c.textContent = d.dias ? pc(d.sucesso) + ' dos dias (' + d.dias_com_coleta + ' de ' + d.dias + ' com coleta)' : 'medição começa em 03/11/2026'; });
+  if (s) rpc('instituto_slo', function (d) { var a = d.alvos || {}; s.textContent = d.geral == null ? 'primeiras sondas em andamento' : pc(d.geral) + ' (site ' + pc(a.site && a.site.disponibilidade) + ', estilo ' + pc(a.css && a.css.disponibilidade) + ', agentes ' + pc(a.api && a.api.disponibilidade) + ')'; });
+})();
 (function () { var s = document.createElement('script'); s.src = '/vitais.js'; s.defer = true; document.head.appendChild(s); })();

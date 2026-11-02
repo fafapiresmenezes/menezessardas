@@ -1,0 +1,3 @@
+-- Passos C18 e C29 (aplicados em 02/11/2026 via MCP): ver migrações c29_slo_disponibilidade, c18_coleta_por_tribunal e c18_coleta_sucesso_v2.
+-- C18: coleta diária dividida em 6 jobs (coletor-instituto-<tribunal>, 09:40–09:50 UTC) após HTTP 546 em 01 e 02/11; painel public.instituto_coleta_sucesso(p_dias).
+-- C29: instituto.disponibilidade + instituto.sondar() a cada 5 min (job instituto-slo-sonda); painel public.instituto_slo(p_dias), meta 99,5%.
