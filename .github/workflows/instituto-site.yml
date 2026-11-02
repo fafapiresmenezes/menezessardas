@@ -1,0 +1,37 @@
+# Plano I-03, passo C30: a cada push, testa todas as páginas do site do Instituto THEYE
+# (Playwright + axe-core, celular e computador, claro e escuro). Falha = alerta por e-mail do GitHub.
+name: "Site do Instituto: testes"
+on:
+  push:
+    branches: [main]
+    paths: ['instituto/site/**', 'instituto/testes/u17-teste.mjs', '.github/workflows/instituto-site.yml']
+  pull_request:
+    paths: ['instituto/site/**', 'instituto/testes/u17-teste.mjs']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  u17:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm i --no-save axe-core@4.10.2
+      - run: npx playwright install --with-deps chromium
+      - name: Servir o site localmente
+        working-directory: instituto/site
+        run: (python3 -m http.server 8765 > /dev/null 2>&1 &) && sleep 2
+      - name: Playwright + axe em 13 páginas
+        run: node instituto/testes/u17-teste.mjs
+      - name: Guardar resultado
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: u17
+          path: resultado-u17.json
+          retention-days: 30
