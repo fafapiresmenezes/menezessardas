@@ -78,6 +78,18 @@ describe('coletor-instituto', () => {
     expect(n).toBe(1)
   })
 
+  it('C18: tempo esgotado é repetido uma vez e, se persistir, a falha diz o tribunal e a classe', async () => {
+    let n = 0
+    const esgotou = () => { const e = new Error('Signal timed out.'); e.name = 'TimeoutError'; throw e }
+    datajud = () => (++n === 1 ? esgotou() : jsonResp({ hits: { hits: [{ _source: PROCESSO }] } }))
+    expect((await (await chamar({ tribunais: ['tjdft'], classes: ['Despejo'] })).json()).falhas).toEqual([])
+    n = 0
+    datajud = () => (++n, esgotou())
+    const c = await (await chamar({ tribunais: ['tjdft'], classes: ['Despejo'] })).json()
+    expect(c.falhas).toEqual(['tjdft/Despejo: tempo esgotado'])
+    expect(n).toBe(2)
+  })
+
   it('erro da função SQL devolve 500 com até onde gravou', async () => {
     estado.rpcErro.instituto_gravar_coleta = 'tabela ausente'
     const r = await chamar({ tribunais: ['tjsp'], classes: ['Despejo'] })
