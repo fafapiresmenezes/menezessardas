@@ -250,9 +250,13 @@
    "prompt": "Em /legislacao.html, matriz \"situação do leigo × melhor caminho\" (ex.: atraso de aluguel, renovatória, revisional, devolução antecipada, fiador) ligando norma, súmula, prazo e a chance do placar; sempre com aviso de que não substitui advogado.",
    "kpi": "10 situações com norma, prazo e chance",
    "skill": "artifact-design",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "0687240fec7ca1017c3e26051827c3c9da8b442880e01ecdbbcbb5c1809bfc60",
-   "sha256_prompt": "61a2a715afffab21324ad2c3b45c86f486846e75a75f9ccccebaa5c85a7c716f"
+   "sha256_prompt": "61a2a715afffab21324ad2c3b45c86f486846e75a75f9ccccebaa5c85a7c716f",
+   "feito_em": "2026-11-03T2210Z",
+   "evidencia": "/legislacao.html#matriz no ar (deploy dpl_25nALkzwzkdEFbwEdtueU3R3DyxA, pino a6c14b7, md5 legislacao.html f316cc8d, legislacao.js ad7fc7ce, base.css 9777de34 conferidos via pg_net). 10 situações (despejo por falta de pagamento, consignação, renovatória, revisional, fim do contrato de 30 meses, devolução antecipada, saída do fiador, venda do imóvel, benfeitorias, reajuste) com caminho, norma (Lei 8.245/91, Súmula 335 STJ, Lei 10.192/2001), prazo e regra; chance ao vivo pela RPC instituto_chance_classes (Wilson 95%, n por classe, 6 tribunais) nas 5 situações com ação típica; as outras 5 dizem que não há chance medida. Aviso de que não substitui advogado. Teste u17 com 0 violação WCAG.",
+   "elo_ev_anterior": "552e6fbd864d8185dcc1d9321f0481c9496435c21af579a8514892ee7e311afc",
+   "sha256_evidencia": "6b521358c4a53690e4f0eb0494ffa98bd9f312f7172237eb00c44b326c5fc08b"
   },
   {
    "n": "D10",

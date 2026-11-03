@@ -1,7 +1,7 @@
 {
- "gerado_em": "2026-11-03T22:05Z",
+ "gerado_em": "2026-11-03T22:11Z",
  "cabeca": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
- "feitos": 11,
+ "feitos": 12,
  "total": 31,
  "impacto_esforco": [
   {
@@ -75,15 +75,6 @@
    "esforco": 3,
    "quadrante": "Planejar",
    "porque": "Legislação ao vivo no Instituto, pedido de M"
-  },
-  {
-   "n": "D09",
-   "titulo": "Matriz solução por caso",
-   "status": "aberto",
-   "impacto": 4,
-   "esforco": 3,
-   "quadrante": "Planejar",
-   "porque": "Caminho por situação para o cliente"
   },
   {
    "n": "D11",
@@ -205,5 +196,5 @@
    "acao": "Responder o cartão da hospedagem paga"
   }
  ],
- "sha256": "e3ea02730a684d7466c2ae9fadb8320db4718c3e09552c0d85d9238c7742d1cf"
+ "sha256": "f6f4647200d3db8a836c5c72bf8f06d294cd961eabe11e9e876c03f0c188007f"
 }
