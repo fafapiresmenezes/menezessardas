@@ -382,9 +382,13 @@
    "prompt": "A cada 5 passos feitos, medição dos 10 temas + 6 pedidos de M em PDF com selo OpenTimestamps (Bitcoin), passo a passo rastreado pelos elos sha256.",
    "kpi": "PDF + .ots a cada 5 passos",
    "skill": "pdf",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "b0a550cc1a2655a8fd8f7ebb745ac86b442d51f7c030a70b9fc62465ace18ea6",
-   "sha256_prompt": "0b269d14f74d8a38797533ff9f8a96eb28f38a11fcbcc534bded118b989051f2"
+   "sha256_prompt": "0b269d14f74d8a38797533ff9f8a96eb28f38a11fcbcc534bded118b989051f2",
+   "feito_em": "2026-11-03T2253Z",
+   "evidencia": "Medicao a cada 5 passos em funcionamento e demonstrada agora: I-M12 gerada em 2026-11-03T22:55Z cobrindo os passos D09 a D17, nota media 9,29 de 10 (de 9,18 na I-M11), programa em 63,9% (41 de 61 passos dos ciclos I-03 e I-04). PDF /mnt/project-files/unificado/medicao-I-M12.pdf, sha256 62421ef8cdfaaec77566aac6666ae76af200cfc88482090d06c674ef41a3f860, selado no Bitcoin por OpenTimestamps em medicao-I-M12.pdf.ots; registro na cadeia-de-medicoes.txt. Gerador versionado em instituto/ferramentas/medicao_i04_m12.py, notas item a item em unificado/i03/notas-I-M12.json. O PDF traz os 10 temas em barras com a variacao explicada desde a I-M11, a tabela dos 9 passos novos com status e evidencia, a fila I-04 inteira com o sha256 de cada PROMPT, os passos abertos do I-03, a cabeca da cadeia e o PROMPT desta propria medicao com o seu sha256. Cadencia: I-M9 (passo 6), I-M10 (11), I-M11 (16), I-M12 (19 feitos, apos D09-D17), e o PROMPT do agendador manda gerar a proxima a cada 5 passos fechados.",
+   "elo_ev_anterior": "f260b55b4dd902604122653d79d063ba184690254945799fcf51c551cbc4dcff",
+   "sha256_evidencia": "cf427c21accaf3a6329ca877973ef3eea5725e384dcd2497fb2a477d0660528a"
   },
   {
    "n": "D19",

@@ -1,7 +1,7 @@
 {
- "gerado_em": "2026-11-03T22:51Z",
+ "gerado_em": "2026-11-03T22:53Z",
  "cabeca": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
- "feitos": 19,
+ "feitos": 20,
  "total": 31,
  "impacto_esforco": [
   {
@@ -102,15 +102,6 @@
    "esforco": 2,
    "quadrante": "Encaixar",
    "porque": "Corta 30% do custo de IA"
-  },
-  {
-   "n": "D18",
-   "titulo": "Medição completa a cada 5 passos",
-   "status": "aberto",
-   "impacto": 2,
-   "esforco": 1,
-   "quadrante": "Encaixar",
-   "porque": "Mantém a nota honesta"
   }
  ],
  "eisenhower_m": [
@@ -139,5 +130,5 @@
    "acao": ""
   }
  ],
- "sha256": "633bae2ab0515bac44af1e592d54a190263899657e0cc28bc6b616058e5694e3"
+ "sha256": "a4a4f59a465c8d8417e0358dc3bbb79c0aaa578f93d8109481174054de7b9b40"
 }
