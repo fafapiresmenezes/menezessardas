@@ -31,11 +31,14 @@ const SITE_INFO = `SOBRE O INSTITUTO (fatos do site):
 - Escritório parceiro: GMenezes Advogados Associados usa a previsão do Instituto na tela Previsões.
 - Prova de registro: documentos e protocolos têm sha256 ancorado no Bitcoin por OpenTimestamps.`
 
+// Passo D12: o roteiro é partido em três blocos. Os dois primeiros são iguais para os 50 agentes
+// e entram no cache de prompt da API; só o terceiro (específico do agente) muda a cada chamada.
+// O custo acumulado sai do bloco cacheado porque mudava a cada resposta e quebrava o cache.
 async function contexto() {
   const s = db()
-  const [placar, motor, uso] = await Promise.all([s.rpc('instituto_placar_unico'), s.rpc('instituto_motor_resumo'), s.rpc('instituto_agentes_custo')])
+  const [placar, motor] = await Promise.all([s.rpc('instituto_placar_unico'), s.rpc('instituto_motor_resumo')])
   const m = JSON.stringify(motor.data ?? {}).slice(0, 3000)
-  return `${SITE_INFO}\n\nPLACAR DE PROTOCOLOS (Brier, BSS, veredito):\n${JSON.stringify(placar.data ?? []).slice(0, 3500)}\n\nMOTOR (séries públicas coletadas, resumo):\n${m}\n\nCUSTO DOS AGENTES ATÉ AGORA: ${JSON.stringify(uso.data ?? {})}`
+  return `PLACAR DE PROTOCOLOS (Brier, BSS, veredito):\n${JSON.stringify(placar.data ?? []).slice(0, 3500)}\n\nMOTOR (séries públicas coletadas, resumo):\n${m}`
 }
 
 async function tratar(req: Request): Promise<Response> {
@@ -70,13 +73,21 @@ async function tratar(req: Request): Promise<Response> {
   if (!c.anthropic_api_key) return json({ erro: 'IA indisponível agora.' }, 503)
   const pergunta = livre || ag.botao
 
-  const sistema = `Você é "${ag.nome}", agente de IA do Instituto THEYE (pesquisa em predição jurídica e ontologia do direito, nicho locação no Brasil).
+  const [ctx, uso] = await Promise.all([contexto(), s.rpc('instituto_agentes_custo')])
+  const fixo = `${SITE_INFO}
+
+Regras gerais dos agentes do Instituto THEYE: responda em português do Brasil, simples, para leigos, em no máximo 200 palavras, sempre terminando a resposta; cite artigo de lei ou súmula quando usar (Lei 8.245/91, STJ, STF); use só os números do contexto quando falar de dados do Instituto, e diga quando não houver dado; nunca dê garantia de resultado nem substitua um advogado; nunca peça nem comente dados pessoais; termine com uma linha "Para aprofundar:" indicando uma página do site (/placar.html, /ontologia.html, /locacao.html, /comparar.html, /laboratorio.html, /precos.html, /estudar.html).
+${REGRA_SISTEMA}`
+  const papel = `Você é "${ag.nome}", agente de IA do Instituto THEYE (pesquisa em predição jurídica e ontologia do direito, nicho locação no Brasil).
 Área: ${ag.area}. Roteiro inspirado no currículo de doutorado de referência: ${ag.formacao}. Você não é uma pessoa nem tem vínculo com essas universidades; se perguntarem, diga isso.
 Papel: ${ag.papel}
-Regras: responda em português do Brasil, simples, para leigos, em no máximo 200 palavras, sempre terminando a resposta; cite artigo de lei ou súmula quando usar (Lei 8.245/91, STJ, STF); use só os números do contexto abaixo quando falar de dados do Instituto, e diga quando não houver dado; nunca dê garantia de resultado nem substitua um advogado; nunca peça nem comente dados pessoais; termine com uma linha "Para aprofundar:" indicando uma página do site (/placar.html, /ontologia.html, /locacao.html, /comparar.html, /laboratorio.html, /precos.html, /estudar.html).
-${REGRA_SISTEMA}
-
-${await contexto()}`
+CUSTO DOS AGENTES ATÉ AGORA: ${JSON.stringify(uso.data ?? {})}`
+  // Blocos 1 e 2 são iguais para todos os agentes e levam cache_control; o bloco 3 muda e fica fora do cache.
+  const sistema = [
+    { type: 'text', text: fixo, cache_control: { type: 'ephemeral' } },
+    { type: 'text', text: ctx, cache_control: { type: 'ephemeral' } },
+    { type: 'text', text: papel },
+  ]
 
   let resp: Response | null = null, modelo = MODELO
   for (const mod of [MODELO, MODELO_RESERVA]) {
@@ -93,15 +104,17 @@ ${await contexto()}`
   const out = await resp.json()
   const texto = (out.content ?? []).filter((x: { type: string }) => x.type === 'text').map((x: { text: string }) => x.text).join('\n').trim()
   const tin = out.usage?.input_tokens ?? 0, tout = out.usage?.output_tokens ?? 0
+  // Passo D12: escrita no cache custa 1,25x o token de entrada e a leitura custa 0,1x.
+  const cEscrita = out.usage?.cache_creation_input_tokens ?? 0, cLeitura = out.usage?.cache_read_input_tokens ?? 0
   const { data: p } = await s.from('precos_api').select('usd_entrada_mtok,usd_saida_mtok').eq('modelo', modelo).maybeSingle()
-  const usd = p ? (tin * Number(p.usd_entrada_mtok) + tout * Number(p.usd_saida_mtok)) / 1e6 : 0
+  const usd = p ? ((tin + 1.25 * cEscrita + 0.1 * cLeitura) * Number(p.usd_entrada_mtok) + tout * Number(p.usd_saida_mtok)) / 1e6 : 0
   await s.rpc('instituto_agente_registrar', { p_agente: ag.id, p_in: tin, p_out: tout, p_usd: usd })
-  await s.from('consumo_api').insert({ funcao: `Instituto: agente ${ag.id}`, modelo, tokens_entrada: tin, tokens_saida: tout })
+  await s.from('consumo_api').insert({ funcao: `Instituto: agente ${ag.id}`, modelo, tokens_entrada: tin + cEscrita + cLeitura, tokens_saida: tout })
   if (!texto) return json({ erro: 'O agente não conseguiu responder agora. Tente de novo.' }, 502)
   if (!respostaSegura(texto)) return json({ erro: MSG_BLOQUEIO, bloqueado: 'vazamento na resposta' }, 422)
   // Passo C09: sorteia até 20 respostas por semana para revisão humana (guarda só a resposta, nunca a pergunta).
   await s.rpc('instituto_agente_amostrar', { p_agente: ag.id, p_modelo: modelo, p_resposta: texto })
-  return json({ ok: true, agente: ag.nome, resposta: texto, modelo, tokens: { entrada: tin, saida: tout }, custo_usd: Number(usd.toFixed(6)) })
+  return json({ ok: true, agente: ag.nome, resposta: texto, modelo, tokens: { entrada: tin, saida: tout, cache_escrita: cEscrita, cache_leitura: cLeitura }, custo_usd: Number(usd.toFixed(6)) })
 }
 
 // Passo L02 (I-04): análise de contrato de locação por IA. Usa a mesma cota dos agentes (conta como 1 pergunta),
