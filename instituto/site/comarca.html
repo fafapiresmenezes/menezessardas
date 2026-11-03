@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relatório por comarca · Instituto THEYE</title>
+<meta name="description" content="Relatório jurimétrico de ações de locação por comarca: volume, taxa de procedência com intervalo de 95%, tempo mediano e comparação com o estado. Registrado no Bitcoin.">
+<link rel="preload" href="/fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="base.css">
+<style>
+.form{max-width:860px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media(max-width:820px){.form{grid-template-columns:minmax(0,1fr)}}
+.form label{display:grid;gap:6px;font-size:14px}
+.form select{max-width:100%;min-width:0;font:inherit;padding:10px 12px;min-height:44px;border:1px solid var(--linha);background:var(--papel);color:var(--tinta);border-radius:6px}
+.rel{margin-top:22px;padding:24px;border:1px solid var(--linha);border-radius:10px;max-width:860px}
+.rel h3{font-family:var(--serif);font-size:24px;margin:0 0 4px}
+.kp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:16px 0}
+@media(max-width:620px){.kp{grid-template-columns:minmax(0,1fr)}}
+.kp div{border:1px solid var(--linha);border-radius:8px;padding:12px}
+.kp b{display:block;font-family:var(--serif);font-size:28px;font-variant-numeric:tabular-nums}
+.sm{font-size:13.5px;color:var(--apagado)}
+.alerta{border-left:4px solid #b54708;padding:8px 12px;background:var(--papel)}
+.tab{width:100%;border-collapse:collapse;font-size:13.5px}
+.tab th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--apagado);text-align:left;padding:6px 8px;border-bottom:1px solid var(--linha);font-weight:500}
+.tab td{padding:6px 8px;border-bottom:1px solid var(--linha);font-variant-numeric:tabular-nums}
+.hash{font-family:var(--mono);font-size:12px;overflow-wrap:anywhere}
+.acoes{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+@media print{header.top,footer,.hero,.so-tela,.acoes{display:none!important}.rel{border:0;padding:0}body{background:#fff;color:#000}}
+</style>
+</head>
+</head>
+</head>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/#laboratorio">Laboratório</a><a href="/placar.html">Placar</a><a href="/ontologia.html">Ontologia</a><a href="/#metodo">Método</a><a href="/#servicos">Serviços</a></nav>
+</div></header>
+<main id="conteudo">
+<div class="hero"><div class="w">
+  <div class="kicker">Relatório por comarca · dados do CNJ · registrado no Bitcoin</div>
+  <h1>Como a Justiça da sua cidade decide ações de aluguel?</h1>
+  <p class="lead">Escolha o tribunal e a comarca. Você vê quantas ações de locação existem, quantas vezes o pedido foi aceito, com a margem de erro, quanto tempo leva e como a comarca se compara ao estado. Salve em PDF.</p>
+  <aside class="um-min" aria-label="Em 1 minuto"><b>Em 1 minuto</b><p>Escolha o tribunal. Escolha a comarca. Leia o relatório e, se quiser, salve em PDF com o código de registro.</p><a class="btn" href="#escolher">Ver minha comarca</a></aside>
+</div></div>
+<section><div class="w">
+  <form class="form so-tela" id="escolher" novalidate>
+    <label>Tribunal<select id="c-trib"><option>TJRJ</option><option>TJSP</option><option>TJMG</option><option>TJRS</option><option>TJPR</option><option>TJDFT</option></select></label>
+    <label>Comarca<select id="c-com"><option value="">carregando</option></select></label>
+  </form>
+  <div class="rel" id="c-rel" aria-live="polite"><p class="sm">Escolha a comarca para ver o relatório.</p></div>
+  <p class="sm so-tela" style="margin-top:16px">Exemplo pronto em PDF, com registro no Bitcoin: <a href="/relatorio-exemplo-rio.pdf">Rio de Janeiro (TJRJ)</a> · <a href="/relatorio-exemplo-rio.ots">prova .ots</a>. Preço: grátis no lançamento; o custo medido de cada relatório é de centavos.</p>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · Relatório por comarca, Passo L04</span><span><a href="/api.html" style="display:inline-block;padding:4px 0">API</a> · Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="comarca.js"></script>
+</body>
+</html>
