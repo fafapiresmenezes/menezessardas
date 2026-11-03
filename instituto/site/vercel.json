@@ -202,27 +202,27 @@
  "rewrites": [
   {
    "source": "/",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/ef3e8cdde769deb14bdec06321244d06ace0bd46/instituto/site/index.html"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/7390f8c444520ddabd959932bfc6db9dd2ced19c/instituto/site/index.html"
   },
   {
    "source": "/o",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/ef3e8cdde769deb14bdec06321244d06ace0bd46/instituto/site/o.html"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/7390f8c444520ddabd959932bfc6db9dd2ced19c/instituto/site/o.html"
   },
   {
    "source": "/o/",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/ef3e8cdde769deb14bdec06321244d06ace0bd46/instituto/site/o.html"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/7390f8c444520ddabd959932bfc6db9dd2ced19c/instituto/site/o.html"
   },
   {
    "source": "/o/:id",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/ef3e8cdde769deb14bdec06321244d06ace0bd46/instituto/site/o.html"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/7390f8c444520ddabd959932bfc6db9dd2ced19c/instituto/site/o.html"
   },
   {
    "source": "/fonts/:f",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/ef3e8cdde769deb14bdec06321244d06ace0bd46/instituto/site/fonts/:f"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/7390f8c444520ddabd959932bfc6db9dd2ced19c/instituto/site/fonts/:f"
   },
   {
    "source": "/:f([a-z0-9-]+\\.(?:html|js|css|ttl|json|txt|csv|pdf|ots))",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/ef3e8cdde769deb14bdec06321244d06ace0bd46/instituto/site/:f"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/7390f8c444520ddabd959932bfc6db9dd2ced19c/instituto/site/:f"
   }
  ]
 }
