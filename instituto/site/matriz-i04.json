@@ -1,7 +1,7 @@
 {
- "gerado_em": "2026-11-03T22:37Z",
+ "gerado_em": "2026-11-03T22:47Z",
  "cabeca": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
- "feitos": 15,
+ "feitos": 16,
  "total": 31,
  "impacto_esforco": [
   {
@@ -95,15 +95,6 @@
    "porque": "Mais tribunais e classes"
   },
   {
-   "n": "D14",
-   "titulo": "Documentos do imóvel por função",
-   "status": "aberto",
-   "impacto": 4,
-   "esforco": 4,
-   "quadrante": "Planejar",
-   "porque": "Diz ao dono quais papéis o imóvel precisa"
-  },
-  {
    "n": "M02",
    "titulo": "Site em theye.club",
    "status": "aguardando M",
@@ -175,5 +166,5 @@
    "acao": ""
   }
  ],
- "sha256": "ab91cd75c17e48d60cf5c66e94ecfa5dccdcdb068b059db66cdadf8d58c182e2"
+ "sha256": "0db49ce1dba9e5967ba43c06b02e5ad7a0e8b977d2f7626626ef5fc3240d6cb5"
 }

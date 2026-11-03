@@ -322,9 +322,13 @@
    "prompt": "Estenda a ontologia (v0.8) com os documentos exigidos para o imóvel estar regular conforme a função (residencial, comercial, galpão, rural, temporada): matrícula, IPTU, habite-se, AVCB, alvará, CND condominial, laudo, etc., com a norma de origem; publique o checklist em /imovel.html.",
    "kpi": "5 funções × documentos com norma",
    "skill": "artifact-design",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "be2b6b55ba8945723e8c65f6ccbe23d8e9696d3ccc993aae97044e166d4870a8",
-   "sha256_prompt": "dcddc7aeba322beb923e238e2be61b3b57240e94ea3256810b5e20af2ae40060"
+   "sha256_prompt": "dcddc7aeba322beb923e238e2be61b3b57240e94ea3256810b5e20af2ae40060",
+   "feito_em": "2026-11-03T2247Z",
+   "evidencia": "Ontologia v0.8 publicada em /ontologia-locacao-v08.ttl (1.434 triplas, de 744 na v0.7; 5 funcoes do imovel, 43 documentos, 45 exigencias, 40 nos de norma novos; classes FuncaoDoImovel e ExigenciaDocumental, propriedades exige_documento, exigencia_de_documento, exigencia_fundada_em, imovel_tem_funcao). Consistencia: SHACL conforme, 0 owl:Nothing, 0 violacao de dominio/alcance no raciocinador OWL RL (3.172 triplas apos a expansao). Checklist no ar em https://instituto-theye.vercel.app/imovel.html: 5 funcoes (residencial, comercial, galpao, rural, temporada), cada documento com quem providencia, quando e a norma com link ao LexML; marcacao fica so no navegador; botao de salvar em PDF. Rural aponta que fica fora da Lei do Inquilinato (Lei 8.245/91 art. 1, par. unico, a) e segue o Estatuto da Terra. md5 de producao confere para imovel.html, imovel.js, documentos-imovel.json, index.html, a ontologia v0.8 (a7ccd5d925770cbff5d00106bac21b60) e base.css; u17 em 22 paginas sem violacao WCAG 2.2 AA.",
+   "elo_ev_anterior": "e7bf8830040724f73acd9d1399dac40efd8b7d9942134da39adf423107a2b37d",
+   "sha256_evidencia": "dab354f1c4d640ccba9ec75511e9d940c901c82ccf8a60e72b0a233bb21a1835"
   },
   {
    "n": "D15",
