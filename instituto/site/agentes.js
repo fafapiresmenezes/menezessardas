@@ -58,4 +58,21 @@
     desenhar();
   });
 })();
+// Passo D10: catálogo de 50 agentes × habilidade × curso citado (/catalogo-50.json).
+(function () {
+  var tb = document.querySelector('#cat-tab tbody'); if (!tb) return;
+  fetch('/catalogo-50.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    if (!d || !d.agentes) { tb.textContent = ''; return; }
+    document.getElementById('cat-quando').textContent = d.agentes.length + ' agentes · links conferidos em ' + d.gerado_em.split('-').reverse().join('/');
+    tb.textContent = '';
+    d.agentes.forEach(function (a) {
+      var tr = document.createElement('tr');
+      [a.nome, a.skill].forEach(function (v) { var td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+      var td = document.createElement('td'), lk = document.createElement('a');
+      lk.href = a.link; lk.textContent = a.curso; lk.rel = 'noopener'; lk.target = '_blank'; td.appendChild(lk); tr.appendChild(td);
+      var ti = document.createElement('td'); ti.textContent = a.instituicao; tr.appendChild(ti);
+      tb.appendChild(tr);
+    });
+  }).catch(function () {});
+})();
 (function () { var s = document.createElement('script'); s.src = '/vitais.js'; s.defer = true; document.head.appendChild(s); })();

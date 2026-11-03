@@ -28,6 +28,9 @@
 .rel select,.rel textarea{min-height:44px;padding:8px 12px;border:1px solid var(--linha);background:var(--papel);color:var(--tinta);font:15px var(--sans)}
 .rel button{min-height:44px;border:1px solid var(--tinta);background:var(--tinta);color:var(--papel);font:500 14px var(--sans);cursor:pointer;justify-self:start;padding:0 16px}
 .custo{font-family:var(--mono);font-size:12.5px;color:var(--tinta-2)}
+.tab th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--apagado);text-align:left;padding:8px;border-bottom:1px solid var(--linha);font-weight:500}
+.tab td{padding:8px;border-bottom:1px solid var(--linha);vertical-align:top}
+.sm{font-size:13.5px;color:var(--apagado)}
 </style>
 </head>
 <body>
@@ -56,6 +59,12 @@
   </details>
   <div class="ags" id="ags"><p>Carregando agentes…</p></div>
   <p style="margin-top:1.5rem"><small>Para usar, entre no <a href="/laboratorio.html">laboratório</a> (cadastro gratuito): 3 perguntas por dia grátis, 20 para membros. Guardamos só a contagem de uso por dia, nunca o texto da pergunta.</small></p>
+</div></section>
+<section><div class="w" id="catalogo">
+  <div class="sec-h"><div><div class="kicker">Catálogo · Passo D10</div><h2>Que habilidade cada agente tem, e de onde ela vem.</h2></div><p class="sm" id="cat-quando">carregando</p></div>
+  <p class="sm">Cada agente tem uma habilidade principal, ligada a um curso ou catálogo público de uma universidade de referência. O agente não cursou nada: a citação mostra qual é o corpo de conhecimento que a resposta dele tenta seguir, e onde você pode conferir o conteúdo.</p>
+  <div class="rolar" tabindex="0" role="region" aria-label="Catálogo de 50 agentes" style="overflow-x:auto"><table class="tab" id="cat-tab" style="width:100%;border-collapse:collapse;font-size:13.5px;min-width:720px"><thead><tr><th>Agente</th><th>Habilidade principal</th><th>Curso citado</th><th>Instituição</th></tr></thead><tbody><tr><td colspan="4">carregando</td></tr></tbody></table></div>
+  <p class="sm">A planilha completa fica em unificado/i04/catalogo-50.xlsx e os dados em <a href="/catalogo-50.json">/catalogo-50.json</a>.</p>
 </div></section>
 </main>
 <footer><div class="w"><span>© 2026 Instituto THEYE · Agentes por botão (U15, 31/10/2026; relato de incidentes C08, 01/11/2026)</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
