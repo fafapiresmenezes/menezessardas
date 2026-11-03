@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentos do imóvel · Instituto THEYE</title>
+<meta name="description" content="Checklist dos documentos que o imóvel precisa ter para a locação ficar regular, por função, com a norma de origem.">
+<link rel="preload" href="/fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="base.css">
+<style>
+.sm{font-size:13.5px;color:var(--apagado)}
+.fns{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.fns button{font:inherit;font-size:14px;padding:10px 14px;min-height:44px;border:1px solid var(--linha);background:var(--papel);color:var(--tinta);border-radius:999px;cursor:pointer}
+.fns button[aria-pressed=true]{border-color:var(--grafo);box-shadow:inset 0 0 0 1px var(--grafo);font-weight:600}
+.lista{display:grid;gap:12px;max-width:900px;margin-top:8px}
+.item{border:1px solid var(--linha);border-left:4px solid var(--grafo);border-radius:10px;padding:14px 16px}
+.item h3{font-size:16px;margin:0 0 4px}
+.item .meta{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--apagado)}
+.item label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.item input[type=checkbox]{width:20px;height:20px;margin-top:2px;flex:0 0 auto}
+.conta{padding:14px 16px;border:1px solid var(--linha);border-radius:10px;max-width:900px;margin-top:16px;font-variant-numeric:tabular-nums}
+@media print{.top,footer,.fns,.btn,.pular,.hero aside{display:none}.item{break-inside:avoid}}
+</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/#laboratorio">Laboratório</a><a href="/placar.html">Placar</a><a href="/ontologia.html">Ontologia</a><a href="/#metodo">Método</a><a href="/#servicos">Serviços</a></nav>
+</div></header>
+<main id="conteudo">
+<div class="hero"><div class="w">
+  <div class="kicker">Ferramenta grátis · ontologia v0.8</div>
+  <h1>Que documentos o imóvel precisa ter?</h1>
+  <p class="lead">Escolha para que serve o imóvel e veja a lista do que precisa estar em ordem antes de assinar a locação. Cada linha diz quem providencia, quando é exigido e qual é a norma. Não precisa de cadastro.</p>
+  <aside class="um-min" aria-label="Em 1 minuto"><b>Em 1 minuto</b><p>Clique na função do imóvel. Marque o que você já tem. O que ficar em branco é o que falta pedir.</p><a class="btn" href="#checklist">Ver o checklist</a></aside>
+</div></div>
+<section><div class="w" id="checklist">
+  <div class="sec-h"><div><div class="kicker">Checklist</div><h2>Por função do imóvel.</h2></div><p class="sm" id="d-fonte">carregando</p></div>
+  <div class="fns" id="d-fns" role="group" aria-label="Função do imóvel"></div>
+  <p class="sm" id="d-resumo"></p>
+  <div class="conta" id="d-conta" aria-live="polite"></div>
+  <div class="lista" id="d-lista"></div>
+  <p style="margin-top:18px"><button type="button" class="btn sec" id="d-imprimir">Salvar em PDF ou imprimir</button> <a class="btn sec" href="/ontologia-locacao-v08.ttl">Baixar a ontologia v0.8 (OWL/Turtle)</a></p>
+  <p class="sm" style="margin-top:14px">Como montamos: cada exigência é um nó da ontologia v0.8 do Instituto, ligado ao documento e à norma que a fundamenta (<code>exige_documento</code>, <code>exigencia_de_documento</code>, <code>exigencia_fundada_em</code>). São 5 funções, 43 documentos e 45 exigências, com 0 inconsistência no raciocinador OWL RL e 0 violação SHACL. Norma municipal (habite-se, alvará, zoneamento, autovistoria) muda de cidade para cidade: confirme na prefeitura. Imóvel rural fica fora da Lei do Inquilinato e segue o Estatuto da Terra. Isto é um checklist, não um parecer: para decidir, fale com um advogado.</p>
+  <p><a class="btn" href="/contrato.html">Já tem o contrato? Deixe a IA ler e apontar os riscos</a></p>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · Documentos do imóvel, Passo D14</span><span><a href="/legislacao.html" style="display:inline-block;padding:4px 0">Legislação</a> · Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="imovel.js"></script>
+</body>
+</html>

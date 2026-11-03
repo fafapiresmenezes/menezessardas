@@ -1,0 +1,1766 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix theye: <https://instituto-theye.vercel.app/o/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://instituto-theye.vercel.app/o> a owl:Ontology ;
+    dcterms:created "2026-11-03"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:source "v0.7 sha256 875f4b7ee77707de236065d349a892f0dd408aa293a2ceb6d01bb09ea4d85eb9" ;
+    dcterms:title "Ontologia de locação do Instituto THEYE"@pt ;
+    owl:versionInfo "0.8.0-locacao" .
+
+theye:Movimento a owl:Class ;
+    rdfs:label "Movimento processual"@pt .
+
+theye:N-8245-10 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 10"@pt ;
+    dcterms:description "Morte do locador"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art10" .
+
+theye:N-8245-11 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 11"@pt ;
+    dcterms:description "Morte do locatário"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art11" .
+
+theye:N-8245-12 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 12"@pt ;
+    dcterms:description "Separação, divórcio ou dissolução de união estável"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art12" .
+
+theye:N-8245-13 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 13"@pt ;
+    dcterms:description "Cessão, sublocação e empréstimo dependem de consentimento"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art13" .
+
+theye:N-8245-14 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 14"@pt ;
+    dcterms:description "Sublocações: regras aplicáveis"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art14" .
+
+theye:N-8245-15 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 15"@pt ;
+    dcterms:description "Rescisão da locação extingue a sublocação"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art15" .
+
+theye:N-8245-16 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 16"@pt ;
+    dcterms:description "Responsabilidade subsidiária do sublocatário"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art16" .
+
+theye:N-8245-2 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 2"@pt ;
+    dcterms:description "Solidariedade entre locadores e entre locatários"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art2" .
+
+theye:N-8245-20 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 20"@pt ;
+    dcterms:description "Vedada cobrança antecipada (salvo temporada ou sem garantia)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art20" .
+
+theye:N-8245-21 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 21"@pt ;
+    dcterms:description "Aluguel da sublocação não excede o da locação"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art21" .
+
+theye:N-8245-24 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 24"@pt ;
+    dcterms:description "Depósito judicial em imóvel com habitação coletiva irregular"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art24" .
+
+theye:N-8245-25 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 25"@pt ;
+    dcterms:description "Impostos e taxas cobrados junto com o aluguel"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art25" .
+
+theye:N-8245-26 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 26"@pt ;
+    dcterms:description "Reparos urgentes e abatimento do aluguel"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art26" .
+
+theye:N-8245-28 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 28"@pt ;
+    dcterms:description "Prazo de 30 dias para exercer a preferência"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art28" .
+
+theye:N-8245-29 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 29"@pt ;
+    dcterms:description "Responsabilidade do locador que desiste da venda"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art29" .
+
+theye:N-8245-3 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 3"@pt ;
+    dcterms:description "Prazo; vênia conjugal acima de 10 anos"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art3" .
+
+theye:N-8245-30 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 30"@pt ;
+    dcterms:description "Preferência do sublocatário"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art30" .
+
+theye:N-8245-31 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 31"@pt ;
+    dcterms:description "Venda de mais de uma unidade"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art31" .
+
+theye:N-8245-32 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 32"@pt ;
+    dcterms:description "Exclusões da preferência (judicial, permuta, doação, incorporação)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art32" .
+
+theye:N-8245-34 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 34"@pt ;
+    dcterms:description "Preferência do condômino sobre o locatário"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art34" .
+
+theye:N-8245-38 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 38"@pt ;
+    dcterms:description "Caução (limite de três aluguéis em dinheiro)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art38" .
+
+theye:N-8245-41 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 41"@pt ;
+    dcterms:description "Seguro-fiança"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art41" .
+
+theye:N-8245-42 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 42"@pt ;
+    dcterms:description "Locação sem garantia: aluguel antecipado"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art42" .
+
+theye:N-8245-43 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 43"@pt ;
+    dcterms:description "Contravenções penais"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art43" .
+
+theye:N-8245-44 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 44"@pt ;
+    dcterms:description "Crimes de ação pública"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art44" .
+
+theye:N-8245-45 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 45"@pt ;
+    dcterms:description "Nulidade de cláusulas que frustrem a lei"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art45" .
+
+theye:N-8245-48 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 48"@pt ;
+    dcterms:description "Temporada: conceito (até 90 dias)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art48" .
+
+theye:N-8245-49 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 49"@pt ;
+    dcterms:description "Temporada: pagamento antecipado"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art49" .
+
+theye:N-8245-5 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 5"@pt ;
+    dcterms:description "Retomada do imóvel só por ação de despejo"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art5" .
+
+theye:N-8245-50 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 50"@pt ;
+    dcterms:description "Temporada: prorrogação"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art50" .
+
+theye:N-8245-53 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 53"@pt ;
+    dcterms:description "Hospitais, escolas e entidades: retomada restrita"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art53" .
+
+theye:N-8245-54 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 54"@pt ;
+    dcterms:description "Shopping center: condições livremente pactuadas"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art54" .
+
+theye:N-8245-54-A a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 54-A"@pt ;
+    dcterms:description "Built to suit (Lei 12.744/2012)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art54-A" .
+
+theye:N-8245-55 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 55"@pt ;
+    dcterms:description "Locação a pessoa jurídica para residência de sócios/empregados"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art55" .
+
+theye:N-8245-58 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 58"@pt ;
+    dcterms:description "Disposições processuais gerais (férias, foro, valor da causa, citação, efeito devolutivo)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art58" .
+
+theye:N-8245-60 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 60"@pt ;
+    dcterms:description "Despejo para obras: prova da obra"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art60" .
+
+theye:N-8245-61 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 61"@pt ;
+    dcterms:description "Despejo: desocupação voluntária em 6 meses"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art61" .
+
+theye:N-8245-63 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 63"@pt ;
+    dcterms:description "Prazo de desocupação da sentença"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art63" .
+
+theye:N-8245-64 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 64"@pt ;
+    dcterms:description "Execução provisória do despejo com caução"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art64" .
+
+theye:N-8245-65 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 65"@pt ;
+    dcterms:description "Despejo coercitivo"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art65" .
+
+theye:N-8245-66 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 66"@pt ;
+    dcterms:description "Imóvel abandonado: imissão na posse"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art66" .
+
+theye:N-8245-7 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 7"@pt ;
+    dcterms:description "Extinção de usufruto ou fideicomisso"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art7" .
+
+theye:N-8245-70 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 70"@pt ;
+    dcterms:description "Revisional com despejo"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art70" .
+
+theye:N-8245-73 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 73"@pt ;
+    dcterms:description "Renovatória: diferenças de aluguel"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art73" .
+
+theye:N-8245-74 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 74"@pt ;
+    dcterms:description "Renovatória improcedente: desocupação"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art74" .
+
+theye:N-8245-75 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 75"@pt ;
+    dcterms:description "Renovatória: indenização"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art75" .
+
+<https://instituto-theye.vercel.app/o/N-8245-76–90> a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 76–90"@pt ;
+    dcterms:description "Disposições finais e transitórias"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art76–90" .
+
+theye:N-8245-8 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 8"@pt ;
+    dcterms:description "Alienação do imóvel durante a locação; cláusula de vigência"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art8" .
+
+theye:P-STF-T1127 a theye:Precedente ;
+    rdfs:label "STF Tema 1127 (RE 1.307.334)"@pt ;
+    dcterms:description "É constitucional a penhora de bem de família do fiador de contrato de locação comercial."@pt ;
+    dcterms:source <https://portal.stf.jus.br/jurisprudenciaRepercussao/> ;
+    theye:precedente_interpreta theye:N-8009-3-VII,
+        theye:N-8245-51 .
+
+theye:P-STF-T295 a theye:Precedente ;
+    rdfs:label "STF Tema 295 (RE 612.360)"@pt ;
+    dcterms:description "Constitucional a penhora do bem de família do fiador de locação."@pt ;
+    dcterms:source <https://portal.stf.jus.br/jurisprudenciaRepercussao/> ;
+    theye:precedente_interpreta theye:N-8009-3-VII .
+
+theye:P-STJ-S214 a theye:Precedente ;
+    rdfs:label "STJ Súmula 214"@pt ;
+    dcterms:description "O fiador na locação não responde por obrigações resultantes de aditamento ao qual não anuiu."@pt ;
+    dcterms:source <https://scon.stj.jus.br/SCON/sumstj/> ;
+    rdfs:comment "Usada na relação aditiva_de: o fiador só responde pelo aditivo a que anuiu."@pt ;
+    theye:precedente_interpreta theye:N-8245-39,
+        theye:N-8245-40 .
+
+theye:P-STJ-S268 a theye:Precedente ;
+    rdfs:label "STJ Súmula 268"@pt ;
+    dcterms:description "O fiador que não integrou a relação processual na ação de despejo não responde pela execução do julgado."@pt ;
+    dcterms:source <https://scon.stj.jus.br/SCON/sumstj/> ;
+    theye:precedente_interpreta theye:N-8245-62 .
+
+theye:P-STJ-S335 a theye:Precedente ;
+    rdfs:label "STJ Súmula 335"@pt ;
+    dcterms:description "Nos contratos de locação, é válida a cláusula de renúncia à indenização das benfeitorias e ao direito de retenção."@pt ;
+    dcterms:source <https://scon.stj.jus.br/SCON/sumstj/> ;
+    theye:precedente_interpreta theye:N-8245-35 .
+
+theye:P-STJ-S549 a theye:Precedente ;
+    rdfs:label "STJ Súmula 549"@pt ;
+    dcterms:description "É válida a penhora de bem de família pertencente a fiador de contrato de locação."@pt ;
+    dcterms:source <https://scon.stj.jus.br/SCON/sumstj/> ;
+    theye:precedente_interpreta theye:N-8009-3-VII,
+        theye:N-8245-37 .
+
+theye:T01 a theye:Tese ;
+    rdfs:label "Falta de pagamento autoriza despejo; purgação da mora evita a rescisão"@pt ;
+    theye:tese_funda_em theye:N-8245-62,
+        theye:N-8245-9 .
+
+theye:T02 a theye:Tese ;
+    rdfs:label "Liminar de desocupação em 15 dias mediante caução de três aluguéis"@pt ;
+    theye:tese_funda_em theye:N-8245-59 .
+
+theye:T03 a theye:Tese ;
+    rdfs:label "Denúncia vazia após 30 meses (residencial) ou fim do prazo (não residencial)"@pt ;
+    theye:tese_funda_em theye:N-8245-46,
+        theye:N-8245-56,
+        theye:N-8245-57 .
+
+theye:T04 a theye:Tese ;
+    rdfs:label "Retomada para uso próprio ou de familiar"@pt ;
+    theye:tese_funda_em theye:N-8245-47,
+        theye:N-8245-52 .
+
+theye:T05 a theye:Tese ;
+    rdfs:label "Aluguel revisto ao preço de mercado após três anos"@pt ;
+    theye:tese_funda_em theye:N-8245-19,
+        theye:N-8245-68,
+        theye:N-8245-69 .
+
+theye:T06 a theye:Tese ;
+    rdfs:label "Renovação compulsória da locação empresarial"@pt ;
+    theye:tese_funda_em theye:N-8245-51,
+        theye:N-8245-71,
+        theye:N-8245-72 .
+
+theye:T07 a theye:Tese ;
+    rdfs:label "Consignação do aluguel ou das chaves libera o locatário"@pt ;
+    theye:tese_funda_em theye:N-8245-6,
+        theye:N-8245-67,
+        theye:N-CC-334,
+        theye:N-CPC-539 .
+
+theye:T08 a theye:Tese ;
+    rdfs:label "Indenização ou retenção por benfeitorias (renunciável)"@pt ;
+    theye:tese_funda_em theye:N-8245-35,
+        theye:N-8245-36 .
+
+theye:T09 a theye:Tese ;
+    rdfs:label "Preterição da preferência gera perdas e danos ou adjudicação"@pt ;
+    theye:tese_funda_em theye:N-8245-27,
+        theye:N-8245-33 .
+
+theye:T10 a theye:Tese ;
+    rdfs:label "Fiança: alcance, exoneração e penhora do bem de família do fiador"@pt ;
+    theye:tese_funda_em theye:N-8009-3-VII,
+        theye:N-8245-39,
+        theye:N-8245-40 .
+
+theye:T11 a theye:Tese ;
+    rdfs:label "Multa por devolução antecipada proporcional ao prazo restante"@pt ;
+    theye:tese_funda_em theye:N-8245-4 .
+
+theye:T12 a theye:Tese ;
+    rdfs:label "Encargos de condomínio: ordinárias do locatário, extraordinárias do locador"@pt ;
+    theye:tese_funda_em theye:N-8245-22,
+        theye:N-8245-23 .
+
+theye:T13 a theye:Tese ;
+    rdfs:label "Cobrança de aluguéis por execução de título"@pt ;
+    theye:tese_funda_em theye:N-8245-62,
+        theye:N-CPC-784-VIII .
+
+theye:aditiva_de a owl:ObjectProperty ;
+    rdfs:domain theye:Contrato ;
+    rdfs:range theye:Contrato .
+
+theye:aplica a owl:ObjectProperty ;
+    rdfs:domain theye:Decisao ;
+    rdfs:range theye:Precedente .
+
+theye:assunto_remete_a a owl:ObjectProperty ;
+    rdfs:domain theye:Assunto ;
+    rdfs:range theye:Norma .
+
+theye:doc-AVCB a owl:Class ;
+    rdfs:subClassOf theye:Documento .
+
+theye:doc-Alvara a owl:Class ;
+    rdfs:subClassOf theye:Documento .
+
+theye:doc-Habite-se a owl:Class ;
+    rdfs:subClassOf theye:Documento .
+
+theye:doc-IPTU a owl:Class ;
+    rdfs:subClassOf theye:Documento .
+
+theye:documento_de a owl:ObjectProperty ;
+    rdfs:comment "Alvo: Contrato ou Imovel"@pt ;
+    rdfs:domain theye:Documento .
+
+theye:envolve a owl:ObjectProperty ;
+    rdfs:domain theye:Processo ;
+    rdfs:range theye:TipoDeParte .
+
+theye:exige_documento a owl:ObjectProperty ;
+    rdfs:label "liga a função do imóvel à exigência documental"@pt ;
+    rdfs:domain theye:FuncaoDoImovel ;
+    rdfs:range theye:ExigenciaDocumental .
+
+theye:exigencia_de_documento a owl:ObjectProperty ;
+    rdfs:label "documento que a exigência cobra"@pt ;
+    rdfs:domain theye:ExigenciaDocumental ;
+    rdfs:range theye:Documento .
+
+theye:exigencia_fundada_em a owl:ObjectProperty ;
+    rdfs:label "norma que fundamenta a exigência"@pt ;
+    rdfs:domain theye:ExigenciaDocumental ;
+    rdfs:range theye:Norma .
+
+theye:exigencia_obrigatoria_quando a owl:DatatypeProperty ;
+    rdfs:domain theye:ExigenciaDocumental ;
+    rdfs:range xsd:string .
+
+theye:fixado_por a owl:ObjectProperty ;
+    rdfs:domain theye:Prazo ;
+    rdfs:range theye:Norma .
+
+theye:func-comercial a owl:Class ;
+    rdfs:label "Comercial (loja, sala, escritório)"@pt ;
+    dcterms:description "Imóvel para atividade econômica. Contrato escrito, prazo determinado de 5 anos e 3 anos no mesmo ramo dão direito à ação renovatória."@pt ;
+    rdfs:subClassOf theye:FuncaoDoImovel ;
+    theye:exige_documento theye:exig-comercial-AVCB-ou-CLCB-do-Corpo-de-Bombeiros,
+        theye:exig-comercial-Alvara-de-funcionamento-ou-licenca-municipal,
+        theye:exig-comercial-Certidao-negativa-de-IPTU-e-taxas,
+        theye:exig-comercial-Contrato-escrito-com-prazo-determinado-de-olho-nos-5-anos,
+        theye:exig-comercial-Declaracao-de-quitacao-de-condominio-e-ata-que-autoriza-a-at,
+        theye:exig-comercial-Habite-se-e-certificado-de-uso-e-ocupacao-do-solo,
+        theye:exig-comercial-Laudo-de-vistoria-inicial-com-fotos,
+        theye:exig-comercial-Licenca-sanitaria,
+        theye:exig-comercial-Matricula-atualizada-com-certidao-de-onus .
+
+theye:func-galpao a owl:Class ;
+    rdfs:label "Galpão (industrial ou logístico)"@pt ;
+    dcterms:description "Depósito, centro de distribuição ou fábrica. Soma as exigências do comercial às licenças de segurança, ambiente e estrutura."@pt ;
+    rdfs:subClassOf theye:FuncaoDoImovel ;
+    theye:exige_documento theye:exig-galpao-AVCB-com-projeto-tecnico-de-incendio-aprovado,
+        theye:exig-galpao-Certificado-de-uso-e-ocupacao-do-solo-para-uso-industrial,
+        theye:exig-galpao-Laudo-de-SPDA-para-raios-em-dia,
+        theye:exig-galpao-Laudo-de-vistoria-inicial-com-fotos-e-inventario-de-instalac,
+        theye:exig-galpao-Laudo-estrutural-com-capacidade-de-carga-do-piso,
+        theye:exig-galpao-Licenca-ambiental-previa-de-instalacao-e-de-operacao,
+        theye:exig-galpao-Matricula-atualizada-com-certidao-de-onus,
+        theye:exig-galpao-Outorga-de-uso-de-agua-ou-poco-cadastrado,
+        theye:exig-galpao-PGR-e-PCMSO-da-operacao .
+
+theye:func-residencial a owl:Class ;
+    rdfs:label "Residencial"@pt ;
+    dcterms:description "Casa ou apartamento para morar. Vale a Lei do Inquilinato; com prazo de 30 meses ou mais, o contrato termina no prazo sem aviso."@pt ;
+    rdfs:subClassOf theye:FuncaoDoImovel ;
+    theye:exige_documento theye:exig-residencial-Certidao-negativa-de-IPTU-e-taxas-do-imovel,
+        theye:exig-residencial-Certidoes-de-acoes-civeis-e-execucoes-do-proprietario,
+        theye:exig-residencial-Convencao-e-regimento-interno-do-condominio,
+        theye:exig-residencial-Declaracao-de-quitacao-de-condominio,
+        theye:exig-residencial-Habite-se-ou-certificado-de-conclusao-da-obra,
+        theye:exig-residencial-Laudo-de-inspecao-predial,
+        theye:exig-residencial-Laudo-de-vistoria-inicial-com-fotos-assinado-pelas-duas-part,
+        theye:exig-residencial-Matricula-atualizada-com-certidao-de-onus,
+        theye:exig-residencial-Procuracao-do-administrador-ou-da-imobiliaria .
+
+theye:func-rural a owl:Class ;
+    rdfs:label "Rural (arrendamento ou parceria)"@pt ;
+    dcterms:description "Imóvel rural fica FORA da Lei do Inquilinato: vale o Estatuto da Terra. Prazo mínimo e preço têm regra própria."@pt ;
+    rdfs:subClassOf theye:FuncaoDoImovel ;
+    theye:exige_documento theye:exig-rural-CAR-Cadastro-Ambiental-Rural-ativo,
+        theye:exig-rural-CCIR-Certificado-de-Cadastro-de-Imovel-Rural-do-Incra,
+        theye:exig-rural-Comprovantes-de-ITR-e-CND-do-ITR,
+        theye:exig-rural-Contrato-de-arrendamento-com-prazo-minimo-e-preco-em-sacas-o,
+        theye:exig-rural-Georreferenciamento-certificado-SIGEF,
+        theye:exig-rural-Laudo-de-benfeitorias-e-de-cobertura-vegetal-na-entrada,
+        theye:exig-rural-Matricula-do-imovel-rural-com-certidao-de-onus,
+        theye:exig-rural-Outorga-de-uso-de-agua-para-irrigacao,
+        theye:exig-rural-Reserva-legal-registrada-no-CAR-e-APPs-identificadas .
+
+theye:func-temporada a owl:Class ;
+    rdfs:label "Temporada (até 90 dias)"@pt ;
+    dcterms:description "Residência para temporada: até 90 dias, aluguel pode ser cobrado adiantado e de uma vez. O condomínio pode restringir hospedagem de curto prazo."@pt ;
+    rdfs:subClassOf theye:FuncaoDoImovel ;
+    theye:exige_documento theye:exig-temporada-AVCB-da-edificacao,
+        theye:exig-temporada-Cadastur-e-cadastro-municipal-quando-a-oferta-e-de-hospedage,
+        theye:exig-temporada-Certidao-negativa-de-IPTU-e-quitacao-de-condominio,
+        theye:exig-temporada-Contrato-escrito-com-prazo-de-ate-90-dias,
+        theye:exig-temporada-Convencao-do-condominio-e-ata-sobre-locacao-de-curto-prazo,
+        theye:exig-temporada-Descricao-dos-moveis-e-utensilios-e-o-estado-deles,
+        theye:exig-temporada-Matricula-e-comprovante-de-propriedade,
+        theye:exig-temporada-Recibo-do-aluguel-e-encargos-pagos-de-uma-vez,
+        theye:exig-temporada-Seguro-do-imovel-e-do-conteudo .
+
+theye:fundamenta a owl:ObjectProperty ;
+    rdfs:domain theye:Norma ;
+    rdfs:range theye:Tese .
+
+theye:garantia-caucao a theye:Garantia ;
+    rdfs:label "caucao" ;
+    rdfs:seeAlso theye:N-8245-37 .
+
+theye:garantia-cessao_fiduciaria a theye:Garantia ;
+    rdfs:label "cessao_fiduciaria" ;
+    rdfs:seeAlso theye:N-8245-37 .
+
+theye:garantia-fianca a theye:Garantia ;
+    rdfs:label "fianca" ;
+    rdfs:seeAlso theye:N-8245-37 .
+
+theye:garantia-seguro a theye:Garantia ;
+    rdfs:label "seguro" ;
+    rdfs:seeAlso theye:N-8245-37 .
+
+theye:garantido_por a owl:ObjectProperty ;
+    rdfs:domain theye:Contrato ;
+    rdfs:range theye:Garantia .
+
+theye:imovel_tem_funcao a owl:ObjectProperty ;
+    rdfs:label "função declarada do imóvel"@pt ;
+    rdfs:domain theye:Imovel ;
+    rdfs:range theye:FuncaoDoImovel .
+
+theye:invoca a owl:ObjectProperty ;
+    rdfs:domain theye:Processo ;
+    rdfs:range theye:Tese .
+
+theye:objeto_de a owl:ObjectProperty ;
+    rdfs:domain theye:Imovel ;
+    rdfs:range theye:Contrato .
+
+theye:parte-fiador a theye:TipoDeParte ;
+    rdfs:label "fiador" .
+
+theye:parte-locador a theye:TipoDeParte ;
+    rdfs:label "locador" .
+
+theye:parte-locatario a theye:TipoDeParte ;
+    rdfs:label "locatario" .
+
+theye:parte-sublocatario a theye:TipoDeParte ;
+    rdfs:label "sublocatario" .
+
+theye:pertence_a a owl:ObjectProperty ;
+    rdfs:domain theye:OrgaoJulgador ;
+    rdfs:range theye:Tribunal .
+
+theye:prazo_de a owl:ObjectProperty ;
+    rdfs:comment "Alvo: Contrato, Imovel ou Processo"@pt ;
+    rdfs:domain theye:Prazo .
+
+theye:precedente_interpreta a owl:ObjectProperty ;
+    rdfs:domain theye:Precedente ;
+    rdfs:range theye:Norma .
+
+theye:preve a owl:ObjectProperty ;
+    rdfs:domain theye:PrevisaoJuridica ;
+    rdfs:range theye:Decisao .
+
+theye:regula a owl:ObjectProperty ;
+    rdfs:domain theye:Norma ;
+    rdfs:range theye:Contrato .
+
+theye:resulta_em a owl:ObjectProperty ;
+    rdfs:domain theye:Processo ;
+    rdfs:range theye:Decisao .
+
+theye:sublocacao_de a owl:ObjectProperty ;
+    rdfs:domain theye:Contrato ;
+    rdfs:range theye:Contrato .
+
+theye:tem_classe a owl:ObjectProperty ;
+    rdfs:domain theye:Processo ;
+    rdfs:range theye:ClasseProcessual .
+
+theye:tese_funda_em a owl:ObjectProperty ;
+    rdfs:domain theye:Tese ;
+    rdfs:range theye:Norma .
+
+theye:testa a owl:ObjectProperty ;
+    rdfs:domain theye:HipoteseJuridica ;
+    rdfs:range theye:PrevisaoJuridica .
+
+theye:tpu-assunto-10073 a theye:Assunto ;
+    skos:notation "10073" ;
+    theye:assunto_remete_a theye:N-8245-1 .
+
+theye:tpu-assunto-10090 a theye:Assunto ;
+    skos:notation "10090" ;
+    theye:assunto_remete_a theye:N-8245-1 .
+
+theye:tpu-assunto-10467 a theye:Assunto ;
+    skos:notation "10467" ;
+    theye:assunto_remete_a theye:N-8245-22,
+        theye:N-8245-23 .
+
+theye:tpu-assunto-10582 a theye:Assunto ;
+    skos:notation "10582" ;
+    theye:assunto_remete_a theye:N-8245-4,
+        theye:N-8245-9 .
+
+theye:tpu-assunto-11000 a theye:Assunto ;
+    skos:notation "11000" ;
+    theye:assunto_remete_a theye:N-8245-23,
+        theye:N-8245-62,
+        theye:N-CPC-784-VIII .
+
+theye:tpu-assunto-11001 a theye:Assunto ;
+    skos:notation "11001" ;
+    theye:assunto_remete_a theye:N-8245-6,
+        theye:N-8245-67 .
+
+theye:tpu-assunto-12416 a theye:Assunto ;
+    skos:notation "12416" ;
+    theye:assunto_remete_a theye:N-8245-59 .
+
+theye:tpu-assunto-12417 a theye:Assunto ;
+    skos:notation "12417" ;
+    theye:assunto_remete_a theye:N-8245-59 .
+
+theye:tpu-assunto-12612 a theye:Assunto ;
+    skos:notation "12612" ;
+    theye:assunto_remete_a theye:N-14010-9 .
+
+theye:tpu-assunto-14915 a theye:Assunto ;
+    skos:notation "14915" ;
+    theye:assunto_remete_a theye:N-8245-59,
+        theye:N-8245-62,
+        theye:N-8245-9 .
+
+theye:tpu-assunto-7690 a theye:Assunto ;
+    skos:notation "7690" ;
+    theye:assunto_remete_a theye:N-8245-9 .
+
+theye:tpu-assunto-7691 a theye:Assunto ;
+    skos:notation "7691" ;
+    theye:assunto_remete_a theye:N-8245-23,
+        theye:N-8245-9 .
+
+theye:tpu-assunto-7697 a theye:Assunto ;
+    skos:notation "7697" ;
+    theye:assunto_remete_a theye:N-8245-17,
+        theye:N-8245-18 .
+
+theye:tpu-assunto-7700 a theye:Assunto ;
+    skos:notation "7700" ;
+    theye:assunto_remete_a theye:N-8245-4 .
+
+theye:tpu-assunto-7703 a theye:Assunto ;
+    skos:notation "7703" ;
+    theye:assunto_remete_a theye:N-8245-23 .
+
+theye:tpu-assunto-7704 a theye:Assunto ;
+    skos:notation "7704" ;
+    theye:assunto_remete_a theye:N-8245-67,
+        theye:N-CC-334,
+        theye:N-CPC-539 .
+
+theye:tpu-assunto-7706 a theye:Assunto ;
+    skos:notation "7706" ;
+    theye:assunto_remete_a theye:N-8245-62 .
+
+theye:tpu-assunto-7770 a theye:Assunto ;
+    skos:notation "7770" ;
+    theye:assunto_remete_a theye:N-8245-18,
+        theye:N-8245-19,
+        theye:N-8245-68 .
+
+theye:tpu-assunto-8961 a theye:Assunto ;
+    skos:notation "8961" ;
+    theye:assunto_remete_a theye:N-8245-59 .
+
+theye:tpu-assunto-899 a theye:Assunto ;
+    skos:notation "899" ;
+    theye:assunto_remete_a theye:N-8245-1 .
+
+theye:tpu-assunto-9196 a theye:Assunto ;
+    skos:notation "9196" ;
+    theye:assunto_remete_a theye:N-8245-59 .
+
+theye:tpu-assunto-9580 a theye:Assunto ;
+    skos:notation "9580" ;
+    theye:assunto_remete_a theye:N-8245-1 .
+
+theye:tpu-assunto-9593 a theye:Assunto ;
+    skos:notation "9593" ;
+    theye:assunto_remete_a theye:N-8245-1 .
+
+theye:tpu-assunto-9609 a theye:Assunto ;
+    skos:notation "9609" ;
+    theye:assunto_remete_a theye:N-CC-565 .
+
+theye:tpu-assunto-9610 a theye:Assunto ;
+    skos:notation "9610" ;
+    theye:assunto_remete_a theye:N-8245-47,
+        theye:N-8245-52 .
+
+theye:tpu-assunto-9611 a theye:Assunto ;
+    skos:notation "9611" ;
+    theye:assunto_remete_a theye:N-8245-47 .
+
+theye:tpu-assunto-9612 a theye:Assunto ;
+    skos:notation "9612" ;
+    theye:assunto_remete_a theye:N-8245-46,
+        theye:N-8245-56,
+        theye:N-8245-57,
+        theye:N-8245-59 .
+
+theye:tpu-assunto-9614 a theye:Assunto ;
+    skos:notation "9614" ;
+    theye:assunto_remete_a theye:N-8245-35,
+        theye:N-8245-36 .
+
+theye:tpu-assunto-9615 a theye:Assunto ;
+    skos:notation "9615" ;
+    theye:assunto_remete_a theye:N-8245-27,
+        theye:N-8245-33 .
+
+theye:tramita_em a owl:ObjectProperty ;
+    rdfs:domain theye:Processo ;
+    rdfs:range theye:OrgaoJulgador .
+
+theye:trata_de a owl:ObjectProperty ;
+    rdfs:domain theye:Processo ;
+    rdfs:range theye:Assunto .
+
+theye:vincula a owl:ObjectProperty ;
+    rdfs:domain theye:Precedente ;
+    rdfs:range theye:Tese .
+
+theye:ClasseProcessual a owl:Class ;
+    rdfs:label "Classe processual (TPU-CNJ)"@pt .
+
+theye:HipoteseJuridica a owl:Class ;
+    rdfs:label "Hipótese jurídica pré-registrada"@pt .
+
+theye:N-14010-9 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 9º"@pt ;
+    dcterms:description "RJET/COVID-19: suspensão de liminares de despejo em 2020"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/lei/l14010.htm> .
+
+theye:N-8245-17 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 17"@pt ;
+    dcterms:description "Livre convenção do aluguel; vedada moeda estrangeira e vinculação cambial"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art17" .
+
+theye:N-8245-69 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 69"@pt ;
+    dcterms:description "Revisional: vigência do novo aluguel desde a citação"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art69" .
+
+theye:N-8245-71 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 71"@pt ;
+    dcterms:description "Renovatória: requisitos da petição inicial"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art71" .
+
+theye:N-8245-72 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 72"@pt ;
+    dcterms:description "Renovatória: matéria de defesa"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art72" .
+
+theye:N-CC-565 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 565 a 578"@pt ;
+    dcterms:description "Locação de coisas (móveis) no Código Civil"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm> .
+
+theye:N-doc-ABNT-NBR-16747-lei-municipal-de-autovistoria-onde-existir a theye:Norma ;
+    rdfs:label "ABNT NBR 16747; lei municipal de autovistoria onde existir"@pt ;
+    dcterms:description "responde pela segurança da estrutura e das instalações."@pt ;
+    dcterms:source <https://www.abntcatalogo.com.br/norma.aspx?Q=TlNTcmNWeXV0eFhsRXdpb1RMRkU0bFBnMVBKdDBsMnV0K0hUTVNOeWxSVT0=> .
+
+theye:N-doc-ABNT-NBR-5419 a theye:Norma ;
+    rdfs:label "ABNT NBR 5419"@pt ;
+    dcterms:description "exigência do AVCB e da seguradora para cobertura de descarga atmosférica."@pt ;
+    dcterms:source <https://www.abntcatalogo.com.br/> .
+
+theye:N-doc-ABNT-NBR-6118-concreto-e-NBR-8800-aco a theye:Norma ;
+    rdfs:label "ABNT NBR 6118 (concreto) e NBR 8800 (aço)"@pt ;
+    dcterms:description "porta-pallets e empilhadeira exigem piso e estrutura dimensionados."@pt ;
+    dcterms:source <https://www.abntcatalogo.com.br/> .
+
+theye:N-doc-CPC-art-792-IV a theye:Norma ;
+    rdfs:label "CPC, art. 792, IV"@pt ;
+    dcterms:description "venda ou penhora em fraude à execução pode atingir o imóvel locado."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2015-03-16;13105> .
+
+theye:N-doc-CTN-art-34-Lei-4-591-64-art-12 a theye:Norma ;
+    rdfs:label "CTN, art. 34; Lei 4.591/64, art. 12"@pt ;
+    dcterms:description "encargos atrasados acompanham a unidade."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1964-12-16;4591> .
+
+theye:N-doc-Codigo-Civil-art-1-336-IV-STJ-REsp-1-819-075-RS a theye:Norma ;
+    rdfs:label "Código Civil, art. 1.336, IV; STJ, REsp 1.819.075/RS"@pt ;
+    dcterms:description "o STJ admitiu que condomínio residencial vede hospedagem de curto prazo."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2002-01-10;10406> .
+
+theye:N-doc-Codigo-Civil-arts-1-333-e-1-334 a theye:Norma ;
+    rdfs:label "Código Civil, arts. 1.333 e 1.334"@pt ;
+    dcterms:description "o locatário fica sujeito às regras do prédio."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2002-01-10;10406> .
+
+theye:N-doc-Codigo-Civil-arts-1-336-IV-e-1-337 a theye:Norma ;
+    rdfs:label "Código Civil, arts. 1.336, IV, e 1.337"@pt ;
+    dcterms:description "o condomínio pode vedar atividade que altere o uso ou incomode os vizinhos."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2002-01-10;10406> .
+
+theye:N-doc-Codigo-Civil-arts-653-e-661 a theye:Norma ;
+    rdfs:label "Código Civil, arts. 653 e 661"@pt ;
+    dcterms:description "quem assina pelo dono precisa de poderes expressos para locar."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2002-01-10;10406> .
+
+theye:N-doc-Codigo-Civil-arts-757-e-765 a theye:Norma ;
+    rdfs:label "Código Civil, arts. 757 e 765"@pt ;
+    dcterms:description "rotatividade alta aumenta o risco de dano; o seguro cobre o que a caução não cobre."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2002-01-10;10406> .
+
+theye:N-doc-Codigo-de-Obras-do-municipio-norma-municipal-Lei-6-766-79-ar a theye:Norma ;
+    rdfs:label "Código de Obras do município (norma municipal); Lei 6.766/79, art. 18, para lote"@pt ;
+    dcterms:description "sem habite-se a edificação não é regular e o seguro pode ser negado."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1979-12-19;6766> .
+
+theye:N-doc-Decreto-59-566-66-art-25 a theye:Norma ;
+    rdfs:label "Decreto 59.566/66, art. 25"@pt ;
+    dcterms:description "define o que o arrendatário devolve e o que será indenizado."@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/decreto/antigos/d59566.htm> .
+
+theye:N-doc-Lei-10-257-2001-art-4o-plano-diretor-e-lei-de-zoneamento-do- a theye:Norma ;
+    rdfs:label "Lei 10.257/2001, art. 4º; plano diretor e lei de zoneamento do município"@pt ;
+    dcterms:description "a atividade precisa ser permitida naquela zona da cidade."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2001-07-10;10257> .
+
+theye:N-doc-Lei-10-257-2001-art-4o-zoneamento-municipal a theye:Norma ;
+    rdfs:label "Lei 10.257/2001, art. 4º; zoneamento municipal"@pt ;
+    dcterms:description "muitos galpões ficam em zona que não admite indústria."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2001-07-10;10257> .
+
+theye:N-doc-Lei-10-267-2001 a theye:Norma ;
+    rdfs:label "Lei 10.267/2001"@pt ;
+    dcterms:description "a certificação do perímetro é exigida para atos de registro."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2001-08-28;10267> .
+
+theye:N-doc-Lei-11-771-2008-arts-22-e-23 a theye:Norma ;
+    rdfs:label "Lei 11.771/2008, arts. 22 e 23"@pt ;
+    dcterms:description "com serviços de hotelaria a atividade passa a ser meio de hospedagem, com ISS e cadastro."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2008-09-17;11771> .
+
+theye:N-doc-Lei-12-651-2012-art-29 a theye:Norma ;
+    rdfs:label "Lei 12.651/2012, art. 29"@pt ;
+    dcterms:description "o CAR é obrigatório e condiciona crédito rural e regularização."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2012-05-25;12651> .
+
+theye:N-doc-Lei-12-651-2012-arts-4o-e-18 a theye:Norma ;
+    rdfs:label "Lei 12.651/2012, arts. 4º e 18"@pt ;
+    dcterms:description "o arrendatário não pode plantar em reserva legal nem em área de preservação."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2012-05-25;12651> .
+
+theye:N-doc-Lei-13-425-2017 a theye:Norma ;
+    rdfs:label "Lei 13.425/2017"@pt ;
+    dcterms:description "hospedagem é uso de reunião de público e muda a exigência de segurança contra incêndio."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2017-03-30;13425> .
+
+theye:N-doc-Lei-13-425-2017-ABNT-NBR-17240-deteccao-e-alarme a theye:Norma ;
+    rdfs:label "Lei 13.425/2017; ABNT NBR 17240 (detecção e alarme)"@pt ;
+    dcterms:description "galpão tem carga de incêndio alta; sem projeto aprovado a operação é interditável."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2017-03-30;13425> .
+
+theye:N-doc-Lei-13-425-2017-decreto-do-Corpo-de-Bombeiros-do-estado a theye:Norma ;
+    rdfs:label "Lei 13.425/2017; decreto do Corpo de Bombeiros do estado"@pt ;
+    dcterms:description "sem auto de vistoria o alvará é negado e o seguro não paga sinistro de incêndio."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2017-03-30;13425> .
+
+theye:N-doc-Lei-13-874-2019-art-3o-I-dispensa-para-baixo-risco-lei-munic a theye:Norma ;
+    rdfs:label "Lei 13.874/2019, art. 3º, I (dispensa para baixo risco); lei municipal"@pt ;
+    dcterms:description "atividade de baixo risco é dispensada de alvará; as outras não."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2019-09-20;13874> .
+
+theye:N-doc-Lei-4-504-64-art-95-Decreto-59-566-66-arts-13-e-18 a theye:Norma ;
+    rdfs:label "Lei 4.504/64, art. 95; Decreto 59.566/66, arts. 13 e 18"@pt ;
+    dcterms:description "o Estatuto da Terra fixa prazo mínimo por tipo de exploração, teto de preço e preferência do arrendatário."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1964-11-30;4504> .
+
+theye:N-doc-Lei-4-591-64-art-12-Codigo-Civil-art-1-336-I a theye:Norma ;
+    rdfs:label "Lei 4.591/64, art. 12; Código Civil, art. 1.336, I"@pt ;
+    dcterms:description "dívida de condomínio acompanha a unidade (obrigação propter rem)."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1964-12-16;4591> .
+
+theye:N-doc-Lei-5-868-72-art-2o a theye:Norma ;
+    rdfs:label "Lei 5.868/72, art. 2º"@pt ;
+    dcterms:description "sem CCIR o imóvel não pode ser arrendado, vendido nem hipotecado."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1972-12-12;5868> .
+
+theye:N-doc-Lei-6-015-73-art-176 a theye:Norma ;
+    rdfs:label "Lei 6.015/73, art. 176"@pt ;
+    dcterms:description "quem anuncia precisa poder locar o imóvel."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1973-12-31;6015> .
+
+theye:N-doc-Lei-6-015-73-art-176-Lei-8-245-91-art-1o-paragrafo-unico-a-e a theye:Norma ;
+    rdfs:label "Lei 6.015/73, art. 176; Lei 8.245/91, art. 1º, parágrafo único, 'a' (exclui o rural)"@pt ;
+    dcterms:description "a locação rural segue a Lei 4.504/64 e o Decreto 59.566/66, não a Lei do Inquilinato."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1991-10-18;8245> .
+
+theye:N-doc-Lei-6-437-77-RDC-Anvisa-216-2004 a theye:Norma ;
+    rdfs:label "Lei 6.437/77; RDC Anvisa 216/2004"@pt ;
+    dcterms:description "manipulação de alimentos e serviços de saúde exigem licença da vigilância."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1977-08-20;6437> .
+
+theye:N-doc-Lei-6-938-81-art-10-Resolucao-CONAMA-237-97 a theye:Norma ;
+    rdfs:label "Lei 6.938/81, art. 10; Resolução CONAMA 237/97"@pt ;
+    dcterms:description "operar sem licença é infração ambiental e pode gerar responsabilidade solidária do dono do imóvel."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1981-08-31;6938> .
+
+theye:N-doc-Lei-8-245-91-art-48 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 48"@pt ;
+    dcterms:description "passando de 90 dias ou repetindo por mais de 30 dias após o prazo, a locação vira residencial comum (art. 50)."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1991-10-18;8245> .
+
+theye:N-doc-Lei-8-245-91-art-48-paragrafo-unico a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 48, parágrafo único"@pt ;
+    dcterms:description "a lei exige essa lista no contrato quando o imóvel é mobiliado."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1991-10-18;8245> .
+
+theye:N-doc-Lei-8-245-91-art-49 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 49"@pt ;
+    dcterms:description "na temporada a lei autoriza receber tudo adiantado, e o recibo é a prova."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1991-10-18;8245> .
+
+theye:N-doc-Lei-8-245-91-arts-23-III-e-35 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, arts. 23, III, e 35"@pt ;
+    dcterms:description "benfeitoria sem autorização escrita pode não ser indenizada (Súmula 335 do STJ)."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1991-10-18;8245> .
+
+theye:N-doc-Lei-8-245-91-arts-51-e-45 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, arts. 51 e 45"@pt ;
+    dcterms:description "sem 5 anos de contrato escrito e 3 anos no mesmo ramo não há renovatória; cláusula de renúncia à renovação é nula."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1991-10-18;8245> .
+
+theye:N-doc-Lei-9-393-96 a theye:Norma ;
+    rdfs:label "Lei 9.393/96"@pt ;
+    dcterms:description "o ITR é anual e por declaração; débito impede certidão."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1996-12-19;9393> .
+
+theye:N-doc-NR-1-e-NR-7-do-Ministerio-do-Trabalho a theye:Norma ;
+    rdfs:label "NR-1 e NR-7 do Ministério do Trabalho"@pt ;
+    dcterms:description "programas de risco e de saúde ocupacional são obrigatórios e são fiscalizados no local."@pt ;
+    dcterms:source <https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadoras> .
+
+theye:Tribunal a owl:Class ;
+    rdfs:label "Tribunal"@pt .
+
+theye:doc-AVCB-com-projeto-tecnico-de-incendio-aprovado a owl:Class ;
+    rdfs:label "AVCB com projeto técnico de incêndio aprovado"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-AVCB-da-edificacao a owl:Class ;
+    rdfs:label "AVCB da edificação"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-AVCB-ou-CLCB-do-Corpo-de-Bombeiros a owl:Class ;
+    rdfs:label "AVCB ou CLCB do Corpo de Bombeiros"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Alvara-de-funcionamento-ou-licenca-municipal a owl:Class ;
+    rdfs:label "Alvará de funcionamento ou licença municipal"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-CAR-Cadastro-Ambiental-Rural-ativo a owl:Class ;
+    rdfs:label "CAR (Cadastro Ambiental Rural) ativo"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-CCIR-Certificado-de-Cadastro-de-Imovel-Rural-do-Incra a owl:Class ;
+    rdfs:label "CCIR (Certificado de Cadastro de Imóvel Rural) do Incra"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Cadastur-e-cadastro-municipal-quando-a-oferta-e-de-hospedage a owl:Class ;
+    rdfs:label "Cadastur e cadastro municipal quando a oferta é de hospedagem"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Certidao-negativa-de-IPTU-e-quitacao-de-condominio a owl:Class ;
+    rdfs:label "Certidão negativa de IPTU e quitação de condomínio"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Certidao-negativa-de-IPTU-e-taxas a owl:Class ;
+    rdfs:label "Certidão negativa de IPTU e taxas"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Certidao-negativa-de-IPTU-e-taxas-do-imovel a owl:Class ;
+    rdfs:label "Certidão negativa de IPTU e taxas do imóvel"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Certidoes-de-acoes-civeis-e-execucoes-do-proprietario a owl:Class ;
+    rdfs:label "Certidões de ações cíveis e execuções do proprietário"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Certificado-de-uso-e-ocupacao-do-solo-para-uso-industrial a owl:Class ;
+    rdfs:label "Certificado de uso e ocupação do solo para uso industrial"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Comprovantes-de-ITR-e-CND-do-ITR a owl:Class ;
+    rdfs:label "Comprovantes de ITR e CND do ITR"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Contrato-de-arrendamento-com-prazo-minimo-e-preco-em-sacas-o a owl:Class ;
+    rdfs:label "Contrato de arrendamento com prazo mínimo e preço em sacas ou percentual legal"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Contrato-escrito-com-prazo-de-ate-90-dias a owl:Class ;
+    rdfs:label "Contrato escrito com prazo de até 90 dias"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Contrato-escrito-com-prazo-determinado-de-olho-nos-5-anos a owl:Class ;
+    rdfs:label "Contrato escrito com prazo determinado, de olho nos 5 anos"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Convencao-do-condominio-e-ata-sobre-locacao-de-curto-prazo a owl:Class ;
+    rdfs:label "Convenção do condomínio e ata sobre locação de curto prazo"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Convencao-e-regimento-interno-do-condominio a owl:Class ;
+    rdfs:label "Convenção e regimento interno do condomínio"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Declaracao-de-quitacao-de-condominio a owl:Class ;
+    rdfs:label "Declaração de quitação de condomínio"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Declaracao-de-quitacao-de-condominio-e-ata-que-autoriza-a-at a owl:Class ;
+    rdfs:label "Declaração de quitação de condomínio e ata que autoriza a atividade"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Descricao-dos-moveis-e-utensilios-e-o-estado-deles a owl:Class ;
+    rdfs:label "Descrição dos móveis e utensílios e o estado deles"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Georreferenciamento-certificado-SIGEF a owl:Class ;
+    rdfs:label "Georreferenciamento certificado (SIGEF)"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Habite-se-e-certificado-de-uso-e-ocupacao-do-solo a owl:Class ;
+    rdfs:label "Habite-se e certificado de uso e ocupação do solo"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Habite-se-ou-certificado-de-conclusao-da-obra a owl:Class ;
+    rdfs:label "Habite-se ou certificado de conclusão da obra"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Laudo-de-SPDA-para-raios-em-dia a owl:Class ;
+    rdfs:label "Laudo de SPDA (para-raios) em dia"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Laudo-de-benfeitorias-e-de-cobertura-vegetal-na-entrada a owl:Class ;
+    rdfs:label "Laudo de benfeitorias e de cobertura vegetal na entrada"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Laudo-de-inspecao-predial a owl:Class ;
+    rdfs:label "Laudo de inspeção predial"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Laudo-de-vistoria-inicial-com-fotos a owl:Class ;
+    rdfs:label "Laudo de vistoria inicial com fotos"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Laudo-de-vistoria-inicial-com-fotos-assinado-pelas-duas-part a owl:Class ;
+    rdfs:label "Laudo de vistoria inicial com fotos, assinado pelas duas partes"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Laudo-de-vistoria-inicial-com-fotos-e-inventario-de-instalac a owl:Class ;
+    rdfs:label "Laudo de vistoria inicial com fotos e inventário de instalações"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Laudo-estrutural-com-capacidade-de-carga-do-piso a owl:Class ;
+    rdfs:label "Laudo estrutural com capacidade de carga do piso"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Licenca-ambiental-previa-de-instalacao-e-de-operacao a owl:Class ;
+    rdfs:label "Licença ambiental (prévia, de instalação e de operação)"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Licenca-sanitaria a owl:Class ;
+    rdfs:label "Licença sanitária"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Matricula-do-imovel-rural-com-certidao-de-onus a owl:Class ;
+    rdfs:label "Matrícula do imóvel rural com certidão de ônus"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Matricula-e-comprovante-de-propriedade a owl:Class ;
+    rdfs:label "Matrícula e comprovante de propriedade"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Outorga-de-uso-de-agua-ou-poco-cadastrado a owl:Class ;
+    rdfs:label "Outorga de uso de água ou poço cadastrado"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Outorga-de-uso-de-agua-para-irrigacao a owl:Class ;
+    rdfs:label "Outorga de uso de água para irrigação"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-PGR-e-PCMSO-da-operacao a owl:Class ;
+    rdfs:label "PGR e PCMSO da operação"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Procuracao-do-administrador-ou-da-imobiliaria a owl:Class ;
+    rdfs:label "Procuração do administrador ou da imobiliária"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Recibo-do-aluguel-e-encargos-pagos-de-uma-vez a owl:Class ;
+    rdfs:label "Recibo do aluguel e encargos pagos de uma vez"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Reserva-legal-registrada-no-CAR-e-APPs-identificadas a owl:Class ;
+    rdfs:label "Reserva legal registrada no CAR e APPs identificadas"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:doc-Seguro-do-imovel-e-do-conteudo a owl:Class ;
+    rdfs:label "Seguro do imóvel e do conteúdo"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:exig-comercial-AVCB-ou-CLCB-do-Corpo-de-Bombeiros a theye:ExigenciaDocumental ;
+    rdfs:label "Comercial (loja, sala, escritório): AVCB ou CLCB do Corpo de Bombeiros"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-AVCB-ou-CLCB-do-Corpo-de-Bombeiros ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-13-425-2017-decreto-do-Corpo-de-Bombeiros-do-estado ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-comercial-Alvara-de-funcionamento-ou-licenca-municipal a theye:ExigenciaDocumental ;
+    rdfs:label "Comercial (loja, sala, escritório): Alvará de funcionamento ou licença municipal"@pt ;
+    dcterms:description "Quem providencia: locatário"@pt ;
+    theye:exigencia_de_documento theye:doc-Alvara-de-funcionamento-ou-licenca-municipal ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-13-874-2019-art-3o-I-dispensa-para-baixo-risco-lei-munic ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-comercial-Certidao-negativa-de-IPTU-e-taxas a theye:ExigenciaDocumental ;
+    rdfs:label "Comercial (loja, sala, escritório): Certidão negativa de IPTU e taxas"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Certidao-negativa-de-IPTU-e-taxas ;
+    theye:exigencia_fundada_em theye:N-doc-CTN-art-34-Lei-8-245-91-art-22-VIII ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-comercial-Contrato-escrito-com-prazo-determinado-de-olho-nos-5-anos a theye:ExigenciaDocumental ;
+    rdfs:label "Comercial (loja, sala, escritório): Contrato escrito com prazo determinado, de olho nos 5 anos"@pt ;
+    dcterms:description "Quem providencia: ambos"@pt ;
+    theye:exigencia_de_documento theye:doc-Contrato-escrito-com-prazo-determinado-de-olho-nos-5-anos ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-8-245-91-arts-51-e-45 ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-comercial-Declaracao-de-quitacao-de-condominio-e-ata-que-autoriza-a-at a theye:ExigenciaDocumental ;
+    rdfs:label "Comercial (loja, sala, escritório): Declaração de quitação de condomínio e ata que autoriza a atividade"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Declaracao-de-quitacao-de-condominio-e-ata-que-autoriza-a-at ;
+    theye:exigencia_fundada_em theye:N-doc-Codigo-Civil-arts-1-336-IV-e-1-337 ;
+    theye:exigencia_obrigatoria_quando "em condomínio" .
+
+theye:exig-comercial-Habite-se-e-certificado-de-uso-e-ocupacao-do-solo a theye:ExigenciaDocumental ;
+    rdfs:label "Comercial (loja, sala, escritório): Habite-se e certificado de uso e ocupação do solo"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Habite-se-e-certificado-de-uso-e-ocupacao-do-solo ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-10-257-2001-art-4o-plano-diretor-e-lei-de-zoneamento-do- ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-comercial-Laudo-de-vistoria-inicial-com-fotos a theye:ExigenciaDocumental ;
+    rdfs:label "Comercial (loja, sala, escritório): Laudo de vistoria inicial com fotos"@pt ;
+    dcterms:description "Quem providencia: ambos"@pt ;
+    theye:exigencia_de_documento theye:doc-Laudo-de-vistoria-inicial-com-fotos ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-8-245-91-art-23-III ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-comercial-Licenca-sanitaria a theye:ExigenciaDocumental ;
+    rdfs:label "Comercial (loja, sala, escritório): Licença sanitária"@pt ;
+    dcterms:description "Quem providencia: locatário"@pt ;
+    theye:exigencia_de_documento theye:doc-Licenca-sanitaria ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-6-437-77-RDC-Anvisa-216-2004 ;
+    theye:exigencia_obrigatoria_quando "alimentos, saúde ou estética" .
+
+theye:exig-comercial-Matricula-atualizada-com-certidao-de-onus a theye:ExigenciaDocumental ;
+    rdfs:label "Comercial (loja, sala, escritório): Matrícula atualizada com certidão de ônus"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Matricula-atualizada-com-certidao-de-onus ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-6-015-73-arts-167-e-176 ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-galpao-AVCB-com-projeto-tecnico-de-incendio-aprovado a theye:ExigenciaDocumental ;
+    rdfs:label "Galpão (industrial ou logístico): AVCB com projeto técnico de incêndio aprovado"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-AVCB-com-projeto-tecnico-de-incendio-aprovado ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-13-425-2017-ABNT-NBR-17240-deteccao-e-alarme ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-galpao-Certificado-de-uso-e-ocupacao-do-solo-para-uso-industrial a theye:ExigenciaDocumental ;
+    rdfs:label "Galpão (industrial ou logístico): Certificado de uso e ocupação do solo para uso industrial"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Certificado-de-uso-e-ocupacao-do-solo-para-uso-industrial ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-10-257-2001-art-4o-zoneamento-municipal ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-galpao-Laudo-de-SPDA-para-raios-em-dia a theye:ExigenciaDocumental ;
+    rdfs:label "Galpão (industrial ou logístico): Laudo de SPDA (para-raios) em dia"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Laudo-de-SPDA-para-raios-em-dia ;
+    theye:exigencia_fundada_em theye:N-doc-ABNT-NBR-5419 ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-galpao-Laudo-de-vistoria-inicial-com-fotos-e-inventario-de-instalac a theye:ExigenciaDocumental ;
+    rdfs:label "Galpão (industrial ou logístico): Laudo de vistoria inicial com fotos e inventário de instalações"@pt ;
+    dcterms:description "Quem providencia: ambos"@pt ;
+    theye:exigencia_de_documento theye:doc-Laudo-de-vistoria-inicial-com-fotos-e-inventario-de-instalac ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-8-245-91-arts-23-III-e-35 ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-galpao-Laudo-estrutural-com-capacidade-de-carga-do-piso a theye:ExigenciaDocumental ;
+    rdfs:label "Galpão (industrial ou logístico): Laudo estrutural com capacidade de carga do piso"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Laudo-estrutural-com-capacidade-de-carga-do-piso ;
+    theye:exigencia_fundada_em theye:N-doc-ABNT-NBR-6118-concreto-e-NBR-8800-aco ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-galpao-Licenca-ambiental-previa-de-instalacao-e-de-operacao a theye:ExigenciaDocumental ;
+    rdfs:label "Galpão (industrial ou logístico): Licença ambiental (prévia, de instalação e de operação)"@pt ;
+    dcterms:description "Quem providencia: locatário"@pt ;
+    theye:exigencia_de_documento theye:doc-Licenca-ambiental-previa-de-instalacao-e-de-operacao ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-6-938-81-art-10-Resolucao-CONAMA-237-97 ;
+    theye:exigencia_obrigatoria_quando "atividade potencialmente poluidora" .
+
+theye:exig-galpao-Matricula-atualizada-com-certidao-de-onus a theye:ExigenciaDocumental ;
+    rdfs:label "Galpão (industrial ou logístico): Matrícula atualizada com certidão de ônus"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Matricula-atualizada-com-certidao-de-onus ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-6-015-73-arts-167-e-176 ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-galpao-Outorga-de-uso-de-agua-ou-poco-cadastrado a theye:ExigenciaDocumental ;
+    rdfs:label "Galpão (industrial ou logístico): Outorga de uso de água ou poço cadastrado"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Outorga-de-uso-de-agua-ou-poco-cadastrado ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-9-433-97-art-12 ;
+    theye:exigencia_obrigatoria_quando "capta água" .
+
+theye:exig-galpao-PGR-e-PCMSO-da-operacao a theye:ExigenciaDocumental ;
+    rdfs:label "Galpão (industrial ou logístico): PGR e PCMSO da operação"@pt ;
+    dcterms:description "Quem providencia: locatário"@pt ;
+    theye:exigencia_de_documento theye:doc-PGR-e-PCMSO-da-operacao ;
+    theye:exigencia_fundada_em theye:N-doc-NR-1-e-NR-7-do-Ministerio-do-Trabalho ;
+    theye:exigencia_obrigatoria_quando "com empregados" .
+
+theye:exig-residencial-Certidao-negativa-de-IPTU-e-taxas-do-imovel a theye:ExigenciaDocumental ;
+    rdfs:label "Residencial: Certidão negativa de IPTU e taxas do imóvel"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Certidao-negativa-de-IPTU-e-taxas-do-imovel ;
+    theye:exigencia_fundada_em theye:N-doc-CTN-art-34-Lei-8-245-91-art-22-VIII ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-residencial-Certidoes-de-acoes-civeis-e-execucoes-do-proprietario a theye:ExigenciaDocumental ;
+    rdfs:label "Residencial: Certidões de ações cíveis e execuções do proprietário"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Certidoes-de-acoes-civeis-e-execucoes-do-proprietario ;
+    theye:exigencia_fundada_em theye:N-doc-CPC-art-792-IV ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-residencial-Convencao-e-regimento-interno-do-condominio a theye:ExigenciaDocumental ;
+    rdfs:label "Residencial: Convenção e regimento interno do condomínio"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Convencao-e-regimento-interno-do-condominio ;
+    theye:exigencia_fundada_em theye:N-doc-Codigo-Civil-arts-1-333-e-1-334 ;
+    theye:exigencia_obrigatoria_quando "em condomínio" .
+
+theye:exig-residencial-Declaracao-de-quitacao-de-condominio a theye:ExigenciaDocumental ;
+    rdfs:label "Residencial: Declaração de quitação de condomínio"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Declaracao-de-quitacao-de-condominio ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-4-591-64-art-12-Codigo-Civil-art-1-336-I ;
+    theye:exigencia_obrigatoria_quando "em condomínio" .
+
+theye:exig-residencial-Habite-se-ou-certificado-de-conclusao-da-obra a theye:ExigenciaDocumental ;
+    rdfs:label "Residencial: Habite-se ou certificado de conclusão da obra"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Habite-se-ou-certificado-de-conclusao-da-obra ;
+    theye:exigencia_fundada_em theye:N-doc-Codigo-de-Obras-do-municipio-norma-municipal-Lei-6-766-79-ar ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-residencial-Laudo-de-inspecao-predial a theye:ExigenciaDocumental ;
+    rdfs:label "Residencial: Laudo de inspeção predial"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Laudo-de-inspecao-predial ;
+    theye:exigencia_fundada_em theye:N-doc-ABNT-NBR-16747-lei-municipal-de-autovistoria-onde-existir ;
+    theye:exigencia_obrigatoria_quando "edifício com mais de 20 anos" .
+
+theye:exig-residencial-Laudo-de-vistoria-inicial-com-fotos-assinado-pelas-duas-part a theye:ExigenciaDocumental ;
+    rdfs:label "Residencial: Laudo de vistoria inicial com fotos, assinado pelas duas partes"@pt ;
+    dcterms:description "Quem providencia: ambos"@pt ;
+    theye:exigencia_de_documento theye:doc-Laudo-de-vistoria-inicial-com-fotos-assinado-pelas-duas-part ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-8-245-91-art-23-III ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-residencial-Matricula-atualizada-com-certidao-de-onus a theye:ExigenciaDocumental ;
+    rdfs:label "Residencial: Matrícula atualizada com certidão de ônus"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Matricula-atualizada-com-certidao-de-onus ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-6-015-73-arts-167-e-176 ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-residencial-Procuracao-do-administrador-ou-da-imobiliaria a theye:ExigenciaDocumental ;
+    rdfs:label "Residencial: Procuração do administrador ou da imobiliária"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Procuracao-do-administrador-ou-da-imobiliaria ;
+    theye:exigencia_fundada_em theye:N-doc-Codigo-Civil-arts-653-e-661 ;
+    theye:exigencia_obrigatoria_quando "se há imobiliária" .
+
+theye:exig-rural-CAR-Cadastro-Ambiental-Rural-ativo a theye:ExigenciaDocumental ;
+    rdfs:label "Rural (arrendamento ou parceria): CAR (Cadastro Ambiental Rural) ativo"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-CAR-Cadastro-Ambiental-Rural-ativo ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-12-651-2012-art-29 ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-rural-CCIR-Certificado-de-Cadastro-de-Imovel-Rural-do-Incra a theye:ExigenciaDocumental ;
+    rdfs:label "Rural (arrendamento ou parceria): CCIR (Certificado de Cadastro de Imóvel Rural) do Incra"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-CCIR-Certificado-de-Cadastro-de-Imovel-Rural-do-Incra ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-5-868-72-art-2o ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-rural-Comprovantes-de-ITR-e-CND-do-ITR a theye:ExigenciaDocumental ;
+    rdfs:label "Rural (arrendamento ou parceria): Comprovantes de ITR e CND do ITR"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Comprovantes-de-ITR-e-CND-do-ITR ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-9-393-96 ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-rural-Contrato-de-arrendamento-com-prazo-minimo-e-preco-em-sacas-o a theye:ExigenciaDocumental ;
+    rdfs:label "Rural (arrendamento ou parceria): Contrato de arrendamento com prazo mínimo e preço em sacas ou percentual legal"@pt ;
+    dcterms:description "Quem providencia: ambos"@pt ;
+    theye:exigencia_de_documento theye:doc-Contrato-de-arrendamento-com-prazo-minimo-e-preco-em-sacas-o ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-4-504-64-art-95-Decreto-59-566-66-arts-13-e-18 ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-rural-Georreferenciamento-certificado-SIGEF a theye:ExigenciaDocumental ;
+    rdfs:label "Rural (arrendamento ou parceria): Georreferenciamento certificado (SIGEF)"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Georreferenciamento-certificado-SIGEF ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-10-267-2001 ;
+    theye:exigencia_obrigatoria_quando "conforme o tamanho da área" .
+
+theye:exig-rural-Laudo-de-benfeitorias-e-de-cobertura-vegetal-na-entrada a theye:ExigenciaDocumental ;
+    rdfs:label "Rural (arrendamento ou parceria): Laudo de benfeitorias e de cobertura vegetal na entrada"@pt ;
+    dcterms:description "Quem providencia: ambos"@pt ;
+    theye:exigencia_de_documento theye:doc-Laudo-de-benfeitorias-e-de-cobertura-vegetal-na-entrada ;
+    theye:exigencia_fundada_em theye:N-doc-Decreto-59-566-66-art-25 ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-rural-Matricula-do-imovel-rural-com-certidao-de-onus a theye:ExigenciaDocumental ;
+    rdfs:label "Rural (arrendamento ou parceria): Matrícula do imóvel rural com certidão de ônus"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Matricula-do-imovel-rural-com-certidao-de-onus ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-6-015-73-art-176-Lei-8-245-91-art-1o-paragrafo-unico-a-e ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-rural-Outorga-de-uso-de-agua-para-irrigacao a theye:ExigenciaDocumental ;
+    rdfs:label "Rural (arrendamento ou parceria): Outorga de uso de água para irrigação"@pt ;
+    dcterms:description "Quem providencia: locatário"@pt ;
+    theye:exigencia_de_documento theye:doc-Outorga-de-uso-de-agua-para-irrigacao ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-9-433-97-art-12 ;
+    theye:exigencia_obrigatoria_quando "irriga" .
+
+theye:exig-rural-Reserva-legal-registrada-no-CAR-e-APPs-identificadas a theye:ExigenciaDocumental ;
+    rdfs:label "Rural (arrendamento ou parceria): Reserva legal registrada no CAR e APPs identificadas"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Reserva-legal-registrada-no-CAR-e-APPs-identificadas ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-12-651-2012-arts-4o-e-18 ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-temporada-AVCB-da-edificacao a theye:ExigenciaDocumental ;
+    rdfs:label "Temporada (até 90 dias): AVCB da edificação"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-AVCB-da-edificacao ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-13-425-2017 ;
+    theye:exigencia_obrigatoria_quando "prédio de uso coletivo ou hospedagem" .
+
+theye:exig-temporada-Cadastur-e-cadastro-municipal-quando-a-oferta-e-de-hospedage a theye:ExigenciaDocumental ;
+    rdfs:label "Temporada (até 90 dias): Cadastur e cadastro municipal quando a oferta é de hospedagem"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Cadastur-e-cadastro-municipal-quando-a-oferta-e-de-hospedage ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-11-771-2008-arts-22-e-23 ;
+    theye:exigencia_obrigatoria_quando "oferece serviços de hospedagem" .
+
+theye:exig-temporada-Certidao-negativa-de-IPTU-e-quitacao-de-condominio a theye:ExigenciaDocumental ;
+    rdfs:label "Temporada (até 90 dias): Certidão negativa de IPTU e quitação de condomínio"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Certidao-negativa-de-IPTU-e-quitacao-de-condominio ;
+    theye:exigencia_fundada_em theye:N-doc-CTN-art-34-Lei-4-591-64-art-12 ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-temporada-Contrato-escrito-com-prazo-de-ate-90-dias a theye:ExigenciaDocumental ;
+    rdfs:label "Temporada (até 90 dias): Contrato escrito com prazo de até 90 dias"@pt ;
+    dcterms:description "Quem providencia: ambos"@pt ;
+    theye:exigencia_de_documento theye:doc-Contrato-escrito-com-prazo-de-ate-90-dias ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-8-245-91-art-48 ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-temporada-Convencao-do-condominio-e-ata-sobre-locacao-de-curto-prazo a theye:ExigenciaDocumental ;
+    rdfs:label "Temporada (até 90 dias): Convenção do condomínio e ata sobre locação de curto prazo"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Convencao-do-condominio-e-ata-sobre-locacao-de-curto-prazo ;
+    theye:exigencia_fundada_em theye:N-doc-Codigo-Civil-art-1-336-IV-STJ-REsp-1-819-075-RS ;
+    theye:exigencia_obrigatoria_quando "em condomínio" .
+
+theye:exig-temporada-Descricao-dos-moveis-e-utensilios-e-o-estado-deles a theye:ExigenciaDocumental ;
+    rdfs:label "Temporada (até 90 dias): Descrição dos móveis e utensílios e o estado deles"@pt ;
+    dcterms:description "Quem providencia: ambos"@pt ;
+    theye:exigencia_de_documento theye:doc-Descricao-dos-moveis-e-utensilios-e-o-estado-deles ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-8-245-91-art-48-paragrafo-unico ;
+    theye:exigencia_obrigatoria_quando "imóvel mobiliado" .
+
+theye:exig-temporada-Matricula-e-comprovante-de-propriedade a theye:ExigenciaDocumental ;
+    rdfs:label "Temporada (até 90 dias): Matrícula e comprovante de propriedade"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Matricula-e-comprovante-de-propriedade ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-6-015-73-art-176 ;
+    theye:exigencia_obrigatoria_quando "sempre" .
+
+theye:exig-temporada-Recibo-do-aluguel-e-encargos-pagos-de-uma-vez a theye:ExigenciaDocumental ;
+    rdfs:label "Temporada (até 90 dias): Recibo do aluguel e encargos pagos de uma vez"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Recibo-do-aluguel-e-encargos-pagos-de-uma-vez ;
+    theye:exigencia_fundada_em theye:N-doc-Lei-8-245-91-art-49 ;
+    theye:exigencia_obrigatoria_quando "cobrança antecipada" .
+
+theye:exig-temporada-Seguro-do-imovel-e-do-conteudo a theye:ExigenciaDocumental ;
+    rdfs:label "Temporada (até 90 dias): Seguro do imóvel e do conteúdo"@pt ;
+    dcterms:description "Quem providencia: locador"@pt ;
+    theye:exigencia_de_documento theye:doc-Seguro-do-imovel-e-do-conteudo ;
+    theye:exigencia_fundada_em theye:N-doc-Codigo-Civil-arts-757-e-765 ;
+    theye:exigencia_obrigatoria_quando "recomendado" .
+
+theye:N-8245-18 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 18"@pt ;
+    dcterms:description "Novo valor e cláusula de reajuste por acordo"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art18" .
+
+theye:N-8245-19 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 19"@pt ;
+    dcterms:description "Revisão judicial do aluguel após três anos"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art19" .
+
+theye:N-8245-22 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 22"@pt ;
+    dcterms:description "Deveres do locador (inclui despesas extraordinárias de condomínio)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art22" .
+
+theye:N-8245-27 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 27"@pt ;
+    dcterms:description "Direito de preferência do locatário na venda"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art27" .
+
+theye:N-8245-33 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 33"@pt ;
+    dcterms:description "Preterição: perdas e danos ou adjudicação (contrato averbado)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art33" .
+
+theye:N-8245-36 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 36"@pt ;
+    dcterms:description "Benfeitorias voluptuárias"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art36" .
+
+theye:N-8245-39 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 39"@pt ;
+    dcterms:description "Garantia se estende até a devolução do imóvel"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art39" .
+
+theye:N-8245-40 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 40"@pt ;
+    dcterms:description "Substituição da garantia (inclui exoneração do fiador)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art40" .
+
+theye:N-8245-46 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 46"@pt ;
+    dcterms:description "Residencial ≥ 30 meses: fim do prazo e denúncia vazia"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art46" .
+
+theye:N-8245-51 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 51"@pt ;
+    dcterms:description "Não residencial: direito à renovação (5 anos, 3 no ramo)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art51" .
+
+theye:N-8245-52 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 52"@pt ;
+    dcterms:description "Exceções à renovação (obras, uso próprio, fundo de comércio)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art52" .
+
+theye:N-8245-56 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 56"@pt ;
+    dcterms:description "Não residencial: fim do prazo"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art56" .
+
+theye:N-8245-57 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 57"@pt ;
+    dcterms:description "Não residencial por prazo indeterminado: denúncia com 30 dias"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art57" .
+
+theye:N-8245-6 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 6"@pt ;
+    dcterms:description "Denúncia pelo locatário no prazo indeterminado (aviso de 30 dias)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art6" .
+
+theye:N-8245-68 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 68"@pt ;
+    dcterms:description "Revisional: rito e aluguel provisório"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art68" .
+
+theye:N-CC-334 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 334 a 345"@pt ;
+    dcterms:description "Pagamento em consignação"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm> .
+
+theye:N-CPC-539 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 539 a 549"@pt ;
+    dcterms:description "Ação de consignação em pagamento"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm> .
+
+theye:N-CPC-784-VIII a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 784, VIII"@pt ;
+    dcterms:description "Crédito de aluguel documentado é título executivo"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm> .
+
+theye:N-doc-CTN-art-34-Lei-8-245-91-art-22-VIII a theye:Norma ;
+    rdfs:label "CTN, art. 34; Lei 8.245/91, art. 22, VIII"@pt ;
+    dcterms:description "o IPTU é do locador, salvo cláusula expressa passando ao locatário."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1991-10-18;8245> .
+
+theye:N-doc-Lei-8-245-91-art-23-III a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 23, III"@pt ;
+    dcterms:description "é a prova do estado do imóvel na entrega; sem ela a devolução virá discutida."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1991-10-18;8245> .
+
+theye:N-doc-Lei-9-433-97-art-12 a theye:Norma ;
+    rdfs:label "Lei 9.433/97, art. 12"@pt ;
+    dcterms:description "captação sem outorga é uso irregular de recurso hídrico."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1997-01-08;9433> .
+
+theye:OrgaoJulgador a owl:Class ;
+    rdfs:label "Órgão julgador"@pt .
+
+theye:Prazo a owl:Class ;
+    rdfs:label "Prazo (data-limite com norma de origem) [v0.7]"@pt .
+
+theye:PrevisaoJuridica a owl:Class ;
+    rdfs:label "Previsão jurídica selada"@pt .
+
+theye:Decisao a owl:Class ;
+    rdfs:label "Decisão"@pt .
+
+theye:N-8245-35 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 35"@pt ;
+    dcterms:description "Benfeitorias necessárias e úteis: indenização e retenção"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art35" .
+
+theye:N-8245-4 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 4"@pt ;
+    dcterms:description "Devolução antecipada pelo locatário; multa proporcional"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art4" .
+
+theye:N-8245-47 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 47"@pt ;
+    dcterms:description "Residencial < 30 meses: hipóteses de retomada"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art47" .
+
+theye:N-8245-67 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 67"@pt ;
+    dcterms:description "Consignação em pagamento de aluguel e encargos"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art67" .
+
+theye:N-doc-Lei-6-015-73-arts-167-e-176 a theye:Norma ;
+    rdfs:label "Lei 6.015/73, arts. 167 e 176"@pt ;
+    dcterms:description "mostra quem é o dono e se há penhora, hipoteca ou usufruto."@pt ;
+    dcterms:source <https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1973-12-31;6015> .
+
+theye:doc-Matricula-atualizada-com-certidao-de-onus a owl:Class ;
+    rdfs:label "Matrícula atualizada com certidão de ônus"@pt ;
+    rdfs:subClassOf theye:Documento ;
+    theye:documento_de theye:Imovel .
+
+theye:N-8009-3-VII a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 3º, VII"@pt ;
+    dcterms:description "Penhora do bem de família do fiador de locação"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8009.htm> .
+
+theye:Garantia a owl:Class ;
+    rdfs:label "Garantia locatícia (art. 37) [v0.7]"@pt .
+
+theye:N-8245-1 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 1"@pt ;
+    dcterms:description "Abrangência; exclusões (bens públicos, vagas, espaços publicitários, apart-hotéis, arrendamento mercantil)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art1" .
+
+theye:N-8245-23 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 23"@pt ;
+    dcterms:description "Deveres do locatário (pagar aluguel e encargos, conservar, despesas ordinárias)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art23" .
+
+theye:N-8245-37 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 37"@pt ;
+    dcterms:description "Modalidades de garantia (caução, fiança, seguro-fiança, cessão de quotas)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art37" .
+
+theye:N-8245-9 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 9"@pt ;
+    dcterms:description "Hipóteses de desfazimento: acordo, infração, falta de pagamento, reparos urgentes"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art9" .
+
+theye:TipoDeParte a owl:Class ;
+    rdfs:label "Tipo de parte"@pt .
+
+theye:N-8245-62 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 62"@pt ;
+    dcterms:description "Despejo por falta de pagamento; cobrança cumulada e purgação da mora"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art62" .
+
+theye:Processo a owl:Class ;
+    rdfs:label "Processo judicial"@pt .
+
+theye:Contrato a owl:Class ;
+    rdfs:label "Contrato de locação"@pt .
+
+theye:FuncaoDoImovel a owl:Class ;
+    rdfs:label "Função do imóvel na locação [v0.8]"@pt .
+
+theye:N-8245-59 a theye:Norma ;
+    rdfs:label "Lei 8.245/91, art. 59"@pt ;
+    dcterms:description "Ação de despejo; liminar de 15 dias com caução de 3 aluguéis (§1º)"@pt ;
+    dcterms:source <https://www.planalto.gov.br/ccivil_03/leis/l8245.htm> ;
+    skos:exactMatch "urn:lex:br:federal:lei:1991-10-18;8245!art59" .
+
+theye:Precedente a owl:Class ;
+    rdfs:label "Precedente (súmula ou tema)"@pt .
+
+theye:Tese a owl:Class ;
+    rdfs:label "Tese jurídica"@pt .
+
+theye:Assunto a owl:Class ;
+    rdfs:label "Assunto (TPU-CNJ)"@pt .
+
+theye:Imovel a owl:Class ;
+    rdfs:label "Imóvel"@pt .
+
+theye:Documento a owl:Class ;
+    rdfs:label "Documento do imóvel ou contrato [v0.7]"@pt .
+
+theye:ExigenciaDocumental a owl:Class ;
+    rdfs:label "Exigência de documento por função [v0.8]"@pt .
+
+theye:Norma a owl:Class ;
+    rdfs:label "Dispositivo normativo"@pt .
+
