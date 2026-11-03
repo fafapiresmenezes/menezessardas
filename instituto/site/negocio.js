@@ -40,4 +40,28 @@
       $('b-res').textContent = n(b.contatos) + ' empresas com chave de teste, ' + n(b.chamadas_teste) + ' chamadas de teste, ' + n(b.pagantes) + ' contratos pagos. Meta do passo: 3 empresas.';
     });
 })();
+// Passo L05: tração por canal (RPC instituto_tracao_resumo).
+(function () {
+  var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhscmFla3p2Z3hkcGlpaWdkeGRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4ODEzOTksImV4cCI6MjEwODQ1NzM5OX0.yCNPEGDb7tdf1JIY30WKUbE-xZwjQFwygJFJnvBeyrs';
+  var $ = function (i) { return document.getElementById(i); };
+  var n = function (x) { return Number(x || 0).toLocaleString('pt-BR'); };
+  var brl = function (x) { return x == null ? '—' : 'R$ ' + Number(x).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+  var NOMES = { linkedin: 'LinkedIn', 'oab-jovem': 'OAB Jovem', 'grupos-imobiliarias': 'Grupos de imobiliárias', direto: 'Direto (sem link rastreado)', outro: 'Outro' };
+  if (!$('t-tab')) return;
+  fetch('https://hlraekzvgxdpiiigdxdo.supabase.co/rest/v1/rpc/instituto_tracao_resumo', { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' }, body: JSON.stringify({ p_dias: 30 }) })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (!d || !d.canais) { $('t-jan').textContent = 'sem conexão com o banco agora'; return; }
+      $('t-jan').textContent = 'últimos ' + d.janela_dias + ' dias';
+      var t = $('t-tab'); t.textContent = '';
+      if (!d.canais.length) { var tr0 = document.createElement('tr'), td0 = document.createElement('td'); td0.colSpan = 6; td0.textContent = 'Ainda sem visitas registradas. A contagem começou no lançamento.'; tr0.appendChild(td0); t.appendChild(tr0); }
+      d.canais.forEach(function (c) {
+        var tr = document.createElement('tr');
+        [NOMES[c.origem] || c.origem, n(c.visitas), n(c.cadastros), c.conversao == null ? '—' : (c.conversao * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%', brl(c.custo_por_cadastro_brl),
+         n(c.contratos_lidos) + ' contratos, ' + n(c.relatorios) + ' relatórios, ' + n(c.chaves_api) + ' chaves de API'].forEach(function (v) { var td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+        t.appendChild(tr);
+      });
+      $('t-res').textContent = n(d.membros_confirmados) + ' cadastros confirmados no total (meta do KR 2.1: 50), ' + n(d.pagantes) + ' pagantes. Custo de IA na janela: ' + brl(d.custo_ia_brl) + '. ' + d.nota;
+    });
+})();
 (function () { var s = document.createElement('script'); s.src = '/vitais.js'; s.defer = true; document.head.appendChild(s); })();

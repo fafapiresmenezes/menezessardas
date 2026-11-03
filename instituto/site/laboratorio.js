@@ -36,7 +36,7 @@
       .then(function () { return chamar({ acao: 'desafio' }); })
       .then(function (d) { if (d.erro) throw d; return provar(d); })
       .then(function (prova) { corpo.prova = prova; corpo.ms = Date.now() - inicio; corpo.site = form.site.value; return chamar(corpo); })
-      .then(function (r) { aviso(r.erro || r.mensagem, !!r.erro); return r; })
+      .then(function (r) { aviso(r.erro || r.mensagem, !!r.erro); if (!r.erro && corpo.acao === 'cadastrar' && window.theyeEvento) window.theyeEvento('cadastro'); return r; })
       .catch(function (e) { aviso((e && e.erro) || 'Algo falhou. Tente de novo.', true); })
       .then(function (r) { botao.disabled = false; botao.textContent = rotulo; return r; });
   }

@@ -62,6 +62,7 @@
       var dados = el('a', 'Baixar o texto registrado', 'btn sec'); dados.href = window.URL.createObjectURL(new Blob([r.texto_selado], { type: 'application/json' })); dados.download = 'relatorio-' + ch.replace(/\W+/g, '-') + '.json'; ac.appendChild(dados);
       var st = el('span', 'Registro no Bitcoin: ' + r.selo + '.', 'sm'); ac.appendChild(st);
       box.appendChild(ac);
+      if (window.theyeEvento) window.theyeEvento('relatorio');
       setTimeout(function () {
         rpc('instituto_relatorio_prova', { p_sha: r.sha256 }).then(function (p) {
           if (p && p.prova_b64) { st.textContent = 'Registro no Bitcoin: prova pronta.'; ac.appendChild(ots(r.sha256, p.prova_b64, 'relatorio-' + ch.replace(/\W+/g, '-'))); }

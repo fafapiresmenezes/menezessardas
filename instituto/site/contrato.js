@@ -35,6 +35,7 @@
         btn.disabled = false;
         if (!j || j.erro) { res.textContent = (j && j.erro) || 'Não consegui ler agora.'; return; }
         mostrar(j.analise);
+        if (window.theyeEvento) window.theyeEvento('contrato');
         res.appendChild(el('p', 'Leitura feita por IA (' + j.modelo + '). O texto do contrato não foi guardado.', 'sm'));
       });
   });

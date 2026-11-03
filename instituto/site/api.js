@@ -23,6 +23,7 @@
         res.appendChild(el('p', 'Sua chave de teste (' + j.limite + ' chamadas). Ela aparece só agora: copie e guarde.'));
         res.appendChild(el('p', j.chave, 'chave'));
         $('t-chave').value = j.chave;
+        if (window.theyeEvento) window.theyeEvento('chave_api');
         var o = j.oferta; res.appendChild(el('h3', 'Sua oferta: ' + o.nome));
         (o.planos || []).forEach(function (p) {
           var t = p.unidade === 'chamada' ? brl(p.preco_brl) + ' por chamada, ' + (p.minimo || '') : p.plano + ': ' + brl(p.preco_brl) + (p.preco_brl == null ? '' : ' por mês') + ', inclui ' + p.inclui + (typeof p.inclui === 'number' ? ' chamadas' : '');

@@ -8,7 +8,7 @@ import { createRequire } from 'node:module'
 const require = createRequire(import.meta.url)
 const BASE = process.env.SITE || 'http://127.0.0.1:8765'
 const PAGINAS = ['/', '/laboratorio.html', '/placar.html', '/comparar.html', '/ontologia.html', '/locacao.html', '/agentes.html',
-  '/estudar.html', '/precos.html', '/servicos.html', '/privacidade.html', '/modelo.html', '/dados.html', '/negocio.html', '/okr.html', '/legislacao.html', '/reajuste.html', '/contrato.html', '/api.html', '/comarca.html']
+  '/estudar.html', '/precos.html', '/servicos.html', '/privacidade.html', '/modelo.html', '/dados.html', '/negocio.html', '/okr.html', '/legislacao.html', '/reajuste.html', '/contrato.html', '/api.html', '/comarca.html', '/lancamento.html']
 const axe = readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8')
 const out = [], falhas = []
 const browser = await chromium.launch(process.env.PW_EXEC ? { executablePath: process.env.PW_EXEC } : {})
