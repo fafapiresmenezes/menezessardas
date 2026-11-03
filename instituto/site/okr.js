@@ -41,4 +41,28 @@
       } catch (e) { /* sem download, o sha256 continua visível */ }
     }).catch(function () { $('objetivos').textContent = 'Sem conexão com o banco agora. Tente de novo em instantes.'; });
 })();
+
+// Passo D07 (I-04): matriz impacto × esforço e Eisenhower, geradas da fila encadeada (matriz-i04.json).
+(function () {
+  var $ = function (i) { return document.getElementById(i); };
+  var el = function (t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+  var Q = [['Fazer já', 'Muito impacto, pouco esforço'], ['Planejar', 'Muito impacto, muito esforço'], ['Encaixar', 'Pouco impacto, pouco esforço'], ['Depois', 'Pouco impacto, muito esforço']];
+  fetch('/matriz-i04.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    if (!d) return;
+    $('mx-quando').textContent = d.feitos + ' de ' + d.total + ' passos feitos · gerada em ' + d.gerado_em.replace('T', ' ').replace('Z', ' UTC');
+    var box = $('mx'); box.textContent = '';
+    Q.forEach(function (q) {
+      var c = el('div'); c.appendChild(el('div', 'eixo', q[1])); c.appendChild(el('h3', null, q[0]));
+      var ul = el('ul');
+      d.impacto_esforco.filter(function (x) { return x.quadrante === q[0]; }).forEach(function (x) {
+        ul.appendChild(el('li', null, x.n + ' · ' + x.titulo + (x.porque ? ' (' + x.porque + ')' : '') + (x.status === 'aguardando M' ? ' · aguarda M' : '')));
+      });
+      if (!ul.children.length) ul.appendChild(el('li', null, 'nada aqui agora'));
+      c.appendChild(ul); box.appendChild(c);
+    });
+    var m = $('mx-m'); m.textContent = '';
+    d.eisenhower_m.forEach(function (x) { m.appendChild(el('li', null, x.quadrante + ': ' + x.titulo + (x.acao ? '. O que fazer: ' + x.acao + '.' : ''))); });
+    if (!m.children.length) m.appendChild(el('li', null, 'Nada depende de M agora.'));
+  }).catch(function () {});
+})();
 (function () { var s = document.createElement('script'); s.src = '/vitais.js'; s.defer = true; document.head.appendChild(s); })();

@@ -1,0 +1,191 @@
+{
+ "gerado_em": "2026-11-03T20:21Z",
+ "cabeca": "76f78951ec348062b7f00acffe9915cafbd4ab4f45cbb31d94c14b5777e2b181",
+ "feitos": 8,
+ "total": 26,
+ "impacto_esforco": [
+  {
+   "n": "M01",
+   "titulo": "Cobrança do plano Membro",
+   "status": "aguardando M",
+   "impacto": 5,
+   "esforco": 2,
+   "quadrante": "Fazer já",
+   "porque": "Liga a receita: sem cobrança não há negócio"
+  },
+  {
+   "n": "M03",
+   "titulo": "Hospedagem que permite cobrar",
+   "status": "aguardando M",
+   "impacto": 4,
+   "esforco": 1,
+   "quadrante": "Fazer já",
+   "porque": "Permite cobrar sem violar o plano grátis da hospedagem"
+  },
+  {
+   "n": "D15",
+   "titulo": "Drag-in e agenda no escritório",
+   "status": "aberto",
+   "impacto": 4,
+   "esforco": 2,
+   "quadrante": "Fazer já",
+   "porque": "Arrastar o contrato e o prazo já entra na agenda"
+  },
+  {
+   "n": "D21",
+   "titulo": "O que falta de você, em um lugar só",
+   "status": "aberto",
+   "impacto": 4,
+   "esforco": 2,
+   "quadrante": "Fazer já",
+   "porque": "Você resolve tudo numa tela só"
+  },
+  {
+   "n": "D19",
+   "titulo": "Validação externa e modelo C2",
+   "status": "aberto",
+   "impacto": 5,
+   "esforco": 4,
+   "quadrante": "Planejar",
+   "porque": "É o que prova se o grafo vence"
+  },
+  {
+   "n": "D08",
+   "titulo": "Portais e sandboxes conectados",
+   "status": "aberto",
+   "impacto": 4,
+   "esforco": 3,
+   "quadrante": "Planejar",
+   "porque": "Legislação ao vivo no Instituto, pedido de M"
+  },
+  {
+   "n": "D09",
+   "titulo": "Matriz solução por caso",
+   "status": "aberto",
+   "impacto": 4,
+   "esforco": 3,
+   "quadrante": "Planejar",
+   "porque": "Caminho por situação para o cliente"
+  },
+  {
+   "n": "D11",
+   "titulo": "Avaliação dos 50 agentes",
+   "status": "aberto",
+   "impacto": 4,
+   "esforco": 3,
+   "quadrante": "Planejar",
+   "porque": "Prova de que os agentes acertam"
+  },
+  {
+   "n": "D16",
+   "titulo": "Vertente THEYE no escritório",
+   "status": "aberto",
+   "impacto": 4,
+   "esforco": 3,
+   "quadrante": "Planejar",
+   "porque": "THEYE dentro do escritório"
+  },
+  {
+   "n": "D22",
+   "titulo": "Cobertura ampliada (lacuna do D02)",
+   "status": "aberto",
+   "impacto": 4,
+   "esforco": 3,
+   "quadrante": "Planejar",
+   "porque": "Mais tribunais e classes"
+  },
+  {
+   "n": "D14",
+   "titulo": "Documentos do imóvel por função",
+   "status": "aberto",
+   "impacto": 4,
+   "esforco": 4,
+   "quadrante": "Planejar",
+   "porque": "Diz ao dono quais papéis o imóvel precisa"
+  },
+  {
+   "n": "M02",
+   "titulo": "Site em theye.club",
+   "status": "aguardando M",
+   "impacto": 3,
+   "esforco": 1,
+   "quadrante": "Encaixar",
+   "porque": "Marca própria no endereço theye.club"
+  },
+  {
+   "n": "D17",
+   "titulo": "Guardião nunca para",
+   "status": "aberto",
+   "impacto": 3,
+   "esforco": 1,
+   "quadrante": "Encaixar",
+   "porque": "Nada para sem aviso"
+  },
+  {
+   "n": "D20",
+   "titulo": "Fechamento a 100%",
+   "status": "aberto",
+   "impacto": 3,
+   "esforco": 1,
+   "quadrante": "Encaixar",
+   "porque": "Entrega final selada"
+  },
+  {
+   "n": "D12",
+   "titulo": "Cache de prompt nos agentes",
+   "status": "aberto",
+   "impacto": 3,
+   "esforco": 2,
+   "quadrante": "Encaixar",
+   "porque": "Corta 30% do custo de IA"
+  },
+  {
+   "n": "D18",
+   "titulo": "Medição completa a cada 5 passos",
+   "status": "aberto",
+   "impacto": 2,
+   "esforco": 1,
+   "quadrante": "Encaixar",
+   "porque": "Mantém a nota honesta"
+  },
+  {
+   "n": "D13",
+   "titulo": "Playground e API Claude conectados",
+   "status": "aberto",
+   "impacto": 2,
+   "esforco": 2,
+   "quadrante": "Encaixar",
+   "porque": "Roteiros para o Console da Anthropic"
+  },
+  {
+   "n": "D10",
+   "titulo": "Top 50 skills por agente",
+   "status": "aberto",
+   "impacto": 3,
+   "esforco": 3,
+   "quadrante": "Depois",
+   "porque": "Mapa das 50 skills com ementa"
+  }
+ ],
+ "eisenhower_m": [
+  {
+   "n": "M01",
+   "titulo": "Cobrança do plano Membro",
+   "quadrante": "Urgente e importante",
+   "acao": "Reconectar o Stripe em Configurações, Conectores"
+  },
+  {
+   "n": "M02",
+   "titulo": "Site em theye.club",
+   "quadrante": "Importante, não urgente",
+   "acao": "Responder o cartão do domínio theye.club"
+  },
+  {
+   "n": "M03",
+   "titulo": "Hospedagem que permite cobrar",
+   "quadrante": "Urgente e importante",
+   "acao": "Responder o cartão da hospedagem paga"
+  }
+ ],
+ "sha256": "de1bc12b79ed23869759fbc3f3f36c21c672dcbf48935f5619531b7628b0464a"
+}

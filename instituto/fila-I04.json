@@ -149,9 +149,13 @@
    "prompt": "Na /okr.html, matriz impacto × esforço (e Eisenhower para pendências de M) com os passos abertos desta fila; o leigo vê em uma olhada o que vem primeiro e por quê.",
    "kpi": "Matriz visual gerada da fila, atualizada a cada passo",
    "skill": "dataviz",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "1d319a0629619334440f7202f63fc1c1df8ea8536e3ab048e15e68de01c28b7e",
-   "sha256_prompt": "973115a29e92a119ab95c19b078dd78548d616068956335dc14878458b26173e"
+   "sha256_prompt": "973115a29e92a119ab95c19b078dd78548d616068956335dc14878458b26173e",
+   "feito_em": "2026-11-03T2021Z",
+   "evidencia": "Matriz impacto x esforco (4 quadrantes) e Eisenhower das pendencias de M em /okr.html#mx, geradas da fila por matriz_i04.py em matriz-i04.json (refeita a cada passo fechado); u17 60/60",
+   "elo_ev_anterior": "4167d718ece1cc32bdb8f821064e21a2fa809492151b3184c823862ca4d1b0ae",
+   "sha256_evidencia": "e990de3e1a06910e6dad1de0659d50f28ad79357c356c62d4045fca2e156786f"
   },
   {
    "n": "D08",

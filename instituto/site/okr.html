@@ -20,6 +20,12 @@
 .meta i{position:absolute;left:0;top:0;bottom:0;background:var(--grafo)}
 .hash{font-family:var(--mono);font-size:11px;color:var(--apagado);word-break:break-all}
 .geral{font-family:var(--serif);font-size:48px}
+.mx{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--linha);border:1px solid var(--linha)}
+@media(max-width:820px){.mx{grid-template-columns:1fr}}
+.mx>div{background:var(--papel);padding:18px;display:grid;gap:6px;align-content:start}
+.mx h3{font-family:var(--serif);font-size:20px;margin:0}
+.mx ul,.eis{margin:0;padding-left:18px;font-size:14.5px;line-height:1.5}
+.eixo{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--apagado)}
 </style>
 </head>
 <body>
@@ -38,6 +44,13 @@
 <section><div class="w">
   <div class="sec-h"><div><div class="kicker">Progresso geral</div><h2><span class="geral" id="k-geral">—</span> do caminho.</h2></div><p class="sm" id="k-quando">carregando</p></div>
   <div class="objs" id="objetivos" aria-live="polite"><p class="sm">carregando</p></div>
+</div></section>
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Prioridade</div><h2>O que vem primeiro, e por quê.</h2></div><p class="sm" id="mx-quando">carregando</p></div>
+  <p>Cada passo aberto do plano ganha uma nota de impacto e de esforço, de 1 a 5. Alto impacto com pouco esforço vem primeiro. A matriz é refeita a cada passo fechado.</p>
+  <div class="mx" id="mx" aria-live="polite"><div><p class="sm">carregando</p></div></div>
+  <h3 style="font-family:var(--serif);font-size:20px;margin:28px 0 8px">O que depende de M (matriz de Eisenhower)</h3>
+  <ul class="eis" id="mx-m"><li>carregando</li></ul>
 </div></section>
 <section><div class="w">
   <div class="sec-h"><div><div class="kicker">Prova</div><h2>Como conferir que nada foi mudado.</h2></div></div>
