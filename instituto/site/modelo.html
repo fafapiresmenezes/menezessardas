@@ -67,6 +67,22 @@ th[scope=row],thead th:first-child{text-align:left;font-weight:400}
   </table></div>
   <p>Leitura: o grafo empata com o convencional nos despejos e no TJSP e perde onde o locatário propõe e no TJRJ. É ali que o próximo modelo (C2, com precedentes e órgão julgador) precisa melhorar.</p>
 
+  <h2 id="regua">1.2 Régua: o melhor publicado no mundo, por métrica</h2>
+  <p>Comparamos o THEYE com as 10 plataformas de previsão jurídica mais citadas e com três estudos de referência. Só vale o número que cada um publica em fonte aberta.</p>
+  <div class="tab" tabindex="0" role="region" aria-label="Régua de calibragem"><table>
+    <caption>Melhor publicado por métrica e distância do THEYE</caption>
+    <thead><tr><th scope="col">Métrica</th><th scope="col">Melhor publicado</th><th scope="col">Fonte</th><th scope="col">THEYE</th><th scope="col">Distância</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Acurácia</th><td>86,7% (moções, EUA)</td><td><a href="https://www.lawnext.com/2022/07/new-judicial-analytics-product-predicts-motion-outcomes-with-claimed-86-7-accuracy.html">Pre/Dicta</a>; 86,6% <a href="https://www.artificiallawyer.com/2017/10/28/ai-beats-human-lawyers-in-casecrunch-prediction-showdown/">Case Crunch</a>; 79% <a href="https://doi.org/10.7717/peerj-cs.93">Aletras 2016</a>; 70,2% <a href="https://doi.org/10.1371/journal.pone.0174698">Katz 2017</a></td><td>Não usamos como régua</td><td>Neste nicho, dizer "procedente" sempre já acerta 86,6%. Acurácia sozinha engana; por isso medimos Brier.</td></tr>
+      <tr><th scope="row">Brier</th><td>Nenhum dos 10 publica</td><td>Plataformas: só acurácia ou taxas</td><td>0,1010</td><td>THEYE é o único com Brier público</td></tr>
+      <tr><th scope="row">Ganho sobre a taxa-base (BSS)</th><td>Nenhum dos 10 publica</td><td>—</td><td>12,9% sobre taxa única; 3,4% sobre taxa por tribunal e classe</td><td>Meta do C2: 10% sobre a taxa por tribunal e classe</td></tr>
+      <tr><th scope="row">Erro de calibração (ECE)</th><td>Nenhum dos 10 publica</td><td>—</td><td>1,4%</td><td>Previsto 15% acerta perto de 15%; o erro médio é de 1,4 ponto</td></tr>
+      <tr><th scope="row">Pré-registro antes do teste</th><td>Nenhum dos 10</td><td>—</td><td>Sim, selado no Bitcoin (I-11)</td><td>Outlier</td></tr>
+      <tr><th scope="row">Prova pública de cada medição</th><td>Desafio público único (Case Crunch, 2017)</td><td><a href="https://www.artificiallawyer.com/2017/10/28/ai-beats-human-lawyers-in-casecrunch-prediction-showdown/">Artificial Lawyer</a></td><td>OpenTimestamps em cada medição</td><td>Outlier. Falta um desafio contra advogados (passo D19)</td></tr>
+    </tbody>
+  </table></div>
+  <p>Leitura: ninguém entre os 10 publica calibragem, então a régua mundial em Brier e ECE é o próprio THEYE. O que falta para sermos o melhor sem ressalva é ganhar mais da taxa-base (modelo C2) e vencer um desafio aberto contra advogados.</p>
+
   <h2>2. Agentes de IA por botão</h2>
   <dl>
     <dt>Modelo</dt><dd>Claude Sonnet 5.5 (Anthropic), com Claude Haiku 5.5 como reserva.</dd>

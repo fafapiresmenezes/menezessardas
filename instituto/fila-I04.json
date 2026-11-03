@@ -2,7 +2,7 @@
  "plano": "I-04 (replanejamento de M em 03/11/2026: THEYE + [X] unificados, PROMPTs encadeados)",
  "origem": "Pedido de M no thread principal 2026-11-03T19:13Z; segue o ciclo I-03 (C30)",
  "regra": "Um passo só fecha se os anteriores estiverem feitos ou em espera formal (aguardando M / em janela). Monetização (M01–M04) vem primeiro, a pedido de M em 03/11 19:17Z.",
- "cabeca": "6e15fa73ca1ced5872d95b984563e2780b9f04d9fbfac57edeb75c71c8d1faac",
+ "cabeca": "76f78951ec348062b7f00acffe9915cafbd4ab4f45cbb31d94c14b5777e2b181",
  "passos": [
   {
    "n": "M01",
@@ -74,9 +74,13 @@
    "prompt": "Monte i04/benchmarks-top10.xlsx com 10 plataformas de predição e jurimetria (ex.: Lex Machina, Pre/Dicta, Blue J, Solomonic, Predictice, Doctrine, Case Crunch, Gavelytics, Jusbrasil Jurimetria, Turivius): para cada uma, só as forças documentadas em fonte pública, a métrica que publicam e o que o THEYE já tem; descarte a mediana e as fraquezas, conforme M; marque onde o THEYE é outlier e onde falta.",
    "kpi": "10 plataformas × 8 critérios com fonte; lacunas viram passos",
    "skill": "xlsx",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "d613a8686e9b5e5e963c85a2b5ad95a694c7f4caafa5060d73311ecd4a47174a",
-   "sha256_prompt": "d1bc9f39a66ad648f05e8bd5157b4409f801755d3516d5ced8f060a65fd4ea77"
+   "sha256_prompt": "d1bc9f39a66ad648f05e8bd5157b4409f801755d3516d5ced8f060a65fd4ea77",
+   "feito_em": "2026-11-03T1957Z",
+   "evidencia": "benchmarks-top10.xlsx sha256 52df147a146598beafc4b12b5a6826224922248876ffb685ba2a883d323d45ed: 10 plataformas x 10 colunas com fonte; THEYE outlier em calibragem publica e prova OTS; lacunas -> D03, D08, D19, D22 (novo)",
+   "elo_ev_anterior": "4c93846cdc070ca9d3dab99d18c64320330e0970ecc211ad57b3e00535f432c5",
+   "sha256_evidencia": "1c8966d10b46951bcc7e2d6791102fd73ca8610ef0782d09c2f70bb4b0227989"
   },
   {
    "n": "D03",
@@ -286,6 +290,17 @@
    "status": "aberto",
    "elo_anterior": "e992c512272b7842b4772180c3c6645148947e7e118fc2a8a63e6372477ebe82",
    "sha256_prompt": "6e15fa73ca1ced5872d95b984563e2780b9f04d9fbfac57edeb75c71c8d1faac"
+  },
+  {
+   "n": "D22",
+   "tema": "Dados e cobertura",
+   "titulo": "Cobertura ampliada (lacuna do D02)",
+   "prompt": "Amplie a cobertura da coleta CNJ além de locação em TJRJ/TJSP/TJMG: inclua TJRS, TJPR, TJDFT e TJBA e as classes de despejo e renovatória, mantendo SLO e anonimização; publique no placar a cobertura nova e o Brier por tribunal.",
+   "kpi": "7 tribunais e 3 classes no placar, SLO ≥ 99%",
+   "skill": "gerente-theye-unificado",
+   "status": "aberto",
+   "elo_anterior": "6e15fa73ca1ced5872d95b984563e2780b9f04d9fbfac57edeb75c71c8d1faac",
+   "sha256_prompt": "76f78951ec348062b7f00acffe9915cafbd4ab4f45cbb31d94c14b5777e2b181"
   }
  ]
 }
