@@ -134,9 +134,13 @@
    "prompt": "Página /okr.html com 3 objetivos e 9 resultados-chave do Instituto (dados ao vivo do banco: SLO, coleta, Brier, agentes, membros), cada número com o sha256 da medição e link do selo OpenTimestamps.",
    "kpi": "Painel no ar com 9 KRs ao vivo e selo",
    "skill": "dataviz",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "3edb390a08e86a46c7720c5f2938d83a375c330b5fec2e2b922a6a05ce455307",
-   "sha256_prompt": "1d319a0629619334440f7202f63fc1c1df8ea8536e3ab048e15e68de01c28b7e"
+   "sha256_prompt": "1d319a0629619334440f7202f63fc1c1df8ea8536e3ab048e15e68de01c28b7e",
+   "feito_em": "2026-11-03T2018Z",
+   "evidencia": "/okr.html no ar (md5 2915a0a8, okr.js b89f87ec, commit 0b0ac21, dpl_B1N27c31TyS9oRb1UyexFHiSqMUj): 3 objetivos e 9 KRs ao vivo da RPC instituto_okr, sha256 por KR, selo diario OTS (cron 02:57 UTC; 1o selo b87590f4 com prova); progresso geral 63%",
+   "elo_ev_anterior": "dfe3a10dd2bb6fccd7a7c9bd993729c1465d384d50523c5c251656752d45cd02",
+   "sha256_evidencia": "4167d718ece1cc32bdb8f821064e21a2fa809492151b3184c823862ca4d1b0ae"
   },
   {
    "n": "D07",
