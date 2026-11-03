@@ -72,6 +72,13 @@
   <div class="rolar" tabindex="0" role="region" aria-label="Placar dos agentes" style="overflow-x:auto"><table class="tab" style="width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px"><thead><tr><th>Tipo de pergunta</th><th>Perguntas</th><th>Acertos</th><th>Taxa</th></tr></thead><tbody id="pa-tab"><tr><td colspan="4">carregando</td></tr></tbody></table></div>
   <p class="sm" id="pa-res">—</p>
 </div></section>
+<section><div class="w" id="como-chama">
+  <div class="sec-h"><div><div class="kicker">Transparência técnica · Passo D13</div><h2>Como cada agente conversa com a IA.</h2></div></div>
+  <p class="sm">Cada botão manda uma chamada à API Claude da Anthropic. Modelo: <b>claude-sonnet-5-5</b>, com <b>claude-haiku-5-5</b> de reserva se o primeiro falhar. Limite de 1.500 tokens de saída, esforço baixo e sem raciocínio estendido, para a resposta sair curta e barata. O roteiro (system) tem três blocos: fatos do site e regras gerais, contexto ao vivo (placar e motor de séries) e o papel do agente. Os dois primeiros são iguais para os 50 agentes e vão com cache de prompt. A pergunta vai embrulhada em &lt;pergunta&gt; e é tratada como dado, nunca como instrução. O custo de cada resposta é medido com o preço por token do modelo (entrada, saída, escrita e leitura de cache) e aparece acima.</p>
+  <p class="sm">Você pode abrir o roteiro de qualquer agente e colar no Console da Anthropic. Nenhuma chave sai daqui: o JSON traz só modelo, parâmetros, roteiro e a pergunta de exemplo.</p>
+  <p><label for="rot-ag" class="sm">Agente</label> <select id="rot-ag" style="font:inherit;padding:10px 12px;min-height:44px;border:1px solid var(--linha);background:var(--papel);color:var(--tinta);border-radius:6px;max-width:100%"><option value="">carregando</option></select> <button type="button" class="btn sec" id="rot-baixar">Baixar o roteiro (JSON)</button></p>
+  <pre id="rot-pre" tabindex="0" role="region" aria-label="Roteiro do agente" style="overflow:auto;max-height:320px;border:1px solid var(--linha);border-radius:8px;padding:12px;font-size:12.5px">Escolha um agente para ver o roteiro.</pre>
+</div></section>
 </main>
 <footer><div class="w"><span>© 2026 Instituto THEYE · Agentes por botão (U15, 31/10/2026; relato de incidentes C08, 01/11/2026)</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
 <script src="agentes.js"></script>

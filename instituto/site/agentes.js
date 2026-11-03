@@ -96,4 +96,29 @@
       document.getElementById('pa-res').textContent = tx;
     }).catch(function () {});
 })();
+// Passo D13: roteiro de cada agente exportável para o Console da Anthropic (RPC instituto_agente_roteiro).
+(function () {
+  var sel = document.getElementById('rot-ag'); if (!sel) return;
+  var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhscmFla3p2Z3hkcGlpaWdkeGRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4ODEzOTksImV4cCI6MjEwODQ1NzM5OX0.yCNPEGDb7tdf1JIY30WKUbE-xZwjQFwygJFJnvBeyrs';
+  var pre = document.getElementById('rot-pre'), baixar = document.getElementById('rot-baixar'), atual = null;
+  fetch('/catalogo-50.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    sel.textContent = '';
+    var o0 = document.createElement('option'); o0.value = ''; o0.textContent = 'Escolha o agente'; sel.appendChild(o0);
+    ((d && d.agentes) || []).forEach(function (a) { var o = document.createElement('option'); o.value = a.id; o.textContent = a.nome; sel.appendChild(o); });
+  });
+  sel.addEventListener('change', function () {
+    if (!sel.value) return;
+    pre.textContent = 'carregando';
+    fetch('https://hlraekzvgxdpiiigdxdo.supabase.co/rest/v1/rpc/instituto_agente_roteiro', { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' }, body: JSON.stringify({ p_id: sel.value }) })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { if (!d || d.erro) { pre.textContent = (d && d.erro) || 'Não consegui carregar agora.'; return; } atual = d; pre.textContent = JSON.stringify(d.corpo, null, 2); })
+      .catch(function () { pre.textContent = 'Sem conexão agora.'; });
+  });
+  baixar.addEventListener('click', function () {
+    if (!atual) return;
+    var a = document.createElement('a');
+    a.href = window.URL.createObjectURL(new Blob([JSON.stringify(atual, null, 2)], { type: 'application/json' }));
+    a.download = 'roteiro-' + sel.value + '.json'; a.click();
+  });
+})();
 (function () { var s = document.createElement('script'); s.src = '/vitais.js'; s.defer = true; document.head.appendChild(s); })();
