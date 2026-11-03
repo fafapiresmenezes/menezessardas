@@ -24,5 +24,20 @@
         t.appendChild(tr);
       });
     }).catch(function () { $('n-cad2').textContent = 'sem conexão com o banco agora'; });
+  // Passo L03: teste A/B de preço da API B2B (só contagens).
+  fetch('https://hlraekzvgxdpiiigdxdo.supabase.co/rest/v1/rpc/instituto_b2b_resumo', { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' }, body: '{}' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (b) {
+      if (!b || !b.ofertas) { $('b-jan').textContent = 'sem conexão com o banco agora'; return; }
+      var f = function (d) { return d ? d.split('-').reverse().join('/') : '—'; };
+      $('b-jan').textContent = 'de ' + f(b.teste_ab.inicio) + ' a ' + f(b.teste_ab.fim);
+      var t = $('b-tab'); t.textContent = '';
+      b.ofertas.forEach(function (o) {
+        var tr = document.createElement('tr');
+        [o.braco + ' · ' + o.nome, o.regra, n((b.por_braco || {})[o.braco])].forEach(function (v) { var td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+        t.appendChild(tr);
+      });
+      $('b-res').textContent = n(b.contatos) + ' empresas com chave de teste, ' + n(b.chamadas_teste) + ' chamadas de teste, ' + n(b.pagantes) + ' contratos pagos. Meta do passo: 3 empresas.';
+    });
 })();
 (function () { var s = document.createElement('script'); s.src = '/vitais.js'; s.defer = true; document.head.appendChild(s); })();

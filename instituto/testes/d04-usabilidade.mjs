@@ -2,7 +2,7 @@
 import { createRequire } from 'module'; import { writeFileSync } from 'fs'
 const require = createRequire(import.meta.url); const { chromium } = require('playwright')
 const B = process.env.BASE || 'http://localhost:8765'
-const P = ['/', '/laboratorio.html', '/placar.html', '/comparar.html', '/ontologia.html', '/locacao.html', '/agentes.html', '/estudar.html', '/precos.html', '/servicos.html', '/privacidade.html', '/modelo.html', '/dados.html', '/negocio.html', '/okr.html', '/legislacao.html', '/reajuste.html', '/contrato.html']
+const P = ['/', '/laboratorio.html', '/placar.html', '/comparar.html', '/ontologia.html', '/locacao.html', '/agentes.html', '/estudar.html', '/precos.html', '/servicos.html', '/privacidade.html', '/modelo.html', '/dados.html', '/negocio.html', '/okr.html', '/legislacao.html', '/reajuste.html', '/contrato.html', '/api.html']
 const silabas = w => Math.max(1, (w.toLowerCase().match(/[aeiouáéíóúâêôãõà]+/g) || []).length)
 const br = await chromium.launch(process.env.PW_EXEC ? { executablePath: process.env.PW_EXEC } : {})
 const out = []; const links = {}

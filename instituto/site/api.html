@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API para imobiliárias · Instituto THEYE</title>
+<meta name="description" content="API de probabilidade de ações de locação para imobiliárias, administradoras e garantidoras: chance, intervalo de 95% e tamanho da amostra em cada resposta. Chave de teste grátis com 20 chamadas.">
+<link rel="preload" href="/fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="base.css">
+<style>
+.form{max-width:860px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media(max-width:820px){.form{grid-template-columns:minmax(0,1fr)}}
+.form label{display:grid;gap:6px;font-size:14px}
+.form input,.form select{max-width:100%;min-width:0;font:inherit;padding:10px 12px;min-height:44px;border:1px solid var(--linha);background:var(--papel);color:var(--tinta);border-radius:6px}
+.form .todo{grid-column:1/-1}
+.ck{display:flex!important;gap:10px;align-items:flex-start}
+.ck input{min-height:24px;min-width:24px;width:24px;height:24px;margin:0}
+.res{margin-top:20px;padding:20px;border:1px solid var(--linha);border-left:4px solid var(--grafo);border-radius:10px;max-width:860px}
+pre{background:var(--papel);border:1px solid var(--linha);border-radius:8px;padding:14px;overflow-x:auto;font-size:13px;max-width:860px}
+code{font-family:var(--mono);overflow-wrap:anywhere}
+pre code{overflow-wrap:normal}
+.sm{font-size:13.5px;color:var(--apagado)}
+.tab{width:100%;min-width:480px;border-collapse:collapse;font-size:13.5px}
+.tab th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--apagado);text-align:left;padding:6px 8px;border-bottom:1px solid var(--linha);font-weight:500}
+.tab td{padding:6px 8px;border-bottom:1px solid var(--linha);vertical-align:top}
+.rolar{overflow-x:auto;max-width:860px}
+.chave{font-family:var(--mono);font-size:15px;word-break:break-all;background:var(--papel);padding:10px;border-radius:6px;border:1px dashed var(--grafo)}
+</style>
+</head>
+</head>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/#laboratorio">Laboratório</a><a href="/placar.html">Placar</a><a href="/ontologia.html">Ontologia</a><a href="/#metodo">Método</a><a href="/#servicos">Serviços</a></nav>
+</div></header>
+<main id="conteudo">
+<div class="hero"><div class="w">
+  <div class="kicker">API B2B · imobiliárias, administradoras e garantidoras</div>
+  <h1>A chance de uma ação de locação, com a margem de erro, em uma chamada.</h1>
+  <p class="lead">Mande o tribunal e o tipo de ação. A API devolve a probabilidade de procedência, o intervalo de 95% e quantos julgamentos sustentam o número. Dados públicos do CNJ, só agregados, sem nome de ninguém.</p>
+  <aside class="um-min" aria-label="Em 1 minuto"><b>Em 1 minuto</b><p>Informe a empresa e o e-mail. Receba na hora uma chave de teste com 20 chamadas. Teste aqui mesmo ou no seu sistema.</p><a class="btn" href="#chave">Pegar chave de teste</a></aside>
+</div></div>
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Passo 1</div><h2>Chave de teste grátis.</h2></div><p class="sm">20 chamadas, sem cartão.</p></div>
+  <form class="form" id="chave" novalidate>
+    <label>Empresa<input id="a-emp" autocomplete="organization" required maxlength="120"></label>
+    <label>E-mail de trabalho<input id="a-email" type="email" autocomplete="email" required maxlength="160"></label>
+    <label>Segmento<select id="a-seg"><option value="imobiliaria">Imobiliária</option><option value="administradora">Administradora de condomínios ou imóveis</option><option value="garantidora">Garantidora ou seguro-fiança</option><option value="outro">Outro</option></select></label>
+    <label>Como nos conheceu (opcional)<input id="a-orig" maxlength="60"></label>
+    <label class="ck todo"><input type="checkbox" id="a-ok"> <span>Aceito que o Instituto THEYE guarde o nome da empresa e este e-mail para enviar a chave e a proposta (LGPD, art. 7º, V). Posso pedir a exclusão a qualquer momento.</span></label>
+    <div class="todo"><button class="btn" type="submit" id="a-ir">Gerar chave de teste</button></div>
+  </form>
+  <div class="res" id="a-res" aria-live="polite"><p class="sm">A chave aparece aqui uma única vez. Guarde-a.</p></div>
+</div></section>
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Passo 2</div><h2>Teste aqui.</h2></div></div>
+  <form class="form" id="teste" novalidate>
+    <label class="todo">Sua chave<input id="t-chave" autocomplete="off" placeholder="thy_teste_..."></label>
+    <label>Tribunal<select id="t-trib"><option>TJRJ</option><option>TJSP</option><option>TJMG</option><option>TJRS</option><option>TJPR</option><option>TJDFT</option></select></label>
+    <label>Tipo de ação<select id="t-classe"><option>Despejo por Falta de Pagamento Cumulado Com Cobrança</option><option>Despejo por Falta de Pagamento</option><option>Consignação em Pagamento</option><option>Revisional de Aluguel</option><option>Renovatória de Locação</option></select></label>
+    <div class="todo"><button class="btn sec" type="submit">Consultar</button></div>
+  </form>
+  <div class="res" id="t-res" aria-live="polite"><p class="sm">O resultado aparece aqui.</p></div>
+</div></section>
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Documentação</div><h2>Uma chamada, um JSON.</h2></div></div>
+  <p>Endereço: <code>POST https://hlraekzvgxdpiiigdxdo.supabase.co/rest/v1/rpc/instituto_api_prever</code></p>
+  <p class="sm">Cabeçalho <code>apikey</code> com a chave pública do site (abaixo); no corpo, sua chave privada em <code>p_chave</code>.</p>
+  <pre tabindex="0"><code>curl -X POST https://hlraekzvgxdpiiigdxdo.supabase.co/rest/v1/rpc/instituto_api_prever \
+  -H &quot;apikey: CHAVE_PUBLICA_ABAIXO&quot; -H &quot;Content-Type: application/json&quot; \
+  -d &#x27;{&quot;p_chave&quot;:&quot;thy_teste_SUA_CHAVE&quot;,&quot;p_tribunal&quot;:&quot;TJRJ&quot;,&quot;p_classe&quot;:&quot;Despejo por Falta de Pagamento Cumulado Com Cobrança&quot;}&#x27;</code></pre>
+  <p class="sm">Chave pública (pode ficar no código do cliente): <code id="a-pub" style="word-break:break-all"></code></p>
+  <div class="rolar" tabindex="0" role="region" aria-label="Tabela"><table class="tab"><thead><tr><th>Campo</th><th>Obrigatório</th><th>O que é</th></tr></thead><tbody>
+    <tr><td><code>p_chave</code></td><td>sim</td><td>sua chave (teste ou contratada)</td></tr>
+    <tr><td><code>p_tribunal</code></td><td>sim</td><td>sigla do tribunal estadual, por exemplo TJRJ</td></tr>
+    <tr><td><code>p_classe</code></td><td>sim</td><td>tipo de ação, como na lista do teste acima</td></tr>
+    <tr><td><code>p_orgao</code></td><td>não</td><td>vara ou órgão julgador, para ajustar pelo grafo</td></tr>
+    <tr><td><code>p_assunto</code></td><td>não</td><td>código de assunto da tabela do CNJ</td></tr>
+  </tbody></table></div>
+  <p style="margin-top:14px">Resposta (exemplo real de 03/11/2026):</p>
+  <pre tabindex="0"><code>{
+  &quot;tribunal&quot;: &quot;TJRJ&quot;,
+  &quot;classe&quot;: &quot;Despejo por Falta de Pagamento Cumulado Com Cobrança&quot;,
+  &quot;convencional&quot;: { &quot;p&quot;: 0.976, &quot;ic95&quot;: [0.958, 0.986], &quot;n&quot;: 490 },
+  &quot;grafo&quot;: { &quot;p&quot;: 0.976, &quot;n_orgao&quot;: 0, &quot;n_assunto&quot;: 0 },
+  &quot;confianca&quot;: &quot;alta&quot;,
+  &quot;amostra_pequena&quot;: false,
+  &quot;fonte&quot;: &quot;DataJud (CNJ), coleta do Instituto THEYE&quot;,
+  &quot;uso&quot;: { &quot;usadas&quot;: 1, &quot;limite&quot;: 20 }
+}</code></pre>
+  <div class="rolar" tabindex="0" role="region" aria-label="Tabela"><table class="tab"><thead><tr><th>Campo</th><th>Significado</th></tr></thead><tbody>
+    <tr><td><code>convencional.p</code></td><td>probabilidade de procedência (total ou parcial)</td></tr>
+    <tr><td><code>convencional.ic95</code></td><td>intervalo de 95% (Wilson): onde o número verdadeiro deve estar</td></tr>
+    <tr><td><code>convencional.n</code></td><td>julgamentos de mérito na amostra</td></tr>
+    <tr><td><code>grafo.p</code></td><td>estimativa ajustada pelo grafo jurídico (vara e assunto)</td></tr>
+    <tr><td><code>confianca</code></td><td>alta com 200 ou mais julgamentos, média com 30 a 199, baixa abaixo de 30</td></tr>
+    <tr><td><code>amostra_pequena</code></td><td>true quando há menos de 30 julgamentos; vem com aviso</td></tr>
+    <tr><td><code>erro</code>, <code>codigo</code></td><td>401 chave inválida, 429 chamadas esgotadas, 400 dado faltando, 404 sem julgamentos</td></tr>
+  </tbody></table></div>
+  <p class="sm" style="margin-top:14px">Como medimos a qualidade: o placar público compara as previsões com o resultado real pelo escore de Brier, em <a href="/placar.html">/placar.html</a> e <a href="/comparar.html">/comparar.html</a>. Hoje o grafo e o modelo convencional estão empatados (inconclusivo); publicamos isso como está.</p>
+</div></section>
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Preço</div><h2>Sua oferta aparece com a chave.</h2></div></div>
+  <p>Estamos testando por 30 dias duas formas de cobrar: por chamada ou por plano mensal. Cada empresa recebe uma das duas ofertas, por ordem de chegada, e ela vale para quem a recebeu. A cobrança por PIX e cartão entra no ar em seguida; até lá, a contratação é por proposta.</p>
+  <p><a class="btn sec" href="/servicos.html">Ver outros serviços</a></p>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · API B2B, Passo L03</span><span><a href="/privacidade.html" style="display:inline-block;padding:4px 0">Privacidade</a> · Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="api.js"></script>
+</body>
+</html>

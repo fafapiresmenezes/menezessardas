@@ -192,9 +192,13 @@
    "prompt": "Ofereça no Instituto a leitura de contrato de locação por IA (reaproveita a função analisar-contrato do escritório, sem dados no banco do escritório): cláusulas de risco, prazos, multa, garantia e índice de reajuste, com artigo da lei. Preço pela regra de M (custo medido × 4); até a cobrança (M01) ligar, entra como benefício do Membro e lista de espera para avulsos.",
    "kpi": "Custo medido por análise; 0 dado pessoal guardado; 10 contratos fictícios lidos sem erro de cláusula",
    "skill": "claude-api",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "1c5e7165cd25bd753e8dd9fa6835ce1af88fc39772d6f51a9a0f24577c1dffe9",
-   "sha256_prompt": "18ae91217f92c346a4a66201ac1cd2a14e3d7d0185c7f918b3266157fc02cab0"
+   "sha256_prompt": "18ae91217f92c346a4a66201ac1cd2a14e3d7d0185c7f918b3266157fc02cab0",
+   "feito_em": "2026-11-03T2128Z",
+   "evidencia": "/contrato.html no ar (commit 7ea4360, md5 conferido em produção: contrato.html db1a7029, contrato.js 0b2c31e7, base.css 9777de34); Edge instituto-agentes v8, ação contrato com Haiku 5.5, ficha de lei conferida (16 regras da Lei 8.245/91, Lei 10.192, Súmulas 214 e 335, CC 413) e máscara de CPF, CNPJ, e-mail, telefone, CEP, conta e endereço antes da IA; texto não é guardado. 10 contratos fictícios: rodada 1 sem ficha 3 erros de lei, rodada 2 com ficha 0 erro e 10/10 pontos plantados acertados (instituto/testes/l02-resultado.json). Custo medido US$ 0,00098 por leitura (2.661 tokens entrada, 1.428 saída). 0 dado pessoal guardado. Benefício de cadastro e Membro (cota somada aos agentes); avulsa espera M01. vitest 44/44; u17 72/72; d04 18 páginas.",
+   "elo_ev_anterior": "8d32c6908e0fc561f187d49a12c99282e840a7282cddef1a55263747fda18f3c",
+   "sha256_evidencia": "aed77d0049b4254502712ad370493e8ba9e37b53709d5f4a9b3d82bc85e4bdb7"
   },
   {
    "n": "L03",

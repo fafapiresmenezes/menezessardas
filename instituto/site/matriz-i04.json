@@ -1,7 +1,7 @@
 {
- "gerado_em": "2026-11-03T21:15Z",
+ "gerado_em": "2026-11-03T21:29Z",
  "cabeca": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
- "feitos": 9,
+ "feitos": 10,
  "total": 31,
  "impacto_esforco": [
   {
@@ -12,15 +12,6 @@
    "esforco": 2,
    "quadrante": "Fazer já",
    "porque": "Liga a receita: sem cobrança não há negócio"
-  },
-  {
-   "n": "L02",
-   "titulo": "Análise de contrato de locação por IA (avulsa)",
-   "status": "aberto",
-   "impacto": 5,
-   "esforco": 2,
-   "quadrante": "Fazer já",
-   "porque": "Ferramenta que o leigo paga para usar"
   },
   {
    "n": "L05",
@@ -223,5 +214,5 @@
    "acao": "Responder o cartão da hospedagem paga"
   }
  ],
- "sha256": "288a41f5c6c547d8b90c164679758c4cf8119c4f775c153553e0de1ac6af21ab"
+ "sha256": "14dc9dc0ffc8d5baeb857f5b90a4da19d00f776e202f54ea29212f0ff0c1a046"
 }
