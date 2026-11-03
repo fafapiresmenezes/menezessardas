@@ -33,6 +33,7 @@ function consulta(tabela: string) {
     is(c: string, v: unknown) { filtros.push(r => (pega(r, c) ?? null) === v); return q },
     not(c: string, op: string, v: unknown) { if (op === 'is') filtros.push(r => (pega(r, c) ?? null) !== v); return q },
     gte(c: string, v: unknown) { filtros.push(r => String(pega(r, c)) >= String(v)); return q },
+    lt(c: string, v: unknown) { filtros.push(r => String(pega(r, c)) < String(v)); return q },
     lte(c: string, v: unknown) { filtros.push(r => String(pega(r, c)) <= String(v)); return q },
     order(c: string, o?: { ascending?: boolean }) { ordem = { col: c, asc: o?.ascending !== false }; return q },
     limit(n: number) { limite = n; return q },
