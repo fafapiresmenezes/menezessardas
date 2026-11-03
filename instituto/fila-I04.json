@@ -295,9 +295,10 @@
    "prompt": "Ative cache de prompt da API Claude no roteiro fixo dos agentes (contexto do site e placar) e meça antes/depois o custo por resposta em 20 chamadas de teste.",
    "kpi": "Custo por resposta cai ≥ 30% sem piorar a qualidade",
    "skill": "claude-api",
-   "status": "aberto",
+   "status": "aguardando M",
    "elo_anterior": "09d3d5dfff452f2abdd2be48196cce214bf65a25d73fe64badfba80e12bda967",
-   "sha256_prompt": "481d25249cd504880a0070cb906beaf094297bc46af738027a1dfe3b919b949e"
+   "sha256_prompt": "481d25249cd504880a0070cb906beaf094297bc46af738027a1dfe3b919b949e",
+   "evidencia_parcial": "Código pronto e testado (commit no ramo main, 44/44 testes vitest): o roteiro dos agentes virou 3 blocos (SITE_INFO + regras gerais; contexto do placar e do motor; papel do agente), com cache_control ephemeral nos dois primeiros, que são iguais para os 50 agentes; o custo acumulado saiu do bloco cacheado porque mudava a cada resposta; a conta de custo agora soma escrita de cache (1,25x) e leitura (0,1x). Falta publicar a função instituto-agentes no Supabase: o classificador de segurança desta sessão bloqueou o deploy de produção (motivo \"Production Deploy\"). Base para o antes/depois: rodada D11, 50 respostas, média US$ 0,01298."
   },
   {
    "n": "D13",
@@ -306,9 +307,13 @@
    "prompt": "Documente em /agentes.html como cada agente chama a API Claude (modelo, tokens, custo) e deixe o roteiro de cada agente exportável para o Console/Workbench da Anthropic (JSON), sem expor chaves.",
    "kpi": "50 roteiros exportáveis; 0 segredo exposto",
    "skill": "claude-api",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "481d25249cd504880a0070cb906beaf094297bc46af738027a1dfe3b919b949e",
-   "sha256_prompt": "be2b6b55ba8945723e8c65f6ccbe23d8e9696d3ccc993aae97044e166d4870a8"
+   "sha256_prompt": "be2b6b55ba8945723e8c65f6ccbe23d8e9696d3ccc993aae97044e166d4870a8",
+   "feito_em": "2026-11-03T2237Z",
+   "evidencia": "No ar em https://instituto-theye.vercel.app/agentes.html#como-chama: seção de transparência técnica (modelo claude-sonnet-5-5 com reserva haiku-5-5, 1.500 tokens de saída, 3 blocos de roteiro com cache nos dois primeiros, pergunta embrulhada em tag e tratada como dado, custo medido por token de entrada, saída, escrita e leitura de cache) e seletor com os 50 agentes que baixa o roteiro em JSON pronto para o Console da Anthropic. RPC public.instituto_agente_roteiro: 50 agentes, 0 erro, nenhuma chave ou segredo no retorno (consulta procurou sk-ant, service_role, cron_segredo e jwt: falso). md5 de produção confere para agentes.html (54725a5a01af7f471e58049dd5e6c32b), agentes.js (2c2982072ead40cf9f15d6dd091ac298) e base.css (9777de3401e4fda0e9b395efd9b34d59); u17 em 21 páginas sem violação WCAG 2.2 AA.",
+   "elo_ev_anterior": "bea1e78d0819bca44a55acc947b87ae6693f4fb6c3032608d04c91452d758741",
+   "sha256_evidencia": "e7bf8830040724f73acd9d1399dac40efd8b7d9942134da39adf423107a2b37d"
   },
   {
    "n": "D14",

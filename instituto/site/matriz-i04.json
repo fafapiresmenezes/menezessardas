@@ -1,7 +1,7 @@
 {
- "gerado_em": "2026-11-03T22:26Z",
+ "gerado_em": "2026-11-03T22:37Z",
  "cabeca": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
- "feitos": 14,
+ "feitos": 15,
  "total": 31,
  "impacto_esforco": [
   {
@@ -133,7 +133,7 @@
   {
    "n": "D12",
    "titulo": "Cache de prompt nos agentes",
-   "status": "aberto",
+   "status": "aguardando M",
    "impacto": 3,
    "esforco": 2,
    "quadrante": "Encaixar",
@@ -147,15 +147,6 @@
    "esforco": 1,
    "quadrante": "Encaixar",
    "porque": "Mantém a nota honesta"
-  },
-  {
-   "n": "D13",
-   "titulo": "Playground e API Claude conectados",
-   "status": "aberto",
-   "impacto": 2,
-   "esforco": 2,
-   "quadrante": "Encaixar",
-   "porque": "Roteiros para o Console da Anthropic"
   }
  ],
  "eisenhower_m": [
@@ -176,7 +167,13 @@
    "titulo": "Hospedagem que permite cobrar",
    "quadrante": "Urgente e importante",
    "acao": "Responder o cartão da hospedagem paga"
+  },
+  {
+   "n": "D12",
+   "titulo": "Cache de prompt nos agentes",
+   "quadrante": "Importante, não urgente",
+   "acao": ""
   }
  ],
- "sha256": "5971957dbca5ad2552c1de77963f30a6d90e2a43198d2e7128844f5ded6be7e6"
+ "sha256": "ab91cd75c17e48d60cf5c66e94ecfa5dccdcdb068b059db66cdadf8d58c182e2"
 }
