@@ -1,0 +1,126 @@
+[
+ {
+  "id": 1,
+  "tipo": "residencial",
+  "prazo": 30,
+  "indice": "IGP-M",
+  "garantia": [
+   "fiador"
+  ],
+  "multa": 3,
+  "defeito": null,
+  "texto": "CONTRATO DE LOCAÇÃO DE IMÓVEL. LOCADOR: Beltrano de Souza, CPF 000.000.000-00. LOCATÁRIO: Ciclano da Silva, CPF 111.111.111-11. IMÓVEL: Rua Fictícia, 100, apto 201, Rio de Janeiro/RJ. CLÁUSULA PRIMEIRA: A locação é exclusivamente residencial. CLÁUSULA SEGUNDA: O prazo é de 30 meses, com início em 01/12/2026. CLÁUSULA TERCEIRA: O aluguel mensal é de R$ 3.200,00, com vencimento no dia 5 de cada mês, pago por PIX ao LOCADOR. CLÁUSULA QUARTA: O aluguel será reajustado a cada 12 (doze) meses pela variação acumulada do IGP-M. CLÁUSULA QUINTA: Encargos de condomínio ordinário e IPTU ficam a cargo do LOCATÁRIO; despesas extraordinárias de condomínio cabem ao LOCADOR (art. 22, X). CLÁUSULA SEXTA: Em caso de devolução antecipada, o LOCATÁRIO pagará multa de 3 aluguéis, proporcional ao tempo restante do contrato (art. 4º da Lei 8.245/91). CLÁUSULA SÉTIMA: Garantia: FIADOR: Fulano de Tal, que responde solidariamente até a entrega das chaves. CLÁUSULA OITAVA: O imóvel é entregue em bom estado, conforme vistoria anexa, e deve ser devolvido no mesmo estado, ressalvado o desgaste natural. CLÁUSULA FINAL: Fica eleito o foro da comarca do Rio de Janeiro. Rio de Janeiro, 20 de novembro de 2026."
+ },
+ {
+  "id": 2,
+  "tipo": "residencial",
+  "prazo": 12,
+  "indice": "IPCA",
+  "garantia": [
+   "caução",
+   "fiador"
+  ],
+  "multa": 3,
+  "defeito": "garantia dupla (art. 37 p.ú.)",
+  "texto": "CONTRATO DE LOCAÇÃO DE IMÓVEL. LOCADOR: Beltrano de Souza, CPF 000.000.000-00. LOCATÁRIO: Ciclano da Silva, CPF 111.111.111-11. IMÓVEL: Rua Fictícia, 100, apto 201, Rio de Janeiro/RJ. CLÁUSULA PRIMEIRA: A locação é exclusivamente residencial. CLÁUSULA SEGUNDA: O prazo é de 12 meses, com início em 01/12/2026. CLÁUSULA TERCEIRA: O aluguel mensal é de R$ 3.200,00, com vencimento no dia 5 de cada mês, pago por PIX ao LOCADOR. CLÁUSULA QUARTA: O aluguel será reajustado a cada 12 (doze) meses pela variação acumulada do IPCA. CLÁUSULA QUINTA: Encargos de condomínio ordinário e IPTU ficam a cargo do LOCATÁRIO; despesas extraordinárias de condomínio cabem ao LOCADOR (art. 22, X). CLÁUSULA SEXTA: Em caso de devolução antecipada, o LOCATÁRIO pagará multa de 3 aluguéis, proporcional ao tempo restante do contrato (art. 4º da Lei 8.245/91). CLÁUSULA SÉTIMA: Garantia: CAUÇÃO em dinheiro equivalente a 3 (três) aluguéis e, cumulativamente, FIADOR: Fulano de Tal, que responde solidariamente até a entrega das chaves. CLÁUSULA OITAVA: O imóvel é entregue em bom estado, conforme vistoria anexa, e deve ser devolvido no mesmo estado, ressalvado o desgaste natural. CLÁUSULA FINAL: Fica eleito o foro da comarca do Rio de Janeiro. Rio de Janeiro, 20 de novembro de 2026."
+ },
+ {
+  "id": 3,
+  "tipo": "comercial",
+  "prazo": 60,
+  "indice": "IGP-M",
+  "garantia": [
+   "seguro-fiança"
+  ],
+  "multa": 6,
+  "defeito": null,
+  "texto": "CONTRATO DE LOCAÇÃO DE IMÓVEL. LOCADOR: Beltrano de Souza, CPF 000.000.000-00. LOCATÁRIO: Ciclano da Silva, CPF 111.111.111-11. IMÓVEL: Rua Fictícia, 100, apto 201, Rio de Janeiro/RJ. CLÁUSULA PRIMEIRA: A locação é comercial, para loja de roupas. CLÁUSULA SEGUNDA: O prazo é de 60 meses, com início em 01/12/2026. CLÁUSULA TERCEIRA: O aluguel mensal é de R$ 3.200,00, com vencimento no dia 5 de cada mês, pago por PIX ao LOCADOR. CLÁUSULA QUARTA: O aluguel será reajustado a cada 12 (doze) meses pela variação acumulada do IGP-M. CLÁUSULA QUINTA: Encargos de condomínio ordinário e IPTU ficam a cargo do LOCATÁRIO; despesas extraordinárias de condomínio cabem ao LOCADOR (art. 22, X). CLÁUSULA SEXTA: Em caso de devolução antecipada, o LOCATÁRIO pagará multa de 6 aluguéis, proporcional ao tempo restante do contrato (art. 4º da Lei 8.245/91). CLÁUSULA SÉTIMA: Garantia: SEGURO-FIANÇA contratado pelo LOCATÁRIO junto a seguradora autorizada pela SUSEP. CLÁUSULA OITAVA: O imóvel é entregue em bom estado, conforme vistoria anexa, e deve ser devolvido no mesmo estado, ressalvado o desgaste natural. CLÁUSULA FINAL: Fica eleito o foro da comarca do Rio de Janeiro. Rio de Janeiro, 20 de novembro de 2026."
+ },
+ {
+  "id": 4,
+  "tipo": "residencial",
+  "prazo": 30,
+  "indice": "INPC",
+  "garantia": [
+   "caução"
+  ],
+  "multa": 3,
+  "caucao_meses": 4,
+  "defeito": "caução acima de 3 aluguéis (art. 38 §2º)",
+  "texto": "CONTRATO DE LOCAÇÃO DE IMÓVEL. LOCADOR: Beltrano de Souza, CPF 000.000.000-00. LOCATÁRIO: Ciclano da Silva, CPF 111.111.111-11. IMÓVEL: Rua Fictícia, 100, apto 201, Rio de Janeiro/RJ. CLÁUSULA PRIMEIRA: A locação é exclusivamente residencial. CLÁUSULA SEGUNDA: O prazo é de 30 meses, com início em 01/12/2026. CLÁUSULA TERCEIRA: O aluguel mensal é de R$ 3.200,00, com vencimento no dia 5 de cada mês, pago por PIX ao LOCADOR. CLÁUSULA QUARTA: O aluguel será reajustado a cada 12 (doze) meses pela variação acumulada do INPC. CLÁUSULA QUINTA: Encargos de condomínio ordinário e IPTU ficam a cargo do LOCATÁRIO; despesas extraordinárias de condomínio cabem ao LOCADOR (art. 22, X). CLÁUSULA SEXTA: Em caso de devolução antecipada, o LOCATÁRIO pagará multa de 3 aluguéis, proporcional ao tempo restante do contrato (art. 4º da Lei 8.245/91). CLÁUSULA SÉTIMA: Garantia: CAUÇÃO em dinheiro equivalente a 4 (quatro) aluguéis. CLÁUSULA OITAVA: O imóvel é entregue em bom estado, conforme vistoria anexa, e deve ser devolvido no mesmo estado, ressalvado o desgaste natural. CLÁUSULA FINAL: Fica eleito o foro da comarca do Rio de Janeiro. Rio de Janeiro, 20 de novembro de 2026."
+ },
+ {
+  "id": 5,
+  "tipo": "residencial",
+  "prazo": 30,
+  "indice": "IPCA",
+  "garantia": [
+   "título de capitalização"
+  ],
+  "multa": 3,
+  "defeito": "reajuste semestral (Lei 10.192/01 exige 12 meses)",
+  "reajuste": "semestral",
+  "texto": "CONTRATO DE LOCAÇÃO DE IMÓVEL. LOCADOR: Beltrano de Souza, CPF 000.000.000-00. LOCATÁRIO: Ciclano da Silva, CPF 111.111.111-11. IMÓVEL: Rua Fictícia, 100, apto 201, Rio de Janeiro/RJ. CLÁUSULA PRIMEIRA: A locação é exclusivamente residencial. CLÁUSULA SEGUNDA: O prazo é de 30 meses, com início em 01/12/2026. CLÁUSULA TERCEIRA: O aluguel mensal é de R$ 3.200,00, com vencimento no dia 5 de cada mês, pago por PIX ao LOCADOR. CLÁUSULA QUARTA: O aluguel será reajustado a cada 6 (seis) meses pela variação acumulada do IPCA. CLÁUSULA QUINTA: Encargos de condomínio ordinário e IPTU ficam a cargo do LOCATÁRIO; despesas extraordinárias de condomínio cabem ao LOCADOR (art. 22, X). CLÁUSULA SEXTA: Em caso de devolução antecipada, o LOCATÁRIO pagará multa de 3 aluguéis, proporcional ao tempo restante do contrato (art. 4º da Lei 8.245/91). CLÁUSULA SÉTIMA: Garantia: TÍTULO DE CAPITALIZAÇÃO no valor de 10 aluguéis. CLÁUSULA OITAVA: O imóvel é entregue em bom estado, conforme vistoria anexa, e deve ser devolvido no mesmo estado, ressalvado o desgaste natural. CLÁUSULA FINAL: Fica eleito o foro da comarca do Rio de Janeiro. Rio de Janeiro, 20 de novembro de 2026."
+ },
+ {
+  "id": 6,
+  "tipo": "comercial",
+  "prazo": 36,
+  "indice": "IGP-M",
+  "garantia": [
+   "fiador"
+  ],
+  "multa": 3,
+  "defeito": "renúncia à renovatória: contrato de 36 meses nem atinge os 5 anos do art. 51",
+  "texto": "CONTRATO DE LOCAÇÃO DE IMÓVEL. LOCADOR: Beltrano de Souza, CPF 000.000.000-00. LOCATÁRIO: Ciclano da Silva, CPF 111.111.111-11. IMÓVEL: Rua Fictícia, 100, apto 201, Rio de Janeiro/RJ. CLÁUSULA PRIMEIRA: A locação é comercial, para loja de roupas. CLÁUSULA SEGUNDA: O prazo é de 36 meses, com início em 01/12/2026. CLÁUSULA TERCEIRA: O aluguel mensal é de R$ 3.200,00, com vencimento no dia 5 de cada mês, pago por PIX ao LOCADOR. CLÁUSULA QUARTA: O aluguel será reajustado a cada 12 (doze) meses pela variação acumulada do IGP-M. CLÁUSULA QUINTA: Encargos de condomínio ordinário e IPTU ficam a cargo do LOCATÁRIO; despesas extraordinárias de condomínio cabem ao LOCADOR (art. 22, X). CLÁUSULA SEXTA: Em caso de devolução antecipada, o LOCATÁRIO pagará multa de 3 aluguéis, proporcional ao tempo restante do contrato (art. 4º da Lei 8.245/91). CLÁUSULA SÉTIMA: Garantia: FIADOR: Fulano de Tal, que responde solidariamente até a entrega das chaves. CLÁUSULA OITAVA: O imóvel é entregue em bom estado, conforme vistoria anexa, e deve ser devolvido no mesmo estado, ressalvado o desgaste natural. CLÁUSULA DÉCIMA: O LOCATÁRIO renuncia expressamente ao direito à ação renovatória. CLÁUSULA FINAL: Fica eleito o foro da comarca do Rio de Janeiro. Rio de Janeiro, 20 de novembro de 2026."
+ },
+ {
+  "id": 7,
+  "tipo": "residencial",
+  "prazo": 30,
+  "indice": "IPCA",
+  "garantia": [
+   "fiador"
+  ],
+  "multa": 3,
+  "defeito": "renúncia a benfeitorias: válida pela Súmula 335 STJ e art. 35 (atenção, não ilegal)",
+  "texto": "CONTRATO DE LOCAÇÃO DE IMÓVEL. LOCADOR: Beltrano de Souza, CPF 000.000.000-00. LOCATÁRIO: Ciclano da Silva, CPF 111.111.111-11. IMÓVEL: Rua Fictícia, 100, apto 201, Rio de Janeiro/RJ. CLÁUSULA PRIMEIRA: A locação é exclusivamente residencial. CLÁUSULA SEGUNDA: O prazo é de 30 meses, com início em 01/12/2026. CLÁUSULA TERCEIRA: O aluguel mensal é de R$ 3.200,00, com vencimento no dia 5 de cada mês, pago por PIX ao LOCADOR. CLÁUSULA QUARTA: O aluguel será reajustado a cada 12 (doze) meses pela variação acumulada do IPCA. CLÁUSULA QUINTA: Encargos de condomínio ordinário e IPTU ficam a cargo do LOCATÁRIO; despesas extraordinárias de condomínio cabem ao LOCADOR (art. 22, X). CLÁUSULA SEXTA: Em caso de devolução antecipada, o LOCATÁRIO pagará multa de 3 aluguéis, proporcional ao tempo restante do contrato (art. 4º da Lei 8.245/91). CLÁUSULA SÉTIMA: Garantia: FIADOR: Fulano de Tal, que responde solidariamente até a entrega das chaves. CLÁUSULA OITAVA: O imóvel é entregue em bom estado, conforme vistoria anexa, e deve ser devolvido no mesmo estado, ressalvado o desgaste natural. CLÁUSULA NONA: O LOCATÁRIO renuncia a qualquer indenização ou retenção por benfeitorias, inclusive as necessárias. CLÁUSULA FINAL: Fica eleito o foro da comarca do Rio de Janeiro. Rio de Janeiro, 20 de novembro de 2026."
+ },
+ {
+  "id": 8,
+  "tipo": "temporada",
+  "prazo": 3,
+  "indice": "não consta",
+  "garantia": [
+   "caução"
+  ],
+  "multa": 0,
+  "defeito": null,
+  "texto": "CONTRATO DE LOCAÇÃO DE IMÓVEL. LOCADOR: Beltrano de Souza, CPF 000.000.000-00. LOCATÁRIO: Ciclano da Silva, CPF 111.111.111-11. IMÓVEL: Rua Fictícia, 100, apto 201, Rio de Janeiro/RJ. CLÁUSULA PRIMEIRA: A locação é para temporada, nos termos do art. 48 da Lei 8.245/91. CLÁUSULA SEGUNDA: O prazo é de 3 meses (noventa dias), com início em 01/12/2026. CLÁUSULA TERCEIRA: O aluguel mensal é de R$ 3.200,00, com vencimento no dia 5 de cada mês, pago por PIX ao LOCADOR. CLÁUSULA QUARTA: não haverá reajuste. CLÁUSULA QUINTA: Encargos de condomínio ordinário e IPTU ficam a cargo do LOCATÁRIO; despesas extraordinárias de condomínio cabem ao LOCADOR (art. 22, X). CLÁUSULA SEXTA: Não há multa por devolução antecipada. CLÁUSULA SÉTIMA: Garantia: CAUÇÃO em dinheiro equivalente a 3 (três) aluguéis. CLÁUSULA OITAVA: O imóvel é entregue em bom estado, conforme vistoria anexa, e deve ser devolvido no mesmo estado, ressalvado o desgaste natural. CLÁUSULA FINAL: Fica eleito o foro da comarca do Rio de Janeiro. Rio de Janeiro, 20 de novembro de 2026."
+ },
+ {
+  "id": 9,
+  "tipo": "residencial",
+  "prazo": 30,
+  "indice": "IGP-M",
+  "garantia": [
+   "fiador"
+  ],
+  "multa": 3,
+  "defeito": "multa integral sem proporcionalidade (art. 4º)",
+  "multa_integral": true,
+  "texto": "CONTRATO DE LOCAÇÃO DE IMÓVEL. LOCADOR: Beltrano de Souza, CPF 000.000.000-00. LOCATÁRIO: Ciclano da Silva, CPF 111.111.111-11. IMÓVEL: Rua Fictícia, 100, apto 201, Rio de Janeiro/RJ. CLÁUSULA PRIMEIRA: A locação é exclusivamente residencial. CLÁUSULA SEGUNDA: O prazo é de 30 meses, com início em 01/12/2026. CLÁUSULA TERCEIRA: O aluguel mensal é de R$ 3.200,00, com vencimento no dia 5 de cada mês, pago por PIX ao LOCADOR. CLÁUSULA QUARTA: O aluguel será reajustado a cada 12 (doze) meses pela variação acumulada do IGP-M. CLÁUSULA QUINTA: Encargos de condomínio ordinário e IPTU ficam a cargo do LOCATÁRIO; despesas extraordinárias de condomínio cabem ao LOCADOR (art. 22, X). CLÁUSULA SEXTA: Em caso de devolução antecipada, o LOCATÁRIO pagará multa de 3 aluguéis, integral, independentemente do tempo decorrido. CLÁUSULA SÉTIMA: Garantia: FIADOR: Fulano de Tal, que responde solidariamente até a entrega das chaves. CLÁUSULA OITAVA: O imóvel é entregue em bom estado, conforme vistoria anexa, e deve ser devolvido no mesmo estado, ressalvado o desgaste natural. CLÁUSULA FINAL: Fica eleito o foro da comarca do Rio de Janeiro. Rio de Janeiro, 20 de novembro de 2026."
+ },
+ {
+  "id": 10,
+  "tipo": "residencial",
+  "prazo": 30,
+  "indice": "IVAR",
+  "garantia": [
+   "seguro-fiança"
+  ],
+  "multa": 3,
+  "defeito": null,
+  "texto": "CONTRATO DE LOCAÇÃO DE IMÓVEL. LOCADOR: Beltrano de Souza, CPF 000.000.000-00. LOCATÁRIO: Ciclano da Silva, CPF 111.111.111-11. IMÓVEL: Rua Fictícia, 100, apto 201, Rio de Janeiro/RJ. CLÁUSULA PRIMEIRA: A locação é exclusivamente residencial. CLÁUSULA SEGUNDA: O prazo é de 30 meses, com início em 01/12/2026. CLÁUSULA TERCEIRA: O aluguel mensal é de R$ 3.200,00, com vencimento no dia 5 de cada mês, pago por PIX ao LOCADOR. CLÁUSULA QUARTA: O aluguel será reajustado a cada 12 (doze) meses pela variação acumulada do IVAR. CLÁUSULA QUINTA: Encargos de condomínio ordinário e IPTU ficam a cargo do LOCATÁRIO; despesas extraordinárias de condomínio cabem ao LOCADOR (art. 22, X). CLÁUSULA SEXTA: Em caso de devolução antecipada, o LOCATÁRIO pagará multa de 3 aluguéis, proporcional ao tempo restante do contrato (art. 4º da Lei 8.245/91). CLÁUSULA SÉTIMA: Garantia: SEGURO-FIANÇA contratado pelo LOCATÁRIO junto a seguradora autorizada pela SUSEP. CLÁUSULA OITAVA: O imóvel é entregue em bom estado, conforme vistoria anexa, e deve ser devolvido no mesmo estado, ressalvado o desgaste natural. CLÁUSULA FINAL: Fica eleito o foro da comarca do Rio de Janeiro. Rio de Janeiro, 20 de novembro de 2026."
+ }
+]

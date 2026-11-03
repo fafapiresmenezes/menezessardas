@@ -1,0 +1,152 @@
+{
+ "passo": "L02",
+ "data": "2026-11-03",
+ "modelo": "claude-haiku-5-5",
+ "rodada_1_sem_ficha": {
+  "ids_pg_net": "1794-1803",
+  "erros_de_lei": 3,
+  "veredito": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok (endereço não mascarado)",
+   "5": "erro leve: citou art. 17 para periodicidade",
+   "6": "ERRO: disse que a renúncia à renovatória é em regra aceita (art. 45 a anula)",
+   "7": "ERRO: disse que a renúncia a benfeitorias necessárias é nula (Súmula 335 diz válida)",
+   "8": "ERRO: IPTU do locatário \"em qualquer locação\" e caução restituída pelo art. 35",
+   "9": "ok",
+   "10": "ok"
+  }
+ },
+ "rodada_2_com_ficha_e_mascara": {
+  "ids_pg_net": "1804-1813",
+  "erros_de_lei": 0,
+  "pontos_plantados_acertados": "10/10",
+  "imprecisoes_leves": 3,
+  "veredito": {
+   "1": "ok",
+   "2": "ok: garantia dupla nula, art. 37 p.ú. e art. 43, II",
+   "3": "ok (gravidade alta para garantia única é exagero, sem erro de lei)",
+   "4": "ok: caução acima de 3 aluguéis, art. 38 §2º",
+   "5": "ok: reajuste semestral nulo, Lei 10.192 art. 2º §1º",
+   "6": "ok: renúncia nula pelo art. 45 e 36 meses não dão renovatória (art. 51)",
+   "7": "ok: renúncia válida, art. 35 e Súmula 335",
+   "8": "ok (chamou de \"mobiliado\" sem constar: imprecisão leve)",
+   "9": "ok: multa integral contraria art. 4º, CC 413 (gravidade média, deveria ser alta)",
+   "10": "ok: IVAR válido, anual"
+  },
+  "custo_medio_usd": 0.00098,
+  "custo_max_usd": 0.001148,
+  "tokens_medios": {
+   "entrada": 2661,
+   "saida": 1428
+  },
+  "preco_haiku_usd_mtok": {
+   "entrada": 0.1,
+   "saida": 0.5
+  }
+ },
+ "casos": [
+  {
+   "id": 1,
+   "tipo": "residencial",
+   "prazo": 30,
+   "indice": "IGP-M",
+   "garantia": [
+    "fiador"
+   ],
+   "defeito": null
+  },
+  {
+   "id": 2,
+   "tipo": "residencial",
+   "prazo": 12,
+   "indice": "IPCA",
+   "garantia": [
+    "caução",
+    "fiador"
+   ],
+   "defeito": "garantia dupla (art. 37 p.ú.)"
+  },
+  {
+   "id": 3,
+   "tipo": "comercial",
+   "prazo": 60,
+   "indice": "IGP-M",
+   "garantia": [
+    "seguro-fiança"
+   ],
+   "defeito": null
+  },
+  {
+   "id": 4,
+   "tipo": "residencial",
+   "prazo": 30,
+   "indice": "INPC",
+   "garantia": [
+    "caução"
+   ],
+   "defeito": "caução acima de 3 aluguéis (art. 38 §2º)"
+  },
+  {
+   "id": 5,
+   "tipo": "residencial",
+   "prazo": 30,
+   "indice": "IPCA",
+   "garantia": [
+    "título de capitalização"
+   ],
+   "defeito": "reajuste semestral (Lei 10.192/01 exige 12 meses)"
+  },
+  {
+   "id": 6,
+   "tipo": "comercial",
+   "prazo": 36,
+   "indice": "IGP-M",
+   "garantia": [
+    "fiador"
+   ],
+   "defeito": "renúncia à renovatória: contrato de 36 meses nem atinge os 5 anos do art. 51"
+  },
+  {
+   "id": 7,
+   "tipo": "residencial",
+   "prazo": 30,
+   "indice": "IPCA",
+   "garantia": [
+    "fiador"
+   ],
+   "defeito": "renúncia a benfeitorias: válida pela Súmula 335 STJ e art. 35 (atenção, não ilegal)"
+  },
+  {
+   "id": 8,
+   "tipo": "temporada",
+   "prazo": 3,
+   "indice": "não consta",
+   "garantia": [
+    "caução"
+   ],
+   "defeito": null
+  },
+  {
+   "id": 9,
+   "tipo": "residencial",
+   "prazo": 30,
+   "indice": "IGP-M",
+   "garantia": [
+    "fiador"
+   ],
+   "defeito": "multa integral sem proporcionalidade (art. 4º)"
+  },
+  {
+   "id": 10,
+   "tipo": "residencial",
+   "prazo": 30,
+   "indice": "IVAR",
+   "garantia": [
+    "seguro-fiança"
+   ],
+   "defeito": null
+  }
+ ]
+}

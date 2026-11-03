@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leitura de contrato · Instituto THEYE</title>
+<meta name="description" content="Cole o contrato de locação e receba, em 1 minuto, os pontos de atenção com o artigo da lei. Dados pessoais são apagados antes da leitura.">
+<link rel="preload" href="/fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="base.css">
+<style>
+.form{max-width:860px;display:grid;gap:12px}
+.form textarea{font:inherit;font-size:15px;min-height:260px;padding:12px;border:1px solid var(--linha);background:var(--papel);color:var(--tinta);border-radius:6px;resize:vertical}
+.form .linha{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.res{margin-top:24px;padding:20px;border:1px solid var(--linha);border-left:4px solid var(--grafo);border-radius:10px;max-width:860px}
+.res h3{font-family:var(--serif);font-size:22px;margin:18px 0 6px}
+.res h3:first-child{margin-top:0}
+.res p{margin:4px 0}
+.sm{font-size:13.5px;color:var(--apagado)}
+.alta{color:#b42318;font-weight:600}.media{color:#b54708;font-weight:600}.baixa{color:var(--apagado);font-weight:600}
+.planos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:860px}
+@media(max-width:820px){.planos{grid-template-columns:1fr}}
+.planos div{border:1px solid var(--linha);border-radius:10px;padding:16px}
+</style>
+</head>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/#laboratorio">Laboratório</a><a href="/placar.html">Placar</a><a href="/ontologia.html">Ontologia</a><a href="/#metodo">Método</a><a href="/#servicos">Serviços</a></nav>
+</div></header>
+<main id="conteudo">
+<div class="hero"><div class="w">
+  <div class="kicker">Leitura por IA · Lei 8.245/91 · dados pessoais apagados</div>
+  <h1>Seu contrato de aluguel tem alguma armadilha?</h1>
+  <p class="lead">Cole o texto do contrato. Em cerca de 1 minuto você recebe o resumo, até 6 pontos de atenção com a gravidade e o artigo da lei, os prazos, a garantia e o que perguntar antes de assinar.</p>
+  <aside class="um-min" aria-label="Em 1 minuto"><b>Em 1 minuto</b><p>Entre no laboratório com seu e-mail (grátis). Cole o contrato aqui. Aperte Ler contrato. Pronto.</p><a class="btn" href="#ler">Ler meu contrato</a></aside>
+</div></div>
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Leitura</div><h2>Cole o contrato inteiro.</h2></div><p class="sm" id="c-estado">verificando seu cadastro</p></div>
+  <form class="form" id="ler" novalidate>
+    <label for="c-texto">Texto do contrato (de 300 a 40 mil caracteres)</label>
+    <textarea id="c-texto" placeholder="CONTRATO DE LOCAÇÃO RESIDENCIAL. LOCADOR: ... LOCATÁRIO: ... CLÁUSULA PRIMEIRA: ..."></textarea>
+    <div class="linha"><button class="btn" id="c-ir" type="submit">Ler contrato</button><span class="sm" id="c-conta">0 caracteres</span></div>
+    <p class="sm">Antes da leitura, CPF, CNPJ, e-mail, telefone, CEP, conta bancária e endereço são trocados por marcas como [CPF]. O texto não é guardado: só contamos quantas leituras foram feitas e quanto custaram.</p>
+  </form>
+  <div class="res" id="c-res" aria-live="polite"><p class="sm">O resultado aparece aqui.</p></div>
+</div></section>
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Acesso</div><h2>Quem pode usar.</h2></div></div>
+  <div class="planos">
+    <div><b>Cadastro grátis</b><p class="sm">3 leituras ou perguntas aos agentes por dia, somadas.</p><a class="btn sec" href="/laboratorio.html">Fazer cadastro</a></div>
+    <div><b>Membro, R$ 79 por mês</b><p class="sm">20 leituras ou perguntas por dia, mais as consultas de previsão do laboratório.</p><a class="btn sec" href="/precos.html">Ver planos</a></div>
+    <div><b>Leitura avulsa</b><p class="sm">Sem cadastro, paga por leitura. Abre quando o pagamento por PIX e cartão entrar no ar. Faça o cadastro grátis para ser avisado.</p></div>
+  </div>
+  <p class="sm" style="margin-top:18px">Isto é uma leitura automática feita por IA, não um parecer jurídico. Ela cita só artigos de uma ficha conferida da <a href="https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1991-10-18;8245">Lei 8.245/91</a> e da <a href="https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2001-02-14;10192">Lei 10.192/2001</a>. Para decidir, fale com um advogado.</p>
+  <p><a class="btn sec" href="/reajuste.html">Calcular o reajuste do aluguel (grátis)</a></p>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · Leitura de contrato, Passo L02</span><span><a href="/legislacao.html" style="display:inline-block;padding:4px 0">Legislação</a> · Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="contrato.js"></script>
+</body>
+</html>
