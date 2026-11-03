@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O que falta de você · Instituto THEYE</title>
+<meta name="description" content="Tudo o que depende de uma decisão sua, em um lugar só, com as opções e o status de cada item.">
+<link rel="preload" href="/fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="base.css">
+<style>
+.sm{font-size:13.5px;color:var(--apagado)}
+.resumo{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:760px;margin:18px 0}
+@media(max-width:700px){.resumo{grid-template-columns:1fr}}
+.resumo div{border:1px solid var(--linha);border-radius:10px;padding:14px 16px}
+.resumo b{display:block;font-family:var(--serif);font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums}
+.fil{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 20px}
+.fil button{font:inherit;font-size:14px;padding:10px 14px;min-height:44px;border:1px solid var(--linha);background:var(--papel);color:var(--tinta);border-radius:999px;cursor:pointer}
+.fil button[aria-pressed=true]{border-color:var(--grafo);box-shadow:inset 0 0 0 1px var(--grafo);font-weight:600}
+.cards{display:grid;gap:14px;max-width:900px}
+.card{border:1px solid var(--linha);border-left:4px solid var(--grafo);border-radius:10px;padding:16px 18px}
+.card h3{font-size:17px;margin:0 0 6px}
+.card .meta{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--apagado);margin-bottom:6px}
+.card ol{margin:10px 0 0;padding-left:22px}
+.card ol li{font-size:14px;margin-bottom:4px}
+.card .esc{margin-top:10px;font-size:14px;font-weight:600}
+.copiar{font:inherit;font-size:13.5px;margin-top:12px;padding:9px 14px;min-height:44px;border:1px solid var(--linha);background:var(--papel);color:var(--tinta);border-radius:6px;cursor:pointer}
+@media print{.top,footer,.fil,.copiar,.pular,.hero aside{display:none}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/#laboratorio">Laboratório</a><a href="/placar.html">Placar</a><a href="/ontologia.html">Ontologia</a><a href="/okr.html">OKRs</a><a href="/negocio.html">Negócio</a></nav>
+</div></header>
+<main id="conteudo">
+<div class="hero"><div class="w">
+  <div class="kicker">Painel de decisões · Passo D21</div>
+  <h1>O que falta de você.</h1>
+  <p class="lead">Tudo o que não posso resolver sozinho está aqui, em um lugar só. Cada item diz por que depende de você, o que trava enquanto não for decidido e as opções de resposta. Você responde no chat: cada item tem um botão que copia a frase pronta.</p>
+  <aside class="um-min" aria-label="Em 1 minuto"><b>Em 1 minuto</b><p>Olhe os itens em vermelho primeiro: são os que travam o dinheiro entrar. Clique em "Copiar a resposta", escolha a opção e me mande no chat.</p><a class="btn" href="#itens">Ver a lista</a></aside>
+</div></div>
+<section><div class="w" id="itens">
+  <div class="sec-h"><div><div class="kicker">Decisões</div><h2>Uma decisão sua por item.</h2></div><p class="sm" id="f-quando">carregando</p></div>
+  <div class="resumo" id="f-resumo"></div>
+  <div class="fil" id="f-fil" role="group" aria-label="Filtrar os itens"></div>
+  <div class="cards" id="f-cards"></div>
+  <p class="sm" style="margin-top:20px">Como esta página funciona: a lista vem da tabela de pendências do Instituto (RPC pública <code>instituto_pendencias</code>, só leitura). Ninguém decide nada clicando aqui: a escolha é registrada quando você responde no chat, e o status desta página muda junto. Enquanto um item não é decidido, eu sigo nos passos que não dependem dele, e nenhum deles para o trabalho.</p>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · O que falta de você, Passo D21</span><span><a href="/okr.html" style="display:inline-block;padding:4px 0">OKRs</a> · Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="falta.js"></script>
+</body>
+</html>
