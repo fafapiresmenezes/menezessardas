@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { fingirDeno, fingirFetch, jsonResp } from '../_testes/deno'
 import { zerar, estado } from '../_testes/supabase-js'
 
-const caixa = fingirDeno({ SUPABASE_URL: 'https://db.supabase.co', SUPABASE_SERVICE_ROLE_KEY: 'k' })
+const caixa = fingirDeno({ SUPABASE_URL: 'https://db.supabase.co', SUPABASE_SERVICE_ROLE_KEY: 'k', COLETOR_ESPERA_MS: '1' })
 await import('./index')
 const chamar = (corpo: unknown = {}, headers: Record<string, string> = { 'x-cron-secret': 'segredo' }) =>
   caixa.handler!(new Request('https://x.functions.supabase.co/coletor-instituto', { method: 'POST', body: JSON.stringify(corpo), headers: { 'Content-Type': 'application/json', ...headers } }))
@@ -62,6 +62,20 @@ describe('coletor-instituto', () => {
     expect(b.falhas).toEqual(['tjrj/Revisional de Aluguel: 503', 'djen tjrj: 429'])
     expect(pedidos[0]!.corpo).toMatchObject({ size: 400, from: 0 })
     expect(b.djen).toEqual([])
+  })
+
+  it('C18: 429 passageiro do DataJud é repetido e a coleta sai sem falha; 404 não é repetido', async () => {
+    let n = 0
+    datajud = () => (++n === 1 ? new Response('', { status: 429 }) : jsonResp({ hits: { hits: [{ _source: PROCESSO }] } }))
+    const b = await (await chamar({ tribunais: ['tjdft'], classes: ['Despejo'] })).json()
+    expect(b.falhas).toEqual([])
+    expect(b.vistos).toBe(1)
+    expect(n).toBe(2)
+    n = 0
+    datajud = () => (++n, new Response('', { status: 404 }))
+    const c = await (await chamar({ tribunais: ['tjdft'], classes: ['Despejo'] })).json()
+    expect(c.falhas).toEqual(['tjdft/Despejo: 404'])
+    expect(n).toBe(1)
   })
 
   it('erro da função SQL devolve 500 com até onde gravou', async () => {

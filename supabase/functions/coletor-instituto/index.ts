@@ -23,8 +23,19 @@ async function segredoOk(req: Request) {
   return !!data?.valor && data.valor === enviado
 }
 
+// Passo C18: o DataJud devolve 429 quando muitas consultas chegam juntas (TJDFT em 03/11). Tenta de novo até 3 vezes com espera crescente.
+const ESPERA_MS = Number(Deno.env.get('COLETOR_ESPERA_MS') ?? 2000)
+async function comRepeticao(fazer: () => Promise<Response>, tentativas = 3): Promise<Response> {
+  for (let n = 1; ; n++) {
+    const r = await fazer()
+    if (r.ok || n >= tentativas || !(r.status === 429 || r.status >= 500)) return r
+    const pedido = Number(r.headers.get('retry-after'))
+    await new Promise(ok => setTimeout(ok, Math.min(8000, pedido > 0 ? pedido * 1000 : ESPERA_MS * 2 ** (n - 1))))
+  }
+}
+
 async function datajud(tribunal: string, classe: string, por = POR_CONSULTA, pular = 0) {
-  const r = await fetch(`https://api-publica.datajud.cnj.jus.br/api_publica_${tribunal}/_search`, {
+  const r = await comRepeticao(() => fetch(`https://api-publica.datajud.cnj.jus.br/api_publica_${tribunal}/_search`, {
     method: 'POST', headers: { Authorization: DATAJUD_KEY, 'Content-Type': 'application/json' },
     signal: AbortSignal.timeout(60000),
     body: JSON.stringify({
@@ -32,7 +43,7 @@ async function datajud(tribunal: string, classe: string, por = POR_CONSULTA, pul
       _source: ['numeroProcesso', 'classe', 'orgaoJulgador.nome', 'assuntos', 'dataAjuizamento', 'movimentos.codigo', 'movimentos.dataHora', 'dataHoraUltimaAtualizacao'],
       query: { bool: { filter: [{ match_phrase: { 'classe.nome': classe } }] } },
     }),
-  })
+  }))
   if (!r.ok) throw new Error(`${tribunal}/${classe}: ${r.status}`)
   const d = await r.json()
   const saida = []
@@ -54,7 +65,7 @@ async function datajud(tribunal: string, classe: string, por = POR_CONSULTA, pul
 
 async function djen(tribunal: string, d: string) {
   const u = `https://comunicaapi.pje.jus.br/api/v1/comunicacao?siglaTribunal=${tribunal.toUpperCase()}&dataDisponibilizacaoInicio=${d}&dataDisponibilizacaoFim=${d}&itensPorPagina=5&pagina=1`
-  const r = await fetch(u, { signal: AbortSignal.timeout(25000) })
+  const r = await comRepeticao(() => fetch(u, { signal: AbortSignal.timeout(25000) }))
   if (!r.ok) throw new Error(`djen ${tribunal}: ${r.status}`)
   const j = await r.json()
   return { tribunal: tribunal.toUpperCase(), dia: d, comunicacoes: Number(j.count ?? 0) }
