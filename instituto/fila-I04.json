@@ -177,9 +177,13 @@
    "prompt": "Publique /reajuste.html: reajuste de aluguel por IGP-M, IPCA e IVAR com a série oficial do Banco Central (SGS 189, 433 e 29641 se disponível), conta mostrada passo a passo, link para a cláusula da Lei 8.245/91 e convite para a consulta grátis do laboratório. Sem cadastro para usar; e-mail opcional para receber o reajuste do próximo mês. Valores conferidos contra a calculadora do Banco Central em 5 casos.",
    "kpi": "5/5 casos iguais ao BCB; página no ar; % de visitantes que vão ao laboratório medido em /negocio.html",
    "skill": "dataviz",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "54673cb77cee2781dfae584a73b67046e27cedf04d466378025b1d307d24fe42",
-   "sha256_prompt": "1c5e7165cd25bd753e8dd9fa6835ce1af88fc39772d6f51a9a0f24577c1dffe9"
+   "sha256_prompt": "1c5e7165cd25bd753e8dd9fa6835ce1af88fc39772d6f51a9a0f24577c1dffe9",
+   "feito_em": "2026-11-03T2115Z",
+   "evidencia": "/reajuste.html no ar (md5 da3ddead, reajuste.js f5926690, commit b529558, dpl_GFCtZFwSCCPq1sboRj35RkMjjpEW): IGP-M/IPCA/INPC do SGS/BCB lidos 1x/dia (cron 09:12/09:27 UTC), conta mes a mes; 5/5 casos iguais entre JS da pagina e calculo independente em Python (diferenca < 0,0001 p.p.); valores mensais conferem com FGV (IGP-M abr/26 2,73, mai/26 0,84); link para o laboratorio; u17 68/68",
+   "elo_ev_anterior": "e990de3e1a06910e6dad1de0659d50f28ad79357c356c62d4045fca2e156786f",
+   "sha256_evidencia": "8d32c6908e0fc561f187d49a12c99282e840a7282cddef1a55263747fda18f3c"
   },
   {
    "n": "L02",
