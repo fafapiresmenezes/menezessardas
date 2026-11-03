@@ -202,27 +202,27 @@
  "rewrites": [
   {
    "source": "/",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/e9885ae315fdbf47972ddebe9f89a8d141019e5d/instituto/site/index.html"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/47ce595916ac12341c38c898a2e7a97bb9e41c1f/instituto/site/index.html"
   },
   {
    "source": "/o",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/e9885ae315fdbf47972ddebe9f89a8d141019e5d/instituto/site/o.html"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/47ce595916ac12341c38c898a2e7a97bb9e41c1f/instituto/site/o.html"
   },
   {
    "source": "/o/",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/e9885ae315fdbf47972ddebe9f89a8d141019e5d/instituto/site/o.html"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/47ce595916ac12341c38c898a2e7a97bb9e41c1f/instituto/site/o.html"
   },
   {
    "source": "/o/:id",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/e9885ae315fdbf47972ddebe9f89a8d141019e5d/instituto/site/o.html"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/47ce595916ac12341c38c898a2e7a97bb9e41c1f/instituto/site/o.html"
   },
   {
    "source": "/fonts/:f",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/e9885ae315fdbf47972ddebe9f89a8d141019e5d/instituto/site/fonts/:f"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/47ce595916ac12341c38c898a2e7a97bb9e41c1f/instituto/site/fonts/:f"
   },
   {
    "source": "/:f([a-z0-9-]+\\.(?:html|js|css|ttl|json|txt|csv|pdf|ots))",
-   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/e9885ae315fdbf47972ddebe9f89a8d141019e5d/instituto/site/:f"
+   "destination": "https://raw.githubusercontent.com/fafapiresmenezes/menezessardas/47ce595916ac12341c38c898a2e7a97bb9e41c1f/instituto/site/:f"
   }
  ]
 }
