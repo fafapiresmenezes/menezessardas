@@ -1,0 +1,228 @@
+{
+ "plano": "I-04 (replanejamento de M em 03/11/2026: THEYE + [X] unificados, PROMPTs encadeados)",
+ "origem": "Pedido de M no thread principal 2026-11-03T19:13Z; segue o ciclo I-03 (C30)",
+ "regra": "Um passo só fecha se os anteriores estiverem feitos ou em espera formal (aguardando M / em janela).",
+ "cabeca": "f859fee1eda40792bd91c799bc9775d93488e6d1d69659bfe0287efcb90fbf68",
+ "passos": [
+  {
+   "n": "D01",
+   "tema": "Gestão (PMO/PMI)",
+   "titulo": "Ler tudo e consolidar",
+   "prompt": "Releia por inteiro os threads do projeto, fila-I02/I03, memória e planos; liste em i04/inventario.md cada pedido de M (data, thread, status: no ar / parcial / falta) e confira que todos estão nesta fila; o que faltar vira passo novo no fim, encadeado.",
+   "kpi": "Inventário com 100% dos pedidos de M classificados",
+   "skill": "pmo-despachar-proximo-passo",
+   "status": "aberto",
+   "elo_anterior": "2849e320ec981df093765c60bbde1d899eb85ab0713a84d32eb9bed67ab5f748",
+   "sha256_prompt": "2ea818b59ab1a14aedf5fcd4bc52974f611dddf450c6e7915c0477185e920ec7"
+  },
+  {
+   "n": "D02",
+   "tema": "Benchmarks outlier",
+   "titulo": "Top 10 benchmarks globais",
+   "prompt": "Monte i04/benchmarks-top10.xlsx com 10 plataformas de predição e jurimetria (ex.: Lex Machina, Pre/Dicta, Blue J, Solomonic, Predictice, Doctrine, Case Crunch, Gavelytics, Jusbrasil Jurimetria, Turivius): para cada uma, só as forças documentadas em fonte pública, a métrica que publicam e o que o THEYE já tem; descarte a mediana e as fraquezas, conforme M; marque onde o THEYE é outlier e onde falta.",
+   "kpi": "10 plataformas × 8 critérios com fonte; lacunas viram passos",
+   "skill": "xlsx",
+   "status": "aberto",
+   "elo_anterior": "2ea818b59ab1a14aedf5fcd4bc52974f611dddf450c6e7915c0477185e920ec7",
+   "sha256_prompt": "29d552be106eba4c671d6737cb6c39e79885f93c70e93594d69a791fc83c6dff"
+  },
+  {
+   "n": "D03",
+   "tema": "Benchmarks outlier",
+   "titulo": "Régua de calibragem outlier",
+   "prompt": "Compare o Brier/BSS/ECE do THEYE com o melhor publicado entre os 10 benchmarks e com a literatura (Katz 2017, Aletras 2016, Medvedeva 2020); publique em /modelo.html a régua \"melhor do mundo\" por métrica, com fonte, e a distância do THEYE a ela.",
+   "kpi": "Tabela com fonte e distância por métrica no site",
+   "skill": "dataviz",
+   "status": "aberto",
+   "elo_anterior": "29d552be106eba4c671d6737cb6c39e79885f93c70e93594d69a791fc83c6dff",
+   "sha256_prompt": "47ce2e7ef7b816faf2b74660ec53327a0da4a760b6ebf8a9bf6321acc37efbb4"
+  },
+  {
+   "n": "D04",
+   "tema": "Para leigos (dummies)",
+   "titulo": "Top 10 métodos de usabilidade",
+   "prompt": "Avalie as 13 páginas com os 10 métodos: heurísticas de Nielsen, SUS, UMUX-Lite, SEQ, sucesso de tarefa, tempo de tarefa, percurso cognitivo, ISO 9241-11, HEART (Google) e WCAG 2.2; o que dá para medir sem pessoas, meça agora; o que precisa de pessoas, prepare o roteiro (junta com C14).",
+   "kpi": "Planilha i04/usabilidade-top10.xlsx; 0 problema grave aberto",
+   "skill": "xlsx",
+   "status": "aberto",
+   "elo_anterior": "47ce2e7ef7b816faf2b74660ec53327a0da4a760b6ebf8a9bf6321acc37efbb4",
+   "sha256_prompt": "c589131ed6d7c478defb08f6c738576fc51c74e1a0555fb7e514c0f93e084506"
+  },
+  {
+   "n": "D05",
+   "tema": "Para leigos (dummies)",
+   "titulo": "Modo simples em todas as páginas",
+   "prompt": "Para cada página do Instituto, um bloco \"Em 1 minuto\" no topo com linguagem de leigo (nível de leitura ≤ 8º ano, índice Flesch adaptado ao português ≥ 50) e um botão do que fazer a seguir; teste u17 52/52 e md5 em produção.",
+   "kpi": "13/13 páginas com bloco simples; Flesch ≥ 50",
+   "skill": "artifact-design",
+   "status": "aberto",
+   "elo_anterior": "c589131ed6d7c478defb08f6c738576fc51c74e1a0555fb7e514c0f93e084506",
+   "sha256_prompt": "a5d738b09f6b1e47b96b3e9c369dbb3167ca61ff3bd5b34c527c78f943aa5140"
+  },
+  {
+   "n": "D06",
+   "tema": "KPIs & OKRs",
+   "titulo": "Painel de OKRs com selo",
+   "prompt": "Página /okr.html com 3 objetivos e 9 resultados-chave do Instituto (dados ao vivo do banco: SLO, coleta, Brier, agentes, membros), cada número com o sha256 da medição e link do selo OpenTimestamps.",
+   "kpi": "Painel no ar com 9 KRs ao vivo e selo",
+   "skill": "dataviz",
+   "status": "aberto",
+   "elo_anterior": "a5d738b09f6b1e47b96b3e9c369dbb3167ca61ff3bd5b34c527c78f943aa5140",
+   "sha256_prompt": "8298aa7f9fc90ad8856ba911ca643214a50eb04922568df243f5ffbbef620bf8"
+  },
+  {
+   "n": "D07",
+   "tema": "KPIs & OKRs",
+   "titulo": "Matriz de priorização visual",
+   "prompt": "Na /okr.html, matriz impacto × esforço (e Eisenhower para pendências de M) com os passos abertos desta fila; o leigo vê em uma olhada o que vem primeiro e por quê.",
+   "kpi": "Matriz visual gerada da fila, atualizada a cada passo",
+   "skill": "dataviz",
+   "status": "aberto",
+   "elo_anterior": "8298aa7f9fc90ad8856ba911ca643214a50eb04922568df243f5ffbbef620bf8",
+   "sha256_prompt": "4aa77ae3dbff362293c5f520ef37fb5b8d8633c5c877f14685c42286adb09a40"
+  },
+  {
+   "n": "D08",
+   "tema": "Legislação ao vivo",
+   "titulo": "Portais e sandboxes conectados",
+   "prompt": "Conecte o Instituto a fontes públicas sem chave: Planalto/LexML (Lei 8.245/91 e alterações), DOU (seção 1), STJ (temas repetitivos), ANPD, BCB e CVM (sandboxes regulatórios); coleta diária agregada com data da última mudança, exibida em /legislacao.html.",
+   "kpi": "6 fontes com coleta diária e 0 falha em 7 dias",
+   "skill": "claude-api",
+   "status": "aberto",
+   "elo_anterior": "4aa77ae3dbff362293c5f520ef37fb5b8d8633c5c877f14685c42286adb09a40",
+   "sha256_prompt": "4744aed0e9000ffabe423f188c08ed9a2b057a2fa994f3b6451150ead279e0f9"
+  },
+  {
+   "n": "D09",
+   "tema": "Legislação ao vivo",
+   "titulo": "Matriz solução por caso",
+   "prompt": "Em /legislacao.html, matriz \"situação do leigo × melhor caminho\" (ex.: atraso de aluguel, renovatória, revisional, devolução antecipada, fiador) ligando norma, súmula, prazo e a chance do placar; sempre com aviso de que não substitui advogado.",
+   "kpi": "10 situações com norma, prazo e chance",
+   "skill": "artifact-design",
+   "status": "aberto",
+   "elo_anterior": "4744aed0e9000ffabe423f188c08ed9a2b057a2fa994f3b6451150ead279e0f9",
+   "sha256_prompt": "866afc966b02897eac0e1ca8b939b60fd871d3849bc0a535514ec5e3015001a7"
+  },
+  {
+   "n": "D10",
+   "tema": "50 agentes PhD",
+   "titulo": "Top 50 skills por agente",
+   "prompt": "Mapeie os 50 agentes a 50 habilidades (uma principal por agente) com referência de ementa pública de doutorado ou mestrado (Ivy League, MIT, top 10 Ásia e Europa) citada por curso e link; publique o catálogo em /agentes.html e em i04/catalogo-50.xlsx.",
+   "kpi": "50 agentes × skill × ementa com link",
+   "skill": "xlsx",
+   "status": "aberto",
+   "elo_anterior": "866afc966b02897eac0e1ca8b939b60fd871d3849bc0a535514ec5e3015001a7",
+   "sha256_prompt": "0fb519e6b5a4d37b847b993056ad12cda3afdfdc2a551b5384b28d87c180c84a"
+  },
+  {
+   "n": "D11",
+   "tema": "50 agentes PhD",
+   "titulo": "Avaliação dos 50 agentes",
+   "prompt": "Banco de 100 perguntas de locação com resposta-gabarito (lei/súmula); rode os 50 agentes por amostra estratificada, meça acerto de citação, recusa correta e custo; publique o placar dos agentes.",
+   "kpi": "Acerto de citação ≥ 90%; custo por resposta medido",
+   "skill": "claude-api",
+   "status": "aberto",
+   "elo_anterior": "0fb519e6b5a4d37b847b993056ad12cda3afdfdc2a551b5384b28d87c180c84a",
+   "sha256_prompt": "ad2ab83818db338d727477625cf0ea7b8b2f49037cbb3c475baa3fd5e489e681"
+  },
+  {
+   "n": "D12",
+   "tema": "Botão e custo",
+   "titulo": "Cache de prompt nos agentes",
+   "prompt": "Ative cache de prompt da API Claude no roteiro fixo dos agentes (contexto do site e placar) e meça antes/depois o custo por resposta em 20 chamadas de teste.",
+   "kpi": "Custo por resposta cai ≥ 30% sem piorar a qualidade",
+   "skill": "claude-api",
+   "status": "aberto",
+   "elo_anterior": "ad2ab83818db338d727477625cf0ea7b8b2f49037cbb3c475baa3fd5e489e681",
+   "sha256_prompt": "7caedc0ced99639b0dce42477173079545d116cab00ad3880df6f668277f1515"
+  },
+  {
+   "n": "D13",
+   "tema": "Botão e custo",
+   "titulo": "Playground e API Claude conectados",
+   "prompt": "Documente em /agentes.html como cada agente chama a API Claude (modelo, tokens, custo) e deixe o roteiro de cada agente exportável para o Console/Workbench da Anthropic (JSON), sem expor chaves.",
+   "kpi": "50 roteiros exportáveis; 0 segredo exposto",
+   "skill": "claude-api",
+   "status": "aberto",
+   "elo_anterior": "7caedc0ced99639b0dce42477173079545d116cab00ad3880df6f668277f1515",
+   "sha256_prompt": "c26800f29665c7a35008a61acfd340acd199508b44c6d0ecc5ab492fed8ee030"
+  },
+  {
+   "n": "D14",
+   "tema": "Imóvel funcional no Brasil",
+   "titulo": "Documentos do imóvel por função",
+   "prompt": "Estenda a ontologia (v0.8) com os documentos exigidos para o imóvel estar regular conforme a função (residencial, comercial, galpão, rural, temporada): matrícula, IPTU, habite-se, AVCB, alvará, CND condominial, laudo, etc., com a norma de origem; publique o checklist em /imovel.html.",
+   "kpi": "5 funções × documentos com norma",
+   "skill": "artifact-design",
+   "status": "aberto",
+   "elo_anterior": "c26800f29665c7a35008a61acfd340acd199508b44c6d0ecc5ab492fed8ee030",
+   "sha256_prompt": "09fa00268a61c59c96c1bc71c93cbe410b24e2352544daec8283423c2fcf9d0b"
+  },
+  {
+   "n": "D15",
+   "tema": "Imóvel funcional no Brasil",
+   "titulo": "Drag-in e agenda no escritório",
+   "prompt": "Peça ao thread principal (sem alterar o escritório) que o drag-in de contratos e imóveis do [X] use o checklist D14 para apontar documentos faltantes e criar prazos na agenda automática; registre a resposta.",
+   "kpi": "Pedido registrado e resposta do thread principal",
+   "skill": "pmo-despachar-proximo-passo",
+   "status": "aberto",
+   "elo_anterior": "09fa00268a61c59c96c1bc71c93cbe410b24e2352544daec8283423c2fcf9d0b",
+   "sha256_prompt": "45291822f61f495c30a1a4e40ef6cc13231e5be1865cf800422320320ff12a30"
+  },
+  {
+   "n": "D16",
+   "tema": "Unificação [X]+THEYE",
+   "titulo": "Vertente THEYE no escritório",
+   "prompt": "Duplicar sem perder nada: confirme que o ramo escritorio-estavel segue íntegro e que a tela Previsões do [X] mostra a vertente THEYE (placar, legislação, checklist do imóvel); o pedido de mudança vai ao thread principal.",
+   "kpi": "Ramo íntegro e vertente visível no [X]",
+   "skill": "pmo-despachar-proximo-passo",
+   "status": "aberto",
+   "elo_anterior": "45291822f61f495c30a1a4e40ef6cc13231e5be1865cf800422320320ff12a30",
+   "sha256_prompt": "9f84dcd57568b41f377660d0b45ec66f9ef2ef8681e0014b975d56e970e4f7aa"
+  },
+  {
+   "n": "D17",
+   "tema": "Gestão (PMO/PMI)",
+   "titulo": "Guardião nunca para",
+   "prompt": "O agente guardião roda 3x/dia, fecha 1 passo por vez em ordem e, se travar, abre cartão de múltipla escolha e segue no próximo passo executável; registre cada turno em SPI/CPI e no maestro.",
+   "kpi": "0 turno sem registro; ordem respeitada pelo fechar_i04",
+   "skill": "pmo-propor-decisao-para-m",
+   "status": "aberto",
+   "elo_anterior": "9f84dcd57568b41f377660d0b45ec66f9ef2ef8681e0014b975d56e970e4f7aa",
+   "sha256_prompt": "9215073a9314060c36dbc402007ae75681b17898019fd99a1a55345d59885140"
+  },
+  {
+   "n": "D18",
+   "tema": "Gestão (PMO/PMI)",
+   "titulo": "Medição completa a cada 5 passos",
+   "prompt": "A cada 5 passos feitos, medição dos 10 temas + 6 pedidos de M em PDF com selo OpenTimestamps (Bitcoin), passo a passo rastreado pelos elos sha256.",
+   "kpi": "PDF + .ots a cada 5 passos",
+   "skill": "pdf",
+   "status": "aberto",
+   "elo_anterior": "9215073a9314060c36dbc402007ae75681b17898019fd99a1a55345d59885140",
+   "sha256_prompt": "06d7223f04e2225cafeda5da80fac80016ccc106d1d56791b3947aa184ad6919"
+  },
+  {
+   "n": "D19",
+   "tema": "Predição jurídica",
+   "titulo": "Validação externa e modelo C2",
+   "prompt": "Execute a rodada externa do protocolo I-11 (C19, 30/11) e a avaliação do modelo C2 pré-registrado (I-12, a partir de 31/01/2027), publicando o resultado sem ajuste.",
+   "kpi": "Resultado publicado e selado",
+   "skill": "pdf",
+   "status": "aberto",
+   "elo_anterior": "06d7223f04e2225cafeda5da80fac80016ccc106d1d56791b3947aa184ad6919",
+   "sha256_prompt": "2d29dee815ae80b55ec38e52b626cb711e86f125e98870f364639ea5dd7af62f"
+  },
+  {
+   "n": "D20",
+   "tema": "Gestão (PMO/PMI)",
+   "titulo": "Fechamento a 100%",
+   "prompt": "Quando todos os passos estiverem feitos, medição final; o que depender de M fica listado com o cartão aberto. Meta: 100% da medição WBS do Instituto.",
+   "kpi": "Medição final 100% ou lista do que depende de M",
+   "skill": "pdf",
+   "status": "aberto",
+   "elo_anterior": "2d29dee815ae80b55ec38e52b626cb711e86f125e98870f364639ea5dd7af62f",
+   "sha256_prompt": "f859fee1eda40792bd91c799bc9775d93488e6d1d69659bfe0287efcb90fbf68"
+  }
+ ]
+}
