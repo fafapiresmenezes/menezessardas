@@ -26,4 +26,21 @@
       });
     }).catch(function () { $('fontes').textContent = 'Sem conexão com o banco agora. Tente de novo em instantes.'; });
 })();
+// Passo D09: chance por tipo de ação na matriz situação × caminho (RPC instituto_chance_classes).
+(function () {
+  var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhscmFla3p2Z3hkcGlpaWdkeGRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4ODEzOTksImV4cCI6MjEwODQ1NzM5OX0.yCNPEGDb7tdf1JIY30WKUbE-xZwjQFwygJFJnvBeyrs';
+  var cel = document.querySelectorAll('td[data-classe]'); if (!cel.length) return;
+  var pct = function (x) { return (x * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%'; };
+  fetch('https://hlraekzvgxdpiiigdxdo.supabase.co/rest/v1/rpc/instituto_chance_classes', { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' }, body: '{}' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      var m = {}; ((d && d.classes) || []).forEach(function (c) { m[c.classe] = c; });
+      Array.prototype.forEach.call(cel, function (td) {
+        var c = m[td.getAttribute('data-classe')];
+        if (!c) { td.textContent = 'Sem conexão com o banco agora.'; return; }
+        td.textContent = c.p == null ? 'Amostra insuficiente (' + c.n + ' julgamentos).' : pct(c.p) + ' (95%: ' + pct(c.ic95[0]) + ' a ' + pct(c.ic95[1]) + '; ' + c.n.toLocaleString('pt-BR') + ' julgamentos em ' + c.tribunais + ' tribunais)' + (c.amostra === 'pequena' ? '. Amostra pequena.' : '.');
+      });
+      if (d && d.base_em) document.getElementById('mx-quando').textContent = 'chance com dados do CNJ até ' + d.base_em.split('-').reverse().join('/');
+    }).catch(function () {});
+})();
 (function () { var s = document.createElement('script'); s.src = '/vitais.js'; s.defer = true; document.head.appendChild(s); })();
