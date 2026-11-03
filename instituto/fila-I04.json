@@ -237,9 +237,11 @@
    "prompt": "Ligue o e-mail do Instituto (Gmail de M agora, @theye.club depois) a contato, avisos e Brevo; publique a página de lançamento com as 4 ferramentas; leve a 3 canais (LinkedIn, comissões de jovens advogados da OAB, grupos de imobiliárias) com link rastreado; meça cadastros, conversão e custo por cadastro em /negocio.html e nos OKRs.",
    "kpi": "50 cadastros (KR 2.1) e 1º pagante; custo por cadastro medido",
    "skill": "internal-comms",
-   "status": "aberto",
+   "status": "em janela",
    "elo_anterior": "86281ce9bc0e77353dc18cec0647a5a9d8dc3ea435b5d7354db1b4cff459224f",
-   "sha256_prompt": "0687240fec7ca1017c3e26051827c3c9da8b442880e01ecdbbcbb5c1809bfc60"
+   "sha256_prompt": "0687240fec7ca1017c3e26051827c3c9da8b442880e01ecdbbcbb5c1809bfc60",
+   "janela_ate": "2026-12-03",
+   "evidencia_parcial": "No ar (pino 7390f8c, md5 de 10 arquivos conferido via pg_net): /lancamento.html com as 4 ferramentas; contagem por canal (utm_source, sem cookie nem dado pessoal) em instituto.tracao via RPC instituto_tracao_evento; painel \"De onde vêm os cadastros\" em /negocio.html (visitas, cadastros, conversão, custo por cadastro = gasto declarado + IA rateada). Textos dos 3 canais com links rastreados em unificado/i04/lancamento-canais.md. Falta: M publicar nos canais, Gmail do Instituto (M cria) e Stripe (M01) para o 1º pagante; meta 50 cadastros até 03/12."
   },
   {
    "n": "D09",
