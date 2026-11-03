@@ -2,7 +2,7 @@
  "plano": "I-04 (replanejamento de M em 03/11/2026: THEYE + [X] unificados, PROMPTs encadeados)",
  "origem": "Pedido de M no thread principal 2026-11-03T19:13Z; segue o ciclo I-03 (C30)",
  "regra": "Um passo só fecha se os anteriores estiverem feitos ou em espera formal (aguardando M / em janela). Monetização (M01–M04) vem primeiro, a pedido de M em 03/11 19:17Z.",
- "cabeca": "76f78951ec348062b7f00acffe9915cafbd4ab4f45cbb31d94c14b5777e2b181",
+ "cabeca": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
  "passos": [
   {
    "n": "M01",
@@ -169,6 +169,61 @@
    "sha256_prompt": "54673cb77cee2781dfae584a73b67046e27cedf04d466378025b1d307d24fe42"
   },
   {
+   "n": "L01",
+   "tema": "Lançamento",
+   "titulo": "Calculadora grátis de reajuste de aluguel",
+   "prompt": "Publique /reajuste.html: reajuste de aluguel por IGP-M, IPCA e IVAR com a série oficial do Banco Central (SGS 189, 433 e 29641 se disponível), conta mostrada passo a passo, link para a cláusula da Lei 8.245/91 e convite para a consulta grátis do laboratório. Sem cadastro para usar; e-mail opcional para receber o reajuste do próximo mês. Valores conferidos contra a calculadora do Banco Central em 5 casos.",
+   "kpi": "5/5 casos iguais ao BCB; página no ar; % de visitantes que vão ao laboratório medido em /negocio.html",
+   "skill": "dataviz",
+   "status": "aberto",
+   "elo_anterior": "54673cb77cee2781dfae584a73b67046e27cedf04d466378025b1d307d24fe42",
+   "sha256_prompt": "1c5e7165cd25bd753e8dd9fa6835ce1af88fc39772d6f51a9a0f24577c1dffe9"
+  },
+  {
+   "n": "L02",
+   "tema": "Lançamento",
+   "titulo": "Análise de contrato de locação por IA (avulsa)",
+   "prompt": "Ofereça no Instituto a leitura de contrato de locação por IA (reaproveita a função analisar-contrato do escritório, sem dados no banco do escritório): cláusulas de risco, prazos, multa, garantia e índice de reajuste, com artigo da lei. Preço pela regra de M (custo medido × 4); até a cobrança (M01) ligar, entra como benefício do Membro e lista de espera para avulsos.",
+   "kpi": "Custo medido por análise; 0 dado pessoal guardado; 10 contratos fictícios lidos sem erro de cláusula",
+   "skill": "claude-api",
+   "status": "aberto",
+   "elo_anterior": "1c5e7165cd25bd753e8dd9fa6835ce1af88fc39772d6f51a9a0f24577c1dffe9",
+   "sha256_prompt": "18ae91217f92c346a4a66201ac1cd2a14e3d7d0185c7f918b3266157fc02cab0"
+  },
+  {
+   "n": "L03",
+   "tema": "Lançamento",
+   "titulo": "API de probabilidade para imobiliárias e garantidoras",
+   "prompt": "Publique /api.html com a API de previsão de locação (U13): documentação em português, chave de teste com 20 chamadas, intervalo de 95% e tamanho da amostra em toda resposta, plano B2B por volume de chamadas. Público: imobiliárias, administradoras e empresas de fiança.",
+   "kpi": "Documentação no ar; chave de teste funcionando; 3 contatos B2B registrados",
+   "skill": "mcp-builder",
+   "status": "aberto",
+   "elo_anterior": "18ae91217f92c346a4a66201ac1cd2a14e3d7d0185c7f918b3266157fc02cab0",
+   "sha256_prompt": "0c7d4329ffb1536b1d2b3ccdc7e7a16fada72ccd99be738bcff0b82443e11ee3"
+  },
+  {
+   "n": "L04",
+   "tema": "Lançamento",
+   "titulo": "Relatório jurimétrico por comarca em PDF selado",
+   "prompt": "Gere sob demanda o relatório de ações de locação de uma comarca (volume, taxa de procedência com intervalo de Wilson, tempo mediano, comparação com o estado), em PDF com sha256 selado no Bitcoin; preço pela regra de M; amostra pequena mostra aviso, nunca número sem margem.",
+   "kpi": "PDF de exemplo público; regra de amostra mínima aplicada; selo OTS em cada PDF",
+   "skill": "pdf",
+   "status": "aberto",
+   "elo_anterior": "0c7d4329ffb1536b1d2b3ccdc7e7a16fada72ccd99be738bcff0b82443e11ee3",
+   "sha256_prompt": "86281ce9bc0e77353dc18cec0647a5a9d8dc3ea435b5d7354db1b4cff459224f"
+  },
+  {
+   "n": "L05",
+   "tema": "Lançamento",
+   "titulo": "Lançamento com e-mail próprio e tração medida",
+   "prompt": "Ligue o e-mail do Instituto (Gmail de M agora, @theye.club depois) a contato, avisos e Brevo; publique a página de lançamento com as 4 ferramentas; leve a 3 canais (LinkedIn, comissões de jovens advogados da OAB, grupos de imobiliárias) com link rastreado; meça cadastros, conversão e custo por cadastro em /negocio.html e nos OKRs.",
+   "kpi": "50 cadastros (KR 2.1) e 1º pagante; custo por cadastro medido",
+   "skill": "internal-comms",
+   "status": "aberto",
+   "elo_anterior": "86281ce9bc0e77353dc18cec0647a5a9d8dc3ea435b5d7354db1b4cff459224f",
+   "sha256_prompt": "0687240fec7ca1017c3e26051827c3c9da8b442880e01ecdbbcbb5c1809bfc60"
+  },
+  {
    "n": "D09",
    "tema": "Legislação ao vivo",
    "titulo": "Matriz solução por caso",
@@ -176,8 +231,8 @@
    "kpi": "10 situações com norma, prazo e chance",
    "skill": "artifact-design",
    "status": "aberto",
-   "elo_anterior": "54673cb77cee2781dfae584a73b67046e27cedf04d466378025b1d307d24fe42",
-   "sha256_prompt": "9fd8bd0d0880a3ff3d98ab3cd6d43157172068d60d232ab4b0307bfa7765315b"
+   "elo_anterior": "0687240fec7ca1017c3e26051827c3c9da8b442880e01ecdbbcbb5c1809bfc60",
+   "sha256_prompt": "61a2a715afffab21324ad2c3b45c86f486846e75a75f9ccccebaa5c85a7c716f"
   },
   {
    "n": "D10",
@@ -187,8 +242,8 @@
    "kpi": "50 agentes × skill × ementa com link",
    "skill": "xlsx",
    "status": "aberto",
-   "elo_anterior": "9fd8bd0d0880a3ff3d98ab3cd6d43157172068d60d232ab4b0307bfa7765315b",
-   "sha256_prompt": "13e305f45ee4967dc8d9922725b6140b249fd0fea5b028a9937b3d9fa299c216"
+   "elo_anterior": "61a2a715afffab21324ad2c3b45c86f486846e75a75f9ccccebaa5c85a7c716f",
+   "sha256_prompt": "e8ff6f88f462647e172daa784e720a617a97de2b8b7c5e319c96e381fb666503"
   },
   {
    "n": "D11",
@@ -198,8 +253,8 @@
    "kpi": "Acerto de citação ≥ 90%; custo por resposta medido",
    "skill": "claude-api",
    "status": "aberto",
-   "elo_anterior": "13e305f45ee4967dc8d9922725b6140b249fd0fea5b028a9937b3d9fa299c216",
-   "sha256_prompt": "857d07351421e95d293536e24d529347c87e180881dfa8e6655ee8f70854e84b"
+   "elo_anterior": "e8ff6f88f462647e172daa784e720a617a97de2b8b7c5e319c96e381fb666503",
+   "sha256_prompt": "09d3d5dfff452f2abdd2be48196cce214bf65a25d73fe64badfba80e12bda967"
   },
   {
    "n": "D12",
@@ -209,8 +264,8 @@
    "kpi": "Custo por resposta cai ≥ 30% sem piorar a qualidade",
    "skill": "claude-api",
    "status": "aberto",
-   "elo_anterior": "857d07351421e95d293536e24d529347c87e180881dfa8e6655ee8f70854e84b",
-   "sha256_prompt": "cac500806c895b8ecafde2612a4e08c6cc2545b0e7206f0dcf5cf74bce163d2b"
+   "elo_anterior": "09d3d5dfff452f2abdd2be48196cce214bf65a25d73fe64badfba80e12bda967",
+   "sha256_prompt": "481d25249cd504880a0070cb906beaf094297bc46af738027a1dfe3b919b949e"
   },
   {
    "n": "D13",
@@ -220,8 +275,8 @@
    "kpi": "50 roteiros exportáveis; 0 segredo exposto",
    "skill": "claude-api",
    "status": "aberto",
-   "elo_anterior": "cac500806c895b8ecafde2612a4e08c6cc2545b0e7206f0dcf5cf74bce163d2b",
-   "sha256_prompt": "5c12a78cb257d26ab381ac1d85913f6a686244672f3a441a2558adcbe3e29f05"
+   "elo_anterior": "481d25249cd504880a0070cb906beaf094297bc46af738027a1dfe3b919b949e",
+   "sha256_prompt": "be2b6b55ba8945723e8c65f6ccbe23d8e9696d3ccc993aae97044e166d4870a8"
   },
   {
    "n": "D14",
@@ -231,8 +286,8 @@
    "kpi": "5 funções × documentos com norma",
    "skill": "artifact-design",
    "status": "aberto",
-   "elo_anterior": "5c12a78cb257d26ab381ac1d85913f6a686244672f3a441a2558adcbe3e29f05",
-   "sha256_prompt": "ae08f55becf37b6966a4e9c4348ae5f12b76dd60ae08caecb4c73a96da004428"
+   "elo_anterior": "be2b6b55ba8945723e8c65f6ccbe23d8e9696d3ccc993aae97044e166d4870a8",
+   "sha256_prompt": "dcddc7aeba322beb923e238e2be61b3b57240e94ea3256810b5e20af2ae40060"
   },
   {
    "n": "D15",
@@ -242,8 +297,8 @@
    "kpi": "Pedido registrado e resposta do thread principal",
    "skill": "pmo-despachar-proximo-passo",
    "status": "aberto",
-   "elo_anterior": "ae08f55becf37b6966a4e9c4348ae5f12b76dd60ae08caecb4c73a96da004428",
-   "sha256_prompt": "5684ef1041bc9d85ec2f75fccb5eb76b876ddc030fd88e93cd4a5aab98af5208"
+   "elo_anterior": "dcddc7aeba322beb923e238e2be61b3b57240e94ea3256810b5e20af2ae40060",
+   "sha256_prompt": "a26e6a35d04c46afbe8422ede455aea9d7520b2912209b6f022cef592cad1797"
   },
   {
    "n": "D16",
@@ -253,8 +308,8 @@
    "kpi": "Ramo íntegro e vertente visível no [X]",
    "skill": "pmo-despachar-proximo-passo",
    "status": "aberto",
-   "elo_anterior": "5684ef1041bc9d85ec2f75fccb5eb76b876ddc030fd88e93cd4a5aab98af5208",
-   "sha256_prompt": "064ca1226e592faedb3b9dbfaa7ad539538356a140fd413eea01e9d50e107875"
+   "elo_anterior": "a26e6a35d04c46afbe8422ede455aea9d7520b2912209b6f022cef592cad1797",
+   "sha256_prompt": "0caa9ced0f0e7eee7c46dbb9ba256ba9830320074e38b02114095105ea3dea14"
   },
   {
    "n": "D17",
@@ -264,8 +319,8 @@
    "kpi": "0 turno sem registro; ordem respeitada pelo fechar_i04",
    "skill": "pmo-propor-decisao-para-m",
    "status": "aberto",
-   "elo_anterior": "064ca1226e592faedb3b9dbfaa7ad539538356a140fd413eea01e9d50e107875",
-   "sha256_prompt": "84880c1d847b04c52f97913a05d0feea64a127d402ca55d057517596ea3bdaba"
+   "elo_anterior": "0caa9ced0f0e7eee7c46dbb9ba256ba9830320074e38b02114095105ea3dea14",
+   "sha256_prompt": "b0a550cc1a2655a8fd8f7ebb745ac86b442d51f7c030a70b9fc62465ace18ea6"
   },
   {
    "n": "D18",
@@ -275,8 +330,8 @@
    "kpi": "PDF + .ots a cada 5 passos",
    "skill": "pdf",
    "status": "aberto",
-   "elo_anterior": "84880c1d847b04c52f97913a05d0feea64a127d402ca55d057517596ea3bdaba",
-   "sha256_prompt": "96b9a630623b35e5c28e328eff3c046b28a50d04d4049626d96644be5e826577"
+   "elo_anterior": "b0a550cc1a2655a8fd8f7ebb745ac86b442d51f7c030a70b9fc62465ace18ea6",
+   "sha256_prompt": "0b269d14f74d8a38797533ff9f8a96eb28f38a11fcbcc534bded118b989051f2"
   },
   {
    "n": "D19",
@@ -286,8 +341,8 @@
    "kpi": "Resultado publicado e selado",
    "skill": "pdf",
    "status": "aberto",
-   "elo_anterior": "96b9a630623b35e5c28e328eff3c046b28a50d04d4049626d96644be5e826577",
-   "sha256_prompt": "851fee47e5141137214899e965709e509f7a4ecd834cbdeb18a2731d39cd614f"
+   "elo_anterior": "0b269d14f74d8a38797533ff9f8a96eb28f38a11fcbcc534bded118b989051f2",
+   "sha256_prompt": "58ca5f97f0aaa7c844b4bafb0f772af372ebdff4df8a031f389b2f211c13c950"
   },
   {
    "n": "D20",
@@ -297,8 +352,8 @@
    "kpi": "Medição final 100% ou lista do que depende de M",
    "skill": "pdf",
    "status": "aberto",
-   "elo_anterior": "851fee47e5141137214899e965709e509f7a4ecd834cbdeb18a2731d39cd614f",
-   "sha256_prompt": "e992c512272b7842b4772180c3c6645148947e7e118fc2a8a63e6372477ebe82"
+   "elo_anterior": "58ca5f97f0aaa7c844b4bafb0f772af372ebdff4df8a031f389b2f211c13c950",
+   "sha256_prompt": "b9d4bf775e3765b634fc7931324a0f9af673d5165f3d2d149278c73d1bf9b2cb"
   },
   {
    "n": "D21",
@@ -308,8 +363,8 @@
    "kpi": "100% dos itens de M com cartão e status visível",
    "skill": "pmo-propor-decisao-para-m",
    "status": "aberto",
-   "elo_anterior": "e992c512272b7842b4772180c3c6645148947e7e118fc2a8a63e6372477ebe82",
-   "sha256_prompt": "6e15fa73ca1ced5872d95b984563e2780b9f04d9fbfac57edeb75c71c8d1faac"
+   "elo_anterior": "b9d4bf775e3765b634fc7931324a0f9af673d5165f3d2d149278c73d1bf9b2cb",
+   "sha256_prompt": "71f840379857070a90df0f57c4fbef92e705939202909c8fe8e8932d63402cd7"
   },
   {
    "n": "D22",
@@ -319,8 +374,8 @@
    "kpi": "7 tribunais e 3 classes no placar, SLO ≥ 99%",
    "skill": "gerente-theye-unificado",
    "status": "aberto",
-   "elo_anterior": "6e15fa73ca1ced5872d95b984563e2780b9f04d9fbfac57edeb75c71c8d1faac",
-   "sha256_prompt": "76f78951ec348062b7f00acffe9915cafbd4ab4f45cbb31d94c14b5777e2b181"
+   "elo_anterior": "71f840379857070a90df0f57c4fbef92e705939202909c8fe8e8932d63402cd7",
+   "sha256_prompt": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f"
   }
  ]
 }

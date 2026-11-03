@@ -8,7 +8,8 @@ IE={'M01':(5,2,'Liga a receita: sem cobrança não há negócio'),'M02':(3,1,'Ma
 'D07':(3,2,'O leigo vê o que vem primeiro'),'D08':(4,3,'Legislação ao vivo no Instituto, pedido de M'),'D09':(4,3,'Caminho por situação para o cliente'),
 'D10':(3,3,'Mapa das 50 skills com ementa'),'D11':(4,3,'Prova de que os agentes acertam'),'D12':(3,2,'Corta 30% do custo de IA'),'D13':(2,2,'Roteiros para o Console da Anthropic'),
 'D14':(4,4,'Diz ao dono quais papéis o imóvel precisa'),'D15':(4,2,'Arrastar o contrato e o prazo já entra na agenda'),'D16':(4,3,'THEYE dentro do escritório'),'D17':(3,1,'Nada para sem aviso'),
-'D18':(2,1,'Mantém a nota honesta'),'D19':(5,4,'É o que prova se o grafo vence'),'D20':(3,1,'Entrega final selada'),'D21':(4,2,'Você resolve tudo numa tela só'),'D22':(4,3,'Mais tribunais e classes')}
+'D18':(2,1,'Mantém a nota honesta'),'D19':(5,4,'É o que prova se o grafo vence'),'D20':(3,1,'Entrega final selada'),'D21':(4,2,'Você resolve tudo numa tela só'),'D22':(4,3,'Mais tribunais e classes'),
+'L01':(5,1,'Atrai inquilinos e locadores de graça (46 milhões moram de aluguel)'),'L02':(5,2,'Ferramenta que o leigo paga para usar'),'L03':(5,3,'Maior ticket: imobiliárias e garantidoras'),'L04':(4,2,'Relatório que escritórios compram por caso'),'L05':(5,2,'Leva as ferramentas a quem paga')}
 q=json.load(open(F));ps=q['passos']
 abertos=[x for x in ps if x['status']!='feito']
 itens=[]

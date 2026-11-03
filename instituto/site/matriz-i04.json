@@ -1,9 +1,18 @@
 {
- "gerado_em": "2026-11-03T20:21Z",
- "cabeca": "76f78951ec348062b7f00acffe9915cafbd4ab4f45cbb31d94c14b5777e2b181",
+ "gerado_em": "2026-11-03T21:06Z",
+ "cabeca": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
  "feitos": 8,
- "total": 26,
+ "total": 31,
  "impacto_esforco": [
+  {
+   "n": "L01",
+   "titulo": "Calculadora grátis de reajuste de aluguel",
+   "status": "aberto",
+   "impacto": 5,
+   "esforco": 1,
+   "quadrante": "Fazer já",
+   "porque": "Atrai inquilinos e locadores de graça (46 milhões moram de aluguel)"
+  },
   {
    "n": "M01",
    "titulo": "Cobrança do plano Membro",
@@ -14,6 +23,24 @@
    "porque": "Liga a receita: sem cobrança não há negócio"
   },
   {
+   "n": "L02",
+   "titulo": "Análise de contrato de locação por IA (avulsa)",
+   "status": "aberto",
+   "impacto": 5,
+   "esforco": 2,
+   "quadrante": "Fazer já",
+   "porque": "Ferramenta que o leigo paga para usar"
+  },
+  {
+   "n": "L05",
+   "titulo": "Lançamento com e-mail próprio e tração medida",
+   "status": "aberto",
+   "impacto": 5,
+   "esforco": 2,
+   "quadrante": "Fazer já",
+   "porque": "Leva as ferramentas a quem paga"
+  },
+  {
    "n": "M03",
    "titulo": "Hospedagem que permite cobrar",
    "status": "aguardando M",
@@ -21,6 +48,15 @@
    "esforco": 1,
    "quadrante": "Fazer já",
    "porque": "Permite cobrar sem violar o plano grátis da hospedagem"
+  },
+  {
+   "n": "L04",
+   "titulo": "Relatório jurimétrico por comarca em PDF selado",
+   "status": "aberto",
+   "impacto": 4,
+   "esforco": 2,
+   "quadrante": "Fazer já",
+   "porque": "Relatório que escritórios compram por caso"
   },
   {
    "n": "D15",
@@ -39,6 +75,15 @@
    "esforco": 2,
    "quadrante": "Fazer já",
    "porque": "Você resolve tudo numa tela só"
+  },
+  {
+   "n": "L03",
+   "titulo": "API de probabilidade para imobiliárias e garantidoras",
+   "status": "aberto",
+   "impacto": 5,
+   "esforco": 3,
+   "quadrante": "Planejar",
+   "porque": "Maior ticket: imobiliárias e garantidoras"
   },
   {
    "n": "D19",
@@ -187,5 +232,5 @@
    "acao": "Responder o cartão da hospedagem paga"
   }
  ],
- "sha256": "de1bc12b79ed23869759fbc3f3f36c21c672dcbf48935f5619531b7628b0464a"
+ "sha256": "e653ce3d464188bcc1e42785af836230f82d14ea442672c9a78cca15741ee367"
 }
