@@ -207,10 +207,12 @@
    "prompt": "Publique /api.html com a API de previsão de locação (U13): documentação em português, chave de teste com 20 chamadas, intervalo de 95% e tamanho da amostra em toda resposta, plano B2B por volume de chamadas. Público: imobiliárias, administradoras e empresas de fiança.",
    "kpi": "Documentação no ar; chave de teste funcionando; 3 contatos B2B registrados",
    "skill": "mcp-builder",
-   "status": "aberto",
+   "status": "em janela",
    "elo_anterior": "18ae91217f92c346a4a66201ac1cd2a14e3d7d0185c7f918b3266157fc02cab0",
    "sha256_prompt": "0c7d4329ffb1536b1d2b3ccdc7e7a16fada72ccd99be738bcff0b82443e11ee3",
-   "decisao_m": "03/11 21:07Z: testar os dois preços por 30 dias (custo x 4 e por valor/volume), metade das ofertas B2B em cada; painel mede conversão e receita."
+   "decisao_m": "03/11 21:07Z: testar os dois preços por 30 dias (custo x 4 e por valor/volume), metade das ofertas B2B em cada; painel mede conversão e receita.",
+   "janela_ate": "2026-12-03",
+   "evidencia_parcial": "03/11 21:45Z: /api.html no ar (commit a1da9fe, md5 conferido: api.html f3588289, api.js 1a8ebc25, base.css 9777de34). RPCs instituto_api_cadastrar e instituto_api_prever (migração l03_api_b2b): chave thy_teste_ guardada só em sha256, 20 chamadas, toda resposta com p, IC 95% Wilson, n, confiança e aviso de amostra pequena (n<30). Teste em transação desfeita: braços A/B alternados, aceite LGPD obrigatório, 20ª chamada aceita, erros 401/404/429. Teste A/B de preço de 03/11 a 03/12: A R$ 0,25 por chamada (custo R$ 0,061 x 4), B planos R$ 490/500 e R$ 1.490/2.500 chamadas; painel em /negocio.html. Falta o KPI de 3 empresas cadastradas, que depende da divulgação (L05)."
   },
   {
    "n": "L04",

@@ -1,5 +1,5 @@
 {
- "gerado_em": "2026-11-03T21:29Z",
+ "gerado_em": "2026-11-03T21:40Z",
  "cabeca": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
  "feitos": 10,
  "total": 31,
@@ -61,7 +61,7 @@
   {
    "n": "L03",
    "titulo": "API de probabilidade para imobiliárias e garantidoras",
-   "status": "aberto",
+   "status": "em janela",
    "impacto": 5,
    "esforco": 3,
    "quadrante": "Planejar",
@@ -214,5 +214,5 @@
    "acao": "Responder o cartão da hospedagem paga"
   }
  ],
- "sha256": "14dc9dc0ffc8d5baeb857f5b90a4da19d00f776e202f54ea29212f0ff0c1a046"
+ "sha256": "12b015840343962949b3c8c9adf67996c8ac5b44a92a7accb0a5d7625790b8ff"
 }
