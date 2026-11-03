@@ -16,7 +16,7 @@ ALVO = {  # data-alvo de cada passo
 }
 CUSTO_PASSO = 1/3
 # Turnos do gerente já consumidos (custo real), pelos registros da cadeia e do agendador.
-TURNOS = ['2026-11-01T10:30Z', '2026-11-01T16:32Z', '2026-11-01T22:32Z', '2026-11-02T10:33Z', '2026-11-02T16:32Z', '2026-11-02T22:32Z']
+TURNOS = ['2026-11-01T10:30Z', '2026-11-01T16:32Z', '2026-11-01T22:32Z', '2026-11-02T10:33Z', '2026-11-02T16:32Z', '2026-11-02T22:32Z', '2026-11-03T10:32Z']
 
 def calcular(agora: dt.datetime):
     L = json.load(open(FILA)); L = L['passos'] if isinstance(L, dict) else L
