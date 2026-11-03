@@ -20,7 +20,7 @@ label{display:grid;gap:6px;font-size:13.5px;color:var(--tinta-2)}
 input[type=email],input[type=text],select{font:inherit;font-size:15px;padding:11px 12px;border:1px solid var(--linha);background:var(--papel);color:var(--tinta);border-radius:0;width:100%}
 input:focus,select:focus{outline:2px solid var(--ouro);outline-offset:1px}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px}
-.check input{margin-top:3px}
+.check input{margin-top:1px;width:24px;height:24px;flex:none}
 .armadilha{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 button.btn{cursor:pointer;border:0;font:inherit}
 .msg{font-size:14px;padding:12px 14px;border-left:2px solid var(--ouro);background:var(--papel-2);color:var(--tinta-2)}
@@ -50,6 +50,7 @@ dt{color:var(--apagado)} dd{color:var(--tinta)}
   <div class="kicker">Laboratório · ações de locação · TJRJ, TJSP e TJMG</div>
   <h1>Qual a chance de o autor ganhar?</h1>
   <p class="lead">Escolha o tribunal, o tipo de ação e, se quiser, a vara e o assunto. O laboratório calcula a probabilidade pelo método convencional e pelo grafo, com intervalo de confiança e tamanho da amostra. Cada pessoa tem uma consulta grátis.</p>
+  <aside class="um-min" aria-label="Em 1 minuto"><b>Em 1 minuto</b><p>Você escolhe o tribunal e o tipo de ação. Nós mostramos a chance de o autor ganhar. A conta vem com a margem de erro. A primeira consulta é grátis.</p><a class="btn" href="#form-cad">Começar agora</a></aside>
 </div></div>
 
 <section><div class="w">

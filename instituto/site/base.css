@@ -80,3 +80,8 @@ footer .w{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
 
 .pular{position:absolute;left:-9999px;top:8px;z-index:99;background:var(--tinta);color:var(--papel);padding:10px 14px;text-decoration:none}
 .pular:focus{left:16px}
+
+.um-min{margin:22px 0 4px;padding:16px 18px;border:1px solid var(--linha);border-left:4px solid var(--tinta-2);border-radius:10px;display:grid;gap:8px;max-width:720px}
+.um-min b{font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.um-min p{margin:0;font-size:16px;line-height:1.55}
+.um-min .btn{justify-self:start}
