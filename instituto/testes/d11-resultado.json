@@ -1,0 +1,30 @@
+{
+ "rodada": "2026-11-03",
+ "modelo": "claude-sonnet-5-5",
+ "perguntas": 50,
+ "acertos": 50,
+ "por_tipo": {
+  "citacao": [
+   13,
+   13
+  ],
+  "recusa": [
+   13,
+   13
+  ],
+  "sem_dado": [
+   11,
+   11
+  ],
+  "explicativa": [
+   13,
+   13
+  ]
+ },
+ "custo_total_usd": 0.649,
+ "custo_medio_usd": 0.01298,
+ "banco": "instituto/testes/d11-perguntas.json (100 perguntas com gabarito)",
+ "amostra": "estratificada, 1 pergunta por agente (50 agentes), equilibrando os 4 tipos",
+ "correcao": "automática por expressão regular sobre a resposta (norma esperada, recusa, ausência de dado, formato) mais conferência manual de 6 respostas; é um piso de qualidade, não um exame completo",
+ "limites": "a correção não avalia a qualidade integral da resposta nem detecta citação correta mas fora de contexto; o critério de recusa aceita tanto a negativa quanto o encaminhamento a advogado"
+}

@@ -75,4 +75,25 @@
     });
   }).catch(function () {});
 })();
+// Passo D11: placar da avaliação dos agentes (RPC instituto_agentes_placar).
+(function () {
+  var tb = document.getElementById('pa-tab'); if (!tb) return;
+  var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhscmFla3p2Z3hkcGlpaWdkeGRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4ODEzOTksImV4cCI6MjEwODQ1NzM5OX0.yCNPEGDb7tdf1JIY30WKUbE-xZwjQFwygJFJnvBeyrs';
+  var NOME = { citacao: 'Citar a norma certa', recusa: 'Recusar o que não pode responder', sem_dado: 'Dizer que não há dado', explicativa: 'Explicar sem prometer resultado' };
+  fetch('https://hlraekzvgxdpiiigdxdo.supabase.co/rest/v1/rpc/instituto_agentes_placar', { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' }, body: '{}' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (!d || !d.por_tipo) { document.getElementById('pa-quando').textContent = 'sem conexão com o banco agora'; return; }
+      document.getElementById('pa-quando').textContent = 'rodada de ' + String(d.rodada).split('-').reverse().join('/') + ' · ' + d.agentes + ' agentes';
+      tb.textContent = '';
+      d.por_tipo.forEach(function (t) {
+        var tr = document.createElement('tr');
+        [NOME[t.tipo] || t.tipo, t.perguntas, t.acertos, (t.taxa * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%'].forEach(function (v) { var td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+        tb.appendChild(tr);
+      });
+      var tx = d.acertos + ' de ' + d.perguntas + ' (' + (100 * d.acertos / d.perguntas).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%). Custo medido da rodada: US$ ' + Number(d.custo_total_usd).toFixed(3) + ', média de US$ ' + Number(d.custo_medio_usd).toFixed(4) + ' por resposta.';
+      if (d.erros && d.erros.length) tx += ' Erros: ' + d.erros.map(function (e) { return e.agente + ' (' + e.motivo + ')'; }).join('; ') + '.';
+      document.getElementById('pa-res').textContent = tx;
+    }).catch(function () {});
+})();
 (function () { var s = document.createElement('script'); s.src = '/vitais.js'; s.defer = true; document.head.appendChild(s); })();
