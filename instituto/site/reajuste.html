@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reajuste de aluguel · Instituto THEYE</title>
+<meta name="description" content="Pesquisa aplicada em predição jurídica, ontologia do direito e desenvolvimento do direito brasileiro.">
+<link rel="preload" href="/fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="base.css">
+<style>
+.calc{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:860px}
+@media(max-width:820px){.calc{grid-template-columns:1fr}}
+.calc label{display:grid;gap:6px;font-size:14px}
+.calc input,.calc select{font:inherit;padding:10px 12px;min-height:44px;border:1px solid var(--linha);background:var(--papel);color:var(--tinta);border-radius:6px}
+.res{margin-top:24px;padding:20px;border:1px solid var(--linha);border-left:4px solid var(--grafo);border-radius:10px;max-width:860px}
+.big{font-family:var(--serif);font-size:40px;line-height:1.1;font-variant-numeric:tabular-nums}
+.sm{font-size:13.5px;color:var(--apagado)}
+.tab{width:100%;min-width:420px;border-collapse:collapse;font-size:13.5px;margin-top:10px}
+.tab th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--apagado);text-align:left;padding:6px 8px;border-bottom:1px solid var(--linha);font-weight:500}
+.tab td{padding:6px 8px;border-bottom:1px solid var(--linha);font-variant-numeric:tabular-nums}
+.rolar{overflow-x:auto}
+</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/#laboratorio">Laboratório</a><a href="/placar.html">Placar</a><a href="/ontologia.html">Ontologia</a><a href="/#metodo">Método</a><a href="/#servicos">Serviços</a></nav>
+</div></header>
+<main id="conteudo">
+<div class="hero"><div class="w">
+  <div class="kicker">Ferramenta grátis · dados oficiais do Banco Central</div>
+  <h1>Quanto vai ficar o seu aluguel?</h1>
+  <p class="lead">Calcule o reajuste anual do aluguel pelo IGP-M, pelo IPCA ou pelo INPC, com a série oficial do Banco Central. A conta aparece mês a mês, para você conferir. Não precisa de cadastro.</p>
+  <aside class="um-min" aria-label="Em 1 minuto"><b>Em 1 minuto</b><p>Digite o valor do aluguel. Escolha o mês do aniversário do contrato e o índice. Pronto: você vê o novo valor e a conta de cada mês.</p><a class="btn" href="#calc">Calcular agora</a></aside>
+</div></div>
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Calculadora</div><h2>Reajuste em três campos.</h2></div><p class="sm" id="r-fonte">carregando índices</p></div>
+  <form class="calc" id="calc" novalidate>
+    <label>Aluguel atual (R$)<input id="r-valor" inputmode="decimal" autocomplete="off" placeholder="2.500,00" required></label>
+    <label>Mês do aniversário do contrato<select id="r-mes"></select></label>
+    <label>Índice do contrato<select id="r-ind"><option>IGP-M</option><option>IPCA</option><option>INPC</option></select></label>
+  </form>
+  <div class="res" id="r-res" aria-live="polite"><p class="sm">Preencha o valor do aluguel para ver o resultado.</p></div>
+  <p class="sm" style="margin-top:18px">Como calculamos: multiplicamos as variações dos 12 meses anteriores ao mês do aniversário (fator = produto de 1 + variação). Se o último mês ainda não saiu, avisamos e usamos os 12 meses mais recentes. O reajuste só pode ser anual (<a href="https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:2001-02-14;10192">Lei 10.192/2001, art. 2º</a>) e segue o índice do contrato (<a href="https://www.lexml.gov.br/urn/urn:lex:br:federal:lei:1991-10-18;8245">Lei 8.245/91, arts. 17 e 18</a>). Isto é uma conta, não um parecer.</p>
+  <p><a class="btn sec" href="/laboratorio.html">Briga pelo aluguel? Veja a chance na Justiça (1 consulta grátis)</a></p>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · Calculadora de reajuste, Passo L01</span><span><a href="/legislacao.html" style="display:inline-block;padding:4px 0">Legislação</a> · Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="reajuste.js"></script>
+</body>
+</html>
