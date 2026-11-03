@@ -1,9 +1,53 @@
 {
  "plano": "I-04 (replanejamento de M em 03/11/2026: THEYE + [X] unificados, PROMPTs encadeados)",
  "origem": "Pedido de M no thread principal 2026-11-03T19:13Z; segue o ciclo I-03 (C30)",
- "regra": "Um passo só fecha se os anteriores estiverem feitos ou em espera formal (aguardando M / em janela).",
- "cabeca": "f859fee1eda40792bd91c799bc9775d93488e6d1d69659bfe0287efcb90fbf68",
+ "regra": "Um passo só fecha se os anteriores estiverem feitos ou em espera formal (aguardando M / em janela). Monetização (M01–M04) vem primeiro, a pedido de M em 03/11 19:17Z.",
+ "cabeca": "e992c512272b7842b4772180c3c6645148947e7e118fc2a8a63e6372477ebe82",
  "passos": [
+  {
+   "n": "M01",
+   "tema": "Monetização",
+   "titulo": "Cobrança do plano Membro",
+   "prompt": "Ligue a cobrança do plano Membro (R$ 79/mês, 20 consultas) e da consulta avulsa (R$ 3,94) por PIX e cartão, com a conta do processador no nome de M (pessoa física); o pagamento confirmado libera o plano automaticamente pelo webhook; teste de ponta a ponta com valor real estornado.",
+   "kpi": "1º pagamento real confirmado e estornado; plano liberado sozinho",
+   "skill": "pmo-propor-decisao-para-m",
+   "status": "aguardando M",
+   "elo_anterior": "2849e320ec981df093765c60bbde1d899eb85ab0713a84d32eb9bed67ab5f748",
+   "sha256_prompt": "fc85acc74e1a75d19d40c611add64a0df791678b2e6ddcfde6f6275b3485b016"
+  },
+  {
+   "n": "M02",
+   "tema": "Monetização",
+   "titulo": "Site em theye.club",
+   "prompt": "Com o OK de M no cartão do domínio, aponte theye.club e www.theye.club para o site do Instituto sem mexer em theyeofgod.org; confira HTTPS, CSS e md5 em produção nos dois endereços.",
+   "kpi": "theye.club serve o Instituto com CSS; theyeofgod.org intacto",
+   "skill": "pmo-propor-decisao-para-m",
+   "status": "aguardando M",
+   "elo_anterior": "fc85acc74e1a75d19d40c611add64a0df791678b2e6ddcfde6f6275b3485b016",
+   "sha256_prompt": "2cb32b792887006147908338aaf16a7dfe90fb3733392ad7c24fb4fc18c40fec"
+  },
+  {
+   "n": "M03",
+   "tema": "Monetização",
+   "titulo": "Hospedagem que permite cobrar",
+   "prompt": "Com a escolha de M no cartão de hospedagem (Vercel Pro US$ 20/mês no nome de M, ou alternativa grátis com uso comercial), deixe o site em plano que permite uso comercial antes de abrir a cobrança.",
+   "kpi": "Plano comercial ativo antes do 1º pagamento",
+   "skill": "pmo-propor-decisao-para-m",
+   "status": "aguardando M",
+   "elo_anterior": "2cb32b792887006147908338aaf16a7dfe90fb3733392ad7c24fb4fc18c40fec",
+   "sha256_prompt": "595150ac37bc7b0792d59a0b37ddb5439fa8ec31b7a2b0465299a07c670d4bc1"
+  },
+  {
+   "n": "M04",
+   "tema": "Monetização",
+   "titulo": "Painel de 30 dias do negócio",
+   "prompt": "Painel ao vivo (agregado, LGPD) com cadastros por dia, conversão para pagante, receita, custo de IA por membro e margem, mais a meta de equilíbrio (7 membros); selo OpenTimestamps diário do resumo.",
+   "kpi": "Painel no ar com 5 indicadores ao vivo",
+   "skill": "dataviz",
+   "status": "aberto",
+   "elo_anterior": "595150ac37bc7b0792d59a0b37ddb5439fa8ec31b7a2b0465299a07c670d4bc1",
+   "sha256_prompt": "f7e93c3fdae0d18cda4b69d1a969e6732b0c99755761c777da4290f162521937"
+  },
   {
    "n": "D01",
    "tema": "Gestão (PMO/PMI)",
@@ -12,8 +56,8 @@
    "kpi": "Inventário com 100% dos pedidos de M classificados",
    "skill": "pmo-despachar-proximo-passo",
    "status": "aberto",
-   "elo_anterior": "2849e320ec981df093765c60bbde1d899eb85ab0713a84d32eb9bed67ab5f748",
-   "sha256_prompt": "2ea818b59ab1a14aedf5fcd4bc52974f611dddf450c6e7915c0477185e920ec7"
+   "elo_anterior": "f7e93c3fdae0d18cda4b69d1a969e6732b0c99755761c777da4290f162521937",
+   "sha256_prompt": "d613a8686e9b5e5e963c85a2b5ad95a694c7f4caafa5060d73311ecd4a47174a"
   },
   {
    "n": "D02",
@@ -23,8 +67,8 @@
    "kpi": "10 plataformas × 8 critérios com fonte; lacunas viram passos",
    "skill": "xlsx",
    "status": "aberto",
-   "elo_anterior": "2ea818b59ab1a14aedf5fcd4bc52974f611dddf450c6e7915c0477185e920ec7",
-   "sha256_prompt": "29d552be106eba4c671d6737cb6c39e79885f93c70e93594d69a791fc83c6dff"
+   "elo_anterior": "d613a8686e9b5e5e963c85a2b5ad95a694c7f4caafa5060d73311ecd4a47174a",
+   "sha256_prompt": "d1bc9f39a66ad648f05e8bd5157b4409f801755d3516d5ced8f060a65fd4ea77"
   },
   {
    "n": "D03",
@@ -34,8 +78,8 @@
    "kpi": "Tabela com fonte e distância por métrica no site",
    "skill": "dataviz",
    "status": "aberto",
-   "elo_anterior": "29d552be106eba4c671d6737cb6c39e79885f93c70e93594d69a791fc83c6dff",
-   "sha256_prompt": "47ce2e7ef7b816faf2b74660ec53327a0da4a760b6ebf8a9bf6321acc37efbb4"
+   "elo_anterior": "d1bc9f39a66ad648f05e8bd5157b4409f801755d3516d5ced8f060a65fd4ea77",
+   "sha256_prompt": "81a36d9e54c4bb06166f90c4567f86ac21944e5ab475021733d4c3482716f1ae"
   },
   {
    "n": "D04",
@@ -45,8 +89,8 @@
    "kpi": "Planilha i04/usabilidade-top10.xlsx; 0 problema grave aberto",
    "skill": "xlsx",
    "status": "aberto",
-   "elo_anterior": "47ce2e7ef7b816faf2b74660ec53327a0da4a760b6ebf8a9bf6321acc37efbb4",
-   "sha256_prompt": "c589131ed6d7c478defb08f6c738576fc51c74e1a0555fb7e514c0f93e084506"
+   "elo_anterior": "81a36d9e54c4bb06166f90c4567f86ac21944e5ab475021733d4c3482716f1ae",
+   "sha256_prompt": "40eb58a33486d69bffa644cd3cd41c3ee66c613dd03ed36f0f777dd54d812861"
   },
   {
    "n": "D05",
@@ -56,8 +100,8 @@
    "kpi": "13/13 páginas com bloco simples; Flesch ≥ 50",
    "skill": "artifact-design",
    "status": "aberto",
-   "elo_anterior": "c589131ed6d7c478defb08f6c738576fc51c74e1a0555fb7e514c0f93e084506",
-   "sha256_prompt": "a5d738b09f6b1e47b96b3e9c369dbb3167ca61ff3bd5b34c527c78f943aa5140"
+   "elo_anterior": "40eb58a33486d69bffa644cd3cd41c3ee66c613dd03ed36f0f777dd54d812861",
+   "sha256_prompt": "3edb390a08e86a46c7720c5f2938d83a375c330b5fec2e2b922a6a05ce455307"
   },
   {
    "n": "D06",
@@ -67,8 +111,8 @@
    "kpi": "Painel no ar com 9 KRs ao vivo e selo",
    "skill": "dataviz",
    "status": "aberto",
-   "elo_anterior": "a5d738b09f6b1e47b96b3e9c369dbb3167ca61ff3bd5b34c527c78f943aa5140",
-   "sha256_prompt": "8298aa7f9fc90ad8856ba911ca643214a50eb04922568df243f5ffbbef620bf8"
+   "elo_anterior": "3edb390a08e86a46c7720c5f2938d83a375c330b5fec2e2b922a6a05ce455307",
+   "sha256_prompt": "1d319a0629619334440f7202f63fc1c1df8ea8536e3ab048e15e68de01c28b7e"
   },
   {
    "n": "D07",
@@ -78,8 +122,8 @@
    "kpi": "Matriz visual gerada da fila, atualizada a cada passo",
    "skill": "dataviz",
    "status": "aberto",
-   "elo_anterior": "8298aa7f9fc90ad8856ba911ca643214a50eb04922568df243f5ffbbef620bf8",
-   "sha256_prompt": "4aa77ae3dbff362293c5f520ef37fb5b8d8633c5c877f14685c42286adb09a40"
+   "elo_anterior": "1d319a0629619334440f7202f63fc1c1df8ea8536e3ab048e15e68de01c28b7e",
+   "sha256_prompt": "973115a29e92a119ab95c19b078dd78548d616068956335dc14878458b26173e"
   },
   {
    "n": "D08",
@@ -89,8 +133,8 @@
    "kpi": "6 fontes com coleta diária e 0 falha em 7 dias",
    "skill": "claude-api",
    "status": "aberto",
-   "elo_anterior": "4aa77ae3dbff362293c5f520ef37fb5b8d8633c5c877f14685c42286adb09a40",
-   "sha256_prompt": "4744aed0e9000ffabe423f188c08ed9a2b057a2fa994f3b6451150ead279e0f9"
+   "elo_anterior": "973115a29e92a119ab95c19b078dd78548d616068956335dc14878458b26173e",
+   "sha256_prompt": "54673cb77cee2781dfae584a73b67046e27cedf04d466378025b1d307d24fe42"
   },
   {
    "n": "D09",
@@ -100,8 +144,8 @@
    "kpi": "10 situações com norma, prazo e chance",
    "skill": "artifact-design",
    "status": "aberto",
-   "elo_anterior": "4744aed0e9000ffabe423f188c08ed9a2b057a2fa994f3b6451150ead279e0f9",
-   "sha256_prompt": "866afc966b02897eac0e1ca8b939b60fd871d3849bc0a535514ec5e3015001a7"
+   "elo_anterior": "54673cb77cee2781dfae584a73b67046e27cedf04d466378025b1d307d24fe42",
+   "sha256_prompt": "9fd8bd0d0880a3ff3d98ab3cd6d43157172068d60d232ab4b0307bfa7765315b"
   },
   {
    "n": "D10",
@@ -111,8 +155,8 @@
    "kpi": "50 agentes × skill × ementa com link",
    "skill": "xlsx",
    "status": "aberto",
-   "elo_anterior": "866afc966b02897eac0e1ca8b939b60fd871d3849bc0a535514ec5e3015001a7",
-   "sha256_prompt": "0fb519e6b5a4d37b847b993056ad12cda3afdfdc2a551b5384b28d87c180c84a"
+   "elo_anterior": "9fd8bd0d0880a3ff3d98ab3cd6d43157172068d60d232ab4b0307bfa7765315b",
+   "sha256_prompt": "13e305f45ee4967dc8d9922725b6140b249fd0fea5b028a9937b3d9fa299c216"
   },
   {
    "n": "D11",
@@ -122,8 +166,8 @@
    "kpi": "Acerto de citação ≥ 90%; custo por resposta medido",
    "skill": "claude-api",
    "status": "aberto",
-   "elo_anterior": "0fb519e6b5a4d37b847b993056ad12cda3afdfdc2a551b5384b28d87c180c84a",
-   "sha256_prompt": "ad2ab83818db338d727477625cf0ea7b8b2f49037cbb3c475baa3fd5e489e681"
+   "elo_anterior": "13e305f45ee4967dc8d9922725b6140b249fd0fea5b028a9937b3d9fa299c216",
+   "sha256_prompt": "857d07351421e95d293536e24d529347c87e180881dfa8e6655ee8f70854e84b"
   },
   {
    "n": "D12",
@@ -133,8 +177,8 @@
    "kpi": "Custo por resposta cai ≥ 30% sem piorar a qualidade",
    "skill": "claude-api",
    "status": "aberto",
-   "elo_anterior": "ad2ab83818db338d727477625cf0ea7b8b2f49037cbb3c475baa3fd5e489e681",
-   "sha256_prompt": "7caedc0ced99639b0dce42477173079545d116cab00ad3880df6f668277f1515"
+   "elo_anterior": "857d07351421e95d293536e24d529347c87e180881dfa8e6655ee8f70854e84b",
+   "sha256_prompt": "cac500806c895b8ecafde2612a4e08c6cc2545b0e7206f0dcf5cf74bce163d2b"
   },
   {
    "n": "D13",
@@ -144,8 +188,8 @@
    "kpi": "50 roteiros exportáveis; 0 segredo exposto",
    "skill": "claude-api",
    "status": "aberto",
-   "elo_anterior": "7caedc0ced99639b0dce42477173079545d116cab00ad3880df6f668277f1515",
-   "sha256_prompt": "c26800f29665c7a35008a61acfd340acd199508b44c6d0ecc5ab492fed8ee030"
+   "elo_anterior": "cac500806c895b8ecafde2612a4e08c6cc2545b0e7206f0dcf5cf74bce163d2b",
+   "sha256_prompt": "5c12a78cb257d26ab381ac1d85913f6a686244672f3a441a2558adcbe3e29f05"
   },
   {
    "n": "D14",
@@ -155,8 +199,8 @@
    "kpi": "5 funções × documentos com norma",
    "skill": "artifact-design",
    "status": "aberto",
-   "elo_anterior": "c26800f29665c7a35008a61acfd340acd199508b44c6d0ecc5ab492fed8ee030",
-   "sha256_prompt": "09fa00268a61c59c96c1bc71c93cbe410b24e2352544daec8283423c2fcf9d0b"
+   "elo_anterior": "5c12a78cb257d26ab381ac1d85913f6a686244672f3a441a2558adcbe3e29f05",
+   "sha256_prompt": "ae08f55becf37b6966a4e9c4348ae5f12b76dd60ae08caecb4c73a96da004428"
   },
   {
    "n": "D15",
@@ -166,8 +210,8 @@
    "kpi": "Pedido registrado e resposta do thread principal",
    "skill": "pmo-despachar-proximo-passo",
    "status": "aberto",
-   "elo_anterior": "09fa00268a61c59c96c1bc71c93cbe410b24e2352544daec8283423c2fcf9d0b",
-   "sha256_prompt": "45291822f61f495c30a1a4e40ef6cc13231e5be1865cf800422320320ff12a30"
+   "elo_anterior": "ae08f55becf37b6966a4e9c4348ae5f12b76dd60ae08caecb4c73a96da004428",
+   "sha256_prompt": "5684ef1041bc9d85ec2f75fccb5eb76b876ddc030fd88e93cd4a5aab98af5208"
   },
   {
    "n": "D16",
@@ -177,8 +221,8 @@
    "kpi": "Ramo íntegro e vertente visível no [X]",
    "skill": "pmo-despachar-proximo-passo",
    "status": "aberto",
-   "elo_anterior": "45291822f61f495c30a1a4e40ef6cc13231e5be1865cf800422320320ff12a30",
-   "sha256_prompt": "9f84dcd57568b41f377660d0b45ec66f9ef2ef8681e0014b975d56e970e4f7aa"
+   "elo_anterior": "5684ef1041bc9d85ec2f75fccb5eb76b876ddc030fd88e93cd4a5aab98af5208",
+   "sha256_prompt": "064ca1226e592faedb3b9dbfaa7ad539538356a140fd413eea01e9d50e107875"
   },
   {
    "n": "D17",
@@ -188,8 +232,8 @@
    "kpi": "0 turno sem registro; ordem respeitada pelo fechar_i04",
    "skill": "pmo-propor-decisao-para-m",
    "status": "aberto",
-   "elo_anterior": "9f84dcd57568b41f377660d0b45ec66f9ef2ef8681e0014b975d56e970e4f7aa",
-   "sha256_prompt": "9215073a9314060c36dbc402007ae75681b17898019fd99a1a55345d59885140"
+   "elo_anterior": "064ca1226e592faedb3b9dbfaa7ad539538356a140fd413eea01e9d50e107875",
+   "sha256_prompt": "84880c1d847b04c52f97913a05d0feea64a127d402ca55d057517596ea3bdaba"
   },
   {
    "n": "D18",
@@ -199,8 +243,8 @@
    "kpi": "PDF + .ots a cada 5 passos",
    "skill": "pdf",
    "status": "aberto",
-   "elo_anterior": "9215073a9314060c36dbc402007ae75681b17898019fd99a1a55345d59885140",
-   "sha256_prompt": "06d7223f04e2225cafeda5da80fac80016ccc106d1d56791b3947aa184ad6919"
+   "elo_anterior": "84880c1d847b04c52f97913a05d0feea64a127d402ca55d057517596ea3bdaba",
+   "sha256_prompt": "96b9a630623b35e5c28e328eff3c046b28a50d04d4049626d96644be5e826577"
   },
   {
    "n": "D19",
@@ -210,8 +254,8 @@
    "kpi": "Resultado publicado e selado",
    "skill": "pdf",
    "status": "aberto",
-   "elo_anterior": "06d7223f04e2225cafeda5da80fac80016ccc106d1d56791b3947aa184ad6919",
-   "sha256_prompt": "2d29dee815ae80b55ec38e52b626cb711e86f125e98870f364639ea5dd7af62f"
+   "elo_anterior": "96b9a630623b35e5c28e328eff3c046b28a50d04d4049626d96644be5e826577",
+   "sha256_prompt": "851fee47e5141137214899e965709e509f7a4ecd834cbdeb18a2731d39cd614f"
   },
   {
    "n": "D20",
@@ -221,8 +265,8 @@
    "kpi": "Medição final 100% ou lista do que depende de M",
    "skill": "pdf",
    "status": "aberto",
-   "elo_anterior": "2d29dee815ae80b55ec38e52b626cb711e86f125e98870f364639ea5dd7af62f",
-   "sha256_prompt": "f859fee1eda40792bd91c799bc9775d93488e6d1d69659bfe0287efcb90fbf68"
+   "elo_anterior": "851fee47e5141137214899e965709e509f7a4ecd834cbdeb18a2731d39cd614f",
+   "sha256_prompt": "e992c512272b7842b4772180c3c6645148947e7e118fc2a8a63e6372477ebe82"
   }
  ]
 }
