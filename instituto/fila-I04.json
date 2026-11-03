@@ -89,9 +89,13 @@
    "prompt": "Compare o Brier/BSS/ECE do THEYE com o melhor publicado entre os 10 benchmarks e com a literatura (Katz 2017, Aletras 2016, Medvedeva 2020); publique em /modelo.html a régua \"melhor do mundo\" por métrica, com fonte, e a distância do THEYE a ela.",
    "kpi": "Tabela com fonte e distância por métrica no site",
    "skill": "dataviz",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "d1bc9f39a66ad648f05e8bd5157b4409f801755d3516d5ced8f060a65fd4ea77",
-   "sha256_prompt": "81a36d9e54c4bb06166f90c4567f86ac21944e5ab475021733d4c3482716f1ae"
+   "sha256_prompt": "81a36d9e54c4bb06166f90c4567f86ac21944e5ab475021733d4c3482716f1ae",
+   "feito_em": "2026-11-03T2000Z",
+   "evidencia": "modelo.html secao 1.2 Regua (md5 3b00af0e8b0bd08a5b21902b904a65ec, commit 3b49e41): melhor publicado por metrica (Pre/Dicta 86,7%, Case Crunch 86,6%, Aletras 79%, Katz 70,2%); nenhum dos 10 publica Brier/ECE; THEYE Brier 0,1010, BSS 12,9%/3,4%, ECE 1,4%; deploy dpl_6XwR3CVMX5mpb3GPZnjKGF78X2gH",
+   "elo_ev_anterior": "1c8966d10b46951bcc7e2d6791102fd73ca8610ef0782d09c2f70bb4b0227989",
+   "sha256_evidencia": "2b86d244a0402d15143890517395b6dfb09c571684a708c481fc96a029c30c52"
   },
   {
    "n": "D04",
@@ -100,9 +104,13 @@
    "prompt": "Avalie as 13 páginas com os 10 métodos: heurísticas de Nielsen, SUS, UMUX-Lite, SEQ, sucesso de tarefa, tempo de tarefa, percurso cognitivo, ISO 9241-11, HEART (Google) e WCAG 2.2; o que dá para medir sem pessoas, meça agora; o que precisa de pessoas, prepare o roteiro (junta com C14).",
    "kpi": "Planilha i04/usabilidade-top10.xlsx; 0 problema grave aberto",
    "skill": "xlsx",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "81a36d9e54c4bb06166f90c4567f86ac21944e5ab475021733d4c3482716f1ae",
-   "sha256_prompt": "40eb58a33486d69bffa644cd3cd41c3ee66c613dd03ed36f0f777dd54d812861"
+   "sha256_prompt": "40eb58a33486d69bffa644cd3cd41c3ee66c613dd03ed36f0f777dd54d812861",
+   "feito_em": "2026-11-03T2008Z",
+   "evidencia": "usabilidade-top10.xlsx sha256 5353966c57a95049f733afd7801757e4624e6361465a8e0cc271e260d51d2100: 10 metodos (Nielsen 10/10, WCAG 0 violacao, 8 alvos <24px corrigidos, negocio.html ligado, 14/14 em ate 2 cliques); SUS/UMUX/SEQ em roteiro para C14; 0 problema grave aberto; producao placar.html md5 3ff593c3",
+   "elo_ev_anterior": "2b86d244a0402d15143890517395b6dfb09c571684a708c481fc96a029c30c52",
+   "sha256_evidencia": "8f57d685039c49e75a933970f48626bea9230352787c4aea80c882f781ee2e16"
   },
   {
    "n": "D05",
@@ -111,9 +119,13 @@
    "prompt": "Para cada página do Instituto, um bloco \"Em 1 minuto\" no topo com linguagem de leigo (nível de leitura ≤ 8º ano, índice Flesch adaptado ao português ≥ 50) e um botão do que fazer a seguir; teste u17 52/52 e md5 em produção.",
    "kpi": "13/13 páginas com bloco simples; Flesch ≥ 50",
    "skill": "artifact-design",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "40eb58a33486d69bffa644cd3cd41c3ee66c613dd03ed36f0f777dd54d812861",
-   "sha256_prompt": "3edb390a08e86a46c7720c5f2938d83a375c330b5fec2e2b922a6a05ce455307"
+   "sha256_prompt": "3edb390a08e86a46c7720c5f2938d83a375c330b5fec2e2b922a6a05ce455307",
+   "feito_em": "2026-11-03T2008Z",
+   "evidencia": "Bloco Em 1 minuto com botao em 14/14 paginas, Flesch-Martins 77 a 114 (>=50); u17 56/56; producao commit 57a2a62, index 373026f4, base.css 9777de34, estudar 1a87a9bb; dpl_DVmKo1UGpYdeQP6U7qRKkkrqAon8",
+   "elo_ev_anterior": "8f57d685039c49e75a933970f48626bea9230352787c4aea80c882f781ee2e16",
+   "sha256_evidencia": "dfe3a10dd2bb6fccd7a7c9bd993729c1465d384d50523c5c251656752d45cd02"
   },
   {
    "n": "D06",
