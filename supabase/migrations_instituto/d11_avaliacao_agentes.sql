@@ -1,0 +1,2 @@
+-- Passo D11 (I-04): avaliação dos 50 agentes contra gabarito (tabela instituto.d11_avaliacao e RPC instituto_agentes_placar).
+-- Aplicada em 03/11/2026; o conteúdo é o mesmo da migração d11_avaliacao_agentes no Supabase.
