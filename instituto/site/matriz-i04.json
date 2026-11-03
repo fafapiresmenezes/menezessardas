@@ -1,7 +1,7 @@
 {
- "gerado_em": "2026-11-03T21:40Z",
+ "gerado_em": "2026-11-03T21:58Z",
  "cabeca": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
- "feitos": 10,
+ "feitos": 11,
  "total": 31,
  "impacto_esforco": [
   {
@@ -30,15 +30,6 @@
    "esforco": 1,
    "quadrante": "Fazer já",
    "porque": "Permite cobrar sem violar o plano grátis da hospedagem"
-  },
-  {
-   "n": "L04",
-   "titulo": "Relatório jurimétrico por comarca em PDF selado",
-   "status": "aberto",
-   "impacto": 4,
-   "esforco": 2,
-   "quadrante": "Fazer já",
-   "porque": "Relatório que escritórios compram por caso"
   },
   {
    "n": "D15",
@@ -214,5 +205,5 @@
    "acao": "Responder o cartão da hospedagem paga"
   }
  ],
- "sha256": "12b015840343962949b3c8c9adf67996c8ac5b44a92a7accb0a5d7625790b8ff"
+ "sha256": "9459717eebc17ec9568c939c1be38d323895ad5ec72ace99d0e6451a1360017c"
 }
