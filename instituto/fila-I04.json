@@ -337,9 +337,13 @@
    "prompt": "Peça ao thread principal (sem alterar o escritório) que o drag-in de contratos e imóveis do [X] use o checklist D14 para apontar documentos faltantes e criar prazos na agenda automática; registre a resposta.",
    "kpi": "Pedido registrado e resposta do thread principal",
    "skill": "pmo-despachar-proximo-passo",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "dcddc7aeba322beb923e238e2be61b3b57240e94ea3256810b5e20af2ae40060",
-   "sha256_prompt": "a26e6a35d04c46afbe8422ede455aea9d7520b2912209b6f022cef592cad1797"
+   "sha256_prompt": "a26e6a35d04c46afbe8422ede455aea9d7520b2912209b6f022cef592cad1797",
+   "feito_em": "2026-11-03T2248Z",
+   "evidencia": "Pedido entregue ao thread principal do escritorio em 2026-11-03T22:50Z, sem tocar no [X]: ontologia v0.8, JSON de consumo https://instituto-theye.vercel.app/documentos-imovel.json (funcoes[].id, nome, resumo, documentos[].doc, quem, quando, norma, url, porque) e pagina /imovel.html. Resposta do thread principal em 22:48Z: da para fazer, o JSON estatico serve (sem RPC), vai ser copiado para o codigo do [X] com versao e sha para o login nao depender do site do Instituto. O [X] nao tem campo 'funcao': ele deriva de tipo e uso (apartamento ou casa locados -> residencial; sala ou loja -> comercial; galpao -> galpao; imovel rural -> rural; contrato de temporada -> temporada), e a pessoa pode trocar a funcao na ficha. Entra como proxima onda do escritorio em tres partes: documentos faltantes na ficha do imovel com norma e link, mesmo checklist no drag-in depois da leitura, e um prazo na agenda automatica por documento faltante citando a norma; o thread principal manda commit e evidencia quando estiver no ar.",
+   "elo_ev_anterior": "dab354f1c4d640ccba9ec75511e9d940c901c82ccf8a60e72b0a233bb21a1835",
+   "sha256_evidencia": "589f624430bbc0e1b4e3dbe1baec88072492bfe5ea5096f5f6ff892d08d2b73a"
   },
   {
    "n": "D16",
@@ -348,9 +352,13 @@
    "prompt": "Duplicar sem perder nada: confirme que o ramo escritorio-estavel segue íntegro e que a tela Previsões do [X] mostra a vertente THEYE (placar, legislação, checklist do imóvel); o pedido de mudança vai ao thread principal.",
    "kpi": "Ramo íntegro e vertente visível no [X]",
    "skill": "pmo-despachar-proximo-passo",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "a26e6a35d04c46afbe8422ede455aea9d7520b2912209b6f022cef592cad1797",
-   "sha256_prompt": "0caa9ced0f0e7eee7c46dbb9ba256ba9830320074e38b02114095105ea3dea14"
+   "sha256_prompt": "0caa9ced0f0e7eee7c46dbb9ba256ba9830320074e38b02114095105ea3dea14",
+   "feito_em": "2026-11-03T2249Z",
+   "evidencia": "Duplicar sem perder nada, conferido em 2026-11-03: ramo escritorio-estavel-2026-10-31 integro, head 3ed32d5fe2df2b9b83f5e1d7a8067587b61683fb de 31/10 17:33Z, ancestral de origin/main com 0 commit fora de main (git merge-base --is-ancestor e git rev-list --count), 239 arquivos. Vertente THEYE visivel no [X]: cartao 'Probabilidade do Instituto THEYE' na tela Previsoes (src/pages/PrevisoesPage.tsx:183, PainelInstituto) com modelo convencional, margem de 95%, modelo por grafo e placar, e item Instituto no menu (src/components/Layout.tsx:53). Pedido de mudanca enviado ao thread principal (nada alterado no [X] por este thread) para completar a vertente na mesma tela: chance por classe de acao pela RPC publica instituto_chance_classes() com IC 95%, e link para o checklist de documentos da funcao do imovel. Resposta do thread principal em 22:49Z: entra na mesma onda, depois do D15, com as duas linhas novas no PainelInstituto; se a RPC falhar, o cartao esconde a linha e nao quebra a tela, e o commit vem quando estiver no ar.",
+   "elo_ev_anterior": "589f624430bbc0e1b4e3dbe1baec88072492bfe5ea5096f5f6ff892d08d2b73a",
+   "sha256_evidencia": "c92759b69fc638db629b5c15f11fd0403be26e6691b79a4d4c41177f2458d7b4"
   },
   {
    "n": "D17",
@@ -359,9 +367,13 @@
    "prompt": "O agente guardião roda 3x/dia, fecha 1 passo por vez em ordem e, se travar, abre cartão de múltipla escolha e segue no próximo passo executável; registre cada turno em SPI/CPI e no maestro.",
    "kpi": "0 turno sem registro; ordem respeitada pelo fechar_i04",
    "skill": "pmo-propor-decisao-para-m",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "0caa9ced0f0e7eee7c46dbb9ba256ba9830320074e38b02114095105ea3dea14",
-   "sha256_prompt": "b0a550cc1a2655a8fd8f7ebb745ac86b442d51f7c030a70b9fc62465ace18ea6"
+   "sha256_prompt": "b0a550cc1a2655a8fd8f7ebb745ac86b442d51f7c030a70b9fc62465ace18ea6",
+   "feito_em": "2026-11-03T2251Z",
+   "evidencia": "Guardiao nunca para, montado e testado em 2026-11-03. (1) Ferramenta nova /mnt/project-files/unificado/ferramentas/spi_cpi_i04.py (copia versionada em instituto/ferramentas/): valor agregado da fila I-04 por PMBOK 7 / ANSI-EIA 748, com data-alvo dos 31 passos, lista TURNOS do guardiao e o campo proximo_executavel, que e o passo que o turno deve executar. Leitura em 22:51Z: BAC 10,33 turnos, PV 6,98, EV 6,00, AC 5, SPI 0,86, CPI 1,20, EAC 8,6; 18 de 31 feitos; turnos_registrados 6 e turnos_sem_registro 0; aguardando M: M01, M02, M03, D12; em janela: D08, L03, L05; proximo executavel D17. JSON publicado em instituto/site/spi-cpi-i04.json. (2) Ordem garantida pela propria ferramenta: teste real de fechar D19 pulando D17 devolveu 'Recusado: feche antes D17 (ou registre-o como aguardando M / em janela)' e saida 1, sem alterar a fila. (3) PROMPT do agendador trig_019HPUPJ7TZCxzfmrXuiUBYE reescrito em 22:50Z com o rito de 5 etapas: ler o proximo_executavel, registrar o turno em TURNOS, executar, marcar 'aguardando M' ou 'em janela' e abrir cartao de multipla escolha em vez de esperar, fechar com fechar_i04 e selar com OpenTimestamps, atualizar a matriz e seguir encadeando enquanto houver passo executavel; passo travado por motivo tecnico fica registrado e o guardiao vai ao proximo. Agendamento 3x/dia (7h32, 13h32 e 19h32 BRT) mantido e ativo, proxima execucao 2026-11-04T10:32Z. (4) Cada fechamento continua gravando em /mnt/project-files/instituto/cadeia-instituto.txt, em maestro/BLOCKCHAIN.txt, em maestro/STEP-Dxx-REPORT.txt e em maestro/audit/ACTIONS_LOG.txt, com backup da fila a cada turno.",
+   "elo_ev_anterior": "c92759b69fc638db629b5c15f11fd0403be26e6691b79a4d4c41177f2458d7b4",
+   "sha256_evidencia": "f260b55b4dd902604122653d79d063ba184690254945799fcf51c551cbc4dcff"
   },
   {
    "n": "D18",

@@ -1,0 +1,277 @@
+{
+ "status_em": "2026-11-03T22:51Z",
+ "unidade": "turno do guardião",
+ "BAC": 10.33,
+ "PV": 6.98,
+ "EV": 6.0,
+ "AC": 5,
+ "SPI": 0.86,
+ "CPI": 1.2,
+ "EAC": 8.6,
+ "feitos": 18,
+ "total": 31,
+ "turnos_registrados": 6,
+ "turnos_sem_registro": 0,
+ "proximo_executavel": "D17",
+ "aguardando_M": [
+  "M01",
+  "M02",
+  "M03",
+  "D12"
+ ],
+ "em_janela": [
+  "D08",
+  "L03",
+  "L05"
+ ],
+ "passos": [
+  {
+   "passo": "M01",
+   "titulo": "Cobrança do plano Membro",
+   "alvo": "2026-11-03",
+   "status": "aguardando M",
+   "pv": 0.317,
+   "ev": 0
+  },
+  {
+   "passo": "M02",
+   "titulo": "Site em theye.club",
+   "alvo": "2026-11-03",
+   "status": "aguardando M",
+   "pv": 0.317,
+   "ev": 0
+  },
+  {
+   "passo": "M03",
+   "titulo": "Hospedagem que permite cobrar",
+   "alvo": "2026-11-03",
+   "status": "aguardando M",
+   "pv": 0.317,
+   "ev": 0
+  },
+  {
+   "passo": "M04",
+   "titulo": "Painel de 30 dias do negócio",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D01",
+   "titulo": "Ler tudo e consolidar",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D02",
+   "titulo": "Top 10 benchmarks globais",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D03",
+   "titulo": "Régua de calibragem outlier",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D04",
+   "titulo": "Top 10 métodos de usabilidade",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D05",
+   "titulo": "Modo simples em todas as páginas",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D06",
+   "titulo": "Painel de OKRs com selo",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D07",
+   "titulo": "Matriz de priorização visual",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D08",
+   "titulo": "Portais e sandboxes conectados",
+   "alvo": "2026-11-10",
+   "status": "em janela",
+   "pv": 0.0,
+   "ev": 0
+  },
+  {
+   "passo": "L01",
+   "titulo": "Calculadora grátis de reajuste de aluguel",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "L02",
+   "titulo": "Análise de contrato de locação por IA (avulsa)",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "L03",
+   "titulo": "API de probabilidade para imobiliárias e garantidoras",
+   "alvo": "2026-12-03",
+   "status": "em janela",
+   "pv": 0.0,
+   "ev": 0
+  },
+  {
+   "passo": "L04",
+   "titulo": "Relatório jurimétrico por comarca em PDF selado",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "L05",
+   "titulo": "Lançamento com e-mail próprio e tração medida",
+   "alvo": "2026-12-03",
+   "status": "em janela",
+   "pv": 0.0,
+   "ev": 0
+  },
+  {
+   "passo": "D09",
+   "titulo": "Matriz solução por caso",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D10",
+   "titulo": "Top 50 skills por agente",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D11",
+   "titulo": "Avaliação dos 50 agentes",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D12",
+   "titulo": "Cache de prompt nos agentes",
+   "alvo": "2026-11-03",
+   "status": "aguardando M",
+   "pv": 0.317,
+   "ev": 0
+  },
+  {
+   "passo": "D13",
+   "titulo": "Playground e API Claude conectados",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D14",
+   "titulo": "Documentos do imóvel por função",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D15",
+   "titulo": "Drag-in e agenda no escritório",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D16",
+   "titulo": "Vertente THEYE no escritório",
+   "alvo": "2026-11-03",
+   "status": "feito",
+   "pv": 0.317,
+   "ev": 0.333
+  },
+  {
+   "passo": "D17",
+   "titulo": "Guardião nunca para",
+   "alvo": "2026-11-04",
+   "status": "aberto",
+   "pv": 0.0,
+   "ev": 0
+  },
+  {
+   "passo": "D18",
+   "titulo": "Medição completa a cada 5 passos",
+   "alvo": "2026-11-04",
+   "status": "aberto",
+   "pv": 0.0,
+   "ev": 0
+  },
+  {
+   "passo": "D19",
+   "titulo": "Validação externa e modelo C2",
+   "alvo": "2026-11-04",
+   "status": "aberto",
+   "pv": 0.0,
+   "ev": 0
+  },
+  {
+   "passo": "D20",
+   "titulo": "Fechamento a 100%",
+   "alvo": "2026-11-04",
+   "status": "aberto",
+   "pv": 0.0,
+   "ev": 0
+  },
+  {
+   "passo": "D21",
+   "titulo": "O que falta de você, em um lugar só",
+   "alvo": "2026-11-05",
+   "status": "aberto",
+   "pv": 0.0,
+   "ev": 0
+  },
+  {
+   "passo": "D22",
+   "titulo": "Cobertura ampliada (lacuna do D02)",
+   "alvo": "2026-11-05",
+   "status": "aberto",
+   "pv": 0.0,
+   "ev": 0
+  }
+ ]
+}

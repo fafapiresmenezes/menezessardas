@@ -1,7 +1,7 @@
 {
- "gerado_em": "2026-11-03T22:47Z",
+ "gerado_em": "2026-11-03T22:51Z",
  "cabeca": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
- "feitos": 16,
+ "feitos": 19,
  "total": 31,
  "impacto_esforco": [
   {
@@ -30,15 +30,6 @@
    "esforco": 1,
    "quadrante": "Fazer já",
    "porque": "Permite cobrar sem violar o plano grátis da hospedagem"
-  },
-  {
-   "n": "D15",
-   "titulo": "Drag-in e agenda no escritório",
-   "status": "aberto",
-   "impacto": 4,
-   "esforco": 2,
-   "quadrante": "Fazer já",
-   "porque": "Arrastar o contrato e o prazo já entra na agenda"
   },
   {
    "n": "D21",
@@ -77,15 +68,6 @@
    "porque": "Legislação ao vivo no Instituto, pedido de M"
   },
   {
-   "n": "D16",
-   "titulo": "Vertente THEYE no escritório",
-   "status": "aberto",
-   "impacto": 4,
-   "esforco": 3,
-   "quadrante": "Planejar",
-   "porque": "THEYE dentro do escritório"
-  },
-  {
    "n": "D22",
    "titulo": "Cobertura ampliada (lacuna do D02)",
    "status": "aberto",
@@ -102,15 +84,6 @@
    "esforco": 1,
    "quadrante": "Encaixar",
    "porque": "Marca própria no endereço theye.club"
-  },
-  {
-   "n": "D17",
-   "titulo": "Guardião nunca para",
-   "status": "aberto",
-   "impacto": 3,
-   "esforco": 1,
-   "quadrante": "Encaixar",
-   "porque": "Nada para sem aviso"
   },
   {
    "n": "D20",
@@ -166,5 +139,5 @@
    "acao": ""
   }
  ],
- "sha256": "0db49ce1dba9e5967ba43c06b02e5ad7a0e8b977d2f7626626ef5fc3240d6cb5"
+ "sha256": "633bae2ab0515bac44af1e592d54a190263899657e0cc28bc6b616058e5694e3"
 }
