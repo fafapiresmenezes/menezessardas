@@ -164,9 +164,11 @@
    "prompt": "Conecte o Instituto a fontes públicas sem chave: Planalto/LexML (Lei 8.245/91 e alterações), DOU (seção 1), STJ (temas repetitivos), ANPD, BCB e CVM (sandboxes regulatórios); coleta diária agregada com data da última mudança, exibida em /legislacao.html.",
    "kpi": "6 fontes com coleta diária e 0 falha em 7 dias",
    "skill": "claude-api",
-   "status": "aberto",
+   "status": "em janela",
    "elo_anterior": "973115a29e92a119ab95c19b078dd78548d616068956335dc14878458b26173e",
-   "sha256_prompt": "54673cb77cee2781dfae584a73b67046e27cedf04d466378025b1d307d24fe42"
+   "sha256_prompt": "54673cb77cee2781dfae584a73b67046e27cedf04d466378025b1d307d24fe42",
+   "janela_ate": "2026-11-10",
+   "evidencia_parcial": "7 fontes publicas (LexML 8.245, DOU s1, STJ repetitivos, Camara PL locacao, BCB IGP-M, ANPD, CVM) lidas 7/7 ok em 03/11 21:15Z; cron 09:10/09:25 UTC; /legislacao.html no ar (md5 2a396ed9, commit f914d86, dpl_GKee3rwHrNEnNrEX5taJuaYvmDwz). KPI \"0 falha em 7 dias\" fecha em 10/11. Planalto recusa leitura automatica (usa LexML); sandbox BCB so com JS (usa IGP-M)."
   },
   {
    "n": "L01",

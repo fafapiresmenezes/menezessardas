@@ -1,5 +1,5 @@
 {
- "gerado_em": "2026-11-03T21:06Z",
+ "gerado_em": "2026-11-03T21:07Z",
  "cabeca": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
  "feitos": 8,
  "total": 31,
@@ -97,7 +97,7 @@
   {
    "n": "D08",
    "titulo": "Portais e sandboxes conectados",
-   "status": "aberto",
+   "status": "em janela",
    "impacto": 4,
    "esforco": 3,
    "quadrante": "Planejar",
@@ -232,5 +232,5 @@
    "acao": "Responder o cartão da hospedagem paga"
   }
  ],
- "sha256": "e653ce3d464188bcc1e42785af836230f82d14ea442672c9a78cca15741ee367"
+ "sha256": "0a19e088100518c7114abecba9dd9704f2a9218598486ac1aba67b31272a4586"
 }
