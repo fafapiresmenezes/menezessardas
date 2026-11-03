@@ -2,7 +2,7 @@
  "plano": "I-04 (replanejamento de M em 03/11/2026: THEYE + [X] unificados, PROMPTs encadeados)",
  "origem": "Pedido de M no thread principal 2026-11-03T19:13Z; segue o ciclo I-03 (C30)",
  "regra": "Um passo só fecha se os anteriores estiverem feitos ou em espera formal (aguardando M / em janela). Monetização (M01–M04) vem primeiro, a pedido de M em 03/11 19:17Z.",
- "cabeca": "e992c512272b7842b4772180c3c6645148947e7e118fc2a8a63e6372477ebe82",
+ "cabeca": "6e15fa73ca1ced5872d95b984563e2780b9f04d9fbfac57edeb75c71c8d1faac",
  "passos": [
   {
    "n": "M01",
@@ -59,9 +59,13 @@
    "prompt": "Releia por inteiro os threads do projeto, fila-I02/I03, memória e planos; liste em i04/inventario.md cada pedido de M (data, thread, status: no ar / parcial / falta) e confira que todos estão nesta fila; o que faltar vira passo novo no fim, encadeado.",
    "kpi": "Inventário com 100% dos pedidos de M classificados",
    "skill": "pmo-despachar-proximo-passo",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "f7e93c3fdae0d18cda4b69d1a969e6732b0c99755761c777da4290f162521937",
-   "sha256_prompt": "d613a8686e9b5e5e963c85a2b5ad95a694c7f4caafa5060d73311ecd4a47174a"
+   "sha256_prompt": "d613a8686e9b5e5e963c85a2b5ad95a694c7f4caafa5060d73311ecd4a47174a",
+   "feito_em": "2026-11-03T1955Z",
+   "evidencia": "inventario.md sha256 5850f1df7d838e1e7d72937553249ab766545c42323e1d6fda45b86c4a46147b: 43 pedidos de M (27 no ar, 8 parciais com passo, 5 dependem de M, 3 entregues); lacuna virou D21 (cabeca 6e15fa73)",
+   "elo_ev_anterior": "c39485cbca5a314b3ac3caa212f4cba6d2dfc9a66c6d5d229597b1a4b838e333",
+   "sha256_evidencia": "4c93846cdc070ca9d3dab99d18c64320330e0970ecc211ad57b3e00535f432c5"
   },
   {
    "n": "D02",
@@ -271,6 +275,17 @@
    "status": "aberto",
    "elo_anterior": "851fee47e5141137214899e965709e509f7a4ecd834cbdeb18a2731d39cd614f",
    "sha256_prompt": "e992c512272b7842b4772180c3c6645148947e7e118fc2a8a63e6372477ebe82"
+  },
+  {
+   "n": "D21",
+   "tema": "Gestão (PMO/PMI)",
+   "titulo": "O que falta de você, em um lugar só",
+   "prompt": "Monte a página \"O que falta de você\" (no Instituto e pedida ao thread principal para o escritório) com um cartão de múltipla escolha por item que só M pode resolver: teste do Outlook no Windows, token do Escavador, logo oficial, teto mensal de IA, chave PIX real, OABs para intimações, Stripe, domínio e hospedagem; cada resposta vira passo fechado na cadeia.",
+   "kpi": "100% dos itens de M com cartão e status visível",
+   "skill": "pmo-propor-decisao-para-m",
+   "status": "aberto",
+   "elo_anterior": "e992c512272b7842b4772180c3c6645148947e7e118fc2a8a63e6372477ebe82",
+   "sha256_prompt": "6e15fa73ca1ced5872d95b984563e2780b9f04d9fbfac57edeb75c71c8d1faac"
   }
  ]
 }
