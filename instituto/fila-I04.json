@@ -265,9 +265,13 @@
    "prompt": "Mapeie os 50 agentes a 50 habilidades (uma principal por agente) com referência de ementa pública de doutorado ou mestrado (Ivy League, MIT, top 10 Ásia e Europa) citada por curso e link; publique o catálogo em /agentes.html e em i04/catalogo-50.xlsx.",
    "kpi": "50 agentes × skill × ementa com link",
    "skill": "xlsx",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "61a2a715afffab21324ad2c3b45c86f486846e75a75f9ccccebaa5c85a7c716f",
-   "sha256_prompt": "e8ff6f88f462647e172daa784e720a617a97de2b8b7c5e319c96e381fb666503"
+   "sha256_prompt": "e8ff6f88f462647e172daa784e720a617a97de2b8b7c5e319c96e381fb666503",
+   "feito_em": "2026-11-03T2219Z",
+   "evidencia": "/agentes.html#catalogo no ar (deploy dpl_3myTrARtHH1Y1V4x7kyUQ1JFwvVD, pino 187cc8f; md5 agentes.html 03d5e5b8, agentes.js 23d858a6, catalogo-50.json 889188d0, base.css 9777de34 conferidos via pg_net). 50 agentes x 1 habilidade principal x 1 curso ou catálogo público citado com link: MIT OpenCourseWare (24), University of Chicago Law School (6), Cochrane (3), Harvard (HLS, Chan School, PON, GSE: 6), USP (4), KU Leuven, Stanford CS251, Carnegie Mellon HCII, Oxford Lifelong Learning, Open Yale Courses, Coursera/UCSC. Os 50 links foram conferidos um a um por requisição HTTP em 03/11/2026 (50/50 com HTTP 200; dois links trocados após 404 e 403). Planilha em unificado/i04/catalogo-50.xlsx; dados em /catalogo-50.json. A página diz que o agente não cursou nada: a citação mostra o corpo de conhecimento que a resposta tenta seguir.",
+   "elo_ev_anterior": "6b521358c4a53690e4f0eb0494ffa98bd9f312f7172237eb00c44b326c5fc08b",
+   "sha256_evidencia": "798718f8a8622a6104f04a52ab06dc06d78b162a74abf0a91af8b53b26156d2d"
   },
   {
    "n": "D11",

@@ -1,7 +1,7 @@
 {
- "gerado_em": "2026-11-03T22:11Z",
+ "gerado_em": "2026-11-03T22:19Z",
  "cabeca": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
- "feitos": 12,
+ "feitos": 13,
  "total": 31,
  "impacto_esforco": [
   {
@@ -165,15 +165,6 @@
    "esforco": 2,
    "quadrante": "Encaixar",
    "porque": "Roteiros para o Console da Anthropic"
-  },
-  {
-   "n": "D10",
-   "titulo": "Top 50 skills por agente",
-   "status": "aberto",
-   "impacto": 3,
-   "esforco": 3,
-   "quadrante": "Depois",
-   "porque": "Mapa das 50 skills com ementa"
   }
  ],
  "eisenhower_m": [
@@ -196,5 +187,5 @@
    "acao": "Responder o cartão da hospedagem paga"
   }
  ],
- "sha256": "f6f4647200d3db8a836c5c72bf8f06d294cd961eabe11e9e876c03f0c188007f"
+ "sha256": "15687d6f93ba8c85ec10899d6667e1e364d3f4ca26310d9e385df1528e43dbc3"
 }
