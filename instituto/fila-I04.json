@@ -44,9 +44,13 @@
    "prompt": "Painel ao vivo (agregado, LGPD) com cadastros por dia, conversão para pagante, receita, custo de IA por membro e margem, mais a meta de equilíbrio (7 membros); selo OpenTimestamps diário do resumo.",
    "kpi": "Painel no ar com 5 indicadores ao vivo",
    "skill": "dataviz",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "595150ac37bc7b0792d59a0b37ddb5439fa8ec31b7a2b0465299a07c670d4bc1",
-   "sha256_prompt": "f7e93c3fdae0d18cda4b69d1a969e6732b0c99755761c777da4290f162521937"
+   "sha256_prompt": "f7e93c3fdae0d18cda4b69d1a969e6732b0c99755761c777da4290f162521937",
+   "feito_em": "2026-11-03T1949Z",
+   "evidencia": "Painel de 30 dias no ar: https://instituto-theye.vercel.app/negocio.html (cadastros, pagantes x meta de 7, conversão, receita, custo de IA por membro, margem, série diária). RPC pública public.instituto_negocio(p_dias) só com agregados, testada como anon (200); tabela instituto.pagamentos pronta para o webhook do Stripe (M01). Selo diário: cron instituto-negocio-selo 02:55 UTC grava resumo + sha256 em instituto.negocio_selos e carimba no OpenTimestamps (1º selo 27e40de7…, ancorar-hash 200). Produção conferida por md5: negocio.html a8703f00…, negocio.js e9ed113b…, base.css aaed2179… text/css; deploy dpl_5NTX2uqppL7Uos9865v1J6NhgTeM, commit 8dd61a3; u17 56/56 (14 páginas × 2 larguras × 2 temas, 0 violação WCAG). Hoje: 1 cadastro, 0 pagantes, custo de IA R$ 2,31 em 30 dias.",
+   "elo_ev_anterior": "2849e320ec981df093765c60bbde1d899eb85ab0713a84d32eb9bed67ab5f748",
+   "sha256_evidencia": "c39485cbca5a314b3ac3caa212f4cba6d2dfc9a66c6d5d229597b1a4b838e333"
   },
   {
    "n": "D01",
