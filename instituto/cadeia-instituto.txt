@@ -1,0 +1,1 @@
+2026-11-04T2233Z guardiao | turno sem passo executavel: 22/31 feitos; travado por M (M01-M03, D12) e por janela (D08, L03, L05, D19, D20) | SPI 0,85 CPI 1,22
