@@ -397,9 +397,10 @@
    "prompt": "Execute a rodada externa do protocolo I-11 (C19, 30/11) e a avaliação do modelo C2 pré-registrado (I-12, a partir de 31/01/2027), publicando o resultado sem ajuste.",
    "kpi": "Resultado publicado e selado",
    "skill": "pdf",
-   "status": "aberto",
+   "status": "em janela",
    "elo_anterior": "0b269d14f74d8a38797533ff9f8a96eb28f38a11fcbcc534bded118b989051f2",
-   "sha256_prompt": "58ca5f97f0aaa7c844b4bafb0f772af372ebdff4df8a031f389b2f211c13c950"
+   "sha256_prompt": "58ca5f97f0aaa7c844b4bafb0f772af372ebdff4df8a031f389b2f211c13c950",
+   "nota": "Depende de prazo externo: rodada externa do protocolo I-11 em 30/11/2026 (passo C19 do ciclo I-03) e avaliacao do modelo C2 pre-registrado a partir de 31/01/2027. Nada a antecipar sem quebrar o pre-registro."
   },
   {
    "n": "D20",
@@ -408,9 +409,10 @@
    "prompt": "Quando todos os passos estiverem feitos, medição final; o que depender de M fica listado com o cartão aberto. Meta: 100% da medição WBS do Instituto.",
    "kpi": "Medição final 100% ou lista do que depende de M",
    "skill": "pdf",
-   "status": "aberto",
+   "status": "em janela",
    "elo_anterior": "58ca5f97f0aaa7c844b4bafb0f772af372ebdff4df8a031f389b2f211c13c950",
-   "sha256_prompt": "b9d4bf775e3765b634fc7931324a0f9af673d5165f3d2d149278c73d1bf9b2cb"
+   "sha256_prompt": "b9d4bf775e3765b634fc7931324a0f9af673d5165f3d2d149278c73d1bf9b2cb",
+   "nota": "Fechamento final: so pode ser feito quando os demais passos estiverem feitos ou formalmente listados como dependentes de M. Reavaliar apos D21 e D22."
   },
   {
    "n": "D21",
@@ -419,9 +421,13 @@
    "prompt": "Monte a página \"O que falta de você\" (no Instituto e pedida ao thread principal para o escritório) com um cartão de múltipla escolha por item que só M pode resolver: teste do Outlook no Windows, token do Escavador, logo oficial, teto mensal de IA, chave PIX real, OABs para intimações, Stripe, domínio e hospedagem; cada resposta vira passo fechado na cadeia.",
    "kpi": "100% dos itens de M com cartão e status visível",
    "skill": "pmo-propor-decisao-para-m",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "b9d4bf775e3765b634fc7931324a0f9af673d5165f3d2d149278c73d1bf9b2cb",
-   "sha256_prompt": "71f840379857070a90df0f57c4fbef92e705939202909c8fe8e8932d63402cd7"
+   "sha256_prompt": "71f840379857070a90df0f57c4fbef92e705939202909c8fe8e8932d63402cd7",
+   "feito_em": "2026-11-03T2259Z",
+   "evidencia": "Pagina 'O que falta de voce' no ar em https://instituto-theye.vercel.app/falta.html, com os 15 itens que so M pode resolver, cada um com o motivo, o que trava, 3 opcoes de multipla escolha e o status do cartao: 15 de 15 com cartao aberto e status visivel (100% do KPI). Instituto: reconectar o Stripe, hospedagem paga da Vercel, apontar theye.club, publicar a funcao dos agentes com cache, e-mail do Instituto, publicar os 3 textos de lancamento, logo oficial, conta no Zenodo para DOI, 5 avaliadores de usabilidade. Escritorio (pedido ao thread principal, nada alterado por este thread): teto mensal de IA, conferir a chave PIX, testar o Outlook no Windows, token do Escavador, numeros de OAB para as intimacoes, Fatima e Leticia usarem e rodarem Testar tudo. Tabela instituto.pendencias_m com RPC publica de leitura instituto_pendencias e RPC de registro instituto_pendencia_registrar, que exige o segredo do cron: visitante nao decide nada clicando na pagina, a escolha e registrada quando M responde no chat e o status da pagina muda junto. Cada item tem botao que copia a frase pronta de resposta. Filtros por pendentes, Instituto e escritorio; link no menu do site. md5 de producao confere para falta.html (477b38e8cee6ed403728d89ed316a075), falta.js, index.html e base.css; u17 em 23 paginas sem violacao WCAG 2.2 AA. Migracao versionada em supabase/migrations_instituto/d21_pendencias_m.sql.",
+   "elo_ev_anterior": "cf427c21accaf3a6329ca877973ef3eea5725e384dcd2497fb2a477d0660528a",
+   "sha256_evidencia": "95dd03bc98999e512e9fe5296348d5633ef272714b77f4f93852d21038d1a7b0"
   },
   {
    "n": "D22",

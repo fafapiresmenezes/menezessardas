@@ -1,7 +1,7 @@
 {
- "gerado_em": "2026-11-03T22:53Z",
+ "gerado_em": "2026-11-03T22:59Z",
  "cabeca": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
- "feitos": 20,
+ "feitos": 21,
  "total": 31,
  "impacto_esforco": [
   {
@@ -32,15 +32,6 @@
    "porque": "Permite cobrar sem violar o plano grátis da hospedagem"
   },
   {
-   "n": "D21",
-   "titulo": "O que falta de você, em um lugar só",
-   "status": "aberto",
-   "impacto": 4,
-   "esforco": 2,
-   "quadrante": "Fazer já",
-   "porque": "Você resolve tudo numa tela só"
-  },
-  {
    "n": "L03",
    "titulo": "API de probabilidade para imobiliárias e garantidoras",
    "status": "em janela",
@@ -52,7 +43,7 @@
   {
    "n": "D19",
    "titulo": "Validação externa e modelo C2",
-   "status": "aberto",
+   "status": "em janela",
    "impacto": 5,
    "esforco": 4,
    "quadrante": "Planejar",
@@ -88,7 +79,7 @@
   {
    "n": "D20",
    "titulo": "Fechamento a 100%",
-   "status": "aberto",
+   "status": "em janela",
    "impacto": 3,
    "esforco": 1,
    "quadrante": "Encaixar",
@@ -130,5 +121,5 @@
    "acao": ""
   }
  ],
- "sha256": "a4a4f59a465c8d8417e0358dc3bbb79c0aaa578f93d8109481174054de7b9b40"
+ "sha256": "92c744f59b4880123db352eca2f104e1374ccbc73c5422f4a4d501b21ec9a286"
 }
