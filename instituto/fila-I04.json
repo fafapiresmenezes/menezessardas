@@ -343,7 +343,8 @@
    "feito_em": "2026-11-03T2248Z",
    "evidencia": "Pedido entregue ao thread principal do escritorio em 2026-11-03T22:50Z, sem tocar no [X]: ontologia v0.8, JSON de consumo https://instituto-theye.vercel.app/documentos-imovel.json (funcoes[].id, nome, resumo, documentos[].doc, quem, quando, norma, url, porque) e pagina /imovel.html. Resposta do thread principal em 22:48Z: da para fazer, o JSON estatico serve (sem RPC), vai ser copiado para o codigo do [X] com versao e sha para o login nao depender do site do Instituto. O [X] nao tem campo 'funcao': ele deriva de tipo e uso (apartamento ou casa locados -> residencial; sala ou loja -> comercial; galpao -> galpao; imovel rural -> rural; contrato de temporada -> temporada), e a pessoa pode trocar a funcao na ficha. Entra como proxima onda do escritorio em tres partes: documentos faltantes na ficha do imovel com norma e link, mesmo checklist no drag-in depois da leitura, e um prazo na agenda automatica por documento faltante citando a norma; o thread principal manda commit e evidencia quando estiver no ar.",
    "elo_ev_anterior": "dab354f1c4d640ccba9ec75511e9d940c901c82ccf8a60e72b0a233bb21a1835",
-   "sha256_evidencia": "589f624430bbc0e1b4e3dbe1baec88072492bfe5ea5096f5f6ff892d08d2b73a"
+   "sha256_evidencia": "589f624430bbc0e1b4e3dbe1baec88072492bfe5ea5096f5f6ff892d08d2b73a",
+   "nota": " Atualização relatada pelo thread do escritório em 2026-11-04T22:22Z (não verificada por este thread): a página do imóvel em produção do [X] já mostra o checklist v0.8 por função, com troca de função na tela, documento marcado como anexado ou faltante, base legal e link; JSON com sha d72ec561…; commit a288013, gh-pages 8f47bb28, deploy dpl_6cxzbPFSpRcAcVsPzZbPYspvCdnT, elo 560. Falta, na próxima onda: checklist no drag-in, prazo automático na agenda e o D16 em Previsões."
   },
   {
    "n": "D16",
