@@ -5,6 +5,8 @@ import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
 import GraficoTendencia from '@/components/GraficoTendencia'
 import AcessoRestrito from '@/components/AcessoRestrito'
+import ChecklistExigencias from '@/components/ChecklistExigencias'
+import { funcaoDoImovel } from '@/lib/exigencias'
 import { repositorio, calcularAlertas, type Alerta, type Contrato, type Imovel } from '@/lib/repositorio'
 import { diasAte, formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
 import { contratoAtivo, tendencia12Meses, valorMensal } from '@/lib/indicadores'
@@ -242,6 +244,8 @@ export default function ImovelDetailPage() {
             </p>
           )}
         </section>
+
+        <ChecklistExigencias funcaoInicial={funcaoDoImovel(imovel.tipo, vigentes[0]?.tipo)} anexos={documentos.map(d => d.nome)} />
 
         {historico.length > 0 && (
           <section aria-labelledby="t-hist">
