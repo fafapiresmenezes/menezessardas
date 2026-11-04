@@ -1,7 +1,7 @@
 {
- "gerado_em": "2026-11-03T22:59Z",
+ "gerado_em": "2026-11-04T21:20Z",
  "cabeca": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
- "feitos": 21,
+ "feitos": 22,
  "total": 31,
  "impacto_esforco": [
   {
@@ -59,15 +59,6 @@
    "porque": "Legislação ao vivo no Instituto, pedido de M"
   },
   {
-   "n": "D22",
-   "titulo": "Cobertura ampliada (lacuna do D02)",
-   "status": "aberto",
-   "impacto": 4,
-   "esforco": 3,
-   "quadrante": "Planejar",
-   "porque": "Mais tribunais e classes"
-  },
-  {
    "n": "M02",
    "titulo": "Site em theye.club",
    "status": "aguardando M",
@@ -121,5 +112,5 @@
    "acao": ""
   }
  ],
- "sha256": "92c744f59b4880123db352eca2f104e1374ccbc73c5422f4a4d501b21ec9a286"
+ "sha256": "3ea541ea584f99e1b3445dc87a9aa925d8730ef89b7db6f50490359aeefff504"
 }

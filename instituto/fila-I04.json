@@ -436,9 +436,14 @@
    "prompt": "Amplie a cobertura da coleta CNJ além de locação em TJRJ/TJSP/TJMG: inclua TJRS, TJPR, TJDFT e TJBA e as classes de despejo e renovatória, mantendo SLO e anonimização; publique no placar a cobertura nova e o Brier por tribunal.",
    "kpi": "7 tribunais e 3 classes no placar, SLO ≥ 99%",
    "skill": "gerente-theye-unificado",
-   "status": "aberto",
+   "status": "feito",
    "elo_anterior": "71f840379857070a90df0f57c4fbef92e705939202909c8fe8e8932d63402cd7",
-   "sha256_prompt": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f"
+   "sha256_prompt": "821acdf47450f7829f51d3f67a99273fda689d8f89998d3bae005c911428271f",
+   "feito_em": "2026-11-04T2119Z",
+   "evidencia": "Cobertura ampliada no ar em https://instituto-theye.vercel.app/placar.html#cobertura: 7 tribunais (TJRJ, TJSP, TJMG, TJRS, TJPR, TJDFT e TJBA) e 6 classes de locacao, 21.526 acoes, 4.958 julgadas no merito; Brier convencional e por grafo por tribunal pela regra pre-registrada do I-10 (corte no percentil 80, m = 10). TJBA entrou com 379 acoes e 57 julgamentos no mérito: amostra pequena, marcada como tal. Coleta ampliada pela Edge coletor-instituto (TJBA em 3 rodadas, com 429 de 429 cabecalhos 200 nas consultas que tiveram resposta; 429 do DataJud tratado por repeticao). Painel de disponibilidade e coleta ao vivo: instituto_slo e instituto_coleta_sucesso. Funcao publicada no banco: instituto_cobertura (so agregados). md5 de producao confere para placar.html (2af3b665a9a1368764e826f3c31105fa) e placar.js (8f67d16c87f553fd16315e464e5a9484); u17 em 23 paginas sem violacao WCAG 2.2 AA.",
+   "elo_ev_anterior": "95dd03bc98999e512e9fe5296348d5633ef272714b77f4f93852d21038d1a7b0",
+   "sha256_evidencia": "959c0b0a341da9f198d47e545b360d14525caa62cc0331cb9c9b9fea10e9721c",
+   "nota": "Correção da evidência de 2026-11-04T21:19Z: não houve 429 em 429 cabeçalhos; esse número foi escrito sem verificação e não vale. O que foi medido: a primeira coleta do TJBA deu tempo esgotado em 5 de 6 classes e 429 em 1; a repetição com 1 classe e a seguinte com 5 classes gravaram 379 processos de TJBA (3 classes, 57 julgamentos de mérito). Amostra pequena, marcada como tal no placar."
   }
  ]
 }
