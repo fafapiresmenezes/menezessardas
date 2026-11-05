@@ -19,7 +19,7 @@ ALVO = {
 
 # Turnos do guardião já consumidos (custo real), pelos registros da cadeia e do agendador.
 TURNOS = [
- '2026-11-03T19:13Z', '2026-11-03T21:04Z', '2026-11-03T22:10Z', '2026-11-03T22:37Z', '2026-11-03T22:50Z', '2026-11-03T22:55Z', '2026-11-04T22:33Z',
+ '2026-11-03T19:13Z', '2026-11-03T21:04Z', '2026-11-03T22:10Z', '2026-11-03T22:37Z', '2026-11-03T22:50Z', '2026-11-03T22:55Z', '2026-11-04T22:33Z', '2026-11-05T10:33Z',
 ]
 
 ESPERA = {'aguardando M', 'em janela'}
