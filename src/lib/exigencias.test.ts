@@ -28,3 +28,14 @@ describe('chance por classe do Instituto', () => {
     expect(textoChanceClasse({ classe: 'Despejo', n: 1234, p: 0.873, ic95: [0.85, 0.892] })).toBe('Despejo: 87% (margem de 95%: 85–89%, n = 1.234)')
   })
 })
+
+import { prazosFaltantes } from './exigencias'
+describe('prazos dos documentos faltantes', () => {
+  it('um prazo por documento faltante, 30 dias depois, citando a norma', () => {
+    const p = prazosFaltantes('residencial', ['matricula certidao.pdf'], { id: 'i1', nome: 'Rua A, Rio' }, new Date('2026-11-05T12:00:00Z'))
+    expect(p.length).toBeGreaterThan(0)
+    expect(p[0]!.dataEvento).toBe('2026-12-05')
+    expect(p.every(x => /\(.+\)$/.test(x.titulo) && x.imovelId === 'i1')).toBe(true)
+    expect(p.some(x => x.titulo.includes('Matrícula'))).toBe(false)
+  })
+})

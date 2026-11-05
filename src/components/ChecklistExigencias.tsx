@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { CheckCircle2, AlertTriangle } from 'lucide-react'
-import { FUNCOES, NOTA_EXIGENCIAS, VERSAO_EXIGENCIAS, checklistDaFuncao, type FuncaoImovel } from '@/lib/exigencias'
+import { FUNCOES, NOTA_EXIGENCIAS, VERSAO_EXIGENCIAS, checklistDaFuncao, prazosFaltantes, type FuncaoImovel } from '@/lib/exigencias'
+import { baixarICS } from '@/lib/ics'
 
 /** Checklist de documentos por função do imóvel (ontologia do Instituto THEYE). */
-export default function ChecklistExigencias({ funcaoInicial, anexos }: { funcaoInicial: FuncaoImovel; anexos: string[] }) {
+export default function ChecklistExigencias({ funcaoInicial, anexos, imovel }: { funcaoInicial: FuncaoImovel; anexos: string[]; imovel?: { id: string; nome: string } }) {
   const [funcao, setFuncao] = useState<FuncaoImovel>(funcaoInicial)
   const { funcao: f, itens } = checklistDaFuncao(funcao, anexos)
   const faltam = itens.filter(i => !i.ok).length
@@ -36,6 +37,12 @@ export default function ChecklistExigencias({ funcaoInicial, anexos }: { funcaoI
           </li>
         ))}
       </ul>
+      {faltam > 0 && imovel && (
+        <button type="button" data-testid="exig-agenda" onClick={() => baixarICS(prazosFaltantes(funcao, anexos, imovel), 'documentos-faltantes.ics')}
+          className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm">
+          Pôr os {faltam} documentos faltantes na agenda (prazo de 30 dias)
+        </button>
+      )}
       <p className="text-xs text-grafite-claro mt-2">Fonte: ontologia de locação v{VERSAO_EXIGENCIAS} do Instituto THEYE. {NOTA_EXIGENCIAS}</p>
     </section>
   )

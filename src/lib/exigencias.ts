@@ -38,3 +38,12 @@ export function checklistDaFuncao(funcao: FuncaoImovel, anexos: string[]) {
   const f = FUNCOES.find(x => x.id === funcao)!
   return { funcao: f, itens: f.documentos.map(e => ({ ...e, ok: presente(e.doc, anexos) })) }
 }
+
+/** Passo 562: prazo na agenda para cada documento faltante (30 dias a partir da base), citando a norma. */
+export function prazosFaltantes(funcao: FuncaoImovel, anexos: string[], imovel: { id: string; nome: string }, base = new Date(), dias = 30) {
+  const d = new Date(base.getTime() + dias * 86400000).toISOString().slice(0, 10)
+  return checklistDaFuncao(funcao, anexos).itens.filter(i => !i.ok).map((i, n) => ({
+    id: `exig-${imovel.id}-${n}`, imovelId: imovel.id, imovel: imovel.nome, tipo: 'documento' as const,
+    titulo: `Providenciar: ${i.doc} (${i.norma})`, dataEvento: d, diasRestantes: dias,
+  }))
+}

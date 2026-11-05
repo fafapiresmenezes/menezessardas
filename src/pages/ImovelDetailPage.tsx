@@ -245,7 +245,7 @@ export default function ImovelDetailPage() {
           )}
         </section>
 
-        <ChecklistExigencias funcaoInicial={funcaoDoImovel(imovel.tipo, vigentes[0]?.tipo)} anexos={documentos.map(d => d.nome)} />
+        <ChecklistExigencias funcaoInicial={funcaoDoImovel(imovel.tipo, vigentes[0]?.tipo)} anexos={documentos.map(d => d.nome)} imovel={{ id: imovel.id, nome: `${imovel.endereco}, ${imovel.cidade}` }} />
 
         {historico.length > 0 && (
           <section aria-labelledby="t-hist">
