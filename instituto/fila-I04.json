@@ -359,7 +359,8 @@
    "feito_em": "2026-11-03T2249Z",
    "evidencia": "Duplicar sem perder nada, conferido em 2026-11-03: ramo escritorio-estavel-2026-10-31 integro, head 3ed32d5fe2df2b9b83f5e1d7a8067587b61683fb de 31/10 17:33Z, ancestral de origin/main com 0 commit fora de main (git merge-base --is-ancestor e git rev-list --count), 239 arquivos. Vertente THEYE visivel no [X]: cartao 'Probabilidade do Instituto THEYE' na tela Previsoes (src/pages/PrevisoesPage.tsx:183, PainelInstituto) com modelo convencional, margem de 95%, modelo por grafo e placar, e item Instituto no menu (src/components/Layout.tsx:53). Pedido de mudanca enviado ao thread principal (nada alterado no [X] por este thread) para completar a vertente na mesma tela: chance por classe de acao pela RPC publica instituto_chance_classes() com IC 95%, e link para o checklist de documentos da funcao do imovel. Resposta do thread principal em 22:49Z: entra na mesma onda, depois do D15, com as duas linhas novas no PainelInstituto; se a RPC falhar, o cartao esconde a linha e nao quebra a tela, e o commit vem quando estiver no ar.",
    "elo_ev_anterior": "589f624430bbc0e1b4e3dbe1baec88072492bfe5ea5096f5f6ff892d08d2b73a",
-   "sha256_evidencia": "c92759b69fc638db629b5c15f11fd0403be26e6691b79a4d4c41177f2458d7b4"
+   "sha256_evidencia": "c92759b69fc638db629b5c15f11fd0403be26e6691b79a4d4c41177f2458d7b4",
+   "nota": " Atualização relatada pelo thread do escritório em 2026-11-05T10:23Z (não verificada por este thread): o cartão do Instituto em Previsões do [X] já mostra a chance por classe de ação com margem de 95% e tamanho da amostra, via instituto_chance_classes(); se a RPC falhar, a linha se esconde; o cartão também tem link para o checklist de documentos. Commit cbf0271, gh-pages 43288a73, deploy dpl_6YSYVuADjUF3JUnEo9s8mR6X9R1b, elo 561. Pendente do D15: checklist no drag-in e prazos na agenda."
   },
   {
    "n": "D17",
