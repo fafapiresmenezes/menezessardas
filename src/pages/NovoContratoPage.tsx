@@ -5,6 +5,9 @@ import Layout from '@/components/Layout'
 import { Passo, Escolha, Campo, classeCampo } from '@/components/Assistente'
 import { SkeletonForm } from '@/components/Skeleton'
 import ZonaArrastar from '@/components/ZonaArrastar'
+import ChecklistExigencias from '@/components/ChecklistExigencias'
+import { funcaoDoImovel } from '@/lib/exigencias'
+import type { TipoContrato } from '@/lib/dominio'
 import { TIPOS_CONTRATO, GARANTIAS, INDICES_REAJUSTE, PERIODICIDADES, tiposContratoParaUso, type UsoImovel } from '@/lib/dominio'
 import { repositorio, type Imovel } from '@/lib/repositorio'
 import { emDias, formatarData } from '@/lib/datas'
@@ -213,6 +216,9 @@ export default function NovoContratoPage() {
                   {lendoPdf && ' — lendo o conteúdo…'}
                   {!lendoPdf && textoExtraido && ' — conteúdo lido para a análise'}
                 </p>
+              )}
+              {arquivo && (
+                <ChecklistExigencias key={tipo} funcaoInicial={funcaoDoImovel(imovel.tipo, (tipo || undefined) as TipoContrato | undefined)} anexos={[arquivo.nome]} imovel={{ id: imovel.id, nome: `${imovel.endereco}, ${imovel.cidade}` }} />
               )}
               <dl className="grid gap-3">
                 <div>
