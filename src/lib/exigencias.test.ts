@@ -21,3 +21,10 @@ describe('exigências por função (ontologia v0.8)', () => {
     expect(c.itens.some(i => !i.ok)).toBe(true)
   })
 })
+
+import { textoChanceClasse } from './previsaoInstituto'
+describe('chance por classe do Instituto', () => {
+  it('formata percentual, margem e amostra', () => {
+    expect(textoChanceClasse({ classe: 'Despejo', n: 1234, p: 0.873, ic95: [0.85, 0.892] })).toBe('Despejo: 87% (margem de 95%: 85–89%, n = 1.234)')
+  })
+})

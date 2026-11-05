@@ -10,7 +10,7 @@ import { repositorio, type Contrato } from '@/lib/repositorio'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { preverCarteira, preverReceita, intervaloWilson, registrarPrevisoes, type Faixa, type PrevisaoContrato } from '@/lib/predicao'
 import { TrendingUp, ShieldAlert, Repeat, Scale, ChevronDown, ChevronUp, Info, FlaskConical } from 'lucide-react'
-import { CLASSES_LOCACAO, consultarPrevisaoInstituto, resumirPrevisaoInstituto, type PrevisaoInstituto } from '@/lib/previsaoInstituto'
+import { CLASSES_LOCACAO, consultarPrevisaoInstituto, resumirPrevisaoInstituto, type PrevisaoInstituto , chanceClassesInstituto, textoChanceClasse, type ChanceClasse } from '@/lib/previsaoInstituto'
 
 const moeda = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v)
 const COR: Record<Faixa, string> = { baixo: 'bg-regular', moderado: 'bg-atencao', alto: 'bg-critico' }
@@ -184,6 +184,8 @@ function PainelInstituto() {
   const [classe, setClasse] = useState(CLASSES_LOCACAO[0])
   const [tribunal, setTribunal] = useState('TJRJ')
   const [res, setRes] = useState<PrevisaoInstituto | null>(null)
+  const [chances, setChances] = useState<ChanceClasse[]>([])
+  useEffect(() => { if (supabaseConfigurado) chanceClassesInstituto().then(setChances).catch(() => setChances([])) }, [])
   const [ocupado, setOcupado] = useState(false)
   const [erro, setErro] = useState('')
   const consultar = async () => {
@@ -214,6 +216,12 @@ function PainelInstituto() {
           <select value={tribunal} onChange={e => setTribunal(e.target.value)} className={campo} data-testid="instituto-tribunal">{['TJRJ', 'TJSP', 'TJMG', 'TJRS', 'TJPR', 'TJDFT'].map(t => <option key={t} value={t}>{t}</option>)}</select>
         </label>
       </div>
+      {chances.length > 0 && (
+        <ul className="mt-3 text-sm text-grafite space-y-0.5" data-testid="instituto-chances" aria-label="Chance por tipo de ação">
+          {chances.slice(0, 6).map(c => <li key={c.classe}>{textoChanceClasse(c)}</li>)}
+        </ul>
+      )}
+      <p className="mt-2 text-sm"><a href="https://instituto-theye.vercel.app/imovel.html" target="_blank" rel="noreferrer" className="underline text-navy" data-testid="instituto-checklist">Documentos que o imóvel precisa ter para a locação, por função</a> (o checklist também aparece na ficha de cada imóvel).</p>
       <button onClick={consultar} disabled={ocupado} data-testid="instituto-calcular" className="mt-3 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">{ocupado ? 'Consultando o Instituto…' : 'Calcular'}</button>
       {erro && <p role="alert" className="text-sm text-critico mt-3" data-testid="instituto-erro">{erro}</p>}
       {res && r && (

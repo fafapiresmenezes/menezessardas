@@ -41,3 +41,13 @@ export async function consultarPrevisaoInstituto(body: { tribunal: string; class
   if (data?.erro) throw new Error(data.erro)
   return data as PrevisaoInstituto
 }
+
+// Passo 561 (D16 do Instituto THEYE): chance por classe de ação, só agregados públicos, com IC95 de Wilson.
+export interface ChanceClasse { classe: string; acoes?: number; n: number; tribunais?: string[] | number; p: number; ic95: [number, number] }
+export async function chanceClassesInstituto(): Promise<ChanceClasse[]> {
+  const { data, error } = await supabase.rpc('instituto_chance_classes')
+  if (error || !Array.isArray(data)) return []
+  return (data as ChanceClasse[]).filter(c => typeof c.p === 'number' && Array.isArray(c.ic95))
+}
+export const textoChanceClasse = (c: ChanceClasse) =>
+  `${c.classe}: ${Math.round(c.p * 100)}% (margem de 95%: ${Math.round(c.ic95[0] * 100)}–${Math.round(c.ic95[1] * 100)}%, n = ${c.n.toLocaleString('pt-BR')})`
