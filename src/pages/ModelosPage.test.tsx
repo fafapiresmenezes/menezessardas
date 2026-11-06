@@ -11,6 +11,10 @@ vi.mock('@/lib/supabase', () => ({
     ? { select: () => ({ eq: () => ({ neq: () => ({ order: () => ({ limit: () => Promise.resolve({ data: [{ id: 'c1', titulo: 'Despejo Rua A', cliente: 'Ana', area: 'Imobiliário', numero_processo: '0001-22', imovel: { endereco: 'Rua A, 10' }, contrato: null }] }) }) }) }) }) }
     : { select: () => ({ order: async () => ({ data: proprios }) }), insert: (r: object) => insert(r), delete: () => ({ eq: async () => { await del(); return {} } }) } },
 }))
+vi.mock('@/lib/repositorio', () => ({ repositorio: {
+  listarContratos: async () => [{ id: 'k1', imovelId: 'i1', tipo: 'locacao_comercial', parte: 'Loja XYZ Ltda', dataInicio: '2026-01-01', dataVencimento: '2030-12-31', valor: 25000, periodicidade: 'mensal', indice: 'ipca', garantia: 'seguro_fianca', dataUltimoReajuste: null, notas: '', criadoEm: '2026-01-01', documentos: [] }],
+  listarImoveis: async () => [{ id: 'i1', endereco: 'Av. Paulista 1000', cidade: 'São Paulo', uf: 'SP', tipo: 'conjunto_comercial', uso: 'locado', proprietario: 'João Silva', matricula: '', notas: '', documentos: [] }],
+} }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 const { default: ModelosPage } = await import('./ModelosPage')
 
@@ -59,5 +63,18 @@ describe('Modelos de peças e contratos', () => {
     expect(screen.queryByTestId('form-modelo')).toBeNull()
     fireEvent.click(screen.getByLabelText('Apagar modelo Honorários padrão'))
     await waitFor(() => expect(del).toHaveBeenCalled())
+  })
+
+  it('D06: escolher um contrato preenche locador, locatário, imóvel, aluguel e prazo do modelo', async () => {
+    Object.defineProperty(window, 'location', { value: { ...window.location, pathname: '/', href: '' }, writable: true })
+    render(<ModelosPage />)
+    const sel = screen.getByTestId('preencher-com-contrato')
+    await waitFor(() => expect(sel.querySelectorAll('option').length).toBe(2))
+    fireEvent.change(sel, { target: { value: 'k1' } })
+    expect(screen.getAllByTestId('previa-preenchida').length).toBe(16)
+    fireEvent.click(screen.getByText('Contrato de locação comercial'))
+    const url = decodeURIComponent(window.location.href)
+    expect(url).toContain('Locador: João Silva. Locatário: Loja XYZ Ltda. Imóvel: Av. Paulista 1000, São Paulo. Aluguel: R$ 25.000,00. Prazo: 60 meses.')
+    expect(url).toContain('garantia Seguro-fiança')
   })
 })

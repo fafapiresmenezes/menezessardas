@@ -3,7 +3,9 @@ import { useBaixado } from '@/hooks/useBaixado'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { FileText, Search, Plus, Trash2, Copy } from 'lucide-react'
-import { preencherModelo, VARIAVEIS_MODELO, type CasoParaModelo } from '@/lib/modelos'
+import { preencherModelo, VARIAVEIS_MODELO, type CasoParaModelo, type ContratoParaModelo } from '@/lib/modelos'
+import { repositorio, type Contrato, type Imovel } from '@/lib/repositorio'
+import { rotulosGarantia, rotulosIndice } from '@/lib/rotulos'
 
 // Biblioteca de modelos: cada modelo abre o agente da área no modo Redigir com o pedido pronto.
 // O advogado completa os dados do caso entre colchetes e o agente redige citando a lei do Planalto.
@@ -41,6 +43,17 @@ export default function ModelosPage() {
   // Passo 48: escolher um caso preenche as variáveis do modelo ({{cliente}}, {{processo}}, …) e os colchetes dos rótulos conhecidos.
   const [casos, setCasos] = useState<(CasoParaModelo & { id: string })[]>([])
   const [casoId, setCasoId] = useState('')
+  // Passo D06 (Diamante): preencher o modelo com os dados do contrato (partes, imóvel, valor, prazo, garantia, índice).
+  const [contratoId, setContratoId] = useState('')
+  const [contratos, setContratos] = useState<Contrato[]>([])
+  const [imoveis, setImoveis] = useState<Imovel[]>([])
+  useEffect(() => { Promise.all([repositorio.listarContratos(), repositorio.listarImoveis()]).then(([c, i]) => { setContratos(c.filter(x => !x.encerradoEm)); setImoveis(i) }).catch(() => undefined) }, [])
+  const mesesEntre = (a: string, b: string | null) => { if (!b) return null; const d1 = new Date(a), d2 = new Date(b); return Math.max(1, Math.round((d2.getTime() - d1.getTime()) / (30.44 * 864e5))) }
+  const contratoParaModelo = (): ContratoParaModelo | null => {
+    const c = contratos.find(x => x.id === contratoId); if (!c) return null
+    const im = imoveis.find(i => i.id === c.imovelId)
+    return { locador: im?.proprietario ?? null, locatario: c.parte, imovel: im ? `${im.endereco}, ${im.cidade}` : null, valor: c.valor, prazoMeses: mesesEntre(c.dataInicio, c.dataVencimento), garantia: rotulosGarantia[c.garantia] ?? c.garantia, indice: rotulosIndice[c.indice] ?? c.indice, inicio: c.dataInicio, vencimento: c.dataVencimento }
+  }
   const [baixado, marcarBaixado] = useBaixado() // Passo 401
   const carregar = async () => {
     const { data } = await supabase.from('modelos_escritorio').select('id, titulo, area, agente, pedido').order('criado_em')
@@ -66,10 +79,11 @@ export default function ModelosPage() {
   const AGENTES = ['imobiliario', 'civel', 'trabalhista', 'familia', 'tributario', 'empresarial', 'consumidor', 'previdenciario', 'penal', 'compliance', 'lgpd']
   const abrir = (m: Modelo) => {
     const caso = casos.find(c => c.id === casoId)
-    const pedido = caso ? preencherModelo(m.pedido, caso).texto : m.pedido
+    const ct = contratoParaModelo()
+    const pedido = caso || ct ? preencherModelo(m.pedido, caso ?? { titulo: 'Contrato' }, ct).texto : m.pedido
     window.location.href = `${window.location.pathname}?agente=${m.agente}&modo=redigir&pedido=${encodeURIComponent(pedido)}#/assistente`
   }
-  const previa = (m: Modelo) => { const caso = casos.find(c => c.id === casoId); return caso ? preencherModelo(m.pedido, caso) : null }
+  const previa = (m: Modelo) => { const caso = casos.find(c => c.id === casoId); const ct = contratoParaModelo(); return caso || ct ? preencherModelo(m.pedido, caso ?? { titulo: 'Contrato' }, ct) : null }
   return (
     <Layout title="Modelos de peças e contratos">
       <div className="space-y-5">
@@ -98,6 +112,14 @@ export default function ModelosPage() {
             </select>
             <span className="block text-xs text-grafite-claro mt-1">Nos seus modelos use {VARIAVEIS_MODELO.join(', ')}; rótulos como "Cliente: [ ]" e "Imóvel: [ ]" também são preenchidos.</span>
           </label>
+          <label className="block mt-3 text-sm">
+            <span className="text-grafite-claro">Preencher com o contrato</span>
+            <select value={contratoId} onChange={e => setContratoId(e.target.value)} data-testid="preencher-com-contrato" className="mt-1 border border-navy/20 px-2 py-2 w-full max-w-md bg-white">
+              <option value="">nenhum</option>
+              {contratos.map(c => { const im = imoveis.find(i => i.id === c.imovelId); return <option key={c.id} value={c.id}>{c.parte} · {im?.endereco ?? 'imóvel'}</option> })}
+            </select>
+            <span className="block text-xs text-grafite-claro mt-1">Locador, locatário, imóvel, aluguel, prazo, garantia e índice entram nos campos "[ ]" do modelo.</span>
+          </label>
           <p className="text-xs text-grafite-claro mt-3" data-testid="contador-modelos">{lista.length} modelo{lista.length === 1 ? '' : 's'}{area !== 'Todas' ? ` em ${area}` : ''} · {proprios.length} do escritório · {MODELOS.length} do catálogo
             {/* Passo 118: catálogo em texto (título, área, origem), para o manual do escritório. */}
             {lista.length > 0 && <button type="button" data-testid="copiar-catalogo" onClick={() => navigator.clipboard?.writeText(`Modelos de peças · ${new Date().toLocaleDateString('pt-BR')} · ${lista.length} modelo(s)\n` + lista.map(m => `${m.titulo} · ${m.area} · ${m.proprio ? 'do escritório' : 'catálogo'}`).join('\n')).catch(() => undefined)} className="ml-3 underline text-navy">copiar catálogo</button>}
@@ -115,7 +137,7 @@ export default function ModelosPage() {
               <button type="button" onClick={() => abrir(m)} data-testid={m.proprio ? 'modelo-proprio' : 'modelo'} className="w-full text-left bg-white shadow-sm p-4 hover:border-dourado border border-transparent">
                 <p className="font-medium flex items-center gap-2"><FileText className="w-4 h-4 text-dourado" aria-hidden />{m.titulo}</p>
                 <p className="text-xs text-grafite-claro mt-1">{m.area}{m.proprio && ' · modelo do escritório'}</p>
-                {casoId && (() => { const pv = previa(m); return pv ? <p className="text-xs text-navy mt-1" data-testid="previa-preenchida">{pv.preenchidas.length ? `Preenche: ${pv.preenchidas.join(', ')}` : 'Só anexa os dados do caso'} · {pv.texto.slice(0, 110)}…</p> : null })()}
+                {(casoId || contratoId) && (() => { const pv = previa(m); return pv ? <p className="text-xs text-navy mt-1" data-testid="previa-preenchida">{pv.preenchidas.length ? `Preenche: ${pv.preenchidas.join(', ')}` : 'Só anexa os dados do caso'} · {pv.texto.slice(0, 110)}…</p> : null })()}
               </button>
               <button type="button" onClick={() => duplicar(m)} aria-label={`Duplicar modelo ${m.titulo}`} data-testid="duplicar-modelo" className={`absolute top-2 ${m.proprio ? 'right-10' : 'right-2'} p-2 text-navy`}><Copy size={16} aria-hidden /></button>
               {m.proprio && m.id && <button type="button" onClick={() => apagar(m.id!)} aria-label={`Apagar modelo ${m.titulo}`} className="absolute top-2 right-2 p-2 text-critico"><Trash2 size={16} aria-hidden /></button>}
