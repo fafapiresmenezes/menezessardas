@@ -4,6 +4,7 @@ import Layout from '@/components/Layout'
 import Vazio from '@/components/Vazio'
 import { supabase } from '@/lib/supabase'
 import { registrarEvento } from '@/lib/trilha'
+import { guardarNaBiblioteca } from '@/lib/biblioteca'
 import { ExternalLink, FileSearch } from 'lucide-react'
 
 // Bloco B03: ficha da parte adversa montada só com fontes públicas e oficiais, com finalidade e caso obrigatórios.
@@ -47,6 +48,8 @@ export default function ParteAdversaPage() {
     const fontes = ['Comunica PJe (CNJ)', 'Querido Diário', ...(k ? ['Receita Federal', 'CEIS/CNEP/TCU'] : [])]
     await supabase.from('fichas_parte_adversa').insert({ parte: parte.trim(), documento: doc || null, caso: caso.trim(), finalidade: finalidade.trim(), fontes, resultado: f })
     await registrarEvento({ tipo: 'parte_adversa_consultada', entidade: caso.trim(), resumo: `Ficha pública de ${parte.trim()} · finalidade: ${finalidade.trim()}` })
+    const linhas = [...(f.comunica?.itens ?? []).slice(0, 20).map(c => `${c.data} · ${c.tribunal} · ${c.classe} · ${c.numero}`), ...(f.diarios?.itens ?? []).map(d => `${d.data} · ${d.municipio} · ${d.trecho.slice(0, 160)}`)]
+    await guardarNaBiblioteca({ tipo: 'parte_adversa', titulo: `Parte adversa: ${parte.trim()}`, conteudo: `Finalidade: ${finalidade.trim()}\nFontes: ${fontes.join(', ')}\n\n${linhas.join('\n') || 'Nada encontrado nas fontes públicas.'}`, caso: caso.trim(), etiquetas: ['parte adversa'] })
     carregar()
   }
 

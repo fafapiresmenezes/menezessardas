@@ -18,6 +18,7 @@ import PerfilJulgador from '@/components/PerfilJulgador'
 import { ExternalLink, Scale, Send, Trash2, Copy, ThumbsUp, ThumbsDown } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { mensagemAmigavel } from '@/lib/erros'
+import { guardarNaBiblioteca } from '@/lib/biblioteca'
 
 const EXEMPLOS = [
   'O locatário de loja com contrato de 5 anos tem direito à renovação? Qual o prazo para a ação?',
@@ -108,6 +109,7 @@ export default function AssistentePage() {
   const [erro, setErro] = useState('')
   // Passo 27: avaliação útil / não útil de cada resposta, gravada em avaliacoes_assistente (taxa mensal em Indicadores).
   const [avaliacoes, setAvaliacoes] = useState<Record<string, boolean>>({})
+  const [guardados, setGuardados] = useState<Record<string, boolean>>({})
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 277
   useEffect(() => {
     if (!supabaseConfigurado) return
@@ -293,6 +295,10 @@ export default function AssistentePage() {
             {/* Passo 138: toda resposta é copiável (pergunta + resposta + fontes), não só as peças. */}
             <button type="button" onClick={() => navigator.clipboard?.writeText(c.modo === 'redigir' ? c.resposta : `Pergunta: ${c.pergunta}\n\n${c.resposta}${c.fontes.length ? `\n\nFontes: ${c.fontes.map(f => f.titulo || f.url).join('; ')}` : ''}`).catch(() => undefined)} data-testid="copiar-resposta" className="mt-3 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
               <Copy size={16} aria-hidden="true" /> {c.modo === 'redigir' ? 'Copiar texto da peça' : 'Copiar resposta'}
+            </button>
+            {/* Bloco B04: guardar a resposta na pasta interna "Já pesquisado". */}
+            <button type="button" onClick={() => guardarNaBiblioteca({ tipo: 'assistente', titulo: c.pergunta.slice(0, 200), conteudo: `${c.resposta}${c.fontes.length ? `\n\nFontes: ${c.fontes.map(f => f.titulo || f.url).join('; ')}` : ''}`, etiquetas: [c.especialidade ?? 'geral'] }).then(ok => setGuardados(g => ({ ...g, [c.id]: ok })))} data-testid="guardar-biblioteca" className="mt-3 ml-2 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
+              {guardados[c.id] === true ? 'Guardado em Já pesquisado' : guardados[c.id] === false ? 'Não foi possível guardar' : 'Guardar na biblioteca'}
             </button>
             {c.fontes.length > 0 && (
               <div className="mt-4 pt-3 border-t border-navy/10">
