@@ -5,6 +5,7 @@ import { perguntar, type Consulta, type Especialidade } from '@/lib/assistente'
 import { render } from '@/pages/AssistentePage'
 import { Briefcase, Send, Sparkles } from 'lucide-react'
 import { mensagemAmigavel } from '@/lib/erros'
+import { extrairAcoes } from '@/lib/acoesConsultor'
 
 // Um consultor de IA para cada nível do escritório. O botão "Diagnóstico agora" envia a fotografia
 // atual do escritório (só números agregados, sem dados de clientes) e pede prioridades ao consultor.
@@ -50,6 +51,16 @@ export default function ConsultoresPage() {
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [resposta, setResposta] = useState<Consulta | null>(null)
+  const [criando, setCriando] = useState(false)
+  const [tarefasCriadas, setTarefasCriadas] = useState<number | null>(null)
+  const acoes = resposta ? extrairAcoes(resposta.resposta) : []
+  const virarTarefas = async () => {
+    setCriando(true); setErro('')
+    const prazo = new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10)
+    const { error } = await supabase.from('tarefas').insert(acoes.map(a => ({ titulo: `${a} (${sel.titulo})`, nivel: 'tarefa', prioridade: 'media', prazo, area: 'Gestão interna' })))
+    setCriando(false)
+    if (error) setErro(mensagemAmigavel(error, 'Não deu para criar as tarefas.')); else setTarefasCriadas(acoes.length)
+  }
   const [respondidoEm, setRespondidoEm] = useState<Date | null>(null)
   const [copiado, setCopiado] = useState(false)
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 266
@@ -113,6 +124,19 @@ export default function ConsultoresPage() {
                 {resposta && <button type="button" data-testid="baixar-consultor" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Consultor (${resposta.especialidade}) · ${new Date(resposta.criadoEm).toLocaleString('pt-BR')}\n\nPergunta: ${resposta.pergunta}\n\n${resposta.resposta}\n\nFontes: ${resposta.fontes.length}`], { type: 'text/plain;charset=utf-8' })); a.download = 'consultor.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="underline text-navy print:hidden ml-2">Baixar resposta</button>}{/* Passo 304 */}
                 <button type="button" onClick={() => { setResposta(null); setPergunta(''); setErro(''); try { localStorage.removeItem('lsm-consultor-pergunta') } catch { /* sem memória local */ } }} className="underline text-navy" data-testid="nova-consulta">Nova consulta</button>
                 <a href={`#/projetos?novo=${encodeURIComponent(`Ação do ${sel.titulo}: ${resposta.resposta.replace(/\s+/g, ' ').slice(0, 120)}`)}`} className="underline text-navy" data-testid="virar-tarefa">Virar tarefa em Casos e projetos</a>
+              </div>
+            )}
+            {/* Passo D02/D03 (Diamante): cada ação do diagnóstico vira tarefa em Casos e projetos com prazo de 7 dias, em 1 clique. */}
+            {resposta && acoes.length > 0 && (
+              <div className="mt-4 border-t border-navy/10 pt-3" data-testid="acoes-diagnostico">
+                <p className="text-xs font-semibold text-navy uppercase tracking-wide">Ações sugeridas ({acoes.length})</p>
+                <ul className="mt-2 space-y-1 text-sm text-grafite">
+                  {acoes.map((a, i) => <li key={i} className="flex items-start gap-2"><span className="text-dourado-escuro">{i + 1}.</span><span className="flex-1">{a}</span></li>)}
+                </ul>
+                <button type="button" disabled={criando || tarefasCriadas !== null} onClick={virarTarefas} className="mt-3 min-h-[44px] px-4 bg-navy text-white text-sm disabled:opacity-60" data-testid="virar-tarefas">
+                  {tarefasCriadas !== null ? `${tarefasCriadas} tarefa(s) criada(s) em Casos e projetos` : criando ? 'Criando…' : 'Virar todas em tarefas (prazo: 7 dias)'}
+                </button>
+                {tarefasCriadas !== null && <a href="#/projetos" className="ml-3 underline text-navy text-sm">Abrir Casos e projetos</a>}
               </div>
             )}
           </section>

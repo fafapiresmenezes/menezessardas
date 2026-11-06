@@ -29,6 +29,16 @@ async function listarCompromissos(): Promise<CompromissoGuardado[]> {
   return (data ?? []).map(c => ({ id: c.id, titulo: c.titulo, imovel: c.imovel, dataEvento: c.data_evento, diasAntes: c.dias_antes, avisosDias: c.avisos_dias ?? [c.dias_antes] }))
 }
 
+// Passo D02 (Diamante): prazos das tarefas abertas (inclusive as criadas a partir de intimações) entram na Agenda e nos Alertas.
+async function listarPrazosDeTarefas(): Promise<CompromissoGuardado[]> {
+  if (!supabaseConfigurado) return []
+  try {
+    const { data, error } = await supabase.from('tarefas').select('id,titulo,cliente,numero_processo,prazo,situacao').not('prazo', 'is', null).neq('situacao', 'feito')
+    if (error || !data) return []
+    return data.map(t => ({ id: `tarefa-${t.id}`, titulo: `Prazo: ${t.titulo}`, imovel: t.numero_processo || t.cliente || 'Casos e projetos', dataEvento: String(t.prazo).slice(0, 10), diasAntes: 1, avisosDias: [1] }))
+  } catch { return [] }
+}
+
 export async function salvarCompromisso(c: NovoCompromisso) {
   if (!supabaseConfigurado) {
     localStorage.setItem(CHAVE_LOCAL, JSON.stringify([...lerLocal(), { ...c, id: crypto.randomUUID() }]))
@@ -64,11 +74,13 @@ export function useAlertas() {
 
   const recarregar = useCallback(async () => {
     try {
-      const [imoveis, contratos, compromissos] = await Promise.all([
+      const [imoveis, contratos, proprios0, prazos] = await Promise.all([
         repositorio.listarImoveis(),
         repositorio.listarContratos(),
         listarCompromissos(),
+        listarPrazosDeTarefas(),
       ])
+      const compromissos = [...proprios0, ...prazos]
       const proprios: Alerta[] = compromissos.map(c => ({
         id: `comp-${c.id}`,
         imovelId: '',

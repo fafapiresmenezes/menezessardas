@@ -8,9 +8,10 @@ const consulta = () => {
   for (const m of ['is', 'gte', 'lte', 'neq', 'lt', 'eq']) q[m] = () => q
   return q
 }
+const insert = vi.fn(async (_r: unknown) => ({ error: null }))
 vi.mock('@/lib/supabase', () => ({
   supabaseConfigurado: true,
-  supabase: { from: (t: string) => ({ select: () => t === 'lancamentos_horas' ? Promise.resolve({ data: [{ minutos: 120, faturavel: true }, { minutos: 60, faturavel: false }] }) : consulta() }) },
+  supabase: { from: (t: string) => ({ select: () => t === 'lancamentos_horas' ? Promise.resolve({ data: [{ minutos: 120, faturavel: true }, { minutos: 60, faturavel: false }] }) : consulta(), insert: (r: unknown) => insert(r) }) },
 }))
 const perguntar = vi.fn(async (texto: string, esp: string, _h: unknown[], _m: string, ctx: string) => ({ id: '1', especialidade: esp, modo: 'responder', pergunta: texto, resposta: `## Prioridades\n1. Reduzir atrasos\n\nContexto: ${ctx}`, criadoEm: '2026-11-02T10:00:00Z', fontes: [] }))
 vi.mock('@/lib/assistente', () => ({ perguntar: (...a: unknown[]) => perguntar(...(a as [string, string, unknown[], string, string])) }))
@@ -45,6 +46,11 @@ describe('Consultores do escritório (um por função)', () => {
     expect(ctx).toContain('3 imóveis na carteira; 3 contratos ativos, 3 vencendo em 60 dias; 3 tarefas abertas, 3 atrasadas; 3 intimações não lidas; 3 horas lançadas, 67% faturáveis')
     expect(resp.querySelector('h3')!.textContent).toBe('Prioridades')
     expect(screen.getByTestId('virar-tarefa').getAttribute('href')).toContain('#/projetos?novo=')
+    // D03 (Diamante): as ações extraídas do diagnóstico viram tarefas em 1 clique, com prazo de 7 dias.
+    expect(screen.getByTestId('acoes-diagnostico').textContent).toContain('Reduzir atrasos')
+    fireEvent.click(screen.getByTestId('virar-tarefas'))
+    await waitFor(() => expect(screen.getByTestId('virar-tarefas').textContent).toContain('1 tarefa(s) criada(s)'))
+    expect(insert).toHaveBeenCalledWith([expect.objectContaining({ titulo: 'Reduzir atrasos (Sócia-gestora)', nivel: 'tarefa', prioridade: 'media', area: 'Gestão interna', prazo: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/) })])
     fireEvent.click(screen.getByTestId('nova-consulta'))
     expect(screen.queryByTestId('resposta-consultor')).toBeNull()
   })

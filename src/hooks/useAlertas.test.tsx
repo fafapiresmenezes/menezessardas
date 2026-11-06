@@ -7,9 +7,12 @@ let configurado = false
 const insert = vi.fn(async (_r: unknown): Promise<{ error: { message: string } | null }> => ({ error: null }))
 let linhas: Record<string, unknown>[] = []
 let existentes: { uid_externo: string }[] = []
+let tarefas: Record<string, unknown>[] = []
 vi.mock('@/lib/supabase', () => ({
   get supabaseConfigurado() { return configurado },
-  supabase: { from: () => ({ select: (cols: string) => cols === 'uid_externo' ? { in: async () => ({ data: existentes, error: null }) } : Promise.resolve({ data: linhas, error: null }), insert: (r: unknown) => insert(r) }) },
+  supabase: { from: (tabela: string) => tabela === 'tarefas'
+    ? { select: () => ({ not: () => ({ neq: async () => ({ data: tarefas, error: null }) }) }) }
+    : { select: (cols: string) => cols === 'uid_externo' ? { in: async () => ({ data: existentes, error: null }) } : Promise.resolve({ data: linhas, error: null }), insert: (r: unknown) => insert(r) } },
 }))
 const imoveis = [{ id: 'i1', endereco: 'Rua A 1', cidade: 'Rio de Janeiro', uf: 'RJ', tipo: 'apartamento', uso: 'locado', proprietario: 'X', matricula: '', notas: '', documentos: [] }]
 let contratos: Record<string, unknown>[] = []
@@ -19,7 +22,7 @@ const { useAlertas, salvarCompromisso, importarCompromissosIcs } = await import(
 
 describe('useAlertas', () => {
   beforeEach(() => {
-    configurado = false; localStorage.clear(); insert.mockClear(); linhas = []; existentes = []; listarImoveis = vi.fn(async () => imoveis)
+    configurado = false; localStorage.clear(); insert.mockClear(); linhas = []; existentes = []; tarefas = []; listarImoveis = vi.fn(async () => imoveis)
     contratos = [{ id: 'c1', imovelId: 'i1', tipo: 'locacao_residencial', parte: 'Ana', dataInicio: '2025-01-01', dataVencimento: emDias(20), valor: 1000, periodicidade: 'mensal', indice: 'fixo', garantia: 'caucao', dataUltimoReajuste: null, notas: '', criadoEm: '2025-01-01', documentos: [] }]
   })
 
@@ -55,6 +58,15 @@ describe('useAlertas', () => {
     const { result } = renderHook(() => useAlertas())
     await waitFor(() => expect(result.current.loading).toBe(false))
     expect(result.current.alertas.find(a => a.id === 'comp-k1')).toMatchObject({ tipo: 'compromisso', titulo: 'Perícia', diasRestantes: 10 })
+  })
+
+  it('D02: prazos de tarefas abertas (ex.: criadas de uma intimação) viram compromissos na Agenda e nos Alertas; feitas e sem prazo ficam de fora', async () => {
+    configurado = true
+    tarefas = [{ id: 't1', titulo: 'Contestar: processo 0001', cliente: 'Ana', numero_processo: '0001-22.2026.8.19.0001', prazo: emDias(4), situacao: 'a_fazer' }]
+    const { result } = renderHook(() => useAlertas())
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(result.current.alertas.find(a => a.id === 'comp-tarefa-t1')).toMatchObject({ tipo: 'compromisso', titulo: 'Prazo: Contestar: processo 0001', imovel: '0001-22.2026.8.19.0001', diasRestantes: 4 })
+    expect(result.current.getCriticos()).toBe(2)
   })
 
   it('importa .ics pulando os UIDs já existentes e os repetidos no próprio arquivo; sem eventos não grava', async () => {
