@@ -25,7 +25,10 @@ const contratos = [
 let carregando = false
 let ultimo: object | null = { mes: '2026-10-01', enviado_em: '2026-11-01T11:00:00Z', destinatarios: 2, sha256: 'abc' }
 const invoke = vi.fn(async (_n: string, _o: object): Promise<{ data?: Record<string, unknown>; error: { message: string } | null }> => ({ data: { enviado: true, mes: '2026-10-01', sha256: 'abcdef1234567890' }, error: null }))
-const from = (t: string) => { const o: Record<string, unknown> = {}; for (const m of ['select', 'order', 'limit', 'maybeSingle']) o[m] = () => o; o.then = (f: (v: unknown) => unknown) => Promise.resolve({ data: t === 'relatorios_mensais' ? ultimo : null }).then(f); return o }
+let horasLanc: Record<string, unknown>[] = []
+let casosHon: Record<string, unknown>[] = []
+const from = (t: string) => { const o: Record<string, unknown> = {}; for (const m of ['select', 'order', 'limit', 'maybeSingle', 'eq']) o[m] = () => o; o.then = (f: (v: unknown) => unknown) => Promise.resolve({ data: t === 'relatorios_mensais' ? ultimo : t === 'lancamentos_horas' ? horasLanc : t === 'tarefas' ? casosHon : null }).then(f); return o }
+vi.mock('@/lib/equipe', () => ({ listarPessoas: async () => [{ id: 'u1', nome: 'Letícia', email: 'l@x' }] }))
 vi.mock('@/lib/supabase', () => ({ supabaseConfigurado: true, supabase: { from, functions: { invoke: (n: string, o: object) => invoke(n, o) } } }))
 vi.mock('@/hooks/useImoveis', () => ({ useImoveis: () => ({ imoveis, loading: carregando }) }))
 vi.mock('@/hooks/useAlertas', () => ({ useAlertas: () => ({ alertas, loading: false }) }))
@@ -111,5 +114,19 @@ describe('Relatórios', () => {
     expect(cartao('Compromissos no período')).toBe('0'); expect(cartao('Pendências vencidas')).toBe('0')
     expect(screen.getByText(/Escolha um horizonte maior ou cadastre prazos/)).toBeTruthy()
     expect(screen.getByTestId('relatorio-mensal').textContent).toContain('O primeiro vai no próximo dia 1.')
+  })
+
+  it('D10: por cliente e por sócio consolida horas e honorários; vazio explica; CSV', async () => {
+    horasLanc = [{ usuario_id: 'u1', cliente: 'Ana', minutos: 120, valor_hora: 200, faturavel: true }]
+    casosHon = [{ cliente: 'Ana', responsavel_id: 'u1', honorario_previsto: 5000, honorario_recebido: 1500 }]
+    render(<RelatoriosPage />)
+    const sec = await screen.findByTestId('por-cliente-socio')
+    await waitFor(() => expect(sec.textContent).toContain('Letícia'))
+    expect(sec.textContent).toContain('Ana'); expect(sec.textContent).toContain('100%')
+    expect(sec.textContent).toContain("R$ 1.100")
+    const clique = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined)
+    fireEvent.click(screen.getByTestId('baixar-clientes-socios'))
+    expect(clique).toHaveBeenCalled(); expect(screen.getByTestId('baixar-clientes-socios').textContent).toBe('Baixado')
+    clique.mockRestore(); horasLanc = []; casosHon = []
   })
 })

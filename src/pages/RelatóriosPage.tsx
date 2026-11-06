@@ -9,6 +9,8 @@ import { repositorio, type Contrato, type Documento } from '@/lib/repositorio'
 import { diasAte } from '@/lib/datas'
 import { rotulosTipoAlerta, rotulosTipoImovel } from '@/lib/rotulos'
 import type { Periodicidade } from '@/lib/dominio'
+import { porCliente, porSocio, csvClientesSocios, type HoraLancada, type CasoHonorario, type PessoaNome } from '@/lib/relatorioClientes'
+import { listarPessoas } from '@/lib/equipe'
 
 type Periodo = 30 | 90 | 365
 
@@ -55,6 +57,21 @@ export default function RelatóriosPage() {
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 265
   const [ocupado, setOcupado] = useState(false)
   const [baixado, marcarBaixado] = useBaixado() // Passo 405
+
+  // Passo D10 (Diamante): relatório por cliente e por sócio (horas, custo, honorários, rentabilidade).
+  const [horasLanc, setHorasLanc] = useState<HoraLancada[]>([])
+  const [casosHon, setCasosHon] = useState<CasoHonorario[]>([])
+  const [pessoas, setPessoas] = useState<PessoaNome[]>([])
+  const [csBaixado, setCsBaixado] = useState(false)
+  useEffect(() => {
+    if (!supabaseConfigurado) return
+    const q = async <T,>(f: () => PromiseLike<{ data: unknown }>) => { try { return ((await f()).data ?? []) as T[] } catch { return [] as T[] } }
+    q<HoraLancada>(() => supabase.from('lancamentos_horas').select('usuario_id,cliente,minutos,valor_hora,faturavel')).then(setHorasLanc)
+    q<CasoHonorario>(() => supabase.from('tarefas').select('cliente,responsavel_id,honorario_previsto,honorario_recebido').eq('nivel', 'projeto')).then(setCasosHon)
+    listarPessoas().then(ps => setPessoas(ps.map(p => ({ id: p.id, nome: p.nome, email: p.email })))).catch(() => setPessoas([]))
+  }, [])
+  const clientes = porCliente(horasLanc, casosHon)
+  const socios = porSocio(horasLanc, casosHon, pessoas)
 
   useEffect(() => {
     repositorio.listarContratos().then(setContratos)
@@ -248,6 +265,35 @@ export default function RelatóriosPage() {
               {porTipoImovel.map(([tipo, n]) => (
                 <Barra key={tipo} rotulo={rotulosTipoImovel[tipo] ?? tipo} valor={n} maximo={maiorImovel} />
               ))}
+            </div>
+          </section>
+
+          <section className="bg-white p-6 shadow-sm lg:col-span-2" aria-labelledby="t-clientes" data-testid="por-cliente-socio">
+            <h2 id="t-clientes" className="text-lg mb-2">Por cliente e por sócio</h2>
+            <p className="text-sm text-grafite-claro mb-4">Horas lançadas (tela Horas) e honorários dos casos (tela Honorários), consolidados. Rentabilidade do cliente = recebido menos o custo das horas.</p>
+            {clientes.length === 0 && socios.length === 0 ? (
+              <p className="text-sm text-grafite-claro">Nada lançado ainda. Lance horas em Horas e honorários em Honorários; esta tabela se monta sozinha.</p>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <caption className="text-left text-xs font-semibold text-navy uppercase tracking-wide mb-2">Clientes</caption>
+                    <thead><tr className="text-left text-xs text-grafite-claro"><th className="py-1 pr-2">Cliente</th><th className="py-1 pr-2">Horas</th><th className="py-1 pr-2">Recebido</th><th className="py-1">Rentab.</th></tr></thead>
+                    <tbody>{clientes.map(l => <tr key={l.cliente} className="border-t border-navy/10"><td className="py-1 pr-2">{l.cliente}</td><td className="py-1 pr-2">{l.horas.toLocaleString('pt-BR')}h</td><td className="py-1 pr-2">{moeda(l.recebido)}</td><td className={`py-1 ${l.rentabilidade < 0 ? 'text-critico' : 'text-regular'}`}>{moeda(l.rentabilidade)}</td></tr>)}</tbody>
+                  </table>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <caption className="text-left text-xs font-semibold text-navy uppercase tracking-wide mb-2">Sócios e responsáveis</caption>
+                    <thead><tr className="text-left text-xs text-grafite-claro"><th className="py-1 pr-2">Pessoa</th><th className="py-1 pr-2">Horas</th><th className="py-1 pr-2">% fat.</th><th className="py-1">Recebido</th></tr></thead>
+                    <tbody>{socios.map(l => <tr key={l.id} className="border-t border-navy/10"><td className="py-1 pr-2">{l.nome}</td><td className="py-1 pr-2">{l.horas.toLocaleString('pt-BR')}h</td><td className="py-1 pr-2">{l.pctFaturavel}%</td><td className="py-1">{moeda(l.recebido)}</td></tr>)}</tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+            <div className="mt-4 flex flex-wrap gap-3 print:hidden">
+              <button type="button" data-testid="baixar-clientes-socios" disabled={clientes.length === 0 && socios.length === 0} onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csvClientesSocios(clientes, socios)], { type: 'text/csv;charset=utf-8' })); a.download = 'clientes-e-socios.csv'; a.click(); setCsBaixado(true); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm disabled:opacity-50">{csBaixado ? 'Baixado' : 'Baixar CSV (clientes e sócios)'}</button>
+              <button type="button" onClick={() => window.print()} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Imprimir (PDF)</button>
             </div>
           </section>
 
