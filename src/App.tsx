@@ -28,6 +28,9 @@ const EquipePage = lazy(() => import('@/pages/EquipePage'))
 import InicioPage from '@/pages/InicioPage'
 const FontesPage = lazy(() => import('@/pages/FontesPage'))
 const KycPage = lazy(() => import('@/pages/KycPage'))
+const PerfilClientePage = lazy(() => import('@/pages/PerfilClientePage'))
+const ParteAdversaPage = lazy(() => import('@/pages/ParteAdversaPage'))
+const BibliotecaPage = lazy(() => import('@/pages/BibliotecaPage'))
 const MeuDiaPage = lazy(() => import('@/pages/MeuDiaPage'))
 const ConsultoresPage = lazy(() => import('@/pages/ConsultoresPage'))
 const NuvemPage = lazy(() => import('@/pages/NuvemPage'))
@@ -245,6 +248,18 @@ function App() {
         <Route
           path="/kyc"
           element={isAuthenticated ? <KycPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/perfil-cliente"
+          element={isAuthenticated ? <PerfilClientePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/parte-adversa"
+          element={isAuthenticated ? <ParteAdversaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/biblioteca"
+          element={isAuthenticated ? <BibliotecaPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/fontes"
