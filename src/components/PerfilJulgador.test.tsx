@@ -45,7 +45,7 @@ describe('Perfil do julgador (DataJud e imprensa)', () => {
     render(<PerfilJulgador />)
     fireEvent.change(screen.getByLabelText('Órgão julgador (vara ou câmara)'), { target: { value: '10ª Vara' } })
     fireEvent.click(screen.getByText('Montar perfil'))
-    await waitFor(() => expect(screen.getByRole('alert').textContent).toBe('CNJ fora do ar'))
+    await waitFor(() => expect(screen.getByRole('alert').textContent).toContain('CNJ fora do ar'))
     invoke.mockResolvedValueOnce({ data: { erro: 'órgão não encontrado' }, error: null })
     fireEvent.click(screen.getByText('Montar perfil'))
     await waitFor(() => expect(screen.getByRole('alert').textContent).toBe('órgão não encontrado'))

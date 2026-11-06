@@ -96,7 +96,7 @@ describe('Ficha do fornecedor', () => {
     expect(screen.getByTestId('sla-pct').textContent).toBe('45% de SLA cumprido')
     salvar.mockRejectedValueOnce(new Error('sem conexão'))
     fireEvent.click(within(within(screen.getByTestId('ocorrencias')).getAllByTestId('ocorrencia')[1]).getByText('marcar como resolvida'))
-    await waitFor(() => expect(screen.getByRole('alert').textContent).toBe('Não foi possível salvar: sem conexão'))
+    await waitFor(() => expect(screen.getByRole('alert').textContent).toContain('sem conexão'))
   })
 
   it('SLA: nova meta exige descrição, número e sentido; medição do mês exige número e informa se cumpriu; fornecedor inexistente', async () => {

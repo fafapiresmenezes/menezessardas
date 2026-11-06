@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { perguntar, type Consulta, type Especialidade } from '@/lib/assistente'
 import { render } from '@/pages/AssistentePage'
 import { Briefcase, Send, Sparkles } from 'lucide-react'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Um consultor de IA para cada nível do escritório. O botão "Diagnóstico agora" envia a fotografia
 // atual do escritório (só números agregados, sem dados de clientes) e pede prioridades ao consultor.
@@ -58,7 +59,7 @@ export default function ConsultoresPage() {
     try {
       const ctx = await fotografia()
       setResposta(await perguntar(texto, sel.chave, [], 'responder', ctx)); setRespondidoEm(new Date()); setCopiado(false)
-    } catch (e) { setErro(e instanceof Error ? e.message : 'Falha ao consultar.') } finally { setCarregando(false) }
+    } catch (e) { setErro(mensagemAmigavel(e, 'O consultor não respondeu agora. Tente de novo em instantes.')) } finally { setCarregando(false) }
   }
   const diagnostico = () => consultar(`Faça o diagnóstico do escritório do ponto de vista de ${sel.titulo.toLowerCase()}: as 5 ações prioritárias para os próximos 30 dias, a métrica de cada uma e o principal risco.`)
 

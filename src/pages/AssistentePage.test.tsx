@@ -61,7 +61,7 @@ describe('Assistente jurídico', () => {
     perguntar.mockRejectedValueOnce(new Error('Limite mensal de IA atingido'))
     fireEvent.change(screen.getByLabelText('Pergunta'), { target: { value: 'Outra pergunta longa' } })
     fireEvent.click(botao())
-    await waitFor(() => expect(screen.getByRole('alert').textContent).toBe('Limite mensal de IA atingido'))
+    await waitFor(() => expect(screen.getByRole('alert').textContent).toMatch(/teto mensal de IA/))
     expect(renderMd('1) um\n2) dois\n\n# Título')).toBe('<ul class="list-disc pl-5 space-y-1"><li>um</li><li>dois</li></ul><p class="font-semibold text-navy mt-3">Título</p>')
   })
 

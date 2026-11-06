@@ -22,6 +22,7 @@ import {
   slaCumprido, rotuloOcorrencia, type Ocorrencia, type TipoOcorrencia,
 } from '@/lib/fornecedores'
 import { ArrowLeft, ExternalLink, Search, Plus, Check, X } from 'lucide-react'
+import { mensagemAmigavel } from '@/lib/erros'
 
 const rotuloCategoria = Object.fromEntries(CATEGORIAS.map(c => [c.valor, c.rotulo]))
 
@@ -78,7 +79,7 @@ export default function FornecedorPage() {
         setTimeout(() => setAviso(''), 4000)
       }
     } catch (e) {
-      setErro('Não foi possível salvar: ' + (e instanceof Error ? e.message : 'erro desconhecido'))
+      setErro(mensagemAmigavel(e, 'Não foi possível salvar o fornecedor.'))
     }
   }
 
@@ -93,7 +94,7 @@ export default function FornecedorPage() {
         `Receita Federal: ${r.razaoSocial}, situação ${r.situacao}.`
       )
     } catch (e) {
-      setErro(e instanceof Error ? e.message : 'Falha na consulta.')
+      setErro(mensagemAmigavel(e, 'Não foi possível consultar o CNPJ agora.'))
     } finally {
       setConsultando(false)
     }

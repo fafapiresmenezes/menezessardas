@@ -17,6 +17,7 @@ import {
 import PerfilJulgador from '@/components/PerfilJulgador'
 import { ExternalLink, Scale, Send, Trash2, Copy, ThumbsUp, ThumbsDown } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
+import { mensagemAmigavel } from '@/lib/erros'
 
 const EXEMPLOS = [
   'O locatário de loja com contrato de 5 anos tem direito à renovação? Qual o prazo para a ação?',
@@ -134,7 +135,7 @@ export default function AssistentePage() {
     // Passo 59: "Perguntar sobre esta tela" traz a tela e o que está visível como fatos do caso.
     const sobre = qs.get('contexto')
     if (sobre) { setContexto(sobre.slice(0, 3000)); if (!qs.get('modo')) setModo('caminhos') }
-    historicoConsultas().then(setHistorico).catch(e => setErro(e instanceof Error ? e.message : 'Não foi possível carregar o histórico.'))
+    historicoConsultas().then(setHistorico).catch(e => setErro(mensagemAmigavel(e, 'Não foi possível carregar o histórico.')))
   }, [])
 
   const mudarEspecialidade = (e: Especialidade) => {
@@ -152,7 +153,7 @@ export default function AssistentePage() {
       setHistorico(h => [c, ...h])
       setPergunta('')
     } catch (e) {
-      setErro(e instanceof Error ? e.message : 'Não foi possível consultar agora.')
+      setErro(mensagemAmigavel(e, 'Não foi possível consultar agora.'))
     } finally {
       setOcupado(false)
     }

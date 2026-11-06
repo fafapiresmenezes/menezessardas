@@ -59,7 +59,7 @@ describe('Consultores do escritório (um por função)', () => {
     expect(localStorage.getItem('lsm-consultor-pergunta')).toBe('Como reduzir inadimplência?')
     perguntar.mockRejectedValueOnce(new Error('Sem chave da IA'))
     fireEvent.submit(campo.closest('form')!)
-    await waitFor(() => expect(screen.getByRole('alert').textContent).toBe('Sem chave da IA'))
+    await waitFor(() => expect(screen.getByRole('alert').textContent).toContain('Sem chave da IA'))
     expect(perguntar.mock.calls[0][0]).toBe('Como reduzir inadimplência?')
   })
 })

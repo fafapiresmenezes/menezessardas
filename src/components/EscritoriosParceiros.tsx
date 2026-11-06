@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import FaturasParceiros from '@/components/FaturasParceiros'
 import MarcaParceiros from '@/components/MarcaParceiros'
 import { criarEscritorio, escritorioDasPessoas, listarEscritorios, moverParaEscritorio, SEDE_ID, type Escritorio, type Pessoa } from '@/lib/equipe'
+import { mensagemAmigavel } from '@/lib/erros'
 
 const brl = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
@@ -28,23 +29,23 @@ export default function EscritoriosParceiros({ pessoas, aoMudar }: { pessoas: Pe
       if (error || data?.erro) throw new Error(data?.erro ?? error?.message ?? 'Erro')
       setLinkConvite(data.link); setMsg(data.enviado ? `Convite enviado para ${conv.email}.` : `Convite criado, mas o e-mail não saiu (${data.detalhe ?? 'sem provedor'}). Envie o link manualmente.`)
       setConv({ nome_escritorio: '', email: '', funcao: 'operador' }); await carregarConvites()
-    } catch (e) { setMsg(e instanceof Error ? e.message : 'Erro') } finally { setOcupado(false) }
+    } catch (e) { setMsg(mensagemAmigavel(e)) } finally { setOcupado(false) }
   }
 
   const carregar = async () => {
-    try { setLista(await listarEscritorios()); setOnde(await escritorioDasPessoas()) } catch (e) { setMsg(e instanceof Error ? e.message : 'Erro') }
+    try { setLista(await listarEscritorios()); setOnde(await escritorioDasPessoas()) } catch (e) { setMsg(mensagemAmigavel(e)) }
   }
   useEffect(() => { carregar(); carregarConvites(); supabase.rpc('aceites_contrato_saas').then(({ data }) => setAceitesSaas((data ?? []) as typeof aceitesSaas)) }, [pessoas.length])
 
   const criar = async () => {
     setMsg(''); setOcupado(true)
     try { await criarEscritorio(nome); setNome(''); setMsg('Escritório criado. Agora mova as pessoas dele na lista abaixo.'); await carregar() }
-    catch (e) { setMsg(e instanceof Error ? e.message : 'Erro') } finally { setOcupado(false) }
+    catch (e) { setMsg(mensagemAmigavel(e)) } finally { setOcupado(false) }
   }
   const mover = async (p: Pessoa, esc: string) => {
     setMsg(''); setOcupado(true)
     try { await moverParaEscritorio(p.id, esc); setOnde({ ...onde, [p.id]: esc }); await carregar(); aoMudar() }
-    catch (e) { setMsg(e instanceof Error ? e.message : 'Erro') } finally { setOcupado(false) }
+    catch (e) { setMsg(mensagemAmigavel(e)) } finally { setOcupado(false) }
   }
   const total = lista.filter(e => e.id !== SEDE_ID).reduce((s, e) => s + e.mensal, 0)
 

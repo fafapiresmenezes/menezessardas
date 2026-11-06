@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import type { Contrato } from '@/lib/repositorio'
 import { Calculator, Copy } from 'lucide-react'
+import { mensagemAmigavel } from '@/lib/erros'
 
 interface Resultado { indice: string; acumulado12m: number; de: string; ate: string; fonte: string; meses?: { data: string; valor: number }[]; desatualizado?: boolean; aviso?: string }
 // Passo 33: simulador com escolha de índice (IGP-M, IPCA, INPC) e gráfico dos últimos 12 meses.
@@ -30,7 +31,7 @@ export default function Reajuste({ contrato, imovel }: { contrato: Contrato; imo
       if (data?.erro) throw new Error(data.erro)
       setRes(data); setIndiceSim(indice); setComparacao(c => ({ ...c, [indice]: data.acumulado12m }))
     } catch (e) {
-      setErro(e instanceof Error ? e.message : 'Não foi possível consultar o índice.')
+      setErro(mensagemAmigavel(e, 'Não foi possível consultar o índice.'))
     } finally { setCarregando(false) }
   }
 

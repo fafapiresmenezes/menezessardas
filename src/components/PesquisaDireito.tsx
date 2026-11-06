@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { perguntar } from '@/lib/assistente'
 import { ExternalLink, FlaskConical, Globe2, Scale } from 'lucide-react'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Pesquisa e desenvolvimento do direito (pedido de M, 30/10/2026): jurisprudência brasileira, direito estrangeiro
 // e comparado, e o programa do Instituto THEYE de pesquisas para o desenvolvimento do direito brasileiro,
@@ -58,7 +59,7 @@ export default function PesquisaDireito() {
       const r = await perguntar(`Pesquisa do Instituto: "${p.titulo}". Pergunta: ${p.pergunta}. Jurisdições a comparar: ${p.jurisdicoes}. Origem: ${p.origem}.`, 'pesquisa', [], 'responder', '', false)
       await supabase.from('pesquisas_instituto').update({ nota: r.resposta, nota_em: new Date().toISOString(), status: 'concluida' }).eq('id', p.id)
       await carregar()
-    } catch (e) { setMsg(e instanceof Error ? e.message : 'A IA não respondeu.') } finally { setGerando(null) }
+    } catch (e) { setMsg(mensagemAmigavel(e, 'A IA não respondeu agora. Tente de novo em instantes.')) } finally { setGerando(null) }
   }
   const apagar = async (id: string) => { await supabase.from('pesquisas_instituto').delete().eq('id', id); carregar() }
   const casoNome = (id: string | null) => { const c = casos.find(x => x.id === id); return c ? `${c.titulo}${c.cliente ? ` (${c.cliente})` : ''}` : '' }

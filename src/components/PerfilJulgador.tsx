@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { Gavel, ExternalLink } from 'lucide-react'
+import { mensagemAmigavel } from '@/lib/erros'
 
 interface Perfil {
   resumo: string
@@ -80,7 +81,7 @@ export default function PerfilJulgador() {
       if (data?.erro) throw new Error(data.erro)
       setPerfil(data as Perfil)
     } catch (e) {
-      setErro(e instanceof Error ? e.message : 'Não foi possível montar o perfil agora.')
+      setErro(mensagemAmigavel(e, 'Não foi possível montar o perfil agora.'))
     } finally { setOcupado(false) }
   }
 
