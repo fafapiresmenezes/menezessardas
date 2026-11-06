@@ -18,7 +18,7 @@ import AceiteContratoSaas from './AceiteContratoSaas'
 import AceiteTermos from './AceiteTermos'
 import { aplicarTema, temaAtual } from '@/lib/tema'
 import { listarPessoas, perfilAtual } from '@/lib/equipe'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -47,6 +47,7 @@ const itensMenu = [
   { icon: Radar, label: 'Monitoramento de processos', href: '/monitoramento' },
   { icon: UserCheck, label: 'Checagem de contraparte', href: '/kyc' },
   { icon: ClipboardList, label: 'Perfil do cliente', href: '/perfil-cliente' },
+  { icon: FileSearch, label: 'Parte adversa', href: '/parte-adversa' },
   { icon: ShieldCheck, label: 'Compliance', href: '/compliance' },
   { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
   { icon: Gauge, label: 'Indicadores', href: '/indicadores' },
