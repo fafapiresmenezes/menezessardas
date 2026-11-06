@@ -58,7 +58,7 @@ export default function EstiloEscrita() {
         {pecas.map(p => (
           <li key={p.id} className="py-2 flex items-center justify-between gap-3 text-sm">
             <span><strong>{p.titulo}</strong> <span className="text-grafite-claro">· {p.texto.length.toLocaleString('pt-BR')} caracteres · {new Date(p.criado_em).toLocaleDateString('pt-BR')}</span></span>
-            <button type="button" onClick={() => apagar(p.id)} className="min-h-[44px] px-3 text-grafite-claro hover:text-red-700 flex items-center gap-1" aria-label={`Apagar ${p.titulo}`}><Trash2 size={16} aria-hidden="true" /> Apagar</button>
+            <button type="button" onClick={() => apagar(p.id)} className="min-h-[44px] px-3 text-grafite-claro hover:text-critico flex items-center gap-1" aria-label={`Apagar ${p.titulo}`}><Trash2 size={16} aria-hidden="true" /> Apagar</button>
           </li>
         ))}
       </ul>

@@ -145,7 +145,7 @@ export default function NuvemPage() {
             {/* Passo 110: lista da pasta em texto (nome, tamanho, data), para conferência ou inventário. */}
             {itens.some(i => i.id !== null) && <button type="button" data-testid="nuvem-copiar" onClick={() => navigator.clipboard?.writeText(`Nuvem · ${area === 'escritorio' ? 'Escritório' : 'Pessoal'}${sub ? '/' + sub : ''} · ${new Date().toLocaleDateString('pt-BR')}\n` + itens.filter(i => i.id !== null).map(i => `${i.name} · ${kb(i.metadata?.size)}${i.updated_at ? ' · ' + new Date(i.updated_at).toLocaleDateString('pt-BR') : ''}`).join('\n')).catch(() => undefined)} className="min-h-[44px] px-3 border border-navy/20 text-navy">Copiar lista</button>}
           </div>
-          {msg && <p role="alert" className="text-sm text-red-700 mt-3">{msg}</p>}
+          {msg && <p role="alert" className="text-sm text-critico mt-3">{msg}</p>}
           <ul className="mt-4 divide-y divide-navy/10" data-testid="nuvem-lista">
             {!itens.length && <li className="py-6 text-sm text-grafite">Pasta vazia. Arraste ou envie arquivos (até 50 MB cada).</li>}
             {itens.filter(i => !filtroNome.trim() || i.name.toLowerCase().includes(filtroNome.trim().toLowerCase())).map(i => i.id === null ? (

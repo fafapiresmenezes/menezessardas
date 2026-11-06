@@ -225,6 +225,10 @@ html.dark { color-scheme: dark; }
 .dark .from-white { --tw-gradient-from: #131C2E var(--tw-gradient-from-position); --tw-gradient-to: rgb(19 28 46 / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
 .dark .to-pergaminho { --tw-gradient-to: #1B2740 var(--tw-gradient-to-position); }
 .dark .bg-gray-100 { background-color: #0B1220; } .dark .text-gray-600 { color: #A7B0BE; }
+/* Revisão R01 (06/11): no modo escuro a barra lateral fica #2C4474 e o dourado caía a 3,1:1; monograma mais claro (4,9:1). Botão dourado mantém texto navy (5,2:1) em vez do creme do modo escuro (2,2:1). */
+.dark .bg-navy.text-white .text-dourado { color: #D4B57A; }
+.dark .bg-dourado.text-navy, .dark .bg-dourado .text-navy { color: #14213D; }
+.dark .text-dourado-escuro { color: #D4B57A; }
 
 /* Passo 52: destaque do tour guiado */
 .tour-destaque { outline: 3px solid #B08D57 !important; outline-offset: 3px; box-shadow: 0 0 0 6px rgba(176, 141, 87, 0.25); transition: outline-color .2s; }

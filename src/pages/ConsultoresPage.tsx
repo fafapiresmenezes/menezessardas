@@ -100,7 +100,7 @@ export default function ConsultoresPage() {
               <button type="submit" disabled={carregando} className="min-h-[44px] px-4 border border-navy text-navy" aria-label="Enviar"><Send size={16} /></button>
             </form>
             {carregando && <p className="text-sm text-grafite mt-6">O consultor está analisando o escritório…</p>}
-            {erro && <p role="alert" className="text-sm text-red-700 mt-6">{erro}</p>}
+            {erro && <p role="alert" className="text-sm text-critico mt-6">{erro}</p>}
             {resposta && <div data-testid="resposta-consultor" className="text-sm text-grafite mt-6 space-y-2" dangerouslySetInnerHTML={{ __html: render(resposta.resposta) }} />}
             {resposta && (
               <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-grafite-claro" data-testid="acoes-consultor">
