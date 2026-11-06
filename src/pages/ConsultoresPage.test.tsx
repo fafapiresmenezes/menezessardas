@@ -68,4 +68,12 @@ describe('Consultores do escritório (um por função)', () => {
     await waitFor(() => expect(screen.getByRole('alert').textContent).toContain('Sem chave da IA'))
     expect(perguntar.mock.calls[0][0]).toBe('Como reduzir inadimplência?')
   })
+
+  it('passo A04: Enviar fica desativado enquanto a pergunta tem menos de 5 letras', () => {
+    render(<ConsultoresPage />)
+    const enviar = screen.getByRole('button', { name: 'Enviar' }) as HTMLButtonElement
+    expect(enviar.disabled).toBe(true)
+    fireEvent.change(screen.getByLabelText('Pergunta ao consultor'), { target: { value: 'Como cobrar?' } })
+    expect(enviar.disabled).toBe(false)
+  })
 })

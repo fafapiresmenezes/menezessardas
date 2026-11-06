@@ -109,7 +109,7 @@ export default function ConsultoresPage() {
               <label className="sr-only" htmlFor="perg-consultor">Pergunta ao consultor</label>
               <input id="perg-consultor" value={pergunta} onChange={e => { setPergunta(e.target.value); try { localStorage.setItem('lsm-consultor-pergunta', e.target.value) } catch { /* sem memória local */ } }} placeholder="Ou pergunte algo específico a este consultor"
                 className="flex-1 min-h-[44px] border border-navy/20 px-3 text-sm" />
-              <button type="submit" disabled={carregando} className="min-h-[44px] px-4 border border-navy text-navy" aria-label="Enviar"><Send size={16} /></button>
+              <button type="submit" disabled={carregando || pergunta.trim().length < 5} title={pergunta.trim().length < 5 ? 'Escreva a pergunta (5 letras ou mais)' : undefined} className="min-h-[44px] px-4 border border-navy text-navy disabled:opacity-50 disabled:cursor-not-allowed" aria-label="Enviar"><Send size={16} /></button>{/* Passo A04: sem pergunta o botão fica desativado, em vez de não fazer nada */}
             </form>
             {carregando && <p className="text-sm text-grafite mt-6">O consultor está analisando o escritório…</p>}
             {erro && <p role="alert" className="text-sm text-critico mt-6">{erro}</p>}

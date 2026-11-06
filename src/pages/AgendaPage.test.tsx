@@ -121,4 +121,11 @@ describe('Agenda', () => {
     expect(upsert).toHaveBeenCalledWith(expect.objectContaining({ chave: 'teste_outlook', valor: expect.stringContaining('"resultado":"funcionou"') }), { onConflict: 'chave' })
     clique.mockRestore()
   })
+
+  it('passo A04: semana em PDF sem resposta do banco avisa em vez de quebrar a tela', async () => {
+    rpc.mockImplementation(async () => ({ data: null, error: null }))
+    montar()
+    fireEvent.click(screen.getByTestId('semana-pdf'))
+    await waitFor(() => expect(screen.getByTestId('semana-msg').textContent).toBe('A agenda da semana não respondeu agora. Tente de novo em instantes.'))
+  })
 })
