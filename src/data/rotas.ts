@@ -8,7 +8,7 @@ export const ROTAS_TELAS: { rota: string; nome: string }[] = [
   { rota: '/legislacao', nome: 'Legislação' }, { rota: '/fontes', nome: 'Fontes do advogado' }, { rota: '/previsoes', nome: 'Previsões' },
   { rota: '/indicadores', nome: 'Indicadores' }, { rota: '/relatorios', nome: 'Relatórios' }, { rota: '/mercado', nome: 'Mercado jurídico' },
   { rota: '/horas', nome: 'Horas' }, { rota: '/honorarios', nome: 'Honorários' }, { rota: '/consumo', nome: 'Consumo' },
-  { rota: '/fornecedores', nome: 'Fornecedores' }, { rota: '/kyc', nome: 'KYC' }, { rota: '/perfil-cliente', nome: 'Perfil do cliente' }, { rota: '/parte-adversa', nome: 'Parte adversa' }, { rota: '/biblioteca', nome: 'Já pesquisado' }, { rota: '/laboratorio-admin', nome: 'Laboratório (administradores)' }, { rota: '/compliance', nome: 'Compliance' },
+  { rota: '/fornecedores', nome: 'Fornecedores' }, { rota: '/kyc', nome: 'KYC' }, { rota: '/perfil-cliente', nome: 'Perfil do cliente' }, { rota: '/parte-adversa', nome: 'Parte adversa' }, { rota: '/biblioteca', nome: 'Já pesquisado' }, { rota: '/laboratorio-admin', nome: 'Laboratório (administradores)' }, { rota: '/enquetes', nome: 'Enquetes do direito' }, { rota: '/compliance', nome: 'Compliance' },
   { rota: '/nuvem', nome: 'Nuvem' }, { rota: '/trilha', nome: 'Trilha de auditoria' }, { rota: '/instituto', nome: 'Instituto' },
   { rota: '/equipe', nome: 'Equipe' }, { rota: '/settings', nome: 'Configurações' },
 ]

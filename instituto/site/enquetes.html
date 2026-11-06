@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enquetes do direito · Instituto THEYE</title>
+<meta name="description" content="O que advogados e pesquisadores pensam sobre temas do desenvolvimento do direito brasileiro: enquetes públicas, só agregados, sempre com número de votos e margem de erro.">
+<link rel="preload" href="/fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="base.css">
+<style>
+.lista{display:grid;gap:1px;background:var(--linha);border:1px solid var(--linha)}
+.lista>article{background:var(--papel);padding:28px 32px}
+.lista h3{font-size:24px;margin:6px 0 16px;max-width:40ch}
+.opc{display:grid;grid-template-columns:1fr auto;gap:4px 16px;font-size:14.5px;margin:10px 0}
+.opc .b{grid-column:1/-1;height:6px;background:var(--papel-2);position:relative}
+.opc .ic{position:absolute;top:0;bottom:0;background:var(--grafo);opacity:.25}
+.opc .pt{position:absolute;top:-2px;width:2px;height:10px;background:var(--grafo)}
+.sm{font-size:13.5px;color:var(--apagado)}
+.veredito{display:inline-block;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border:1px solid var(--ouro);color:var(--ouro);margin-top:12px}
+dl{display:grid;grid-template-columns:220px 1fr;gap:8px 24px;font-size:14.5px;margin-top:16px}
+@media(max-width:600px){dl{grid-template-columns:1fr}}
+dt{color:var(--apagado)} dd{color:var(--tinta)}
+</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/placar.html">Placar</a><a href="/comparar.html">Grafo x convencional</a><a href="/noticias.html">Notícias</a><a href="/enquetes.html" aria-current="page">Enquetes</a><a href="/ontologia.html">Ontologia</a><a href="/estudar.html">Estudar</a></nav>
+</div></header>
+<main id="conteudo">
+<div class="hero"><div class="w">
+  <div class="kicker">Opinião medida · só agregados</div>
+  <h1>O que quem pratica o direito pensa sobre o futuro dele?</h1>
+  <p class="lead">Enquetes abertas pelos escritórios parceiros sobre temas do desenvolvimento do direito brasileiro: IA no Judiciário, reforma da Lei do Inquilinato, LGPD, custas, prazos. Publicamos só o total, a partir de 10 votos, sempre com a margem de erro. Ninguém vê voto de ninguém.</p>
+  <aside class="um-min" aria-label="Em 1 minuto"><b>Em 1 minuto</b><p>Advogados votam dentro da plataforma. Aqui aparece só a soma, com o tamanho da amostra e o erro. Se a diferença couber no erro, dizemos "empate técnico".</p><a class="btn" href="/noticias.html">Ver o índice de notícias</a></aside>
+</div></div>
+
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Enquetes públicas · <span data-k="quando">carregando</span></div><h2>Resultados até agora.</h2></div>
+  <p>Uma enquete é um retrato de quem respondeu, não da advocacia inteira. O intervalo ao lado de cada percentual (Wilson, 95%) diz até onde o número pode variar com esse tamanho de amostra.</p></div>
+  <div class="lista" id="enquetes"><article><div class="sm">Carregando…</div></article></div>
+</div></section>
+
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Método</div><h2>Exatamente o que foi feito.</h2></div></div>
+  <dl>
+    <dt>Quem vota</dt><dd>Pessoas com conta na plataforma dos escritórios parceiros, uma vez por conta. O banco recusa o segundo voto.</dd>
+    <dt>O que é guardado</dt><dd>Enquete, opção escolhida e identificador da conta, só para impedir voto duplo. Nenhum relatório, tela ou API devolve quem votou em quê.</dd>
+    <dt>O que é publicado</dt><dd>Total por opção, número de votos e intervalo de confiança de 95% (Wilson). Enquetes com menos de 10 votos aparecem sem contagem, como "amostra pequena".</dd>
+    <dt>Vencedor</dt><dd>Só quando o intervalo da opção mais votada não cruza o da segunda. Caso contrário, "empate técnico".</dd>
+    <dt>Limites</dt><dd>Amostra de conveniência: não é pesquisa representativa da advocacia brasileira. Serve para registrar tendências de quem usa a plataforma, não para generalizar.</dd>
+  </dl>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · Bloco B, passo B14, regras fixadas em 06/11/2026</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="enquetes.js"></script>
+</body>
+</html>
