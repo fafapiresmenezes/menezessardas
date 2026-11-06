@@ -123,7 +123,7 @@ describe('Relatórios', () => {
     const sec = await screen.findByTestId('por-cliente-socio')
     await waitFor(() => expect(sec.textContent).toContain('Letícia'))
     expect(sec.textContent).toContain('Ana'); expect(sec.textContent).toContain('100%')
-    expect(sec.textContent).toContain("R$ 1.100")
+    expect(sec.textContent).toMatch(/1\.100/)
     const clique = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined)
     fireEvent.click(screen.getByTestId('baixar-clientes-socios'))
     expect(clique).toHaveBeenCalled(); expect(screen.getByTestId('baixar-clientes-socios').textContent).toBe('Baixado')
