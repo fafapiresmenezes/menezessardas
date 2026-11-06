@@ -2,6 +2,7 @@
 // e notícias sobre o magistrado. A IA resume o padrão decisório e sugere como argumentar.
 // Não é perfil psicológico: só o que está em decisões e publicações públicas.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { sortearPerfil, instrucoesDeRedacao, hash32 } from '../../../src/lib/estiloPecas.ts'
 
 const MODELO = 'claude-sonnet-5-5'
 const MODELO_RESERVA = 'claude-haiku-5-5'
@@ -151,12 +152,14 @@ Deno.serve(async (req) => {
     },
   }
   const dados = JSON.stringify({ julgador: nome || null, tribunal: TRIBUNAIS[tribunal], orgao: orgao || null, tema: tema || null, estatisticasDataJud: estatisticas, noticias: imprensa })
+  // Rotação de estilo (06/11/2026): varia só a redação dos textos; números e estrutura não mudam.
+  const redacao = instrucoesDeRedacao(sortearPerfil({ semente: hash32(`${tribunal}|${orgao}|${nome}|${Date.now()}`) }))
   const corpo = (modelo: string) => JSON.stringify({
       model: modelo,
       max_tokens: 6000,
       tools: [ferramenta],
       tool_choice: { type: 'auto' },
-      system: `Você é analista de jurimetria para um escritório de advocacia do Rio de Janeiro. Monte um perfil DECISÓRIO (não psicológico) do órgão julgador e, se houver, do magistrado, usando apenas os dados públicos fornecidos: estatísticas do DataJud (CNJ) e manchetes. Em português do Brasil. Nunca atribua características pessoais, opiniões ou intenções ao magistrado; fale de padrões observáveis e diga claramente quando os dados são insuficientes. Se o tema do caso foi informado, direcione as recomendações a ele. Responda obrigatoriamente chamando a ferramenta registrar_perfil.`,
+      system: `Você é analista de jurimetria para um escritório de advocacia do Rio de Janeiro. Monte um perfil DECISÓRIO (não psicológico) do órgão julgador e, se houver, do magistrado, usando apenas os dados públicos fornecidos: estatísticas do DataJud (CNJ) e manchetes. Em português do Brasil. Nunca atribua características pessoais, opiniões ou intenções ao magistrado; fale de padrões observáveis e diga claramente quando os dados são insuficientes. Se o tema do caso foi informado, direcione as recomendações a ele. Responda obrigatoriamente chamando a ferramenta registrar_perfil.\n\n${redacao}`,
       messages: [{ role: 'user', content: `DADOS PÚBLICOS:\n${dados}` }],
     })
   // Tenta de novo em sobrecarga (429/5xx) e cai para o modelo rápido se o principal falhar.

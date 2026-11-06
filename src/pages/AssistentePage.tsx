@@ -16,7 +16,8 @@ import {
 } from '@/lib/assistente'
 import PerfilJulgador from '@/components/PerfilJulgador'
 import { ExternalLink, Scale, Send, Trash2, Copy, ThumbsUp, ThumbsDown, FileDown } from 'lucide-react'
-import { baixarPecaWord } from '@/lib/formatarPeca'
+import { baixarPecaWord, type Formatacao } from '@/lib/formatarPeca'
+import { carregarFormatacao } from '@/lib/formatacaoUsuario'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { mensagemAmigavel } from '@/lib/erros'
 import { guardarNaBiblioteca } from '@/lib/biblioteca'
@@ -105,6 +106,8 @@ export default function AssistentePage() {
   const [modo, setModo] = useState<Modo>('responder')
   const [contexto, setContexto] = useState('')
   const [usarEstilo, setUsarEstilo] = useState(true)
+  const [formatacao, setFormatacao] = useState<Partial<Formatacao> | null>(null)
+  useEffect(() => { carregarFormatacao().then(setFormatacao).catch(() => undefined) }, [])
   const [historico, setHistorico] = useState<Consulta[]>([])
   const [ocupado, setOcupado] = useState(false)
   const [erro, setErro] = useState('')
@@ -220,14 +223,13 @@ export default function AssistentePage() {
               <textarea id="contexto" value={contexto} onChange={e => setContexto(e.target.value)} rows={3}
                 placeholder="Partes, datas, valores, o que já aconteceu. Quanto mais fatos, melhor a peça ou a matriz."
                 className="w-full border border-navy/15 p-3 text-sm focus:outline-none focus:border-dourado" />
-              {modo === 'redigir' && (
-                <label className="flex items-center gap-2 mt-3 text-sm">
-                  <input type="checkbox" checked={usarEstilo} onChange={e => setUsarEstilo(e.target.checked)} data-testid="usar-estilo" />
-                  Redigir no meu estilo de escrita (peças enviadas em Configurações)
-                </label>
-              )}
             </>
           )}
+          {/* Bloco E: o estilo próprio vale para todos os modos (perguntas, peças e caminhos). */}
+          <label className="flex items-center gap-2 mt-3 text-sm min-h-[44px]">
+            <input type="checkbox" checked={usarEstilo} onChange={e => setUsarEstilo(e.target.checked)} data-testid="usar-estilo" />
+            Escrever no meu estilo e na minha formatação (peças enviadas em <a href="#/settings" className="underline decoration-dourado">Configurações</a>)
+          </label>
           <div className="flex flex-wrap items-center gap-2 mt-3">
             <button
               onClick={() => enviar()}
@@ -297,14 +299,14 @@ export default function AssistentePage() {
             <button type="button" onClick={() => navigator.clipboard?.writeText(c.modo === 'redigir' ? c.resposta : `Pergunta: ${c.pergunta}\n\n${c.resposta}${c.fontes.length ? `\n\nFontes: ${c.fontes.map(f => f.titulo || f.url).join('; ')}` : ''}`).catch(() => undefined)} data-testid="copiar-resposta" className="mt-3 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
               <Copy size={16} aria-hidden="true" /> {c.modo === 'redigir' ? 'Copiar texto da peça' : 'Copiar resposta'}
             </button>
-            {c.modo === 'redigir' && (
-              <button type="button" onClick={() => baixarPecaWord(c.resposta, c.pergunta.slice(0, 60))} data-testid="baixar-peca-word" className="mt-3 ml-2 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
-                <FileDown size={16} aria-hidden="true" /> Baixar peça formatada (Word)
+            {c.modo !== 'caminhos' && (
+              <button type="button" onClick={() => baixarPecaWord(c.resposta, c.pergunta.slice(0, 60), usarEstilo ? formatacao : null)} data-testid="baixar-peca-word" className="mt-3 ml-2 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
+                <FileDown size={16} aria-hidden="true" /> {c.modo === 'redigir' ? 'Baixar peça formatada (Word)' : 'Baixar parecer formatado (Word)'}
               </button>
             )}
             {c.estilo && (
               <p className="mt-2 text-xs text-grafite-claro" data-testid="estilo-da-peca">
-                Estilo desta peça: {c.estilo.mistura.map(m => `${m.nome} ${Math.round(m.peso * 100)}%`).join(' + ')}{c.estilo.aderencia != null ? ` · aderência ao perfil ${c.estilo.aderencia}%` : ''}. A próxima peça sai com outro ritmo e outros conectivos. Revise e assine antes de usar.
+                Estilo deste texto: {c.estilo.mistura.map(m => `${m.nome} ${Math.round(m.peso * 100)}%`).join(' + ')}{c.estilo.aderencia != null ? ` · aderência ao perfil ${c.estilo.aderencia}%` : ''}. A próxima sai com outro ritmo e outros conectivos. Revise e assine antes de usar.
               </p>
             )}
             {/* Bloco B04: guardar a resposta na pasta interna "Já pesquisado". */}

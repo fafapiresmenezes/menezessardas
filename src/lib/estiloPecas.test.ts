@@ -1,6 +1,6 @@
 // Rotação de estilo das peças (06/11/2026): perfis reprodutíveis, diferentes entre si e dentro dos limites.
 import { describe, it, expect } from 'vitest'
-import { sortearPerfil, instrucoesDoPerfil, medirTexto, aderencia, distancia, gerador, hash32, ESCOLAS, REFERENCIAS, LIMITES, DISTANCIA_MINIMA, type Perfil } from './estiloPecas'
+import { sortearPerfil, instrucoesDoPerfil, instrucoesDeRedacao, amostrasDoAutor, medirTexto, aderencia, distancia, gerador, hash32, ESCOLAS, REFERENCIAS, LIMITES, DISTANCIA_MINIMA, type Perfil } from './estiloPecas'
 import { pecaEmHtml, ehTitulo } from './formatarPeca'
 
 describe('estiloPecas', () => {
@@ -93,5 +93,19 @@ describe('formatarPeca', () => {
     expect(html).toContain('&lt;nada&gt;')
     expect(html).toContain('<blockquote>Art. 62.')
     expect(html).toContain('<ul class="pedidos"><li>a) a citação do réu;</li>')
+  })
+})
+
+describe('rotação em todos os agentes', () => {
+  it('instruções curtas mudam só a redação e mantêm estrutura e números', () => {
+    const t = instrucoesDeRedacao(sortearPerfil({ semente: 5 }))
+    expect(t).toContain('REDAÇÃO DESTA RESPOSTA')
+    expect(t).toContain('mantenha a estrutura, os números')
+    expect(t).not.toContain('FORMATAÇÃO')
+  })
+  it('amostras do autor respeitam o limite de caracteres', () => {
+    const a = amostrasDoAutor([{ titulo: 'A', texto: 'x'.repeat(10000) }, { titulo: 'B', texto: 'y'.repeat(10000) }, { titulo: 'C', texto: 'z' }], 15000)
+    expect(a).toHaveLength(2)
+    expect(a.join('').replace(/### [AB]\n/g, '')).toHaveLength(15000)
   })
 })

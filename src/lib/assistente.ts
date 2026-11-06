@@ -62,9 +62,9 @@ export interface Consulta {
 }
 
 type DadosPeca = { perfilEstilo?: { mistura?: { nome: string; peso: number }[] }; aderencia?: number } | null
-const estiloDe = (modo: string, dados: unknown): Consulta['estilo'] => {
+const estiloDe = (_modo: string, dados: unknown): Consulta['estilo'] => {
   const d = dados as DadosPeca
-  return modo === 'redigir' && d?.perfilEstilo?.mistura ? { mistura: d.perfilEstilo.mistura, aderencia: d.aderencia } : undefined
+  return d?.perfilEstilo?.mistura ? { mistura: d.perfilEstilo.mistura, aderencia: d.aderencia } : undefined
 }
 
 const MATRIZ_EXEMPLO: Matriz = {

@@ -5,7 +5,7 @@
 //   2. os artigos mais relevantes dessas leis vão ao modelo principal, que responde citando artigo e lei.
 // O texto de cada lei fica em cache na tabela leis_texto por 7 dias.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { sortearPerfil, instrucoesDoPerfil, medirTexto, aderencia, hash32, type Perfil } from '../../../src/lib/estiloPecas.ts'
+import { sortearPerfil, instrucoesDoPerfil, instrucoesDeRedacao, amostrasDoAutor, medirTexto, aderencia, hash32, type Perfil } from '../../../src/lib/estiloPecas.ts'
 
 const MODELO_TRIAGEM = 'claude-haiku-5-5'
 const MODELO_RESPOSTA = 'claude-sonnet-5-5'
@@ -344,6 +344,38 @@ Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"
       ...historico.slice(-6).map((h: { papel: string; texto: string }) => ({ role: h.papel === 'assistente' ? 'assistant' : 'user', content: h.texto })),
       { role: 'user', content: trechos },
     ]
+    // Estilo de escrita próprio (pedido de M, 30/10 e 06/11/2026): as peças que a pessoa enviou em
+    // Configurações valem para TODOS os modos; nas peças vão até 70 mil caracteres, nos demais 15 mil.
+    let estiloProprio = ''
+    if (usuario && corpo.estilo !== false) {
+      try {
+        const { data: pecas } = await servico().from('estilos_escrita').select('titulo, texto').eq('usuario_id', usuario).order('criado_em').limit(10)
+        if (pecas && pecas.length) {
+          const amostras = amostrasDoAutor(pecas as { titulo: string; texto: string }[], modo === 'redigir' ? 70000 : 15000)
+          estiloProprio = `\n\nESTILO DE ESCRITA DO AUTOR (${amostras.length} peças de referência). Imite fielmente vocabulário, extensão das frases, forma de abrir e fechar, tom, modo de numerar e de citar a lei. Nunca copie trechos factuais das amostras; use-as só como modelo de forma.\n${amostras.join('\n\n')}`
+        }
+      } catch { /* sem estilo, segue padrão */ }
+    }
+    // Rotação de estilo (pedido de M, 06/11/2026) em todos os modos: cada texto sorteia um perfil
+    // diferente dos últimos textos da mesma pessoa, para que nunca saiam todos iguais.
+    let perfil: Perfil | null = null
+    if (corpo.rotacao !== false) {
+      let anteriores: Perfil[] = []
+      if (usuario) {
+        try {
+          const { data: ult } = await servico().from('consultas_juridicas').select('dados').eq('usuario_id', usuario).order('criado_em', { ascending: false }).limit(6)
+          anteriores = ((ult ?? []) as { dados: { perfilEstilo?: Perfil } | null }[]).map(u => u.dados?.perfilEstilo).filter((x): x is Perfil => !!x?.parametros)
+        } catch { /* sem histórico, sorteia livre */ }
+      }
+      perfil = sortearPerfil({
+        semente: hash32(`${usuario ?? semanal ?? 'anonimo'}|${pergunta}|${Date.now()}`),
+        especialidade,
+        anteriores,
+        usados: anteriores.flatMap(a => Object.values(a.conectivos ?? {}).flat()),
+      })
+    }
+    const prevalece = estiloProprio ? '\nQuando houver ESTILO DE ESCRITA DO AUTOR, ele prevalece: use a rotação só para variar ritmo, conectivos, abertura e fecho.' : ''
+    const blocoPerfil = perfil ? `\n\n${modo === 'redigir' ? instrucoesDoPerfil(perfil) : instrucoesDeRedacao(perfil)}${prevalece}` : ''
     let texto = ''
     let dados: unknown = null
 
@@ -382,7 +414,7 @@ Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"
       const r = await anthropic(chave, {
         model: MODELO_RESPOSTA, max_tokens: 8000, tools: [ferramenta], tool_choice: { type: 'auto' }, // Sonnet 5.5 recusa tool_choice forçado
 
-        system: `${regrasComuns}\nMonte de 2 a 5 caminhos (extrajudicial, judicial, negociação, aguardar etc.), pontue cada um em quatro critérios e aponte as zonas cinzentas com honestidade. Responda obrigatoriamente chamando a ferramenta registrar_caminhos, sem texto fora dela.`,
+        system: `${regrasComuns}\nMonte de 2 a 5 caminhos (extrajudicial, judicial, negociação, aguardar etc.), pontue cada um em quatro critérios e aponte as zonas cinzentas com honestidade. Responda obrigatoriamente chamando a ferramenta registrar_caminhos, sem texto fora dela.${estiloProprio}${blocoPerfil}`,
         messages: mensagens,
       }, usuario)
       const bruto = r.content?.find((c: { type: string }) => c.type === 'tool_use')?.input ?? null
@@ -395,51 +427,14 @@ Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"
       }
       d.recomendado = Math.min(Math.max(0, Number(d.recomendado) || 0), d.caminhos.length - 1)
       if (!Array.isArray(d.proximosPassos)) d.proximosPassos = []
-      dados = d
+      dados = perfil ? { ...d, perfilEstilo: perfil } : d
       texto = `${d.sintese}\n\n**Recomendado:** ${d.caminhos[d.recomendado]?.nome ?? d.caminhos[0]?.nome}. ${d.porque}`
     } else {
-      // Estilo de escrita próprio: até 10 peças enviadas pelo usuário em Configurações (pedido de M, 30/10/2026).
-      let estiloProprio = ''
-      if (modo === 'redigir' && usuario && corpo.estilo !== false) {
-        try {
-          const { data: pecas } = await servico().from('estilos_escrita').select('titulo, texto').eq('usuario_id', usuario).order('criado_em').limit(10)
-          if (pecas && pecas.length) {
-            let total = 0
-            const amostras: string[] = []
-            for (const p of pecas as { titulo: string; texto: string }[]) {
-              const t = p.texto.slice(0, Math.max(0, 70000 - total)); if (!t) break
-              total += t.length; amostras.push(`### ${p.titulo}\n${t}`)
-            }
-            estiloProprio = `\n\nESTILO DE ESCRITA DO AUTOR (${amostras.length} peças de referência). Imite fielmente vocabulário, extensão das frases, forma de abrir e fechar, tom, modo de numerar e de citar a lei. Nunca copie trechos factuais das amostras; use-as só como modelo de forma.\n${amostras.join('\n\n')}`
-          }
-        } catch { /* sem estilo, segue padrão */ }
-      }
-      // Rotação de estilo (pedido de M, 06/11/2026): cada peça sorteia um perfil de escrita
-      // diferente das últimas peças da mesma pessoa, para que nunca saiam todas iguais.
-      let perfil: Perfil | null = null
-      if (modo === 'redigir' && corpo.rotacao !== false) {
-        let anteriores: Perfil[] = []
-        if (usuario) {
-          try {
-            const { data: ult } = await servico().from('consultas_juridicas').select('dados').eq('usuario_id', usuario).eq('modo', 'redigir').order('criado_em', { ascending: false }).limit(6)
-            anteriores = ((ult ?? []) as { dados: { perfilEstilo?: Perfil } | null }[]).map(u => u.dados?.perfilEstilo).filter((x): x is Perfil => !!x?.parametros)
-          } catch { /* sem histórico, sorteia livre */ }
-        }
-        perfil = sortearPerfil({
-          semente: hash32(`${usuario ?? 'anonimo'}|${pergunta}|${Date.now()}`),
-          especialidade,
-          anteriores,
-          usados: anteriores.flatMap(a => Object.values(a.conectivos ?? {}).flat()),
-        })
-      }
-      const blocoPerfil = perfil
-        ? `\n\n${instrucoesDoPerfil(perfil)}${estiloProprio ? '\nQuando houver ESTILO DE ESCRITA DO AUTOR, ele prevalece: use este perfil só para variar ritmo, conectivos, abertura e fecho.' : ''}`
-        : ''
       const sistema = modo === 'redigir'
         ? `${regrasComuns}
 Redija a peça ou o contrato pedido, completo e pronto para revisão: título; qualificação das partes com [campos entre colchetes] para o que faltar; cláusulas ou tópicos numerados; fundamentação legal embutida no texto (artigo e lei); pedidos ou cláusulas finais; local, data e assinatura. Use o padrão forense brasileiro e linguagem clara. Ao final, acrescente uma seção "Pontos a conferir antes de usar" com o que depende de fatos ou documentos.${estiloProprio}${blocoPerfil}`
         : `${regrasComuns}
-Estrutura: resposta direta em 1–2 frases; fundamentação com os artigos; riscos ou exceções (inclusive zonas cinzentas e divergências); próximos passos práticos. Títulos curtos em negrito e listas. Termine com "Fontes consultadas: " e os nomes das leis usadas.`
+Estrutura: resposta direta em 1–2 frases; fundamentação com os artigos; riscos ou exceções (inclusive zonas cinzentas e divergências); próximos passos práticos. Títulos curtos em negrito e listas. Termine com "Fontes consultadas: " e os nomes das leis usadas.${estiloProprio}${blocoPerfil}`
       const resposta = await anthropic(chave, { model: MODELO_RESPOSTA, max_tokens: modo === 'redigir' ? 12000 : 6000, system: sistema, messages: mensagens }, usuario)
       texto = (resposta.content ?? []).filter((c: { type: string }) => c.type === 'text').map((c: { text: string }) => c.text).join('\n').trim()
       if (perfil) {

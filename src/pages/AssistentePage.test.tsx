@@ -84,7 +84,7 @@ describe('Assistente jurídico', () => {
     montar('#/assistente?contexto=Tela%20Im%C3%B3veis%3A%203%20contratos%20vencidos')
     await waitFor(() => expect(screen.getByRole('tab', { name: 'Caminhos' }).getAttribute('aria-selected')).toBe('true'))
     expect((screen.getByLabelText('Fatos do caso (opcional)') as HTMLTextAreaElement).value).toBe('Tela Imóveis: 3 contratos vencidos')
-    expect(screen.queryByTestId('usar-estilo')).toBeNull()
+    expect(screen.getByTestId('usar-estilo')).toBeTruthy() // Bloco E: o estilo próprio vale também em Caminhos
     perguntar.mockResolvedValueOnce(consulta({ id: 'm1', modo: 'caminhos', pergunta: 'O que fazer com os vencidos?', resposta: '', fontes: [], matriz }))
     fireEvent.change(screen.getByLabelText('Pergunta'), { target: { value: 'O que fazer com os vencidos?' } })
     fireEvent.click(screen.getByRole('button', { name: 'Caminhos' }))

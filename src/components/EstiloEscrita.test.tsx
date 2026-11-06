@@ -36,7 +36,7 @@ describe('Meu estilo de escrita', () => {
   it('lê um PDF enviado e preenche texto e título; com 10 peças o formulário some', async () => {
     render(<EstiloEscrita />)
     const arquivo = new File(['%PDF'], 'parecer-2025.pdf', { type: 'application/pdf' })
-    fireEvent.change(await screen.findByLabelText(/Arquivo \(PDF ou TXT\)/), { target: { files: [arquivo] } })
+    fireEvent.change(await screen.findByLabelText(/Arquivo \(Word, PDF ou TXT\)/), { target: { files: [arquivo] } })
     await waitFor(() => expect((screen.getByLabelText('Texto da peça') as HTMLTextAreaElement).value).toContain('Texto extraído do PDF.'))
     expect((screen.getByLabelText('Título da peça') as HTMLInputElement).value).toBe('parecer-2025')
     cleanup(); pecas = Array.from({ length: 10 }, (_, i) => ({ id: `p${i}`, titulo: `Peça ${i}`, texto: longo, criado_em: '2026-11-01T00:00:00Z' }))

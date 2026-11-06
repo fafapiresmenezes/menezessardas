@@ -94,6 +94,10 @@ describe('assistente-juridico', () => {
     expect(resp!.messages[0]).toEqual({ role: 'assistant', content: 'antes' })
     expect(resp!.messages.at(-1).content).toContain('Art. 51. Nas locações')
     expect(resp!.system).toContain('Fontes consultadas')
+    // Bloco E: perguntas também recebem a rotação de redação, e o perfil fica guardado.
+    expect(resp!.system).toContain('REDAÇÃO DESTA RESPOSTA')
+    expect(resp!.system).not.toContain('PERFIL DE ESCRITA DESTA PEÇA')
+    expect((b.dados as { perfilEstilo: { mistura: unknown[] } }).perfilEstilo.mistura.length).toBeGreaterThanOrEqual(2)
     expect(estado.inseridos.filter(i => i.tabela === 'consumo_api')).toHaveLength(2)
     expect(estado.inseridos.find(i => i.tabela === 'consultas_juridicas')!.linha).toMatchObject({ usuario_id: 'u1', especialidade: 'imobiliario', modo: 'responder', modelo: 'claude-sonnet-5-5' })
   })
@@ -129,6 +133,25 @@ describe('assistente-juridico', () => {
     const c = await (await chamar({ pergunta: 'Redija notificação', modo: 'redigir', rotacao: false })).json() as Resposta
     expect(c.dados).toBeNull()
     expect(pedidosIa.at(-1)!.system).not.toContain('PERFIL DE ESCRITA')
+  })
+
+  it('responder e caminhos usam as peças da própria pessoa (até 15 mil caracteres) e a rotação; estilo=false tira as peças', async () => {
+    estado.tabelas.estilos_escrita = [{ usuario_id: 'u1', titulo: 'Parecer modelo', texto: 'P'.repeat(20000), criado_em: '2026-01-01' }]
+    ia = c => (c.tools?.[0]?.name === 'planejar_pesquisa' ? triagem({ leis: ['inquilinato'], termos: [] }) : texto('Resposta.'))
+    await chamar({ pergunta: 'O fiador responde depois da prorrogação?' })
+    const sys = pedidosIa.at(-1)!.system as string
+    expect(sys).toContain('ESTILO DE ESCRITA DO AUTOR (1 peças de referência)')
+    expect(sys.match(/P+/g)!.reduce((m, x) => Math.max(m, x.length), 0)).toBe(15000)
+    expect(sys).toContain('ele prevalece')
+    await chamar({ pergunta: 'O fiador responde depois da prorrogação?', estilo: false })
+    expect(pedidosIa.at(-1)!.system).not.toContain('ESTILO DE ESCRITA DO AUTOR')
+    const matriz = { sintese: 's', caminhos: [{ nome: 'A', descricao: 'd', fundamento: 'f', exito: 3, rapidez: 3, custo: 3, risco: 3 }, { nome: 'B', descricao: 'd', fundamento: 'f', exito: 3, rapidez: 3, custo: 3, risco: 3 }], recomendado: 0, porque: 'p', proximosPassos: [] }
+    ia = c => (c.tools?.[0]?.name === 'planejar_pesquisa' ? triagem({ leis: ['inquilinato'], termos: [] }) : jsonResp({ content: [{ type: 'tool_use', name: 'registrar_caminhos', input: matriz }] }))
+    const r = await (await chamar({ pergunta: 'Quais caminhos para o atraso?', modo: 'caminhos' })).json() as { dados: { perfilEstilo?: unknown; caminhos: unknown[] } }
+    expect(pedidosIa.at(-1)!.system).toContain('REDAÇÃO DESTA RESPOSTA')
+    expect(pedidosIa.at(-1)!.system).toContain('ESTILO DE ESCRITA DO AUTOR')
+    expect(r.dados.caminhos).toHaveLength(2)
+    expect(r.dados.perfilEstilo).toBeTruthy()
   })
 
   it('caminhos: aceita listas vindas como texto JSON, limita o recomendado ao intervalo e monta a síntese; sem matriz é 502', async () => {
