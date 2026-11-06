@@ -27,3 +27,17 @@ describe('importarImoveis', () => {
     expect(dividir('a;"b;c";d', ';')).toEqual(['a', 'b;c', 'd'])
   })
 })
+
+describe('importação: duplicado da carteira atual (passo A07)', () => {
+  const cab = 'endereco;cidade;uf;tipo;uso;proprietario;matricula'
+  it('recusa endereço+cidade já cadastrado (sem diferenciar acento e caixa) e matrícula repetida', () => {
+    const csv = [cab, 'Av. Paulista 1000;São Paulo;SP;loja;locado;Fulano;', 'Rua Nova 1;Niterói;RJ;casa;vago;Beltrano;123456789', 'Rua Livre 2;Niterói;RJ;casa;vago;Ciclano;555'].join('\n')
+    const r = analisarCsv(csv, [{ endereco: 'av. paulista 1000', cidade: 'Sao Paulo', matricula: '123456789' }])
+    expect(r.linhas[0].erros).toContain('já está na carteira (mesmo endereço e cidade)')
+    expect(r.linhas[1].erros).toContain('já está na carteira (matrícula 123456789)')
+    expect(r.validas.map(l => l.numero)).toEqual([4])
+  })
+  it('sem carteira informada, nada muda', () => {
+    expect(analisarCsv([cab, 'Rua A 1;Rio;RJ;casa;vago;X;'].join('\n')).validas).toHaveLength(1)
+  })
+})

@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { repositorio } from '@/lib/repositorio'
-import { analisarCsv, MODELO_CSV, type Linha } from '@/lib/importarImoveis'
+import { analisarCsv, MODELO_CSV, type Linha, type Existente } from '@/lib/importarImoveis'
 import { rotulosTipoImovel, rotulosUso } from '@/lib/rotulos'
 import { Download, Upload, CheckCircle2, AlertTriangle } from 'lucide-react'
 
@@ -14,11 +14,15 @@ export default function ImportarImoveisPage() {
   const [importando, setImportando] = useState(false)
   const [relatorio, setRelatorio] = useState<{ gravadas: number; falhas: { numero: number; erro: string }[] } | null>(null)
 
+  // Passo A07: a carteira atual entra na conferência para não importar imóvel repetido.
+  const [existentes, setExistentes] = useState<Existente[]>([])
+  useEffect(() => { Promise.resolve().then(() => repositorio.listarImoveis()).then(l => setExistentes(l.map(i => ({ endereco: i.endereco, cidade: i.cidade, matricula: i.matricula })))).catch(() => setExistentes([])) }, [])
+  useEffect(() => { if (texto.trim()) setResultado(analisarCsv(texto, existentes)) }, [existentes]) // eslint-disable-line react-hooks/exhaustive-deps
   const baixarModelo = () => {
     const url = URL.createObjectURL(new Blob(['﻿' + MODELO_CSV], { type: 'text/csv;charset=utf-8' }))
     const a = document.createElement('a'); a.href = url; a.download = 'modelo-imoveis.csv'; a.click(); URL.revokeObjectURL(url)
   }
-  const analisar = (t: string) => { setTexto(t); setRelatorio(null); setResultado(t.trim() ? analisarCsv(t) : null) }
+  const analisar = (t: string) => { setTexto(t); setRelatorio(null); setResultado(t.trim() ? analisarCsv(t, existentes) : null) }
   const lerArquivo = (f: File | undefined) => { if (!f) return; setNomeArquivo(f.name); f.text().then(analisar) }
   const importar = async (soValidas: boolean) => {
     if (!resultado) return
