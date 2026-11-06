@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { formatarData } from '@/lib/datas'
 import Marca from '@/components/Marca'
 import AssinarPortal from '@/components/AssinarPortal'
+import PortalMensagens from '@/components/PortalMensagens'
 import { TextoComTermos } from '@/components/Termo'
 import { GLOSSARIO } from '@/data/glossario'
 import { CheckCircle2, Circle, Clock, Scale } from 'lucide-react'
@@ -74,6 +75,7 @@ export default function PortalClientePage() {
               </section>
             )}
             <AssinarPortal token={token} />
+            <PortalMensagens token={token} caso={caso.titulo} />{/* Passo D18 */}
             <details className="mt-6 border-t border-navy/10 pt-4 text-sm" data-testid="portal-glossario">
               <summary className="cursor-pointer font-medium text-navy min-h-[44px] flex items-center">Não entendeu algum termo? Veja o glossário em linguagem simples</summary>
               <dl className="mt-2 grid gap-2 max-h-72 overflow-auto">

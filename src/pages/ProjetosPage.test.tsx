@@ -31,6 +31,7 @@ vi.mock('@/lib/supabase', () => ({ supabaseConfigurado: true, supabase: { from }
 vi.mock('@/lib/equipe', () => ({ listarPessoas: async () => [{ id: 'u1', nome: 'Letícia', email: 'l@x', funcao: 'advogada' }, { id: 'u2', nome: 'Fátima', email: 'f@x', funcao: 'admin' }] }))
 vi.mock('@/lib/repositorio', () => ({ repositorio: { listarImoveis: async () => [{ id: 'i1', endereco: 'Rua das Flores 123' }] } }))
 vi.mock('@/lib/caminhoCritico', () => ({ caminhoCritico: (etapas: { id: string }[]) => (etapas.length ? { caminho: ['t1', 't2'], fimPrevisto: '2026-12-20', atraso: 0, fins: { t2: '2026-12-20' } } : { caminho: [], fimPrevisto: null, atraso: 0, fins: {} }) }))
+vi.mock('@/components/PortalCasoEscritorio', () => ({ default: ({ tarefaId }: { tarefaId: string }) => <div data-testid="portal-escritorio-stub">{tarefaId}</div> }))
 vi.mock('@/components/AssinaturasCaso', () => ({ default: ({ tarefaId, cliente }: { tarefaId: string; cliente: string | null }) => <div data-testid="assinaturas-stub">{tarefaId}:{cliente}</div> }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 const { default: ProjetosPage } = await import('./ProjetosPage')

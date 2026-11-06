@@ -12,6 +12,7 @@ vi.mock('@/lib/supabase', () => ({
 }))
 vi.mock('@/components/Marca', () => ({ default: () => <div data-testid="marca-sede" /> }))
 vi.mock('@/components/AssinarPortal', () => ({ default: () => <div data-testid="assinar" /> }))
+vi.mock('@/components/PortalMensagens', () => ({ default: ({ caso }: { caso: string }) => <div data-testid="portal-conversa-stub">{caso}</div> }))
 const { default: PortalClientePage } = await import('./PortalClientePage')
 const montar = () => render(<MemoryRouter initialEntries={['/portal/tok1']}><Routes><Route path="/portal/:token" element={<PortalClientePage />} /></Routes></MemoryRouter>)
 const casoBase = { titulo: 'Despejo Rua A', cliente: 'Ana', area: 'Imobiliário', numero_processo: '0001-22', situacao: 'fazendo', atualizado_em: '2026-11-01T10:00:00Z', honorario_previsto: 3000, honorario_recebido: 1000, vencimento_honorario: '2026-12-10',

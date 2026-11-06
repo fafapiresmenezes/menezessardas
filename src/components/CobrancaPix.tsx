@@ -6,22 +6,25 @@ import { Copy, Printer, X } from 'lucide-react'
 
 // Cobrança por PIX de um honorário: QR + código copia e cola, usando a chave PIX do escritório (Configurações).
 // Passo D13: referência e descrição opcionais (PIX por parcela, com o valor da parcela).
-export default function CobrancaPix({ valor, caso, cliente, fechar, referencia, descricao }: { valor: number; caso: string; cliente: string | null; fechar: () => void; referencia?: string; descricao?: string }) {
+type DadosPix = { pix_chave: string | null; pix_nome: string | null; pix_cidade: string | null }
+// Passo D18: `dados` pronto (Portal do cliente, sem login) dispensa a RPC dados_pix.
+export default function CobrancaPix({ valor, caso, cliente, fechar, referencia, descricao, dados }: { valor: number; caso: string; cliente: string | null; fechar: () => void; referencia?: string; descricao?: string; dados?: DadosPix }) {
   const [codigo, setCodigo] = useState('')
   const [qr, setQr] = useState('')
   const [erro, setErro] = useState('')
   const [copiado, setCopiado] = useState(false)
   useEffect(() => {
     (async () => {
-      const { data, error } = await supabase.rpc('dados_pix')
-      const d = (Array.isArray(data) ? data[0] : data) as { pix_chave: string | null; pix_nome: string | null; pix_cidade: string | null } | undefined
+      const r = dados ? { data: dados, error: null } : await supabase.rpc('dados_pix')
+      const { data, error } = r
+      const d = (Array.isArray(data) ? data[0] : data) as DadosPix | undefined
       if (error) return setErro(error.message)
       if (!d?.pix_chave) return setErro('Cadastre a chave PIX do escritório em Configurações → Cobrança por PIX.')
       const c = codigoPix({ chave: d.pix_chave, nome: d.pix_nome ?? 'GMenezes Advogados', cidade: d.pix_cidade ?? 'Rio de Janeiro', valor, referencia: referencia ?? caso.slice(0, 20), descricao: descricao ?? `Honorarios ${caso}` })
       setCodigo(c)
       setQr(await QRCode.toDataURL(c, { margin: 1, width: 220 }))
     })()
-  }, [valor, caso, referencia, descricao])
+  }, [valor, caso, referencia, descricao, dados])
   const copiar = async () => { try { await navigator.clipboard.writeText(codigo); setCopiado(true) } catch { setErro('Não foi possível copiar; selecione o código e copie.') } }
   const imprimir = () => {
     const w = window.open('', '_blank'); if (!w) return

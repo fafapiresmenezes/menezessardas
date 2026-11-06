@@ -9,6 +9,7 @@ import { listarPessoas, type Pessoa } from '@/lib/equipe'
 import { formatarData, diasAte } from '@/lib/datas'
 import { FolderKanban, Plus, ChevronRight } from 'lucide-react'
 import AssinaturasCaso from '@/components/AssinaturasCaso'
+import PortalCasoEscritorio from '@/components/PortalCasoEscritorio'
 import { caminhoCritico } from '@/lib/caminhoCritico'
 
 // Gestão de projetos do escritório em hierarquia (Projeto → Tarefa → Subtarefa), no estilo Monday:
@@ -227,6 +228,7 @@ export default function ProjetosPage() {
         </section>
 
         {projeto && <AssinaturasCaso key={projeto} tarefaId={projeto} cliente={tarefas.find(t => t.id === projeto)?.cliente ?? null} />}
+        {projeto && <PortalCasoEscritorio key={`portal-${projeto}`} tarefaId={projeto} cliente={tarefas.find(t => t.id === projeto)?.cliente ?? null} />}{/* Passo D18 */}
 
         <section aria-labelledby="t-caso" className="bg-white shadow-sm p-5">
           <h2 id="t-caso" className="text-lg mb-1 flex items-center gap-2"><FolderKanban size={18} className="text-dourado" aria-hidden="true" /> Novo caso pronto (com etapas e prazos)</h2>
