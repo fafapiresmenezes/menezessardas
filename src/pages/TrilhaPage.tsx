@@ -14,6 +14,8 @@ import {
   baixarArquivo,
   listarAncoragens,
   montarOts,
+  retomarSelosPendentes,
+  selosPendentes,
   textoDoSelo,
   verificarLastro,
   type Ancoragem,
@@ -83,6 +85,7 @@ export default function TrilhaPage() {
     } finally { setExportando(false) }
   }
 
+  const [pendentes, setPendentes] = useState(() => selosPendentes().length)
   const carregar = async () => {
     const [lista, v, ancs] = await Promise.all([listarTrilha(), verificarTrilha(), listarAncoragens()])
     setEventos([...lista].reverse()) // mais recentes no topo
@@ -93,6 +96,8 @@ export default function TrilhaPage() {
 
   useEffect(() => {
     carregar()
+    // Passo D11 (Diamante): selos que ficaram pendentes saem sozinhos ao abrir a tela.
+    if (selosPendentes().length) retomarSelosPendentes().then(r => { setPendentes(r.pendentes); if (r.enviados) carregar() }).catch(() => undefined)
   }, [])
 
   const ancorar = async () => {
@@ -105,6 +110,7 @@ export default function TrilhaPage() {
       await carregar()
     } catch (e) {
       setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
+      setPendentes(selosPendentes().length)
     } finally {
       setAncorando(false)
     }
@@ -210,6 +216,7 @@ export default function TrilhaPage() {
               </p>
             )
           })()}
+          {pendentes > 0 && <p className="text-sm text-atencao mt-3" data-testid="selos-pendentes">{pendentes} selo(s) pendente(s): o calendário não respondeu; reenvio automático ao abrir esta tela.</p>}
           {ancoragens.length === 0 && <p className="text-sm text-grafite-claro mt-3" data-testid="estado-selo">Nenhum selo ainda. O primeiro é feito automaticamente todo dia, ou agora pelo botão.</p>}
           <div className="flex flex-wrap gap-3 mt-4">
             <button

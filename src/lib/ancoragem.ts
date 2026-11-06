@@ -72,7 +72,46 @@ export async function ancorarAgora(): Promise<Ancoragem> {
   const seq = eventos[eventos.length - 1].seq
   const arquivo = new TextEncoder().encode(textoDoSelo(seq, v.selo))
   const digest = await sha256(arquivo)
+  return ancorarDigest(seq, v.selo, digest)
+}
 
+/** Passo D11 (Diamante): selos que não conseguiram sair ficam numa fila no navegador e são retomados ao abrir a Trilha. */
+export interface SeloPendente { seq: number; selo: string; digest: string; em: string; tentativas: number }
+const CHAVE_PENDENTES = 'lsm-selos-pendentes-v1'
+export function selosPendentes(): SeloPendente[] {
+  try { return JSON.parse(localStorage.getItem(CHAVE_PENDENTES) || '[]') } catch { return [] }
+}
+function guardarPendentes(lista: SeloPendente[]) {
+  try { lista.length ? localStorage.setItem(CHAVE_PENDENTES, JSON.stringify(lista)) : localStorage.removeItem(CHAVE_PENDENTES) } catch { /* sem armazenamento */ }
+}
+function enfileirar(seq: number, selo: string, digestHex: string) {
+  const lista = selosPendentes().filter(p => p.digest !== digestHex)
+  guardarPendentes([...lista, { seq, selo, digest: digestHex, em: new Date().toISOString(), tentativas: 1 }])
+}
+/** Tenta de novo cada selo pendente; devolve quantos saíram e quantos continuam na fila. */
+export async function retomarSelosPendentes(): Promise<{ enviados: number; pendentes: number }> {
+  let enviados = 0
+  for (const p of selosPendentes()) {
+    const bytes = Uint8Array.from(p.digest.match(/../g)!.map(h => parseInt(h, 16)))
+    try { await ancorarDigest(p.seq, p.selo, bytes); enviados++ } catch { guardarPendentes(selosPendentes().map(x => (x.digest === p.digest ? { ...x, tentativas: x.tentativas + 1 } : x))) }
+  }
+  return { enviados, pendentes: selosPendentes().length }
+}
+
+async function gravarAncoragem(anc: Ancoragem) {
+  if (supabaseConfigurado) {
+    const { error } = await supabase.from('ancoragens').insert({ seq: anc.seq, selo: anc.selo, digest: anc.digest, calendario: anc.calendario, prova_b64: anc.provaB64 })
+    if (error) throw error
+  } else {
+    localStorage.setItem(CHAVE, JSON.stringify([...lerLocal(), anc]))
+  }
+  await registrarEvento({ tipo: 'trilha_ancorada', entidade: anc.id, resumo: `Selo do registro nº ${anc.seq} enviado ao OpenTimestamps` })
+  guardarPendentes(selosPendentes().filter(p => p.digest !== anc.digest))
+}
+
+async function ancorarDigest(seq: number, selo: string, digest: Uint8Array): Promise<Ancoragem> {
+  const digestHex = hex(digest)
+  const id = `${seq}-${digestHex.slice(0, 8)}`
   let ultimoErro = ''
   for (const cal of CALENDARIOS) {
     try {
@@ -86,25 +125,30 @@ export async function ancorarAgora(): Promise<Ancoragem> {
         continue
       }
       const prova = new Uint8Array(await resp.arrayBuffer())
-      const anc: Ancoragem = {
-        id: `${seq}-${hex(digest).slice(0, 8)}`,
-        seq, selo: v.selo, digest: hex(digest), calendario: cal, provaB64: paraB64(prova), em: new Date().toISOString(),
-      }
-      if (supabaseConfigurado) {
-        const { error } = await supabase.from('ancoragens').insert({
-          seq, selo: anc.selo, digest: anc.digest, calendario: cal, prova_b64: anc.provaB64,
-        })
-        if (error) throw error
-      } else {
-        localStorage.setItem(CHAVE, JSON.stringify([...lerLocal(), anc]))
-      }
-      await registrarEvento({ tipo: 'trilha_ancorada', entidade: anc.id, resumo: `Selo do registro nº ${seq} enviado ao OpenTimestamps` })
+      const anc: Ancoragem = { id, seq, selo, digest: digestHex, calendario: cal, provaB64: paraB64(prova), em: new Date().toISOString() }
+      await gravarAncoragem(anc)
       return anc
     } catch (e) {
       ultimoErro = e instanceof Error ? e.message : String(e)
     }
   }
-  throw new Error(`Não foi possível falar com os calendários públicos agora (${ultimoErro}). Tente de novo mais tarde.`)
+  // Segundo caminho: o servidor (Edge Function ancorar-hash) fala com os calendários quando o navegador não alcança.
+  if (supabaseConfigurado && typeof supabase.functions?.invoke === 'function') {
+    try {
+      const { data, error } = await supabase.functions.invoke('ancorar-hash', { body: { digest: digestHex } })
+      const r = data as { calendario?: string; provaB64?: string; erro?: string } | null
+      if (!error && r?.provaB64 && r.calendario) {
+        const anc: Ancoragem = { id, seq, selo, digest: digestHex, calendario: r.calendario, provaB64: r.provaB64, em: new Date().toISOString() }
+        await gravarAncoragem(anc)
+        return anc
+      }
+      ultimoErro = r?.erro || (error instanceof Error ? error.message : ultimoErro)
+    } catch (e) {
+      ultimoErro = e instanceof Error ? e.message : String(e)
+    }
+  }
+  enfileirar(seq, selo, digestHex)
+  throw new Error(`Não foi possível falar com os calendários públicos agora (${ultimoErro}). Tente de novo mais tarde. O selo ficou pendente e será reenviado quando esta tela abrir de novo.`)
 }
 
 /** Monta o arquivo .ots: cabeçalho padrão + SHA-256 do arquivo + árvore devolvida pelo calendário. */

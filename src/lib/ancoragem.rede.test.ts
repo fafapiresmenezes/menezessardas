@@ -11,7 +11,7 @@ const registrarEvento = vi.fn(async (_e: object) => undefined)
 vi.mock('./trilha', () => ({ listarTrilha: async () => eventos, verificarTrilha: async () => verificacao, registrarEvento: (e: object) => registrarEvento(e) }))
 const mem = new Map<string, string>()
 ;(globalThis as { localStorage?: unknown }).localStorage = { getItem: (k: string) => mem.get(k) ?? null, setItem: (k: string, v: string) => { mem.set(k, v) }, removeItem: (k: string) => { mem.delete(k) } }
-const { ancorarAgora, listarAncoragens, verificarLastro, montarOts, textoDoSelo, CALENDARIOS } = await import('./ancoragem')
+const { ancorarAgora, listarAncoragens, verificarLastro, montarOts, textoDoSelo, CALENDARIOS, selosPendentes, retomarSelosPendentes } = await import('./ancoragem')
 
 const SELO = 'ab'.repeat(32)
 const hexDe = (b: ArrayBuffer) => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('')
@@ -91,5 +91,18 @@ describe('ancorarAgora', () => {
       { ancoragemId: 'c', seq: 3, coerente: false, motivo: 'O digest guardado não confere com o selo.' },
       { ancoragemId: 'd', seq: 3, coerente: true },
     ])
+  })
+
+  it('D11: quando todos os calendários falham, o selo fica pendente no navegador e é reenviado por retomarSelosPendentes', async () => {
+    fetchMock.mockReset().mockImplementation(async () => new Response('', { status: 500 }))
+    await expect(ancorarAgora()).rejects.toThrow('O selo ficou pendente')
+    const d = await digestEsperado(3, SELO)
+    expect(selosPendentes()).toMatchObject([{ seq: 3, selo: SELO, digest: d, tentativas: 1 }])
+    expect(await retomarSelosPendentes()).toEqual({ enviados: 0, pendentes: 1 })
+    expect(selosPendentes()[0].tentativas).toBe(2)
+    fetchMock.mockReset().mockImplementation(async () => ok())
+    expect(await retomarSelosPendentes()).toEqual({ enviados: 1, pendentes: 0 })
+    expect((await listarAncoragens()).map(a => a.digest)).toEqual([d])
+    expect(registrarEvento).toHaveBeenCalledTimes(1)
   })
 })
