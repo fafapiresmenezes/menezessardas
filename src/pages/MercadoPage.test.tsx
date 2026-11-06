@@ -34,8 +34,8 @@ describe('Previsão de mercado jurídico (demanda por área)', () => {
     expect(screen.getByText(/Leitura rápida/).closest('p')!.textContent).toContain('a área que mais cresce é Imobiliário, e a que menos cresce é Cível')
     expect(screen.getByTestId('mercado-penal').textContent).toContain('Sem tendência confiável')
     expect(screen.getByTestId('jen-imobiliario').textContent).toContain('As duas fontes apontam a mesma direção.')
-    expect(screen.getByText('familia: O CNJ não respondeu.')).toBeTruthy()
-    expect(screen.getByText('trabalhista: O CNJ não respondeu.')).toBeTruthy()
+    expect(screen.getByText('Família: O CNJ não respondeu.')).toBeTruthy()
+    expect(screen.getByText('Trabalhista: O CNJ não respondeu agora. Tente de novo em alguns minutos.')).toBeTruthy()
     expect(screen.getByTestId('comparacao')).toBeTruthy()
   })
 

@@ -107,7 +107,7 @@ export default function HonorariosPage() {
           ))}
         </section>
         {erro && <p role="alert" className="text-sm text-critico">{erro}</p>}
-        <section className="bg-white shadow-sm p-5 overflow-x-auto">
+        <section className="bg-white shadow-sm p-5 min-w-0 max-w-full overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
             <h2 className="text-lg flex items-center gap-2"><Banknote size={18} className="text-dourado" aria-hidden="true" /> Por caso</h2>
             <div className="flex flex-wrap gap-2">
@@ -120,7 +120,7 @@ export default function HonorariosPage() {
             </div>
           </div>
           <p className="text-xs text-grafite-claro mb-3">Rentabilidade = honorários recebidos menos o custo das horas lançadas para o mesmo cliente (tela Horas). Edite os valores e toque em Salvar.</p>
-          <table className="w-full text-sm" data-testid="tabela-honorarios">
+          <div className="relative overflow-x-auto max-w-full"><table className="w-full text-sm" data-testid="tabela-honorarios">
             <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite border-b"><th className="py-2">Caso</th><th>Combinado</th><th>Recebido</th><th>Vencimento</th><th>Cobrança</th><th>Rentabilidade</th><th><span className="sr-only">Ações</span></th></tr></thead>
             <tbody>
               {casos.map(c => {
@@ -143,7 +143,7 @@ export default function HonorariosPage() {
               })}
               {!casos.length && <tr><td colSpan={7} className="py-6 text-grafite-claro">Nenhum caso ainda. Crie um em Casos e projetos.</td></tr>}
             </tbody>
-          </table>
+          </table></div>
         </section>
         {msgBaixa && <p role="status" className="text-sm text-navy" data-testid="msg-baixa">{msgBaixa}</p>}
         {baixa && (

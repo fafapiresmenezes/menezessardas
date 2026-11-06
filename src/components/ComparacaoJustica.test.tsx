@@ -32,7 +32,7 @@ describe('Escritório lado a lado com o Justiça em Números', () => {
     expect(screen.getByTestId('casos-por-area').textContent).toContain('Nenhum caso cadastrado ainda')
     cleanup(); rpc.mockResolvedValueOnce({ data: null, error: { message: 'falhou' } })
     render(<ComparacaoJustica />)
-    expect((await screen.findByRole('alert')).textContent).toBe('falhou')
+    expect((await screen.findByRole('alert')).textContent).toMatch(/Não foi possível ler/)
   })
 })
 

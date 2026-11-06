@@ -11,6 +11,7 @@ type Area = {
   jen?: { fonte: string; tribunal: string; indicador: string; porAno: { ano: number; n: number }[]; previsao: { ano: number; processos: number; margem: number; variacao: number | null; r2: number }; confianca: 'alta' | 'media' | 'baixa'; concordam: boolean }
   confiancaCombinada?: 'alta' | 'media' | 'baixa'; fontePrevisao?: string
 }
+const NOME_AREA: Record<string, string> = { imobiliario: 'Imobiliário', civel: 'Cível', trabalhista: 'Trabalhista', familia: 'Família', tributario: 'Tributário', empresarial: 'Empresarial', consumidor: 'Consumidor', previdenciario: 'Previdenciário', penal: 'Penal', compliance: 'Compliance' }
 const AREAS = ['imobiliario', 'civel', 'trabalhista', 'familia', 'tributario', 'empresarial', 'consumidor', 'previdenciario', 'penal', 'compliance']
 const fmt = (n: number) => n.toLocaleString('pt-BR')
 
@@ -19,9 +20,15 @@ export default function MercadoPage() {
   const [dados, setDados] = useState<Record<string, Area | { erro: string } | null>>({})
   useEffect(() => {
     AREAS.forEach(async a => {
-      const { data, error } = await supabase.functions.invoke('mercado', { body: { area: a } })
-      const corpo = error ? await (error as { context?: Response }).context?.json?.().catch(() => null) : data
-      setDados(d => ({ ...d, [a]: error || corpo?.erro ? { erro: corpo?.erro ?? 'O CNJ não respondeu.' } : data }))
+      // Revisão 06/11: falha de rede não pode deixar a área presa em "Carregando".
+      try {
+        const { data, error } = await supabase.functions.invoke('mercado', { body: { area: a } })
+        let corpo = data
+        if (error) { try { corpo = await (error as { context?: Response }).context?.json?.() } catch { corpo = null } }
+        setDados(d => ({ ...d, [a]: error || corpo?.erro ? { erro: corpo?.erro ?? 'O CNJ não respondeu agora. Tente de novo em alguns minutos.' } : data }))
+      } catch {
+        setDados(d => ({ ...d, [a]: { erro: 'Sem conexão com o CNJ agora. Tente de novo em alguns minutos.' } }))
+      }
     })
   }, [])
   const prontas = AREAS.map(a => dados[a]).filter((d): d is Area => !!d && 'previsao' in d && !!d.previsao)
@@ -66,7 +73,7 @@ export default function MercadoPage() {
           {AREAS.map(a => {
             const d = dados[a]
             if (!d) return <section key={a} className="bg-white shadow-sm p-5 text-sm text-grafite-claro">Consultando o CNJ…</section>
-            if ('erro' in d && !('porAno' in d)) return <section key={a} className="bg-white shadow-sm p-5 text-sm">{a}: {d.erro}</section>
+            if ('erro' in d && !('porAno' in d)) return <section key={a} className="bg-white shadow-sm p-5 text-sm">{NOME_AREA[a] ?? a}: {d.erro}</section>
             const x = d as Area
             const max = Math.max(1, ...x.porAno.map(p => p.n), x.previsao ? x.previsao.processos + x.previsao.margem : 0)
             return (

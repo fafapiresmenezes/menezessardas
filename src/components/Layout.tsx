@@ -175,9 +175,9 @@ export default function Layout({ children, title }: LayoutProps) {
       </aside>
 
       <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
-        <header className="bg-white border-b border-navy/10 px-4 md:px-8 py-5 flex items-center justify-between gap-4">
-          <h1 className="font-serif text-2xl md:text-3xl text-navy truncate">{title}</h1>
-          <div className="flex items-center gap-2 flex-shrink-0">
+        <header className="bg-white border-b border-navy/10 px-4 md:px-8 py-4 md:py-5 flex flex-wrap md:flex-nowrap items-center justify-between gap-3 md:gap-4">
+          <h1 className="font-serif text-2xl md:text-3xl text-navy truncate min-w-0 max-w-full">{title}</h1>
+          <div className="flex flex-wrap md:flex-nowrap items-center gap-2 md:flex-shrink-0">
           <TourTela />
           <PerguntarTela />
           <BotaoExportar />

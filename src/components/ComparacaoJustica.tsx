@@ -19,7 +19,7 @@ const mesesJen = (m: number) => m >= 12 ? `${Math.floor(m / 12)} ano(s) e ${m % 
 export default function ComparacaoJustica() {
   const [ind, setInd] = useState<Indic | null>(null)
   const [erro, setErro] = useState('')
-  useEffect(() => { supabase.rpc('indicadores_escritorio').then(({ data, error }) => { if (error) setErro(error.message); else setInd(data as Indic) }) }, [])
+  useEffect(() => { supabase.rpc('indicadores_escritorio').then(({ data, error }) => { if (error) setErro('Não foi possível ler os números do escritório agora. Tente de novo em instantes.'); else setInd(data as Indic) }, () => setErro('Sem conexão agora. Tente de novo em instantes.')) }, [])
   const tempoEsc = ind?.tempo_medio_dias ?? null
   return (
     <section className="bg-white border border-navy/10 rounded-sm p-5" data-testid="comparacao-justica">
@@ -31,7 +31,7 @@ export default function ComparacaoJustica() {
           <h3 className="font-semibold text-navy">Escritório</h3>
           <p className="text-3xl font-display text-navy mt-2" data-testid="tempo-medio-escritorio">{ind ? meses(tempoEsc) : '…'}</p>
           <p className="text-xs text-grafite-claro">tempo médio da abertura ao encerramento{ind?.margem_dias != null && ` · ± ${ind.margem_dias} dia(s) (95%)`}</p>
-          <p className="text-sm mt-2">{ind ? `${ind.casos_total} caso(s): ${ind.casos_abertos} aberto(s), ${ind.casos_encerrados} encerrado(s).` : 'Carregando…'}</p>
+          <p className="text-sm mt-2">{ind ? `${ind.casos_total} caso(s): ${ind.casos_abertos} aberto(s), ${ind.casos_encerrados} encerrado(s).` : erro ? '—' : 'Carregando…'}</p>
           <ul className="text-sm mt-2 space-y-0.5" data-testid="casos-por-area">
             {ind?.por_area.map(a => <li key={a.area}><strong>{a.area}</strong>: {a.n} caso(s){a.tempo_medio_dias != null && `, ${meses(a.tempo_medio_dias)} em média`}</li>)}
             {ind && !ind.por_area.length && <li className="text-grafite-claro">Nenhum caso cadastrado ainda em Casos e projetos.</li>}

@@ -128,7 +128,9 @@ export default function LegislacaoPage() {
   const estadoRadar = (() => {
     if (!radar.length) return ''
     const hoje = new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' })
-    const deHoje = radar.filter(n => (n.vistoEm ?? '').slice(0, 10) === hoje).length
+    // Revisão 06/11: vistoEm vem em UTC; compara no fuso de Brasília (antes, depois das 21h "hoje" zerava).
+    const diaSP = (iso?: string) => { const t = Date.parse(iso ?? ''); return Number.isNaN(t) ? '' : new Date(t).toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) }
+    const deHoje = radar.filter(n => diaSP(n.vistoEm) === hoje).length
     const ultimo = Math.max(...radar.map(n => Date.parse(n.vistoEm) || 0))
     const horas = Math.round((Date.now() - ultimo) / 36e5)
     const quando = horas < 1 ? 'há menos de 1 hora' : horas < 48 ? `há ${horas} h` : `há ${Math.round(horas / 24)} dias`

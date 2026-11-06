@@ -168,6 +168,10 @@ export default function AgendaPage() {
     return mapa
   }, [alertas])
 
+  const [semanaCopiada, setSemanaCopiada] = useState(false)
+  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 274
+  const [baixado, marcarBaixado] = useBaixado() // Passo 390
+
   if (loading) {
     return (
       <Layout title="Agenda">
@@ -206,9 +210,7 @@ export default function AgendaPage() {
   // Passo 94: resumo dos próximos 7 dias e botão "Hoje".
   const semana = proximos.filter(a => a.diasRestantes <= 7)
   // Passo 124: os próximos 7 dias em texto, para colar no Outlook ou no WhatsApp.
-  const [semanaCopiada, setSemanaCopiada] = useState(false)
-  const [linkCopiado, setLinkCopiado] = useState(false) // Passo 274
-  const [baixado, marcarBaixado] = useBaixado() // Passo 390
+  // Passo 124: estados movidos para antes do retorno de 'Carregando' (hooks sempre na mesma ordem; corrige a tela branca da Agenda)
   const copiarSemana = async () => {
     const t = ['Próximos 7 dias — GMenezes Advogados Associados', ...(semana.length ? semana.map(a => `• ${formatarData(a.dataEvento)} — ${a.titulo} (${a.imovel})`) : ['Nenhum compromisso.'])].join('\n')
     try { await navigator.clipboard.writeText(t); setSemanaCopiada(true); setTimeout(() => setSemanaCopiada(false), 2500) } catch { /* sem área de transferência */ }

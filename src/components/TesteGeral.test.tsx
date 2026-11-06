@@ -2,6 +2,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
 
+// Revisão 06/11: relógio fixo ao meio-dia (UTC); antes o teste falhava entre 0h e 9h UTC.
+vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date('2026-11-02T12:00:00Z'))
 const hoje = new Date().toISOString().slice(0, 10)
 const ontem = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
 let diario: object[] = []
