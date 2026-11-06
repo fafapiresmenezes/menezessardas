@@ -129,4 +129,19 @@ describe('Configurações', () => {
     expect(ics.checked).toBe(false)
     for (const t of ['dois-fatores', 'estilo', 'sus', 'pix']) expect(screen.getByTestId(t)).toBeTruthy()
   })
+
+  it('D05: abas escondem as seções que não estão em uso, "Tudo" mostra todas e a aba escolhida fica lembrada', async () => {
+    localStorage.removeItem('lsm-config-aba')
+    render(<ConfiguracoesPage />)
+    const form = screen.getByText('Salvar preferências').closest('form')!
+    expect(form.className).not.toContain('hidden')
+    expect(screen.getByTestId('dois-fatores').parentElement!.className).toContain('hidden')
+    fireEvent.click(screen.getByTestId('aba-seguranca'))
+    expect(form.className).toContain('hidden')
+    expect(screen.getByTestId('dois-fatores').parentElement!.className).not.toContain('hidden')
+    expect(localStorage.getItem('lsm-config-aba')).toBe('seguranca')
+    fireEvent.click(screen.getByTestId('aba-tudo'))
+    expect(form.className).not.toContain('hidden')
+    for (const t of ['dois-fatores', 'estilo', 'sus', 'pix']) expect(screen.getByTestId(t).parentElement!.className).not.toContain('hidden')
+  })
 })

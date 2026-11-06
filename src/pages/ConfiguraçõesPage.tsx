@@ -10,6 +10,8 @@ import { estadoChaveIA, removerChaveIA, salvarChaveIA, testarChaveIA, type Estad
 import { perfilAtual, rotuloFuncao, type Funcao } from '@/lib/equipe'
 import SecaoPix from '@/components/SecaoPix'
 
+const ABAS = [{ id: 'perfil', rotulo: 'Perfil e avisos' }, { id: 'seguranca', rotulo: 'Segurança' }, { id: 'ia', rotulo: 'IA e escrita' }, { id: 'integracoes', rotulo: 'Integrações' }, { id: 'avaliacao', rotulo: 'Avaliação' }, { id: 'tudo', rotulo: 'Tudo' }]
+
 const CHAVE = 'preferencias-usuario'
 
 interface Preferencias {
@@ -84,12 +86,22 @@ export default function ConfiguraçõesPage() {
   const campo = 'w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white'
   const rotulo = 'block text-xs uppercase tracking-wider text-grafite mb-2'
 
+  const [aba, setAba] = useState<string>(() => { try { return localStorage.getItem('lsm-config-aba') || 'perfil' } catch { return 'perfil' } })
+  const mostra = (id: string) => (aba === id || aba === 'tudo' ? '' : 'hidden')
+
   return (
     <Layout title="Configurações">
-      <p className="text-sm text-grafite-claro mb-6 max-w-2xl">
+      <p className="text-sm text-grafite-claro mb-4 max-w-2xl">
         Gerencie seu perfil, preferências de notificações e acesso à inteligência artificial para análise de contratos.
       </p>
-      <form onSubmit={salvar} className="max-w-2xl space-y-6" noValidate>
+      {/* Passo D05 (Diamante): abas para a tela não ficar com 57 botões de uma vez; "Tudo" mostra como antes. */}
+      <nav aria-label="Seções das configurações" className="max-w-2xl mb-6 flex flex-wrap gap-2 print:hidden">
+        {ABAS.map(a => (
+          <button key={a.id} type="button" data-testid={`aba-${a.id}`} aria-pressed={aba === a.id} onClick={() => { setAba(a.id); try { localStorage.setItem('lsm-config-aba', a.id) } catch { /* sem memória local */ } }}
+            className={`min-h-[44px] px-4 text-sm border ${aba === a.id ? 'bg-navy text-white border-navy' : 'border-navy/20 text-navy bg-white'}`}>{a.rotulo}</button>
+        ))}
+      </nav>
+      <form onSubmit={salvar} className={`max-w-2xl space-y-6 ${mostra('perfil')}`} noValidate>
         {/* Passo 168: imprimir o resumo das preferências (sem segredos). */}
         <button type="button" onClick={() => window.print()} data-testid="imprimir-preferencias" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm mr-2 print:hidden">Imprimir</button>
         <button type="button" onClick={copiarResumoPrefs} data-testid="copiar-preferencias" className="min-h-[44px] px-4 border border-navy text-navy text-sm">{resumoCopiado ? 'Resumo copiado' : 'Copiar resumo das preferências'}</button>
@@ -205,15 +217,23 @@ export default function ConfiguraçõesPage() {
         </button>
       </form>
 
-      <SecaoSenha />
-      <DoisFatores />
-      <SecaoChaveIA />
-      <EstiloEscrita />
-      <SecaoEmail />
-      <SecaoEscavador />
-      <SecaoIcs />
-      <SecaoPix />
-      <AvaliacaoSUS />
+      <div className={mostra('seguranca')}>
+        <SecaoSenha />
+        <DoisFatores />
+      </div>
+      <div className={mostra('ia')}>
+        <SecaoChaveIA />
+        <EstiloEscrita />
+      </div>
+      <div className={mostra('integracoes')}>
+        <SecaoEmail />
+        <SecaoEscavador />
+        <SecaoIcs />
+        <SecaoPix />
+      </div>
+      <div className={mostra('avaliacao')}>
+        <AvaliacaoSUS />
+      </div>
     </Layout>
   )
 }
