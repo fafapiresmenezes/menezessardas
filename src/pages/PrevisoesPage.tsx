@@ -10,7 +10,7 @@ import { repositorio, type Contrato } from '@/lib/repositorio'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { preverCarteira, preverReceita, intervaloWilson, registrarPrevisoes, type Faixa, type PrevisaoContrato } from '@/lib/predicao'
 import { TrendingUp, ShieldAlert, Repeat, Scale, ChevronDown, ChevronUp, Info, FlaskConical } from 'lucide-react'
-import { CLASSES_LOCACAO, consultarPrevisaoInstituto, resumirPrevisaoInstituto, type PrevisaoInstituto , chanceClassesInstituto, textoChanceClasse, type ChanceClasse } from '@/lib/previsaoInstituto'
+import { CLASSES_LOCACAO, consultarPrevisaoInstituto, resumirPrevisaoInstituto, type PrevisaoInstituto , chanceClassesInstituto, textoChanceClasse, type ChanceClasse, probabilidadeUnica } from '@/lib/previsaoInstituto'
 
 const moeda = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v)
 const COR: Record<Faixa, string> = { baixo: 'bg-regular', moderado: 'bg-atencao', alto: 'bg-critico' }
@@ -229,6 +229,7 @@ function PainelInstituto() {
           <p className="font-serif text-3xl text-navy">{r.titulo}</p>
           <p className="text-sm text-grafite">{r.detalhe} · confiança {r.confianca}</p>
           {r.grafo && <p className="text-sm text-grafite" data-testid="instituto-grafo">{r.grafo}</p>}
+          {(() => { const u = probabilidadeUnica(res); return u && <p className="text-sm text-navy" data-testid="instituto-unica"><strong>{u.texto}</strong> <span className="text-grafite-claro">({u.explicacao})</span></p> })()}
           <p className="text-sm p-3 bg-atencaoFundo border-l-4 border-atencao" role="note" data-testid="instituto-aviso">{res.aviso}</p>
           <p className="text-xs text-grafite-claro">Fonte: {res.fonte} · {tribunal} · {classe}. Mede tendência do tribunal, não o seu processo.</p>
           <button type="button" onClick={copiarInstituto} data-testid="instituto-copiar" className="min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{resCopiado ? 'Resultado copiado' : 'Copiar para o parecer'}</button>
