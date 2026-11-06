@@ -38,12 +38,20 @@ export function mediasDiarias(resposta: unknown, hoje: string): { data_ref: stri
   return [...acc.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([data_ref, a]) => ({ data_ref, valor: Number((a.soma / a.n).toFixed(4)), pontos: a.n }))
 }
 
+const pausa = (ms: number) => new Promise(r => setTimeout(r, ms))
+
 async function coletar(t: typeof TEMAS[number], hoje: string, dias: number) {
   const t0 = Date.now()
   const nome = `gdelt:${t.tema}`
   try {
-    const r = await fetch(urlTema(t.consulta, dias), { headers: UA, signal: AbortSignal.timeout(45000) })
-    const texto = await r.text()
+    // O GDELT limita a 1 consulta a cada ~5 s por endereço e responde 429 quando aperta; tentamos até 3 vezes com espera crescente.
+    let r!: Response, texto = ''
+    for (let tentativa = 1; tentativa <= 3; tentativa++) {
+      r = await fetch(urlTema(t.consulta, dias), { headers: UA, signal: AbortSignal.timeout(45000) })
+      texto = await r.text()
+      if (r.status !== 429 || tentativa === 3) break
+      await pausa(6000 * tentativa)
+    }
     if (!r.ok) throw Object.assign(new Error(`HTTP ${r.status}`), { status: r.status })
     let corpo: unknown
     try { corpo = JSON.parse(texto) } catch { throw new Error('resposta não é JSON (GDELT costuma devolver texto quando recusa a consulta)') }
@@ -65,6 +73,6 @@ Deno.serve(async (req) => {
   const dias = Math.min(30, Math.max(2, Number(new URL(req.url).searchParams.get('dias') ?? 3) || 3))
   const hoje = new Date().toISOString().slice(0, 10)
   const resultado = []
-  for (const t of TEMAS) { resultado.push(await coletar(t, hoje, dias)); await new Promise(r => setTimeout(r, 1500)) } // uma consulta por vez, como o GDELT pede
+  for (const t of TEMAS) { resultado.push(await coletar(t, hoje, dias)); await pausa(6000) } // uma consulta por vez, com mais de 5 s entre elas, como o GDELT pede
   return json({ em: new Date().toISOString(), dia: hoje, temas: resultado.length, ok: resultado.filter(x => x.ok).length, resultado })
 })

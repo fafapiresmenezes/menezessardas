@@ -55,6 +55,19 @@ describe('gdelt-juridico', () => {
     expect(JSON.stringify(grav)).not.toMatch(/https?:\/\/[^"]*(noticia|news)/) // nenhuma URL de notícia é guardada
   })
 
+  it('429 do GDELT é tentado de novo com espera; na terceira falha vira lacuna', async () => {
+    const ok = () => new Response(JSON.stringify({ timeline: [{ series: 'Volume Intensity', data: [{ date: `${compacto(ontem)}T000000Z`, value: 0.4 }] }] }))
+    let vezes = 0
+    respostas['locação'] = () => (++vezes < 3 ? new Response('rate limit', { status: 429 }) : ok())
+    respostas['despejo'] = () => new Response('rate limit', { status: 429 })
+    respostas['Selic'] = ok; respostas['inadimplência'] = ok; respostas['LGPD'] = ok; respostas['STF'] = ok
+    const b = await (await chamar('cron-1')).json()
+    const por = Object.fromEntries((b.resultado as { fonte: string }[]).map(r => [r.fonte, r]))
+    expect(vezes).toBe(3)
+    expect(por['gdelt:locacao']).toMatchObject({ ok: true, itens: 1 })
+    expect(por['gdelt:despejo']).toMatchObject({ ok: false, status: 429 })
+  })
+
   it('o parâmetro dias é limitado entre 2 e 30', async () => {
     const urls: string[] = []
     fingirFetch(u => { urls.push(u); return new Response(JSON.stringify({ timeline: [] })) })
