@@ -11,7 +11,7 @@ import { registrarEvento } from './trilha'
 
 export interface AnaliseContrato {
   resumo: string
-  clausulasRisco: { titulo: string; gravidade: 'alta' | 'media' | 'baixa'; observacao: string }[]
+  clausulasRisco: { titulo: string; gravidade: 'alta' | 'media' | 'baixa'; observacao: string; trecho?: string; pagina?: number }[]
   prazos: { descricao: string; data?: string }[]
   sugestoes: string[]
   exemplo?: boolean

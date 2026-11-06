@@ -41,6 +41,8 @@ describe('analisar-contrato', () => {
     expect(req.max_tokens).toBe(1200)
     expect(req.tool_choice).toEqual({ type: 'tool', name: 'registrar_analise' })
     expect(req.tools[0].input_schema.required).toEqual(['resumo', 'clausulasRisco', 'prazos', 'sugestoes'])
+    expect(Object.keys(req.tools[0].input_schema.properties.clausulasRisco.items.properties)).toEqual(['titulo', 'gravidade', 'observacao', 'trecho', 'pagina'])
+    expect(req.system).toContain('[Página N]')
     expect(req.messages[0].content).toHaveLength('Contrato para análise:\n\n'.length + 40000)
     expect(req.system).toContain('não substitui a revisão de um advogado')
     expect(estado.inseridos.find(i => i.tabela === 'consumo_api')!.linha).toMatchObject({ funcao: 'analisar-contrato', usuario_id: 'u1', modelo: 'claude-haiku-5-5', tokens_entrada: 500, tokens_saida: 120 })

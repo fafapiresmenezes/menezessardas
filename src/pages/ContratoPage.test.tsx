@@ -38,7 +38,7 @@ vi.mock('@/lib/repositorio', async (orig) => ({
     atualizarTextoContrato: async () => undefined,
   },
 }))
-const analisarContrato = vi.fn(async (_c: object, _i: object, _o?: string) => ({ resumo: 'Locação residencial por 30 meses com caução.', clausulasRisco: [{ titulo: 'Multa de 3 aluguéis', gravidade: 'alta' as const, observacao: 'Acima do usual.' }], prazos: [{ descricao: 'Reajuste anual', data: '01/11/2026' }], sugestoes: ['Reduzir a multa.'] }))
+const analisarContrato = vi.fn(async (_c: object, _i: object, _o?: string) => ({ resumo: 'Locação residencial por 30 meses com caução.', clausulasRisco: [{ titulo: 'Multa de 3 aluguéis', gravidade: 'alta' as const, observacao: 'Acima do usual.', trecho: 'multa de três aluguéis', pagina: 4 }], prazos: [{ descricao: 'Reajuste anual', data: '01/11/2026' }], sugestoes: ['Reduzir a multa.'] }))
 vi.mock('@/lib/agente', () => ({ ultimaAnalise: async () => null, analisarContrato: (c: object, i: object, o?: string) => analisarContrato(c, i, o) }))
 const enviarArquivo = vi.fn(async (a: File, pasta: string) => `${pasta}/${a.name}`)
 const apagarArquivo = vi.fn(async (_c?: string) => undefined)
@@ -161,6 +161,11 @@ describe('Contrato', () => {
     expect(screen.getByText(/Multa de 3 aluguéis/).textContent).toContain('(Alta)')
     expect(screen.getByText('Reajuste anual — 01/11/2026')).toBeTruthy()
     expect(screen.getByText('Reduzir a multa.')).toBeTruthy()
+    // D07: trecho literal citado e PDF aberto na página apontada; sem pares do mesmo tipo não há mediana.
+    expect(screen.getByTestId('trecho-clausula').textContent).toContain('multa de três aluguéis')
+    fireEvent.click(screen.getByTestId('abrir-pagina'))
+    await waitFor(() => expect(window.open).toHaveBeenLastCalledWith('https://arquivos/contratos/c1/instrumento.pdf#page=4', '_blank', 'noopener'))
+    expect(screen.queryByTestId('mediana-carteira')).toBeNull()
     expect(screen.getByText(/Última análise:/)).toBeTruthy()
     analisarContrato.mockRejectedValueOnce(new Error('Chave da IA não configurada'))
     fireEvent.click(screen.getByText('Analisar novamente'))

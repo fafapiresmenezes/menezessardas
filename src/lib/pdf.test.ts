@@ -26,7 +26,7 @@ describe('extração de texto do PDF', () => {
 
   it('junta os itens de cada página com espaço e as páginas com quebra de linha, ignorando itens sem texto', async () => {
     paginas = [['CONTRATO', 'DE', 'LOCAÇÃO'], ['Cláusula 1ª']]
-    expect(await extrairTextoPdf(arquivo)).toBe('CONTRATO DE LOCAÇÃO \nCláusula 1ª')
+    expect(await extrairTextoPdf(arquivo)).toBe('[Página 1] CONTRATO DE LOCAÇÃO \n[Página 2] Cláusula 1ª')
   })
 
   it('para de ler depois de 40 mil caracteres e corta o texto nesse limite', async () => {

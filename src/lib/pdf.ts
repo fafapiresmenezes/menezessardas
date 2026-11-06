@@ -19,7 +19,7 @@ export async function extrairTextoPdf(arquivo: File): Promise<string> {
     const pagina = await doc.getPage(n)
     const conteudo = await pagina.getTextContent()
     const linha = conteudo.items.map(it => ('str' in it ? it.str : '')).join(' ')
-    partes.push(linha)
+    partes.push(`[Página ${n}] ${linha}`) // Passo D07: a análise cita a página
     if (partes.join(' ').length > LIMITE_CHARS) break
   }
   return partes.join('\n').slice(0, LIMITE_CHARS).trim()

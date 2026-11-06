@@ -20,11 +20,13 @@ const cors = {
 const SISTEMA = `Você é assistente jurídico de um escritório de advocacia brasileiro, especializado em
 contratos imobiliários (Lei 8.245/91 e Código Civil). Analise o contrato recebido e responda em
 português do Brasil, de forma objetiva, SEM inventar cláusulas que não estejam no texto. Quando algo
-não constar, diga "não consta". Você não substitui a revisão de um advogado inscrito na OAB.`
+não constar, diga "não consta". Você não substitui a revisão de um advogado inscrito na OAB.
+Para cada cláusula de risco, copie em "trecho" um pedaço literal e curto (até 200 caracteres) do
+contrato que a sustenta e informe em "pagina" o número do marcador [Página N] em que esse trecho está.`
 
 interface Saida {
   resumo: string
-  clausulasRisco: { titulo: string; gravidade: 'alta' | 'media' | 'baixa'; observacao: string }[]
+  clausulasRisco: { titulo: string; gravidade: 'alta' | 'media' | 'baixa'; observacao: string; trecho?: string; pagina?: number }[]
   prazos: { descricao: string; data?: string }[]
   sugestoes: string[]
 }
@@ -155,6 +157,8 @@ Deno.serve(async (req: Request) => {
                 titulo: { type: 'string' },
                 gravidade: { type: 'string', enum: ['alta', 'media', 'baixa'] },
                 observacao: { type: 'string' },
+                trecho: { type: 'string', description: 'Citação literal e curta do contrato (até 200 caracteres).' },
+                pagina: { type: 'integer', description: 'Número do marcador [Página N] onde o trecho está.' },
               },
               required: ['titulo', 'gravidade', 'observacao'],
             },

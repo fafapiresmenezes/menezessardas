@@ -38,6 +38,14 @@ export default function ContratoPage() {
   const [compromissos, setCompromissos] = useState<ReturnType<typeof calcularAlertas>>([])
   const [vinculados, setVinculados] = useState<Contrato[]>([])
   const [analise, setAnalise] = useState<AnaliseContrato | null>(null)
+  const [medianaTipo, setMedianaTipo] = useState<number | null>(null)
+  const [qtdPares, setQtdPares] = useState(0)
+  // Passo D07: abre o PDF do contrato na página citada pela análise.
+  const abrirNaPagina = async (pagina: number) => {
+    const doc = documentos.find(d => d.tipo === 'contrato' && d.caminhoStorage)
+    if (!doc?.caminhoStorage) { setErro('O PDF do contrato não está anexado nesta ficha.'); return }
+    try { window.open(`${await urlAssinada(doc.caminhoStorage)}#page=${pagina}`, '_blank', 'noopener') } catch (e) { setErro(mensagemAmigavel(e)) }
+  }
   const [analiseEm, setAnaliseEm] = useState<string | null>(null)
   const [params, setParams] = useSearchParams()
   const [analisando, setAnalisando] = useState(false)
@@ -65,13 +73,19 @@ export default function ContratoPage() {
     }
     // O PDF do próprio instrumento (campo arquivo) entra na lista como documento do contrato.
     const doArquivo: Documento[] = c?.arquivo
-      ? [{ id: `arquivo-${c.id}`, tipo: 'contrato', nome: c.arquivo.nome, enviadoEm: c.criadoEm }]
+      ? [{ id: `arquivo-${c.id}`, tipo: 'contrato', nome: c.arquivo.nome, enviadoEm: c.criadoEm, caminhoStorage: c.arquivo.caminhoStorage }]
       : []
     setDocumentos(c ? [...doArquivo, ...c.documentos] : i?.documentos ?? [])
     setVinculados(c ? await repositorio.listarVinculados(c.id) : [])
     const todos = await repositorio.listarContratos()
     const imoveis = await repositorio.listarImoveis()
     setCompromissos(calcularAlertas(imoveis, todos).filter(a => a.imovelId === id))
+    // Passo D07 (Diamante): mediana do valor dos outros contratos ativos do mesmo tipo, para situar este.
+    if (c) {
+      const pares = todos.filter(x => x.id !== c.id && x.tipo === c.tipo && !x.encerradoEm && x.valor > 0).map(x => x.valor).sort((a, b) => a - b)
+      setMedianaTipo(pares.length ? (pares.length % 2 ? pares[(pares.length - 1) / 2] : (pares[pares.length / 2 - 1] + pares[pares.length / 2]) / 2) : null)
+      setQtdPares(pares.length)
+    }
   }, [id, navigate])
 
   useEffect(() => {
@@ -559,6 +573,11 @@ export default function ContratoPage() {
               <div>
                 <h4 className="text-xs uppercase tracking-wider text-grafite-claro mb-1">Resumo</h4>
                 <p className="text-sm">{analise.resumo}</p>
+                {contrato && medianaTipo !== null && (
+                  <p className="text-xs text-grafite-claro mt-2" data-testid="mediana-carteira">
+                    Valor deste contrato {moeda(contrato.valor)} · mediana dos outros {qtdPares} contrato(s) de {rotulosTipoContrato[contrato.tipo].toLowerCase()} da carteira {moeda(medianaTipo)} ({contrato.valor >= medianaTipo ? '+' : '−'}{Math.abs(Math.round(((contrato.valor - medianaTipo) / medianaTipo) * 100))}%).
+                  </p>
+                )}
               </div>
 
               {analise.clausulasRisco.length > 0 && (
@@ -574,6 +593,8 @@ export default function ContratoPage() {
                           <span className="text-xs uppercase tracking-wider">({rotuloGravidade[c.gravidade]})</span>
                         </p>
                         <p className="text-grafite mt-0.5">{c.observacao}</p>
+                        {c.trecho && <blockquote className="mt-1 text-xs italic text-grafite-claro border-l border-navy/20 pl-2" data-testid="trecho-clausula">“{c.trecho}”</blockquote>}
+                        {c.pagina ? <button type="button" onClick={() => abrirNaPagina(c.pagina!)} className="mt-1 text-xs underline text-navy print:hidden" data-testid="abrir-pagina">Abrir o PDF na página {c.pagina}</button> : null}
                       </li>
                     ))}
                   </ul>
