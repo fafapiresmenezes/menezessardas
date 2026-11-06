@@ -64,6 +64,7 @@ describe('perfil-julgador', () => {
     expect(req.messages[0].content).toContain('"tema":"despejo"')
     expect(req.messages[0].content).toContain('"processos":120')
     expect(req.system).toContain('não psicológico')
+    expect(req.system).toContain('REDAÇÃO DESTA RESPOSTA')
     expect(estado.inseridos.find(i => i.tabela === 'consumo_api')!.linha).toMatchObject({ funcao: 'perfil-julgador', usuario_id: 'u1', modelo: 'claude-sonnet-5-5', tokens_entrada: 900, tokens_saida: 300 })
     expect(estado.inseridos.find(i => i.tabela === 'perfis_julgador')!.linha).toMatchObject({ usuario_id: 'u1', nome: 'Ana Souza', tribunal: 'TJRJ' })
   })

@@ -3,6 +3,9 @@ import { PenLine, Trash2, Upload } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '../lib/supabase'
 import { extrairTextoPdf } from '../lib/pdf'
 import { ESCOLAS, REFERENCIAS, FORMATACAO } from '../lib/estiloPecas'
+import { lerDocx } from '../lib/docx'
+import { formatacaoFinal, type Formatacao } from '../lib/formatarPeca'
+import { carregarFormatacao, salvarFormatacao, apagarFormatacao } from '../lib/formatacaoUsuario'
 
 interface Peca { id: string; titulo: string; texto: string; criado_em: string }
 const LIMITE = 10
@@ -15,6 +18,8 @@ export default function EstiloEscrita() {
   const [msg, setMsg] = useState('')
   const [ocupado, setOcupado] = useState(false)
   const arquivo = useRef<HTMLInputElement>(null)
+  const [formatacao, setFormatacao] = useState<Partial<Formatacao> | null>(null)
+  useEffect(() => { carregarFormatacao().then(setFormatacao).catch(() => undefined) }, [])
 
   const carregar = async () => {
     if (!supabaseConfigurado) return
@@ -26,10 +31,20 @@ export default function EstiloEscrita() {
   const lerArquivo = async (f: File) => {
     setMsg('')
     try {
-      const t = f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf') ? await extrairTextoPdf(f) : await f.text()
+      const nome = f.name.toLowerCase()
+      let t: string
+      if (nome.endsWith('.docx')) {
+        // Word: além do texto, lê a formatação (fonte, tamanho, margens, entrelinhas, recuo).
+        const d = await lerDocx(f)
+        t = d.texto
+        if (Object.keys(d.formatacao).length) {
+          await salvarFormatacao(d.formatacao, f.name)
+          setFormatacao(d.formatacao)
+        }
+      } else t = f.type === 'application/pdf' || nome.endsWith('.pdf') ? await extrairTextoPdf(f) : await f.text()
       setTexto(t.trim().slice(0, 60000))
       if (!titulo) setTitulo(f.name.replace(/\.[^.]+$/, '').slice(0, 120))
-    } catch { setMsg('Não consegui ler o arquivo. Cole o texto no campo.') }
+    } catch { setMsg('Não consegui ler o arquivo. Cole o texto no campo ou envie em Word, PDF ou TXT.') }
   }
 
   const enviar = async (e: React.FormEvent) => {
@@ -53,7 +68,7 @@ export default function EstiloEscrita() {
   return (
     <section className="bg-white dark:bg-grafite p-6 shadow-sm mt-6" aria-labelledby="t-estilo" data-testid="secao-estilo">
       <h2 id="t-estilo" className="text-lg mb-1 flex items-center gap-2"><PenLine size={18} aria-hidden="true" /> Meu estilo de escrita</h2>
-      <p className="text-sm text-grafite-claro mb-4">Envie até {LIMITE} peças suas (petições, pareceres, contratos, e-mails formais). O Assistente passa a redigir com o seu vocabulário, ritmo e forma de citar a lei. Só você vê as suas peças.</p>
+      <p className="text-sm text-grafite-claro mb-4">Envie até {LIMITE} peças suas (petições, pareceres, contratos, e-mails formais). Todos os robôs e agentes do Assistente passam a escrever com o seu vocabulário, ritmo e forma de citar a lei, em perguntas, peças e caminhos. Envie em Word para a plataforma copiar também a sua formatação. Só você vê as suas peças.</p>
       <ul className="divide-y divide-navy/10 mb-4" aria-label="Peças enviadas">
         {pecas.length === 0 && <li className="py-2 text-sm text-grafite-claro">Nenhuma peça ainda.</li>}
         {pecas.map(p => (
@@ -70,8 +85,8 @@ export default function EstiloEscrita() {
             <input id="estilo-titulo" value={titulo} onChange={e => setTitulo(e.target.value)} maxLength={120} className="w-full border border-navy/15 p-2 text-sm" placeholder="Ex.: Contestação em ação de despejo (2025)" />
           </div>
           <div>
-            <label htmlFor="estilo-arquivo" className="block text-xs uppercase tracking-wider text-grafite-claro mb-1">Arquivo (PDF ou TXT) ou cole o texto abaixo</label>
-            <input id="estilo-arquivo" ref={arquivo} type="file" accept=".pdf,.txt,text/plain,application/pdf" onChange={e => { const f = e.target.files?.[0]; if (f) lerArquivo(f) }} className="text-sm" />
+            <label htmlFor="estilo-arquivo" className="block text-xs uppercase tracking-wider text-grafite-claro mb-1">Arquivo (Word, PDF ou TXT) ou cole o texto abaixo</label>
+            <input id="estilo-arquivo" ref={arquivo} type="file" accept=".docx,.pdf,.txt,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={e => { const f = e.target.files?.[0]; if (f) lerArquivo(f) }} className="text-sm" />
           </div>
           <div>
             <label htmlFor="estilo-texto" className="block text-xs uppercase tracking-wider text-grafite-claro mb-1">Texto da peça</label>
@@ -82,6 +97,21 @@ export default function EstiloEscrita() {
         </form>
       ) : <p className="text-sm text-grafite-claro">Limite de {LIMITE} peças atingido. Apague uma para enviar outra.</p>}
       {msg && <p role="status" className="text-sm mt-3">{msg}</p>}
+      <div className="mt-6 border-t border-navy/10 pt-4" data-testid="minha-formatacao">
+        <h3 className="text-sm font-semibold">Minha formatação</h3>
+        {(() => {
+          const f = formatacaoFinal(formatacao)
+          return (
+            <p className="text-sm text-grafite-claro mt-1">
+              {formatacao ? 'Lida do seu Word: ' : 'Padrão de grandes escritórios (envie uma peça em Word para usar a sua): '}
+              {f.fonte} {String(f.corpo).replace('.', ',')}, entrelinhas {String(f.entrelinhas).replace('.', ',')}, recuo {String(f.recuoPrimeiraLinha).replace('.', ',')} cm, margens {f.margens.superior}/{f.margens.direita}/{f.margens.inferior}/{f.margens.esquerda} cm. Vale para toda peça e todo parecer baixados em Word.
+            </p>
+          )
+        })()}
+        {formatacao && (
+          <button type="button" onClick={() => apagarFormatacao().then(() => setFormatacao(null))} data-testid="voltar-padrao" className="mt-2 min-h-[44px] px-3 border border-navy/20 text-sm">Voltar ao padrão de grandes escritórios</button>
+        )}
+      </div>
       <details className="mt-6 border-t border-navy/10 pt-4" data-testid="padrao-escrita">
         <summary className="cursor-pointer text-sm font-semibold min-h-[44px] flex items-center">Padrão de escrita das peças e rotação de estilo</summary>
         <p className="text-sm text-grafite-claro mt-2">Cada peça redigida sorteia uma mistura de {ESCOLAS.length} escolas de escrita jurídica brasileira, com ritmo de frases, conectivos, abertura e numeração diferentes das últimas peças. Se você enviou peças suas acima, o seu estilo prevalece e a rotação só varia o ritmo e os conectivos. O advogado sempre revisa e assina.</p>

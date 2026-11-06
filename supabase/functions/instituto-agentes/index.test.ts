@@ -76,6 +76,9 @@ describe('instituto-agentes', () => {
     expect(sys[2]!.text).toContain('Você é "Agente de Locação"')
     expect(txt).toContain('"series":3')
     expect(txt).toContain('nunca dê garantia de resultado')
+    // Bloco E: rotação de redação fica no bloco que não entra no cache.
+    expect(sys[2]!.text).toContain('REDAÇÃO DESTA RESPOSTA')
+    expect(sys[0]!.text).not.toContain('REDAÇÃO DESTA RESPOSTA')
     const nomes = estado.rpcs.map(x => x.nome)
     expect(nomes).toContain('instituto_agente_registrar')
     expect(estado.rpcs.find(x => x.nome === 'instituto_agente_registrar')!.args).toEqual({ p_agente: 'a01', p_in: 1000, p_out: 200, p_usd: 0.006 })

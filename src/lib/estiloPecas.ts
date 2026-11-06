@@ -449,3 +449,29 @@ export function aderencia(m: Medida, p: Perfil) {
   const penal = m.maiorRepeticao > 2 ? 0.15 : 0
   return Math.round(Math.max(0, 1 - 0.5 * dFrase - 0.35 * dRitmo - penal) * 100)
 }
+
+/**
+ * Versão curta do perfil para textos que não são peças (pareceres, matrizes, diagnósticos,
+ * respostas dos agentes): varia ritmo, voz, conectivos e evita vícios, sem mexer em
+ * estrutura, números ou formatação exigidos por cada agente.
+ */
+export function instrucoesDeRedacao(p: Perfil) {
+  const q = p.parametros
+  return `REDAÇÃO DESTA RESPOSTA (rotação de estilo; a próxima terá outra):
+- Frases com cerca de ${Math.round(Math.min(q.frase, 26))} palavras em média, alternando curtas e longas; nunca três frases seguidas do mesmo tamanho.
+- Voz ${nivel(q.pessoalidade, 'impessoal', 'mista', 'na primeira pessoa do plural')}; tom ${nivel(q.retorica, 'sóbrio', 'firme', 'enfático, sem exagero')}.
+- Conectivos preferidos: ${Object.values(p.conectivos).flat().join(', ')}. Cada um no máximo duas vezes.
+- Evite: ${VICIOS.join('; ')}.
+- Esta orientação muda só a redação: mantenha a estrutura, os números, as citações e o formato pedidos acima.`
+}
+
+/** Corta as amostras do autor para caber no prompt (peças: até 70 mil caracteres; demais textos: 15 mil). */
+export function amostrasDoAutor(pecas: { titulo: string; texto: string }[], limite: number) {
+  let total = 0
+  const amostras: string[] = []
+  for (const p of pecas) {
+    const t = p.texto.slice(0, Math.max(0, limite - total)); if (!t) break
+    total += t.length; amostras.push(`### ${p.titulo}\n${t}`)
+  }
+  return amostras
+}

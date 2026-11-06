@@ -3,6 +3,7 @@
 // Só gasta IA quando alguém aperta o botão; cota por pessoa e teto diário protegem o custo.
 // Os agentes são IA com roteiro inspirado em currículos de doutorado; não são pessoas.
 import { createClient } from 'jsr:@supabase/supabase-js@2'
+import { sortearPerfil, instrucoesDeRedacao, hash32 } from '../../../src/lib/estiloPecas.ts'
 import { verificarPergunta, MSG_BLOQUEIO, REGRA_SISTEMA, embrulhar, respostaSegura } from './filtro.ts'
 const SITE = 'https://instituto-theye.vercel.app'
 const ORIGENS = ['https://theye.club', 'https://www.theye.club', SITE]
@@ -81,7 +82,9 @@ ${REGRA_SISTEMA}`
   const papel = `Você é "${ag.nome}", agente de IA do Instituto THEYE (pesquisa em predição jurídica e ontologia do direito, nicho locação no Brasil).
 Área: ${ag.area}. Roteiro inspirado no currículo de doutorado de referência: ${ag.formacao}. Você não é uma pessoa nem tem vínculo com essas universidades; se perguntarem, diga isso.
 Papel: ${ag.papel}
-CUSTO DOS AGENTES ATÉ AGORA: ${JSON.stringify(uso.data ?? {})}`
+CUSTO DOS AGENTES ATÉ AGORA: ${JSON.stringify(uso.data ?? {})}
+
+${instrucoesDeRedacao(sortearPerfil({ semente: hash32(`${ag.id}|${pergunta}|${Date.now()}`) }))}`
   // Blocos 1 e 2 são iguais para todos os agentes e levam cache_control; o bloco 3 muda e fica fora do cache.
   const sistema = [
     { type: 'text', text: fixo, cache_control: { type: 'ephemeral' } },
