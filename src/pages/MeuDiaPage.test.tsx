@@ -41,6 +41,7 @@ describe('Meu dia', () => {
     resultados.diagnosticos_semanais = { data: { id: 'd1', resposta: '## Diagnóstico\n\n### Ações\n1. Revisar os contratos vencidos\n2. Cobrar honorários atrasados', criado_em: '2026-11-02T06:00:00Z' } }
     resultados.acoes_consultor = { data: [{ id: 'a1', indice: 1, texto: 'Revisar os contratos vencidos', feito_em: null }, { id: 'a2', indice: 2, texto: 'Cobrar honorários atrasados', feito_em: '2026-11-02T09:00:00Z' }] }
     resultados.horas = { data: { meta: 120, horas: 20, esperado_hoje: 60, pct_ritmo: 33, abaixo: true } }
+    resultados.monitoramentos = { data: [{ id: 'm1', valor: '08012345620268190001', rotulo: 'Despejo Rua A', novidade_em: '2026-11-06T10:00:00Z', novidades: [{ data: '2026-11-05', texto: 'Sentença publicada' }, { data: '2026-11-04', texto: 'Juntada' }] }, { id: 'm2', valor: '1', rotulo: null, novidade_em: null, novidades: [] }] }
   })
 
   it('papel lembrado muda foco, atalhos e seção do resumo; tarefas, intimações e contratos vencendo; aviso de horas abaixo do ritmo', async () => {
@@ -103,5 +104,12 @@ describe('Meu dia', () => {
     expect(click).toHaveBeenCalled()
     expect(screen.getByTestId('baixar-meu-dia').textContent).toBe('baixado')
     click.mockRestore()
+  })
+
+  it('D15: movimentações novas dos processos monitorados aparecem em Meu dia com link ao Monitoramento', async () => {
+    render(<MemoryRouter><MeuDiaPage /></MemoryRouter>)
+    const bloco = await screen.findByTestId('movimentacoes')
+    await waitFor(() => expect(within(bloco).getAllByTestId('movimentacao')).toHaveLength(1))
+    expect(within(bloco).getByTestId('movimentacao').textContent).toBe('Despejo Rua A: Sentença publicada (+1)')
   })
 })
