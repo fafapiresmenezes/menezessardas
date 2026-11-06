@@ -5,6 +5,8 @@ import { render, screen, fireEvent, waitFor, cleanup, within } from '@testing-li
 const hoje = new Date(); const iso = (d: number) => new Date(hoje.getTime() + d * 86400000).toISOString().slice(0, 10)
 let casos: object[] = []
 let pagamentos: object[] = []
+let parcelas: object[] = []
+const rpc = vi.fn(async (_f: string, _a: object): Promise<{ error: { message: string } | null; data?: unknown }> => ({ error: null, data: 3 }))
 const insert = vi.fn(async (_r: object): Promise<{ error: { message: string } | null }> => ({ error: null }))
 const update = vi.fn(async (_r: object): Promise<{ error: { message: string } | null }> => ({ error: null }))
 const del = vi.fn(async () => ({}))
@@ -13,15 +15,16 @@ vi.mock('@/lib/supabase', () => ({
   supabase: { from: (t: string) => t === 'tarefas'
     ? { select: () => ({ eq: () => ({ order: async () => ({ data: casos, error: null }) }) }), update: (r: object) => ({ eq: async () => update(r) }) }
     : t === 'lancamentos_horas' ? { select: async () => ({ data: [{ cliente: 'Ana', minutos: 120, valor_hora: 300 }] }) }
-    : { select: () => ({ order: async () => ({ data: pagamentos }) }), insert: (r: object) => insert(r), delete: () => ({ eq: async () => { await del(); return {} } }) } },
+    : t === 'parcelas_honorarios' ? { select: () => ({ order: async () => ({ data: parcelas }) }) }
+    : { select: () => ({ order: async () => ({ data: pagamentos }) }), insert: (r: object) => insert(r), delete: () => ({ eq: async () => { await del(); return {} } }) }, rpc: (f: string, a: object) => rpc(f, a) },
 }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
-vi.mock('@/components/CobrancaPix', () => ({ default: ({ valor, caso }: { valor: number; caso: string }) => <div data-testid="pix-stub">{caso} {valor}</div> }))
+vi.mock('@/components/CobrancaPix', () => ({ default: ({ valor, caso, referencia }: { valor: number; caso: string; referencia?: string }) => <div data-testid="pix-stub">{caso} {valor}{referencia ? ` ${referencia}` : ''}</div> }))
 const { default: HonorariosPage } = await import('./HonorariosPage')
 const n = (s: string | null | undefined) => (s ?? '').replace(/ /g, ' ')
 
 describe('Honorários e rentabilidade', () => {
-  beforeEach(() => { cleanup(); insert.mockClear(); update.mockClear(); del.mockClear(); pagamentos = []
+  beforeEach(() => { cleanup(); insert.mockClear(); update.mockClear(); del.mockClear(); rpc.mockClear(); pagamentos = []; parcelas = []
     casos = [
       { id: 'c1', titulo: 'Despejo Rua A', cliente: 'Ana', area: 'Imobiliário', situacao: 'andamento', honorario_previsto: 5000, honorario_recebido: 2000, vencimento_honorario: iso(-10) },
       { id: 'c2', titulo: 'Consultoria B', cliente: 'Bruno', area: null, situacao: 'andamento', honorario_previsto: 1000, honorario_recebido: 1000, vencimento_honorario: null },
@@ -51,7 +54,7 @@ describe('Honorários e rentabilidade', () => {
     fireEvent.click(screen.getByText('Salvar'))
     await waitFor(() => expect(update).toHaveBeenCalledWith({ honorario_previsto: 6000, honorario_recebido: 2000, vencimento_honorario: null }))
     fireEvent.click(screen.getAllByTestId('cobrar-pix')[0])
-    expect(screen.getByTestId('pix-stub').textContent).toBe('Despejo Rua A 3000')
+    expect(screen.getByTestId('pix-stub').textContent).toBe('Despejo Rua A 3000 Despejo Rua A')
     fireEvent.click(screen.getAllByText('Carta de cobrança')[0])
     expect(w.document.write.mock.calls[0][0]).toContain('Prezado(a) Ana')
     expect(n(w.document.write.mock.calls[0][0])).toContain('R$ 3.000,00')
@@ -88,5 +91,40 @@ describe('Honorários e rentabilidade', () => {
     expect(click).toHaveBeenCalled()
     expect(screen.getByTestId('baixar-honorarios').textContent).toBe('Baixado')
     click.mockRestore()
+  })
+
+  it('D13: parcelar sugere o saldo e prévia, gera parcelas pela RPC; lista parcelas com situação; PIX por parcela com o valor da parcela; marcar paga', async () => {
+    parcelas = [
+      { id: 11, caso_id: 'c1', numero: 1, vencimento: iso(-20), valor: 1000, pago_em: iso(-20), pagamento_id: 5 },
+      { id: 12, caso_id: 'c1', numero: 2, vencimento: iso(-3), valor: 1000, pago_em: null, pagamento_id: null },
+      { id: 13, caso_id: 'c1', numero: 3, vencimento: iso(40), valor: 1000, pago_em: null, pagamento_id: null },
+    ]
+    render(<HonorariosPage />)
+    await screen.findByText('Despejo Rua A')
+    const lista = await screen.findByTestId('parcelas-caso')
+    expect(n(lista.textContent)).toContain('1/3 pagas')
+    expect(n(lista.textContent)).toContain('1 atrasada')
+    const itens = within(lista).getAllByTestId('parcela')
+    expect(itens).toHaveLength(3)
+    expect(n(itens[0].textContent)).toContain('Paga'); expect(n(itens[1].textContent)).toContain('Atrasada 3 dias'); expect(n(itens[2].textContent)).toContain('Em dia')
+    fireEvent.click(within(lista).getByLabelText('PIX da parcela 2'))
+    expect(n(screen.getByTestId('pix-stub').textContent)).toBe('Despejo Rua A 1000 Despejo Rua AP2')
+    fireEvent.click(within(lista).getAllByTestId('quitar-parcela')[0])
+    await waitFor(() => expect(rpc).toHaveBeenCalledWith('quitar_parcela', expect.objectContaining({ p_parcela: 12, p_meio: 'pix' })))
+    expect(n((await screen.findByTestId('msg-parcelas')).textContent)).toContain('Parcela 2 quitada')
+    // Parcelar o caso c3 (saldo 800) em 3 vezes.
+    fireEvent.click(screen.getAllByTestId('parcelar')[1])
+    const form = screen.getByTestId('form-parcelar')
+    expect((within(form).getByTestId('parcelar-total') as HTMLInputElement).value).toBe('800.00')
+    expect(n(within(form).getByTestId('parcelar-previa').textContent)).toMatch(/3× R\$ 266,66 \(última R\$ 266,68\)/)
+    fireEvent.change(within(form).getByTestId('parcelar-quantidade'), { target: { value: '0' } })
+    fireEvent.click(within(form).getByTestId('parcelar-salvar'))
+    expect(n(screen.getByTestId('msg-parcelas').textContent)).toContain('Informe o total')
+    fireEvent.change(within(form).getByTestId('parcelar-quantidade'), { target: { value: '2' } })
+    fireEvent.change(within(form).getByTestId('parcelar-primeiro'), { target: { value: '2026-12-10' } })
+    fireEvent.click(within(form).getByTestId('parcelar-salvar'))
+    await waitFor(() => expect(rpc).toHaveBeenCalledWith('gerar_parcelas', { p_caso: 'c3', p_quantidade: 2, p_primeiro: '2026-12-10', p_valor_total: 800 }))
+    expect(n(screen.getByTestId('msg-parcelas').textContent)).toContain('2 parcelas de Revisão C a partir de 10/12/2026')
+    expect(screen.queryByTestId('form-parcelar')).toBeNull()
   })
 })

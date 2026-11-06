@@ -39,6 +39,16 @@ async function listarPrazosDeTarefas(): Promise<CompromissoGuardado[]> {
   } catch { return [] }
 }
 
+// Passo D13 (Diamante): parcelas de honorários em aberto entram na Agenda e nos Alertas (aviso 7 dias antes).
+async function listarParcelasDeHonorarios(): Promise<CompromissoGuardado[]> {
+  if (!supabaseConfigurado) return []
+  try {
+    const { data, error } = await supabase.from('parcelas_honorarios').select('id,caso_id,numero,vencimento,valor,pago_em,tarefas(titulo,cliente)').is('pago_em', null)
+    if (error || !data) return []
+    return data.map(p => { const t = (Array.isArray(p.tarefas) ? p.tarefas[0] : p.tarefas) as { titulo?: string; cliente?: string | null } | null; return { id: `parcela-${p.id}`, titulo: `Parcela ${p.numero} de honorários: ${t?.titulo ?? 'caso'}`, imovel: t?.cliente || 'Honorários', dataEvento: String(p.vencimento).slice(0, 10), diasAntes: 7, avisosDias: [7, 1] } })
+  } catch { return [] }
+}
+
 export async function salvarCompromisso(c: NovoCompromisso) {
   if (!supabaseConfigurado) {
     localStorage.setItem(CHAVE_LOCAL, JSON.stringify([...lerLocal(), { ...c, id: crypto.randomUUID() }]))
@@ -74,13 +84,14 @@ export function useAlertas() {
 
   const recarregar = useCallback(async () => {
     try {
-      const [imoveis, contratos, proprios0, prazos] = await Promise.all([
+      const [imoveis, contratos, proprios0, prazos, parcelas] = await Promise.all([
         repositorio.listarImoveis(),
         repositorio.listarContratos(),
         listarCompromissos(),
         listarPrazosDeTarefas(),
+        listarParcelasDeHonorarios(),
       ])
-      const compromissos = [...proprios0, ...prazos]
+      const compromissos = [...proprios0, ...prazos, ...parcelas]
       const proprios: Alerta[] = compromissos.map(c => ({
         id: `comp-${c.id}`,
         imovelId: '',

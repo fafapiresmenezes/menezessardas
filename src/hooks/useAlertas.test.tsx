@@ -8,9 +8,12 @@ const insert = vi.fn(async (_r: unknown): Promise<{ error: { message: string } |
 let linhas: Record<string, unknown>[] = []
 let existentes: { uid_externo: string }[] = []
 let tarefas: Record<string, unknown>[] = []
+let parcelas: Record<string, unknown>[] = []
 vi.mock('@/lib/supabase', () => ({
   get supabaseConfigurado() { return configurado },
-  supabase: { from: (tabela: string) => tabela === 'tarefas'
+  supabase: { from: (tabela: string) => tabela === 'parcelas_honorarios'
+    ? { select: () => ({ is: async () => ({ data: parcelas, error: null }) }) }
+    : tabela === 'tarefas'
     ? { select: () => ({ not: () => ({ neq: async () => ({ data: tarefas, error: null }) }) }) }
     : { select: (cols: string) => cols === 'uid_externo' ? { in: async () => ({ data: existentes, error: null }) } : Promise.resolve({ data: linhas, error: null }), insert: (r: unknown) => insert(r) } },
 }))
@@ -22,7 +25,7 @@ const { useAlertas, salvarCompromisso, importarCompromissosIcs } = await import(
 
 describe('useAlertas', () => {
   beforeEach(() => {
-    configurado = false; localStorage.clear(); insert.mockClear(); linhas = []; existentes = []; tarefas = []; listarImoveis = vi.fn(async () => imoveis)
+    configurado = false; localStorage.clear(); insert.mockClear(); linhas = []; existentes = []; tarefas = []; parcelas = []; listarImoveis = vi.fn(async () => imoveis)
     contratos = [{ id: 'c1', imovelId: 'i1', tipo: 'locacao_residencial', parte: 'Ana', dataInicio: '2025-01-01', dataVencimento: emDias(20), valor: 1000, periodicidade: 'mensal', indice: 'fixo', garantia: 'caucao', dataUltimoReajuste: null, notas: '', criadoEm: '2025-01-01', documentos: [] }]
   })
 

@@ -6,6 +6,8 @@ import { supabase } from '@/lib/supabase'
 import { formatarData, diasAte } from '@/lib/datas'
 import { Banknote, Printer, QrCode, TrendingDown, TrendingUp, Receipt, Trash2 } from 'lucide-react'
 import CobrancaPix from '@/components/CobrancaPix'
+import { planoParcelas, situacaoParcela, resumoParcelas, type Parcela } from '@/lib/parcelas'
+import { CalendarClock } from 'lucide-react'
 
 // Honorários e rentabilidade: por caso, o combinado, o recebido, o vencimento e a régua de cobrança;
 // a rentabilidade cruza honorários recebidos com as horas lançadas para o mesmo cliente.
@@ -21,7 +23,11 @@ export default function HonorariosPage() {
   const [horas, setHoras] = useState<Hora[]>([])
   const [erro, setErro] = useState('')
   const [editando, setEditando] = useState<Record<string, Partial<Caso>>>({})
-  const [pix, setPix] = useState<Caso | null>(null)
+  const [pix, setPix] = useState<{ caso: Caso; valor: number; referencia: string; descricao: string } | null>(null)
+  // Passo D13: parcelas por caso (vencimento, situação, PIX por parcela, quitação).
+  const [parcelas, setParcelas] = useState<Parcela[]>([])
+  const [parcelar, setParcelar] = useState<{ caso: Caso; quantidade: string; primeiro: string; total: string } | null>(null)
+  const [msgParcelas, setMsgParcelas] = useState('')
   const [pagamentos, setPagamentos] = useState<Pagamento[]>([])
   const [baixa, setBaixa] = useState<{ caso: Caso; data: string; valor: string; meio: string; observacao: string } | null>(null)
   const [msgBaixa, setMsgBaixa] = useState('')
@@ -40,14 +46,30 @@ export default function HonorariosPage() {
   const apagarPagamento = async (p: Pagamento) => { await supabase.from('pagamentos_honorarios').delete().eq('id', p.id); carregar() }
 
   const carregar = async () => {
-    const [c, h, pg] = await Promise.all([
+    const [c, h, pg, pc] = await Promise.all([
       supabase.from('tarefas').select('id,titulo,cliente,area,situacao,honorario_previsto,honorario_recebido,vencimento_honorario').eq('nivel', 'projeto').order('criado_em', { ascending: false }),
       supabase.from('lancamentos_horas').select('cliente,minutos,valor_hora'),
       supabase.from('pagamentos_honorarios').select('id,caso_id,data,valor,meio,observacao').order('data', { ascending: false }),
+      supabase.from('parcelas_honorarios').select('id,caso_id,numero,vencimento,valor,pago_em,pagamento_id').order('numero'),
     ])
     if (c.error) setErro(mensagemAmigavel(c.error))
-    setCasos((c.data ?? []) as Caso[]); setHoras((h.data ?? []) as Hora[]); setPagamentos((pg.data ?? []) as Pagamento[])
+    setCasos((c.data ?? []) as Caso[]); setHoras((h.data ?? []) as Hora[]); setPagamentos((pg.data ?? []) as Pagamento[]); setParcelas((pc?.data ?? []) as Parcela[])
   }
+  const abrirParcelar = (c: Caso) => { const aberto = Math.max(0, Number(c.honorario_previsto) - Number(c.honorario_recebido)); const d = new Date(); d.setMonth(d.getMonth() + 1); setParcelar({ caso: c, quantidade: '3', primeiro: d.toISOString().slice(0, 10), total: aberto.toFixed(2) }); setMsgParcelas('') }
+  const salvarParcelas = async () => {
+    if (!parcelar) return
+    const total = Number(String(parcelar.total).replace(',', '.')); const n = Number(parcelar.quantidade)
+    if (!planoParcelas(total, n, parcelar.primeiro).length) return setMsgParcelas('Informe o total, a quantidade (1 a 120) e o primeiro vencimento.')
+    const { error } = await supabase.rpc('gerar_parcelas', { p_caso: parcelar.caso.id, p_quantidade: n, p_primeiro: parcelar.primeiro, p_valor_total: total })
+    if (error) return setMsgParcelas(mensagemAmigavel(error))
+    setMsgParcelas(`${n} parcela${n > 1 ? 's' : ''} de ${parcelar.caso.titulo} a partir de ${formatarData(parcelar.primeiro)}. As parcelas aparecem na Agenda e no resumo semanal por e-mail.`); setParcelar(null); carregar()
+  }
+  const quitarParcela = async (p: Parcela) => {
+    const { error } = await supabase.rpc('quitar_parcela', { p_parcela: p.id, p_data: new Date().toISOString().slice(0, 10), p_meio: 'pix' })
+    if (error) return setMsgParcelas(mensagemAmigavel(error))
+    setMsgParcelas(`Parcela ${p.numero} quitada (${brl(Number(p.valor))}).`); carregar()
+  }
+  const pixParcela = (c: Caso, p: Parcela) => setPix({ caso: c, valor: Number(p.valor), referencia: `${c.titulo.slice(0, 14)}P${p.numero}`, descricao: `Parcela ${p.numero} ${c.titulo}` })
   useEffect(() => { carregar() }, [])
 
   const custoPorCliente = useMemo(() => {
@@ -134,7 +156,9 @@ export default function HonorariosPage() {
                     <td><input aria-label={`Combinado ${c.titulo}`} type="number" className="border px-2 py-1 w-28" value={e.honorario_previsto ?? c.honorario_previsto} onChange={ev => setEditando({ ...editando, [c.id]: { ...e, honorario_previsto: Number(ev.target.value) } })} /></td>
                     <td><input aria-label={`Recebido ${c.titulo}`} type="number" className="border px-2 py-1 w-28" value={e.honorario_recebido ?? c.honorario_recebido} onChange={ev => setEditando({ ...editando, [c.id]: { ...e, honorario_recebido: Number(ev.target.value) } })} /></td>
                     <td><input aria-label={`Vencimento ${c.titulo}`} type="date" className="border px-2 py-1" value={e.vencimento_honorario ?? c.vencimento_honorario ?? ''} onChange={ev => setEditando({ ...editando, [c.id]: { ...e, vencimento_honorario: ev.target.value } })} /></td>
-                    <td className={`${r.cor} whitespace-nowrap`}>{r.rotulo}{r.aberto > 0 && <button onClick={() => carta(c)} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1"><Printer size={12} aria-hidden="true" /> Carta de cobrança</button>}{r.aberto > 0 && <button onClick={() => setPix(c)} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1" data-testid="cobrar-pix"><QrCode size={12} aria-hidden="true" /> Cobrar por PIX</button>}<button onClick={() => abrirBaixa(c)} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1" data-testid="registrar-pagamento"><Receipt size={12} aria-hidden="true" /> Registrar pagamento</button>
+                    <td className={`${r.cor} whitespace-nowrap`}>{r.rotulo}{r.aberto > 0 && <button onClick={() => carta(c)} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1"><Printer size={12} aria-hidden="true" /> Carta de cobrança</button>}{r.aberto > 0 && <button onClick={() => setPix({ caso: c, valor: r.aberto, referencia: c.titulo.slice(0, 20), descricao: `Honorarios ${c.titulo}` })} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1" data-testid="cobrar-pix"><QrCode size={12} aria-hidden="true" /> Cobrar por PIX</button>}<button onClick={() => abrirBaixa(c)} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1" data-testid="registrar-pagamento"><Receipt size={12} aria-hidden="true" /> Registrar pagamento</button>
+                      {r.aberto > 0 && <button onClick={() => abrirParcelar(c)} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1" data-testid="parcelar"><CalendarClock size={12} aria-hidden="true" /> {parcelas.some(p => p.caso_id === c.id) ? 'Refazer parcelas' : 'Parcelar'}</button>}
+                      {parcelas.some(p => p.caso_id === c.id) && (() => { const ps = parcelas.filter(p => p.caso_id === c.id); const res = resumoParcelas(ps); return <div className="mt-1" data-testid="parcelas-caso"><p className="text-[11px] text-grafite">{res.pagas}/{res.total} pagas{res.atrasadas > 0 && <span className="text-critico"> · {res.atrasadas} atrasada{res.atrasadas > 1 ? 's' : ''} ({brl(res.valorAtrasado)})</span>}</p><ol className="text-[11px] text-grafite-claro space-y-0.5">{ps.map(p => { const st = situacaoParcela(p); return <li key={p.id} data-testid="parcela" className={st.codigo === 'atrasada' ? 'text-critico' : st.codigo === 'vence_breve' ? 'text-dourado-escuro' : ''}>{p.numero}ª · {formatarData(p.vencimento)} · {brl(Number(p.valor))} · {st.rotulo}{!p.pago_em && <> <button onClick={() => pixParcela(c, p)} className="underline" aria-label={`PIX da parcela ${p.numero}`}>PIX</button> <button onClick={() => quitarParcela(p)} className="underline" aria-label={`Marcar parcela ${p.numero} paga`} data-testid="quitar-parcela">Marcar paga</button></>}</li> })}</ol></div> })()}
                       {pagamentos.filter(p => p.caso_id === c.id).length > 0 && <ul className="mt-1 text-[11px] text-grafite-claro" data-testid="pagamentos-caso">{pagamentos.filter(p => p.caso_id === c.id).slice(0, 5).map(p => <li key={p.id} data-testid="pagamento">{formatarData(p.data)} · {brl(Number(p.valor))} · {MEIOS[p.meio] ?? p.meio} <button onClick={() => apagarPagamento(p)} aria-label="Apagar pagamento" className="align-middle"><Trash2 size={10} aria-hidden="true" /></button></li>)}</ul>}</td>
                     <td className={`whitespace-nowrap ${rent < 0 ? 'text-critico' : 'text-navy'}`}>{rent < 0 ? <TrendingDown size={14} className="inline" aria-hidden="true" /> : <TrendingUp size={14} className="inline" aria-hidden="true" />} {brl(rent)}<span className="block text-xs text-grafite-claro">custo {brl(custo)}</span></td>
                     <td>{editando[c.id] && <button onClick={() => salvar(c)} className="min-h-[36px] px-3 bg-navy text-white text-xs uppercase">Salvar</button>}</td>
@@ -162,7 +186,24 @@ export default function HonorariosPage() {
             </div>
           </section>
         )}
-        {pix && <CobrancaPix valor={regua(pix).aberto} caso={pix.titulo} cliente={pix.cliente} fechar={() => setPix(null)} />}
+        {msgParcelas && <p role="status" className="text-sm text-navy" data-testid="msg-parcelas">{msgParcelas}</p>}
+        {parcelar && (
+          <section className="bg-white shadow-sm border-l-4 border-dourado p-5" aria-label="Parcelar honorários" data-testid="form-parcelar">
+            <h2 className="text-lg mb-1">Parcelar · {parcelar.caso.titulo}</h2>
+            <p className="text-xs text-grafite-claro mb-3">Parcelas mensais com os centavos na última. Cada parcela tem QR PIX com o próprio valor; as parcelas já pagas são preservadas. Vencimentos entram na Agenda e no resumo semanal por e-mail.</p>
+            <div className="grid gap-3 sm:grid-cols-4">
+              <label className="text-xs">Total (R$)<input type="number" min="0.01" step="0.01" value={parcelar.total} onChange={e => setParcelar({ ...parcelar, total: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="parcelar-total" /></label>
+              <label className="text-xs">Parcelas<input type="number" min="1" max="120" value={parcelar.quantidade} onChange={e => setParcelar({ ...parcelar, quantidade: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="parcelar-quantidade" /></label>
+              <label className="text-xs">1º vencimento<input type="date" value={parcelar.primeiro} onChange={e => setParcelar({ ...parcelar, primeiro: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="parcelar-primeiro" /></label>
+              <div className="text-xs self-end pb-2" data-testid="parcelar-previa">{(() => { const pl = planoParcelas(Number(String(parcelar.total).replace(',', '.')), Number(parcelar.quantidade), parcelar.primeiro); return pl.length ? `${pl.length}× ${brl(pl[0].valor)}${pl.length > 1 && pl[pl.length - 1].valor !== pl[0].valor ? ` (última ${brl(pl[pl.length - 1].valor)})` : ''} até ${formatarData(pl[pl.length - 1].vencimento)}` : 'Preencha os campos' })()}</div>
+            </div>
+            <div className="flex gap-2 mt-3">
+              <button onClick={salvarParcelas} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider" data-testid="parcelar-salvar">Gerar parcelas</button>
+              <button onClick={() => setParcelar(null)} className="min-h-[44px] px-4 border text-sm">Cancelar</button>
+            </div>
+          </section>
+        )}
+        {pix && <CobrancaPix valor={pix.valor} caso={pix.caso.titulo} cliente={pix.caso.cliente} referencia={pix.referencia} descricao={pix.descricao} fechar={() => setPix(null)} />}
       </div>
     </Layout>
   )

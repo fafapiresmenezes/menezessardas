@@ -16,11 +16,12 @@ type Secao = Record<string, string | number>
 const ROTULOS: Record<string, string> = {
   contratos_vencidos: 'Contratos vencidos', contratos_60_dias: 'Contratos vencendo em 60 dias', valor_60_dias: 'Valor mensal em risco (60 dias)',
   honorarios_em_aberto: 'Honorários em aberto', honorarios_atrasados: 'Honorários atrasados', tarefas_alta: 'Tarefas de prioridade alta abertas',
+  parcelas_vencendo_7_dias: 'Parcelas de honorários vencendo em 7 dias', parcelas_atrasadas: 'Parcelas de honorários atrasadas', valor_parcelas_atrasadas: 'Valor das parcelas atrasadas',
   intimacoes_nao_lidas: 'Intimações não lidas', prazos_processuais_semana: 'Prazos processuais nesta semana', prazos_vencidos: 'Prazos processuais vencidos',
   tarefas_semana: 'Tarefas com prazo nesta semana', tarefas_vencidas: 'Tarefas vencidas', audiencias_compromissos: 'Audiências e compromissos na semana',
   compromissos_semana: 'Compromissos da semana', compromissos_lista: 'Agenda', contratos_30_dias: 'Contratos vencendo em 30 dias', reajustes_30_dias: 'Reajustes a aplicar em 30 dias',
 }
-const DINHEIRO = new Set(['valor_60_dias', 'honorarios_em_aberto'])
+const DINHEIRO = new Set(['valor_60_dias', 'honorarios_em_aberto', 'valor_parcelas_atrasadas'])
 const linhas = (s: Secao) => Object.entries(s).map(([k, v]) =>
   `<tr><td style="padding:4px 8px;border-bottom:1px solid #eee">${ROTULOS[k] ?? k}</td><td style="padding:4px 8px;border-bottom:1px solid #eee;text-align:right"><strong>${DINHEIRO.has(k) ? brl(Number(v)) : (v === '' ? '—' : v)}</strong></td></tr>`).join('')
 
