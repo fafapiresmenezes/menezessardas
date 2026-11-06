@@ -11,6 +11,7 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import {
   calcularKPIs,
   calcularOKRs,
+  type MetasOKR,
   matrizRisco,
   matrizPendencias,
   tendencia12Meses,
@@ -178,16 +179,33 @@ export default function IndicadoresPage() {
     }
   }
 
+  // Passo D04 (Diamante): metas dos OKRs editáveis pela sócia (configuracoes.metas_okr).
+  const [metas, setMetas] = useState<MetasOKR | null>(null)
+  const [editandoMetas, setEditandoMetas] = useState(false)
+  const [rascunhoMetas, setRascunhoMetas] = useState<Record<string, string>>({})
+  const [msgMetas, setMsgMetas] = useState('')
+  useEffect(() => {
+    if (!supabaseConfigurado) return
+    supabase.from('configuracoes').select('valor').eq('chave', 'metas_okr').maybeSingle().then(r => { try { setMetas(r.data ? JSON.parse(r.data.valor) : null) } catch { setMetas(null) } })
+  }, [])
+  const salvarMetas = async () => {
+    const novas: MetasOKR = { ...(metas ?? {}) }
+    for (const [k, v] of Object.entries(rascunhoMetas)) { const n = Number(String(v).replace(',', '.')); if (v.trim() !== '' && Number.isFinite(n) && n >= 0) novas[k] = n }
+    const { error } = await supabase.from('configuracoes').upsert({ chave: 'metas_okr', valor: JSON.stringify(novas) }, { onConflict: 'chave' })
+    if (error) { setMsgMetas(mensagemAmigavel(error, 'Não deu para salvar as metas.')); return }
+    setMetas(novas); setEditandoMetas(false); setRascunhoMetas({}); setMsgMetas('Metas salvas. Valem para toda a equipe e entram na próxima ata do trimestre.')
+  }
+
   const dados = useMemo(() => {
     if (!contratos) return null
     return {
       kpis: calcularKPIs(imoveis, contratos),
-      okrs: calcularOKRs(imoveis, contratos, alertas),
+      okrs: calcularOKRs(imoveis, contratos, alertas, metas),
       risco: matrizRisco(imoveis, contratos),
       pendencias: matrizPendencias(alertas),
       tendencia: tendencia12Meses(imoveis, contratos),
     }
-  }, [imoveis, contratos, alertas])
+  }, [imoveis, contratos, alertas, metas])
 
   if (li || la || !dados) {
     return (
@@ -387,6 +405,12 @@ export default function IndicadoresPage() {
           <h2 id="t-okr" className="text-xl mb-5">
             OKRs do trimestre
           </h2>
+          <div className="mb-3 flex flex-wrap items-center gap-3 text-sm print:hidden">
+            {!editandoMetas
+              ? <button type="button" data-testid="editar-metas" onClick={() => { setEditandoMetas(true); setMsgMetas('') }} className="underline text-navy">Editar metas</button>
+              : <><button type="button" data-testid="salvar-metas" onClick={salvarMetas} className="min-h-[44px] px-4 bg-navy text-white">Salvar metas</button><button type="button" onClick={() => { setEditandoMetas(false); setRascunhoMetas({}) }} className="underline text-navy">Cancelar</button></>}
+            {msgMetas && <span role="status" className="text-grafite-claro">{msgMetas}</span>}
+          </div>
           <div className="space-y-6">
             {okrs.map((o, i) => (
               <div key={i}>
@@ -401,7 +425,7 @@ export default function IndicadoresPage() {
                     return (
                       <div key={j}>
                         <div className="flex items-center justify-between text-sm mb-1">
-                          <span className="text-grafite">{kr.descricao}</span>
+                          <span className="text-grafite">{kr.descricao}{editandoMetas && <label className="ml-2 text-xs text-grafite-claro">meta <input type="number" min={0} inputMode="decimal" aria-label={`Meta: ${kr.descricao}`} value={rascunhoMetas[kr.descricao] ?? String(kr.meta)} onChange={e => setRascunhoMetas(m => ({ ...m, [kr.descricao]: e.target.value }))} className="w-20 border border-navy/20 px-1 py-0.5 text-sm" /> {kr.unidade}</label>}</span>
                           <span className={atingido ? 'text-regular font-medium' : 'text-atencao font-medium'}>
                             {kr.atual}
                             {kr.unidade === '%' ? '%' : ''} / meta {teto && kr.unidade === '%' ? '≤ ' : ''}{kr.meta}

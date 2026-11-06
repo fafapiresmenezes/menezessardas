@@ -145,7 +145,16 @@ export function receitaEmRisco(contratos: Contrato[], receitaTotal: number): num
   return Math.round((emRisco / receitaTotal) * 100)
 }
 
-export function calcularOKRs(imoveis: Imovel[], contratos: Contrato[], alertas: Alerta[]): Objetivo[] {
+// Passo D04 (Diamante): metas editáveis pela sócia, guardadas em configuracoes.metas_okr como { "descrição do resultado-chave": meta }.
+export type MetasOKR = Record<string, number>
+export function aplicarMetas(objetivos: Objetivo[], metas?: MetasOKR | null): Objetivo[] {
+  if (!metas) return objetivos
+  return objetivos.map(o => ({ ...o, keyResults: o.keyResults.map(k => (typeof metas[k.descricao] === 'number' && Number.isFinite(metas[k.descricao]) ? { ...k, meta: metas[k.descricao] } : k)) }))
+}
+export function calcularOKRs(imoveis: Imovel[], contratos: Contrato[], alertas: Alerta[], metas?: MetasOKR | null): Objetivo[] {
+  return aplicarMetas(okrsPadrao(imoveis, contratos, alertas), metas)
+}
+function okrsPadrao(imoveis: Imovel[], contratos: Contrato[], alertas: Alerta[]): Objetivo[] {
   const totalImoveis = imoveis.length || 1
   const semPendenciaVencida = imoveis.filter(
     i => !alertas.some(a => a.imovelId === i.id && a.diasRestantes < 0)

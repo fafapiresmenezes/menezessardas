@@ -1,6 +1,6 @@
 // Passos 413–414: indicadores da carteira — KPIs, receita em risco, OKRs e matrizes.
 import { describe, it, expect } from 'vitest'
-import { contratoAtivo, valorMensal, calcularKPIs, receitaEmRisco, calcularOKRs, matrizRisco, matrizPendencias } from './indicadores'
+import { contratoAtivo, valorMensal, calcularKPIs, receitaEmRisco, calcularOKRs, aplicarMetas, matrizRisco, matrizPendencias } from './indicadores'
 import type { Contrato, Imovel, Alerta } from './repositorio'
 import { emDias } from './datas'
 
@@ -80,5 +80,16 @@ describe('matrizes', () => {
       { ...base, id: 'c', tipo: 'renovatoria', diasRestantes: 200 },
     ])
     expect(r.map(p => [p.urgencia, p.importancia])).toEqual([['alto', 'alto'], ['medio', 'medio'], ['baixo', 'alto']])
+  })
+})
+
+describe('D04: metas dos OKRs editáveis', () => {
+  it('aplicarMetas troca só as metas informadas e ignora valores inválidos; calcularOKRs aceita as metas', () => {
+    const base = [{ titulo: 'O', keyResults: [{ descricao: 'A', atual: 1, meta: 90, unidade: '%' as const }, { descricao: 'B', atual: 1, meta: 0, unidade: 'un' as const }] }]
+    const r = aplicarMetas(base, { A: 80, B: Number.NaN, C: 5 })
+    expect(r[0].keyResults.map(k => k.meta)).toEqual([80, 0])
+    expect(aplicarMetas(base, null)).toBe(base)
+    const okrs = calcularOKRs([], [], [], { 'Documentação em dia': 99 })
+    expect(okrs[0].keyResults.find(k => k.descricao === 'Documentação em dia')!.meta).toBe(99)
   })
 })
