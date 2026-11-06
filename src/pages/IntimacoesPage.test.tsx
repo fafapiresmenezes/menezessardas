@@ -84,3 +84,13 @@ describe('Caixa de intimações', () => {
     click.mockRestore()
   })
 })
+
+describe('Caixa de intimações: resposta parcial do robô (passo A03)', () => {
+  it('sem oabs e sem falhas na resposta, mostra o total e não derruba a tela', async () => {
+    cleanup(); lista = []
+    invoke.mockReset().mockImplementation(async () => ({ data: { novas: 0 }, error: null }))
+    render(<MemoryRouter><IntimacoesPage /></MemoryRouter>)
+    fireEvent.click(await screen.findByRole('button', { name: /buscar agora/i }))
+    await waitFor(() => expect(screen.getByText(/0 intimação\(ões\) nova\(s\) nos últimos 30 dias\./)).toBeTruthy())
+  })
+})
