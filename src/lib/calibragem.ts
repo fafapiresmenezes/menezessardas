@@ -98,3 +98,26 @@ export function combinarProbabilidades(fontes: Fonte[]): { p: number; nTotal: nu
   const x = validas.reduce((s, f, i) => s + (w[i] / soma) * logit(f.p), 0)
   return { p: sigm(x), nTotal: validas.reduce((s, f) => s + f.n, 0), pesos: validas.map((f, i) => ({ nome: f.nome, peso: w[i] / soma })) }
 }
+
+/** B16 (metodologia dos whitepapers e da literatura de previsão): extremização.
+ *  Quando várias fontes independentes concordam, a média delas fica tímida demais; empurrar o log-odds por um fator a > 1
+ *  (Satopää et al. 2014; Baron et al. 2014; prática do Good Judgment Project) costuma reduzir o Brier.
+ *  Regra do Instituto: a = 1 (sem efeito) até que o re-treino semanal prove, em dados de teste, que a > 1 melhora Brier E ECE. */
+export function extremizar(p: number, a = 1): number {
+  if (!Number.isFinite(a) || a <= 0) return clamp(p)
+  return sigm(a * logit(p))
+}
+
+/** Escolhe o fator de extremização entre os candidatos que mais reduz o Brier no conjunto de teste, exigindo melhora também no ECE.
+ *  Devolve a = 1 (sem efeito) quando nenhum candidato vence a linha de base ou quando a amostra é pequena (< minimo). */
+export function escolherExtremizacao(pares: Par[], candidatos = [1.1, 1.2, 1.3, 1.5], minimo = 100): { a: number; brier: number | null; ece: number | null; motivo: string } {
+  const base = { a: 1, brier: brier(pares), ece: ece(pares) }
+  if (pares.length < minimo || base.brier === null || base.ece === null) return { ...base, motivo: `amostra pequena: ${pares.length} desfechos, mínimo ${minimo}` }
+  let melhor = { ...base, motivo: 'nenhum fator venceu a linha de base; a = 1 mantido' }
+  for (const a of candidatos) {
+    const ajust = pares.map(({ p, y }) => ({ p: extremizar(p, a), y }))
+    const b = brier(ajust)!, e = ece(ajust)!
+    if (b < melhor.brier! && e < base.ece) melhor = { a, brier: b, ece: e, motivo: `a = ${a} reduziu Brier e ECE no teste` }
+  }
+  return melhor
+}

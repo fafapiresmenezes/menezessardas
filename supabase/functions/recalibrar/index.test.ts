@@ -29,6 +29,7 @@ describe('recalibrar (B09)', () => {
     expect(inad.promovido).toBe(true)
     expect(inad.brier_novo).toBeLessThan(inad.brier_bruto)
     expect(inad.sha256).toMatch(/^[0-9a-f]{64}$/)
+    expect(inad.extremizacao.a).toBe(1) // B16: relatado, não aplicado, enquanto não vencer a linha de base
     const salvo = estado.inseridos.find(i => i.tabela === 'modelos_calibragem')!.linha as { ativo: boolean; blocos: { valor: number }[] }
     expect(salvo.ativo).toBe(true)
     expect(salvo.blocos[0].valor).toBeCloseTo(0.1, 1)

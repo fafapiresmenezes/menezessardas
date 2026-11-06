@@ -3,7 +3,7 @@
 // isotônica no treino e só promove o modelo novo se melhorar o Brier E o erro de calibragem no teste.
 // Cada versão é guardada com sha256 (para o selo em blockchain da medição). Nunca usa nome nem dado pessoal.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { ajustarIsotonico, aplicarIsotonico, brier, ece, type Par } from '../../../src/lib/calibragem.ts'
+import { ajustarIsotonico, aplicarIsotonico, brier, ece, escolherExtremizacao, type Par } from '../../../src/lib/calibragem.ts'
 
 const db = () => createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { 'Content-Type': 'application/json' } })
@@ -40,7 +40,9 @@ export async function recalibrar() {
     const hash = await sha256(JSON.stringify(modelo))
     if (melhora && ativo) await sb.from('modelos_calibragem').update({ ativo: false }).eq('id', ativo.id)
     await sb.from('modelos_calibragem').insert({ alvo: a.alvo, metodo: 'isotonica-pav', blocos, n_treino: treino.length, n_teste: teste.length, brier_teste: m.brier_novo, ece_teste: m.ece_novo, brier_bruto: m.brier_bruto, ece_bruto: m.ece_bruto, ativo: melhora, sha256: hash })
-    resumo.push({ alvo: a.alvo, n: pares.length, promovido: melhora, sha256: hash, ...m, motivo: melhora ? 'melhorou Brier e erro de calibragem no teste' : 'não melhorou o suficiente; modelo atual mantido' })
+    // B16: a extremização (fator a > 1) é só relatada; entra no modelo quando vencer a linha de base em semanas seguidas.
+    const extremizacao = escolherExtremizacao(teste)
+    resumo.push({ alvo: a.alvo, n: pares.length, promovido: melhora, sha256: hash, ...m, extremizacao, motivo: melhora ? 'melhorou Brier e erro de calibragem no teste' : 'não melhorou o suficiente; modelo atual mantido' })
   }
   return resumo
 }
