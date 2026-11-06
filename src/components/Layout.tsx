@@ -20,7 +20,7 @@ import { aplicarTema, temaAtual } from '@/lib/tema'
 import { listarPessoas, perfilAtual } from '@/lib/equipe'
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -43,6 +43,7 @@ const itensMenu = [
   { icon: Briefcase, label: 'Consultores', href: '/consultores' },
   { icon: Cloud, label: 'Nuvem', href: '/nuvem' },
   { icon: Banknote, label: 'Honorários', href: '/honorarios' },
+  { icon: KeySquare, label: 'Administração de locação', href: '/administracao' },
   { icon: Timer, label: 'Horas e honorários', href: '/horas' },
   { icon: FileText, label: 'Modelos de peças', href: '/modelos' },
   { icon: Globe, label: 'Fontes do advogado', href: '/fontes' },
