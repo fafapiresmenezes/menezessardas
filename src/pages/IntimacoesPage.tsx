@@ -44,13 +44,16 @@ export default function IntimacoesPage() {
     const d = error ? await (error as { context?: Response }).context?.json?.().catch(() => null) : data
     if (!d || d.erro) return setMsg({ ok: false, texto: d?.erro ?? 'O CNJ não respondeu agora. Tente de novo em instantes.' })
     if (d.aviso) return setMsg({ ok: false, texto: d.aviso })
-    setMsg({ ok: !d.falhas?.length, texto: `${d.novas} intimação(ões) nova(s) nos últimos 30 dias para ${d.oabs.join(', ')}.${d.falhas?.length ? ' Falhou: ' + d.falhas.join('; ') : ''}` })
+    // Passo A03: resposta parcial do robô não pode derrubar a tela.
+    const oabsResp: string[] = Array.isArray(d.oabs) ? d.oabs : []
+    const falhas: string[] = Array.isArray(d.falhas) ? d.falhas : []
+    setMsg({ ok: !falhas.length, texto: `${Number(d.novas) || 0} intimação(ões) nova(s) nos últimos 30 dias${oabsResp.length ? ` para ${oabsResp.join(', ')}` : ''}.${falhas.length ? ' Falhou: ' + falhas.join('; ') : ''}` })
     carregar()
   }
   const salvarOabs = async () => {
     const { error } = await supabase.rpc('definir_configuracao', { p_chave: 'oabs_monitoradas', p_valor: oabs })
     if (error) return setMsg({ ok: false, texto: error.message })
-    setOabs(''); buscar()
+    buscar() // Passo A03: as OABs salvas continuam à vista no campo
   }
   const marcarLida = async (i: Intimacao) => {
     setLista(l => l.map(x => (x.id === i.id ? { ...x, lida: true } : x)))
