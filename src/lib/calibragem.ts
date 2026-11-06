@@ -56,6 +56,19 @@ export function veredito(pares: Par[], meta = 0.05, minimo = 100): { veredito: V
   return { veredito: ic && ic.max <= meta ? 'dentro da meta' : 'fora da meta', ece: e, intervalo: ic, n: pares.length }
 }
 
+export type BlocoIsotonico = { pMax: number; valor: number; n: number }
+/** Aplica blocos guardados (modelo salvo no banco) a uma probabilidade bruta. */
+export function aplicarIsotonico(blocos: BlocoIsotonico[], p: number): number {
+  if (!blocos.length) return p
+  return (blocos.find(b => p <= b.pMax) ?? blocos[blocos.length - 1]).valor
+}
+/** Ajusta e devolve os blocos (para guardar e reaplicar depois). */
+export function ajustarIsotonico(pares: Par[]): BlocoIsotonico[] {
+  if (!pares.length) return []
+  const f = recalibradorIsotonico(pares) as ((p: number) => number) & { blocos?: BlocoIsotonico[] }
+  return f.blocos ?? []
+}
+
 /** Recalibração isotônica (algoritmo PAV): devolve uma função que corrige a probabilidade bruta sem inverter a ordem. */
 export function recalibradorIsotonico(pares: Par[]): (p: number) => number {
   if (!pares.length) return p => p
@@ -71,10 +84,8 @@ export function recalibradorIsotonico(pares: Par[]): (p: number) => number {
       blocos.push({ soma: a.soma + b.soma, n: a.n + b.n, pMin: a.pMin, pMax: b.pMax })
     }
   }
-  return (p: number) => {
-    const b = blocos.find(x => p <= x.pMax) ?? blocos[blocos.length - 1]
-    return b.soma / b.n
-  }
+  const saida: BlocoIsotonico[] = blocos.map(b => ({ pMax: b.pMax, valor: b.soma / b.n, n: b.n }))
+  return Object.assign((p: number) => aplicarIsotonico(saida, p), { blocos: saida })
 }
 
 export type Fonte = { nome: string; p: number; n: number }
