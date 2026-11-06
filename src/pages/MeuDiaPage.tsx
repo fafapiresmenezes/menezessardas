@@ -219,7 +219,7 @@ export default function MeuDiaPage() {
           <h2 className="font-serif text-lg flex items-center gap-2"><CalendarClock className="w-5 h-5" aria-hidden />Calculadora de prazo processual</h2>
           <div className="flex flex-wrap gap-3 items-end mt-3 text-sm">
             <label>Data da intimação ou publicação<input type="date" value={calc.inicio} onChange={e => setCalc({ ...calc, inicio: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="prazo-inicio" /></label>
-            <label>Dias úteis<input type="number" min={1} max={365} value={calc.dias} onChange={e => setCalc({ ...calc, dias: Number(e.target.value) })} className="block border px-3 py-2 mt-1 w-24" data-testid="prazo-dias" /></label>
+            <label>Dias úteis<input type="number" min={1} max={365} value={calc.dias} onChange={e => setCalc({ ...calc, dias: Number(e.target.value) })} className="block border px-3 py-2 min-h-[44px] mt-1 w-24" data-testid="prazo-dias" /></label>
             <label className="flex items-center gap-2 min-h-[44px]"><input type="checkbox" checked={calc.dobro} onChange={e => setCalc({ ...calc, dobro: e.target.checked })} />Em dobro (Fazenda, MP, Defensoria, litisconsortes)</label>
           </div>
           {prazo && (

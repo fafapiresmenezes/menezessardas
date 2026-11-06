@@ -37,9 +37,12 @@ export default function NovoContratoPage() {
   const [textoExtraido, setTextoExtraido] = useState<string>('')
   const [lendoPdf, setLendoPdf] = useState(false)
 
+  // Passo D23 (usabilidade): sem imóvel na URL, a tela oferece a escolha aqui mesmo, em vez de voltar à lista sem explicar.
+  const [imoveis, setImoveis] = useState<Imovel[] | null>(null)
+  const [escolhido, setEscolhido] = useState('')
   useEffect(() => {
     if (!imovelId) {
-      navigate('/imoveis')
+      repositorio.listarImoveis().then(l => { setImoveis(l); if (l[0]) setEscolhido(l[0].id) }).catch(() => setImoveis([]))
       return
     }
     repositorio.obterImovel(imovelId).then(i => {
@@ -104,6 +107,27 @@ export default function NovoContratoPage() {
     else navigate('/imoveis')
   }
 
+  if (!imovelId) return (
+    <Layout title="Novo contrato">
+      <div className="max-w-2xl mx-auto bg-white shadow-sm p-6 border-t-2 border-dourado" data-testid="escolher-imovel">
+        <h2 className="font-serif text-xl text-navy">Para qual imóvel é este contrato?</h2>
+        <p className="text-sm text-grafite-claro mt-1 mb-4">Todo contrato fica ligado a um imóvel da carteira. Escolha abaixo ou cadastre o imóvel primeiro.</p>
+        {imoveis === null ? <SkeletonForm /> : imoveis.length === 0 ? (
+          <button type="button" onClick={() => navigate('/imoveis/novo')} className="min-h-[44px] px-4 bg-navy text-white text-sm">Cadastrar o primeiro imóvel</button>
+        ) : (
+          <div className="flex flex-wrap gap-2 items-end">
+            <label className="text-sm flex-1 min-w-[240px]">Imóvel
+              <select data-testid="imovel-escolha" className={classeCampo} value={escolhido} onChange={e => setEscolhido(e.target.value)}>
+                {imoveis.map(i => <option key={i.id} value={i.id}>{i.endereco} · {i.proprietario}</option>)}
+              </select>
+            </label>
+            <button type="button" data-testid="imovel-continuar" onClick={() => navigate(`/contrato/novo?imovelId=${escolhido}`)} className="min-h-[44px] px-4 bg-navy text-white text-sm">Continuar</button>
+            <button type="button" onClick={() => navigate('/imoveis/novo')} className="min-h-[44px] px-4 border border-navy text-navy text-sm">Novo imóvel</button>
+          </div>
+        )}
+      </div>
+    </Layout>
+  )
   if (!imovel) return <Layout title="Novo contrato"><div className="max-w-2xl mx-auto"><SkeletonForm /></div></Layout>
 
   return (

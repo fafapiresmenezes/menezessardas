@@ -7,7 +7,7 @@ import { emDias } from '@/lib/datas'
 let imovel: object | null = { id: 'i1', endereco: 'Rua das Flores 123', uso: 'locado' }
 const criarContrato = vi.fn(async (_d: object) => ({ id: 'c1' }))
 const enviarArquivo = vi.fn(async (_a: File, _p: string) => 'contratos/i1/x.pdf')
-vi.mock('@/lib/repositorio', () => ({ repositorio: { obterImovel: async () => imovel, criarContrato: (d: object) => criarContrato(d) } }))
+vi.mock('@/lib/repositorio', () => ({ repositorio: { obterImovel: async () => imovel, listarImoveis: async () => [{ id: 'i1', endereco: 'Rua das Flores 123', proprietario: 'Ana' }, { id: 'i2', endereco: 'Av. Central 9', proprietario: 'Bia' }], criarContrato: (d: object) => criarContrato(d) } }))
 vi.mock('@/lib/arquivos', () => ({ enviarArquivo: (a: File, p: string) => enviarArquivo(a, p) }))
 vi.mock('@/lib/pdf', () => ({ extrairTextoPdf: async () => 'CONTRATO DE LOCAÇÃO texto lido' }))
 vi.mock('@/components/ZonaArrastar', () => ({ default: ({ onArquivo }: { onArquivo: (a: File) => void }) => <button type="button" data-testid="zona-stub" onClick={() => onArquivo(new File(['%PDF'], 'contrato.pdf', { type: 'application/pdf' }))}>anexar pdf</button> }))
@@ -22,9 +22,12 @@ const preencher = (id: string, v: string) => fireEvent.change(document.getElemen
 describe('Novo contrato (assistente em 5 etapas)', () => {
   beforeEach(() => { cleanup(); criarContrato.mockClear(); enviarArquivo.mockClear(); imovel = { id: 'i1', endereco: 'Rua das Flores 123', uso: 'locado' } })
 
-  it('sem imóvel volta à lista; imóvel locado oferece só os tipos de locação; cada etapa só avança preenchida', async () => {
+  it('sem imóvel pede a escolha na própria tela (D23); imóvel locado oferece só os tipos de locação; cada etapa só avança preenchida', async () => {
     montar('/contratos/novo')
-    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/imoveis'))
+    await waitFor(() => expect(screen.getByTestId('imovel-escolha')).toBeTruthy())
+    fireEvent.change(screen.getByTestId('imovel-escolha'), { target: { value: 'i2' } })
+    fireEvent.click(screen.getByTestId('imovel-continuar'))
+    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/contrato/novo?imovelId=i2'))
     cleanup(); montar('/contratos/novo?imovelId=i1')
     await waitFor(() => expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Novo contrato — Rua das Flores 123'))
     const opcoes = within(screen.getByRole('radiogroup', { name: 'tipo' })).getAllByRole('radio').length

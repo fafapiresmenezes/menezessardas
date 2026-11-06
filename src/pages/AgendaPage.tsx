@@ -237,37 +237,37 @@ export default function AgendaPage() {
           <div className="flex flex-wrap items-center gap-2">
             <a
               href={mailto}
-              className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm hover:bg-white"
+              className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-white"
             >
               <Mail size={16} aria-hidden="true" /> Enviar por e-mail
             </a>
-            <button onClick={semanaEmPdf} data-testid="semana-pdf" className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 rounded-sm text-sm hover:bg-pergaminho">
+            <button onClick={semanaEmPdf} data-testid="semana-pdf" className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho">
               <Download size={16} aria-hidden="true" /> Semana em PDF
             </button>
-            <button onClick={enviarSemanaTeste} data-testid="semana-email-teste" className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm hover:bg-white">
+            <button onClick={enviarSemanaTeste} data-testid="semana-email-teste" className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-white">
               <Mail size={16} aria-hidden="true" /> Testar e-mail de sexta
             </button>
-            <label className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm hover:bg-white cursor-pointer" data-testid="importar-ics">
+            <label className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-white cursor-pointer" data-testid="importar-ics">
               <Plus size={16} aria-hidden="true" /> Importar .ics
               <input type="file" accept=".ics,text/calendar" className="sr-only" data-testid="importar-ics-input" onChange={e => { importarIcs(e.target.files?.[0]); e.target.value = '' }} />
             </label>
             <button
               onClick={() => baixarICS(alertas)}
-              className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 rounded-sm text-sm hover:bg-pergaminho"
+              className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho"
             >
               <Download size={16} aria-hidden="true" /> Exportar iCal
             </button>
             <button
               onClick={() => sincronizarGoogleCalendar('outlook')}
               disabled={sincronizando}
-              className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 rounded-sm text-sm hover:bg-navy-700 disabled:opacity-50"
+              className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-navy-700 disabled:opacity-50"
             >
               <ExternalLink size={16} aria-hidden="true" /> Conectar ao Outlook
             </button>
             <button
               onClick={() => sincronizarGoogleCalendar('google')}
               disabled={sincronizando}
-              className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 rounded-sm text-sm hover:bg-navy-700 disabled:opacity-50"
+              className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-navy-700 disabled:opacity-50"
             >
               <ExternalLink size={16} aria-hidden="true" /> {sincronizando ? 'Abrindo…' : 'Conectar ao Google Agenda'}
             </button>
@@ -275,9 +275,9 @@ export default function AgendaPage() {
           {msgSemana && <p role="status" className="text-sm mt-2" data-testid="semana-msg">{msgSemana}</p>}
           <p className="w-full text-sm p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="resumo-semana">
             {semana.length === 0 ? 'Próximos 7 dias: nenhum compromisso.' : <>Próximos 7 dias: <strong>{semana.length}</strong> compromisso{semana.length > 1 ? 's' : ''}; o primeiro é <strong>{semana[0].titulo}</strong> {semana[0].diasRestantes === 0 ? 'hoje' : semana[0].diasRestantes === 1 ? 'amanhã' : `em ${semana[0].diasRestantes} dias`} ({formatarData(semana[0].dataEvento)}).</>}
-            {' '}<button type="button" onClick={copiarSemana} data-testid="copiar-semana" className="underline text-navy">{semanaCopiada ? 'semana copiada' : 'copiar os 7 dias'}</button>
+            {' '}<button type="button" onClick={copiarSemana} data-testid="copiar-semana" className="underline text-navy min-h-[44px] inline-flex items-center">{semanaCopiada ? 'semana copiada' : 'copiar os 7 dias'}</button>
             {/* Passo 156: imprimir a agenda do mês. */}
-            {' '}<button type="button" onClick={() => window.print()} data-testid="imprimir-agenda" className="underline text-navy print:hidden">imprimir</button>
+            {' '}<button type="button" onClick={() => window.print()} data-testid="imprimir-agenda" className="underline text-navy print:hidden min-h-[44px] inline-flex items-center">imprimir</button>
             {' '}<button type="button" data-testid="copiar-link-agenda" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 236 */}
             {alertas.length > 0 && <button type="button" data-testid="baixar-agenda" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['data;imóvel;tipo;título;dias restantes', ...alertas.map(a => `${a.dataEvento};${a.imovel};${a.tipo};${a.titulo.replace(/;/g, ',')};${a.diasRestantes}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'agenda.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 308 */}
             {' '}<button type="button" onClick={() => { setAno(hoje.getFullYear()); setMes(hoje.getMonth()) }} data-testid="agenda-hoje" className="underline text-navy print:hidden">hoje</button>{/* Passo 190 */}

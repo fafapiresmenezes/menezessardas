@@ -136,9 +136,11 @@ export default function Layout({ children, title }: LayoutProps) {
 
   return (
     <div className="flex h-screen bg-pergaminho">
+      {/* Passo D23 (usabilidade): no celular o menu recolhido some (a tela ganha 80px) e, aberto, vira gaveta sobre o conteúdo. */}
+      {menuAberto && <button type="button" aria-label="Fechar menu" onClick={() => setMenuAberto(false)} className="md:hidden fixed inset-0 bg-black/40 z-30" />}
       <aside
         className={`${
-          menuAberto ? 'w-64' : 'w-20'
+          menuAberto ? 'w-64 fixed inset-y-0 left-0 z-40 md:static' : 'w-0 md:w-20'
         } bg-navy text-white transition-all duration-300 overflow-hidden flex flex-col flex-shrink-0`}
         style={marca ? { backgroundColor: marca.cor } : undefined}
         data-marca={marca ? 'parceiro' : 'sede'}
@@ -206,7 +208,10 @@ export default function Layout({ children, title }: LayoutProps) {
 
       <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
         <header className="bg-white border-b border-navy/10 px-4 md:px-8 py-4 md:py-5 flex flex-wrap md:flex-nowrap items-center justify-between gap-3 md:gap-4">
-          <h1 className="font-serif text-2xl md:text-3xl text-navy truncate min-w-0 max-w-full">{title}</h1>
+          <div className="flex items-center gap-2 min-w-0 max-w-full">
+            {!menuAberto && <button type="button" onClick={() => setMenuAberto(true)} aria-label="Abrir menu" className="md:hidden min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/20 text-navy rounded-sm"><Menu size={20} /></button>}
+            <h1 className="font-serif text-2xl md:text-3xl text-navy truncate min-w-0">{title}</h1>
+          </div>
           <div className="flex flex-wrap md:flex-nowrap items-center gap-2 md:flex-shrink-0">
           <TourTela />
           <PerguntarTela />

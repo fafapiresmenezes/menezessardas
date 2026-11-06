@@ -87,13 +87,13 @@ export default function IntimacoesPage() {
               <RefreshCw size={16} aria-hidden="true" className={ocupado ? 'animate-spin' : ''} /> {ocupado ? 'Buscando…' : 'Buscar agora'}
             </button>
             <label className="text-sm flex items-center gap-2">
-              <select aria-label="Quais intimações mostrar" value={filtro} onChange={e => setFiltro(e.target.value as 'novas' | 'todas' | 'urgentes')} className="border px-2 py-2" data-testid="filtro-intimacoes">
+              <select aria-label="Quais intimações mostrar" value={filtro} onChange={e => setFiltro(e.target.value as 'novas' | 'todas' | 'urgentes')} className="border px-2 py-2 min-h-[44px]" data-testid="filtro-intimacoes">
                 <option value="urgentes">Só urgentes ({lista.filter(i => { const s = urgencia(i)?.situacao; return s === 'vencido' || s === 'critico' }).length})</option>
                 <option value="novas">Só as não lidas ({lista.filter(i => !i.lida).length})</option>
                 <option value="todas">Todas ({lista.length})</option>
               </select>
             </label>
-            <input type="search" value={busca} onChange={e => setBusca(e.target.value)} placeholder="Buscar processo, tribunal ou texto" aria-label="Buscar nas intimações" className="border px-3 py-2 text-sm w-64" data-testid="busca-intimacoes" />
+            <input type="search" value={busca} onChange={e => setBusca(e.target.value)} placeholder="Buscar processo, tribunal ou texto" aria-label="Buscar nas intimações" className="border px-3 py-2 min-h-[44px] text-sm w-64" data-testid="busca-intimacoes" />
             {/* Passo 105: resumo das intimações visíveis em texto (processo, tribunal, prazo), para colar na agenda ou no e-mail do cliente. */}
             {visiveis.length > 0 && <button type="button" onClick={copiarResumo} data-testid="copiar-intimacoes" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar resumo</button>}
             {visiveis.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-intimacoes" className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}{/* Passo 200 */}
@@ -110,7 +110,7 @@ export default function IntimacoesPage() {
           {admin && (
             <div className="flex flex-wrap gap-2 items-end">
               <label className="text-xs uppercase tracking-wider text-grafite block">OABs do escritório (número/UF, separadas por vírgula)
-                <input value={oabs} onChange={e => setOabs(e.target.value)} placeholder="123456/RJ, 98765/RJ" className="block border px-3 py-2 mt-1 w-72 normal-case" />
+                <input value={oabs} onChange={e => setOabs(e.target.value)} placeholder="123456/RJ, 98765/RJ" className="block border px-3 py-2 min-h-[44px] mt-1 w-72 normal-case" />
               </label>
               <button onClick={salvarOabs} disabled={!oabs.trim()} className="min-h-[44px] px-4 border border-navy text-navy text-sm disabled:opacity-50">Salvar OABs</button>
             </div>
