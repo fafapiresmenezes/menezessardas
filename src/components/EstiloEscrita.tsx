@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { PenLine, Trash2, Upload } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '../lib/supabase'
 import { extrairTextoPdf } from '../lib/pdf'
+import { ESCOLAS, REFERENCIAS, FORMATACAO } from '../lib/estiloPecas'
 
 interface Peca { id: string; titulo: string; texto: string; criado_em: string }
 const LIMITE = 10
@@ -81,6 +82,17 @@ export default function EstiloEscrita() {
         </form>
       ) : <p className="text-sm text-grafite-claro">Limite de {LIMITE} peças atingido. Apague uma para enviar outra.</p>}
       {msg && <p role="status" className="text-sm mt-3">{msg}</p>}
+      <details className="mt-6 border-t border-navy/10 pt-4" data-testid="padrao-escrita">
+        <summary className="cursor-pointer text-sm font-semibold min-h-[44px] flex items-center">Padrão de escrita das peças e rotação de estilo</summary>
+        <p className="text-sm text-grafite-claro mt-2">Cada peça redigida sorteia uma mistura de {ESCOLAS.length} escolas de escrita jurídica brasileira, com ritmo de frases, conectivos, abertura e numeração diferentes das últimas peças. Se você enviou peças suas acima, o seu estilo prevalece e a rotação só varia o ritmo e os conectivos. O advogado sempre revisa e assina.</p>
+        <ul className="mt-3 space-y-2 text-sm">
+          {ESCOLAS.map(e => (
+            <li key={e.id}><strong>{e.nome}.</strong> {e.descricao} <span className="text-grafite-claro">Referências: {REFERENCIAS.filter(r => r.escola === e.id).map(r => r.nome).join(', ')}.</span></li>
+          ))}
+        </ul>
+        <p className="text-xs text-grafite-claro mt-3">{REFERENCIAS.length} juristas de referência, usados só para nomear as escolas; nenhuma frase deles é copiada.</p>
+        <p className="text-sm mt-3"><strong>Formatação ao baixar em Word:</strong> {FORMATACAO.fonte} {FORMATACAO.corpo}, entrelinhas {String(FORMATACAO.entrelinhas).replace('.', ',')}, margens {FORMATACAO.margens.superior}/{FORMATACAO.margens.direita}/{FORMATACAO.margens.inferior}/{FORMATACAO.margens.esquerda} cm, citações longas recuadas {FORMATACAO.recuoCitacao} cm.</p>
+      </details>
     </section>
   )
 }

@@ -15,7 +15,8 @@ import {
   type Modo,
 } from '@/lib/assistente'
 import PerfilJulgador from '@/components/PerfilJulgador'
-import { ExternalLink, Scale, Send, Trash2, Copy, ThumbsUp, ThumbsDown } from 'lucide-react'
+import { ExternalLink, Scale, Send, Trash2, Copy, ThumbsUp, ThumbsDown, FileDown } from 'lucide-react'
+import { baixarPecaWord } from '@/lib/formatarPeca'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { mensagemAmigavel } from '@/lib/erros'
 import { guardarNaBiblioteca } from '@/lib/biblioteca'
@@ -296,6 +297,16 @@ export default function AssistentePage() {
             <button type="button" onClick={() => navigator.clipboard?.writeText(c.modo === 'redigir' ? c.resposta : `Pergunta: ${c.pergunta}\n\n${c.resposta}${c.fontes.length ? `\n\nFontes: ${c.fontes.map(f => f.titulo || f.url).join('; ')}` : ''}`).catch(() => undefined)} data-testid="copiar-resposta" className="mt-3 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
               <Copy size={16} aria-hidden="true" /> {c.modo === 'redigir' ? 'Copiar texto da peça' : 'Copiar resposta'}
             </button>
+            {c.modo === 'redigir' && (
+              <button type="button" onClick={() => baixarPecaWord(c.resposta, c.pergunta.slice(0, 60))} data-testid="baixar-peca-word" className="mt-3 ml-2 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
+                <FileDown size={16} aria-hidden="true" /> Baixar peça formatada (Word)
+              </button>
+            )}
+            {c.estilo && (
+              <p className="mt-2 text-xs text-grafite-claro" data-testid="estilo-da-peca">
+                Estilo desta peça: {c.estilo.mistura.map(m => `${m.nome} ${Math.round(m.peso * 100)}%`).join(' + ')}{c.estilo.aderencia != null ? ` · aderência ao perfil ${c.estilo.aderencia}%` : ''}. A próxima peça sai com outro ritmo e outros conectivos. Revise e assine antes de usar.
+              </p>
+            )}
             {/* Bloco B04: guardar a resposta na pasta interna "Já pesquisado". */}
             <button type="button" onClick={() => guardarNaBiblioteca({ tipo: 'assistente', titulo: c.pergunta.slice(0, 200), conteudo: `${c.resposta}${c.fontes.length ? `\n\nFontes: ${c.fontes.map(f => f.titulo || f.url).join('; ')}` : ''}`, etiquetas: [c.especialidade ?? 'geral'] }).then(ok => setGuardados(g => ({ ...g, [c.id]: ok })))} data-testid="guardar-biblioteca" className="mt-3 ml-2 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
               {guardados[c.id] === true ? 'Guardado em Já pesquisado' : guardados[c.id] === false ? 'Não foi possível guardar' : 'Guardar na biblioteca'}
