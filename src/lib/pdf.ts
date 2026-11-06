@@ -3,15 +3,20 @@
  * conteúdo do contrato, não só os campos do cadastro. O worker é carregado
  * pelo Vite como URL.
  */
-import * as pdfjs from 'pdfjs-dist'
-
-// O worker vem do cdnjs na mesma versão do pacote. Evita publicar o arquivo do
-// worker (que contém um byte de controle) na hospedagem estática do preview.
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`
+// Passo A02 (Régua Global R1): o pdfjs (~290 KB) só é baixado quando alguém
+// envia um PDF, e não mais na tela de entrada.
+async function carregarPdfjs() {
+  const pdfjs = await import('pdfjs-dist')
+  // O worker vem do cdnjs na mesma versão do pacote. Evita publicar o arquivo do
+  // worker (que contém um byte de controle) na hospedagem estática do preview.
+  pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`
+  return pdfjs
+}
 
 const LIMITE_CHARS = 40000
 
 export async function extrairTextoPdf(arquivo: File): Promise<string> {
+  const pdfjs = await carregarPdfjs()
   const buffer = await arquivo.arrayBuffer()
   const doc = await pdfjs.getDocument({ data: buffer }).promise
   const partes: string[] = []
