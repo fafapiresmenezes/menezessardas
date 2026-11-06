@@ -110,6 +110,25 @@ describe('assistente-juridico', () => {
     expect(resp.system).toContain('ESTILO DE ESCRITA DO AUTOR (1 peças de referência)')
     expect(resp.system).toContain('Notificação modelo')
     expect(resp.system).not.toContain('Alheia')
+    // Rotação de estilo: perfil sorteado entra no prompt e fica guardado com a peça.
+    expect(resp.system).toContain('PERFIL DE ESCRITA DESTA PEÇA')
+    expect(resp.system).toContain('ESTILO DE ESCRITA DO AUTOR, ele prevalece')
+    const d = b.dados as { perfilEstilo: { parametros: Record<string, number>; mistura: unknown[] }; aderencia: number }
+    expect(d.perfilEstilo.mistura.length).toBeGreaterThanOrEqual(2)
+    expect(typeof d.aderencia).toBe('number')
+  })
+
+  it('redigir: a peça seguinte sorteia perfil distante das anteriores; rotacao=false desliga', async () => {
+    ia = c => (c.tools?.[0]?.name === 'planejar_pesquisa' ? triagem({ leis: ['inquilinato'], termos: ['despejo'] }) : texto('NOTIFICAÇÃO. O locatário não pagou. Contudo, foi avisado.'))
+    const a = await (await chamar({ pergunta: 'Redija notificação', modo: 'redigir' })).json() as { dados: { perfilEstilo: { parametros: Record<string, number> } } }
+    const guardadas = (estado.tabelas.consultas_juridicas as { modo: string; dados: unknown }[]).filter(r => r.modo === 'redigir')
+    expect(guardadas).toHaveLength(1)
+    const b = await (await chamar({ pergunta: 'Redija notificação', modo: 'redigir' })).json() as { dados: { perfilEstilo: { parametros: Record<string, number>; distanciaMinima: number } } }
+    expect(b.dados.perfilEstilo.parametros).not.toEqual(a.dados.perfilEstilo.parametros)
+    expect(b.dados.perfilEstilo.distanciaMinima).toBeLessThan(1)
+    const c = await (await chamar({ pergunta: 'Redija notificação', modo: 'redigir', rotacao: false })).json() as Resposta
+    expect(c.dados).toBeNull()
+    expect(pedidosIa.at(-1)!.system).not.toContain('PERFIL DE ESCRITA')
   })
 
   it('caminhos: aceita listas vindas como texto JSON, limita o recomendado ao intervalo e monta a síntese; sem matriz é 502', async () => {

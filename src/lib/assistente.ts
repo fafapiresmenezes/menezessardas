@@ -56,7 +56,15 @@ export interface Consulta {
   fontes: Fonte[]
   matriz?: Matriz
   artigosConsultados?: { lei: string; artigo: string }[]
+  /** Peças: perfil de escrita sorteado pela rotação de estilo e a aderência medida (0–100). */
+  estilo?: { mistura: { nome: string; peso: number }[]; aderencia?: number }
   criadoEm: string
+}
+
+type DadosPeca = { perfilEstilo?: { mistura?: { nome: string; peso: number }[] }; aderencia?: number } | null
+const estiloDe = (modo: string, dados: unknown): Consulta['estilo'] => {
+  const d = dados as DadosPeca
+  return modo === 'redigir' && d?.perfilEstilo?.mistura ? { mistura: d.perfilEstilo.mistura, aderencia: d.aderencia } : undefined
 }
 
 const MATRIZ_EXEMPLO: Matriz = {
@@ -103,7 +111,7 @@ export async function historicoConsultas(): Promise<Consulta[]> {
   if (error) throw new Error(error.message)
   return (data ?? []).map(r => ({
     id: r.id, especialidade: r.especialidade, modo: (r.modo ?? 'responder') as Modo, pergunta: r.pergunta, resposta: r.resposta,
-    fontes: (r.fontes ?? []) as Fonte[], matriz: r.modo === 'caminhos' && r.dados ? (r.dados as Matriz) : undefined, criadoEm: r.criado_em,
+    fontes: (r.fontes ?? []) as Fonte[], matriz: r.modo === 'caminhos' && r.dados ? (r.dados as Matriz) : undefined, estilo: estiloDe(r.modo, r.dados), criadoEm: r.criado_em,
   }))
 }
 
@@ -140,7 +148,7 @@ export async function perguntar(pergunta: string, especialidade: Especialidade, 
   return {
     id: crypto.randomUUID(), especialidade, modo, pergunta, resposta: data.resposta,
     fontes: data.fontes ?? [], matriz: modo === 'caminhos' ? (data.dados as Matriz) : undefined,
-    artigosConsultados: data.artigosConsultados, criadoEm: data.consultadoEm,
+    artigosConsultados: data.artigosConsultados, estilo: estiloDe(modo, data.dados), criadoEm: data.consultadoEm,
   }
 }
 

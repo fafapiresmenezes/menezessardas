@@ -5,6 +5,7 @@
 //   2. os artigos mais relevantes dessas leis vão ao modelo principal, que responde citando artigo e lei.
 // O texto de cada lei fica em cache na tabela leis_texto por 7 dias.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { sortearPerfil, instrucoesDoPerfil, medirTexto, aderencia, hash32, type Perfil } from '../../../src/lib/estiloPecas.ts'
 
 const MODELO_TRIAGEM = 'claude-haiku-5-5'
 const MODELO_RESPOSTA = 'claude-sonnet-5-5'
@@ -413,13 +414,38 @@ Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"
           }
         } catch { /* sem estilo, segue padrão */ }
       }
+      // Rotação de estilo (pedido de M, 06/11/2026): cada peça sorteia um perfil de escrita
+      // diferente das últimas peças da mesma pessoa, para que nunca saiam todas iguais.
+      let perfil: Perfil | null = null
+      if (modo === 'redigir' && corpo.rotacao !== false) {
+        let anteriores: Perfil[] = []
+        if (usuario) {
+          try {
+            const { data: ult } = await servico().from('consultas_juridicas').select('dados').eq('usuario_id', usuario).eq('modo', 'redigir').order('criado_em', { ascending: false }).limit(6)
+            anteriores = ((ult ?? []) as { dados: { perfilEstilo?: Perfil } | null }[]).map(u => u.dados?.perfilEstilo).filter((x): x is Perfil => !!x?.parametros)
+          } catch { /* sem histórico, sorteia livre */ }
+        }
+        perfil = sortearPerfil({
+          semente: hash32(`${usuario ?? 'anonimo'}|${pergunta}|${Date.now()}`),
+          especialidade,
+          anteriores,
+          usados: anteriores.flatMap(a => Object.values(a.conectivos ?? {}).flat()),
+        })
+      }
+      const blocoPerfil = perfil
+        ? `\n\n${instrucoesDoPerfil(perfil)}${estiloProprio ? '\nQuando houver ESTILO DE ESCRITA DO AUTOR, ele prevalece: use este perfil só para variar ritmo, conectivos, abertura e fecho.' : ''}`
+        : ''
       const sistema = modo === 'redigir'
         ? `${regrasComuns}
-Redija a peça ou o contrato pedido, completo e pronto para revisão: título; qualificação das partes com [campos entre colchetes] para o que faltar; cláusulas ou tópicos numerados; fundamentação legal embutida no texto (artigo e lei); pedidos ou cláusulas finais; local, data e assinatura. Use o padrão forense brasileiro e linguagem clara. Ao final, acrescente uma seção "Pontos a conferir antes de usar" com o que depende de fatos ou documentos.${estiloProprio}`
+Redija a peça ou o contrato pedido, completo e pronto para revisão: título; qualificação das partes com [campos entre colchetes] para o que faltar; cláusulas ou tópicos numerados; fundamentação legal embutida no texto (artigo e lei); pedidos ou cláusulas finais; local, data e assinatura. Use o padrão forense brasileiro e linguagem clara. Ao final, acrescente uma seção "Pontos a conferir antes de usar" com o que depende de fatos ou documentos.${estiloProprio}${blocoPerfil}`
         : `${regrasComuns}
 Estrutura: resposta direta em 1–2 frases; fundamentação com os artigos; riscos ou exceções (inclusive zonas cinzentas e divergências); próximos passos práticos. Títulos curtos em negrito e listas. Termine com "Fontes consultadas: " e os nomes das leis usadas.`
       const resposta = await anthropic(chave, { model: MODELO_RESPOSTA, max_tokens: modo === 'redigir' ? 12000 : 6000, system: sistema, messages: mensagens }, usuario)
       texto = (resposta.content ?? []).filter((c: { type: string }) => c.type === 'text').map((c: { text: string }) => c.text).join('\n').trim()
+      if (perfil) {
+        const medida = medirTexto(texto)
+        dados = { perfilEstilo: perfil, medida, aderencia: aderencia(medida, perfil) }
+      }
     }
 
     if (semanal) await servico().from('diagnosticos_semanais').insert({ nivel: semanal, resposta: texto, fotografia: fotografiaSemanal })
