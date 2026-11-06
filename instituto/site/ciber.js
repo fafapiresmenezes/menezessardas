@@ -23,7 +23,16 @@
   function util(d) { var w = d.getUTCDay(); return w !== 0 && w !== 6 && !feriados(d.getUTCFullYear())[iso(d)]; }
   function somarUteis(inicio, n) { var d = new Date(inicio.getTime()), k = 0; while (k < n) { d = new Date(d.getTime() + 864e5); if (util(d)) k++; } return d; }
   function br(d) { return d.toLocaleDateString('pt-BR', { timeZone: 'UTC', weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }); }
-  window.theyeCiber = { somarUteis: somarUteis, feriados: feriados, pascoa: pascoa };
+
+  // Q18/Q19: PDF gerado pelo próprio navegador (Imprimir > Salvar como PDF). Nada sai do computador.
+  function imprimir(ids, cab, titulo) {
+    var agora = new Date();
+    $(cab).textContent = titulo + ' · Instituto THEYE · gerado em ' + agora.toLocaleString('pt-BR') + '. Documento de apoio, não é parecer.';
+    ids.forEach(function (id) { $(id).classList.add('imprimir'); });
+    var fim = function () { ids.forEach(function (id) { $(id).classList.remove('imprimir'); }); window.removeEventListener('afterprint', fim); };
+    window.addEventListener('afterprint', fim); window.print(); setTimeout(fim, 1500);
+  }
+  window.theyeCiber = { imprimir: imprimir,  somarUteis: somarUteis, feriados: feriados, pascoa: pascoa };
 
   function prazo() {
     var v = $('p-data').value, r = $('p-res'); r.textContent = ''; r.className = 'res';
@@ -46,6 +55,7 @@
     if ($('p-sens').value === 'sim') ol.insertBefore(el('li', 'Dados sensíveis ou de crianças indicam risco relevante: trate como incidente a comunicar.'), ol.children[2]);
     r.appendChild(ol);
   }
+  $('p-pdf').onclick = function () { if (!$('p-data').value) { $('p-data').focus(); return; } imprimir(['prazo'], 'p-cab', 'Registro de incidente de segurança'); };
   ['p-data', 'p-peq', 'p-sens'].forEach(function (id) { $(id).addEventListener('input', prazo); $(id).addEventListener('change', prazo); });
 
   // ---------- Ferramenta 2: teste de risco ----------

@@ -3,6 +3,15 @@
   var $ = function (id) { return document.getElementById(id); };
   function el(tag, txt, cls) { var e = document.createElement(tag); if (txt) e.textContent = txt; if (cls) e.className = cls; return e; }
 
+
+  // Q18/Q19: PDF gerado pelo próprio navegador (Imprimir > Salvar como PDF). Nada sai do computador.
+  function imprimir(ids, cab, titulo) {
+    var agora = new Date();
+    $(cab).textContent = titulo + ' · Instituto THEYE · gerado em ' + agora.toLocaleString('pt-BR') + '. Documento de apoio, não é parecer.';
+    ids.forEach(function (id) { $(id).classList.add('imprimir'); });
+    var fim = function () { ids.forEach(function (id) { $(id).classList.remove('imprimir'); }); window.removeEventListener('afterprint', fim); };
+    window.addEventListener('afterprint', fim); window.print(); setTimeout(fim, 1500);
+  }
   // ---------- Ferramenta 1: teste de Mosca ----------
   var TIPOS = [
     ['Contrato de locação de 5 anos', 10, 'Prazo do contrato mais 5 anos de prescrição (CC, art. 206, § 5º).'],
@@ -77,6 +86,7 @@
     r.appendChild(el('p', n.q ? 'Prioridade: liste os documentos assinados que precisam valer por mais de 10 anos e passe-os pelo teste de Mosca acima.' : 'Bom ponto de partida. Revise o inventário a cada nova norma do ITI.', 'sm'));
   }
   inv.addEventListener('change', inventario);
+  $('q-pdf').onclick = function () { imprimir(['mosca', 'inventario'], 'q-cab', 'Relatório de prontidão quântica'); };
 
   // ---------- Ferramenta 3: linha do tempo ----------
   var LT = [
