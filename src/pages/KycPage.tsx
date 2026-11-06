@@ -84,7 +84,7 @@ export default function KycPage() {
               <UserCheck className="w-4 h-4" aria-hidden />{estado.carregando ? 'Consultando…' : 'Checar'}
             </button>
           </div>
-          <p className="text-sm text-grafite-claro mt-2">Consulta gratuita em fontes públicas: Receita Federal, sanções (CEIS, CNEP, TCU e CNJ) e a base do próprio escritório, para apontar conflito de interesses.</p>
+          <p className="text-sm text-grafite-claro mt-2">Consulta gratuita em fontes públicas: Receita Federal, sanções (CEIS, CNEP, TCU e CNJ), lista OFAC (EUA), pessoas expostas politicamente (PEP, com a chave gratuita em Configurações) e a base do próprio escritório, para apontar conflito de interesses.</p>
           {estado.erro && <p role="alert" className="mt-3 p-3 text-sm border-l-2 bg-criticoFundo border-critico text-critico">{estado.erro}</p>}
         </section>
         {r && (

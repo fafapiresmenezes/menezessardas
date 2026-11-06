@@ -39,7 +39,44 @@ async function tcu(cnpj: string) {
   } catch (e) { return { ok: false, erro: String(e) } }
 }
 
-type Checagem = { cnpj: string; risco: string; alertas: string[]; receita: Record<string, unknown>; certidoes: Record<string, unknown>; conflitos: { onde: string; detalhe: string }[]; fontes: string[]; consultadoEm: string }
+// Passo D09 (Diamante): listas internacionais e PEP.
+const normalizar = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[^A-Z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim()
+const SUFIXOS = /\b(LTDA|LTDA\.|ME|EPP|S\/A|SA|S A|EIRELI|SOCIEDADE|EMPRESA|COMERCIO|INDUSTRIA|SERVICOS|DE|DO|DA|DOS|DAS|E|LIMITADA)\b/g
+const chaveNome = (t: string) => normalizar(t).replace(SUFIXOS, ' ').replace(/\s+/g, ' ').trim()
+
+/** OFAC (Tesouro dos EUA), lista SDN pública em CSV: sem chave. Compara razão social e sócios (nome inteiro, sem sufixos societários). */
+export async function ofac(nomes: string[], baixar: () => Promise<string> = async () => { const r = await fetch('https://www.treasury.gov/ofac/downloads/sdn.csv', { signal: AbortSignal.timeout(30000) }); if (!r.ok) throw new Error(`HTTP ${r.status}`); return await r.text() }) {
+  const alvos = nomes.map(chaveNome).filter(n => n.length >= 8)
+  if (!alvos.length) return { ok: true, consultados: 0, encontrados: [] as string[] }
+  try {
+    const csv = await baixar()
+    const encontrados: string[] = []
+    for (const linha of csv.split('\n')) {
+      const m = linha.match(/^\d+,"([^"]*)"/)
+      if (!m) continue
+      const sdn = chaveNome(m[1])
+      if (!sdn) continue
+      for (const a of alvos) if (sdn === a || (a.length >= 12 && sdn.includes(a))) { if (!encontrados.includes(m[1])) encontrados.push(m[1]); break }
+    }
+    return { ok: true, consultados: alvos.length, encontrados }
+  } catch (e) { return { ok: false, erro: String(e), consultados: alvos.length, encontrados: [] as string[] } }
+}
+
+/** PEP (pessoa exposta politicamente) no Portal da Transparência (CGU): precisa da chave gratuita, guardada em configuracoes.transparencia_api_key. */
+export async function pep(nomes: string[], chave: string | null, buscar: (nome: string) => Promise<unknown[]> = async nome => { const r = await fetch(`https://api.portaldatransparencia.gov.br/api-de-dados/peps?nome=${encodeURIComponent(nome)}&pagina=1`, { headers: { 'chave-api-dados': chave ?? '' }, signal: AbortSignal.timeout(20000) }); if (!r.ok) throw new Error(`HTTP ${r.status}`); return await r.json() }) {
+  const alvos = nomes.map(n => normalizar(n)).filter(n => n.length >= 8)
+  if (!chave) return { ok: false, semChave: true, consultados: 0, encontrados: [] as string[] }
+  const encontrados: string[] = []
+  try {
+    for (const a of alvos.slice(0, 10)) {
+      const lista = (await buscar(a)) as { nome?: string; cpf?: string; descricaoFuncao?: string; siglaFuncao?: string }[]
+      for (const p of lista ?? []) if (p.nome && normalizar(p.nome) === a) encontrados.push(`${p.nome}${p.descricaoFuncao || p.siglaFuncao ? ` (${p.descricaoFuncao || p.siglaFuncao})` : ''}`)
+    }
+    return { ok: true, consultados: alvos.length, encontrados }
+  } catch (e) { return { ok: false, erro: String(e), consultados: alvos.length, encontrados } }
+}
+
+type Checagem = { cnpj: string; risco: string; alertas: string[]; receita: Record<string, unknown>; certidoes: Record<string, unknown>; ofac?: Record<string, unknown>; pep?: Record<string, unknown>; conflitos: { onde: string; detalhe: string }[]; fontes: string[]; consultadoEm: string }
 
 // Faz a checagem completa com o cliente informado (do usuário ou do robô) e grava no histórico,
 // comparando com a última checagem do mesmo CNPJ para marcar mudança de status (Passo 26).
@@ -47,6 +84,9 @@ type Checagem = { cnpj: string; risco: string; alertas: string[]; receita: Recor
 async function checar(sb: any, cnpj: string, usuarioId: string | null, automatica: boolean): Promise<Checagem & { mudou: boolean; riscoAnterior: string | null; proximaEm: string }> {
   const [rf, cert] = await Promise.all([receita(cnpj), tcu(cnpj)])
   const nome = rf.ok && rf.encontrado ? String(rf.nome) : ''
+  const socios: string[] = rf.ok && rf.encontrado ? (rf.socios as { nome: string }[]).map(x => x.nome) : []
+  const { data: cfgPep } = await sb.from('configuracoes').select('valor').eq('chave', 'transparencia_api_key').maybeSingle().then((r: { data: { valor: string } | null }) => r, () => ({ data: null }))
+  const [listaOfac, listaPep] = await Promise.all([ofac([nome, ...socios]), pep(socios, cfgPep?.valor || null)])
   const conflitos: { onde: string; detalhe: string }[] = []
   const { data: forn } = await sb.from('fornecedores').select('id,dados')
   for (const f of forn ?? []) {
@@ -62,12 +102,14 @@ async function checar(sb: any, cnpj: string, usuarioId: string | null, automatic
   if (rf.ok && rf.encontrado && String(rf.situacao).toUpperCase() !== 'ATIVA') alertas.push(`Situação na Receita: ${rf.situacao}.`)
   if (cert.ok && cert.alguma) alertas.push('Consta em cadastro de sanções (veja as certidões).')
   if (conflitos.length) alertas.push('A contraparte já aparece no escritório: verifique conflito de interesses.')
-  const incompleto = !rf.ok || !cert.ok || !!cert.indisponivel
+  if (listaOfac.encontrados.length) alertas.push(`Consta na lista de sanções OFAC (EUA): ${listaOfac.encontrados.join('; ')}.`)
+  if (listaPep.encontrados.length) alertas.push(`Pessoa exposta politicamente (PEP) no quadro societário: ${listaPep.encontrados.join('; ')}. Diligência reforçada (Lei 9.613/98).`)
+  const incompleto = !rf.ok || !cert.ok || !!cert.indisponivel || !listaOfac.ok
   const risco = alertas.length ? 'alto' : incompleto ? 'a conferir' : 'baixo'
   const consultadoEm = new Date().toISOString()
   const r: Checagem = {
-    cnpj, risco, alertas, receita: rf, certidoes: cert, conflitos,
-    fontes: ['Receita Federal (BrasilAPI)', 'TCU – certidão consolidada (CEIS, CNEP, inidôneos TCU, improbidade CNJ)', 'Base interna do escritório'],
+    cnpj, risco, alertas, receita: rf, certidoes: cert, conflitos, ofac: listaOfac, pep: listaPep,
+    fontes: ['Receita Federal (BrasilAPI)', 'TCU – certidão consolidada (CEIS, CNEP, inidôneos TCU, improbidade CNJ)', `OFAC (EUA) – lista SDN${listaOfac.ok ? '' : ' (fora do ar agora)'}`, listaPep.semChave ? 'PEP (Portal da Transparência): não consultado, falta a chave gratuita em Configurações' : 'PEP – Portal da Transparência (CGU)', 'Base interna do escritório'],
     consultadoEm,
   }
   const { data: ant } = await sb.from('checagens_kyc').select('risco').eq('cnpj', cnpj).order('consultado_em', { ascending: false }).limit(1).maybeSingle()

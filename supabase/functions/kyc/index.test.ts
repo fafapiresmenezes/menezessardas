@@ -33,7 +33,9 @@ describe('kyc', () => {
     expect(b.alertas).toEqual([])
     expect(b.receita).toMatchObject({ encontrado: true, nome: 'BRILHO LIMPEZA LTDA', socios: [{ nome: 'ANA', qualificacao: 'Sócio-Administrador' }] })
     expect(b.certidoes).toMatchObject({ alguma: false, indisponivel: false })
-    expect(b.fontes).toHaveLength(3)
+    expect(b.fontes).toHaveLength(5)
+    expect(b.fontes.join(' ')).toContain('PEP (Portal da Transparência): não consultado')
+    expect(b.ofac).toMatchObject({ ok: true, encontrados: [] })
     expect(b.mudou).toBe(false)
     expect(b.riscoAnterior).toBeNull()
     expect(estado.inseridos[0]!.tabela).toBe('checagens_kyc')
@@ -88,5 +90,24 @@ describe('kyc', () => {
     expect(f.reconsultados).toBe(2)
     estado.usuario = null
     expect((await chamar({ reconsultar: true })).status).toBe(401)
+  })
+
+  it('D09: OFAC (lista SDN) e PEP (Portal da Transparência) entram na checagem; acerto vira alerta e risco alto; OFAC fora do ar dá "a conferir"', async () => {
+    const sdn = '36,"BANCO NACIONAL DE CUBA",-0- ,"CUBA",-0- \n99,"BRILHO LIMPEZA",-0- ,"SDGT",-0- \n'
+    receita = () => jsonResp({ razao_social: 'BRILHO LIMPEZA LTDA', descricao_situacao_cadastral: 'ATIVA', uf: 'RJ', qsa: [{ nome_socio: 'JOAO DA SILVA PEREIRA', qualificacao_socio: 'Sócio' }] })
+    fingirFetch(u => u.includes('brasilapi') ? receita() : u.includes('treasury.gov') ? new Response(sdn) : u.includes('portaldatransparencia') ? jsonResp([{ nome: 'JOÃO DA SILVA PEREIRA', descricaoFuncao: 'Deputado Federal' }]) : tcu())
+    zerar({ configuracoes: [{ chave: 'cron_segredo', valor: 'cron-1' }, { chave: 'transparencia_api_key', valor: 'chave-cgu' }], fornecedores: [], contratos: [], checagens_kyc: [], usuarios_perfis: [{ id: 'u1', funcao: 'admin' }] })
+    estado.usuario = { id: 'u1' }
+    const b = await (await chamar({ cnpj: CNPJ })).json()
+    expect(b.risco).toBe('alto')
+    expect(b.alertas).toEqual([
+      'Consta na lista de sanções OFAC (EUA): BRILHO LIMPEZA.',
+      'Pessoa exposta politicamente (PEP) no quadro societário: JOÃO DA SILVA PEREIRA (Deputado Federal). Diligência reforçada (Lei 9.613/98).',
+    ])
+    expect(b.fontes).toContain('PEP – Portal da Transparência (CGU)')
+    fingirFetch(u => u.includes('brasilapi') ? receita() : u.includes('treasury.gov') ? new Response('x', { status: 503 }) : u.includes('portaldatransparencia') ? jsonResp([]) : tcu())
+    const c = await (await chamar({ cnpj: CNPJ })).json()
+    expect(c.risco).toBe('a conferir')
+    expect(c.fontes.join(' ')).toContain('OFAC (EUA) – lista SDN (fora do ar agora)')
   })
 })

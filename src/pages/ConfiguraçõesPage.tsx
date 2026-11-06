@@ -228,6 +228,7 @@ export default function ConfiguraçõesPage() {
       <div className={mostra('integracoes')}>
         <SecaoEmail />
         <SecaoEscavador />
+        <SecaoTransparencia />
         <SecaoIcs />
         <SecaoPix />
       </div>
@@ -638,6 +639,45 @@ function SecaoEscavador() {
 }
 
 // Passo 41 (Onda D): convite .ics por e-mail a cada prazo/compromisso novo ou alterado (REQUEST, mesmo UID).
+// Passo D09 (Diamante): chave gratuita do Portal da Transparência para a consulta de PEP na Checagem de contraparte.
+function SecaoTransparencia() {
+  const [definida, setDefinida] = useState<boolean | null>(null)
+  const [chave, setChave] = useState('')
+  const [ocupado, setOcupado] = useState(false)
+  const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+  const carregar = async () => {
+    const { data } = await supabase.rpc('estado_configuracao', { p_chave: 'transparencia_api_key' })
+    const e = (Array.isArray(data) ? data[0] : data) as { permitido: boolean; definida: boolean } | undefined
+    setDefinida(e?.permitido ? e.definida : null)
+  }
+  useEffect(() => { if (supabaseConfigurado) carregar() }, [])
+  if (!supabaseConfigurado || definida === null) return null
+  const salvar = async () => {
+    setOcupado(true); setMsg(null)
+    const { error } = await supabase.rpc('definir_configuracao', { p_chave: 'transparencia_api_key', p_valor: chave })
+    setOcupado(false)
+    if (error) return setMsg({ tipo: 'erro', texto: mensagemAmigavel(error) })
+    setChave(''); await carregar(); setMsg({ tipo: 'ok', texto: 'Chave salva. A Checagem de contraparte passa a consultar PEP.' })
+  }
+  return (
+    <section aria-labelledby="transparencia" className="max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado" data-testid="secao-transparencia">
+      <h2 id="transparencia" className="text-lg mb-3">Portal da Transparência (PEP)</h2>
+      <div className="space-y-3 text-sm">
+        <p><strong>Situação:</strong> {definida ? 'chave salva; a Checagem de contraparte consulta PEP.' : 'sem chave: a Checagem de contraparte não consulta pessoas expostas politicamente.'}</p>
+        <ol className="text-xs text-grafite-claro list-decimal pl-5 space-y-1">
+          <li>Entre em <a href="https://portaldatransparencia.gov.br/api-de-dados/cadastrar-email" target="_blank" rel="noopener noreferrer" className="underline text-navy">portaldatransparencia.gov.br/api-de-dados</a> e cadastre o e-mail (gratuito).</li>
+          <li>A chave chega por e-mail. Cole abaixo e clique em Salvar.</li>
+        </ol>
+        <div className="flex flex-wrap gap-2">
+          <input type="password" value={chave} onChange={e => setChave(e.target.value)} aria-label="Chave do Portal da Transparência" placeholder={definida ? 'Trocar a chave' : 'Cole a chave aqui'} className="flex-1 min-h-[44px] border border-navy/20 px-3" />
+          <button type="button" onClick={salvar} disabled={ocupado || chave.trim().length < 20} className="min-h-[44px] px-4 bg-navy text-white disabled:opacity-50">{ocupado ? 'Salvando…' : 'Salvar'}</button>
+        </div>
+        {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={msg.tipo === 'erro' ? 'text-critico' : 'text-regular'}>{msg.texto}</p>}
+      </div>
+    </section>
+  )
+}
+
 function SecaoIcs() {
   const [ligado, setLigado] = useState(false)
   const [msg, setMsg] = useState('')
