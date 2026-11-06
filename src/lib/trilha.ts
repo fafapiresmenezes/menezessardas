@@ -23,6 +23,7 @@ export type TipoEvento =
   | 'configuracao_alterada'
   | 'acesso_alterado'
   | 'parte_adversa_consultada'
+  | 'laboratorio_admin_aviso_assinado'
 
 export interface EventoTrilha {
   id: string

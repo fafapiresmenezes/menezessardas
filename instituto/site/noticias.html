@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notícias e previsão · Instituto THEYE</title>
+<meta name="description" content="Índice diário do noticiário jurídico brasileiro por tema (GDELT), só agregados, como variável candidata das previsões de locação. Pré-registro fixado antes do resultado.">
+<link rel="preload" href="/fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="base.css">
+<style>
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--linha);border:1px solid var(--linha)}
+@media(max-width:900px){.cards{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.cards{grid-template-columns:1fr}}
+.cards>div{background:var(--papel);padding:24px;min-height:200px}
+.num{font-family:var(--serif);font-size:40px;line-height:1.1}
+.sm{font-size:13.5px;color:var(--apagado)}
+.var{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:6px}
+.var.up{color:var(--conv)} .var.down{color:var(--grafo)}
+svg.sp{display:block;width:100%;height:56px;margin-top:14px}
+svg.sp path{fill:none;stroke:var(--grafo);stroke-width:1.5}
+svg.sp line{stroke:var(--linha)}
+.veredito{display:inline-block;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border:1px solid var(--ouro);color:var(--ouro);margin-top:10px}
+.passos{counter-reset:p;list-style:none;margin:0;padding:0;display:grid;gap:1px;background:var(--linha);border:1px solid var(--linha)}
+.passos li{counter-increment:p;background:var(--papel);padding:20px 24px 20px 64px;position:relative;font-size:15px;color:var(--tinta-2)}
+.passos li::before{content:counter(p);position:absolute;left:24px;top:18px;font-family:var(--serif);font-size:24px;color:var(--ouro)}
+.passos b{color:var(--tinta)}
+dl{display:grid;grid-template-columns:220px 1fr;gap:8px 24px;font-size:14.5px;margin-top:16px}
+@media(max-width:600px){dl{grid-template-columns:1fr}}
+dt{color:var(--apagado)} dd{color:var(--tinta)}
+.hash{font-family:var(--mono);font-size:11px;color:var(--apagado);word-break:break-all;margin-top:10px}
+</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/placar.html">Placar</a><a href="/comparar.html">Grafo x convencional</a><a href="/noticias.html" aria-current="page">Notícias</a><a href="/ontologia.html">Ontologia</a><a href="/estudar.html">Estudar</a><a href="/servicos.html">Serviços</a></nav>
+</div></header>
+<main id="conteudo">
+<div class="hero"><div class="w">
+  <div class="kicker">Variável candidata · regras fixadas antes do resultado</div>
+  <h1>O noticiário antecipa o que acontece nos processos?</h1>
+  <p class="lead">Todo dia medimos quanto do noticiário brasileiro fala de locação, despejo, juros, inadimplência, tribunais superiores e LGPD. É o mesmo método do motor THE EYE: só médias diárias, nenhuma manchete, nenhum nome. Em 06/12/2026 testamos se essa série melhora a previsão de locação. Até lá, ela é só candidata.</p>
+  <aside class="um-min" aria-label="Em 1 minuto"><b>Em 1 minuto</b><p>Contamos quanto os jornais falam de cada tema por dia. Guardamos só o número. Daqui a um mês vamos ver se esse número ajuda a prever processos. Se não ajudar, dizemos isso.</p><a class="btn" href="/comparar.html">Ver o experimento principal</a></aside>
+</div></div>
+
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Índice diário · <span data-k="quando">carregando</span></div><h2>Seis temas, trinta dias.</h2></div>
+  <p>Cada número é a porcentagem média do noticiário brasileiro em português daquele dia que mencionou o tema, segundo o GDELT. A linha mostra os últimos 30 dias; a variação compara o último dia com a média do período.</p></div>
+  <div class="cards" id="temas"><div><div class="sm">Carregando o índice…</div></div></div>
+  <p class="nota" id="nota-coleta" style="margin-top:14px" hidden></p>
+</div></section>
+
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Pré-registro · fixado em 06/11/2026</div><h2>Como vamos saber se ajuda.</h2></div></div>
+  <ol class="passos">
+    <li><b>Pergunta.</b> Acrescentar o índice de notícias do tema "despejo" (média dos 7 dias anteriores à distribuição) como variável do modelo B (grafo) reduz o erro de Brier nas ações de locação do conjunto de teste?</li>
+    <li><b>Régua.</b> Diferença pareada de Brier (com índice − sem índice) no mesmo conjunto de teste do experimento I-10, intervalo de 95% por bootstrap de 2.000 reamostras. Só declaramos "ajuda" se o limite superior do intervalo ficar abaixo de zero.</li>
+    <li><b>Dados.</b> Processos distribuídos a partir de 06/11/2026 e decididos até 06/12/2026, mínimo de 100 desfechos. Com menos que isso, o resultado sai como "amostra pequena" e o teste é adiado, nunca encurtado.</li>
+    <li><b>Baseline.</b> O modelo sem índice. Se o índice não vencer esse baseline, ele não entra na probabilidade única do THEYE, e esta página dirá isso.</li>
+    <li><b>O que não fazemos.</b> Não trocamos os termos de busca nem o tema depois de ver o número. Não guardamos manchetes, URLs ou nomes. Não usamos notícias sobre pessoas.</li>
+  </ol>
+  <div class="hash" data-k="selo">sha256 do pré-registro: calculado na medição do Bloco B</div>
+</div></section>
+
+<section><div class="w">
+  <div class="sec-h"><div><div class="kicker">Método</div><h2>Exatamente o que foi feito.</h2></div></div>
+  <dl>
+    <dt>Fonte</dt><dd>GDELT 2.0 DOC API, modo "volume intensity", filtros <code>sourcecountry:BR sourcelang:por</code>. Uso livre com citação (The GDELT Project).</dd>
+    <dt>Consultas fixas</dt><dd>locação (locação, aluguel, inquilino, locatário) · despejo (despejo, desocupação, "ação de despejo") · juros (Selic, "taxa de juros", Copom) · inadimplência (inadimplência, inadimplente, "nome sujo") · tribunais (STF, STJ, "Supremo Tribunal", "Superior Tribunal") · LGPD (LGPD, "dados pessoais", ANPD).</dd>
+    <dt>Agregação</dt><dd>Média simples dos pontos do dia (janelas de 15 minutos). O dia corrente, incompleto, nunca entra. Um robô coleta às 02h10 (Brasília) com janela de 3 dias para fechar o dia anterior.</dd>
+    <dt>Privacidade</dt><dd>Nenhuma URL, manchete, veículo ou nome é guardado. O teste automático falha se uma URL aparecer no que é gravado.</dd>
+    <dt>Proveniência</dt><dd>Cada coleta guarda o sha256 da resposta do GDELT, o status e o tempo. Falha fica registrada como falha, nunca estimada.</dd>
+    <dt>Origem do método</dt><dd>O coletor do motor THE EYE no computador do titular (<code>gdelt_15min.py</code>, outubro de 2026) já agregava eventos por país e estado sem guardar texto. Esta página aplica a mesma regra ao tema jurídico.</dd>
+    <dt>Limites</dt><dd>O GDELT cobre o que está na web aberta e em português; jornais pagos e diários oficiais ficam de fora. Volume de notícia não é opinião pública nem decisão judicial.</dd>
+  </dl>
+  <p class="nota">Para aprender a ler este tipo de teste, veja o módulo 4 da <a href="/estudar.html">trilha de estudo</a>. O experimento principal está em <a href="/comparar.html">Grafo x convencional</a>.</p>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · Bloco B, passo B11, regras fixadas em 06/11/2026</span><span>Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="noticias.js"></script>
+</body>
+</html>

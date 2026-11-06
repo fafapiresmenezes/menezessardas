@@ -38,6 +38,7 @@ const rotuloTipo: Record<TipoEvento, string> = {
   configuracao_alterada: 'Configuração alterada',
   acesso_alterado: 'Acesso alterado',
   parte_adversa_consultada: 'Parte adversa consultada',
+  laboratorio_admin_aviso_assinado: 'Aviso LGPD do laboratório assinado',
 }
 
 const corTipo: Record<TipoEvento, string> = {
@@ -54,6 +55,7 @@ const corTipo: Record<TipoEvento, string> = {
   configuracao_alterada: 'bg-navy/10 text-navy',
   acesso_alterado: 'bg-dourado/15 text-dourado-escuro',
   parte_adversa_consultada: 'bg-navy/10 text-navy',
+  laboratorio_admin_aviso_assinado: 'bg-dourado/15 text-dourado-escuro',
 }
 
 const dataHora = (iso: string) =>
