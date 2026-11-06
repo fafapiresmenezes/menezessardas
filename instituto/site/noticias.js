@@ -45,6 +45,6 @@
         box.appendChild(c);
       });
       $('temas').parentNode.querySelector('[data-k="quando"]').textContent = ultimoDia ? 'último dia completo ' + dia(ultimoDia) : 'aguardando a primeira coleta';
-      $('nota-coleta').textContent = 'Última coleta bem-sucedida: ' + dt(d.ultima_coleta) + '. ' + (d.fonte || '');
+      $('nota-coleta').hidden = false; $('nota-coleta').textContent = 'Última coleta bem-sucedida: ' + dt(d.ultima_coleta) + '. ' + (d.fonte || '');
     }).catch(function () { $('temas').textContent = 'Sem conexão com o banco agora. Tente de novo em instantes.'; });
 })();
