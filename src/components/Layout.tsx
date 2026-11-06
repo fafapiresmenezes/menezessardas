@@ -18,6 +18,8 @@ import AceiteContratoSaas from './AceiteContratoSaas'
 import AceiteTermos from './AceiteTermos'
 import { aplicarTema, temaAtual } from '@/lib/tema'
 import { listarPessoas, perfilAtual } from '@/lib/equipe'
+import { verificarAvisosCriticos } from '@/lib/pwa'
+import { emDias } from '@/lib/datas'
 import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote } from 'lucide-react'
 
 interface LayoutProps {
@@ -86,6 +88,22 @@ export default function Layout({ children, title }: LayoutProps) {
   }, [])
   const navigate = useNavigate()
   const { pathname } = useLocation()
+
+  // Passo D19: app instalável e avisos no celular (prazos em até 2 dias, intimações vencidas, compromissos de hoje),
+  // conferidos ao abrir e a cada 30 minutos enquanto a tela estiver aberta.
+  useEffect(() => {
+    if (!supabaseConfigurado) return
+    const conferir = () => verificarAvisosCriticos(async () => {
+      const [i, c] = await Promise.all([
+        supabase.from('intimacoes').select('id,lida,prazo_final,tribunal,numero_processo,tipo').eq('lida', false).not('prazo_final', 'is', null).lte('prazo_final', emDias(2)).limit(50),
+        supabase.from('compromissos').select('id,titulo,data_evento').eq('data_evento', emDias(0)).limit(20),
+      ])
+      return { intimacoes: i.data ?? [], compromissos: c.data ?? [] }
+    }).catch(() => undefined)
+    conferir()
+    const t = setInterval(conferir, 30 * 60 * 1000)
+    return () => clearInterval(t)
+  }, [])
 
   // Ctrl/⌘ + K abre a busca global em qualquer tela.
   useEffect(() => {

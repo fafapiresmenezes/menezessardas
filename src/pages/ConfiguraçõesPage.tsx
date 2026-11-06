@@ -9,6 +9,7 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { estadoChaveIA, removerChaveIA, salvarChaveIA, testarChaveIA, type EstadoChaveIA } from '@/lib/ia'
 import { perfilAtual, rotuloFuncao, type Funcao } from '@/lib/equipe'
 import SecaoPix from '@/components/SecaoPix'
+import AvisosCelular from '@/components/AvisosCelular'
 
 const ABAS = [{ id: 'perfil', rotulo: 'Perfil e avisos' }, { id: 'seguranca', rotulo: 'Segurança' }, { id: 'ia', rotulo: 'IA e escrita' }, { id: 'integracoes', rotulo: 'Integrações' }, { id: 'avaliacao', rotulo: 'Avaliação' }, { id: 'tudo', rotulo: 'Tudo' }]
 
@@ -216,6 +217,7 @@ export default function ConfiguraçõesPage() {
           Salvar preferências
         </button>
       </form>
+      <div className={`max-w-2xl ${mostra('perfil')}`}><AvisosCelular /></div>{/* Passo D19 */}
 
       <div className={mostra('seguranca')}>
         <SecaoSenha />
