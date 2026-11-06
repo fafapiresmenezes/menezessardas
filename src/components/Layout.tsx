@@ -198,6 +198,17 @@ export default function Layout({ children, title }: LayoutProps) {
               )}
             </button>
           )}
+          {admin && (
+            <button
+              onClick={() => navigate('/laboratorio-admin')}
+              className="hidden md:flex items-center gap-2 min-h-[44px] px-3 border border-navy/30 text-navy rounded-sm text-sm hover:bg-navy/5 transition"
+              aria-label="Laboratório de autoavaliação, só para administradores"
+              data-testid="menu-laboratorio-admin"
+            >
+              <FlaskConical size={16} aria-hidden="true" />
+              <span className="hidden lg:inline">Laboratório</span>
+            </button>
+          )}
           <button
             onClick={() => { const t = tema === 'escuro' ? 'claro' : 'escuro'; aplicarTema(t); setTema(t) }}
             className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/15 rounded-sm text-grafite-claro hover:border-dourado hover:text-navy transition"
