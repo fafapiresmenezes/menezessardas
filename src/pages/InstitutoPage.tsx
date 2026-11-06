@@ -6,17 +6,19 @@ import PerfilJulgador from '@/components/PerfilJulgador'
 import { useImoveis } from '@/hooks/useImoveis'
 import { radarPortais, type NovidadePortal } from '@/lib/legislacao'
 import { diasAte } from '@/lib/datas'
-import { FlaskConical, BarChart3, Leaf, ExternalLink, MessageSquare, BookOpen, Scale } from 'lucide-react'
+import { FlaskConical, BarChart3, Leaf, ExternalLink, MessageSquare, BookOpen, Scale, ShieldAlert } from 'lucide-react'
 import { MEDICOES, PLANO_M31, DECK_URL } from '@/data/medicoes'
 import PesquisaDireito from '@/components/PesquisaDireito'
+import CiberQuantica from '@/components/CiberQuantica'
 import { gerarPdfTexto, quebrar } from '@/lib/pdfSimples'
 
-type Aba = 'inovacao' | 'jurimetria' | 'esg' | 'case' | 'pesquisa'
+type Aba = 'inovacao' | 'jurimetria' | 'esg' | 'case' | 'pesquisa' | 'tecnologia'
 const ABAS: { valor: Aba; rotulo: string; Icone: typeof FlaskConical }[] = [
   { valor: 'inovacao', rotulo: 'Inovação e sandboxes', Icone: FlaskConical },
   { valor: 'jurimetria', rotulo: 'Jurimetria e predição', Icone: BarChart3 },
   { valor: 'esg', rotulo: 'ESG e compliance', Icone: Leaf },
   { valor: 'pesquisa', rotulo: 'Pesquisa e desenvolvimento do direito', Icone: Scale },
+  { valor: 'tecnologia', rotulo: 'Cibersegurança e quântica', Icone: ShieldAlert },
   { valor: 'case', rotulo: 'Case study desta plataforma', Icone: BookOpen },
 ]
 
@@ -255,7 +257,7 @@ export default function InstitutoPage() {
             </button>
           ))}
         </div>
-        <div role="tabpanel">{aba === 'inovacao' ? <Inovacao /> : aba === 'jurimetria' ? <Jurimetria /> : aba === 'esg' ? <Esg /> : aba === 'pesquisa' ? <PesquisaDireito /> : <CaseStudy />}</div>
+        <div role="tabpanel">{aba === 'inovacao' ? <Inovacao /> : aba === 'jurimetria' ? <Jurimetria /> : aba === 'esg' ? <Esg /> : aba === 'pesquisa' ? <PesquisaDireito /> : aba === 'tecnologia' ? <CiberQuantica /> : <CaseStudy />}</div>
       </div>
     </Layout>
   )

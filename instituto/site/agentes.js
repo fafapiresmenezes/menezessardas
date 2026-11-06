@@ -3,7 +3,7 @@
   var FN = 'https://hlraekzvgxdpiiigdxdo.supabase.co/functions/v1/instituto-agentes';
   var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhscmFla3p2Z3hkcGlpaWdkeGRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4ODEzOTksImV4cCI6MjEwODQ1NzM5OX0.yCNPEGDb7tdf1JIY30WKUbE-xZwjQFwygJFJnvBeyrs';
   var $ = function (id) { return document.getElementById(id); };
-  var todos = [], lote = 1, ultimo = null;
+  var todos = [], lote = /^#lote[1-6]$/.test(location.hash) ? Number(location.hash.slice(5)) : 1, ultimo = null;
   var REST = 'https://hlraekzvgxdpiiigdxdo.supabase.co/rest/v1/rpc/';
   function rpc(fn, corpo) {
     return fetch(REST + fn, { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' }, body: JSON.stringify(corpo || {}) })

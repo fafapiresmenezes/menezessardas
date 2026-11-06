@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Computação quântica e direito · Instituto THEYE</title>
+<meta name="description" content="Computação quântica na ótica do direito brasileiro: teste de Mosca para documentos e assinaturas, inventário de criptografia, linha do tempo regulatória e agenda de pesquisa.">
+<link rel="preload" href="/fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="base.css">
+<style>
+.calc{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:980px;align-items:end}
+@media(max-width:900px){.calc{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.calc{grid-template-columns:1fr}}
+.calc label{display:grid;gap:6px;font-size:14px}
+.calc input,.calc select{font:inherit;padding:10px 12px;min-height:44px;border:1px solid var(--linha);background:var(--papel);color:var(--tinta);border-radius:6px}
+.res{margin-top:24px;padding:20px;border:1px solid var(--linha);border-left:4px solid var(--grafo);border-radius:10px;max-width:980px}
+.res.alerta{border-left-color:var(--conv)}
+.big{font-family:var(--serif);font-size:34px;line-height:1.15;font-variant-numeric:tabular-nums}
+.sm{font-size:13.5px;color:var(--apagado)}
+.barra{position:relative;height:34px;margin:14px 0 6px;max-width:760px;border:1px solid var(--linha);background:var(--papel-2)}
+.barra i{position:absolute;top:0;bottom:0;left:0}
+.barra .x{background:var(--grafo)}
+.barra .y{background:var(--ouro-claro)}
+.barra .z{width:2px;background:var(--conv);top:-6px;bottom:-6px}
+.leg{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--tinta-2)}
+.leg span::before{content:"";display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:-1px}
+.leg .lx::before{background:var(--grafo)} .leg .ly::before{background:var(--ouro-claro)} .leg .lz::before{background:var(--conv);width:3px}
+.inv{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-width:980px}
+@media(max-width:700px){.inv{grid-template-columns:1fr}}
+.inv label{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--linha);border-radius:8px;cursor:pointer;font-size:14.5px;min-height:44px}
+.inv input{width:20px;height:20px;flex:none;margin-top:2px}
+.inv small{display:block;color:var(--apagado);font-size:12.5px}
+.selo-r{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border:1px solid currentColor;margin-right:6px}
+.r-q{color:var(--conv)} .r-g{color:var(--ouro)} .r-ok{color:var(--grafo)}
+.linha-t{list-style:none;border-left:2px solid var(--linha);margin-left:8px;max-width:860px}
+.linha-t li{position:relative;padding:0 0 22px 22px}
+.linha-t li::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--papel);border:2px solid var(--ouro)}
+.linha-t li.br::before{background:var(--grafo);border-color:var(--grafo)}
+.linha-t li.fut::before{border-style:dashed}
+.linha-t b{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--ouro);display:block}
+.linha-t span{font-size:15px}
+.agenda{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--linha);border:1px solid var(--linha)}
+@media(max-width:820px){.agenda{grid-template-columns:1fr}}
+.agenda div{background:var(--papel);padding:22px}
+.agenda b{display:block;font-family:var(--serif);font-weight:500;font-size:19px;margin-bottom:6px}
+.agenda p{font-size:14.5px;color:var(--tinta-2)}
+.agenda small{display:block;margin-top:8px;font-family:var(--mono);font-size:11.5px;color:var(--apagado)}
+ul.lista{margin:8px 0 0 20px;font-size:15px} ul.lista li{margin:6px 0}
+</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="top"><div class="w">
+  <a class="marca" href="/"><span class="selo" aria-hidden="true">TH</span><b>Instituto THEYE</b></a>
+  <nav aria-label="Seções"><a href="/#laboratorio">Laboratório</a><a href="/ciber.html">Cibersegurança</a><a href="/quantico.html" aria-current="page">Quântica</a><a href="/agentes.html#lote6">Agentes</a><a href="/#servicos">Serviços</a></nav>
+</div></header>
+<main id="conteudo">
+<div class="hero"><div class="w">
+  <div class="kicker">Tema de pesquisa · computação quântica na ótica do direito</div>
+  <h1>A assinatura de hoje ainda vale amanhã?</h1>
+  <p class="lead">Um computador quântico grande o bastante poderá quebrar a criptografia que protege certificados digitais, assinaturas e arquivos sigilosos. Quem guarda dados por muitos anos precisa planejar agora, porque um dado copiado hoje pode ser aberto depois. Três ferramentas para medir esse risco e a agenda de pesquisa do Instituto.</p>
+  <aside class="um-min" aria-label="Em 1 minuto"><b>Em 1 minuto</b><p>Escolha o tipo de documento. A ferramenta compara quanto tempo ele precisa continuar sigiloso e válido com a data provável de um computador quântico capaz de quebrá-lo. Se a soma passa da data, o documento já está em risco.</p><a class="btn" href="#mosca">Testar um documento</a></aside>
+</div></div>
+
+<section id="mosca"><div class="w">
+  <div class="sec-h"><div><div class="kicker">Ferramenta 1</div><h2>Teste de Mosca para documentos.</h2></div>
+  <p>O teste do pesquisador Michele Mosca (Universidade de Waterloo): se <b>x + y &gt; z</b>, há risco. <b>x</b> é por quanto tempo o documento precisa ficar sigiloso ou com assinatura confiável; <b>y</b> é quanto tempo o escritório leva para migrar para criptografia pós-quântica; <b>z</b> é em quantos anos surge um computador quântico capaz de quebrar RSA e curvas elípticas.</p></div>
+  <form class="calc" id="f-mosca" novalidate>
+    <label>Tipo de documento<select id="m-tipo"></select></label>
+    <label>x · anos de sigilo ou validade<input id="m-x" type="number" min="0" max="100" inputmode="numeric"></label>
+    <label>y · anos para migrar<input id="m-y" type="number" min="0" max="30" value="3" inputmode="numeric"></label>
+    <label>z · cenário do computador quântico<select id="m-z"><option value="7">Otimista: 2033 (7 anos)</option><option value="10" selected>Central: 2036 (10 anos)</option><option value="15">Distante: 2041 (15 anos)</option></select></label>
+  </form>
+  <div class="res" id="m-res" aria-live="polite"></div>
+  <p class="sm" style="margin-top:14px">Os cenários seguem a faixa das pesquisas anuais com especialistas do Global Risk Institute (Quantum Threat Timeline) e os prazos oficiais do NIST, que tiram RSA e curvas elípticas de uso até 2035. Ninguém sabe a data exata: use o cenário otimista para dados muito sensíveis. Isto é uma conta de risco, não um parecer.</p>
+</div></section>
+
+<section id="inventario"><div class="w">
+  <div class="sec-h"><div><div class="kicker">Ferramenta 2</div><h2>Inventário de criptografia do escritório.</h2></div>
+  <p>Marque o que o escritório usa. A ferramenta separa o que um computador quântico quebra (algoritmo de Shor), o que só enfraquece (algoritmo de Grover, resolvido com chave maior) e o que já é pós-quântico.</p></div>
+  <div class="inv" id="inv"></div>
+  <div class="res" id="i-res" aria-live="polite"><p class="sm">Marque pelo menos um item.</p></div>
+</div></section>
+
+<section id="linha"><div class="w">
+  <div class="sec-h"><div><div class="kicker">Ferramenta 3</div><h2>Linha do tempo das regras.</h2></div>
+  <p>Do algoritmo que acendeu o alerta às datas-limite oficiais. Os pontos verdes são do Brasil; os tracejados ainda vão acontecer.</p></div>
+  <ol class="linha-t" id="lt"></ol>
+</div></section>
+
+<section id="questoes"><div class="w">
+  <div class="sec-h"><div><div class="kicker">Questões jurídicas</div><h2>O que muda para o direito brasileiro.</h2></div>
+  <p>Perguntas que já cabem num parecer, mesmo antes do primeiro computador quântico útil.</p></div>
+  <ul class="lista">
+    <li><b>Validade da assinatura no tempo.</b> A MP 2.200-2/2001 (art. 10, § 1º) presume verdadeiro o documento assinado com certificado ICP-Brasil. Se o algoritmo for quebrado, a presunção continua para assinaturas antigas? A resposta técnica é o carimbo do tempo renovado e a reassinatura de arquivos de longo prazo.</li>
+    <li><b>Dever de segurança pelo estado da técnica.</b> A LGPD (art. 46, § 2º, e art. 44, III) mede a segurança pelas técnicas disponíveis na época. Com padrões pós-quânticos publicados desde 2024, quem guarda dados por décadas e não migra pode responder por isso.</li>
+    <li><b>Coletar agora, decifrar depois.</b> Tráfego sigiloso copiado hoje pode ser aberto no futuro. Isso afeta o sigilo profissional (Lei 8.906/94, art. 7º, II), o segredo de justiça e os segredos de negócio.</li>
+    <li><b>Prova digital e cadeia de custódia.</b> Hash SHA-256 resiste ao computador quântico; assinatura RSA, não. Laudos e protocolos de prova (CPP, art. 158-A) devem preferir hash com carimbo de tempo.</li>
+    <li><b>Blockchain e registros.</b> Carimbos OpenTimestamps no Bitcoin dependem de hash e seguem robustos; carteiras com chave pública exposta não. Isso pesa em contratos tokenizados e em garantias registradas em cadeia.</li>
+    <li><b>Contratos de TI.</b> Cláusula de "agilidade criptográfica": o fornecedor deve trocar algoritmos sem trocar o sistema, com prazo ligado aos marcos do NIST e da ICP-Brasil.</li>
+  </ul>
+</div></section>
+
+<section id="pesquisa"><div class="w">
+  <div class="sec-h"><div><div class="kicker">Agenda de pesquisa</div><h2>Perguntas que o Instituto vai estudar.</h2></div>
+  <p>Mesmo método dos outros temas: fonte pública, incerteza declarada, resultado publicado e rastro em blockchain.</p></div>
+  <div class="agenda">
+    <div><b>Quanto do acervo jurídico brasileiro está em risco?</b><p>Estimar quantos documentos com assinatura ICP-Brasil precisam valer por mais de 10 anos (escrituras, contratos longos, procurações) e o custo de reassinar esse acervo.</p><small>Fonte: ITI, CNJ, cartórios · Método: teste de Mosca em escala</small></div>
+    <div><b>A presunção da MP 2.200-2 sobrevive?</b><p>Proposta de norma de transição: data de corte, reassinatura obrigatória para arquivos de longo prazo e regra de prova para documentos antigos.</p><small>Fonte: ICP-Brasil, eIDAS (UE) · Método: direito comparado</small></div>
+    <div><b>Quem responde se a criptografia cair?</b><p>Dividir a responsabilidade entre autoridade certificadora, fornecedor de software e quem guarda o dado, à luz da LGPD e do Código de Defesa do Consumidor.</p><small>Fonte: LGPD, CDC, STJ · Método: análise dogmática</small></div>
+    <div><b>Previsão da data do computador quântico.</b><p>Aplicar o placar de previsões do Instituto ao tema: previsões seladas sobre marcos técnicos (qubits lógicos, quebra de RSA de teste) e pontuação Brier quando o desfecho chegar.</p><small>Fonte: arXiv, NIST · Método: previsão calibrada</small></div>
+  </div>
+  <p style="margin-top:24px"><a class="btn" href="/agentes.html#lote6">Perguntar ao agente de computação quântica</a> <a class="btn sec" href="/ciber.html">Ver o tema de cibersegurança</a></p>
+</div></section>
+</main>
+<footer><div class="w"><span>© 2026 Instituto THEYE · Computação quântica e direito, tema Q02</span><span><a href="/legislacao.html" style="display:inline-block;padding:4px 0">Legislação</a> · Desenvolvido pelo Instituto THEYE</span></div></footer>
+<script src="quantico.js"></script>
+<script src="/vitais.js" defer></script>
+</body>
+</html>
