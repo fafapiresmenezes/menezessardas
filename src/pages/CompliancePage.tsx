@@ -3,6 +3,9 @@ import { useBaixado } from '@/hooks/useBaixado'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import Layout from '@/components/Layout'
 import { Printer, MessageSquare, UserCheck } from 'lucide-react'
+import { gerarRelatorioSelado } from '@/lib/relatorioCompliance'
+import { baixarArquivo } from '@/lib/ancoragem'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Diagnóstico de integridade vendável a clientes: perguntas baseadas nos parâmetros de avaliação do
 // programa de integridade (Decreto 11.129/2022, art. 57) e na LGPD (Lei 13.709/2018). Gera nota por
@@ -88,6 +91,19 @@ export default function CompliancePage() {
   // Passo 130: código de integridade copiável para o e-mail ao cliente.
   const [codigoCopiado, setCodigoCopiado] = useState(false)
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 254
+  // Passo D08 (Diamante): PDF para o cliente com código de integridade e selo OpenTimestamps.
+  const [selando, setSelando] = useState(false)
+  const [msgSelo, setMsgSelo] = useState('')
+  const baixarSelado = async () => {
+    if (geral === null) return
+    setSelando(true); setMsgSelo('Gerando o PDF e pedindo o selo…')
+    try {
+      const r = await gerarRelatorioSelado({ empresa: empresa.trim(), geral, nivel, pilares: PILARES.map((p, pi) => ({ nome: p.nome, nota: nota(p.perguntas, pi) })), lacunas: lacunas.map(l => ({ pilar: l.pilar, acao: l.acao, base: l.base, v: l.v ?? 0 })), codigo })
+      baixarArquivo(`${r.nomeBase}.pdf`, r.pdf as BlobPart, 'application/pdf')
+      if (r.ots) baixarArquivo(`${r.nomeBase}.pdf.ots`, r.ots as BlobPart)
+      setMsgSelo(`PDF baixado (SHA-256 ${r.sha256.slice(0, 12)}…)${r.ots ? ` com o selo .ots via ${r.calendario?.replace('https://', '')}` : '; o selo não veio agora (calendário fora do ar), o SHA-256 ficou na Trilha'}.`)
+    } catch (e) { setMsgSelo(mensagemAmigavel(e, 'Não deu para gerar o PDF.')) } finally { setSelando(false) }
+  }
   const [baixado, marcarBaixado] = useBaixado() // Passo 398
   const copiarCodigo = async () => { try { await navigator.clipboard.writeText(`Diagnóstico de compliance${empresa.trim() ? ` — ${empresa.trim()}` : ''} · ${new Date().toLocaleDateString('pt-BR')} · código de integridade SHA-256 ${codigo}`); setCodigoCopiado(true); setTimeout(() => setCodigoCopiado(false), 2500) } catch { /* sem área de transferência */ } }
   useEffect(() => {
@@ -146,8 +162,10 @@ export default function CompliancePage() {
             {codigo && <p className="text-xs text-grafite-claro mt-4 break-all" data-testid="codigo-integridade">Código de integridade (SHA-256 das respostas, empresa e data): {codigo}. Qualquer alteração nas respostas muda este código. <button type="button" onClick={copiarCodigo} data-testid="copiar-codigo" className="underline text-navy print:hidden">{codigoCopiado ? 'código copiado' : 'copiar código'}</button></p>}
             <div className="flex flex-wrap gap-3 mt-4 print:hidden">
               <button type="button" onClick={() => window.print()} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2"><Printer className="w-4 h-4" aria-hidden />Imprimir ou salvar em PDF</button>
+              <button type="button" onClick={baixarSelado} disabled={selando || geral === null} data-testid="baixar-pdf-selado" className="min-h-[44px] border border-navy text-navy px-5 text-sm uppercase tracking-wider disabled:opacity-50">{selando ? 'Selando…' : 'Baixar PDF selado (cliente)'}</button>
               {supabaseConfigurado && <button type="button" onClick={salvarPlano} disabled={salvando} data-testid="salvar-plano" className="min-h-[44px] border border-navy text-navy px-5 text-sm uppercase tracking-wider disabled:opacity-50">{salvando ? 'Criando…' : 'Gravar diagnóstico e criar plano em Casos e projetos'}</button>}
             </div>
+            {msgSelo && <p role="status" data-testid="msg-selo" className="text-sm text-grafite-claro mt-2">{msgSelo}</p>}
             {msg && <p role="status" data-testid="msg-plano" className={`text-sm mt-3 ${msg.ok ? 'text-regular' : 'text-critico'}`}>{msg.texto}{msg.ok && <> <a className="underline" href="#/projetos">Abrir Casos e projetos</a></>}</p>}
           </section>
         )}

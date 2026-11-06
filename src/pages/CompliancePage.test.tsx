@@ -12,6 +12,10 @@ vi.mock('@/lib/supabase', () => ({
     ? { insert: (r: object) => ({ select: () => ({ single: async () => ({ data: { id: 'caso1' }, error: (await insertTarefa(r)).error }) }), then: (f: (v: unknown) => unknown) => insertTarefa(r).then(f) }) }
     : { select: () => ({ order: async () => ({ data: historico }) }), insert: (r: object) => insertDiag(r) } },
 }))
+const gerar = vi.fn(async (_d: object) => ({ pdf: new Uint8Array([1]), sha256: 'c'.repeat(64), ots: new Uint8Array([2]), calendario: 'https://alice.btc.calendar.opentimestamps.org', nomeBase: 'compliance-x-2026-11-06' }))
+vi.mock('@/lib/relatorioCompliance', () => ({ gerarRelatorioSelado: (d: object) => gerar(d) }))
+const baixar = vi.fn((_n: string, _c: unknown, _t?: string) => undefined)
+vi.mock('@/lib/ancoragem', () => ({ baixarArquivo: (n: string, c: unknown, t?: string) => baixar(n, c, t) }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 const { default: CompliancePage } = await import('./CompliancePage')
 
@@ -87,5 +91,16 @@ describe('Compliance: diagnóstico de integridade', () => {
     expect(click).toHaveBeenCalled()
     expect(screen.getByTestId('baixar-diagnostico').textContent).toBe('Baixado')
     click.mockRestore()
+  })
+
+  it('D08: Baixar PDF selado só com resposta; gera o relatório com pilares, lacunas e código; baixa .pdf e .ots e explica', async () => {
+    render(<CompliancePage />)
+    expect(screen.queryByTestId('baixar-pdf-selado')).toBeNull()
+    fireEvent.click(screen.getAllByText('Não')[0])
+    expect((screen.getByTestId('baixar-pdf-selado') as HTMLButtonElement).disabled).toBe(false)
+    fireEvent.click(screen.getByTestId('baixar-pdf-selado'))
+    await waitFor(() => expect(screen.getByTestId('msg-selo').textContent).toContain('PDF baixado (SHA-256 cccccccccccc…) com o selo .ots via alice'))
+    expect(gerar).toHaveBeenCalledWith(expect.objectContaining({ geral: 0, lacunas: [expect.objectContaining({ v: 0 })] }))
+    expect(baixar.mock.calls.map(c => c[0])).toEqual(['compliance-x-2026-11-06.pdf', 'compliance-x-2026-11-06.pdf.ots'])
   })
 })
