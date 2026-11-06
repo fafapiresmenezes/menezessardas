@@ -19,6 +19,7 @@ import AceiteTermos from './AceiteTermos'
 import { aplicarTema, temaAtual } from '@/lib/tema'
 import { listarPessoas, perfilAtual } from '@/lib/equipe'
 import { verificarAvisosCriticos } from '@/lib/pwa'
+import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
 import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare } from 'lucide-react'
 
@@ -68,6 +69,9 @@ const itensMenu = [
 export default function Layout({ children, title }: LayoutProps) {
   const [sede, setSede] = useState(true)
   useEffect(() => { ehSede().then(setSede).catch(() => setSede(true)) }, [])
+  // Passo D22: white-label — parceiro vê a própria marca e cor no menu.
+  const [marca, setMarca] = useState<MarcaEscritorio | null>(null)
+  useEffect(() => { minhaMarca().then(setMarca).catch(() => setMarca(null)) }, [])
   const [menuAberto, setMenuAberto] = useState(
     () => typeof window === 'undefined' || window.innerWidth >= 768
   )
@@ -125,6 +129,7 @@ export default function Layout({ children, title }: LayoutProps) {
       window.location.reload()
       return
     }
+    esquecerMarca()
     await supabase.auth.signOut()
     navigate('/login')
   }
@@ -135,13 +140,15 @@ export default function Layout({ children, title }: LayoutProps) {
         className={`${
           menuAberto ? 'w-64' : 'w-20'
         } bg-navy text-white transition-all duration-300 overflow-hidden flex flex-col flex-shrink-0`}
+        style={marca ? { backgroundColor: marca.cor } : undefined}
+        data-marca={marca ? 'parceiro' : 'sede'}
       >
         <div className="p-4 border-b border-white/10 flex items-center justify-between gap-2">
           {menuAberto ? (
-            <Marca className="flex-1 min-w-0" />
+            <Marca className="flex-1 min-w-0" marca={marca} />
           ) : (
             <span className="font-serif text-dourado tracking-widest text-lg mx-auto" aria-hidden="true">
-              GM
+              {marca ? marca.nome.slice(0, 2).toUpperCase() : 'GM'}
             </span>
           )}
           <button

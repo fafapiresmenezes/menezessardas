@@ -4,12 +4,16 @@ import { useNavigate } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { entrarDemo } from '@/lib/authDemo'
 import Marca from '@/components/Marca'
+import { marcaPorDominio, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [armadilha, setArmadilha] = useState('')
   const [abertoEm] = useState(() => Date.now())
+  // Passo D22: em domínio próprio de parceiro, a tela de entrada mostra a marca dele.
+  const [marca, setMarca] = useState<MarcaEscritorio | null>(null)
+  useEffect(() => { esquecerMarca(); marcaPorDominio().then(setMarca).catch(() => setMarca(null)) }, [])
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [avisoRecuperacao, setAvisoRecuperacao] = useState(false)
@@ -95,10 +99,10 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-navy flex items-center justify-center p-4">
+    <main className="min-h-screen bg-navy flex items-center justify-center p-4" style={marca ? { backgroundColor: marca.cor } : undefined}>
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
-          <Marca tamanho="grande" />
+          <Marca tamanho="grande" marca={marca} />
         </div>
 
         <div className="bg-white rounded-sm shadow-xl border-t-2 border-dourado p-8">

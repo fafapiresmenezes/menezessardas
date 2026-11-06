@@ -6,7 +6,7 @@ const rpc = vi.fn(async (_n: string, _a: object): Promise<{ error: { message: st
 vi.mock('@/lib/supabase', () => ({
   supabaseConfigurado: true,
   supabase: {
-    from: () => ({ select: () => ({ in: async () => ({ data: [{ id: 'e2', nome_exibicao: 'Alfa Advocacia', cor: '#AA0000', logo_url: 'https://x/logo.png' }] }) }) }),
+    from: () => ({ select: () => ({ in: async () => ({ data: [{ id: 'e2', nome_exibicao: 'Alfa Advocacia', cor: '#AA0000', logo_url: 'https://x/logo.png', dominio: 'alfa.adv.br' }] }) }) }),
     rpc: (n: string, a: object) => rpc(n, a),
   },
 }))
@@ -39,6 +39,11 @@ describe('Marca dos escritórios parceiros (Portal e e-mails)', () => {
     fireEvent.click(screen.getByTestId('marca-salvar'))
     await waitFor(() => expect(rpc).toHaveBeenCalledWith('definir_marca', { p_escritorio: 'e3', p_nome: 'Beta Jurídico', p_cor: '#14213D', p_logo_url: 'https://b/logo.svg' }))
     expect((await screen.findByTestId('marca-msg')).textContent).toContain('Marca salva')
+    expect(rpc).toHaveBeenCalledWith('definir_dominio', { p_escritorio: 'e3', p_dominio: '' })
+    fireEvent.change(screen.getByLabelText('Domínio próprio de Beta'), { target: { value: 'app.beta.adv.br' } })
+    fireEvent.click(screen.getByTestId('marca-salvar'))
+    await waitFor(() => expect(rpc).toHaveBeenCalledWith('definir_dominio', { p_escritorio: 'e3', p_dominio: 'app.beta.adv.br' }))
+    expect(screen.getByTestId('marca-msg').textContent).toContain('cname.vercel-dns.com')
     rpc.mockResolvedValueOnce({ error: { message: 'sem permissão' } })
     fireEvent.click(screen.getByTestId('marca-salvar'))
     await waitFor(() => expect(screen.getByTestId('marca-msg').textContent).toBe('sem permissão'))
