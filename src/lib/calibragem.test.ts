@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { brier, curvaConfiabilidade, ece, eceIntervalo, casosPorFaixa, veredito, recalibradorIsotonico, combinarProbabilidades, type Par } from './calibragem'
+import * as calib from './calibragem'
 
 // Gerador reproduzível de casos perfeitamente calibrados: probabilidade p acontece com frequência p.
 function calibrados(n: number, semente = 7): Par[] {
@@ -76,5 +77,34 @@ describe('probabilidade única na tela do Instituto (B07)', () => {
     const u = probabilidadeUnica(r, false, { p: 0.5, n: 25 })!
     expect(u.explicacao).toContain('DataJud (Instituto) 91%')
     expect(u.explicacao).toContain('Histórico do escritório 9%')
+  })
+})
+
+describe('B16: extremização só quando vence a linha de base', () => {
+  const { extremizar, escolherExtremizacao } = calib
+  it('a = 1 não muda nada; a > 1 afasta de 50%', () => {
+    expect(extremizar(0.7)).toBeCloseTo(0.7, 6)
+    expect(extremizar(0.7, 1.5)).toBeGreaterThan(0.7)
+    expect(extremizar(0.3, 1.5)).toBeLessThan(0.3)
+    expect(extremizar(0.5, 3)).toBeCloseTo(0.5, 6)
+  })
+  it('amostra pequena mantém a = 1 e diz por quê', () => {
+    const r = escolherExtremizacao([{ p: 0.6, y: 1 }, { p: 0.4, y: 0 }])
+    expect(r.a).toBe(1); expect(r.motivo).toContain('amostra pequena')
+  })
+  it('fontes tímidas (média de sinais independentes) ganham com a > 1; fontes já calibradas ficam em a = 1', () => {
+    let s = 7
+    const rnd = () => { s = (s * 48271) % 2147483647; return s / 2147483647 }
+    const sigm = (x: number) => 1 / (1 + Math.exp(-x))
+    const timidas: calib.Par[] = [], calibradas: calib.Par[] = []
+    for (let i = 0; i < 2000; i++) {
+      const z = (rnd() - 0.5) * 6 // verdade latente em log-odds
+      const y: 0 | 1 = rnd() < sigm(z) ? 1 : 0
+      calibradas.push({ p: sigm(z), y })
+      timidas.push({ p: sigm(z / 2), y }) // média de fontes que só veem metade do sinal
+    }
+    const t = escolherExtremizacao(timidas)
+    expect(t.a).toBeGreaterThan(1); expect(t.brier!).toBeLessThan(calib.brier(timidas)!)
+    expect(escolherExtremizacao(calibradas).a).toBe(1)
   })
 })
