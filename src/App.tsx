@@ -32,6 +32,7 @@ const PerfilClientePage = lazy(() => import('@/pages/PerfilClientePage'))
 const ParteAdversaPage = lazy(() => import('@/pages/ParteAdversaPage'))
 const BibliotecaPage = lazy(() => import('@/pages/BibliotecaPage'))
 const LaboratorioAdminPage = lazy(() => import('@/pages/LaboratorioAdminPage'))
+const EnquetesPage = lazy(() => import('@/pages/EnquetesPage'))
 const MeuDiaPage = lazy(() => import('@/pages/MeuDiaPage'))
 const ConsultoresPage = lazy(() => import('@/pages/ConsultoresPage'))
 const NuvemPage = lazy(() => import('@/pages/NuvemPage'))
@@ -265,6 +266,10 @@ function App() {
         <Route
           path="/laboratorio-admin"
           element={isAuthenticated ? <LaboratorioAdminPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/enquetes"
+          element={isAuthenticated ? <EnquetesPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/fontes"

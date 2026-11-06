@@ -16,6 +16,7 @@ import { Escolha, Campo, classeCampo } from '@/components/Assistente'
 import { GARANTIAS, INDICES_REAJUSTE, PERIODICIDADES, type Garantia, type IndiceReajuste, type Periodicidade } from '@/lib/dominio'
 import ZonaArrastar from '@/components/ZonaArrastar'
 import Reajuste from '@/components/Reajuste'
+import CompararVersoes from '@/components/CompararVersoes'
 import { analisarContrato, ultimaAnalise, type AnaliseContrato, type OrigemAnalise } from '@/lib/agente'
 
 const LIMITE_MB = 50
@@ -430,6 +431,7 @@ export default function ContratoPage() {
           </section>
         )}
 
+        {contrato && vinculados.length > 0 && <CompararVersoes contrato={contrato} vinculados={vinculados} />}{/* Passo D17 */}
         <section className="bg-white p-6 shadow-sm" aria-labelledby="titulo-vinculados">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
             <h3 id="titulo-vinculados" className="text-lg">Aditivos e subcontratos ({vinculados.length})</h3>

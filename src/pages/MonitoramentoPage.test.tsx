@@ -4,15 +4,17 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 
 let lista: object[] = []
 const invoke = vi.fn(async (_n: string, o: { body: Record<string, unknown> }): Promise<{ data?: unknown; error: { message: string } | null }> => {
+  if (o.body.sincronizar) return { data: { sincronizados: 2 }, error: null }
   if (o.body.linha_do_tempo) return { data: { numero: o.body.linha_do_tempo, tribunal: 'TJRJ', encontrado: true, classe: 'Despejo', orgao: '10ª Vara Cível', movs: [{ data: '2026-10-05', nome: 'Citação expedida' }, { data: '2026-09-01', nome: 'Distribuído' }, { data: '2020-01-01', nome: 'Andamento antigo' }] }, error: null }
   return { data: { verificados: 1, resumo: [{ valor: 'x', novas: 2 }] }, error: null }
 })
 const insert = vi.fn(async (_r: object): Promise<{ data: { id: string } | null; error: { code?: string } | null }> => ({ data: { id: 'm9' }, error: null }))
 const del = vi.fn(async () => ({}))
+const update = vi.fn(async (_r: object) => ({}))
 vi.mock('@/lib/supabase', () => ({
   supabaseConfigurado: true,
   supabase: {
-    from: () => ({ select: () => ({ order: async () => ({ data: lista }) }), insert: (r: object) => ({ select: () => ({ single: () => insert(r) }) }), delete: () => ({ eq: async () => { await del(); return {} } }) }),
+    from: () => ({ select: () => ({ order: async () => ({ data: lista }) }), insert: (r: object) => ({ select: () => ({ single: () => insert(r) }) }), delete: () => ({ eq: async () => { await del(); return {} } }), update: (r: object) => ({ eq: async () => { await update(r); return {} } }) }),
     functions: { invoke: (n: string, o: { body: Record<string, unknown> }) => invoke(n, o) },
   },
 }))
@@ -85,5 +87,16 @@ describe('Monitoramento de processos e nomes (CNJ)', () => {
     expect(item.textContent).toContain('Sem novidades desde que começou')
     fireEvent.click(screen.getByText('Verificar tudo agora'))
     await waitFor(() => expect(screen.getByTestId('mon-msg').textContent).toContain('As fontes do CNJ não responderam agora'))
+  })
+
+  it('D15: trazer processos dos casos chama a sincronização; marcar novidades como vistas limpa a lista', async () => {
+    lista = [{ id: 'm1', tipo: 'processo', valor: '08012345620268190001', rotulo: 'Despejo Rua A', ultimo_estado: { classe: 'Despejo' }, novidades: [{ data: '2026-11-05', texto: 'Sentença', vista_em: '2026-11-06' }], verificado_em: '2026-11-06', novidade_em: '2026-11-06' }]
+    render(<MonitoramentoPage />)
+    await screen.findByTestId('mon-item')
+    fireEvent.click(screen.getByTestId('mon-trazer-casos'))
+    await waitFor(() => expect(invoke).toHaveBeenCalledWith('monitorar', expect.objectContaining({ body: { sincronizar: true } })))
+    expect(screen.getByTestId('mon-msg').textContent).toContain('2 processo(s) dos casos entraram')
+    fireEvent.click(screen.getByTestId('mon-vistas'))
+    await waitFor(() => expect(update).toHaveBeenCalledWith({ novidades: [], novidade_em: null }))
   })
 })

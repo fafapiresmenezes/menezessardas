@@ -63,10 +63,48 @@ async function comunicacoes(nome: string) {
     numero: i.numeroprocessocommascara ?? i.numero_processo, trecho: limpa(String(i.texto ?? '')).slice(0, 300) }))
 }
 
+// Passo D15 (Diamante): andamento automático. Todo caso com número CNJ entra sozinho no monitoramento
+// (rótulo = título do caso) e as movimentações novas viram e-mail à equipe (Brevo) na verificação diária.
+async function sincronizarCasos(s: ReturnType<typeof sb>): Promise<number> {
+  const { data: casos } = await s.from('tarefas').select('id,titulo,numero_processo').not('numero_processo', 'is', null).neq('situacao', 'feito')
+  const { data: atuais } = await s.from('monitoramentos').select('valor').eq('tipo', 'processo')
+  const ja = new Set((atuais ?? []).map(m => String(m.valor).replace(/\D/g, '')))
+  const novos: { tipo: string; valor: string; rotulo: string }[] = []
+  for (const c of casos ?? []) {
+    const n = String(c.numero_processo).replace(/\D/g, '')
+    if (n.length !== 20 || ja.has(n) || !tribunalDoNumero(n)) continue
+    ja.add(n); novos.push({ tipo: 'processo', valor: n, rotulo: String(c.titulo).slice(0, 120) })
+  }
+  if (novos.length) await s.from('monitoramentos').insert(novos)
+  return novos.length
+}
+
+const esc = (t: string) => t.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string))
+type Movimento = { rotulo: string; valor: string; data: string; texto: string }
+async function avisarEquipe(s: ReturnType<typeof sb>, movs: Movimento[]): Promise<{ enviados: number; erro?: string }> {
+  if (!movs.length) return { enviados: 0 }
+  const { data: cfg } = await s.from('configuracoes').select('chave,valor').in('chave', ['brevo_api_key', 'email_remetente'])
+  const conf = Object.fromEntries((cfg ?? []).map(c => [c.chave, c.valor as string]))
+  if (!conf.brevo_api_key || !conf.email_remetente) return { enviados: 0, erro: 'Brevo não configurado' }
+  const { data: equipe } = await s.from('usuarios_perfis').select('id,email')
+  const { data: prefs } = await s.from('preferencias_usuario').select('usuario_id,alertas_email')
+  const desligou = new Set((prefs ?? []).filter(p => p.alertas_email === false).map(p => p.usuario_id))
+  const para = (equipe ?? []).filter(u => u.email && !desligou.has(u.id)).map(u => u.email as string)
+  const linhas = movs.slice(0, 40).map(m => `<tr><td style="padding:10px;border-bottom:1px solid #eee"><strong>${esc(m.rotulo || m.valor)}</strong><br><span style="color:#555">${esc(m.valor)}</span><br>${esc(m.data.slice(0, 10).split('-').reverse().join('/'))} — ${esc(m.texto)}</td></tr>`).join('')
+  const html = `<div style="font-family:Georgia,serif;max-width:600px;margin:auto"><div style="background:#14213d;color:#fff;padding:18px"><h2 style="margin:0">Movimentações nos processos</h2></div><table style="width:100%;border-collapse:collapse">${linhas}</table><p style="padding:10px"><a href="https://gmenezes-advogados.vercel.app/#/monitoramento">Abrir o Monitoramento</a></p><p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · fonte: DataJud (CNJ) e Comunica PJe · aviso automático</p></div>`
+  let enviados = 0, erro: string | undefined
+  for (const email of para) {
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
+      body: JSON.stringify({ sender: { name: 'Avisos GMenezes', email: conf.email_remetente }, to: [{ email }], subject: `${movs.length} movimentação(ões) nova(s) nos processos`, htmlContent: html }) })
+    if (r.ok) enviados++; else erro = `${r.status}`
+  }
+  return { enviados, erro }
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
   if (!(await autorizado(req))) return json({ erro: 'Entre na plataforma.' }, 401)
-  const { id, linha_do_tempo, amostra } = await req.json().catch(() => ({}))
+  const { id, linha_do_tempo, amostra, sincronizar } = await req.json().catch(() => ({}))
   // Passo 22: linha do tempo completa dos andamentos de um processo (DataJud), para filtrar por período na tela.
   if (linha_do_tempo) {
     try {
@@ -88,7 +126,12 @@ Deno.serve(async (req) => {
     } catch (e) { return json({ erro: e instanceof Error ? e.message : String(e) }, 502) }
   }
   const s = sb()
-  let q = s.from('monitoramentos').select('id,tipo,valor,ultimo_estado,novidades')
+  // Sem id (verificação diária ou botão "Verificar agora"): traz os processos dos casos antes de verificar.
+  let sincronizados = 0
+  if (!id) { try { sincronizados = await sincronizarCasos(s) } catch { /* segue sem sincronizar */ } }
+  if (sincronizar) return json({ sincronizados })
+  const movimentos: Movimento[] = []
+  let q = s.from('monitoramentos').select('id,tipo,valor,rotulo,ultimo_estado,novidades')
   if (id) q = q.eq('id', id)
   const { data: lista } = await q
   const resumo: { valor: string; novas: number; erro?: string }[] = []
@@ -112,10 +155,13 @@ Deno.serve(async (req) => {
       const chaves = [...new Set([...itens.map(x => x.chave), ...(antes.chaves ?? [])])].slice(0, 300)
       const novidades = [...novas.map(({ data, texto }) => ({ data, texto, vista_em: agora })), ...((m.novidades as unknown[]) ?? [])].slice(0, 50)
       await s.from('monitoramentos').update({ ultimo_estado: { ...estado, chaves }, novidades, verificado_em: agora, ...(novas.length ? { novidade_em: agora } : {}) }).eq('id', m.id)
+      for (const x of novas) movimentos.push({ rotulo: m.rotulo ?? '', valor: m.valor, data: x.data, texto: x.texto })
       resumo.push({ valor: m.valor, novas: novas.length })
     } catch (e) {
       resumo.push({ valor: m.valor, novas: 0, erro: e instanceof Error ? e.message : String(e) })
     }
   }
-  return json({ verificados: resumo.length, resumo })
+  // E-mail só na verificação automática (cron); pelo botão a pessoa já está vendo a tela.
+  const email = !id && req.headers.get('x-cron-secret') ? await avisarEquipe(s, movimentos) : { enviados: 0 }
+  return json({ verificados: resumo.length, sincronizados, resumo, email })
 })

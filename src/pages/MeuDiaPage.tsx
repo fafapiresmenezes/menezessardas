@@ -44,6 +44,8 @@ export default function MeuDiaPage() {
   const [tarefas, setTarefas] = useState<{ id: string; titulo: string; prazo: string | null; prioridade: string }[]>([])
   const [intimacoes, setIntimacoes] = useState(0)
   const [vencendo, setVencendo] = useState<{ id: string; imovel_id: string; locatario_fornecedor: string; data_vencimento: string }[]>([])
+  // Passo D15: movimentações novas nos processos monitorados (últimos 7 dias).
+  const [movimentacoes, setMovimentacoes] = useState<{ id: string; valor: string; rotulo: string | null; novidade_em: string | null; novidades: { data: string; texto: string }[] }[]>([])
   // Passo 173: prazo e "em dobro" da calculadora lembrados neste navegador.
   const [calc, setCalc] = useState(() => { try { const v = JSON.parse(localStorage.getItem('lsm-meudia-calc') || '{}'); return { inicio: hoje(), dias: Number(v.dias) > 0 ? Number(v.dias) : 15, dobro: v.dobro === true } } catch { return { inicio: hoje(), dias: 15, dobro: false } } })
   useEffect(() => { try { localStorage.setItem('lsm-meudia-calc', JSON.stringify({ dias: calc.dias, dobro: calc.dobro })) } catch { /* sem armazenamento */ } }, [calc.dias, calc.dobro])
@@ -96,12 +98,14 @@ export default function MeuDiaPage() {
       const { data: u } = await supabase.auth.getUser()
       const em7 = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10)
       const em60 = new Date(Date.now() + 60 * 86400000).toISOString().slice(0, 10)
-      const [t, i, c] = await Promise.all([
+      const ha7 = new Date(Date.now() - 7 * 86400000).toISOString()
+      const [t, i, c, mv] = await Promise.all([
         supabase.from('tarefas').select('id,titulo,prazo,prioridade').eq('responsavel_id', u.user?.id ?? '').neq('situacao', 'feito').lte('prazo', em7).order('prazo').limit(20),
         supabase.from('intimacoes').select('id', { count: 'exact', head: true }).eq('lida', false),
         supabase.from('contratos').select('id,imovel_id,locatario_fornecedor,data_vencimento').is('encerrado_em', null).gte('data_vencimento', hoje()).lte('data_vencimento', em60).order('data_vencimento').limit(10),
+        supabase.from('monitoramentos').select('id,valor,rotulo,novidade_em,novidades').gte('novidade_em', ha7).order('novidade_em', { ascending: false }).limit(5),
       ])
-      setTarefas(t.data ?? []); setIntimacoes(i.count ?? 0); setVencendo(c.data ?? [])
+      setTarefas(t.data ?? []); setIntimacoes(i.count ?? 0); setVencendo(c.data ?? []); setMovimentacoes((mv?.data ?? []).filter(m => (m.novidades ?? []).length > 0))
     })()
   }, [])
   const p = PAPEIS[papel]
@@ -155,6 +159,11 @@ export default function MeuDiaPage() {
             <h2 className="font-serif text-lg flex items-center gap-2"><Inbox className="w-5 h-5" aria-hidden />Intimações</h2>
             <p className="text-3xl font-serif mt-2" data-testid="intimacoes-nao-lidas">{intimacoes}</p>
             <p className="text-sm text-grafite-claro">não lidas · <Link to="/intimacoes" className="underline">abrir</Link></p>
+          </section>
+          <section className={cartao} data-testid="movimentacoes">
+            <h2 className="font-serif text-lg flex items-center gap-2"><Inbox className="w-5 h-5" aria-hidden />Movimentações nos processos (7 dias)</h2>
+            {movimentacoes.length ? <ul className="text-sm mt-2 space-y-1">{movimentacoes.map(m => <li key={m.id} data-testid="movimentacao"><Link to="/monitoramento" className="underline">{m.rotulo || m.valor}</Link>: {m.novidades[0].texto}{m.novidades.length > 1 && ` (+${m.novidades.length - 1})`}</li>)}</ul>
+              : <p className="text-sm text-grafite-claro mt-2">Nenhuma novidade. Casos com número CNJ são verificados todo dia no DataJud.</p>}
           </section>
           <section className={cartao}>
             <h2 className="font-serif text-lg flex items-center gap-2"><FileWarning className="w-5 h-5" aria-hidden />Contratos vencendo (60 dias)</h2>
