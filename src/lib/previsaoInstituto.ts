@@ -1,6 +1,7 @@
 // U13 (plano unificado I-02): probabilidade do Instituto THEYE para ações de locação.
 // A Edge `previsao-locacao` só responde para a equipe do escritório (usuarios_perfis) e não lê dados do escritório.
 import { supabase } from '@/lib/supabase'
+import { combinarProbabilidades } from '@/lib/calibragem'
 
 export interface PrevisaoInstituto {
   convencional: { p: number; ic95: [number, number]; n: number }
@@ -51,3 +52,15 @@ export async function chanceClassesInstituto(): Promise<ChanceClasse[]> {
 }
 export const textoChanceClasse = (c: ChanceClasse) =>
   `${c.classe}: ${Math.round(c.p * 100)}% (margem de 95%: ${Math.round(c.ic95[0] * 100)}–${Math.round(c.ic95[1] * 100)}%, n = ${c.n.toLocaleString('pt-BR')})`
+
+/** B07: probabilidade única. Junta as fontes com peso pela amostra. O modelo por grafo só entra
+ *  quando vencer o convencional no placar pré-registrado; até lá o peso dele é zero e a tela diz isso. */
+export function probabilidadeUnica(r: PrevisaoInstituto, grafoAprovado = false, escritorio?: { p: number; n: number }): { texto: string; explicacao: string } | null {
+  const fontes = [{ nome: 'DataJud (Instituto)', p: r.convencional.p, n: r.convencional.n }]
+  if (escritorio && escritorio.n > 0) fontes.push({ nome: 'Histórico do escritório', p: escritorio.p, n: escritorio.n })
+  if (grafoAprovado && r.grafo) fontes.push({ nome: 'Grafo', p: r.grafo.p, n: r.convencional.n })
+  const c = combinarProbabilidades(fontes)
+  if (!c) return null
+  const pesos = c.pesos.map(w => `${w.nome} ${Math.round(w.peso * 100)}%`).join(', ')
+  return { texto: `Probabilidade única THEYE: ${pct(c.p)}`, explicacao: `Pesos: ${pesos}${!grafoAprovado && r.grafo ? '; grafo com peso 0 até vencer o modelo convencional no placar' : ''}.` }
+}
