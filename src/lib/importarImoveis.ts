@@ -34,7 +34,10 @@ function opcao<T extends string>(lista: { valor: T; rotulo: string }[], v: strin
   return o ? o.valor : null
 }
 
-export function analisarCsv(texto: string): { linhas: Linha[]; validas: Linha[]; erros: number; cabecalhoOk: boolean } {
+/** Imóvel já cadastrado, para não importar de novo (passo A07). */
+export type Existente = { endereco: string; cidade: string; matricula?: string | null }
+
+export function analisarCsv(texto: string, existentes: Existente[] = []): { linhas: Linha[]; validas: Linha[]; erros: number; cabecalhoOk: boolean } {
   const brutas = texto.replace(/^﻿/, '').split(/\r?\n/).filter(l => l.trim())
   if (!brutas.length) return { linhas: [], validas: [], erros: 0, cabecalhoOk: false }
   const sep = (brutas[0].match(/;/g)?.length ?? 0) >= (brutas[0].match(/,/g)?.length ?? 0) ? ';' : ','
@@ -69,6 +72,14 @@ export function analisarCsv(texto: string): { linhas: Linha[]; validas: Linha[];
     const k = `${norm(l.bruto.endereco ?? '')}|${norm(l.bruto.cidade ?? '')}`
     if (!l.bruto.endereco) continue
     if (vistos.has(k)) { l.erros.push(`repete a linha ${vistos.get(k)}`); l.dados = undefined } else vistos.set(k, l.numero)
+  }
+  // Passo A07 (Régua Global R1): duplicado da carteira atual, pelo endereço + cidade ou pela matrícula.
+  const naCarteira = new Set(existentes.map(e => `${norm(e.endereco)}|${norm(e.cidade)}`))
+  const matriculas = new Set(existentes.map(e => norm(e.matricula ?? '')).filter(Boolean))
+  for (const l of linhas) {
+    if (!l.bruto.endereco) continue
+    if (naCarteira.has(`${norm(l.bruto.endereco)}|${norm(l.bruto.cidade ?? '')}`)) { l.erros.push('já está na carteira (mesmo endereço e cidade)'); l.dados = undefined }
+    else if (l.bruto.matricula && matriculas.has(norm(l.bruto.matricula))) { l.erros.push(`já está na carteira (matrícula ${l.bruto.matricula})`); l.dados = undefined }
   }
   const validas = linhas.filter(l => !l.erros.length)
   return { linhas, validas, erros: linhas.length - validas.length, cabecalhoOk }

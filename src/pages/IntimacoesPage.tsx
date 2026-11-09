@@ -3,7 +3,8 @@ import { useBaixado } from '@/hooks/useBaixado'
 import Vazio from '@/components/Vazio'
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
+import { intimacoesDemo } from '@/data/intimacoesDemo'
 import { perfilAtual } from '@/lib/equipe'
 import { formatarData, diasAte } from '@/lib/datas'
 import SeloSituacao from '@/components/SeloSituacao'
@@ -38,6 +39,7 @@ export default function IntimacoesPage() {
   useEffect(() => { setMostrar(TAMANHO_PAGINA) }, [filtro, busca])
 
   const carregar = async () => {
+    if (!supabaseConfigurado) { setLista(l => (l.length ? l : intimacoesDemo())); return } // Passo A06: demonstração com dados fictícios
     const { data } = await supabase.from('intimacoes').select('id,oab,data_disponibilizacao,tribunal,orgao,tipo,classe,numero_processo,texto,link,lida,prazo_dias,prazo_final,tarefa_id').order('data_disponibilizacao', { ascending: false }).limit(300)
     setLista((data ?? []) as Intimacao[])
   }
@@ -45,18 +47,23 @@ export default function IntimacoesPage() {
 
   const buscar = async () => {
     setOcupado(true); setMsg(null)
+    if (!supabaseConfigurado) { setOcupado(false); setMsg({ ok: true, texto: 'Demonstração: a busca no CNJ roda com as OABs reais quando a plataforma está ligada ao banco do escritório. As intimações abaixo são fictícias.' }); return }
     const { data, error } = await supabase.functions.invoke('intimacoes', { body: { dias: 30 }, region: FunctionRegion.SaEast1 })
     setOcupado(false)
     const d = error ? await (error as { context?: Response }).context?.json?.().catch(() => null) : data
     if (!d || d.erro) return setMsg({ ok: false, texto: d?.erro ?? 'O CNJ não respondeu agora. Tente de novo em instantes.' })
     if (d.aviso) return setMsg({ ok: false, texto: d.aviso })
-    setMsg({ ok: !d.falhas?.length, texto: `${d.novas} intimação(ões) nova(s) nos últimos 30 dias para ${d.oabs.join(', ')}.${d.falhas?.length ? ' Falhou: ' + d.falhas.join('; ') : ''}` })
+    // Passo A03: resposta parcial do robô não pode derrubar a tela.
+    const oabsResp: string[] = Array.isArray(d.oabs) ? d.oabs : []
+    const falhas: string[] = Array.isArray(d.falhas) ? d.falhas : []
+    setMsg({ ok: !falhas.length, texto: `${Number(d.novas) || 0} intimação(ões) nova(s) nos últimos 30 dias${oabsResp.length ? ` para ${oabsResp.join(', ')}` : ''}.${falhas.length ? ' Falhou: ' + falhas.join('; ') : ''}` })
     carregar()
   }
   const salvarOabs = async () => {
+    if (!supabaseConfigurado) { setMsg({ ok: true, texto: `Demonstração: OABs anotadas (${oabs}). Em uso real ficam salvas para a busca diária das 7h.` }); return }
     const { error } = await supabase.rpc('definir_configuracao', { p_chave: 'oabs_monitoradas', p_valor: oabs })
     if (error) return setMsg({ ok: false, texto: error.message })
-    setOabs(''); buscar()
+    buscar() // Passo A03: as OABs salvas continuam à vista no campo
   }
   const marcarLida = async (i: Intimacao) => {
     setLista(l => l.map(x => (x.id === i.id ? { ...x, lida: true } : x)))
@@ -69,6 +76,7 @@ export default function IntimacoesPage() {
     return { d, situacao: d < 0 ? 'vencido' : d <= 2 ? 'critico' : d <= 5 ? 'atencao' : 'regular', texto: d < 0 ? 'Prazo vencido' : d === 0 ? 'Vence hoje' : `${d} dia(s) corridos` } as const
   }
   const criarTarefa = async (i: Intimacao) => {
+    if (!supabaseConfigurado) { setMsg({ ok: true, texto: 'Demonstração: em uso real a tarefa vai para Casos e projetos com o prazo estimado.' }); setLista(l => l.map(x => (x.id === i.id ? { ...x, tarefa_id: 'demo' } : x))); return }
     const { data, error } = await supabase.rpc('criar_tarefa_intimacao', { p_id: i.id })
     if (error) setMsg({ ok: false, texto: 'Não deu para criar a tarefa: ' + error.message })
     else { setMsg({ ok: true, texto: 'Tarefa criada em Casos e projetos com o prazo estimado.' }); setLista(l => l.map(x => (x.id === i.id ? { ...x, tarefa_id: String(data) } : x))) }
@@ -106,6 +114,7 @@ export default function IntimacoesPage() {
             {visiveis.length > 0 && <button type="button" data-testid="copiar-link-intimacoes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 226 */}
             {visiveis.length > 0 && <button type="button" data-testid="baixar-intimacoes" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['processo;tribunal;órgão;tipo;disponibilizada em', ...visiveis.map(i => `${i.numero_processo ?? ''};${i.tribunal ?? ''};${i.orgao ?? ''};${i.tipo ?? ''};${i.data_disponibilizacao}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'intimacoes.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 294 */}
           </div>
+          {!supabaseConfigurado && <p className="text-xs border-l-2 border-dourado pl-2 text-grafite" data-testid="aviso-demo">Demonstração: intimações com dado fictício, para mostrar o fluxo (urgência, prazo e tarefa no caso).</p>}
           <p className="flex flex-wrap gap-3 text-xs" data-testid="resumo-urgencia">
             <span><strong>{resumo.vencido}</strong> vencida(s)</span>
             <span><strong>{resumo.critico}</strong> crítica(s)</span>

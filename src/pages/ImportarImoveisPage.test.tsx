@@ -4,14 +4,15 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 import { MemoryRouter } from 'react-router-dom'
 
 const criarImovel = vi.fn(async (d: { endereco: string }) => { if (d.endereco.includes('falha')) throw new Error('duplicado'); return { id: 'x' } })
-vi.mock('@/lib/repositorio', () => ({ repositorio: { criarImovel: (d: { endereco: string }) => criarImovel(d) } }))
+let carteira: { endereco: string; cidade: string; matricula: string }[] = []
+vi.mock('@/lib/repositorio', () => ({ repositorio: { criarImovel: (d: { endereco: string }) => criarImovel(d), listarImoveis: async () => carteira } }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 const { default: ImportarImoveisPage } = await import('./ImportarImoveisPage')
 const CAB = 'endereco;cidade;uf;tipo;uso;proprietario;matricula;area_m2;notas'
 const montar = () => render(<MemoryRouter><ImportarImoveisPage /></MemoryRouter>)
 
 describe('Importar imóveis por planilha', () => {
-  beforeEach(() => { cleanup(); criarImovel.mockClear() })
+  beforeEach(() => { cleanup(); criarImovel.mockClear(); carteira = [] })
 
   it('baixa o modelo; cabeçalho errado avisa; linhas válidas e com erro aparecem com a situação', () => {
     URL.createObjectURL = vi.fn(() => 'blob:m') as unknown as typeof URL.createObjectURL
@@ -56,5 +57,14 @@ describe('Importar imóveis por planilha', () => {
     fireEvent.click(screen.getByTestId('importar-tudo'))
     await screen.findByTestId('relatorio-importacao')
     expect(criarImovel).toHaveBeenCalledWith(expect.objectContaining({ endereco: 'Rua A, 1', tipo: 'apartamento' }))
+  })
+
+  it('passo A07: linha com imóvel já cadastrado na carteira aparece com erro e não é importada', async () => {
+    carteira = [{ endereco: 'Rua A, 1', cidade: 'Rio de Janeiro', matricula: '' }]
+    montar()
+    await waitFor(() => undefined)
+    fireEvent.change(screen.getByTestId('csv-texto'), { target: { value: `${CAB}\nRua A, 1;Rio de Janeiro;RJ;apartamento;locado;Ana;;80;\nRua C, 3;Rio de Janeiro;RJ;casa;vago;Caio;;;` } })
+    await waitFor(() => expect(screen.getByText(/já está na carteira/)).toBeTruthy())
+    expect(screen.getAllByTestId('linha-ok').length).toBe(1)
   })
 })

@@ -42,6 +42,8 @@ export default function AgendaPage() {
     const { data, error } = await supabase.rpc('semana_agenda', { p_inicio: inicio, p_dias: 7 })
     if (error) { setMsgSemana(mensagemAmigavel(error)); return }
     const sem = data as { inicio: string; fim: string; total: number; dias: { dia: string; itens: { tipo: string; titulo: string; detalhe: string; responsavel: string }[] }[] }
+    // Passo A04: resposta vazia ou fora do formato não derruba a tela.
+    if (!sem || typeof sem.inicio !== 'string' || !Array.isArray(sem.dias)) { setMsgSemana('A agenda da semana não respondeu agora. Tente de novo em instantes.'); return }
     const br = (d: string) => d.split('-').reverse().join('/')
     const L: { texto: string; tamanho?: number; negrito?: boolean }[] = [{ texto: `Semana de ${br(sem.inicio)} a ${br(sem.fim)}`, tamanho: 16, negrito: true }, { texto: `${sem.total} item(ns): prazos de casos e compromissos, por dia e responsável.`, tamanho: 9 }, { texto: ' ' }]
     if (!sem.dias.length) L.push({ texto: 'Nenhum prazo ou compromisso nos próximos 7 dias.', tamanho: 11 })

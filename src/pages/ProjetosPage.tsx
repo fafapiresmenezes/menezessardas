@@ -169,7 +169,7 @@ export default function ProjetosPage() {
   const critico = new Set(cronograma?.caminho ?? [])
   const feitas = visiveis.filter(t => t.situacao === 'feito').length
   const atrasadas = visiveis.filter(t => t.situacao !== 'feito' && t.prazo && (diasAte(t.prazo) ?? 0) < 0).length
-  const horas = visiveis.reduce((s, t) => s + Number(t.horas), 0)
+  const horas = visiveis.reduce((s, t) => s + (Number(t.horas) || 0), 0)
   // Passo 115: andamento em texto (progresso, atrasadas, cada tarefa com prazo e situação), para o cliente ou a sócia.
   const copiarAndamento = () => {
     const p = tarefas.find(t => t.id === projeto)
