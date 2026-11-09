@@ -70,7 +70,10 @@ export function serviceWorkerDisponivel() {
 /** Registra o sw.js ao lado do index.html (funciona na raiz e em subpasta). Só em produção. */
 export async function registrarServiceWorker(): Promise<ServiceWorkerRegistration | null> {
   if (!serviceWorkerDisponivel() || !import.meta.env.PROD) return null
-  try { return await navigator.serviceWorker.register('./sw.js') } catch { return null }
+  // updateViaCache: 'none' obriga o navegador a buscar sw.js direto do servidor a cada registro,
+  // em vez de usar uma cópia em cache HTTP — sem isso, um sw.js em cache podia impedir que o
+  // navegador percebesse um deploy novo por bem mais tempo que o esperado.
+  try { return await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }) } catch { return null }
 }
 
 const ICONE = new URL('./icone-192.png', typeof document !== 'undefined' ? document.baseURI : 'https://localhost/').href

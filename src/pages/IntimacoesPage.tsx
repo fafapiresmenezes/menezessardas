@@ -30,6 +30,12 @@ export default function IntimacoesPage() {
   const [aberta, setAberta] = useState<number | null>(null)
   const [busca, setBusca] = useState('')
   const [baixado, marcarBaixado] = useBaixado() // Passo 389
+  // Paginação da lista: sem isso, uma caixa com centenas de intimações renderizava todas de uma vez
+  // (visto numa auditoria: ~300 intimações × ~3 controles cada = quase mil elementos na tela).
+  // Resumo, impressão, cópia e CSV continuam considerando todas as visíveis — só a lista na tela é paginada.
+  const TAMANHO_PAGINA = 30
+  const [mostrar, setMostrar] = useState(TAMANHO_PAGINA)
+  useEffect(() => { setMostrar(TAMANHO_PAGINA) }, [filtro, busca])
 
   const carregar = async () => {
     const { data } = await supabase.from('intimacoes').select('id,oab,data_disponibilizacao,tribunal,orgao,tipo,classe,numero_processo,texto,link,lida,prazo_dias,prazo_final,tarefa_id').order('data_disponibilizacao', { ascending: false }).limit(300)
@@ -118,7 +124,7 @@ export default function IntimacoesPage() {
         </section>
         {visiveis.length ? (
           <ul className="bg-white shadow-sm divide-y divide-navy/10">
-            {visiveis.map(i => (
+            {visiveis.slice(0, mostrar).map(i => (
               <li key={i.id} className={`p-4 ${i.lida ? 'opacity-70' : ''}`}>
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>
@@ -141,7 +147,15 @@ export default function IntimacoesPage() {
               </li>
             ))}
           </ul>
-        ) : (
+        ) : null}
+        {visiveis.length > mostrar && (
+          <p className="text-center">
+            <button type="button" onClick={() => setMostrar(m => m + TAMANHO_PAGINA)} className="min-h-[44px] px-6 border border-navy/20 text-navy text-sm" data-testid="mostrar-mais-intimacoes">
+              Mostrar mais ({visiveis.length - mostrar} restantes)
+            </button>
+          </p>
+        )}
+        {!visiveis.length && (
           <Vazio titulo={`Nenhuma intimação ${filtro === 'novas' ? 'não lida' : 'guardada'}`} texto="A busca roda todo dia às 7h para as OABs cadastradas. Se faltar alguma OAB, cadastre em Configurações." acao={{ rotulo: 'Cadastrar OABs', para: '/settings' }} />
         )}
       </div>
