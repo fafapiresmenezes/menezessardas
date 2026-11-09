@@ -4,10 +4,12 @@ import { ShieldAlert } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 
 // Decisão de M (30/10/2026): dois fatores obrigatório para administradores, com 7 dias de aviso.
+// Decisão de M (09/11/2026): obrigatoriedade desativada — 2FA fica disponível mas não bloqueia mais ninguém.
+export const DOIS_FATORES_OBRIGATORIO = false
 export const PRAZO_2FA = new Date('2026-11-06T23:59:59-03:00')
 
 export async function adminSemDoisFatores(): Promise<boolean> {
-  if (!supabaseConfigurado) return false
+  if (!supabaseConfigurado || !DOIS_FATORES_OBRIGATORIO) return false
   try {
     const { data } = await supabase.auth.mfa.listFactors()
     const verificados = (data?.totp ?? []).filter(f => f.status === 'verified')
@@ -19,10 +21,10 @@ export default function ExigirDoisFatores({ admin }: { admin: boolean }) {
   const [sem2fa, setSem2fa] = useState(false)
   const { pathname } = useLocation()
   useEffect(() => {
-    if (!admin) return
+    if (!admin || !DOIS_FATORES_OBRIGATORIO) return
     adminSemDoisFatores().then(setSem2fa)
   }, [admin, pathname])
-  if (!admin || !sem2fa) return null
+  if (!admin || !sem2fa || !DOIS_FATORES_OBRIGATORIO) return null
   const agora = new Date()
   const dias = Math.max(0, Math.ceil((PRAZO_2FA.getTime() - agora.getTime()) / 86400000))
   const venceu = agora > PRAZO_2FA
