@@ -57,3 +57,16 @@ describe('Calibração das previsões (Brier)', () => {
     expect(screen.getByTestId('calib-renovação').textContent).toContain('—')
   })
 })
+
+describe('Comparação com o Justiça em Números: resposta incompleta (passo A08)', () => {
+  beforeEach(() => { cleanup(); rpc.mockReset() })
+  it('resposta sem por_area não derruba a tela; resposta vazia vira aviso', async () => {
+    rpc.mockResolvedValueOnce({ data: { ok: true }, error: null })
+    render(<ComparacaoJustica />)
+    await waitFor(() => expect(screen.getByTestId('casos-por-area').textContent).toContain('Nenhum caso cadastrado ainda'))
+    cleanup()
+    rpc.mockResolvedValueOnce({ data: null, error: null })
+    render(<ComparacaoJustica />)
+    await waitFor(() => expect(screen.getByRole('alert').textContent).toBe('Os números do escritório ainda não estão disponíveis.'))
+  })
+})

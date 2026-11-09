@@ -16,10 +16,11 @@ export const JEN_AMOSTRA = 'censo do CNJ: 40,9 milhões de casos novos e 75,5 mi
 const meses = (d: number | null) => d === null ? '—' : d < 60 ? `${d} dia(s)` : `${(d / 30.4).toFixed(1)} meses`
 const mesesJen = (m: number) => m >= 12 ? `${Math.floor(m / 12)} ano(s) e ${m % 12} mes(es)` : `${m} meses`
 
+// Passo A08: resposta vazia ou incompleta do banco não derruba a tela de Mercado (antes: "Cannot read properties of undefined (reading 'map')").
 export default function ComparacaoJustica() {
   const [ind, setInd] = useState<Indic | null>(null)
   const [erro, setErro] = useState('')
-  useEffect(() => { supabase.rpc('indicadores_escritorio').then(({ data, error }) => { if (error) setErro('Não foi possível ler os números do escritório agora. Tente de novo em instantes.'); else setInd(data as Indic) }, () => setErro('Sem conexão agora. Tente de novo em instantes.')) }, [])
+  useEffect(() => { supabase.rpc('indicadores_escritorio').then(({ data, error }) => { if (error) setErro('Não foi possível ler os números do escritório agora. Tente de novo em instantes.'); else if (!data || typeof data !== 'object') setErro('Os números do escritório ainda não estão disponíveis.'); else { const d = data as Partial<Indic>; setInd({ ...d, casos_total: d.casos_total ?? 0, casos_abertos: d.casos_abertos ?? 0, casos_encerrados: d.casos_encerrados ?? 0, por_area: Array.isArray(d.por_area) ? d.por_area : [] } as Indic) } }, () => setErro('Sem conexão agora. Tente de novo em instantes.')) }, [])
   const tempoEsc = ind?.tempo_medio_dias ?? null
   return (
     <section className="bg-white border border-navy/10 rounded-sm p-5" data-testid="comparacao-justica">

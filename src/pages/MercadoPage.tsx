@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useBaixado } from '@/hooks/useBaixado'
 import Layout from '@/components/Layout'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import ComparacaoJustica from '@/components/ComparacaoJustica'
+import IntervaloTribunais from '@/components/IntervaloTribunais'
+import { AREA_JEN, JEN_FONTE, previsaoJen } from '@/lib/mercadoJen'
 
 type Area = {
   area: string; nome: string; porAno: { ano: number; n: number }[]; amostra: number; fonte: string; consultadoEm: string
@@ -19,6 +21,16 @@ const fmt = (n: number) => n.toLocaleString('pt-BR')
 export default function MercadoPage() {
   const [dados, setDados] = useState<Record<string, Area | { erro: string } | null>>({})
   useEffect(() => {
+    // Passo A08: sem servidor (demonstração), cada área usa só a série pública do Justiça em Números, com a fonte dita.
+    if (!supabaseConfigurado) {
+      setDados(Object.fromEntries(AREAS.map(a => {
+        const c = AREA_JEN[a]; const p = previsaoJen(c.trib, c.i)
+        if (!p) return [a, { erro: 'Sem série suficiente no Justiça em Números.' }]
+        const { confianca, ultimo: _u, serie, ...previsao } = p
+        return [a, { area: a, nome: c.nome, porAno: serie, amostra: serie.reduce((s, x) => s + x.n, 0), fonte: JEN_FONTE, consultadoEm: '2026-06-23', previsao, confianca, confiancaCombinada: confianca, fontePrevisao: `${JEN_FONTE} (${c.trib})` } satisfies Area]
+      })))
+      return
+    }
     AREAS.forEach(async a => {
       // Revisão 06/11: falha de rede não pode deixar a área presa em "Carregando".
       try {
@@ -48,6 +60,7 @@ export default function MercadoPage() {
     <Layout title="Previsão de mercado jurídico">
       <div className="space-y-6">
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6">
+          {!supabaseConfigurado && <p className="text-sm mb-3 p-3 bg-atencaoFundo border-l-2 border-atencao" data-testid="aviso-demo-mercado">Demonstração: números públicos do Justiça em Números 2026 (CNJ), sem a consulta ao vivo do DataJud. Na versão do escritório as duas fontes são cruzadas toda semana.</p>}
           <p className="text-sm">Quantos processos novos cada área recebe por ano nos tribunais do Rio, em duas fontes públicas do CNJ (DataJud por classe processual e Justiça em Números por tribunal), e a tendência para os próximos 3 anos, com margem de erro de 95%. Mede <strong>demanda</strong>: mais processos significam mais clientes potenciais, não necessariamente honorários maiores.</p>
           {/* Passo 159: imprimir o mercado jurídico por área. */}
           {prontas.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-mercado" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}
@@ -101,6 +114,7 @@ export default function MercadoPage() {
             )
           })}
         </div>
+        <IntervaloTribunais />
         <ComparacaoJustica />
         <p className="text-xs text-grafite-claro">Método: contagem anual de processos novos (data de ajuizamento) na classe processual que representa cada área; tendência linear com intervalo de previsão de 95%. Anos recentes podem estar incompletos se o tribunal ainda não enviou tudo ao CNJ. Atualizado a cada 7 dias. Segunda fonte: Justiça em Números 2026 (base aberta do CNJ, 23/06/2026), série anual consolidada por tribunal, mesma tendência linear; a confiança combinada sobe quando as duas fontes concordam e cai quando divergem.</p>
       </div>
