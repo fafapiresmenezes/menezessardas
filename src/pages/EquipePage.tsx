@@ -110,8 +110,8 @@ export default function EquipePage() {
                 Como adicionar alguém
               </h2>
               <ol className="list-decimal pl-5 text-sm text-grafite mt-3 space-y-1">
-                <li>A pessoa abre o link da plataforma e clica em <strong>Criar conta</strong>, com o e-mail dela e uma senha.</li>
-                <li>Ela já entra como <strong>Leitor</strong> (vê tudo, não altera nada), sem esperar a sua aprovação.</li>
+                <li>Envie um convite pelo e-mail da pessoa (a administração da sede faz isso em Escritórios parceiros).</li>
+                <li>Ao aceitar o convite, ela entra <strong>no seu escritório</strong>, com a função do convite. Quem cria conta sem convite ganha um escritório próprio e vazio, separado do seu.</li>
                 <li>Na lista abaixo você muda a função dela para operador ou administrador, ou retira o acesso escolhendo <strong>Sem acesso</strong>.</li>
               </ol>
               <p className="text-sm text-grafite mt-3">

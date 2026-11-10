@@ -74,7 +74,7 @@ export default function LoginPage() {
       try {
         const { data, error } = await supabase.auth.signUp({ email, password: senha })
         if (error) setErro(/rate limit/i.test(error.message ?? '') ? 'Muitas contas criadas em pouco tempo. Aguarde alguns minutos e tente de novo.' : 'Não foi possível criar o acesso: ' + mensagemAmigavel(error))
-        else if (data?.session) navigate('/inicio') // sem confirmação de e-mail: a conta já entra, como leitor
+        else if (data?.session) navigate('/inicio') // sem confirmação de e-mail: a conta já entra, no escritório próprio
         else {
           setAvisoCadastro('Conta criada. Abra o e-mail que enviamos e toque no link de confirmação; depois é só entrar com este e-mail e senha. Não precisa esperar aprovação.')
           setPrimeiroAcesso(false)
@@ -127,8 +127,9 @@ export default function LoginPage() {
 
           {primeiroAcesso && (
             <div role="status" className="mb-5 p-3 bg-atencaoFundo border-l-2 border-atencao text-atencao text-sm">
-              Crie sua conta com e-mail e senha. Ela já entra como leitor, sem esperar aprovação;
-              um administrador pode depois mudar a sua função em Equipe.
+              Crie sua conta com e-mail e senha. Ela nasce com um escritório próprio e vazio, do qual
+              você é a pessoa administradora — seus dados ficam só com a sua equipe. Para entrar
+              no escritório de outra pessoa, peça um convite a ela.
             </div>
           )}
 

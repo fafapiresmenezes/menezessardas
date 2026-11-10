@@ -84,7 +84,7 @@ describe('Tela de login', () => {
     vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date('2026-11-10T10:00:00Z'))
     montar()
     fireEvent.click(screen.getByText('Criar conta'))
-    expect(screen.getByText(/já entra como leitor, sem esperar aprovação/)).toBeTruthy()
+    expect(screen.getByText(/nasce com um escritório próprio e vazio/)).toBeTruthy()
     preencher('aluna@escritorio.com', 'senhaforte1')
     vi.setSystemTime(new Date('2026-11-10T10:00:05Z'))
     signUp.mockResolvedValueOnce({ data: { session: { access_token: 't' } }, error: null })
