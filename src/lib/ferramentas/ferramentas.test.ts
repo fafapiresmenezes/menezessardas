@@ -22,6 +22,13 @@ describe('catálogo de ferramentas (Theye Suporte Jurídico)', () => {
     for (const [a, b] of r.resultado.linhas) { expect(a).toBeTruthy(); expect(b).not.toMatch(/NaN|undefined|Infinity/) }
     if (r.resultado.texto) expect(r.resultado.texto).not.toMatch(/NaN|undefined/)
   })
+  it.each(FERRAMENTAS.map(f => [f.id, f] as const))('%s com campos vazios avisa ou calcula, sem NaN', (_id, f) => {
+    const v = valoresPadrao(f, new Date('2026-11-09T12:00:00'))
+    for (const c of f.campos) if (c.tipo === 'texto' || c.tipo === 'area' || c.tipo === 'numero' || c.tipo === 'data') v[c.nome] = ''
+    const r = rodar(f, v)
+    if (r.ok) for (const [, x] of r.resultado.linhas) expect(x).not.toMatch(/NaN|undefined|Infinity/)
+    else expect(r.erro.length).toBeGreaterThan(5)
+  })
   it('entrada inválida vira mensagem, não erro de tela', () => {
     const f = FERRAMENTAS.find(x => x.id === 'prazo-corrido')!
     const r = rodar(f, { inicio: '2026-02-30', dias: '10' })
