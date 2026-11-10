@@ -27,7 +27,7 @@ export default function DoisFatores() {
     try {
       // remove rascunhos antigos não verificados para não acumular
       for (const f of fatores.filter(f => f.status !== 'verified')) await supabase.auth.mfa.unenroll({ factorId: f.id })
-      const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'GMenezes ' + new Date().toLocaleDateString('pt-BR') })
+      const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Theye ' + new Date().toLocaleDateString('pt-BR') })
       if (error || !data) { setMsg('Não foi possível iniciar: ' + (error?.message ?? '')); return }
       setQr(data.totp.qr_code); setSegredo(data.totp.secret); setFatorId(data.id)
     } finally { setOcupado(false) }

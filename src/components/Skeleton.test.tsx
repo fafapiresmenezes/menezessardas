@@ -51,17 +51,17 @@ describe('Skeleton, Vazio e Marca', () => {
     expect(screen.getByTestId('vazio-alertas').querySelectorAll('p')).toHaveLength(1)
   })
 
-  it('Marca: monograma GM oculto para leitores de tela, nome do escritório, subtítulo opcional e tamanho grande', () => {
+  it('Marca: monograma THEYE oculto para leitores de tela, nome do escritório, subtítulo opcional e tamanho grande', () => {
     const { container } = render(<Marca />)
-    const gm = screen.getByText('GM')
+    const gm = screen.getByText('THEYE')
     expect(gm.getAttribute('aria-hidden')).toBe('true')
     expect(gm.className).toContain('text-xl')
-    expect(container.textContent).toContain('GMenezes')
-    expect(screen.getByText('Advogados Associados')).toBeTruthy()
+    expect(container.textContent).toContain('Theye Suporte Jurídico')
+    expect(screen.getByText('Instituto THEYE')).toBeTruthy()
     cleanup()
     const g = render(<Marca tamanho="grande" comSubtitulo={false} className="mt-8" />)
-    expect(screen.getByText('GM').className).toContain('text-4xl')
-    expect(screen.queryByText('Advogados Associados')).toBeNull()
+    expect(screen.getByText('THEYE').className).toContain('text-4xl')
+    expect(screen.queryByText('Instituto THEYE')).toBeNull()
     expect(g.container.firstElementChild!.className).toContain('mt-8')
   })
 })

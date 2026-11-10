@@ -16,7 +16,7 @@ export function linhasFatura(f: Fatura, nome: string, pix?: string): { texto: st
   return [
     { texto: `Fatura ${mesAno(f.competencia)}`, tamanho: 16, negrito: true },
     { texto: `Escritório: ${nome}`, tamanho: 11 },
-    { texto: `Emitida por: Value Pas (plataforma GMenezes, desenvolvida pelo Instituto THEYE)`, tamanho: 10 },
+    { texto: `Emitida por: Value Pas (Theye Suporte Jurídico, do Instituto THEYE)`, tamanho: 10 },
     { texto: ' ' },
     { texto: `${f.operadores} operador(es) x R$ 390,00 = ${brl(390 * f.operadores)}`, tamanho: 11 },
     { texto: `${f.leitores} leitor(es) x R$ 120,00 = ${brl(120 * f.leitores)}`, tamanho: 11 },

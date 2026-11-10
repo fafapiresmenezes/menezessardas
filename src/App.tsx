@@ -47,6 +47,8 @@ const CompliancePage = lazy(() => import('@/pages/CompliancePage'))
 const ProjetosPage = lazy(() => import('@/pages/ProjetosPage'))
 const IntimacoesPage = lazy(() => import('@/pages/IntimacoesPage'))
 const AdministracaoPage = lazy(() => import('@/pages/AdministracaoPage'))
+const FerramentasPage = lazy(() => import('@/pages/FerramentasPage'))
+const EstudosPage = lazy(() => import('@/pages/EstudosPage'))
 
 // Com dois fatores ativos, a sessão só libera o sistema depois do código (nível aal2).
 async function segundoFatorOk() {
@@ -123,6 +125,14 @@ function App() {
         <Route
           path="/administracao"
           element={isAuthenticated ? <AdministracaoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/ferramentas"
+          element={isAuthenticated ? <FerramentasPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/estudos"
+          element={isAuthenticated ? <EstudosPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/honorarios"

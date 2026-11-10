@@ -219,7 +219,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-white/60 text-xs mt-8">
-          GMenezes Advogados Associados
+          Theye Suporte Jurídico · braço de serviços do Instituto THEYE
         </p>
       </div>
     </main>

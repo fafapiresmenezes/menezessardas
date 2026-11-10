@@ -4,7 +4,7 @@ export const ROTAS_TELAS: { rota: string; nome: string }[] = [
   { rota: '/imoveis', nome: 'Imóveis' }, { rota: '/imoveis/novo', nome: 'Novo imóvel' }, { rota: '/imoveis/importar', nome: 'Importar imóveis' },
   { rota: '/contrato/novo', nome: 'Novo contrato' }, { rota: '/projetos', nome: 'Casos e projetos' }, { rota: '/agenda', nome: 'Agenda' },
   { rota: '/intimacoes', nome: 'Intimações' }, { rota: '/alertas', nome: 'Alertas' }, { rota: '/monitoramento', nome: 'Monitoramento' },
-  { rota: '/assistente', nome: 'Assistente jurídico' }, { rota: '/consultores', nome: 'Consultores' }, { rota: '/modelos', nome: 'Modelos de peças' },
+  { rota: '/assistente', nome: 'Assistente jurídico' }, { rota: '/ferramentas', nome: 'Ferramentas do dia a dia' }, { rota: '/estudos', nome: 'Estudos para entidades' }, { rota: '/consultores', nome: 'Consultores' }, { rota: '/modelos', nome: 'Modelos de peças' },
   { rota: '/legislacao', nome: 'Legislação' }, { rota: '/fontes', nome: 'Fontes do advogado' }, { rota: '/previsoes', nome: 'Previsões' },
   { rota: '/indicadores', nome: 'Indicadores' }, { rota: '/relatorios', nome: 'Relatórios' }, { rota: '/mercado', nome: 'Mercado jurídico' },
   { rota: '/horas', nome: 'Horas' }, { rota: '/honorarios', nome: 'Honorários' }, { rota: '/administracao', nome: 'Administração de locação' }, { rota: '/consumo', nome: 'Consumo' },

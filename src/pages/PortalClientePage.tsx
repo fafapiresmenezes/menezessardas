@@ -19,7 +19,7 @@ const brl = (v: number) => (v ?? 0).toLocaleString('pt-BR', { style: 'currency',
 // Passo 07: resumo de todos os casos do mesmo cliente (só andamento, prazos e honorários).
 type CasoResumo = { titulo: string; area: string | null; numero_processo: string | null; situacao: string; atualizado_em: string; token: string | null; etapas_total: number; etapas_feitas: number; proximo_prazo: string | null; honorario_previsto: number; honorario_recebido: number }
 type Resumo = { cliente: string; casos: CasoResumo[] }
-// Passo 39: marca do escritório dono do caso (parceiros veem a própria marca; a sede, o lockup GMenezes).
+// Passo 39: marca do escritório dono do caso (parceiros veem a própria marca; a sede, o lockup Theye).
 type MarcaEscritorio = { nome: string; cor: string; logo_url: string | null; sede: boolean }
 
 export default function PortalClientePage() {
@@ -107,7 +107,7 @@ export default function PortalClientePage() {
             </ul>
           </section>
         )}
-        <p className="text-center text-xs text-grafite-claro mt-8" data-testid="portal-rodape">{marca && !marca.sede ? `${marca.nome} · plataforma GMenezes, desenvolvida pelo Instituto THEYE` : 'GMenezes Advogados Associados · Desenvolvido pelo Instituto THEYE'}</p>
+        <p className="text-center text-xs text-grafite-claro mt-8" data-testid="portal-rodape">{marca && !marca.sede ? `${marca.nome} · Theye Suporte Jurídico, do Instituto THEYE` : 'GMenezes Advogados Associados · Theye Suporte Jurídico, do Instituto THEYE'}</p>
       </div>
     </main>
   )

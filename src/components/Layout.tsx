@@ -21,7 +21,7 @@ import { listarPessoas, perfilAtual } from '@/lib/equipe'
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -40,6 +40,8 @@ const itensMenu = [
   { icon: Truck, label: 'Fornecedores', href: '/fornecedores' },
   { icon: Scale, label: 'Legislação', href: '/legislacao' },
   { icon: MessageSquare, label: 'Assistente', href: '/assistente' },
+  { icon: Wrench, label: 'Ferramentas do dia a dia', href: '/ferramentas' },
+  { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
   { icon: Sunrise, label: 'Meu dia', href: '/meu-dia' },
   { icon: Briefcase, label: 'Consultores', href: '/consultores' },
   { icon: Cloud, label: 'Nuvem', href: '/nuvem' },
