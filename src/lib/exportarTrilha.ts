@@ -47,7 +47,7 @@ export async function selarDigest(sha256Hex: string): Promise<{ ots: Uint8Array<
   return { ots, calendario: prova.calendario }
 }
 
-export async function exportarTrilhaPeriodo(de: string, ate: string, rotuloEscritorio = 'GMenezes Advogados Associados'): Promise<ExportacaoTrilha> {
+export async function exportarTrilhaPeriodo(de: string, ate: string, rotuloEscritorio = 'Instituto THEYE'): Promise<ExportacaoTrilha> {
   const [todos, verificacao] = await Promise.all([listarTrilha(), verificarTrilha()])
   const ini = `${de}T00:00:00`, fim = `${ate}T23:59:59.999`
   const eventos: EventoTrilha[] = todos.filter(e => e.em >= new Date(ini).toISOString() && e.em <= new Date(fim).toISOString())

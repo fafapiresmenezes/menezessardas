@@ -12,7 +12,7 @@ import path from 'node:path'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const swPath = path.resolve(__dirname, '../dist/sw.js')
 
-const versao = `gmenezes-${Date.now().toString(36)}`
+const versao = `theye-${Date.now().toString(36)}`
 const conteudo = readFileSync(swPath, 'utf8')
 const atualizado = conteudo.replace(/const VERSAO = '[^']*'/, `const VERSAO = '${versao}'`)
 

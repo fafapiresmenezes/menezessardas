@@ -45,7 +45,7 @@ describe('Portal do cliente (página pública por link secreto)', () => {
     expect(screen.getByTestId('portal-glossario')).toBeTruthy()
     expect(screen.getByTestId('assinar')).toBeTruthy()
     expect(screen.getByTestId('marca-sede')).toBeTruthy()
-    expect(screen.getByTestId('portal-rodape').textContent).toBe('GMenezes Advogados Associados · Theye Suporte Jurídico, do Instituto THEYE')
+    expect(screen.getByTestId('portal-rodape').textContent).toBe('Theye Suporte Jurídico · Instituto THEYE')
     expect(screen.queryByTestId('portal-resumo')).toBeNull()
   })
 

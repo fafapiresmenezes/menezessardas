@@ -93,7 +93,7 @@ describe('Instituto THEYE (página)', () => {
     fireEvent.click(screen.getByTestId('copiar-cadeia'))
     await waitFor(() => expect(screen.getByTestId('copiar-cadeia').textContent).toBe('Cadeia copiada'))
     const texto = write.mock.calls[0][0]
-    expect(texto.startsWith('Cadeia de medições — GMenezes Advogados Associados\nM14 ·')).toBe(true)
+    expect(texto.startsWith('Cadeia de medições — Instituto THEYE\nM14 ·')).toBe(true)
     expect(texto.split('\n').length).toBe(MEDICOES.length + 2)
     expect(texto).toContain(`Plano M31 · ${PLANO_M31.arquivo} · SHA-256 ${PLANO_M31.sha256}`)
     fireEvent.click(screen.getByTestId('copiar-link-instituto'))

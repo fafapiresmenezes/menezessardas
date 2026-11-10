@@ -9,7 +9,7 @@ Versão ${CONTRATO_SAAS_VERSAO}
 
 CONTRATADA: Value Pas (empresa emissora, subcontratada do Instituto THEYE), doravante "Value Pas".
 CONTRATANTE: o escritório ou empresa identificado no cadastro da plataforma, representado pelo administrador que aceita este contrato, doravante "Cliente".
-OBJETO: licença de uso, não exclusiva e intransferível, da plataforma de gestão jurídica GMenezes (desenvolvida pelo Instituto THEYE), em área própria e separada, para gerir casos, prazos, contratos, honorários, portal do cliente e demais funções disponíveis no plano.
+OBJETO: licença de uso, não exclusiva e intransferível, da plataforma Theye Suporte Jurídico, do Instituto THEYE,, em área própria e separada, para gerir casos, prazos, contratos, honorários, portal do cliente e demais funções disponíveis no plano.
 
 1. Prazo e vigência
 1.1. O contrato vigora por 12 (doze) meses a partir do aceite e se renova automaticamente por iguais períodos, salvo aviso de uma das partes com 30 (trinta) dias de antecedência.
@@ -23,7 +23,7 @@ OBJETO: licença de uso, não exclusiva e intransferível, da plataforma de gest
 
 3. Proteção de dados (LGPD, Lei 13.709/2018)
 3.1. O Cliente é o CONTROLADOR dos dados pessoais que insere na plataforma (clientes, partes, processos, equipe). A Value Pas e o Instituto THEYE atuam como OPERADORES, tratando os dados exclusivamente conforme as instruções do Cliente e para a prestação do serviço.
-3.2. Os dados do Cliente ficam em área segregada por escritório (políticas de acesso por linha no banco de dados); nenhum outro escritório, nem a sede GMenezes, acessa seu conteúdo, salvo suporte técnico autorizado por escrito pelo Cliente.
+3.2. Os dados do Cliente ficam em área segregada por escritório (políticas de acesso por linha no banco de dados); nenhum outro escritório, nem o escritório-sede, acessa seu conteúdo, salvo suporte técnico autorizado por escrito pelo Cliente.
 3.3. A Value Pas adota medidas técnicas e administrativas de segurança (criptografia em trânsito, controle de acesso por função, dois fatores obrigatório para administradores, registro de auditoria, selos de integridade) e comunica incidentes de segurança ao Cliente em até 48 horas da ciência.
 3.4. Ao fim do contrato, o Cliente pode exportar seus dados por 90 dias; depois disso, os dados são eliminados, ressalvadas obrigações legais de guarda.
 3.5. Os dados são hospedados em provedores de nuvem (Supabase/AWS e Vercel) que podem operar fora do Brasil, com cláusulas de transferência internacional adequadas à LGPD.

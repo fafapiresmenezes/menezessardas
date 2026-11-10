@@ -278,7 +278,7 @@ export default function IndicadoresPage() {
               {msgAta && <span className="text-sm" aria-live="polite" data-testid="okr-msg">{msgAta}</span>}
             </div>
             {/* Passo 143: revisões de OKR copiáveis (trimestre, data, hash) para a ata da reunião. */}
-            {!!revisoes.length && <button type="button" onClick={() => navigator.clipboard?.writeText(['Revisões de OKR — GMenezes Advogados Associados', ...revisoes.map(r => `${r.trimestre} · ${new Date(r.criado_em).toLocaleString('pt-BR')} · SHA-256 ${r.sha256}${r.ots_b64 ? ' · OTS' : ''}`)].join('\n')).catch(() => undefined)} data-testid="copiar-revisoes" className="mt-3 underline text-navy text-sm">copiar revisões</button>}
+            {!!revisoes.length && <button type="button" onClick={() => navigator.clipboard?.writeText(['Revisões de OKR — Instituto THEYE', ...revisoes.map(r => `${r.trimestre} · ${new Date(r.criado_em).toLocaleString('pt-BR')} · SHA-256 ${r.sha256}${r.ots_b64 ? ' · OTS' : ''}`)].join('\n')).catch(() => undefined)} data-testid="copiar-revisoes" className="mt-3 underline text-navy text-sm">copiar revisões</button>}
             {!!revisoes.length && (
               <ul className="mt-4 divide-y text-sm" data-testid="okr-revisoes">
                 {revisoes.map(r => (

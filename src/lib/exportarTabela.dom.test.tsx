@@ -41,7 +41,7 @@ describe('lerTabela', () => {
     const pdf = paraPdf(g, 'Honorários')
     const texto = new TextDecoder('latin1').decode(pdf)
     expect(texto.startsWith('%PDF-')).toBe(true)
-    expect(texto).toContain('GMenezes Advogados Associados')
+    expect(texto).toContain('Instituto THEYE')
     expect(texto).toContain('Nome: Ana')
     expect(texto).toContain('Valor: -')
     expect(texto).toContain('2 linha')

@@ -33,10 +33,10 @@ export const descricaoFuncao: Record<Funcao | 'nenhuma', string> = {
 }
 
 const DEMO: Pessoa[] = [
-  { id: 'd1', email: 'leticia@gmenezes.com', nome: 'Letícia Sardas', funcao: 'admin', criadoEm: '2026-09-01T12:00:00Z', confirmado: true, ultimoAcesso: '2026-10-25T13:10:00Z' },
-  { id: 'd2', email: 'paulo@gmenezes.com', nome: 'Paulo Menezes', funcao: 'operador', criadoEm: '2026-09-03T12:00:00Z', confirmado: true, ultimoAcesso: '2026-10-24T18:40:00Z' },
-  { id: 'd3', email: 'carla@gmenezes.com', nome: 'Carla Nunes', funcao: 'leitor', criadoEm: '2026-09-10T12:00:00Z', confirmado: true, ultimoAcesso: '2026-10-20T09:05:00Z' },
-  { id: 'd4', email: 'estagio@gmenezes.com', nome: 'Rafael Lima', funcao: null, criadoEm: '2026-10-24T15:30:00Z', confirmado: false, ultimoAcesso: null },
+  { id: 'd1', email: 'leticia@theye.com.br', nome: 'Letícia Sardas', funcao: 'admin', criadoEm: '2026-09-01T12:00:00Z', confirmado: true, ultimoAcesso: '2026-10-25T13:10:00Z' },
+  { id: 'd2', email: 'paulo@theye.com.br', nome: 'Paulo Menezes', funcao: 'operador', criadoEm: '2026-09-03T12:00:00Z', confirmado: true, ultimoAcesso: '2026-10-24T18:40:00Z' },
+  { id: 'd3', email: 'carla@theye.com.br', nome: 'Carla Nunes', funcao: 'leitor', criadoEm: '2026-09-10T12:00:00Z', confirmado: true, ultimoAcesso: '2026-10-20T09:05:00Z' },
+  { id: 'd4', email: 'estagio@theye.com.br', nome: 'Rafael Lima', funcao: null, criadoEm: '2026-10-24T15:30:00Z', confirmado: false, ultimoAcesso: null },
 ]
 
 let demoAtual: Pessoa[] = DEMO.map(p => ({ ...p }))
@@ -109,7 +109,7 @@ export async function definirSenhaProvisoria(pessoa: Pessoa): Promise<string> {
   return senha
 }
 
-// Onda B: vários escritórios na mesma plataforma. A sede (GMenezes) administra os parceiros e vê a cobrança por usuário.
+// Onda B: vários escritórios na mesma plataforma. A sede (Instituto THEYE) administra os parceiros e vê a cobrança por usuário.
 export const SEDE_ID = '00000000-0000-0000-0000-000000000001'
 export interface Escritorio { id: string; nome: string; plano: string; criadoEm: string; operadores: number; leitores: number; mensal: number; mensal1Ano: number }
 
@@ -123,7 +123,7 @@ export async function ehSede(): Promise<boolean> {
 }
 
 export async function listarEscritorios(): Promise<Escritorio[]> {
-  if (!supabaseConfigurado) return [{ id: SEDE_ID, nome: 'GMenezes Advogados Associados', plano: 'sede', criadoEm: '2026-10-30', operadores: 3, leitores: 1, mensal: 1290, mensal1Ano: 903 }]
+  if (!supabaseConfigurado) return [{ id: SEDE_ID, nome: 'Instituto THEYE', plano: 'sede', criadoEm: '2026-10-30', operadores: 3, leitores: 1, mensal: 1290, mensal1Ano: 903 }]
   const { data, error } = await supabase.rpc('cobranca_escritorios')
   if (error) throw new Error(error.message)
   return ((data ?? []) as Record<string, unknown>[]).map(r => ({ id: String(r.id), nome: String(r.nome), plano: String(r.plano), criadoEm: String(r.criado_em), operadores: Number(r.operadores), leitores: Number(r.leitores), mensal: Number(r.mensal), mensal1Ano: Number(r.mensal_1ano) }))

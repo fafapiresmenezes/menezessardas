@@ -16,7 +16,7 @@ import {
   montarOts,
   retomarSelosPendentes,
   selosPendentes,
-  textoDoSelo,
+  textoDoSeloAncorado,
   verificarLastro,
   type Ancoragem,
   type Lastro,
@@ -217,7 +217,7 @@ export default function TrilhaPage() {
               <p className={`text-sm mt-3 ${atrasado ? 'text-atencao' : 'text-regular'}`} data-testid="estado-selo">
                 {ancoragens.length} selo(s) ancorado(s). Último há {horas < 1 ? 'menos de 1 hora' : `${horas} hora(s)`} ({dataHora(ult.em)}){atrasado ? '. O selo diário deveria ter rodado; use "Ancorar selo agora".' : '. O selo diário está em dia.'}
                 {/* Passo 113: o último selo em texto (data e código), para colar no e-mail do auditor. */}
-                <button type="button" data-testid="copiar-selo" onClick={() => navigator.clipboard?.writeText(`Selo blockchain da trilha · GMenezes Advogados Associados\nAncorado em: ${dataHora(ult.em)}\nSelo (SHA-256): ${ult.selo}\nTotal de selos ancorados: ${ancoragens.length}\nConferência pública: opentimestamps.org`).catch(() => undefined)} className="ml-3 underline text-navy">copiar último selo</button>
+                <button type="button" data-testid="copiar-selo" onClick={() => navigator.clipboard?.writeText(`Selo blockchain da trilha · Instituto THEYE\nAncorado em: ${dataHora(ult.em)}\nSelo (SHA-256): ${ult.selo}\nTotal de selos ancorados: ${ancoragens.length}\nConferência pública: opentimestamps.org`).catch(() => undefined)} className="ml-3 underline text-navy">copiar último selo</button>
               </p>
             )
           })()}
@@ -269,7 +269,7 @@ export default function TrilhaPage() {
                     </div>
                     <div className="flex gap-2">
                       <button
-                        onClick={() => baixarArquivo(`selo-${a.seq}.txt`, textoDoSelo(a.seq, a.selo), 'text/plain')}
+                        onClick={() => { void textoDoSeloAncorado(a).then(t => baixarArquivo(`selo-${a.seq}.txt`, t, 'text/plain')) }}
                         className="min-h-[44px] inline-flex items-center gap-1 px-3 border border-navy/30 text-sm hover:bg-pergaminho"
                       >
                         <Download size={14} aria-hidden="true" /> Selo (.txt)

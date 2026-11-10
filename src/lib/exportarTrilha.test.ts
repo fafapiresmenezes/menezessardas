@@ -29,7 +29,7 @@ describe('exportarTrilhaPeriodo', () => {
     expect(r.nomeBase).toBe(`trilha-${hoje}-a-${hoje}`)
     const s = texto(r.pdf)
     expect(s.startsWith('%PDF-1.4')).toBe(true)
-    expect(s).toContain('GMenezes Advogados Associados')
+    expect(s).toContain('Instituto THEYE')
     expect(s).toContain('Cadeia \xedntegra: 2 registro')
     expect(s).toContain('Rua das Laranjeiras, 10')
     const depois = await listarTrilha()

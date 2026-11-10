@@ -30,8 +30,20 @@ export const CALENDARIOS = [
 
 const CHAVE = 'lsm-ancoragens-v1'
 
-export function textoDoSelo(seq: number, selo: string): string {
-  return `Plataforma de Gestão de Contratos - GMenezes Advogados Associados\nSelo da trilha de auditoria\nregistros: ${seq}\nselo: ${selo}\n`
+export const CABECALHO_SELO = 'Theye Suporte Jurídico - Instituto THEYE'
+// Selos ancorados antes do rebranding (10/11/2026) foram gerados com este cabeçalho;
+// mudar o texto mudaria o SHA-256, então a verificação aceita os dois.
+export const CABECALHO_SELO_ANTIGO = 'Plataforma de Gestão de Contratos - GMenezes Advogados Associados'
+
+export function textoDoSelo(seq: number, selo: string, cabecalho: string = CABECALHO_SELO): string {
+  return `${cabecalho}\nSelo da trilha de auditoria\nregistros: ${seq}\nselo: ${selo}\n`
+}
+
+/** Texto do selo que de fato foi ancorado: o arquivo baixado tem de bater com o digest enviado ao calendário, então selos antigos saem com o cabeçalho antigo. */
+export async function textoDoSeloAncorado(a: Pick<Ancoragem, 'seq' | 'selo' | 'digest'>): Promise<string> {
+  const antigo = textoDoSelo(a.seq, a.selo, CABECALHO_SELO_ANTIGO)
+  const digestAntigo = hex(await sha256(new TextEncoder().encode(antigo)))
+  return digestAntigo === a.digest ? antigo : textoDoSelo(a.seq, a.selo)
 }
 
 async function sha256(bytes: Uint8Array): Promise<Uint8Array> {
@@ -198,8 +210,9 @@ export async function verificarLastro(): Promise<Lastro[]> {
     if (!ev) resultados.push({ ancoragemId: a.id, seq: a.seq, coerente: false, motivo: 'O registro ancorado não existe mais na trilha.' })
     else if (ev.hash !== a.selo) resultados.push({ ancoragemId: a.id, seq: a.seq, coerente: false, motivo: 'O registro foi alterado depois de ancorado.' })
     else {
-      const digest = hex(await sha256(new TextEncoder().encode(textoDoSelo(a.seq, a.selo))))
-      resultados.push(digest === a.digest
+      const digestNovo = hex(await sha256(new TextEncoder().encode(textoDoSelo(a.seq, a.selo))))
+      const digestAntigo = digestNovo === a.digest ? digestNovo : hex(await sha256(new TextEncoder().encode(textoDoSelo(a.seq, a.selo, CABECALHO_SELO_ANTIGO))))
+      resultados.push(digestNovo === a.digest || digestAntigo === a.digest
         ? { ancoragemId: a.id, seq: a.seq, coerente: true }
         : { ancoragemId: a.id, seq: a.seq, coerente: false, motivo: 'O digest guardado não confere com o selo.' })
     }

@@ -115,6 +115,7 @@ export default function CarteiraProcessosPage() {
                       <td>{l.intimacoesNaoLidas ? <Link to="/intimacoes" className="text-critico underline">{l.intimacoesNaoLidas} não lida(s)</Link> : '—'}{l.proximoPrazo && <span className="block text-xs">prazo {formatarData(l.proximoPrazo)}</span>}</td>
                       <td>{nome(l.responsavel_id)}</td>
                       <td className="text-xs space-y-1">
+                        {l.numero && <Link className="block underline text-navy" to={`/monitoramento?lt=${l.numero}`} data-testid="carteira-historico">Histórico (DataJud)</Link>}
                         {l.numero && <a className="block underline text-navy" href={`https://www.jusbrasil.com.br/busca?q=${l.numero_processo}`} target="_blank" rel="noreferrer">Jusbrasil</a>}
                         {l.numero && <a className="block underline text-navy" href={`https://www.escavador.com/busca?q=${l.numero_processo}`} target="_blank" rel="noreferrer">Escavador</a>}
                         <button type="button" onClick={() => encerrar(l.id, l.situacao === 'feito' ? 'fazendo' : 'feito')} className="block underline text-navy" data-testid="carteira-encerrar">{l.situacao === 'feito' ? 'Reabrir' : 'Encerrar'}</button>

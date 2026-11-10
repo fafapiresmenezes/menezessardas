@@ -130,7 +130,7 @@ describe('Previsões', () => {
     fireEvent.click(screen.getByTestId('copiar-previsoes'))
     await waitFor(() => expect(screen.getByTestId('copiar-previsoes').textContent).toBe('Resumo copiado'))
     const resumo = nb(write.mock.calls[1][0]).split('\n')
-    expect(resumo.slice(1)).toEqual(['Receita contratada (12 meses): R$ 12.000', 'Receita esperada (12 meses): R$ 12.200', 'Contratos com risco alto: 1 de 2', 'Chance média de renovação: 58%', '• risco alto: Ana Locatária (72 pontos)', 'Regras declaradas v1 · GMenezes Advogados Associados'])
+    expect(resumo.slice(1)).toEqual(['Receita contratada (12 meses): R$ 12.000', 'Receita esperada (12 meses): R$ 12.200', 'Contratos com risco alto: 1 de 2', 'Chance média de renovação: 58%', '• risco alto: Ana Locatária (72 pontos)', 'Regras declaradas v1 · Instituto THEYE'])
     fireEvent.click(screen.getByTestId('copiar-link-previsoes'))
     await waitFor(() => expect(screen.getByTestId('copiar-link-previsoes').textContent).toBe('Link copiado'))
     fireEvent.click(screen.getByTestId('baixar-previsoes'))

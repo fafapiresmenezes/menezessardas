@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useBaixado } from '@/hooks/useBaixado'
 import Vazio from '@/components/Vazio'
 import { FunctionRegion } from '@supabase/supabase-js'
@@ -40,6 +41,13 @@ export default function MonitoramentoPage() {
     if (error || data?.erro) return setMsgLinha(`Não foi possível consultar: ${data?.erro ?? error?.message}`)
     setLinha(data as Linha); setMsgLinha(data.encontrado ? '' : 'Processo não encontrado no DataJud (pode ser sigiloso ou de tribunal fora da base).')
   }
+  // A Carteira abre /monitoramento?lt=<número> e a linha do tempo já é consultada.
+  const [params] = useSearchParams()
+  const ltParam = params.get('lt') ?? ''
+  useEffect(() => {
+    if (ltParam.replace(/\D/g, '').length === 20) linhaDoTempo(ltParam)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ltParam])
   // Passo 92: busca por texto nos andamentos e cópia da linha do tempo filtrada.
   const [textoMov, setTextoMov] = useState('')
   const [copiado, setCopiado] = useState(false)

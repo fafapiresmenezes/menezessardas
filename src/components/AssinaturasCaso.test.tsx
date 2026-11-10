@@ -23,7 +23,7 @@ describe('Assinatura eletrônica do caso', () => {
     fireEvent.click(screen.getByTestId('pedir-assinatura'))
     const texto = screen.getByTestId('assin-texto') as HTMLTextAreaElement
     expect(texto.value).toContain('Contratante: Maria Silva.')
-    expect(texto.value).toContain('CNPJ 10.945.994/0001-72')
+    expect(texto.value).toContain('Contratada: Instituto THEYE')
     fireEvent.change(screen.getByTestId('assin-titulo'), { target: { value: '  Procuração ' } })
     fireEvent.click(screen.getByTestId('enviar-assinatura'))
     await waitFor(() => expect(insert).toHaveBeenCalledWith({ tarefa_id: 't1', titulo: 'Procuração', texto: texto.value }))

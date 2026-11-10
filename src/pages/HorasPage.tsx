@@ -98,7 +98,7 @@ export default function HorasPage() {
     const nomeMes = new Date(Number(a), Number(m) - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
     const texto = [`Resumo de horas — ${nomeMes}`, `Total: ${hm(totalMin)} (${hm(totalFat)} faturáveis) · a faturar: ${brl(totalValor)}`, '',
       ...porCliente.map(c => `• ${c.cliente}: ${hm(c.min)} faturáveis = ${brl(c.valor)}${c.naoFat ? ` (+ ${hm(c.naoFat)} não faturáveis)` : ''}`),
-      '', 'GMenezes Advogados Associados'].join('\n')
+      '', 'Instituto THEYE'].join('\n')
     try { await navigator.clipboard.writeText(texto); setCopiado(true); setTimeout(() => setCopiado(false), 2500) } catch { setErro('Não foi possível copiar; use a planilha ou o relatório.') }
   }
   return (

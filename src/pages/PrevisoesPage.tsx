@@ -273,7 +273,7 @@ export default function PrevisoesPage() {
   const [baixado, marcarBaixado] = useBaixado() // Passo 397
   const copiarResumo = async () => {
     const t = [`Previsões da carteira — ${new Date().toLocaleDateString('pt-BR')}`, `Receita contratada (12 meses): ${moeda(totalContratada)}`, `Receita esperada (12 meses): ${moeda(totalEsperada)}`, `Contratos com risco alto: ${altos} de ${previsoes.length}`, `Chance média de renovação: ${renovMedia}%`,
-      ...previsoes.filter(p => p.faixaRisco === 'alto').map(p => `• risco alto: ${p.contrato.parte || 'contrato'} (${p.risco} pontos)`), 'Regras declaradas v1 · GMenezes Advogados Associados'].join('\n')
+      ...previsoes.filter(p => p.faixaRisco === 'alto').map(p => `• risco alto: ${p.contrato.parte || 'contrato'} (${p.risco} pontos)`), 'Regras declaradas v1 · Instituto THEYE'].join('\n')
     try { await navigator.clipboard.writeText(t); setCopiadoResumo(true); setTimeout(() => setCopiadoResumo(false), 2500) } catch { /* sem área de transferência */ }
   }
 
