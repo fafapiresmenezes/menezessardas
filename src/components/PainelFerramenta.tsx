@@ -20,6 +20,13 @@ export default function PainelFerramenta({ ferramenta }: { ferramenta: Ferrament
     const a = document.createElement('a'); a.href = url; a.download = `${ferramenta.id}.txt`; a.click(); URL.revokeObjectURL(url)
   }
 
+  const baixarArquivo = () => {
+    if (!saida?.ok || !saida.resultado.arquivo) return
+    const { nome, conteudo, tipo } = saida.resultado.arquivo
+    const url = URL.createObjectURL(new Blob([conteudo], { type: tipo }))
+    const a = document.createElement('a'); a.href = url; a.download = nome; a.click(); URL.revokeObjectURL(url)
+  }
+
   return (
     <section className="bg-white p-5 shadow-sm" data-testid={`ferramenta-${ferramenta.id}`} aria-labelledby={`titulo-${ferramenta.id}`}>
       <h2 id={`titulo-${ferramenta.id}`} className="text-lg text-navy">{ferramenta.nome}</h2>
@@ -82,10 +89,15 @@ export default function PainelFerramenta({ ferramenta }: { ferramenta: Ferrament
             {!!saida.resultado.alertas?.length && (
               <ul className="mt-3 space-y-1 text-sm">{saida.resultado.alertas.map((a, i) => <li key={i} className="border-l-4 border-dourado bg-dourado/10 p-2">{a}</li>)}</ul>
             )}
+            {!!saida.resultado.links?.length && (
+              <ul className="mt-3 space-y-1 text-sm" data-testid="ferramenta-links">{saida.resultado.links.map(([rotulo, url]) => <li key={url}><a href={url} target="_blank" rel="noopener noreferrer" className="underline decoration-dourado text-navy break-all">{rotulo} ↗</a></li>)}</ul>
+            )}
             {saida.resultado.texto && <pre className="mt-3 whitespace-pre-wrap bg-gray-50 border border-navy/10 p-3 text-sm font-sans" data-testid="ferramenta-texto">{saida.resultado.texto}</pre>}
             <div className="mt-3 flex flex-wrap gap-2">
               <button type="button" onClick={copiar} className="inline-flex items-center gap-2 border border-navy/30 text-navy min-h-[44px] px-4 text-sm">{copiado ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />} {copiado ? 'Copiado' : 'Copiar'}</button>
-              <button type="button" onClick={baixar} className="inline-flex items-center gap-2 border border-navy/30 text-navy min-h-[44px] px-4 text-sm"><Download size={16} aria-hidden="true" /> Baixar .txt</button>
+              {saida.resultado.arquivo
+                ? <button type="button" onClick={baixarArquivo} className="inline-flex items-center gap-2 bg-dourado text-navy min-h-[44px] px-4 text-sm"><Download size={16} aria-hidden="true" /> Baixar arquivo</button>
+                : <button type="button" onClick={baixar} className="inline-flex items-center gap-2 border border-navy/30 text-navy min-h-[44px] px-4 text-sm"><Download size={16} aria-hidden="true" /> Baixar .txt</button>}
             </div>
           </div>
         )}

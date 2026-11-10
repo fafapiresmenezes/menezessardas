@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import PainelFerramenta from './PainelFerramenta'
+import PdfFerramenta from './PdfFerramenta'
 import { FERRAMENTAS, buscarFerramentas, type Categoria } from '@/lib/ferramentas/catalogo'
 
 export default function CaixaFerramentas({ categorias }: { categorias: Categoria[] }) {
@@ -42,7 +43,7 @@ export default function CaixaFerramentas({ categorias }: { categorias: Categoria
         </ul>
       </div>
       <div>
-        {escolhida ? <PainelFerramenta key={escolhida.id} ferramenta={escolhida} /> : (
+        {escolhida ? (escolhida.componente ? <PdfFerramenta key={escolhida.id} ferramenta={escolhida} /> : <PainelFerramenta key={escolhida.id} ferramenta={escolhida} />) : (
           <div className="bg-white p-6 shadow-sm text-sm text-grafite-claro" data-testid="ferramenta-vazia">Escolha uma ferramenta na lista. Tudo é calculado no seu navegador: nada é enviado ao servidor.</div>
         )}
       </div>
