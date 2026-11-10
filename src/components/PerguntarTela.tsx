@@ -27,7 +27,7 @@ export default function PerguntarTela() {
       className="flex items-center gap-2 min-h-[44px] min-w-[44px] px-3 border border-navy/20 text-navy text-sm hover:border-dourado transition"
       aria-label={`Perguntar ao Assistente sobre a tela ${tela}`} title="Perguntar sobre esta tela">
       <MessageCircle size={18} aria-hidden="true" />
-      <span className="hidden lg:inline">Perguntar sobre esta tela</span>
+      <span className="hidden 2xl:inline">Perguntar sobre esta tela</span>
     </button>
   )
 }

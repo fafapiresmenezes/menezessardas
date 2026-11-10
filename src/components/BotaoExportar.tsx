@@ -47,7 +47,7 @@ export default function BotaoExportar() {
       <button type="button" onClick={() => setAberto(a => !a)} data-testid="exportar" aria-haspopup="menu" aria-expanded={aberto}
         aria-label={`Exportar ${tabelas.length === 1 ? 'a tabela' : `as ${tabelas.length} tabelas`} desta tela`} title="Exportar tabela (CSV ou PDF)"
         className="flex items-center gap-2 min-h-[44px] min-w-[44px] px-3 border border-navy/20 text-navy text-sm hover:border-dourado transition">
-        <Download size={18} aria-hidden="true" /><span className="hidden xl:inline">Exportar</span>
+        <Download size={18} aria-hidden="true" /><span className="hidden 2xl:inline">Exportar</span>
       </button>
       {aberto && (
         <div role="menu" data-testid="exportar-menu" className="absolute right-0 mt-2 w-[min(92vw,340px)] bg-white shadow-2xl border-t-2 border-dourado z-50 py-2">

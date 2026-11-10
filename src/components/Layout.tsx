@@ -215,7 +215,8 @@ export default function Layout({ children, title }: LayoutProps) {
         <header className="bg-white border-b border-navy/10 px-4 md:px-8 py-4 md:py-5 flex flex-wrap md:flex-nowrap items-center justify-between gap-3 md:gap-4">
           <div className="flex items-center gap-2 min-w-0 max-w-full">
             {!menuAberto && <button type="button" onClick={() => setMenuAberto(true)} aria-label="Abrir menu" className="md:hidden min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/20 text-navy rounded-sm"><Menu size={20} /></button>}
-            <h1 className="font-serif text-2xl md:text-3xl text-navy truncate min-w-0">{title}</h1>
+            {/* Em notebooks os rótulos dos botões somem (só ícones) para o título da tela caber inteiro. */}
+            <h1 className="font-serif text-2xl md:text-3xl text-navy truncate min-w-0" title={title}>{title}</h1>
           </div>
           <div className="flex flex-wrap md:flex-nowrap items-center gap-2 md:flex-shrink-0">
           <TourTela />
@@ -227,9 +228,10 @@ export default function Layout({ children, title }: LayoutProps) {
               onClick={() => navigate('/equipe')}
               className="relative flex items-center gap-2 min-h-[44px] px-3 sm:px-4 bg-navy text-white rounded-sm text-sm hover:bg-navy-700 transition"
               aria-label={pendentes ? `Área do administrador: ${pendentes} cadastro(s) esperando liberação` : 'Área do administrador'}
+              title="Área do administrador"
             >
               <UserCog size={16} aria-hidden="true" />
-              <span className="hidden sm:inline">Área do administrador</span>
+              <span className="hidden 2xl:inline">Área do administrador</span>
               {pendentes > 0 && (
                 <span className="absolute -top-2 -right-2 min-w-[20px] h-5 px-1 rounded-full bg-dourado text-navy text-xs font-semibold flex items-center justify-center" aria-hidden="true">{pendentes}</span>
               )}
@@ -240,10 +242,11 @@ export default function Layout({ children, title }: LayoutProps) {
               onClick={() => navigate('/laboratorio-admin')}
               className="hidden md:flex items-center gap-2 min-h-[44px] px-3 border border-navy/30 text-navy rounded-sm text-sm hover:bg-navy/5 transition"
               aria-label="Laboratório de autoavaliação, só para administradores"
+              title="Laboratório"
               data-testid="menu-laboratorio-admin"
             >
               <FlaskConical size={16} aria-hidden="true" />
-              <span className="hidden lg:inline">Laboratório</span>
+              <span className="hidden 2xl:inline">Laboratório</span>
             </button>
           )}
           <button
