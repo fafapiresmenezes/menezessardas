@@ -68,7 +68,7 @@ export function telefoneWhatsapp(tel: string | null): string | null {
   return d.length <= 11 ? `55${d}` : d
 }
 
-export function mensagemRetorno(l: Pick<Lead, 'nome' | 'etapa' | 'assunto'>, escritorio = 'Theye Suporte Jurídico'): string {
+export function mensagemRetorno(l: Pick<Lead, 'nome' | 'etapa' | 'assunto'>, escritorio = 'Instituto THEYE'): string {
   const primeiro = l.nome.trim().split(/\s+/)[0]
   const sobre = l.assunto ? ` sobre ${l.assunto.trim().replace(/[.]$/, '')}` : ''
   switch (l.etapa) {

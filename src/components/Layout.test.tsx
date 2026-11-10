@@ -24,7 +24,7 @@ function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathn
 const montar = (rota = '/dashboard') => render(<MemoryRouter initialEntries={[rota]}><Layout title="Painel"><p>conteúdo</p></Layout><Routes><Route path="*" element={<Onde />} /></Routes></MemoryRouter>)
 
 describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
-  beforeEach(() => { cleanup(); sede = true; perfil = 'operador'; signOut.mockClear(); aplicarTema.mockClear(); Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true }) })
+  beforeEach(() => { cleanup(); localStorage.clear(); sede = true; perfil = 'operador'; signOut.mockClear(); aplicarTema.mockClear(); Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true }) })
 
   it('mostra título e conteúdo, marca o item do menu da tela atual, navega pelo menu e recolhe o menu', () => {
     montar('/agenda')
@@ -33,12 +33,37 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
     const nav = screen.getByRole('navigation', { name: 'Menu principal' })
     expect(nav.querySelector('[aria-current=page]')!.textContent).toBe('Agenda')
     expect(screen.getByText(/Desenvolvido pelo/).textContent).toContain('Instituto THEYE')
+    fireEvent.click(screen.getByText('Imóveis e locação'))
     fireEvent.click(screen.getByText('Imóveis'))
     expect(screen.getByTestId('onde').textContent).toBe('/imoveis')
     fireEvent.click(screen.getByLabelText('Recolher menu'))
     expect(screen.queryByText('Agenda')).toBeNull()
     expect(screen.getByLabelText('Expandir menu').getAttribute('aria-expanded')).toBe('false')
     expect(screen.getByTitle('Agenda')).toBeTruthy()
+  })
+
+  it('o menu é dividido em grupos: abre o da tela atual e "Hoje", recolhe e abre à vontade, lembra a escolha e mostra a tela escolhida de qualquer grupo', () => {
+    montar('/financeiro')
+    const nav = screen.getByRole('navigation', { name: 'Menu principal' })
+    const grupo = (nome: string) => screen.getByText(nome).closest('button') as HTMLButtonElement
+    expect(grupo('Hoje').getAttribute('aria-expanded')).toBe('true')
+    expect(grupo('Clientes e dinheiro').getAttribute('aria-expanded')).toBe('true')
+    expect(nav.querySelector('[aria-current=page]')!.textContent).toBe('Financeiro')
+    expect(grupo('Imóveis e locação').getAttribute('aria-expanded')).toBe('false')
+    expect(screen.queryByText('Fornecedores')).toBeNull()
+    fireEvent.click(grupo('Imóveis e locação'))
+    expect(screen.getByText('Fornecedores')).toBeTruthy()
+    fireEvent.click(grupo('Clientes e dinheiro'))
+    expect(screen.queryByText('Funil de vendas')).toBeNull()
+    expect(JSON.parse(localStorage.getItem('lsm-menu-grupos')!)).toMatchObject({ imoveis: true, financeiro: false })
+    fireEvent.click(screen.getByTestId('menu-alternar-tudo'))
+    expect(grupo('Pesquisa e redação').getAttribute('aria-expanded')).toBe('true')
+    fireEvent.click(screen.getByTestId('menu-alternar-tudo'))
+    expect(grupo('Pesquisa e redação').getAttribute('aria-expanded')).toBe('false')
+    expect(grupo('Hoje').getAttribute('aria-expanded')).toBe('true')
+    cleanup()
+    montar('/financeiro')
+    expect(screen.getByText('Funil de vendas')).toBeTruthy()
   })
 
   it('escritório parceiro não vê os itens só da sede; admin vê a área do administrador com os cadastros pendentes', async () => {
@@ -64,8 +89,10 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
     expect(screen.queryByRole('dialog')).toBeNull()
     fireEvent.click(screen.getByLabelText('Abrir busca global (Ctrl+K)'))
     expect(screen.getByRole('dialog')).toBeTruthy()
+    fireEvent.click(screen.getByLabelText('Mais opções'))
     fireEvent.click(screen.getByLabelText('Usar modo escuro'))
     expect(aplicarTema).toHaveBeenCalledWith('escuro')
+    fireEvent.click(screen.getByLabelText('Mais opções'))
     expect(screen.getByLabelText('Usar modo claro')).toBeTruthy()
     fireEvent.click(screen.getByText('Sair'))
     await waitFor(() => expect(signOut).toHaveBeenCalled())

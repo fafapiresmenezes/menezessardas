@@ -222,7 +222,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-white/60 text-xs mt-8">
-          Theye Suporte Jurídico · braço de serviços do Instituto THEYE
+          Instituto THEYE · Suporte Jurídico
         </p>
       </div>
     </main>

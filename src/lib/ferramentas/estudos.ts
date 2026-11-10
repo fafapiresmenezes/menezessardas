@@ -92,7 +92,7 @@ export const SECOES_AIR: [string, string][] = [
 ]
 export function montarAir(titulo: string, secoes: Record<string, string>) {
   const preenchidas = SECOES_AIR.filter(([k]) => (secoes[k] ?? '').trim().length >= 20)
-  const texto = [`RELATÓRIO DE ANÁLISE DE IMPACTO — ${titulo.trim() || '[tema]'}`, 'Estrutura: Decreto 10.411/2020, art. 6º. Elaborado com Theye Suporte Jurídico.', '',
+  const texto = [`RELATÓRIO DE ANÁLISE DE IMPACTO — ${titulo.trim() || '[tema]'}`, 'Estrutura: Decreto 10.411/2020, art. 6º. Elaborado com o Instituto THEYE.', '',
     ...SECOES_AIR.flatMap(([k, rot]) => [rot.toUpperCase(), (secoes[k] ?? '').trim() || '[a preencher]', ''])].join('\n')
   return { texto, pct: Math.round(100 * preenchidas.length / SECOES_AIR.length), pendentes: SECOES_AIR.filter(([k]) => !preenchidas.some(([p]) => p === k)).map(([, r]) => r) }
 }
@@ -162,6 +162,6 @@ export function mapaPartesInteressadas(texto: string) {
 export function preRegistro(c: Record<string, string>) {
   const campos: [string, string][] = [['titulo', 'Título do estudo'], ['pergunta', 'Pergunta de pesquisa'], ['hipoteses', 'Hipóteses (definidas antes de ver os dados)'], ['desenho', 'Desenho e fontes de dados'], ['amostra', 'Amostra e critério de parada'], ['variaveis', 'Variáveis e como serão medidas'], ['analise', 'Plano de análise'], ['exclusao', 'Critérios de exclusão de dados']]
   const faltam = campos.filter(([k]) => !(c[k] ?? '').trim()).map(([, r]) => r)
-  const texto = ['PRÉ-REGISTRO DE ESTUDO — Instituto THEYE / Theye Suporte Jurídico', ...campos.map(([k, r]) => `${r}: ${(c[k] ?? '').trim() || '[a preencher]'}`), '', 'Registre este texto na Trilha (selo de data) antes de coletar os dados.'].join('\n')
+  const texto = ['PRÉ-REGISTRO DE ESTUDO — Instituto THEYE', ...campos.map(([k, r]) => `${r}: ${(c[k] ?? '').trim() || '[a preencher]'}`), '', 'Registre este texto na Trilha (selo de data) antes de coletar os dados.'].join('\n')
   return { texto, faltam }
 }

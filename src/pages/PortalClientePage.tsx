@@ -109,7 +109,7 @@ export default function PortalClientePage() {
             </ul>
           </section>
         )}
-        <p className="text-center text-xs text-grafite-claro mt-8" data-testid="portal-rodape">{marca && !marca.sede ? `${marca.nome} · Theye Suporte Jurídico, do Instituto THEYE` : 'Theye Suporte Jurídico · Instituto THEYE'}</p>
+        <p className="text-center text-xs text-grafite-claro mt-8" data-testid="portal-rodape">{marca && !marca.sede ? `${marca.nome} · Instituto THEYE` : 'Instituto THEYE · Suporte Jurídico'}</p>
       </div>
     </main>
   )

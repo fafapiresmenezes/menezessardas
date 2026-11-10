@@ -3,11 +3,11 @@
 // Versão 2.0 (10/11/2026): rebranding — o nome GMenezes sai dos termos a pedido do M; versão nova exige novo aceite.
 export const TERMOS_VERSAO = '2.0 (10/11/2026)'
 
-export const TERMOS_TEXTO = `TERMOS DE USO E AVISO DE PRIVACIDADE — THEYE SUPORTE JURÍDICO
+export const TERMOS_TEXTO = `TERMOS DE USO E AVISO DE PRIVACIDADE — INSTITUTO THEYE
 Versão ${TERMOS_VERSAO}
 
 1. O que é a plataforma
-Plataforma Theye Suporte Jurídico, do Instituto THEYE, para administrar processos, contratos, imóveis, prazos, clientes e honorários.
+Plataforma do Instituto THEYE, para administrar processos, contratos, imóveis, prazos, clientes e honorários.
 
 2. Quem pode usar
 Só pessoas liberadas por um administrador do escritório. Cada acesso é pessoal e intransferível. Senhas e códigos de dois fatores não devem ser compartilhados.

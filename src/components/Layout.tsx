@@ -17,11 +17,12 @@ import ExigirDoisFatores from './ExigirDoisFatores'
 import AceiteContratoSaas from './AceiteContratoSaas'
 import AceiteTermos from './AceiteTermos'
 import { aplicarTema, temaAtual } from '@/lib/tema'
+import { NOME_PLATAFORMA } from '@/lib/plataforma'
 import { listarPessoas, perfilAtual } from '@/lib/equipe'
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, ChevronDown, MoreHorizontal } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -29,47 +30,66 @@ interface LayoutProps {
 }
 
 const SO_SEDE = ['/imoveis', '/fornecedores', '/alertas', '/instituto', '/consumo']
-const itensMenu = [
-  { icon: Home, label: 'Trocar de área', href: '/inicio' },
-  { icon: LayoutGrid, label: 'Painel', href: '/dashboard' },
-  { icon: FolderKanban, label: 'Casos e projetos', href: '/projetos' },
-  { icon: Gavel, label: 'Carteira de processos', href: '/processos' },
-  { icon: Filter, label: 'Funil de vendas', href: '/funil' },
-  { icon: PiggyBank, label: 'Financeiro', href: '/financeiro' },
-  { icon: Inbox, label: 'Intimações', href: '/intimacoes' },
-  { icon: Building2, label: 'Imóveis', href: '/imoveis' },
-  { icon: CalendarDays, label: 'Agenda', href: '/agenda' },
-  { icon: Bell, label: 'Alertas', href: '/alertas' },
-  { icon: Truck, label: 'Fornecedores', href: '/fornecedores' },
-  { icon: Scale, label: 'Legislação', href: '/legislacao' },
-  { icon: MessageSquare, label: 'Assistente', href: '/assistente' },
-  { icon: Wrench, label: 'Ferramentas do dia a dia', href: '/ferramentas' },
-  { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
-  { icon: Sunrise, label: 'Meu dia', href: '/meu-dia' },
-  { icon: Briefcase, label: 'Consultores', href: '/consultores' },
-  { icon: Cloud, label: 'Nuvem', href: '/nuvem' },
-  { icon: Banknote, label: 'Honorários', href: '/honorarios' },
-  { icon: KeySquare, label: 'Administração de locação', href: '/administracao' },
-  { icon: Timer, label: 'Horas e honorários', href: '/horas' },
-  { icon: FileText, label: 'Modelos de peças', href: '/modelos' },
-  { icon: Globe, label: 'Fontes do advogado', href: '/fontes' },
-  { icon: Radar, label: 'Monitoramento de processos', href: '/monitoramento' },
-  { icon: UserCheck, label: 'Checagem de contraparte', href: '/kyc' },
-  { icon: ClipboardList, label: 'Perfil do cliente', href: '/perfil-cliente' },
-  { icon: FileSearch, label: 'Parte adversa', href: '/parte-adversa' },
-  { icon: Library, label: 'Já pesquisado', href: '/biblioteca' },
-  { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
-  { icon: ShieldCheck, label: 'Compliance', href: '/compliance' },
-  { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
-  { icon: Gauge, label: 'Indicadores', href: '/indicadores' },
-  { icon: TrendingUp, label: 'Previsões', href: '/previsoes' },
-  { icon: FlaskConical, label: 'Instituto', href: '/instituto' },
-  { icon: FileBarChart, label: 'Relatórios', href: '/relatorios' },
-  { icon: ShieldCheck, label: 'Trilha', href: '/trilha' },
-  { icon: Wallet, label: 'Consumo', href: '/consumo' },
-  { icon: Users, label: 'Equipe', href: '/equipe' },
-  { icon: Settings, label: 'Configurações', href: '/settings' },
+const gruposMenu = [
+  { id: 'hoje', titulo: 'Hoje', itens: [
+    { icon: Home, label: 'Trocar de área', href: '/inicio' },
+    { icon: Sunrise, label: 'Meu dia', href: '/meu-dia' },
+    { icon: LayoutGrid, label: 'Painel', href: '/dashboard' },
+    { icon: Inbox, label: 'Intimações', href: '/intimacoes' },
+    { icon: CalendarDays, label: 'Agenda', href: '/agenda' },
+  ] },
+  { id: 'processos', titulo: 'Processos e casos', itens: [
+    { icon: FolderKanban, label: 'Casos e projetos', href: '/projetos' },
+    { icon: Gavel, label: 'Carteira de processos', href: '/processos' },
+    { icon: Radar, label: 'Monitoramento de processos', href: '/monitoramento' },
+    { icon: FileSearch, label: 'Parte adversa', href: '/parte-adversa' },
+    { icon: UserCheck, label: 'Checagem de contraparte', href: '/kyc' },
+    { icon: ClipboardList, label: 'Perfil do cliente', href: '/perfil-cliente' },
+  ] },
+  { id: 'financeiro', titulo: 'Clientes e dinheiro', itens: [
+    { icon: Filter, label: 'Funil de vendas', href: '/funil' },
+    { icon: PiggyBank, label: 'Financeiro', href: '/financeiro' },
+    { icon: Banknote, label: 'Honorários', href: '/honorarios' },
+    { icon: Timer, label: 'Horas e honorários', href: '/horas' },
+  ] },
+  { id: 'imoveis', titulo: 'Imóveis e locação', itens: [
+    { icon: Building2, label: 'Imóveis', href: '/imoveis' },
+    { icon: KeySquare, label: 'Administração de locação', href: '/administracao' },
+    { icon: Truck, label: 'Fornecedores', href: '/fornecedores' },
+    { icon: Bell, label: 'Alertas', href: '/alertas' },
+  ] },
+  { id: 'pesquisa', titulo: 'Pesquisa e redação', itens: [
+    { icon: Scale, label: 'Legislação', href: '/legislacao' },
+    { icon: MessageSquare, label: 'Assistente', href: '/assistente' },
+    { icon: FileText, label: 'Modelos de peças', href: '/modelos' },
+    { icon: Globe, label: 'Fontes do advogado', href: '/fontes' },
+    { icon: Library, label: 'Já pesquisado', href: '/biblioteca' },
+    { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
+    { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
+  ] },
+  { id: 'ferramentas', titulo: 'Ferramentas e estudos', itens: [
+    { icon: Wrench, label: 'Ferramentas do dia a dia', href: '/ferramentas' },
+    { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
+    { icon: Briefcase, label: 'Consultores', href: '/consultores' },
+  ] },
+  { id: 'gestao', titulo: 'Gestão e conformidade', itens: [
+    { icon: ShieldCheck, label: 'Compliance', href: '/compliance' },
+    { icon: Gauge, label: 'Indicadores', href: '/indicadores' },
+    { icon: TrendingUp, label: 'Previsões', href: '/previsoes' },
+    { icon: FileBarChart, label: 'Relatórios', href: '/relatorios' },
+    { icon: ShieldCheck, label: 'Trilha', href: '/trilha' },
+  ] },
+  { id: 'admin', titulo: 'Administração', itens: [
+    { icon: FlaskConical, label: 'Instituto', href: '/instituto' },
+    { icon: Cloud, label: 'Nuvem', href: '/nuvem' },
+    { icon: Wallet, label: 'Consumo', href: '/consumo' },
+    { icon: Users, label: 'Equipe', href: '/equipe' },
+    { icon: Settings, label: 'Configurações', href: '/settings' },
+  ] },
 ]
+const CHAVE_GRUPOS = 'lsm-menu-grupos'
+const estaAtivo = (href: string, pathname: string) => pathname.startsWith(href) || (href === '/fornecedores' && pathname.startsWith('/fornecedor/'))
+const grupoDe = (pathname: string) => gruposMenu.find(g => g.itens.some(i => estaAtivo(i.href, pathname)))?.id
 
 export default function Layout({ children, title }: LayoutProps) {
   const [sede, setSede] = useState(true)
@@ -98,6 +118,23 @@ export default function Layout({ children, title }: LayoutProps) {
   }, [])
   const navigate = useNavigate()
   const { pathname } = useLocation()
+
+  // Menu em grupos recolhíveis: o grupo da tela atual e "Hoje" começam abertos; a escolha da pessoa é lembrada.
+  const [grupos, setGrupos] = useState<Record<string, boolean>>(() => {
+    let salvo: Record<string, boolean> = {}
+    try { salvo = JSON.parse(localStorage.getItem(CHAVE_GRUPOS) || '{}') } catch { /* sem armazenamento */ }
+    return { hoje: true, ...salvo, ...(grupoDe(pathname) ? { [grupoDe(pathname)!]: true } : {}) }
+  })
+  useEffect(() => {
+    const g = grupoDe(pathname)
+    if (g) setGrupos(a => (a[g] ? a : { ...a, [g]: true }))
+  }, [pathname])
+  const mudarGrupos = (proximo: Record<string, boolean>) => {
+    setGrupos(proximo)
+    try { localStorage.setItem(CHAVE_GRUPOS, JSON.stringify(proximo)) } catch { /* sem armazenamento */ }
+  }
+  const alternarGrupo = (id: string) => mudarGrupos({ ...grupos, [id]: !grupos[id] })
+  const [maisAberto, setMaisAberto] = useState(false)
 
   // Passo D19: app instalável e avisos no celular (prazos em até 2 dias, intimações vencidas, compromissos de hoje),
   // conferidos ao abrir e a cada 30 minutos enquanto a tela estiver aberta.
@@ -155,7 +192,7 @@ export default function Layout({ children, title }: LayoutProps) {
             <Marca className="flex-1 min-w-0" marca={marca} />
           ) : (
             <span className="font-serif text-dourado tracking-widest text-lg mx-auto" aria-hidden="true">
-              {marca ? marca.nome.slice(0, 2).toUpperCase() : 'GM'}
+              {marca ? marca.nome.slice(0, 2).toUpperCase() : 'TH'}
             </span>
           )}
           <button
@@ -169,28 +206,70 @@ export default function Layout({ children, title }: LayoutProps) {
         </div>
 
         <nav className="flex-1 overflow-y-auto" aria-label="Menu principal">
-          <ul className="space-y-1 p-3">
-            {itensMenu.filter(item => sede || !SO_SEDE.includes(item.href)).map((item) => {
-              const ativo = pathname.startsWith(item.href) || (item.href === '/fornecedores' && pathname.startsWith('/fornecedor/'))
-              return (
-                <li key={item.label}>
+          {menuAberto && (
+            <div className="px-4 pt-3 flex justify-end">
+              {(() => {
+                const visiveis = gruposMenu.filter(g => g.itens.some(i => sede || !SO_SEDE.includes(i.href)))
+                const todosAbertos = visiveis.every(g => grupos[g.id])
+                return (
                   <button
-                    onClick={() => navigate(item.href)}
-                    aria-current={ativo ? 'page' : undefined}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded transition border-l-2 ${
-                      ativo
-                        ? 'bg-white/10 border-dourado text-white'
-                        : 'border-transparent text-white/75 hover:bg-white/5 hover:text-white'
-                    }`}
-                    title={!menuAberto ? item.label : undefined}
+                    type="button"
+                    onClick={() => mudarGrupos(Object.fromEntries(visiveis.map(g => [g.id, g.id === 'hoje' || !todosAbertos])))}
+                    className="text-[11px] uppercase tracking-wider text-white/70 hover:text-white underline-offset-2 hover:underline min-h-[32px]"
+                    data-testid="menu-alternar-tudo"
                   >
-                    <item.icon size={19} className="flex-shrink-0" />
-                    {menuAberto && <span className="text-sm">{item.label}</span>}
+                    {todosAbertos ? 'Recolher grupos' : 'Abrir todos os grupos'}
                   </button>
-                </li>
-              )
-            })}
-          </ul>
+                )
+              })()}
+            </div>
+          )}
+          {gruposMenu.map(grupo => {
+            const itens = grupo.itens.filter(item => sede || !SO_SEDE.includes(item.href))
+            if (!itens.length) return null
+            const aberto = !menuAberto || !!grupos[grupo.id]
+            const grupoAtivo = itens.some(i => estaAtivo(i.href, pathname))
+            return (
+              <div key={grupo.id} className={menuAberto ? 'px-3 py-1' : 'px-3 py-1 border-t border-white/10 first:border-t-0'} data-grupo={grupo.id}>
+                {menuAberto && (
+                  <button
+                    type="button"
+                    onClick={() => alternarGrupo(grupo.id)}
+                    aria-expanded={aberto}
+                    aria-controls={`grupo-${grupo.id}`}
+                    className={`w-full flex items-center justify-between px-4 py-2 min-h-[40px] text-[11px] uppercase tracking-[0.16em] rounded hover:bg-white/5 ${grupoAtivo ? 'text-dourado' : 'text-white/70'}`}
+                  >
+                    <span>{grupo.titulo}</span>
+                    <ChevronDown size={14} aria-hidden="true" className={`transition-transform ${aberto ? '' : '-rotate-90'}`} />
+                  </button>
+                )}
+                {aberto && (
+                  <ul id={`grupo-${grupo.id}`} className="space-y-1">
+                    {itens.map(item => {
+                      const ativo = estaAtivo(item.href, pathname)
+                      return (
+                        <li key={item.label}>
+                          <button
+                            onClick={() => navigate(item.href)}
+                            aria-current={ativo ? 'page' : undefined}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded transition border-l-2 ${
+                              ativo
+                                ? 'bg-white/10 border-dourado text-white'
+                                : 'border-transparent text-white/75 hover:bg-white/5 hover:text-white'
+                            }`}
+                            title={!menuAberto ? item.label : undefined}
+                          >
+                            <item.icon size={19} className="flex-shrink-0" />
+                            {menuAberto && <span className="text-sm">{item.label}</span>}
+                          </button>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
+              </div>
+            )
+          })}
         </nav>
 
         <div className="p-3 border-t border-white/10 space-y-3">
@@ -237,26 +316,47 @@ export default function Layout({ children, title }: LayoutProps) {
               )}
             </button>
           )}
-          {admin && (
+          <div className="relative">
             <button
-              onClick={() => navigate('/laboratorio-admin')}
-              className="hidden md:flex items-center gap-2 min-h-[44px] px-3 border border-navy/30 text-navy rounded-sm text-sm hover:bg-navy/5 transition"
-              aria-label="Laboratório de autoavaliação, só para administradores"
-              title="Laboratório"
-              data-testid="menu-laboratorio-admin"
+              type="button"
+              onClick={() => setMaisAberto(a => !a)}
+              aria-expanded={maisAberto}
+              aria-haspopup="true"
+              aria-label="Mais opções"
+              title="Mais opções"
+              className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/15 rounded-sm text-grafite-claro hover:border-dourado hover:text-navy transition"
+              data-testid="mais-opcoes"
             >
-              <FlaskConical size={16} aria-hidden="true" />
-              <span className="hidden 2xl:inline">Laboratório</span>
+              <MoreHorizontal size={18} aria-hidden="true" />
             </button>
-          )}
-          <button
-            onClick={() => { const t = tema === 'escuro' ? 'claro' : 'escuro'; aplicarTema(t); setTema(t) }}
-            className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/15 rounded-sm text-grafite-claro hover:border-dourado hover:text-navy transition"
-            aria-label={tema === 'escuro' ? 'Usar modo claro' : 'Usar modo escuro'}
-            title={tema === 'escuro' ? 'Modo claro' : 'Modo escuro'}
-          >
-            {tema === 'escuro' ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
-          </button>
+            {maisAberto && (
+              <>
+                <button type="button" aria-label="Fechar opções" tabIndex={-1} onClick={() => setMaisAberto(false)} className="fixed inset-0 z-40 cursor-default" />
+                <div role="group" aria-label="Mais opções" className="absolute right-0 mt-2 z-50 w-64 bg-white border border-navy/15 shadow-lg p-2 space-y-1">
+                  <button
+                    onClick={() => { const t = tema === 'escuro' ? 'claro' : 'escuro'; aplicarTema(t); setTema(t); setMaisAberto(false) }}
+                    className="w-full flex items-center gap-3 min-h-[44px] px-3 text-sm text-navy hover:bg-navy/5 text-left"
+                    aria-label={tema === 'escuro' ? 'Usar modo claro' : 'Usar modo escuro'}
+                  >
+                    {tema === 'escuro' ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
+                    {tema === 'escuro' ? 'Modo claro' : 'Modo escuro'}
+                  </button>
+                  {admin && (
+                    <button
+                      onClick={() => { setMaisAberto(false); navigate('/laboratorio-admin') }}
+                      className="w-full flex items-center gap-3 min-h-[44px] px-3 text-sm text-navy hover:bg-navy/5 text-left"
+                      aria-label="Laboratório de autoavaliação, só para administradores"
+                      data-testid="menu-laboratorio-admin"
+                    >
+                      <FlaskConical size={16} aria-hidden="true" />
+                      Laboratório
+                    </button>
+                  )}
+                  <p className="px-3 pt-1 text-[11px] text-grafite-claro">{NOME_PLATAFORMA}</p>
+                </div>
+              </>
+            )}
+          </div>
           <button
             onClick={() => setBuscaAberta(true)}
             className="flex items-center gap-2 min-h-[44px] px-3 sm:px-4 border border-navy/15 rounded-sm text-sm text-grafite-claro hover:border-dourado hover:text-navy transition flex-shrink-0"

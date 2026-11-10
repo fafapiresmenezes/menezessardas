@@ -45,7 +45,7 @@ describe('Portal do cliente (página pública por link secreto)', () => {
     expect(screen.getByTestId('portal-glossario')).toBeTruthy()
     expect(screen.getByTestId('assinar')).toBeTruthy()
     expect(screen.getByTestId('marca-sede')).toBeTruthy()
-    expect(screen.getByTestId('portal-rodape').textContent).toBe('Theye Suporte Jurídico · Instituto THEYE')
+    expect(screen.getByTestId('portal-rodape').textContent).toBe('Instituto THEYE · Suporte Jurídico')
     expect(screen.queryByTestId('portal-resumo')).toBeNull()
   })
 
@@ -66,7 +66,7 @@ describe('Portal do cliente (página pública por link secreto)', () => {
     const cab = screen.getByTestId('portal-marca-parceiro')
     expect(cab.textContent).toContain('Alfa Advocacia')
     expect(cab.querySelector('img')!.getAttribute('src')).toBe('https://x/logo.png')
-    expect(screen.getByTestId('portal-rodape').textContent).toBe('Alfa Advocacia · Theye Suporte Jurídico, do Instituto THEYE')
+    expect(screen.getByTestId('portal-rodape').textContent).toBe('Alfa Advocacia · Instituto THEYE')
     const writeText = vi.fn(async (_t: string) => undefined)
     Object.assign(navigator, { clipboard: { writeText } })
     fireEvent.click(screen.getByTestId('copiar-link-portal'))

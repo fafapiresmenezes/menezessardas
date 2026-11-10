@@ -57,12 +57,12 @@ describe('Aceite dos termos no primeiro acesso', () => {
 
 describe('Marca (monograma provisório)', () => {
   beforeEach(cleanup)
-  it('mostra Theye Suporte Jurídico com subtítulo e versão grande sem subtítulo', () => {
+  it('mostra Instituto THEYE com subtítulo e versão grande sem subtítulo', () => {
     const { rerender, container } = render(<Marca />)
-    expect(container.textContent).toContain('Theye Suporte Jurídico')
     expect(container.textContent).toContain('Instituto THEYE')
+    expect(container.textContent).toContain('Suporte Jurídico')
     rerender(<Marca tamanho="grande" comSubtitulo={false} />)
-    expect(container.textContent).not.toContain('Instituto THEYE')
+    expect(container.textContent).not.toContain('Suporte Jurídico')
     expect(container.innerHTML).toContain('text-4xl')
   })
 })

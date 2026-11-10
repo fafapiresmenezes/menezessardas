@@ -9,7 +9,7 @@ Versão ${CONTRATO_SAAS_VERSAO}
 
 CONTRATADA: Value Pas (empresa emissora, subcontratada do Instituto THEYE), doravante "Value Pas".
 CONTRATANTE: o escritório ou empresa identificado no cadastro da plataforma, representado pelo administrador que aceita este contrato, doravante "Cliente".
-OBJETO: licença de uso, não exclusiva e intransferível, da plataforma Theye Suporte Jurídico, do Instituto THEYE,, em área própria e separada, para gerir casos, prazos, contratos, honorários, portal do cliente e demais funções disponíveis no plano.
+OBJETO: licença de uso, não exclusiva e intransferível, da plataforma do Instituto THEYE, em área própria e separada, para gerir casos, prazos, contratos, honorários, portal do cliente e demais funções disponíveis no plano.
 
 1. Prazo e vigência
 1.1. O contrato vigora por 12 (doze) meses a partir do aceite e se renova automaticamente por iguais períodos, salvo aviso de uma das partes com 30 (trinta) dias de antecedência.

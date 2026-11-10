@@ -7,7 +7,7 @@ export default function EstudosPage() {
   return (
     <Layout title="Estudos para entidades">
       <section className="bg-white p-6 shadow-sm mb-6">
-        <h2 className="text-lg text-navy mb-1">Theye Suporte Jurídico, braço de serviços do Instituto THEYE</h2>
+        <h2 className="text-lg text-navy mb-1">Instituto THEYE: estudos para entidades do direito</h2>
         <p className="text-sm text-grafite-claro max-w-3xl">Estudos sob encomenda para OAB, associações, casas legislativas, defensorias, universidades e o setor imobiliário, para fazer a legislação brasileira avançar com evidências. Use o recomendador para montar o pacote certo (estudo principal, complementares e monitoramento), o orçamento para a proposta e as ferramentas de método para executar o estudo.</p>
         <div className="mt-4 flex flex-wrap gap-2" aria-label="Temas do Instituto">
           {Object.values(TEMAS).map(t => <span key={t} className="text-xs border border-dourado/60 text-navy px-2 py-1">{t}</span>)}

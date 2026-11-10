@@ -38,7 +38,7 @@ export function gerarICS(alertas: Alerta[], nomeCalendario = 'Compromissos contr
   const linhas: string[] = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Instituto THEYE//Theye Suporte Jurídico//PT-BR',
+    'PRODID:-//Instituto THEYE//Suporte Juridico//PT-BR',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     dobrar('X-WR-CALNAME:' + escapar(nomeCalendario)),

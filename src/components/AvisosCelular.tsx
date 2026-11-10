@@ -16,12 +16,12 @@ export default function AvisosCelular() {
     setMsg(e === 'permitido' ? 'Avisos ligados neste aparelho. Prazos em até 2 dias, intimações vencidas e compromissos do dia aparecem como notificação.' : e === 'negado' ? 'O navegador bloqueou os avisos. Libere em Configurações do site > Notificações e tente de novo.' : 'Este navegador não mostra avisos.')
   }
   const testar = async () => {
-    const ok = await mostrarAviso({ chave: 'teste-' + Date.now(), titulo: 'Aviso de teste · Theye Suporte Jurídico', corpo: 'Assim chegam os prazos críticos neste aparelho.', rota: '/meu-dia' })
+    const ok = await mostrarAviso({ chave: 'teste-' + Date.now(), titulo: 'Aviso de teste · Instituto THEYE', corpo: 'Assim chegam os prazos críticos neste aparelho.', rota: '/meu-dia' })
     setMsg(ok ? 'Aviso de teste enviado.' : 'Não foi possível mostrar o aviso. Confira a permissão do navegador.')
   }
   const instalar = async () => {
     const r = await instalarApp()
-    setMsg(r === 'aceito' ? 'Aplicativo instalado. Abra pelo ícone Theye na tela inicial.' : r === 'recusado' ? 'Instalação cancelada. O botão continua aqui quando quiser.' : 'Use o menu do navegador: "Instalar aplicativo" ou "Adicionar à tela de início".')
+    setMsg(r === 'aceito' ? 'Aplicativo instalado. Abra pelo ícone THEYE na tela inicial.' : r === 'recusado' ? 'Instalação cancelada. O botão continua aqui quando quiser.' : 'Use o menu do navegador: "Instalar aplicativo" ou "Adicionar à tela de início".')
     setInstalavel(podeInstalar()); setInstalado(instaladoComoApp())
   }
   const botao = 'min-h-[44px] px-4 text-sm border border-navy text-navy bg-white dark:bg-transparent dark:text-white dark:border-white/40'
