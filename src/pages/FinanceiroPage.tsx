@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { mensagemAmigavel } from '@/lib/erros'
-import { formatarData } from '@/lib/datas'
+import { formatarData, hojeLocal } from '@/lib/datas'
 import { tabelaAusente } from '@/lib/escritorio/tabelaAusente'
 import { CATEGORIAS_DESPESA, CATEGORIAS_RECEITA, fluxoMensal, recebiveis, aging, contasAPagar, previsao90, resultadoPorArea, despesasPorCategoria, pontoEquilibrio, reembolsosPendentes, repetirMensal, mesesAte, somarMeses, type Lancamento, type PagamentoHonorario, type ParcelaHonorario, type CasoFin } from '@/lib/escritorio/financeiro'
 import { Wallet, Plus, Download, Check } from 'lucide-react'
@@ -13,7 +13,7 @@ import { Wallet, Plus, Download, Check } from 'lucide-react'
 const brl = (v: number) => (v ?? 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 const pct = (v: number | null) => (v === null ? '—' : `${Math.round(v * 100)}%`)
 const nomeMes = (m: string) => new Date(`${m}-15T12:00:00`).toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' })
-const hojeIso = () => new Date().toISOString().slice(0, 10)
+const hojeIso = () => hojeLocal()
 const VAZIO = { tipo: 'despesa' as 'receita' | 'despesa', categoria: CATEGORIAS_DESPESA[0], descricao: '', valor: '', vencimento: hojeIso(), pago: false, caso_id: '', cliente: '', reembolsavel: false, repetir: '1' }
 
 export default function FinanceiroPage() {

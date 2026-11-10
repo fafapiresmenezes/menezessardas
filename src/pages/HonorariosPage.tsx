@@ -3,11 +3,13 @@ import { useBaixado } from '@/hooks/useBaixado'
 import { mensagemAmigavel } from '@/lib/erros'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
-import { formatarData, diasAte } from '@/lib/datas'
+import { formatarData, diasAte, hojeLocal, isoLocal } from '@/lib/datas'
 import { Banknote, Printer, QrCode, TrendingDown, TrendingUp, Receipt, Trash2 } from 'lucide-react'
 import CobrancaPix from '@/components/CobrancaPix'
 import { planoParcelas, situacaoParcela, resumoParcelas, type Parcela } from '@/lib/parcelas'
 import { CalendarClock } from 'lucide-react'
+import { lerNumero } from '@/lib/numero'
+import { escaparHtml } from '@/lib/abrirAba'
 
 // Honorários e rentabilidade: por caso, o combinado, o recebido, o vencimento e a régua de cobrança;
 // a rentabilidade cruza honorários recebidos com as horas lançadas para o mesmo cliente.
@@ -34,16 +36,21 @@ export default function HonorariosPage() {
   const [tabelaCopiada, setTabelaCopiada] = useState(false) // Passo 215
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 279
   const [baixado, marcarBaixado] = useBaixado() // Passo 393
-  const abrirBaixa = (c: Caso) => setBaixa({ caso: c, data: new Date().toISOString().slice(0, 10), valor: String(Math.max(0, Number(c.honorario_previsto) - Number(c.honorario_recebido))), meio: 'pix', observacao: '' })
+  const abrirBaixa = (c: Caso) => setBaixa({ caso: c, data: hojeLocal(), valor: String(Math.max(0, Number(c.honorario_previsto) - Number(c.honorario_recebido))), meio: 'pix', observacao: '' })
   const salvarBaixa = async () => {
     if (!baixa) return
-    const valor = Number(String(baixa.valor).replace(',', '.'))
+    const valor = lerNumero(baixa.valor)
     if (!valor || valor <= 0) return setMsgBaixa('Informe um valor maior que zero.')
     const { error } = await supabase.from('pagamentos_honorarios').insert({ caso_id: baixa.caso.id, data: baixa.data, valor, meio: baixa.meio, observacao: baixa.observacao.trim() || null })
     if (error) return setMsgBaixa(mensagemAmigavel(error))
     setMsgBaixa(`Pagamento de ${brl(valor)} registrado em ${formatarData(baixa.data)} (${MEIOS[baixa.meio]}).`); setBaixa(null); carregar()
   }
-  const apagarPagamento = async (p: Pagamento) => { await supabase.from('pagamentos_honorarios').delete().eq('id', p.id); carregar() }
+  const apagarPagamento = async (p: Pagamento) => {
+    if (!window.confirm(`Apagar o recebimento de ${brl(Number(p.valor))}?`)) return
+    const { error } = await supabase.from('pagamentos_honorarios').delete().eq('id', p.id)
+    if (error) setErro(mensagemAmigavel(error))
+    carregar()
+  }
 
   const carregar = async () => {
     const [c, h, pg, pc] = await Promise.all([
@@ -55,17 +62,17 @@ export default function HonorariosPage() {
     if (c.error) setErro(mensagemAmigavel(c.error))
     setCasos((c.data ?? []) as Caso[]); setHoras((h.data ?? []) as Hora[]); setPagamentos((pg.data ?? []) as Pagamento[]); setParcelas((pc?.data ?? []) as Parcela[])
   }
-  const abrirParcelar = (c: Caso) => { const aberto = Math.max(0, Number(c.honorario_previsto) - Number(c.honorario_recebido)); const d = new Date(); d.setMonth(d.getMonth() + 1); setParcelar({ caso: c, quantidade: '3', primeiro: d.toISOString().slice(0, 10), total: aberto.toFixed(2) }); setMsgParcelas('') }
+  const abrirParcelar = (c: Caso) => { const aberto = Math.max(0, Number(c.honorario_previsto) - Number(c.honorario_recebido)); const d = new Date(); d.setMonth(d.getMonth() + 1); setParcelar({ caso: c, quantidade: '3', primeiro: isoLocal(d), total: aberto.toFixed(2) }); setMsgParcelas('') }
   const salvarParcelas = async () => {
     if (!parcelar) return
-    const total = Number(String(parcelar.total).replace(',', '.')); const n = Number(parcelar.quantidade)
+    const total = lerNumero(parcelar.total); const n = Number(parcelar.quantidade)
     if (!planoParcelas(total, n, parcelar.primeiro).length) return setMsgParcelas('Informe o total, a quantidade (1 a 120) e o primeiro vencimento.')
     const { error } = await supabase.rpc('gerar_parcelas', { p_caso: parcelar.caso.id, p_quantidade: n, p_primeiro: parcelar.primeiro, p_valor_total: total })
     if (error) return setMsgParcelas(mensagemAmigavel(error))
     setMsgParcelas(`${n} parcela${n > 1 ? 's' : ''} de ${parcelar.caso.titulo} a partir de ${formatarData(parcelar.primeiro)}. As parcelas aparecem na Agenda e no resumo semanal por e-mail.`); setParcelar(null); carregar()
   }
   const quitarParcela = async (p: Parcela) => {
-    const { error } = await supabase.rpc('quitar_parcela', { p_parcela: p.id, p_data: new Date().toISOString().slice(0, 10), p_meio: 'pix' })
+    const { error } = await supabase.rpc('quitar_parcela', { p_parcela: p.id, p_data: hojeLocal(), p_meio: 'pix' })
     if (error) return setMsgParcelas(mensagemAmigavel(error))
     setMsgParcelas(`Parcela ${p.numero} quitada (${brl(Number(p.valor))}).`); carregar()
   }
@@ -99,8 +106,8 @@ export default function HonorariosPage() {
     const w = window.open('', '_blank'); if (!w) return
     w.document.write(`<html><head><title>Cobrança de honorários</title><style>body{font-family:Georgia,serif;max-width:700px;margin:40px auto;line-height:1.6}</style></head><body>
 <p>GMenezes Advogados Associados</p><p>Rio de Janeiro, ${new Date().toLocaleDateString('pt-BR')}</p>
-<p>Prezado(a) ${c.cliente ?? 'cliente'},</p>
-<p>Em relação ao caso <strong>${c.titulo}</strong>, informamos que há honorários em aberto no valor de <strong>${brl(r.aberto)}</strong>${c.vencimento_honorario ? `, com vencimento em ${formatarData(c.vencimento_honorario)}` : ''}.</p>
+<p>Prezado(a) ${escaparHtml(c.cliente ?? 'cliente')},</p>
+<p>Em relação ao caso <strong>${escaparHtml(c.titulo)}</strong>, informamos que há honorários em aberto no valor de <strong>${brl(r.aberto)}</strong>${c.vencimento_honorario ? `, com vencimento em ${formatarData(c.vencimento_honorario)}` : ''}.</p>
 <p>Pedimos a gentileza de regularizar o pagamento ou entrar em contato para combinar a melhor forma. Ficamos à disposição.</p>
 <p>Atenciosamente,<br/>GMenezes Advogados Associados</p></body></html>`)
     w.document.close(); w.print()
@@ -159,7 +166,7 @@ export default function HonorariosPage() {
                     <td className={`${r.cor} whitespace-nowrap`}>{r.rotulo}{r.aberto > 0 && <button onClick={() => carta(c)} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1"><Printer size={12} aria-hidden="true" /> Carta de cobrança</button>}{r.aberto > 0 && <button onClick={() => setPix({ caso: c, valor: r.aberto, referencia: c.titulo.slice(0, 20), descricao: `Honorarios ${c.titulo}` })} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1" data-testid="cobrar-pix"><QrCode size={12} aria-hidden="true" /> Cobrar por PIX</button>}<button onClick={() => abrirBaixa(c)} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1" data-testid="registrar-pagamento"><Receipt size={12} aria-hidden="true" /> Registrar pagamento</button>
                       {r.aberto > 0 && <button onClick={() => abrirParcelar(c)} className="block text-xs underline text-navy mt-1 inline-flex items-center gap-1" data-testid="parcelar"><CalendarClock size={12} aria-hidden="true" /> {parcelas.some(p => p.caso_id === c.id) ? 'Refazer parcelas' : 'Parcelar'}</button>}
                       {parcelas.some(p => p.caso_id === c.id) && (() => { const ps = parcelas.filter(p => p.caso_id === c.id); const res = resumoParcelas(ps); return <div className="mt-1" data-testid="parcelas-caso"><p className="text-[11px] text-grafite">{res.pagas}/{res.total} pagas{res.atrasadas > 0 && <span className="text-critico"> · {res.atrasadas} atrasada{res.atrasadas > 1 ? 's' : ''} ({brl(res.valorAtrasado)})</span>}</p><ol className="text-[11px] text-grafite-claro space-y-0.5">{ps.map(p => { const st = situacaoParcela(p); return <li key={p.id} data-testid="parcela" className={st.codigo === 'atrasada' ? 'text-critico' : st.codigo === 'vence_breve' ? 'text-dourado-escuro' : ''}>{p.numero}ª · {formatarData(p.vencimento)} · {brl(Number(p.valor))} · {st.rotulo}{!p.pago_em && <> <button onClick={() => pixParcela(c, p)} className="underline" aria-label={`PIX da parcela ${p.numero}`}>PIX</button> <button onClick={() => quitarParcela(p)} className="underline" aria-label={`Marcar parcela ${p.numero} paga`} data-testid="quitar-parcela">Marcar paga</button></>}</li> })}</ol></div> })()}
-                      {pagamentos.filter(p => p.caso_id === c.id).length > 0 && <ul className="mt-1 text-[11px] text-grafite-claro" data-testid="pagamentos-caso">{pagamentos.filter(p => p.caso_id === c.id).slice(0, 5).map(p => <li key={p.id} data-testid="pagamento">{formatarData(p.data)} · {brl(Number(p.valor))} · {MEIOS[p.meio] ?? p.meio} <button onClick={() => apagarPagamento(p)} aria-label="Apagar pagamento" className="align-middle"><Trash2 size={10} aria-hidden="true" /></button></li>)}</ul>}</td>
+                      {pagamentos.filter(p => p.caso_id === c.id).length > 0 && <ul className="mt-1 text-[11px] text-grafite-claro" data-testid="pagamentos-caso">{pagamentos.filter(p => p.caso_id === c.id).slice(0, 5).map(p => <li key={p.id} data-testid="pagamento">{formatarData(p.data)} · {brl(Number(p.valor))} · {MEIOS[p.meio] ?? p.meio} <button onClick={() => apagarPagamento(p)} aria-label="Apagar pagamento" className="align-middle p-2 -m-1 text-grafite-claro hover:text-critico"><Trash2 size={10} aria-hidden="true" /></button></li>)}</ul>}</td>
                     <td className={`whitespace-nowrap ${rent < 0 ? 'text-critico' : 'text-navy'}`}>{rent < 0 ? <TrendingDown size={14} className="inline" aria-hidden="true" /> : <TrendingUp size={14} className="inline" aria-hidden="true" />} {brl(rent)}<span className="block text-xs text-grafite-claro">custo {brl(custo)}</span></td>
                     <td>{editando[c.id] && <button onClick={() => salvar(c)} className="min-h-[36px] px-3 bg-navy text-white text-xs uppercase">Salvar</button>}</td>
                   </tr>
@@ -195,7 +202,7 @@ export default function HonorariosPage() {
               <label className="text-xs">Total (R$)<input type="number" min="0.01" step="0.01" value={parcelar.total} onChange={e => setParcelar({ ...parcelar, total: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="parcelar-total" /></label>
               <label className="text-xs">Parcelas<input type="number" min="1" max="120" value={parcelar.quantidade} onChange={e => setParcelar({ ...parcelar, quantidade: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="parcelar-quantidade" /></label>
               <label className="text-xs">1º vencimento<input type="date" value={parcelar.primeiro} onChange={e => setParcelar({ ...parcelar, primeiro: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="parcelar-primeiro" /></label>
-              <div className="text-xs self-end pb-2" data-testid="parcelar-previa">{(() => { const pl = planoParcelas(Number(String(parcelar.total).replace(',', '.')), Number(parcelar.quantidade), parcelar.primeiro); return pl.length ? `${pl.length}× ${brl(pl[0].valor)}${pl.length > 1 && pl[pl.length - 1].valor !== pl[0].valor ? ` (última ${brl(pl[pl.length - 1].valor)})` : ''} até ${formatarData(pl[pl.length - 1].vencimento)}` : 'Preencha os campos' })()}</div>
+              <div className="text-xs self-end pb-2" data-testid="parcelar-previa">{(() => { const pl = planoParcelas(lerNumero(parcelar.total), Number(parcelar.quantidade), parcelar.primeiro); return pl.length ? `${pl.length}× ${brl(pl[0].valor)}${pl.length > 1 && pl[pl.length - 1].valor !== pl[0].valor ? ` (última ${brl(pl[pl.length - 1].valor)})` : ''} até ${formatarData(pl[pl.length - 1].vencimento)}` : 'Preencha os campos' })()}</div>
             </div>
             <div className="flex gap-2 mt-3">
               <button onClick={salvarParcelas} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider" data-testid="parcelar-salvar">Gerar parcelas</button>

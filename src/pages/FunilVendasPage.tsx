@@ -4,7 +4,7 @@ import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { mensagemAmigavel } from '@/lib/erros'
 import { listarPessoas, type Pessoa } from '@/lib/equipe'
-import { formatarData } from '@/lib/datas'
+import { formatarData, hojeLocal } from '@/lib/datas'
 import { ETAPAS, ORIGENS, MOTIVOS_PERDA, resumoFunil, proximaEtapa, validarMudanca, telefoneWhatsapp, mensagemRetorno, casoDoLead, rotuloEtapa, type Lead, type Etapa } from '@/lib/escritorio/funil'
 import { tabelaAusente } from '@/lib/escritorio/tabelaAusente'
 import { Filter, Plus, MessageCircle, ArrowRight, Trash2 } from 'lucide-react'
@@ -67,12 +67,15 @@ export default function FunilVendasPage() {
     setErro('')
     const { data, error } = await supabase.from('tarefas').insert(casoDoLead(l)).select('id').single()
     if (error || !data) return setErro(error ? mensagemAmigavel(error) : 'Não foi possível criar o caso.')
-    await supabase.from('leads').update({ caso_id: (data as { id: string }).id, etapa: 'ganho' }).eq('id', l.id)
+    const vinculo = await supabase.from('leads').update({ caso_id: (data as { id: string }).id, etapa: 'ganho' }).eq('id', l.id)
+    if (vinculo.error) { setErro(`O caso foi criado, mas o contato não foi marcado como ganho (${mensagemAmigavel(vinculo.error)}). Marque à mão para não criar o caso de novo.`); carregar(); return }
     setMsg(`Caso criado para ${l.nome}, com honorários de ${brl(Number(l.valor_estimado))}.`); carregar()
   }
   const apagar = async (l: Lead) => {
     if (!window.confirm(`Apagar ${l.nome} do funil?`)) return
-    await supabase.from('leads').delete().eq('id', l.id); carregar()
+    const { error } = await supabase.from('leads').delete().eq('id', l.id)
+    if (error) setErro(mensagemAmigavel(error))
+    carregar()
   }
 
   if (ausente) return (
@@ -94,7 +97,7 @@ export default function FunilVendasPage() {
 
         {(resumo.followUps.length > 0 || resumo.parados.length > 0) && (
           <section className="bg-white shadow-sm border-l-4 border-critico p-4 text-sm" data-testid="funil-retornos">
-            {resumo.followUps.length > 0 && <p><strong>Retornar hoje ({resumo.followUps.length}):</strong> {resumo.followUps.map(l => `${l.nome}${l.proximo_contato! < new Date().toISOString().slice(0, 10) ? ` (atrasado desde ${formatarData(l.proximo_contato!)})` : ''}`).join(' · ')}</p>}
+            {resumo.followUps.length > 0 && <p><strong>Retornar hoje ({resumo.followUps.length}):</strong> {resumo.followUps.map(l => `${l.nome}${l.proximo_contato! < hojeLocal() ? ` (atrasado desde ${formatarData(l.proximo_contato!)})` : ''}`).join(' · ')}</p>}
             {resumo.parados.length > 0 && <p className="mt-1"><strong>Parados há mais de 14 dias na mesma etapa:</strong> {resumo.parados.map(l => l.nome).join(' · ')}</p>}
           </section>
         )}

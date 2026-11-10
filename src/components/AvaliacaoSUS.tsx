@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ClipboardCheck } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '../lib/supabase'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // System Usability Scale (Brooke, 1986): 10 afirmações, escala 1–5; nota de 0 a 100. Média de 68 é o ponto de corte do mercado.
 const ITENS = [
@@ -37,7 +38,7 @@ export default function AvaliacaoSUS() {
     const nota = notaSUS(r)
     if (supabaseConfigurado) {
       const { error } = await supabase.from('avaliacoes_sus').insert({ respostas: r, nota })
-      if (error) { setMsg('Não foi possível guardar: ' + error.message); return }
+      if (error) { setMsg('Não foi possível guardar: ' + mensagemAmigavel(error)); return }
     }
     setMsg(`Obrigado. Sua nota: ${nota} de 100.`); setR(Array(10).fill(0)); await carregar()
   }

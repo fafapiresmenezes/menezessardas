@@ -12,6 +12,7 @@
 import { supabase, supabaseConfigurado } from './supabase'
 import type { Imovel } from './repositorio'
 import { registrarEvento } from './trilha'
+import { hojeLocal } from '@/lib/datas'
 
 export type StatusAcompanhamento = 'nova' | 'em_analise' | 'concluida' | 'nao_se_aplica'
 
@@ -106,7 +107,7 @@ export const NOVIDADE_EXEMPLO: Norma = {
   alcance: comercial,
   alcanceTexto: 'Imóveis comerciais, lojas e hotéis',
   acao: 'Ler a norma, identificar os contratos afetados e decidir se há aditivo a propor.',
-  publicadaEm: new Date().toISOString().slice(0, 10),
+  publicadaEm: hojeLocal(),
 }
 
 export function imoveisAfetados(n: Norma, imoveis: Imovel[]): Imovel[] {
@@ -199,7 +200,7 @@ export async function radarPortais(area?: string): Promise<NovidadePortal[]> {
     return [{
       id: 'ex-1', fonte: 'Câmara dos Deputados', tipo: 'Projeto', titulo: 'PL 3925/2026',
       resumo: 'Altera a Lei nº 8.245/1991 para vedar a oferta publicitária de locação residencial com aluguel diferente do contratado (exemplo da demonstração).',
-      link: 'https://www.camara.leg.br/', data: new Date().toISOString().slice(0, 10), termo: 'inquilinato', vistoEm: new Date().toISOString(),
+      link: 'https://www.camara.leg.br/', data: hojeLocal(), termo: 'inquilinato', vistoEm: new Date().toISOString(),
     }]
   }
   let q = supabase

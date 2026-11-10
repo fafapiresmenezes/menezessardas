@@ -6,6 +6,7 @@ import { ESCOLAS, REFERENCIAS, FORMATACAO } from '../lib/estiloPecas'
 import { lerDocx } from '../lib/docx'
 import { formatacaoFinal, type Formatacao } from '../lib/formatarPeca'
 import { carregarFormatacao, salvarFormatacao, apagarFormatacao } from '../lib/formatacaoUsuario'
+import { mensagemAmigavel } from '@/lib/erros'
 
 interface Peca { id: string; titulo: string; texto: string; criado_em: string }
 const LIMITE = 10
@@ -53,14 +54,16 @@ export default function EstiloEscrita() {
     setOcupado(true); setMsg('')
     const { error } = await supabase.from('estilos_escrita').insert({ titulo: titulo.trim() || 'Peça sem título', texto: texto.trim() })
     setOcupado(false)
-    if (error) { setMsg(error.message); return }
+    if (error) { setMsg(mensagemAmigavel(error)); return }
     setTitulo(''); setTexto(''); if (arquivo.current) arquivo.current.value = ''
     setMsg('Peça guardada. O Assistente já usa o seu estilo ao redigir.')
     carregar()
   }
 
   const apagar = async (id: string) => {
-    await supabase.from('estilos_escrita').delete().eq('id', id)
+    if (!window.confirm('Apagar esta peça do seu estilo de escrita?')) return
+    const { error } = await supabase.from('estilos_escrita').delete().eq('id', id)
+    if (error) setMsg(mensagemAmigavel(error))
     carregar()
   }
 

@@ -3,6 +3,7 @@ import { useBaixado } from '@/hooks/useBaixado'
 import { supabase } from '@/lib/supabase'
 import { formatarData } from '@/lib/datas'
 import { PenLine, Trash2 } from 'lucide-react'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Assinatura eletrônica simples (Lei 14.063/2020, art. 4º, I): o escritório escreve o documento (contrato de honorários,
 // procuração, termo), o cliente assina pelo link do portal com nome e CPF/CNPJ; fica o hash e a hora.
@@ -30,18 +31,19 @@ export default function AssinaturasCaso({ tarefaId, cliente }: { tarefaId: strin
   const [baixado, marcarBaixado] = useBaixado() // Passo 406
   const carregar = async () => {
     const { data, error } = await supabase.from('assinaturas_eletronicas').select('id,titulo,hash_texto,assinante_nome,assinante_documento,assinado_em,hash_assinatura,criado_em,selo_id,selos_blockchain(situacao,altura_bitcoin,data_bloco,criado_em)').eq('tarefa_id', tarefaId).order('criado_em')
-    if (error) setErro(error.message); else setLista((data ?? []) as unknown as Assinatura[])
+    if (error) setErro(mensagemAmigavel(error)); else setLista((data ?? []) as unknown as Assinatura[])
   }
   useEffect(() => { carregar() }, [tarefaId])
   const pedir = async () => {
     setErro('')
     const { error } = await supabase.from('assinaturas_eletronicas').insert({ tarefa_id: tarefaId, titulo: titulo.trim(), texto })
-    if (error) return setErro(error.message)
+    if (error) return setErro(mensagemAmigavel(error))
     setAberto(false); carregar()
   }
   const apagar = async (id: string) => {
+    if (!window.confirm('Apagar este pedido de assinatura?')) return
     const { error } = await supabase.from('assinaturas_eletronicas').delete().eq('id', id)
-    if (error) setErro(error.message); else carregar()
+    if (error) setErro(mensagemAmigavel(error)); else carregar()
   }
   return (
     <section aria-labelledby="t-assin" className="bg-white shadow-sm p-5" data-testid="assinaturas-caso">

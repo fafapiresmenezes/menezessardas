@@ -6,11 +6,12 @@ import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { repositorio, type Imovel } from '@/lib/repositorio'
 import { listarPessoas, type Pessoa } from '@/lib/equipe'
-import { formatarData, diasAte } from '@/lib/datas'
+import { formatarData, diasAte, isoLocal } from '@/lib/datas'
 import { FolderKanban, Plus, ChevronRight } from 'lucide-react'
 import AssinaturasCaso from '@/components/AssinaturasCaso'
 import PortalCasoEscritorio from '@/components/PortalCasoEscritorio'
 import { caminhoCritico } from '@/lib/caminhoCritico'
+import { lerHoras } from '@/lib/numero'
 
 // Gestão de projetos do escritório em hierarquia (Projeto → Tarefa → Subtarefa), no estilo Monday:
 // vale para qualquer caso (processo, contrato, consultoria, cliente externo ou projeto interno), com
@@ -100,8 +101,8 @@ export default function ProjetosPage() {
       titulo: tituloCaso, nivel: 'projeto', prioridade: 'media', cliente: caso.cliente.trim() || null, area: caso.area,
       numero_processo: caso.numero.trim() || null, tipo: caso.tipo, responsavel_id: caso.responsavel_id || null,
     }).select('id').single()
-    if (error || !data) return setErro(error?.message ?? 'Falha ao criar o caso.')
-    const dia = (n: number) => new Date(Date.now() + n * 864e5).toISOString().slice(0, 10)
+    if (error || !data) return setErro(error ? mensagemAmigavel(error) : 'Falha ao criar o caso.')
+    const dia = (n: number) => isoLocal(new Date(Date.now() + n * 864e5))
     // Etapas do modelo em sequência: cada uma depende da anterior (Passo 30).
     let anterior: string | null = null
     for (const [t, d] of m.etapas) {
@@ -109,7 +110,7 @@ export default function ProjetosPage() {
         titulo: t, nivel: 'tarefa', pai_id: data.id, prioridade: 'media', prazo: dia(d), area: caso.area, cliente: caso.cliente.trim() || null,
         responsavel_id: caso.responsavel_id || null, depende_de: anterior,
       }).select('id').single()
-      if (res.error || !res.data) return setErro(res.error?.message ?? 'Falha ao criar etapa.')
+      if (res.error || !res.data) return setErro(res.error ? mensagemAmigavel(res.error) : 'Falha ao criar etapa.')
       anterior = res.data.id
     }
     setCaso({ ...caso, titulo: '', cliente: '', numero: '' }); setProjeto(data.id); carregar()
@@ -148,9 +149,11 @@ export default function ProjetosPage() {
     if (error) { setErro(mensagemAmigavel(error)); carregar() }
   }
   const somarHoras = async (t: Tarefa) => {
-    const h = Number(prompt('Quantas horas trabalhou nesta tarefa agora?', '1')?.replace(',', '.'))
+    const h = lerHoras(prompt('Quantas horas trabalhou nesta tarefa agora? (ex.: 1,5 ou 1:30)', '1'))
     if (!h || h <= 0) return
-    await supabase.from('tarefas').update({ horas: Number(t.horas) + h }).eq('id', t.id); carregar()
+    const { error } = await supabase.from('tarefas').update({ horas: Number(t.horas) + h }).eq('id', t.id)
+    if (error) setErro(mensagemAmigavel(error))
+    carregar()
   }
 
   const dependerDe = async (t: Tarefa, dep: string) => {

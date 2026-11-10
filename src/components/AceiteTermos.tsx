@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { ShieldCheck } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { TERMOS_TEXTO, TERMOS_VERSAO, hashTermos } from '@/lib/termos'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Passo 09: no primeiro acesso (ou em nova versão dos termos) a pessoa precisa ler e aceitar.
 // O aceite grava data, versão e hash em aceites_termos; sem aceitar, a tela fica coberta.
@@ -23,7 +24,7 @@ export default function AceiteTermos() {
     setSalvando(true); setErro('')
     const { error } = await supabase.rpc('aceitar_termos', { p_versao: TERMOS_VERSAO, p_hash: await hashTermos(), p_navegador: navigator.userAgent })
     setSalvando(false)
-    if (error) setErro('Não deu para gravar o aceite: ' + error.message)
+    if (error) setErro('Não deu para gravar o aceite: ' + mensagemAmigavel(error))
     else setPendente(false)
   }
   return (

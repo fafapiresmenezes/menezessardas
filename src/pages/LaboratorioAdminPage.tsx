@@ -97,7 +97,7 @@ export default function LaboratorioAdminPage() {
           {!assinado ? (
             <div className="space-y-3" data-testid="lab-aviso">
               <p className="text-sm border border-navy/20 p-4 bg-marfim/40">{AVISO}</p>
-              <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={marcado} onChange={e => setMarcado(e.target.checked)} className="mt-1 w-5 h-5" /><span>Li e assino este aviso como administrador(a).</span></label>
+              <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={marcado} onChange={e => setMarcado(e.target.checked)} className="mt-1 w-5 h-5 shrink-0" /><span>Li e assino este aviso como administrador(a).</span></label>
               <button type="button" disabled={!marcado} onClick={assinar} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-40">Assinar e liberar o laboratório</button>
             </div>
           ) : (

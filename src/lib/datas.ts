@@ -14,21 +14,30 @@ function hojeZerado() {
 export function emDias(dias: number): string {
   const d = hojeZerado()
   d.setDate(d.getDate() + dias)
-  return d.toISOString().slice(0, 10)
+  return isoLocal(d)
 }
 
 /** Dias entre hoje e a data informada. Negativo quando já passou. */
 export function diasAte(dataISO: string | null | undefined): number | null {
   if (!dataISO) return null
-  const alvo = new Date(dataISO + 'T00:00:00')
+  const alvo = new Date(dataISO.slice(0, 10) + 'T00:00:00')
   if (Number.isNaN(alvo.getTime())) return null
   return Math.round((alvo.getTime() - hojeZerado().getTime()) / 86400000)
+}
+
+/** Data (aaaa-mm-dd) no fuso de quem usa: depois das 21h no Brasil o UTC já está no dia seguinte. */
+export function isoLocal(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+/** Hoje (aaaa-mm-dd) no fuso local. Use no lugar de new Date().toISOString().slice(0, 10). */
+export function hojeLocal(): string {
+  return isoLocal(new Date())
 }
 
 /** aaaa-mm-dd → dd/mm/aaaa */
 export function formatarData(dataISO: string | null | undefined): string {
   if (!dataISO) return '—'
-  const [a, m, d] = dataISO.split('-')
+  const [a, m, d] = dataISO.slice(0, 10).split('-')
   if (!a || !m || !d) return dataISO
   return `${d}/${m}/${a}`
 }

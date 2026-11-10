@@ -23,6 +23,9 @@ vi.mock('@/components/CobrancaPix', () => ({ default: ({ valor, caso, referencia
 const { default: HonorariosPage } = await import('./HonorariosPage')
 const n = (s: string | null | undefined) => (s ?? '').replace(/ /g, ' ')
 
+// Apagar agora pede confirmação: nos testes, a pessoa sempre confirma.
+beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true) })
+
 describe('Honorários e rentabilidade', () => {
   beforeEach(() => { cleanup(); insert.mockClear(); update.mockClear(); del.mockClear(); rpc.mockClear(); pagamentos = []; parcelas = []
     casos = [

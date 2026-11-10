@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ShieldCheck } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '../lib/supabase'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Autenticação em dois fatores (TOTP): a pessoa lê o QR no Google Authenticator, Microsoft Authenticator
 // ou Authy e, a partir daí, o site pede o código de 6 dígitos depois da senha.
@@ -28,7 +29,7 @@ export default function DoisFatores() {
       // remove rascunhos antigos não verificados para não acumular
       for (const f of fatores.filter(f => f.status !== 'verified')) await supabase.auth.mfa.unenroll({ factorId: f.id })
       const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Theye ' + new Date().toLocaleDateString('pt-BR') })
-      if (error || !data) { setMsg('Não foi possível iniciar: ' + (error?.message ?? '')); return }
+      if (error || !data) { setMsg('Não foi possível iniciar: ' + (error ? mensagemAmigavel(error) : '')); return }
       setQr(data.totp.qr_code); setSegredo(data.totp.secret); setFatorId(data.id)
     } finally { setOcupado(false) }
   }
@@ -46,7 +47,7 @@ export default function DoisFatores() {
   const desativar = async (id: string) => {
     if (!window.confirm('Desativar a verificação em dois fatores desta conta?')) return
     const { error } = await supabase.auth.mfa.unenroll({ factorId: id })
-    setMsg(error ? 'Não foi possível desativar: ' + error.message : 'Dois fatores desativados.')
+    setMsg(error ? 'Não foi possível desativar: ' + mensagemAmigavel(error) : 'Dois fatores desativados.')
     await carregar()
   }
 

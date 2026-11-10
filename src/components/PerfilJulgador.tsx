@@ -77,7 +77,7 @@ export default function PerfilJulgador() {
     try {
       if (!supabaseConfigurado) { setPerfil({ ...EXEMPLO, nome, orgao: orgao || EXEMPLO.orgao }); return }
       const { data, error } = await supabase.functions.invoke('perfil-julgador', { body: { nome, orgao, tribunal, tema } })
-      if (error) throw new Error(error.message)
+      if (error) throw new Error(mensagemAmigavel(error))
       if (data?.erro) throw new Error(data.erro)
       setPerfil(data as Perfil)
     } catch (e) {

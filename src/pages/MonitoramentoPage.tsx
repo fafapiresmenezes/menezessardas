@@ -8,6 +8,7 @@ import { supabase } from '@/lib/supabase'
 import { Radar, Trash2, RefreshCw, History } from 'lucide-react'
 import { variacoesNome, filtrarNovidades, processosNovos } from '@/lib/escritorio/carteira'
 import { formatarCnj } from '@/lib/escritorio/importarProcessos'
+import { hojeLocal, isoLocal } from '@/lib/datas'
 
 // Passo 22: linha do tempo dos andamentos (DataJud) por processo, com filtro por período.
 type Mov = { data: string; nome: string }
@@ -29,8 +30,8 @@ export default function MonitoramentoPage() {
   const [numeroLinha, setNumeroLinha] = useState('')
   const [linha, setLinha] = useState<Linha | null>(null)
   const [msgLinha, setMsgLinha] = useState('')
-  const [de, setDe] = useState(() => new Date(Date.now() - 365 * 86400000).toISOString().slice(0, 10))
-  const [ate, setAte] = useState(() => new Date().toISOString().slice(0, 10))
+  const [de, setDe] = useState(() => isoLocal(new Date(Date.now() - 365 * 86400000)))
+  const [ate, setAte] = useState(() => hojeLocal())
   const linhaDoTempo = async (numero: string) => {
     const n = numero.replace(/\D/g, '')
     if (n.length !== 20) return setMsgLinha('O número do processo precisa ter 20 dígitos (padrão CNJ).')
@@ -104,9 +105,18 @@ export default function MonitoramentoPage() {
     await verificar(data!.id)
     if (extras) setMsg(m => `${m} Também monitorando ${extras} variação(ões) de grafia do nome.`)
   }
-  const remover = async (id: string) => { await supabase.from('monitoramentos').delete().eq('id', id); carregar() }
+  const remover = async (id: string) => {
+    if (!window.confirm('Parar de monitorar este item? O histórico de novidades dele some.')) return
+    const r = await supabase.from('monitoramentos').delete().eq('id', id)
+    if (r?.error) setMsg(mensagemAmigavel(r.error))
+    carregar()
+  }
   // Passo D15: novidades vistas saem da lista e de Meu dia; casos com número CNJ entram sozinhos.
-  const marcarVistas = async (id: string) => { await supabase.from('monitoramentos').update({ novidades: [], novidade_em: null }).eq('id', id); carregar() }
+  const marcarVistas = async (id: string) => {
+    const r = await supabase.from('monitoramentos').update({ novidades: [], novidade_em: null }).eq('id', id)
+    if (r?.error) setMsg(mensagemAmigavel(r.error))
+    carregar()
+  }
   const trazerCasos = async () => {
     setOcupado(true)
     const { data, error } = await supabase.functions.invoke('monitorar', { body: { sincronizar: true }, region: FunctionRegion.SaEast1 })

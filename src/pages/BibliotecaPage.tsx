@@ -1,3 +1,4 @@
+import { mensagemAmigavel } from '@/lib/erros'
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import Vazio from '@/components/Vazio'
@@ -24,7 +25,9 @@ export default function BibliotecaPage() {
   }
   const apagar = async (i: ItemBiblioteca) => {
     if (!window.confirm(`Apagar "${i.titulo}" da biblioteca?`)) return
-    await supabase.from('biblioteca_pesquisas').delete().eq('id', i.id); carregar()
+    const { error } = await supabase.from('biblioteca_pesquisas').delete().eq('id', i.id)
+    setMsg(error ? mensagemAmigavel(error, 'Não foi possível apagar agora. Tente de novo.') : 'Apagado.')
+    carregar()
   }
   return (
     <Layout title="Já pesquisado">

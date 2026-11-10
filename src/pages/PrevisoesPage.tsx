@@ -11,6 +11,7 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { preverCarteira, preverReceita, intervaloWilson, registrarPrevisoes, type Faixa, type PrevisaoContrato } from '@/lib/predicao'
 import { TrendingUp, ShieldAlert, Repeat, Scale, ChevronDown, ChevronUp, Info, FlaskConical } from 'lucide-react'
 import { CLASSES_LOCACAO, consultarPrevisaoInstituto, resumirPrevisaoInstituto, type PrevisaoInstituto , chanceClassesInstituto, textoChanceClasse, type ChanceClasse, probabilidadeUnica } from '@/lib/previsaoInstituto'
+import { hojeLocal } from '@/lib/datas'
 
 const moeda = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v)
 const COR: Record<Faixa, string> = { baixo: 'bg-regular', moderado: 'bg-atencao', alto: 'bg-critico' }
@@ -254,7 +255,7 @@ export default function PrevisoesPage() {
   // Uma fotografia por dia das previsões de cada contrato, para calibrar com o desfecho real.
   useEffect(() => {
     if (!previsoes.length || !Object.keys(indices).length) return
-    const chave = `lsm-previsoes-${new Date().toISOString().slice(0, 10)}`
+    const chave = `lsm-previsoes-${hojeLocal()}`
     try { if (localStorage.getItem(chave)) return; localStorage.setItem(chave, '1') } catch { /* sem armazenamento */ }
     registrarPrevisoes([
       ...previsoes.map(p => ({ tipo: 'risco_contrato', referencia: p.contrato.id, previsto: { risco: p.risco, faixa: p.faixaRisco, renovacao: p.renovacao, fatores: p.fatoresRisco.map(f => f.fator) }, fonte: 'regras declaradas v1' })),

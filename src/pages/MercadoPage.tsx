@@ -25,7 +25,7 @@ export default function MercadoPage() {
         const { data, error } = await supabase.functions.invoke('mercado', { body: { area: a } })
         let corpo = data
         if (error) { try { corpo = await (error as { context?: Response }).context?.json?.() } catch { corpo = null } }
-        setDados(d => ({ ...d, [a]: error || corpo?.erro ? { erro: corpo?.erro ?? 'O CNJ não respondeu agora. Tente de novo em alguns minutos.' } : data }))
+        setDados(d => ({ ...d, [a]: error || corpo?.erro ? { erro: corpo?.erro ?? 'O CNJ não respondeu agora. Tente de novo em alguns minutos.' } : Array.isArray(data?.porAno) ? data : { erro: 'O CNJ devolveu uma resposta incompleta. Tente de novo em alguns minutos.' } }))
       } catch {
         setDados(d => ({ ...d, [a]: { erro: 'Sem conexão com o CNJ agora. Tente de novo em alguns minutos.' } }))
       }
@@ -91,7 +91,7 @@ export default function MercadoPage() {
                   {x.porAno.length ? <>Último ano: {fmt(x.porAno[x.porAno.length - 1].n)} processos novos. </> : (x.fontePrevisao ? 'O DataJud não tem esta classe; a previsão usa só o Justiça em Números. ' : 'Sem dados no CNJ para esta classe. ')}
                   {x.previsao && (x.confianca === 'baixa' ? <>Sem tendência confiável: os números variam demais para prever.</> : <>Previsão {x.previsao.ano}: <strong>{fmt(x.previsao.processos)}</strong> ± {fmt(x.previsao.margem)}.</>)}
                 </p>
-                {x.jen && (
+                {x.jen && x.jen.porAno?.length > 0 && x.jen.previsao && (
                   <p className="text-sm mt-2 border-t border-navy/10 pt-2" data-testid={`jen-${a}`}>
                     <strong>Justiça em Números</strong> ({x.jen.tribunal}, {x.jen.indicador}): último ano {fmt(x.jen.porAno[x.jen.porAno.length - 1].n)}; previsão {x.jen.previsao.ano}: <strong>{fmt(x.jen.previsao.processos)}</strong> ± {fmt(x.jen.previsao.margem)} ({x.jen.previsao.variacao !== null && (x.jen.previsao.variacao >= 0 ? '+' : '')}{x.jen.previsao.variacao}%, confiança {x.jen.confianca}). {x.previsao && !x.fontePrevisao && (x.jen.concordam ? 'As duas fontes apontam a mesma direção.' : 'As fontes divergem: use com cautela.')}
                   </p>

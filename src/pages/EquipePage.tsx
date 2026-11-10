@@ -174,7 +174,7 @@ export default function EquipePage() {
                         </p>
                         <p className="text-xs mt-1" data-testid={`aceite-${p.id}`}>
                           {aceites[p.id]
-                            ? <span className="text-regular" title={`SHA-256 ${aceites[p.id].hash}`}>Termos e LGPD aceitos em {dataPt(aceites[p.id].aceito_em)} (v{aceites[p.id].versao}) · hash {aceites[p.id].hash.slice(0, 12)}…</span>
+                            ? <span className="text-regular" title={`SHA-256 ${aceites[p.id].hash}`}>Termos e LGPD aceitos em {dataPt(aceites[p.id].aceito_em)} (v{aceites[p.id].versao}) · hash {(aceites[p.id].hash ?? '').slice(0, 12)}…</span>
                             : <span className="text-atencao">Termos e LGPD ainda não aceitos (aparecem no próximo acesso)</span>}
                         </p>
                       </div>

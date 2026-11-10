@@ -18,6 +18,7 @@ import ZonaArrastar from '@/components/ZonaArrastar'
 import Reajuste from '@/components/Reajuste'
 import CompararVersoes from '@/components/CompararVersoes'
 import { analisarContrato, ultimaAnalise, type AnaliseContrato, type OrigemAnalise } from '@/lib/agente'
+import { abrirEmNovaAba } from '@/lib/abrirAba'
 
 const LIMITE_MB = 50
 
@@ -45,7 +46,7 @@ export default function ContratoPage() {
   const abrirNaPagina = async (pagina: number) => {
     const doc = documentos.find(d => d.tipo === 'contrato' && d.caminhoStorage)
     if (!doc?.caminhoStorage) { setErro('O PDF do contrato não está anexado nesta ficha.'); return }
-    try { window.open(`${await urlAssinada(doc.caminhoStorage)}#page=${pagina}`, '_blank', 'noopener') } catch (e) { setErro(mensagemAmigavel(e)) }
+    try { await abrirEmNovaAba(async () => `${await urlAssinada(doc.caminhoStorage!)}#page=${pagina}`) } catch (e) { setErro(mensagemAmigavel(e)) }
   }
   const [analiseEm, setAnaliseEm] = useState<string | null>(null)
   const [params, setParams] = useSearchParams()
@@ -220,7 +221,7 @@ export default function ContratoPage() {
     if (!doc.caminhoStorage) return
     setErro('')
     try {
-      window.open(await urlAssinada(doc.caminhoStorage), '_blank', 'noopener')
+      await abrirEmNovaAba(() => urlAssinada(doc.caminhoStorage!))
     } catch (e) {
       setErro(mensagemAmigavel(e))
     }

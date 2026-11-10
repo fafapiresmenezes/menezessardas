@@ -1,6 +1,8 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
+// A aba abre no clique e recebe o link assinado depois (Safari bloqueia window.open após await).
+const aba = { location: { href: '' }, close: () => undefined, opener: null as unknown }
 
 const mesAtual = () => new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }).slice(0, 7)
 let linhas: object[] = []
@@ -71,13 +73,13 @@ describe('Consumo de IA e e-mails', () => {
 
   it('faturas do mês: anexar envia ao armazenamento e abrir gera link assinado; copiar resumo e tabela; baixar CSV', async () => {
     const write = vi.fn(async (_t: string) => undefined); Object.assign(navigator, { clipboard: { writeText: write } })
-    URL.createObjectURL = vi.fn(() => 'blob:x'); URL.revokeObjectURL = vi.fn(); window.open = vi.fn()
+    URL.createObjectURL = vi.fn(() => 'blob:x'); URL.revokeObjectURL = vi.fn(); window.open = vi.fn(() => aba as unknown as Window)
     const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined)
     faturas = [{ name: '1700000000-anthropic.pdf' }]
     render(<ConsumoPage />)
     await waitFor(() => expect(n(screen.getByTestId('total-mes').textContent)).toBe('R$ 50,00'))
     fireEvent.click(screen.getByText('anthropic.pdf'))
-    await waitFor(() => expect(window.open).toHaveBeenCalledWith(`https://assinado/faturas/${mesAtual()}/1700000000-anthropic.pdf`, '_blank', 'noopener'))
+    await waitFor(() => expect(aba.location.href).toBe(`https://assinado/faturas/${mesAtual()}/1700000000-anthropic.pdf`))
     const f = new File(['x'], 'brevo nov.pdf', { type: 'application/pdf' })
     fireEvent.change(screen.getByText('Anexar fatura').querySelector('input')!, { target: { files: [f] } })
     await waitFor(() => expect(upload).toHaveBeenCalledWith(expect.stringMatching(new RegExp(`^faturas/${mesAtual()}/\\d+-brevo_nov.pdf$`)), f))

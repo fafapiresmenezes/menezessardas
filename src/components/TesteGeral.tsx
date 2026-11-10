@@ -5,6 +5,7 @@ import { repositorio } from '@/lib/repositorio'
 import { radarPortais } from '@/lib/legislacao'
 import { preverCarteira } from '@/lib/predicao'
 import { CheckCircle2, XCircle, Loader2, PlayCircle } from 'lucide-react'
+import { isoLocal } from '@/lib/datas'
 
 type Estado = 'esperando' | 'rodando' | 'ok' | 'falhou'
 interface Teste { nome: string; rodar: () => Promise<string> }
@@ -45,7 +46,7 @@ export default function TesteGeral() {
     supabase.from('saude_sistema').select('verificacao,ok,verificado_em').gte('verificado_em', desde).order('id', { ascending: true }).limit(2000)
       .then(({ data }) => setHistorico(data ?? []))
   }, [])
-  const dias = Array.from({ length: 30 }, (_, i) => new Date(Date.now() - (29 - i) * 86400000).toISOString().slice(0, 10))
+  const dias = Array.from({ length: 30 }, (_, i) => isoLocal(new Date(Date.now() - (29 - i) * 86400000)))
   const verificacoes = [...new Set(historico.map(h => h.verificacao))]
   const celula = (v: string, dia: string) => {
     const do_dia = historico.filter(h => h.verificacao === v && h.verificado_em.slice(0, 10) === dia)

@@ -46,7 +46,9 @@ export default function ParteAdversaPage() {
     const f: Ficha = { comunica: b.data?.comunica, diarios: b.data?.queridoDiario, empresa: k ? (k.error ? { erro: 'Receita e sanções fora do ar agora.' } : k.data) : undefined }
     setFicha(f)
     const fontes = ['Comunica PJe (CNJ)', 'Querido Diário', ...(k ? ['Receita Federal', 'CEIS/CNEP/TCU'] : [])]
-    await supabase.from('fichas_parte_adversa').insert({ parte: parte.trim(), documento: doc || null, caso: caso.trim(), finalidade: finalidade.trim(), fontes, resultado: f })
+    const registro = await supabase.from('fichas_parte_adversa').insert({ parte: parte.trim(), documento: doc || null, caso: caso.trim(), finalidade: finalidade.trim(), fontes, resultado: f })
+    // A consulta a dados de terceiro precisa ficar registrada (LGPD): se o registro falhar, avisamos.
+    if (registro.error) setErro('A ficha abaixo foi montada, mas o registro da consulta não foi gravado. Tente de novo para deixar a finalidade registrada.')
     await registrarEvento({ tipo: 'parte_adversa_consultada', entidade: caso.trim(), resumo: `Ficha pública de ${parte.trim()} · finalidade: ${finalidade.trim()}` })
     const linhas = [...(f.comunica?.itens ?? []).slice(0, 20).map(c => `${c.data} · ${c.tribunal} · ${c.classe} · ${c.numero}`), ...(f.diarios?.itens ?? []).map(d => `${d.data} · ${d.municipio} · ${d.trecho.slice(0, 160)}`)]
     await guardarNaBiblioteca({ tipo: 'parte_adversa', titulo: `Parte adversa: ${parte.trim()}`, conteudo: `Finalidade: ${finalidade.trim()}\nFontes: ${fontes.join(', ')}\n\n${linhas.join('\n') || 'Nada encontrado nas fontes públicas.'}`, caso: caso.trim(), etiquetas: ['parte adversa'] })

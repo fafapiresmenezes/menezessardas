@@ -4,6 +4,7 @@ import QRCode from 'qrcode'
 import { supabase } from '@/lib/supabase'
 import { codigoPix } from '@/lib/pix'
 import { gerarPdfTexto } from '@/lib/pdfSimples'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Passo 38 (Onda D): fatura mensal de cada escritório parceiro (gerada no dia 1 pelo banco; "Gerar agora" para teste),
 // com PDF simples e PIX copia e cola/QR da Value Pas (chave PIX da sede, em Configurações). Só a sede vê.
@@ -52,7 +53,7 @@ export default function FaturasParceiros({ nomes }: { nomes: Record<string, stri
     setOcupado(true); setMsg('')
     const { data, error } = await supabase.rpc('gerar_faturas_escritorios')
     setOcupado(false)
-    if (error) { setMsg(`Não foi possível gerar: ${error.message}`); return }
+    if (error) { setMsg(`Não foi possível gerar: ${mensagemAmigavel(error)}`); return }
     setMsg(`${(data ?? []).length} fatura(s) na competência atual.`); carregar()
   }
   const baixar = (f: Fatura) => {
@@ -65,7 +66,7 @@ export default function FaturasParceiros({ nomes }: { nomes: Record<string, stri
   const copiar = async (f: Fatura) => { try { await navigator.clipboard.writeText(codigo(f)); setMsg('Código PIX copiado.') } catch { setMsg('Selecione o código no PDF e copie.') } }
   const marcarPaga = async (f: Fatura) => {
     const { error } = await supabase.from('faturas_escritorio').update({ pago_em: new Date().toISOString() }).eq('id', f.id)
-    setMsg(error ? error.message : 'Fatura marcada como paga.'); carregar()
+    setMsg(error ? mensagemAmigavel(error) : 'Fatura marcada como paga.'); carregar()
   }
 
   return (

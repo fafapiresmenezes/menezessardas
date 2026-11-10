@@ -6,6 +6,7 @@ import { Printer, MessageSquare, UserCheck } from 'lucide-react'
 import { gerarRelatorioSelado } from '@/lib/relatorioCompliance'
 import { baixarArquivo } from '@/lib/ancoragem'
 import { mensagemAmigavel } from '@/lib/erros'
+import { hojeLocal, isoLocal } from '@/lib/datas'
 
 // Diagnóstico de integridade vendável a clientes: perguntas baseadas nos parâmetros de avaliação do
 // programa de integridade (Decreto 11.129/2022, art. 57) e na LGPD (Lei 13.709/2018). Gera nota por
@@ -73,9 +74,9 @@ export default function CompliancePage() {
     if (geral === null) return
     setSalvando(true); setMsg(null)
     const nome = empresa.trim() || 'Cliente sem nome'
-    const dia = (n: number) => { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10) }
+    const dia = (n: number) => { const d = new Date(); d.setDate(d.getDate() + n); return isoLocal(d) }
     const { data: caso, error } = await supabase.from('tarefas').insert({ titulo: `Plano de ação de compliance · ${nome}`, nivel: 'projeto', prioridade: 'alta', cliente: nome, area: 'Compliance', tipo: 'projeto' }).select('id').single()
-    if (error || !caso) { setSalvando(false); setMsg({ ok: false, texto: 'Não deu para criar o caso: ' + (error?.message ?? 'erro') }); return }
+    if (error || !caso) { setSalvando(false); setMsg({ ok: false, texto: 'Não deu para criar o caso: ' + (error ? mensagemAmigavel(error) : 'erro') }); return }
     const ordenadas = [...lacunas].sort((a, b) => (a.v ?? 0) - (b.v ?? 0))
     if (ordenadas.length) {
       const { error: e2 } = await supabase.from('tarefas').insert(ordenadas.map(l => ({ titulo: `${l.pilar}: ${l.acao}`, nivel: 'tarefa', pai_id: caso.id, prioridade: l.v === 0 ? 'alta' : 'media', prazo: dia(l.v === 0 ? 30 : 60), area: 'Compliance', cliente: nome })))
@@ -108,7 +109,7 @@ export default function CompliancePage() {
   const copiarCodigo = async () => { try { await navigator.clipboard.writeText(`Diagnóstico de compliance${empresa.trim() ? ` — ${empresa.trim()}` : ''} · ${new Date().toLocaleDateString('pt-BR')} · código de integridade SHA-256 ${codigo}`); setCodigoCopiado(true); setTimeout(() => setCodigoCopiado(false), 2500) } catch { /* sem área de transferência */ } }
   useEffect(() => {
     if (geral === null) { setCodigo(''); return }
-    const texto = JSON.stringify({ empresa: empresa.trim(), resp, geral, data: new Date().toISOString().slice(0, 10) })
+    const texto = JSON.stringify({ empresa: empresa.trim(), resp, geral, data: hojeLocal() })
     crypto.subtle?.digest('SHA-256', new TextEncoder().encode(texto)).then(b => setCodigo(Array.from(new Uint8Array(b), x => x.toString(16).padStart(2, '0')).join(''))).catch(() => setCodigo(''))
   }, [resp, empresa, geral])
   return (

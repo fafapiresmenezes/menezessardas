@@ -49,7 +49,7 @@ export default function PesquisaDireito() {
   const salvar = async (e: React.FormEvent) => {
     e.preventDefault(); setMsg('')
     const { error } = await supabase.from('pesquisas_instituto').insert({ titulo: form.titulo.trim(), pergunta: form.pergunta.trim(), origem: form.origem, caso_id: form.caso_id || null, jurisdicoes: form.jurisdicoes.trim() || 'Brasil' })
-    if (error) return setMsg(error.message)
+    if (error) return setMsg(mensagemAmigavel(error))
     setMsg('Pesquisa registrada no programa do Instituto.'); setForm({ ...form, titulo: '', pergunta: '', caso_id: '' }); carregar()
   }
   const gerar = async (p: Pesquisa) => {
@@ -61,7 +61,12 @@ export default function PesquisaDireito() {
       await carregar()
     } catch (e) { setMsg(mensagemAmigavel(e, 'A IA não respondeu agora. Tente de novo em instantes.')) } finally { setGerando(null) }
   }
-  const apagar = async (id: string) => { await supabase.from('pesquisas_instituto').delete().eq('id', id); carregar() }
+  const apagar = async (id: string) => {
+    if (!window.confirm('Apagar esta pesquisa?')) return
+    const { error } = await supabase.from('pesquisas_instituto').delete().eq('id', id)
+    if (error) setMsg(mensagemAmigavel(error))
+    carregar()
+  }
   const casoNome = (id: string | null) => { const c = casos.find(x => x.id === id); return c ? `${c.titulo}${c.cliente ? ` (${c.cliente})` : ''}` : '' }
   return (
     <div className="space-y-6" data-testid="pesquisa-direito">

@@ -1,6 +1,8 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, cleanup, within } from '@testing-library/react'
+// A aba abre no clique e recebe o link assinado depois (Safari bloqueia window.open após await).
+const aba = { location: { href: '' }, close: () => undefined, opener: null as unknown }
 
 let msgs: object[] = []
 let docs: object[] = []
@@ -21,7 +23,7 @@ vi.mock('@/lib/arquivos', () => ({ urlAssinada: async (c: string) => `https://as
 const { default: PortalCasoEscritorio } = await import('./PortalCasoEscritorio')
 
 describe('Conversa e documentos do Portal, lado do escritório (D18)', () => {
-  beforeEach(() => { cleanup(); insert.mockClear(); update.mockClear(); msgs = []; docs = []; window.open = vi.fn() })
+  beforeEach(() => { cleanup(); insert.mockClear(); update.mockClear(); msgs = []; docs = []; window.open = vi.fn(() => aba as unknown as Window) })
 
   it('mostra mensagens novas do cliente, marca lidas, responde com o nome de quem está logado', async () => {
     msgs = [{ id: 1, autor: 'cliente', autor_nome: 'Ana', texto: 'Quando é a audiência?', criado_em: '2026-11-05T13:00:00Z', lido_em: null }]
@@ -42,7 +44,7 @@ describe('Conversa e documentos do Portal, lado do escritório (D18)', () => {
     const li = await screen.findByTestId('esc-documentos')
     expect(li.textContent).toContain('novo')
     fireEvent.click(within(li).getByTestId('esc-abrir-doc'))
-    await waitFor(() => expect(window.open).toHaveBeenCalledWith('https://assinada/portal/c1/x-rg.jpg', '_blank', 'noopener'))
+    await waitFor(() => expect(aba.location.href).toBe('https://assinada/portal/c1/x-rg.jpg'))
     await waitFor(() => expect(update).toHaveBeenCalledWith('documentos_portal', expect.objectContaining({ visto_em: expect.any(String) })))
   })
 })

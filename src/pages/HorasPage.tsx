@@ -1,8 +1,11 @@
+import { mensagemAmigavel } from '@/lib/erros'
 import { useEffect, useState } from 'react'
 import { useBaixado } from '@/hooks/useBaixado'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { Play, Square, Download, Printer, Trash2, Target, ClipboardCopy } from 'lucide-react'
+import { hojeLocal, isoLocal } from '@/lib/datas'
+import { lerNumero, lerHoras } from '@/lib/numero'
 
 // Passo 21: meta mensal de horas por função (tabela metas_horas, só admin edita) e progresso da pessoa logada (RPC progresso_horas).
 const PAPEIS: Record<string, string> = { socia: 'Sócia', advogada: 'Advogada', estagiario: 'Estagiário ou paralegal', secretaria: 'Secretária', financeiro: 'Financeiro' }
@@ -21,7 +24,7 @@ export default function HorasPage() {
   useEffect(() => { try { localStorage.setItem('lsm-horas-mes', mes) } catch { /* sem armazenamento */ } }, [mes])
   const [lista, setLista] = useState<Lanc[]>([])
   const [erro, setErro] = useState('')
-  const [form, setForm] = useState({ data: new Date().toISOString().slice(0, 10), cliente: '', descricao: '', horas: '', valor_hora: '', faturavel: true })
+  const [form, setForm] = useState({ data: hojeLocal(), cliente: '', descricao: '', horas: '', valor_hora: '', faturavel: true })
   const [inicio, setInicio] = useState<number | null>(() => { try { const v = localStorage.getItem('lsm-cronometro'); return v ? Number(v) : null } catch { return null } })
   const [agora, setAgora] = useState(Date.now())
   const [papel, setPapel] = useState(() => { try { return localStorage.getItem('lsm-papel') || 'advogada' } catch { return 'advogada' } })
@@ -37,7 +40,7 @@ export default function HorasPage() {
   useEffect(() => { carregarMeta(); try { localStorage.setItem('lsm-papel', papel) } catch { /* */ } }, [papel]) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { supabase.auth.getUser().then(async ({ data }) => { if (!data.user) return; const { data: pf } = await supabase.from('usuarios_perfis').select('funcao').eq('id', data.user.id).maybeSingle(); setAdmin(pf?.funcao === 'admin') }) }, [])
   const salvarMeta = async () => {
-    const v = Number(metaEdit.replace(',', '.')); if (!(v >= 0)) return setMsgMeta('Informe um número de horas.')
+    const v = lerHoras(metaEdit); if (!(v >= 0)) return setMsgMeta('Informe um número de horas.')
     const { error } = await supabase.from('metas_horas').upsert({ papel, horas_mes: v, atualizado_em: new Date().toISOString() }, { onConflict: 'papel' })
     setMsgMeta(error ? 'Não foi possível salvar (só administradores definem metas).' : `Meta de ${PAPEIS[papel]} salva: ${v}h por mês.`); setMetaEdit(''); carregarMeta()
   }
@@ -46,7 +49,7 @@ export default function HorasPage() {
   const carregar = async () => {
     const fim = new Date(`${mes}-01T12:00`); fim.setMonth(fim.getMonth() + 1)
     const { data, error } = await supabase.from('lancamentos_horas').select('id,data,cliente,descricao,minutos,valor_hora,faturavel')
-      .gte('data', `${mes}-01`).lt('data', fim.toISOString().slice(0, 10)).order('data', { ascending: false })
+      .gte('data', `${mes}-01`).lt('data', isoLocal(fim)).order('data', { ascending: false })
     if (error) setErro('Não foi possível carregar os lançamentos.'); else setLista((data ?? []).map(l => ({ ...l, valor_hora: Number(l.valor_hora) })))
   }
   useEffect(() => { carregar() }, [mes]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -59,13 +62,18 @@ export default function HorasPage() {
   }
   const salvar = async () => {
     setErro('')
-    const minutos = Math.round(Number(form.horas.replace(',', '.')) * 60)
+    const minutos = Math.round(lerHoras(form.horas) * 60)
     if (!form.cliente.trim() || !form.descricao.trim() || !(minutos > 0)) return setErro('Preencha cliente, o que foi feito e as horas.')
-    const { error } = await supabase.from('lancamentos_horas').insert({ data: form.data, cliente: form.cliente.trim(), descricao: form.descricao.trim(), minutos, valor_hora: Number(form.valor_hora.replace(',', '.')) || 0, faturavel: form.faturavel })
+    const { error } = await supabase.from('lancamentos_horas').insert({ data: form.data, cliente: form.cliente.trim(), descricao: form.descricao.trim(), minutos, valor_hora: lerNumero(form.valor_hora) || 0, faturavel: form.faturavel })
     if (error) return setErro('Não foi possível salvar (leitores não lançam horas).')
     setForm(f => ({ ...f, descricao: '', horas: '' })); carregar(); carregarMeta()
   }
-  const apagar = async (id: string) => { await supabase.from('lancamentos_horas').delete().eq('id', id); carregar() }
+  const apagar = async (id: string) => {
+    if (!window.confirm('Apagar este lançamento de horas?')) return
+    const { error } = await supabase.from('lancamentos_horas').delete().eq('id', id)
+    if (error) setErro(mensagemAmigavel(error))
+    carregar()
+  }
 
   const porCliente = Object.values(lista.reduce((acc, l) => {
     const c = (acc[l.cliente] ??= { cliente: l.cliente, min: 0, valor: 0, naoFat: 0 })
@@ -139,7 +147,7 @@ export default function HorasPage() {
             <label className="md:col-span-5">O que foi feito<input value={form.descricao} onChange={e => setForm({ ...form, descricao: e.target.value })} className={campo} data-testid="h-desc" /></label>
             <button type="button" onClick={salvar} data-testid="h-salvar" className="min-h-[44px] bg-navy text-white text-sm uppercase tracking-wider mt-5">Lançar</button>
             {/* Passo 120: repete o último lançamento (cliente, descrição, valor da hora) com a data de hoje; só falta ajustar as horas. */}
-            {lista.length > 0 && <button type="button" data-testid="h-repetir" onClick={() => { const u = lista[0]; setForm({ data: new Date().toISOString().slice(0, 10), cliente: u.cliente, descricao: u.descricao, horas: '', valor_hora: String(u.valor_hora), faturavel: u.faturavel }) }} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm mt-5 ml-2">Repetir último</button>}
+            {lista.length > 0 && <button type="button" data-testid="h-repetir" onClick={() => { const u = lista[0]; setForm({ data: hojeLocal(), cliente: u.cliente, descricao: u.descricao, horas: '', valor_hora: String(u.valor_hora), faturavel: u.faturavel }) }} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm mt-5 ml-2">Repetir último</button>}
           </div>
           {erro && <p role="alert" className="mt-3 p-3 text-sm border-l-2 bg-criticoFundo border-critico text-critico">{erro}</p>}
         </section>

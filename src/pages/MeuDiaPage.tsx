@@ -7,6 +7,8 @@ import { calcularPrazo, feriadosDoRio } from '@/lib/prazos'
 import { CalendarClock, Inbox, ListChecks, FileWarning, Briefcase, Mail } from 'lucide-react'
 import { extrairAcoes } from '@/lib/acoesConsultor'
 import { render } from '@/pages/AssistentePage'
+import { hojeLocal, isoLocal } from '@/lib/datas'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // "Meu dia": o que cada nível do escritório precisa ver ao abrir a plataforma, num só lugar.
 // O papel escolhido define a ordem e os atalhos; os dados são os mesmos para todos (respeitando o sigilo).
@@ -36,7 +38,7 @@ const ROTULOS_RESUMO: Record<string, string> = {
 const DINHEIRO = new Set(['valor_60_dias', 'honorarios_em_aberto'])
 const brl = (v: number) => 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 type Resumo = { semana: string; socia: Record<string, string | number>; advogada: Record<string, string | number>; secretaria: Record<string, string | number> }
-const hoje = () => new Date().toISOString().slice(0, 10)
+const hoje = () => hojeLocal()
 const fmt = (d: string) => new Date(`${d}T12:00`).toLocaleDateString('pt-BR')
 
 export default function MeuDiaPage() {
@@ -62,7 +64,7 @@ export default function MeuDiaPage() {
   const testarResumo = async () => {
     setMsgResumo('Enviando o resumo de teste para o seu e-mail…')
     const { data, error } = await supabase.functions.invoke('resumo-semanal', { body: { teste: true } })
-    if (error) return setMsgResumo(`Não foi possível enviar: ${error.message}`)
+    if (error) return setMsgResumo(`Não foi possível enviar: ${mensagemAmigavel(error)}`)
     if (data?.enviado) { setMsgResumo('Resumo de teste enviado para o seu e-mail. Toda segunda-feira às 8h ele vai para toda a equipe.'); if (data.resumo) setResumo(r => r ?? { conteudo: data.resumo, criado_em: new Date().toISOString(), enviado_em: null, destinatarios: 0 }) }
     else setMsgResumo(`Não enviado: ${data?.motivo ?? data?.detalhe ?? data?.erro ?? 'erro desconhecido'}.`)
   }
@@ -96,8 +98,8 @@ export default function MeuDiaPage() {
   useEffect(() => {
     (async () => {
       const { data: u } = await supabase.auth.getUser()
-      const em7 = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10)
-      const em60 = new Date(Date.now() + 60 * 86400000).toISOString().slice(0, 10)
+      const em7 = isoLocal(new Date(Date.now() + 7 * 86400000))
+      const em60 = isoLocal(new Date(Date.now() + 60 * 86400000))
       const ha7 = new Date(Date.now() - 7 * 86400000).toISOString()
       const [t, i, c, mv] = await Promise.all([
         supabase.from('tarefas').select('id,titulo,prazo,prioridade').eq('responsavel_id', u.user?.id ?? '').neq('situacao', 'feito').lte('prazo', em7).order('prazo').limit(20),
@@ -201,7 +203,7 @@ export default function MeuDiaPage() {
                     {acoes.map(a => (
                       <li key={a.id}>
                         <label className="flex items-start gap-2 text-sm min-h-[44px] cursor-pointer">
-                          <input type="checkbox" checked={!!a.feito_em} onChange={() => marcarAcao(a)} className="mt-1" data-testid={`acao-${a.indice}`} />
+                          <input type="checkbox" checked={!!a.feito_em} onChange={() => marcarAcao(a)} className="mt-1 w-5 h-5 shrink-0" data-testid={`acao-${a.indice}`} />
                           <span className={a.feito_em ? 'line-through text-grafite-claro' : ''}>{a.indice}. {a.texto}{a.feito_em && <span className="text-xs ml-2">feita em {new Date(a.feito_em).toLocaleDateString('pt-BR')}</span>}</span>
                         </label>
                       </li>
@@ -220,7 +222,7 @@ export default function MeuDiaPage() {
           <div className="flex flex-wrap gap-3 items-end mt-3 text-sm">
             <label>Data da intimação ou publicação<input type="date" value={calc.inicio} onChange={e => setCalc({ ...calc, inicio: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="prazo-inicio" /></label>
             <label>Dias úteis<input type="number" min={1} max={365} value={calc.dias} onChange={e => setCalc({ ...calc, dias: Number(e.target.value) })} className="block border px-3 py-2 min-h-[44px] mt-1 w-24" data-testid="prazo-dias" /></label>
-            <label className="flex items-center gap-2 min-h-[44px]"><input type="checkbox" checked={calc.dobro} onChange={e => setCalc({ ...calc, dobro: e.target.checked })} />Em dobro (Fazenda, MP, Defensoria, litisconsortes)</label>
+            <label className="flex items-center gap-2 min-h-[44px]"><input type="checkbox" className="w-5 h-5 shrink-0" checked={calc.dobro} onChange={e => setCalc({ ...calc, dobro: e.target.checked })} />Em dobro (Fazenda, MP, Defensoria, litisconsortes)</label>
           </div>
           {prazo && (
             <div className="mt-3" aria-live="polite">

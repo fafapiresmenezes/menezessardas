@@ -22,6 +22,9 @@ vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: 
 const { default: MonitoramentoPage } = await import('./MonitoramentoPage')
 const NUM = '0801234-56.2026.8.19.0001'
 
+// Apagar agora pede confirmação: nos testes, a pessoa sempre confirma.
+beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true) })
+
 describe('Monitoramento de processos e nomes (CNJ)', () => {
   beforeEach(() => { cleanup(); lista = []; invoke.mockClear(); insert.mockClear(); del.mockClear(); localStorage.clear(); window.scrollTo = vi.fn() })
 

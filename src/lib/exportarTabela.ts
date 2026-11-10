@@ -1,5 +1,6 @@
 // Passo 61: exportar qualquer tabela da tela em CSV (abre no Excel com acentos) ou PDF simples.
 import { gerarPdfTexto, quebrar } from '@/lib/pdfSimples'
+import { hojeLocal } from '@/lib/datas'
 
 export type Grade = { titulo: string; cabecalho: string[]; linhas: string[][] }
 
@@ -56,5 +57,5 @@ export function paraPdf(g: Grade, tela: string): Uint8Array<ArrayBuffer> {
 
 export function nomeArquivo(tela: string, titulo: string, ext: string) {
   const base = `${tela}-${titulo}`.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60)
-  return `${base || 'tabela'}-${new Date().toISOString().slice(0, 10)}.${ext}`
+  return `${base || 'tabela'}-${hojeLocal()}.${ext}`
 }

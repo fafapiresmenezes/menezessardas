@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { FileSignature } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { CONTRATO_SAAS_TEXTO, CONTRATO_SAAS_VERSAO, hashContratoSaas } from '@/lib/contratoSaas'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Passo 40: administrador de escritório parceiro precisa aceitar o contrato de adesão SaaS (Value Pas) no primeiro acesso.
 export default function AceiteContratoSaas({ admin, sede }: { admin: boolean; sede: boolean }) {
@@ -18,7 +19,7 @@ export default function AceiteContratoSaas({ admin, sede }: { admin: boolean; se
     setSalvando(true); setErro('')
     const { error } = await supabase.rpc('aceitar_contrato_saas', { p_versao: CONTRATO_SAAS_VERSAO, p_hash: await hashContratoSaas(), p_navegador: navigator.userAgent })
     setSalvando(false)
-    if (error) setErro('Não deu para gravar o aceite: ' + error.message)
+    if (error) setErro('Não deu para gravar o aceite: ' + mensagemAmigavel(error))
     else setPendente(false)
   }
   return (

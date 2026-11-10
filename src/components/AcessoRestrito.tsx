@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { listarPessoas, perfilAtual, type Pessoa } from '@/lib/equipe'
 import { Lock } from 'lucide-react'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Sigilo por imóvel: o admin marca o imóvel como restrito e escolhe quem da equipe vê ele,
 // seus contratos e documentos. O banco aplica a regra (pode_ver_imovel), não só a tela.
@@ -30,7 +31,7 @@ export default function AcessoRestrito({ imovelId }: { imovelId: string }) {
 
   const alternarRestrito = async () => {
     const { error } = await supabase.from('imoveis').update({ restrito: !restrito }).eq('id', imovelId)
-    if (error) return setMsg(error.message)
+    if (error) return setMsg(mensagemAmigavel(error))
     setRestrito(!restrito); setMsg(!restrito ? 'Imóvel restrito: só os marcados abaixo (e os administradores) veem.' : 'Imóvel aberto para toda a equipe.')
   }
   const alternarPessoa = async (p: Pessoa) => {
@@ -38,7 +39,7 @@ export default function AcessoRestrito({ imovelId }: { imovelId: string }) {
     const { error } = tem
       ? await supabase.from('imovel_acesso').delete().eq('imovel_id', imovelId).eq('usuario_id', p.id)
       : await supabase.from('imovel_acesso').insert({ imovel_id: imovelId, usuario_id: p.id })
-    if (error) return setMsg(error.message)
+    if (error) return setMsg(mensagemAmigavel(error))
     const n = new Set(com); if (tem) n.delete(p.id); else n.add(p.id); setCom(n)
   }
 

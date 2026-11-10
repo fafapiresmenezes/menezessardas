@@ -37,7 +37,7 @@ export function resumoFunil(leads: Lead[], agora = new Date()) {
   const valorAberto = abertos.reduce((s, l) => s + Number(l.valor_estimado || 0), 0)
   const previsao = abertos.reduce((s, l) => s + Number(l.valor_estimado || 0) * chance(l.etapa), 0)
   const valorGanho = ganhos.reduce((s, l) => s + Number(l.valor_estimado || 0), 0)
-  const hoje = agora.toISOString().slice(0, 10)
+  const hoje = `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}`
   const followUps = abertos.filter(l => l.proximo_contato && l.proximo_contato <= hoje).sort((a, b) => (a.proximo_contato! < b.proximo_contato! ? -1 : 1))
   const semFollowUp = abertos.filter(l => !l.proximo_contato)
   const parados = abertos.filter(l => diasEntre(l.etapa_desde, agora) > 14)

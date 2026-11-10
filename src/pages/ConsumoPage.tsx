@@ -5,6 +5,9 @@ import { projetarMes, sugerirTeto } from '@/lib/projecaoConsumo'
 import { supabase } from '@/lib/supabase'
 import { perfilAtual, type Funcao } from '@/lib/equipe'
 import { Printer, Wallet, AlertTriangle, Paperclip, Download } from 'lucide-react'
+import { lerNumero } from '@/lib/numero'
+import { abrirEmNovaAba } from '@/lib/abrirAba'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Transparência de custos: cada uso de IA e cada e-mail é registrado no servidor com quem usou,
 // a função e os tokens; o custo vem da tabela pública de preços e da cotação PTAX do Banco Central.
@@ -97,21 +100,22 @@ export default function ConsumoPage() {
   const pctTeto = cot?.teto_brl ? Math.min(100, (gastoAtual / cot.teto_brl) * 100) : null
 
   async function salvarTeto() {
-    const v = teto.trim() ? Number(teto.replace(',', '.')) : null
+    const v = teto.trim() ? lerNumero(teto) : null
     if (v !== null && (!isFinite(v) || v < 0)) return setMsg({ ok: false, texto: 'Informe um valor em reais, por exemplo 300.' })
     const { error } = await supabase.rpc('definir_teto_mensal', { valor_brl: v })
-    setMsg(error ? { ok: false, texto: error.message } : { ok: true, texto: v === null ? 'Teto removido.' : `Teto mensal definido em ${brl(v)}.` })
+    setMsg(error ? { ok: false, texto: mensagemAmigavel(error) } : { ok: true, texto: v === null ? 'Teto removido.' : `Teto mensal definido em ${brl(v)}.` })
     carregar()
   }
   async function anexarFatura(arq: File) {
     const nome = `${Date.now()}-${arq.name.replace(/[^\w.-]+/g, '_')}`
     const { error } = await supabase.storage.from('documentos').upload(`faturas/${mes}/${nome}`, arq)
-    setMsg(error ? { ok: false, texto: error.message } : { ok: true, texto: 'Fatura anexada ao extrato do mês.' })
+    setMsg(error ? { ok: false, texto: mensagemAmigavel(error) } : { ok: true, texto: 'Fatura anexada ao extrato do mês.' })
     carregarFaturas(mes)
   }
   async function abrirFatura(nome: string) {
-    const { data } = await supabase.storage.from('documentos').createSignedUrl(`faturas/${mes}/${nome}`, 300)
-    if (data?.signedUrl) window.open(data.signedUrl, '_blank', 'noopener')
+    try {
+      await abrirEmNovaAba(async () => (await supabase.storage.from('documentos').createSignedUrl(`faturas/${mes}/${nome}`, 300)).data?.signedUrl)
+    } catch (e) { setMsg({ ok: false, texto: e instanceof Error ? e.message : 'Não foi possível abrir a fatura.' }) }
   }
 
   return (

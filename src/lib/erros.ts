@@ -22,5 +22,8 @@ export function mensagemAmigavel(err: unknown, padrao = 'Não foi possível conc
   for (const [re, msg] of MAPA) if (re.test(bruto)) return msg
   if (!bruto) return padrao
   // Mensagens já em português e curtas passam como estão; o resto vira o padrão com o detalhe técnico entre parênteses.
-  return /^[A-ZÀ-Ú][^{}<>]{0,140}$/.test(bruto) && /[áéíóúãõçÁÉÍÓÚ]|\b(não|já|ou|para|com)\b/.test(bruto) ? bruto : `${padrao} (detalhe técnico: ${bruto.slice(0, 120)})`
+  const curta = /^[^{}<>\[\]=]{1,140}$/.test(bruto)
+  const ingles = /\b(the|of|for|is|not|failed|error|invalid|unexpected|cannot|could|to|and|with|from|on|at)\b/i.test(bruto)
+  const portugues = /[áéíóúâêôãõçÁÉÍÓÚÂÊÔÃÕÇ]|\b(não|já|ou|para|com|sem|link|erro|falha|fora)\b/i.test(bruto)
+  return curta && portugues && !ingles ? bruto : `${padrao} (detalhe técnico: ${bruto.slice(0, 120)})`
 }

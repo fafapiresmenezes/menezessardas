@@ -8,6 +8,7 @@ import { perfilAtual } from '@/lib/equipe'
 import { formatarData, diasAte } from '@/lib/datas'
 import SeloSituacao from '@/components/SeloSituacao'
 import { RefreshCw, ExternalLink } from 'lucide-react'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Caixa de intimações: publicações do Diário de Justiça Eletrônico Nacional (Comunica PJe, CNJ)
 // para as OABs do escritório. Busca diária automática e botão "Buscar agora". Gratuito.
@@ -50,17 +51,19 @@ export default function IntimacoesPage() {
     const d = error ? await (error as { context?: Response }).context?.json?.().catch(() => null) : data
     if (!d || d.erro) return setMsg({ ok: false, texto: d?.erro ?? 'O CNJ não respondeu agora. Tente de novo em instantes.' })
     if (d.aviso) return setMsg({ ok: false, texto: d.aviso })
-    setMsg({ ok: !d.falhas?.length, texto: `${d.novas} intimação(ões) nova(s) nos últimos 30 dias para ${d.oabs.join(', ')}.${d.falhas?.length ? ' Falhou: ' + d.falhas.join('; ') : ''}` })
+    setMsg({ ok: !d.falhas?.length, texto: `${d.novas} intimação(ões) nova(s) nos últimos 30 dias para ${(d.oabs ?? []).join(', ')}.${d.falhas?.length ? ' Falhou: ' + d.falhas.join('; ') : ''}` })
     carregar()
   }
   const salvarOabs = async () => {
     const { error } = await supabase.rpc('definir_configuracao', { p_chave: 'oabs_monitoradas', p_valor: oabs })
-    if (error) return setMsg({ ok: false, texto: error.message })
+    if (error) return setMsg({ ok: false, texto: mensagemAmigavel(error) })
     setOabs(''); buscar()
   }
   const marcarLida = async (i: Intimacao) => {
     setLista(l => l.map(x => (x.id === i.id ? { ...x, lida: true } : x)))
-    await supabase.from('intimacoes').update({ lida: true }).eq('id', i.id)
+    const { error } = await supabase.from('intimacoes').update({ lida: true }).eq('id', i.id)
+    // Sem permissão (leitor) ou sem rede: desfaz na tela e avisa, para a intimação não sumir sem ter sido gravada como lida.
+    if (error) { setLista(l => l.map(x => (x.id === i.id ? { ...x, lida: false } : x))); setMsg({ ok: false, texto: mensagemAmigavel(error) }) }
   }
   // Passo 13: urgência pelo prazo estimado (dias úteis, CPC art. 219/224) e tarefa no caso correspondente.
   const urgencia = (i: Intimacao) => {
@@ -70,7 +73,7 @@ export default function IntimacoesPage() {
   }
   const criarTarefa = async (i: Intimacao) => {
     const { data, error } = await supabase.rpc('criar_tarefa_intimacao', { p_id: i.id })
-    if (error) setMsg({ ok: false, texto: 'Não deu para criar a tarefa: ' + error.message })
+    if (error) setMsg({ ok: false, texto: 'Não deu para criar a tarefa: ' + mensagemAmigavel(error) })
     else { setMsg({ ok: true, texto: 'Tarefa criada em Casos e projetos com o prazo estimado.' }); setLista(l => l.map(x => (x.id === i.id ? { ...x, tarefa_id: String(data) } : x))) }
   }
   const ordem = { vencido: 0, critico: 1, atencao: 2, regular: 3 } as const

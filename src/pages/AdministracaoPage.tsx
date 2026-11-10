@@ -7,9 +7,11 @@ import { repositorio, type Contrato, type Imovel } from '@/lib/repositorio'
 import { enviarArquivo, urlAssinada } from '@/lib/arquivos'
 import { baixarArquivo } from '@/lib/ancoragem'
 import { mensagemAmigavel } from '@/lib/erros'
-import { formatarData } from '@/lib/datas'
+import { formatarData, hojeLocal } from '@/lib/datas'
 import { brl, competenciaDe, compararVistorias, estadoGeral, ESTADOS, lancamentosPadrao, pdfLaudo, pdfPrestacao, prestacaoContas, roteiroPadrao, rotuloCompetencia, TIPOS, TIPOS_VISTORIA, type Administracao, type FotoVistoria, type ItemVistoria, type Lancamento, type Vistoria } from '@/lib/locacao'
 import { ClipboardCheck, Camera, FileDown, Coins, Plus, Receipt } from 'lucide-react'
+import { lerNumero } from '@/lib/numero'
+import { abrirEmNovaAba } from '@/lib/abrirAba'
 
 const cartao = 'bg-white shadow-sm p-5 border-t-2 border-dourado'
 const botao = 'min-h-[44px] px-4 text-sm border border-navy text-navy bg-white'
@@ -76,20 +78,20 @@ export default function AdministracaoPage() {
   }
   const salvarNovo = async () => {
     if (!novo || !contrato) return
-    const valor = Number(String(novo.valor).replace(',', '.'))
+    const valor = lerNumero(novo.valor)
     if (!novo.descricao.trim() || !(valor > 0)) { setErro('Informe a descrição e um valor maior que zero.'); return }
-    const { error } = await supabase.from('lancamentos_locacao').insert({ contrato_id: contrato.id, competencia, tipo: novo.tipo, descricao: novo.descricao.trim(), valor, pago_em: novo.tipo === 'despesa' ? new Date().toISOString().slice(0, 10) : null })
+    const { error } = await supabase.from('lancamentos_locacao').insert({ contrato_id: contrato.id, competencia, tipo: novo.tipo, descricao: novo.descricao.trim(), valor, pago_em: novo.tipo === 'despesa' ? hojeLocal() : null })
     if (error) { setErro(mensagemAmigavel(error)); return }
     setNovo(null); setErro(''); await carregar(contrato.id)
   }
   const marcarPago = async (l: Lancamento, pago: boolean) => {
-    const { error } = await supabase.from('lancamentos_locacao').update({ pago_em: pago ? new Date().toISOString().slice(0, 10) : null }).eq('id', l.id)
+    const { error } = await supabase.from('lancamentos_locacao').update({ pago_em: pago ? hojeLocal() : null }).eq('id', l.id)
     if (error) { setErro(mensagemAmigavel(error)); return }
-    setLancamentos(ls => ls.map(x => x.id === l.id ? { ...x, pago_em: pago ? new Date().toISOString().slice(0, 10) : null } : x))
+    setLancamentos(ls => ls.map(x => x.id === l.id ? { ...x, pago_em: pago ? hojeLocal() : null } : x))
   }
   const registrarRepasse = async () => {
     if (!contrato || prestacao.saldoRepasse <= 0) return
-    const { error } = await supabase.from('lancamentos_locacao').insert({ contrato_id: contrato.id, competencia, tipo: 'repasse', descricao: 'Repasse ao proprietário', valor: prestacao.saldoRepasse, pago_em: new Date().toISOString().slice(0, 10) })
+    const { error } = await supabase.from('lancamentos_locacao').insert({ contrato_id: contrato.id, competencia, tipo: 'repasse', descricao: 'Repasse ao proprietário', valor: prestacao.saldoRepasse, pago_em: hojeLocal() })
     if (error) { setErro(mensagemAmigavel(error)); return }
     setMsg(`Repasse de ${brl(prestacao.saldoRepasse)} registrado.`); await carregar(contrato.id)
   }
@@ -97,7 +99,7 @@ export default function AdministracaoPage() {
   const baixarPrestacao = () => baixarArquivo(`prestacao-de-contas-${competencia.slice(0, 7)}.pdf`, pdfPrestacao(prestacao, cab, taxaPct), 'application/pdf')
 
   // Vistoria
-  const iniciarVistoria = (tipo: Vistoria['tipo']) => setNova({ imovel_id: contrato?.imovelId ?? '', contrato_id: contrato?.id ?? null, tipo, data: new Date().toISOString().slice(0, 10), estado_geral: 'bom', itens: roteiroPadrao(), fotos: [], observacoes: '', responsavel: '' })
+  const iniciarVistoria = (tipo: Vistoria['tipo']) => setNova({ imovel_id: contrato?.imovelId ?? '', contrato_id: contrato?.id ?? null, tipo, data: hojeLocal(), estado_geral: 'bom', itens: roteiroPadrao(), fotos: [], observacoes: '', responsavel: '' })
   const mudarItem = (idx: number, dados: Partial<ItemVistoria>) => setNova(v => v ? { ...v, itens: v.itens.map((it, i) => i === idx ? { ...it, ...dados } : it) } : v)
   const anexarFotos = async (arquivos: FileList | null) => {
     if (!nova || !arquivos?.length) return
@@ -120,7 +122,7 @@ export default function AdministracaoPage() {
     setNova(null); setMsg(`${TIPOS_VISTORIA[v.tipo]} registrada.`); await carregar(contratoId)
   }
   const baixarLaudo = (v: Vistoria) => baixarArquivo(`laudo-vistoria-${v.tipo}-${v.data}.pdf`, pdfLaudo(v, cab), 'application/pdf')
-  const abrirFoto = async (f: FotoVistoria) => { try { window.open(await urlAssinada(f.caminho), '_blank', 'noopener') } catch (e) { setErro(mensagemAmigavel(e)) } }
+  const abrirFoto = async (f: FotoVistoria) => { try { await abrirEmNovaAba(() => urlAssinada(f.caminho)) } catch (e) { setErro(mensagemAmigavel(e)) } }
   const entrada = vistorias.find(v => v.tipo === 'entrada'), saida = vistorias.find(v => v.tipo === 'saida')
   const diferencas = entrada && saida ? compararVistorias(entrada.itens, saida.itens) : []
 

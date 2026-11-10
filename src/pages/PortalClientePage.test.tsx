@@ -21,6 +21,14 @@ const casoBase = { titulo: 'Despejo Rua A', cliente: 'Ana', area: 'Imobiliário'
 describe('Portal do cliente (página pública por link secreto)', () => {
   beforeEach(() => { cleanup(); caso = null; resumo = null; marca = null })
 
+  it('resposta incompleta do servidor (sem etapas, sem casos, marca sem nome) vira link indisponível, sem quebrar nem mostrar "undefined"', async () => {
+    caso = { titulo: 'x' }; resumo = { cliente: 'Ana' }; marca = { cor: '#000000', sede: false }
+    montar()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Link do Portal indisponível' })).toBeTruthy()
+    expect(screen.getByRole('alert').textContent).toContain('Peça um link novo')
+    expect(screen.getByTestId('portal-rodape').textContent).not.toContain('undefined')
+  })
+
   it('link inválido avisa; caso válido mostra andamento, etapas com prazo, honorários, glossário e rodapé da sede', async () => {
     montar()
     expect(screen.getByText('Carregando…')).toBeTruthy()

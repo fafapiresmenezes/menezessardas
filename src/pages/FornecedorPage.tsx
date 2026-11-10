@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
 import { Escolha, Campo, classeCampo } from '@/components/Assistente'
-import { formatarData, diasAte, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
+import { formatarData, diasAte, situacaoPorPrazo, textoPrazo, hojeLocal } from '@/lib/datas'
 import {
   CATEGORIAS,
   CERTIDOES_PADRAO,
@@ -23,6 +23,7 @@ import {
 } from '@/lib/fornecedores'
 import { ArrowLeft, ExternalLink, Search, Plus, Check, X } from 'lucide-react'
 import { mensagemAmigavel } from '@/lib/erros'
+import { lerNumero } from '@/lib/numero'
 
 const rotuloCategoria = Object.fromEntries(CATEGORIAS.map(c => [c.valor, c.rotulo]))
 
@@ -42,7 +43,7 @@ export default function FornecedorPage() {
   const [certNome, setCertNome] = useState(CERTIDOES_PADRAO[0])
   // Passo 11: ocorrências por fornecedor.
   const [ocTipo, setOcTipo] = useState<TipoOcorrencia>('atraso')
-  const [ocData, setOcData] = useState(new Date().toISOString().slice(0, 10))
+  const [ocData, setOcData] = useState(hojeLocal())
   const [ocDescricao, setOcDescricao] = useState('')
   const [certValidade, setCertValidade] = useState('')
   const [slaDesc, setSlaDesc] = useState('')
@@ -89,7 +90,7 @@ export default function FornecedorPage() {
     try {
       const r = await consultarCnpj(f.cnpj)
       await salvar(
-        { ...f, kyc: { ...f.kyc, consultadoEm: new Date().toISOString().slice(0, 10), razaoSocial: r.razaoSocial, situacao: r.situacao } },
+        { ...f, kyc: { ...f.kyc, consultadoEm: hojeLocal(), razaoSocial: r.razaoSocial, situacao: r.situacao } },
         `CNPJ consultado na Receita: ${f.nome} (${r.situacao})`,
         `Receita Federal: ${r.razaoSocial}, situação ${r.situacao}.`
       )
@@ -102,7 +103,7 @@ export default function FornecedorPage() {
 
   const marcarLista = (lista: 'ceis' | 'cnep', valor: ResultadoLista) =>
     salvar(
-      { ...f, kyc: { ...f.kyc, [lista]: valor, listasVerificadasEm: new Date().toISOString().slice(0, 10) } },
+      { ...f, kyc: { ...f.kyc, [lista]: valor, listasVerificadasEm: hojeLocal() } },
       `${lista.toUpperCase()} verificado manualmente: ${f.nome} (${valor})`
     )
 
@@ -120,7 +121,7 @@ export default function FornecedorPage() {
     salvar({ ...f, certidoes: f.certidoes.filter(c => c.id !== cid) }, `Certidão removida (${f.nome})`)
 
   const addSla = () => {
-    const meta = Number(slaMeta.replace(',', '.'))
+    const meta = lerNumero(slaMeta)
     if (!slaDesc.trim() || !slaMeta || Number.isNaN(meta)) return setErro('Descreva o SLA e informe a meta (número).')
     if (!slaSentido) return setErro('Escolha se a meta é um mínimo ou um máximo.')
     const sla: SLA = { id: novoIdLocal(), descricao: slaDesc.trim(), unidade: slaUnidade, meta, sentido: slaSentido, medicoes: [] }
@@ -131,7 +132,7 @@ export default function FornecedorPage() {
   }
 
   const registrarMedicao = (s: SLA) => {
-    const valor = Number((medicoes[s.id] ?? '').replace(',', '.'))
+    const valor = lerNumero(medicoes[s.id] ?? '')
     if (!medicoes[s.id] || Number.isNaN(valor)) return setErro('Informe o resultado do mês como número.')
     const mes = mesAtual()
     const novas = [...s.medicoes.filter(m => m.mes !== mes), { mes, valor }]
@@ -289,7 +290,7 @@ export default function FornecedorPage() {
                 <span className={`px-2 py-0.5 text-xs ${o.tipo === 'elogio' ? 'bg-regularFundo text-regular' : o.resolvidaEm ? 'bg-pergaminho text-grafite' : 'bg-atencaoFundo text-atencao'}`}>{rotuloOcorrencia[o.tipo]}{o.resolvidaEm && ` · resolvida em ${formatarData(o.resolvidaEm)}`}</span>
                 <span className="flex-1 min-w-[12rem]">{o.descricao}</span>
                 {o.tipo !== 'elogio' && !o.resolvidaEm && (
-                  <button type="button" className="underline text-navy text-xs" onClick={() => salvar({ ...f, ocorrencias: (f.ocorrencias ?? []).map(x => x.id === o.id ? { ...x, resolvidaEm: new Date().toISOString().slice(0, 10) } : x) }, `Ocorrência resolvida: ${f.nome} — ${o.descricao.slice(0, 60)}`, 'Ocorrência marcada como resolvida.')}>marcar como resolvida</button>
+                  <button type="button" className="underline text-navy text-xs" onClick={() => salvar({ ...f, ocorrencias: (f.ocorrencias ?? []).map(x => x.id === o.id ? { ...x, resolvidaEm: hojeLocal() } : x) }, `Ocorrência resolvida: ${f.nome} — ${o.descricao.slice(0, 60)}`, 'Ocorrência marcada como resolvida.')}>marcar como resolvida</button>
                 )}
               </li>
             ))}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Passo 50: "Metas do mês" por função no Painel: horas (meta em Configurações/Horas), casos concluídos, tarefas e prazos,
 // mais honorários do mês; barra de progresso e cor pelo desvio em relação ao esperado até hoje.
@@ -19,7 +20,7 @@ export function pctRitmo(feito: number, esperado: number): number | null { retur
 export default function MetasDoMes() {
   const [m, setM] = useState<Metas | null>(null)
   const [erro, setErro] = useState('')
-  useEffect(() => { supabase.rpc('metas_do_mes').then(({ data, error }) => { if (error) setErro(error.message); else setM(data as Metas) }) }, [])
+  useEffect(() => { supabase.rpc('metas_do_mes').then(({ data, error }) => { if (error) setErro(mensagemAmigavel(error)); else setM(data as Metas) }) }, [])
   if (erro) return <p role="alert" className="text-sm text-critico">{erro}</p>
   if (!m) return null
   const pctHon = pctRitmo(Number(m.honorarios_recebidos), Number(m.honorarios_previstos))

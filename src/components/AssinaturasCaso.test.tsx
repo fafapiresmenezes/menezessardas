@@ -11,6 +11,9 @@ vi.mock('@/lib/supabase', () => ({
 }))
 const { default: AssinaturasCaso } = await import('./AssinaturasCaso')
 
+// Apagar agora pede confirmação: nos testes, a pessoa sempre confirma.
+beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true) })
+
 describe('Assinatura eletrônica do caso', () => {
   beforeEach(() => { cleanup(); lista = []; insert.mockClear(); del.mockClear() })
 

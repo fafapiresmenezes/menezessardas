@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { ExternalLink, Search } from 'lucide-react'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Fontes que o advogado usa todo dia: digita uma vez (nome, CNPJ, número do processo ou tema)
 // e abre cada site já com a busca feita. As que têm ligação direta estão marcadas.
@@ -61,13 +62,17 @@ export default function FontesPage() {
   const salvarBusca = async () => {
     setMsgSalva('')
     const { error } = await supabase.from('buscas_salvas').insert({ termo: termo.trim() })
-    if (error) return setMsgSalva(error.message.includes('duplicate') ? 'Essa busca já está salva.' : error.message)
+    if (error) return setMsgSalva(error.message.includes('duplicate') ? 'Essa busca já está salva.' : mensagemAmigavel(error))
     setMsgSalva('Busca salva. Ela será repetida todo dia às 7h15 e as novidades aparecem em Intimações e Alertas.')
     await carregarSalvas()
     // Primeira rodada imediata, só para as buscas deste usuário.
     supabase.functions.invoke('buscar-partes', { body: { salvas: true }, region: FunctionRegion.SaEast1 }).then(carregarSalvas)
   }
-  const apagarSalva = async (id: string) => { await supabase.from('buscas_salvas').delete().eq('id', id); carregarSalvas() }
+  const apagarSalva = async (id: string) => {
+    const { error } = await supabase.from('buscas_salvas').delete().eq('id', id)
+    if (error) setMsgSalva(mensagemAmigavel(error))
+    carregarSalvas()
+  }
   return (
     <Layout title="Fontes do advogado">
       <div className="space-y-6">

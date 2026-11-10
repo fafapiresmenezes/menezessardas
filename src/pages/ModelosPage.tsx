@@ -6,6 +6,7 @@ import { FileText, Search, Plus, Trash2, Copy } from 'lucide-react'
 import { preencherModelo, VARIAVEIS_MODELO, type CasoParaModelo, type ContratoParaModelo } from '@/lib/modelos'
 import { repositorio, type Contrato, type Imovel } from '@/lib/repositorio'
 import { rotulosGarantia, rotulosIndice } from '@/lib/rotulos'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Biblioteca de modelos: cada modelo abre o agente da área no modo Redigir com o pedido pronto.
 // O advogado completa os dados do caso entre colchetes e o agente redige citando a lei do Planalto.
@@ -63,13 +64,18 @@ export default function ModelosPage() {
   const salvar = async () => {
     setMsg('')
     const { error } = await supabase.from('modelos_escritorio').insert({ titulo: form.titulo.trim(), area: form.area.trim() || 'Escritório', agente: form.agente, pedido: form.pedido.trim() })
-    if (error) return setMsg(error.message)
+    if (error) return setMsg(mensagemAmigavel(error))
     setMsg('Modelo cadastrado e visível para todo o escritório.')
     setForm({ titulo: '', area: 'Escritório', agente: 'civel', pedido: '' })
     setAberto(false)
     carregar()
   }
-  const apagar = async (id: string) => { await supabase.from('modelos_escritorio').delete().eq('id', id); carregar() }
+  const apagar = async (id: string) => {
+    if (!window.confirm('Apagar este modelo do escritório?')) return
+    const { error } = await supabase.from('modelos_escritorio').delete().eq('id', id)
+    if (error) setMsg(mensagemAmigavel(error))
+    carregar()
+  }
   // Passo 90: duplicar um modelo (do catálogo ou do escritório) abre o formulário já preenchido para ajustar e salvar.
   const duplicar = (m: Modelo) => { setForm({ titulo: `${m.titulo} (cópia)`, area: m.area, agente: m.agente, pedido: m.pedido }); setAberto(true); setMsg(''); window.scrollTo({ top: 0, behavior: 'smooth' }) }
   const todos = [...proprios, ...MODELOS]

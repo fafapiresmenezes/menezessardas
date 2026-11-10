@@ -44,7 +44,7 @@ export default function PerfilClientePage() {
           <label htmlFor="cliente" className="block font-medium">Nome do cliente</label>
           <input id="cliente" value={nome} onChange={e => setNome(e.target.value)} className="border px-3 py-2 min-h-[44px] w-full max-w-md" />
           <label className="flex items-start gap-2 text-sm" data-testid="perfil-aceite">
-            <input type="checkbox" checked={aceite} onChange={e => setAceite(e.target.checked)} className="mt-1 w-5 h-5" />
+            <input type="checkbox" checked={aceite} onChange={e => setAceite(e.target.checked)} className="mt-1 w-5 h-5 shrink-0" />
             <span>{TERMO}</span>
           </label>
         </section>

@@ -22,6 +22,7 @@ import {
 import { Printer, Building2, Percent, FileCheck2, CalendarClock, TrendingUp, AlertOctagon, Sparkles, ListChecks, CalendarCheck } from 'lucide-react'
 import { selarDigest } from '@/lib/exportarTrilha'
 import { baixarArquivo } from '@/lib/ancoragem'
+import { lerNumero } from '@/lib/numero'
 
 // Passo 23: ciclo trimestral de OKR (lembrete 15 dias antes do fim do trimestre, revisão e ata com selo).
 const trimestreDe = (d: Date) => `${d.getFullYear()}-T${Math.floor(d.getMonth() / 3) + 1}`
@@ -190,7 +191,7 @@ export default function IndicadoresPage() {
   }, [])
   const salvarMetas = async () => {
     const novas: MetasOKR = { ...(metas ?? {}) }
-    for (const [k, v] of Object.entries(rascunhoMetas)) { const n = Number(String(v).replace(',', '.')); if (v.trim() !== '' && Number.isFinite(n) && n >= 0) novas[k] = n }
+    for (const [k, v] of Object.entries(rascunhoMetas)) { const n = lerNumero(v); if (v.trim() !== '' && Number.isFinite(n) && n >= 0) novas[k] = n }
     const { error } = await supabase.from('configuracoes').upsert({ chave: 'metas_okr', valor: JSON.stringify(novas) }, { onConflict: 'chave' })
     if (error) { setMsgMetas(mensagemAmigavel(error, 'Não deu para salvar as metas.')); return }
     setMetas(novas); setEditandoMetas(false); setRascunhoMetas({}); setMsgMetas('Metas salvas. Valem para toda a equipe e entram na próxima ata do trimestre.')

@@ -99,7 +99,7 @@ export default function EscritoriosParceiros({ pessoas, aoMudar }: { pessoas: Pe
         <h3 className="font-semibold">Contrato de adesão SaaS (Value Pas)</h3>
         <p className="text-xs text-grafite-claro mt-1 mb-2">Cada administrador de escritório parceiro aceita o contrato no primeiro acesso; fica registrado com data, versão e hash do texto.</p>
         {aceitesSaas.length === 0 ? <p className="text-grafite-claro" data-testid="sem-aceites-saas">Nenhum aceite ainda.</p> : (
-          <ul className="divide-y divide-navy/5">{aceitesSaas.map(a => <li key={a.escritorio_id + a.versao} className="py-1" data-testid="aceite-saas-item">{a.nome} · aceito em {new Date(a.aceito_em).toLocaleDateString('pt-BR')} (v{a.versao}) · hash {a.hash.slice(0, 12)}…</li>)}</ul>
+          <ul className="divide-y divide-navy/5">{aceitesSaas.map(a => <li key={a.escritorio_id + a.versao} className="py-1" data-testid="aceite-saas-item">{a.nome} · aceito em {a.aceito_em ? new Date(a.aceito_em).toLocaleDateString('pt-BR') : '—'} (v{a.versao}) · hash {(a.hash ?? '').slice(0, 12)}…</li>)}</ul>
         )}
       </div>
       <MarcaParceiros escritorios={lista.filter(e => e.id !== SEDE_ID).map(e => ({ id: e.id, nome: e.nome }))} />

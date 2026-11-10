@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { sessaoDemoAtiva } from '@/lib/authDemo'
 import LoginPage from '@/pages/LoginPage'
@@ -26,6 +26,7 @@ const FornecedorPage = lazy(() => import('@/pages/FornecedorPage'))
 const ConfiguraçõesPage = lazy(() => import('@/pages/ConfiguraçõesPage'))
 const EquipePage = lazy(() => import('@/pages/EquipePage'))
 import InicioPage from '@/pages/InicioPage'
+import ErroTela from '@/components/ErroTela'
 const FontesPage = lazy(() => import('@/pages/FontesPage'))
 const KycPage = lazy(() => import('@/pages/KycPage'))
 const PerfilClientePage = lazy(() => import('@/pages/PerfilClientePage'))
@@ -122,6 +123,7 @@ function App() {
 
   return (
     <HashRouter>
+      <ProtecaoRotas>
       <Suspense fallback={<Carregando />}>
       <Routes>
         <Route path="/portal/:token" element={<PortalClientePage />} />
@@ -326,8 +328,16 @@ function App() {
         <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />
       </Routes>
       </Suspense>
+      </ProtecaoRotas>
     </HashRouter>
   )
+}
+
+// Erro no corpo de uma tela (fora do Layout) derrubava o app inteiro: todas as telas seguintes ficavam em branco
+// até recarregar. Esta proteção mostra o aviso só naquela tela e se desarma ao mudar de endereço.
+function ProtecaoRotas({ children }: { children: React.ReactNode }) {
+  const { pathname } = useLocation()
+  return <ErroTela chave={pathname} topo>{children}</ErroTela>
 }
 
 export default App

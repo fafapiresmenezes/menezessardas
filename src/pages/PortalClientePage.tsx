@@ -30,9 +30,10 @@ export default function PortalClientePage() {
   const [marca, setMarca] = useState<MarcaEscritorio | null>(null)
   const [baixado, marcarBaixado] = useBaixado() // Passo 395
   useEffect(() => {
-    supabase.rpc('portal_caso', { p_token: token }).then(r => setCaso((r.data as Caso) ?? null))
-    supabase.rpc('portal_cliente', { p_token: token }).then(r => setResumo((r.data as Resumo) ?? null))
-    supabase.rpc('portal_marca', { p_token: token }).then(r => setMarca((r.data as MarcaEscritorio) ?? null))
+    // Resposta inesperada (sem etapas ou sem casos) conta como link inválido, em vez de derrubar a tela.
+    supabase.rpc('portal_caso', { p_token: token }).then(r => { const d = r.data as Caso | null; setCaso(d && Array.isArray(d.etapas) ? d : null) }, () => setCaso(null))
+    supabase.rpc('portal_cliente', { p_token: token }).then(r => { const d = r.data as Resumo | null; setResumo(d && Array.isArray(d.casos) ? d : null) }, () => setResumo(null))
+    supabase.rpc('portal_marca', { p_token: token }).then(r => { const d = r.data as MarcaEscritorio | null; setMarca(d && d.nome ? d : null) }, () => setMarca(null))
   }, [token])
   const feitas = caso?.etapas.filter(e => e.situacao === 'feito').length ?? 0
   const total = caso?.etapas.length ?? 0
@@ -46,6 +47,7 @@ export default function PortalClientePage() {
       ) : <header className="bg-navy py-6"><Marca /></header>}
       <div className="max-w-2xl mx-auto px-4 py-8">
         {caso === undefined && <p className="text-grafite">Carregando…</p>}
+        {caso === null && <h1 className="font-serif text-2xl text-navy mb-2">Link do Portal indisponível</h1>}
         {caso === null && <p role="alert" className="text-grafite">Este link não é válido, expirou (links do Portal valem 90 dias) ou foi desativado pelo escritório. Peça um link novo ao escritório.</p>}
         {caso && (
           <article data-testid="portal-caso" className="bg-white border-t-2 border-dourado shadow-sm p-6">

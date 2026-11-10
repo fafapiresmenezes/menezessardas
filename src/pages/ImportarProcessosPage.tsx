@@ -96,13 +96,15 @@ export default function ImportarProcessosPage() {
     const origem = FONTES.find(f => f.valor === fonte)!.rotulo.toLowerCase()
     const casos = prontas.map(l => paraCaso(l, origem, responsavel || null))
     const falhas: string[] = []; let gravados = 0, monitorados = 0
+    const salvos: typeof casos = []
     for (let i = 0; i < casos.length; i += 50) {
       const lote = casos.slice(i, i + 50)
       const { error } = await supabase.from('tarefas').insert(lote)
-      if (error) falhas.push(`Linhas ${i + 1} a ${i + lote.length}: ${mensagemAmigavel(error)}`); else gravados += lote.length
+      if (error) falhas.push(`Linhas ${i + 1} a ${i + lote.length}: ${mensagemAmigavel(error)}`); else { gravados += lote.length; salvos.push(...lote) }
     }
     if (monitorar && gravados) {
-      const mons = casos.filter(c => c.numero_processo && c.situacao !== 'feito').map(c => ({ tipo: 'processo', valor: c.numero_processo!.replace(/\D/g, ''), rotulo: c.titulo.slice(0, 120) }))
+      // Só monitora os casos que de fato entraram (um lote recusado não deve virar monitoramento solto).
+      const mons = salvos.filter(c => c.numero_processo && c.situacao !== 'feito').map(c => ({ tipo: 'processo', valor: c.numero_processo!.replace(/\D/g, ''), rotulo: c.titulo.slice(0, 120) }))
       if (mons.length) {
         const { error } = await supabase.from('monitoramentos').upsert(mons, { onConflict: 'tipo,valor', ignoreDuplicates: true })
         if (error) falhas.push(`Monitoramento: ${mensagemAmigavel(error)}`); else monitorados = mons.length

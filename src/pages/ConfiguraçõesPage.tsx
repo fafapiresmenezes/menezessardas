@@ -174,7 +174,7 @@ export default function ConfiguraçõesPage() {
                 type="checkbox"
                 checked={prefs.notificacoes}
                 onChange={e => setPrefs({ ...prefs, notificacoes: e.target.checked })}
-                className="h-4 w-4 accent-navy cursor-pointer"
+                className="h-5 w-5 shrink-0 accent-navy cursor-pointer"
               />
               <span>Mostrar notificações dentro da plataforma</span>
             </label>
@@ -183,7 +183,7 @@ export default function ConfiguraçõesPage() {
                 type="checkbox"
                 checked={prefs.alertasEmail}
                 onChange={e => setPrefs({ ...prefs, alertasEmail: e.target.checked })}
-                className="h-4 w-4 accent-navy cursor-pointer"
+                className="h-5 w-5 shrink-0 accent-navy cursor-pointer"
               />
               <span>Enviar alertas também por e-mail</span>
             </label>

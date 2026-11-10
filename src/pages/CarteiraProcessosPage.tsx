@@ -5,13 +5,13 @@ import Vazio from '@/components/Vazio'
 import { supabase } from '@/lib/supabase'
 import { mensagemAmigavel } from '@/lib/erros'
 import { listarPessoas, type Pessoa } from '@/lib/equipe'
-import { formatarData } from '@/lib/datas'
+import { formatarData, hojeLocal } from '@/lib/datas'
 import { montarCarteira, filtrarCarteira, resumoCarteira, type CasoCarteira, type MonCarteira, type IntimacaoCarteira, type FiltroCarteira } from '@/lib/escritorio/carteira'
 import { Briefcase, Upload, Radar, Download } from 'lucide-react'
 
 // Carteira de processos (como o painel do Escavador e do Jusbrasil): todos os processos do escritório numa tabela,
 // com tribunal, última movimentação no DataJud, tempo parado, intimações não lidas e próximo prazo.
-const hojeIso = () => new Date().toISOString().slice(0, 10)
+const hojeIso = () => hojeLocal()
 const ALERTAS: [NonNullable<FiltroCarteira['alerta']>, string][] = [['', 'Todos'], ['intimacao', 'Com intimação não lida'], ['parado90', 'Parados há mais de 90 dias'], ['parado180', 'Parados há mais de 180 dias'], ['sem_monitor', 'Sem monitoramento'], ['nao_encontrado', 'Não achados no DataJud']]
 
 export default function CarteiraProcessosPage() {
