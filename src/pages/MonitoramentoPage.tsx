@@ -6,6 +6,8 @@ import { mensagemAmigavel } from '@/lib/erros'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { Radar, Trash2, RefreshCw, History } from 'lucide-react'
+import { variacoesNome, filtrarNovidades, processosNovos } from '@/lib/escritorio/carteira'
+import { formatarCnj } from '@/lib/escritorio/importarProcessos'
 
 // Passo 22: linha do tempo dos andamentos (DataJud) por processo, com filtro por período.
 type Mov = { data: string; nome: string }
@@ -50,6 +52,25 @@ export default function MonitoramentoPage() {
       ...movsFiltrados.map(m => `${dt(m.data)} — ${m.nome}`), '', 'Fonte: DataJud (CNJ)'].join('\n')
     try { await navigator.clipboard.writeText(texto); setCopiado(true); setTimeout(() => setCopiado(false), 2500) } catch { setMsgLinha('Não foi possível copiar; selecione o texto e copie à mão.') }
   }
+  // Como no Escavador: variações de grafia do nome, filtros "contém / não contém" e aviso de processo novo fora da carteira.
+  const [comVariacoes, setComVariacoes] = useState(true)
+  const lerFiltro = (k: string) => { try { return localStorage.getItem(k) ?? '' } catch { return '' } }
+  const [contem, setContem] = useState(() => lerFiltro('lsm-mon-contem'))
+  const [naoContem, setNaoContem] = useState(() => lerFiltro('lsm-mon-nao-contem'))
+  const guardarFiltro = (k: string, v: string) => { try { localStorage.setItem(k, v) } catch { /* sem memória local */ } }
+  const [carteira, setCarteira] = useState<Set<string>>(new Set())
+  const carregarCarteira = async () => {
+    try {
+      const { data } = await supabase.from('tarefas').select('numero_processo').order('criado_em')
+      setCarteira(new Set(((data ?? []) as { numero_processo: string | null }[]).map(t => String(t.numero_processo ?? '').replace(/\D/g, '')).filter(n => n.length === 20)))
+    } catch { /* sem carteira: não marca processos novos */ }
+  }
+  useEffect(() => { carregarCarteira() }, [])
+  const criarCaso = async (numero: string, m: Mon) => {
+    const { error } = await supabase.from('tarefas').insert({ titulo: `Processo novo · ${m.rotulo || m.valor}`.slice(0, 200), nivel: 'projeto', tipo: 'caso', numero_processo: formatarCnj(numero), cliente: m.rotulo || null, situacao: 'a_fazer', prioridade: 'alta', descricao: `Achado pelo monitoramento do nome ${m.valor} em ${new Date().toLocaleDateString('pt-BR')}.` }).select('id').single()
+    if (error) return setMsg(mensagemAmigavel(error))
+    setMsg(`Processo ${formatarCnj(numero)} incluído na carteira.`); carregarCarteira()
+  }
   const carregar = async () => {
     const { data } = await supabase.from('monitoramentos').select('id,tipo,valor,rotulo,ultimo_estado,novidades,verificado_em,novidade_em').order('novidade_em', { ascending: false, nullsFirst: false })
     setLista((data ?? []) as Mon[])
@@ -72,8 +93,16 @@ export default function MonitoramentoPage() {
     if (v.length < 4) return setMsg('Digite pelo menos 4 letras.')
     const { data, error } = await supabase.from('monitoramentos').insert({ tipo, valor: tipo === 'processo' ? v.replace(/\D/g, '') : v.toUpperCase(), rotulo: rotulo.trim() || null }).select('id').single()
     if (error) return setMsg(error.code === '23505' ? 'Isso já está sendo monitorado.' : 'Não foi possível adicionar (leitores não incluem monitoramentos).')
+    let extras = 0
+    if (tipo === 'nome' && comVariacoes) {
+      for (const variacao of variacoesNome(v).filter(x => x !== v.toUpperCase())) {
+        const r = await supabase.from('monitoramentos').insert({ tipo: 'nome', valor: variacao, rotulo: `${rotulo.trim() || v.toUpperCase()} (variação)`.slice(0, 120) }).select('id').single()
+        if (!r.error) extras++
+      }
+    }
     setValor(''); setRotulo('')
-    await verificar(data.id)
+    await verificar(data!.id)
+    if (extras) setMsg(m => `${m} Também monitorando ${extras} variação(ões) de grafia do nome.`)
   }
   const remover = async (id: string) => { await supabase.from('monitoramentos').delete().eq('id', id); carregar() }
   // Passo D15: novidades vistas saem da lista e de Meu dia; casos com número CNJ entram sozinhos.
@@ -99,6 +128,11 @@ export default function MonitoramentoPage() {
             <input value={rotulo} onChange={e => setRotulo(e.target.value)} placeholder="Apelido (opcional)" className="border px-3 py-2 md:col-span-2" aria-label="Apelido" />
             <button type="button" onClick={trazerCasos} disabled={ocupado} data-testid="mon-trazer-casos" className="min-h-[44px] border border-navy/20 text-navy text-sm px-3 disabled:opacity-50">Trazer processos dos casos</button>
             <button type="button" onClick={adicionar} disabled={ocupado} data-testid="mon-adicionar" className="min-h-[44px] bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-50">Monitorar</button>
+          </div>
+          {tipo === 'nome' && <label className="mt-2 text-sm inline-flex items-center gap-2"><input type="checkbox" checked={comVariacoes} onChange={e => setComVariacoes(e.target.checked)} data-testid="mon-variacoes" /> Monitorar também as variações de grafia{valor.trim().length >= 4 && variacoesNome(valor).length > 1 ? `: ${variacoesNome(valor).filter(x => x !== valor.trim().toUpperCase()).join(' · ')}` : ' (sem acento, sem "da/de/dos", abreviado)'}</label>}
+          <div className="grid gap-2 md:grid-cols-2 mt-3 text-sm">
+            <label>Mostrar só novidades que contêm<input value={contem} onChange={e => { setContem(e.target.value); guardarFiltro('lsm-mon-contem', e.target.value) }} placeholder="ex.: TJRJ, citação" className="border px-3 py-2 w-full min-h-[44px]" data-testid="mon-contem" /></label>
+            <label>Esconder novidades que contêm<input value={naoContem} onChange={e => { setNaoContem(e.target.value); guardarFiltro('lsm-mon-nao-contem', e.target.value) }} placeholder="ex.: edital, leilão" className="border px-3 py-2 w-full min-h-[44px]" data-testid="mon-nao-contem" /></label>
           </div>
           <button type="button" onClick={() => verificar()} disabled={ocupado || !lista.length} className="mt-3 min-h-[44px] px-4 border text-sm inline-flex items-center gap-2 disabled:opacity-50"><RefreshCw className={`w-4 h-4 ${ocupado ? 'animate-spin' : ''}`} aria-hidden />Verificar tudo agora</button>
           {msg && <p role="status" className="mt-3 text-sm" data-testid="mon-msg">{msg}</p>}
@@ -143,9 +177,16 @@ export default function MonitoramentoPage() {
                 <p className="font-medium">{m.rotulo ? `${m.rotulo} · ` : ''}<span className="font-mono">{m.valor}</span></p>
                 <p className="text-xs text-grafite-claro">{m.tipo === 'processo' ? (m.ultimo_estado?.encontrado === false ? 'Não encontrado no DataJud' : [m.ultimo_estado?.classe, m.ultimo_estado?.orgao].filter(Boolean).join(' · ')) : 'Nome monitorado no Diário de Justiça Eletrônico Nacional'} · verificado {dt(m.verificado_em)}</p>
                 {m.novidades.length > 0 && <button type="button" onClick={() => marcarVistas(m.id)} className="mt-2 text-xs underline text-navy" data-testid="mon-vistas">Marcar como vistas</button>}
-                {m.novidades.length ? (
-                  <ul className="mt-2 text-sm space-y-1">{m.novidades.slice(0, 8).map((n, i) => <li key={i}><span className="text-xs bg-dourado/20 px-1">novo</span> {dt(n.data)} · {n.texto}</li>)}</ul>
-                ) : <p className="text-sm text-grafite-claro mt-2">Sem novidades desde que começou o monitoramento.</p>}
+                {(() => {
+                  const visiveis = filtrarNovidades(m.novidades, contem, naoContem)
+                  if (!m.novidades.length) return <p className="text-sm text-grafite-claro mt-2">Sem novidades desde que começou o monitoramento.</p>
+                  if (!visiveis.length) return <p className="text-sm text-grafite-claro mt-2" data-testid="mon-filtradas">{m.novidades.length} novidade(s) escondida(s) pelos filtros.</p>
+                  return <ul className="mt-2 text-sm space-y-1">{visiveis.slice(0, 8).map((n, i) => {
+                    const novos = m.tipo === 'nome' ? processosNovos(n.texto, carteira) : []
+                    return <li key={i}><span className="text-xs bg-dourado/20 px-1">novo</span> {dt(n.data)} · {n.texto}
+                      {novos.map(p => <span key={p} className="block text-xs mt-0.5" data-testid="mon-processo-novo"><strong className="text-critico">Processo fora da carteira</strong> {formatarCnj(p)} · <button type="button" onClick={() => criarCaso(p, m)} className="underline text-navy">incluir como caso</button></span>)}</li>
+                  })}{visiveis.length < m.novidades.length && <li className="text-xs text-grafite-claro">{m.novidades.length - visiveis.length} escondida(s) pelos filtros</li>}</ul>
+                })()}
               </div>
               {m.tipo === 'processo' && <button type="button" onClick={() => { linhaDoTempo(m.valor); window.scrollTo({ top: 0, behavior: 'smooth' }) }} aria-label="Ver linha do tempo" className="p-2" data-testid="lt-abrir"><History className="w-4 h-4" aria-hidden /></button>}
               <button type="button" onClick={() => verificar(m.id)} disabled={ocupado} aria-label="Verificar este agora" className="p-2"><RefreshCw className="w-4 h-4" aria-hidden /></button>

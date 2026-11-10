@@ -48,6 +48,10 @@ const ProjetosPage = lazy(() => import('@/pages/ProjetosPage'))
 const IntimacoesPage = lazy(() => import('@/pages/IntimacoesPage'))
 const AdministracaoPage = lazy(() => import('@/pages/AdministracaoPage'))
 const FerramentasPage = lazy(() => import('@/pages/FerramentasPage'))
+const CarteiraProcessosPage = lazy(() => import('@/pages/CarteiraProcessosPage'))
+const ImportarProcessosPage = lazy(() => import('@/pages/ImportarProcessosPage'))
+const FunilVendasPage = lazy(() => import('@/pages/FunilVendasPage'))
+const FinanceiroPage = lazy(() => import('@/pages/FinanceiroPage'))
 const EstudosPage = lazy(() => import('@/pages/EstudosPage'))
 
 // Com dois fatores ativos, a sessão só libera o sistema depois do código (nível aal2).
@@ -125,6 +129,22 @@ function App() {
         <Route
           path="/administracao"
           element={isAuthenticated ? <AdministracaoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/processos"
+          element={isAuthenticated ? <CarteiraProcessosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/processos/importar"
+          element={isAuthenticated ? <ImportarProcessosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/funil"
+          element={isAuthenticated ? <FunilVendasPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/financeiro"
+          element={isAuthenticated ? <FinanceiroPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/ferramentas"

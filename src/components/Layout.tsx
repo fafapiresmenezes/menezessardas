@@ -21,7 +21,7 @@ import { listarPessoas, perfilAtual } from '@/lib/equipe'
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -33,6 +33,9 @@ const itensMenu = [
   { icon: Home, label: 'Trocar de área', href: '/inicio' },
   { icon: LayoutGrid, label: 'Painel', href: '/dashboard' },
   { icon: FolderKanban, label: 'Casos e projetos', href: '/projetos' },
+  { icon: Gavel, label: 'Carteira de processos', href: '/processos' },
+  { icon: Filter, label: 'Funil de vendas', href: '/funil' },
+  { icon: PiggyBank, label: 'Financeiro', href: '/financeiro' },
   { icon: Inbox, label: 'Intimações', href: '/intimacoes' },
   { icon: Building2, label: 'Imóveis', href: '/imoveis' },
   { icon: CalendarDays, label: 'Agenda', href: '/agenda' },
