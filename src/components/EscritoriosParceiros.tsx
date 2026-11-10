@@ -5,6 +5,7 @@ import FaturasParceiros from '@/components/FaturasParceiros'
 import MarcaParceiros from '@/components/MarcaParceiros'
 import { criarEscritorio, escritorioDasPessoas, listarEscritorios, moverParaEscritorio, SEDE_ID, type Escritorio, type Pessoa } from '@/lib/equipe'
 import { mensagemAmigavel } from '@/lib/erros'
+import { resumoPreco } from '@/lib/precos'
 
 const brl = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
@@ -52,7 +53,7 @@ export default function EscritoriosParceiros({ pessoas, aoMudar }: { pessoas: Pe
   return (
     <section className="bg-white shadow-sm p-6" aria-labelledby="parceiros" data-testid="escritorios-parceiros">
       <h2 id="parceiros" className="text-lg flex items-center gap-2 mb-1"><Building size={18} className="text-dourado" aria-hidden="true" /> Escritórios parceiros e cobrança por usuário</h2>
-      <p className="text-sm text-grafite-claro mb-4">Outro escritório ou empresa gere os próprios casos, horas, honorários e portal do cliente aqui, sem ver nada da sede. Preço (Value Pas): R$ 390 por operador e R$ 120 por leitor ao mês, 30% de desconto no 1º ano.</p>
+      <p className="text-sm text-grafite-claro mb-4">Outro escritório ou empresa gere os próprios casos, horas, honorários e portal do cliente aqui, sem ver nada da sede. Preço (Value Pas): {resumoPreco()}, qualquer que seja a função.</p>
       <div className="flex gap-2 mb-4">
         <input aria-label="Nome do novo escritório" placeholder="Nome do escritório ou empresa" value={nome} onChange={e => setNome(e.target.value)} className="border px-3 py-2 flex-1" />
         <button data-testid="criar-escritorio" onClick={criar} disabled={ocupado || nome.trim().length < 3} className="min-h-[44px] bg-navy text-white px-4 text-sm uppercase tracking-wider inline-flex items-center gap-1"><Plus size={14} aria-hidden="true" /> Criar</button>
@@ -62,7 +63,7 @@ export default function EscritoriosParceiros({ pessoas, aoMudar }: { pessoas: Pe
         <div className="grid sm:grid-cols-4 gap-2">
           <input aria-label="Nome do escritório convidado" placeholder="Nome do escritório" value={conv.nome_escritorio} onChange={e => setConv({ ...conv, nome_escritorio: e.target.value })} className="border px-3 py-2 sm:col-span-2" data-testid="convite-escritorio" />
           <input aria-label="E-mail do responsável" type="email" placeholder="E-mail do responsável" value={conv.email} onChange={e => setConv({ ...conv, email: e.target.value })} className="border px-3 py-2" data-testid="convite-email" />
-          <select aria-label="Função do convidado" value={conv.funcao} onChange={e => setConv({ ...conv, funcao: e.target.value })} className="border px-3 py-2" data-testid="convite-funcao"><option value="operador">Operador (R$ 390)</option><option value="leitor">Leitor (R$ 120)</option></select>
+          <select aria-label="Função do convidado" value={conv.funcao} onChange={e => setConv({ ...conv, funcao: e.target.value })} className="border px-3 py-2" data-testid="convite-funcao"><option value="operador">Operador</option><option value="leitor">Leitor</option></select>
         </div>
         <div className="flex items-center gap-3 mt-2">
           <button data-testid="convidar-parceiro" onClick={convidar} disabled={ocupado || conv.nome_escritorio.trim().length < 3 || !conv.email.includes('@')} className="min-h-[44px] bg-navy text-white px-4 text-sm uppercase tracking-wider disabled:bg-grafite-claro/40">Enviar convite</button>
@@ -76,11 +77,11 @@ export default function EscritoriosParceiros({ pessoas, aoMudar }: { pessoas: Pe
         )}
       </div>
       <table className="w-full text-sm mb-4" data-testid="tabela-cobranca">
-        <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite border-b"><th className="py-2">Escritório</th><th>Operadores</th><th>Leitores</th><th>Mensal</th><th>1º ano (−30%)</th></tr></thead>
+        <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite border-b"><th className="py-2">Escritório</th><th>Operadores</th><th>Leitores</th><th>Mensal</th></tr></thead>
         <tbody>{lista.map(e => (
-          <tr key={e.id} className="border-b border-navy/5"><td className="py-2">{e.nome}{e.id === SEDE_ID && <span className="text-xs text-grafite-claro"> (sede, sem cobrança)</span>}</td><td>{e.operadores}</td><td>{e.leitores}</td><td>{e.id === SEDE_ID ? '—' : brl(e.mensal)}</td><td>{e.id === SEDE_ID ? '—' : brl(e.mensal1Ano)}</td></tr>
+          <tr key={e.id} className="border-b border-navy/5"><td className="py-2">{e.nome}{e.id === SEDE_ID && <span className="text-xs text-grafite-claro"> (sede, sem cobrança)</span>}</td><td>{e.operadores}</td><td>{e.leitores}</td><td>{e.id === SEDE_ID ? '—' : brl(e.mensal)}</td></tr>
         ))}</tbody>
-        <tfoot><tr className="font-medium"><td className="py-2" colSpan={3}>Receita mensal dos parceiros</td><td colSpan={2}>{brl(total)}</td></tr></tfoot>
+        <tfoot><tr className="font-medium"><td className="py-2" colSpan={3}>Receita mensal dos parceiros</td><td>{brl(total)}</td></tr></tfoot>
       </table>
       {lista.length > 1 && (
         <ul className="divide-y divide-navy/5">

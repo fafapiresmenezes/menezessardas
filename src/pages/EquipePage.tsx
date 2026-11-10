@@ -111,8 +111,8 @@ export default function EquipePage() {
               </h2>
               <ol className="list-decimal pl-5 text-sm text-grafite mt-3 space-y-1">
                 <li>A pessoa abre o link da plataforma e clica em <strong>Criar conta</strong>, com o e-mail dela e uma senha.</li>
-                <li>Ela aparece aqui como <strong>Sem acesso</strong>.</li>
-                <li>Você escolhe a função dela na lista abaixo. Pronto: ela já consegue entrar, mesmo sem clicar no link do e-mail de cadastro.</li>
+                <li>Ela já entra como <strong>Leitor</strong> (vê tudo, não altera nada), sem esperar a sua aprovação.</li>
+                <li>Na lista abaixo você muda a função dela para operador ou administrador, ou retira o acesso escolhendo <strong>Sem acesso</strong>.</li>
               </ol>
               <p className="text-sm text-grafite mt-3">
                 Alguém esqueceu a senha? Use <strong>Senha provisória</strong> na linha da pessoa, entregue a senha gerada e peça para ela trocar em Configurações → Senha.

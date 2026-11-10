@@ -1,6 +1,8 @@
 // Passo 40 (Onda D): contrato de adesão SaaS da Value Pas, aceito com hash pelo administrador de cada escritório parceiro
 // no primeiro acesso. O aceite grava data, versão, SHA-256 do texto e navegador em aceites_contrato_saas.
-export const CONTRATO_SAAS_VERSAO = '1.0 (31/10/2026)'
+// Versão 2.0 (10/11/2026): preço novo definido por M — instalação de R$ 15.000,00 em 3 parcelas sem juros e R$ 200,00 por usuário
+// ao mês, sem o desconto do 1º ano. Versão nova = aceite novo de cada administrador (cláusula 8.2).
+export const CONTRATO_SAAS_VERSAO = '2.0 (10/11/2026)'
 
 export const CONTRATO_SAAS_TEXTO = `CONTRATO DE ADESÃO · LICENÇA DE USO DE SOFTWARE COMO SERVIÇO (SaaS)
 Versão ${CONTRATO_SAAS_VERSAO}
@@ -14,8 +16,8 @@ OBJETO: licença de uso, não exclusiva e intransferível, da plataforma de gest
 1.2. O uso é liberado no aceite; a cobrança começa no primeiro dia do mês seguinte à liberação do primeiro usuário.
 
 2. Preço e pagamento
-2.1. Mensalidade por usuário: R$ 390,00 por operador e R$ 120,00 por leitor, apurada no dia 1 de cada mês pelo número de usuários ativos no escritório do Cliente.
-2.2. Nos primeiros 12 meses contados do cadastro do escritório, aplica-se desconto de 30% (trinta por cento) sobre a mensalidade.
+2.1. Taxa de instalação: R$ 15.000,00 (quinze mil reais), paga em 3 (três) parcelas mensais e iguais de R$ 5.000,00 (cinco mil reais), sem juros, cobradas nas três primeiras faturas.
+2.2. Mensalidade por usuário: R$ 200,00 (duzentos reais) por usuário ativo, qualquer que seja a função (administrador, operador ou leitor), apurada no dia 1 de cada mês pelo número de usuários ativos no escritório do Cliente.
 2.3. A fatura é emitida no dia 1, com vencimento no dia 10, paga por PIX (QR ou copia e cola) indicado na própria fatura. Atraso superior a 30 dias autoriza a suspensão do acesso, mantidos os dados por 90 dias.
 2.4. Reajuste anual pelo IPCA (IBGE) ou índice que o substitua. Serviços de terceiros (APIs externas, como diários oficiais pagos) são repassados sem margem.
 
