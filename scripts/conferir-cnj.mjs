@@ -33,6 +33,17 @@ const numeros = arqNumeros ? [...new Set(readFileSync(arqNumeros, 'utf8').match(
 const advogados = nomes.split(',').map(s => s.trim()).filter(Boolean)
 console.log(`Janela: ${inicio} a ${hoje} · ${numeros.length} processo(s) · advogado(s): ${advogados.join(', ') || 'nenhum'}`)
 
+// Teste rápido antes da lista toda: se o CNJ não responde deste servidor, avisa logo em vez de esperar cada consulta.
+const sonda = async (nome, url, init) => {
+  const t0 = Date.now()
+  const r = await fetch(url, { ...init, signal: AbortSignal.timeout(20000) }).then(x => `${x.status}`).catch(e => `falhou (${e.cause?.code ?? e.name})`)
+  console.log(`Teste ${nome}: ${r} em ${Date.now() - t0} ms`)
+  return /^2/.test(r)
+}
+const okCom = await sonda('Comunica PJe (DJEN)', `${m.COMUNICA}?numeroOab=1&ufOab=RJ&itensPorPagina=5&pagina=1`)
+const okDj = await sonda('DataJud', 'https://api-publica.datajud.cnj.jus.br/api_publica_tjrj/_search', { method: 'POST', headers: { Authorization: m.DATAJUD_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify({ size: 1, query: { match_all: {} } }) })
+if (!okCom && !okDj) { console.log('O CNJ não respondeu deste servidor. Nada a conferir.'); process.exit(2) }
+
 const pubs = new Map(), erros = [], andamentos = []
 const fila = [
   ...advogados.map(n => ({ rot: `advogado ${n}`, f: { nomeAdvogado: n }, pag: 10 })),
@@ -42,11 +53,11 @@ let feitos = 0
 const trabalhar = async () => {
   while (fila.length) {
     const q = fila.shift()
-    const c = await m.comunica(q.f, inicio, hoje, q.pag)
+    const c = okCom ? await m.comunica(q.f, inicio, hoje, q.pag) : { ok: false, erro: 'Comunica fora do ar daqui', itens: [] }
     if (!c.ok) erros.push(`${q.rot}: ${c.erro}`)
     for (const p of c.itens) pubs.set(p.id, p)
     if (q.numero) {
-      const d = await m.datajud(q.numero).catch(e => ({ ok: false, erro: String(e) }))
+      const d = okDj ? await m.datajud(q.numero).catch(e => ({ ok: false, erro: String(e) })) : { ok: false, erro: 'DataJud fora do ar daqui' }
       const ult = d.movimentos?.[0]
       andamentos.push([q.numero, d.ok ? (d.encontrado ? 'sim' : 'não achado') : `erro: ${d.erro}`, d.tribunal ?? '', d.orgao ?? '', d.classe ?? '', ult ? String(ult.data).slice(0, 10) : '', ult ? `${ult.nome}${ult.complemento ? ` (${ult.complemento})` : ''}` : '', c.itens.length])
     }
