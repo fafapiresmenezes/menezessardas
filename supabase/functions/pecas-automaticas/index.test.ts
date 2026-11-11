@@ -57,8 +57,12 @@ describe('pecas-automaticas', () => {
     expect(email.to).toEqual([{ email: 'fatima@exemplo.com.br' }, { email: 'outro@exemplo.com.br' }])
     expect(email.attachment[0].name).toMatch(/\.doc$/)
     const doc = new TextDecoder().decode(Uint8Array.from(atob(email.attachment[0].content), c => c.charCodeAt(0)))
-    expect(doc).toContain("font-family: 'Garamond'"); expect(doc).toContain('<h2>I – DOS FATOS</h2>')
+    expect(doc).toContain("font-family: 'Garamond'")
+    // Formatação em rodízio: a numeração da seção depende do modelo sorteado (I –, 1. ou nenhuma).
+    expect(doc).toMatch(/<h2>(?:I – |1\. )?DOS FATOS<\/h2>/)
+    expect(doc).toMatch(/<meta name="formatacao" content="[a-z-]+">/)
     const salva = estado.inseridos.find(i => i.tabela === 'pecas_automaticas')!.linha as Record<string, unknown>
+    expect((salva.perfil as { formato?: string }).formato).toMatch(/^[a-z-]+$/)
     expect(salva).toMatchObject({ tarefa_id: 't-perto', enviada_para: ['fatima@exemplo.com.br', 'outro@exemplo.com.br'] })
     expect(estado.atualizados.find(a => a.tabela === 'tarefas')!.valores).toMatchObject({ peca_automatica_em: expect.any(String) })
   })
