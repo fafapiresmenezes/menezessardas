@@ -66,6 +66,36 @@ describe('Importar processos anteriores', () => {
     expect(linhas[1].textContent).toContain('Já cadastrado')
   })
 
+  it('importar tudo pelas OABs: valida, guarda as OABs, busca o histórico em blocos de 30 dias e lista os processos', async () => {
+    falso.tabelas.intimacoes = [{ numero_processo: A, tribunal: 'TJRJ', data_disponibilizacao: '2026-11-01' }]
+    falso.responderFuncao((_n, b) => ({ data: { novas: 2, falhas: [], periodo: { inicio: b.inicio, fim: b.fim } }, error: null }))
+    tela(<ImportarProcessosPage />)
+    fireEvent.click(screen.getByTestId('fonte-intimacoes'))
+    fireEvent.click(screen.getByTestId('buscar-historico'))
+    expect(await screen.findByText(/Escreva ao menos uma OAB/)).toBeTruthy()
+    fireEvent.change(screen.getByTestId('oabs-texto'), { target: { value: '12.345/rj, abc' } })
+    fireEvent.click(screen.getByTestId('buscar-historico'))
+    expect(await screen.findByText(/Não entendi: abc/)).toBeTruthy()
+    fireEvent.change(screen.getByTestId('oabs-texto'), { target: { value: '12.345/rj, 999/SP' } })
+    fireEvent.change(screen.getByTestId('oabs-meses'), { target: { value: '12' } })
+    fireEvent.click(screen.getByTestId('buscar-historico'))
+    await waitFor(() => expect(screen.getByTestId('oabs-progresso').textContent).toContain('24 intimação'), { timeout: 10000 })
+    expect(falso.rpcs).toEqual([{ nome: 'definir_configuracao', args: { p_chave: 'oabs_monitoradas', p_valor: '12345/RJ, 999/SP' } }])
+    expect(falso.invocacoes).toHaveLength(12)
+    expect(falso.invocacoes[0]).toMatchObject({ nome: 'intimacoes', body: { historico: true } })
+    expect((await screen.findAllByTestId('linha-processo')).length).toBe(1)
+  }, 20000)
+
+  it('importar tudo pelas OABs: avisa quando o servidor ainda está na versão antiga', async () => {
+    falso.responderFuncao(() => ({ data: { novas: 0, falhas: [], periodo: { inicio: '2000-01-01', fim: '2000-01-15' } }, error: null }))
+    tela(<ImportarProcessosPage />)
+    fireEvent.click(screen.getByTestId('fonte-intimacoes'))
+    fireEvent.change(screen.getByTestId('oabs-texto'), { target: { value: '1/RJ' } })
+    fireEvent.click(screen.getByTestId('buscar-historico'))
+    expect(await screen.findByText(/versão antiga/)).toBeTruthy()
+    expect(falso.invocacoes).toHaveLength(1)
+  })
+
   it('Escavador: busca pelo termo e mostra o erro do serviço', async () => {
     falso.responderFuncao((_n, b) => (b.termo === 'falha' ? { data: { erro: 'Créditos do Escavador esgotados.' }, error: null } : { data: { processos: [{ numero: C, titulo: 'Maria x Banco', tribunal: 'TJRJ', classe: null }] }, error: null }))
     tela(<ImportarProcessosPage />)

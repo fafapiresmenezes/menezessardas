@@ -14,6 +14,7 @@ export function criarSupabaseFalso(inicial: Record<string, Linha[]> = {}, padroe
   const erros: Record<string, Erro | undefined> = {}
   const chamadas: { tabela: string; op: string; dados?: unknown }[] = []
   const invocacoes: { nome: string; body: unknown }[] = []
+  const rpcs: { nome: string; args: unknown }[] = []
   let respostaFuncao: (nome: string, body: Record<string, unknown>) => { data?: unknown; error: Erro | null } = () => ({ data: null, error: null })
   let seq = 1
 
@@ -58,11 +59,11 @@ export function criarSupabaseFalso(inicial: Record<string, Linha[]> = {}, padroe
       delete: () => consulta(t, 'delete'),
     }),
     functions: { invoke: async (nome: string, o: { body: Record<string, unknown> }) => { invocacoes.push({ nome, body: o.body }); return respostaFuncao(nome, o.body) } },
-    rpc: async () => ({ data: null, error: null }),
+    rpc: async (nome: string, args?: unknown) => { rpcs.push({ nome, args }); return { data: null, error: null } },
     auth: { getUser: async () => ({ data: { user: null } }) },
   }
   return {
-    supabase, tabelas, chamadas, invocacoes,
+    supabase, tabelas, chamadas, invocacoes, rpcs,
     falhar: (t: string, e: Erro | undefined) => { erros[t] = e },
     responderFuncao: (f: typeof respostaFuncao) => { respostaFuncao = f },
   }

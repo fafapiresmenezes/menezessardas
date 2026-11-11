@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
+import { FunctionRegion } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import { mensagemAmigavel } from '@/lib/erros'
 import { listarPessoas, type Pessoa } from '@/lib/equipe'
 import { analisarPlanilha, analisarLista, analisarResultados, paraCaso, importavel, areaProvavel, ROTULO_SITUACAO, MODELO_PLANILHA, type LinhaImportacao } from '@/lib/escritorio/importarProcessos'
+import { janelas, lerOabs } from '@/lib/escritorio/historicoOab'
 import { Download, Upload, CheckCircle2, FileSpreadsheet, ListOrdered, Inbox, Search } from 'lucide-react'
 
 // Importar processos anteriores: o escritório traz a carteira que já tem e não começa do zero.
@@ -34,6 +36,20 @@ export default function ImportarProcessosPage() {
   const [buscando, setBuscando] = useState(false)
   const [importando, setImportando] = useState(false)
   const [relatorio, setRelatorio] = useState<{ casos: number; monitorados: number; falhas: string[] } | null>(null)
+  // Importar tudo pelas OABs: busca o histórico do Diário (DJEN) em blocos de 30 dias e lista os processos achados.
+  const [oabsTexto, setOabsTexto] = useState('')
+  const [meses, setMeses] = useState(24)
+  const [avisoHistorico, setAvisoHistorico] = useState('')
+  const [progresso, setProgresso] = useState<{ feitos: number; total: number; novas: number } | null>(null)
+  const parar = useRef(false)
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const { data } = await supabase.from('configuracoes').select('valor').eq('chave', 'oabs_monitoradas').maybeSingle()
+        if (data?.valor) setOabsTexto(String(data.valor))
+      } catch { /* sem permissão para ler: a pessoa digita */ }
+    })()
+  }, [])
 
   const carregarExistentes = async () => {
     const { data } = await supabase.from('tarefas').select('numero_processo').eq('nivel', 'projeto').not('numero_processo', 'is', null)
@@ -74,6 +90,29 @@ export default function ImportarProcessosPage() {
       .map(i => ({ numero: String(i.numero_processo), titulo: i.classe ?? undefined, vara: i.orgao ?? undefined, tribunal: i.tribunal ?? undefined }))
     if (!itens.length) setErro('Nenhuma intimação com número de processo. Confira as OABs em Intimações e clique em "Buscar agora" lá.')
     mostrar(analisarResultados(itens, ex))
+  }
+  const buscarHistorico = async () => {
+    const { oabs, invalidas } = lerOabs(oabsTexto)
+    if (invalidas.length) return setErro(`Não entendi: ${invalidas.join(', ')}. Escreva assim: 123456/RJ (número da OAB, barra e o estado).`)
+    if (!oabs.length) return setErro('Escreva ao menos uma OAB, por exemplo 123456/RJ. Coloque a de cada advogado do escritório, inclusive a de quem já saiu.')
+    setBuscando(true); setErro(''); setAvisoHistorico(''); parar.current = false
+    const salvar = await supabase.rpc('definir_configuracao', { p_chave: 'oabs_monitoradas', p_valor: oabs.join(', ') })
+    if (salvar.error) { setBuscando(false); return setErro(`Não consegui guardar as OABs: ${mensagemAmigavel(salvar.error)} Só administradores podem fazer isso.`) }
+    const lista = janelas(meses)
+    let novas = 0
+    for (let i = 0; i < lista.length; i++) {
+      if (parar.current) break
+      setProgresso({ feitos: i, total: lista.length, novas })
+      const { data, error } = await supabase.functions.invoke('intimacoes', { body: { inicio: lista[i].inicio, fim: lista[i].fim, historico: true }, region: FunctionRegion.SaEast1 })
+      const d = error ? await (error as { context?: Response }).context?.json?.().catch(() => null) : data
+      if (!d || d.erro) { setAvisoHistorico(d?.erro ?? 'O CNJ não respondeu agora. O que já foi buscado ficou guardado; clique de novo para continuar.'); break }
+      if (d.periodo?.inicio !== lista[i].inicio) { setAvisoHistorico('O servidor ainda está na versão antiga e só traz os últimos dias. Peça a quem publica a plataforma para atualizar a função "intimacoes".'); break }
+      novas += Number(d.novas ?? 0)
+      if (d.falhas?.length) setAvisoHistorico(`Algumas buscas falharam (${d.falhas.join('; ')}). Confira o número e o estado das OABs.`)
+      await new Promise(r => setTimeout(r, 400))
+    }
+    setProgresso(p => (p ? { ...p, novas } : p))
+    await buscarIntimacoes()
   }
   const buscarEscavador = async () => {
     if (termo.trim().length < 3) return setErro('Escreva o nome, o CPF/CNPJ ou o número do processo.')
@@ -141,7 +180,22 @@ export default function ImportarProcessosPage() {
 
           {fonte === 'intimacoes' && <div className="mt-4">
             <p className="text-xs text-grafite-claro mb-2">A plataforma já capta, todo dia, as intimações do Diário de Justiça Eletrônico Nacional pelas OABs do escritório. Aqui aparecem os processos dessas intimações que ainda não são casos.</p>
-            <button type="button" onClick={buscarIntimacoes} disabled={buscando} data-testid="buscar-intimacoes" className="min-h-[44px] px-4 bg-navy text-white text-sm disabled:opacity-50">{buscando ? 'Procurando…' : 'Procurar processos nas intimações'}</button>
+            <div className="border border-dourado/50 bg-pergaminho p-3 mb-3" data-testid="importar-tudo-oab">
+              <p className="text-sm font-medium">Importar tudo pelas OABs do escritório</p>
+              <p className="text-xs text-grafite-claro mt-1">Escreva a OAB de cada advogado (inclusive a de quem já saiu). A plataforma busca no Diário de Justiça Eletrônico Nacional todos os processos em que cada um recebeu intimação e mostra a lista aqui para você conferir. Ela também passa a avisar das próximas intimações dessas OABs, todo dia.</p>
+              <div className="flex flex-wrap items-end gap-3 mt-2">
+                <label className="text-sm">OABs (separe por vírgula)
+                  <input value={oabsTexto} onChange={e => setOabsTexto(e.target.value)} placeholder="123456/RJ, 98765/RJ" data-testid="oabs-texto" className="block border px-3 py-2 min-h-[44px] mt-1 w-72" /></label>
+                <label className="text-sm">Voltar quanto tempo
+                  <select value={meses} onChange={e => setMeses(Number(e.target.value))} data-testid="oabs-meses" className="block border px-2 py-2 min-h-[44px] mt-1"><option value={12}>12 meses</option><option value={24}>24 meses</option><option value={36}>3 anos</option><option value={60}>5 anos</option></select></label>
+                <button type="button" onClick={buscarHistorico} disabled={buscando} data-testid="buscar-historico" className="min-h-[44px] px-4 bg-dourado text-navy uppercase tracking-wider text-sm disabled:opacity-50">{buscando ? 'Buscando…' : 'Buscar todos os processos'}</button>
+                {buscando && <button type="button" onClick={() => { parar.current = true }} className="min-h-[44px] px-3 underline text-sm">Parar</button>}
+              </div>
+              {avisoHistorico && <p role="alert" className="text-sm text-critico mt-2" data-testid="oabs-aviso">{avisoHistorico}</p>}
+              {progresso && <p role="status" className="text-xs mt-2" data-testid="oabs-progresso">{buscando ? `Buscando bloco ${Math.min(progresso.feitos + 1, progresso.total)} de ${progresso.total}…` : `Busca concluída em ${progresso.feitos >= progresso.total ? progresso.total : progresso.feitos} de ${progresso.total} blocos.`} {progresso.novas} intimação(ões) nova(s) guardada(s).</p>}
+              <p className="text-xs text-grafite-claro mt-2">O que a busca não alcança: processos em que a OAB não recebeu nenhuma intimação nesse período, e os que correm em segredo de justiça. Para esses, use a planilha.</p>
+            </div>
+            <button type="button" onClick={buscarIntimacoes} disabled={buscando} data-testid="buscar-intimacoes" className="min-h-[44px] px-4 border border-navy text-navy text-sm disabled:opacity-50">{buscando ? 'Procurando…' : 'Só listar o que já foi captado: procurar processos nas intimações'}</button>
           </div>}
 
           {fonte === 'escavador' && <div className="mt-4">

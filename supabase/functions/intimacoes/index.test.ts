@@ -67,4 +67,39 @@ describe('intimacoes', () => {
     const inicio = new Date(Date.now() - 60 * 86400000).toISOString().slice(0, 10)
     expect(b.periodo.inicio).toBe(inicio)
   })
+
+  it('aceita inicio e fim pedidos (até 93 dias) e devolve o período usado', async () => {
+    paginas = { '12345/RJ': [[]], '999/SP': [[]] }
+    const b = await (await chamar({ inicio: '2025-01-01', fim: '2025-02-15' })).json()
+    expect(b.periodo).toEqual({ inicio: '2025-01-01', fim: '2025-02-15' })
+    expect(pedidos[0]).toContain('dataDisponibilizacaoInicio=2025-01-01')
+    expect(pedidos[0]).toContain('dataDisponibilizacaoFim=2025-02-15')
+  })
+
+  it('recusa período invertido ou maior que 93 dias', async () => {
+    const a = await chamar({ inicio: '2025-03-01', fim: '2025-01-01' })
+    expect(a.status).toBe(400)
+    const c = await chamar({ inicio: '2025-01-01', fim: '2025-06-01' })
+    expect(c.status).toBe(400)
+    expect((await c.json()).erro).toContain('93 dias')
+    expect(pedidos).toHaveLength(0)
+  })
+
+  it('no modo histórico pagina até 10 vezes e já marca como lidas as intimações com mais de 60 dias', async () => {
+    const cheia = (base: number) => Array.from({ length: 100 }, (_, i) => ({ id: base + i, texto: '', data_disponibilizacao: '2024-05-10' }))
+    const recente = new Date(Date.now() - 5 * 86400000).toISOString().slice(0, 10)
+    paginas = { '12345/RJ': [...Array.from({ length: 9 }, (_, k) => cheia(k * 100 + 1)), [{ id: 9001, texto: '', data_disponibilizacao: recente }, ...cheia(2000)]], '999/SP': [[]] }
+    const b = await (await chamar({ inicio: '2024-05-01', fim: '2024-05-30', historico: true })).json()
+    expect(pedidos.filter(p => p.includes('numeroOab=12345')).length).toBe(10)
+    expect(b.novas).toBe(1001)
+    const linhas = estado.upserts.map(u => u.linha as { id: number; lida?: boolean })
+    expect(linhas.find(l => l.id === 1)!.lida).toBe(true)
+    expect(linhas.find(l => l.id === 9001)!.lida).toBeUndefined()
+  })
+
+  it('sem o modo histórico a intimação antiga não é marcada como lida', async () => {
+    paginas = { '12345/RJ': [[{ id: 1, texto: '', data_disponibilizacao: '2024-05-10' }]], '999/SP': [[]] }
+    await chamar({ inicio: '2024-05-01', fim: '2024-05-30' })
+    expect((estado.upserts[0]!.linha as { lida?: boolean }).lida).toBeUndefined()
+  })
 })
