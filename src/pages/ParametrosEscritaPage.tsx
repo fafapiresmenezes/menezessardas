@@ -115,6 +115,14 @@ const SECOES: SecaoParametros[] = [
         tipo: 'numero',
       },
       {
+        chave: 'estrutura_minimo_palavras',
+        label: 'Tamanho mínimo da peça (palavras)',
+        dica: 'A peça nunca sai curta: se ficar abaixo disso, o robô refaz. Vale para recursos, contestação, réplica, memoriais e embargos; manifestações simples têm a metade.',
+        descricao: 'Piso de extensão. Os 10 juristas da banca desenvolvem a peça por inteiro; resumo ou esquema não é aceito.',
+        valor: '1600',
+        tipo: 'numero',
+      },
+      {
         chave: 'estrutura_comprimento_recurso',
         label: 'Comprimento máximo – recursos (páginas)',
         dica: 'Limite específico para apelações, agravos e recursos especiais, que costumam ser mais detalhados que petições iniciais.',

@@ -38,6 +38,7 @@ const REGRAS_ESCRITA: [string, string][] = [
   ["estrutura_secoes", "Seções obrigatórias"],
   ["estrutura_comprimento_peticao", "Comprimento máximo (páginas)"],
   ["estrutura_comprimento_recurso", "Comprimento máximo – recursos (páginas)"],
+  ["estrutura_minimo_palavras", "Tamanho mínimo da peça (palavras; manifestação simples, metade)"],
   ["linguagem_nivel", "Nível de formalidade"],
   ["linguagem_voz", "Voz preferencial"],
   ["linguagem_latim", "Uso de expressões em latim"],
