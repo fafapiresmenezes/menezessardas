@@ -95,14 +95,14 @@ const CHAVE_GRUPOS = 'lsm-menu-grupos'
 const CHAVE_SIMPLES = 'theye-menu-simples'
 // Menu simples (padrão): só o que se usa todo dia, com nomes do dia a dia. "Ver todas as telas" abre o menu completo.
 const menuEssencial = [
-  { icon: Home, label: 'Início', href: '/inicio' },
-  { icon: Sunrise, label: 'O que vence', href: '/meu-dia' },
-  { icon: Gavel, label: 'Meus processos', href: '/processos' },
-  { icon: UserPlus, label: 'Inserir processos antigos', href: '/processos-antigos' },
-  { icon: Inbox, label: 'Intimações', href: '/intimacoes' },
-  { icon: CalendarDays, label: 'Agenda', href: '/agenda' },
-  { icon: PenLine, label: 'Meu jeito de escrever', href: '/meu-estilo' },
-  { icon: BookOpen, label: 'Parâmetros de escrita', href: '/parametros-escrita' },
+  { bloco: 'Todo dia', dica: 'Comece por aqui', icon: Home, label: 'Início', href: '/inicio' },
+  { bloco: 'Todo dia', dica: '', icon: Sunrise, label: 'O que vence', href: '/meu-dia' },
+  { bloco: 'Todo dia', dica: '', icon: CalendarDays, label: 'Agenda', href: '/agenda' },
+  { bloco: 'Processos', dica: 'Ver, incluir e acompanhar', icon: Gavel, label: 'Meus processos', href: '/processos' },
+  { bloco: 'Processos', dica: '', icon: UserPlus, label: 'Inserir processos antigos', href: '/processos-antigos' },
+  { bloco: 'Processos', dica: '', icon: Inbox, label: 'Intimações', href: '/intimacoes' },
+  { bloco: 'Escrever peças', dica: 'Como o robô escreve por você', icon: PenLine, label: 'Meu jeito de escrever', href: '/meu-estilo' },
+  { bloco: 'Escrever peças', dica: '', icon: BookOpen, label: 'Parâmetros de escrita', href: '/parametros-escrita' },
 ]
 const estaAtivo = (href: string, pathname: string) => pathname.startsWith(href) || (href === '/fornecedores' && pathname.startsWith('/fornecedor/'))
 const grupoDe = (pathname: string) => gruposMenu.find(g => g.itens.some(i => estaAtivo(i.href, pathname)))?.id
@@ -231,10 +231,17 @@ export default function Layout({ children, title }: LayoutProps) {
         <nav className="flex-1 overflow-y-auto" aria-label="Menu principal">
           {simples && (
             <ul className="px-3 pt-3 space-y-1" data-testid="menu-simples">
-              {menuEssencial.map(item => {
+              {menuEssencial.map((item, i) => {
                 const ativo = estaAtivo(item.href, pathname)
+                const abreBloco = menuAberto && menuEssencial[i - 1]?.bloco !== item.bloco
                 return (
                   <li key={item.href}>
+                    {abreBloco && (
+                      <div className={`px-4 pb-1 ${i ? 'pt-4' : 'pt-1'}`} data-bloco={item.bloco}>
+                        <p className="text-[11px] uppercase tracking-[0.16em] text-dourado">{item.bloco}</p>
+                        {item.dica && <p className="text-xs text-white/60">{item.dica}</p>}
+                      </div>
+                    )}
                     <button
                       onClick={() => navigate(item.href)}
                       aria-current={ativo ? 'page' : undefined}
