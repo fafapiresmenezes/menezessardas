@@ -61,6 +61,9 @@ describe('o que fazer e até quando', () => {
   })
   it('réplica e laudo', () => {
     expect(lerIntimacao(pub('Em réplica, no prazo legal.'), HOJE).ato?.id).toBe('cpc-replica')
+    const volta = lerIntimacao(pub('Cumpra-se o V. Acórdão. Digam as partes, em 5 (cinco) dias, se há algo a ser requerido.'), HOJE)
+    expect(volta.oQueFazer).toMatch(/voltou do tribunal/)
+    expect(volta.oQueFazer).not.toMatch(/Saiu o acórdão/)
     expect(lerIntimacao(pub('Manifestem-se as partes sobre o laudo pericial.'), HOJE).ato?.id).toBe('cpc-laudo')
   })
   it('manifestação usa o prazo escrito pelo juiz', () => {
