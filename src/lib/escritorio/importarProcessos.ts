@@ -19,15 +19,15 @@ const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCa
 
 // Cabeçalhos aceitos (como escritórios costumam nomear as colunas no Excel, no Astrea, no Projuris etc.).
 const APELIDOS: Record<Campo, string[]> = {
-  numero: ['numero', 'numero do processo', 'n do processo', 'no do processo', 'processo', 'numero cnj', 'cnj', 'autos', 'numero dos autos', 'n processo'],
-  cliente: ['cliente', 'nome do cliente', 'parte', 'nosso cliente', 'contratante', 'autor cliente'],
+  numero: ['numero', 'numero do processo', 'n do processo', 'no do processo', 'processo', 'numero cnj', 'cnj', 'autos', 'numero dos autos', 'n processo', 'num processo'],
+  cliente: ['cliente', 'nome do cliente', 'parte', 'parte de interesse', 'nosso cliente', 'contratante', 'autor cliente'],
   parte_contraria: ['parte contraria', 'contraparte', 'parte adversa', 'reu', 'adverso', 'outra parte', 'polo passivo'],
   area: ['area', 'area do direito', 'materia', 'ramo'],
-  vara: ['vara', 'orgao', 'orgao julgador', 'juizo', 'comarca', 'vara comarca', 'foro'],
+  vara: ['vara', 'orgao', 'nome orgao', 'orgao julgador', 'juizo', 'comarca', 'vara comarca', 'foro'],
   valor_causa: ['valor da causa', 'valor causa', 'valor', 'valor discutido'],
   fase: ['fase', 'situacao', 'status', 'etapa', 'andamento'],
   honorarios: ['honorarios', 'honorario', 'honorarios contratados', 'valor dos honorarios', 'honorarios previstos'],
-  observacoes: ['observacoes', 'obs', 'observacao', 'notas', 'anotacoes', 'comentarios'],
+  observacoes: ['observacoes', 'obs', 'observacao', 'notas', 'anotacoes', 'comentarios', 'resumo do caso', 'resumo'],
   titulo: ['titulo', 'nome do caso', 'caso', 'acao', 'tipo de acao', 'classe'],
 }
 
@@ -111,6 +111,13 @@ export function analisarPlanilha(texto: string, existentes: Iterable<string> = [
     colunas.forEach((c, j) => { if (c && partes[j]) dados[c] = partes[j] })
     let numero = (dados.numero ?? '').replace(/\D/g, '')
     if (!temNumero) numero = extrairNumeros(l)[0] ?? ''
+    // Número de outro padrão (processo administrativo, precatório, recurso em tribunal superior): vira caso sem monitoramento,
+    // guardando o número original nas observações, em vez de ser barrado como "inválido".
+    const original = (dados.numero ?? '').trim()
+    if (temNumero && original && (numero.length < 19 || numero.length > 21)) {
+      dados.observacoes = [dados.observacoes, `Nº fora do padrão CNJ (como no sistema de origem): ${original}`].filter(Boolean).join(' · ')
+      numero = ''
+    }
     const c = classificar(numero, vistos, ex)
     if (c.situacao === 'ok') vistos.add(numero)
     linhas.push({ linha: i + 2, numero, dados, ...c })

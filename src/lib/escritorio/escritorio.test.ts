@@ -48,6 +48,17 @@ describe('importar processos', () => {
     expect(r.linhas[0]).toMatchObject({ situacao: 'ok', numero: digitos(A) })
     expect(areaProvavel(r.linhas[0])).toBe('Imobiliário')
   })
+  it('planilha de sistema antigo (Núm. Processo, Parte de Interesse, Nome Órgão, Resumo do Caso) e números fora do padrão CNJ viram caso sem número', () => {
+    const tsv = `Núm. Processo\tParte de Interesse\tParte Contrária\tAção\tNome Órgão\tResumo do Caso\tAdv. Principal\n${A}\tAcme Ltda\tMunicípio X\tIndenizatória\t3 VARA CÍVEL\tResumo aqui\tFulano\nPROC ADM 006/004184/2026\tAcme Ltda\tMunicípio X\tPROCESSO ADMINISTRATIVO\t\t\tFulano\n2025/0065453-3\tAcme Ltda\tBanco Y\tRecurso Especial\tSTJ\t\tFulano`
+    const r = analisarPlanilha(tsv)
+    expect(r.colunas).toEqual(['numero', 'cliente', 'parte_contraria', 'titulo', 'vara', 'observacoes', null])
+    expect(r.linhas[0]).toMatchObject({ situacao: 'ok', numero: digitos(A) })
+    expect(r.linhas[0].dados).toMatchObject({ cliente: 'Acme Ltda', vara: '3 VARA CÍVEL', observacoes: 'Resumo aqui' })
+    expect(r.linhas[1]).toMatchObject({ situacao: 'sem_numero', numero: '' })
+    expect(r.linhas[1].dados.observacoes).toContain('PROC ADM 006/004184/2026')
+    expect(r.linhas[2].dados.observacoes).toContain('2025/0065453-3')
+    expect(r.linhas.every(l => l.situacao !== 'invalido')).toBe(true)
+  })
   it('planilha sem cabeçalho reconhecível ou vazia dá erro claro', () => {
     expect(analisarPlanilha('').erro).toMatch(/cabeçalho/)
     expect(analisarPlanilha('foo;bar\n1;2').erro).toMatch(/Não reconheci/)
