@@ -1,0 +1,37 @@
+# "Conferir agora" pelos servidores do GitHub (que alcançam o CNJ): lê no DJEN as publicações dos processos da lista
+# e do(s) advogado(s), calcula o prazo de cada uma com as regras da plataforma e consulta o último andamento no DataJud.
+# Só lê fontes públicas; não grava em banco nenhum. O resultado fica em "Artifacts" (prazos.csv e andamentos.csv).
+name: Conferir no CNJ
+on:
+  push:
+    branches: [claude/project-thread-g3xylj]
+    paths: ['scripts/conferir-cnj.mjs', 'scripts/dados/**', '.github/workflows/conferir-cnj.yml']
+  workflow_dispatch:
+    inputs:
+      advogados:
+        description: 'Nome(s) do(s) advogado(s), separados por vírgula'
+        default: 'Caio Barros'
+      dias:
+        description: 'Quantos dias para trás (máx. 93)'
+        default: '93'
+permissions:
+  contents: read
+jobs:
+  conferir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Conferir no CNJ
+        run: node scripts/conferir-cnj.mjs scripts/dados/processos-caio.txt "${{ inputs.advogados || 'Caio Barros' }}" "${{ inputs.dias || '93' }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: conferencia-cnj
+          path: conferencia-cnj/
+          retention-days: 30
