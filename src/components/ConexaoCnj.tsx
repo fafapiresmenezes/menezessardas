@@ -7,7 +7,7 @@ const COR = { ok: 'border-green-600 bg-green-50', atrasada: 'border-amber-500 bg
 const ROTULO = { ok: 'Conectado', atrasada: 'Atrasada', falha: 'Atenção', sem_dados: 'Sem registro' } as const
 
 /** Painel do administrador: a conexão com o CNJ está em dia? Mostra a última consulta e permite testar na hora. */
-export default function ConexaoCnj({ aoTestar }: { aoTestar?: () => void }) {
+export default function ConexaoCnj({ aoTestar }: { aoTestar?: (ok: boolean) => void }) {
   const [valor, setValor] = useState<string | null>(null)
   const [teste, setTeste] = useState<{ ok: boolean; texto: string } | null>(null)
   const [testando, setTestando] = useState(false)
@@ -21,12 +21,13 @@ export default function ConexaoCnj({ aoTestar }: { aoTestar?: () => void }) {
   const s = situacaoCnj(valor)
   const testar = async () => {
     setTestando(true); setTeste(null)
+    let deu = false
     try {
       const { data, error } = await supabase.functions.invoke('intimacoes', { body: { teste: true }, region: FunctionRegion.SaEast1 })
       if (error || !data || typeof data.conexao !== 'boolean') setTeste({ ok: false, texto: 'Não consegui falar com o servidor da plataforma. A função "intimacoes" precisa estar implantada e atualizada no Supabase.' })
-      else setTeste(data.conexao ? { ok: true, texto: 'O CNJ respondeu agora: a conexão está funcionando.' } : { ok: false, texto: `O CNJ não respondeu agora (código ${data.status ?? 'sem resposta'}). A plataforma tenta de novo sozinha a cada 4 horas.` })
+      else { deu = data.conexao; setTeste(data.conexao ? { ok: true, texto: 'O CNJ respondeu agora: a conexão está funcionando.' } : { ok: false, texto: `O CNJ não respondeu agora (código ${data.status ?? 'sem resposta'}). A plataforma tenta de novo sozinha a cada 4 horas.` }) }
     } catch { setTeste({ ok: false, texto: 'Não consegui falar com o servidor da plataforma agora.' }) }
-    setTestando(false); aoTestar?.(); ler()
+    setTestando(false); aoTestar?.(deu); ler()
   }
   return (
     <div className={`border-l-4 p-3 text-sm flex flex-wrap items-center gap-3 ${COR[s.situacao]}`} data-testid="conexao-cnj" data-situacao={s.situacao}>

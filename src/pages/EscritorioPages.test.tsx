@@ -86,6 +86,25 @@ describe('Importar processos anteriores', () => {
     expect((await screen.findAllByTestId('linha-processo')).length).toBe(1)
   }, 20000)
 
+  it('passo a passo: marca o que já foi feito e destaca o próximo', async () => {
+    falso.responderFuncao((_n, b) => (b.teste ? { data: { conexao: true, status: 200 }, error: null } : { data: { novas: 0, falhas: [], periodo: { inicio: b.inicio, fim: b.fim } }, error: null }))
+    tela(<ImportarProcessosPage />)
+    fireEvent.click(screen.getByTestId('fonte-intimacoes'))
+    const passos = () => within(screen.getByTestId('passos-importacao')).getAllByRole('listitem')
+    expect(passos()).toHaveLength(5)
+    expect(passos()[0].dataset.atual).toBe('true')
+    fireEvent.click(screen.getByTestId('testar-conexao-cnj'))
+    await waitFor(() => expect(passos()[0].dataset.feito).toBe('true'))
+    expect(passos()[1].dataset.atual).toBe('true')
+    expect(passos()[1].textContent).toContain('Você está aqui')
+    fireEvent.change(screen.getByTestId('oabs-texto'), { target: { value: '123456/RJ' } })
+    expect(passos()[1].dataset.feito).toBe('true')
+    expect(passos()[2].dataset.atual).toBe('true')
+    fireEvent.change(screen.getByTestId('oabs-meses'), { target: { value: '12' } })
+    fireEvent.click(screen.getByTestId('buscar-historico'))
+    await waitFor(() => expect(passos()[2].dataset.feito).toBe('true'), { timeout: 10000 })
+  }, 20000)
+
   it('importar tudo pelas OABs: avisa quando o servidor ainda está na versão antiga', async () => {
     falso.responderFuncao(() => ({ data: { novas: 0, falhas: [], periodo: { inicio: '2000-01-01', fim: '2000-01-15' } }, error: null }))
     tela(<ImportarProcessosPage />)

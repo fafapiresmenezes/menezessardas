@@ -6,6 +6,8 @@ import { supabase } from '@/lib/supabase'
 import { mensagemAmigavel } from '@/lib/erros'
 import { listarPessoas, type Pessoa } from '@/lib/equipe'
 import { analisarPlanilha, analisarLista, analisarResultados, paraCaso, importavel, areaProvavel, ROTULO_SITUACAO, MODELO_PLANILHA, type LinhaImportacao } from '@/lib/escritorio/importarProcessos'
+import ConexaoCnj from '@/components/ConexaoCnj'
+import PassosImportacao from '@/components/PassosImportacao'
 import { janelas, lerOabs } from '@/lib/escritorio/historicoOab'
 import { Download, Upload, CheckCircle2, FileSpreadsheet, ListOrdered, Inbox, Search } from 'lucide-react'
 
@@ -39,6 +41,7 @@ export default function ImportarProcessosPage() {
   // Importar tudo pelas OABs: busca o histórico do Diário (DJEN) em blocos de 30 dias e lista os processos achados.
   const [oabsTexto, setOabsTexto] = useState('')
   const [meses, setMeses] = useState(24)
+  const [conexaoOk, setConexaoOk] = useState(false)
   const [avisoHistorico, setAvisoHistorico] = useState('')
   const [progresso, setProgresso] = useState<{ feitos: number; total: number; novas: number } | null>(null)
   const parar = useRef(false)
@@ -155,6 +158,14 @@ export default function ImportarProcessosPage() {
     setMarcadas(new Set())
   }
 
+  const oabsValidas = lerOabs(oabsTexto).oabs.length > 0 && lerOabs(oabsTexto).invalidas.length === 0
+  const passos = [
+    { titulo: 'Confira se a ligação com o CNJ está ativa', ajuda: 'Na faixa abaixo, clique em "Testar conexão agora". Se aparecer "o CNJ respondeu agora", pode seguir.', feito: !!conexaoOk },
+    { titulo: 'Digite a OAB de cada advogado do escritório', ajuda: 'Número, barra e estado, assim: 123456/RJ. Se tiver mais de um, separe por vírgula. Coloque também a de quem já saiu do escritório.', feito: oabsValidas },
+    { titulo: 'Clique em "Buscar todos os processos" e espere', ajuda: 'Pode levar alguns minutos. A barra de andamento mostra onde está. Não feche a página.', feito: !!progresso && !buscando },
+    { titulo: 'Confira a lista que aparece', ajuda: 'Cada linha é um processo achado. Os já cadastrados e os com número errado ficam de fora sozinhos. Desmarque os que não quer.', feito: linhas.length > 0 && !!progresso && !buscando },
+    { titulo: 'Clique em "Importar" e pronto', ajuda: 'Cada processo vira um caso em Projetos e entra no monitoramento. A plataforma passa a avisar de cada andamento e intimação nova.', feito: !!relatorio },
+  ]
   return (
     <Layout title="Importar processos anteriores">
       <div className="space-y-6">
@@ -179,6 +190,9 @@ export default function ImportarProcessosPage() {
             <textarea value={texto} onChange={e => analisar(e.target.value, 'lista')} rows={6} placeholder="0001234-56.2023.8.19.0001" className="w-full border px-3 py-2 mt-1 font-mono text-xs" data-testid="lista-texto" /></label>}
 
           {fonte === 'intimacoes' && <div className="mt-4">
+            <p className="text-sm font-medium mb-2">Como importar tudo, em 5 passos</p>
+            <div className="mb-4"><PassosImportacao passos={passos} /></div>
+            <div className="mb-4"><ConexaoCnj aoTestar={ok => setConexaoOk(ok)} /></div>
             <p className="text-xs text-grafite-claro mb-2">A plataforma já capta, todo dia, as intimações do Diário de Justiça Eletrônico Nacional pelas OABs do escritório. Aqui aparecem os processos dessas intimações que ainda não são casos.</p>
             <div className="border border-dourado/50 bg-pergaminho p-3 mb-3" data-testid="importar-tudo-oab">
               <p className="text-sm font-medium">Importar tudo pelas OABs do escritório</p>
