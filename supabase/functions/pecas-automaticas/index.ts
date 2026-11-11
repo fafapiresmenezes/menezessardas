@@ -73,6 +73,7 @@ Regras: padrão forense brasileiro; endereçamento ao juízo correto; qualifica�
 Nunca invente jurisprudência: se citar precedente, marque "[conferir no tribunal]". Doutrina só com certeza, senão "[doutrina a conferir]".
 Ao final, depois da assinatura, acrescente a seção "PONTOS A CONFERIR ANTES DE PROTOCOLAR" com o que depende de documentos ou fatos.
 Acabamento: a resposta começa direto no endereçamento, sem aviso, saudação ou comentário antes; não use linhas de traços nem títulos em markdown; o nome da peça vai sozinho numa linha, em caixa alta; pedidos em alíneas a), b), c), uma por linha; fecho com "Nestes termos, pede deferimento.", depois local e data, depois [advogado] e [OAB] em linhas separadas. Qualquer observação sua para o advogado (dúvida sobre a natureza do ato, prazo, dado que falta) vai SÓ na seção final de pontos a conferir.
+Extensão: a peça é completa e desenvolvida, nunca resumida nem esquemática. Mínimo de cerca de 1.600 palavras (quatro páginas) em recurso, contestação, réplica, memoriais e embargos; mínimo de cerca de 800 palavras em manifestação e petição simples. Desenvolva fatos, fundamentos e pedidos por inteiro; mesmo com poucos dados, escreva a peça toda, com [campos] onde faltar informação e a explicação em PONTOS A CONFERIR.
 Títulos de seção em caixa alta, numa linha só e SEM número (ex.: DOS FATOS): a numeração e a formatação final são aplicadas depois, pelo modelo do escritório. Não use markdown além de **negrito** pontual.`
 
 // Cada peça passa por 4 revisões, uma por rodada, antes de ir para o e-mail.
@@ -80,8 +81,10 @@ const REVISOES: { nome: string; foco: string }[] = [
   { nome: 'fatos, partes e endereçamento', foco: 'Confronte cada fato, data, valor, nome de parte e número com a publicação e os dados do caso. Fato sem apoio vai para [colchetes]. Confira se a peça é a certa para o ato (o que a publicação manda fazer) e se está endereçada a quem vai decidir: o juízo da vara quando o processo está em primeiro grau; o relator ou o presidente do órgão quando está no tribunal. Corrija prazo e cabimento citados.' },
   { nome: 'fundamentação, pedidos e citações', foco: 'Confira cada artigo e lei citados (existência, número, aplicação ao caso). Todo precedente leva "[conferir no tribunal]"; doutrina só com certeza, senão "[doutrina a conferir]"; retire o que não puder sustentar. Os pedidos devem decorrer da fundamentação, sem pedido a mais, a menos ou contraditório, e cobrir o que a publicação exige.' },
   { nome: 'escrita: redator, narrativa e tom do julgador', foco: 'Reescreva só o necessário para aplicar à peça o método e as forças do redator de referência, as dez técnicas de narrativa, o tom ajustado ao julgador e os parâmetros do escritório. Corte repetição, adjetivo, parágrafo longo e rodeio; frases diretas e precisas. Nada de humor, ironia ou imagem que o tom do julgador não autorize.' },
-  { nome: 'acabamento e pontos a conferir', foco: 'Confira a estrutura final: endereçamento, classe e número, qualificação, nome da peça sozinho em caixa alta, títulos de seção em caixa alta e sem número, pedidos em alíneas, "Nestes termos, pede deferimento.", local e data, [advogado] e [OAB]. Sem markdown além de negrito pontual e sem linhas de traços. Releia a peça inteira como o julgador: nada cortado, repetido ou contraditório. Atualize a seção PONTOS A CONFERIR ANTES DE PROTOCOLAR com tudo o que ficou entre colchetes e todo dado a confirmar; ela é obrigatória.' },
+  { nome: 'acabamento e pontos a conferir', foco: 'Confira a estrutura final: endereçamento, classe e número, qualificação, nome da peça sozinho em caixa alta, títulos de seção em caixa alta e sem número, pedidos em alíneas, "Nestes termos, pede deferimento.", local e data, [advogado] e [OAB]. Sem markdown além de negrito pontual e sem linhas de traços. Releia a peça inteira como o julgador: nada cortado, repetido ou contraditório. Se a peça estiver curta para o ato (menos de 1.600 palavras em recurso, contestação, réplica, memoriais ou embargos; menos de 800 em manifestação), desenvolva fatos e fundamentos até a extensão devida. Atualize a seção PONTOS A CONFERIR ANTES DE PROTOCOLAR com tudo o que ficou entre colchetes e todo dado a confirmar; ela é obrigatória.' },
 ]
+// Tamanho mínimo da peça (caracteres): abaixo disso a IA é chamada de novo; a revisão não pode encolher a peça além de 20%.
+const MINIMO_PECA = 4500
 const REVISOES_POR_RODADA = Number(Deno.env.get('REVISOES_POR_RODADA') ?? '10')
 
 const pedidoDaPeca = (t: Record<string, any>, caso: Record<string, any> | null) => `Redija a peça para cumprir esta tarefa: "${t.titulo}".
@@ -107,7 +110,7 @@ async function chamarIA(chave: string, system: string, user: string, minimo: num
     const texto = ((resp.content ?? []) as { type: string; text?: string }[]).filter(c => c.type === 'text').map(c => c.text).join('\n').trim()
     if (texto.length >= minimo) return { texto, resp }
     if (tentativa >= 1) throw new Error(`A IA devolveu um texto curto demais: "${texto.slice(0, 120).replace(/\s+/g, ' ')}"`)
-    mensagens.push({ role: 'assistant', content: texto || '(sem texto)' }, { role: 'user', content: 'Isso não é a peça. Redija agora a peça completa, do endereçamento até a seção PONTOS A CONFERIR, mesmo que faltem dados: o que faltar fica entre [colchetes] e vai para PONTOS A CONFERIR. Não responda com explicações nem recusas.' })
+    mensagens.push({ role: 'assistant', content: texto || '(sem texto)' }, { role: 'user', content: 'Isso não é a peça, ou ficou curta demais. Redija agora a peça completa e desenvolvida, do endereçamento até a seção PONTOS A CONFERIR, com a extensão mínima pedida, mesmo que faltem dados: o que faltar fica entre [colchetes] e vai para PONTOS A CONFERIR. Não responda com explicações nem recusas.' })
   }
 }
 
@@ -147,7 +150,7 @@ FOCO DESTA REVISÃO: ${rev.foco}
 
 ${BASE_SISTEMA}${ctx.regras}\n\n${instrucoesDoRedator(redator)}\n\n${instrucoesDeNarrativa()}\n\n${instrucoesDoJulgador(tom as any, orgao as string | null)}`
     const user = `${pedidoDaPeca(t, caso)}\n\nTEXTO ATUAL DA PEÇA:\n${r.texto}`
-    const { texto, resp } = await chamarIA(ctx.chave, sistema, user, Math.max(400, Math.floor(String(r.texto).length * 0.6)))
+    const { texto, resp } = await chamarIA(ctx.chave, sistema, user, Math.max(MINIMO_PECA, Math.floor(String(r.texto).length * 0.8)))
     await s.from('consumo_api').insert({ funcao: 'peças automáticas (revisão)', modelo: resp.model ?? MODELO, tokens_entrada: resp.usage?.input_tokens ?? 0, tokens_saida: resp.usage?.output_tokens ?? 0, usuario_id: t.responsavel_id ?? null })
     return await concluirPasso(s, r, texto, etapa, t, form, perfil, ctx)
   } catch (e) {
@@ -242,7 +245,7 @@ Deno.serve(async (req) => {
       const estilo = amostras.length ? `\n\nESTILO DE ESCRITA DO ESCRITÓRIO (${amostras.length} peças de referência). Imite vocabulário, extensão das frases, forma de abrir e fechar, tom, numeração e modo de citar a lei. Nunca copie fatos das amostras.\n${amostras.join('\n\n')}\nQuando houver estilo do escritório, ele prevalece; use o perfil abaixo só para variar ritmo, conectivos, abertura e fecho.` : ''
       const sistema = `${BASE_SISTEMA}${regras}${estilo}\n\n${instrucoesDoRedator(redator)}\n\n${instrucoesDeNarrativa()}\n\n${instrucoesDoJulgador(tom, orgao)}\n\n${instrucoesDoPerfil(perfil)}`
       const pedido = pedidoDaPeca(t, caso)
-      const { texto, resp } = await chamarIA(chave, sistema, pedido, 400)
+      const { texto, resp } = await chamarIA(chave, sistema, pedido, MINIMO_PECA)
       await s.from('consumo_api').insert({ funcao: 'peças automáticas', modelo: resp.model ?? MODELO, tokens_entrada: resp.usage?.input_tokens ?? 0, tokens_saida: resp.usage?.output_tokens ?? 0, usuario_id: t.responsavel_id ?? null })
       const titulo = `${String(t.titulo).split(' · ')[0]} · ${t.numero_processo}`
       const nota = aderencia(medirTexto(texto), perfil)

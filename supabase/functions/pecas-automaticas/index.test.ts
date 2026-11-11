@@ -9,7 +9,7 @@ const chamar = (body: unknown = {}, headers: Record<string, string> = { 'x-cron-
   caixa.handler!(new Request('https://x.functions.supabase.co/pecas-automaticas', { method: 'POST', headers, body: JSON.stringify(body) }))
 const hoje = new Date(Date.now() - 3 * 3600000).toISOString().slice(0, 10)
 const emDias = (n: number) => new Date(Date.parse(hoje) + n * 86400000).toISOString().slice(0, 10)
-const PECA = 'EXCELENTÍSSIMO SENHOR DOUTOR JUIZ DE DIREITO DA 5ª VARA CÍVEL\n\nI – DOS FATOS\n\n' + 'O apelante recorreu da sentença. A decisão deve ser mantida. '.repeat(20) + '\n\nPONTOS A CONFERIR ANTES DE PROTOCOLAR\n\n- documentos'
+const PECA = 'EXCELENTÍSSIMO SENHOR DOUTOR JUIZ DE DIREITO DA 5ª VARA CÍVEL\n\nI – DOS FATOS\n\n' + 'O apelante recorreu da sentença. A decisão deve ser mantida. '.repeat(90) + '\n\nPONTOS A CONFERIR ANTES DE PROTOCOLAR\n\n- documentos'
 
 let chamadas: { url: string; body: any }[] = []
 beforeEach(() => {
