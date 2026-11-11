@@ -124,11 +124,11 @@ begin
   perform cron.unschedule(jobid) from cron.job where jobname in ('prazos-automaticos', 'pecas-automaticas');
   perform cron.schedule('prazos-automaticos', '20 */4 * * *', $cmd$
     select net.http_post(url:='https://hlraekzvgxdpiiigdxdo.supabase.co/functions/v1/prazos-automaticos',
-      headers:=jsonb_build_object('Content-Type','application/json','x-cron-secret',(select valor from public.configuracoes where chave='cron_segredo')),
+      headers:=jsonb_build_object('Content-Type','application/json','x-region','sa-east-1','x-cron-secret',(select valor from public.configuracoes where chave='cron_segredo')),
       body:='{}'::jsonb, timeout_milliseconds:=150000) $cmd$);
   perform cron.schedule('pecas-automaticas', '0 10,16 * * *', $cmd$
     select net.http_post(url:='https://hlraekzvgxdpiiigdxdo.supabase.co/functions/v1/pecas-automaticas',
-      headers:=jsonb_build_object('Content-Type','application/json','x-cron-secret',(select valor from public.configuracoes where chave='cron_segredo')),
+      headers:=jsonb_build_object('Content-Type','application/json','x-region','sa-east-1','x-cron-secret',(select valor from public.configuracoes where chave='cron_segredo')),
       body:='{}'::jsonb, timeout_milliseconds:=150000) $cmd$);
 end $$;
 

@@ -1,4 +1,5 @@
-// "Conferir agora" fora da plataforma: roda nos servidores do GitHub (que alcançam o CNJ) e lê, com as MESMAS
+// "Conferir agora" fora da plataforma. ATENÇÃO: o CNJ só responde a endereços do Brasil (testado em 11/11/2026:
+// dos servidores do GitHub, nos EUA, o DJEN deu 403 e o DataJud não respondeu). Rode num computador no Brasil. Lê, com as MESMAS
 // regras da tela, tudo o que saiu no Diário de Justiça Eletrônico Nacional para uma lista de processos e de advogados.
 // Uso: node scripts/conferir-cnj.mjs <arquivo-com-numeros> "<nome do advogado>[,outro]" [dias=93]
 // Saída: conferencia-cnj/prazos.csv, conferencia-cnj/andamentos.csv e um resumo no terminal. Só lê; não grava em banco nenhum.
