@@ -31,6 +31,7 @@ const FontesPage = lazy(() => import('@/pages/FontesPage'))
 const KycPage = lazy(() => import('@/pages/KycPage'))
 const PesquisaDiligenciaPage = lazy(() => import('@/pages/PesquisaDiligenciaPage'))
 const PrazosPorCodigoPage = lazy(() => import('@/pages/PrazosPorCodigoPage'))
+const AssumirProcessosPage = lazy(() => import('@/pages/AssumirProcessosPage'))
 const PerfilClientePage = lazy(() => import('@/pages/PerfilClientePage'))
 const ParteAdversaPage = lazy(() => import('@/pages/ParteAdversaPage'))
 const BibliotecaPage = lazy(() => import('@/pages/BibliotecaPage'))
@@ -321,6 +322,10 @@ function App() {
         <Route
           path="/prazos"
           element={isAuthenticated ? <PrazosPorCodigoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/processos-antigos"
+          element={isAuthenticated ? <AssumirProcessosPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/consumo"

@@ -7,3 +7,11 @@ verify_jwt = true
 
 [functions.monitor-legislacao]
 verify_jwt = true
+
+# Robôs chamados pelo horário automático do banco (pg_cron) com o cabeçalho x-cron-secret, sem login.
+# Cada função confere sozinha: usuário logado OU segredo do horário (configuracoes.cron_segredo).
+[functions.prazos-automaticos]
+verify_jwt = false
+
+[functions.pecas-automaticas]
+verify_jwt = false

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gravarAreaAtual } from '@/lib/assistente'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
-import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck } from 'lucide-react'
+import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck, CalendarClock, UserPlus, Search } from 'lucide-react'
 import AceiteTermos from '@/components/AceiteTermos'
 
 // Tela de entrada: o escritório escolhe a área de trabalho antes de entrar na plataforma.
@@ -73,9 +73,25 @@ export default function InicioPage() {
         <p className="font-serif text-dourado text-4xl tracking-widest">THEYE</p>
         <h1 className="font-serif text-white text-3xl mt-2">THEYE Institute</h1>
         <p className="text-white/60 text-xs uppercase tracking-[0.18em] mt-2">Suporte Jurídico</p>
-        <p className="text-white/70 mt-3">Escolha a área em que vai trabalhar agora</p>
-        <button type="button" data-testid="ir-meu-dia" onClick={() => navigate('/meu-dia')} className="mt-4 min-h-[44px] px-5 border border-dourado text-dourado text-sm uppercase tracking-wider">Ver meu dia: prazos, tarefas e intimações</button>
-        <button type="button" data-testid="ir-consultores" onClick={() => navigate('/consultores')} className="mt-4 ml-3 min-h-[44px] px-5 bg-dourado text-navy text-sm uppercase tracking-wider">Consultores do escritório</button>
+      </div>
+      {/* Os três atalhos do dia a dia vêm antes das áreas: quem entra sabe na hora por onde começar. */}
+      <div className="w-full max-w-6xl mb-8" aria-label="Por onde começar">
+        <p className="text-white text-lg mb-3 text-center">O que você precisa agora?</p>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {[
+            { id: 'ir-meu-dia', destino: '/meu-dia', titulo: 'Ver o que vence', texto: 'Prazos, tarefas e intimações de hoje e da semana.', icone: CalendarClock },
+            { id: 'ir-processos-antigos', destino: '/processos-antigos', titulo: 'Inserir processos antigos', texto: 'Planilha ou nome do advogado: cadastra, busca no CNJ e mostra os prazos.', icone: UserPlus },
+            { id: 'ir-pesquisa', destino: '/pesquisa', titulo: 'Pesquisar', texto: 'Processo, pessoa ou empresa numa caixa só.', icone: Search },
+          ].map(a => (
+            <button key={a.id} type="button" data-testid={a.id} onClick={() => navigate(a.destino)} className="bg-dourado text-navy text-left p-5 min-h-[96px] shadow-lg hover:-translate-y-0.5 transition focus:outline-none focus:ring-4 focus:ring-white/60">
+              <a.icone className="w-7 h-7 mb-2" aria-hidden />
+              <span className="block font-serif text-xl">{a.titulo}</span>
+              <span className="block text-sm">{a.texto}</span>
+            </button>
+          ))}
+        </div>
+        <p className="text-center mt-3"><button type="button" data-testid="ir-consultores" onClick={() => navigate('/consultores')} className="min-h-[44px] px-4 text-white/80 underline text-sm">Consultores do escritório</button></p>
+        <p className="text-white/70 mt-6 text-center">Ou escolha a área em que vai trabalhar</p>
       </div>
       {carregado && (areaFixa || areaUltima) && (
         <div className="w-full max-w-6xl mb-5 bg-white/10 border border-dourado/50 text-white p-4 flex flex-wrap items-center gap-3 text-sm" data-testid="area-lembrada">

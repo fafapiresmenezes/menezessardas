@@ -76,6 +76,13 @@ describe('fontes-oficiais', () => {
     expect(b.comunica.itens).toHaveLength(2)
   })
 
+  it('processo com período: o DJEN só traz a janela pedida', async () => {
+    resolver = u => (u.includes('datajud') ? jsonResp({ hits: { hits: [] } }) : jsonResp({ items: [] }))
+    await chamar({ tipo: 'processo', termo: '0001234-56.2023.8.19.0001', inicio: '2026-08-15', fim: '2026-11-11' })
+    const u = new URL(pedidos.find(p => p.url.includes('comunicaapi'))!.url)
+    expect(u.searchParams.get('dataDisponibilizacaoInicio')).toBe('2026-08-15'); expect(u.searchParams.get('numeroProcesso')).toBe('00012345620238190001')
+  })
+
   it('processo do TRE do DF tenta o segundo nome de índice quando o primeiro não existe', async () => {
     resolver = u => u.includes('tre-dft') ? new Response('', { status: 404 }) : u.includes('tre-df/') ? jsonResp({ hits: { hits: [] } }) : jsonResp({ items: [] })
     const b = await (await chamar({ tipo: 'processo', termo: '0000001-00.2023.6.07.0001' })).json()
