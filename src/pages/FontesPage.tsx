@@ -1,6 +1,7 @@
 import { FunctionRegion } from '@supabase/supabase-js'
 import { useBaixado } from '@/hooks/useBaixado'
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { ExternalLink, Search } from 'lucide-react'
@@ -22,7 +23,9 @@ const FONTES: { nome: string; para: string; url: (t: string) => string; direta?:
 ]
 
 export default function FontesPage() {
-  const [termo, setTermo] = useState(() => { try { return localStorage.getItem('lsm-fontes-termo') ?? '' } catch { return '' } }) // Passo 201
+  // A central de pesquisa abre /fontes?termo=... já com o termo preenchido.
+  const [params] = useSearchParams()
+  const [termo, setTermo] = useState(() => { const t = params.get('termo'); if (t) return t; try { return localStorage.getItem('lsm-fontes-termo') ?? '' } catch { return '' } }) // Passo 201
   const [busca, setBusca] = useState<{ carregando?: boolean; erro?: string; processos?: { numero: string; titulo: string; tribunal: string | null; ultimaMovimentacao: string | null; classe: string | null; link: string | null }[] } | null>(null)
   const buscarEscavador = async () => {
     setBusca({ carregando: true })

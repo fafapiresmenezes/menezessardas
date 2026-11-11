@@ -1,5 +1,6 @@
 import { FunctionRegion } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import Vazio from '@/components/Vazio'
 import { supabase } from '@/lib/supabase'
@@ -21,8 +22,10 @@ type Salva = { id: number; parte: string; caso: string; finalidade: string; cons
 export const REGRAS = 'Use só para preparar ou conduzir um processo, negociação ou contrato (LGPD, art. 7º, VI). A ficha junta apenas fontes públicas e oficiais. Não consulta redes sociais pessoais, não monta perfil psicológico, não usa imagem e não monitora a pessoa. Cada consulta fica registrada na Trilha com quem consultou, o caso e a finalidade.'
 
 export default function ParteAdversaPage() {
-  const [parte, setParte] = useState('')
-  const [cnpj, setCnpj] = useState('')
+  // A central de pesquisa abre /parte-adversa?parte=...&cnpj=... já preenchida.
+  const [params] = useSearchParams()
+  const [parte, setParte] = useState(() => params.get('parte') ?? '')
+  const [cnpj, setCnpj] = useState(() => params.get('cnpj') ?? '')
   const [caso, setCaso] = useState('')
   const [finalidade, setFinalidade] = useState('')
   const [carregando, setCarregando] = useState(false)

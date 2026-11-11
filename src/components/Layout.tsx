@@ -22,7 +22,7 @@ import { listarPessoas, perfilAtual } from '@/lib/equipe'
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, ChevronDown, MoreHorizontal } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, ChevronDown, MoreHorizontal, SearchCheck, CalendarClock } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -37,10 +37,12 @@ const gruposMenu = [
     { icon: LayoutGrid, label: 'Painel', href: '/dashboard' },
     { icon: Inbox, label: 'Intimações', href: '/intimacoes' },
     { icon: CalendarDays, label: 'Agenda', href: '/agenda' },
+    { icon: CalendarClock, label: 'Prazos por código', href: '/prazos' },
   ] },
   { id: 'processos', titulo: 'Processos e casos', itens: [
     { icon: FolderKanban, label: 'Casos e projetos', href: '/projetos' },
     { icon: Gavel, label: 'Carteira de processos', href: '/processos' },
+    { icon: SearchCheck, label: 'Pesquisa e due diligence', href: '/pesquisa' },
     { icon: Radar, label: 'Monitoramento de processos', href: '/monitoramento' },
     { icon: FileSearch, label: 'Parte adversa', href: '/parte-adversa' },
     { icon: UserCheck, label: 'Checagem de contraparte', href: '/kyc' },

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useBaixado } from '@/hooks/useBaixado'
 import Vazio from '@/components/Vazio'
 import Layout from '@/components/Layout'
@@ -28,7 +29,9 @@ const COR = { baixo: 'bg-green-50 border-green-700 text-green-800', alto: 'bg-cr
 
 // Checagem de contraparte antes de fechar contrato: Receita, sanções (via TCU) e conflito de interesses.
 export default function KycPage() {
-  const [cnpj, setCnpj] = useState(() => { try { return localStorage.getItem('lsm-kyc-cnpj') ?? '' } catch { return '' } }) // Passo 191
+  // A central de pesquisa abre /kyc?doc=... já com o CNPJ preenchido.
+  const [params] = useSearchParams()
+  const [cnpj, setCnpj] = useState(() => { const d = params.get('doc'); if (d) return d; try { return localStorage.getItem('lsm-kyc-cnpj') ?? '' } catch { return '' } }) // Passo 191
   const [estado, setEstado] = useState<{ carregando?: boolean; erro?: string; r?: Resultado }>({})
   const [historico, setHistorico] = useState<Historico[]>([])
   const [msgRecon, setMsgRecon] = useState('')
