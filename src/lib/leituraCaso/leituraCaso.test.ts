@@ -131,9 +131,25 @@ describe('derivados da literatura', () => {
     expect(z.minimoAutor).toBe(45000); expect(z.maximoReu).toBe(65000); expect(z.existe).toBe(true); expect(z.meio).toBe(55000)
     expect(zonaDeAcordo({ ...p, chanceAutor: 90, custos: 0 }, { chanceAutor: 20, custos: 0 }).existe).toBe(false)
   })
-  it('as 50 referências estão completas e sem repetição', () => {
-    expect(REFERENCIAS.length).toBe(50)
-    expect(new Set(REFERENCIAS.map(r => r.titulo)).size).toBe(50)
+  it('as referências estão completas e sem repetição', () => {
+    expect(REFERENCIAS.length).toBe(56)
+    expect(new Set(REFERENCIAS.map(r => r.titulo)).size).toBe(56)
     for (const r of REFERENCIAS) { expect(r.autores && r.veiculo && r.uso).toBeTruthy(); expect(r.ano).toBeGreaterThan(1900) }
   })
+})
+
+import { placar, paresDoPlacar } from './placar'
+import { novaLeitura } from './roteiro'
+
+describe('placar das previsões', () => {
+  const c = (chance: number | null, desfecho: 'procedente' | 'improcedente' | 'parcial' | 'acordo' | null) => ({ ...novaLeitura(), previsao: chance === null ? null : { chance, em: '2026-11-11' }, desfecho })
+  it('só conta sentença de mérito com previsão registrada', () => {
+    const casos = [c(80, 'procedente'), c(80, 'improcedente'), c(60, 'parcial'), c(70, 'acordo'), c(null, 'procedente'), c(50, null)]
+    expect(paresDoPlacar(casos)).toEqual([{ p: 0.8, y: 1 }, { p: 0.8, y: 0 }])
+    const r = placar(casos)
+    expect(r.registradas).toBe(5); expect(r.comDesfecho).toBe(4); expect(r.contam).toBe(2)
+    expect(r.brier).toBeCloseTo((0.04 + 0.64) / 2, 5)
+    expect(r.acertoPct).toBe(50)
+  })
+  it('sem desfechos não inventa nota', () => { expect(placar([c(70, null)]).brier).toBeNull() })
 })

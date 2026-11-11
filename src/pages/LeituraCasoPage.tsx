@@ -9,7 +9,8 @@ import { TIPOS_ACAO, tipoAcao, lerContexto, pontosDoCaso } from '@/lib/leituraCa
 import { decidir, faixaDecisao, encolher, ajustarTaxaBase, zonaDeAcordo, FATORES_AJUSTE, ESCALA_AJUSTE } from '@/lib/leituraCaso/decisao'
 import { REFERENCIAS, ROTULO_TEMA, type TemaRef } from '@/lib/leituraCaso/referencias'
 import { confrontar, soUmMenciona } from '@/lib/leituraCaso/contradicoes'
-import { ROTEIRO, novaLeitura, lerLeituras, gravarLeituras, type LeituraCaso } from '@/lib/leituraCaso/roteiro'
+import { ROTEIRO, novaLeitura, lerLeituras, gravarLeituras, type LeituraCaso, type Desfecho } from '@/lib/leituraCaso/roteiro'
+import { placar, nivelBrier } from '@/lib/leituraCaso/placar'
 import { Compass, Scale, MessagesSquare, ClipboardCheck, Plus, Trash2, Copy, ShieldCheck, Info, BookMarked } from 'lucide-react'
 
 // Leitura do caso: contexto, predição com dados públicos, confronto de depoimentos e roteiro de audiência.
@@ -74,6 +75,7 @@ export default function LeituraCasoPage() {
   const divergencias = useMemo(() => confrontar(caso.depoimentos), [caso.depoimentos])
   const isolados = useMemo(() => soUmMenciona(caso.depoimentos), [caso.depoimentos])
   const tipo = tipoAcao(caso.acao)
+  const pl = useMemo(() => placar(casos), [casos])
 
   const faixa = juri && juri.amostra ? intervaloWilson(juri.resultados.procedencia + juri.resultados.parcial / 2, juri.amostra) : null
   // Taxa base: a da vara, puxada para a do tribunal quando a vara tem poucas sentenças (Efron e Morris).
@@ -250,9 +252,13 @@ export default function LeituraCasoPage() {
                 </div>
                 <Numero id="lc-proposta" label="Proposta de acordo (R$)" valor={caso.proposta} aoMudar={n => muda({ proposta: n })} passo={100} />
                 <Numero id="lc-custos" label="Custos ainda a gastar (R$)" valor={caso.custos} aoMudar={n => muda({ custos: n })} passo={100} />
-                <Numero id="lc-sucumb" label="Sucumbência (%)" valor={caso.sucumbenciaPct} aoMudar={n => muda({ sucumbenciaPct: n })} />
+                <div><label htmlFor="lc-sucumb" className={rotulo}>Sucumbência (CPC, art. 85, §2º)</label>
+                  <select id="lc-sucumb" value={caso.sucumbenciaPct} onChange={e => muda({ sucumbenciaPct: +e.target.value })} className={campo}>
+                    {[0, 10, 15, 20].map(v => <option key={v} value={v}>{v === 0 ? 'Não considerar' : `${v}% do valor`}</option>)}
+                    {![0, 10, 15, 20].includes(caso.sucumbenciaPct) && <option value={caso.sucumbenciaPct}>{caso.sucumbenciaPct}%</option>}
+                  </select></div>
                 <Numero id="lc-meses" label="Meses até o fim" valor={caso.meses} aoMudar={n => muda({ meses: n })} />
-                <Numero id="lc-juros" label="Custo do dinheiro (% ao mês)" valor={caso.jurosMesPct} aoMudar={n => muda({ jurosMesPct: n })} passo={0.1} />
+                <Numero id="lc-juros" label="Custo do dinheiro (% ao mês; juros de mora: Selic, Lei 14.905/2024)" valor={caso.jurosMesPct} aoMudar={n => muda({ jurosMesPct: n })} passo={0.1} />
               </div>
               {decisao ? (
                 <div className="mt-5 space-y-3" data-testid="decisao">
@@ -281,9 +287,33 @@ export default function LeituraCasoPage() {
                       </p>
                     )}
                   </div>
-                  <p className="text-xs text-grafite-claro flex gap-2"><Info size={14} className="shrink-0 mt-0.5" aria-hidden /> A conta não pesa risco de não receber (devedor sem bens), custo emocional nem precedente para outros casos. Isso fica com você e o cliente.</p>
+                  <p className="text-xs text-grafite-claro flex gap-2"><Info size={14} className="shrink-0 mt-0.5" aria-hidden /> No acordo antes da sentença, as custas finais remanescentes ficam dispensadas e as já pagas pela metade (CPC, art. 90, §§ 2º e 3º); a audiência de conciliação é regra (art. 334). A conta não pesa risco de não receber (devedor sem bens), custo emocional nem precedente para outros casos. Isso fica com você e o cliente.</p>
                 </div>
               ) : <p className="text-sm text-grafite-claro mt-4">Preencha o valor em discussão e tenha uma chance (do CNJ ou sua) para ver a conta.</p>}
+            </section>
+
+            <section className="bg-white shadow-sm p-6" aria-label="Placar das previsões">
+              <h2 className="font-serif text-xl mb-1">Placar das suas previsões</h2>
+              <p className="text-sm text-grafite-claro mb-4">Registre a chance que você usou neste caso e, quando sair a sentença, o desfecho. Com o tempo o escritório descobre se a chance de 70% dele acontece mesmo 7 vezes em 10 (nota de Brier: 0 é perfeito, 0,25 é chute).</p>
+              <div className="flex flex-wrap items-end gap-3">
+                <button type="button" disabled={chance === null} data-testid="registrar-previsao" onClick={() => chance !== null && muda({ previsao: { chance, em: new Date().toISOString() } })} className="min-h-[44px] px-4 border border-navy text-navy text-sm disabled:opacity-50">
+                  {caso.previsao ? `Atualizar previsão (registrada: ${caso.previsao.chance}%)` : `Registrar previsão${chance !== null ? ` de ${chance}%` : ''}`}
+                </button>
+                <div>
+                  <label htmlFor="lc-desfecho" className={rotulo}>Desfecho real</label>
+                  <select id="lc-desfecho" value={caso.desfecho ?? ''} disabled={!caso.previsao} onChange={e => muda({ desfecho: (e.target.value || null) as Desfecho | null })} className={campo}>
+                    <option value="">Ainda sem sentença</option><option value="procedente">Procedente (autor venceu)</option><option value="improcedente">Improcedente (autor perdeu)</option>
+                    <option value="parcial">Procedência parcial</option><option value="acordo">Acordo</option><option value="outro">Extinto sem mérito</option>
+                  </select>
+                </div>
+              </div>
+              <div className="mt-4 grid gap-4 sm:grid-cols-4" data-testid="placar">
+                <div><p className={rotulo}>Previsões registradas</p><p className="font-serif text-2xl text-navy">{pl.registradas}</p></div>
+                <div><p className={rotulo}>Contam no placar</p><p className="font-serif text-2xl text-navy">{pl.contam}</p><p className="text-xs text-grafite-claro">só procedente ou improcedente</p></div>
+                <div><p className={rotulo}>Nota de Brier</p><p className="font-serif text-2xl text-navy">{pl.brier === null ? '—' : pl.brier.toLocaleString('pt-BR', { minimumFractionDigits: 3 })}</p><p className="text-xs text-grafite-claro">{nivelBrier(pl.brier)}</p></div>
+                <div><p className={rotulo}>Acerto do lado</p><p className="font-serif text-2xl text-navy">{pl.acertoPct === null ? '—' : `${pl.acertoPct}%`}</p></div>
+              </div>
+              {pl.contam > 0 && pl.contam < 100 && <p className="text-xs text-grafite-claro mt-2">Com {pl.contam} caso(s) o placar ainda oscila muito; a leitura firme começa perto de 100 desfechos (mesma regra da calibração da carteira).</p>}
             </section>
 
             <PerfilJulgador />
