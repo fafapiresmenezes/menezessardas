@@ -31,6 +31,7 @@ import ErroTela from '@/components/ErroTela'
 const FontesPage = lazy(() => import('@/pages/FontesPage'))
 const KycPage = lazy(() => import('@/pages/KycPage'))
 const PesquisaDiligenciaPage = lazy(() => import('@/pages/PesquisaDiligenciaPage'))
+const LeituraCasoPage = lazy(() => import('@/pages/LeituraCasoPage'))
 const PrazosPorCodigoPage = lazy(() => import('@/pages/PrazosPorCodigoPage'))
 const AssumirProcessosPage = lazy(() => import('@/pages/AssumirProcessosPage'))
 const PerfilClientePage = lazy(() => import('@/pages/PerfilClientePage'))
@@ -320,6 +321,10 @@ function App() {
         <Route
           path="/pesquisa"
           element={isAuthenticated ? <PesquisaDiligenciaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/leitura-do-caso"
+          element={isAuthenticated ? <LeituraCasoPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/prazos"
