@@ -59,7 +59,7 @@ describe('Marca (monograma provisório)', () => {
   beforeEach(cleanup)
   it('mostra THEYE Institute com subtítulo e versão grande sem subtítulo', () => {
     const { rerender, container } = render(<Marca />)
-    expect(container.textContent).toContain('THEYE Institute')
+    expect(container.textContent).toContain('Plataforma THEYE')
     expect(container.textContent).toContain('Suporte Jurídico')
     rerender(<Marca tamanho="grande" comSubtitulo={false} />)
     expect(container.textContent).not.toContain('Suporte Jurídico')

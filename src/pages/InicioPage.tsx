@@ -71,7 +71,7 @@ export default function InicioPage() {
       <AceiteTermos />
       <div className="text-center mb-10">
         <p className="font-serif text-dourado text-4xl tracking-widest">THEYE</p>
-        <h1 className="font-serif text-white text-3xl mt-2">THEYE Institute</h1>
+        <h1 className="font-serif text-white text-3xl mt-2">Plataforma THEYE</h1>
         <p className="text-white/60 text-xs uppercase tracking-[0.18em] mt-2">Suporte Jurídico</p>
       </div>
       {/* Os três atalhos do dia a dia vêm antes das áreas: quem entra sabe na hora por onde começar. */}

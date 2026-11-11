@@ -26,7 +26,24 @@ const montar = (rota = '/dashboard') => render(<MemoryRouter initialEntries={[ro
 describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
   beforeEach(() => { cleanup(); localStorage.clear(); sede = true; perfil = 'operador'; signOut.mockClear(); aplicarTema.mockClear(); Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true }) })
 
+  it('começa no menu simples, só com o essencial, e abre o menu completo num clique (e volta)', () => {
+    montar('/meu-dia')
+    const simples = screen.getByTestId('menu-simples')
+    expect([...simples.querySelectorAll('li button')].map(b => b.textContent)).toEqual(['Início', 'O que vence', 'Meus processos', 'Inserir processos antigos', 'Intimações', 'Agenda', 'Ver todas as telas'])
+    expect(simples.querySelector('[aria-current=page]')!.textContent).toBe('O que vence')
+    expect(screen.queryByText('Imóveis e locação')).toBeNull()
+    fireEvent.click(screen.getByText('Meus processos'))
+    expect(screen.getByTestId('onde').textContent).toBe('/processos')
+    fireEvent.click(screen.getByTestId('menu-ver-tudo'))
+    expect(screen.getByText('Imóveis e locação')).toBeTruthy()
+    expect(localStorage.getItem('theye-menu-simples')).toBe('nao')
+    fireEvent.click(screen.getByTestId('menu-voltar-simples'))
+    expect(screen.getByTestId('menu-simples')).toBeTruthy()
+    expect(localStorage.getItem('theye-menu-simples')).toBe('sim')
+  })
+
   it('mostra título e conteúdo, marca o item do menu da tela atual, navega pelo menu e recolhe o menu', () => {
+    localStorage.setItem('theye-menu-simples', 'nao')
     montar('/agenda')
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Painel')
     expect(screen.getByText('conteúdo')).toBeTruthy()
@@ -43,6 +60,7 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
   })
 
   it('o menu é dividido em grupos: abre o da tela atual e "Hoje", recolhe e abre à vontade, lembra a escolha e mostra a tela escolhida de qualquer grupo', () => {
+    localStorage.setItem('theye-menu-simples', 'nao')
     montar('/financeiro')
     const nav = screen.getByRole('navigation', { name: 'Menu principal' })
     const grupo = (nome: string) => screen.getByText(nome).closest('button') as HTMLButtonElement

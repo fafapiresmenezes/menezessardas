@@ -91,6 +91,16 @@ const gruposMenu = [
   ] },
 ]
 const CHAVE_GRUPOS = 'lsm-menu-grupos'
+const CHAVE_SIMPLES = 'theye-menu-simples'
+// Menu simples (padrão): só o que se usa todo dia, com nomes do dia a dia. "Ver todas as telas" abre o menu completo.
+const menuEssencial = [
+  { icon: Home, label: 'Início', href: '/inicio' },
+  { icon: Sunrise, label: 'O que vence', href: '/meu-dia' },
+  { icon: Gavel, label: 'Meus processos', href: '/processos' },
+  { icon: UserPlus, label: 'Inserir processos antigos', href: '/processos-antigos' },
+  { icon: Inbox, label: 'Intimações', href: '/intimacoes' },
+  { icon: CalendarDays, label: 'Agenda', href: '/agenda' },
+]
 const estaAtivo = (href: string, pathname: string) => pathname.startsWith(href) || (href === '/fornecedores' && pathname.startsWith('/fornecedor/'))
 const grupoDe = (pathname: string) => gruposMenu.find(g => g.itens.some(i => estaAtivo(i.href, pathname)))?.id
 
@@ -138,6 +148,13 @@ export default function Layout({ children, title }: LayoutProps) {
   }
   const alternarGrupo = (id: string) => mudarGrupos({ ...grupos, [id]: !grupos[id] })
   const [maisAberto, setMaisAberto] = useState(false)
+  const [simples, setSimples] = useState<boolean>(() => {
+    try { return localStorage.getItem(CHAVE_SIMPLES) !== 'nao' } catch { return true }
+  })
+  const mudarSimples = (v: boolean) => {
+    setSimples(v)
+    try { localStorage.setItem(CHAVE_SIMPLES, v ? 'sim' : 'nao') } catch { /* sem armazenamento */ }
+  }
 
   // Passo D19: app instalável e avisos no celular (prazos em até 2 dias, intimações vencidas, compromissos de hoje),
   // conferidos ao abrir e a cada 30 minutos enquanto a tela estiver aberta.
@@ -209,7 +226,41 @@ export default function Layout({ children, title }: LayoutProps) {
         </div>
 
         <nav className="flex-1 overflow-y-auto" aria-label="Menu principal">
-          {menuAberto && (
+          {simples && (
+            <ul className="px-3 pt-3 space-y-1" data-testid="menu-simples">
+              {menuEssencial.map(item => {
+                const ativo = estaAtivo(item.href, pathname)
+                return (
+                  <li key={item.href}>
+                    <button
+                      onClick={() => navigate(item.href)}
+                      aria-current={ativo ? 'page' : undefined}
+                      className={`w-full flex items-center gap-3 px-4 py-3 min-h-[48px] rounded transition border-l-2 ${ativo ? 'bg-white/10 border-dourado text-white' : 'border-transparent text-white/85 hover:bg-white/5 hover:text-white'}`}
+                      title={!menuAberto ? item.label : undefined}
+                    >
+                      <item.icon size={20} className="flex-shrink-0" />
+                      {menuAberto && <span className="text-base">{item.label}</span>}
+                    </button>
+                  </li>
+                )
+              })}
+              {menuAberto && (
+                <li className="pt-4">
+                  <button type="button" onClick={() => mudarSimples(false)} className="w-full px-4 py-2 min-h-[44px] text-sm text-white/70 hover:text-white underline underline-offset-2 text-left" data-testid="menu-ver-tudo">
+                    Ver todas as telas
+                  </button>
+                </li>
+              )}
+            </ul>
+          )}
+          {!simples && menuAberto && (
+            <div className="px-4 pt-3">
+              <button type="button" onClick={() => mudarSimples(true)} className="text-sm text-dourado hover:underline underline-offset-2 min-h-[36px]" data-testid="menu-voltar-simples">
+                ← Voltar ao menu simples
+              </button>
+            </div>
+          )}
+          {!simples && menuAberto && (
             <div className="px-4 pt-3 flex justify-end">
               {(() => {
                 const visiveis = gruposMenu.filter(g => g.itens.some(i => sede || !SO_SEDE.includes(i.href)))
@@ -227,7 +278,7 @@ export default function Layout({ children, title }: LayoutProps) {
               })()}
             </div>
           )}
-          {gruposMenu.map(grupo => {
+          {!simples && gruposMenu.map(grupo => {
             const itens = grupo.itens.filter(item => sede || !SO_SEDE.includes(item.href))
             if (!itens.length) return null
             const aberto = !menuAberto || !!grupos[grupo.id]
@@ -303,7 +354,7 @@ export default function Layout({ children, title }: LayoutProps) {
           <div className="flex flex-wrap md:flex-nowrap items-center gap-2 md:flex-shrink-0">
           <TourTela />
           <PerguntarTela />
-          <BotaoExportar />
+          {!simples && <BotaoExportar />}
           <SinoNotificacoes />
           {admin && (
             <button

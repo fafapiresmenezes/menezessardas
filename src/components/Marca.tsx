@@ -37,7 +37,7 @@ export default function Marca({ tamanho = 'pequena', comSubtitulo = true, classN
         className={`font-sans uppercase text-white/70 tracking-[0.4em] ${grande ? 'text-xs mt-1' : 'text-[9px] mt-0.5'}`}
         aria-hidden="true"
       >
-        Institute
+        Plataforma
       </div>
       {comSubtitulo && (
         <>
