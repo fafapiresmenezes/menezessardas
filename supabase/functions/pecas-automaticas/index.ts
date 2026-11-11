@@ -32,6 +32,39 @@ function usuarioDoToken(req: Request): { id: string } | null {
   } catch { return null }
 }
 
+// Rótulos das regras da tela "Parâmetros de escrita" (configuracoes, chaves escrita_*), na ordem em que entram no pedido à IA.
+const REGRAS_ESCRITA: [string, string][] = [
+  ["estrutura_cabecalho", "Cabeçalho padrão"],
+  ["estrutura_secoes", "Seções obrigatórias"],
+  ["estrutura_comprimento_peticao", "Comprimento máximo (páginas)"],
+  ["estrutura_comprimento_recurso", "Comprimento máximo – recursos (páginas)"],
+  ["linguagem_nivel", "Nível de formalidade"],
+  ["linguagem_voz", "Voz preferencial"],
+  ["linguagem_latim", "Uso de expressões em latim"],
+  ["linguagem_comprimento_paragrafo", "Comprimento máximo de parágrafo (linhas)"],
+  ["linguagem_repeticao", "Instrução contra redundância"],
+  ["arg_metodo", "Método de argumentação"],
+  ["arg_hierarquia_fontes", "Hierarquia de fontes"],
+  ["arg_jurisprudencia_max", "Máximo de citações jurisprudenciais por tese"],
+  ["arg_tese_min", "Mínimo de fundamentos por pedido"],
+  ["pedidos_criterio", "Critério para redigir pedidos"],
+  ["pedidos_subsidiarios", "Instrução para pedidos subsidiários"],
+  ["pedidos_tutela", "Tutela de urgência: padrão de justificativa"],
+  ["ref_formato_jurisprudencia", "Formato de citação de julgados"],
+  ["ref_formato_doutrina", "Formato de citação de doutrina"],
+  ["ref_verificar_antes", "Instrução de verificação prévia"],
+  ["qualidade_checklist", "Checklist de revisão final"],
+  ["qualidade_formatacao", "Formatação padrão (NBR 14724)"],
+  ["tipos_peticao_inicial", "Petição inicial"],
+  ["tipos_contestacao", "Contestação"],
+  ["tipos_recurso", "Recursos (apelação, agravo)"],
+  ["tipos_manifestacao", "Manifestações e petições incidentais"],
+]
+function regrasDeEscrita(conf: Record<string, string>): string {
+  const linhas = REGRAS_ESCRITA.map(([c, rotulo]) => [rotulo, String(conf[`escrita_${c}`] ?? '').trim()]).filter(([, v]) => v).map(([r, v]) => `- ${r}: ${v.replace(/\n+/g, ' | ')}`)
+  return linhas.length ? `\n\nPARÂMETROS DE ESCRITA DO ESCRITÓRIO (definidos pelo escritório; siga todos, salvo quando contrariarem as regras acima sobre fatos, jurisprudência e títulos sem número):\n${linhas.join('\n')}` : ''
+}
+
 // Tarefas que não pedem peça (audiência, só leitura, pagamento do cliente).
 const SEM_PECA = /^(comparecer|ler a publica|ler e decidir|pagar a d|cumprir o que o juiz)/i
 
@@ -48,8 +81,9 @@ Deno.serve(async (req) => {
   const hoje = hojeBrasilia()
   const limite = somarDias(hoje, ANTECEDENCIA)
 
-  const { data: cfg } = await s.from('configuracoes').select('chave,valor').in('chave', ['pecas_destinatarios', 'brevo_api_key', 'email_remetente', 'anthropic_api_key'])
+  const { data: cfg } = await s.from('configuracoes').select('chave,valor').in('chave', ['pecas_destinatarios', 'brevo_api_key', 'email_remetente', 'anthropic_api_key', ...REGRAS_ESCRITA.map(([c]) => `escrita_${c}`)])
   const conf = Object.fromEntries(((cfg ?? []) as { chave: string; valor: string }[]).map(c => [c.chave, c.valor]))
+  const regras = regrasDeEscrita(conf)
   const chave = Deno.env.get('ANTHROPIC_API_KEY') || conf.anthropic_api_key
   if (!chave) return json({ erro: 'Falta a chave da IA (Configurações → Chave da IA).' }, 400)
   const destinatarios = String(conf.pecas_destinatarios ?? '').split(/[,;\s]+/).map(e => e.trim().toLowerCase()).filter(e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e))
@@ -80,7 +114,7 @@ Deno.serve(async (req) => {
 Regras: padrão forense brasileiro; endereçamento ao juízo correto; qualificação com [campos entre colchetes] para o que não estiver nos dados; fatos SÓ os que estão na publicação e nos dados do caso (o que faltar vai entre colchetes); fundamentação com artigo e lei; pedidos numerados; local, data e assinatura com [advogado] e [OAB].
 Nunca invente jurisprudência: se citar precedente, marque "[conferir no tribunal]". Doutrina só com certeza, senão "[doutrina a conferir]".
 Ao final, depois da assinatura, acrescente a seção "PONTOS A CONFERIR ANTES DE PROTOCOLAR" com o que depende de documentos ou fatos.
-Títulos de seção em caixa alta, numa linha só e SEM número (ex.: DOS FATOS): a numeração e a formatação final são aplicadas depois, pelo modelo do escritório. Não use markdown além de **negrito** pontual.${estilo}\n\n${instrucoesDoPerfil(perfil)}`
+Títulos de seção em caixa alta, numa linha só e SEM número (ex.: DOS FATOS): a numeração e a formatação final são aplicadas depois, pelo modelo do escritório. Não use markdown além de **negrito** pontual.${regras}${estilo}\n\n${instrucoesDoPerfil(perfil)}`
       const pedido = `Redija a peça para cumprir esta tarefa: "${t.titulo}".
 Processo: ${t.numero_processo}. Prazo final: ${br(t.prazo)}.
 Cliente: ${t.cliente ?? caso?.cliente ?? '[cliente]'}. Área: ${t.area ?? caso?.area ?? '[área]'}.

@@ -67,6 +67,15 @@ describe('pecas-automaticas', () => {
     expect(estado.atualizados.find(a => a.tabela === 'tarefas')!.valores).toMatchObject({ peca_automatica_em: expect.any(String) })
   })
 
+  it('segue os parâmetros de escrita salvos pelo escritório', async () => {
+    estado.tabelas.configuracoes.push({ chave: 'escrita_arg_metodo', valor: 'IRAC' }, { chave: 'escrita_linguagem_voz', valor: 'ativa' })
+    await chamar()
+    const ia = chamadas.find(c => c.url.includes('anthropic'))!.body
+    expect(ia.system).toMatch(/PARÂMETROS DE ESCRITA DO ESCRITÓRIO/)
+    expect(ia.system).toContain('- Método de argumentação: IRAC')
+    expect(ia.system).toContain('- Voz preferencial: ativa')
+  })
+
   it('sem destinatário, escreve e guarda, e avisa', async () => {
     estado.tabelas.configuracoes = estado.tabelas.configuracoes.filter(c => c.chave !== 'pecas_destinatarios')
     const b = await (await chamar()).json()

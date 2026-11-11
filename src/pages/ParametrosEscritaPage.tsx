@@ -409,6 +409,7 @@ export default function ParametrosEscritaPage() {
   const [valores, setValores] = useState<Record<string, string>>({})
   const [salvando, setSalvando] = useState(false)
   const [salvo, setSalvo] = useState(false)
+  const [erroSalvar, setErroSalvar] = useState(false)
   const [carregando, setCarregando] = useState(true)
   const [campoAtivo, setCampoAtivo] = useState<string | null>(null)
   const [mostrarBoas, setMostrarBoas] = useState(() => {
@@ -430,7 +431,7 @@ export default function ParametrosEscritaPage() {
         if (data) {
           const mapa: Record<string, string> = {}
           data.forEach((r: { chave: string; valor: string }) => {
-            mapa[r.chave] = r.valor
+            mapa[r.chave.replace(/^escrita_/, '')] = r.valor
           })
           setValores(mapa)
         }
@@ -457,14 +458,16 @@ export default function ParametrosEscritaPage() {
     try {
       const linhas = SECOES.flatMap(s =>
         s.parametros.map(p => ({
-          chave: p.chave,
+          chave: `escrita_${p.chave}`,
           valor: getValor(p),
         }))
       )
-      await supabase.from('configuracoes').upsert(linhas, { onConflict: 'chave' })
+      const { error } = await supabase.from('configuracoes').upsert(linhas, { onConflict: 'chave' })
+      if (error) throw error
+      setErroSalvar(false)
       setSalvo(true)
       setTimeout(() => setSalvo(false), 3000)
-    } catch { /* silencia */ }
+    } catch { setErroSalvar(true) }
     setSalvando(false)
   }
 
@@ -639,6 +642,11 @@ export default function ParametrosEscritaPage() {
             <span className="flex items-center gap-1 text-sm text-green-700 dark:text-green-400">
               <CheckCircle2 size={15} />
               Salvo com sucesso
+            </span>
+          )}
+          {erroSalvar && (
+            <span role="alert" className="text-sm text-red-700 dark:text-red-400">
+              Não foi possível salvar. Só quem administra o escritório pode alterar estas regras.
             </span>
           )}
           <span className="text-xs text-grafite/50 ml-auto">
