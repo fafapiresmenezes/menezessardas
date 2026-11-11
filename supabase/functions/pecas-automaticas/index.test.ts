@@ -81,7 +81,8 @@ describe('pecas-automaticas', () => {
     const salva = estado.inseridos.find(i => i.tabela === 'pecas_automaticas')!.linha as Record<string, unknown>
     expect((salva.perfil as { formato?: string }).formato).toMatch(/^[a-z-]+$/)
     expect((salva.perfil as { redator?: string }).redator).toBe('barbosa-moreira')
-    expect(salva).toMatchObject({ tarefa_id: 't-perto', revisoes: 4, revisao_pendente: false, enviada_para: ['fatima@exemplo.com.br', 'outro@exemplo.com.br'] })
+    expect(salva).toMatchObject({ tarefa_id: 't-perto', enviada_para: ['fatima@exemplo.com.br', 'outro@exemplo.com.br'] })
+    expect(salva.perfil).toMatchObject({ rev: 4, pend: false })
     expect(estado.atualizados.find(a => a.tabela === 'tarefas')!.valores).toMatchObject({ peca_automatica_em: expect.any(String) })
   })
 
@@ -99,7 +100,8 @@ describe('pecas-automaticas', () => {
     await chamar()
     await revisar(4)
     const salva = estado.inseridos.find(i => i.tabela === 'pecas_automaticas')!.linha as Record<string, unknown>
-    expect(salva).toMatchObject({ revisoes: 4, revisao_pendente: false, enviada_para: [], erro: 'Ninguém cadastrado para receber as peças.' })
+    expect(salva).toMatchObject({ enviada_para: [], erro: 'Ninguém cadastrado para receber as peças.' })
+    expect(salva.perfil).toMatchObject({ rev: 4, pend: false })
     expect(chamadas.some(c => c.url.includes('brevo'))).toBe(false)
   })
 
@@ -134,10 +136,10 @@ describe('pecas-automaticas', () => {
     })
     await revisar(1)
     const linha = () => estado.tabelas.pecas_automaticas[0] as Record<string, any>
-    expect(linha().revisoes).toBe(0)
+    expect(linha().perfil.rev).toBe(0)
     expect(linha().erro).toMatch(/^revisão 1:/)
     await revisar(1)
-    expect(linha().revisoes).toBe(1)
+    expect(linha().perfil.rev).toBe(1)
     expect(linha().erro).toMatch(/revisão 1 não aplicada/)
     expect(String(linha().texto)).toContain('EXCELENTÍSSIMO')
   })

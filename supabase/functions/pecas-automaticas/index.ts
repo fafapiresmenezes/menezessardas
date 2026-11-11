@@ -129,11 +129,11 @@ async function enviarEmail(conf: Record<string, string>, destinatarios: string[]
 
 // Uma passada de revisão numa peça; na 4ª, formata e envia por e-mail.
 async function revisarUma(s: any, r: Record<string, any>, ctx: { conf: Record<string, string>; regras: string; chave: string; destinatarios: string[] }) {
-  const etapa = Number(r.revisoes ?? 0)
+  const etapa = Number((r.perfil as Record<string, any> | null)?.rev ?? 0)
   const rev = REVISOES[etapa]!
   try {
     const { data: t } = await s.from('tarefas').select('id,titulo,descricao,prazo,pai_id,numero_processo,cliente,area,responsavel_id,escritorio_id').eq('id', r.tarefa_id).maybeSingle()
-    if (!t) { await s.from('pecas_automaticas').update({ revisao_pendente: false, revisao_em: null, erro: 'Tarefa não encontrada para revisar.' }).eq('id', r.id); return { id: r.id, titulo: r.titulo, revisoes: etapa, detalhe: 'tarefa não encontrada' } }
+    if (!t) { await s.from('pecas_automaticas').update({ perfil: { ...(r.perfil ?? {}), pend: false, rev_em: null }, erro: 'Tarefa não encontrada para revisar.' }).eq('id', r.id); return { id: r.id, titulo: r.titulo, revisoes: etapa, detalhe: 'tarefa não encontrada' } }
     const [{ data: caso }, { data: form }] = await Promise.all([
       t.pai_id ? s.from('tarefas').select('titulo,cliente,area,descricao').eq('id', t.pai_id).maybeSingle() : Promise.resolve({ data: null }),
       t.responsavel_id ? s.from('formatacao_escrita').select('dados').eq('usuario_id', t.responsavel_id).maybeSingle() : Promise.resolve({ data: null }),
@@ -158,32 +158,34 @@ ${BASE_SISTEMA}${ctx.regras}\n\n${instrucoesDoRedator(redator)}\n\n${instrucoesD
       const { data: form } = t?.responsavel_id ? await s.from('formatacao_escrita').select('dados').eq('usuario_id', t.responsavel_id).maybeSingle() : { data: null }
       return await concluirPasso(s, r, String(r.texto), etapa, t ?? { id: r.tarefa_id, titulo: r.titulo, numero_processo: r.numero, prazo: null }, form, (r.perfil ?? {}) as Record<string, any>, ctx, `revisão ${etapa + 1} não aplicada: ${msg}`)
     }
-    await s.from('pecas_automaticas').update({ revisao_em: null, erro: `revisão ${etapa + 1}: ${msg}`.slice(0, 400) }).eq('id', r.id)
+    await s.from('pecas_automaticas').update({ perfil: { ...(r.perfil ?? {}), rev_em: null }, erro: `revisão ${etapa + 1}: ${msg}`.slice(0, 400) }).eq('id', r.id)
     return { id: r.id, titulo: r.titulo, revisoes: etapa, detalhe: msg }
   }
 }
 
 async function concluirPasso(s: any, r: Record<string, any>, texto: string, etapa: number, t: Record<string, any>, form: any, perfil: Record<string, any>, ctx: { conf: Record<string, string>; destinatarios: string[] }, aviso?: string) {
   if (etapa + 1 < REVISOES.length) {
-    await s.from('pecas_automaticas').update({ texto, revisoes: etapa + 1, revisao_em: null, erro: aviso ?? null }).eq('id', r.id)
+    await s.from('pecas_automaticas').update({ texto, perfil: { ...perfil, rev: etapa + 1, rev_em: null }, erro: aviso ?? null }).eq('id', r.id)
     return { id: r.id, titulo: r.titulo, revisoes: etapa + 1 }
   }
   const formato = (FORMATOS as any[]).find(f => f.id === perfil.formato) ?? FORMATOS[0]
   const html = pecaEmHtml(texto, r.titulo, form?.dados ?? null, formato)
   const nota = aderencia(medirTexto(texto), perfil as any)
   const { enviada, detalhe } = await enviarEmail(ctx.conf, ctx.destinatarios, t, r.titulo, html)
-  await s.from('pecas_automaticas').update({ texto, revisoes: etapa + 1, revisao_pendente: false, revisao_em: null, aderencia: nota, enviada_para: enviada ? ctx.destinatarios : [], enviada_em: enviada ? new Date().toISOString() : null, erro: [aviso, detalhe].filter(Boolean).join(' | ') || null }).eq('id', r.id)
+  await s.from('pecas_automaticas').update({ texto, perfil: { ...perfil, rev: etapa + 1, pend: false, rev_em: null }, aderencia: nota, enviada_para: enviada ? ctx.destinatarios : [], enviada_em: enviada ? new Date().toISOString() : null, erro: [aviso, detalhe].filter(Boolean).join(' | ') || null }).eq('id', r.id)
   return { id: r.id, titulo: r.titulo, revisoes: etapa + 1, enviada, detalhe }
 }
 
 // Rodada de revisões: pega as peças pendentes (as mais adiantadas primeiro, para saírem logo) e dá mais uma passada em cada.
 async function revisarPendentes(s: any, ctx: { conf: Record<string, string>; regras: string; chave: string; destinatarios: string[] }) {
   const corte = new Date(Date.now() - 4 * 60000).toISOString()
-  const { data } = await s.from('pecas_automaticas').select('id,tarefa_id,numero,titulo,texto,perfil,revisoes,revisao_em,erro,criado_em').eq('revisao_pendente', true).order('criado_em').limit(200)
-  const prontas = ((data ?? []) as Record<string, any>[]).filter(r => !r.revisao_em || String(r.revisao_em) < corte).sort((a, b) => Number(b.revisoes ?? 0) - Number(a.revisoes ?? 0)).slice(0, REVISOES_POR_RODADA)
-  if (prontas.length) await s.from('pecas_automaticas').update({ revisao_em: new Date().toISOString() }).in('id', prontas.map(r => r.id))
+  const { data } = await s.from('pecas_automaticas').select('id,tarefa_id,numero,titulo,texto,perfil,erro,criado_em').is('enviada_em', null).order('criado_em').limit(300)
+  const pendentes = ((data ?? []) as Record<string, any>[]).filter(r => r.perfil?.pend === true)
+  const prontas = pendentes.filter(r => !r.perfil.rev_em || String(r.perfil.rev_em) < corte).sort((a, b) => Number(b.perfil.rev ?? 0) - Number(a.perfil.rev ?? 0)).slice(0, REVISOES_POR_RODADA)
+  const marca = new Date().toISOString()
+  await Promise.all(prontas.map(r => { r.perfil = { ...r.perfil, rev_em: marca }; return s.from('pecas_automaticas').update({ perfil: r.perfil }).eq('id', r.id) }))
   const feitas = await Promise.all(prontas.map(r => revisarUma(s, r, ctx)))
-  return { pendentes: ((data ?? []) as unknown[]).length, nesta_rodada: prontas.length, feitas }
+  return { pendentes: pendentes.length, nesta_rodada: prontas.length, feitas }
 }
 
 Deno.serve(async (req) => {
@@ -245,7 +247,7 @@ Deno.serve(async (req) => {
       const titulo = `${String(t.titulo).split(' · ')[0]} · ${t.numero_processo}`
       const nota = aderencia(medirTexto(texto), perfil)
       // O rascunho não sai por e-mail: passa por 4 revisões (rodada "revisar") e só então é enviado.
-      await s.from('pecas_automaticas').insert({ tarefa_id: t.id, escritorio_id: t.escritorio_id, numero: t.numero_processo, titulo, texto, perfil: { ...perfil, formato: formato.id, redator: redator.id, julgador: { orgao, ...tom }, redatorReferencia: redator.referencia }, aderencia: nota, enviada_para: [], enviada_em: null, erro: null, revisao_pendente: true, revisoes: 0 })
+      await s.from('pecas_automaticas').insert({ tarefa_id: t.id, escritorio_id: t.escritorio_id, numero: t.numero_processo, titulo, texto, perfil: { ...perfil, formato: formato.id, redator: redator.id, julgador: { orgao, ...tom }, redatorReferencia: redator.referencia, pend: true, rev: 0, rev_em: null }, aderencia: nota, enviada_para: [], enviada_em: null, erro: null })
       await s.from('tarefas').update({ peca_automatica_em: new Date().toISOString() }).eq('id', t.id)
       feitas.push({ tarefa: t.id, titulo, enviada: false, detalhe: 'Rascunho pronto; passa por 4 revisões antes de ir para o e-mail.', redator: redator.referencia })
     } catch (e) {
