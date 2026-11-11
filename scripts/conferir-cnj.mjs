@@ -1,31 +1,37 @@
 // "Conferir agora" fora da plataforma. ATENÇÃO: o CNJ só responde a endereços do Brasil (testado em 11/11/2026:
 // dos servidores do GitHub, nos EUA, o DJEN deu 403 e o DataJud não respondeu). Rode num computador no Brasil. Lê, com as MESMAS
 // regras da tela, tudo o que saiu no Diário de Justiça Eletrônico Nacional para uma lista de processos e de advogados.
-// Uso: node scripts/conferir-cnj.mjs <arquivo-com-numeros> "<nome do advogado>[,outro]" [dias=93]
+// Uso (só precisa do Node 20+, sem npm install): node scripts/conferir-cnj.mjs <arquivo-com-numeros> "<nome do advogado>[,outro]" [dias=93]
 // Saída: conferencia-cnj/prazos.csv, conferencia-cnj/andamentos.csv e um resumo no terminal. Só lê; não grava em banco nenhum.
-import { build } from 'esbuild'
-import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from 'node:fs'
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import path from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
-const raiz = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
-const [arqNumeros, nomes = '', diasTxt = '93'] = process.argv.slice(2)
+// Roda só com o Node (sem "npm install"): as regras da plataforma vêm já empacotadas em conferir-cnj-lib.mjs.
+// Para atualizar o pacote depois de mexer nas regras: node scripts/conferir-cnj.mjs --empacotar (precisa do npm ci).
+const raiz = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const LIB = path.join(raiz, 'scripts', 'conferir-cnj-lib.mjs')
 globalThis.Deno = { env: { get: () => undefined } }
-
-const entrada = `export * from './supabase/functions/_compartilhado/cnj.ts'
+if (process.argv[2] === '--empacotar') {
+  const { build } = await import('esbuild')
+  const { existsSync: ex, statSync } = await import('node:fs')
+  const r = await build({
+    stdin: { contents: `export * from './supabase/functions/_compartilhado/cnj.ts'
 export { lerTodas, csvDosPrazos, ROTULO_URGENCIA } from './src/lib/escritorio/lerIntimacao'
-export { somarDias } from './src/lib/ferramentas/base'`
-const r = await build({
-  stdin: { contents: entrada, resolveDir: raiz, loader: 'ts' }, bundle: true, write: false, format: 'esm', platform: 'node',
-  plugins: [{ name: 'arroba', setup(b) { b.onResolve({ filter: /^@\// }, a => {
-    const base = path.join(raiz, 'src', a.path.slice(2))
-    for (const c of [`${base}.ts`, `${base}.tsx`, path.join(base, 'index.ts'), base]) if (existsSync(c) && statSync(c).isFile()) return { path: c }
-    return { errors: [{ text: `não achei ${a.path}` }] }
-  }) } }],
-  resolveExtensions: ['.ts', '.tsx', '.js'],
-})
-const tmp = path.join(raiz, 'node_modules', '.conferir-cnj.mjs')
-writeFileSync(tmp, r.outputFiles[0].text)
-const m = await import(tmp)
+export { somarDias } from './src/lib/ferramentas/base'`, resolveDir: raiz, loader: 'ts' },
+    bundle: true, write: false, format: 'esm', platform: 'node', resolveExtensions: ['.ts', '.tsx', '.js'],
+    plugins: [{ name: 'arroba', setup(b) { b.onResolve({ filter: /^@\// }, a => {
+      const base = path.join(raiz, 'src', a.path.slice(2))
+      for (const c of [`${base}.ts`, `${base}.tsx`, path.join(base, 'index.ts'), base]) if (ex(c) && statSync(c).isFile()) return { path: c }
+      return { errors: [{ text: `não achei ${a.path}` }] }
+    }) } }],
+  })
+  writeFileSync(LIB, '// Gerado por: node scripts/conferir-cnj.mjs --empacotar (não editar à mão)\n' + r.outputFiles[0].text)
+  console.log('Pacote atualizado:', LIB); process.exit(0)
+}
+if (!existsSync(LIB)) { console.error('Falta scripts/conferir-cnj-lib.mjs. Rode: node scripts/conferir-cnj.mjs --empacotar'); process.exit(1) }
+const m = await import(pathToFileURL(LIB).href)
+const [arqNumeros, nomes = '', diasTxt = '93'] = process.argv.slice(2)
 
 const hoje = new Date(Date.now() - 3 * 3600000).toISOString().slice(0, 10)
 const dias = Math.min(93, Math.max(1, Number(diasTxt) || 93))
