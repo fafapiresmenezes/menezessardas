@@ -93,9 +93,9 @@ const SECOES: SecaoParametros[] = [
       {
         chave: 'estrutura_cabecalho',
         label: 'Cabeçalho padrão',
-        dica: 'Texto que abre toda petição. Os campos entre chaves {VARA}, {AUTOR} etc. são preenchidos automaticamente pelo robô com os dados do processo.',
-        descricao: 'Elementos obrigatórios: processo, vara, juízo, partes, tipo de peça. Os campos {VARA}, {COMARCA}, {AUTOR} são substituídos automaticamente.',
-        valor: 'EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) DE DIREITO DA {VARA} COMARCA DE {COMARCA}\n\n{TIPO_ACAO} nº {NUMERO_PROCESSO}\n\n{AUTOR}, por seu advogado,',
+        dica: 'Como o robô deve endereçar e abrir a peça: a quem dirigir (juiz, relator), o tratamento e o que vem logo depois.',
+        descricao: 'Escreva a regra em palavras, não um modelo com lacunas: o robô decide o endereçamento pela fase do processo (vara ou tribunal).',
+        valor: 'Endereçar a quem vai decidir a peça: ao juízo de primeiro grau quando o processo está na vara; ao desembargador relator ou ao presidente do órgão quando está no tribunal (embargos de declaração contra acórdão, memoriais, contrarrazões já distribuídas). Usar o tratamento no gênero correto quando o nome constar da publicação; quando não constar, usar a forma por extenso ("Excelentíssimo Senhor Doutor Juiz de Direito"), nunca "(A)". Em seguida: classe e número do processo, e a qualificação das partes.',
         tipo: 'multiline',
       },
       {
