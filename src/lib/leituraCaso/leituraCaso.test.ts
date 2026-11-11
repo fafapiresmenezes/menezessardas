@@ -109,3 +109,31 @@ describe('confronto de depoimentos', () => {
     expect(s.map(x => x.trecho)).toEqual(['O síndico cobrou multa condominial de R$ 300,00.'])
   })
 })
+
+import { encolher, ajustarTaxaBase, zonaDeAcordo } from './decisao'
+import { REFERENCIAS } from './referencias'
+
+describe('derivados da literatura', () => {
+  it('encolhimento: vara com pouca amostra fica perto do tribunal; com muita, perto dela mesma', () => {
+    expect(encolher({ chance: 100, amostra: 5 }, 60).chance).toBe(64)
+    expect(encolher({ chance: 90, amostra: 5000 }, 60).chance).toBe(90)
+    expect(encolher({ chance: 80, amostra: 50 }, 60).pesoOrgao).toBe(50)
+  })
+  it('ajuste da taxa base: neutro mantém, a favor sobe, do lado do réu inverte', () => {
+    expect(ajustarTaxaBase(60, {}, true).chance).toBe(60)
+    expect(ajustarTaxaBase(50, { prova: 1 }, true).chance).toBe(60)
+    expect(ajustarTaxaBase(50, { prova: 1 }, false).chance).toBe(40)
+    expect(ajustarTaxaBase(99.9, { prova: 2, tese: 2 }, true).chance).toBeLessThanOrEqual(100)
+  })
+  it('zona de acordo existe quando o réu espera pagar mais do que o autor aceita', () => {
+    const p = { lado: 'autor' as const, valorPedido: 100000, chanceAutor: 50, custos: 5000, sucumbenciaPct: 0, meses: 0, jurosMesPct: 0, proposta: 0 }
+    const z = zonaDeAcordo(p, { chanceAutor: 60, custos: 5000 })
+    expect(z.minimoAutor).toBe(45000); expect(z.maximoReu).toBe(65000); expect(z.existe).toBe(true); expect(z.meio).toBe(55000)
+    expect(zonaDeAcordo({ ...p, chanceAutor: 90, custos: 0 }, { chanceAutor: 20, custos: 0 }).existe).toBe(false)
+  })
+  it('as 50 referências estão completas e sem repetição', () => {
+    expect(REFERENCIAS.length).toBe(50)
+    expect(new Set(REFERENCIAS.map(r => r.titulo)).size).toBe(50)
+    for (const r of REFERENCIAS) { expect(r.autores && r.veiculo && r.uso).toBeTruthy(); expect(r.ano).toBeGreaterThan(1900) }
+  })
+})

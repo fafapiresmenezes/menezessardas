@@ -6,10 +6,11 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { mensagemAmigavel } from '@/lib/erros'
 import { intervaloWilson, registrarPrevisoes } from '@/lib/predicao'
 import { TIPOS_ACAO, tipoAcao, lerContexto, pontosDoCaso } from '@/lib/leituraCaso/contexto'
-import { decidir, faixaDecisao } from '@/lib/leituraCaso/decisao'
+import { decidir, faixaDecisao, encolher, ajustarTaxaBase, zonaDeAcordo, FATORES_AJUSTE, ESCALA_AJUSTE } from '@/lib/leituraCaso/decisao'
+import { REFERENCIAS, ROTULO_TEMA, type TemaRef } from '@/lib/leituraCaso/referencias'
 import { confrontar, soUmMenciona } from '@/lib/leituraCaso/contradicoes'
 import { ROTEIRO, novaLeitura, lerLeituras, gravarLeituras, type LeituraCaso } from '@/lib/leituraCaso/roteiro'
-import { Compass, Scale, MessagesSquare, ClipboardCheck, Plus, Trash2, Copy, ShieldCheck, Info } from 'lucide-react'
+import { Compass, Scale, MessagesSquare, ClipboardCheck, Plus, Trash2, Copy, ShieldCheck, Info, BookMarked } from 'lucide-react'
 
 // Leitura do caso: contexto, predição com dados públicos, confronto de depoimentos e roteiro de audiência.
 // Tudo fica neste aparelho (localStorage); só a consulta de jurimetria vai ao CNJ, e sem dado pessoal.
@@ -21,12 +22,13 @@ interface Jurimetria {
   amostra: number; confianca: 'alta' | 'media' | 'baixa'; fonte: string; aviso?: string
 }
 
-type Aba = 'contexto' | 'predicao' | 'depoimentos' | 'audiencia'
+type Aba = 'contexto' | 'predicao' | 'depoimentos' | 'audiencia' | 'ciencia'
 const ABAS: { id: Aba; rotulo: string; icone: typeof Compass }[] = [
   { id: 'contexto', rotulo: '1. Contexto do caso', icone: Compass },
   { id: 'predicao', rotulo: '2. Predição e decisão', icone: Scale },
   { id: 'depoimentos', rotulo: '3. Confronto de depoimentos', icone: MessagesSquare },
   { id: 'audiencia', rotulo: '4. Roteiro de audiência', icone: ClipboardCheck },
+  { id: 'ciencia', rotulo: 'Base científica', icone: BookMarked },
 ]
 const TRIBUNAIS = ['tjrj', 'tjsp', 'tjmg', 'tjes', 'stj', 'trf2']
 const ROTULO_DIV = { data: 'Data diferente', hora: 'Horário diferente', valor: 'Valor diferente', quantidade: 'Quantidade diferente', negacao: 'Um afirma, outro nega' }
@@ -48,13 +50,15 @@ export default function LeituraCasoPage() {
   const [atualId, setAtualId] = useState(() => casos[0].id)
   const [aba, setAba] = useState<Aba>('contexto')
   const [juri, setJuri] = useState<Jurimetria | null>(null)
+  const [juriTribunal, setJuriTribunal] = useState<Jurimetria | null>(null)
+  const [temaRef, setTemaRef] = useState<TemaRef | 'todos'>('todos')
   const [ocupado, setOcupado] = useState(false)
   const [erro, setErro] = useState('')
   const [copiado, setCopiado] = useState(false)
   const caso = casos.find(c => c.id === atualId) ?? casos[0]
 
   useEffect(() => { gravarLeituras(casos) }, [casos])
-  useEffect(() => { setJuri(null); setErro('') }, [atualId, caso.acao, caso.tribunal])
+  useEffect(() => { setJuri(null); setJuriTribunal(null); setErro('') }, [atualId, caso.acao, caso.tribunal, caso.orgao])
 
   const muda = (parcial: Partial<LeituraCaso>) => setCasos(cs => cs.map(c => c.id === caso.id ? { ...c, ...parcial, atualizadoEm: new Date().toISOString() } : c))
   const novo = () => { const n = novaLeitura(); setCasos(cs => [n, ...cs]); setAtualId(n.id); setAba('contexto') }
@@ -72,22 +76,36 @@ export default function LeituraCasoPage() {
   const tipo = tipoAcao(caso.acao)
 
   const faixa = juri && juri.amostra ? intervaloWilson(juri.resultados.procedencia + juri.resultados.parcial / 2, juri.amostra) : null
-  const chance = caso.chanceManual ?? juri?.chanceExito ?? null
+  // Taxa base: a da vara, puxada para a do tribunal quando a vara tem poucas sentenças (Efron e Morris).
+  const enc = juri?.chanceExito != null && juriTribunal?.chanceExito != null && caso.orgao.trim() ? encolher({ chance: juri.chanceExito, amostra: juri.amostra }, juriTribunal.chanceExito) : null
+  const base = enc?.chance ?? juri?.chanceExito ?? null
+  const temAjuste = Object.values(caso.ajustes ?? {}).some(v => v !== 0)
+  const ajustada = base !== null && temAjuste ? ajustarTaxaBase(base, caso.ajustes, caso.lado === 'autor') : null
+  const chance = caso.chanceManual ?? ajustada?.chance ?? base
   const premissas = { lado: caso.lado, valorPedido: caso.valorPedido, chanceAutor: chance ?? 0, custos: caso.custos, sucumbenciaPct: caso.sucumbenciaPct, meses: caso.meses, jurosMesPct: caso.jurosMesPct, proposta: caso.proposta }
   const decisao = chance !== null && caso.valorPedido > 0 ? decidir(premissas) : null
-  const sensib = decisao && caso.chanceManual === null ? faixaDecisao(premissas, faixa) : null
+  const sensib = decisao && caso.chanceManual === null && !ajustada && !enc ? faixaDecisao(premissas, faixa) : null
+  const zona = decisao && caso.chanceOutroLado !== null ? zonaDeAcordo(premissas, { chanceAutor: caso.chanceOutroLado, custos: caso.custosOutro }) : null
 
   const consultar = async () => {
     setOcupado(true); setErro('')
     try {
       if (!supabaseConfigurado) {
-        setJuri({ tribunal: caso.tribunal.toUpperCase(), acao: tipo.rotulo, orgao: caso.orgao || null, processos: 4200, resultados: { procedencia: 610, parcial: 140, improcedencia: 90, semMerito: 380, acordo: 260 }, chanceExito: 81, taxaAcordo: 18, taxaSemMerito: 26, amostra: 840, confianca: 'alta', fonte: 'Exemplo da demonstração' })
+        const demo: Jurimetria = { tribunal: caso.tribunal.toUpperCase(), acao: tipo.rotulo, orgao: null, processos: 4200, resultados: { procedencia: 610, parcial: 140, improcedencia: 90, semMerito: 380, acordo: 260 }, chanceExito: 81, taxaAcordo: 18, taxaSemMerito: 26, amostra: 840, confianca: 'alta', fonte: 'Exemplo da demonstração' }
+        if (caso.orgao.trim()) {
+          setJuri({ ...demo, orgao: caso.orgao, processos: 120, resultados: { procedencia: 14, parcial: 2, improcedencia: 4, semMerito: 9, acordo: 6 }, chanceExito: 75, amostra: 20, confianca: 'baixa' })
+          setJuriTribunal(demo)
+        } else setJuri(demo)
         return
       }
       const { data, error } = await supabase.functions.invoke('jurimetria', { body: { acao: caso.acao, tribunal: caso.tribunal, orgao: caso.orgao } })
       if (error) throw new Error(mensagemAmigavel(error))
       if (data?.erro) throw new Error(data.erro)
       setJuri(data)
+      if (caso.orgao.trim()) {
+        const t = await supabase.functions.invoke('jurimetria', { body: { acao: caso.acao, tribunal: caso.tribunal, orgao: '' } })
+        if (!t.error && !t.data?.erro) setJuriTribunal(t.data)
+      }
       registrarPrevisoes([{ tipo: 'jurimetria', referencia: `${data.tribunal}|${data.acao}|${data.orgao ?? ''}`, previsto: { chanceExito: data.chanceExito, resultados: data.resultados, taxaAcordo: data.taxaAcordo }, amostra: data.amostra, fonte: data.fonte }])
     } catch (e) { setErro(mensagemAmigavel(e, 'Não foi possível consultar o CNJ agora.')) } finally { setOcupado(false) }
   }
@@ -194,9 +212,28 @@ export default function LeituraCasoPage() {
                   <div><p className={rotulo}>Sentenças na amostra</p><p className="font-serif text-3xl text-navy">{juri.amostra.toLocaleString('pt-BR')}</p><p className="text-xs text-grafite-claro">{juri.confianca === 'alta' ? 'amostra sólida' : juri.confianca === 'media' ? 'amostra parcial' : 'amostra pequena: use com cautela'}</p></div>
                   <div><p className={rotulo}>Terminam em acordo</p><p className="font-serif text-3xl text-navy">{juri.taxaAcordo ?? '—'}%</p></div>
                   <div><p className={rotulo}>Sem julgar o mérito</p><p className="font-serif text-3xl text-navy">{juri.taxaSemMerito ?? '—'}%</p><p className="text-xs text-grafite-claro">extinção, desistência</p></div>
+                  {enc && juriTribunal && <p className="sm:col-span-4 text-sm p-3 bg-pergaminho border-l-2 border-dourado" data-testid="encolhida">Chance da vara ajustada pela do tribunal: <b>{enc.chance}%</b>. A vara tem {juri.amostra} sentenças ({juri.chanceExito}%) e o {juriTribunal.tribunal} tem {juriTribunal.amostra.toLocaleString('pt-BR')} ({juriTribunal.chanceExito}%); com pouca amostra, a vara pesa {enc.pesoOrgao}% e o tribunal o resto (encolhimento de Efron e Morris).</p>}
                   <p className="sm:col-span-4 text-xs text-grafite-claro">Fonte: {juri.fonte}.{juri.aviso ? ` ${juri.aviso}` : ''}</p>
                 </div>
               )}
+            </section>
+
+            <section className="bg-white shadow-sm p-6" aria-label="Ajustar pelo caso">
+              <h2 className="font-serif text-xl mb-1">Ajustar a taxa ao seu caso</h2>
+              <p className="text-sm text-grafite-claro mb-4">Método dos superprevisores (Tetlock): parte da taxa de casos parecidos e ajusta aos poucos pelo que este caso tem de diferente. Avalie do ponto de vista de quem representamos; cada degrau muda a chance relativa em 1,5 vez.</p>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                {FATORES_AJUSTE.map(f => (
+                  <div key={f.id}>
+                    <label htmlFor={`aj-${f.id}`} className={rotulo}>{f.texto}</label>
+                    <select id={`aj-${f.id}`} value={caso.ajustes?.[f.id] ?? 0} onChange={e => muda({ ajustes: { ...caso.ajustes, [f.id]: +e.target.value } })} className={campo}>
+                      {ESCALA_AJUSTE.map(([v, r]) => <option key={v} value={v}>{r}</option>)}
+                    </select>
+                  </div>
+                ))}
+              </div>
+              <p className="text-sm mt-3" data-testid="ajustada">
+                {base === null ? 'Consulte o CNJ para ter a taxa base.' : ajustada ? <>Taxa base {base}% → <b>{ajustada.chance}%</b> de chance de o autor vencer, ajustada pelo caso.</> : <>Sem ajuste: vale a taxa base de {base}%.</>}
+              </p>
             </section>
 
             <section className="bg-white shadow-sm p-6" aria-label="Acordo ou seguir">
@@ -208,8 +245,8 @@ export default function LeituraCasoPage() {
                 <Numero id="lc-valor" label="Valor em discussão (R$)" valor={caso.valorPedido} aoMudar={n => muda({ valorPedido: n })} passo={100} />
                 <div>
                   <label htmlFor="lc-chance" className={rotulo}>Chance de o autor vencer (%)</label>
-                  <input id="lc-chance" type="number" min={0} max={100} value={caso.chanceManual ?? ''} placeholder={juri?.chanceExito != null ? `${juri.chanceExito} (CNJ)` : 'Informe'} onChange={e => muda({ chanceManual: e.target.value === '' ? null : Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)) })} className={campo} />
-                  <p className="text-xs text-grafite-claro mt-1">{caso.chanceManual === null ? (juri?.chanceExito != null ? 'Usando a taxa do CNJ.' : 'Consulte o CNJ ou informe.') : 'Usando a sua estimativa.'}</p>
+                  <input id="lc-chance" type="number" min={0} max={100} value={caso.chanceManual ?? ''} placeholder={chance != null ? `${chance}` : 'Informe'} onChange={e => muda({ chanceManual: e.target.value === '' ? null : Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)) })} className={campo} />
+                  <p className="text-xs text-grafite-claro mt-1">{caso.chanceManual !== null ? 'Usando a sua estimativa.' : ajustada ? `Usando a taxa ajustada (${ajustada.chance}%).` : base !== null ? `Usando a taxa do CNJ (${base}%).` : 'Consulte o CNJ ou informe.'}</p>
                 </div>
                 <Numero id="lc-proposta" label="Proposta de acordo (R$)" valor={caso.proposta} aoMudar={n => muda({ proposta: n })} passo={100} />
                 <Numero id="lc-custos" label="Custos ainda a gastar (R$)" valor={caso.custos} aoMudar={n => muda({ custos: n })} passo={100} />
@@ -227,6 +264,23 @@ export default function LeituraCasoPage() {
                   </p>
                   {sensib && <p className="text-sm text-grafite" data-testid="sensibilidade">Na margem de erro do CNJ, o acordo equivalente vai de {moeda(Math.min(sensib.pior.acordoEquivalente, sensib.melhor.acordoEquivalente))} a {moeda(Math.max(sensib.pior.acordoEquivalente, sensib.melhor.acordoEquivalente))}.</p>}
                   <details className="text-sm"><summary className="cursor-pointer text-navy">Ver a conta passo a passo</summary><ul className="list-disc pl-5 mt-2 space-y-1">{decisao.passos.map(p => <li key={p}>{p}</li>)}</ul></details>
+                  <div className="border-t border-navy/10 pt-3">
+                    <p className="font-medium text-sm mb-2">Zona de acordo (Cooter e Rubinfeld): como a outra parte deve enxergar o caso</p>
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                      <div>
+                        <label htmlFor="lc-chance-outro" className={rotulo}>Chance do autor, na visão da outra parte (%)</label>
+                        <input id="lc-chance-outro" type="number" min={0} max={100} value={caso.chanceOutroLado ?? ''} placeholder="Informe" onChange={e => muda({ chanceOutroLado: e.target.value === '' ? null : Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)) })} className={campo} />
+                      </div>
+                      <Numero id="lc-custos-outro" label="Custos da outra parte (R$)" valor={caso.custosOutro ?? 0} aoMudar={n => muda({ custosOutro: n })} passo={100} />
+                    </div>
+                    {zona && (
+                      <p className={`mt-3 p-3 text-sm border-l-4 ${zona.existe ? 'border-regular bg-navy/5' : 'border-atencao bg-atencaoFundo'}`} data-testid="zona">
+                        {zona.existe
+                          ? <>Há espaço para acordo entre <b>{moeda(zona.minimoAutor)}</b> (mínimo que o autor aceita) e <b>{moeda(zona.maximoReu)}</b> (máximo que o réu paga). Ponto médio: {moeda(zona.meio ?? 0)}.</>
+                          : <>Sem zona de acordo: o autor só aceitaria {moeda(zona.minimoAutor)} e o réu pagaria no máximo {moeda(zona.maximoReu)}. As visões estão longe; vale mostrar à outra parte a estatística do CNJ antes de negociar (Bebchuk).</>}
+                      </p>
+                    )}
+                  </div>
                   <p className="text-xs text-grafite-claro flex gap-2"><Info size={14} className="shrink-0 mt-0.5" aria-hidden /> A conta não pesa risco de não receber (devedor sem bens), custo emocional nem precedente para outros casos. Isso fica com você e o cliente.</p>
                 </div>
               ) : <p className="text-sm text-grafite-claro mt-4">Preencha o valor em discussão e tenha uma chance (do CNJ ou sua) para ver a conta.</p>}
@@ -311,6 +365,27 @@ export default function LeituraCasoPage() {
               )
             })}
             {divergencias.length > 0 && <p className="text-sm p-3 bg-pergaminho border-l-2 border-dourado">Há {divergencias.length} divergência(s) no confronto de depoimentos. <button type="button" className="underline decoration-dourado" onClick={() => setAba('depoimentos')}>Ver as perguntas sugeridas</button>.</p>}
+          </section>
+        )}
+        {aba === 'ciencia' && (
+          <section className="bg-white shadow-sm p-6 space-y-4" aria-label="Base científica">
+            <div>
+              <h2 className="font-serif text-xl mb-1">Base científica ({REFERENCIAS.length} referências)</h2>
+              <p className="text-sm text-grafite-claro">Os artigos, livros, relatórios e normas que sustentam cada ferramenta desta tela, e os que mostram o que não fazer (como ler emoção pelo rosto). Em cada item, onde ele entra na plataforma.</p>
+            </div>
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrar por tema">
+              {(['todos', ...Object.keys(ROTULO_TEMA)] as (TemaRef | 'todos')[]).map(t => (
+                <button key={t} type="button" aria-pressed={temaRef === t} onClick={() => setTemaRef(t)} data-testid={`tema-${t}`} className={`min-h-[40px] px-3 text-xs border ${temaRef === t ? 'bg-navy text-white border-navy' : 'border-navy/20 text-navy'}`}>{t === 'todos' ? 'Todos' : ROTULO_TEMA[t]}</button>
+              ))}
+            </div>
+            <ol className="space-y-3" data-testid="referencias">
+              {REFERENCIAS.filter(r => temaRef === 'todos' || r.tema === temaRef).map(r => (
+                <li key={r.titulo} className="text-sm border-l-2 border-dourado pl-3">
+                  <p><b>{r.autores}</b> ({r.ano}). <i>{r.titulo}</i>. {r.veiculo}. <span className="text-grafite-claro">[{r.tipo} · {ROTULO_TEMA[r.tema]}]</span></p>
+                  <p className="text-grafite mt-0.5">{r.uso}</p>
+                </li>
+              ))}
+            </ol>
           </section>
         )}
       </div>

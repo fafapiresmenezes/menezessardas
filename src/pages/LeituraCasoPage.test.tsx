@@ -59,4 +59,35 @@ describe('Leitura do caso e predição', () => {
     abrir()
     expect(screen.getByText(/não usa câmera, voz, rosto nem nenhum dado biométrico/)).toBeTruthy()
   })
+
+  it('com a vara informada, puxa a chance para a do tribunal e ajusta pelo caso', async () => {
+    abrir()
+    fireEvent.change(screen.getByLabelText('Vara ou câmara (opcional)'), { target: { value: '10ª Vara Cível' } })
+    fireEvent.click(screen.getByTestId('aba-predicao'))
+    fireEvent.click(screen.getByTestId('consultar-juri'))
+    // vara 75% com 20 sentenças, tribunal 81%: (15 + 50 × 0,81) / 70 = 79%
+    expect((await screen.findByTestId('encolhida')).textContent).toContain('79%')
+    fireEvent.change(screen.getByLabelText('Prova documental do nosso lado'), { target: { value: '2' } })
+    expect(screen.getByTestId('ajustada').textContent).toMatch(/79% → 89%/)
+  })
+
+  it('mostra a zona de acordo com a visão da outra parte', async () => {
+    abrir()
+    fireEvent.click(screen.getByTestId('aba-predicao'))
+    fireEvent.change(screen.getByLabelText('Chance de o autor vencer (%)'), { target: { value: '50' } })
+    fireEvent.change(screen.getByLabelText('Valor em discussão (R$)'), { target: { value: '100000' } })
+    fireEvent.change(screen.getByLabelText('Meses até o fim'), { target: { value: '0' } })
+    fireEvent.change(screen.getByLabelText('Sucumbência (%)'), { target: { value: '0' } })
+    fireEvent.change(screen.getByLabelText('Chance do autor, na visão da outra parte (%)'), { target: { value: '70' } })
+    expect(screen.getByTestId('zona').textContent).toMatch(/entre R\$\s50\.000,00.*R\$\s70\.000,00/)
+  })
+
+  it('lista as 50 referências e filtra por tema', () => {
+    abrir()
+    fireEvent.click(screen.getByTestId('aba-ciencia'))
+    expect(screen.getByTestId('referencias').querySelectorAll('li').length).toBe(50)
+    fireEvent.click(screen.getByTestId('tema-depoimentos'))
+    expect(screen.getByTestId('referencias').textContent).toContain('Emotional Expressions Reconsidered')
+    expect(screen.getByTestId('referencias').querySelectorAll('li').length).toBe(4)
+  })
 })

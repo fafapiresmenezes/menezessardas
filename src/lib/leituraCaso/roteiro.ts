@@ -50,6 +50,9 @@ export interface LeituraCaso {
   depoimentos: Depoimento[]
   roteiro: Record<string, boolean>
   notas: Record<string, string>
+  ajustes: Record<string, number>
+  chanceOutroLado: number | null
+  custosOutro: number
   atualizadoEm: string
 }
 
@@ -59,7 +62,7 @@ export function novaLeitura(): LeituraCaso {
   return {
     id: Math.random().toString(36).slice(2, 10), titulo: 'Novo caso', acao: 'despejo', tribunal: 'tjrj', orgao: '', numero: '', fatos: '',
     lado: 'autor', valorPedido: 0, chanceManual: null, custos: 0, sucumbenciaPct: 10, meses: 24, jurosMesPct: 1, proposta: 0,
-    depoimentos: [{ id: 'd1', quem: '', texto: '' }, { id: 'd2', quem: '', texto: '' }], roteiro: {}, notas: {}, atualizadoEm: new Date().toISOString(),
+    depoimentos: [{ id: 'd1', quem: '', texto: '' }, { id: 'd2', quem: '', texto: '' }], roteiro: {}, notas: {}, ajustes: {}, chanceOutroLado: null, custosOutro: 0, atualizadoEm: new Date().toISOString(),
   }
 }
 
