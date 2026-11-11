@@ -24,6 +24,7 @@ const LegislacaoPage = lazy(() => import('@/pages/LegislacaoPage'))
 const FornecedoresPage = lazy(() => import('@/pages/FornecedoresPage'))
 const FornecedorPage = lazy(() => import('@/pages/FornecedorPage'))
 const ConfiguraçõesPage = lazy(() => import('@/pages/ConfiguraçõesPage'))
+const MeuEstiloPage = lazy(() => import('@/pages/MeuEstiloPage'))
 const EquipePage = lazy(() => import('@/pages/EquipePage'))
 import InicioPage from '@/pages/InicioPage'
 import ErroTela from '@/components/ErroTela'
@@ -334,6 +335,10 @@ function App() {
         <Route
           path="/equipe"
           element={isAuthenticated ? <EquipePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/meu-estilo"
+          element={isAuthenticated ? <MeuEstiloPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/settings"
