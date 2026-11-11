@@ -3,6 +3,61 @@ import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { ChevronDown, ChevronRight, Save, CheckCircle2, FileText, Scale, BookOpen, Target, Layers, Pen, Info, HelpCircle, ArrowRight } from 'lucide-react'
 
+// ─── Tooltip universal ────────────────────────────────────────────────────────
+// Aparece ao passar o cursor por cima de qualquer elemento filho.
+// Usa posicionamento fixo via portal inline para não ser cortado por overflow:hidden.
+function Tooltip({ texto, children, posicao = 'top' }: {
+  texto: string
+  children: React.ReactNode
+  posicao?: 'top' | 'bottom' | 'right'
+}) {
+  const [visivel, setVisivel] = useState(false)
+  const [coords, setCoords] = useState({ x: 0, y: 0 })
+  const ref = useRef<HTMLSpanElement>(null)
+
+  function mostrar() {
+    if (!ref.current) return
+    const r = ref.current.getBoundingClientRect()
+    if (posicao === 'top') setCoords({ x: r.left + r.width / 2, y: r.top - 8 })
+    else if (posicao === 'bottom') setCoords({ x: r.left + r.width / 2, y: r.bottom + 8 })
+    else setCoords({ x: r.right + 8, y: r.top + r.height / 2 })
+    setVisivel(true)
+  }
+
+  return (
+    <>
+      <span
+        ref={ref}
+        onMouseEnter={mostrar}
+        onMouseLeave={() => setVisivel(false)}
+        className="inline-flex"
+      >
+        {children}
+      </span>
+      {visivel && (
+        <div
+          style={{
+            position: 'fixed',
+            left: posicao === 'right' ? coords.x : coords.x,
+            top: posicao === 'top' ? coords.y : posicao === 'bottom' ? coords.y : coords.y,
+            transform: posicao === 'top'
+              ? 'translate(-50%, -100%)'
+              : posicao === 'bottom'
+              ? 'translate(-50%, 0)'
+              : 'translate(0, -50%)',
+            zIndex: 9999,
+            pointerEvents: 'none',
+          }}
+          className="max-w-xs bg-texto text-fundo text-xs rounded-lg px-3 py-2 shadow-lg leading-snug"
+        >
+          {texto}
+        </div>
+      )}
+    </>
+  )
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 // Parâmetros de qualidade para redação de peças jurídicas,
 // calibrados nos benchmarks PMO/MIT (Project Management Office / MIT Sloan)
 // e PMI/Stanford (Project Management Institute / Stanford Law School).
@@ -10,7 +65,8 @@ import { ChevronDown, ChevronRight, Save, CheckCircle2, FileText, Scale, BookOpe
 interface Parametro {
   chave: string
   label: string
-  descricao: string
+  descricao: string   // aparece quando o campo recebe foco
+  dica: string        // aparece quando o cursor passa por cima do label
   valor: string
   tipo: 'texto' | 'multiline' | 'numero' | 'selecao'
   opcoes?: string[]
@@ -20,6 +76,7 @@ interface SecaoParametros {
   id: string
   titulo: string
   subtitulo: string
+  dica: string        // aparece quando o cursor passa pelo cabeçalho
   icone: React.ReactNode
   parametros: Parametro[]
 }
@@ -29,25 +86,29 @@ const SECOES: SecaoParametros[] = [
     id: 'estrutura',
     titulo: 'Estrutura e Organização',
     subtitulo: 'PMI/Stanford: clareza hierárquica e coesão interna',
+    dica: 'Define como o robô monta o esqueleto de cada peça: qual é o cabeçalho, em que ordem vêm as seções e qual o tamanho máximo. Clique para abrir.',
     icone: <Layers size={18} />,
     parametros: [
       {
         chave: 'estrutura_cabecalho',
         label: 'Cabeçalho padrão',
-        descricao: 'Elementos obrigatórios: processo, vara, juízo, partes, tipo de peça.',
+        dica: 'Texto que abre toda petição. Os campos entre chaves {VARA}, {AUTOR} etc. são preenchidos automaticamente pelo robô com os dados do processo.',
+        descricao: 'Elementos obrigatórios: processo, vara, juízo, partes, tipo de peça. Os campos {VARA}, {COMARCA}, {AUTOR} são substituídos automaticamente.',
         valor: 'EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) DE DIREITO DA {VARA} COMARCA DE {COMARCA}\n\n{TIPO_ACAO} nº {NUMERO_PROCESSO}\n\n{AUTOR}, por seu advogado,',
         tipo: 'multiline',
       },
       {
         chave: 'estrutura_secoes',
         label: 'Seções obrigatórias',
-        descricao: 'Ordem padrão das seções em toda petição.',
+        dica: 'Lista as seções que toda petição deve ter, nessa ordem. O robô usa essa sequência como espinha dorsal do texto.',
+        descricao: 'Ordem padrão das seções em toda petição. Uma por linha.',
         valor: 'I – DOS FATOS\nII – DO DIREITO\nIII – DOS PEDIDOS\nIV – DO VALOR DA CAUSA',
         tipo: 'multiline',
       },
       {
         chave: 'estrutura_comprimento_peticao',
         label: 'Comprimento máximo (páginas)',
+        dica: 'O robô avisa quando a peça ultrapassar esse número de páginas. PMI/Stanford recomenda 25 para petições iniciais.',
         descricao: 'Limite recomendado pelo PMI/Stanford para peças iniciais. Peças incidentais: metade.',
         valor: '25',
         tipo: 'numero',
@@ -55,6 +116,7 @@ const SECOES: SecaoParametros[] = [
       {
         chave: 'estrutura_comprimento_recurso',
         label: 'Comprimento máximo – recursos (páginas)',
+        dica: 'Limite específico para apelações, agravos e recursos especiais, que costumam ser mais detalhados que petições iniciais.',
         descricao: 'Limite para apelações, agravos e recursos especiais.',
         valor: '30',
         tipo: 'numero',
@@ -65,12 +127,14 @@ const SECOES: SecaoParametros[] = [
     id: 'linguagem',
     titulo: 'Linguagem e Tom',
     subtitulo: 'PMO/MIT: comunicação eficaz, direta e sem redundância',
+    dica: 'Controla como o robô escreve: nível de formalidade, se usa voz ativa ou passiva, se traduz o latim e qual o tamanho máximo de cada parágrafo.',
     icone: <Pen size={18} />,
     parametros: [
       {
         chave: 'linguagem_nivel',
         label: 'Nível de formalidade',
-        descricao: 'Padrão linguístico a ser usado em todas as peças.',
+        dica: 'formal-técnico = linguagem jurídica densa; formal-simples = jurídico mas mais direto; neutro = sem termos muito técnicos.',
+        descricao: 'Padrão linguístico a ser usado em todas as peças. "formal-tecnico" é o padrão para tribunais.',
         valor: 'formal-tecnico',
         tipo: 'selecao',
         opcoes: ['formal-tecnico', 'formal-simples', 'neutro'],
@@ -78,6 +142,7 @@ const SECOES: SecaoParametros[] = [
       {
         chave: 'linguagem_voz',
         label: 'Voz preferencial',
+        dica: 'Voz ativa = "O réu causou o dano". Voz passiva = "O dano foi causado pelo réu". PMO/MIT recomenda ativa por ser mais clara.',
         descricao: 'PMO/MIT recomenda voz ativa para clareza e objetividade.',
         valor: 'ativa',
         tipo: 'selecao',
@@ -86,6 +151,7 @@ const SECOES: SecaoParametros[] = [
       {
         chave: 'linguagem_latim',
         label: 'Uso de expressões em latim',
+        dica: '"com-traducao" = usa mas traduz na primeira vez. "evitar" = substitui por português. "livre" = usa sem restrição.',
         descricao: 'Se ativado, expressões latinas devem ser traduzidas na primeira ocorrência.',
         valor: 'com-traducao',
         tipo: 'selecao',
@@ -94,6 +160,7 @@ const SECOES: SecaoParametros[] = [
       {
         chave: 'linguagem_comprimento_paragrafo',
         label: 'Comprimento máximo de parágrafo (linhas)',
+        dica: 'O robô quebra parágrafos que ultrapassem esse número de linhas. Stanford Law recomenda 8 para facilitar a leitura pelo juiz.',
         descricao: 'Stanford Law recomenda no máximo 8 linhas por parágrafo para leitura eficiente.',
         valor: '8',
         tipo: 'numero',
@@ -101,6 +168,7 @@ const SECOES: SecaoParametros[] = [
       {
         chave: 'linguagem_repeticao',
         label: 'Instrução contra redundância',
+        dica: 'Regra que o robô segue para não repetir o mesmo argumento em vários lugares da mesma peça.',
         descricao: 'Regra a ser seguida para evitar repetição de argumentos.',
         valor: 'Cada argumento é apresentado uma única vez, no momento mais estratégico. Repetições são substituídas por referências cruzadas ("conforme exposto em [seção]").',
         tipo: 'multiline',
@@ -111,11 +179,13 @@ const SECOES: SecaoParametros[] = [
     id: 'argumentacao',
     titulo: 'Argumentação Jurídica',
     subtitulo: 'PMI/Stanford: estrutura IRAC e hierarquia de fundamentos',
+    dica: 'Define o método que o robô usa para montar cada argumento: qual fonte citar primeiro (CF, lei, STF…) e quantos julgados incluir por tese.',
     icone: <Scale size={18} />,
     parametros: [
       {
         chave: 'arg_metodo',
         label: 'Método de argumentação',
+        dica: 'IRAC = Issue (questão) → Rule (norma) → Application (aplicação ao caso) → Conclusion. É o método Stanford/PMI. CREAC adiciona uma Counter-argument antes da Conclusion.',
         descricao: 'IRAC (Issue, Rule, Application, Conclusion) é o padrão Stanford/PMI para argumentação jurídica estruturada.',
         valor: 'IRAC',
         tipo: 'selecao',
@@ -124,13 +194,15 @@ const SECOES: SecaoParametros[] = [
       {
         chave: 'arg_hierarquia_fontes',
         label: 'Hierarquia de fontes',
-        descricao: 'Ordem preferencial ao citar fundamentos jurídicos.',
+        dica: 'Quando houver mais de uma fonte disponível, o robô escolhe pela ordem desta lista. Uma por linha.',
+        descricao: 'Ordem preferencial ao citar fundamentos jurídicos. Uma fonte por linha.',
         valor: '1. Constituição Federal\n2. Lei federal\n3. Súmula vinculante / STF\n4. Súmula STJ\n5. Jurisprudência STF e STJ\n6. Jurisprudência TJRJ\n7. Doutrina\n8. Analogia',
         tipo: 'multiline',
       },
       {
         chave: 'arg_jurisprudencia_max',
         label: 'Máximo de citações jurisprudenciais por tese',
+        dica: 'O robô para de adicionar julgados quando atingir esse número por tese. PMO/MIT recomenda 3 para não sobrecarregar a peça.',
         descricao: 'PMO/MIT recomenda no máximo 3 julgados por tese para evitar sobrecarga.',
         valor: '3',
         tipo: 'numero',
@@ -138,6 +210,7 @@ const SECOES: SecaoParametros[] = [
       {
         chave: 'arg_tese_min',
         label: 'Mínimo de fundamentos por pedido',
+        dica: 'O robô avisa se um pedido tiver menos fundamentos do que esse número. Garante que todo pedido tenha apoio jurídico suficiente.',
         descricao: 'Cada pedido deve ter ao menos este número de fundamentos independentes.',
         valor: '2',
         tipo: 'numero',
@@ -148,11 +221,13 @@ const SECOES: SecaoParametros[] = [
     id: 'pedidos',
     titulo: 'Pedidos e Conclusão',
     subtitulo: 'PMI/Stanford: precisão, mensurabilidade e viabilidade (critérios SMART)',
+    dica: 'Controla como o robô redige a seção de pedidos: qual critério usar, como formular pedidos alternativos e o que incluir em tutela de urgência.',
     icone: <Target size={18} />,
     parametros: [
       {
         chave: 'pedidos_criterio',
         label: 'Critério para redigir pedidos',
+        dica: 'SMART-JUR = Específico, Mensurável, Baseado em autoridade, Realista, Tempestivo. "Livre" = sem critério fixo.',
         descricao: 'PMI/Stanford adapta os critérios SMART ao direito: Específico, Mensurável, Baseado em autoridade, Realista, Tempestivo.',
         valor: 'SMART-JUR',
         tipo: 'selecao',
@@ -161,6 +236,7 @@ const SECOES: SecaoParametros[] = [
       {
         chave: 'pedidos_subsidiarios',
         label: 'Instrução para pedidos subsidiários',
+        dica: 'Texto que o robô usa como guia para formular pedidos alternativos — os que valem se o principal não for aceito.',
         descricao: 'Como formular pedidos alternativos quando o principal não puder ser deferido.',
         valor: 'Pedidos subsidiários são apresentados com a expressão "subsidiariamente, caso V. Exa. não acolha o pedido anterior,". São ordenados do mais ao menos favorável ao cliente.',
         tipo: 'multiline',
@@ -168,6 +244,7 @@ const SECOES: SecaoParametros[] = [
       {
         chave: 'pedidos_tutela',
         label: 'Tutela de urgência: padrão de justificativa',
+        dica: 'Sempre que a peça pedir tutela antecipada ou cautelar, o robô usa esse template para justificar. Inclui os três requisitos do art. 300 CPC.',
         descricao: 'Elementos obrigatórios para fundamentar tutela antecipada ou cautelar (art. 300 CPC).',
         valor: 'a) Probabilidade do direito (fumus boni iuris): demonstrar com base em prova pré-constituída.\nb) Perigo de dano ou risco ao resultado útil do processo (periculum in mora): descrever dano concreto, atual ou iminente.\nc) Reversibilidade: confirmar ou justificar exceção ao art. 300, §3º CPC.',
         tipo: 'multiline',
@@ -178,18 +255,21 @@ const SECOES: SecaoParametros[] = [
     id: 'referencias',
     titulo: 'Citações e Referências',
     subtitulo: 'PMO/MIT: rastreabilidade e verificabilidade de fontes',
+    dica: 'Define o formato exato que o robô usa para citar julgados e doutrina, e a regra de nunca citar de memória.',
     icone: <BookOpen size={18} />,
     parametros: [
       {
         chave: 'ref_formato_jurisprudencia',
         label: 'Formato de citação de julgados',
-        descricao: 'Padrão para identificar decisões judiciais.',
+        dica: 'Template para citar decisões judiciais. Os campos entre chaves {Tribunal}, {Data} etc. são preenchidos pelo robô.',
+        descricao: 'Padrão para identificar decisões judiciais. Campos entre chaves são preenchidos automaticamente.',
         valor: '{Tribunal}, {Órgão Julgador}, {Tipo de Recurso} nº {Número}, Rel. Min./Des. {Nome}, j. {Data}, {DJe/DJ} {Data de Publicação}.',
         tipo: 'multiline',
       },
       {
         chave: 'ref_formato_doutrina',
         label: 'Formato de citação de doutrina',
+        dica: 'Template ABNT adaptado. O robô preenche SOBRENOME, Nome, Título, edição, cidade, editora, ano e página.',
         descricao: 'Padrão ABNT adaptado à petição jurídica.',
         valor: 'SOBRENOME, Nome. Título da obra. {ed}. ed. {Cidade}: {Editora}, {Ano}, p. {Página}.',
         tipo: 'multiline',
@@ -197,6 +277,7 @@ const SECOES: SecaoParametros[] = [
       {
         chave: 'ref_verificar_antes',
         label: 'Instrução de verificação prévia',
+        dica: 'Regra que o robô recebe antes de usar qualquer citação: sempre conferir na fonte original antes de incluir.',
         descricao: 'Regra de qualidade PMO/MIT antes de usar qualquer citação.',
         valor: 'Toda citação jurisprudencial deve ser verificada no sistema de origem (STF, STJ, TJRJ) antes de ser incluída. Nunca citar de memória ou de segunda fonte.',
         tipo: 'multiline',
@@ -207,19 +288,22 @@ const SECOES: SecaoParametros[] = [
     id: 'qualidade',
     titulo: 'Revisão e Qualidade',
     subtitulo: 'PMO/MIT: checklist de entrega e controle de qualidade',
+    dica: 'O checklist que o robô apresenta antes de protocolar qualquer peça, e as especificações de formatação (margens, fonte, espaçamento).',
     icone: <CheckCircle2 size={18} />,
     parametros: [
       {
         chave: 'qualidade_checklist',
         label: 'Checklist de revisão final',
-        descricao: 'Itens obrigatórios antes de assinar e protocolar qualquer peça.',
+        dica: 'Lista de verificação que aparece antes de assinar. Um item por linha, começando com ☐. O advogado confirma cada um manualmente.',
+        descricao: 'Itens obrigatórios antes de assinar e protocolar qualquer peça. Um item por linha.',
         valor: '☐ Número do processo e vara conferidos\n☐ Nome das partes conferido\n☐ Prazo verificado (tempestividade)\n☐ Pedidos listados e numerados\n☐ Valor da causa declarado\n☐ Documentos listados nos anexos\n☐ Citações verificadas nas fontes originais\n☐ Ortografia e gramática revisadas\n☐ Formatação ABNT e margens NBR 14724\n☐ Assinatura digital aplicada',
         tipo: 'multiline',
       },
       {
         chave: 'qualidade_formatacao',
         label: 'Formatação padrão (NBR 14724)',
-        descricao: 'Especificações técnicas de formatação.',
+        dica: 'Especificações técnicas que o robô aplica ao gerar o documento: fonte, espaçamento, margens e recuos conforme a ABNT.',
+        descricao: 'Especificações técnicas de formatação conforme NBR 14724.',
         valor: 'Fonte: Times New Roman ou Arial, corpo 12\nEspaçamento: 1,5 entre linhas; simples entre citações longas\nMargem: superior e esquerda 3 cm; inferior e direita 2 cm\nParágrafos: recuo de 1,25 cm na primeira linha\nCitações longas (>3 linhas): recuo 4 cm, corpo 10, sem aspas',
         tipo: 'multiline',
       },
@@ -229,33 +313,38 @@ const SECOES: SecaoParametros[] = [
     id: 'tipos_pecas',
     titulo: 'Parâmetros por Tipo de Peça',
     subtitulo: 'PMI/Stanford: diferenciação por finalidade processual',
+    dica: 'Instruções específicas para cada tipo de peça: como o robô aborda uma petição inicial é diferente de uma contestação ou recurso.',
     icone: <FileText size={18} />,
     parametros: [
       {
         chave: 'tipos_peticao_inicial',
         label: 'Petição inicial',
-        descricao: 'Foco e tom recomendado.',
+        dica: 'Instruções de foco e tom para quando o robô rascunha uma petição inicial — a peça que abre o processo.',
+        descricao: 'Foco e tom recomendado para petições iniciais.',
         valor: 'Foco: clareza fática e fundamento jurídico sólido. Tom: objetivo e construtivo. Narrar fatos cronologicamente. Demonstrar direito antes do pedido. Sempre quantificar o dano quando possível.',
         tipo: 'multiline',
       },
       {
         chave: 'tipos_contestacao',
         label: 'Contestação',
-        descricao: 'Foco e estratégia recomendada.',
+        dica: 'Estratégia padrão para contestações: como impugnar fatos, onde colocar preliminares e por que sempre ter tese subsidiária.',
+        descricao: 'Foco e estratégia recomendada para contestações.',
         valor: 'Estratégia: impugnar especificamente cada fato (art. 341 CPC). Começar pelas preliminares, depois mérito. Sempre apresentar tese subsidiária. Não deixar fatos não impugnados (imputação de verdade).',
         tipo: 'multiline',
       },
       {
         chave: 'tipos_recurso',
         label: 'Recursos (apelação, agravo)',
-        descricao: 'Foco e critério de seleção de matéria.',
+        dica: 'Critério de quando recorrer e como selecionar os melhores argumentos. PMI/Stanford: só recorrer quando a chance de êxito superar 40%.',
+        descricao: 'Foco e critério de seleção de matéria para recursos.',
         valor: 'PMI/Stanford: recorrer somente quando o erro for demonstrável e a perspectiva de êxito for superior a 40%. Selecionar as razões mais fortes (máx. 5 teses por recurso). Foco em questões de direito para STJ/STF.',
         tipo: 'multiline',
       },
       {
         chave: 'tipos_manifestacao',
         label: 'Manifestações e petições incidentais',
-        descricao: 'Tom e comprimento.',
+        dica: 'Instruções para peças menores (impugnações, réplicas, petições simples): ir ao ponto, não repetir histórico, máx. 10 páginas.',
+        descricao: 'Tom e comprimento para manifestações e petições incidentais.',
         valor: 'Tom: direto e econômico. Comprimento máximo: 10 páginas. Ir ao ponto sem recapitular todo o histórico. Referência cruzada às peças anteriores em vez de repetição.',
         tipo: 'multiline',
       },
@@ -282,12 +371,14 @@ function PainelBoasVindas({ onFechar }: { onFechar: () => void }) {
           <BookOpen size={18} className="text-dourado shrink-0" />
           <span className="font-semibold text-texto text-sm">O que é esta tela?</span>
         </div>
-        <button
-          onClick={onFechar}
-          className="text-xs text-grafite/60 hover:text-grafite underline underline-offset-2 shrink-0"
-        >
-          Entendi, fechar
-        </button>
+        <Tooltip texto="Fecha este painel de ajuda. Você pode reabri-lo clicando em 'Como usar' no topo da página." posicao="bottom">
+          <button
+            onClick={onFechar}
+            className="text-xs text-grafite/60 hover:text-grafite underline underline-offset-2 shrink-0"
+          >
+            Entendi, fechar
+          </button>
+        </Tooltip>
       </div>
       <ol className="space-y-2 text-sm text-grafite">
         <li className="flex items-start gap-2">
@@ -397,23 +488,27 @@ export default function ParametrosEscritaPage() {
           <p className="text-xs text-grafite/70">
             Regras que o robô segue ao rascunhar peças — calibradas nos benchmarks <strong>PMO/MIT</strong> e <strong>PMI/Stanford</strong>.
             {!mostrarBoas && (
-              <button
-                onClick={() => setMostrarBoas(true)}
-                className="ml-2 inline-flex items-center gap-1 text-dourado underline underline-offset-2"
-              >
-                <Info size={11} /> Como usar
-              </button>
+              <Tooltip texto="Abre o painel explicativo com instruções de uso desta tela — como editar, salvar e aplicar os parâmetros." posicao="bottom">
+                <button
+                  onClick={() => setMostrarBoas(true)}
+                  className="ml-2 inline-flex items-center gap-1 text-dourado underline underline-offset-2"
+                >
+                  <Info size={11} /> Como usar
+                </button>
+              </Tooltip>
             )}
           </p>
           <div className="flex items-center gap-2 shrink-0 ml-4">
-            <button
-              onClick={salvar}
-              disabled={salvando}
-              className="flex items-center gap-1.5 bg-dourado text-white text-sm font-medium px-4 py-2 rounded hover:opacity-90 disabled:opacity-50 transition"
-            >
-              <Save size={14} />
-              {salvando ? 'Salvando…' : 'Salvar'}
-            </button>
+            <Tooltip texto="Grava todas as alterações feitas nesta tela. As regras entram em vigor na próxima peça que o robô rascunhar." posicao="bottom">
+              <button
+                onClick={salvar}
+                disabled={salvando}
+                className="flex items-center gap-1.5 bg-dourado text-white text-sm font-medium px-4 py-2 rounded hover:opacity-90 disabled:opacity-50 transition"
+              >
+                <Save size={14} />
+                {salvando ? 'Salvando…' : 'Salvar'}
+              </button>
+            </Tooltip>
             {salvo && (
               <span className="flex items-center gap-1 text-sm text-green-700 dark:text-green-400 whitespace-nowrap">
                 <CheckCircle2 size={14} />
@@ -428,27 +523,29 @@ export default function ParametrosEscritaPage() {
           {SECOES.map(secao => (
             <div key={secao.id} className="border border-borda rounded-xl overflow-hidden">
               {/* Cabeçalho da seção — clicável */}
-              <button
-                onClick={() => toggleSecao(secao.id)}
-                className="w-full flex items-center justify-between px-4 py-3.5 bg-fundo-alt hover:bg-borda/40 transition text-left gap-3"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-dourado">{secao.icone}</span>
-                  <div>
-                    <span className="font-semibold text-sm text-texto">{secao.titulo}</span>
-                    <span className="ml-2 text-xs text-grafite/55">{secao.subtitulo}</span>
+              <Tooltip texto={secao.dica} posicao="bottom">
+                <button
+                  onClick={() => toggleSecao(secao.id)}
+                  className="w-full flex items-center justify-between px-4 py-3.5 bg-fundo-alt hover:bg-borda/40 transition text-left gap-3"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-dourado">{secao.icone}</span>
+                    <div>
+                      <span className="font-semibold text-sm text-texto">{secao.titulo}</span>
+                      <span className="ml-2 text-xs text-grafite/55">{secao.subtitulo}</span>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <span className="text-xs text-grafite/50">
-                    {secoesAbertas[secao.id] ? 'fechar' : `${secao.parametros.length} campos`}
-                  </span>
-                  {secoesAbertas[secao.id]
-                    ? <ChevronDown size={16} className="text-grafite" />
-                    : <ChevronRight size={16} className="text-grafite" />
-                  }
-                </div>
-              </button>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span className="text-xs text-grafite/50">
+                      {secoesAbertas[secao.id] ? 'fechar' : `${secao.parametros.length} campos`}
+                    </span>
+                    {secoesAbertas[secao.id]
+                      ? <ChevronDown size={16} className="text-grafite" />
+                      : <ChevronRight size={16} className="text-grafite" />
+                    }
+                  </div>
+                </button>
+              </Tooltip>
 
               {/* Parâmetros */}
               {secoesAbertas[secao.id] && (
@@ -460,9 +557,11 @@ export default function ParametrosEscritaPage() {
                         key={p.chave}
                         className={`px-4 py-4 transition-colors ${ativo ? 'bg-dourado/[0.03]' : ''}`}
                       >
-                        <label className="block text-sm font-medium text-texto mb-0.5">
-                          {p.label}
-                        </label>
+                        <Tooltip texto={p.dica} posicao="right">
+                          <label className="block text-sm font-medium text-texto mb-0.5 cursor-help">
+                            {p.label}
+                          </label>
+                        </Tooltip>
 
                         {p.tipo === 'selecao' && (
                           <select
@@ -526,14 +625,16 @@ export default function ParametrosEscritaPage() {
 
         {/* Botão salvar no final */}
         <div className="flex items-center gap-3 mt-6 pt-4 border-t border-borda">
-          <button
-            onClick={salvar}
-            disabled={salvando}
-            className="flex items-center gap-2 bg-dourado text-white text-sm font-medium px-5 py-2.5 rounded-lg hover:opacity-90 disabled:opacity-50 transition"
-          >
-            <Save size={15} />
-            {salvando ? 'Salvando…' : 'Salvar parâmetros'}
-          </button>
+          <Tooltip texto="Grava todas as alterações feitas nesta tela. As regras entram em vigor na próxima peça que o robô rascunhar." posicao="top">
+            <button
+              onClick={salvar}
+              disabled={salvando}
+              className="flex items-center gap-2 bg-dourado text-white text-sm font-medium px-5 py-2.5 rounded-lg hover:opacity-90 disabled:opacity-50 transition"
+            >
+              <Save size={15} />
+              {salvando ? 'Salvando…' : 'Salvar parâmetros'}
+            </button>
+          </Tooltip>
           {salvo && (
             <span className="flex items-center gap-1 text-sm text-green-700 dark:text-green-400">
               <CheckCircle2 size={15} />
