@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
-import { ChevronDown, ChevronRight, Save, CheckCircle2, FileText, Scale, BookOpen, Target, Layers, Pen } from 'lucide-react'
+import { ChevronDown, ChevronRight, Save, CheckCircle2, FileText, Scale, BookOpen, Target, Layers, Pen, Info, HelpCircle, ArrowRight } from 'lucide-react'
 
 // Parâmetros de qualidade para redação de peças jurídicas,
 // calibrados nos benchmarks PMO/MIT (Project Management Office / MIT Sloan)
@@ -263,6 +263,54 @@ const SECOES: SecaoParametros[] = [
   },
 ]
 
+// Tooltip que aparece quando o cursor entra num campo
+function DicaAtiva({ texto }: { texto: string }) {
+  return (
+    <div className="mt-2 flex items-start gap-2 bg-dourado/10 border border-dourado/30 rounded-md px-3 py-2 text-xs text-dourado animate-in fade-in duration-150">
+      <HelpCircle size={13} className="mt-0.5 shrink-0" />
+      <span>{texto}</span>
+    </div>
+  )
+}
+
+// Painel de boas-vindas (aparece na primeira visita, some ao clicar)
+function PainelBoasVindas({ onFechar }: { onFechar: () => void }) {
+  return (
+    <div className="mb-6 border border-dourado/40 rounded-xl bg-dourado/5 p-5">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-2 mb-3">
+          <BookOpen size={18} className="text-dourado shrink-0" />
+          <span className="font-semibold text-texto text-sm">O que é esta tela?</span>
+        </div>
+        <button
+          onClick={onFechar}
+          className="text-xs text-grafite/60 hover:text-grafite underline underline-offset-2 shrink-0"
+        >
+          Entendi, fechar
+        </button>
+      </div>
+      <ol className="space-y-2 text-sm text-grafite">
+        <li className="flex items-start gap-2">
+          <ArrowRight size={14} className="text-dourado mt-0.5 shrink-0" />
+          <span>Aqui ficam as <strong>regras que o robô segue</strong> quando rascunha uma petição, recurso ou contrato para você.</span>
+        </li>
+        <li className="flex items-start gap-2">
+          <ArrowRight size={14} className="text-dourado mt-0.5 shrink-0" />
+          <span>Clique no <strong>título de cada bloco</strong> (ex.: "Estrutura e Organização") para abri-lo e ver os campos.</span>
+        </li>
+        <li className="flex items-start gap-2">
+          <ArrowRight size={14} className="text-dourado mt-0.5 shrink-0" />
+          <span>Clique em qualquer campo de texto — uma <strong>dica aparece embaixo</strong> explicando o que aquele campo faz.</span>
+        </li>
+        <li className="flex items-start gap-2">
+          <ArrowRight size={14} className="text-dourado mt-0.5 shrink-0" />
+          <span>Quando terminar de ajustar, clique em <strong>"Salvar parâmetros"</strong> — só isso. O robô já usa na próxima peça.</span>
+        </li>
+      </ol>
+    </div>
+  )
+}
+
 export default function ParametrosEscritaPage() {
   const [secoesAbertas, setSecoesAbertas] = useState<Record<string, boolean>>({
     estrutura: true,
@@ -271,9 +319,17 @@ export default function ParametrosEscritaPage() {
   const [salvando, setSalvando] = useState(false)
   const [salvo, setSalvo] = useState(false)
   const [carregando, setCarregando] = useState(true)
+  const [campoAtivo, setCampoAtivo] = useState<string | null>(null)
+  const [mostrarBoas, setMostrarBoas] = useState(() => {
+    try { return localStorage.getItem('param_escrita_boas') !== 'ok' } catch { return true }
+  })
+
+  function fecharBoas() {
+    try { localStorage.setItem('param_escrita_boas', 'ok') } catch {}
+    setMostrarBoas(false)
+  }
 
   useEffect(() => {
-    // Carregar valores salvos no banco
     async function carregar() {
       try {
         const { data } = await supabase
@@ -308,7 +364,6 @@ export default function ParametrosEscritaPage() {
   async function salvar() {
     setSalvando(true)
     try {
-      // Montar todos os pares chave/valor para upsert
       const linhas = SECOES.flatMap(s =>
         s.parametros.map(p => ({
           chave: p.chave,
@@ -318,7 +373,7 @@ export default function ParametrosEscritaPage() {
       await supabase.from('configuracoes').upsert(linhas, { onConflict: 'chave' })
       setSalvo(true)
       setTimeout(() => setSalvo(false), 3000)
-    } catch { /* silencia erro de upsert */ }
+    } catch { /* silencia */ }
     setSalvando(false)
   }
 
@@ -333,119 +388,148 @@ export default function ParametrosEscritaPage() {
   return (
     <Layout title="Parâmetros de escrita de peças">
       <div className="max-w-3xl">
-        <p className="text-sm text-grafite mb-1">
-          Parâmetros e modelos para redação de peças jurídicas, documentos e processos.
-          Calibrados nos benchmarks <strong>PMO/MIT</strong> (MIT Sloan School of Management)
-          e <strong>PMI/Stanford</strong> (Project Management Institute + Stanford Law School).
-        </p>
-        <p className="text-xs text-grafite/70 mb-6">
-          Estes parâmetros guiam o robô na hora de rascunhar peças automáticas.
-          Os advogados sempre revisam antes de assinar.
-        </p>
 
-        {/* Botão salvar no topo */}
-        <div className="flex items-center gap-3 mb-6">
-          <button
-            onClick={salvar}
-            disabled={salvando}
-            className="flex items-center gap-2 bg-dourado text-white text-sm font-medium px-4 py-2 rounded hover:opacity-90 disabled:opacity-50 transition"
-          >
-            <Save size={15} />
-            {salvando ? 'Salvando…' : 'Salvar parâmetros'}
-          </button>
-          {salvo && (
-            <span className="flex items-center gap-1 text-sm text-green-700 dark:text-green-400">
-              <CheckCircle2 size={15} />
-              Salvo com sucesso
-            </span>
-          )}
+        {/* Painel de boas-vindas */}
+        {mostrarBoas && <PainelBoasVindas onFechar={fecharBoas} />}
+
+        {/* Cabeçalho compacto */}
+        <div className="flex items-center justify-between mb-5">
+          <p className="text-xs text-grafite/70">
+            Regras que o robô segue ao rascunhar peças — calibradas nos benchmarks <strong>PMO/MIT</strong> e <strong>PMI/Stanford</strong>.
+            {!mostrarBoas && (
+              <button
+                onClick={() => setMostrarBoas(true)}
+                className="ml-2 inline-flex items-center gap-1 text-dourado underline underline-offset-2"
+              >
+                <Info size={11} /> Como usar
+              </button>
+            )}
+          </p>
+          <div className="flex items-center gap-2 shrink-0 ml-4">
+            <button
+              onClick={salvar}
+              disabled={salvando}
+              className="flex items-center gap-1.5 bg-dourado text-white text-sm font-medium px-4 py-2 rounded hover:opacity-90 disabled:opacity-50 transition"
+            >
+              <Save size={14} />
+              {salvando ? 'Salvando…' : 'Salvar'}
+            </button>
+            {salvo && (
+              <span className="flex items-center gap-1 text-sm text-green-700 dark:text-green-400 whitespace-nowrap">
+                <CheckCircle2 size={14} />
+                Salvo!
+              </span>
+            )}
+          </div>
         </div>
 
-        <div className="space-y-4">
+        {/* Seções */}
+        <div className="space-y-3">
           {SECOES.map(secao => (
-            <div key={secao.id} className="border border-borda rounded-lg overflow-hidden">
-              {/* Cabeçalho da seção */}
+            <div key={secao.id} className="border border-borda rounded-xl overflow-hidden">
+              {/* Cabeçalho da seção — clicável */}
               <button
                 onClick={() => toggleSecao(secao.id)}
-                className="w-full flex items-center justify-between px-4 py-3 bg-fundo-alt hover:bg-borda/30 transition text-left"
+                className="w-full flex items-center justify-between px-4 py-3.5 bg-fundo-alt hover:bg-borda/40 transition text-left gap-3"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <span className="text-dourado">{secao.icone}</span>
                   <div>
                     <span className="font-semibold text-sm text-texto">{secao.titulo}</span>
-                    <span className="ml-2 text-xs text-grafite/60">{secao.subtitulo}</span>
+                    <span className="ml-2 text-xs text-grafite/55">{secao.subtitulo}</span>
                   </div>
                 </div>
-                {secoesAbertas[secao.id]
-                  ? <ChevronDown size={16} className="text-grafite" />
-                  : <ChevronRight size={16} className="text-grafite" />
-                }
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="text-xs text-grafite/50">
+                    {secoesAbertas[secao.id] ? 'fechar' : `${secao.parametros.length} campos`}
+                  </span>
+                  {secoesAbertas[secao.id]
+                    ? <ChevronDown size={16} className="text-grafite" />
+                    : <ChevronRight size={16} className="text-grafite" />
+                  }
+                </div>
               </button>
 
-              {/* Parâmetros da seção */}
+              {/* Parâmetros */}
               {secoesAbertas[secao.id] && (
                 <div className="divide-y divide-borda">
-                  {secao.parametros.map(p => (
-                    <div key={p.chave} className="px-4 py-4">
-                      <label className="block text-sm font-medium text-texto mb-1">
-                        {p.label}
-                      </label>
-                      {p.descricao && (
-                        <p className="text-xs text-grafite/70 mb-2">{p.descricao}</p>
-                      )}
+                  {secao.parametros.map(p => {
+                    const ativo = campoAtivo === p.chave
+                    return (
+                      <div
+                        key={p.chave}
+                        className={`px-4 py-4 transition-colors ${ativo ? 'bg-dourado/[0.03]' : ''}`}
+                      >
+                        <label className="block text-sm font-medium text-texto mb-0.5">
+                          {p.label}
+                        </label>
 
-                      {p.tipo === 'selecao' && (
-                        <select
-                          value={getValor(p)}
-                          onChange={e => setValor(p.chave, e.target.value)}
-                          className="w-full max-w-xs border border-borda rounded px-3 py-1.5 text-sm bg-fundo text-texto focus:outline-none focus:ring-1 focus:ring-dourado"
-                        >
-                          {p.opcoes?.map(o => (
-                            <option key={o} value={o}>{o}</option>
-                          ))}
-                        </select>
-                      )}
+                        {p.tipo === 'selecao' && (
+                          <select
+                            value={getValor(p)}
+                            onChange={e => setValor(p.chave, e.target.value)}
+                            onFocus={() => setCampoAtivo(p.chave)}
+                            onBlur={() => setCampoAtivo(null)}
+                            className="mt-1 w-full max-w-xs border border-borda rounded-lg px-3 py-1.5 text-sm bg-fundo text-texto focus:outline-none focus:ring-2 focus:ring-dourado/50 focus:border-dourado"
+                          >
+                            {p.opcoes?.map(o => (
+                              <option key={o} value={o}>{o}</option>
+                            ))}
+                          </select>
+                        )}
 
-                      {p.tipo === 'numero' && (
-                        <input
-                          type="number"
-                          value={getValor(p)}
-                          onChange={e => setValor(p.chave, e.target.value)}
-                          className="w-24 border border-borda rounded px-3 py-1.5 text-sm bg-fundo text-texto focus:outline-none focus:ring-1 focus:ring-dourado"
-                        />
-                      )}
+                        {p.tipo === 'numero' && (
+                          <input
+                            type="number"
+                            value={getValor(p)}
+                            onChange={e => setValor(p.chave, e.target.value)}
+                            onFocus={() => setCampoAtivo(p.chave)}
+                            onBlur={() => setCampoAtivo(null)}
+                            className="mt-1 w-24 border border-borda rounded-lg px-3 py-1.5 text-sm bg-fundo text-texto focus:outline-none focus:ring-2 focus:ring-dourado/50 focus:border-dourado"
+                          />
+                        )}
 
-                      {(p.tipo === 'texto') && (
-                        <input
-                          type="text"
-                          value={getValor(p)}
-                          onChange={e => setValor(p.chave, e.target.value)}
-                          className="w-full border border-borda rounded px-3 py-1.5 text-sm bg-fundo text-texto focus:outline-none focus:ring-1 focus:ring-dourado"
-                        />
-                      )}
+                        {p.tipo === 'texto' && (
+                          <input
+                            type="text"
+                            value={getValor(p)}
+                            onChange={e => setValor(p.chave, e.target.value)}
+                            onFocus={() => setCampoAtivo(p.chave)}
+                            onBlur={() => setCampoAtivo(null)}
+                            className="mt-1 w-full border border-borda rounded-lg px-3 py-1.5 text-sm bg-fundo text-texto focus:outline-none focus:ring-2 focus:ring-dourado/50 focus:border-dourado"
+                          />
+                        )}
 
-                      {p.tipo === 'multiline' && (
-                        <textarea
-                          value={getValor(p)}
-                          onChange={e => setValor(p.chave, e.target.value)}
-                          rows={Math.max(3, getValor(p).split('\n').length + 1)}
-                          className="w-full border border-borda rounded px-3 py-2 text-sm bg-fundo text-texto font-mono focus:outline-none focus:ring-1 focus:ring-dourado resize-y"
-                        />
-                      )}
-                    </div>
-                  ))}
+                        {p.tipo === 'multiline' && (
+                          <textarea
+                            value={getValor(p)}
+                            onChange={e => setValor(p.chave, e.target.value)}
+                            onFocus={() => setCampoAtivo(p.chave)}
+                            onBlur={() => setCampoAtivo(null)}
+                            rows={Math.max(3, getValor(p).split('\n').length + 1)}
+                            className="mt-1 w-full border border-borda rounded-lg px-3 py-2 text-sm bg-fundo text-texto font-mono focus:outline-none focus:ring-2 focus:ring-dourado/50 focus:border-dourado resize-y"
+                          />
+                        )}
+
+                        {/* Dica aparece quando o campo está em foco */}
+                        {ativo && p.descricao && (
+                          <DicaAtiva texto={p.descricao} />
+                        )}
+                      </div>
+                    )
+                  })}
                 </div>
               )}
             </div>
           ))}
         </div>
 
-        {/* Botão salvar no final também */}
-        <div className="flex items-center gap-3 mt-6">
+        {/* Botão salvar no final */}
+        <div className="flex items-center gap-3 mt-6 pt-4 border-t border-borda">
           <button
             onClick={salvar}
             disabled={salvando}
-            className="flex items-center gap-2 bg-dourado text-white text-sm font-medium px-4 py-2 rounded hover:opacity-90 disabled:opacity-50 transition"
+            className="flex items-center gap-2 bg-dourado text-white text-sm font-medium px-5 py-2.5 rounded-lg hover:opacity-90 disabled:opacity-50 transition"
           >
             <Save size={15} />
             {salvando ? 'Salvando…' : 'Salvar parâmetros'}
@@ -456,6 +540,9 @@ export default function ParametrosEscritaPage() {
               Salvo com sucesso
             </span>
           )}
+          <span className="text-xs text-grafite/50 ml-auto">
+            Alterações só valem após salvar
+          </span>
         </div>
       </div>
     </Layout>
