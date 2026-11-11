@@ -49,7 +49,7 @@ describe('Pesquisa e due diligence', () => {
     fireEvent.click(screen.getByTestId('assunto-empresa'))
     expect(screen.getAllByText(/validade: 180 dias/, { exact: false }).length).toBeGreaterThan(0)
     const t = within(screen.getByTestId('cobertura'))
-    expect(t.getByText('DataJud (CNJ)')).toBeTruthy(); expect(t.getByText(/Sem inteiro teor/)).toBeTruthy()
+    expect(t.getByText('DataJud (CNJ)')).toBeTruthy(); expect(t.getByText(/nem o inteiro teor/)).toBeTruthy()
   })
   it('sem nada digitado não mostra ações, só a lista e a cobertura', () => {
     abrir()

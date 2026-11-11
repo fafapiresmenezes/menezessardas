@@ -70,7 +70,7 @@ describe('listas de diligência e cobertura', () => {
   })
   it('cobertura diz o limite de cada fonte, sem prometer o que ela não entrega', () => {
     for (const c of COBERTURA) { expect(c.limite.length).toBeGreaterThan(10); expect(c.historico.length).toBeGreaterThan(5) }
-    expect(COBERTURA.find(c => c.fonte.startsWith('DataJud'))?.limite).toMatch(/Sem inteiro teor/)
+    expect(COBERTURA.find(c => c.fonte.startsWith('DataJud'))?.limite).toMatch(/nem o inteiro teor/)
   })
   it('texto da lista para copiar conta os itens conferidos', () => {
     const d = DILIGENCIAS[0]

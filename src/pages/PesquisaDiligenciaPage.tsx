@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { ExternalLink, Search, ClipboardCheck, Copy } from 'lucide-react'
+import BuscaFontesOficiais from '@/components/BuscaFontesOficiais'
 import { COBERTURA, DILIGENCIAS, acoesPara, detectar, textoDiligencia, type TipoBusca } from '@/lib/pesquisa/pesquisa'
 
 // Central de pesquisa e due diligence: uma caixa só para número de processo, CPF, CNPJ, OAB ou nome.
@@ -71,6 +72,8 @@ export default function PesquisaDiligenciaPage() {
             </ul>
           </section>
         )}
+
+        {d.tipo !== 'vazio' && <BuscaFontesOficiais key={`${d.tipo}|${d.formatado}`} d={d} />}
 
         <section className="bg-white shadow-sm p-6" aria-label="Lista de due diligence">
           <h2 className="font-serif text-xl flex items-center gap-2"><ClipboardCheck className="w-5 h-5 text-dourado" aria-hidden />Due diligence: lista de conferência</h2>
