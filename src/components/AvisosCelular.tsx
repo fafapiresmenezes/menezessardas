@@ -16,7 +16,7 @@ export default function AvisosCelular() {
     setMsg(e === 'permitido' ? 'Avisos ligados neste aparelho. Prazos em até 2 dias, intimações vencidas e compromissos do dia aparecem como notificação.' : e === 'negado' ? 'O navegador bloqueou os avisos. Libere em Configurações do site > Notificações e tente de novo.' : 'Este navegador não mostra avisos.')
   }
   const testar = async () => {
-    const ok = await mostrarAviso({ chave: 'teste-' + Date.now(), titulo: 'Aviso de teste · Instituto THEYE', corpo: 'Assim chegam os prazos críticos neste aparelho.', rota: '/meu-dia' })
+    const ok = await mostrarAviso({ chave: 'teste-' + Date.now(), titulo: 'Aviso de teste · THEYE Institute', corpo: 'Assim chegam os prazos críticos neste aparelho.', rota: '/meu-dia' })
     setMsg(ok ? 'Aviso de teste enviado.' : 'Não foi possível mostrar o aviso. Confira a permissão do navegador.')
   }
   const instalar = async () => {

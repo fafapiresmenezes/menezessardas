@@ -18,7 +18,7 @@ export function linhasFatura(f: Fatura, nome: string, pix?: string): { texto: st
   return [
     { texto: `Fatura ${mesAno(f.competencia)}`, tamanho: 16, negrito: true },
     { texto: `Escritório: ${nome}`, tamanho: 11 },
-    { texto: `Emitida por: Value Pas (Instituto THEYE)`, tamanho: 10 },
+    { texto: `Emitida por: Value Pas (THEYE Institute)`, tamanho: 10 },
     { texto: ' ' },
     ...(f.preco_usuario ? [
       { texto: `${f.operadores + f.leitores} usuário(s) x ${brl(Number(f.preco_usuario))} = ${brl(Number(f.preco_usuario) * (f.operadores + f.leitores))}`, tamanho: 11 },

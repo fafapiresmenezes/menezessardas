@@ -5,7 +5,7 @@ interface MarcaProps {
   tamanho?: 'pequena' | 'grande'
   comSubtitulo?: boolean
   className?: string
-  /** Passo D22: marca do escritório parceiro (white-label). Sem ela, o lockup Instituto THEYE. */
+  /** Passo D22: marca do escritório parceiro (white-label). Sem ela, o lockup THEYE Institute. */
   marca?: MarcaEscritorio | null
 }
 
@@ -28,16 +28,16 @@ export default function Marca({ tamanho = 'pequena', comSubtitulo = true, classN
     <div className={`flex flex-col items-center ${className}`} data-testid="marca-theye">
       <span className="sr-only">{NOME_PLATAFORMA}</span>
       <div
-        className={`font-sans uppercase text-white/70 tracking-[0.3em] ${grande ? 'text-xs mb-1' : 'text-[9px] mb-0.5'}`}
-        aria-hidden="true"
-      >
-        Instituto
-      </div>
-      <div
         className={`font-serif tracking-[0.22em] text-dourado ${grande ? 'text-4xl' : 'text-xl'}`}
         aria-hidden="true"
       >
         THEYE
+      </div>
+      <div
+        className={`font-sans uppercase text-white/70 tracking-[0.4em] ${grande ? 'text-xs mt-1' : 'text-[9px] mt-0.5'}`}
+        aria-hidden="true"
+      >
+        Institute
       </div>
       {comSubtitulo && (
         <>

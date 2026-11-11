@@ -62,7 +62,7 @@ export default function KycPage() {
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 275
   const [baixado, marcarBaixado] = useBaixado() // Passo 381
   const copiarHistorico = async () => {
-    const t = ['Histórico de checagens de contraparte — Instituto THEYE', ...histVisivel.map(h => `${new Date(h.consultado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })} · ${h.nome ?? fmtCnpj(h.cnpj)} · risco ${h.risco}${h.mudou ? ` (era ${h.risco_anterior})` : ''} · reconsulta ${proxima(h.consultado_em).toLocaleDateString('pt-BR')}`)].join('\n')
+    const t = ['Histórico de checagens de contraparte — THEYE Institute', ...histVisivel.map(h => `${new Date(h.consultado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })} · ${h.nome ?? fmtCnpj(h.cnpj)} · risco ${h.risco}${h.mudou ? ` (era ${h.risco_anterior})` : ''} · reconsulta ${proxima(h.consultado_em).toLocaleDateString('pt-BR')}`)].join('\n')
     try { await navigator.clipboard.writeText(t); setHistCopiado(true); setTimeout(() => setHistCopiado(false), 2500) } catch { /* sem área de transferência */ }
   }
   const copiarResultado = async () => {

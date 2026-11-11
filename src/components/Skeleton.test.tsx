@@ -56,7 +56,7 @@ describe('Skeleton, Vazio e Marca', () => {
     const gm = screen.getByText('THEYE')
     expect(gm.getAttribute('aria-hidden')).toBe('true')
     expect(gm.className).toContain('text-xl')
-    expect(container.textContent).toContain('Instituto THEYE')
+    expect(container.textContent).toContain('THEYE Institute')
     expect(screen.getByText('Suporte Jurídico')).toBeTruthy()
     cleanup()
     const g = render(<Marca tamanho="grande" comSubtitulo={false} className="mt-8" />)

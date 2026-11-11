@@ -16,13 +16,13 @@ create or replace function instituto.placar_linhas() returns table (id text, j j
   select 'I-10', jsonb_build_object('id','I-10','dominio','jurídico (locação)','titulo','Grafo x convencional, 1ª rodada (DataJud, 3 tribunais)',
     'n', c.resultado->'teste', 'brier_modelo', c.resultado->'brier_grafo', 'brier_base', c.resultado->'brier_convencional',
     'base','convencional (taxa por tribunal e classe)', 'dif', c.resultado->'dif_grafo_menos_conv', 'ic95', c.resultado->'ic95',
-    'veredito', c.resultado->>'veredito', 'origem','Instituto THEYE, pré-registro I-10')
+    'veredito', c.resultado->>'veredito', 'origem','THEYE Institute, pré-registro I-10')
   from (select * from instituto.comparacoes order by id desc limit 1) c
   union all
   select 'I-11', jsonb_build_object('id','I-11','dominio','jurídico (locação)','titulo','Grafo de normas x convencional (DataJud, 6 tribunais)',
     'n', r.resultado->'teste', 'brier_modelo', r.resultado->'C'->'brier', 'brier_base', r.resultado->'B'->'brier',
     'base','convencional (regressão com variáveis do processo)', 'dif', r.resultado->'dif_brier_c_menos_b', 'ic95', r.resultado->'ic95'->'c_menos_b',
-    'ece', r.resultado->'C'->'ece', 'veredito', r.resultado->>'veredito', 'origem','Instituto THEYE, pré-registro I-11 (selado 19:46Z)')
+    'ece', r.resultado->'C'->'ece', 'veredito', r.resultado->>'veredito', 'origem','THEYE Institute, pré-registro I-11 (selado 19:46Z)')
   from (select * from instituto.i11_rodadas order by id desc limit 1) r $$;
 
 create or replace function public.instituto_placar_unico() returns jsonb language sql security definer set search_path = '' stable as $$

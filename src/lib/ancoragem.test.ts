@@ -5,7 +5,7 @@ import { textoDoSelo, textoDoSeloAncorado, montarOts, CALENDARIOS, CABECALHO_SEL
 describe('textoDoSelo', () => {
   it('é texto simples com nome do escritório, quantidade de registros e o selo', () => {
     const t = textoDoSelo(42, 'abc123')
-    expect(t).toContain('Instituto THEYE')
+    expect(t).toContain('THEYE Institute')
     expect(t).toContain('registros: 42')
     expect(t.endsWith('selo: abc123\n')).toBe(true)
   })

@@ -284,7 +284,7 @@ export default function Layout({ children, title }: LayoutProps) {
           {menuAberto && (
             <p className="text-[11px] text-white/70 px-4 text-center">
               Desenvolvido pelo<br />
-              Instituto THEYE
+              THEYE Institute
             </p>
           )}
         </div>

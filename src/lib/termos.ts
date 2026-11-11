@@ -3,11 +3,11 @@
 // Versão 2.0 (10/11/2026): rebranding — o nome GMenezes sai dos termos a pedido do M; versão nova exige novo aceite.
 export const TERMOS_VERSAO = '2.0 (10/11/2026)'
 
-export const TERMOS_TEXTO = `TERMOS DE USO E AVISO DE PRIVACIDADE — INSTITUTO THEYE
+export const TERMOS_TEXTO = `TERMOS DE USO E AVISO DE PRIVACIDADE — THEYE INSTITUTE
 Versão ${TERMOS_VERSAO}
 
 1. O que é a plataforma
-Plataforma do Instituto THEYE, para administrar processos, contratos, imóveis, prazos, clientes e honorários.
+Plataforma do THEYE Institute, para administrar processos, contratos, imóveis, prazos, clientes e honorários.
 
 2. Quem pode usar
 Só pessoas liberadas por um administrador do escritório. Cada acesso é pessoal e intransferível. Senhas e códigos de dois fatores não devem ser compartilhados.
@@ -16,7 +16,7 @@ Só pessoas liberadas por um administrador do escritório. Cada acesso é pessoa
 Tudo o que está na plataforma é protegido pelo sigilo profissional da advocacia (Lei 8.906/1994, art. 34, VII, e Código de Ética da OAB). É proibido copiar, exportar ou divulgar dados fora das finalidades do trabalho no escritório.
 
 4. Dados pessoais (Lei 13.709/2018 — LGPD)
-4.1 Controlador: o escritório titular da conta. Operador: Instituto THEYE (desenvolvimento e manutenção).
+4.1 Controlador: o escritório titular da conta. Operador: THEYE Institute (desenvolvimento e manutenção).
 4.2 Dados tratados sobre você: nome, e-mail, função, registros de acesso e de uso (trilha de auditoria), consumo de inteligência artificial e peças enviadas para "Meu estilo de escrita".
 4.3 Finalidades: operar a plataforma, garantir segurança, cumprir obrigações legais e éticas da advocacia e medir uso e custos.
 4.4 Base legal: execução de contrato de trabalho ou prestação de serviços, cumprimento de obrigação legal e exercício regular de direitos (art. 7º, II, V e VI).

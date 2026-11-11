@@ -19,7 +19,7 @@ export const ETAPAS: { valor: Etapa; rotulo: string; chance: number; dica: strin
 export const ABERTAS: Etapa[] = ['novo', 'qualificacao', 'reuniao', 'proposta', 'negociacao']
 export const ORIGENS: [string, string][] = [
   ['indicacao', 'Indicação de cliente'], ['parceiro', 'Parceiro / correspondente'], ['site', 'Site'], ['instagram', 'Instagram'],
-  ['google', 'Google'], ['whatsapp', 'WhatsApp'], ['evento', 'Palestra / evento'], ['instituto', 'Instituto THEYE'], ['cliente_atual', 'Cliente atual (novo caso)'], ['outro', 'Outro'],
+  ['google', 'Google'], ['whatsapp', 'WhatsApp'], ['evento', 'Palestra / evento'], ['instituto', 'THEYE Institute'], ['cliente_atual', 'Cliente atual (novo caso)'], ['outro', 'Outro'],
 ]
 export const MOTIVOS_PERDA = ['Preço / honorários', 'Escolheu outro advogado', 'Desistiu de entrar com a ação', 'Sem retorno', 'Fora da área do escritório', 'Caso sem viabilidade', 'Outro']
 
@@ -68,7 +68,7 @@ export function telefoneWhatsapp(tel: string | null): string | null {
   return d.length <= 11 ? `55${d}` : d
 }
 
-export function mensagemRetorno(l: Pick<Lead, 'nome' | 'etapa' | 'assunto'>, escritorio = 'Instituto THEYE'): string {
+export function mensagemRetorno(l: Pick<Lead, 'nome' | 'etapa' | 'assunto'>, escritorio = 'THEYE Institute'): string {
   const primeiro = l.nome.trim().split(/\s+/)[0]
   const sobre = l.assunto ? ` sobre ${l.assunto.trim().replace(/[.]$/, '')}` : ''
   switch (l.etapa) {

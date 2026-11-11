@@ -105,11 +105,11 @@ export default function HonorariosPage() {
     const r = regua(c)
     const w = window.open('', '_blank'); if (!w) return
     w.document.write(`<html><head><title>Cobrança de honorários</title><style>body{font-family:Georgia,serif;max-width:700px;margin:40px auto;line-height:1.6}</style></head><body>
-<p>Instituto THEYE</p><p>Rio de Janeiro, ${new Date().toLocaleDateString('pt-BR')}</p>
+<p>THEYE Institute</p><p>Rio de Janeiro, ${new Date().toLocaleDateString('pt-BR')}</p>
 <p>Prezado(a) ${escaparHtml(c.cliente ?? 'cliente')},</p>
 <p>Em relação ao caso <strong>${escaparHtml(c.titulo)}</strong>, informamos que há honorários em aberto no valor de <strong>${brl(r.aberto)}</strong>${c.vencimento_honorario ? `, com vencimento em ${formatarData(c.vencimento_honorario)}` : ''}.</p>
 <p>Pedimos a gentileza de regularizar o pagamento ou entrar em contato para combinar a melhor forma. Ficamos à disposição.</p>
-<p>Atenciosamente,<br/>Instituto THEYE</p></body></html>`)
+<p>Atenciosamente,<br/>THEYE Institute</p></body></html>`)
     w.document.close(); w.print()
   }
 

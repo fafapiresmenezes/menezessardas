@@ -95,7 +95,7 @@ export function linhasSemana(s: Semana, escritorio: string): Linha[] {
     for (const i of d.itens) for (const q of quebrar(`- [${i.tipo === 'prazo' ? 'Prazo' : 'Compromisso'}] ${i.titulo}${i.detalhe ? ' · ' + i.detalhe : ''}${i.responsavel ? ' · resp.: ' + i.responsavel : ''}`, 9.5)) L.push({ texto: q, tamanho: 9.5 })
     L.push({ texto: ' ' })
   }
-  L.push({ texto: 'Gerado automaticamente pela plataforma GMenezes (Instituto THEYE). Confira os autos antes de agir.', tamanho: 8 })
+  L.push({ texto: 'Gerado automaticamente pela plataforma GMenezes (THEYE Institute). Confira os autos antes de agir.', tamanho: 8 })
   return L
 }
 
@@ -139,7 +139,7 @@ Deno.serve(async (req) => {
   const html = `<div style="font-family:Georgia,serif;max-width:620px;margin:auto"><div style="background:#14213d;color:#fff;padding:18px"><div style="font-size:12px;opacity:.85">${nomeEsc.replace(/[<>&]/g, '')}</div><h2 style="margin:0">Semana de ${dataBr(s.inicio)} a ${dataBr(s.fim)}</h2></div>
 <div style="padding:16px;line-height:1.5"><p>${s.total} item(ns) nos próximos 7 dias. O PDF está anexo para imprimir ou arquivar.</p>${linhasHtml || '<p>Nenhum prazo ou compromisso nos próximos 7 dias.</p>'}
 ${teste ? '<p style="color:#888">Envio de teste pedido por você na Agenda.</p>' : ''}<p><a href="${APP}/agenda">Abrir Agenda</a> · <a href="${APP}/meu-dia">Meu dia</a></p></div>
-<p style="font-size:11px;color:#888;padding:10px">${nomeEsc.replace(/[<>&]/g, '')} · semana em PDF, toda sexta às 17h · plataforma desenvolvida pelo Instituto THEYE</p></div>`
+<p style="font-size:11px;color:#888;padding:10px">${nomeEsc.replace(/[<>&]/g, '')} · semana em PDF, toda sexta às 17h · plataforma desenvolvida pelo THEYE Institute</p></div>`
   let falha: string | undefined
   for (const email of para) {
     const resp = await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },

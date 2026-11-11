@@ -16,7 +16,7 @@ export default function PainelFerramenta({ ferramenta }: { ferramenta: Ferrament
     try { await navigator.clipboard.writeText(textoSaida); setCopiado(true) } catch { setCopiado(false) }
   }
   const baixar = () => {
-    const url = URL.createObjectURL(new Blob([`${ferramenta.nome}\n\n${textoSaida}\n\nInstituto THEYE — Suporte Jurídico\n`], { type: 'text/plain;charset=utf-8' }))
+    const url = URL.createObjectURL(new Blob([`${ferramenta.nome}\n\n${textoSaida}\n\nTHEYE Institute — Suporte Jurídico\n`], { type: 'text/plain;charset=utf-8' }))
     const a = document.createElement('a'); a.href = url; a.download = `${ferramenta.id}.txt`; a.click(); URL.revokeObjectURL(url)
   }
 

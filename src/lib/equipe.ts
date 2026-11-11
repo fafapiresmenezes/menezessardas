@@ -123,7 +123,7 @@ export async function ehSede(): Promise<boolean> {
 }
 
 export async function listarEscritorios(): Promise<Escritorio[]> {
-  if (!supabaseConfigurado) return [{ id: SEDE_ID, nome: 'Instituto THEYE', plano: 'sede', criadoEm: '2026-10-30', operadores: 3, leitores: 1, mensal: 1290, mensal1Ano: 903 }]
+  if (!supabaseConfigurado) return [{ id: SEDE_ID, nome: 'THEYE Institute', plano: 'sede', criadoEm: '2026-10-30', operadores: 3, leitores: 1, mensal: 1290, mensal1Ano: 903 }]
   const { data, error } = await supabase.rpc('cobranca_escritorios')
   if (error) throw new Error(error.message)
   return ((data ?? []) as Record<string, unknown>[]).map(r => ({ id: String(r.id), nome: String(r.nome), plano: String(r.plano), criadoEm: String(r.criado_em), operadores: Number(r.operadores), leitores: Number(r.leitores), mensal: Number(r.mensal), mensal1Ano: Number(r.mensal_1ano) }))

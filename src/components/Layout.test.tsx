@@ -32,7 +32,7 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
     expect(screen.getByText('conteúdo')).toBeTruthy()
     const nav = screen.getByRole('navigation', { name: 'Menu principal' })
     expect(nav.querySelector('[aria-current=page]')!.textContent).toBe('Agenda')
-    expect(screen.getByText(/Desenvolvido pelo/).textContent).toContain('Instituto THEYE')
+    expect(screen.getByText(/Desenvolvido pelo/).textContent).toContain('THEYE Institute')
     fireEvent.click(screen.getByText('Imóveis e locação'))
     fireEvent.click(screen.getByText('Imóveis'))
     expect(screen.getByTestId('onde').textContent).toBe('/imoveis')

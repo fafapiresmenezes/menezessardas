@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
       ${teste ? '<p style="color:#888">Este é um envio de teste pedido por você em Meu dia.</p>' : ''}
       <p><a href="${APP}/meu-dia">Abrir Meu dia</a> · <a href="${APP}/alertas">Abrir Alertas</a></p>
     </div>
-    <p style="font-size:11px;color:#888;padding:10px">${nomeMarca} · resumo automático de segunda-feira${marca.sede === false ? ' · plataforma GMenezes, desenvolvida pelo Instituto THEYE' : ''}</p></div>`
+    <p style="font-size:11px;color:#888;padding:10px">${nomeMarca} · resumo automático de segunda-feira${marca.sede === false ? ' · plataforma GMenezes, desenvolvida pelo THEYE Institute' : ''}</p></div>`
   let falha: string | undefined
   for (const email of para) {
     const resp = await fetch('https://api.brevo.com/v3/smtp/email', {

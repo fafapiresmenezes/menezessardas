@@ -4,7 +4,7 @@ returns jsonb language sql stable security definer set search_path = instituto, 
   with a as (select classe, count(*) acoes, count(*) filter (where desfecho in ('procedencia','parcial','improcedencia'))::float8 n,
                     count(*) filter (where desfecho in ('procedencia','parcial'))::float8 k, count(distinct tribunal) tribunais from processos group by classe),
   w as (select *, case when n > 0 then k / n end p from a)
-  select jsonb_build_object('base_em', current_date, 'fonte', 'DataJud (CNJ), ações de locação coletadas pelo Instituto THEYE; procedência = pedido de quem entrou com a ação aceito total ou parcialmente, entre julgamentos de mérito; intervalo de 95% de Wilson.',
+  select jsonb_build_object('base_em', current_date, 'fonte', 'DataJud (CNJ), ações de locação coletadas pelo THEYE Institute; procedência = pedido de quem entrou com a ação aceito total ou parcialmente, entre julgamentos de mérito; intervalo de 95% de Wilson.',
     'classes', coalesce(jsonb_agg(jsonb_build_object('classe', classe, 'acoes', acoes, 'n', n::int, 'tribunais', tribunais,
       'p', case when n >= 10 then round(p::numeric, 3) end,
       'ic95', case when n >= 10 then jsonb_build_array(

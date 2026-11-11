@@ -217,7 +217,7 @@ export default function AgendaPage() {
   // Passo 124: os próximos 7 dias em texto, para colar no Outlook ou no WhatsApp.
   // Passo 124: estados movidos para antes do retorno de 'Carregando' (hooks sempre na mesma ordem; corrige a tela branca da Agenda)
   const copiarSemana = async () => {
-    const t = ['Próximos 7 dias — Instituto THEYE', ...(semana.length ? semana.map(a => `• ${formatarData(a.dataEvento)} — ${a.titulo} (${a.imovel})`) : ['Nenhum compromisso.'])].join('\n')
+    const t = ['Próximos 7 dias — THEYE Institute', ...(semana.length ? semana.map(a => `• ${formatarData(a.dataEvento)} — ${a.titulo} (${a.imovel})`) : ['Nenhum compromisso.'])].join('\n')
     try { await navigator.clipboard.writeText(t); setSemanaCopiada(true); setTimeout(() => setSemanaCopiada(false), 2500) } catch { /* sem área de transferência */ }
   }
   const irParaHoje = () => { setAno(hoje.getFullYear()); setMes(hoje.getMonth()) }

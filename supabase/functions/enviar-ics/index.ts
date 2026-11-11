@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
 <div style="padding:16px;line-height:1.5"><p><b>${titulo.replace(/[<>&]/g, '')}</b><br>${descricao.replace(/[<>&]/g, '')}<br>Data: ${data.slice(0, 10).split('-').reverse().join('/')}</p>
 <p>O convite .ics anexo abre no Outlook, Google Agenda ou Apple Calendário. Se o prazo mudar, você recebe o mesmo convite atualizado (sem duplicar).</p>
 <p style="font-size:12px;color:#555">Para parar de receber, desligue "Convite .ics por e-mail" em Configurações da plataforma.</p></div>
-<p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · plataforma desenvolvida pelo Instituto THEYE</p></div>`
+<p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · plataforma desenvolvida pelo THEYE Institute</p></div>`
     const resp = await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
       body: JSON.stringify({ sender: { name: 'Agenda GMenezes', email: conf.email_remetente }, to: [{ email: dest }], subject: `${sequencia ? 'Atualização' : 'Convite'}: ${titulo} · ${data.slice(0, 10).split('-').reverse().join('/')}`, htmlContent: html,
         attachment: [{ name: 'compromisso.ics', content: btoa(unescape(encodeURIComponent(ics))) }] }) })

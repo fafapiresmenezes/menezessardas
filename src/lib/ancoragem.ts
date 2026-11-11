@@ -30,7 +30,7 @@ export const CALENDARIOS = [
 
 const CHAVE = 'lsm-ancoragens-v1'
 
-export const CABECALHO_SELO = 'Theye Suporte Jurídico - Instituto THEYE'
+export const CABECALHO_SELO = 'Theye Suporte Jurídico - THEYE Institute'
 // Selos ancorados antes do rebranding (10/11/2026) foram gerados com este cabeçalho;
 // mudar o texto mudaria o SHA-256, então a verificação aceita os dois.
 export const CABECALHO_SELO_ANTIGO = 'Plataforma de Gestão de Contratos - GMenezes Advogados Associados'

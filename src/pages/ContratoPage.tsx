@@ -273,7 +273,7 @@ export default function ContratoPage() {
     v === 0 ? 'Sem contraprestação' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
   // Passo 141: resumo do contrato em uma linha por campo, para o e-mail ou o parecer.
   const copiarResumoContrato = () => {
-    const t = [`${rotulosTipoContrato[contrato.tipo]} — ${contrato.parte}`, `Imóvel: ${imovel.endereco}`, `Início: ${formatarData(contrato.dataInicio)}${contrato.dataVencimento ? ` · Vencimento: ${formatarData(contrato.dataVencimento)}` : ''}`, `Valor: ${moeda(contrato.valor)}`, `Situação: ${encerrado ? `encerrado em ${formatarData(contrato.encerradoEm)}` : rotulosStatusContrato[statusContrato]}`, 'Instituto THEYE'].join('\n')
+    const t = [`${rotulosTipoContrato[contrato.tipo]} — ${contrato.parte}`, `Imóvel: ${imovel.endereco}`, `Início: ${formatarData(contrato.dataInicio)}${contrato.dataVencimento ? ` · Vencimento: ${formatarData(contrato.dataVencimento)}` : ''}`, `Valor: ${moeda(contrato.valor)}`, `Situação: ${encerrado ? `encerrado em ${formatarData(contrato.encerradoEm)}` : rotulosStatusContrato[statusContrato]}`, 'THEYE Institute'].join('\n')
     navigator.clipboard?.writeText(t).catch(() => undefined)
   }
 

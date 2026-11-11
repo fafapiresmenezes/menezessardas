@@ -38,7 +38,7 @@ export default function InicioPage() {
   const [mapaCopiado, setMapaCopiado] = useState(false)
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 276
   const copiarMapa = async () => {
-    const t = ['Áreas da plataforma — Instituto THEYE', ...AREAS.map((a, i) => `${i + 1}. ${a.titulo}: ${a.texto}`)].join('\n')
+    const t = ['Áreas da plataforma — THEYE Institute', ...AREAS.map((a, i) => `${i + 1}. ${a.titulo}: ${a.texto}`)].join('\n')
     try { await navigator.clipboard.writeText(t); setMapaCopiado(true); setTimeout(() => setMapaCopiado(false), 2500) } catch { /* sem área de transferência */ }
   }
   useEffect(() => {
@@ -71,7 +71,7 @@ export default function InicioPage() {
       <AceiteTermos />
       <div className="text-center mb-10">
         <p className="font-serif text-dourado text-4xl tracking-widest">THEYE</p>
-        <h1 className="font-serif text-white text-3xl mt-2">Instituto THEYE</h1>
+        <h1 className="font-serif text-white text-3xl mt-2">THEYE Institute</h1>
         <p className="text-white/60 text-xs uppercase tracking-[0.18em] mt-2">Suporte Jurídico</p>
         <p className="text-white/70 mt-3">Escolha a área em que vai trabalhar agora</p>
         <button type="button" data-testid="ir-meu-dia" onClick={() => navigate('/meu-dia')} className="mt-4 min-h-[44px] px-5 border border-dourado text-dourado text-sm uppercase tracking-wider">Ver meu dia: prazos, tarefas e intimações</button>
@@ -124,7 +124,7 @@ export default function InicioPage() {
           </button>
         ))}
       </div>
-      <p className="text-white/50 text-xs mt-12">Desenvolvido pelo Instituto THEYE</p>
+      <p className="text-white/50 text-xs mt-12">Desenvolvido pelo THEYE Institute</p>
     </main>
   )
 }

@@ -28,7 +28,7 @@ const montar = () => render(<MemoryRouter><PesquisaDireito /></MemoryRouter>)
 // Apagar agora pede confirmação: nos testes, a pessoa sempre confirma.
 beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true) })
 
-describe('Pesquisa e desenvolvimento do direito (Instituto THEYE)', () => {
+describe('Pesquisa e desenvolvimento do direito (THEYE Institute)', () => {
   beforeEach(() => { cleanup(); pesquisas = []; insert.mockClear(); update.mockClear(); del.mockClear(); perguntar.mockClear() })
 
   it('o tema digitado entra na busca de cada fonte gratuita e no pedido ao pesquisador', async () => {

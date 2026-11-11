@@ -81,7 +81,7 @@ begin
     'titulo', 'Relatório jurimétrico de locação', 'tribunal', t, 'comarca', nome, 'base_em', current_date,
     'comarca_dados', instituto.metricas_locacao(t, ch),
     'estado', instituto.metricas_locacao(t, null),
-    'metodo', 'Ações de locação do DataJud (CNJ) coletadas pelo Instituto THEYE. Procedência = procedente ou parcialmente procedente entre julgamentos de mérito; intervalo de 95% de Wilson. Tempo = mediana de dias entre ajuizamento e desfecho. Com menos de 10 julgamentos a taxa não é mostrada; de 10 a 29 vem com aviso.',
+    'metodo', 'Ações de locação do DataJud (CNJ) coletadas pelo THEYE Institute. Procedência = procedente ou parcialmente procedente entre julgamentos de mérito; intervalo de 95% de Wilson. Tempo = mediana de dias entre ajuizamento e desfecho. Com menos de 10 julgamentos a taxa não é mostrada; de 10 a 29 vem com aviso.',
     'fonte', 'DataJud (CNJ), só dados agregados; nenhuma parte é identificada.');
   h := encode(digest(r::text, 'sha256'), 'hex');
   select * into row_ from relatorios_comarca where sha256 = h;

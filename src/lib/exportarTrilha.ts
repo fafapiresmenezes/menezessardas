@@ -47,7 +47,7 @@ export async function selarDigest(sha256Hex: string): Promise<{ ots: Uint8Array<
   return { ots, calendario: prova.calendario }
 }
 
-export async function exportarTrilhaPeriodo(de: string, ate: string, rotuloEscritorio = 'Instituto THEYE'): Promise<ExportacaoTrilha> {
+export async function exportarTrilhaPeriodo(de: string, ate: string, rotuloEscritorio = 'THEYE Institute'): Promise<ExportacaoTrilha> {
   const [todos, verificacao] = await Promise.all([listarTrilha(), verificarTrilha()])
   const ini = `${de}T00:00:00`, fim = `${ate}T23:59:59.999`
   const eventos: EventoTrilha[] = todos.filter(e => e.em >= new Date(ini).toISOString() && e.em <= new Date(fim).toISOString())
@@ -69,7 +69,7 @@ export async function exportarTrilhaPeriodo(de: string, ate: string, rotuloEscri
     linhas.push({ texto: ' ', tamanho: 4 })
   }
   if (!eventos.length) linhas.push({ texto: 'Nenhum registro no período.', tamanho: 9 })
-  linhas.push({ texto: ' ', tamanho: 6 }, { texto: 'Desenvolvido pelo Instituto THEYE. Conferência: calcule o SHA-256 deste arquivo e verifique o .ots em opentimestamps.org.', tamanho: 7, cor: [0.4, 0.4, 0.4] })
+  linhas.push({ texto: ' ', tamanho: 6 }, { texto: 'Desenvolvido pelo THEYE Institute. Conferência: calcule o SHA-256 deste arquivo e verifique o .ots em opentimestamps.org.', tamanho: 7, cor: [0.4, 0.4, 0.4] })
 
   const pdf = gerarPdfTexto(`Trilha de auditoria ${de} a ${ate}`, linhas)
   const sha256 = hex(await crypto.subtle.digest('SHA-256', pdf))

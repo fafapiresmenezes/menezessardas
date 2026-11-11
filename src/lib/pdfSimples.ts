@@ -64,7 +64,7 @@ export function gerarPdfTexto(titulo: string, linhas: Linha[]): Uint8Array<Array
   }
   const pags = add(`<< /Type /Pages /Kids [${ids.map(i => `${i} 0 R`).join(' ')}] /Count ${ids.length} >>`)
   const catalogo = add(`<< /Type /Catalog /Pages ${pags} 0 R >>`)
-  const info = add(`<< /Title (${winAnsi(titulo)}) /Producer (Instituto THEYE) >>`)
+  const info = add(`<< /Title (${winAnsi(titulo)}) /Producer (THEYE Institute) >>`)
 
   let saida = '%PDF-1.4\n%\xe2\xe3\xcf\xd3\n'
   const offsets: number[] = []

@@ -53,14 +53,14 @@ async function enviarLink(email: string, token: string, primeiro: boolean, site 
   const c = Object.fromEntries((conf ?? []).map((x: { chave: string; valor: string }) => [x.chave, x.valor]))
   if (!c.brevo_api_key || !c.email_remetente) return false
   const link = `${site}/laboratorio.html#t=${token}`
-  const html = `<div style="font-family:Georgia,serif;max-width:520px;color:#151a22"><p style="font-family:monospace;font-size:11px;letter-spacing:.1em;color:#9a7a3c">INSTITUTO THEYE</p>
+  const html = `<div style="font-family:Georgia,serif;max-width:520px;color:#151a22"><p style="font-family:monospace;font-size:11px;letter-spacing:.1em;color:#9a7a3c">THEYE INSTITUTE</p>
 <h2 style="font-weight:500">${primeiro ? 'Confirme seu e-mail' : 'Seu link de entrada'}</h2>
 <p style="font-family:Arial,sans-serif;font-size:15px;color:#3a4250">${primeiro ? 'Falta um passo para liberar sua consulta gratuita ao laboratório de predição jurídica.' : 'Use o botão abaixo para entrar no laboratório.'} O link vale por 24 horas.</p>
 <p><a href="${link}" style="display:inline-block;background:#151a22;color:#fff;padding:12px 20px;text-decoration:none;font-family:Arial,sans-serif">Entrar no laboratório</a></p>
-<p style="font-family:Arial,sans-serif;font-size:12px;color:#7a8190">Se você não pediu isto, ignore esta mensagem. Desenvolvido pelo Instituto THEYE.</p></div>`
+<p style="font-family:Arial,sans-serif;font-size:12px;color:#7a8190">Se você não pediu isto, ignore esta mensagem. Desenvolvido pelo THEYE Institute.</p></div>`
   const r = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST', headers: { 'api-key': c.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
-    body: JSON.stringify({ sender: { name: 'Instituto THEYE', email: c.email_remetente }, to: [{ email }], subject: primeiro ? 'Confirme seu cadastro no Instituto THEYE' : 'Seu link de entrada no Instituto THEYE', htmlContent: html }),
+    body: JSON.stringify({ sender: { name: 'THEYE Institute', email: c.email_remetente }, to: [{ email }], subject: primeiro ? 'Confirme seu cadastro no THEYE Institute' : 'Seu link de entrada no THEYE Institute', htmlContent: html }),
   }).catch(() => null)
   if (r?.ok) await db().from('consumo_api').insert({ funcao: 'Instituto: link de acesso', modelo: 'brevo-email', quantidade: 1 })
   return !!r?.ok

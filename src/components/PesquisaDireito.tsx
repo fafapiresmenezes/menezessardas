@@ -89,7 +89,7 @@ export default function PesquisaDireito() {
       </section>
       <section className="bg-white p-6 shadow-sm">
         <h2 className="text-lg mb-1 flex items-center gap-2"><FlaskConical size={18} className="text-dourado" aria-hidden /> Programa de desenvolvimento do direito brasileiro</h2>
-        <p className="text-sm text-grafite-claro mb-3">Perguntas que nascem de casos internos ou de soluções do mundo todo viram pesquisas do Instituto THEYE: o pesquisador compara jurisdições, propõe teses para o direito brasileiro e diz como aplicar no caso. Tudo fica registrado para o escritório.</p>
+        <p className="text-sm text-grafite-claro mb-3">Perguntas que nascem de casos internos ou de soluções do mundo todo viram pesquisas do THEYE Institute: o pesquisador compara jurisdições, propõe teses para o direito brasileiro e diz como aplicar no caso. Tudo fica registrado para o escritório.</p>
         <form onSubmit={salvar} className="grid gap-3 md:grid-cols-2" data-testid="form-pesquisa">
           <label className="text-sm md:col-span-2">Título<input required minLength={3} value={form.titulo} onChange={e => setForm({ ...form, titulo: e.target.value })} id="pesq-titulo" className="mt-1 w-full border px-3 py-2" placeholder="Ex.: Cláusula de não concorrência em locação comercial: o que fazem EUA e UE" /></label>
           <label className="text-sm md:col-span-2">Pergunta de pesquisa<textarea required minLength={10} rows={3} value={form.pergunta} onChange={e => setForm({ ...form, pergunta: e.target.value })} id="pesq-pergunta" className="mt-1 w-full border px-3 py-2" placeholder="O que o direito brasileiro ainda não resolve bem e como outras jurisdições tratam?" /></label>

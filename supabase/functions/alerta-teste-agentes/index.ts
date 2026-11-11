@@ -29,7 +29,7 @@ async function avisarFalhas(falhas: { verificacao: string; status_http: number; 
   const html = `<div style="font-family:Georgia,serif;max-width:620px;margin:auto">
     <div style="background:#8b1a1a;color:#fff;padding:18px"><h2 style="margin:0">Teste automático: ${falhas.length} falha(s) em ${quando}</h2></div>
     <div style="padding:16px;line-height:1.5"><p>O teste automático da plataforma encontrou problema em:</p><ul>${lista}</ul>
-    <p>Na maioria das vezes é instabilidade de uma fonte externa (Banco Central, CNJ, Planalto) e se resolve sozinho no próximo teste. Se a falha repetir dois dias seguidos, avise o Instituto THEYE.</p>
+    <p>Na maioria das vezes é instabilidade de uma fonte externa (Banco Central, CNJ, Planalto) e se resolve sozinho no próximo teste. Se a falha repetir dois dias seguidos, avise o THEYE Institute.</p>
     <p><a href="https://gmenezes-advogados.vercel.app/#/equipe">Abrir Área do administrador (histórico de 30 dias)</a></p></div>
     <p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · aviso automático</p></div>`
   let enviados = 0

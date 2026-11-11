@@ -1,4 +1,4 @@
-// Passo 551: Edge Function instituto-agentes — 50 agentes por botão do Instituto THEYE: origem permitida, lista, cota e teto, chamada à IA com reserva, custo e amostra para revisão.
+// Passo 551: Edge Function instituto-agentes — 50 agentes por botão do THEYE Institute: origem permitida, lista, cota e teto, chamada à IA com reserva, custo e amostra para revisão.
 import { describe, it, expect, beforeEach } from 'vitest'
 import { fingirDeno, fingirFetch, jsonResp } from '../_testes/deno'
 import { zerar, estado } from '../_testes/supabase-js'

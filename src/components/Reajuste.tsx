@@ -50,7 +50,7 @@ Novo valor: ${brl(novo)}, a partir do próximo vencimento.
 
 Permanecemos à disposição.
 
-Instituto THEYE` : ''
+THEYE Institute` : ''
 
   return (
     <section className="bg-white p-6 shadow-sm" aria-labelledby="titulo-reajuste">

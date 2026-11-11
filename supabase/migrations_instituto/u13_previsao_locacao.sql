@@ -22,7 +22,7 @@ begin
   r := public.instituto_prever(p_tribunal, p_classe, nullif(p_orgao,''), p_assunto);
   insert into instituto.api_uso(dia, rota, chamadas) values (current_date, 'previsao-locacao', 1)
     on conflict (dia, rota) do update set chamadas = instituto.api_uso.chamadas + 1;
-  return r || jsonb_build_object('origem', 'Instituto THEYE', 'api', 'previsao-locacao v1 (U13)');
+  return r || jsonb_build_object('origem', 'THEYE Institute', 'api', 'previsao-locacao v1 (U13)');
 end $$;
 revoke all on function public.previsao_locacao_escritorio(text,text,text,integer) from public, anon;
 grant execute on function public.previsao_locacao_escritorio(text,text,text,integer) to authenticated, service_role;
