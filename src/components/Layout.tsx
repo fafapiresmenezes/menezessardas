@@ -22,7 +22,7 @@ import { listarPessoas, perfilAtual } from '@/lib/equipe'
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, ChevronDown, MoreHorizontal, SearchCheck, CalendarClock, UserPlus, PenLine } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, ChevronDown, MoreHorizontal, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -69,6 +69,7 @@ const gruposMenu = [
     { icon: Library, label: 'Já pesquisado', href: '/biblioteca' },
     { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
     { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
+    { icon: BookOpen, label: 'Parâmetros de escrita', href: '/parametros-escrita' },
   ] },
   { id: 'ferramentas', titulo: 'Ferramentas e estudos', itens: [
     { icon: Wrench, label: 'Ferramentas do dia a dia', href: '/ferramentas' },
@@ -101,6 +102,7 @@ const menuEssencial = [
   { icon: Inbox, label: 'Intimações', href: '/intimacoes' },
   { icon: CalendarDays, label: 'Agenda', href: '/agenda' },
   { icon: PenLine, label: 'Meu jeito de escrever', href: '/meu-estilo' },
+  { icon: BookOpen, label: 'Parâmetros de escrita', href: '/parametros-escrita' },
 ]
 const estaAtivo = (href: string, pathname: string) => pathname.startsWith(href) || (href === '/fornecedores' && pathname.startsWith('/fornecedor/'))
 const grupoDe = (pathname: string) => gruposMenu.find(g => g.itens.some(i => estaAtivo(i.href, pathname)))?.id
