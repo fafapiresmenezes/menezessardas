@@ -91,7 +91,6 @@ export default function InicioPage() {
           ))}
         </div>
         <p className="text-center mt-3"><button type="button" data-testid="ir-consultores" onClick={() => navigate('/consultores')} className="min-h-[44px] px-4 text-white/80 underline text-sm">Consultores do escritório</button></p>
-        <p className="text-white/70 mt-6 text-center">Ou escolha a área em que vai trabalhar</p>
       </div>
       {carregado && (areaFixa || areaUltima) && (
         <div className="w-full max-w-6xl mb-5 bg-white/10 border border-dourado/50 text-white p-4 flex flex-wrap items-center gap-3 text-sm" data-testid="area-lembrada">
@@ -111,7 +110,10 @@ export default function InicioPage() {
           )}
         </div>
       )}
-      <form className="w-full max-w-6xl mb-4" onSubmit={e => { e.preventDefault(); const a = areasVisiveis[0]; if (a) abrir(a.destino, a.chave) }}>
+      {/* Só o que é preciso fica à vista: as três tarefas de cima. As áreas de trabalho abrem aqui, em um clique. */}
+      <details className="w-full max-w-6xl" data-testid="todas-areas" open={!!buscaArea || undefined}>
+        <summary className="cursor-pointer text-white/90 text-center min-h-[48px] flex items-center justify-center select-none underline">Ver todas as áreas de trabalho</summary>
+      <form className="w-full max-w-6xl mb-4 mt-3" onSubmit={e => { e.preventDefault(); const a = areasVisiveis[0]; if (a) abrir(a.destino, a.chave) }}>
         <label className="block text-white/80 text-sm">Para onde quer ir?
           <input value={buscaArea} onChange={e => setBuscaArea(e.target.value)} placeholder="Ex.: contrato, despejo, trabalhista, INSS…" data-testid="busca-area" className="mt-1 w-full max-w-md block border border-dourado/60 bg-white/95 text-navy px-3 min-h-[44px]" />
         </label>
@@ -140,6 +142,7 @@ export default function InicioPage() {
           </button>
         ))}
       </div>
+      </details>
       <p className="text-white/50 text-xs mt-12">Desenvolvido pelo THEYE Institute</p>
     </main>
   )
