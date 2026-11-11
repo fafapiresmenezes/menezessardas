@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { entrarDemo } from '@/lib/authDemo'
 import Marca from '@/components/Marca'
+import { NOME_PLATAFORMA } from '@/lib/plataforma'
 import { marcaPorDominio, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 
 export default function LoginPage() {
@@ -108,9 +109,9 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-white rounded-sm shadow-xl border-t-2 border-dourado p-8">
-          <h1 className="font-serif text-2xl text-navy text-center">Gestão Contratual</h1>
+          <h1 className="font-serif text-2xl text-navy text-center">{NOME_PLATAFORMA}</h1>
           <p className="text-sm text-grafite-claro text-center mt-2 mb-7">
-            Acesso restrito aos profissionais do escritório
+            Entre com o seu e-mail e a sua senha
           </p>
 
           {erro && (
@@ -136,7 +137,7 @@ export default function LoginPage() {
           {avisoRecuperacao && (
             <div role="status" className="mb-5 p-3 bg-atencaoFundo border-l-2 border-atencao text-atencao text-sm">
               {supabaseConfigurado
-                ? 'Peça a uma pessoa administradora do escritório uma senha provisória (menu Equipe). Depois de entrar, troque-a em Configurações → Senha.'
+                ? 'Esqueceu a senha? Peça a uma pessoa administradora da sua equipe uma senha provisória (menu Equipe). Depois de entrar, troque-a em Configurações → Senha.'
                 : 'Na demonstração, entre com admin@exemplo.com e a senha senha123.'}
             </div>
           )}
