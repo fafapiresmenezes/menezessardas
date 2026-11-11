@@ -417,6 +417,75 @@ Mantenha as forças dessa tradição: ${b.forcas}.
 Siga o método e o padrão de qualidade dessa tradição. Não copie trechos de obra nenhuma, não cite ${b.referencia} como autor do texto e não lhe atribua frases; se citar obra dele como doutrina, só com certeza, senão "[doutrina a conferir]".`
 }
 
+/** As dez técnicas de narrativa (storytelling forense) aplicadas à exposição dos fatos de toda peça. */
+export const NARRATIVA: { nome: string; regra: string }[] = [
+  { nome: 'Tema do caso', regra: 'uma frase, logo no começo, que diga do que o caso trata e por que o cliente tem razão; tudo o mais serve a ela' },
+  { nome: 'Abertura pelo que está em jogo', regra: 'antes da lei, dizer quem é o cliente e o que ele pode perder ou ganhar com a decisão' },
+  { nome: 'Pessoa, não rótulo', regra: 'chamar o cliente pelo nome ou pelo papel na vida (a locadora, o pai, a empresa), sem repetir "o autor" a cada linha' },
+  { nome: 'Ordem do tempo', regra: 'contar na ordem em que aconteceu, com data em cada passo decisivo' },
+  { nome: 'Fato concreto no lugar do adjetivo', regra: 'valor, data, documento e conduta; nada de "absurdo", "flagrante" ou "inaceitável"' },
+  { nome: 'Conflito claro', regra: 'mostrar o que o cliente buscava, o que a outra parte fez e o dano que resultou' },
+  { nome: 'Fato desfavorável enfrentado', regra: 'tratar de frente o ponto fraco e explicar por que não muda o resultado, em vez de escondê-lo' },
+  { nome: 'Cada fato com sua prova', regra: 'todo fato relevante aponta o documento ou a folha dos autos; se faltar, vai entre colchetes' },
+  { nome: 'Ponte para o direito', regra: 'cada fato narrado reaparece na fundamentação; fato que não sustenta pedido sai do texto' },
+  { nome: 'Fecho pela consequência', regra: 'terminar mostrando ao julgador o efeito prático de acolher ou negar o pedido' },
+]
+
+/** Bloco das instruções com as dez técnicas de narrativa. */
+export function instrucoesDeNarrativa() {
+  return `NARRATIVA DOS FATOS (dez técnicas; aplique todas na medida do tipo da peça):
+${NARRATIVA.map((n, i) => `${i + 1}. ${n.nome}: ${n.regra}.`).join('\n')}
+A narrativa nunca cria fato: usa só o que está na publicação e nos dados do caso; o que faltar vai entre colchetes.`
+}
+
+export interface TomDoJulgador {
+  /** Palavras lidas do próprio julgador (decisões e despachos publicados). */
+  amostra: number
+  suficiente: boolean
+  extensao: 'conciso' | 'medio' | 'extenso'
+  tracos: ('leve' | 'humanista' | 'tecnico' | 'rigoroso')[]
+}
+
+const MARCAS_DO_JULGADOR: Record<TomDoJulgador['tracos'][number], RegExp> = {
+  leve: /!|\bora,|convenhamos|pasme|francamente|diga-se de passagem|como diria|curios[oa]mente|salta aos olhos|com o perdao d|poeta|\bverso\b/g,
+  humanista: /dignidade|sofrimento|vulnerab|sensib|humanidade|afeto|melhor interesse|hipossufici|drama|angustia/g,
+  tecnico: /\bart\.|§|sumula|tema \d|precedente|repetitiv|enunciado|\bresp\b|informativo/g,
+  rigoroso: /preclus|intempestiv|nao conheco|inepcia|sob pena de|deserc|indefiro|litigancia de ma-fe|advirto/g,
+}
+
+/**
+ * Lê o modo de escrever do julgador nas decisões e despachos dele já publicados no processo.
+ * É leitura de texto público, não perfil psicológico. Com pouca amostra, não conclui nada.
+ */
+export function tomDoJulgador(textos: string[]): TomDoJulgador {
+  const bruto = textos.join('\n')
+  const t = bruto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+  const palavras = t.split(/\s+/).filter(Boolean).length
+  const frases = Math.max(1, t.split(/[.;!?]+\s/).filter(f => f.trim().split(/\s+/).length > 2).length)
+  const media = palavras / frases
+  const suficiente = palavras >= 150
+  const porMil = (re: RegExp) => ((t.match(re) ?? []).length * 1000) / Math.max(1, palavras)
+  const limites: Record<TomDoJulgador['tracos'][number], number> = { leve: 4, humanista: 4, tecnico: 12, rigoroso: 5 }
+  const tracos = suficiente ? (Object.keys(MARCAS_DO_JULGADOR) as TomDoJulgador['tracos']).filter(k => porMil(MARCAS_DO_JULGADOR[k]) >= limites[k]) : []
+  return { amostra: palavras, suficiente, extensao: media < 20 ? 'conciso' : media > 34 ? 'extenso' : 'medio', tracos }
+}
+
+/** Bloco das instruções que ajusta o tom da peça a quem vai julgá-la. */
+export function instrucoesDoJulgador(tom: TomDoJulgador, orgao?: string | null) {
+  const quem = orgao ? ` (${orgao})` : ''
+  const base = `TOM AJUSTADO AO JULGADOR${quem}: a peça é escrita para quem vai decidir.`
+  const respeito = 'Em qualquer caso: respeito ao julgador e à parte contrária; nunca piada, nunca ironia contra pessoa alguma, nunca imitar ou comentar o estilo do julgador.'
+  if (!tom.suficiente) return `${base} Há pouco texto do julgador nos autos para conhecer o estilo dele: use tom sóbrio, direto e respeitoso, sem humor. ${respeito}`
+  const linhas = [
+    tom.extensao === 'conciso' ? 'O julgador escreve curto: vá direto ao ponto, parágrafos breves, pedido logo visível, sem repetição.' : tom.extensao === 'extenso' ? 'O julgador fundamenta com fôlego: desenvolva o raciocínio por inteiro, sem pular etapas.' : 'O julgador escreve em extensão média: equilíbrio entre síntese e fundamentação.',
+    tom.tracos.includes('tecnico') ? 'Ele decide com artigo, súmula e precedente: ancore cada tese na norma e no precedente aplicável (marcado "[conferir no tribunal]").' : '',
+    tom.tracos.includes('humanista') ? 'Ele dá peso ao lado humano do caso: deixe a narrativa mostrar as pessoas e a consequência concreta da decisão.' : '',
+    tom.tracos.includes('rigoroso') ? 'Ele é rigoroso com forma e prazo: demonstre tempestividade, cabimento e cumprimento de cada requisito logo no início.' : '',
+    tom.tracos.includes('leve') ? 'Ele escreve com leveza: cabe, no máximo uma vez, uma imagem bem escolhida ou frase de espírito elegante, se servir ao argumento.' : 'Ele escreve em tom sério: nenhuma leveza, nenhuma figura de efeito.',
+  ].filter(Boolean)
+  return `${base} Leitura feita sobre ${tom.amostra} palavras de decisões e despachos dele neste processo.\n${linhas.map(l => `- ${l}`).join('\n')}\n${respeito}`
+}
+
 /**
  * Sorteia o perfil de escrita de uma peça.
  * 1. Escolhe 2 ou 3 escolas (com preferência pela área) e pesos de Dirichlet.

@@ -1,6 +1,6 @@
 // Rotação de estilo das peças (06/11/2026): perfis reprodutíveis, diferentes entre si e dentro dos limites.
 import { describe, it, expect } from 'vitest'
-import { BANCA, escolherRedator, instrucoesDoRedator, chaveArea, sortearPerfil, instrucoesDoPerfil, instrucoesDeRedacao, amostrasDoAutor, medirTexto, aderencia, distancia, gerador, hash32, ESCOLAS, REFERENCIAS, LIMITES, DISTANCIA_MINIMA, type Perfil } from './estiloPecas'
+import { NARRATIVA, instrucoesDeNarrativa, tomDoJulgador, instrucoesDoJulgador, BANCA, escolherRedator, instrucoesDoRedator, chaveArea, sortearPerfil, instrucoesDoPerfil, instrucoesDeRedacao, amostrasDoAutor, medirTexto, aderencia, distancia, gerador, hash32, ESCOLAS, REFERENCIAS, LIMITES, DISTANCIA_MINIMA, type Perfil } from './estiloPecas'
 import { pecaEmHtml, ehTitulo } from './formatarPeca'
 
 describe('estiloPecas', () => {
@@ -159,3 +159,32 @@ describe('banca dos dez redatores', () => {
     expect(dominante).toBeGreaterThan(28)
   })
 })
+
+describe('narrativa e tom do julgador', () => {
+  it('tem dez técnicas de narrativa e proíbe criar fato', () => {
+    expect(NARRATIVA).toHaveLength(10)
+    expect(instrucoesDeNarrativa()).toMatch(/10\. Fecho pela consequência/)
+    expect(instrucoesDeNarrativa()).toMatch(/nunca cria fato/)
+  })
+  it('com pouco texto do julgador não conclui nada e fica sóbrio, sem humor', () => {
+    const tom = tomDoJulgador(['Digam as partes em 5 dias.'])
+    expect(tom.suficiente).toBe(false)
+    expect(instrucoesDoJulgador(tom, '2ª Vara Cível')).toMatch(/tom sóbrio, direto e respeitoso, sem humor/)
+  })
+  it('julgador técnico e conciso pede peça direta e ancorada em norma; tom sério não admite leveza', () => {
+    const tom = tomDoJulgador(['Indefiro o pedido. Aplica-se o art. 373 do CPC e a Súmula 7 do STJ. O precedente do Tema 1076 resolve a questão. Sob pena de preclusão, junte o autor o documento. '.repeat(8)])
+    expect(tom.suficiente).toBe(true)
+    expect(tom.extensao).toBe('conciso')
+    expect(tom.tracos).toEqual(expect.arrayContaining(['tecnico', 'rigoroso']))
+    const t = instrucoesDoJulgador(tom, null)
+    expect(t).toMatch(/vá direto ao ponto/)
+    expect(t).toMatch(/tom sério: nenhuma leveza/)
+    expect(t).toMatch(/nunca piada/)
+  })
+  it('julgador de escrita leve admite uma única imagem, sem ironia contra pessoa', () => {
+    const tom = tomDoJulgador(['Ora, convenhamos, a tese do réu é curiosa! Diga-se de passagem, como diria o poeta, o tempo não para, e o prazo também não. A dignidade da família pede sensibilidade neste drama. '.repeat(8)])
+    expect(tom.tracos).toEqual(expect.arrayContaining(['leve', 'humanista']))
+    expect(instrucoesDoJulgador(tom, null)).toMatch(/no máximo uma vez/)
+  })
+})
+

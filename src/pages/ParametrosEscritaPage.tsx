@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
-import { BANCA } from '@/lib/estiloPecas'
+import { BANCA, NARRATIVA } from '@/lib/estiloPecas'
 import { ChevronDown, ChevronRight, Save, CheckCircle2, FileText, Scale, BookOpen, Target, Layers, Pen, Info, HelpCircle, ArrowRight } from 'lucide-react'
 
 // ─── Tooltip universal ────────────────────────────────────────────────────────
@@ -648,6 +648,33 @@ export default function ParametrosEscritaPage() {
               </li>
             ))}
           </ol>
+        </section>
+
+        <section className="bg-superficie border border-borda rounded-xl mt-6" aria-labelledby="narrativa-titulo">
+          <div className="px-4 py-3 border-b border-borda">
+            <Tooltip texto="Técnicas que o robô aplica ao contar os fatos de toda peça. Não dá para editar aqui." posicao="bottom">
+              <h2 id="narrativa-titulo" className="font-semibold text-sm text-texto cursor-help">Narrativa dos fatos: as 10 técnicas</h2>
+            </Tooltip>
+            <p className="text-xs text-grafite/70 mt-1">
+              Toda peça conta a história do cliente com estas técnicas. O robô nunca cria fato: o que não estiver nos dados do caso vai entre colchetes para o advogado preencher.
+            </p>
+          </div>
+          <ol className="divide-y divide-borda">
+            {NARRATIVA.map((n, i) => (
+              <li key={n.nome} className="px-4 py-2.5 text-xs text-grafite"><strong className="text-texto">{i + 1}. {n.nome}:</strong> {n.regra}.</li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="bg-superficie border border-borda rounded-xl mt-6" aria-labelledby="julgador-titulo">
+          <div className="px-4 py-3">
+            <Tooltip texto="O robô lê as decisões e despachos do juiz ou relator já publicados no processo e ajusta o tom da peça." posicao="bottom">
+              <h2 id="julgador-titulo" className="font-semibold text-sm text-texto cursor-help">Tom ajustado a quem vai julgar</h2>
+            </Tooltip>
+            <p className="text-xs text-grafite mt-1">
+              Antes de escrever, o robô lê o que o próprio julgador já publicou no processo: se escreve curto ou longo, se decide por artigo e precedente, se dá peso ao lado humano, se é rigoroso com forma e prazo, se escreve com leveza ou em tom sério. A peça acompanha esse modo. Com pouco texto do julgador, o tom fica sóbrio. Em nenhum caso há piada ou ironia contra pessoa alguma.
+            </p>
+          </div>
         </section>
 
         {/* Botão salvar no final */}

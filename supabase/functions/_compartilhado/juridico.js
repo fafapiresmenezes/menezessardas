@@ -805,6 +805,57 @@ Mantenha as forças dessa tradição: ${b.forcas}.
 É proibido reproduzir as fraquezas dela: ${b.evitar}.
 Siga o método e o padrão de qualidade dessa tradição. Não copie trechos de obra nenhuma, não cite ${b.referencia} como autor do texto e não lhe atribua frases; se citar obra dele como doutrina, só com certeza, senão "[doutrina a conferir]".`;
 }
+var NARRATIVA = [
+  { nome: "Tema do caso", regra: "uma frase, logo no começo, que diga do que o caso trata e por que o cliente tem razão; tudo o mais serve a ela" },
+  { nome: "Abertura pelo que está em jogo", regra: "antes da lei, dizer quem é o cliente e o que ele pode perder ou ganhar com a decisão" },
+  { nome: "Pessoa, não rótulo", regra: 'chamar o cliente pelo nome ou pelo papel na vida (a locadora, o pai, a empresa), sem repetir "o autor" a cada linha' },
+  { nome: "Ordem do tempo", regra: "contar na ordem em que aconteceu, com data em cada passo decisivo" },
+  { nome: "Fato concreto no lugar do adjetivo", regra: 'valor, data, documento e conduta; nada de "absurdo", "flagrante" ou "inaceitável"' },
+  { nome: "Conflito claro", regra: "mostrar o que o cliente buscava, o que a outra parte fez e o dano que resultou" },
+  { nome: "Fato desfavorável enfrentado", regra: "tratar de frente o ponto fraco e explicar por que não muda o resultado, em vez de escondê-lo" },
+  { nome: "Cada fato com sua prova", regra: "todo fato relevante aponta o documento ou a folha dos autos; se faltar, vai entre colchetes" },
+  { nome: "Ponte para o direito", regra: "cada fato narrado reaparece na fundamentação; fato que não sustenta pedido sai do texto" },
+  { nome: "Fecho pela consequência", regra: "terminar mostrando ao julgador o efeito prático de acolher ou negar o pedido" }
+];
+function instrucoesDeNarrativa() {
+  return `NARRATIVA DOS FATOS (dez técnicas; aplique todas na medida do tipo da peça):
+${NARRATIVA.map((n, i) => `${i + 1}. ${n.nome}: ${n.regra}.`).join("\n")}
+A narrativa nunca cria fato: usa só o que está na publicação e nos dados do caso; o que faltar vai entre colchetes.`;
+}
+var MARCAS_DO_JULGADOR = {
+  leve: /!|\bora,|convenhamos|pasme|francamente|diga-se de passagem|como diria|curios[oa]mente|salta aos olhos|com o perdao d|poeta|\bverso\b/g,
+  humanista: /dignidade|sofrimento|vulnerab|sensib|humanidade|afeto|melhor interesse|hipossufici|drama|angustia/g,
+  tecnico: /\bart\.|§|sumula|tema \d|precedente|repetitiv|enunciado|\bresp\b|informativo/g,
+  rigoroso: /preclus|intempestiv|nao conheco|inepcia|sob pena de|deserc|indefiro|litigancia de ma-fe|advirto/g
+};
+function tomDoJulgador(textos) {
+  const bruto = textos.join("\n");
+  const t = bruto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const palavras = t.split(/\s+/).filter(Boolean).length;
+  const frases = Math.max(1, t.split(/[.;!?]+\s/).filter((f) => f.trim().split(/\s+/).length > 2).length);
+  const media = palavras / frases;
+  const suficiente = palavras >= 150;
+  const porMil = (re) => (t.match(re) ?? []).length * 1e3 / Math.max(1, palavras);
+  const limites = { leve: 4, humanista: 4, tecnico: 12, rigoroso: 5 };
+  const tracos = suficiente ? Object.keys(MARCAS_DO_JULGADOR).filter((k) => porMil(MARCAS_DO_JULGADOR[k]) >= limites[k]) : [];
+  return { amostra: palavras, suficiente, extensao: media < 20 ? "conciso" : media > 34 ? "extenso" : "medio", tracos };
+}
+function instrucoesDoJulgador(tom, orgao) {
+  const quem = orgao ? ` (${orgao})` : "";
+  const base = `TOM AJUSTADO AO JULGADOR${quem}: a peça é escrita para quem vai decidir.`;
+  const respeito = "Em qualquer caso: respeito ao julgador e à parte contrária; nunca piada, nunca ironia contra pessoa alguma, nunca imitar ou comentar o estilo do julgador.";
+  if (!tom.suficiente) return `${base} Há pouco texto do julgador nos autos para conhecer o estilo dele: use tom sóbrio, direto e respeitoso, sem humor. ${respeito}`;
+  const linhas = [
+    tom.extensao === "conciso" ? "O julgador escreve curto: vá direto ao ponto, parágrafos breves, pedido logo visível, sem repetição." : tom.extensao === "extenso" ? "O julgador fundamenta com fôlego: desenvolva o raciocínio por inteiro, sem pular etapas." : "O julgador escreve em extensão média: equilíbrio entre síntese e fundamentação.",
+    tom.tracos.includes("tecnico") ? 'Ele decide com artigo, súmula e precedente: ancore cada tese na norma e no precedente aplicável (marcado "[conferir no tribunal]").' : "",
+    tom.tracos.includes("humanista") ? "Ele dá peso ao lado humano do caso: deixe a narrativa mostrar as pessoas e a consequência concreta da decisão." : "",
+    tom.tracos.includes("rigoroso") ? "Ele é rigoroso com forma e prazo: demonstre tempestividade, cabimento e cumprimento de cada requisito logo no início." : "",
+    tom.tracos.includes("leve") ? "Ele escreve com leveza: cabe, no máximo uma vez, uma imagem bem escolhida ou frase de espírito elegante, se servir ao argumento." : "Ele escreve em tom sério: nenhuma leveza, nenhuma figura de efeito."
+  ].filter(Boolean);
+  return `${base} Leitura feita sobre ${tom.amostra} palavras de decisões e despachos dele neste processo.
+${linhas.map((l) => `- ${l}`).join("\n")}
+${respeito}`;
+}
 function sortearPerfil(opcoes) {
   const r = gerador(opcoes.semente);
   const anteriores = (opcoes.anteriores ?? []).map((a) => "parametros" in a ? a.parametros : a);
@@ -1103,6 +1154,7 @@ export {
   BANCA,
   CODIGOS,
   FORMATOS,
+  NARRATIVA,
   ROTULO_URGENCIA,
   aderencia,
   amostrasDoAutor,
@@ -1117,7 +1169,9 @@ export {
   escolherRedator,
   formatacaoFinal,
   hash32,
+  instrucoesDeNarrativa,
   instrucoesDeRedacao,
+  instrucoesDoJulgador,
   instrucoesDoPerfil,
   instrucoesDoRedator,
   lerIntimacao,
@@ -1131,5 +1185,6 @@ export {
   somarDias,
   sortearFormato,
   sortearPerfil,
+  tomDoJulgador,
   urgenciaPara
 };

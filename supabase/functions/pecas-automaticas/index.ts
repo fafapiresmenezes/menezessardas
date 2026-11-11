@@ -6,7 +6,7 @@
 // - Nunca protocola nada. Jurisprudência só com "[conferir no tribunal]".
 // Roda pelo cron (x-cron-secret) ou pelo botão "Escrever as peças agora" (usuário logado; aceita { tarefa_id }).
 import { createClient } from 'jsr:@supabase/supabase-js@2'
-import { pecaEmHtml, sortearFormato, sortearPerfil, instrucoesDoPerfil, amostrasDoAutor, hash32, medirTexto, aderencia, somarDias, br, escolherRedator, instrucoesDoRedator } from '../_compartilhado/juridico.js'
+import { pecaEmHtml, sortearFormato, sortearPerfil, instrucoesDoPerfil, amostrasDoAutor, hash32, medirTexto, aderencia, somarDias, br, escolherRedator, instrucoesDoRedator, instrucoesDeNarrativa, tomDoJulgador, instrucoesDoJulgador } from '../_compartilhado/juridico.js'
 
 const cors = {
   'Access-Control-Allow-Origin': '*',
@@ -111,6 +111,12 @@ Deno.serve(async (req) => {
       const area = t.area ?? caso?.area ?? undefined
       const redator = escolherRedator({ area, titulo: `${t.titulo} ${caso?.titulo ?? ''}`, anteriores: ((anteriores ?? []) as { perfil: any }[]).map(a => a.perfil?.redator).filter(Boolean), semente })
       const perfil = sortearPerfil({ semente, especialidade: area, escolas: [redator.escola], anteriores: ((anteriores ?? []) as { perfil: any }[]).map(a => a.perfil).filter((p: any) => p?.parametros) })
+      // Tom ajustado a quem julga: lê as decisões e despachos do próprio juízo já publicados neste processo.
+      const { data: irmas } = t.pai_id ? await s.from('tarefas').select('descricao').eq('pai_id', t.pai_id).limit(15) : { data: null }
+      const publicado = (d: unknown) => String(d ?? '').split(/Publicação de [^\n]*:\n/)[1]?.split('\nLeitura automática')[0] ?? ''
+      const doJuizo = [t, ...((irmas ?? []) as { descricao?: string }[])].map(x => publicado(x.descricao)).filter(Boolean)
+      const tom = tomDoJulgador([...new Set(doJuizo)])
+      const orgao = String(t.descricao ?? '').match(/Publicação de [^(\n]*\(([^)\n]+)\):/)?.[1] ?? null
       const amostras = (estilos ?? []).length ? amostrasDoAutor(estilos as { titulo: string; texto: string }[], 60000) : []
       const estilo = amostras.length ? `\n\nESTILO DE ESCRITA DO ESCRITÓRIO (${amostras.length} peças de referência). Imite vocabulário, extensão das frases, forma de abrir e fechar, tom, numeração e modo de citar a lei. Nunca copie fatos das amostras.\n${amostras.join('\n\n')}\nQuando houver estilo do escritório, ele prevalece; use o perfil abaixo só para variar ritmo, conectivos, abertura e fecho.` : ''
       const sistema = `Você é advogado sênior de um escritório brasileiro e redige peças processuais completas, prontas para revisão do advogado responsável.
@@ -118,7 +124,7 @@ Regras: padrão forense brasileiro; endereçamento ao juízo correto; qualifica�
 Nunca invente jurisprudência: se citar precedente, marque "[conferir no tribunal]". Doutrina só com certeza, senão "[doutrina a conferir]".
 Ao final, depois da assinatura, acrescente a seção "PONTOS A CONFERIR ANTES DE PROTOCOLAR" com o que depende de documentos ou fatos.
 Acabamento: a resposta começa direto no endereçamento, sem aviso, saudação ou comentário antes; não use linhas de traços nem títulos em markdown; o nome da peça vai sozinho numa linha, em caixa alta; pedidos em alíneas a), b), c), uma por linha; fecho com "Nestes termos, pede deferimento.", depois local e data, depois [advogado] e [OAB] em linhas separadas. Qualquer observação sua para o advogado (dúvida sobre a natureza do ato, prazo, dado que falta) vai SÓ na seção final de pontos a conferir.
-Títulos de seção em caixa alta, numa linha só e SEM número (ex.: DOS FATOS): a numeração e a formatação final são aplicadas depois, pelo modelo do escritório. Não use markdown além de **negrito** pontual.${regras}${estilo}\n\n${instrucoesDoRedator(redator)}\n\n${instrucoesDoPerfil(perfil)}`
+Títulos de seção em caixa alta, numa linha só e SEM número (ex.: DOS FATOS): a numeração e a formatação final são aplicadas depois, pelo modelo do escritório. Não use markdown além de **negrito** pontual.${regras}${estilo}\n\n${instrucoesDoRedator(redator)}\n\n${instrucoesDeNarrativa()}\n\n${instrucoesDoJulgador(tom, orgao)}\n\n${instrucoesDoPerfil(perfil)}`
       const pedido = `Redija a peça para cumprir esta tarefa: "${t.titulo}".
 Processo: ${t.numero_processo}. Prazo final: ${br(t.prazo)}.
 Cliente: ${t.cliente ?? caso?.cliente ?? '[cliente]'}. Área: ${t.area ?? caso?.area ?? '[área]'}.
@@ -158,7 +164,7 @@ ${String(t.descricao ?? '').slice(0, 9000)}`
         enviada = env.ok
         if (!env.ok) detalhe = `E-mail recusado (${env.status}): ${(await env.text()).slice(0, 200)}`
       }
-      await s.from('pecas_automaticas').insert({ tarefa_id: t.id, escritorio_id: t.escritorio_id, numero: t.numero_processo, titulo, texto, perfil: { ...perfil, formato: formato.id, redator: redator.id, redatorReferencia: redator.referencia }, aderencia: nota, enviada_para: enviada ? destinatarios : [], enviada_em: enviada ? new Date().toISOString() : null, erro: detalhe ?? null })
+      await s.from('pecas_automaticas').insert({ tarefa_id: t.id, escritorio_id: t.escritorio_id, numero: t.numero_processo, titulo, texto, perfil: { ...perfil, formato: formato.id, redator: redator.id, julgador: { orgao, ...tom }, redatorReferencia: redator.referencia }, aderencia: nota, enviada_para: enviada ? destinatarios : [], enviada_em: enviada ? new Date().toISOString() : null, erro: detalhe ?? null })
       await s.from('tarefas').update({ peca_automatica_em: new Date().toISOString() }).eq('id', t.id)
       feitas.push({ tarefa: t.id, titulo, enviada, detalhe, redator: redator.referencia })
     } catch (e) {
