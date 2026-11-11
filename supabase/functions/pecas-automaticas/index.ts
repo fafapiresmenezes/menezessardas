@@ -157,7 +157,9 @@ ${BASE_SISTEMA}${ctx.regras}\n\n${instrucoesDoRedator(redator)}\n\n${instrucoesD
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)
     // Se a mesma revisão falha pela 2ª vez, segue com o texto que já havia, anotando o motivo.
-    if (String(r.erro ?? '').startsWith(`revisão ${etapa + 1}:`)) {
+    // Erro da própria IA (crédito, limite de ritmo, instabilidade) NÃO conta como revisão pulada: a peça espera e tenta de novo, sem seguir para o e-mail.
+    const falhaDeServico = /^IA respondeu \d+/.test(msg)
+    if (!falhaDeServico && String(r.erro ?? '').startsWith(`revisão ${etapa + 1}:`)) {
       const { data: t } = await s.from('tarefas').select('id,titulo,prazo,numero_processo,responsavel_id,escritorio_id').eq('id', r.tarefa_id).maybeSingle()
       const { data: form } = t?.responsavel_id ? await s.from('formatacao_escrita').select('dados').eq('usuario_id', t.responsavel_id).maybeSingle() : { data: null }
       return await concluirPasso(s, r, String(r.texto), etapa, t ?? { id: r.tarefa_id, titulo: r.titulo, numero_processo: r.numero, prazo: null }, form, (r.perfil ?? {}) as Record<string, any>, ctx, `revisão ${etapa + 1} não aplicada: ${msg}`)

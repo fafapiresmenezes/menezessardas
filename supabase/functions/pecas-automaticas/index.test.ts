@@ -143,4 +143,20 @@ describe('pecas-automaticas', () => {
     expect(linha().erro).toMatch(/revisão 1 não aplicada/)
     expect(String(linha().texto)).toContain('EXCELENTÍSSIMO')
   })
+
+  it('falha do serviço de IA (crédito, limite) não pula revisão: a peça espera, sem ir para o e-mail', async () => {
+    await chamar()
+    fingirFetch((u, init) => {
+      chamadas.push({ url: u, body: init?.body ? JSON.parse(String(init.body)) : null })
+      if (u.includes('anthropic')) return new Response('{"error":{"message":"Your credit balance is too low"}}', { status: 400 })
+      return jsonResp({ messageId: 'm1' }, 201)
+    })
+    await revisar(5)
+    const linha = estado.tabelas.pecas_automaticas[0] as Record<string, any>
+    expect(linha.perfil.rev).toBe(0)
+    expect(linha.perfil.pend).toBe(true)
+    expect(linha.erro).toMatch(/credit balance/)
+    expect(chamadas.some(c => c.url.includes('brevo'))).toBe(false)
+  })
 })
+
