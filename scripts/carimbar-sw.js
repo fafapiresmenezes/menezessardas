@@ -10,14 +10,14 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const swPath = path.resolve(__dirname, '../dist/sw.js')
+const swPath = path.resolve(__dirname, '..', process.argv[2] ?? 'dist', 'sw.js')
 
 const versao = `theye-${Date.now().toString(36)}`
 const conteudo = readFileSync(swPath, 'utf8')
 const atualizado = conteudo.replace(/const VERSAO = '[^']*'/, `const VERSAO = '${versao}'`)
 
 if (atualizado === conteudo) {
-  throw new Error('carimbar-sw.js: não encontrou "const VERSAO = \'...\'" em dist/sw.js — build do service worker pode ter mudado de formato.')
+  throw new Error(`carimbar-sw.js: não encontrou "const VERSAO = '...'" em ${swPath} — build do service worker pode ter mudado de formato.`)
 }
 
 writeFileSync(swPath, atualizado)
