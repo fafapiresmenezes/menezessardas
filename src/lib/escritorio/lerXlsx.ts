@@ -38,16 +38,7 @@ const desescapar = (s: string) => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').
 const textoDe = (xml: string) => desescapar([...xml.matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map(m => m[1]).join(''))
 const coluna = (ref: string) => { let n = 0; for (const ch of ref.replace(/\d+/g, '')) n = n * 26 + (ch.charCodeAt(0) - 64); return n - 1 }
 
-/** Converte o .xlsx em texto com colunas separadas por tabulação (uma linha por linha da planilha). */
-export async function xlsxParaTexto(arquivo: ArrayBuffer): Promise<string> {
-  const b = new Uint8Array(arquivo)
-  const entradas = entradasDoZip(b)
-  const achar = (nome: string) => entradas.find(e => e.nome === nome)
-  const comp = achar('xl/sharedStrings.xml')
-  const compartilhadas = comp ? [...(await abrir(b, comp)).matchAll(/<si>([\s\S]*?)<\/si>/g)].map(m => textoDe(m[1])) : []
-  const abas = entradas.filter(e => /^xl\/worksheets\/sheet\d+\.xml$/.test(e.nome)).sort((x, y) => Number(x.nome.match(/\d+/)![0]) - Number(y.nome.match(/\d+/)![0]))
-  if (!abas.length) throw new Error('Não achei nenhuma aba com dados na planilha.')
-  const xml = await abrir(b, abas[0])
+function abaParaTexto(xml: string, compartilhadas: string[]): string {
   const linhas: string[] = []
   for (const r of xml.matchAll(/<row\b[^>]*>([\s\S]*?)<\/row>/g)) {
     const celulas: string[] = []
@@ -67,4 +58,40 @@ export async function xlsxParaTexto(arquivo: ArrayBuffer): Promise<string> {
     if (celulas.some(x => x)) linhas.push(celulas.join('\t'))
   }
   return linhas.join('\n')
+}
+
+/** Todas as abas da planilha, com o nome de cada uma, em texto separado por tabulação. */
+export async function xlsxAbas(arquivo: ArrayBuffer): Promise<{ nome: string; texto: string }[]> {
+  const b = new Uint8Array(arquivo)
+  const entradas = entradasDoZip(b)
+  const achar = (nome: string) => entradas.find(e => e.nome === nome)
+  const comp = achar('xl/sharedStrings.xml')
+  const compartilhadas = comp ? [...(await abrir(b, comp)).matchAll(/<si>([\s\S]*?)<\/si>/g)].map(m => textoDe(m[1])) : []
+  // Nomes das abas: workbook.xml liga o nome a um r:id, e o .rels liga o r:id ao arquivo da aba.
+  const wb = achar('xl/workbook.xml'), rels = achar('xl/_rels/workbook.xml.rels')
+  const nomes = new Map<string, string>()
+  if (wb && rels) {
+    const alvo = new Map([...(await abrir(b, rels)).matchAll(/<Relationship\b[^>]*>/g)].map(m => [m[0].match(/Id="([^"]+)"/)?.[1] ?? '', (m[0].match(/Target="([^"]+)"/)?.[1] ?? '').replace(/^\/?(xl\/)?/, 'xl/')]))
+    for (const m of (await abrir(b, wb)).matchAll(/<sheet\b[^>]*>/g)) {
+      const nome = desescapar(m[0].match(/name="([^"]*)"/)?.[1] ?? ''), id = m[0].match(/r:id="([^"]+)"/)?.[1] ?? ''
+      if (alvo.get(id)) nomes.set(alvo.get(id)!, nome)
+    }
+  }
+  const abas = entradas.filter(e => /^xl\/worksheets\/sheet\d+\.xml$/.test(e.nome)).sort((x, y) => Number(x.nome.match(/\d+/)![0]) - Number(y.nome.match(/\d+/)![0]))
+  if (!abas.length) throw new Error('Não achei nenhuma aba com dados na planilha.')
+  const out: { nome: string; texto: string }[] = []
+  for (const [i, a] of abas.entries()) out.push({ nome: nomes.get(a.nome) || `Aba ${i + 1}`, texto: abaParaTexto(await abrir(b, a), compartilhadas) })
+  return out
+}
+
+/** Arquivo de dentro de um ZIP (Word .docx, planilha .ods), já descompactado. */
+export async function arquivoDoZip(arquivo: ArrayBuffer, nome: string): Promise<string | null> {
+  const b = new Uint8Array(arquivo)
+  const e = entradasDoZip(b).find(x => x.nome === nome)
+  return e ? abrir(b, e) : null
+}
+
+/** Converte o .xlsx em texto com colunas separadas por tabulação (só a primeira aba). */
+export async function xlsxParaTexto(arquivo: ArrayBuffer): Promise<string> {
+  return (await xlsxAbas(arquivo))[0].texto
 }
