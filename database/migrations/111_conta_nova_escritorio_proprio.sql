@@ -1,12 +1,11 @@
--- 111 — Conta nova nasce num escritório próprio e vazio + veto ao escritório Sardas e Menezes
--- (decisões do M em 10/11/2026).
+-- 111 — Conta nova nasce num escritório próprio e vazio (decisão do M em 10/11/2026; em 11/11/2026 o M
+-- retirou o veto ao escritório Sardas e Menezes: ele entra como qualquer outro escritório cliente).
 -- M definiu que a plataforma é para outros escritórios e para o Instituto (estudo e pesquisa):
--- ninguém de fora pode entrar nos dados da sede, e o escritório Sardas e Menezes está VETADO.
+-- ninguém de fora entra nos dados da sede.
 -- A migração 109 colocava a conta nova como leitor DA SEDE, com acesso de leitura a tudo; agora:
---   * conta nova comum vira ADMINISTRADORA de um escritório recém-criado e vazio, com o nome dela;
---   * e-mails dos domínios do escritório vetado (gmenezes.com, lsm.law) não recebem perfil nenhum
---     (sem perfil, a RLS não deixa ler nada);
---   * os perfis já existentes desses domínios perdem a função ("Sem acesso" na tela Equipe).
+--   * conta nova comum vira ADMINISTRADORA de um escritório recém-criado e vazio, com o nome dela,
+--     qualquer que seja o domínio do e-mail (gmenezes.com e lsm.law inclusive);
+--   * quem precisa trabalhar DENTRO da sede (equipe da sede) é convidado pelo administrador da sede.
 -- Exceções (iguais às da 109):
 --   * o primeiro usuário do banco continua virando administrador (da sede);
 --   * quem tem convite de escritório parceiro pendente NÃO recebe perfil aqui: o aceite do
@@ -33,10 +32,6 @@ BEGIN
   IF NEW.email IS NULL THEN
     RETURN NEW;
   END IF;
-  -- Veto ao escritório Sardas e Menezes: nenhum perfil para estes domínios.
-  IF split_part(lower(NEW.email), '@', 2) IN ('gmenezes.com', 'lsm.law') THEN
-    RETURN NEW;
-  END IF;
   IF EXISTS (
     SELECT 1 FROM public.convites_escritorio c
     WHERE lower(c.email) = lower(NEW.email) AND c.aceito_em IS NULL AND c.expira_em >= now()
@@ -58,9 +53,3 @@ END;
 $$;
 
 REVOKE EXECUTE ON FUNCTION public.criar_perfil_primeiro_acesso() FROM PUBLIC, anon, authenticated;
-
--- Perfis já existentes dos domínios vetados ficam "Sem acesso" (a conta continua bloqueada no auth).
-UPDATE public.usuarios_perfis
-   SET funcao = NULL
- WHERE split_part(lower(email), '@', 2) IN ('gmenezes.com', 'lsm.law')
-   AND funcao IS NOT NULL;
