@@ -6,7 +6,7 @@
 // - Nunca protocola nada. Jurisprudência só com "[conferir no tribunal]".
 // Roda pelo cron (x-cron-secret) ou pelo botão "Escrever as peças agora" (usuário logado; aceita { tarefa_id }).
 import { createClient } from 'jsr:@supabase/supabase-js@2'
-import { pecaEmHtml, sortearPerfil, instrucoesDoPerfil, amostrasDoAutor, hash32, medirTexto, aderencia, somarDias, br } from '../_compartilhado/juridico.js'
+import { pecaEmHtml, sortearFormato, sortearPerfil, instrucoesDoPerfil, amostrasDoAutor, hash32, medirTexto, aderencia, somarDias, br } from '../_compartilhado/juridico.js'
 
 const cors = {
   'Access-Control-Allow-Origin': '*',
@@ -70,14 +70,17 @@ Deno.serve(async (req) => {
         t.responsavel_id ? s.from('formatacao_escrita').select('dados').eq('usuario_id', t.responsavel_id).maybeSingle() : Promise.resolve({ data: null }),
       ])
       const { data: anteriores } = await s.from('pecas_automaticas').select('perfil').order('criado_em', { ascending: false }).limit(6)
-      const perfil = sortearPerfil({ semente: hash32(`${t.id}|${Date.now()}`), especialidade: t.area ?? undefined, anteriores: ((anteriores ?? []) as { perfil: any }[]).map(a => a.perfil).filter((p: any) => p?.parametros) })
+      const semente = hash32(`${t.id}|${Date.now()}`)
+      // Formatação em rodízio entre 10 modelos, sem repetir os últimos usados.
+      const formato = sortearFormato(semente, ((anteriores ?? []) as { perfil: any }[]).map(a => a.perfil?.formato).filter(Boolean))
+      const perfil = sortearPerfil({ semente, especialidade: t.area ?? undefined, anteriores: ((anteriores ?? []) as { perfil: any }[]).map(a => a.perfil).filter((p: any) => p?.parametros) })
       const amostras = (estilos ?? []).length ? amostrasDoAutor(estilos as { titulo: string; texto: string }[], 60000) : []
       const estilo = amostras.length ? `\n\nESTILO DE ESCRITA DO ESCRITÓRIO (${amostras.length} peças de referência). Imite vocabulário, extensão das frases, forma de abrir e fechar, tom, numeração e modo de citar a lei. Nunca copie fatos das amostras.\n${amostras.join('\n\n')}\nQuando houver estilo do escritório, ele prevalece; use o perfil abaixo só para variar ritmo, conectivos, abertura e fecho.` : ''
       const sistema = `Você é advogado sênior de um escritório brasileiro e redige peças processuais completas, prontas para revisão do advogado responsável.
 Regras: padrão forense brasileiro; endereçamento ao juízo correto; qualificação com [campos entre colchetes] para o que não estiver nos dados; fatos SÓ os que estão na publicação e nos dados do caso (o que faltar vai entre colchetes); fundamentação com artigo e lei; pedidos numerados; local, data e assinatura com [advogado] e [OAB].
 Nunca invente jurisprudência: se citar precedente, marque "[conferir no tribunal]". Doutrina só com certeza, senão "[doutrina a conferir]".
 Ao final, depois da assinatura, acrescente a seção "PONTOS A CONFERIR ANTES DE PROTOCOLAR" com o que depende de documentos ou fatos.
-Títulos de seção em caixa alta, numa linha só. Não use markdown além de **negrito** pontual.${estilo}\n\n${instrucoesDoPerfil(perfil)}`
+Títulos de seção em caixa alta, numa linha só e SEM número (ex.: DOS FATOS): a numeração e a formatação final são aplicadas depois, pelo modelo do escritório. Não use markdown além de **negrito** pontual.${estilo}\n\n${instrucoesDoPerfil(perfil)}`
       const pedido = `Redija a peça para cumprir esta tarefa: "${t.titulo}".
 Processo: ${t.numero_processo}. Prazo final: ${br(t.prazo)}.
 Cliente: ${t.cliente ?? caso?.cliente ?? '[cliente]'}. Área: ${t.area ?? caso?.area ?? '[área]'}.
@@ -97,7 +100,7 @@ ${String(t.descricao ?? '').slice(0, 9000)}`
       if (texto.length < 400) throw new Error('A IA devolveu um texto curto demais.')
       await s.from('consumo_api').insert({ funcao: 'peças automáticas', modelo: resp.model ?? MODELO, tokens_entrada: resp.usage?.input_tokens ?? 0, tokens_saida: resp.usage?.output_tokens ?? 0, usuario_id: t.responsavel_id ?? null })
       const titulo = `${String(t.titulo).split(' · ')[0]} · ${t.numero_processo}`
-      const html = pecaEmHtml(texto, titulo, (form as { dados?: unknown } | null)?.dados ?? null)
+      const html = pecaEmHtml(texto, titulo, (form as { dados?: unknown } | null)?.dados ?? null, formato)
       const nota = aderencia(medirTexto(texto), perfil)
 
       let enviada = false, detalhe: string | undefined
@@ -117,7 +120,7 @@ ${String(t.descricao ?? '').slice(0, 9000)}`
         enviada = env.ok
         if (!env.ok) detalhe = `E-mail recusado (${env.status}): ${(await env.text()).slice(0, 200)}`
       }
-      await s.from('pecas_automaticas').insert({ tarefa_id: t.id, escritorio_id: t.escritorio_id, numero: t.numero_processo, titulo, texto, perfil, aderencia: nota, enviada_para: enviada ? destinatarios : [], enviada_em: enviada ? new Date().toISOString() : null, erro: detalhe ?? null })
+      await s.from('pecas_automaticas').insert({ tarefa_id: t.id, escritorio_id: t.escritorio_id, numero: t.numero_processo, titulo, texto, perfil: { ...perfil, formato: formato.id }, aderencia: nota, enviada_para: enviada ? destinatarios : [], enviada_em: enviada ? new Date().toISOString() : null, erro: detalhe ?? null })
       await s.from('tarefas').update({ peca_automatica_em: new Date().toISOString() }).eq('id', t.id)
       feitas.push({ tarefa: t.id, titulo, enviada, detalhe })
     } catch (e) {

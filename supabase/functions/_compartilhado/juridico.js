@@ -508,6 +508,60 @@ var ESCOLAS = [
     numeracao: "arabica"
   }
 ];
+var REFERENCIAS = [
+  { nome: "Rui Barbosa", area: "Constitucional", escola: "classica" },
+  { nome: "Pontes de Miranda", area: "Civil e processo", escola: "classica" },
+  { nome: "Clóvis Beviláqua", area: "Civil", escola: "classica" },
+  { nome: "Miguel Reale", area: "Teoria do direito e Civil", escola: "classica" },
+  { nome: "Orlando Gomes", area: "Contratos", escola: "classica" },
+  { nome: "Caio Mário da Silva Pereira", area: "Civil", escola: "classica" },
+  { nome: "Washington de Barros Monteiro", area: "Civil", escola: "classica" },
+  { nome: "Celso de Mello", area: "Constitucional (STF)", escola: "classica" },
+  { nome: "Luís Roberto Barroso", area: "Constitucional (STF)", escola: "didatica" },
+  { nome: "José Afonso da Silva", area: "Constitucional", escola: "didatica" },
+  { nome: "Paulo Bonavides", area: "Constitucional", escola: "didatica" },
+  { nome: "Cármen Lúcia", area: "Constitucional (STF)", escola: "didatica" },
+  { nome: "Flávio Tartuce", area: "Civil", escola: "didatica" },
+  { nome: "Pablo Stolze Gagliano", area: "Civil", escola: "didatica" },
+  { nome: "Carlos Roberto Gonçalves", area: "Civil", escola: "didatica" },
+  { nome: "Luiz Fux", area: "Processo civil (STF)", escola: "processualista" },
+  { nome: "Fredie Didier Jr.", area: "Processo civil", escola: "processualista" },
+  { nome: "Humberto Theodoro Júnior", area: "Processo civil", escola: "processualista" },
+  { nome: "Cândido Rangel Dinamarco", area: "Processo civil", escola: "processualista" },
+  { nome: "José Carlos Barbosa Moreira", area: "Processo civil", escola: "processualista" },
+  { nome: "Ada Pellegrini Grinover", area: "Processo coletivo", escola: "processualista" },
+  { nome: "Teresa Arruda Alvim", area: "Processo civil", escola: "processualista" },
+  { nome: "Luiz Guilherme Marinoni", area: "Processo civil", escola: "processualista" },
+  { nome: "Cassio Scarpinella Bueno", area: "Processo civil", escola: "processualista" },
+  { nome: "Daniel Amorim Assumpção Neves", area: "Processo civil", escola: "processualista" },
+  { nome: "Nelson Nery Junior", area: "Processo e Civil", escola: "processualista" },
+  { nome: "Gustavo Tepedino", area: "Civil-constitucional", escola: "civil-constitucional" },
+  { nome: "Anderson Schreiber", area: "Civil-constitucional", escola: "civil-constitucional" },
+  { nome: "Judith Martins-Costa", area: "Boa-fé e contratos", escola: "civil-constitucional" },
+  { nome: "Paulo Lôbo", area: "Civil e Família", escola: "civil-constitucional" },
+  { nome: "Maria Celina Bodin de Moraes", area: "Responsabilidade civil", escola: "civil-constitucional" },
+  { nome: "Nelson Rosenvald", area: "Civil", escola: "civil-constitucional" },
+  { nome: "Ingo Wolfgang Sarlet", area: "Direitos fundamentais", escola: "civil-constitucional" },
+  { nome: "Gilmar Mendes", area: "Constitucional (STF)", escola: "civil-constitucional" },
+  { nome: "Nancy Andrighi", area: "Direito privado (STJ)", escola: "pragmatica" },
+  { nome: "Luis Felipe Salomão", area: "Direito privado (STJ)", escola: "pragmatica" },
+  { nome: "Paulo de Tarso Sanseverino", area: "Direito privado (STJ)", escola: "pragmatica" },
+  { nome: "Alexandre de Moraes", area: "Constitucional (STF)", escola: "pragmatica" },
+  { nome: "Hely Lopes Meirelles", area: "Administrativo", escola: "pragmatica" },
+  { nome: "Fábio Ulhoa Coelho", area: "Empresarial", escola: "empresarial" },
+  { nome: "Rubens Requião", area: "Empresarial", escola: "empresarial" },
+  { nome: "Modesto Carvalhosa", area: "Societário", escola: "empresarial" },
+  { nome: "Fábio Konder Comparato", area: "Empresarial e Constitucional", escola: "empresarial" },
+  { nome: "Sobral Pinto", area: "Advocacia", escola: "combativa" },
+  { nome: "Evandro Lins e Silva", area: "Advocacia criminal", escola: "combativa" },
+  { nome: "Lenio Streck", area: "Hermenêutica", escola: "combativa" },
+  { nome: "Carlos Ayres Britto", area: "Constitucional (STF)", escola: "combativa" },
+  { nome: "Sylvio Capanema de Souza", area: "Locação (Lei 8.245/91)", escola: "imobiliaria" },
+  { nome: "Gildo dos Santos", area: "Locação", escola: "imobiliaria" },
+  { nome: "Arnaldo Rizzardo", area: "Contratos e imobiliário", escola: "imobiliaria" },
+  { nome: "Maria Helena Diniz", area: "Civil e registros", escola: "imobiliaria" },
+  { nome: "Sílvio de Salvo Venosa", area: "Civil e locação", escola: "imobiliaria" }
+];
 var FORMATACAO = {
   fonte: "Times New Roman",
   fonteAlternativa: "Georgia",
@@ -662,6 +716,7 @@ function instrucoesDoPerfil(p) {
   const todos = Object.values(p.conectivos).flat();
   return `PERFIL DE ESCRITA DESTA PEÇA (sorteado para esta peça; a próxima terá outro):
 - Escolas misturadas: ${p.mistura.map((m) => `${m.nome} ${Math.round(m.peso * 100)}%`).join(", ")}.
+- Referências de escrita desta peça (imite o método e a clareza, nunca copie texto nem atribua frases a eles): ${p.mistura.flatMap((m) => REFERENCIAS.filter((r) => r.escola === m.id).slice(0, 3).map((r) => r.nome)).join(", ")}.
 - Frases com cerca de ${Math.round(q.frase)} palavras em média, alternando curtas e longas (variação de ±${Math.round(q.ritmo)} palavras). Nunca deixe três frases seguidas do mesmo tamanho.
 - Parágrafos de ${Math.max(2, Math.round(q.paragrafo - 1))} a ${Math.round(q.paragrafo + 1)} frases.
 - Doutrina: cerca de ${q.doutrina.toFixed(1).replace(".", ",")} referência(s) a cada 1.000 palavras; jurisprudência: cerca de ${q.jurisprudencia.toFixed(1).replace(".", ",")}. Cite autor e obra só quando tiver certeza; caso contrário marque "[doutrina a conferir]". Precedentes sempre com "[conferir no tribunal]".
@@ -750,7 +805,29 @@ function ehTitulo(linha) {
   const letras = t.replace(/[^A-Za-zÀ-ÿ]/g, "");
   return letras.length >= 4 && letras === letras.toUpperCase() && !/[.;:]$/.test(t);
 }
-function pecaEmHtml(texto, titulo = "Peça", propria) {
+var M = (superior, direita, inferior, esquerda) => ({ superior, direita, inferior, esquerda });
+var FORMATOS = [
+  { id: "abnt-classico", nome: "Clássico ABNT", base: { fonte: "Times New Roman", corpo: 12, entrelinhas: 1.5, recuoPrimeiraLinha: 2, margens: M(3, 2, 2, 3) }, tituloAlinhado: "left", numeracaoTitulos: "romano", paragrafosNumerados: false, espacoDepois: 6, tituloVersalete: false },
+  { id: "banca-numerada", nome: "Grande banca, parágrafos numerados", base: { fonte: "Garamond", corpo: 13, entrelinhas: 1.5, recuoPrimeiraLinha: 0, margens: M(3, 2.5, 2.5, 3) }, tituloAlinhado: "left", numeracaoTitulos: "arabico", paragrafosNumerados: true, espacoDepois: 8, tituloVersalete: false },
+  { id: "tribunal-superior", nome: "Tribunal superior (memorial)", base: { fonte: "Book Antiqua", corpo: 12, entrelinhas: 1.5, recuoPrimeiraLinha: 2.5, margens: M(3, 2, 2, 3) }, tituloAlinhado: "center", numeracaoTitulos: "romano", paragrafosNumerados: false, espacoDepois: 6, tituloVersalete: true },
+  { id: "corporativo", nome: "Corporativo sóbrio", base: { fonte: "Arial", corpo: 12, entrelinhas: 1.5, recuoPrimeiraLinha: 0, margens: M(2.5, 2.5, 2.5, 3) }, tituloAlinhado: "left", numeracaoTitulos: "arabico", paragrafosNumerados: true, espacoDepois: 10, tituloVersalete: false },
+  { id: "cambria-moderno", nome: "Moderno de escritório", base: { fonte: "Cambria", corpo: 12, entrelinhas: 1.5, recuoPrimeiraLinha: 1.5, margens: M(3, 2, 2, 3) }, tituloAlinhado: "left", numeracaoTitulos: "romano", paragrafosNumerados: false, espacoDepois: 8, tituloVersalete: false },
+  { id: "palatino-academico", nome: "Acadêmico (parecerista)", base: { fonte: "Palatino Linotype", corpo: 12, entrelinhas: 1.5, recuoPrimeiraLinha: 2, margens: M(3, 2.5, 2.5, 3) }, tituloAlinhado: "center", numeracaoTitulos: "arabico", paragrafosNumerados: true, espacoDepois: 6, tituloVersalete: true },
+  { id: "georgia-leitura", nome: "Leitura em tela (PJe)", base: { fonte: "Georgia", corpo: 12, entrelinhas: 1.5, recuoPrimeiraLinha: 1.25, margens: M(2.5, 2.5, 2.5, 2.5) }, tituloAlinhado: "left", numeracaoTitulos: "nenhuma", paragrafosNumerados: false, espacoDepois: 10, tituloVersalete: false },
+  { id: "century-contencioso", nome: "Contencioso tradicional", base: { fonte: "Century Schoolbook", corpo: 12, entrelinhas: 1.5, recuoPrimeiraLinha: 2.5, margens: M(3, 2, 2, 3) }, tituloAlinhado: "left", numeracaoTitulos: "romano", paragrafosNumerados: true, espacoDepois: 6, tituloVersalete: false },
+  { id: "calibri-agil", nome: "Ágil de contencioso de massa", base: { fonte: "Calibri", corpo: 12, entrelinhas: 1.15, recuoPrimeiraLinha: 1.25, margens: M(2.5, 2, 2, 3) }, tituloAlinhado: "left", numeracaoTitulos: "arabico", paragrafosNumerados: false, espacoDepois: 10, tituloVersalete: false },
+  { id: "times-compacto", nome: "Compacto de juizado", base: { fonte: "Times New Roman", corpo: 12, entrelinhas: 1.15, recuoPrimeiraLinha: 1.5, margens: M(2.5, 2, 2, 2.5) }, tituloAlinhado: "left", numeracaoTitulos: "romano", paragrafosNumerados: false, espacoDepois: 6, tituloVersalete: false }
+];
+function sortearFormato(semente, usados = []) {
+  const recentes = new Set(usados.slice(0, FORMATOS.length - 1));
+  const livres = FORMATOS.filter((f) => !recentes.has(f.id));
+  const lista = livres.length ? livres : FORMATOS;
+  return lista[(semente >>> 0) % lista.length];
+}
+var ROMANOS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX"];
+var semNumero = (t) => t.replace(/^\s*(?:[IVXLC]+|\d+(?:\.\d+)*)\s*(?:[–—.)-]|\.\s*[–—-])?\s+(?=[A-ZÀ-Ý])/, "");
+function pecaEmHtml(texto, titulo = "Peça", propria, modelo) {
+  if (modelo) return pecaComModelo(texto, titulo, propria, modelo);
   const f = { ...FORMATACAO, ...formatacaoFinal(propria) };
   const blocos = texto.replace(/\r/g, "").split(/\n\s*\n/).map((b) => b.trim()).filter(Boolean);
   const corpo = blocos.map((b) => {
@@ -776,9 +853,55 @@ ul.pedidos li { text-align: justify; margin-bottom: 4pt; }
 ${corpo}
 </body></html>`;
 }
+function pecaComModelo(texto, titulo, propria, md) {
+  const f = { ...FORMATACAO, ...md.base, ...propria ? formatacaoFinal({ ...md.base, ...propria }) : {} };
+  let nTitulo = 0, nPar = 0, depoisDoPrimeiroTitulo = false;
+  const tituloHtml = (bruto) => {
+    const sem = bruto.replace(/^#+\s*/, "").replace(/\*\*/g, "").trim();
+    const limpo = semNumero(sem);
+    const secao = limpo !== sem || /^(D[OA]S?\s|PRELIMINAR|M[ÉE]RITO|S[ÍI]NTESE|CONCLUS|PEDIDO|REQUERIMENTO|TEMPESTIVIDADE|CABIMENTO|RESUMO|BREVE|RAZ[ÕO]ES|FUNDAMENT|INTRODU)/.test(limpo);
+    if (!secao) return `<p class="cx"><b>${negrito(limpo)}</b></p>`;
+    nTitulo++;
+    depoisDoPrimeiroTitulo = true;
+    const prefixo = md.numeracaoTitulos === "romano" ? `${ROMANOS[nTitulo - 1] ?? nTitulo} – ` : md.numeracaoTitulos === "arabico" ? `${nTitulo}. ` : "";
+    return `<h2>${negrito(prefixo + limpo)}</h2>`;
+  };
+  const paragrafo = (l) => {
+    if (md.paragrafosNumerados && depoisDoPrimeiroTitulo) {
+      nPar++;
+      return `<p class="num"><span class="n">${nPar}.</span> ${negrito(l)}</p>`;
+    }
+    return `<p>${negrito(l)}</p>`;
+  };
+  const blocos = texto.replace(/\r/g, "").split(/\n\s*\n/).map((b) => b.trim()).filter(Boolean);
+  const corpo = blocos.map((b) => {
+    const linhas = b.split("\n");
+    if (linhas.length === 1 && ehTitulo(b)) return tituloHtml(b);
+    if (linhas.every((l) => /^\s*>/.test(l))) return `<blockquote>${negrito(linhas.map((l) => l.replace(/^\s*>\s?/, "")).join(" "))}</blockquote>`;
+    if (linhas.every((l) => /^\s*([-*•]|[a-z]\)|\d+[.)])\s+/.test(l))) return `<ul class="pedidos">${linhas.map((l) => `<li>${negrito(l.replace(/^\s*[-*•]\s+/, ""))}</li>`).join("")}</ul>`;
+    return linhas.map((l) => ehTitulo(l) ? tituloHtml(l) : paragrafo(l)).join("");
+  }).join("\n");
+  const m = f.margens;
+  return `<!doctype html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${esc(titulo)}</title>
+<meta name="formatacao" content="${esc(md.id)}">
+<style>
+@page { size: 21cm 29.7cm; margin: ${m.superior}cm ${m.direita}cm ${m.inferior}cm ${m.esquerda}cm; }
+body { font-family: '${esc(f.fonte)}', ${f.fonteAlternativa}, serif; font-size: ${f.corpo}pt; line-height: ${f.entrelinhas}; color: #000; }
+p { text-align: justify; text-indent: ${f.recuoPrimeiraLinha}cm; margin: 0 0 ${md.espacoDepois}pt 0; }
+p.num, p.cx { text-indent: 0; }
+p.num .n { font-weight: bold; display: inline-block; min-width: 1cm; }
+h2 { font-size: ${f.corpo}pt; font-weight: bold; text-transform: uppercase; text-align: ${md.tituloAlinhado}; margin: 18pt 0 ${md.espacoDepois}pt 0;${md.tituloVersalete ? " font-variant: small-caps; letter-spacing: 0.04em;" : ""} }
+blockquote { margin: 6pt 0 ${md.espacoDepois}pt ${f.recuoCitacao}cm; font-size: ${f.citacaoLonga}pt; line-height: 1; text-align: justify; }
+ul.pedidos { list-style: none; margin: 0 0 ${md.espacoDepois}pt ${f.recuoPrimeiraLinha || 1}cm; padding: 0; }
+ul.pedidos li { text-align: justify; margin-bottom: 4pt; }
+</style></head><body>
+${corpo}
+</body></html>`;
+}
 export {
   ATOS_POR_CODIGO,
   CODIGOS,
+  FORMATOS,
   ROTULO_URGENCIA,
   aderencia,
   amostrasDoAutor,
@@ -802,6 +925,7 @@ export {
   rotuloPrazo,
   semAcento,
   somarDias,
+  sortearFormato,
   sortearPerfil,
   urgenciaPara
 };
