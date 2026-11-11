@@ -3,7 +3,7 @@ import { useBaixado } from '@/hooks/useBaixado'
 import Layout from '@/components/Layout'
 import { projetarMes, sugerirTeto } from '@/lib/projecaoConsumo'
 import { supabase } from '@/lib/supabase'
-import { perfilAtual, type Funcao } from '@/lib/equipe'
+import { perfilAtual, ehSede, type Funcao } from '@/lib/equipe'
 import { Printer, Wallet, AlertTriangle, Paperclip, Download } from 'lucide-react'
 import { lerNumero } from '@/lib/numero'
 import { abrirEmNovaAba } from '@/lib/abrirAba'
@@ -44,6 +44,9 @@ export default function ConsumoPage() {
   const [mes, setMes] = useState(() => { try { return localStorage.getItem('lsm-consumo-mes') || mesAtual() } catch { return mesAtual() } })
   useEffect(() => { try { localStorage.setItem('lsm-consumo-mes', mes) } catch { /* sem armazenamento */ } }, [mes])
   const [perfil, setPerfil] = useState<Funcao | null>(null)
+  // Escritórios parceiros veem só o próprio consumo e o próprio teto; as faturas dos fornecedores e o e-mail de aviso são da sede.
+  const [sede, setSede] = useState(true)
+  useEffect(() => { ehSede().then(setSede).catch(() => setSede(true)) }, [])
   const [teto, setTeto] = useState('')
   const [faturas, setFaturas] = useState<{ name: string }[]>([])
   const [msg, setMsg] = useState<{ ok: boolean; texto: string } | null>(null)
@@ -200,7 +203,7 @@ export default function ConsumoPage() {
           ))}
         </div>
 
-        <section className="bg-white shadow-sm p-6">
+        {sede && <section className="bg-white shadow-sm p-6">
           <h3 className="text-base mb-1">Faturas originais do mês</h3>
           <p className="text-sm text-grafite-claro mb-3">As faturas dos fornecedores (Anthropic, Brevo e hospedagem) ficam anexadas aqui e saem junto no extrato.</p>
           {faturas.length === 0 ? <p className="text-sm text-grafite-claro">Nenhuma fatura anexada a este mês.</p> : (
@@ -216,7 +219,7 @@ export default function ConsumoPage() {
               <input type="file" accept="application/pdf,image/*" className="sr-only" onChange={e => e.target.files?.[0] && anexarFatura(e.target.files[0])} />
             </label>
           )}
-        </section>
+        </section>}
 
         <section className="bg-white shadow-sm p-6">
           <h3 className="text-base mb-1">Tabela de preços usada no cálculo</h3>
@@ -238,14 +241,14 @@ export default function ConsumoPage() {
         {perfil === 'admin' && (
           <section className="bg-white shadow-sm p-6 print:hidden">
             <h3 className="text-base mb-1">Teto mensal de gasto</h3>
-            <p className="text-sm text-grafite-claro mb-3">Ao chegar a 80% aparece um aviso em Alertas e os administradores recebem e-mail; ao chegar a 100% a inteligência artificial pausa até o mês seguinte e sai novo e-mail. A verificação roda de hora em hora. Deixe em branco para não ter teto.</p>
+            <p className="text-sm text-grafite-claro mb-3">{sede ? (<>Ao chegar a 80% aparece um aviso em Alertas e os administradores recebem e-mail; ao chegar a 100% a inteligência artificial pausa até o mês seguinte e sai novo e-mail. A verificação roda de hora em hora. Deixe em branco para não ter teto.</>) : 'Defina quanto o escritório aceita gastar por mês com a inteligência artificial. Ao chegar a 80% a barra acima fica amarela; ao chegar a 100% a inteligência artificial do escritório pausa até o mês seguinte ou até um administrador aumentar o teto.'}</p>
             <div className="flex flex-wrap gap-3 items-end">
               <label className="text-sm">
                 <span className="block mb-1">Valor em reais</span>
                 <input id="teto" inputMode="decimal" value={teto} onChange={e => setTeto(e.target.value)} placeholder="ex.: 300" className="border border-navy/20 px-3 min-h-[44px] w-40" />
               </label>
               <button onClick={salvarTeto} className="min-h-[44px] px-5 bg-navy text-white text-sm">Salvar teto</button>
-              <button type="button" onClick={testarAviso} disabled={testandoAviso} data-testid="testar-aviso-teto" className="min-h-[44px] px-5 border border-navy text-navy text-sm disabled:opacity-50">{testandoAviso ? 'Enviando…' : 'Testar e-mail de aviso'}</button>
+              {sede && <button type="button" onClick={testarAviso} disabled={testandoAviso} data-testid="testar-aviso-teto" className="min-h-[44px] px-5 border border-navy text-navy text-sm disabled:opacity-50">{testandoAviso ? 'Enviando…' : 'Testar e-mail de aviso'}</button>}
             </div>
           </section>
         )}

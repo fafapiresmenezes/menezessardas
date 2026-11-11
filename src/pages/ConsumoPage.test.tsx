@@ -22,13 +22,14 @@ vi.mock('@/lib/supabase', () => ({
     functions: { invoke: (f: string, o?: object) => invoke(f, o) },
   },
 }))
-vi.mock('@/lib/equipe', () => ({ perfilAtual: async () => perfil }))
+let sede = true
+vi.mock('@/lib/equipe', () => ({ perfilAtual: async () => perfil, ehSede: async () => sede }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 const { default: ConsumoPage } = await import('./ConsumoPage')
 const n = (s: string | null | undefined) => (s ?? '').replace(/ /g, ' ')
 
 describe('Consumo de IA e e-mails', () => {
-  beforeEach(() => { cleanup(); localStorage.clear(); rpc.mockClear(); upload.mockClear(); invoke.mockClear(); perfil = 'admin'; faturas = []
+  beforeEach(() => { cleanup(); localStorage.clear(); rpc.mockClear(); upload.mockClear(); invoke.mockClear(); perfil = 'admin'; sede = true; faturas = []
     cotacao = { valor: 5, data: '2026-11-02', teto_brl: 300, mes_usd: 50 }
     linhas = [
       { mes: `${mesAtual()}-01`, funcao: 'assistente-juridico', modelo: 'claude-sonnet', usuario: 'fatima@exemplo.com', usos: 10, tokens_entrada: 1000, tokens_saida: 500, custo_usd: 8 },
@@ -94,5 +95,22 @@ describe('Consumo de IA e e-mails', () => {
     expect(click).toHaveBeenCalled()
     expect(screen.getByTestId('baixar-consumo').textContent).toBe('baixado')
     click.mockRestore()
+  })
+
+  it('escritório parceiro: vê o próprio consumo e o teto, sem as faturas dos fornecedores da sede nem o e-mail de aviso', async () => {
+    sede = false
+    render(<ConsumoPage />)
+    await waitFor(() => expect(n(screen.getByTestId('total-mes').textContent)).toBe('R$ 50,00'))
+    expect(screen.queryByText('Faturas originais do mês')).toBeNull()
+    expect(screen.queryByTestId('testar-aviso-teto')).toBeNull()
+    expect(screen.getByLabelText('Valor em reais')).toBeTruthy()
+    expect(screen.getByText(/a inteligência artificial do escritório pausa/)).toBeTruthy()
+  })
+
+  it('sede: segue vendo as faturas dos fornecedores e o e-mail de aviso', async () => {
+    render(<ConsumoPage />)
+    await waitFor(() => expect(n(screen.getByTestId('total-mes').textContent)).toBe('R$ 50,00'))
+    expect(screen.getByText('Faturas originais do mês')).toBeTruthy()
+    expect(screen.getByTestId('testar-aviso-teto')).toBeTruthy()
   })
 })

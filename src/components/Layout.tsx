@@ -29,7 +29,7 @@ interface LayoutProps {
   title?: string
 }
 
-const SO_SEDE = ['/imoveis', '/fornecedores', '/alertas', '/instituto', '/consumo']
+const SO_SEDE = ['/imoveis', '/fornecedores', '/alertas', '/instituto']
 const gruposMenu = [
   { id: 'hoje', titulo: 'Hoje', itens: [
     { icon: Home, label: 'Trocar de área', href: '/inicio' },

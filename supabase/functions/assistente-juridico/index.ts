@@ -194,7 +194,7 @@ function selecionar(leiId: string, texto: string, termos: string[], artigosCitad
 // Chama a Anthropic com nova tentativa em sobrecarga. Alguns modelos recusam tool_choice forçado:
 // nesse caso repete com tool_choice automático e instrução explícita para usar a ferramenta.
 async function anthropic(chave: string, corpo: Record<string, unknown>, usuario: string | null = null) {
-  if (await tetoAtingido()) throw new Error('Teto mensal de gasto com IA atingido. Um administrador pode ajustá-lo em Configurações → Consumo.')
+  if (await tetoAtingido(usuario)) throw new Error('Teto mensal de gasto com IA atingido. Um administrador pode ajustá-lo em Configurações → Consumo.')
   let atual = corpo
   for (let tentativa = 0; tentativa < 3; tentativa++) {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -229,11 +229,14 @@ async function registrarConsumo(funcao: string, usuario: string | null, r: { mod
 }
 
 // Teto mensal de gasto definido pelo escritório (Configurações → Consumo). Sem teto = sem limite.
-async function tetoAtingido(): Promise<boolean> {
+async function tetoAtingido(usuario: string | null = null): Promise<boolean> {
   try {
     const { createClient: cc } = await import('jsr:@supabase/supabase-js@2')
-    const { data } = await cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!).rpc('teto_consumo_atingido')
-    return data === true
+    const db = cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
+    // O teto é do escritório de quem pediu (migração 113). Se o banco ainda não tem a versão nova, cai no teto único de antes.
+    let r = await db.rpc('teto_consumo_atingido', usuario ? { p_usuario: usuario } : {})
+    if (r.error && usuario) r = await db.rpc('teto_consumo_atingido')
+    return r.data === true
   } catch (_) { return false }
 }
 

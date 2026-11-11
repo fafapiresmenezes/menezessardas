@@ -102,11 +102,14 @@ async function registrarConsumo(funcao: string, usuario: string | null, r: { mod
 }
 
 // Teto mensal de gasto definido pelo escritório (Configurações → Consumo). Sem teto = sem limite.
-async function tetoAtingido(): Promise<boolean> {
+async function tetoAtingido(usuario: string | null = null): Promise<boolean> {
   try {
     const { createClient: cc } = await import('jsr:@supabase/supabase-js@2')
-    const { data } = await cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!).rpc('teto_consumo_atingido')
-    return data === true
+    const db = cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
+    // O teto é do escritório de quem pediu (migração 113). Se o banco ainda não tem a versão nova, cai no teto único de antes.
+    let r = await db.rpc('teto_consumo_atingido', usuario ? { p_usuario: usuario } : {})
+    if (r.error && usuario) r = await db.rpc('teto_consumo_atingido')
+    return r.data === true
   } catch (_) { return false }
 }
 
@@ -163,7 +166,7 @@ Deno.serve(async (req) => {
       messages: [{ role: 'user', content: `DADOS PÚBLICOS:\n${dados}` }],
     })
   // Tenta de novo em sobrecarga (429/5xx) e cai para o modelo rápido se o principal falhar.
-  if (await tetoAtingido()) return json({ erro: 'Teto mensal de gasto com IA atingido. Um administrador pode ajustá-lo em Configurações → Consumo.' }, 429)
+  if (await tetoAtingido(usuario)) return json({ erro: 'Teto mensal de gasto com IA atingido. Um administrador pode ajustá-lo em Configurações → Consumo.' }, 429)
   let r: Response | null = null
   for (const modelo of [MODELO, MODELO, MODELO_RESERVA]) {
     r = await fetch('https://api.anthropic.com/v1/messages', {
