@@ -30,7 +30,7 @@ describe('Leitura do caso e predição', () => {
     expect((await screen.findByTestId('resultado-juri')).textContent).toContain('81%')
     fireEvent.change(screen.getByLabelText('Valor em discussão (R$)'), { target: { value: '10000' } })
     fireEvent.change(screen.getByLabelText('Meses até o fim'), { target: { value: '0' } })
-    fireEvent.change(screen.getByLabelText('Sucumbência (%)'), { target: { value: '0' } })
+    fireEvent.change(screen.getByLabelText('Sucumbência (CPC, art. 85, §2º)'), { target: { value: '0' } })
     fireEvent.change(screen.getByLabelText('Proposta de acordo (R$)'), { target: { value: '9000' } })
     expect(screen.getByTestId('recomendacao').textContent).toMatch(/R\$\s8\.100,00.*compensa/)
     expect(screen.getByTestId('sensibilidade')).toBeTruthy()
@@ -77,17 +77,29 @@ describe('Leitura do caso e predição', () => {
     fireEvent.change(screen.getByLabelText('Chance de o autor vencer (%)'), { target: { value: '50' } })
     fireEvent.change(screen.getByLabelText('Valor em discussão (R$)'), { target: { value: '100000' } })
     fireEvent.change(screen.getByLabelText('Meses até o fim'), { target: { value: '0' } })
-    fireEvent.change(screen.getByLabelText('Sucumbência (%)'), { target: { value: '0' } })
+    fireEvent.change(screen.getByLabelText('Sucumbência (CPC, art. 85, §2º)'), { target: { value: '0' } })
     fireEvent.change(screen.getByLabelText('Chance do autor, na visão da outra parte (%)'), { target: { value: '70' } })
     expect(screen.getByTestId('zona').textContent).toMatch(/entre R\$\s50\.000,00.*R\$\s70\.000,00/)
   })
 
-  it('lista as 50 referências e filtra por tema', () => {
+  it('lista as referências e filtra por tema', () => {
     abrir()
     fireEvent.click(screen.getByTestId('aba-ciencia'))
-    expect(screen.getByTestId('referencias').querySelectorAll('li').length).toBe(50)
+    expect(screen.getByTestId('referencias').querySelectorAll('li').length).toBe(56)
     fireEvent.click(screen.getByTestId('tema-depoimentos'))
     expect(screen.getByTestId('referencias').textContent).toContain('Emotional Expressions Reconsidered')
     expect(screen.getByTestId('referencias').querySelectorAll('li').length).toBe(4)
+  })
+
+  it('registra a previsão, o desfecho e calcula a nota de Brier', async () => {
+    abrir()
+    fireEvent.click(screen.getByTestId('aba-predicao'))
+    fireEvent.change(screen.getByLabelText('Chance de o autor vencer (%)'), { target: { value: '80' } })
+    fireEvent.click(screen.getByTestId('registrar-previsao'))
+    fireEvent.change(screen.getByLabelText('Desfecho real'), { target: { value: 'improcedente' } })
+    const p = screen.getByTestId('placar').textContent ?? ''
+    expect(p).toContain('0,640')
+    cleanup(); abrir(); fireEvent.click(screen.getByTestId('aba-predicao'))
+    expect(screen.getByTestId('placar').textContent).toContain('0,640')
   })
 })
