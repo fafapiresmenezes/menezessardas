@@ -50,7 +50,7 @@ export default function CarteiraProcessosPage() {
     if (!alvo.length) return setMsg('Todos os processos ativos já estão no monitoramento.')
     const { error } = await supabase.from('monitoramentos').upsert(alvo.map(l => ({ tipo: 'processo', valor: l.numero, rotulo: l.titulo.slice(0, 120) })), { onConflict: 'tipo,valor', ignoreDuplicates: true })
     if (error) return setMsg(mensagemAmigavel(error))
-    setMsg(`${alvo.length} processo(s) entraram no monitoramento. O robô verifica o DataJud todo dia às 7h30.`); carregar()
+    setMsg(`${alvo.length} processo(s) entraram no monitoramento. O robô verifica o DataJud sozinho, várias vezes ao dia.`); carregar()
   }
   const encerrar = async (id: string, situacao: string) => {
     const { error } = await supabase.from('tarefas').update({ situacao, atualizado_em: new Date().toISOString() }).eq('id', id)

@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { fingirDeno, fingirFetch, jsonResp } from '../_testes/deno'
 import { zerar, estado } from '../_testes/supabase-js'
 
-const caixa = fingirDeno({ SUPABASE_URL: 'https://db', SUPABASE_SERVICE_ROLE_KEY: 'k' })
+const caixa = fingirDeno({ SUPABASE_URL: 'https://db', SUPABASE_SERVICE_ROLE_KEY: 'k', INTIMACOES_ESPERA_MS: '0' })
 await import('./index')
 const jwt = (payload: object) => `h.${btoa(JSON.stringify(payload)).replace(/=+$/, '')}.s`
 const chamar = (body: unknown = {}, headers: Record<string, string> = { authorization: `Bearer ${jwt({ role: 'authenticated' })}` }) =>
@@ -54,7 +54,7 @@ describe('intimacoes', () => {
     expect(pedidos[0]).toContain('itensPorPagina=100&pagina=1')
     const inicioEsperado = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10)
     expect(b.periodo).toEqual({ inicio: inicioEsperado, fim: new Date().toISOString().slice(0, 10) })
-    expect(estado.upserts).toHaveLength(2)
+    expect(estado.upserts.filter(u => u.tabela === 'intimacoes')).toHaveLength(2)
     expect(estado.upserts[0]!.linha).toMatchObject({ id: 1, oab: '12345/RJ', tribunal: 'TJRJ', tipo: 'Intimação', numero_processo: '0001-11.2026.8.19.0001', texto: 'Fica intimado o réu' })
   })
 
@@ -92,7 +92,7 @@ describe('intimacoes', () => {
     const b = await (await chamar({ inicio: '2024-05-01', fim: '2024-05-30', historico: true })).json()
     expect(pedidos.filter(p => p.includes('numeroOab=12345')).length).toBe(10)
     expect(b.novas).toBe(1001)
-    const linhas = estado.upserts.map(u => u.linha as { id: number; lida?: boolean })
+    const linhas = estado.upserts.filter(u => u.tabela === 'intimacoes').map(u => u.linha as { id: number; lida?: boolean })
     expect(linhas.find(l => l.id === 1)!.lida).toBe(true)
     expect(linhas.find(l => l.id === 9001)!.lida).toBeUndefined()
   })
@@ -100,6 +100,48 @@ describe('intimacoes', () => {
   it('sem o modo histórico a intimação antiga não é marcada como lida', async () => {
     paginas = { '12345/RJ': [[{ id: 1, texto: '', data_disponibilizacao: '2024-05-10' }]], '999/SP': [[]] }
     await chamar({ inicio: '2024-05-01', fim: '2024-05-30' })
-    expect((estado.upserts[0]!.linha as { lida?: boolean }).lida).toBeUndefined()
+    expect((estado.upserts.find(u => u.tabela === 'intimacoes')!.linha as { lida?: boolean }).lida).toBeUndefined()
+  })
+
+  it('tenta de novo quando o CNJ oscila (500) e conta como sucesso se a segunda tentativa responde', async () => {
+    let n = 0
+    fingirFetch(u => { pedidos.push(u); n++; return n === 1 ? new Response('', { status: 503 }) : jsonResp({ items: [] }) })
+    estado.tabelas.configuracoes = [{ chave: 'oabs_monitoradas', valor: '12345/RJ' }]
+    const b = await (await chamar()).json()
+    expect(b.falhas).toEqual([])
+    expect(pedidos).toHaveLength(2)
+  })
+
+  it('erro 4xx não é repetido e fica registrado como falha', async () => {
+    fingirFetch(u => { pedidos.push(u); return new Response('', { status: 400 }) })
+    estado.tabelas.configuracoes = [{ chave: 'oabs_monitoradas', valor: '12345/RJ' }]
+    const b = await (await chamar()).json()
+    expect(b.falhas).toEqual(['12345/RJ: 400'])
+    expect(pedidos).toHaveLength(1)
+  })
+
+  it('grava o resultado da última consulta (ok ou com falha) e o último sucesso; histórico não mexe nesse registro', async () => {
+    paginas = { '12345/RJ': [[]], '999/SP': [[]] }
+    await chamar({}, { 'x-cron-secret': 'cron-1' })
+    const reg = estado.upserts.filter(u => u.tabela === 'configuracoes').map(u => u.linha as { chave: string; valor: string })
+    expect(JSON.parse(reg.find(r => r.chave === 'cnj_ultima_consulta')!.valor)).toMatchObject({ ok: true, origem: 'automatica', falhas: [] })
+    expect(reg.some(r => r.chave === 'cnj_ultimo_sucesso')).toBe(true)
+    estado.upserts.length = 0
+    paginas = { '12345/RJ': [[]] }
+    await chamar()
+    const r2 = estado.upserts.filter(u => u.tabela === 'configuracoes').map(u => u.linha as { chave: string; valor: string })
+    expect(JSON.parse(r2.find(r => r.chave === 'cnj_ultima_consulta')!.valor)).toMatchObject({ ok: false, origem: 'manual' })
+    expect(r2.some(r => r.chave === 'cnj_ultimo_sucesso')).toBe(false)
+    estado.upserts.length = 0
+    await chamar({ inicio: '2024-01-01', fim: '2024-01-30', historico: true })
+    expect(estado.upserts.filter(u => u.tabela === 'configuracoes')).toHaveLength(0)
+  })
+
+  it('"teste" só confere a conexão com o CNJ: não precisa de OAB e não grava nada', async () => {
+    paginas = { '1/RJ': [[]] }
+    estado.tabelas.configuracoes = [{ chave: 'oabs_monitoradas', valor: '' }]
+    const b = await (await chamar({ teste: true })).json()
+    expect(b).toMatchObject({ conexao: true, status: 200 })
+    expect(estado.upserts).toHaveLength(0)
   })
 })

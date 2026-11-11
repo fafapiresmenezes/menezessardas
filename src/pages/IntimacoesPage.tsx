@@ -1,6 +1,7 @@
 import { FunctionRegion } from '@supabase/supabase-js'
 import { useBaixado } from '@/hooks/useBaixado'
 import Vazio from '@/components/Vazio'
+import ConexaoCnj from '@/components/ConexaoCnj'
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
@@ -90,7 +91,8 @@ export default function IntimacoesPage() {
     <Layout title="Intimações">
       <div className="space-y-6">
         <section className="bg-white shadow-sm border-t-2 border-dourado p-5 space-y-3">
-          <p className="text-sm">Publicações do <strong>Diário de Justiça Eletrônico Nacional</strong> (CNJ) para as OABs do escritório. A busca roda sozinha todo dia às 7h; o botão busca na hora.</p>
+          {admin && <ConexaoCnj />}
+          <p className="text-sm">Publicações do <strong>Diário de Justiça Eletrônico Nacional</strong> (CNJ) para as OABs do escritório. A busca roda sozinha várias vezes ao dia; o botão busca na hora.</p>
           <div className="flex flex-wrap gap-3 items-center">
             <button onClick={buscar} disabled={ocupado} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2 disabled:opacity-50">
               <RefreshCw size={16} aria-hidden="true" className={ocupado ? 'animate-spin' : ''} /> {ocupado ? 'Buscando…' : 'Buscar agora'}
@@ -159,7 +161,7 @@ export default function IntimacoesPage() {
           </p>
         )}
         {!visiveis.length && (
-          <Vazio titulo={`Nenhuma intimação ${filtro === 'novas' ? 'não lida' : 'guardada'}`} texto="A busca roda todo dia às 7h para as OABs cadastradas. Se faltar alguma OAB, cadastre em Configurações." acao={{ rotulo: 'Cadastrar OABs', para: '/settings' }} />
+          <Vazio titulo={`Nenhuma intimação ${filtro === 'novas' ? 'não lida' : 'guardada'}`} texto="A busca roda sozinha várias vezes ao dia para as OABs cadastradas. Se faltar alguma OAB, cadastre em Configurações." acao={{ rotulo: 'Cadastrar OABs', para: '/settings' }} />
         )}
       </div>
     </Layout>
