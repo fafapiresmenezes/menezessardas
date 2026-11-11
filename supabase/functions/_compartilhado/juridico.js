@@ -294,9 +294,9 @@ function prazoEscrito(texto) {
 }
 function audienciaNoTexto(texto) {
   const t = semAcento(texto);
-  const i = t.search(/audiencia|sessao de julgamento|pauta de julgamento/);
+  const i = t.search(/audiencia|sessao de julgamento|pauta de julgamento|edital[- ]?pauta|sessao (presencial|virtual|ordinaria|extraordinaria|do dia)/);
   if (i < 0) return null;
-  const janela = t.slice(Math.max(0, i - 120), i + 260);
+  const janela = t.slice(Math.max(0, i - 120), i + 600);
   const m = janela.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/) ?? janela.match(/(\d{1,2}) de (janeiro|fevereiro|marco|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro) de (\d{4})/);
   if (!m) return null;
   const meses = ["janeiro", "fevereiro", "marco", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];

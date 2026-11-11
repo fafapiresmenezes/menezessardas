@@ -26,6 +26,12 @@ describe('leitura do texto', () => {
   })
   it('acha a data e a hora da audiência', () => {
     expect(audienciaNoTexto('Designo audiência de conciliação para o dia 02/12/2026, às 14:30h.')).toEqual({ data: '2026-12-02', hora: '14:30' })
+    // Pauta de câmara: a palavra "MEMORIAIS" no edital não pode virar prazo de alegações finais.
+    const pauta = '*** SECRETARIA DA 22ª CÂMARA DE DIREITO PRIVADO ***\n-------------------------\nEDITAL-PAUTA\n-------------------------\nSESSÃO DE JULGAMENTO - PRESENCIAL\nFAÇO PÚBLICO, DE ORDEM DO EXMO. SR. DES. PRESIDENTE, QUE SERÃO JULGADOS EM SESSÃO PRESENCIAL DA 22ª CÂMARA DE DIREITO PRIVADO DO DIA 04/11/2026, quarta-feira , A PARTIR DE 13:30, OU NAS SESSÕES ULTERIORES, os processos abaixo relacionados.\nOs endereços eletrônicos dos gabinetes para o envio de MEMORIAIS estão disponíveis na intranet.\n- 009. APELAÇÃO 0029929-04.2022.8.19.0002'
+    expect(audienciaNoTexto(pauta)?.data).toBe('2026-11-04')
+    const lida = lerIntimacao(pub(pauta, { data: '2026-10-21' }), '2026-10-22')
+    expect(lida.oQueFazer).toMatch(/^Comparecer à audiência ou sessão/)
+    expect(lida.vence).toBe('2026-11-04')
   })
   it('publicação é o 1º dia útil depois da disponibilização (sexta → segunda)', () => {
     expect(dataDaPublicacao('2026-11-06')).toBe('2026-11-09')

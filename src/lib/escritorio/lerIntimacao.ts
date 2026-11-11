@@ -61,9 +61,10 @@ export function prazoEscrito(texto: string): { dias: number; corridos: boolean }
 /** Data e hora de audiência citada no texto, se houver. */
 export function audienciaNoTexto(texto: string): { data: string; hora: string | null } | null {
   const t = semAcento(texto)
-  const i = t.search(/audiencia|sessao de julgamento|pauta de julgamento/)
+  // Pauta de tribunal vem como "EDITAL-PAUTA ... SESSÃO ... 04/11/2026, A PARTIR DE 13:30": a data fica longe do título.
+  const i = t.search(/audiencia|sessao de julgamento|pauta de julgamento|edital[- ]?pauta|sessao (presencial|virtual|ordinaria|extraordinaria|do dia)/)
   if (i < 0) return null
-  const janela = t.slice(Math.max(0, i - 120), i + 260)
+  const janela = t.slice(Math.max(0, i - 120), i + 600)
   const m = janela.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/) ?? janela.match(/(\d{1,2}) de (janeiro|fevereiro|marco|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro) de (\d{4})/)
   if (!m) return null
   const meses = ['janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro']
