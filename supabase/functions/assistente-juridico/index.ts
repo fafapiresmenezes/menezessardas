@@ -101,7 +101,7 @@ const ESPECIALIDADES: Record<string, string> = {
   civel: 'Você é especialista em direito civil e contratos (Código Civil, CPC, CDC quando cabível): obrigações, contratos, responsabilidade civil, cobranças e execuções.',
   ambiental: 'Você é especialista em direito ambiental (Lei 6.938/81, Código Florestal, Lei 9.605/98): licenciamento, passivo ambiental, áreas protegidas e responsabilidade.',
   geral: 'Você é um advogado generalista brasileiro, cuidadoso e didático.',
-  pesquisa: 'Você é pesquisador jurídico do Instituto THEYE, doutor em direito. Faz pesquisa de jurisprudência brasileira (STF, STJ, TST, TJRJ) e de direito estrangeiro e comparado (EUA, Reino Unido, União Europeia, França, Alemanha, Portugal, Canadá, Argentina) para propor o desenvolvimento do direito brasileiro. Estrutura: 1) pergunta de pesquisa; 2) estado da arte no Brasil (lei nos trechos fornecidos; jurisprudência marcada "a verificar no tribunal", com o nome do tema e, quando souber, o tipo de precedente: tema repetitivo, repercussão geral, súmula); 3) como outras jurisdições resolvem, com o nome da lei ou do caso e a corte, marcados "a verificar"; 4) lições e proposta para o direito brasileiro (interpretação, tese ou projeto de lei); 5) como aplicar em um caso concreto do escritório; 6) fontes gratuitas para conferir (STF, STJ, CourtListener, EUR-Lex, BAILII, CanLII, Legifrance, HUDOC, Corte IDH). Nunca invente ementas, números de processo ou citações: quando não tiver certeza, diga que o ponto precisa ser localizado.',
+  pesquisa: 'Você é pesquisador jurídico do THEYE Institute, doutor em direito. Faz pesquisa de jurisprudência brasileira (STF, STJ, TST, TJRJ) e de direito estrangeiro e comparado (EUA, Reino Unido, União Europeia, França, Alemanha, Portugal, Canadá, Argentina) para propor o desenvolvimento do direito brasileiro. Estrutura: 1) pergunta de pesquisa; 2) estado da arte no Brasil (lei nos trechos fornecidos; jurisprudência marcada "a verificar no tribunal", com o nome do tema e, quando souber, o tipo de precedente: tema repetitivo, repercussão geral, súmula); 3) como outras jurisdições resolvem, com o nome da lei ou do caso e a corte, marcados "a verificar"; 4) lições e proposta para o direito brasileiro (interpretação, tese ou projeto de lei); 5) como aplicar em um caso concreto do escritório; 6) fontes gratuitas para conferir (STF, STJ, CourtListener, EUR-Lex, BAILII, CanLII, Legifrance, HUDOC, Corte IDH). Nunca invente ementas, números de processo ou citações: quando não tiver certeza, diga que o ponto precisa ser localizado.',
 }
 
 function usuarioAutenticado(req: Request): string | null {
@@ -194,7 +194,7 @@ function selecionar(leiId: string, texto: string, termos: string[], artigosCitad
 // Chama a Anthropic com nova tentativa em sobrecarga. Alguns modelos recusam tool_choice forçado:
 // nesse caso repete com tool_choice automático e instrução explícita para usar a ferramenta.
 async function anthropic(chave: string, corpo: Record<string, unknown>, usuario: string | null = null) {
-  if (await tetoAtingido()) throw new Error('Teto mensal de gasto com IA atingido. Um administrador pode ajustá-lo em Configurações → Consumo.')
+  if (await tetoAtingido(usuario)) throw new Error('Teto mensal de gasto com IA atingido. Um administrador pode ajustá-lo em Configurações → Consumo.')
   let atual = corpo
   for (let tentativa = 0; tentativa < 3; tentativa++) {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -229,11 +229,14 @@ async function registrarConsumo(funcao: string, usuario: string | null, r: { mod
 }
 
 // Teto mensal de gasto definido pelo escritório (Configurações → Consumo). Sem teto = sem limite.
-async function tetoAtingido(): Promise<boolean> {
+async function tetoAtingido(usuario: string | null = null): Promise<boolean> {
   try {
     const { createClient: cc } = await import('jsr:@supabase/supabase-js@2')
-    const { data } = await cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!).rpc('teto_consumo_atingido')
-    return data === true
+    const db = cc(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
+    // O teto é do escritório de quem pediu (migração 113). Se o banco ainda não tem a versão nova, cai no teto único de antes.
+    let r = await db.rpc('teto_consumo_atingido', usuario ? { p_usuario: usuario } : {})
+    if (r.error && usuario) r = await db.rpc('teto_consumo_atingido')
+    return r.data === true
   } catch (_) { return false }
 }
 

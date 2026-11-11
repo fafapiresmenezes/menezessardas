@@ -1,5 +1,6 @@
 // Passo 61: exportar qualquer tabela da tela em CSV (abre no Excel com acentos) ou PDF simples.
 import { gerarPdfTexto, quebrar } from '@/lib/pdfSimples'
+import { hojeLocal } from '@/lib/datas'
 
 export type Grade = { titulo: string; cabecalho: string[]; linhas: string[][] }
 
@@ -40,7 +41,7 @@ function tituloAnterior(t: Element): string {
 
 export function paraPdf(g: Grade, tela: string): Uint8Array<ArrayBuffer> {
   const linhas: Parameters<typeof gerarPdfTexto>[1] = [
-    { texto: 'GMenezes Advogados Associados', tamanho: 14, negrito: true, cor: [0.08, 0.13, 0.24] },
+    { texto: 'THEYE Institute', tamanho: 14, negrito: true, cor: [0.08, 0.13, 0.24] },
     { texto: `${tela} · ${g.titulo}`, tamanho: 11, negrito: true },
     { texto: `Exportado em ${new Date().toLocaleString('pt-BR')} · ${g.linhas.length} linha(s)`, tamanho: 8, cor: [0.4, 0.4, 0.4] },
     { texto: ' ', tamanho: 6 },
@@ -50,11 +51,11 @@ export function paraPdf(g: Grade, tela: string): Uint8Array<ArrayBuffer> {
     quebrar(pares, 8.5).forEach((t, i) => linhas.push({ texto: t, tamanho: 8.5, x: i ? 52 : undefined }))
     linhas.push({ texto: ' ', tamanho: 3 })
   }
-  linhas.push({ texto: ' ', tamanho: 6 }, { texto: 'Desenvolvido pelo Instituto THEYE.', tamanho: 7, cor: [0.4, 0.4, 0.4] })
+  linhas.push({ texto: ' ', tamanho: 6 }, { texto: 'Desenvolvido pelo THEYE Institute.', tamanho: 7, cor: [0.4, 0.4, 0.4] })
   return gerarPdfTexto(`${tela} - ${g.titulo}`, linhas)
 }
 
 export function nomeArquivo(tela: string, titulo: string, ext: string) {
   const base = `${tela}-${titulo}`.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60)
-  return `${base || 'tabela'}-${new Date().toISOString().slice(0, 10)}.${ext}`
+  return `${base || 'tabela'}-${hojeLocal()}.${ext}`
 }

@@ -4,6 +4,7 @@ import { formatarData } from '@/lib/datas'
 import { situacaoParcela } from '@/lib/parcelas'
 import CobrancaPix from '@/components/CobrancaPix'
 import { MessageSquare, Paperclip, QrCode, Send } from 'lucide-react'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Passo D18 (Diamante), lado do cliente no Portal: conversa com o advogado, envio de documentos e
 // pagamento de parcela por PIX com QR do valor exato. Tudo pelo código secreto do link, sem login.
@@ -36,7 +37,7 @@ export default function PortalMensagens({ token, caso }: { token: string; caso: 
     setOcupado(true); setErro('')
     const { error } = await supabase.rpc('portal_enviar_mensagem', { p_token: token, p_texto: texto.trim() })
     setOcupado(false)
-    if (error) return setErro(error.message)
+    if (error) return setErro(mensagemAmigavel(error))
     setTexto(''); setAviso('Mensagem enviada ao escritório.'); carregar()
   }
   const enviarArquivo = async (f: File | undefined) => {

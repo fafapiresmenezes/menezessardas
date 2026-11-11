@@ -19,7 +19,7 @@ const mesesJen = (m: number) => m >= 12 ? `${Math.floor(m / 12)} ano(s) e ${m % 
 export default function ComparacaoJustica() {
   const [ind, setInd] = useState<Indic | null>(null)
   const [erro, setErro] = useState('')
-  useEffect(() => { supabase.rpc('indicadores_escritorio').then(({ data, error }) => { if (error) setErro('Não foi possível ler os números do escritório agora. Tente de novo em instantes.'); else setInd(data as Indic) }, () => setErro('Sem conexão agora. Tente de novo em instantes.')) }, [])
+  useEffect(() => { supabase.rpc('indicadores_escritorio').then(({ data, error }) => { if (error) setErro('Não foi possível ler os números do escritório agora. Tente de novo em instantes.'); else if (data && typeof (data as Indic).casos_total === 'number') setInd({ ...(data as Indic), por_area: Array.isArray((data as Indic).por_area) ? (data as Indic).por_area : [] }) /* escritório sem casos: o banco devolve por_area nulo */; else setErro('O banco não devolveu os números do escritório agora. Tente de novo em instantes.') }, () => setErro('Sem conexão agora. Tente de novo em instantes.')) }, [])
   const tempoEsc = ind?.tempo_medio_dias ?? null
   return (
     <section className="bg-white border border-navy/10 rounded-sm p-5" data-testid="comparacao-justica">

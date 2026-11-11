@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useBaixado } from '@/hooks/useBaixado'
 import Vazio from '@/components/Vazio'
 import Layout from '@/components/Layout'
@@ -28,7 +29,9 @@ const COR = { baixo: 'bg-green-50 border-green-700 text-green-800', alto: 'bg-cr
 
 // Checagem de contraparte antes de fechar contrato: Receita, sanções (via TCU) e conflito de interesses.
 export default function KycPage() {
-  const [cnpj, setCnpj] = useState(() => { try { return localStorage.getItem('lsm-kyc-cnpj') ?? '' } catch { return '' } }) // Passo 191
+  // A central de pesquisa abre /kyc?doc=... já com o CNPJ preenchido.
+  const [params] = useSearchParams()
+  const [cnpj, setCnpj] = useState(() => { const d = params.get('doc'); if (d) return d; try { return localStorage.getItem('lsm-kyc-cnpj') ?? '' } catch { return '' } }) // Passo 191
   const [estado, setEstado] = useState<{ carregando?: boolean; erro?: string; r?: Resultado }>({})
   const [historico, setHistorico] = useState<Historico[]>([])
   const [msgRecon, setMsgRecon] = useState('')
@@ -62,7 +65,7 @@ export default function KycPage() {
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 275
   const [baixado, marcarBaixado] = useBaixado() // Passo 381
   const copiarHistorico = async () => {
-    const t = ['Histórico de checagens de contraparte — GMenezes Advogados Associados', ...histVisivel.map(h => `${new Date(h.consultado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })} · ${h.nome ?? fmtCnpj(h.cnpj)} · risco ${h.risco}${h.mudou ? ` (era ${h.risco_anterior})` : ''} · reconsulta ${proxima(h.consultado_em).toLocaleDateString('pt-BR')}`)].join('\n')
+    const t = ['Histórico de checagens de contraparte — THEYE Institute', ...histVisivel.map(h => `${new Date(h.consultado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })} · ${h.nome ?? fmtCnpj(h.cnpj)} · risco ${h.risco}${h.mudou ? ` (era ${h.risco_anterior})` : ''} · reconsulta ${proxima(h.consultado_em).toLocaleDateString('pt-BR')}`)].join('\n')
     try { await navigator.clipboard.writeText(t); setHistCopiado(true); setTimeout(() => setHistCopiado(false), 2500) } catch { /* sem área de transferência */ }
   }
   const copiarResultado = async () => {

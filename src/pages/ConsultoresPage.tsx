@@ -6,6 +6,7 @@ import { render } from '@/pages/AssistentePage'
 import { Briefcase, Send, Sparkles } from 'lucide-react'
 import { mensagemAmigavel } from '@/lib/erros'
 import { extrairAcoes } from '@/lib/acoesConsultor'
+import { hojeLocal, isoLocal } from '@/lib/datas'
 
 // Um consultor de IA para cada nível do escritório. O botão "Diagnóstico agora" envia a fotografia
 // atual do escritório (só números agregados, sem dados de clientes) e pede prioridades ao consultor.
@@ -27,8 +28,8 @@ const NIVEIS: { chave: Especialidade; nivel: string; titulo: string; foco: strin
 ]
 
 async function fotografia(): Promise<string> {
-  const hoje = new Date().toISOString().slice(0, 10)
-  const em60 = new Date(Date.now() + 60 * 864e5).toISOString().slice(0, 10)
+  const hoje = hojeLocal()
+  const em60 = isoLocal(new Date(Date.now() + 60 * 864e5))
   const conta = async (q: PromiseLike<{ count: number | null }>) => (await q).count ?? 0
   const [imoveis, contratos, vencendo, tarefas, atrasadas, intimacoes, horas] = await Promise.all([
     conta(supabase.from('imoveis').select('id', { count: 'exact', head: true })),
@@ -56,7 +57,7 @@ export default function ConsultoresPage() {
   const acoes = resposta ? extrairAcoes(resposta.resposta) : []
   const virarTarefas = async () => {
     setCriando(true); setErro('')
-    const prazo = new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10)
+    const prazo = isoLocal(new Date(Date.now() + 7 * 864e5))
     const { error } = await supabase.from('tarefas').insert(acoes.map(a => ({ titulo: `${a} (${sel.titulo})`, nivel: 'tarefa', prioridade: 'media', prazo, area: 'Gestão interna' })))
     setCriando(false)
     if (error) setErro(mensagemAmigavel(error, 'Não deu para criar as tarefas.')); else setTarefasCriadas(acoes.length)

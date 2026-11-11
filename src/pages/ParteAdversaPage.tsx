@@ -1,5 +1,6 @@
 import { FunctionRegion } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import Vazio from '@/components/Vazio'
 import { supabase } from '@/lib/supabase'
@@ -21,8 +22,10 @@ type Salva = { id: number; parte: string; caso: string; finalidade: string; cons
 export const REGRAS = 'Use só para preparar ou conduzir um processo, negociação ou contrato (LGPD, art. 7º, VI). A ficha junta apenas fontes públicas e oficiais. Não consulta redes sociais pessoais, não monta perfil psicológico, não usa imagem e não monitora a pessoa. Cada consulta fica registrada na Trilha com quem consultou, o caso e a finalidade.'
 
 export default function ParteAdversaPage() {
-  const [parte, setParte] = useState('')
-  const [cnpj, setCnpj] = useState('')
+  // A central de pesquisa abre /parte-adversa?parte=...&cnpj=... já preenchida.
+  const [params] = useSearchParams()
+  const [parte, setParte] = useState(() => params.get('parte') ?? '')
+  const [cnpj, setCnpj] = useState(() => params.get('cnpj') ?? '')
   const [caso, setCaso] = useState('')
   const [finalidade, setFinalidade] = useState('')
   const [carregando, setCarregando] = useState(false)
@@ -46,7 +49,9 @@ export default function ParteAdversaPage() {
     const f: Ficha = { comunica: b.data?.comunica, diarios: b.data?.queridoDiario, empresa: k ? (k.error ? { erro: 'Receita e sanções fora do ar agora.' } : k.data) : undefined }
     setFicha(f)
     const fontes = ['Comunica PJe (CNJ)', 'Querido Diário', ...(k ? ['Receita Federal', 'CEIS/CNEP/TCU'] : [])]
-    await supabase.from('fichas_parte_adversa').insert({ parte: parte.trim(), documento: doc || null, caso: caso.trim(), finalidade: finalidade.trim(), fontes, resultado: f })
+    const registro = await supabase.from('fichas_parte_adversa').insert({ parte: parte.trim(), documento: doc || null, caso: caso.trim(), finalidade: finalidade.trim(), fontes, resultado: f })
+    // A consulta a dados de terceiro precisa ficar registrada (LGPD): se o registro falhar, avisamos.
+    if (registro.error) setErro('A ficha abaixo foi montada, mas o registro da consulta não foi gravado. Tente de novo para deixar a finalidade registrada.')
     await registrarEvento({ tipo: 'parte_adversa_consultada', entidade: caso.trim(), resumo: `Ficha pública de ${parte.trim()} · finalidade: ${finalidade.trim()}` })
     const linhas = [...(f.comunica?.itens ?? []).slice(0, 20).map(c => `${c.data} · ${c.tribunal} · ${c.classe} · ${c.numero}`), ...(f.diarios?.itens ?? []).map(d => `${d.data} · ${d.municipio} · ${d.trecho.slice(0, 160)}`)]
     await guardarNaBiblioteca({ tipo: 'parte_adversa', titulo: `Parte adversa: ${parte.trim()}`, conteudo: `Finalidade: ${finalidade.trim()}\nFontes: ${fontes.join(', ')}\n\n${linhas.join('\n') || 'Nada encontrado nas fontes públicas.'}`, caso: caso.trim(), etiquetas: ['parte adversa'] })

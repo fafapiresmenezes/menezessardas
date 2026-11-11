@@ -22,6 +22,9 @@ vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: 
 const { default: HorasPage } = await import('./HorasPage')
 
 const mes = new Date().toISOString().slice(0, 7)
+// Apagar agora pede confirmação: nos testes, a pessoa sempre confirma.
+beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true) })
+
 describe('Horas e honorários', () => {
   beforeEach(() => { cleanup(); insert.mockClear(); upsert.mockClear(); del.mockClear(); rpc.mockClear(); localStorage.clear(); funcao = 'admin'
     lista = [

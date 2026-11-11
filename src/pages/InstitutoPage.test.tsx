@@ -23,7 +23,7 @@ const ult = MEDICOES[MEDICOES.length - 1], prim = MEDICOES[0]
 const nota = (n: number) => n.toFixed(2).replace('.', ',')
 const aba = (nome: RegExp) => fireEvent.click(screen.getByRole('tab', { name: nome }))
 
-describe('Instituto THEYE (página)', () => {
+describe('THEYE Institute (página)', () => {
   const write = vi.fn(async (_t: string) => undefined)
   beforeEach(() => { cleanup(); localStorage.clear(); write.mockClear(); Object.assign(navigator, { clipboard: { writeText: write } }); radar = [] })
 
@@ -93,7 +93,7 @@ describe('Instituto THEYE (página)', () => {
     fireEvent.click(screen.getByTestId('copiar-cadeia'))
     await waitFor(() => expect(screen.getByTestId('copiar-cadeia').textContent).toBe('Cadeia copiada'))
     const texto = write.mock.calls[0][0]
-    expect(texto.startsWith('Cadeia de medições — GMenezes Advogados Associados\nM14 ·')).toBe(true)
+    expect(texto.startsWith('Cadeia de medições — THEYE Institute\nM14 ·')).toBe(true)
     expect(texto.split('\n').length).toBe(MEDICOES.length + 2)
     expect(texto).toContain(`Plano M31 · ${PLANO_M31.arquivo} · SHA-256 ${PLANO_M31.sha256}`)
     fireEvent.click(screen.getByTestId('copiar-link-instituto'))

@@ -82,4 +82,13 @@ describe('analisar-contrato', () => {
     expect(r.status).toBe(502); expect(b.erro).toBe('Falha na API da Anthropic.'); expect(b.detalhe).toHaveLength(300)
     expect(estado.inseridos).toHaveLength(0)
   })
+
+  it('o teto é conferido para o escritório de quem pediu (p_usuario) e, se a função do banco falhar, a análise não é bloqueada', async () => {
+    await chamar({ texto: 'contrato' })
+    expect(estado.rpcs.find(r => r.nome === 'teto_consumo_atingido')!.args).toEqual({ p_usuario: 'u1' })
+    estado.rpcErro.teto_consumo_atingido = 'função ausente'
+    const r = await chamar({ texto: 'contrato' })
+    expect(r.status).toBe(200)
+    expect(estado.rpcs.filter(x => x.nome === 'teto_consumo_atingido').length).toBeGreaterThanOrEqual(3) // com usuário, e de novo sem (versão antiga do banco)
+  })
 })

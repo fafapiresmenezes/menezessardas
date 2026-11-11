@@ -1,4 +1,4 @@
-// Passo 422: cartão "Probabilidade do Instituto THEYE" — formatação em linguagem simples.
+// Passo 422: cartão "Probabilidade do THEYE Institute" — formatação em linguagem simples.
 import { describe, it, expect } from 'vitest'
 import { pct, resumirPrevisaoInstituto, CLASSES_LOCACAO } from './previsaoInstituto'
 

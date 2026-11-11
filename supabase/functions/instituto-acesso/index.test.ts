@@ -1,4 +1,4 @@
-// Passo 552: Edge Function instituto-acesso — laboratório do Instituto THEYE: desafio anti-robô, cadastro (CPF vira HMAC), entrada por link, confirmação, estado, opções e consulta.
+// Passo 552: Edge Function instituto-acesso — laboratório do THEYE Institute: desafio anti-robô, cadastro (CPF vira HMAC), entrada por link, confirmação, estado, opções e consulta.
 import { describe, it, expect, beforeEach, beforeAll } from 'vitest'
 import { fingirDeno, fingirFetch } from '../_testes/deno'
 import { zerar, estado } from '../_testes/supabase-js'
@@ -86,7 +86,7 @@ describe('instituto-acesso', () => {
     expect(args.p_token_hash).toMatch(/^[0-9a-f]{64}$/)
     expect(JSON.stringify(args)).not.toContain('52998224725')
     expect(rpc('instituto_registrar_tentativa')[0]).toEqual({ p_rede: args.p_rede, p_sal: 'sal-fixo' })
-    expect(envios[0]).toMatchObject({ to: 'joao@gmail.com', subject: 'Confirme seu cadastro no Instituto THEYE' })
+    expect(envios[0]).toMatchObject({ to: 'joao@gmail.com', subject: 'Confirme seu cadastro no THEYE Institute' })
     expect(envios[0]!.html).toContain('https://theye.club/laboratorio.html#t=')
     expect(estado.inseridos[0]).toMatchObject({ tabela: 'consumo_api', linha: { funcao: 'Instituto: link de acesso' } })
   })
@@ -105,7 +105,7 @@ describe('instituto-acesso', () => {
   it('entrar: resposta igual com ou sem cadastro (não revela quem existe); link enviado só quando a função SQL aceita', async () => {
     let b = await (await chamar(cadastro({ acao: 'entrar' }))).json()
     expect(b).toEqual({ ok: true, mensagem: 'Se houver cadastro com esse e-mail, enviamos um link de entrada.' })
-    expect(envios[0]).toMatchObject({ to: 'joao@gmail.com', subject: 'Seu link de entrada no Instituto THEYE' })
+    expect(envios[0]).toMatchObject({ to: 'joao@gmail.com', subject: 'Seu link de entrada no THEYE Institute' })
     estado.rpcResposta.instituto_novo_token = false
     b = await (await chamar(cadastro({ acao: 'entrar' }))).json()
     expect(b.ok).toBe(true)

@@ -110,9 +110,9 @@ export default function EquipePage() {
                 Como adicionar alguém
               </h2>
               <ol className="list-decimal pl-5 text-sm text-grafite mt-3 space-y-1">
-                <li>A pessoa abre o link da plataforma e clica em <strong>Criar conta</strong>, com o e-mail dela e uma senha.</li>
-                <li>Ela aparece aqui como <strong>Sem acesso</strong>.</li>
-                <li>Você escolhe a função dela na lista abaixo. Pronto: ela já consegue entrar, mesmo sem clicar no link do e-mail de cadastro.</li>
+                <li>Envie um convite pelo e-mail da pessoa (a administração da sede faz isso em Escritórios parceiros).</li>
+                <li>Ao aceitar o convite, ela entra <strong>no seu escritório</strong>, com a função do convite. Quem cria conta sem convite ganha um escritório próprio e vazio, separado do seu.</li>
+                <li>Na lista abaixo você muda a função dela para operador ou administrador, ou retira o acesso escolhendo <strong>Sem acesso</strong>.</li>
               </ol>
               <p className="text-sm text-grafite mt-3">
                 Alguém esqueceu a senha? Use <strong>Senha provisória</strong> na linha da pessoa, entregue a senha gerada e peça para ela trocar em Configurações → Senha.
@@ -137,7 +137,7 @@ export default function EquipePage() {
                 Pessoas com acesso ({pessoas.length})
               </h2>
               <div className="px-6 pb-3 flex flex-wrap items-center gap-3">
-                <button type="button" onClick={async () => { const rot = (f: string | null) => f === 'admin' ? 'administrador' : f === 'operador' ? 'operador' : f === 'leitor' ? 'leitor' : 'esperando liberação'; const t = [`Equipe com acesso — ${new Date().toLocaleDateString('pt-BR')}`, ...pessoas.map(p => `• ${p.nome || p.email} <${p.email}> — ${rot(p.funcao)}`), 'GMenezes Advogados Associados'].join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoLista(true); setTimeout(() => setCopiadoLista(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-equipe" className="min-h-[44px] px-3 border border-navy text-navy text-xs">{copiadoLista ? 'Lista copiada' : 'Copiar lista'}</button>
+                <button type="button" onClick={async () => { const rot = (f: string | null) => f === 'admin' ? 'administrador' : f === 'operador' ? 'operador' : f === 'leitor' ? 'leitor' : 'esperando liberação'; const t = [`Equipe com acesso — ${new Date().toLocaleDateString('pt-BR')}`, ...pessoas.map(p => `• ${p.nome || p.email} <${p.email}> — ${rot(p.funcao)}`), 'THEYE Institute'].join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoLista(true); setTimeout(() => setCopiadoLista(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-equipe" className="min-h-[44px] px-3 border border-navy text-navy text-xs">{copiadoLista ? 'Lista copiada' : 'Copiar lista'}</button>
                 <button type="button" onClick={() => window.print()} data-testid="imprimir-equipe" className="min-h-[44px] px-3 border border-navy/20 text-navy text-xs ml-2 print:hidden">Imprimir</button>{/* Passo 222 */}
                 <button type="button" data-testid="copiar-link-equipe" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-3 border border-navy/20 text-navy text-xs ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 256 */}
                 {pessoas.length > 0 && <button type="button" data-testid="baixar-equipe" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['nome;e-mail;função;confirmado;último acesso', ...pessoas.map(p => `${p.nome};${p.email};${p.funcao ?? ''};${p.confirmado ? 'sim' : 'não'};${p.ultimoAcesso ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'equipe.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 320 */}
@@ -174,7 +174,7 @@ export default function EquipePage() {
                         </p>
                         <p className="text-xs mt-1" data-testid={`aceite-${p.id}`}>
                           {aceites[p.id]
-                            ? <span className="text-regular" title={`SHA-256 ${aceites[p.id].hash}`}>Termos e LGPD aceitos em {dataPt(aceites[p.id].aceito_em)} (v{aceites[p.id].versao}) · hash {aceites[p.id].hash.slice(0, 12)}…</span>
+                            ? <span className="text-regular" title={`SHA-256 ${aceites[p.id].hash}`}>Termos e LGPD aceitos em {dataPt(aceites[p.id].aceito_em)} (v{aceites[p.id].versao}) · hash {(aceites[p.id].hash ?? '').slice(0, 12)}…</span>
                             : <span className="text-atencao">Termos e LGPD ainda não aceitos (aparecem no próximo acesso)</span>}
                         </p>
                       </div>

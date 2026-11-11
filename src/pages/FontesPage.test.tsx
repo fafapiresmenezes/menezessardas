@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 
 let salvas: object[] = []
 const insert = vi.fn(async (_r: object): Promise<{ error: { message: string } | null }> => ({ error: null }))
@@ -23,7 +24,7 @@ describe('Fontes do advogado', () => {
   beforeEach(() => { cleanup(); salvas = []; insert.mockClear(); update.mockClear(); del.mockClear(); invoke.mockReset().mockImplementation(async () => ({ data: null, error: null })); localStorage.clear() })
 
   it('10 fontes abrem já com o termo; termo lembrado; botões só habilitam com 4 letras', async () => {
-    render(<FontesPage />)
+    render(<MemoryRouter><FontesPage /></MemoryRouter>)
     expect(screen.getAllByTestId('fonte').length).toBe(10)
     expect(screen.getByTestId('contador-fontes').textContent).toContain('10 fontes públicas e gratuitas; cada cartão')
     const botao = screen.getByTestId('buscar-gratis') as HTMLButtonElement
@@ -39,7 +40,7 @@ describe('Fontes do advogado', () => {
   it('Enter busca nas fontes públicas e lista comunicações e diários; erro vira alerta; Escavador lista processos com copiar número', async () => {
     const write = vi.fn(async (_t: string) => undefined); Object.assign(navigator, { clipboard: { writeText: write } })
     invoke.mockResolvedValueOnce({ data: { tipo: 'nome', comunica: { ok: true, total: 1, itens: [{ numero: '0001-11', tribunal: 'TJRJ', data: '2026-10-20', tipo: 'Intimação', trecho: 'trecho A' }] }, queridoDiario: { ok: true, total: 1, itens: [{ data: '2026-10-21', municipio: 'Rio de Janeiro', link: 'https://qd/1', trecho: 'trecho B' }] } }, error: null })
-    render(<FontesPage />)
+    render(<MemoryRouter><FontesPage /></MemoryRouter>)
     fireEvent.change(screen.getByLabelText('O que você quer procurar?'), { target: { value: 'Maria Silva' } })
     fireEvent.submit(screen.getByTestId('form-termo'))
     await waitFor(() => expect(screen.getByTestId('resultado-gratis').textContent).toContain('Comunicações processuais (CNJ, últimos 12 meses): 1'))
@@ -59,7 +60,7 @@ describe('Fontes do advogado', () => {
   it('salvar busca repete todo dia (primeira rodada imediata); duplicada avisa; ligar a caso e apagar; copiar buscas salvas', async () => {
     const write = vi.fn(async (_t: string) => undefined); Object.assign(navigator, { clipboard: { writeText: write } })
     salvas = [{ id: 's1', termo: 'Maria Silva', ultima_execucao: '2026-11-01T10:00:00Z', ultimo_total: 3, novas_ultima: 1, caso_id: null }]
-    render(<FontesPage />)
+    render(<MemoryRouter><FontesPage /></MemoryRouter>)
     await waitFor(() => expect(screen.getByText('Maria Silva')).toBeTruthy())
     expect(screen.getByText(/última rodada 01\/11\/2026 · 3 comunicação\(ões\) no ano · 1 nova\(s\)/)).toBeTruthy()
     fireEvent.change(screen.getByLabelText('O que você quer procurar?'), { target: { value: 'João Souza' } })

@@ -2,6 +2,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, cleanup, within, waitFor } from '@testing-library/react'
 import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom'
+// A aba abre no clique e recebe o link assinado depois (Safari bloqueia window.open após await).
+const aba = { location: { href: '' }, close: () => undefined, opener: null as unknown }
 
 const emDias = (n: number) => { const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10) }
 type Doc = { id: string; tipo: string; nome: string; enviadoEm: string; caminhoStorage?: string; dataVencimento?: string }
@@ -59,7 +61,7 @@ const texto = (s: string | null | undefined) => (s ?? '').replace(/ /g, ' ')
 describe('Contrato', () => {
   beforeEach(() => {
     cleanup(); reset(); atualizarContrato.mockClear(); encerrarContrato.mockClear(); anexarDocumento.mockClear(); removerDocumento.mockClear(); analisarContrato.mockClear(); enviarArquivo.mockClear(); apagarArquivo.mockClear()
-    window.print = vi.fn(); window.open = vi.fn(); window.confirm = vi.fn(() => true)
+    window.print = vi.fn(); window.open = vi.fn(() => aba as unknown as Window); window.confirm = vi.fn(() => true)
     Object.assign(navigator, { clipboard: { writeText: vi.fn(async (_t: string) => undefined) } })
   })
 
@@ -149,7 +151,7 @@ describe('Contrato', () => {
     await waitFor(() => expect(secao('titulo-documentos').querySelector('h3')!.textContent).toBe('Documentos (3)'))
     expect(within(secao('titulo-documentos')).getByText('laudo.txt')).toBeTruthy()
     fireEvent.click(screen.getByLabelText('Abrir Contrato assinado.pdf'))
-    await waitFor(() => expect(window.open).toHaveBeenCalledWith('https://arquivos/contratos/c1/assinado.pdf', '_blank', 'noopener'))
+    await waitFor(() => expect(aba.location.href).toBe('https://arquivos/contratos/c1/assinado.pdf'))
     fireEvent.click(screen.getByLabelText('Excluir Contrato assinado.pdf'))
     expect(window.confirm).toHaveBeenCalledWith('Excluir “Contrato assinado.pdf”? Esta ação não pode ser desfeita.')
     await waitFor(() => expect(removerDocumento).toHaveBeenCalledWith('cd1'))
@@ -164,7 +166,7 @@ describe('Contrato', () => {
     // D07: trecho literal citado e PDF aberto na página apontada; sem pares do mesmo tipo não há mediana.
     expect(screen.getByTestId('trecho-clausula').textContent).toContain('multa de três aluguéis')
     fireEvent.click(screen.getByTestId('abrir-pagina'))
-    await waitFor(() => expect(window.open).toHaveBeenLastCalledWith('https://arquivos/contratos/c1/instrumento.pdf#page=4', '_blank', 'noopener'))
+    await waitFor(() => expect(aba.location.href).toBe('https://arquivos/contratos/c1/instrumento.pdf#page=4'))
     expect(screen.queryByTestId('mediana-carteira')).toBeNull()
     expect(screen.getByText(/Última análise:/)).toBeTruthy()
     analisarContrato.mockRejectedValueOnce(new Error('Chave da IA não configurada'))

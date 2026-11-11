@@ -25,7 +25,10 @@ vi.mock('@/lib/assistente', () => ({ perguntar: (...a: unknown[]) => perguntar(.
 const { default: PesquisaDireito } = await import('./PesquisaDireito')
 const montar = () => render(<MemoryRouter><PesquisaDireito /></MemoryRouter>)
 
-describe('Pesquisa e desenvolvimento do direito (Instituto THEYE)', () => {
+// Apagar agora pede confirmação: nos testes, a pessoa sempre confirma.
+beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true) })
+
+describe('Pesquisa e desenvolvimento do direito (THEYE Institute)', () => {
   beforeEach(() => { cleanup(); pesquisas = []; insert.mockClear(); update.mockClear(); del.mockClear(); perguntar.mockClear() })
 
   it('o tema digitado entra na busca de cada fonte gratuita e no pedido ao pesquisador', async () => {

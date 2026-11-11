@@ -21,6 +21,14 @@ const casoBase = { titulo: 'Despejo Rua A', cliente: 'Ana', area: 'Imobiliário'
 describe('Portal do cliente (página pública por link secreto)', () => {
   beforeEach(() => { cleanup(); caso = null; resumo = null; marca = null })
 
+  it('resposta incompleta do servidor (sem etapas, sem casos, marca sem nome) vira link indisponível, sem quebrar nem mostrar "undefined"', async () => {
+    caso = { titulo: 'x' }; resumo = { cliente: 'Ana' }; marca = { cor: '#000000', sede: false }
+    montar()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Link do Portal indisponível' })).toBeTruthy()
+    expect(screen.getByRole('alert').textContent).toContain('Peça um link novo')
+    expect(screen.getByTestId('portal-rodape').textContent).not.toContain('undefined')
+  })
+
   it('link inválido avisa; caso válido mostra andamento, etapas com prazo, honorários, glossário e rodapé da sede', async () => {
     montar()
     expect(screen.getByText('Carregando…')).toBeTruthy()
@@ -37,7 +45,7 @@ describe('Portal do cliente (página pública por link secreto)', () => {
     expect(screen.getByTestId('portal-glossario')).toBeTruthy()
     expect(screen.getByTestId('assinar')).toBeTruthy()
     expect(screen.getByTestId('marca-sede')).toBeTruthy()
-    expect(screen.getByTestId('portal-rodape').textContent).toBe('GMenezes Advogados Associados · Desenvolvido pelo Instituto THEYE')
+    expect(screen.getByTestId('portal-rodape').textContent).toBe('THEYE Institute · Suporte Jurídico')
     expect(screen.queryByTestId('portal-resumo')).toBeNull()
   })
 
@@ -58,7 +66,7 @@ describe('Portal do cliente (página pública por link secreto)', () => {
     const cab = screen.getByTestId('portal-marca-parceiro')
     expect(cab.textContent).toContain('Alfa Advocacia')
     expect(cab.querySelector('img')!.getAttribute('src')).toBe('https://x/logo.png')
-    expect(screen.getByTestId('portal-rodape').textContent).toBe('Alfa Advocacia · plataforma GMenezes, desenvolvida pelo Instituto THEYE')
+    expect(screen.getByTestId('portal-rodape').textContent).toBe('Alfa Advocacia · THEYE Institute')
     const writeText = vi.fn(async (_t: string) => undefined)
     Object.assign(navigator, { clipboard: { writeText } })
     fireEvent.click(screen.getByTestId('copiar-link-portal'))

@@ -18,6 +18,7 @@ import ZonaArrastar from '@/components/ZonaArrastar'
 import Reajuste from '@/components/Reajuste'
 import CompararVersoes from '@/components/CompararVersoes'
 import { analisarContrato, ultimaAnalise, type AnaliseContrato, type OrigemAnalise } from '@/lib/agente'
+import { abrirEmNovaAba } from '@/lib/abrirAba'
 
 const LIMITE_MB = 50
 
@@ -45,7 +46,7 @@ export default function ContratoPage() {
   const abrirNaPagina = async (pagina: number) => {
     const doc = documentos.find(d => d.tipo === 'contrato' && d.caminhoStorage)
     if (!doc?.caminhoStorage) { setErro('O PDF do contrato não está anexado nesta ficha.'); return }
-    try { window.open(`${await urlAssinada(doc.caminhoStorage)}#page=${pagina}`, '_blank', 'noopener') } catch (e) { setErro(mensagemAmigavel(e)) }
+    try { await abrirEmNovaAba(async () => `${await urlAssinada(doc.caminhoStorage!)}#page=${pagina}`) } catch (e) { setErro(mensagemAmigavel(e)) }
   }
   const [analiseEm, setAnaliseEm] = useState<string | null>(null)
   const [params, setParams] = useSearchParams()
@@ -220,7 +221,7 @@ export default function ContratoPage() {
     if (!doc.caminhoStorage) return
     setErro('')
     try {
-      window.open(await urlAssinada(doc.caminhoStorage), '_blank', 'noopener')
+      await abrirEmNovaAba(() => urlAssinada(doc.caminhoStorage!))
     } catch (e) {
       setErro(mensagemAmigavel(e))
     }
@@ -272,7 +273,7 @@ export default function ContratoPage() {
     v === 0 ? 'Sem contraprestação' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
   // Passo 141: resumo do contrato em uma linha por campo, para o e-mail ou o parecer.
   const copiarResumoContrato = () => {
-    const t = [`${rotulosTipoContrato[contrato.tipo]} — ${contrato.parte}`, `Imóvel: ${imovel.endereco}`, `Início: ${formatarData(contrato.dataInicio)}${contrato.dataVencimento ? ` · Vencimento: ${formatarData(contrato.dataVencimento)}` : ''}`, `Valor: ${moeda(contrato.valor)}`, `Situação: ${encerrado ? `encerrado em ${formatarData(contrato.encerradoEm)}` : rotulosStatusContrato[statusContrato]}`, 'GMenezes Advogados Associados'].join('\n')
+    const t = [`${rotulosTipoContrato[contrato.tipo]} — ${contrato.parte}`, `Imóvel: ${imovel.endereco}`, `Início: ${formatarData(contrato.dataInicio)}${contrato.dataVencimento ? ` · Vencimento: ${formatarData(contrato.dataVencimento)}` : ''}`, `Valor: ${moeda(contrato.valor)}`, `Situação: ${encerrado ? `encerrado em ${formatarData(contrato.encerradoEm)}` : rotulosStatusContrato[statusContrato]}`, 'THEYE Institute'].join('\n')
     navigator.clipboard?.writeText(t).catch(() => undefined)
   }
 

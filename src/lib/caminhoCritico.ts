@@ -5,12 +5,13 @@
 export type Etapa = { id: string; titulo: string; prazo: string | null; situacao: string; depende_de: string | null; criado_em?: string }
 export type Resultado = { fimPrevisto: string | null; caminho: string[]; atraso: number; fins: Record<string, string> }
 
+import { hojeLocal } from './datas'
 const dia = (s: string) => new Date(`${s.slice(0, 10)}T00:00:00Z`)
 const chave = (d: Date) => d.toISOString().slice(0, 10)
 const mais = (d: Date, n: number) => new Date(d.getTime() + n * 86400000)
 const diasEntre = (a: Date, b: Date) => Math.round((b.getTime() - a.getTime()) / 86400000)
 
-export function caminhoCritico(etapas: Etapa[], inicio: string, hojeIso = chave(new Date())): Resultado {
+export function caminhoCritico(etapas: Etapa[], inicio: string, hojeIso = hojeLocal()): Resultado {
   const porId = new Map(etapas.map(e => [e.id, e]))
   const ini = dia(inicio), hoje = dia(hojeIso)
   const fins = new Map<string, Date>()

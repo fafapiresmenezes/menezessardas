@@ -4,7 +4,7 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 
 const SEDE = '00000000-0000-0000-0000-000000000001'
 const sede = { id: SEDE, nome: 'GMenezes (sede)', plano: 'sede', criadoEm: '2026-10-01', operadores: 3, leitores: 2, mensal: 0, mensal1Ano: 0 }
-const parceiro = { id: 'e2', nome: 'Escritório Alfa', plano: 'parceiro', criadoEm: '2026-11-01', operadores: 2, leitores: 1, mensal: 900, mensal1Ano: 630 }
+const parceiro = { id: 'e2', nome: 'Escritório Alfa', plano: 'parceiro', criadoEm: '2026-11-01', operadores: 2, leitores: 1, mensal: 600, mensal1Ano: 600 }
 let escritorios = [sede, parceiro]
 const criarEscritorio = vi.fn(async (_n: string) => undefined)
 const moverParaEscritorio = vi.fn(async (_p: string, _e: string) => undefined)
@@ -34,15 +34,16 @@ const pessoas = [{ id: 'p1', nome: 'Ana', email: 'ana@exemplo.com', funcao: 'ope
 describe('Escritórios parceiros (cobrança por usuário)', () => {
   beforeEach(() => { cleanup(); escritorios = [sede, parceiro]; convites = []; aceites = []; invoke.mockReset(); criarEscritorio.mockClear(); moverParaEscritorio.mockClear() })
 
-  it('tabela de cobrança: sede sem cobrança, parceiro com mensal e 1º ano com desconto, total dos parceiros', async () => {
+  it('tabela de cobrança: sede sem cobrança, parceiro com R$ 200 por usuário, preço novo no texto, total dos parceiros', async () => {
     render(<EscritoriosParceiros pessoas={pessoas} aoMudar={() => {}} />)
     const tabela = await screen.findByTestId('tabela-cobranca')
     await waitFor(() => expect(tabela.textContent).toContain('Escritório Alfa'))
     const t = tabela.textContent!.replace(/ /g, ' ')
     expect(t).toContain('(sede, sem cobrança)')
-    expect(t).toContain('R$ 900,00')
-    expect(t).toContain('R$ 630,00')
-    expect(t).toContain('Receita mensal dos parceirosR$ 900,00')
+    expect(t).toContain('R$ 600,00')
+    expect(t).not.toContain('30%')
+    expect(t).toContain('Receita mensal dos parceirosR$ 600,00')
+    expect(screen.getByTestId('escritorios-parceiros').textContent!.replace(/\u00a0/g, ' ')).toContain('instalação de R$ 15.000,00 em 3 vezes sem juros e R$ 200,00 por usuário ao mês')
     expect(screen.getByTestId('sem-aceites-saas')).toBeTruthy()
   })
 

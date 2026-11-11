@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase'
 import { formatarData } from '@/lib/datas'
 import { TextoComTermos } from './Termo'
 import { PenLine, CheckCircle2 } from 'lucide-react'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Lado do cliente no portal: lê o documento, informa nome e CPF/CNPJ, aceita e assina.
 type Doc = { id: string; titulo: string; texto: string; hash_texto: string; assinante_nome: string | null; assinado_em: string | null; hash_assinatura: string | null }
@@ -16,7 +17,7 @@ export default function AssinarPortal({ token }: { token: string }) {
     const f = form[d.id] ?? { nome: '', doc: '', aceite: false }
     setErro('')
     const { error } = await supabase.rpc('portal_assinar', { p_token: token, p_id: d.id, p_nome: f.nome, p_documento: f.doc })
-    if (error) return setErro(error.message)
+    if (error) return setErro(mensagemAmigavel(error))
     carregar()
   }
   if (!docs.length) return null

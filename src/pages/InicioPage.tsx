@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gravarAreaAtual } from '@/lib/assistente'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
-import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck } from 'lucide-react'
+import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck, CalendarClock, UserPlus, Search } from 'lucide-react'
 import AceiteTermos from '@/components/AceiteTermos'
 
 // Tela de entrada: o escritório escolhe a área de trabalho antes de entrar na plataforma.
@@ -38,7 +38,7 @@ export default function InicioPage() {
   const [mapaCopiado, setMapaCopiado] = useState(false)
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 276
   const copiarMapa = async () => {
-    const t = ['Áreas da plataforma — GMenezes Advogados Associados', ...AREAS.map((a, i) => `${i + 1}. ${a.titulo}: ${a.texto}`)].join('\n')
+    const t = ['Áreas da plataforma — THEYE Institute', ...AREAS.map((a, i) => `${i + 1}. ${a.titulo}: ${a.texto}`)].join('\n')
     try { await navigator.clipboard.writeText(t); setMapaCopiado(true); setTimeout(() => setMapaCopiado(false), 2500) } catch { /* sem área de transferência */ }
   }
   useEffect(() => {
@@ -70,11 +70,27 @@ export default function InicioPage() {
     <main className="min-h-screen bg-navy flex flex-col items-center justify-center px-4 py-12">
       <AceiteTermos />
       <div className="text-center mb-10">
-        <p className="font-serif text-dourado text-4xl tracking-widest">GM</p>
-        <h1 className="font-serif text-white text-3xl mt-2">GMenezes Advogados Associados</h1>
-        <p className="text-white/70 mt-3">Escolha a área em que vai trabalhar agora</p>
-        <button type="button" data-testid="ir-meu-dia" onClick={() => navigate('/meu-dia')} className="mt-4 min-h-[44px] px-5 border border-dourado text-dourado text-sm uppercase tracking-wider">Ver meu dia: prazos, tarefas e intimações</button>
-        <button type="button" data-testid="ir-consultores" onClick={() => navigate('/consultores')} className="mt-4 ml-3 min-h-[44px] px-5 bg-dourado text-navy text-sm uppercase tracking-wider">Consultores do escritório</button>
+        <p className="font-serif text-dourado text-4xl tracking-widest">THEYE</p>
+        <h1 className="font-serif text-white text-3xl mt-2">THEYE Institute</h1>
+        <p className="text-white/60 text-xs uppercase tracking-[0.18em] mt-2">Suporte Jurídico</p>
+      </div>
+      {/* Os três atalhos do dia a dia vêm antes das áreas: quem entra sabe na hora por onde começar. */}
+      <div className="w-full max-w-6xl mb-8" aria-label="Por onde começar">
+        <p className="text-white text-lg mb-3 text-center">O que você precisa agora?</p>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {[
+            { id: 'ir-meu-dia', destino: '/meu-dia', titulo: 'Ver o que vence', texto: 'Prazos, tarefas e intimações de hoje e da semana.', icone: CalendarClock },
+            { id: 'ir-processos-antigos', destino: '/processos-antigos', titulo: 'Inserir processos antigos', texto: 'Planilha ou nome do advogado: cadastra, busca no CNJ e mostra os prazos.', icone: UserPlus },
+            { id: 'ir-pesquisa', destino: '/pesquisa', titulo: 'Pesquisar', texto: 'Processo, pessoa ou empresa numa caixa só.', icone: Search },
+          ].map(a => (
+            <button key={a.id} type="button" data-testid={a.id} onClick={() => navigate(a.destino)} className="bg-dourado text-navy text-left p-5 min-h-[96px] shadow-lg hover:-translate-y-0.5 transition focus:outline-none focus:ring-4 focus:ring-white/60">
+              <a.icone className="w-7 h-7 mb-2" aria-hidden />
+              <span className="block font-serif text-xl">{a.titulo}</span>
+              <span className="block text-sm">{a.texto}</span>
+            </button>
+          ))}
+        </div>
+        <p className="text-center mt-3"><button type="button" data-testid="ir-consultores" onClick={() => navigate('/consultores')} className="min-h-[44px] px-4 text-white/80 underline text-sm">Consultores do escritório</button></p>
       </div>
       {carregado && (areaFixa || areaUltima) && (
         <div className="w-full max-w-6xl mb-5 bg-white/10 border border-dourado/50 text-white p-4 flex flex-wrap items-center gap-3 text-sm" data-testid="area-lembrada">
@@ -94,14 +110,22 @@ export default function InicioPage() {
           )}
         </div>
       )}
-      <form className="w-full max-w-6xl mb-4" onSubmit={e => { e.preventDefault(); const a = areasVisiveis[0]; if (a) abrir(a.destino, a.chave) }}>
+      {/* Só o que é preciso fica à vista: as três tarefas de cima. As áreas de trabalho abrem aqui, em um clique. */}
+      <details className="w-full max-w-6xl" data-testid="todas-areas" open={!!buscaArea || undefined}>
+        <summary className="cursor-pointer text-white/90 text-center min-h-[48px] flex items-center justify-center select-none underline">Ver todas as áreas de trabalho</summary>
+      <form className="w-full max-w-6xl mb-4 mt-3" onSubmit={e => { e.preventDefault(); const a = areasVisiveis[0]; if (a) abrir(a.destino, a.chave) }}>
         <label className="block text-white/80 text-sm">Para onde quer ir?
           <input value={buscaArea} onChange={e => setBuscaArea(e.target.value)} placeholder="Ex.: contrato, despejo, trabalhista, INSS…" data-testid="busca-area" className="mt-1 w-full max-w-md block border border-dourado/60 bg-white/95 text-navy px-3 min-h-[44px]" />
         </label>
-        <button type="button" onClick={copiarMapa} data-testid="copiar-mapa-areas" className="mt-2 underline text-white/80 text-xs">{mapaCopiado ? 'mapa copiado' : 'copiar mapa das áreas'}</button>
-        <button type="button" onClick={() => window.print()} data-testid="imprimir-mapa" className="mt-2 ml-3 underline text-white/80 text-xs print:hidden">imprimir</button>{/* Passo 204 */}
-        <button type="button" data-testid="copiar-link-inicio" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-2 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 238 */}
-        <button type="button" data-testid="baixar-areas" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['área;descrição', ...AREAS.map(a => `${a.titulo};${a.texto}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'areas.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">baixar lista</button>{/* Passo 315 */}
+        <details className="mt-1 text-white/80 text-xs" data-testid="mais-opcoes-inicio">
+          <summary className="cursor-pointer min-h-[44px] inline-flex items-center underline select-none">Mais opções do mapa de áreas</summary>
+          <div className="flex flex-wrap items-center gap-2">
+          <button type="button" onClick={copiarMapa} data-testid="copiar-mapa-areas" className="mt-2 min-h-[44px] underline text-white/80 text-xs">{mapaCopiado ? 'mapa copiado' : 'copiar mapa das áreas'}</button>
+          <button type="button" onClick={() => window.print()} data-testid="imprimir-mapa" className="mt-2 ml-3 min-h-[44px] underline text-white/80 text-xs print:hidden">imprimir</button>{/* Passo 204 */}
+          <button type="button" data-testid="copiar-link-inicio" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-2 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 238 */}
+          <button type="button" data-testid="baixar-areas" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['área;descrição', ...AREAS.map(a => `${a.titulo};${a.texto}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'areas.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">baixar lista</button>{/* Passo 315 */}
+          </div>
+        </details>
         {buscaArea && <p className="text-white/70 text-xs mt-1" data-testid="busca-area-resultado">{areasVisiveis.length ? `${areasVisiveis.length} área(s); Enter abre ${areasVisiveis[0].titulo}.` : 'Nenhuma área com esse termo. Tente "contrato" ou "cível".'}</p>}
       </form>
       <div className="grid gap-4 w-full max-w-6xl sm:grid-cols-2 lg:grid-cols-5">
@@ -118,7 +142,8 @@ export default function InicioPage() {
           </button>
         ))}
       </div>
-      <p className="text-white/50 text-xs mt-12">Desenvolvido pelo Instituto THEYE</p>
+      </details>
+      <p className="text-white/50 text-xs mt-12">Desenvolvido pelo THEYE Institute</p>
     </main>
   )
 }

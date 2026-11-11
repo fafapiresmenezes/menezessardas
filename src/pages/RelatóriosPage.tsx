@@ -11,6 +11,7 @@ import { rotulosTipoAlerta, rotulosTipoImovel } from '@/lib/rotulos'
 import type { Periodicidade } from '@/lib/dominio'
 import { porCliente, porSocio, csvClientesSocios, type HoraLancada, type CasoHonorario, type PessoaNome } from '@/lib/relatorioClientes'
 import { listarPessoas } from '@/lib/equipe'
+import { mensagemAmigavel } from '@/lib/erros'
 
 type Periodo = 30 | 90 | 365
 
@@ -81,7 +82,7 @@ export default function RelatóriosPage() {
     setOcupado(true); setMsgMensal('Gerando o PDF e enviando para o seu e-mail…')
     const { data, error } = await supabase.functions.invoke('relatorio-mensal', { body: { teste: true } })
     setOcupado(false)
-    if (error) return setMsgMensal(`Não foi possível enviar: ${error.message}`)
+    if (error) return setMsgMensal(`Não foi possível enviar: ${mensagemAmigavel(error)}`)
     if (data?.enviado) setMsgMensal(`Relatório de ${data.mes?.slice(0, 7)} enviado para o seu e-mail (SHA-256 ${String(data.sha256).slice(0, 12)}…). No dia 1 de cada mês ele vai sozinho à sócia.`)
     else setMsgMensal(`Não enviado: ${data?.motivo ?? data?.detalhe ?? data?.erro ?? 'erro desconhecido'}.`)
   }

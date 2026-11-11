@@ -11,6 +11,7 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { preverCarteira, preverReceita, intervaloWilson, registrarPrevisoes, type Faixa, type PrevisaoContrato } from '@/lib/predicao'
 import { TrendingUp, ShieldAlert, Repeat, Scale, ChevronDown, ChevronUp, Info, FlaskConical } from 'lucide-react'
 import { CLASSES_LOCACAO, consultarPrevisaoInstituto, resumirPrevisaoInstituto, type PrevisaoInstituto , chanceClassesInstituto, textoChanceClasse, type ChanceClasse, probabilidadeUnica } from '@/lib/previsaoInstituto'
+import { hojeLocal } from '@/lib/datas'
 
 const moeda = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v)
 const COR: Record<Faixa, string> = { baixo: 'bg-regular', moderado: 'bg-atencao', alto: 'bg-critico' }
@@ -191,7 +192,7 @@ function PainelInstituto() {
   const consultar = async () => {
     setOcupado(true); setErro('')
     try {
-      if (!supabaseConfigurado) { setRes({ convencional: { p: 0.974, ic95: [0.958, 0.986], n: 490 }, grafo: { p: 0.97 }, confianca: 'alta', placar_atual: 'inconclusivo', aviso: 'Exemplo da demonstração. Não é garantia de resultado.', fonte: 'Instituto THEYE (demonstração)' }); return }
+      if (!supabaseConfigurado) { setRes({ convencional: { p: 0.974, ic95: [0.958, 0.986], n: 490 }, grafo: { p: 0.97 }, confianca: 'alta', placar_atual: 'inconclusivo', aviso: 'Exemplo da demonstração. Não é garantia de resultado.', fonte: 'THEYE Institute (demonstração)' }); return }
       setRes(await consultarPrevisaoInstituto({ tribunal, classe }))
     } catch (e) { setErro(mensagemAmigavel(e)) } finally { setOcupado(false) }
   }
@@ -200,13 +201,13 @@ function PainelInstituto() {
   const [resCopiado, setResCopiado] = useState(false)
   const copiarInstituto = async () => {
     if (!res || !r) return
-    const t = [`Probabilidade do Instituto THEYE — ${tribunal} · ${classe}`, `${r.titulo} — ${r.detalhe} · confiança ${r.confianca}`, r.grafo ?? '', `Aviso: ${res.aviso}`, `Fonte: ${res.fonte} · mede tendência do tribunal, não o processo concreto`].filter(Boolean).join('\n')
+    const t = [`Probabilidade do THEYE Institute — ${tribunal} · ${classe}`, `${r.titulo} — ${r.detalhe} · confiança ${r.confianca}`, r.grafo ?? '', `Aviso: ${res.aviso}`, `Fonte: ${res.fonte} · mede tendência do tribunal, não o processo concreto`].filter(Boolean).join('\n')
     try { await navigator.clipboard.writeText(t); setResCopiado(true); setTimeout(() => setResCopiado(false), 2500) } catch { /* sem área de transferência */ }
   }
   const campo = 'w-full min-h-[44px] border border-navy/15 px-3 text-sm bg-white focus:outline-none focus:border-dourado'
   return (
     <section className="bg-white p-6 shadow-sm border-t-2 border-dourado" aria-labelledby="t-instituto" data-testid="painel-instituto">
-      <h2 id="t-instituto" className="text-lg flex items-center gap-2 mb-1"><FlaskConical size={18} aria-hidden="true" /> Probabilidade do Instituto THEYE</h2>
+      <h2 id="t-instituto" className="text-lg flex items-center gap-2 mb-1"><FlaskConical size={18} aria-hidden="true" /> Probabilidade do THEYE Institute</h2>
       <p className="text-sm text-grafite-claro mb-4">Ações de locação em seis tribunais, pela base do Instituto (DataJud anonimizado). Mostra o modelo convencional com margem de erro e o modelo por grafo, que está em teste pré-registrado. Nada do escritório é enviado ao Instituto.</p>
       <div className="grid gap-3 sm:grid-cols-3">
         <label className="text-xs uppercase tracking-wider text-grafite-claro sm:col-span-2">Tipo de ação
@@ -254,7 +255,7 @@ export default function PrevisoesPage() {
   // Uma fotografia por dia das previsões de cada contrato, para calibrar com o desfecho real.
   useEffect(() => {
     if (!previsoes.length || !Object.keys(indices).length) return
-    const chave = `lsm-previsoes-${new Date().toISOString().slice(0, 10)}`
+    const chave = `lsm-previsoes-${hojeLocal()}`
     try { if (localStorage.getItem(chave)) return; localStorage.setItem(chave, '1') } catch { /* sem armazenamento */ }
     registrarPrevisoes([
       ...previsoes.map(p => ({ tipo: 'risco_contrato', referencia: p.contrato.id, previsto: { risco: p.risco, faixa: p.faixaRisco, renovacao: p.renovacao, fatores: p.fatoresRisco.map(f => f.fator) }, fonte: 'regras declaradas v1' })),
@@ -272,7 +273,7 @@ export default function PrevisoesPage() {
   const [baixado, marcarBaixado] = useBaixado() // Passo 397
   const copiarResumo = async () => {
     const t = [`Previsões da carteira — ${new Date().toLocaleDateString('pt-BR')}`, `Receita contratada (12 meses): ${moeda(totalContratada)}`, `Receita esperada (12 meses): ${moeda(totalEsperada)}`, `Contratos com risco alto: ${altos} de ${previsoes.length}`, `Chance média de renovação: ${renovMedia}%`,
-      ...previsoes.filter(p => p.faixaRisco === 'alto').map(p => `• risco alto: ${p.contrato.parte || 'contrato'} (${p.risco} pontos)`), 'Regras declaradas v1 · GMenezes Advogados Associados'].join('\n')
+      ...previsoes.filter(p => p.faixaRisco === 'alto').map(p => `• risco alto: ${p.contrato.parte || 'contrato'} (${p.risco} pontos)`), 'Regras declaradas v1 · THEYE Institute'].join('\n')
     try { await navigator.clipboard.writeText(t); setCopiadoResumo(true); setTimeout(() => setCopiadoResumo(false), 2500) } catch { /* sem área de transferência */ }
   }
 

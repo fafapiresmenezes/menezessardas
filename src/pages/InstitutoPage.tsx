@@ -141,8 +141,8 @@ export function linhasCaseStudy(): { texto: string; tamanho?: number; negrito?: 
   const primeira = MEDICOES[0], ultima = MEDICOES[MEDICOES.length - 1]
   const nota = (n: number) => n.toFixed(2).replace('.', ',')
   const L: { texto: string; tamanho?: number; negrito?: boolean }[] = [
-    { texto: 'Case study: plataforma GMenezes Advogados Associados', tamanho: 16, negrito: true },
-    { texto: `Instituto THEYE · de ${nota(primeira.nota)} a ${nota(ultima.nota)} em ${MEDICOES.length} medições (M${primeira.n} a M${ultima.n}) · gerado em ${new Date().toLocaleDateString('pt-BR')}`, tamanho: 9 }, { texto: ' ' },
+    { texto: 'Case study: plataforma THEYE Institute', tamanho: 16, negrito: true },
+    { texto: `THEYE Institute · de ${nota(primeira.nota)} a ${nota(ultima.nota)} em ${MEDICOES.length} medições (M${primeira.n} a M${ultima.n}) · gerado em ${new Date().toLocaleDateString('pt-BR')}`, tamanho: 9 }, { texto: ' ' },
     { texto: '1. Trajetória de notas', tamanho: 12, negrito: true },
   ]
   for (const m of MEDICOES) L.push({ texto: `M${m.n} · ${m.data.split('-').reverse().join('/')} · ${nota(m.nota)} ${'#'.repeat(Math.max(1, Math.round((m.nota - 7) * 10)))}`, tamanho: 8.5 })
@@ -155,7 +155,7 @@ export function linhasCaseStudy(): { texto: string; tamanho?: number; negrito?: 
   L.push({ texto: `Plano M31 · ${PLANO_M31.data.split('-').reverse().join('/')} · média ${nota(PLANO_M31.media)} · ${PLANO_M31.arquivo} · .ots: sim`, tamanho: 8.5, negrito: true }, { texto: `SHA-256 ${PLANO_M31.sha256}`, tamanho: 7.5 })
   L.push({ texto: ' ' }, { texto: '3. Nota de método', tamanho: 12, negrito: true })
   for (const q of quebrar('Cada entrega é medida em dez critérios ponderados: funcionalidade, confiabilidade, segurança, usabilidade, desempenho, inteligência artificial, dados, acessibilidade, documentação e adoção. A nota é a média ponderada, de 0 a 10, atribuída pelo agente de medição com base em testes em produção (navegador real, zero erros de JavaScript, CSS carregado) e nos critérios de Nielsen, SUS, WCAG 2.2 AA, ISO 9241-110 e HEART. Cada medição gera um PDF cujo SHA-256 é encadeado ao da medição anterior (cadeia-de-medicoes.txt) e carimbado no Bitcoin pelo OpenTimestamps (.ots), o que impede alterar o histórico sem que se perceba. Para conferir: calcule o SHA-256 do PDF e compare com a tabela; verifique o .ots em opentimestamps.org. Limite: a nota mede a plataforma, não o uso pela equipe; o que falta para 10 depende de dados reais, logo oficial e adoção.', 9)) L.push({ texto: q, tamanho: 9 })
-  L.push({ texto: ' ' }, { texto: 'Instituto THEYE · plataforma desenvolvida para GMenezes Advogados Associados · dados fictícios até a equipe cadastrar os reais.', tamanho: 8 })
+  L.push({ texto: ' ' }, { texto: 'THEYE Institute · dados fictícios até a equipe cadastrar os reais.', tamanho: 8 })
   return L
 }
 
@@ -163,7 +163,7 @@ function CaseStudy() {
   // Passo 123: a cadeia inteira copiável (medição, data, nota, hash) para auditoria externa.
   const [cadeiaCopiada, setCadeiaCopiada] = useState(false)
   const copiarCadeia = async () => {
-    const t = ['Cadeia de medições — GMenezes Advogados Associados', ...MEDICOES.map(m => `M${m.n} · ${m.data.split('-').reverse().join('/')} · nota ${m.nota.toFixed(2).replace('.', ',')}${m.ots ? ' · OTS' : ''} · ${m.arquivo} · SHA-256 ${m.sha256}`), `Plano M31 · ${PLANO_M31.arquivo} · SHA-256 ${PLANO_M31.sha256}`].join('\n')
+    const t = ['Cadeia de medições — THEYE Institute', ...MEDICOES.map(m => `M${m.n} · ${m.data.split('-').reverse().join('/')} · nota ${m.nota.toFixed(2).replace('.', ',')}${m.ots ? ' · OTS' : ''} · ${m.arquivo} · SHA-256 ${m.sha256}`), `Plano M31 · ${PLANO_M31.arquivo} · SHA-256 ${PLANO_M31.sha256}`].join('\n')
     try { await navigator.clipboard.writeText(t); setCadeiaCopiada(true); setTimeout(() => setCadeiaCopiada(false), 2500) } catch { /* sem área de transferência */ }
   }
   const primeira = MEDICOES[0], ultima = MEDICOES[MEDICOES.length - 1]
@@ -171,16 +171,16 @@ function CaseStudy() {
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 273
   const [baixado, marcarBaixado] = useBaixado() // Passo 399
   const caseEmPdf = () => {
-    const pdf = gerarPdfTexto('Case study GMenezes', linhasCaseStudy())
+    const pdf = gerarPdfTexto('Case study THEYE Institute', linhasCaseStudy())
     const url = URL.createObjectURL(new Blob([pdf], { type: 'application/pdf' }))
-    const a = document.createElement('a'); a.href = url; a.download = `case-study-gmenezes-M${ultima.n}.pdf`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 2000)
+    const a = document.createElement('a'); a.href = url; a.download = `case-study-theye-M${ultima.n}.pdf`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 2000)
     setMsgPdf(`Case study em PDF gerado com ${MEDICOES.length} medições, SHA-256 e provas .ots.`)
   }
   return (
     <div className="space-y-6" data-testid="case-study">
       <section className="bg-white p-6 shadow-sm">
         <h2 className="text-lg mb-1">Case study: de {primeira.nota.toFixed(2).replace('.', ',')} a {ultima.nota.toFixed(2).replace('.', ',')} em {MEDICOES.length} medições</h2>
-        <p className="text-sm text-grafite-claro mb-4">Esta plataforma foi construída pelo Instituto THEYE para o escritório GMenezes Advogados Associados e medida a cada entrega com dez critérios ponderados (funcionalidade, confiabilidade, segurança, usabilidade, desempenho, IA, dados, acessibilidade, documentação e adoção). Cada medição vira um PDF cujo SHA-256 é encadeado ao anterior e carimbado no Bitcoin (OpenTimestamps), de modo que ninguém pode alterar o histórico depois.</p>
+        <p className="text-sm text-grafite-claro mb-4">Esta plataforma foi construída e é mantida pelo THEYE Institute e medida a cada entrega com dez critérios ponderados (funcionalidade, confiabilidade, segurança, usabilidade, desempenho, IA, dados, acessibilidade, documentação e adoção). Cada medição vira um PDF cujo SHA-256 é encadeado ao anterior e carimbado no Bitcoin (OpenTimestamps), de modo que ninguém pode alterar o histórico depois.</p>
         <div className="flex items-end gap-1 h-32" aria-hidden>
           {MEDICOES.map(m => <div key={m.n} className={m.n === ultima.n ? 'flex-1 bg-dourado' : 'flex-1 bg-navy'} style={{ height: `${((m.nota - 7) / 3) * 100}%` }} title={`M${m.n}: ${m.nota}`} />)}
         </div>
@@ -237,10 +237,10 @@ export default function InstitutoPage() {
   const [hashCopiado, setHashCopiado] = useState(false)
   const copiarHash = async () => { try { await navigator.clipboard.writeText(`${ult.arquivo} SHA-256 ${ult.sha256}`); setHashCopiado(true); setTimeout(() => setHashCopiado(false), 2500) } catch { /* sem área de transferência */ } }
   return (
-    <Layout title="Instituto THEYE">
+    <Layout title="THEYE Institute">
       <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-6">
         <header>
-          <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">Instituto THEYE</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">THEYE Institute</p>
           <h2 className="text-3xl text-navy">Ferramentas do Instituto</h2>
           <p className="text-sm text-grafite-claro mt-1">Inovação regulatória, jurimetria, ESG e pesquisa jurídica (Brasil e mundo) para o desenvolvimento do direito brasileiro.</p>
           <p className="text-sm mt-3 p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="estado-medicao">

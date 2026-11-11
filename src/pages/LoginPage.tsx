@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { entrarDemo } from '@/lib/authDemo'
 import Marca from '@/components/Marca'
+import { NOME_PLATAFORMA } from '@/lib/plataforma'
 import { marcaPorDominio, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 
 export default function LoginPage() {
@@ -72,10 +73,11 @@ export default function LoginPage() {
         return
       }
       try {
-        const { error } = await supabase.auth.signUp({ email, password: senha })
-        if (error) setErro('Não foi possível criar o acesso: ' + mensagemAmigavel(error))
+        const { data, error } = await supabase.auth.signUp({ email, password: senha })
+        if (error) setErro(/rate limit/i.test(error.message ?? '') ? 'Muitas contas criadas em pouco tempo. Aguarde alguns minutos e tente de novo.' : 'Não foi possível criar o acesso: ' + mensagemAmigavel(error))
+        else if (data?.session) navigate('/inicio') // sem confirmação de e-mail: a conta já entra, no escritório próprio
         else {
-          setAvisoCadastro('Cadastro recebido. Um administrador do escritório vai liberar o seu acesso; depois é só entrar com este e-mail e senha.')
+          setAvisoCadastro('Conta criada. Abra o e-mail que enviamos e toque no link de confirmação; depois é só entrar com este e-mail e senha. Não precisa esperar aprovação.')
           setPrimeiroAcesso(false)
         }
       } catch {
@@ -89,6 +91,7 @@ export default function LoginPage() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password: senha })
       if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else navigate('/inicio') }
+      else if (/not confirmed/i.test(error.message ?? '')) setErro('Falta confirmar o seu e-mail: abra a mensagem que enviamos quando a conta foi criada e toque no link. Depois entre de novo.')
       else if (error.status === 400 || error.status === 401 || /invalid/i.test(mensagemAmigavel(error))) setErro('E-mail ou senha incorretos.')
       else setErro('Não foi possível falar com o servidor (' + mensagemAmigavel(error) + '). Verifique a conexão e tente de novo.')
     } catch {
@@ -106,9 +109,9 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-white rounded-sm shadow-xl border-t-2 border-dourado p-8">
-          <h1 className="font-serif text-2xl text-navy text-center">Gestão Contratual</h1>
+          <h1 className="font-serif text-2xl text-navy text-center">{NOME_PLATAFORMA}</h1>
           <p className="text-sm text-grafite-claro text-center mt-2 mb-7">
-            Acesso restrito aos profissionais do escritório
+            Entre com o seu e-mail e a sua senha
           </p>
 
           {erro && (
@@ -125,15 +128,16 @@ export default function LoginPage() {
 
           {primeiroAcesso && (
             <div role="status" className="mb-5 p-3 bg-atencaoFundo border-l-2 border-atencao text-atencao text-sm">
-              Crie sua conta com e-mail e senha. O acesso é liberado por um administrador do escritório,
-              que escolhe a sua função (operador ou leitor).
+              Crie sua conta com e-mail e senha. Ela nasce com um escritório próprio e vazio, do qual
+              você é a pessoa administradora — seus dados ficam só com a sua equipe. Para entrar
+              no escritório de outra pessoa, peça um convite a ela.
             </div>
           )}
 
           {avisoRecuperacao && (
             <div role="status" className="mb-5 p-3 bg-atencaoFundo border-l-2 border-atencao text-atencao text-sm">
               {supabaseConfigurado
-                ? 'Peça a uma pessoa administradora do escritório uma senha provisória (menu Equipe). Depois de entrar, troque-a em Configurações → Senha.'
+                ? 'Esqueceu a senha? Peça a uma pessoa administradora da sua equipe uma senha provisória (menu Equipe). Depois de entrar, troque-a em Configurações → Senha.'
                 : 'Na demonstração, entre com admin@exemplo.com e a senha senha123.'}
             </div>
           )}
@@ -219,7 +223,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-white/60 text-xs mt-8">
-          GMenezes Advogados Associados
+          THEYE Institute · Suporte Jurídico
         </p>
       </div>
     </main>

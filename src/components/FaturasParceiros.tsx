@@ -4,10 +4,12 @@ import QRCode from 'qrcode'
 import { supabase } from '@/lib/supabase'
 import { codigoPix } from '@/lib/pix'
 import { gerarPdfTexto } from '@/lib/pdfSimples'
+import { mensagemAmigavel } from '@/lib/erros'
+import { PARCELAS_INSTALACAO } from '@/lib/precos'
 
 // Passo 38 (Onda D): fatura mensal de cada escritório parceiro (gerada no dia 1 pelo banco; "Gerar agora" para teste),
 // com PDF simples e PIX copia e cola/QR da Value Pas (chave PIX da sede, em Configurações). Só a sede vê.
-export interface Fatura { id: string; escritorio_id: string; competencia: string; operadores: number; leitores: number; valor_cheio: number; desconto_pct: number; valor: number; vencimento: string; criado_em: string; pago_em: string | null }
+export interface Fatura { id: string; escritorio_id: string; competencia: string; operadores: number; leitores: number; valor_cheio: number; desconto_pct: number; valor: number; vencimento: string; criado_em: string; pago_em: string | null; /** Preço por usuário da fatura; vazio nas faturas antigas (R$ 390 por operador, R$ 120 por leitor, 30% no 1º ano). */ preco_usuario?: number | null; instalacao?: number | null; parcela_instalacao?: number | null }
 const brl = (v: number) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 const mesAno = (d: string) => new Date(d + 'T12:00:00').toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
 const dataBr = (d: string) => new Date(d + 'T12:00:00').toLocaleDateString('pt-BR')
@@ -16,12 +18,17 @@ export function linhasFatura(f: Fatura, nome: string, pix?: string): { texto: st
   return [
     { texto: `Fatura ${mesAno(f.competencia)}`, tamanho: 16, negrito: true },
     { texto: `Escritório: ${nome}`, tamanho: 11 },
-    { texto: `Emitida por: Value Pas (plataforma GMenezes, desenvolvida pelo Instituto THEYE)`, tamanho: 10 },
+    { texto: `Emitida por: Value Pas (THEYE Institute)`, tamanho: 10 },
     { texto: ' ' },
-    { texto: `${f.operadores} operador(es) x R$ 390,00 = ${brl(390 * f.operadores)}`, tamanho: 11 },
-    { texto: `${f.leitores} leitor(es) x R$ 120,00 = ${brl(120 * f.leitores)}`, tamanho: 11 },
-    { texto: `Subtotal: ${brl(f.valor_cheio)}`, tamanho: 11 },
-    { texto: `Desconto (${f.desconto_pct}% no primeiro ano): -${brl(f.valor_cheio - f.valor)}`, tamanho: 11 },
+    ...(f.preco_usuario ? [
+      { texto: `${f.operadores + f.leitores} usuário(s) x ${brl(Number(f.preco_usuario))} = ${brl(Number(f.preco_usuario) * (f.operadores + f.leitores))}`, tamanho: 11 },
+      ...(Number(f.instalacao) > 0 ? [{ texto: `Instalação, parcela ${f.parcela_instalacao ?? 1} de ${PARCELAS_INSTALACAO} (sem juros): ${brl(Number(f.instalacao))}`, tamanho: 11 }] : []),
+    ] : [
+      { texto: `${f.operadores} operador(es) x R$ 390,00 = ${brl(390 * f.operadores)}`, tamanho: 11 },
+      { texto: `${f.leitores} leitor(es) x R$ 120,00 = ${brl(120 * f.leitores)}`, tamanho: 11 },
+      { texto: `Subtotal: ${brl(f.valor_cheio)}`, tamanho: 11 },
+      { texto: `Desconto (${f.desconto_pct}% no primeiro ano): -${brl(f.valor_cheio - f.valor)}`, tamanho: 11 },
+    ]),
     { texto: `Total: ${brl(f.valor)}`, tamanho: 13, negrito: true },
     { texto: `Vencimento: ${dataBr(f.vencimento)}`, tamanho: 11 },
     { texto: f.pago_em ? `Paga em ${new Date(f.pago_em).toLocaleDateString('pt-BR')}` : 'Em aberto', tamanho: 11 },
@@ -52,7 +59,7 @@ export default function FaturasParceiros({ nomes }: { nomes: Record<string, stri
     setOcupado(true); setMsg('')
     const { data, error } = await supabase.rpc('gerar_faturas_escritorios')
     setOcupado(false)
-    if (error) { setMsg(`Não foi possível gerar: ${error.message}`); return }
+    if (error) { setMsg(`Não foi possível gerar: ${mensagemAmigavel(error)}`); return }
     setMsg(`${(data ?? []).length} fatura(s) na competência atual.`); carregar()
   }
   const baixar = (f: Fatura) => {
@@ -65,7 +72,7 @@ export default function FaturasParceiros({ nomes }: { nomes: Record<string, stri
   const copiar = async (f: Fatura) => { try { await navigator.clipboard.writeText(codigo(f)); setMsg('Código PIX copiado.') } catch { setMsg('Selecione o código no PDF e copie.') } }
   const marcarPaga = async (f: Fatura) => {
     const { error } = await supabase.from('faturas_escritorio').update({ pago_em: new Date().toISOString() }).eq('id', f.id)
-    setMsg(error ? error.message : 'Fatura marcada como paga.'); carregar()
+    setMsg(error ? mensagemAmigavel(error) : 'Fatura marcada como paga.'); carregar()
   }
 
   return (

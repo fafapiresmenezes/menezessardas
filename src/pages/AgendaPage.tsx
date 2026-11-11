@@ -1,3 +1,4 @@
+import { abrirEmNovaAba } from '@/lib/abrirAba'
 import { useEffect, useMemo, useState } from 'react'
 import { useBaixado } from '@/hooks/useBaixado'
 import Vazio from '@/components/Vazio'
@@ -10,7 +11,7 @@ import { useAlertas, salvarCompromisso, importarCompromissosIcs } from '@/hooks/
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { baixarICS, lerIcs } from '@/lib/ics'
 import { gerarPdfTexto, quebrar } from '@/lib/pdfSimples'
-import { formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
+import { formatarData, situacaoPorPrazo, textoPrazo, isoLocal } from '@/lib/datas'
 import { CalendarDays, ChevronLeft, ChevronRight, Download, Mail, ExternalLink, Plus, X } from 'lucide-react'
 
 const MESES = [
@@ -38,10 +39,11 @@ export default function AgendaPage() {
   const [msgSemana, setMsgSemana] = useState('')
   const semanaEmPdf = async () => {
     setMsgSemana('')
-    const inicio = new Date(Date.now() + 86400000).toISOString().slice(0, 10)
+    const inicio = isoLocal(new Date(Date.now() + 86400000))
     const { data, error } = await supabase.rpc('semana_agenda', { p_inicio: inicio, p_dias: 7 })
     if (error) { setMsgSemana(mensagemAmigavel(error)); return }
     const sem = data as { inicio: string; fim: string; total: number; dias: { dia: string; itens: { tipo: string; titulo: string; detalhe: string; responsavel: string }[] }[] }
+    if (!sem || !Array.isArray(sem.dias) || !sem.inicio || !sem.fim) { setMsgSemana('A agenda da semana não respondeu como esperado. Tente de novo em instantes.'); return }
     const br = (d: string) => d.split('-').reverse().join('/')
     const L: { texto: string; tamanho?: number; negrito?: boolean }[] = [{ texto: `Semana de ${br(sem.inicio)} a ${br(sem.fim)}`, tamanho: 16, negrito: true }, { texto: `${sem.total} item(ns): prazos de casos e compromissos, por dia e responsável.`, tamanho: 9 }, { texto: ' ' }]
     if (!sem.dias.length) L.push({ texto: 'Nenhum prazo ou compromisso nos próximos 7 dias.', tamanho: 11 })
@@ -109,12 +111,15 @@ export default function AgendaPage() {
   // O Outlook para Windows abre o link webcal: e assina o mesmo calendário.
   const sincronizarGoogleCalendar = async (destino: 'google' | 'outlook' = 'google') => {
     setSincronizando(true)
-    try {
+    const linkFeed = async () => {
       const { data: token, error } = await supabase.rpc('link_agenda')
       if (error || !token) throw error ?? new Error('sem link')
-      const feed = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/agenda-feed?t=${token}`.replace(/^https?:/, 'webcal:')
-      if (destino === 'outlook') window.location.href = feed
-      else window.open(`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(feed)}`, '_blank', 'noopener')
+      return `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/agenda-feed?t=${token}`.replace(/^https?:/, 'webcal:')
+    }
+    try {
+      // A aba do Google é aberta já no clique: depois do await, Safari e celulares bloqueiam a janela.
+      if (destino === 'outlook') window.location.href = await linkFeed()
+      else await abrirEmNovaAba(async () => `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(await linkFeed())}`)
     } catch (e) {
       console.error('Erro ao conectar a agenda:', e)
       alert('Não foi possível gerar o link da agenda. Entre de novo na plataforma e tente outra vez.')
@@ -212,7 +217,7 @@ export default function AgendaPage() {
   // Passo 124: os próximos 7 dias em texto, para colar no Outlook ou no WhatsApp.
   // Passo 124: estados movidos para antes do retorno de 'Carregando' (hooks sempre na mesma ordem; corrige a tela branca da Agenda)
   const copiarSemana = async () => {
-    const t = ['Próximos 7 dias — GMenezes Advogados Associados', ...(semana.length ? semana.map(a => `• ${formatarData(a.dataEvento)} — ${a.titulo} (${a.imovel})`) : ['Nenhum compromisso.'])].join('\n')
+    const t = ['Próximos 7 dias — THEYE Institute', ...(semana.length ? semana.map(a => `• ${formatarData(a.dataEvento)} — ${a.titulo} (${a.imovel})`) : ['Nenhum compromisso.'])].join('\n')
     try { await navigator.clipboard.writeText(t); setSemanaCopiada(true); setTimeout(() => setSemanaCopiada(false), 2500) } catch { /* sem área de transferência */ }
   }
   const irParaHoje = () => { setAno(hoje.getFullYear()); setMes(hoje.getMonth()) }

@@ -33,6 +33,17 @@ describe('Faturas mensais dos escritórios parceiros (Value Pas)', () => {
     expect(linhasFatura({ ...fatura, pago_em: '2026-11-05T10:00:00Z' }, 'X').map(x => x.texto)).toContain('Chave PIX não configurada (Configurações > PIX).')
   })
 
+  it('preço novo: R$ 200 por usuário e parcela da instalação, sem desconto; fatura antiga continua com o preço antigo', () => {
+    const nova = { ...fatura, valor_cheio: 600, desconto_pct: 0, valor: 5600, preco_usuario: 200, instalacao: 5000, parcela_instalacao: 2 }
+    const l = linhasFatura(nova, 'Escritório X', '000201PIX').map(x => x.texto.replace(/\u00a0/g, ' '))
+    expect(l).toContain('3 usuário(s) x R$ 200,00 = R$ 600,00')
+    expect(l).toContain('Instalação, parcela 2 de 3 (sem juros): R$ 5.000,00')
+    expect(l).toContain('Total: R$ 5.600,00')
+    expect(l.some(x => x.includes('Desconto') || x.includes('390'))).toBe(false)
+    const semInstalacao = linhasFatura({ ...nova, valor: 600, instalacao: 0, parcela_instalacao: null }, 'X').map(x => x.texto)
+    expect(semInstalacao.some(x => x.includes('Instalação'))).toBe(false)
+  })
+
   it('lista faturas com valor e vencimento, mostra QR PIX, copia o código e marca como paga', async () => {
     faturas = [fatura]
     const writeText = vi.fn(async (_t: string) => undefined)

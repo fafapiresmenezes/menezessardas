@@ -124,7 +124,7 @@ export default function AlertasPage() {
             <ul className="mt-3 divide-y divide-navy/10 text-sm">
               {mudancasKyc.map(m => (
                 <li key={m.id} className="py-2 flex flex-wrap items-center gap-2" data-testid="kyc-mudanca">
-                  <span className="text-grafite-claro">{formatarData(m.consultado_em.slice(0, 10))}</span>
+                  <span className="text-grafite-claro">{formatarData(m.consultado_em)}</span>
                   <span className="font-medium text-navy">{m.nome ?? m.cnpj}</span>
                   <span>era <strong>{m.risco_anterior}</strong>, agora <strong>{m.risco}</strong></span>
                   <button type="button" onClick={() => navigate('/kyc')} className="ml-auto underline text-navy">abrir KYC</button>
@@ -142,7 +142,7 @@ export default function AlertasPage() {
               {novidades.map(n => (
                 <li key={n.id} className="py-2 flex flex-wrap gap-2">
                   <span className="text-grafite-claro">{formatarData(n.data_disponibilizacao)}</span>
-                  <span className="font-medium text-navy">{n.oab.slice(6)}</span>
+                  <span className="font-medium text-navy">{(n.oab ?? '').replace(/^busca:/, '')}</span>
                   <span>{[n.tribunal, n.tipo, n.numero_processo].filter(Boolean).join(' · ')}</span>
                   <button type="button" onClick={() => navigate('/intimacoes')} className="ml-auto underline text-navy">ver</button>
                 </li>

@@ -1,4 +1,4 @@
-// Passo 550: Edge Function coletor-instituto — coleta diária anonimizada do DataJud e volume do DJEN para o Instituto THEYE.
+// Passo 550: Edge Function coletor-instituto — coleta diária anonimizada do DataJud e volume do DJEN para o THEYE Institute.
 import { describe, it, expect, beforeEach } from 'vitest'
 import { fingirDeno, fingirFetch, jsonResp } from '../_testes/deno'
 import { zerar, estado } from '../_testes/supabase-js'

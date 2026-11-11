@@ -3,6 +3,8 @@ import QRCode from 'qrcode'
 import { supabase } from '@/lib/supabase'
 import { codigoPix } from '@/lib/pix'
 import { Copy, Printer, X } from 'lucide-react'
+import { escaparHtml } from '@/lib/abrirAba'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Cobrança por PIX de um honorário: QR + código copia e cola, usando a chave PIX do escritório (Configurações).
 // Passo D13: referência e descrição opcionais (PIX por parcela, com o valor da parcela).
@@ -18,9 +20,9 @@ export default function CobrancaPix({ valor, caso, cliente, fechar, referencia, 
       const r = dados ? { data: dados, error: null } : await supabase.rpc('dados_pix')
       const { data, error } = r
       const d = (Array.isArray(data) ? data[0] : data) as DadosPix | undefined
-      if (error) return setErro(error.message)
+      if (error) return setErro(mensagemAmigavel(error))
       if (!d?.pix_chave) return setErro('Cadastre a chave PIX do escritório em Configurações → Cobrança por PIX.')
-      const c = codigoPix({ chave: d.pix_chave, nome: d.pix_nome ?? 'GMenezes Advogados', cidade: d.pix_cidade ?? 'Rio de Janeiro', valor, referencia: referencia ?? caso.slice(0, 20), descricao: descricao ?? `Honorarios ${caso}` })
+      const c = codigoPix({ chave: d.pix_chave, nome: d.pix_nome ?? 'THEYE Institute', cidade: d.pix_cidade ?? 'Rio de Janeiro', valor, referencia: referencia ?? caso.slice(0, 20), descricao: descricao ?? `Honorarios ${caso}` })
       setCodigo(c)
       setQr(await QRCode.toDataURL(c, { margin: 1, width: 220 }))
     })()
@@ -28,7 +30,7 @@ export default function CobrancaPix({ valor, caso, cliente, fechar, referencia, 
   const copiar = async () => { try { await navigator.clipboard.writeText(codigo); setCopiado(true) } catch { setErro('Não foi possível copiar; selecione o código e copie.') } }
   const imprimir = () => {
     const w = window.open('', '_blank'); if (!w) return
-    w.document.write(`<html><head><title>Cobrança PIX</title><style>body{font-family:Georgia,serif;max-width:600px;margin:40px auto;line-height:1.6;text-align:center}code{display:block;word-break:break-all;font-size:11px;text-align:left;border:1px solid #ccc;padding:8px}</style></head><body><p>GMenezes Advogados Associados</p><h2>Honorários · ${caso}</h2><p>${cliente ?? ''}</p><p><strong>${valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></p><img src="${qr}" alt="QR PIX"/><p>PIX copia e cola:</p><code>${codigo}</code></body></html>`)
+    w.document.write(`<html><head><title>Cobrança PIX</title><style>body{font-family:Georgia,serif;max-width:600px;margin:40px auto;line-height:1.6;text-align:center}code{display:block;word-break:break-all;font-size:11px;text-align:left;border:1px solid #ccc;padding:8px}</style></head><body><p>THEYE Institute</p><h2>Honorários · ${escaparHtml(caso)}</h2><p>${escaparHtml(cliente)}</p><p><strong>${valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></p><img src="${qr}" alt="QR PIX"/><p>PIX copia e cola:</p><code>${escaparHtml(codigo)}</code></body></html>`)
     w.document.close(); w.print()
   }
   return (

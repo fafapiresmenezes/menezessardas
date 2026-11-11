@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { sessaoDemoAtiva } from '@/lib/authDemo'
 import LoginPage from '@/pages/LoginPage'
@@ -26,8 +26,12 @@ const FornecedorPage = lazy(() => import('@/pages/FornecedorPage'))
 const ConfiguraçõesPage = lazy(() => import('@/pages/ConfiguraçõesPage'))
 const EquipePage = lazy(() => import('@/pages/EquipePage'))
 import InicioPage from '@/pages/InicioPage'
+import ErroTela from '@/components/ErroTela'
 const FontesPage = lazy(() => import('@/pages/FontesPage'))
 const KycPage = lazy(() => import('@/pages/KycPage'))
+const PesquisaDiligenciaPage = lazy(() => import('@/pages/PesquisaDiligenciaPage'))
+const PrazosPorCodigoPage = lazy(() => import('@/pages/PrazosPorCodigoPage'))
+const AssumirProcessosPage = lazy(() => import('@/pages/AssumirProcessosPage'))
 const PerfilClientePage = lazy(() => import('@/pages/PerfilClientePage'))
 const ParteAdversaPage = lazy(() => import('@/pages/ParteAdversaPage'))
 const BibliotecaPage = lazy(() => import('@/pages/BibliotecaPage'))
@@ -47,6 +51,12 @@ const CompliancePage = lazy(() => import('@/pages/CompliancePage'))
 const ProjetosPage = lazy(() => import('@/pages/ProjetosPage'))
 const IntimacoesPage = lazy(() => import('@/pages/IntimacoesPage'))
 const AdministracaoPage = lazy(() => import('@/pages/AdministracaoPage'))
+const FerramentasPage = lazy(() => import('@/pages/FerramentasPage'))
+const CarteiraProcessosPage = lazy(() => import('@/pages/CarteiraProcessosPage'))
+const ImportarProcessosPage = lazy(() => import('@/pages/ImportarProcessosPage'))
+const FunilVendasPage = lazy(() => import('@/pages/FunilVendasPage'))
+const FinanceiroPage = lazy(() => import('@/pages/FinanceiroPage'))
+const EstudosPage = lazy(() => import('@/pages/EstudosPage'))
 
 // Com dois fatores ativos, a sessão só libera o sistema depois do código (nível aal2).
 async function segundoFatorOk() {
@@ -116,6 +126,7 @@ function App() {
 
   return (
     <HashRouter>
+      <ProtecaoRotas>
       <Suspense fallback={<Carregando />}>
       <Routes>
         <Route path="/portal/:token" element={<PortalClientePage />} />
@@ -123,6 +134,30 @@ function App() {
         <Route
           path="/administracao"
           element={isAuthenticated ? <AdministracaoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/processos"
+          element={isAuthenticated ? <CarteiraProcessosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/processos/importar"
+          element={isAuthenticated ? <ImportarProcessosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/funil"
+          element={isAuthenticated ? <FunilVendasPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/financeiro"
+          element={isAuthenticated ? <FinanceiroPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/ferramentas"
+          element={isAuthenticated ? <FerramentasPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/estudos"
+          element={isAuthenticated ? <EstudosPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/honorarios"
@@ -281,6 +316,18 @@ function App() {
           element={isAuthenticated ? <FontesPage /> : <Navigate to="/login" />}
         />
         <Route
+          path="/pesquisa"
+          element={isAuthenticated ? <PesquisaDiligenciaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/prazos"
+          element={isAuthenticated ? <PrazosPorCodigoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/processos-antigos"
+          element={isAuthenticated ? <AssumirProcessosPage /> : <Navigate to="/login" />}
+        />
+        <Route
           path="/consumo"
           element={isAuthenticated ? <ConsumoPage /> : <Navigate to="/login" />}
         />
@@ -296,8 +343,16 @@ function App() {
         <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />
       </Routes>
       </Suspense>
+      </ProtecaoRotas>
     </HashRouter>
   )
+}
+
+// Erro no corpo de uma tela (fora do Layout) derrubava o app inteiro: todas as telas seguintes ficavam em branco
+// até recarregar. Esta proteção mostra o aviso só naquela tela e se desarma ao mudar de endereço.
+function ProtecaoRotas({ children }: { children: React.ReactNode }) {
+  const { pathname } = useLocation()
+  return <ErroTela chave={pathname} topo>{children}</ErroTela>
 }
 
 export default App

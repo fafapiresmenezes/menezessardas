@@ -25,7 +25,7 @@ export default function MercadoPage() {
         const { data, error } = await supabase.functions.invoke('mercado', { body: { area: a } })
         let corpo = data
         if (error) { try { corpo = await (error as { context?: Response }).context?.json?.() } catch { corpo = null } }
-        setDados(d => ({ ...d, [a]: error || corpo?.erro ? { erro: corpo?.erro ?? 'O CNJ não respondeu agora. Tente de novo em alguns minutos.' } : data }))
+        setDados(d => ({ ...d, [a]: error || corpo?.erro ? { erro: corpo?.erro ?? 'O CNJ não respondeu agora. Tente de novo em alguns minutos.' } : Array.isArray(data?.porAno) ? data : { erro: 'O CNJ devolveu uma resposta incompleta. Tente de novo em alguns minutos.' } }))
       } catch {
         setDados(d => ({ ...d, [a]: { erro: 'Sem conexão com o CNJ agora. Tente de novo em alguns minutos.' } }))
       }
@@ -40,7 +40,7 @@ export default function MercadoPage() {
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 252
   const [baixado, marcarBaixado] = useBaixado() // Passo 396
   const copiarAreas = async () => {
-    const t = ['Demanda judicial por área — CNJ, tribunais do RJ', ...prontas.map(x => `${x.nome}: ${x.previsao!.variacao !== null && x.previsao!.variacao >= 0 ? '+' : ''}${x.previsao!.variacao}% até ${x.previsao!.ano} · confiança ${nivel(x)} · amostra ${fmt(x.amostra)} · ${x.fontePrevisao ?? x.fonte}`), `Gerado em ${new Date().toLocaleDateString('pt-BR')} · GMenezes Advogados Associados`].join('\n')
+    const t = ['Demanda judicial por área — CNJ, tribunais do RJ', ...prontas.map(x => `${x.nome}: ${x.previsao!.variacao !== null && x.previsao!.variacao >= 0 ? '+' : ''}${x.previsao!.variacao}% até ${x.previsao!.ano} · confiança ${nivel(x)} · amostra ${fmt(x.amostra)} · ${x.fontePrevisao ?? x.fonte}`), `Gerado em ${new Date().toLocaleDateString('pt-BR')} · THEYE Institute`].join('\n')
     try { await navigator.clipboard.writeText(t); setAreasCopiadas(true); setTimeout(() => setAreasCopiadas(false), 2500) } catch { /* sem área de transferência */ }
   }
   const ranking = [...prontas].filter(x => nivel(x) === 'alta' || nivel(x) === 'media').sort((x, y) => (y.previsao!.variacao ?? -999) - (x.previsao!.variacao ?? -999))
@@ -58,7 +58,7 @@ export default function MercadoPage() {
           {ranking.length > 0 && (
             <>
             <p className="mt-3 text-sm"><strong>Leitura rápida:</strong> a área que mais cresce é <strong>{ranking[0].nome}</strong>{ranking.length > 1 && <>, e a que menos cresce é <strong>{ranking[ranking.length - 1].nome}</strong></>}. Só entram áreas com confiança alta ou média.{' '}
-              <button type="button" onClick={async () => { const t = ['Previsão de demanda judicial por área (CNJ, tribunais do RJ)', ...ranking.map((r, i) => `${i + 1}. ${r.nome}: ${r.previsao!.variacao !== null && r.previsao!.variacao >= 0 ? '+' : ''}${r.previsao!.variacao}% até ${r.previsao!.ano} (confiança ${nivel(r)})`), `Gerado em ${new Date().toLocaleDateString('pt-BR')} · GMenezes Advogados Associados`].join('\n'); try { await navigator.clipboard.writeText(t); setCopiado(true); setTimeout(() => setCopiado(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-ranking" className="underline text-navy">{copiado ? 'ranking copiado' : 'copiar ranking'}</button>
+              <button type="button" onClick={async () => { const t = ['Previsão de demanda judicial por área (CNJ, tribunais do RJ)', ...ranking.map((r, i) => `${i + 1}. ${r.nome}: ${r.previsao!.variacao !== null && r.previsao!.variacao >= 0 ? '+' : ''}${r.previsao!.variacao}% até ${r.previsao!.ano} (confiança ${nivel(r)})`), `Gerado em ${new Date().toLocaleDateString('pt-BR')} · THEYE Institute`].join('\n'); try { await navigator.clipboard.writeText(t); setCopiado(true); setTimeout(() => setCopiado(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-ranking" className="underline text-navy">{copiado ? 'ranking copiado' : 'copiar ranking'}</button>
               <button type="button" onClick={() => window.print()} data-testid="imprimir-ranking" className="ml-2 underline text-navy text-sm print:hidden">imprimir ranking</button>{/* Passo 193 */}
             </p>
             <ol className="mt-2 text-sm list-decimal pl-5 space-y-1" data-testid="ranking">
@@ -91,7 +91,7 @@ export default function MercadoPage() {
                   {x.porAno.length ? <>Último ano: {fmt(x.porAno[x.porAno.length - 1].n)} processos novos. </> : (x.fontePrevisao ? 'O DataJud não tem esta classe; a previsão usa só o Justiça em Números. ' : 'Sem dados no CNJ para esta classe. ')}
                   {x.previsao && (x.confianca === 'baixa' ? <>Sem tendência confiável: os números variam demais para prever.</> : <>Previsão {x.previsao.ano}: <strong>{fmt(x.previsao.processos)}</strong> ± {fmt(x.previsao.margem)}.</>)}
                 </p>
-                {x.jen && (
+                {x.jen && x.jen.porAno?.length > 0 && x.jen.previsao && (
                   <p className="text-sm mt-2 border-t border-navy/10 pt-2" data-testid={`jen-${a}`}>
                     <strong>Justiça em Números</strong> ({x.jen.tribunal}, {x.jen.indicador}): último ano {fmt(x.jen.porAno[x.jen.porAno.length - 1].n)}; previsão {x.jen.previsao.ano}: <strong>{fmt(x.jen.previsao.processos)}</strong> ± {fmt(x.jen.previsao.margem)} ({x.jen.previsao.variacao !== null && (x.jen.previsao.variacao >= 0 ? '+' : '')}{x.jen.previsao.variacao}%, confiança {x.jen.confianca}). {x.previsao && !x.fontePrevisao && (x.jen.concordam ? 'As duas fontes apontam a mesma direção.' : 'As fontes divergem: use com cautela.')}
                   </p>

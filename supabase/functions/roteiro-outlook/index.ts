@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
       <h3 style="color:#14213D;margin-top:24px">Link do calendário (se o botão não abrir o Outlook)</h3>
       <p style="word-break:break-all;font-family:monospace;font-size:12px;background:#f4f4f4;padding:10px">${webcal}</p>
       <p style="font-size:12px;color:#666">No Outlook da web ou no Google Agenda, use esta versão: <span style="word-break:break-all">${https}</span>. O link é secreto: não encaminhe fora do escritório.</p></div>
-      <p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · Desenvolvido pelo Instituto THEYE</p></div>`
+      <p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · Desenvolvido pelo THEYE Institute</p></div>`
     const r = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
       body: JSON.stringify({

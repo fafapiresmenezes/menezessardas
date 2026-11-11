@@ -19,7 +19,7 @@ const brl = (v: number) => (v ?? 0).toLocaleString('pt-BR', { style: 'currency',
 // Passo 07: resumo de todos os casos do mesmo cliente (só andamento, prazos e honorários).
 type CasoResumo = { titulo: string; area: string | null; numero_processo: string | null; situacao: string; atualizado_em: string; token: string | null; etapas_total: number; etapas_feitas: number; proximo_prazo: string | null; honorario_previsto: number; honorario_recebido: number }
 type Resumo = { cliente: string; casos: CasoResumo[] }
-// Passo 39: marca do escritório dono do caso (parceiros veem a própria marca; a sede, o lockup GMenezes).
+// Passo 39: marca do escritório dono do caso (parceiros veem a própria marca; a sede, o lockup Theye).
 type MarcaEscritorio = { nome: string; cor: string; logo_url: string | null; sede: boolean }
 
 export default function PortalClientePage() {
@@ -30,9 +30,10 @@ export default function PortalClientePage() {
   const [marca, setMarca] = useState<MarcaEscritorio | null>(null)
   const [baixado, marcarBaixado] = useBaixado() // Passo 395
   useEffect(() => {
-    supabase.rpc('portal_caso', { p_token: token }).then(r => setCaso((r.data as Caso) ?? null))
-    supabase.rpc('portal_cliente', { p_token: token }).then(r => setResumo((r.data as Resumo) ?? null))
-    supabase.rpc('portal_marca', { p_token: token }).then(r => setMarca((r.data as MarcaEscritorio) ?? null))
+    // Resposta inesperada (sem etapas ou sem casos) conta como link inválido, em vez de derrubar a tela.
+    supabase.rpc('portal_caso', { p_token: token }).then(r => { const d = r.data as Caso | null; setCaso(d && Array.isArray(d.etapas) ? d : null) }, () => setCaso(null))
+    supabase.rpc('portal_cliente', { p_token: token }).then(r => { const d = r.data as Resumo | null; setResumo(d && Array.isArray(d.casos) ? d : null) }, () => setResumo(null))
+    supabase.rpc('portal_marca', { p_token: token }).then(r => { const d = r.data as MarcaEscritorio | null; setMarca(d && d.nome ? d : null) }, () => setMarca(null))
   }, [token])
   const feitas = caso?.etapas.filter(e => e.situacao === 'feito').length ?? 0
   const total = caso?.etapas.length ?? 0
@@ -46,6 +47,7 @@ export default function PortalClientePage() {
       ) : <header className="bg-navy py-6"><Marca /></header>}
       <div className="max-w-2xl mx-auto px-4 py-8">
         {caso === undefined && <p className="text-grafite">Carregando…</p>}
+        {caso === null && <h1 className="font-serif text-2xl text-navy mb-2">Link do Portal indisponível</h1>}
         {caso === null && <p role="alert" className="text-grafite">Este link não é válido, expirou (links do Portal valem 90 dias) ou foi desativado pelo escritório. Peça um link novo ao escritório.</p>}
         {caso && (
           <article data-testid="portal-caso" className="bg-white border-t-2 border-dourado shadow-sm p-6">
@@ -54,7 +56,7 @@ export default function PortalClientePage() {
             {/* Passo 174: o cliente imprime o andamento do caso. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-portal" className="mt-2 underline text-navy text-sm print:hidden">imprimir este andamento</button>
             <button type="button" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} data-testid="copiar-link-portal" className="mt-2 ml-3 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link desta página'}</button>{/* Passo 205 */}
-            <button type="button" data-testid="baixar-andamento" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([[caso.titulo, `Andamento: ${feitas} de ${total} etapas`, ...caso.etapas.map(e => `${e.situacao === 'feito' ? '✓' : '○'} ${e.titulo}`), `Gerado em ${new Date().toLocaleDateString('pt-BR')} · GMenezes Advogados Associados`].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'andamento.txt'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-2 ml-3 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar andamento'}</button>{/* Passo 289 */}
+            <button type="button" data-testid="baixar-andamento" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([[caso.titulo, `Andamento: ${feitas} de ${total} etapas`, ...caso.etapas.map(e => `${e.situacao === 'feito' ? '✓' : '○'} ${e.titulo}`), `Gerado em ${new Date().toLocaleDateString('pt-BR')} · THEYE Institute`].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'andamento.txt'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-2 ml-3 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar andamento'}</button>{/* Passo 289 */}
             <p className="text-sm text-grafite mt-1">{[caso.area, caso.numero_processo && `Processo ${caso.numero_processo}`].filter(Boolean).join(' · ')}</p>
             <div className="mt-5">
               <div className="flex justify-between text-sm text-grafite"><span>Andamento</span><span>{feitas} de {total} etapas</span></div>
@@ -107,7 +109,7 @@ export default function PortalClientePage() {
             </ul>
           </section>
         )}
-        <p className="text-center text-xs text-grafite-claro mt-8" data-testid="portal-rodape">{marca && !marca.sede ? `${marca.nome} · plataforma GMenezes, desenvolvida pelo Instituto THEYE` : 'GMenezes Advogados Associados · Desenvolvido pelo Instituto THEYE'}</p>
+        <p className="text-center text-xs text-grafite-claro mt-8" data-testid="portal-rodape">{marca && !marca.sede ? `${marca.nome} · THEYE Institute` : 'THEYE Institute · Suporte Jurídico'}</p>
       </div>
     </main>
   )

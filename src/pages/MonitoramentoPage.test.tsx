@@ -1,6 +1,11 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
+import { render as renderBase, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import type { ReactElement } from 'react'
+
+let rota = '/monitoramento'
+const render = (el: ReactElement) => renderBase(<MemoryRouter initialEntries={[rota]}>{el}</MemoryRouter>)
 
 let lista: object[] = []
 const invoke = vi.fn(async (_n: string, o: { body: Record<string, unknown> }): Promise<{ data?: unknown; error: { message: string } | null }> => {
@@ -21,6 +26,9 @@ vi.mock('@/lib/supabase', () => ({
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 const { default: MonitoramentoPage } = await import('./MonitoramentoPage')
 const NUM = '0801234-56.2026.8.19.0001'
+
+// Apagar agora pede confirmação: nos testes, a pessoa sempre confirma.
+beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true) })
 
 describe('Monitoramento de processos e nomes (CNJ)', () => {
   beforeEach(() => { cleanup(); lista = []; invoke.mockClear(); insert.mockClear(); del.mockClear(); localStorage.clear(); window.scrollTo = vi.fn() })
@@ -76,6 +84,14 @@ describe('Monitoramento de processos e nomes (CNJ)', () => {
     expect(writeText.mock.calls[0][0]).toContain('05/10/2026 — Citação expedida')
     fireEvent.change(screen.getByTestId('lt-busca'), { target: { value: 'zzz' } })
     expect(screen.getByText('Nenhum andamento no período')).toBeTruthy()
+  })
+
+  it('abrir /monitoramento?lt=<número> (link da Carteira) consulta a linha do tempo sozinho', async () => {
+    rota = `/monitoramento?lt=${NUM}`
+    render(<MonitoramentoPage />)
+    await waitFor(() => expect(screen.getByTestId('lt-total')).toBeTruthy())
+    expect(invoke.mock.calls[0][1].body).toEqual({ linha_do_tempo: '08012345620268190001' })
+    rota = '/monitoramento'
   })
 
   it('erro das fontes do CNJ ao verificar tudo vira aviso', async () => {

@@ -38,7 +38,7 @@ export function gerarICS(alertas: Alerta[], nomeCalendario = 'Compromissos contr
   const linhas: string[] = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//GMenezes Advogados Associados//Gestão Contratual//PT-BR',
+    'PRODID:-//THEYE Institute//Suporte Juridico//PT-BR',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     dobrar('X-WR-CALNAME:' + escapar(nomeCalendario)),
@@ -46,7 +46,7 @@ export function gerarICS(alertas: Alerta[], nomeCalendario = 'Compromissos contr
 
   alertas.forEach(a => {
     linhas.push('BEGIN:VEVENT')
-    linhas.push(`UID:${a.id}@gmenezes`)
+    linhas.push(`UID:${a.id}@theye`)
     linhas.push(`DTSTAMP:${agora}`)
     linhas.push(`DTSTART;VALUE=DATE:${soData(a.dataEvento)}`)
     linhas.push(`DTEND;VALUE=DATE:${proximoDia(a.dataEvento)}`)

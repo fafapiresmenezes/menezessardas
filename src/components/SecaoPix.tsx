@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { perfilAtual } from '@/lib/equipe'
 import { Banknote } from 'lucide-react'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Chave PIX do escritório: usada pela cobrança de honorários (sem API bancária, sem custo).
 export default function SecaoPix() {
@@ -20,7 +21,7 @@ export default function SecaoPix() {
   const salvar = async () => {
     setMsg(null)
     const { error } = await supabase.rpc('definir_pix', { p_chave: f.chave, p_nome: f.nome, p_cidade: f.cidade })
-    if (error) return setMsg({ tipo: 'erro', texto: error.message })
+    if (error) return setMsg({ tipo: 'erro', texto: mensagemAmigavel(error) })
     await carregar(); setMsg({ tipo: 'ok', texto: 'Chave PIX salva. O botão "Cobrar por PIX" já funciona em Honorários.' })
   }
   return (

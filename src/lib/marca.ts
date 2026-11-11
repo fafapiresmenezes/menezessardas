@@ -23,7 +23,7 @@ function normalizar(d: unknown): MarcaEscritorio | null {
   return { nome, cor: corValida(m.cor as string), logo_url: logoValida(m.logo_url as string), sede: false }
 }
 
-/** Marca do escritório da pessoa logada; null para a sede (lockup GMenezes). Guardada na sessão. */
+/** Marca do escritório da pessoa logada; null para a sede (lockup Instituto THEYE). Guardada na sessão. */
 export async function minhaMarca(): Promise<MarcaEscritorio | null> {
   if (!supabaseConfigurado) return null
   try { const k = sessionStorage.getItem(CHAVE); if (k !== null) return k ? JSON.parse(k) : null } catch { /* sem sessionStorage */ }

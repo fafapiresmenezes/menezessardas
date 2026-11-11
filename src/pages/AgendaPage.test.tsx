@@ -55,7 +55,7 @@ describe('Agenda', () => {
     fireEvent.click(screen.getByTestId('copiar-semana'))
     await waitFor(() => expect(screen.getByTestId('copiar-semana').textContent).toBe('semana copiada'))
     const copiado = (navigator.clipboard.writeText as ReturnType<typeof vi.fn>).mock.calls[0]![0] as string
-    expect(copiado).toContain('Próximos 7 dias — GMenezes Advogados Associados')
+    expect(copiado).toContain('Próximos 7 dias — THEYE Institute')
     expect(copiado).toContain('Vistoria (Rua das Laranjeiras, 50)')
     fireEvent.click(screen.getByTestId('imprimir-agenda'))
     expect(window.print).toHaveBeenCalled()

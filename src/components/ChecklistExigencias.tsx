@@ -43,7 +43,7 @@ export default function ChecklistExigencias({ funcaoInicial, anexos, imovel }: {
           Pôr os {faltam} documentos faltantes na agenda (prazo de 30 dias)
         </button>
       )}
-      <p className="text-xs text-grafite-claro mt-2">Fonte: ontologia de locação v{VERSAO_EXIGENCIAS} do Instituto THEYE. {NOTA_EXIGENCIAS}</p>
+      <p className="text-xs text-grafite-claro mt-2">Fonte: ontologia de locação v{VERSAO_EXIGENCIAS} do THEYE Institute. {NOTA_EXIGENCIAS}</p>
     </section>
   )
 }

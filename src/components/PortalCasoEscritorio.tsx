@@ -4,6 +4,7 @@ import { mensagemAmigavel } from '@/lib/erros'
 import { urlAssinada } from '@/lib/arquivos'
 import { formatarData } from '@/lib/datas'
 import { MessageSquare, Paperclip, Send } from 'lucide-react'
+import { abrirEmNovaAba } from '@/lib/abrirAba'
 
 // Passo D18 (Diamante), lado do escritório: conversa com o cliente do caso e documentos que ele enviou pelo Portal.
 type Msg = { id: number; autor: 'cliente' | 'escritorio'; autor_nome: string | null; texto: string; criado_em: string; lido_em: string | null }
@@ -34,7 +35,7 @@ export default function PortalCasoEscritorio({ tarefaId, cliente }: { tarefaId: 
   }
   const abrir = async (d: Doc) => {
     try {
-      window.open(await urlAssinada(d.caminho), '_blank', 'noopener')
+      await abrirEmNovaAba(() => urlAssinada(d.caminho))
       if (!d.visto_em) { await supabase.from('documentos_portal').update({ visto_em: new Date().toISOString() }).eq('id', d.id); carregar() }
     } catch (e) { setErro(mensagemAmigavel(e)) }
   }

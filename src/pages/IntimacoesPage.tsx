@@ -1,6 +1,7 @@
 import { FunctionRegion } from '@supabase/supabase-js'
 import { useBaixado } from '@/hooks/useBaixado'
 import Vazio from '@/components/Vazio'
+import ConexaoCnj from '@/components/ConexaoCnj'
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
@@ -8,6 +9,7 @@ import { perfilAtual } from '@/lib/equipe'
 import { formatarData, diasAte } from '@/lib/datas'
 import SeloSituacao from '@/components/SeloSituacao'
 import { RefreshCw, ExternalLink } from 'lucide-react'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Caixa de intimações: publicações do Diário de Justiça Eletrônico Nacional (Comunica PJe, CNJ)
 // para as OABs do escritório. Busca diária automática e botão "Buscar agora". Gratuito.
@@ -50,17 +52,19 @@ export default function IntimacoesPage() {
     const d = error ? await (error as { context?: Response }).context?.json?.().catch(() => null) : data
     if (!d || d.erro) return setMsg({ ok: false, texto: d?.erro ?? 'O CNJ não respondeu agora. Tente de novo em instantes.' })
     if (d.aviso) return setMsg({ ok: false, texto: d.aviso })
-    setMsg({ ok: !d.falhas?.length, texto: `${d.novas} intimação(ões) nova(s) nos últimos 30 dias para ${d.oabs.join(', ')}.${d.falhas?.length ? ' Falhou: ' + d.falhas.join('; ') : ''}` })
+    setMsg({ ok: !d.falhas?.length, texto: `${d.novas} intimação(ões) nova(s) nos últimos 30 dias para ${(d.oabs ?? []).join(', ')}.${d.falhas?.length ? ' Falhou: ' + d.falhas.join('; ') : ''}` })
     carregar()
   }
   const salvarOabs = async () => {
     const { error } = await supabase.rpc('definir_configuracao', { p_chave: 'oabs_monitoradas', p_valor: oabs })
-    if (error) return setMsg({ ok: false, texto: error.message })
+    if (error) return setMsg({ ok: false, texto: mensagemAmigavel(error) })
     setOabs(''); buscar()
   }
   const marcarLida = async (i: Intimacao) => {
     setLista(l => l.map(x => (x.id === i.id ? { ...x, lida: true } : x)))
-    await supabase.from('intimacoes').update({ lida: true }).eq('id', i.id)
+    const { error } = await supabase.from('intimacoes').update({ lida: true }).eq('id', i.id)
+    // Sem permissão (leitor) ou sem rede: desfaz na tela e avisa, para a intimação não sumir sem ter sido gravada como lida.
+    if (error) { setLista(l => l.map(x => (x.id === i.id ? { ...x, lida: false } : x))); setMsg({ ok: false, texto: mensagemAmigavel(error) }) }
   }
   // Passo 13: urgência pelo prazo estimado (dias úteis, CPC art. 219/224) e tarefa no caso correspondente.
   const urgencia = (i: Intimacao) => {
@@ -70,7 +74,7 @@ export default function IntimacoesPage() {
   }
   const criarTarefa = async (i: Intimacao) => {
     const { data, error } = await supabase.rpc('criar_tarefa_intimacao', { p_id: i.id })
-    if (error) setMsg({ ok: false, texto: 'Não deu para criar a tarefa: ' + error.message })
+    if (error) setMsg({ ok: false, texto: 'Não deu para criar a tarefa: ' + mensagemAmigavel(error) })
     else { setMsg({ ok: true, texto: 'Tarefa criada em Casos e projetos com o prazo estimado.' }); setLista(l => l.map(x => (x.id === i.id ? { ...x, tarefa_id: String(data) } : x))) }
   }
   const ordem = { vencido: 0, critico: 1, atencao: 2, regular: 3 } as const
@@ -87,7 +91,8 @@ export default function IntimacoesPage() {
     <Layout title="Intimações">
       <div className="space-y-6">
         <section className="bg-white shadow-sm border-t-2 border-dourado p-5 space-y-3">
-          <p className="text-sm">Publicações do <strong>Diário de Justiça Eletrônico Nacional</strong> (CNJ) para as OABs do escritório. A busca roda sozinha todo dia às 7h; o botão busca na hora.</p>
+          {admin && <ConexaoCnj />}
+          <p className="text-sm">Publicações do <strong>Diário de Justiça Eletrônico Nacional</strong> (CNJ) para as OABs do escritório. A busca roda sozinha várias vezes ao dia; o botão busca na hora.</p>
           <div className="flex flex-wrap gap-3 items-center">
             <button onClick={buscar} disabled={ocupado} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2 disabled:opacity-50">
               <RefreshCw size={16} aria-hidden="true" className={ocupado ? 'animate-spin' : ''} /> {ocupado ? 'Buscando…' : 'Buscar agora'}
@@ -156,7 +161,7 @@ export default function IntimacoesPage() {
           </p>
         )}
         {!visiveis.length && (
-          <Vazio titulo={`Nenhuma intimação ${filtro === 'novas' ? 'não lida' : 'guardada'}`} texto="A busca roda todo dia às 7h para as OABs cadastradas. Se faltar alguma OAB, cadastre em Configurações." acao={{ rotulo: 'Cadastrar OABs', para: '/settings' }} />
+          <Vazio titulo={`Nenhuma intimação ${filtro === 'novas' ? 'não lida' : 'guardada'}`} texto="A busca roda sozinha várias vezes ao dia para as OABs cadastradas. Se faltar alguma OAB, cadastre em Configurações." acao={{ rotulo: 'Cadastrar OABs', para: '/settings' }} />
         )}
       </div>
     </Layout>

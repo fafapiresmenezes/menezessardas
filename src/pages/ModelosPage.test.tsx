@@ -18,6 +18,9 @@ vi.mock('@/lib/repositorio', () => ({ repositorio: {
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 const { default: ModelosPage } = await import('./ModelosPage')
 
+// Apagar agora pede confirmação: nos testes, a pessoa sempre confirma.
+beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true) })
+
 describe('Modelos de peças e contratos', () => {
   beforeEach(() => { cleanup(); proprios = []; insert.mockClear(); del.mockClear(); localStorage.clear(); window.scrollTo = vi.fn() })
 

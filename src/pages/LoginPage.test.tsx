@@ -6,7 +6,7 @@ import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom'
 let configurado = true
 let nivel = { nextLevel: 'aal1', currentLevel: 'aal1' }
 const signInWithPassword = vi.fn(async (_c: object): Promise<{ error: { status?: number; message: string } | null }> => ({ error: null }))
-const signUp = vi.fn(async (_c: object): Promise<{ error: { message: string } | null }> => ({ error: null }))
+const signUp = vi.fn(async (_c: object): Promise<{ data?: { session: object | null }; error: { message: string } | null }> => ({ data: { session: null }, error: null }))
 const challengeAndVerify = vi.fn(async (_c: object): Promise<{ error: { message: string } | null }> => ({ error: null }))
 vi.mock('@/lib/supabase', () => ({
   get supabaseConfigurado() { return configurado },
@@ -58,7 +58,7 @@ describe('Tela de login', () => {
     await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/inicio'))
   })
 
-  it('criar conta: bloqueia robô (menos de 3 s), exige 8 caracteres, cadastra e avisa que o admin libera; esqueci a senha orienta', async () => {
+  it('criar conta: bloqueia robô (menos de 3 s), exige 8 caracteres, cadastra e avisa que não precisa de aprovação; esqueci a senha orienta', async () => {
     vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date('2026-11-02T10:00:00Z'))
     montar()
     fireEvent.click(screen.getByText('Criar conta'))
@@ -73,12 +73,36 @@ describe('Tela de login', () => {
     fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'senhaforte1' } })
     fireEvent.click(screen.getByText('Criar acesso'))
     await waitFor(() => expect(signUp).toHaveBeenCalledWith({ email: 'novo@gmenezes.com', password: 'senhaforte1' }))
-    expect((await screen.findByRole('status')).textContent).toContain('Um administrador do escritório vai liberar o seu acesso')
+    expect((await screen.findByRole('status')).textContent).toContain('Não precisa esperar aprovação')
     expect(screen.getByText('Entrar')).toBeTruthy()
     fireEvent.click(screen.getByText('Esqueci minha senha'))
     expect(screen.getAllByRole('status').some(s => s.textContent!.includes('senha provisória (menu Equipe)'))).toBe(true)
     vi.useRealTimers()
   })
+
+  it('conta nova sem aprovação: entra direto quando o servidor já devolve a sessão; e-mail não confirmado tem aviso próprio', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date('2026-11-10T10:00:00Z'))
+    montar()
+    fireEvent.click(screen.getByText('Criar conta'))
+    expect(screen.getByText(/nasce com um escritório próprio e vazio/)).toBeTruthy()
+    preencher('aluna@escritorio.com', 'senhaforte1')
+    vi.setSystemTime(new Date('2026-11-10T10:00:05Z'))
+    signUp.mockResolvedValueOnce({ data: { session: { access_token: 't' } }, error: null })
+    fireEvent.click(screen.getByText('Criar acesso'))
+    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/inicio'))
+    vi.useRealTimers()
+    cleanup(); montar()
+    signInWithPassword.mockResolvedValueOnce({ error: { status: 400, message: 'Email not confirmed' } })
+    preencher('aluna@escritorio.com', 'senhaforte1'); fireEvent.click(screen.getByText('Entrar'))
+    expect((await screen.findByRole('alert')).textContent).toContain('Falta confirmar o seu e-mail')
+    cleanup(); montar()
+    fireEvent.click(screen.getByText('Criar conta'))
+    signUp.mockResolvedValueOnce({ error: { message: 'email rate limit exceeded' } })
+    preencher('outra@escritorio.com', 'senhaforte1')
+    await new Promise(r => setTimeout(r, 3100))
+    fireEvent.click(screen.getByText('Criar acesso'))
+    expect((await screen.findByRole('alert')).textContent).toContain('Muitas contas criadas em pouco tempo')
+  }, 15000)
 
   it('sem banco (demonstração) entra com as credenciais de exemplo e recusa outras', async () => {
     configurado = false

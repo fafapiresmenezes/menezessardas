@@ -1,9 +1,11 @@
 import { FunctionRegion } from '@supabase/supabase-js'
 import { useBaixado } from '@/hooks/useBaixado'
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { ExternalLink, Search } from 'lucide-react'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Fontes que o advogado usa todo dia: digita uma vez (nome, CNPJ, número do processo ou tema)
 // e abre cada site já com a busca feita. As que têm ligação direta estão marcadas.
@@ -21,7 +23,9 @@ const FONTES: { nome: string; para: string; url: (t: string) => string; direta?:
 ]
 
 export default function FontesPage() {
-  const [termo, setTermo] = useState(() => { try { return localStorage.getItem('lsm-fontes-termo') ?? '' } catch { return '' } }) // Passo 201
+  // A central de pesquisa abre /fontes?termo=... já com o termo preenchido.
+  const [params] = useSearchParams()
+  const [termo, setTermo] = useState(() => { const t = params.get('termo'); if (t) return t; try { return localStorage.getItem('lsm-fontes-termo') ?? '' } catch { return '' } }) // Passo 201
   const [busca, setBusca] = useState<{ carregando?: boolean; erro?: string; processos?: { numero: string; titulo: string; tribunal: string | null; ultimaMovimentacao: string | null; classe: string | null; link: string | null }[] } | null>(null)
   const buscarEscavador = async () => {
     setBusca({ carregando: true })
@@ -61,13 +65,17 @@ export default function FontesPage() {
   const salvarBusca = async () => {
     setMsgSalva('')
     const { error } = await supabase.from('buscas_salvas').insert({ termo: termo.trim() })
-    if (error) return setMsgSalva(error.message.includes('duplicate') ? 'Essa busca já está salva.' : error.message)
+    if (error) return setMsgSalva(error.message.includes('duplicate') ? 'Essa busca já está salva.' : mensagemAmigavel(error))
     setMsgSalva('Busca salva. Ela será repetida todo dia às 7h15 e as novidades aparecem em Intimações e Alertas.')
     await carregarSalvas()
     // Primeira rodada imediata, só para as buscas deste usuário.
     supabase.functions.invoke('buscar-partes', { body: { salvas: true }, region: FunctionRegion.SaEast1 }).then(carregarSalvas)
   }
-  const apagarSalva = async (id: string) => { await supabase.from('buscas_salvas').delete().eq('id', id); carregarSalvas() }
+  const apagarSalva = async (id: string) => {
+    const { error } = await supabase.from('buscas_salvas').delete().eq('id', id)
+    if (error) setMsgSalva(mensagemAmigavel(error))
+    carregarSalvas()
+  }
   return (
     <Layout title="Fontes do advogado">
       <div className="space-y-6">

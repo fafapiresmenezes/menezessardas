@@ -49,7 +49,7 @@ export default function PesquisaDireito() {
   const salvar = async (e: React.FormEvent) => {
     e.preventDefault(); setMsg('')
     const { error } = await supabase.from('pesquisas_instituto').insert({ titulo: form.titulo.trim(), pergunta: form.pergunta.trim(), origem: form.origem, caso_id: form.caso_id || null, jurisdicoes: form.jurisdicoes.trim() || 'Brasil' })
-    if (error) return setMsg(error.message)
+    if (error) return setMsg(mensagemAmigavel(error))
     setMsg('Pesquisa registrada no programa do Instituto.'); setForm({ ...form, titulo: '', pergunta: '', caso_id: '' }); carregar()
   }
   const gerar = async (p: Pesquisa) => {
@@ -61,7 +61,12 @@ export default function PesquisaDireito() {
       await carregar()
     } catch (e) { setMsg(mensagemAmigavel(e, 'A IA não respondeu agora. Tente de novo em instantes.')) } finally { setGerando(null) }
   }
-  const apagar = async (id: string) => { await supabase.from('pesquisas_instituto').delete().eq('id', id); carregar() }
+  const apagar = async (id: string) => {
+    if (!window.confirm('Apagar esta pesquisa?')) return
+    const { error } = await supabase.from('pesquisas_instituto').delete().eq('id', id)
+    if (error) setMsg(mensagemAmigavel(error))
+    carregar()
+  }
   const casoNome = (id: string | null) => { const c = casos.find(x => x.id === id); return c ? `${c.titulo}${c.cliente ? ` (${c.cliente})` : ''}` : '' }
   return (
     <div className="space-y-6" data-testid="pesquisa-direito">
@@ -84,7 +89,7 @@ export default function PesquisaDireito() {
       </section>
       <section className="bg-white p-6 shadow-sm">
         <h2 className="text-lg mb-1 flex items-center gap-2"><FlaskConical size={18} className="text-dourado" aria-hidden /> Programa de desenvolvimento do direito brasileiro</h2>
-        <p className="text-sm text-grafite-claro mb-3">Perguntas que nascem de casos internos ou de soluções do mundo todo viram pesquisas do Instituto THEYE: o pesquisador compara jurisdições, propõe teses para o direito brasileiro e diz como aplicar no caso. Tudo fica registrado para o escritório.</p>
+        <p className="text-sm text-grafite-claro mb-3">Perguntas que nascem de casos internos ou de soluções do mundo todo viram pesquisas do THEYE Institute: o pesquisador compara jurisdições, propõe teses para o direito brasileiro e diz como aplicar no caso. Tudo fica registrado para o escritório.</p>
         <form onSubmit={salvar} className="grid gap-3 md:grid-cols-2" data-testid="form-pesquisa">
           <label className="text-sm md:col-span-2">Título<input required minLength={3} value={form.titulo} onChange={e => setForm({ ...form, titulo: e.target.value })} id="pesq-titulo" className="mt-1 w-full border px-3 py-2" placeholder="Ex.: Cláusula de não concorrência em locação comercial: o que fazem EUA e UE" /></label>
           <label className="text-sm md:col-span-2">Pergunta de pesquisa<textarea required minLength={10} rows={3} value={form.pergunta} onChange={e => setForm({ ...form, pergunta: e.target.value })} id="pesq-pergunta" className="mt-1 w-full border px-3 py-2" placeholder="O que o direito brasileiro ainda não resolve bem e como outras jurisdições tratam?" /></label>

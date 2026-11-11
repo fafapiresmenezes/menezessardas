@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Palette } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { mensagemAmigavel } from '@/lib/erros'
 
 // Passo 39 (Onda D): marca de cada escritório parceiro (nome de exibição, cor e logo) usada no Portal do cliente e nos e-mails.
 type Marca = { nome_exibicao: string; cor: string; logo_url: string; dominio: string }
@@ -21,7 +22,7 @@ export default function MarcaParceiros({ escritorios }: { escritorios: { id: str
   const salvar = async (id: string) => {
     const m = marcas[id] ?? PADRAO
     const { error } = await supabase.rpc('definir_marca', { p_escritorio: id, p_nome: m.nome_exibicao, p_cor: m.cor, p_logo_url: m.logo_url })
-    if (error) { setMsg(error.message); return }
+    if (error) { setMsg(mensagemAmigavel(error)); return }
     // Passo D22: domínio próprio (white-label) — só a sede define; o DNS do parceiro aponta para a plataforma.
     const { error: e2 } = await supabase.rpc('definir_dominio', { p_escritorio: id, p_dominio: m.dominio.trim() })
     setMsg(e2 ? e2.message : 'Marca salva. A plataforma, o Portal do cliente e os e-mails desse escritório já usam a nova marca.' + (m.dominio.trim() ? ` Domínio ${m.dominio.trim()}: no DNS do parceiro, crie um CNAME apontando para cname.vercel-dns.com e peça à sede para adicionar o domínio no painel da Vercel.` : ''))
@@ -30,7 +31,7 @@ export default function MarcaParceiros({ escritorios }: { escritorios: { id: str
   return (
     <div className="border border-navy/10 p-4 mt-4" data-testid="marca-parceiros">
       <h3 className="font-semibold flex items-center gap-2"><Palette size={16} className="text-dourado" aria-hidden="true" /> Marca de cada escritório parceiro</h3>
-      <p className="text-xs text-grafite-claro mt-1 mb-3">Nome de exibição, cor e logo (endereço https) aparecem no menu da plataforma, no Portal do cliente e nos e-mails dos casos desse escritório (white-label). Domínio próprio: quem entra por ele já vê a marca do parceiro na tela de entrada. O rodapé mantém "plataforma GMenezes, desenvolvida pelo Instituto THEYE".</p>
+      <p className="text-xs text-grafite-claro mt-1 mb-3">Nome de exibição, cor e logo (endereço https) aparecem no menu da plataforma, no Portal do cliente e nos e-mails dos casos desse escritório (white-label). Domínio próprio: quem entra por ele já vê a marca do parceiro na tela de entrada. O rodapé mantém "THEYE Institute".</p>
       <ul className="space-y-2">
         {escritorios.map(e => { const m = marcas[e.id] ?? PADRAO; return (
           <li key={e.id} className="grid sm:grid-cols-6 gap-2 items-center text-sm" data-testid="marca-item">

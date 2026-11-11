@@ -6,12 +6,15 @@ const area = (a: string, nome: string, variacao: number, confianca = 'alta', ext
   area: a, nome, porAno: [{ ano: 2023, n: 1000 }, { ano: 2024, n: 1100 }, { ano: 2025, n: 1200 }], amostra: 3300, fonte: 'DataJud', consultadoEm: '2026-11-01',
   previsao: { ano: 2028, processos: 1500, margem: 100, variacao, r2: 0.9 }, confianca, ...extra,
 })
+let jenVazio = false
 const invoke = vi.fn(async (_n: string, o: { body: { area: string } }) => {
   const a = o.body.area
   if (a === 'imobiliario') return { data: area(a, 'Imobiliário', 25, 'alta', { jen: { fonte: 'JEN', tribunal: 'TJRJ', indicador: 'casos novos', porAno: [{ ano: 2025, n: 900 }], previsao: { ano: 2028, processos: 1000, margem: 50, variacao: 10, r2: 0.8 }, confianca: 'media', concordam: true } }), error: null }
   if (a === 'civel') return { data: area(a, 'Cível', -5, 'media'), error: null }
   if (a === 'penal') return { data: area(a, 'Penal', 40, 'baixa'), error: null }
   if (a === 'familia') return { data: { erro: 'O CNJ não respondeu.' }, error: null }
+  if (a === 'tributario') return { data: { area: a, nome: 'Tributário' }, error: null } // resposta pela metade, sem série
+  if (a === 'empresarial' && jenVazio) return { data: area(a, 'Empresarial', 3, 'media', { jen: { fonte: 'JEN', tribunal: 'TJRJ', indicador: 'casos novos', porAno: [] } }), error: null }
   return { data: null, error: { message: 'falhou' } }
 })
 vi.mock('@/lib/supabase', () => ({ supabaseConfigurado: true, supabase: { functions: { invoke: (n: string, o: { body: { area: string } }) => invoke(n, o) } } }))
@@ -21,6 +24,15 @@ const { default: MercadoPage } = await import('./MercadoPage')
 
 describe('Previsão de mercado jurídico (demanda por área)', () => {
   beforeEach(() => { cleanup(); invoke.mockClear() })
+
+  it('resposta incompleta do CNJ e Justiça em Números sem série não derrubam a tela', async () => {
+    jenVazio = true
+    render(<MercadoPage />)
+    expect(await screen.findByText(/Tributário: O CNJ devolveu uma resposta incompleta/)).toBeTruthy()
+    await waitFor(() => expect(screen.getAllByText('Empresarial').length).toBeGreaterThan(0))
+    expect(screen.queryByTestId('jen-empresarial')).toBeNull()
+    jenVazio = false
+  })
 
   it('consulta as 10 áreas, mostra cada cartão com previsão, duas fontes, erro do CNJ, e o ranking só com confiança alta ou média', async () => {
     render(<MercadoPage />)

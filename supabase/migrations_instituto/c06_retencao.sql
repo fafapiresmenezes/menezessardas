@@ -1,4 +1,4 @@
--- C06 (ciclo I-03): prazos de retenção do Instituto THEYE, aplicados todo dia por cron.
+-- C06 (ciclo I-03): prazos de retenção do THEYE Institute, aplicados todo dia por cron.
 create table if not exists instituto.retencao_log(em timestamptz primary key default now(), apagados jsonb not null);
 alter table instituto.retencao_log enable row level security;
 

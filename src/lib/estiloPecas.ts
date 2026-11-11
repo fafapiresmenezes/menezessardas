@@ -385,6 +385,7 @@ export function instrucoesDoPerfil(p: Perfil) {
   const todos = Object.values(p.conectivos).flat()
   return `PERFIL DE ESCRITA DESTA PEÇA (sorteado para esta peça; a próxima terá outro):
 - Escolas misturadas: ${p.mistura.map(m => `${m.nome} ${Math.round(m.peso * 100)}%`).join(', ')}.
+- Referências de escrita desta peça (imite o método e a clareza, nunca copie texto nem atribua frases a eles): ${p.mistura.flatMap(m => REFERENCIAS.filter(r => r.escola === m.id).slice(0, 3).map(r => r.nome)).join(', ')}.
 - Frases com cerca de ${Math.round(q.frase)} palavras em média, alternando curtas e longas (variação de ±${Math.round(q.ritmo)} palavras). Nunca deixe três frases seguidas do mesmo tamanho.
 - Parágrafos de ${Math.max(2, Math.round(q.paragrafo - 1))} a ${Math.round(q.paragrafo + 1)} frases.
 - Doutrina: cerca de ${q.doutrina.toFixed(1).replace('.', ',')} referência(s) a cada 1.000 palavras; jurisprudência: cerca de ${q.jurisprudencia.toFixed(1).replace('.', ',')}. Cite autor e obra só quando tiver certeza; caso contrário marque "[doutrina a conferir]". Precedentes sempre com "[conferir no tribunal]".

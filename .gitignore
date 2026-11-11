@@ -44,3 +44,4 @@ src/**/*.js
 node_modules
 dist-prod
 resultado-u17.json
+conferencia-cnj/

@@ -56,7 +56,7 @@ async function gerarPdf(r: Relatorio, geradoEm: string): Promise<Uint8Array> {
   }
   if (y < 90) nova()
   page.drawText(ansi('Como ler: contratos e documentos são a fotografia no fim do mês; tarefas, horas, intimações e IA são o movimento dentro do mês; honorários recebidos são o acumulado dos casos.'), { x: 40, y, size: 8, font: sans, color: cinza, maxWidth: 515, lineHeight: 10 }); y -= 24
-  page.drawText(ansi(`Abra a plataforma em gmenezes-advogados.vercel.app · Relatórios. Desenvolvido pelo Instituto THEYE.`), { x: 40, y, size: 8, font: sans, color: cinza })
+  page.drawText(ansi(`Abra a plataforma em gmenezes-advogados.vercel.app · Relatórios. Desenvolvido pelo THEYE Institute.`), { x: 40, y, size: 8, font: sans, color: cinza })
   return await pdf.save()
 }
 

@@ -16,13 +16,14 @@ import {
   montarOts,
   retomarSelosPendentes,
   selosPendentes,
-  textoDoSelo,
+  textoDoSeloAncorado,
   verificarLastro,
   type Ancoragem,
   type Lastro,
 } from '@/lib/ancoragem'
 import { Printer, ShieldCheck, ShieldAlert, Link2, Anchor, Download, FileDown } from 'lucide-react'
 import { exportarTrilhaPeriodo } from '@/lib/exportarTrilha'
+import { hojeLocal, isoLocal } from '@/lib/datas'
 
 const rotuloTipo: Record<TipoEvento, string> = {
   imovel_criado: 'Imóvel cadastrado',
@@ -70,8 +71,8 @@ export default function TrilhaPage() {
   const [ancorando, setAncorando] = useState(false)
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
   // Exportação por período (Passo 17): PDF + SHA-256 + selo .ots.
-  const hojeIso = new Date().toISOString().slice(0, 10)
-  const [periodo, setPeriodo] = useState({ de: new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10), ate: hojeIso })
+  const hojeIso = hojeLocal()
+  const [periodo, setPeriodo] = useState({ de: isoLocal(new Date(Date.now() - 30 * 86400000)), ate: hojeIso })
   const [exportando, setExportando] = useState(false)
   // Passo 73: filtros da lista (tipo de ação, texto e dia); a verificação da cadeia continua sobre todos os registros.
   const [filtro, setFiltro] = useState(() => { try { return { tipo: '', texto: localStorage.getItem('lsm-trilha-texto') ?? '', dia: '' } } catch { return { tipo: '', texto: '', dia: '' } } }) // Passo 198
@@ -177,8 +178,8 @@ export default function TrilhaPage() {
           <p className="text-sm text-grafite-claro mt-1">Gera um PDF com todos os registros do período (hash e elo de cada um), calcula o SHA-256 do arquivo e baixa junto o selo OpenTimestamps (.ots), que prova no Bitcoin a data do documento. Entregue os dois arquivos ao auditor.</p>
           <div className="flex flex-wrap items-end gap-3 mt-3 text-sm">
             <span className="flex gap-1" role="group" aria-label="Períodos prontos" data-testid="atalhos-periodo">
-              {[['7 dias', 7], ['30 dias', 30], ['90 dias', 90]].map(([r, n]) => <button key={r as string} type="button" onClick={() => setPeriodo({ de: new Date(Date.now() - (n as number) * 86400000).toISOString().slice(0, 10), ate: hojeIso })} className="min-h-[44px] px-3 border border-navy/30 text-navy text-xs">{r as string}</button>)}
-              <button type="button" onClick={() => { const d = new Date(); const ini = new Date(d.getFullYear(), d.getMonth() - 1, 1); const fim = new Date(d.getFullYear(), d.getMonth(), 0); setPeriodo({ de: ini.toISOString().slice(0, 10), ate: fim.toISOString().slice(0, 10) }) }} className="min-h-[44px] px-3 border border-navy/30 text-navy text-xs">mês passado</button>
+              {[['7 dias', 7], ['30 dias', 30], ['90 dias', 90]].map(([r, n]) => <button key={r as string} type="button" onClick={() => setPeriodo({ de: isoLocal(new Date(Date.now() - (n as number) * 86400000)), ate: hojeIso })} className="min-h-[44px] px-3 border border-navy/30 text-navy text-xs">{r as string}</button>)}
+              <button type="button" onClick={() => { const d = new Date(); const ini = new Date(d.getFullYear(), d.getMonth() - 1, 1); const fim = new Date(d.getFullYear(), d.getMonth(), 0); setPeriodo({ de: isoLocal(ini), ate: isoLocal(fim) }) }} className="min-h-[44px] px-3 border border-navy/30 text-navy text-xs">mês passado</button>
             </span>
             <label>De<input type="date" value={periodo.de} max={periodo.ate} onChange={e => setPeriodo({ ...periodo, de: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="exportar-de" /></label>
             <label>Até<input type="date" value={periodo.ate} min={periodo.de} max={hojeIso} onChange={e => setPeriodo({ ...periodo, ate: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="exportar-ate" /></label>
@@ -216,7 +217,7 @@ export default function TrilhaPage() {
               <p className={`text-sm mt-3 ${atrasado ? 'text-atencao' : 'text-regular'}`} data-testid="estado-selo">
                 {ancoragens.length} selo(s) ancorado(s). Último há {horas < 1 ? 'menos de 1 hora' : `${horas} hora(s)`} ({dataHora(ult.em)}){atrasado ? '. O selo diário deveria ter rodado; use "Ancorar selo agora".' : '. O selo diário está em dia.'}
                 {/* Passo 113: o último selo em texto (data e código), para colar no e-mail do auditor. */}
-                <button type="button" data-testid="copiar-selo" onClick={() => navigator.clipboard?.writeText(`Selo blockchain da trilha · GMenezes Advogados Associados\nAncorado em: ${dataHora(ult.em)}\nSelo (SHA-256): ${ult.selo}\nTotal de selos ancorados: ${ancoragens.length}\nConferência pública: opentimestamps.org`).catch(() => undefined)} className="ml-3 underline text-navy">copiar último selo</button>
+                <button type="button" data-testid="copiar-selo" onClick={() => navigator.clipboard?.writeText(`Selo blockchain da trilha · THEYE Institute\nAncorado em: ${dataHora(ult.em)}\nSelo (SHA-256): ${ult.selo}\nTotal de selos ancorados: ${ancoragens.length}\nConferência pública: opentimestamps.org`).catch(() => undefined)} className="ml-3 underline text-navy">copiar último selo</button>
               </p>
             )
           })()}
@@ -268,7 +269,7 @@ export default function TrilhaPage() {
                     </div>
                     <div className="flex gap-2">
                       <button
-                        onClick={() => baixarArquivo(`selo-${a.seq}.txt`, textoDoSelo(a.seq, a.selo), 'text/plain')}
+                        onClick={() => { void textoDoSeloAncorado(a).then(t => baixarArquivo(`selo-${a.seq}.txt`, t, 'text/plain')) }}
                         className="min-h-[44px] inline-flex items-center gap-1 px-3 border border-navy/30 text-sm hover:bg-pergaminho"
                       >
                         <Download size={14} aria-hidden="true" /> Selo (.txt)

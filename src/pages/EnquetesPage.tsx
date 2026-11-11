@@ -58,7 +58,7 @@ export default function EnquetesPage() {
       <div className="space-y-6">
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6 flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-2xl space-y-1">
-            <p className="text-sm text-grafite-claro">Votação da equipe sobre temas importantes para o desenvolvimento do direito. Um voto por pessoa; o resultado mostra sempre o número de votos e a margem de erro, e só declara um lado vencedor quando os intervalos não se cruzam. Enquetes marcadas como públicas aparecem no site do Instituto THEYE apenas como agregado, e só a partir de 10 votos.</p>
+            <p className="text-sm text-grafite-claro">Votação da equipe sobre temas importantes para o desenvolvimento do direito. Um voto por pessoa; o resultado mostra sempre o número de votos e a margem de erro, e só declara um lado vencedor quando os intervalos não se cruzam. Enquetes marcadas como públicas aparecem no site do THEYE Institute apenas como agregado, e só a partir de 10 votos.</p>
           </div>
           {admin && <button type="button" onClick={() => setCriando(c => !c)} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider inline-flex items-center gap-2" data-testid="nova-enquete"><Plus className="w-4 h-4" aria-hidden />Nova enquete</button>}
         </section>

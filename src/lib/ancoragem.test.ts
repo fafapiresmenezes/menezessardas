@@ -1,13 +1,20 @@
 // Passo 419: selo blockchain — texto do selo e montagem do arquivo .ots (cabeçalho OpenTimestamps).
 import { describe, it, expect } from 'vitest'
-import { textoDoSelo, montarOts, CALENDARIOS, type Ancoragem } from './ancoragem'
+import { textoDoSelo, textoDoSeloAncorado, montarOts, CALENDARIOS, CABECALHO_SELO_ANTIGO, type Ancoragem } from './ancoragem'
 
 describe('textoDoSelo', () => {
   it('é texto simples com nome do escritório, quantidade de registros e o selo', () => {
     const t = textoDoSelo(42, 'abc123')
-    expect(t).toContain('GMenezes Advogados Associados')
+    expect(t).toContain('THEYE Institute')
     expect(t).toContain('registros: 42')
     expect(t.endsWith('selo: abc123\n')).toBe(true)
+  })
+  it('um selo ancorado antes do rebranding baixa com o cabeçalho antigo, para o SHA-256 continuar batendo', async () => {
+    const digestDe = async (txt: string) => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(txt)))).map(b => b.toString(16).padStart(2, '0')).join('')
+    const antigo = textoDoSelo(7, 'selo7', CABECALHO_SELO_ANTIGO)
+    expect(await textoDoSeloAncorado({ seq: 7, selo: 'selo7', digest: await digestDe(antigo) })).toBe(antigo)
+    const novo = textoDoSelo(8, 'selo8')
+    expect(await textoDoSeloAncorado({ seq: 8, selo: 'selo8', digest: await digestDe(novo) })).toBe(novo)
   })
 })
 

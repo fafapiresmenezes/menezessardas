@@ -13,6 +13,9 @@ vi.mock('../lib/pdf', () => ({ extrairTextoPdf: async () => 'Texto extraído do 
 const { default: EstiloEscrita } = await import('./EstiloEscrita')
 const longo = 'Excelentíssimo Senhor Doutor Juiz de Direito. '.repeat(6)
 
+// Apagar agora pede confirmação: nos testes, a pessoa sempre confirma.
+beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true) })
+
 describe('Meu estilo de escrita', () => {
   beforeEach(() => { cleanup(); pecas = []; insert.mockClear(); del.mockClear() })
 
