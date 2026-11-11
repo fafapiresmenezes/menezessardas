@@ -16,6 +16,14 @@ const POR_AREA: Record<string, { camara: string[]; noticias: string[] }> = {
   consumidor: { camara: ['código de defesa do consumidor', 'relações de consumo'], noticias: ['STJ consumidor decisão', 'Procon'] },
   previdenciario: { camara: ['previdência social', 'aposentadoria INSS'], noticias: ['INSS revisão', 'STJ previdenciário'] },
   penal: { camara: ['código penal', 'execução penal'], noticias: ['STF penal decisão', 'STJ habeas corpus'] },
+  // Órgãos do sistema de Justiça (MP, tribunais, conselhos, Defensoria, OAB, tribunais de contas): só fontes públicas e gratuitas.
+  justica: { camara: [], noticias: [
+    'site:mprj.mp.br', 'site:mpf.mp.br', 'site:mpsp.mp.br', 'site:mpmg.mp.br', 'site:cnmp.mp.br', 'Ministério Público do Rio de Janeiro MPRJ', 'Ministério Público Federal MPF decisão', 'CNMP Conselho Nacional do Ministério Público',
+    'site:cnj.jus.br', 'CNJ Conselho Nacional de Justiça resolução', 'site:stf.jus.br', 'site:stj.jus.br', 'site:tst.jus.br', 'site:tse.jus.br', 'site:stm.jus.br', 'site:cjf.jus.br',
+    'site:tjrj.jus.br', 'site:tjsp.jus.br', 'site:tjmg.jus.br', 'site:tjrs.jus.br', 'site:tjpr.jus.br', 'site:tjdft.jus.br', 'site:trf2.jus.br', 'site:trf1.jus.br', 'site:trf3.jus.br', 'site:trf4.jus.br', 'site:trf5.jus.br', 'site:trf6.jus.br',
+    'site:trt1.jus.br', 'site:trt2.jus.br', 'site:trt15.jus.br', 'site:dpge.rj.gov.br', 'site:defensoria.rj.def.br', 'Defensoria Pública da União DPU', 'OAB Conselho Federal da Ordem dos Advogados', 'OAB RJ Ordem dos Advogados do Brasil seccional',
+    'TCU Tribunal de Contas da União acórdão', 'TCE-RJ Tribunal de Contas do Estado do Rio de Janeiro', 'AGU Advocacia-Geral da União', 'PGE-RJ Procuradoria Geral do Estado do Rio de Janeiro', 'PGFN Procuradoria-Geral da Fazenda Nacional', 'CADE decisão', 'ANPD Autoridade Nacional de Proteção de Dados', 'CVM processo sancionador',
+  ] },
   compliance: { camara: ['proteção de dados pessoais', 'lei anticorrupção'], noticias: ['ANPD decisão', 'LGPD multa'] },
 }
 
