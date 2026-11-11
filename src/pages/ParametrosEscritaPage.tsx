@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
+import { BANCA } from '@/lib/estiloPecas'
 import { ChevronDown, ChevronRight, Save, CheckCircle2, FileText, Scale, BookOpen, Target, Layers, Pen, Info, HelpCircle, ArrowRight } from 'lucide-react'
 
 // ─── Tooltip universal ────────────────────────────────────────────────────────
@@ -625,6 +626,29 @@ export default function ParametrosEscritaPage() {
             </div>
           ))}
         </div>
+
+        {/* Banca dos dez redatores */}
+        <section className="mt-6 border border-borda rounded-xl overflow-hidden" aria-labelledby="banca-titulo">
+          <div className="px-4 py-3.5 bg-fundo-alt">
+            <Tooltip texto="Os dez modos de escrever que o robô usa. Ele escolhe sozinho, pela área do processo e pelo tipo da peça, e faz rodízio para duas peças seguidas não saírem iguais." posicao="bottom">
+              <h2 id="banca-titulo" className="font-semibold text-sm text-texto cursor-help">Banca de redatores: os 10 juristas de referência</h2>
+            </Tooltip>
+            <p className="text-xs text-grafite/70 mt-1">
+              Cada peça automática é escrita no método de um destes juristas, escolhido pela área e pelo tipo da peça. O robô mantém as forças de cada tradição e é proibido de repetir as fraquezas. São referências de estilo: nenhuma peça é escrita, revisada ou endossada por essas pessoas, e toda peça sai como rascunho para revisão do advogado.
+            </p>
+          </div>
+          <ol className="divide-y divide-borda">
+            {BANCA.map((b, i) => (
+              <li key={b.id} className="px-4 py-3">
+                <Tooltip texto={`Como escreve: ${b.metodo}`} posicao="bottom">
+                  <p className="text-sm font-medium text-texto cursor-help">{i + 1}. {b.referencia} <span className="font-normal text-grafite/70">· {b.especialidade}</span></p>
+                </Tooltip>
+                <p className="text-xs text-grafite mt-1"><strong className="text-green-700 dark:text-green-400">Mantém:</strong> {b.forcas}.</p>
+                <p className="text-xs text-grafite mt-0.5"><strong className="text-red-700 dark:text-red-400">Proibido:</strong> {b.evitar}.</p>
+              </li>
+            ))}
+          </ol>
+        </section>
 
         {/* Botão salvar no final */}
         <div className="flex items-center gap-3 mt-6 pt-4 border-t border-borda">

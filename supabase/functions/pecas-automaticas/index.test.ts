@@ -52,6 +52,8 @@ describe('pecas-automaticas', () => {
     const ia = chamadas.find(c => c.url.includes('anthropic'))!.body
     expect(ia.system).toMatch(/ESTILO DE ESCRITA DO ESCRITÓRIO/)
     expect(ia.system).toMatch(/PERFIL DE ESCRITA DESTA PEÇA/)
+    // Cível + contrarrazões a recurso: quem escreve é o redator de processo civil e recursos.
+    expect(ia.system).toMatch(/REDATOR DESTA PEÇA .*José Carlos Barbosa Moreira/)
     expect(ia.messages[0].content).toMatch(/Ao apelado para contrarrazões/)
     const email = chamadas.find(c => c.url.includes('brevo'))!.body
     expect(email.to).toEqual([{ email: 'fatima@exemplo.com.br' }, { email: 'outro@exemplo.com.br' }])
@@ -63,6 +65,7 @@ describe('pecas-automaticas', () => {
     expect(doc).toMatch(/<meta name="formatacao" content="[a-z-]+">/)
     const salva = estado.inseridos.find(i => i.tabela === 'pecas_automaticas')!.linha as Record<string, unknown>
     expect((salva.perfil as { formato?: string }).formato).toMatch(/^[a-z-]+$/)
+    expect((salva.perfil as { redator?: string }).redator).toBe('barbosa-moreira')
     expect(salva).toMatchObject({ tarefa_id: 't-perto', enviada_para: ['fatima@exemplo.com.br', 'outro@exemplo.com.br'] })
     expect(estado.atualizados.find(a => a.tabela === 'tarefas')!.valores).toMatchObject({ peca_automatica_em: expect.any(String) })
   })

@@ -1,6 +1,6 @@
 // Rotação de estilo das peças (06/11/2026): perfis reprodutíveis, diferentes entre si e dentro dos limites.
 import { describe, it, expect } from 'vitest'
-import { sortearPerfil, instrucoesDoPerfil, instrucoesDeRedacao, amostrasDoAutor, medirTexto, aderencia, distancia, gerador, hash32, ESCOLAS, REFERENCIAS, LIMITES, DISTANCIA_MINIMA, type Perfil } from './estiloPecas'
+import { BANCA, escolherRedator, instrucoesDoRedator, chaveArea, sortearPerfil, instrucoesDoPerfil, instrucoesDeRedacao, amostrasDoAutor, medirTexto, aderencia, distancia, gerador, hash32, ESCOLAS, REFERENCIAS, LIMITES, DISTANCIA_MINIMA, type Perfil } from './estiloPecas'
 import { pecaEmHtml, ehTitulo } from './formatarPeca'
 
 describe('estiloPecas', () => {
@@ -107,5 +107,55 @@ describe('rotação em todos os agentes', () => {
     const a = amostrasDoAutor([{ titulo: 'A', texto: 'x'.repeat(10000) }, { titulo: 'B', texto: 'y'.repeat(10000) }, { titulo: 'C', texto: 'z' }], 15000)
     expect(a).toHaveLength(2)
     expect(a.join('').replace(/### [AB]\n/g, '')).toHaveLength(15000)
+  })
+})
+
+describe('banca dos dez redatores', () => {
+  it('tem dez redatores, sem repetir, cada um ligado a uma escola e a uma referência conhecidas', () => {
+    expect(BANCA).toHaveLength(10)
+    expect(new Set(BANCA.map(b => b.id)).size).toBe(10)
+    const escolas = new Set(ESCOLAS.map(e => e.id))
+    for (const b of BANCA) {
+      expect(escolas.has(b.escola)).toBe(true)
+      expect(REFERENCIAS.some(r => r.nome === b.referencia && r.escola === b.escola)).toBe(true)
+      expect(b.metodo.length).toBeGreaterThan(60)
+    }
+  })
+
+  it('entende a área como está gravada no processo', () => {
+    expect(chaveArea('Cível')).toBe('civel')
+    expect(chaveArea('Família e sucessões')).toBe('familia')
+    expect(chaveArea('Imobiliário')).toBe('imobiliario')
+    expect(chaveArea('Tributário')).toBe('tributario')
+    expect(chaveArea(null)).toBe('')
+  })
+
+  it('escolhe pela área e pelo tipo da peça', () => {
+    expect(escolherRedator({ area: 'Tributário', titulo: 'EXECUÇÃO FISCAL' }).id).toBe('barros-carvalho')
+    expect(escolherRedator({ area: 'Imobiliário', titulo: 'AÇÃO DE DESPEJO' }).id).toBe('capanema')
+    expect(escolherRedator({ area: 'Família e sucessões', titulo: 'INVENTÁRIO E PARTILHA' }).id).toBe('pontes-de-miranda')
+    expect(escolherRedator({ area: 'Consumidor', titulo: 'Responder à contestação (réplica)' }).id).toBe('nancy-andrighi')
+    expect(escolherRedator({ area: 'Cível', titulo: 'Responder ao recurso da outra parte (contrarrazões)' }).id).toBe('barbosa-moreira')
+  })
+
+  it('faz rodízio: quem escreveu a última peça da mesma área cede a vez quando há outro à altura', () => {
+    const primeiro = escolherRedator({ area: 'Cível', titulo: 'Manifestação' })
+    const segundo = escolherRedator({ area: 'Cível', titulo: 'Manifestação', anteriores: [primeiro.id] })
+    expect(segundo.id).not.toBe(primeiro.id)
+  })
+
+  it('as instruções nomeiam a tradição e proíbem atribuir o texto ao jurista', () => {
+    const t = instrucoesDoRedator(BANCA[0]!)
+    expect(t).toContain('Rui Barbosa')
+    expect(t).toMatch(/não lhe atribua frases/)
+    expect(t).toMatch(/Mantenha as forças dessa tradição: força do argumento/)
+    expect(t).toMatch(/proibido reproduzir as fraquezas dela: prolixidade/)
+    expect(BANCA.every(b => b.forcas.length > 20 && b.evitar.length > 20)).toBe(true)
+  })
+
+  it('o perfil sorteado puxa para a escola do redator', () => {
+    let dominante = 0
+    for (let i = 1; i <= 40; i++) if (sortearPerfil({ semente: i, escolas: ['imobiliaria'] }).mistura.some(m => m.id === 'imobiliaria')) dominante++
+    expect(dominante).toBeGreaterThan(28)
   })
 })

@@ -548,6 +548,7 @@ var REFERENCIAS = [
   { nome: "Paulo de Tarso Sanseverino", area: "Direito privado (STJ)", escola: "pragmatica" },
   { nome: "Alexandre de Moraes", area: "Constitucional (STF)", escola: "pragmatica" },
   { nome: "Hely Lopes Meirelles", area: "Administrativo", escola: "pragmatica" },
+  { nome: "Paulo de Barros Carvalho", area: "Tributário", escola: "processualista" },
   { nome: "Fábio Ulhoa Coelho", area: "Empresarial", escola: "empresarial" },
   { nome: "Rubens Requião", area: "Empresarial", escola: "empresarial" },
   { nome: "Modesto Carvalhosa", area: "Societário", escola: "empresarial" },
@@ -657,17 +658,163 @@ var AFINIDADE = {
   familia: ["civil-constitucional", "didatica"],
   civel: ["civil-constitucional", "processualista"]
 };
+function chaveArea(area) {
+  const a = String(area ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  if (/famil|sucess|inventar/.test(a)) return "familia";
+  if (/imobili|locac|condomin/.test(a)) return /condomin/.test(a) ? "condominial" : "imobiliario";
+  if (/tribut|fiscal/.test(a)) return "tributario";
+  if (/trabalh/.test(a)) return "trabalhista";
+  if (/consum/.test(a)) return "consumidor";
+  if (/empres|societ|recupera/.test(a)) return "empresarial";
+  if (/penal|crim/.test(a)) return "penal";
+  if (/constituc|administr|fazenda|public/.test(a)) return "publico";
+  if (/registr/.test(a)) return "registral";
+  if (/complian/.test(a)) return "compliance";
+  if (/civ/.test(a)) return "civel";
+  return a;
+}
+var BANCA = [
+  {
+    id: "rui-barbosa",
+    referencia: "Rui Barbosa",
+    especialidade: "Constitucional e tribunais superiores",
+    escola: "classica",
+    areas: ["publico", "penal"],
+    pecas: /mandado de seguran|habeas|extraordin|constitucional/i,
+    metodo: "Constrói a peça como defesa de um direito: expõe o fato com gravidade, ergue a tese sobre a Constituição e a encadeia em períodos amplos e bem articulados, com vocabulário preciso e fecho solene.",
+    forcas: "força do argumento, domínio do vernáculo, arquitetura do raciocínio",
+    evitar: "prolixidade, erudição exibida, períodos que se perdem, citação em língua estrangeira sem tradução"
+  },
+  {
+    id: "pontes-de-miranda",
+    referencia: "Pontes de Miranda",
+    especialidade: "Civil, família e sucessões",
+    escola: "classica",
+    areas: ["familia", "registral", "civel"],
+    pecas: /invent[aá]rio|partilha|sucess|usucapi|nulidade|anula/i,
+    metodo: "Classifica antes de argumentar: identifica a natureza do fato jurídico, separa existência, validade e eficácia, e só então tira a consequência, com rigor conceitual e remissão exata ao artigo.",
+    forcas: "precisão conceitual, classificação rigorosa, remissão exata à lei",
+    evitar: "hermetismo, neologismos, frases truncadas, excesso de parênteses e de remissões cruzadas"
+  },
+  {
+    id: "barbosa-moreira",
+    referencia: "José Carlos Barbosa Moreira",
+    especialidade: "Processo civil e recursos",
+    escola: "processualista",
+    areas: ["civel"],
+    pecas: /recurso|apela|agravo|embargos|contrarraz|ac[oó]rd[aã]o|decis[aã]o/i,
+    metodo: "Abre pelo cabimento, pela tempestividade e pelo interesse; depois ataca a decisão ponto por ponto, na ordem em que foi fundamentada, com frases limpas e sem um adjetivo sobrando.",
+    forcas: "clareza, concisão, ordem lógica, elegância sem enfeite",
+    evitar: "ironia, tom professoral, digressão teórica que não serve ao caso"
+  },
+  {
+    id: "barroso",
+    referencia: "Luís Roberto Barroso",
+    especialidade: "Constitucional e direito público",
+    escola: "didatica",
+    areas: ["publico", "compliance"],
+    pecas: /fazenda|munic[ií]pio|\bestado do\b|\buni[aã]o federal\b|administrativ/i,
+    metodo: "Anuncia a tese em uma frase e a demonstra em três ou quatro proposições numeradas, uma ideia por parágrafo, em linguagem que o cliente entenderia, fechando com a consequência prática.",
+    forcas: "didatismo, síntese, estrutura visível, linguagem acessível",
+    evitar: "frases de efeito, generalidades de princípio sem lei que as sustente, tom de palestra"
+  },
+  {
+    id: "tepedino",
+    referencia: "Gustavo Tepedino",
+    especialidade: "Contratos e responsabilidade civil",
+    escola: "civil-constitucional",
+    areas: ["civel", "familia"],
+    pecas: /contrat|indeniza|responsabilidade|dano|obriga/i,
+    metodo: "Lê o contrato e o dano à luz da boa-fé objetiva, da função social e da dignidade, sempre ancorando o princípio em um artigo do Código Civil e na situação concreta das partes.",
+    forcas: "leitura sistemática, equilíbrio entre princípio e regra, sensibilidade ao caso concreto",
+    evitar: "abstração demais, princípio usado no lugar da prova, parágrafos longos de teoria"
+  },
+  {
+    id: "nancy-andrighi",
+    referencia: "Nancy Andrighi",
+    especialidade: "Consumidor e direito privado no STJ",
+    escola: "pragmatica",
+    areas: ["consumidor", "civel"],
+    pecas: /consum|banc|plano de sa[uú]de|especial|r[eé]plica|contesta/i,
+    metodo: "Vai direto ao ponto que decide a causa: delimita a controvérsia, mostra o entendimento consolidado do tribunal, encaixa o caso nele e aponta o efeito concreto da decisão para a parte.",
+    forcas: "objetividade, foco no ponto decisivo, domínio do precedente, atenção ao efeito prático",
+    evitar: "empilhar ementas, colar trechos longos de julgados, precedente sem demonstrar a semelhança com o caso"
+  },
+  {
+    id: "capanema",
+    referencia: "Sylvio Capanema de Souza",
+    especialidade: "Locação e imobiliário",
+    escola: "imobiliaria",
+    areas: ["imobiliario", "condominial"],
+    pecas: /despejo|loca[cç]|aluguel|renovat|revisional|condom/i,
+    metodo: "Parte do contrato, da cláusula e da cronologia, com datas e valores exatos; liga cada um ao artigo da Lei do Inquilinato e resume o débito ou a obrigação antes dos pedidos.",
+    forcas: "precisão de datas, valores e cláusulas, conhecimento da prática forense, tom direto",
+    evitar: "casuísmo sem fundamento legal, coloquialidade, tabela sem explicação"
+  },
+  {
+    id: "ulhoa-coelho",
+    referencia: "Fábio Ulhoa Coelho",
+    especialidade: "Empresarial e societário",
+    escola: "empresarial",
+    areas: ["empresarial"],
+    pecas: /societ|s[oó]cio|fal[eê]ncia|recupera[cç][aã]o judicial|t[ií]tulo|cheque|duplicata/i,
+    metodo: "Abre com um resumo de três frases, trata a questão pelo risco e pelo custo para a empresa, usa seções curtas com títulos que informam e fecha com o que se pede em tópicos.",
+    forcas: "visão de negócio, clareza executiva, seções curtas, quantificação do risco",
+    evitar: "jargão corporativo, anglicismos, simplificação que omite o fundamento legal"
+  },
+  {
+    id: "barros-carvalho",
+    referencia: "Paulo de Barros Carvalho",
+    especialidade: "Tributário e execução fiscal",
+    escola: "processualista",
+    areas: ["tributario"],
+    pecas: /fiscal|tribut|imposto|iptu|icms|\biss\b|d[ií]vida ativa|pr[eé]-executividade/i,
+    metodo: "Decompõe a exigência nos seus elementos (fato gerador, sujeito, base, alíquota, tempo) e testa cada um contra a lei e a prova, com linguagem exata e conclusão que decorre do exame.",
+    forcas: "rigor analítico, decomposição da norma, exatidão terminológica",
+    evitar: "vocabulário de lógica e semiótica, abstração, frases que só o especialista entende"
+  },
+  {
+    id: "sobral-pinto",
+    referencia: "Sobral Pinto",
+    especialidade: "Advocacia de defesa e trabalhista",
+    escola: "combativa",
+    areas: ["trabalhista", "penal", "consumidor"],
+    pecas: /defesa|tutela|urg[eê]ncia|liminar|alega[cç][oõ]es finais|memoriais|reclama/i,
+    metodo: "Narra o fato mais grave com concretude, mostra a injustiça a corrigir e sustenta a tese com firmeza e lealdade, alternando frases curtas de impacto com períodos de fundamentação.",
+    forcas: "coragem, narrativa concreta, firmeza com lealdade processual",
+    evitar: "indignação em excesso, ataque pessoal à parte ou ao juiz, adjetivação, pergunta retórica repetida"
+  }
+];
+function escolherRedator(opcoes) {
+  const area = chaveArea(opcoes.area);
+  const titulo = String(opcoes.titulo ?? "");
+  const recentes = opcoes.anteriores ?? [];
+  const r = gerador(opcoes.semente ?? 1);
+  const pontuados = BANCA.map((b) => {
+    const posicao = b.areas.indexOf(area);
+    const pontos = (posicao === 0 ? 4 : posicao > 0 ? 2.5 : 0) + (b.pecas.test(titulo) ? 3 : 0) - (recentes[0] === b.id ? 2.5 : recentes.slice(1, 3).includes(b.id) ? 1 : 0) + r() * 0.5;
+    return { b, pontos };
+  });
+  return pontuados.sort((x, y) => y.pontos - x.pontos)[0].b;
+}
+function instrucoesDoRedator(b) {
+  return `REDATOR DESTA PEÇA (banca de redatores do escritório): tradição de escrita de ${b.referencia} (${b.especialidade}).
+Método: ${b.metodo}
+Mantenha as forças dessa tradição: ${b.forcas}.
+É proibido reproduzir as fraquezas dela: ${b.evitar}.
+Siga o método e o padrão de qualidade dessa tradição. Não copie trechos de obra nenhuma, não cite ${b.referencia} como autor do texto e não lhe atribua frases; se citar obra dele como doutrina, só com certeza, senão "[doutrina a conferir]".`;
+}
 function sortearPerfil(opcoes) {
   const r = gerador(opcoes.semente);
   const anteriores = (opcoes.anteriores ?? []).map((a) => "parametros" in a ? a.parametros : a);
-  const preferidas = AFINIDADE[opcoes.especialidade ?? ""] ?? [];
+  const preferidas = opcoes.escolas?.length ? opcoes.escolas : AFINIDADE[chaveArea(opcoes.especialidade)] ?? [];
   let melhor = null;
   for (let t = 1; t <= 24; t++) {
     const quantas = r() < 0.6 ? 2 : 3;
     const pool = [...ESCOLAS];
     const escolhidas = [];
     while (escolhidas.length < quantas) {
-      const pesos2 = pool.map((e) => preferidas.includes(e.id) ? 3 : 1);
+      const pesos2 = pool.map((e) => preferidas.includes(e.id) ? opcoes.escolas?.length ? 8 : 3 : 1);
       let alvo = r() * pesos2.reduce((s, p) => s + p, 0);
       let i = 0;
       while (alvo > pesos2[i] && i < pool.length - 1) {
@@ -853,53 +1000,106 @@ ul.pedidos li { text-align: justify; margin-bottom: 4pt; }
 ${corpo}
 </body></html>`;
 }
+var SO_TRACOS = /^\s*(?:[-–—_*=]\s*){3,}$/;
+var INICIO_ENDERECAMENTO = /^\**\s*(EXCELENT|EXMO|EXMA|EGR[ÉE]GI|COLEND|AO\s+JU[ÍI]Z|À\s|AO\s|ILUSTR[ÍI]SSIM|MERIT[ÍI]SSIM|DOUTO|SENHOR)/i;
+var INICIO_ANEXO = /^\s*(?:#+\s*)?\**\s*PONTOS\s+A\s+CONFERIR/i;
+var INICIO_FECHO = /^\s*(nest[ea]s\s+termos|termos\s+em\s+que|pede\s+(e\s+espera\s+)?deferimento|p\.\s*deferimento|pede-se\s+deferimento)/i;
+var DATA_DO_FECHO = /(\d{1,2}|\[[^\]]*\])\s+de\s+[a-zç\[\]]+\s+de\s+(\d{4}|\[[^\]]*\])/i;
+var ESPACO_DESPACHO = /^\s*[([]\s*espa[çc]o\s+para\s+despacho\s*[)\]]\s*$/i;
+var ITEM = /^\s*(?:([-*•])|([a-z]\)|\d+[.)]))\s+/;
+function separarPeca(texto) {
+  const linhas = texto.replace(/\r/g, "").split("\n").filter((l) => !SO_TRACOS.test(l));
+  const iAnexo = linhas.findIndex((l) => INICIO_ANEXO.test(l));
+  let corpo = iAnexo >= 0 ? linhas.slice(0, iAnexo) : linhas;
+  const anexo = iAnexo >= 0 ? linhas.slice(iAnexo + 1) : [];
+  const iEnd = corpo.findIndex((l) => INICIO_ENDERECAMENTO.test(l.trim()));
+  const avisos = iEnd > 0 && corpo.slice(0, iEnd).some((l) => l.trim()) && iEnd <= 12 ? corpo.slice(0, iEnd) : [];
+  if (avisos.length) corpo = corpo.slice(iEnd);
+  return { corpo: corpo.join("\n").trim(), conferir: [...avisos, ...avisos.length && anexo.length ? [""] : [], ...anexo].join("\n").trim() };
+}
 function pecaComModelo(texto, titulo, propria, md) {
   const f = { ...FORMATACAO, ...md.base, ...propria ? formatacaoFinal({ ...md.base, ...propria }) : {} };
-  let nTitulo = 0, nPar = 0, depoisDoPrimeiroTitulo = false;
+  const { corpo: textoDaPeca, conferir } = separarPeca(texto);
+  let nTitulo = 0, nPar = 0, depoisDoPrimeiroTitulo = false, houveParagrafo = false, noFecho = false, assinaturas = 0;
   const tituloHtml = (bruto) => {
     const sem = bruto.replace(/^#+\s*/, "").replace(/\*\*/g, "").trim();
     const limpo = semNumero(sem);
     const secao = limpo !== sem || /^(D[OA]S?\s|PRELIMINAR|M[ÉE]RITO|S[ÍI]NTESE|CONCLUS|PEDIDO|REQUERIMENTO|TEMPESTIVIDADE|CABIMENTO|RESUMO|BREVE|RAZ[ÕO]ES|FUNDAMENT|INTRODU)/.test(limpo);
-    if (!secao) return `<p class="cx"><b>${negrito(limpo)}</b></p>`;
+    if (!secao) return houveParagrafo ? `<p class="nome"><b>${negrito(limpo)}</b></p>` : `<p class="cx"><b>${negrito(limpo)}</b></p>`;
     nTitulo++;
     depoisDoPrimeiroTitulo = true;
     const prefixo = md.numeracaoTitulos === "romano" ? `${ROMANOS[nTitulo - 1] ?? nTitulo} – ` : md.numeracaoTitulos === "arabico" ? `${nTitulo}. ` : "";
     return `<h2>${negrito(prefixo + limpo)}</h2>`;
   };
-  const paragrafo = (l) => {
+  const item = (l) => {
+    const m2 = l.match(ITEM);
+    const marca = m2[1] ? "–" : m2[2];
+    return `<p class="item"><span class="marca">${esc(marca)}</span> ${negrito(l.replace(ITEM, ""))}</p>`;
+  };
+  const linhaHtml = (l) => {
+    if (ESPACO_DESPACHO.test(l)) return '<p class="despacho">&nbsp;</p>';
+    if (noFecho) {
+      if (DATA_DO_FECHO.test(l)) return `<p class="data">${negrito(l)}</p>`;
+      assinaturas++;
+      return `<p class="${assinaturas === 1 ? "ass primeira" : "ass"}">${negrito(l.replace(/\*\*/g, ""))}</p>`;
+    }
+    if (INICIO_FECHO.test(l)) {
+      noFecho = true;
+      return `<p class="fecho">${negrito(l)}</p>`;
+    }
+    if (ehTitulo(l)) return tituloHtml(l);
+    if (ITEM.test(l)) return item(l);
+    if (!houveParagrafo && !depoisDoPrimeiroTitulo && l.length < 110 && !/,\s*$/.test(l)) return `<p class="ref">${negrito(l)}</p>`;
+    houveParagrafo = true;
     if (md.paragrafosNumerados && depoisDoPrimeiroTitulo) {
       nPar++;
       return `<p class="num"><span class="n">${nPar}.</span> ${negrito(l)}</p>`;
     }
     return `<p>${negrito(l)}</p>`;
   };
-  const blocos = texto.replace(/\r/g, "").split(/\n\s*\n/).map((b) => b.trim()).filter(Boolean);
+  const blocos = textoDaPeca.split(/\n\s*\n/).map((b) => b.trim()).filter(Boolean);
   const corpo = blocos.map((b) => {
-    const linhas = b.split("\n");
-    if (linhas.length === 1 && ehTitulo(b)) return tituloHtml(b);
-    if (linhas.every((l) => /^\s*>/.test(l))) return `<blockquote>${negrito(linhas.map((l) => l.replace(/^\s*>\s?/, "")).join(" "))}</blockquote>`;
-    if (linhas.every((l) => /^\s*([-*•]|[a-z]\)|\d+[.)])\s+/.test(l))) return `<ul class="pedidos">${linhas.map((l) => `<li>${negrito(l.replace(/^\s*[-*•]\s+/, ""))}</li>`).join("")}</ul>`;
-    return linhas.map((l) => ehTitulo(l) ? tituloHtml(l) : paragrafo(l)).join("");
+    const linhas = b.split("\n").filter((l) => l.trim());
+    if (linhas.length && linhas.every((l) => /^\s*>/.test(l))) return `<blockquote>${negrito(linhas.map((l) => l.replace(/^\s*>\s?/, "")).join(" "))}</blockquote>`;
+    return linhas.map(linhaHtml).join("");
   }).join("\n");
+  const folha = conferir ? `
+<br clear="all" style="page-break-before:always; mso-break-type:section-break">
+<div class="conferir"><p class="conferir-titulo"><b>PONTOS A CONFERIR ANTES DE PROTOCOLAR</b></p>
+<p class="conferir-aviso">Esta folha é só para o advogado responsável. Não faz parte da peça: apague antes de protocolar.</p>
+${conferir.split("\n").filter((l) => l.trim()).map((l) => `<p class="conferir-item">${negrito(l)}</p>`).join("\n")}</div>` : "";
   const m = f.margens;
   return `<!doctype html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${esc(titulo)}</title>
 <meta name="formatacao" content="${esc(md.id)}">
 <style>
 @page { size: 21cm 29.7cm; margin: ${m.superior}cm ${m.direita}cm ${m.inferior}cm ${m.esquerda}cm; }
 body { font-family: '${esc(f.fonte)}', ${f.fonteAlternativa}, serif; font-size: ${f.corpo}pt; line-height: ${f.entrelinhas}; color: #000; }
-p { text-align: justify; text-indent: ${f.recuoPrimeiraLinha}cm; margin: 0 0 ${md.espacoDepois}pt 0; }
-p.num, p.cx { text-indent: 0; }
+p { text-align: justify; text-indent: ${f.recuoPrimeiraLinha}cm; margin: 0 0 ${md.espacoDepois}pt 0; orphans: 2; widows: 2; }
+p.num, p.cx, p.ref, p.nome, p.data, p.ass, p.despacho, p.item, .conferir p { text-indent: 0; }
+p.cx { text-align: left; margin-bottom: 0; }
+p.despacho { margin: 0; height: 3cm; line-height: 3cm; }
+p.ref { text-align: left; margin-bottom: 0; }
+p.nome { text-align: center; margin: 14pt 0; letter-spacing: 0.06em; }
 p.num .n { font-weight: bold; display: inline-block; min-width: 1cm; }
-h2 { font-size: ${f.corpo}pt; font-weight: bold; text-transform: uppercase; text-align: ${md.tituloAlinhado}; margin: 18pt 0 ${md.espacoDepois}pt 0;${md.tituloVersalete ? " font-variant: small-caps; letter-spacing: 0.04em;" : ""} }
+p.item { margin-left: ${(f.recuoPrimeiraLinha || 1.25) + 0.75}cm; text-indent: -0.75cm; }
+p.item .marca { display: inline-block; min-width: 0.75cm; text-indent: 0; }
+p.fecho { margin-top: 12pt; }
+p.data { text-align: right; margin: 12pt 0 0 0; }
+p.ass { text-align: center; margin: 0; font-weight: normal; }
+p.ass.primeira { margin-top: 42pt; font-weight: bold; }
+h2 { font-size: ${f.corpo}pt; font-weight: bold; text-transform: uppercase; text-align: ${md.tituloAlinhado}; margin: 18pt 0 ${md.espacoDepois}pt 0; page-break-after: avoid;${md.tituloVersalete ? " font-variant: small-caps; letter-spacing: 0.04em;" : ""} }
 blockquote { margin: 6pt 0 ${md.espacoDepois}pt ${f.recuoCitacao}cm; font-size: ${f.citacaoLonga}pt; line-height: 1; text-align: justify; }
-ul.pedidos { list-style: none; margin: 0 0 ${md.espacoDepois}pt ${f.recuoPrimeiraLinha || 1}cm; padding: 0; }
-ul.pedidos li { text-align: justify; margin-bottom: 4pt; }
+.conferir { font-family: Arial, Helvetica, sans-serif; font-size: 10.5pt; line-height: 1.3; }
+.conferir p { text-align: left; margin: 0 0 6pt 0; }
+p.conferir-titulo { font-size: 12pt; margin-bottom: 2pt; }
+p.conferir-aviso { font-style: italic; border-bottom: 1px solid #000; padding-bottom: 6pt; margin-bottom: 10pt; }
 </style></head><body>
-${corpo}
+${corpo}${folha}
 </body></html>`;
 }
 export {
   ATOS_POR_CODIGO,
+  BANCA,
   CODIGOS,
   FORMATOS,
   ROTULO_URGENCIA,
@@ -908,14 +1108,17 @@ export {
   audienciaNoTexto,
   br,
   calcularPrazoPorCodigo,
+  chaveArea,
   codigoDoProcesso,
   csvDosPrazos,
   dataDaPublicacao,
   diasEntre,
+  escolherRedator,
   formatacaoFinal,
   hash32,
   instrucoesDeRedacao,
   instrucoesDoPerfil,
+  instrucoesDoRedator,
   lerIntimacao,
   lerTodas,
   linhaDoPrazo,

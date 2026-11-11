@@ -30,7 +30,7 @@ export async function gerar() {
         "export * from '@/lib/escritorio/lerIntimacao'",
         "export { ATOS_POR_CODIGO, CODIGOS, calcularPrazoPorCodigo, rotuloPrazo } from '@/lib/prazos/codigos'",
         "export { pecaEmHtml, formatacaoFinal, FORMATOS, sortearFormato } from '@/lib/formatarPeca'",
-        "export { sortearPerfil, instrucoesDoPerfil, instrucoesDeRedacao, amostrasDoAutor, hash32, medirTexto, aderencia } from '@/lib/estiloPecas'",
+        "export { sortearPerfil, instrucoesDoPerfil, instrucoesDeRedacao, amostrasDoAutor, hash32, medirTexto, aderencia, BANCA, escolherRedator, instrucoesDoRedator, chaveArea } from '@/lib/estiloPecas'",
         "export { br, somarDias, diasEntre } from '@/lib/ferramentas/base'",
       ].join('\n'),
       resolveDir: raiz, loader: 'ts', sourcefile: 'juridico-entrada.ts',
