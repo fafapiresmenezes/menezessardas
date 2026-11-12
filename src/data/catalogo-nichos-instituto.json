@@ -1,0 +1,1049 @@
+{
+ "origem": "nichos_inventario_2026-10-15.csv (PC do M, pasta 05_ONTOLOGIA_PREDICAO)",
+ "total": 149,
+ "nichos": [
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Focos de calor por bioma",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "focos-por-bioma"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Inflação por região metropolitana",
+   "fonte_oficial": true,
+   "frequencia": "evento/prazo",
+   "id": "inflacao-regional"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Municípios que publicam no PNCP",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "adesao-pncp-municipios"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Pontualidade da prestação de contas municipal",
+   "fonte_oficial": true,
+   "frequencia": "evento/prazo",
+   "id": "entrega-siconfi-municipios"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Receita municipal por habitante",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "receita-por-habitante"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Qualidade do fornecimento de energia",
+   "fonte_oficial": true,
+   "frequencia": "semanal",
+   "id": "qualidade-fornecimento-energia"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Transferências do FPM",
+   "fonte_oficial": true,
+   "frequencia": "mensal",
+   "id": "transferencias-fpm"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Prazo de publicação de contratos no PNCP",
+   "fonte_oficial": true,
+   "frequencia": "evento/prazo",
+   "id": "prazo-publicacao-contratos"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Contratos públicos por habitante",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "contratos-por-habitante"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Dependência de transferências",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "dependencia-transferencias"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Gasto em saúde e educação por habitante",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "despesa-saude-educacao-por-habitante"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Frota por combustível",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "frota-por-combustivel"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Peso da contratação direta",
+   "fonte_oficial": true,
+   "frequencia": "trimestral",
+   "id": "contratacao-direta-participacao"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Licitações desertas e fracassadas",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "licitacoes-desertas-fracassadas"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Óbitos registrados por mil habitantes",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "obitos-por-mil-habitantes"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Frota de veículos por habitante",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "frota-por-habitante"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Cadastro Único em relação à população",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "cobertura-cadunico"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Aditivos de valor e prazo",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "aditivos-contratuais"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Obras públicas paralisadas",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "obras-paralisadas"
+  },
+  {
+   "area": "Indicadores públicos",
+   "nicho": "Empresas impedidas de contratar",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "sancoes-empresas"
+  },
+  {
+   "area": "Formação e leitura",
+   "nicho": "Como ler: foco de calor não é desmatamento",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "explicador-focos-e-desmatamento"
+  },
+  {
+   "area": "Formação e leitura",
+   "nicho": "Como ler: gasto com pessoal e receita corrente líquida",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "explicador-pessoal-rcl"
+  },
+  {
+   "area": "Formação e leitura",
+   "nicho": "Como ler: o IPCA",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "explicador-ipca"
+  },
+  {
+   "area": "Formação e leitura",
+   "nicho": "Como ler: a taxa de desocupação",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "explicador-desocupacao-pnad"
+  },
+  {
+   "area": "Formação e leitura",
+   "nicho": "Trilha 2: dados abertos do Brasil na prática",
+   "fonte_oficial": true,
+   "frequencia": "semanal",
+   "id": "trilha-2-aulas-dados-abertos"
+  },
+  {
+   "area": "Formação e leitura",
+   "nicho": "Trilha 3: medir uma previsão",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "trilha-3-medir-previsao"
+  },
+  {
+   "area": "Formação e leitura",
+   "nicho": "Trilha: ler um recorde de SI",
+   "fonte_oficial": false,
+   "frequencia": "semanal",
+   "id": "trilha-ler-recorde-de-si"
+  },
+  {
+   "area": "Formação e leitura",
+   "nicho": "Oficina: comparar estados e municípios sem erro",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "oficina-comparar-territorios"
+  },
+  {
+   "area": "Formação e leitura",
+   "nicho": "Glossário do número público",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "glossario-publico"
+  },
+  {
+   "area": "Formação e leitura",
+   "nicho": "Indicadores para gestão: ficha, linha de base e meta viável",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "curso-ficha-de-indicador"
+  },
+  {
+   "area": "Formação e leitura",
+   "nicho": "Como ler: taxa em município pequeno",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "explicador-municipio-pequeno"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Meta Selic após cada reunião do Copom",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "selic-meta-copom"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Alertas mensais de desmatamento (DETER)",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "deter-alertas-mensais"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Bandeira tarifária do mês",
+   "fonte_oficial": true,
+   "frequencia": "semanal",
+   "id": "bandeira-tarifaria-mensal"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Dívida bruta do governo geral",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "divida-bruta-governo-geral"
+  },
+  {
+   "area": "Predição",
+   "nicho": "PIB trimestral: cresce ou recua",
+   "fonte_oficial": true,
+   "frequencia": "trimestral",
+   "id": "pib-trimestral-sinal"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Resultado primário do Governo Central",
+   "fonte_oficial": true,
+   "frequencia": "mensal",
+   "id": "resultado-primario-governo-central"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Inadimplência no crédito das famílias",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "inadimplencia-credito-familias"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Placar público de acerto",
+   "fonte_oficial": true,
+   "frequencia": "semanal",
+   "id": "placar-brier-publico"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Energia armazenada nos reservatórios do SIN",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "energia-armazenada-subsistemas"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Produção industrial mensal",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "producao-industrial-mensal"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Curva de calibração e decomposição de Murphy",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "calibracao-murphy"
+  },
+  {
+   "area": "Predição",
+   "nicho": "O Focus como linha de base pública",
+   "fonte_oficial": true,
+   "frequencia": "evento/prazo",
+   "id": "focus-linha-de-base"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Participação eólica e solar na geração",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "geracao-renovavel-participacao"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Temperatura do mês nas capitais",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "temperatura-anomalia-capitais"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Data centers e carga elétrica no Brasil",
+   "fonte_oficial": true,
+   "frequencia": "semanal",
+   "id": "datacenter-carga-eletrica-br"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Dengue por semana epidemiológica",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "dengue-semanal-uf"
+  },
+  {
+   "area": "Predição",
+   "nicho": "Arrecadação federal mensal",
+   "fonte_oficial": true,
+   "frequencia": "mensal",
+   "id": "arrecadacao-federal-mensal"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Recordes de SI em prazo curto",
+   "fonte_oficial": false,
+   "frequencia": "semanal",
+   "id": "si-recordes-trimestrais"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Marco legal da SI: fases na Câmara",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "marco-si-fases-camara"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Data centers de SI",
+   "fonte_oficial": false,
+   "frequencia": "mensal",
+   "id": "si-data-centers-potencia"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Interesse público por SI",
+   "fonte_oficial": false,
+   "frequencia": "diario",
+   "id": "interesse-publico-em-si"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Licenças dos modelos e dados de SI",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "licencas-modelos-si"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Pesquisa em SI feita no Brasil",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "pesquisa-si-brasil"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Chips para SI",
+   "fonte_oficial": false,
+   "frequencia": "evento/prazo",
+   "id": "si-hardware-aceleradores"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Distância entre modelos abertos e fechados",
+   "fonte_oficial": false,
+   "frequencia": "semanal",
+   "id": "si-pesos-abertos-distancia"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Pesquisa em segurança de SI",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "pesquisa-em-seguranca-de-si"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Regulamento europeu de SI: calendário de aplicação",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "regulamento-europeu-si-calendario"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Adoção de ferramentas de SI",
+   "fonte_oficial": false,
+   "frequencia": "mensal",
+   "id": "adocao-de-ferramentas-de-si"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Que riscos de SI cada norma cobre",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "cobertura-riscos-si-normas"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Incidentes de SI por setor",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "incidentes-si-por-setor"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Regulação de SI na América Latina",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "regulacao-si-america-latina"
+  },
+  {
+   "area": "Superinteligência (SI)",
+   "nicho": "Vocabulário ligado de SI em português",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "vocabulario-si-pt"
+  },
+  {
+   "area": "Economia real e setor externo",
+   "nicho": "Produção agrícola (lavouras)",
+   "fonte_oficial": true,
+   "frequencia": "evento/prazo",
+   "id": "producao-agricola-lavouras"
+  },
+  {
+   "area": "Economia real e setor externo",
+   "nicho": "Rebanhos (pecuária)",
+   "fonte_oficial": true,
+   "frequencia": "evento/prazo",
+   "id": "rebanhos-municipais"
+  },
+  {
+   "area": "Economia real e setor externo",
+   "nicho": "Contas externas e câmbio",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "setor-externo-e-cambio"
+  },
+  {
+   "area": "Economia real e setor externo",
+   "nicho": "PIX por município",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "pix-por-municipio"
+  },
+  {
+   "area": "Economia real e setor externo",
+   "nicho": "Empresas e pessoal ocupado por porte",
+   "fonte_oficial": true,
+   "frequencia": "evento/prazo",
+   "id": "empresas-por-porte"
+  },
+  {
+   "area": "Economia real e setor externo",
+   "nicho": "Objetivos de Desenvolvimento Sustentável no Brasil",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "ods-brasil"
+  },
+  {
+   "area": "Economia real e setor externo",
+   "nicho": "Fundos de investimento (agregado)",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "mercado-de-capitais-fundos"
+  },
+  {
+   "area": "Arcade",
+   "nicho": "Jogo: fumaça",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "arcade-fumaca"
+  },
+  {
+   "area": "Arcade",
+   "nicho": "Banco de perguntas de treino",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "arcade-banco-de-treino"
+  },
+  {
+   "area": "Arcade",
+   "nicho": "Jogo: quanto é?",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "arcade-quanto-e"
+  },
+  {
+   "area": "Arcade",
+   "nicho": "Jogo: recorde ou não",
+   "fonte_oficial": false,
+   "frequencia": "semanal",
+   "id": "arcade-recorde-de-si"
+  },
+  {
+   "area": "Arcade",
+   "nicho": "Jogo: a proposta andou?",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "arcade-tramitacao-por-tema"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "Estimativa preliminar e taxa consolidada do PRODES",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "revisao-prodes"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "Revisões do PIB trimestral",
+   "fonte_oficial": true,
+   "frequencia": "trimestral",
+   "id": "revisao-contas-nacionais"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "Qualidade dos metadados nos portais de dados abertos",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "qualidade-metadados-portais"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "Frescor dos conjuntos de dados abertos",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "frescor-dados-abertos"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "Onde falta dado",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "lacunas-territoriais"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "Ficha de origem de cada número",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "proveniencia-por-numero"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "Disponibilidade das APIs públicas de dados",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "saude-apis-publicas"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "Licença de cada fonte usada",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "licencas-fontes-do-instituto"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "Cumprimento do calendário oficial de divulgação",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "calendario-divulgacao-estatistica"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "Revisões do saldo de emprego formal",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "revisao-emprego-formal"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "Municípios com diário oficial aberto e pesquisável",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "cobertura-diarios-oficiais"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "O mesmo número em duas fontes oficiais",
+   "fonte_oficial": true,
+   "frequencia": "mensal",
+   "id": "divergencia-entre-fontes"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "Registro público de correções",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "registro-de-correcoes"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "Pedidos de acesso à informação no governo federal",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "lai-pedidos-respostas"
+  },
+  {
+   "area": "Transparência e proveniência",
+   "nicho": "Planos de dados abertos dos órgãos federais",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "planos-dados-abertos"
+  },
+  {
+   "area": "Ciência e tecnologia de fronteira",
+   "nicho": "Vendas de chips aceleradores",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "semicondutores-vendas-aceleradores"
+  },
+  {
+   "area": "Ciência e tecnologia de fronteira",
+   "nicho": "Abertura de dados do governo",
+   "fonte_oficial": true,
+   "frequencia": "semanal",
+   "id": "abertura-de-dados-do-governo"
+  },
+  {
+   "area": "Ciência e tecnologia de fronteira",
+   "nicho": "Ciência brasileira em acesso aberto",
+   "fonte_oficial": false,
+   "frequencia": "semanal",
+   "id": "ciencia-acesso-aberto"
+  },
+  {
+   "area": "Ciência e tecnologia de fronteira",
+   "nicho": "Pesquisa brasileira em semicondutores e microeletrônica",
+   "fonte_oficial": true,
+   "frequencia": "trimestral",
+   "id": "semicondutores-pesquisa-br"
+  },
+  {
+   "area": "Ciência e tecnologia de fronteira",
+   "nicho": "SI na pesquisa em saúde",
+   "fonte_oficial": false,
+   "frequencia": "semanal",
+   "id": "si-na-saude-literatura"
+  },
+  {
+   "area": "Ciência e tecnologia de fronteira",
+   "nicho": "Aprendizado de máquina aberto (curso)",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "aprendizado-de-maquina-aberto"
+  },
+  {
+   "area": "Geolocalização",
+   "nicho": "Amazônia Legal: o recorte e seus municípios",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "amazonia-legal"
+  },
+  {
+   "area": "Geolocalização",
+   "nicho": "Regiões metropolitanas: trabalho e renda",
+   "fonte_oficial": true,
+   "frequencia": "trimestral",
+   "id": "regioes-metropolitanas"
+  },
+  {
+   "area": "Geolocalização",
+   "nicho": "Regiões de saúde: estabelecimentos por habitante",
+   "fonte_oficial": true,
+   "frequencia": "semanal",
+   "id": "regioes-de-saude"
+  },
+  {
+   "area": "Geolocalização",
+   "nicho": "Semiárido: água, seca e saneamento",
+   "fonte_oficial": true,
+   "frequencia": "semanal",
+   "id": "semiarido"
+  },
+  {
+   "area": "Geolocalização",
+   "nicho": "Consórcios públicos entre municípios",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "consorcios-publicos"
+  },
+  {
+   "area": "Geolocalização",
+   "nicho": "Faixa de fronteira",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "faixa-de-fronteira"
+  },
+  {
+   "area": "Ontologia",
+   "nicho": "Código IBGE: a identidade de cada lugar",
+   "fonte_oficial": true,
+   "frequencia": "evento/prazo",
+   "id": "identidade-municipio-ibge"
+  },
+  {
+   "area": "Ontologia",
+   "nicho": "Denominadores: população por município",
+   "fonte_oficial": true,
+   "frequencia": "evento/prazo",
+   "id": "denominador-populacao"
+  },
+  {
+   "area": "Ontologia",
+   "nicho": "Brasil entre países",
+   "fonte_oficial": true,
+   "frequencia": "evento/prazo",
+   "id": "brasil-entre-paises"
+  },
+  {
+   "area": "Ontologia",
+   "nicho": "Dicionário aberto de indicadores",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "dicionario-indicadores"
+  },
+  {
+   "area": "Ontologia",
+   "nicho": "Regiões imediatas e intermediárias",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "regioes-imediatas"
+  },
+  {
+   "area": "Ontologia",
+   "nicho": "Esgoto: Censo e SINISA lado a lado",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "esgoto-duas-fontes"
+  },
+  {
+   "area": "Ontologia",
+   "nicho": "Terras indígenas como território",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "terras-indigenas-territorio"
+  },
+  {
+   "area": "Biotecnologia",
+   "nicho": "Medicamentos biológicos registrados",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "biotec-biologicos-anvisa"
+  },
+  {
+   "area": "Biotecnologia",
+   "nicho": "Produção científica brasileira em biotecnologia",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "biotec-producao-br"
+  },
+  {
+   "area": "Biotecnologia",
+   "nicho": "Pesquisa biomédica com afiliação brasileira",
+   "fonte_oficial": false,
+   "frequencia": "semanal",
+   "id": "biotec-literatura-biomedica"
+  },
+  {
+   "area": "Biotecnologia",
+   "nicho": "Modelos abertos de SI para proteínas e genomas",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "biotec-modelos-abertos"
+  },
+  {
+   "area": "Biotecnologia",
+   "nicho": "Curso: como a biologia organiza o conhecimento",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "biotec-curso-ontologias-vida"
+  },
+  {
+   "area": "Biotecnologia",
+   "nicho": "Patentes de biotecnologia depositadas no INPI",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "biotec-patentes-inpi"
+  },
+  {
+   "area": "Normas e regulação",
+   "nicho": "Proposições sobre SI por assunto",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "proposicoes-si-por-assunto"
+  },
+  {
+   "area": "Normas e regulação",
+   "nicho": "Reajustes tarifários homologados",
+   "fonte_oficial": true,
+   "frequencia": "semanal",
+   "id": "aneel-reajustes-homologados"
+  },
+  {
+   "area": "Normas e regulação",
+   "nicho": "Decisões de registro na ANVISA",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "anvisa-decisoes-registro"
+  },
+  {
+   "area": "Normas e regulação",
+   "nicho": "Tempo de tramitação por tema",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "tramitacao-tempo-por-tema"
+  },
+  {
+   "area": "Normas e regulação",
+   "nicho": "Prazo de decisão do INPI",
+   "fonte_oficial": true,
+   "frequencia": "anual",
+   "id": "prazo-decisao-inpi"
+  },
+  {
+   "area": "Normas e regulação",
+   "nicho": "Normas municipais por tema",
+   "fonte_oficial": false,
+   "frequencia": "diario",
+   "id": "normas-municipais-por-tema"
+  },
+  {
+   "area": "Normas e regulação",
+   "nicho": "Cumprimento das agendas regulatórias",
+   "fonte_oficial": false,
+   "frequencia": "mensal",
+   "id": "agenda-regulatoria-cumprimento"
+  },
+  {
+   "area": "Normas e regulação",
+   "nicho": "Consultas públicas das agências",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "consultas-publicas-regulatorias"
+  },
+  {
+   "area": "Normas e regulação",
+   "nicho": "ANPD: regulação de dados e SI",
+   "fonte_oficial": true,
+   "frequencia": "evento/prazo",
+   "id": "anpd-agenda-si-dados"
+  },
+  {
+   "area": "Normas e regulação",
+   "nicho": "Pedidos de patente em SI no Brasil",
+   "fonte_oficial": true,
+   "frequencia": "mensal",
+   "id": "patentes-si-brasil"
+  },
+  {
+   "area": "Normas e regulação",
+   "nicho": "Marcas e programas de computador por UF",
+   "fonte_oficial": true,
+   "frequencia": "mensal",
+   "id": "marcas-programas-por-uf"
+  },
+  {
+   "area": "Normas e regulação",
+   "nicho": "Normas federais por órgão e assunto",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "normas-dou-por-orgao"
+  },
+  {
+   "area": "Normas e regulação",
+   "nicho": "Processos judiciais por assunto",
+   "fonte_oficial": true,
+   "frequencia": "mensal",
+   "id": "litigios-por-assunto"
+  },
+  {
+   "area": "Normas e regulação",
+   "nicho": "Ações de controle concentrado por tema",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "controle-concentrado-por-tema"
+  },
+  {
+   "area": "Meu município",
+   "nicho": "Ambiente no meu município",
+   "fonte_oficial": true,
+   "frequencia": "diario",
+   "id": "meu-municipio-ambiente"
+  },
+  {
+   "area": "Meu município",
+   "nicho": "Contas do meu município",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "meu-municipio-contas"
+  },
+  {
+   "area": "Meu município",
+   "nicho": "Retrato do meu município",
+   "fonte_oficial": true,
+   "frequencia": "evento/prazo",
+   "id": "meu-municipio-retrato"
+  },
+  {
+   "area": "Meu município",
+   "nicho": "Meu estado ao longo do tempo",
+   "fonte_oficial": true,
+   "frequencia": "trimestral",
+   "id": "uf-serie-trimestral"
+  },
+  {
+   "area": "Meu município",
+   "nicho": "Alfabetização no meu município",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "alfabetizacao-por-municipio"
+  },
+  {
+   "area": "Meu município",
+   "nicho": "Comparação entre municípios semelhantes",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "municipios-semelhantes"
+  },
+  {
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Produção científica brasileira em física e computação quântica",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "quantico-producao-br"
+  },
+  {
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Curso: qubit, superposição e ruído",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "quantico-curso-fundamentos"
+  },
+  {
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Onde se pesquisa quântica no Brasil",
+   "fonte_oficial": false,
+   "frequencia": "trimestral",
+   "id": "quantico-grupos-por-uf"
+  },
+  {
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Ritmo mundial de pré-publicações em física quântica",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "quantico-ritmo-preprints"
+  },
+  {
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Curso: otimização com Max-Cut e QUBO",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "quantico-curso-otimizacao"
+  },
+  {
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Pós-graduação em óptica e informação quântica",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "quantico-pos-graduacao"
+  },
+  {
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Fomento público à pesquisa quântica",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "quantico-fomento-publico"
+  },
+  {
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Marcos públicos do hardware quântico",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "quantico-marcos-hardware"
+  },
+  {
+   "area": "Cibersegurança",
+   "nicho": "Curso: hash, assinatura e prova de integridade",
+   "fonte_oficial": false,
+   "frequencia": "a definir",
+   "id": "ciber-curso-hash-e-assinatura"
+  },
+  {
+   "area": "Cibersegurança",
+   "nicho": "Criptografia pós-quântica: padrões e calendário",
+   "fonte_oficial": true,
+   "frequencia": "evento/prazo",
+   "id": "pqc-padroes-nist"
+  },
+  {
+   "area": "Cibersegurança",
+   "nicho": "Curso: migrar para criptografia pós-quântica",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "pqc-curso-migracao"
+  },
+  {
+   "area": "Cibersegurança",
+   "nicho": "Vulnerabilidades publicadas por mês",
+   "fonte_oficial": true,
+   "frequencia": "anual",
+   "id": "ciber-vulnerabilidades-publicadas"
+  },
+  {
+   "area": "Cibersegurança",
+   "nicho": "Incidentes de segurança notificados no Brasil",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "ciber-incidentes-notificados-br"
+  },
+  {
+   "area": "Cibersegurança",
+   "nicho": "Incidentes na administração pública federal",
+   "fonte_oficial": true,
+   "frequencia": "a definir",
+   "id": "ciber-incidentes-governo-federal"
+  }
+ ]
+}
