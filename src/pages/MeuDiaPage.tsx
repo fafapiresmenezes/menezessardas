@@ -8,6 +8,7 @@ import { CalendarClock, Inbox, ListChecks, FileWarning, Briefcase, Mail } from '
 import { extrairAcoes } from '@/lib/acoesConsultor'
 import { render } from '@/pages/AssistentePage'
 import { hojeLocal, isoLocal } from '@/lib/datas'
+import { AREAS_DIREITO } from '@/lib/assistente'
 import { mensagemAmigavel } from '@/lib/erros'
 
 // "Meu dia": o que cada nível do escritório precisa ver ao abrir a plataforma, num só lugar.
@@ -41,9 +42,22 @@ type Resumo = { semana: string; socia: Record<string, string | number>; advogada
 const hoje = () => hojeLocal()
 const fmt = (d: string) => new Date(`${d}T12:00`).toLocaleDateString('pt-BR')
 
+// Tarefas separadas por área do direito (pedido do M, 12/11/2026): a mais urgente primeiro dentro de cada bloco.
+export function agruparPorArea<T extends { area: string | null; prazo: string | null }>(tarefas: T[]): { area: string; nome: string; itens: T[] }[] {
+  const nomes = new Map(AREAS_DIREITO.map(a => [a.chave, a.nome]))
+  const grupos = new Map<string, T[]>()
+  for (const t of tarefas) {
+    const chave = t.area && nomes.has(t.area) ? t.area : (t.area || 'geral')
+    grupos.set(chave, [...(grupos.get(chave) ?? []), t])
+  }
+  return [...grupos.entries()]
+    .map(([area, itens]) => ({ area, nome: nomes.get(area) ?? (area === 'geral' ? 'Geral (sem área marcada)' : area), itens }))
+    .sort((a, b) => (a.itens[0]?.prazo ?? '9999').localeCompare(b.itens[0]?.prazo ?? '9999'))
+}
+
 export default function MeuDiaPage() {
   const [papel, setPapel] = useState(() => { try { return localStorage.getItem('lsm-papel') || 'advogada' } catch { return 'advogada' } })
-  const [tarefas, setTarefas] = useState<{ id: string; titulo: string; prazo: string | null; prioridade: string }[]>([])
+  const [tarefas, setTarefas] = useState<{ id: string; titulo: string; prazo: string | null; prioridade: string; area: string | null }[]>([])
   const [intimacoes, setIntimacoes] = useState(0)
   const [vencendo, setVencendo] = useState<{ id: string; imovel_id: string; locatario_fornecedor: string; data_vencimento: string }[]>([])
   // Passo D15: movimentações novas nos processos monitorados (últimos 7 dias).
@@ -102,7 +116,7 @@ export default function MeuDiaPage() {
       const em60 = isoLocal(new Date(Date.now() + 60 * 86400000))
       const ha7 = new Date(Date.now() - 7 * 86400000).toISOString()
       const [t, i, c, mv] = await Promise.all([
-        supabase.from('tarefas').select('id,titulo,prazo,prioridade').eq('responsavel_id', u.user?.id ?? '').neq('situacao', 'feito').lte('prazo', em7).order('prazo').limit(20),
+        supabase.from('tarefas').select('id,titulo,prazo,prioridade,area').eq('responsavel_id', u.user?.id ?? '').neq('situacao', 'feito').lte('prazo', em7).order('prazo').limit(40),
         supabase.from('intimacoes').select('id', { count: 'exact', head: true }).eq('lida', false),
         supabase.from('contratos').select('id,imovel_id,locatario_fornecedor,data_vencimento').is('encerrado_em', null).gte('data_vencimento', hoje()).lte('data_vencimento', em60).order('data_vencimento').limit(10),
         supabase.from('monitoramentos').select('id,valor,rotulo,novidade_em,novidades').gte('novidade_em', ha7).order('novidade_em', { ascending: false }).limit(5),
@@ -154,8 +168,17 @@ export default function MeuDiaPage() {
         <div className="grid gap-4 md:grid-cols-3">
           <section className={cartao}>
             <h2 className="font-serif text-lg flex items-center gap-2"><ListChecks className="w-5 h-5" aria-hidden />Minhas tarefas (7 dias)</h2>
-            {tarefas.length ? <ul className="text-sm mt-2 space-y-1">{tarefas.map(t => <li key={t.id}>{t.prazo && <span className={t.prazo < hoje() ? 'text-critico font-medium' : ''}>{fmt(t.prazo)} · </span>}{t.titulo}</li>)}</ul>
-              : <p className="text-sm text-grafite-claro mt-2">Nada vencendo para você.</p>}
+            {tarefas.length ? (
+              // Pedido do M (12/11/2026): nada de "porrada de coisa" misturada — cada área do direito em seu bloco.
+              <div className="mt-2 space-y-3" data-testid="tarefas-por-area">
+                {agruparPorArea(tarefas).map(g => (
+                  <div key={g.area} data-testid={`area-${g.area}`}>
+                    <p className="text-[11px] uppercase tracking-wider text-dourado border-b border-navy/10 pb-0.5">{g.nome} ({g.itens.length})</p>
+                    <ul className="text-sm mt-1 space-y-1">{g.itens.map(t => <li key={t.id}>{t.prazo && <span className={t.prazo < hoje() ? 'text-critico font-medium' : ''}>{fmt(t.prazo)} · </span>}{t.titulo}</li>)}</ul>
+                  </div>
+                ))}
+              </div>
+            ) : <p className="text-sm text-grafite-claro mt-2">Nada vencendo para você.</p>}
           </section>
           <section className={cartao}>
             <h2 className="font-serif text-lg flex items-center gap-2"><Inbox className="w-5 h-5" aria-hidden />Intimações</h2>

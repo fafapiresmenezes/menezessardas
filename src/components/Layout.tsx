@@ -98,6 +98,56 @@ const gruposMenu = [
     { icon: Settings, label: 'Configurações', href: '/settings' },
   ] },
 ]
+// Autoexplicativo: ao passar o mouse em qualquer item do menu, uma frase diz para que a tela serve.
+const DICAS: Record<string, string> = {
+  '/inicio': 'Escolher a área do direito em que você vai trabalhar agora',
+  '/meu-dia': 'O que vence hoje e nos próximos dias, separado por área do direito',
+  '/processos-antigos': 'Trazer processos de antes da plataforma: planilha ou busca no tribunal',
+  '/migracao': 'Importar tudo do sistema antigo do escritório, com como desfazer',
+  '/dashboard': 'Números gerais do escritório em um só painel',
+  '/intimacoes': 'Publicações e intimações recebidas, com o que fazer em cada uma',
+  '/agenda': 'Audiências, reuniões e compromissos, com avisos por e-mail',
+  '/prazos': 'Prazo certo por código: CPC, CLT, CPP, Juizados e outros',
+  '/projetos': 'Casos e projetos do escritório, com tarefas dentro de cada um',
+  '/processos': 'Carteira de processos com andamentos e prazos de cada um',
+  '/pesquisa': 'Pesquisa e due diligence sobre pessoas e empresas em fontes públicas',
+  '/leitura-do-caso': 'Contexto do caso, chance de êxito e roteiro de perguntas',
+  '/monitoramento': 'Vigiar processos no tribunal e avisar quando algo sair',
+  '/parte-adversa': 'O que se sabe da parte contrária em fontes públicas',
+  '/kyc': 'Checar quem é a contraparte antes de contratar ou processar',
+  '/perfil-cliente': 'Ficha de cada cliente: casos, contatos e preferências',
+  '/funil': 'Clientes em potencial, da primeira conversa ao contrato',
+  '/financeiro': 'Entradas, saídas e saldo do escritório',
+  '/honorarios': 'Honorários combinados, cobrados e recebidos',
+  '/horas': 'Lançar horas trabalhadas e ver o ritmo da meta',
+  '/imoveis': 'Imóveis administrados, contratos e documentos',
+  '/administracao': 'Administração de locações: cobranças, repasses e reajustes',
+  '/fornecedores': 'Fornecedores do escritório e dos imóveis',
+  '/alertas': 'Avisos de vencimento e reajuste de contratos',
+  '/legislacao': 'Ler a lei direto do Planalto, artigo por artigo',
+  '/assistente': 'Perguntar, redigir peça ou comparar caminhos com a IA',
+  '/modelos': 'Modelos prontos de peças e documentos do escritório',
+  '/fontes': 'Tribunais, diários e fontes oficiais em um só lugar',
+  '/biblioteca': 'Tudo o que já foi pesquisado, para não pesquisar duas vezes',
+  '/parametros-escrita': 'Como o robô escreve: redatores, tom e formatação das peças',
+  '/meu-estilo': 'Ensinar à plataforma o seu jeito de escrever',
+  '/ferramentas': 'Calculadoras, validadores e listas de verificação do dia a dia',
+  '/compliance': 'LGPD, integridade e conformidade do escritório',
+  '/indicadores': 'Indicadores e metas (OKRs) do escritório',
+  '/relatorios': 'Relatórios prontos para imprimir ou exportar',
+  '/trilha': 'Registro do que foi feito, com carimbo que prova a data',
+  '/instituto': 'Pesquisa e estudos do THEYE Institute',
+  '/consultores': 'Consultores de IA por nível e por especialidade',
+  '/estudos': 'Estudos para entidades, órgãos e associações',
+  '/enquetes': 'Enquetes sobre temas do direito',
+  '/mercado': 'O mercado jurídico em números',
+  '/previsoes': 'Previsões e riscos da carteira',
+  '/solucoes': 'A plataforma oferecida a outros escritórios (vertente comercial)',
+  '/nuvem': 'Arquivos do escritório na nuvem',
+  '/consumo': 'Quanto cada pessoa consome de IA e quanto custa',
+  '/equipe': 'Pessoas do escritório, funções e permissões',
+  '/settings': 'Configurações da conta e da plataforma',
+}
 const CHAVE_GRUPOS = 'lsm-menu-grupos'
 const CHAVE_SIMPLES = 'theye-menu-simples'
 // Menu simples (padrão): só o que se usa todo dia, com nomes do dia a dia. "Ver todas as telas" abre o menu completo.
@@ -141,6 +191,9 @@ export default function Layout({ children, title }: LayoutProps) {
   }, [])
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  // Com o menu recolhido só há o ícone, então a dica começa pelo nome da tela.
+  const dicaDe = (item: { href: string; label: string }) =>
+    menuAberto ? (DICAS[item.href] ?? item.label) : `${item.label}${DICAS[item.href] ? ` — ${DICAS[item.href]}` : ''}`
 
   // Menu em grupos recolhíveis: o grupo da tela atual e "Hoje" começam abertos; a escolha da pessoa é lembrada.
   const [grupos, setGrupos] = useState<Record<string, boolean>>(() => {
@@ -253,7 +306,7 @@ export default function Layout({ children, title }: LayoutProps) {
                       onClick={() => navigate(item.href)}
                       aria-current={ativo ? 'page' : undefined}
                       className={`w-full flex items-center gap-3 px-4 py-3 min-h-[48px] rounded transition border-l-2 ${ativo ? 'bg-white/10 border-dourado text-white' : 'border-transparent text-white/85 hover:bg-white/5 hover:text-white'}`}
-                      title={!menuAberto ? item.label : undefined}
+                      title={dicaDe(item)}
                     >
                       <item.icon size={20} className="flex-shrink-0" />
                       {menuAberto && <span className="text-base">{item.label}</span>}
@@ -328,7 +381,7 @@ export default function Layout({ children, title }: LayoutProps) {
                                 ? 'bg-white/10 border-dourado text-white'
                                 : 'border-transparent text-white/75 hover:bg-white/5 hover:text-white'
                             }`}
-                            title={!menuAberto ? item.label : undefined}
+                            title={dicaDe(item)}
                           >
                             <item.icon size={19} className="flex-shrink-0" />
                             {menuAberto && <span className="text-sm">{item.label}</span>}

@@ -57,7 +57,8 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
     fireEvent.click(screen.getByLabelText('Recolher menu'))
     expect(screen.queryByText('Agenda')).toBeNull()
     expect(screen.getByLabelText('Expandir menu').getAttribute('aria-expanded')).toBe('false')
-    expect(screen.getByTitle('Agenda')).toBeTruthy()
+    // Menu recolhido: a dica do ícone começa pelo nome da tela e explica para que ela serve.
+    expect(screen.getByTitle(/^Agenda — /)).toBeTruthy()
   })
 
   it('o menu é dividido em grupos: abre o da tela atual e "Hoje", recolhe e abre à vontade, lembra a escolha e mostra a tela escolhida de qualquer grupo', () => {

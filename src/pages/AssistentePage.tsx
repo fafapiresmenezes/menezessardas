@@ -105,6 +105,9 @@ export default function AssistentePage() {
   const [pergunta, setPergunta] = useState(() => { try { return localStorage.getItem('lsm-assistente-pergunta') ?? '' } catch { return '' } }) // Passo 203
   const [modo, setModo] = useState<Modo>('responder')
   const [contexto, setContexto] = useState('')
+  // Pedido do M (12/11/2026): toda peça pergunta quem vai ler. O perfil vem só de fontes legítimas
+  // (decisões publicadas do próprio juízo), nunca de redes sociais: adapta o tom, sem bajulação.
+  const [receptor, setReceptor] = useState('')
   const [usarEstilo, setUsarEstilo] = useState(true)
   const [formatacao, setFormatacao] = useState<Partial<Formatacao> | null>(null)
   useEffect(() => { carregarFormatacao().then(setFormatacao).catch(() => undefined) }, [])
@@ -155,7 +158,10 @@ export default function AssistentePage() {
     setOcupado(true)
     setErro('')
     try {
-      const c = await perguntar(p, especialidade, historico.filter(h => h.especialidade === especialidade && h.modo === 'responder'), modo, contexto, usarEstilo)
+      const comReceptor = receptor.trim()
+        ? `${contexto}\n\nQuem vai ler (receptor): ${receptor.trim()}. Adapte o tom e a ordem dos argumentos ao padrão das decisões publicadas desse juízo ou destinatário (fontes públicas e oficiais apenas), em registro formal e sóbrio, sem bajulação e sem mencionar esta adaptação no texto.`
+        : contexto
+      const c = await perguntar(p, especialidade, historico.filter(h => h.especialidade === especialidade && h.modo === 'responder'), modo, comReceptor, usarEstilo)
       setHistorico(h => [c, ...h])
       setPergunta('')
     } catch (e) {
@@ -223,6 +229,11 @@ export default function AssistentePage() {
               <textarea id="contexto" value={contexto} onChange={e => setContexto(e.target.value)} rows={3}
                 placeholder="Partes, datas, valores, o que já aconteceu. Quanto mais fatos, melhor a peça ou a matriz."
                 className="w-full border border-navy/15 p-3 text-sm focus:outline-none focus:border-dourado" />
+              <label htmlFor="receptor" className="block text-xs uppercase tracking-wider text-grafite-claro mt-3 mb-1">Quem vai ler? (juízo, desembargador, parte contrária — opcional)</label>
+              <input id="receptor" data-testid="receptor" value={receptor} onChange={e => setReceptor(e.target.value)}
+                placeholder="Ex.: 35ª Vara Cível do Rio, Des. Fulano (2ª Câmara), diretoria da empresa ré"
+                className="w-full border border-navy/15 p-3 text-sm focus:outline-none focus:border-dourado" />
+              <p className="text-xs text-grafite-claro mt-1">O texto é adaptado ao padrão das <strong>decisões publicadas</strong> desse juízo (fontes oficiais). A plataforma não vasculha redes sociais de ninguém.</p>
             </>
           )}
           {/* Bloco E: o estilo próprio vale para todos os modos (perguntas, peças e caminhos). */}

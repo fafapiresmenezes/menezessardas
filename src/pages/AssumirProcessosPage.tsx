@@ -19,12 +19,15 @@ import RoboCnj from '@/components/RoboCnj'
 // 3) a busca no CNJ, que mostra em ordem o que fazer e até quando (prazo pelo código de cada ramo).
 // Embaixo, o robô que repete tudo sozinho a cada 4 horas e escreve as peças 7 dias antes.
 const CHAVE = 'lsm-assumir-v1'
+// Pedido do M (12/11/2026): o espaço de trabalho desta tela é de cada pessoa, não de todo mundo.
+// A chave ganha o id do usuário logado; num computador compartilhado, cada um vê só o seu.
+let chaveAtual = CHAVE
 type Capa = { numero: string; achou: boolean; ultimo?: string; quando?: string }
 type Salvo = { nome: string; oab: string; numeros: string; meses: number; pubs: Publicacao[]; capas: Capa[]; quando: string | null; ocultos: string[]; agendados: string[] }
 const VAZIO: Salvo = { nome: '', oab: '', numeros: '', meses: 3, pubs: [], capas: [], quando: null, ocultos: [], agendados: [] }
-const ler = (): Salvo => { try { return { ...VAZIO, ...JSON.parse(localStorage.getItem(CHAVE) || '{}') } } catch { return VAZIO } }
+const ler = (): Salvo => { try { return { ...VAZIO, ...JSON.parse(localStorage.getItem(chaveAtual) || '{}') } } catch { return VAZIO } }
 const gravar = (s: Salvo) => {
-  try { localStorage.setItem(CHAVE, JSON.stringify({ ...s, pubs: s.pubs.map(p => ({ ...p, texto: p.texto.slice(0, 4000) })) })) } catch { /* memória do navegador cheia ou bloqueada */ }
+  try { localStorage.setItem(chaveAtual, JSON.stringify({ ...s, pubs: s.pubs.map(p => ({ ...p, texto: p.texto.slice(0, 4000) })) })) } catch { /* memória do navegador cheia ou bloqueada */ }
 }
 
 const mascara = (d: string) => `${d.slice(0, 7)}-${d.slice(7, 9)}.${d.slice(9, 13)}.${d.slice(13, 14)}.${d.slice(14, 16)}.${d.slice(16, 20)}`
@@ -75,6 +78,20 @@ export default function AssumirProcessosPage() {
     setCasosCadastrados(nums); return nums
   }
   useEffect(() => { carregarCadastrados().catch(() => setCasosCadastrados([])) }, [])
+  // Espaço privado: ao saber quem está logado, passa a ler e gravar na chave dessa pessoa.
+  useEffect(() => {
+    supabase.auth?.getUser?.().then(({ data }) => {
+      const id = data?.user?.id
+      if (!id) return
+      const minha = `${CHAVE}:${id}`
+      const migrar = chaveAtual === CHAVE && !localStorage.getItem(minha) && localStorage.getItem(CHAVE)
+      chaveAtual = minha
+      try {
+        if (migrar) localStorage.setItem(minha, localStorage.getItem(CHAVE)!) // traz o rascunho antigo uma única vez
+        setS(ler())
+      } catch { /* sem armazenamento */ }
+    }).catch(() => undefined)
+  }, [])
 
   /** Planilha do Excel (.xlsx) ou CSV: lê no navegador e mostra quantos são novos antes de gravar. */
   const lerPlanilha = async (f: File | undefined) => {
@@ -211,6 +228,10 @@ export default function AssumirProcessosPage() {
       <div className="space-y-5 max-w-4xl">
         <p className="text-base">Coloque aqui os processos que o escritório já tem (inclusive os de quem saiu). Em 3 passos a plataforma cadastra, procura no CNJ tudo o que saiu para eles e mostra <strong>o que fazer e até quando</strong>, do mais urgente para o menos urgente.</p>
         <p className="text-sm">Vai trazer <strong>tudo</strong> do sistema antigo (clientes, prazos e financeiro também, em vários arquivos)? Use <Link to="/migracao" className="underline text-navy">Trazer do sistema antigo</Link>.</p>
+        <p className="text-sm border-l-4 border-dourado bg-navy/5 p-3" data-testid="aviso-privacidade">
+          <strong>Este espaço é só seu.</strong> O que você preenche e busca aqui fica guardado para o seu usuário, do seu jeito.
+          Só o que você decidir <em>cadastrar</em> vai para a carteira do escritório — onde os sócios e o gestor enxergam o conjunto.
+        </p>
 
         <Passo n={1} titulo="Quais processos?" feito={numeros.length > 0}>
           <label className="min-h-[52px] px-5 mb-3 bg-navy text-white text-base inline-flex items-center gap-2 cursor-pointer">
