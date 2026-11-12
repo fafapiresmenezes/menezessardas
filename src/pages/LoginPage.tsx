@@ -223,7 +223,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-white/60 text-xs mt-8">
-          Plataforma THEYE · Suporte Jurídico
+          Theye.club
         </p>
       </div>
     </main>
