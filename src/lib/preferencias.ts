@@ -4,6 +4,7 @@
  * JSON { usuario_id: { telaInicial } }), sem mudança de esquema no banco.
  */
 import { supabase, supabaseConfigurado } from './supabase'
+import { lerConfig, gravarMinhaTela } from './config'
 
 export type Preferencia = { telaInicial?: string }
 const CHAVE = 'preferencias_usuarios'
@@ -23,8 +24,8 @@ function limpar(bruto: unknown): Record<string, Preferencia> {
 export async function lerPreferencias(): Promise<Record<string, Preferencia>> {
   if (!supabaseConfigurado) return {}
   try {
-    const { data } = await supabase.from('configuracoes').select('valor').eq('chave', CHAVE).maybeSingle()
-    return limpar(data?.valor ? JSON.parse(String(data.valor)) : {})
+    const bruto = (await lerConfig([CHAVE]))[CHAVE]
+    return limpar(bruto ? JSON.parse(bruto) : {})
   } catch { return {} }
 }
 
@@ -42,6 +43,8 @@ export async function minhaPreferencia(): Promise<Preferencia> {
 export async function definirMinhaPreferencia(p: Preferencia): Promise<void> {
   const id = await meuId()
   if (!id) throw new Error('Entre na plataforma para salvar a sua preferência.')
+  // Caminho novo: o banco grava só a preferência de quem pede, sem tocar na dos colegas.
+  if (await gravarMinhaTela(p.telaInicial || null)) return
   const todas = await lerPreferencias()
   if (p.telaInicial) todas[id] = { ...todas[id], telaInicial: p.telaInicial }
   else delete todas[id]

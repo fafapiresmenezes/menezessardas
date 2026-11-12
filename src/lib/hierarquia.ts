@@ -1,11 +1,12 @@
 /**
  * Hierarquia do escritório (pedido do M, 12/11/2026): sócio, gestor, advogado pleno e júnior.
  * Cada pessoa é dona dos seus próprios processos; sócios e o gestor veem o conjunto.
- * Os cargos ficam na tabela `configuracoes` (chave "cargos", JSON { usuario_id: cargo }),
- * para não depender de mudança de esquema no banco. A `funcao` (admin/operador/leitor)
+ * Os cargos ficam nas configurações do escritório (chave "cargos", JSON { usuario_id: cargo });
+ * cada escritório tem o seu mapa e toda a equipe consegue lê-lo. A `funcao` (admin/operador/leitor)
  * continua mandando no que cada um pode FAZER; o cargo manda no que cada um pode VER.
  */
 import { supabase, supabaseConfigurado } from './supabase'
+import { lerConfig, gravarConfig } from './config'
 
 export type Cargo = 'socio' | 'gestor' | 'pleno' | 'junior'
 
@@ -62,8 +63,8 @@ function limpar(mapa: unknown): MapaCargos {
 export async function lerCargos(): Promise<MapaCargos> {
   if (!supabaseConfigurado) return {}
   try {
-    const { data } = await supabase.from('configuracoes').select('valor').eq('chave', 'cargos').maybeSingle()
-    return limpar(data?.valor ? JSON.parse(String(data.valor)) : {})
+    const { cargos } = await lerConfig(['cargos'])
+    return limpar(cargos ? JSON.parse(cargos) : {})
   } catch { return {} }
 }
 
@@ -72,8 +73,7 @@ export async function definirCargo(usuarioId: string, cargo: Cargo | null): Prom
   const atual = await lerCargos()
   if (cargo) atual[usuarioId] = cargo
   else delete atual[usuarioId]
-  const { error } = await supabase.from('configuracoes').upsert({ chave: 'cargos', valor: JSON.stringify(atual) }, { onConflict: 'chave' })
-  if (error) throw new Error(error.message)
+  await gravarConfig({ cargos: JSON.stringify(atual) })
   return atual
 }
 

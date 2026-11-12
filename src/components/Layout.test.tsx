@@ -17,6 +17,7 @@ vi.mock('@/lib/tema', () => ({ temaAtual: () => 'claro', aplicarTema: (t: string
 vi.mock('@/lib/authDemo', () => ({ sairDemo: vi.fn() }))
 for (const c of ['Marca', 'BoasVindas', 'TourTela', 'PerguntarTela', 'SinoNotificacoes', 'BotaoExportar', 'Atalhos', 'FaixaConexao', 'ExigirDoisFatores', 'AceiteContratoSaas', 'AceiteTermos']) vi.doMock(`./${c}`, () => ({ default: () => null }))
 vi.mock('./ErroTela', () => ({ default: ({ children }: { children: React.ReactNode }) => <>{children}</> }))
+vi.mock('./AguardandoLiberacao', () => ({ default: () => <div data-testid="aguardando-liberacao" /> }))
 vi.mock('./Busca', () => ({ default: ({ aberta, fechar }: { aberta: boolean; fechar: () => void }) => aberta ? <div role="dialog" aria-label="Busca global"><button onClick={fechar}>fechar</button></div> : null }))
 const { default: Layout } = await import('./Layout')
 
@@ -117,5 +118,13 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
     fireEvent.click(screen.getByText('Sair'))
     await waitFor(() => expect(signOut).toHaveBeenCalled())
     await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/login'))
+  })
+
+  it('conta que ainda não pertence a um escritório vê só a tela de espera, sem menu nem conteúdo', async () => {
+    perfil = null
+    montar('/processos')
+    await waitFor(() => expect(screen.getByTestId('aguardando-liberacao')).toBeTruthy())
+    expect(screen.queryByText('conteúdo')).toBeNull()
+    expect(screen.queryByRole('navigation', { name: 'Menu principal' })).toBeNull()
   })
 })

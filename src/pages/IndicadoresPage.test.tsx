@@ -20,6 +20,10 @@ const insert = vi.fn(async (_v: Record<string, unknown>): Promise<{ error: { mes
 let metasGuardadas: string | null = null
 const upsert = vi.fn(async (_v: Record<string, unknown>) => ({ error: null }))
 const from = (t: string) => ({ select: () => ({ order: () => ({ limit: () => ({ then: (f: (v: unknown) => unknown) => Promise.resolve({ data: t === 'revisoes_okr' ? revisoes : [] }).then(f) }) }), eq: () => ({ maybeSingle: () => ({ then: (f: (v: unknown) => unknown) => Promise.resolve({ data: metasGuardadas ? { valor: metasGuardadas } : null }).then(f) }) }) }), insert: (v: Record<string, unknown>) => insert(v), upsert: (v: Record<string, unknown>) => upsert(v) })
+vi.mock('@/lib/config', () => ({
+  lerConfig: async () => (metasGuardadas ? { metas_okr: metasGuardadas } : {}),
+  gravarConfig: async (itens: Record<string, string>) => { await upsert({ chave: 'metas_okr', valor: itens.metas_okr }) },
+}))
 const calcularOKRs = vi.fn((..._a: unknown[]) => okrs)
 const selar = vi.fn(async (_h: string) => ({ ots: new Uint8Array([1, 2]), calendario: 'https://alice.btc.calendar.opentimestamps.org' }))
 const baixar = vi.fn((_n: string, _c: unknown) => undefined)
@@ -148,7 +152,7 @@ describe('Indicadores', () => {
     expect(screen.queryByTestId('ciclo-okr')).toBeNull(); expect(screen.queryByTestId('aderencia-consultores')).toBeNull(); expect(screen.queryByTestId('utilidade-assistente')).toBeNull()
   })
 
-  it('D04: Editar metas mostra um campo por resultado-chave, salva em configuracoes.metas_okr e recalcula os OKRs com as metas', async () => {
+  it('D04: Editar metas mostra um campo por resultado-chave, salva nas configurações do escritório (metas_okr) e recalcula os OKRs com as metas', async () => {
     configurado = true; metasGuardadas = JSON.stringify({ 'Documentação em dia': 97 })
     render(<IndicadoresPage />)
     await waitFor(() => expect(calcularOKRs).toHaveBeenLastCalledWith(expect.anything(), expect.anything(), expect.anything(), { 'Documentação em dia': 97 }))

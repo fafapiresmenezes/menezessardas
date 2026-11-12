@@ -148,3 +148,43 @@ export async function escritorioDasPessoas(): Promise<Record<string, string>> {
   for (const r of (data ?? []) as Record<string, unknown>[]) if (r.escritorio_id) m[String(r.id)] = String(r.escritorio_id)
   return m
 }
+
+// Entrar dizendo de qual escritório você é (migração 117): escritório que já existe exige liberação da administração dele.
+export type EstadoEntrada = 'dentro' | 'pendente' | 'recusado' | 'convite' | 'nenhum' | 'suspenso' | 'indisponivel'
+export interface PedidoEntrada { estado: EstadoEntrada; escritorio?: string; desde?: string }
+export interface PedidoPendente { id: string; email: string; nome: string; nomeDigitado: string; criadoEm: string; escritorioNome: string }
+
+/** Padrão da casa: nome do escritório em LETRAS MAIÚSCULAS, sem espaços sobrando. */
+export const nomeDeEscritorio = (texto: string) => texto.toUpperCase().replace(/\s+/g, ' ').trim()
+
+const ESTADOS: EstadoEntrada[] = ['dentro', 'pendente', 'recusado', 'convite', 'nenhum', 'suspenso']
+function lerPedido(d: unknown): PedidoEntrada {
+  const m = (d && typeof d === 'object' ? d : {}) as Record<string, unknown>
+  const estado = ESTADOS.includes(m.estado as EstadoEntrada) ? (m.estado as EstadoEntrada) : 'indisponivel'
+  return { estado, escritorio: typeof m.escritorio === 'string' ? m.escritorio : undefined, desde: typeof m.desde === 'string' ? m.desde : undefined }
+}
+
+/** Situação de quem entrou e ainda não tem escritório. "indisponivel" = o banco ainda não sabe responder. */
+export async function meuPedidoEntrada(): Promise<PedidoEntrada> {
+  if (!supabaseConfigurado) return { estado: 'dentro' }
+  const { data, error } = await supabase.rpc('meu_pedido_entrada')
+  return error ? { estado: 'indisponivel' } : lerPedido(data)
+}
+
+/** Pede para entrar no escritório com este nome; se ele ainda não existe, é criado e a pessoa passa a administrá-lo. */
+export async function entrarEmEscritorio(nome: string): Promise<PedidoEntrada> {
+  const { data, error } = await supabase.rpc('entrar_em_escritorio', { p_nome: nomeDeEscritorio(nome) })
+  if (error) throw new Error(error.message)
+  return lerPedido(data)
+}
+
+/** Pessoas que pediram para entrar no escritório de quem administra (a sede vê os pedidos de todos). */
+export async function pedidosPendentes(): Promise<PedidoPendente[]> {
+  if (!supabaseConfigurado) return []
+  const { data, error } = await supabase.rpc('pedidos_entrada_pendentes')
+  if (error) return []
+  return ((data ?? []) as Record<string, unknown>[]).map(r => ({
+    id: String(r.usuario_id), email: String(r.email ?? ''), nome: String(r.nome ?? r.email ?? ''),
+    nomeDigitado: String(r.nome_digitado ?? ''), criadoEm: String(r.criado_em ?? ''), escritorioNome: String(r.escritorio_nome ?? ''),
+  }))
+}

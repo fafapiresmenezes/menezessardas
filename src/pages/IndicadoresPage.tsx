@@ -8,6 +8,7 @@ import { useImoveis } from '@/hooks/useImoveis'
 import { useAlertas } from '@/hooks/useAlertas'
 import { repositorio, type Contrato } from '@/lib/repositorio'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
+import { lerConfig, gravarConfig } from '@/lib/config'
 import {
   calcularKPIs,
   calcularOKRs,
@@ -187,13 +188,13 @@ export default function IndicadoresPage() {
   const [msgMetas, setMsgMetas] = useState('')
   useEffect(() => {
     if (!supabaseConfigurado) return
-    supabase.from('configuracoes').select('valor').eq('chave', 'metas_okr').maybeSingle().then(r => { try { setMetas(r.data ? JSON.parse(r.data.valor) : null) } catch { setMetas(null) } })
+    lerConfig(['metas_okr']).then(c => { try { setMetas(c.metas_okr ? JSON.parse(c.metas_okr) : null) } catch { setMetas(null) } }).catch(() => setMetas(null))
   }, [])
   const salvarMetas = async () => {
     const novas: MetasOKR = { ...(metas ?? {}) }
     for (const [k, v] of Object.entries(rascunhoMetas)) { const n = lerNumero(v); if (v.trim() !== '' && Number.isFinite(n) && n >= 0) novas[k] = n }
-    const { error } = await supabase.from('configuracoes').upsert({ chave: 'metas_okr', valor: JSON.stringify(novas) }, { onConflict: 'chave' })
-    if (error) { setMsgMetas(mensagemAmigavel(error, 'Não deu para salvar as metas.')); return }
+    try { await gravarConfig({ metas_okr: JSON.stringify(novas) }) }
+    catch (e) { setMsgMetas(mensagemAmigavel(e, 'Não deu para salvar as metas.')); return }
     setMetas(novas); setEditandoMetas(false); setRascunhoMetas({}); setMsgMetas('Metas salvas. Valem para toda a equipe e entram na próxima ata do trimestre.')
   }
 

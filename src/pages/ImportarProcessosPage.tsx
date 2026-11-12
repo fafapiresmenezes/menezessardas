@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { FunctionRegion } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
+import { lerConfig } from '@/lib/config'
 import { mensagemAmigavel } from '@/lib/erros'
 import { listarPessoas, type Pessoa } from '@/lib/equipe'
 import { analisarPlanilha, analisarLista, analisarResultados, paraCaso, importavel, areaProvavel, ROTULO_SITUACAO, MODELO_PLANILHA, type LinhaImportacao } from '@/lib/escritorio/importarProcessos'
@@ -48,8 +49,8 @@ export default function ImportarProcessosPage() {
   useEffect(() => {
     ;(async () => {
       try {
-        const { data } = await supabase.from('configuracoes').select('valor').eq('chave', 'oabs_monitoradas').maybeSingle()
-        if (data?.valor) setOabsTexto(String(data.valor))
+        const { oabs_monitoradas } = await lerConfig(['oabs_monitoradas'])
+        if (oabs_monitoradas) setOabsTexto(oabs_monitoradas)
       } catch { /* sem permissão para ler: a pessoa digita */ }
     })()
   }, [])

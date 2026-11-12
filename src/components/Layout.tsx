@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import GuiaDaTela from './GuiaDaTela'
+import AguardandoLiberacao from './AguardandoLiberacao'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { sairDemo } from '@/lib/authDemo'
@@ -178,11 +179,14 @@ export default function Layout({ children, title }: LayoutProps) {
   const [tema, setTema] = useState(temaAtual)
   const [admin, setAdmin] = useState(false)
   const [pendentes, setPendentes] = useState(0)
+  // Quem entrou mas ainda não pertence a um escritório não vê nada da plataforma: só a tela de espera.
+  const [semEscritorio, setSemEscritorio] = useState(false)
 
   // Área do administrador: só aparece para admin, com o número de cadastros esperando liberação.
   useEffect(() => {
     perfilAtual()
       .then(async f => {
+        if (f === null) { setSemEscritorio(true); return }
         if (f !== 'admin') return
         setAdmin(true)
         const pessoas = await listarPessoas()
@@ -259,6 +263,8 @@ export default function Layout({ children, title }: LayoutProps) {
     await supabase.auth.signOut()
     navigate('/login')
   }
+
+  if (semEscritorio) return <AguardandoLiberacao aoEntrar={() => window.location.reload()} />
 
   return (
     <div className="flex h-screen bg-pergaminho">

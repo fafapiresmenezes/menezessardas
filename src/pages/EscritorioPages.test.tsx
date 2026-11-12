@@ -80,7 +80,7 @@ describe('Importar processos anteriores', () => {
     fireEvent.change(screen.getByTestId('oabs-meses'), { target: { value: '12' } })
     fireEvent.click(screen.getByTestId('buscar-historico'))
     await waitFor(() => expect(screen.getByTestId('oabs-progresso').textContent).toContain('24 intimação'), { timeout: 10000 })
-    expect(falso.rpcs).toEqual([{ nome: 'definir_configuracao', args: { p_chave: 'oabs_monitoradas', p_valor: '12345/RJ, 999/SP' } }])
+    expect(falso.rpcs.filter(r => r.nome !== 'config_ler')).toEqual([{ nome: 'definir_configuracao', args: { p_chave: 'oabs_monitoradas', p_valor: '12345/RJ, 999/SP' } }])
     expect(falso.invocacoes).toHaveLength(12)
     expect(falso.invocacoes[0]).toMatchObject({ nome: 'intimacoes', body: { historico: true } })
     expect((await screen.findAllByTestId('linha-processo')).length).toBe(1)

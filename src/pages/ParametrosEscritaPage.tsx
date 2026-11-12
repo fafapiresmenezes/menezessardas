@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import Layout from '@/components/Layout'
-import { supabase } from '@/lib/supabase'
+import { lerConfigPrefixo, gravarConfig } from '@/lib/config'
 import { BANCA, NARRATIVA, RATING, ESCRITORIOS, JURISTAS_POR_SETOR } from '@/lib/estiloPecas'
 import { ChevronDown, ChevronRight, Save, CheckCircle2, FileText, Scale, BookOpen, Target, Layers, Pen, Info, HelpCircle, ArrowRight } from 'lucide-react'
 
@@ -433,17 +433,10 @@ export default function ParametrosEscritaPage() {
   useEffect(() => {
     async function carregar() {
       try {
-        const { data } = await supabase
-          .from('configuracoes')
-          .select('chave, valor')
-          .like('chave', 'escrita_%')
-        if (data) {
-          const mapa: Record<string, string> = {}
-          data.forEach((r: { chave: string; valor: string }) => {
-            mapa[r.chave.replace(/^escrita_/, '')] = r.valor
-          })
-          setValores(mapa)
-        }
+        const lido = await lerConfigPrefixo('escrita_')
+        const mapa: Record<string, string> = {}
+        for (const [chave, valor] of Object.entries(lido)) mapa[chave.replace(/^escrita_/, '')] = valor
+        if (Object.keys(mapa).length) setValores(mapa)
       } catch { /* usa defaults */ }
       setCarregando(false)
     }
@@ -465,14 +458,9 @@ export default function ParametrosEscritaPage() {
   async function salvar() {
     setSalvando(true)
     try {
-      const linhas = SECOES.flatMap(s =>
-        s.parametros.map(p => ({
-          chave: `escrita_${p.chave}`,
-          valor: getValor(p),
-        }))
-      )
-      const { error } = await supabase.from('configuracoes').upsert(linhas, { onConflict: 'chave' })
-      if (error) throw error
+      const itens: Record<string, string> = {}
+      for (const s of SECOES) for (const p of s.parametros) itens[`escrita_${p.chave}`] = getValor(p)
+      await gravarConfig(itens)
       setErroSalvar(false)
       setSalvo(true)
       setTimeout(() => setSalvo(false), 3000)

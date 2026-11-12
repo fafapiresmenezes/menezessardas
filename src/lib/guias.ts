@@ -82,8 +82,8 @@ export const GUIAS: Record<string, Guia> = {
     titulo: 'Como organizar a equipe',
     passos: [
       'Esta tela é de quem administra o escritório.',
-      'Na lista "Pessoas com acesso", cada linha é uma pessoa.',
-      'No campo "Função", escolha o que ela pode fazer: administrar, operar ou só ler.',
+      'Se alguém pediu para entrar, o pedido aparece no topo: toque em "Liberar para trabalhar" ou em "Recusar".',
+      'Na lista "Pessoas com acesso", no campo "Função", escolha o que cada pessoa pode fazer: administrar, operar ou só ler.',
       'No campo "Cargo na hierarquia", escolha o que ela pode ver: sócio e gestor veem tudo; pleno e júnior veem só o que é deles.',
       'A mudança é salva na hora. Não há botão de salvar.',
     ],

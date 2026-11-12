@@ -14,8 +14,10 @@ import {
   listarPessoas,
   perfilAtual,
   ehSede,
+  pedidosPendentes,
   rotuloFuncao,
   type Funcao,
+  type PedidoPendente,
   type Pessoa,
 } from '@/lib/equipe'
 import { CARGOS, definirCargo, descricaoCargo, lerCargos, rotuloCargo, type Cargo, type MapaCargos } from '@/lib/hierarquia'
@@ -28,6 +30,8 @@ const dataPt = (iso: string | null) =>
 export default function EquipePage() {
   const [perfil, setPerfil] = useState<Funcao | null | 'carregando'>('carregando')
   const [pessoas, setPessoas] = useState<Pessoa[]>([])
+  // Quem pediu para entrar neste escritório e ainda espera a liberação.
+  const [pedidos, setPedidos] = useState<PedidoPendente[]>([])
   // Passo 102: lista de pessoas em texto para o controle de acessos.
   const [copiadoLista, setCopiadoLista] = useState(false)
   const [sede, setSede] = useState(false)
@@ -51,6 +55,7 @@ export default function EquipePage() {
       setPerfil(p)
       if (p === 'admin') {
         setPessoas(await listarPessoas()); setSede(await ehSede()); lerCargos().then(setCargos).catch(() => {})
+        pedidosPendentes().then(setPedidos).catch(() => setPedidos([]))
         const { data } = await supabase.rpc('aceites_equipe')
         setAceites(Object.fromEntries(((data ?? []) as { usuario_id: string; versao: string; hash: string; aceito_em: string }[]).map(a => [a.usuario_id, a])))
       }
@@ -88,6 +93,19 @@ export default function EquipePage() {
     } finally { setOcupado('') }
   }
 
+  const decidirPedido = async (pedido: PedidoPendente, funcao: Funcao | null) => {
+    if (!funcao && !window.confirm(`Recusar o pedido de ${pedido.nome}? Ela não entra no escritório e pode pedir de novo.`)) return
+    setOcupado(pedido.id); setMsg(null)
+    try {
+      const pessoa = pessoas.find(p => p.id === pedido.id) ?? { id: pedido.id, email: pedido.email, nome: pedido.nome, funcao: null, criadoEm: pedido.criadoEm, confirmado: true, ultimoAcesso: null }
+      await definirFuncao(pessoa, funcao)
+      setMsg({ tipo: 'ok', texto: funcao ? `${pedido.nome} entrou no escritório como ${rotuloFuncao[funcao]}. Agora defina o cargo dela na lista abaixo.` : `Pedido de ${pedido.nome} recusado.` })
+      setPedidos(await pedidosPendentes()); setPessoas(await listarPessoas())
+    } catch (e) {
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
+    } finally { setOcupado('') }
+  }
+
   const alterar = async (pessoa: Pessoa, valor: string) => {
     const funcao = valor === 'nenhuma' ? null : (valor as Funcao)
     if (funcao === pessoa.funcao) return
@@ -117,6 +135,31 @@ export default function EquipePage() {
           </section>
         ) : (
           <>
+            {pedidos.length > 0 && (
+              <section className="bg-white p-6 shadow-sm border-l-4 border-navy" aria-labelledby="pedidos-entrada" data-testid="pedidos-entrada">
+                <h2 id="pedidos-entrada" className="text-lg font-semibold">{pedidos.length === 1 ? '1 pessoa pediu' : `${pedidos.length} pessoas pediram`} para entrar no escritório</h2>
+                <p className="text-sm text-grafite mt-2">
+                  Elas criaram conta dizendo que são deste escritório. Enquanto você não liberar, não enxergam nada. Libere só quem você conhece; na dúvida, recuse.
+                </p>
+                <ul className="mt-3 divide-y divide-navy/10">
+                  {pedidos.map(pd => (
+                    <li key={pd.id} className="py-3 flex flex-col md:flex-row md:items-center gap-3" data-testid={`pedido-${pd.id}`}>
+                      <div className="min-w-0 flex-1 text-sm">
+                        <p className="font-medium truncate">{pd.nome}</p>
+                        <p className="text-grafite-claro truncate">{pd.email}</p>
+                        <p className="text-xs text-grafite-claro">Escreveu “{pd.nomeDigitado}”{sede && pd.escritorioNome ? <> (escritório: {pd.escritorioNome})</> : null} em {dataPt(pd.criadoEm)}</p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <button type="button" disabled={ocupado === pd.id} onClick={() => decidirPedido(pd, 'operador')} data-testid={`liberar-${pd.id}`} title="Deixa a pessoa entrar e trabalhar: cadastrar e editar processos, prazos e documentos" className="min-h-[44px] px-3 bg-navy text-white text-sm disabled:bg-grafite-claro">Liberar para trabalhar</button>
+                        <button type="button" disabled={ocupado === pd.id} onClick={() => decidirPedido(pd, 'leitor')} data-testid={`liberar-leitura-${pd.id}`} title="Deixa a pessoa entrar só para consultar, sem alterar nada" className="min-h-[44px] px-3 border border-navy text-navy text-sm">Liberar só para consultar</button>
+                        <button type="button" disabled={ocupado === pd.id} onClick={() => decidirPedido(pd, null)} data-testid={`recusar-${pd.id}`} title="Não deixa a pessoa entrar neste escritório" className="min-h-[44px] px-3 border border-critico text-critico text-sm">Recusar</button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
             <section className="bg-dourado/10 p-6 shadow-sm border-l-4 border-dourado" aria-labelledby="definir-cargos" data-testid="aviso-definir-cargos">
               <h2 id="definir-cargos" className="text-lg font-semibold">Fátima: defina aqui o cargo de cada pessoa</h2>
               <p className="text-sm text-grafite mt-2">
@@ -140,9 +183,9 @@ export default function EquipePage() {
                 Como adicionar alguém
               </h2>
               <ol className="list-decimal pl-5 text-sm text-grafite mt-3 space-y-1">
-                <li>Envie um convite pelo e-mail da pessoa (a administração da sede faz isso em Escritórios parceiros).</li>
-                <li>Ao aceitar o convite, ela entra <strong>no seu escritório</strong>, com a função do convite. Quem cria conta sem convite ganha um escritório próprio e vazio, separado do seu.</li>
-                <li>Na lista abaixo você muda a função dela para operador ou administrador, ou retira o acesso escolhendo <strong>Sem acesso</strong>.</li>
+                <li>Peça para a pessoa abrir a plataforma, tocar em <strong>Criar conta</strong> e escrever o nome do escritório igualzinho ao seu, em letras maiúsculas.</li>
+                <li>O pedido dela aparece no topo desta tela. Toque em <strong>Liberar para trabalhar</strong> (ou <strong>só para consultar</strong>). Antes disso ela não enxerga nada.</li>
+                <li>Na lista abaixo você muda a função dela, define o cargo, ou retira o acesso escolhendo <strong>Sem acesso</strong>.</li>
               </ol>
               <p className="text-sm text-grafite mt-3">
                 Alguém esqueceu a senha? Use <strong>Senha provisória</strong> na linha da pessoa, entregue a senha gerada e peça para ela trocar em Configurações → Senha.
