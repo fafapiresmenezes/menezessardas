@@ -119,17 +119,17 @@ export default function CarteiraProcessosPage() {
                 <tbody className="divide-y divide-navy/10">
                   {visiveis.map(l => (
                     <tr key={l.id} data-testid="carteira-linha" className="align-top">
-                      <td className="py-2"><Link to={`/projetos?caso=${l.id}`} className="text-navy font-medium underline">{l.titulo}</Link><span className="block font-mono text-xs text-grafite-claro">{l.numero_processo ?? 'sem número'}</span>{l.fase && <span className="block text-xs">Fase: {l.fase}</span>}</td>
+                      <td className="py-2"><Link to={`/projetos?caso=${l.id}`} title="Abre este processo com todas as tarefas, prazos e documentos" className="text-navy font-medium underline">{l.titulo}</Link><span className="block font-mono text-xs text-grafite-claro">{l.numero_processo ?? 'sem número'}</span>{l.fase && <span className="block text-xs">Fase: {l.fase}</span>}</td>
                       <td>{l.cliente ?? '—'}{l.parteContraria && <span className="block text-xs text-grafite-claro">x {l.parteContraria}</span>}</td>
                       <td>{l.area ?? '—'}</td>
                       <td>{l.tribunal}{(l.orgao || l.classe) && <span className="block text-xs text-grafite-claro">{[l.classe, l.orgao].filter(Boolean).join(' · ')}</span>}</td>
                       <td>{l.ultima ? <>{formatarData(l.ultima)}<span className={`block text-xs ${(l.parado ?? 0) > 90 ? 'text-critico' : 'text-grafite-claro'}`}>{l.parado} dia(s) sem andamento</span></> : <span className="text-xs text-grafite-claro">{l.naoEncontrado ? 'Não achado no DataJud' : l.monitorado ? 'Aguardando a 1ª verificação' : l.numero ? 'Não monitorado' : '—'}</span>}</td>
-                      <td>{l.intimacoesNaoLidas ? <Link to="/intimacoes" className="text-critico underline">{l.intimacoesNaoLidas} não lida(s)</Link> : '—'}{l.proximoPrazo && <span className="block text-xs">prazo {formatarData(l.proximoPrazo)}</span>}</td>
+                      <td>{l.intimacoesNaoLidas ? <Link to="/intimacoes" title="Ver as intimações deste processo que ainda não foram lidas" className="text-critico underline">{l.intimacoesNaoLidas} não lida(s)</Link> : '—'}{l.proximoPrazo && <span className="block text-xs">prazo {formatarData(l.proximoPrazo)}</span>}</td>
                       <td>{nome(l.responsavel_id)}</td>
                       <td className="text-xs space-y-1">
-                        {l.numero && <Link className="block underline text-navy" to={`/monitoramento?lt=${l.numero}`} data-testid="carteira-historico">Histórico (DataJud)</Link>}
-                        {l.numero && <a className="block underline text-navy" href={`https://www.jusbrasil.com.br/busca?q=${l.numero_processo}`} target="_blank" rel="noreferrer">Jusbrasil</a>}
-                        {l.numero && <a className="block underline text-navy" href={`https://www.escavador.com/busca?q=${l.numero_processo}`} target="_blank" rel="noreferrer">Escavador</a>}
+                        {l.numero && <Link className="block underline text-navy" to={`/monitoramento?lt=${l.numero}`} title="Mostra todos os andamentos deste processo no DataJud (CNJ)" data-testid="carteira-historico">Histórico (DataJud)</Link>}
+                        {l.numero && <a className="block underline text-navy" href={`https://www.jusbrasil.com.br/busca?q=${l.numero_processo}`} target="_blank" rel="noreferrer" title="Abre a busca pelo processo no Jusbrasil (site externo)">Jusbrasil</a>}
+                        {l.numero && <a className="block underline text-navy" href={`https://www.escavador.com/busca?q=${l.numero_processo}`} target="_blank" rel="noreferrer" title="Abre a busca pelo processo no Escavador (site externo)">Escavador</a>}
                         <button type="button" onClick={() => encerrar(l.id, l.situacao === 'feito' ? 'fazendo' : 'feito')} title={l.situacao === 'feito' ? 'Reabre este processo na carteira' : 'Marca este processo como encerrado'} className="block underline text-navy" data-testid="carteira-encerrar">{l.situacao === 'feito' ? 'Reabrir' : 'Encerrar'}</button>
                       </td>
                     </tr>

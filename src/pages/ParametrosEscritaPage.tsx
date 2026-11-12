@@ -580,7 +580,7 @@ export default function ParametrosEscritaPage() {
 
                         {p.tipo === 'numero' && (
                           <input
-                            type="number"
+                            aria-label={p.label} title={p.dica} type="number"
                             value={getValor(p)}
                             onChange={e => setValor(p.chave, e.target.value)}
                             onFocus={() => setCampoAtivo(p.chave)}
@@ -591,7 +591,7 @@ export default function ParametrosEscritaPage() {
 
                         {p.tipo === 'texto' && (
                           <input
-                            type="text"
+                            aria-label={p.label} title={p.dica} type="text"
                             value={getValor(p)}
                             onChange={e => setValor(p.chave, e.target.value)}
                             onFocus={() => setCampoAtivo(p.chave)}
@@ -606,7 +606,7 @@ export default function ParametrosEscritaPage() {
                             onChange={e => setValor(p.chave, e.target.value)}
                             onFocus={() => setCampoAtivo(p.chave)}
                             onBlur={() => setCampoAtivo(null)}
-                            rows={Math.max(3, getValor(p).split('\n').length + 1)}
+                            aria-label={p.label} title={p.dica} rows={Math.max(3, getValor(p).split('\n').length + 1)}
                             className="mt-1 w-full border border-borda rounded-lg px-3 py-2 text-sm bg-fundo text-texto font-mono focus:outline-none focus:ring-2 focus:ring-dourado/50 focus:border-dourado resize-y"
                           />
                         )}

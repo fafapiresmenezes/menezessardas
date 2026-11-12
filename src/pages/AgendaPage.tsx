@@ -223,13 +223,13 @@ export default function AgendaPage() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <button onClick={() => mudarMes(-1)} className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-sm hover:bg-white" aria-label="Mês anterior">
+            <button onClick={() => mudarMes(-1)} className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-sm hover:bg-white" aria-label="Mês anterior" title="Mostra o mês anterior na agenda">
               <ChevronLeft size={20} aria-hidden="true" />
             </button>
             <h2 className="font-serif text-2xl text-navy capitalize min-w-[11rem] text-center">
               {MESES[mes]} de {ano}
             </h2>
-            <button onClick={() => mudarMes(1)} className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-sm hover:bg-white" aria-label="Próximo mês">
+            <button onClick={() => mudarMes(1)} className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-sm hover:bg-white" aria-label="Próximo mês" title="Mostra o próximo mês na agenda">
               <ChevronRight size={20} aria-hidden="true" />
             </button>
             {(ano !== hoje.getFullYear() || mes !== hoje.getMonth()) && <button type="button" onClick={irParaHoje} data-testid="agenda-hoje" title="Volta o calendário para o mês atual" className="min-h-[44px] px-3 text-sm border border-navy text-navy rounded-sm hover:bg-white">Hoje</button>}
