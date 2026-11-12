@@ -22,7 +22,7 @@ import { listarPessoas, perfilAtual } from '@/lib/equipe'
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, ChevronDown, MoreHorizontal, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, ChevronDown, MoreHorizontal, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, AppWindow } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -67,6 +67,7 @@ const gruposMenu = [
     { icon: Scale, label: 'Legislação', href: '/legislacao' },
     { icon: MessageSquare, label: 'Assistente', href: '/assistente' },
     { icon: FileText, label: 'Modelos de peças', href: '/modelos' },
+    { icon: AppWindow, label: 'Navegador interno', href: '/navegador' },
     { icon: Globe, label: 'Fontes do advogado', href: '/fontes' },
     { icon: Library, label: 'Já pesquisado', href: '/biblioteca' },
     { icon: BookOpen, label: 'Parâmetros de escrita', href: '/parametros-escrita' },
@@ -127,6 +128,7 @@ const DICAS: Record<string, string> = {
   '/legislacao': 'Ler a lei direto do Planalto, artigo por artigo',
   '/assistente': 'Perguntar, redigir peça ou comparar caminhos com a IA',
   '/modelos': 'Modelos prontos de peças e documentos do escritório',
+  '/navegador': 'Abrir tribunais, diários e pesquisa sem sair da plataforma',
   '/fontes': 'Tribunais, diários e fontes oficiais em um só lugar',
   '/biblioteca': 'Tudo o que já foi pesquisado, para não pesquisar duas vezes',
   '/parametros-escrita': 'Como o robô escreve: redatores, tom e formatação das peças',
@@ -158,6 +160,7 @@ const menuEssencial = [
   { bloco: 'Processos', dica: 'Ver, incluir e acompanhar', icon: Gavel, label: 'Meus processos', href: '/processos' },
   { bloco: 'Processos', dica: '', icon: UserPlus, label: 'Inserir processos antigos', href: '/processos-antigos' },
   { bloco: 'Processos', dica: '', icon: Inbox, label: 'Intimações', href: '/intimacoes' },
+  { bloco: 'Processos', dica: '', icon: AppWindow, label: 'Navegador interno', href: '/navegador' },
   { bloco: 'Escrever peças', dica: 'Como o robô escreve por você', icon: PenLine, label: 'Meu jeito de escrever', href: '/meu-estilo' },
   { bloco: 'Escrever peças', dica: '', icon: BookOpen, label: 'Parâmetros de escrita', href: '/parametros-escrita' },
 ]
@@ -425,6 +428,17 @@ export default function Layout({ children, title }: LayoutProps) {
           <TourTela />
           <PerguntarTela />
           {!simples && <BotaoExportar />}
+          <button
+            type="button"
+            onClick={() => navigate('/navegador')}
+            className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center gap-2 px-3 border border-navy/15 rounded-sm text-navy hover:border-dourado transition text-sm"
+            aria-label="Navegador interno"
+            title="Navegador interno: abrir tribunais, diários e pesquisa sem sair da plataforma"
+            data-testid="abrir-navegador"
+          >
+            <AppWindow size={18} aria-hidden="true" />
+            <span className="hidden 2xl:inline">Navegador</span>
+          </button>
           <SinoNotificacoes />
           {admin && (
             <button

@@ -29,7 +29,7 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
   it('começa no menu simples, só com o essencial, e abre o menu completo num clique (e volta)', () => {
     montar('/meu-dia')
     const simples = screen.getByTestId('menu-simples')
-    expect([...simples.querySelectorAll('li button')].map(b => b.textContent)).toEqual(['Início', 'O que vence', 'Agenda', 'Meus processos', 'Inserir processos antigos', 'Intimações', 'Meu jeito de escrever', 'Parâmetros de escrita', 'Ver todas as telas'])
+    expect([...simples.querySelectorAll('li button')].map(b => b.textContent)).toEqual(['Início', 'O que vence', 'Agenda', 'Meus processos', 'Inserir processos antigos', 'Intimações', 'Navegador interno', 'Meu jeito de escrever', 'Parâmetros de escrita', 'Ver todas as telas'])
     expect([...simples.querySelectorAll('[data-bloco]')].map(b => b.getAttribute('data-bloco'))).toEqual(['Todo dia', 'Processos', 'Escrever peças'])
     expect(simples.querySelector('[aria-current=page]')!.textContent).toBe('O que vence')
     expect(screen.queryByText('Imóveis e locação')).toBeNull()
