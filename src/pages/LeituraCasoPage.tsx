@@ -131,13 +131,13 @@ export default function LeituraCasoPage() {
           <div className="flex flex-wrap items-end gap-3">
             <div className="flex-1 min-w-[220px]">
               <label htmlFor="lc-caso" className={rotulo}>Caso</label>
-              <select id="lc-caso" value={caso.id} onChange={e => setAtualId(e.target.value)} className={campo}>
+              <select id="lc-caso" value={caso.id} onChange={e => setAtualId(e.target.value)} title="Escolhe qual leitura de caso guardada neste aparelho abrir" className={campo}>
                 {casos.map(c => <option key={c.id} value={c.id}>{c.titulo || 'Sem título'}</option>)}
               </select>
             </div>
-            <button type="button" onClick={novo} className="min-h-[44px] px-4 border border-navy text-navy text-sm flex items-center gap-2" data-testid="novo-caso"><Plus size={16} aria-hidden /> Novo caso</button>
-            <button type="button" onClick={copiar} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm flex items-center gap-2" data-testid="copiar-leitura"><Copy size={16} aria-hidden /> {copiado ? 'Leitura copiada' : 'Copiar leitura completa'}</button>
-            <button type="button" onClick={excluir} className="min-h-[44px] px-4 border border-critico/40 text-critico text-sm flex items-center gap-2"><Trash2 size={16} aria-hidden /> Apagar</button>
+            <button type="button" onClick={novo} title="Cria uma nova leitura de caso em branco neste aparelho" className="min-h-[44px] px-4 border border-navy text-navy text-sm flex items-center gap-2" data-testid="novo-caso"><Plus size={16} aria-hidden /> Novo caso</button>
+            <button type="button" onClick={copiar} title="Copia a leitura completa em texto (linha do tempo, pontos faltantes, jurimetria e decisão) para colar no parecer" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm flex items-center gap-2" data-testid="copiar-leitura"><Copy size={16} aria-hidden /> {copiado ? 'Leitura copiada' : 'Copiar leitura completa'}</button>
+            <button type="button" onClick={excluir} title="Apaga esta leitura de caso deste aparelho (pede confirmação; não dá para desfazer)" className="min-h-[44px] px-4 border border-critico/40 text-critico text-sm flex items-center gap-2"><Trash2 size={16} aria-hidden /> Apagar</button>
           </div>
           <p className="text-xs text-grafite-claro mt-3 flex items-start gap-2"><ShieldCheck size={14} className="mt-0.5 shrink-0 text-dourado" aria-hidden />
             LGPD: o relato e os depoimentos ficam só neste aparelho. A plataforma não usa câmera, voz, rosto nem nenhum dado biométrico; a predição usa estatística pública e anônima do CNJ.</p>
@@ -146,7 +146,7 @@ export default function LeituraCasoPage() {
         <nav className="flex flex-wrap gap-2" role="tablist" aria-label="Etapas da leitura">
           {ABAS.map(a => {
             const I = a.icone
-            return <button key={a.id} role="tab" aria-selected={aba === a.id} data-testid={`aba-${a.id}`} onClick={() => setAba(a.id)} className={`min-h-[44px] px-4 text-sm flex items-center gap-2 border ${aba === a.id ? 'bg-navy text-white border-navy' : 'bg-white text-navy border-navy/20'}`}><I size={16} aria-hidden /> {a.rotulo}</button>
+            return <button key={a.id} role="tab" aria-selected={aba === a.id} data-testid={`aba-${a.id}`} onClick={() => setAba(a.id)} title={`Mostra a etapa ${a.rotulo} da leitura do caso`} className={`min-h-[44px] px-4 text-sm flex items-center gap-2 border ${aba === a.id ? 'bg-navy text-white border-navy' : 'bg-white text-navy border-navy/20'}`}><I size={16} aria-hidden /> {a.rotulo}</button>
           })}
         </nav>
 
@@ -155,10 +155,10 @@ export default function LeituraCasoPage() {
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <div className="lg:col-span-2"><label htmlFor="lc-titulo" className={rotulo}>Nome do caso</label><input id="lc-titulo" value={caso.titulo} onChange={e => muda({ titulo: e.target.value })} className={campo} /></div>
               <div><label htmlFor="lc-acao" className={rotulo}>Tipo de ação</label>
-                <select id="lc-acao" value={caso.acao} onChange={e => muda({ acao: e.target.value })} className={campo}>{TIPOS_ACAO.map(t => <option key={t.valor} value={t.valor}>{t.rotulo}</option>)}</select></div>
+                <select id="lc-acao" value={caso.acao} onChange={e => muda({ acao: e.target.value })} title="Escolhe o tipo de ação; ele define os pontos que costumam decidir o caso e a consulta de jurimetria" className={campo}>{TIPOS_ACAO.map(t => <option key={t.valor} value={t.valor}>{t.rotulo}</option>)}</select></div>
               <div><label htmlFor="lc-numero" className={rotulo}>Número do processo (se houver)</label><input id="lc-numero" value={caso.numero} onChange={e => muda({ numero: e.target.value })} className={campo} placeholder="0000000-00.0000.0.00.0000" /></div>
               <div><label htmlFor="lc-tribunal" className={rotulo}>Tribunal</label>
-                <select id="lc-tribunal" value={caso.tribunal} onChange={e => muda({ tribunal: e.target.value })} className={campo}>{TRIBUNAIS.map(t => <option key={t} value={t}>{t.toUpperCase()}</option>)}</select></div>
+                <select id="lc-tribunal" value={caso.tribunal} onChange={e => muda({ tribunal: e.target.value })} title="Escolhe o tribunal usado na consulta de jurimetria do CNJ" className={campo}>{TRIBUNAIS.map(t => <option key={t} value={t}>{t.toUpperCase()}</option>)}</select></div>
               <div className="lg:col-span-3"><label htmlFor="lc-orgao" className={rotulo}>Vara ou câmara (opcional)</label><input id="lc-orgao" value={caso.orgao} onChange={e => muda({ orgao: e.target.value })} className={campo} placeholder="Ex.: 10ª Vara Cível" /></div>
             </div>
             <div>
@@ -177,8 +177,8 @@ export default function LeituraCasoPage() {
                 {(contexto.valores.length > 0 || contexto.dispositivos.length > 0 || contexto.processos.length > 0) && (
                   <div className="mt-4 grid gap-3 sm:grid-cols-2 text-sm">
                     {contexto.valores.length > 0 && <div><p className={rotulo}>Valores citados</p><ul data-testid="valores">{contexto.valores.map((v, i) => <li key={i}>{moeda(v.valor)}</li>)}</ul><p className="text-xs text-grafite-claro mt-1">Soma: {moeda(contexto.valores.reduce((s, v) => s + v.valor, 0))}</p></div>}
-                    {contexto.dispositivos.length > 0 && <div><p className={rotulo}>Leis e súmulas citadas</p><ul data-testid="dispositivos">{contexto.dispositivos.map(d => <li key={d}><Link className="underline decoration-dourado" to={`/legislacao?q=${encodeURIComponent(d)}`}>{d}</Link></li>)}</ul></div>}
-                    {contexto.processos.length > 0 && <div><p className={rotulo}>Processos citados</p><ul>{contexto.processos.map(p => <li key={p}><Link className="underline decoration-dourado" to={`/monitoramento?lt=${encodeURIComponent(p)}`}>{p}</Link></li>)}</ul></div>}
+                    {contexto.dispositivos.length > 0 && <div><p className={rotulo}>Leis e súmulas citadas</p><ul data-testid="dispositivos">{contexto.dispositivos.map(d => <li key={d}><Link className="underline decoration-dourado" title="Abre a tela de Legislação com a busca por este dispositivo já preenchida" to={`/legislacao?q=${encodeURIComponent(d)}`}>{d}</Link></li>)}</ul></div>}
+                    {contexto.processos.length > 0 && <div><p className={rotulo}>Processos citados</p><ul>{contexto.processos.map(p => <li key={p}><Link className="underline decoration-dourado" title="Abre a tela de Monitoramento com este número de processo já preenchido" to={`/monitoramento?lt=${encodeURIComponent(p)}`}>{p}</Link></li>)}</ul></div>}
                   </div>
                 )}
               </div>
@@ -205,7 +205,7 @@ export default function LeituraCasoPage() {
               <h2 className="font-serif text-xl mb-1">Chance com base em casos parecidos</h2>
               <p className="text-sm text-grafite-claro mb-4">Estatística das sentenças registradas no DataJud (CNJ) para {tipo.rotulo.toLowerCase()} no {caso.tribunal.toUpperCase()}{caso.orgao ? `, ${caso.orgao}` : ''}. É a taxa de quem já passou por isso, não uma previsão do seu processo; os pontos do relato e a prova mudam o quadro.</p>
               {tipo.jurimetria ? (
-                <button type="button" onClick={consultar} disabled={ocupado} data-testid="consultar-juri" className="min-h-[44px] px-4 bg-navy text-white text-sm disabled:opacity-60">{ocupado ? 'Consultando o CNJ (até 40 s)…' : 'Consultar o CNJ'}</button>
+                <button type="button" onClick={consultar} disabled={ocupado} title="Consulta no DataJud (CNJ) a estatística de sentenças de casos parecidos neste tribunal e vara, sem enviar nenhum dado pessoal" data-testid="consultar-juri" className="min-h-[44px] px-4 bg-navy text-white text-sm disabled:opacity-60">{ocupado ? 'Consultando o CNJ (até 40 s)…' : 'Consultar o CNJ'}</button>
               ) : <p className="text-sm p-3 bg-atencaoFundo border-l-4 border-atencao">Ainda não há base pública ligada para este tipo de ação. Informe abaixo a chance que você estima, e a conta de decisão funciona igual.</p>}
               {erro && <p role="alert" className="text-sm text-critico mt-3">{erro}</p>}
               {juri && (
@@ -227,7 +227,7 @@ export default function LeituraCasoPage() {
                 {FATORES_AJUSTE.map(f => (
                   <div key={f.id}>
                     <label htmlFor={`aj-${f.id}`} className={rotulo}>{f.texto}</label>
-                    <select id={`aj-${f.id}`} value={caso.ajustes?.[f.id] ?? 0} onChange={e => muda({ ajustes: { ...caso.ajustes, [f.id]: +e.target.value } })} className={campo}>
+                    <select id={`aj-${f.id}`} value={caso.ajustes?.[f.id] ?? 0} onChange={e => muda({ ajustes: { ...caso.ajustes, [f.id]: +e.target.value } })} title="Ajusta a taxa base pelo que este caso tem de diferente neste fator; cada degrau muda a chance relativa em 1,5 vez" className={campo}>
                       {ESCALA_AJUSTE.map(([v, r]) => <option key={v} value={v}>{r}</option>)}
                     </select>
                   </div>
@@ -243,7 +243,7 @@ export default function LeituraCasoPage() {
               <p className="text-sm text-grafite-claro mb-4">Valor esperado com as premissas abaixo, em reais de hoje. Cada número é seu e pode ser trocado.</p>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <div><label htmlFor="lc-lado" className={rotulo}>Representamos</label>
-                  <select id="lc-lado" value={caso.lado} onChange={e => muda({ lado: e.target.value as 'autor' | 'reu' })} className={campo}><option value="autor">O autor</option><option value="reu">O réu</option></select></div>
+                  <select id="lc-lado" value={caso.lado} onChange={e => muda({ lado: e.target.value as 'autor' | 'reu' })} title="Escolhe qual lado o escritório representa; a conta de acordo ou seguir muda conforme o lado" className={campo}><option value="autor">O autor</option><option value="reu">O réu</option></select></div>
                 <Numero id="lc-valor" label="Valor em discussão (R$)" valor={caso.valorPedido} aoMudar={n => muda({ valorPedido: n })} passo={100} />
                 <div>
                   <label htmlFor="lc-chance" className={rotulo}>Chance de o autor vencer (%)</label>
@@ -253,7 +253,7 @@ export default function LeituraCasoPage() {
                 <Numero id="lc-proposta" label="Proposta de acordo (R$)" valor={caso.proposta} aoMudar={n => muda({ proposta: n })} passo={100} />
                 <Numero id="lc-custos" label="Custos ainda a gastar (R$)" valor={caso.custos} aoMudar={n => muda({ custos: n })} passo={100} />
                 <div><label htmlFor="lc-sucumb" className={rotulo}>Sucumbência (CPC, art. 85, §2º)</label>
-                  <select id="lc-sucumb" value={caso.sucumbenciaPct} onChange={e => muda({ sucumbenciaPct: +e.target.value })} className={campo}>
+                  <select id="lc-sucumb" value={caso.sucumbenciaPct} onChange={e => muda({ sucumbenciaPct: +e.target.value })} title="Escolhe o percentual de honorários de sucumbência considerado na conta do valor esperado" className={campo}>
                     {[0, 10, 15, 20].map(v => <option key={v} value={v}>{v === 0 ? 'Não considerar' : `${v}% do valor`}</option>)}
                     {![0, 10, 15, 20].includes(caso.sucumbenciaPct) && <option value={caso.sucumbenciaPct}>{caso.sucumbenciaPct}%</option>}
                   </select></div>
@@ -296,12 +296,12 @@ export default function LeituraCasoPage() {
               <h2 className="font-serif text-xl mb-1">Placar das suas previsões</h2>
               <p className="text-sm text-grafite-claro mb-4">Registre a chance que você usou neste caso e, quando sair a sentença, o desfecho. Com o tempo o escritório descobre se a chance de 70% dele acontece mesmo 7 vezes em 10 (nota de Brier: 0 é perfeito, 0,25 é chute).</p>
               <div className="flex flex-wrap items-end gap-3">
-                <button type="button" disabled={chance === null} data-testid="registrar-previsao" onClick={() => chance !== null && muda({ previsao: { chance, em: new Date().toISOString() } })} className="min-h-[44px] px-4 border border-navy text-navy text-sm disabled:opacity-50">
+                <button type="button" disabled={chance === null} title="Guarda a chance usada neste caso para, quando sair a sentença, medir a calibração das suas previsões" data-testid="registrar-previsao" onClick={() => chance !== null && muda({ previsao: { chance, em: new Date().toISOString() } })} className="min-h-[44px] px-4 border border-navy text-navy text-sm disabled:opacity-50">
                   {caso.previsao ? `Atualizar previsão (registrada: ${caso.previsao.chance}%)` : `Registrar previsão${chance !== null ? ` de ${chance}%` : ''}`}
                 </button>
                 <div>
                   <label htmlFor="lc-desfecho" className={rotulo}>Desfecho real</label>
-                  <select id="lc-desfecho" value={caso.desfecho ?? ''} disabled={!caso.previsao} onChange={e => muda({ desfecho: (e.target.value || null) as Desfecho | null })} className={campo}>
+                  <select id="lc-desfecho" value={caso.desfecho ?? ''} disabled={!caso.previsao} onChange={e => muda({ desfecho: (e.target.value || null) as Desfecho | null })} title="Registra o desfecho real do caso quando sair a sentença, para entrar no placar das previsões" className={campo}>
                     <option value="">Ainda sem sentença</option><option value="procedente">Procedente (autor venceu)</option><option value="improcedente">Improcedente (autor perdeu)</option>
                     <option value="parcial">Procedência parcial</option><option value="acordo">Acordo</option><option value="outro">Extinto sem mérito</option>
                   </select>
@@ -332,14 +332,14 @@ export default function LeituraCasoPage() {
                   <div className="flex gap-2 items-end">
                     <div className="flex-1"><label htmlFor={`dep-quem-${d.id}`} className={rotulo}>Depoente {i + 1}</label>
                       <input id={`dep-quem-${d.id}`} value={d.quem} placeholder="Ex.: Autor, Testemunha João" onChange={e => muda({ depoimentos: caso.depoimentos.map(x => x.id === d.id ? { ...x, quem: e.target.value } : x) })} className={campo} /></div>
-                    {caso.depoimentos.length > 2 && <button type="button" aria-label={`Remover depoente ${i + 1}`} onClick={() => muda({ depoimentos: caso.depoimentos.filter(x => x.id !== d.id) })} className="min-h-[44px] px-3 border border-navy/20 text-critico"><Trash2 size={16} aria-hidden /></button>}
+                    {caso.depoimentos.length > 2 && <button type="button" aria-label={`Remover depoente ${i + 1}`} title="Remove este depoente e a transcrição dele do confronto" onClick={() => muda({ depoimentos: caso.depoimentos.filter(x => x.id !== d.id) })} className="min-h-[44px] px-3 border border-navy/20 text-critico"><Trash2 size={16} aria-hidden /></button>}
                   </div>
                   <label htmlFor={`dep-texto-${d.id}`} className="sr-only">Transcrição do depoente {i + 1}</label>
                   <textarea id={`dep-texto-${d.id}`} rows={7} value={d.texto} onChange={e => muda({ depoimentos: caso.depoimentos.map(x => x.id === d.id ? { ...x, texto: e.target.value } : x) })} className="mt-2 w-full border border-navy/15 p-3 text-sm focus:outline-none focus:border-dourado" placeholder="Transcrição do depoimento" />
                 </div>
               ))}
             </div>
-            <button type="button" onClick={() => muda({ depoimentos: [...caso.depoimentos, { id: `d${Date.now().toString(36)}`, quem: '', texto: '' }] })} className="min-h-[44px] px-4 border border-navy text-navy text-sm flex items-center gap-2"><Plus size={16} aria-hidden /> Mais um depoente</button>
+            <button type="button" onClick={() => muda({ depoimentos: [...caso.depoimentos, { id: `d${Date.now().toString(36)}`, quem: '', texto: '' }] })} title="Adiciona mais um quadro de depoente para colar outra transcrição" className="min-h-[44px] px-4 border border-navy text-navy text-sm flex items-center gap-2"><Plus size={16} aria-hidden /> Mais um depoente</button>
 
             <div>
               <h3 className="font-serif text-lg mb-2">Divergências encontradas ({divergencias.length})</h3>
@@ -394,7 +394,7 @@ export default function LeituraCasoPage() {
                 </div>
               )
             })}
-            {divergencias.length > 0 && <p className="text-sm p-3 bg-pergaminho border-l-2 border-dourado">Há {divergencias.length} divergência(s) no confronto de depoimentos. <button type="button" className="underline decoration-dourado" onClick={() => setAba('depoimentos')}>Ver as perguntas sugeridas</button>.</p>}
+            {divergencias.length > 0 && <p className="text-sm p-3 bg-pergaminho border-l-2 border-dourado">Há {divergencias.length} divergência(s) no confronto de depoimentos. <button type="button" className="underline decoration-dourado" title="Abre a etapa de confronto de depoimentos com as perguntas sugeridas" onClick={() => setAba('depoimentos')}>Ver as perguntas sugeridas</button>.</p>}
           </section>
         )}
         {aba === 'ciencia' && (
@@ -405,7 +405,7 @@ export default function LeituraCasoPage() {
             </div>
             <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrar por tema">
               {(['todos', ...Object.keys(ROTULO_TEMA)] as (TemaRef | 'todos')[]).map(t => (
-                <button key={t} type="button" aria-pressed={temaRef === t} onClick={() => setTemaRef(t)} data-testid={`tema-${t}`} className={`min-h-[40px] px-3 text-xs border ${temaRef === t ? 'bg-navy text-white border-navy' : 'border-navy/20 text-navy'}`}>{t === 'todos' ? 'Todos' : ROTULO_TEMA[t]}</button>
+                <button key={t} type="button" aria-pressed={temaRef === t} onClick={() => setTemaRef(t)} title={t === 'todos' ? 'Mostra todas as referências científicas' : `Mostra só as referências do tema ${ROTULO_TEMA[t as TemaRef]}`} data-testid={`tema-${t}`} className={`min-h-[40px] px-3 text-xs border ${temaRef === t ? 'bg-navy text-white border-navy' : 'border-navy/20 text-navy'}`}>{t === 'todos' ? 'Todos' : ROTULO_TEMA[t]}</button>
               ))}
             </div>
             <ol className="space-y-3" data-testid="referencias">

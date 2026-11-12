@@ -108,14 +108,14 @@ export default function HorasPage() {
           <h2 className="font-serif text-lg flex items-center gap-2"><Target className="w-5 h-5" aria-hidden />Meta mensal de horas por função</h2>
           <div className="flex flex-wrap items-center gap-3 mt-2 text-sm">
             <label>Minha função
-              <select value={papel} onChange={e => setPapel(e.target.value)} className="border px-3 py-2 ml-2 min-h-[44px]" data-testid="meta-papel">
+              <select value={papel} onChange={e => setPapel(e.target.value)} className="border px-3 py-2 ml-2 min-h-[44px]" data-testid="meta-papel" title="Escolhe a sua função no escritório para ver a meta mensal de horas e o seu progresso nela">
                 {Object.entries(PAPEIS).map(([k, v]) => <option key={k} value={k}>{v} · meta {metas[k] ?? 0}h</option>)}
               </select>
             </label>
             {admin && (
               <span className="flex items-center gap-2">
                 <input value={metaEdit} onChange={e => setMetaEdit(e.target.value)} placeholder={`nova meta (${metas[papel] ?? 0}h)`} className="border px-3 py-2 w-40 min-h-[44px]" data-testid="meta-valor" aria-label="Nova meta de horas por mês" />
-                <button type="button" onClick={salvarMeta} className="min-h-[44px] px-4 border border-navy text-navy text-sm" data-testid="meta-salvar">Definir meta</button>
+                <button type="button" onClick={salvarMeta} className="min-h-[44px] px-4 border border-navy text-navy text-sm" data-testid="meta-salvar" title="Grava a nova meta mensal de horas para a função escolhida (só administradores)">Definir meta</button>
               </span>
             )}
             {msgMeta && <span aria-live="polite" data-testid="msg-meta">{msgMeta}</span>}
@@ -132,7 +132,7 @@ export default function HorasPage() {
         </section>
         <section className="bg-white shadow-sm border-t-2 border-dourado p-5 print:hidden">
           <div className="flex flex-wrap items-center gap-3 mb-3">
-            <button type="button" onClick={cronometro} data-testid="cronometro" className={`min-h-[44px] px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2 ${inicio ? 'bg-critico text-white' : 'bg-navy text-white'}`}>
+            <button type="button" onClick={cronometro} title={inicio ? 'Para o cronômetro e preenche o campo Horas com o tempo medido' : 'Inicia o cronômetro para medir o tempo de trabalho; ao parar, as horas são preenchidas automaticamente'} data-testid="cronometro" className={`min-h-[44px] px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2 ${inicio ? 'bg-critico text-white' : 'bg-navy text-white'}`}>
               {inicio ? <><Square className="w-4 h-4" aria-hidden />Parar ({hm(Math.floor((agora - inicio) / 60000))})</> : <><Play className="w-4 h-4" aria-hidden />Iniciar cronômetro</>}
             </button>
             <span className="text-sm text-grafite-claro">Ou digite as horas abaixo.</span>
@@ -145,9 +145,9 @@ export default function HorasPage() {
             <label>Valor/hora (R$)<input value={form.valor_hora} onChange={e => setForm({ ...form, valor_hora: e.target.value })} placeholder="450" className={campo} data-testid="h-valor" /></label>
             <label className="flex items-center gap-2 min-h-[44px] mt-5"><input type="checkbox" checked={form.faturavel} onChange={e => setForm({ ...form, faturavel: e.target.checked })} />Faturável</label>
             <label className="md:col-span-5">O que foi feito<input value={form.descricao} onChange={e => setForm({ ...form, descricao: e.target.value })} className={campo} data-testid="h-desc" /></label>
-            <button type="button" onClick={salvar} data-testid="h-salvar" className="min-h-[44px] bg-navy text-white text-sm uppercase tracking-wider mt-5">Lançar</button>
+            <button type="button" onClick={salvar} title="Grava este lançamento de horas (data, cliente, descrição, horas e valor) no mês" data-testid="h-salvar" className="min-h-[44px] bg-navy text-white text-sm uppercase tracking-wider mt-5">Lançar</button>
             {/* Passo 120: repete o último lançamento (cliente, descrição, valor da hora) com a data de hoje; só falta ajustar as horas. */}
-            {lista.length > 0 && <button type="button" data-testid="h-repetir" onClick={() => { const u = lista[0]; setForm({ data: hojeLocal(), cliente: u.cliente, descricao: u.descricao, horas: '', valor_hora: String(u.valor_hora), faturavel: u.faturavel }) }} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm mt-5 ml-2">Repetir último</button>}
+            {lista.length > 0 && <button type="button" data-testid="h-repetir" title="Preenche o formulário com o último lançamento (cliente, descrição e valor da hora) e a data de hoje; só falta ajustar as horas" onClick={() => { const u = lista[0]; setForm({ data: hojeLocal(), cliente: u.cliente, descricao: u.descricao, horas: '', valor_hora: String(u.valor_hora), faturavel: u.faturavel }) }} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm mt-5 ml-2">Repetir último</button>}
           </div>
           {erro && <p role="alert" className="mt-3 p-3 text-sm border-l-2 bg-criticoFundo border-critico text-critico">{erro}</p>}
         </section>
@@ -156,12 +156,12 @@ export default function HorasPage() {
           <div className="flex flex-wrap items-center gap-3 justify-between">
             <label className="text-sm print:hidden">Mês <input type="month" value={mes} onChange={e => setMes(e.target.value)} className="border px-3 py-2 ml-2" /></label>
             <div className="flex gap-2 print:hidden">
-              <button type="button" onClick={copiarResumo} disabled={!lista.length} data-testid="copiar-resumo" className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2 disabled:opacity-50"><ClipboardCopy className="w-4 h-4" aria-hidden />{copiado ? 'Resumo copiado' : 'Copiar resumo do mês'}</button>
-              <button type="button" onClick={() => window.print()} disabled={!lista.length} data-testid="imprimir-horas" className="min-h-[44px] px-4 border text-sm print:hidden disabled:opacity-50">Imprimir mês</button>{/* Passo 187 */}
-              <button type="button" data-testid="copiar-link-horas" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 232 */}
-              {lista.length > 0 && <button type="button" data-testid="baixar-horas" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['data;cliente;descrição;minutos;valor hora;faturável', ...lista.map(l => `${l.data};${l.cliente};${l.descricao.replace(/;/g, ',')};${l.minutos};${l.valor_hora};${l.faturavel ? 'sim' : 'não'}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'horas.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 300 */}
-              <button type="button" onClick={csv} className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2"><Download className="w-4 h-4" aria-hidden />Planilha (CSV)</button>
-              <button type="button" onClick={() => window.print()} className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2"><Printer className="w-4 h-4" aria-hidden />Relatório para o cliente</button>
+              <button type="button" onClick={copiarResumo} disabled={!lista.length} title="Copia um resumo em texto das horas do mês por cliente, pronto para colar no e-mail de cobrança" data-testid="copiar-resumo" className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2 disabled:opacity-50"><ClipboardCopy className="w-4 h-4" aria-hidden />{copiado ? 'Resumo copiado' : 'Copiar resumo do mês'}</button>
+              <button type="button" onClick={() => window.print()} disabled={!lista.length} title="Abre a janela de impressão do navegador para imprimir os lançamentos do mês escolhido" data-testid="imprimir-horas" className="min-h-[44px] px-4 border text-sm print:hidden disabled:opacity-50">Imprimir mês</button>{/* Passo 187 */}
+              <button type="button" data-testid="copiar-link-horas" title="Copia o endereço desta página de horas para compartilhar com a equipe" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 232 */}
+              {lista.length > 0 && <button type="button" data-testid="baixar-horas" title="Baixa a planilha CSV com todos os lançamentos de horas do mês escolhido" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['data;cliente;descrição;minutos;valor hora;faturável', ...lista.map(l => `${l.data};${l.cliente};${l.descricao.replace(/;/g, ',')};${l.minutos};${l.valor_hora};${l.faturavel ? 'sim' : 'não'}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'horas.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 300 */}
+              <button type="button" onClick={csv} title="Baixa a planilha CSV do mês com valores calculados (horas, valor da hora e total), pronta para faturar" className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2"><Download className="w-4 h-4" aria-hidden />Planilha (CSV)</button>
+              <button type="button" onClick={() => window.print()} title="Abre a janela de impressão para gerar o relatório de horas do mês para enviar ao cliente" className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2"><Printer className="w-4 h-4" aria-hidden />Relatório para o cliente</button>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-3 my-4 text-center">
@@ -181,7 +181,7 @@ export default function HorasPage() {
                 <span className="w-20 shrink-0">{new Date(`${l.data}T12:00`).toLocaleDateString('pt-BR')}</span>
                 <span className="flex-1"><strong>{l.cliente}</strong> · {l.descricao}{!l.faturavel && <span className="text-grafite-claro"> (não faturável)</span>}</span>
                 <span className="w-14 text-right">{hm(l.minutos)}</span>
-                <button type="button" onClick={() => apagar(l.id)} aria-label="Apagar lançamento" className="print:hidden p-2"><Trash2 className="w-4 h-4" aria-hidden /></button>
+                <button type="button" onClick={() => apagar(l.id)} aria-label="Apagar lançamento" title="Apaga este lançamento de horas (pede confirmação)" className="print:hidden p-2"><Trash2 className="w-4 h-4" aria-hidden /></button>
               </li>
             ))}
             {!lista.length && <li className="py-3 text-grafite-claro">Nenhum lançamento neste mês.</li>}

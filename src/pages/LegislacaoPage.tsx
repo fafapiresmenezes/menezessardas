@@ -149,6 +149,7 @@ export default function LegislacaoPage() {
             <button
               onClick={atualizar}
               disabled={buscando}
+              title="Consulta o LexML agora em busca de normas novas sobre locação e imóveis"
               className="min-h-[44px] inline-flex items-center gap-2 px-4 border border-navy text-navy hover:bg-pergaminho text-sm disabled:opacity-50"
             >
               <RefreshCw size={16} className={buscando ? 'animate-spin' : ''} aria-hidden="true" />
@@ -156,6 +157,7 @@ export default function LegislacaoPage() {
             </button>
             <button
               onClick={() => window.print()}
+              title="Abre a janela de impressão do navegador; escolha 'Salvar como PDF' para gerar o PDF desta página"
               className="min-h-[44px] inline-flex items-center gap-2 px-4 bg-navy text-white hover:bg-navy-700 text-sm"
             >
               <Printer size={16} aria-hidden="true" /> Exportar PDF
@@ -183,6 +185,7 @@ export default function LegislacaoPage() {
             <button
               onClick={pesquisarLeis}
               disabled={buscandoPesquisa || !termoPesquisa.trim()}
+              title="Busca leis federais, estaduais e decretos relacionados ao termo digitado"
               className="min-h-[44px] inline-flex items-center gap-2 px-4 border border-navy text-navy hover:bg-pergaminho text-sm disabled:opacity-50"
             >
               <Search size={16} aria-hidden="true" />
@@ -194,12 +197,12 @@ export default function LegislacaoPage() {
               <p className="text-sm text-grafite-claro">{resultadosPesquisa.length} resultado(s)</p>
               {resultadosPesquisa.map(lei => (
                 <div key={lei.numero} className="border-l-4 border-dourado pl-3 py-2">
-                  <a href={lei.url} target="_blank" rel="noopener noreferrer" className="text-navy font-medium hover:underline flex items-center gap-2">
+                  <a href={lei.url} target="_blank" rel="noopener noreferrer" title="Abre em nova aba o texto oficial desta lei" className="text-navy font-medium hover:underline flex items-center gap-2">
                     {lei.titulo}
                     <ExternalLink size={14} aria-hidden="true" />
                   </a>
                   <p className="text-xs text-grafite-claro mt-0.5">Lei {lei.numero}
-                    <button type="button" onClick={() => copiarCitacao(lei)} data-testid="copiar-citacao" className="ml-3 underline text-navy">{copiado === lei.numero ? 'citação copiada' : 'copiar citação'}</button>
+                    <button type="button" onClick={() => copiarCitacao(lei)} title="Copia a citação desta lei no formato ABNT, pronta para colar em petição ou parecer" data-testid="copiar-citacao" className="ml-3 underline text-navy">{copiado === lei.numero ? 'citação copiada' : 'copiar citação'}</button>
                   </p>
                   {lei.ementas.length > 0 && (
                     <p className="text-sm text-grafite mt-1">{lei.ementas[0]}</p>
@@ -220,14 +223,14 @@ export default function LegislacaoPage() {
               </p>
             </div>
             <label className="text-sm print:hidden">Área:
-              <select value={areaRadar} onChange={e => trocarArea(e.target.value)} data-testid="radar-area" className="ml-2 border px-2 min-h-[36px]">
+              <select value={areaRadar} onChange={e => trocarArea(e.target.value)} title="Escolhe a área do direito cujas novidades o radar mostra; a escolha fica guardada para você" data-testid="radar-area" className="ml-2 border px-2 min-h-[36px]">
                 {AREAS_DIREITO.map(a => <option key={a.chave} value={a.chave}>{a.nome}</option>)}
                 <option value="todas">Todas as áreas</option>
               </select>
             </label>
             <div role="radiogroup" aria-label="Filtro do radar" className="flex gap-1 print:hidden">
               {(['todos', 'Projeto', 'Notícia'] as const).map(f => (
-                <button key={f} role="radio" aria-checked={filtroRadar === f} onClick={() => setFiltroRadar(f)}
+                <button key={f} role="radio" aria-checked={filtroRadar === f} onClick={() => setFiltroRadar(f)} title={f === 'todos' ? 'Mostra todos os itens do radar, projetos de lei e notícias' : f === 'Projeto' ? 'Mostra só os projetos de lei captados pelo radar' : 'Mostra só as notícias dos tribunais captadas pelo radar'}
                   className={`min-h-[36px] px-3 text-xs uppercase tracking-wider border ${filtroRadar === f ? 'bg-navy text-white border-navy' : 'border-navy/20 text-grafite'}`}>
                   {f === 'todos' ? 'Tudo' : f === 'Projeto' ? 'Projetos de lei' : 'Notícias'}
                 </button>
@@ -236,10 +239,10 @@ export default function LegislacaoPage() {
           </div>
           {estadoRadar && <p className={`text-sm mb-3 p-2 border-l-4 ${estadoRadar.includes('atrasada') ? 'border-atencao bg-atencaoFundo' : 'border-dourado bg-pergaminho'}`} data-testid="estado-radar">{estadoRadar}</p>}
           {/* Passo 117: o radar em texto (tipo, título, fonte, data, link), para o boletim do escritório. */}
-          {radar.length > 0 && <button type="button" data-testid="copiar-radar" onClick={() => navigator.clipboard?.writeText(`Radar de legislação · ${new Date().toLocaleDateString('pt-BR')} · ${radar.length} novidade(s)\n` + radar.map(n => `${n.tipo} · ${n.titulo} · ${n.fonte}${n.data ? ' · ' + formatarData(n.data) : ''}\n  ${n.link}`).join('\n')).catch(() => undefined)} className="mb-3 min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar radar</button>}
-          {radar.length > 0 && <button type="button" data-testid="imprimir-radar" onClick={() => window.print()} className="mb-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir radar</button>}{/* Passo 184 */}
-          {radar.length > 0 && <button type="button" data-testid="copiar-link-radar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mb-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 229 */}
-          {radar.length > 0 && <button type="button" data-testid="baixar-radar" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['fonte;tipo;título;data;link', ...radar.map(r => `${r.fonte};${r.tipo};${r.titulo.replace(/;/g, ',')};${r.data ?? ''};${r.link}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'radar-legislacao.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 299 */}
+          {radar.length > 0 && <button type="button" title="Copia o radar em texto (tipo, título, fonte, data e link de cada item) para o boletim do escritório" data-testid="copiar-radar" onClick={() => navigator.clipboard?.writeText(`Radar de legislação · ${new Date().toLocaleDateString('pt-BR')} · ${radar.length} novidade(s)\n` + radar.map(n => `${n.tipo} · ${n.titulo} · ${n.fonte}${n.data ? ' · ' + formatarData(n.data) : ''}\n  ${n.link}`).join('\n')).catch(() => undefined)} className="mb-3 min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar radar</button>}
+          {radar.length > 0 && <button type="button" title="Abre a janela de impressão do navegador para imprimir o radar" data-testid="imprimir-radar" onClick={() => window.print()} className="mb-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir radar</button>}{/* Passo 184 */}
+          {radar.length > 0 && <button type="button" title="Copia o endereço desta página de legislação para compartilhar com a equipe" data-testid="copiar-link-radar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mb-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 229 */}
+          {radar.length > 0 && <button type="button" title="Baixa a planilha CSV com os itens do radar (fonte, tipo, título, data e link)" data-testid="baixar-radar" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['fonte;tipo;título;data;link', ...radar.map(r => `${r.fonte};${r.tipo};${r.titulo.replace(/;/g, ',')};${r.data ?? ''};${r.link}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'radar-legislacao.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 299 */}
           {radar.length === 0 ? (
             <p className="text-sm text-grafite-claro" data-testid="radar-vazio">Nada captado ainda para esta área. A varredura roda todo dia às 8h30; escolha "Todas as áreas" para ver o que já existe.</p>
           ) : (
@@ -248,13 +251,13 @@ export default function LegislacaoPage() {
                 <li key={n.id} className="py-3 flex flex-wrap items-start gap-x-4 gap-y-1">
                   <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 border ${n.tipo === 'Projeto' ? 'border-dourado text-navy' : 'border-navy/20 text-grafite-claro'}`}>{n.tipo}</span>
                   <div className="flex-1 min-w-[240px]">
-                    <a href={n.link} target="_blank" rel="noopener noreferrer" className="text-sm text-navy font-medium hover:underline inline-flex items-center gap-1">
+                    <a href={n.link} target="_blank" rel="noopener noreferrer" title={`Abre em nova aba o item completo na fonte original (${n.fonte})`} className="text-sm text-navy font-medium hover:underline inline-flex items-center gap-1">
                       {n.titulo} <ExternalLink size={12} aria-hidden="true" />
                     </a>
                     {n.resumo && <p className="text-sm text-grafite mt-0.5">{n.resumo}</p>}
                     <p className="text-xs text-grafite-claro mt-0.5">{n.fonte}{n.data ? ` · ${formatarData(n.data)}` : ''}{n.termo ? ` · tema: ${n.termo}` : ''}</p>
                     {!!n.afetados?.length && (
-                      <p className="text-xs mt-1 text-navy" data-testid="radar-afetados">Possivelmente afetados: {n.afetados.map(a => <Link key={a.id} to={a.tipo === 'caso' ? '/projetos' : `/contrato/${a.id}`} className="underline mr-2">{a.tipo === 'caso' ? 'caso' : 'contrato'} {a.nome} ({a.palavras} palavra{a.palavras > 1 ? 's' : ''} em comum)</Link>)} · o responsável recebeu uma tarefa.</p>
+                      <p className="text-xs mt-1 text-navy" data-testid="radar-afetados">Possivelmente afetados: {n.afetados.map(a => <Link key={a.id} to={a.tipo === 'caso' ? '/projetos' : `/contrato/${a.id}`} title={a.tipo === 'caso' ? 'Abre Casos e projetos para ver o caso possivelmente afetado por esta novidade' : 'Abre o contrato possivelmente afetado por esta novidade'} className="underline mr-2">{a.tipo === 'caso' ? 'caso' : 'contrato'} {a.nome} ({a.palavras} palavra{a.palavras > 1 ? 's' : ''} em comum)</Link>)} · o responsável recebeu uma tarefa.</p>
                     )}
                   </div>
                 </li>
@@ -299,6 +302,7 @@ export default function LegislacaoPage() {
                           href={n.link}
                           target="_blank"
                           rel="noreferrer"
+                          title="Abre em nova aba o texto oficial desta norma na fonte"
                           className="inline-flex items-center gap-1 text-navy underline underline-offset-4 min-h-[44px]"
                         >
                           {n.fonte} <ExternalLink size={12} aria-hidden="true" />
@@ -312,7 +316,7 @@ export default function LegislacaoPage() {
                         <ul className="mt-1 text-xs space-y-0.5">
                           {afetados.map(i => (
                             <li key={i.id}>
-                              <Link to={`/contrato/${i.id}`} className="text-navy underline underline-offset-2">
+                              <Link to={`/contrato/${i.id}`} title="Abre o contrato deste imóvel afetado pela mudança na lei" className="text-navy underline underline-offset-2">
                                 {i.endereco}
                               </Link>
                             </li>
@@ -328,6 +332,7 @@ export default function LegislacaoPage() {
                         id={`st-${n.id}`}
                         value={status}
                         onChange={e => mudar(n, e.target.value as StatusAcompanhamento)}
+                        title="Muda o status de acompanhamento desta norma (nova, em análise, concluída ou não se aplica) e salva na hora"
                         className="mt-2 block w-full min-h-[44px] px-2 border border-grafite-claro/40 bg-white print:hidden"
                       >
                         {(Object.keys(ROTULO_STATUS) as StatusAcompanhamento[]).map(s => (

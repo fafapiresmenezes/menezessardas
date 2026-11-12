@@ -84,7 +84,7 @@ export default function AlertasPage() {
           </p>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {indicadores.map(ind => (
-              <button type="button" key={ind.rotulo} onClick={() => setFiltro(ind.chave)} aria-pressed={filtro === ind.chave} data-testid={`filtro-${ind.chave}`}
+              <button type="button" key={ind.rotulo} onClick={() => setFiltro(ind.chave)} aria-pressed={filtro === ind.chave} data-testid={`filtro-${ind.chave}`} title={`Filtra a lista abaixo para mostrar apenas os alertas de "${ind.rotulo}"`}
                 className={`text-left bg-white border-t-2 p-5 shadow-sm hover:bg-pergaminho transition ${filtro === ind.chave ? 'border-navy ring-1 ring-navy' : 'border-dourado'}`}>
                 <p className="text-xs uppercase tracking-wider text-grafite-claro">{ind.rotulo}</p>
                 <p className={`font-serif text-4xl mt-2 ${ind.cor}`}>{ind.valor}</p>
@@ -92,17 +92,17 @@ export default function AlertasPage() {
             ))}
           </div>
           <p className="text-xs text-grafite-claro mt-2" data-testid="filtro-ativo">
-            {filtro === 'todos' ? 'Clique em um número para filtrar a lista.' : <>Mostrando {visiveis.length} de {alertas.length}. <button type="button" onClick={() => setFiltro('todos')} className="underline text-navy">ver todos</button></>}
+            {filtro === 'todos' ? 'Clique em um número para filtrar a lista.' : <>Mostrando {visiveis.length} de {alertas.length}. <button type="button" onClick={() => setFiltro('todos')} title="Remove o filtro e volta a mostrar todos os alertas" className="underline text-navy">ver todos</button></>}
             {/* Passo 119: alertas visíveis em texto (imóvel, compromisso, data, dias), para a reunião ou o e-mail da sócia. */}
-            {visiveis.length > 0 && <button type="button" data-testid="copiar-alertas" onClick={() => navigator.clipboard?.writeText(`Alertas · ${new Date().toLocaleDateString('pt-BR')} · ${visiveis.length} de ${alertas.length}\n` + visiveis.map(a => `${a.diasRestantes < 0 ? 'VENCIDO há ' + (-a.diasRestantes) + ' dia(s)' : a.diasRestantes === 0 ? 'HOJE' : 'em ' + a.diasRestantes + ' dia(s)'} · ${a.imovel} · ${a.titulo} · ${formatarData(a.dataEvento)}`).join('\n')).catch(() => undefined)} className="ml-3 underline text-navy">copiar lista</button>}
-            {visiveis.length > 0 && <button type="button" data-testid="imprimir-alertas" onClick={() => window.print()} className="ml-3 underline text-navy print:hidden">imprimir</button>}{/* Passo 186 */}
-            {visiveis.length > 0 && <button type="button" data-testid="copiar-link-alertas" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-3 underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 231 */}
-            {visiveis.length > 0 && <button type="button" data-testid="baixar-alertas" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['imóvel;tipo;título;data do evento;dias restantes', ...visiveis.map(a => `${a.imovel};${a.tipo};${a.titulo.replace(/;/g, ',')};${a.dataEvento};${a.diasRestantes}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'alertas.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 298 */}
+            {visiveis.length > 0 && <button type="button" data-testid="copiar-alertas" title="Copia os alertas visíveis em texto (imóvel, compromisso, data e dias) para colar em e-mail ou reunião" onClick={() => navigator.clipboard?.writeText(`Alertas · ${new Date().toLocaleDateString('pt-BR')} · ${visiveis.length} de ${alertas.length}\n` + visiveis.map(a => `${a.diasRestantes < 0 ? 'VENCIDO há ' + (-a.diasRestantes) + ' dia(s)' : a.diasRestantes === 0 ? 'HOJE' : 'em ' + a.diasRestantes + ' dia(s)'} · ${a.imovel} · ${a.titulo} · ${formatarData(a.dataEvento)}`).join('\n')).catch(() => undefined)} className="ml-3 underline text-navy">copiar lista</button>}
+            {visiveis.length > 0 && <button type="button" data-testid="imprimir-alertas" title="Abre a tela de impressão do navegador com a lista de alertas visível" onClick={() => window.print()} className="ml-3 underline text-navy print:hidden">imprimir</button>}{/* Passo 186 */}
+            {visiveis.length > 0 && <button type="button" data-testid="copiar-link-alertas" title="Copia o endereço desta página de alertas para compartilhar com a equipe" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-3 underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 231 */}
+            {visiveis.length > 0 && <button type="button" data-testid="baixar-alertas" title="Baixa a lista de alertas visíveis em arquivo CSV para abrir em planilha" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['imóvel;tipo;título;data do evento;dias restantes', ...visiveis.map(a => `${a.imovel};${a.tipo};${a.titulo.replace(/;/g, ',')};${a.dataEvento};${a.diasRestantes}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'alertas.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 298 */}
           </p>
           {prefEmail && (
             <p className="text-sm mt-3 p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="pref-email">
               {prefEmail.alertas_email ? `Você recebe estes avisos por e-mail com até ${prefEmail.dias_antecedencia} dias de antecedência.` : 'Você escolheu não receber estes avisos por e-mail.'}{' '}
-              <button type="button" onClick={() => navigate('/settings')} className="underline text-navy">alterar em Configurações</button>
+              <button type="button" onClick={() => navigate('/settings')} title="Abre a página de Configurações para mudar o recebimento de avisos por e-mail" className="underline text-navy">alterar em Configurações</button>
             </p>
           )}
         </div>
@@ -114,7 +114,7 @@ export default function AlertasPage() {
               {avisosTeto[0].gasto_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} de {avisosTeto[0].teto_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} ({avisosTeto[0].pct}%) em {formatarData(avisosTeto[0].criado_em.slice(0, 10))}.
               {avisosTeto[0].email_enviado_em ? ' Administradores avisados por e-mail.' : ' E-mail aos administradores ainda não enviado.'}
             </p>
-            <button type="button" onClick={() => navigate('/consumo')} className="mt-2 underline text-navy text-sm">Abrir Consumo</button>
+            <button type="button" onClick={() => navigate('/consumo')} title="Abre a página de Consumo para ver o gasto de IA do mês em detalhe" className="mt-2 underline text-navy text-sm">Abrir Consumo</button>
           </section>
         )}
         {mudancasKyc.length > 0 && (
@@ -127,8 +127,8 @@ export default function AlertasPage() {
                   <span className="text-grafite-claro">{formatarData(m.consultado_em)}</span>
                   <span className="font-medium text-navy">{m.nome ?? m.cnpj}</span>
                   <span>era <strong>{m.risco_anterior}</strong>, agora <strong>{m.risco}</strong></span>
-                  <button type="button" onClick={() => navigate('/kyc')} className="ml-auto underline text-navy">abrir KYC</button>
-                  <button type="button" onClick={() => verKyc(m.id)} className="underline text-navy" data-testid="kyc-visto">marcar como visto</button>
+                  <button type="button" onClick={() => navigate('/kyc')} title="Abre a página de KYC para ver os detalhes da checagem desta empresa" className="ml-auto underline text-navy">abrir KYC</button>
+                  <button type="button" onClick={() => verKyc(m.id)} title="Marca esta mudança de status como vista e a remove desta lista de alertas" className="underline text-navy" data-testid="kyc-visto">marcar como visto</button>
                 </li>
               ))}
             </ul>
@@ -144,7 +144,7 @@ export default function AlertasPage() {
                   <span className="text-grafite-claro">{formatarData(n.data_disponibilizacao)}</span>
                   <span className="font-medium text-navy">{(n.oab ?? '').replace(/^busca:/, '')}</span>
                   <span>{[n.tribunal, n.tipo, n.numero_processo].filter(Boolean).join(' · ')}</span>
-                  <button type="button" onClick={() => navigate('/intimacoes')} className="ml-auto underline text-navy">ver</button>
+                  <button type="button" onClick={() => navigate('/intimacoes')} title="Abre a página de Intimações para ler esta comunicação e marcá-la como lida" className="ml-auto underline text-navy">ver</button>
                 </li>
               ))}
             </ul>
@@ -164,6 +164,7 @@ export default function AlertasPage() {
                 <button
                   key={alerta.id}
                   onClick={() => navigate(`/contrato/${alerta.imovelId}`)}
+                  title="Abre o contrato deste imóvel para gerenciar o compromisso do alerta"
                   className="w-full text-left p-5 hover:bg-pergaminho transition flex items-start justify-between gap-4 min-h-[88px]"
                   aria-label={`${alerta.titulo} - ${alerta.imovel} - ${textoPrazo(alerta.diasRestantes)}`}
                 >

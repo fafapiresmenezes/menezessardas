@@ -577,6 +577,7 @@ export default function ParametrosEscritaPage() {
 
                         {p.tipo === 'selecao' && (
                           <select
+                            title={p.dica}
                             value={getValor(p)}
                             onChange={e => setValor(p.chave, e.target.value)}
                             onFocus={() => setCampoAtivo(p.chave)}

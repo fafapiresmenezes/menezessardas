@@ -147,8 +147,8 @@ export default function LoginPage() {
               <p className="text-sm text-grafite">Digite o código de 6 dígitos do seu aplicativo autenticador.</p>
               <input aria-label="Código de 6 dígitos" inputMode="numeric" autoFocus maxLength={7} value={codigo} onChange={e => setCodigo(e.target.value)} className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm tracking-widest" />
               {erro && <p role="alert" className="text-sm text-critico">{erro}</p>}
-              <button type="submit" disabled={carregando} className="w-full bg-navy text-white py-3 rounded-sm uppercase tracking-wider text-sm">Confirmar código</button>
-              <button type="button" onClick={async () => { await supabase.auth.signOut(); setPedirCodigo(false); setCodigo('') }} className="w-full text-sm underline text-grafite">Entrar com outra conta</button>
+              <button type="submit" disabled={carregando} title="Confere o código do aplicativo autenticador e conclui a entrada na plataforma" className="w-full bg-navy text-white py-3 rounded-sm uppercase tracking-wider text-sm">Confirmar código</button>
+              <button type="button" onClick={async () => { await supabase.auth.signOut(); setPedirCodigo(false); setCodigo('') }} title="Sai desta conta e volta à tela de e-mail e senha para entrar com outra" className="w-full text-sm underline text-grafite">Entrar com outra conta</button>
             </form>
           ) : (
           <form onSubmit={entrar} className="space-y-5">
@@ -188,6 +188,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={carregando}
+              title={primeiroAcesso ? 'Cria a sua conta com este e-mail e senha; ela nasce com um escritório próprio e vazio' : 'Entra na plataforma com o e-mail e a senha informados'}
               className="w-full bg-navy hover:bg-navy-700 disabled:bg-grafite-claro text-white tracking-wider uppercase text-sm py-3 rounded-sm transition"
             >
               {carregando ? 'Aguarde…' : primeiroAcesso ? 'Criar acesso' : 'Entrar'}
@@ -202,6 +203,7 @@ export default function LoginPage() {
                 setErro('')
                 setAvisoRecuperacao(true)
               }}
+              title="Mostra as instruções para recuperar a senha com uma pessoa administradora da sua equipe"
               className="inline-flex items-center min-h-[44px] text-sm text-navy underline underline-offset-4 hover:text-dourado-escuro"
             >
               Esqueci minha senha
@@ -214,6 +216,7 @@ export default function LoginPage() {
                   setAvisoCadastro('')
                   setPrimeiroAcesso(v => !v)
                 }}
+                title={primeiroAcesso ? 'Volta à tela de entrada para quem já tem conta' : 'Muda o formulário para criar uma conta nova com escritório próprio'}
                 className="block mx-auto mt-3 min-h-[44px] text-sm text-navy underline underline-offset-4 hover:text-dourado-escuro"
               >
                 {primeiroAcesso ? 'Já tenho acesso' : 'Criar conta'}

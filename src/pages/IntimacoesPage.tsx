@@ -94,11 +94,11 @@ export default function IntimacoesPage() {
           {admin && <ConexaoCnj />}
           <p className="text-sm">Publicações do <strong>Diário de Justiça Eletrônico Nacional</strong> (CNJ) para as OABs do escritório. A busca roda sozinha várias vezes ao dia; o botão busca na hora.</p>
           <div className="flex flex-wrap gap-3 items-center">
-            <button onClick={buscar} disabled={ocupado} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2 disabled:opacity-50">
+            <button onClick={buscar} disabled={ocupado} title="Busca na hora as publicações dos últimos 30 dias no Diário de Justiça Eletrônico Nacional para as OABs do escritório" className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2 disabled:opacity-50">
               <RefreshCw size={16} aria-hidden="true" className={ocupado ? 'animate-spin' : ''} /> {ocupado ? 'Buscando…' : 'Buscar agora'}
             </button>
             <label className="text-sm flex items-center gap-2">
-              <select aria-label="Quais intimações mostrar" value={filtro} onChange={e => setFiltro(e.target.value as 'novas' | 'todas' | 'urgentes')} className="border px-2 py-2 min-h-[44px]" data-testid="filtro-intimacoes">
+              <select aria-label="Quais intimações mostrar" value={filtro} onChange={e => setFiltro(e.target.value as 'novas' | 'todas' | 'urgentes')} className="border px-2 py-2 min-h-[44px]" title="Escolhe quais intimações aparecem na lista: só urgentes, só as não lidas ou todas" data-testid="filtro-intimacoes">
                 <option value="urgentes">Só urgentes ({lista.filter(i => { const s = urgencia(i)?.situacao; return s === 'vencido' || s === 'critico' }).length})</option>
                 <option value="novas">Só as não lidas ({lista.filter(i => !i.lida).length})</option>
                 <option value="todas">Todas ({lista.length})</option>
@@ -106,10 +106,10 @@ export default function IntimacoesPage() {
             </label>
             <input type="search" value={busca} onChange={e => setBusca(e.target.value)} placeholder="Buscar processo, tribunal ou texto" aria-label="Buscar nas intimações" className="border px-3 py-2 min-h-[44px] text-sm w-64" data-testid="busca-intimacoes" />
             {/* Passo 105: resumo das intimações visíveis em texto (processo, tribunal, prazo), para colar na agenda ou no e-mail do cliente. */}
-            {visiveis.length > 0 && <button type="button" onClick={copiarResumo} data-testid="copiar-intimacoes" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar resumo</button>}
-            {visiveis.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-intimacoes" className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}{/* Passo 200 */}
-            {visiveis.length > 0 && <button type="button" data-testid="copiar-link-intimacoes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 226 */}
-            {visiveis.length > 0 && <button type="button" data-testid="baixar-intimacoes" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['processo;tribunal;órgão;tipo;disponibilizada em', ...visiveis.map(i => `${i.numero_processo ?? ''};${i.tribunal ?? ''};${i.orgao ?? ''};${i.tipo ?? ''};${i.data_disponibilizacao}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'intimacoes.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 294 */}
+            {visiveis.length > 0 && <button type="button" onClick={copiarResumo} title="Copia um resumo em texto das intimações visíveis (processo, tribunal e prazo) para colar na agenda ou no e-mail do cliente" data-testid="copiar-intimacoes" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar resumo</button>}
+            {visiveis.length > 0 && <button type="button" onClick={() => window.print()} title="Abre a janela de impressão do navegador para imprimir as intimações visíveis" data-testid="imprimir-intimacoes" className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}{/* Passo 200 */}
+            {visiveis.length > 0 && <button type="button" data-testid="copiar-link-intimacoes" title="Copia o endereço desta página de intimações para compartilhar com a equipe" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 226 */}
+            {visiveis.length > 0 && <button type="button" data-testid="baixar-intimacoes" title="Baixa a planilha CSV com as intimações visíveis (processo, tribunal, órgão, tipo e data)" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['processo;tribunal;órgão;tipo;disponibilizada em', ...visiveis.map(i => `${i.numero_processo ?? ''};${i.tribunal ?? ''};${i.orgao ?? ''};${i.tipo ?? ''};${i.data_disponibilizacao}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'intimacoes.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 294 */}
           </div>
           <p className="flex flex-wrap gap-3 text-xs" data-testid="resumo-urgencia">
             <span><strong>{resumo.vencido}</strong> vencida(s)</span>
@@ -123,7 +123,7 @@ export default function IntimacoesPage() {
               <label className="text-xs uppercase tracking-wider text-grafite block">OABs do escritório (número/UF, separadas por vírgula)
                 <input value={oabs} onChange={e => setOabs(e.target.value)} placeholder="123456/RJ, 98765/RJ" className="block border px-3 py-2 min-h-[44px] mt-1 w-72 normal-case" />
               </label>
-              <button onClick={salvarOabs} disabled={!oabs.trim()} className="min-h-[44px] px-4 border border-navy text-navy text-sm disabled:opacity-50">Salvar OABs</button>
+              <button onClick={salvarOabs} title="Grava as OABs informadas como monitoradas e já dispara uma busca de intimações" disabled={!oabs.trim()} className="min-h-[44px] px-4 border border-navy text-navy text-sm disabled:opacity-50">Salvar OABs</button>
             </div>
           )}
         </section>
@@ -139,13 +139,13 @@ export default function IntimacoesPage() {
                       <p className="flex flex-wrap items-center gap-2 mt-1 text-xs" data-testid={`urgencia-${i.id}`}>
                         <SeloSituacao situacao={u.situacao} texto={u.texto} />
                         <span className="text-grafite-claro">prazo estimado até {formatarData(i.prazo_final!)} ({i.prazo_dias} dias úteis; confira nos autos)</span>
-                        {i.tarefa_id ? <a href="#/projetos" className="underline text-navy">tarefa criada no caso</a> : <button type="button" onClick={() => criarTarefa(i)} className="underline text-navy" data-testid={`criar-tarefa-${i.id}`}>criar tarefa no caso</button>}
+                        {i.tarefa_id ? <a href="#/projetos" title="Abre Casos e projetos, onde está a tarefa criada para esta intimação" className="underline text-navy">tarefa criada no caso</a> : <button type="button" onClick={() => criarTarefa(i)} title="Cria uma tarefa no caso correspondente com o prazo estimado desta intimação" className="underline text-navy" data-testid={`criar-tarefa-${i.id}`}>criar tarefa no caso</button>}
                       </p>) : null })()}
                   </div>
                   <div className="flex gap-3 text-sm">
-                    <button onClick={() => setAberta(aberta === i.id ? null : i.id)} className="underline text-navy">{aberta === i.id ? 'Fechar' : 'Ler'}</button>
-                    {i.link && <a href={i.link} target="_blank" rel="noopener noreferrer" className="underline text-navy inline-flex items-center gap-1">Abrir no tribunal <ExternalLink size={12} aria-hidden="true" /></a>}
-                    {!i.lida && <button onClick={() => marcarLida(i)} className="underline text-grafite">Marcar como lida</button>}
+                    <button onClick={() => setAberta(aberta === i.id ? null : i.id)} title={aberta === i.id ? 'Esconde o texto completo desta intimação' : 'Mostra o texto completo desta intimação aqui na página'} className="underline text-navy">{aberta === i.id ? 'Fechar' : 'Ler'}</button>
+                    {i.link && <a href={i.link} target="_blank" rel="noopener noreferrer" title="Abre em nova aba a publicação original no site do tribunal" className="underline text-navy inline-flex items-center gap-1">Abrir no tribunal <ExternalLink size={12} aria-hidden="true" /></a>}
+                    {!i.lida && <button onClick={() => marcarLida(i)} title="Marca esta intimação como lida; ela sai do filtro de não lidas" className="underline text-grafite">Marcar como lida</button>}
                   </div>
                 </div>
                 {aberta === i.id && <p className="text-sm mt-2 whitespace-pre-wrap">{i.texto}</p>}
@@ -155,7 +155,7 @@ export default function IntimacoesPage() {
         ) : null}
         {visiveis.length > mostrar && (
           <p className="text-center">
-            <button type="button" onClick={() => setMostrar(m => m + TAMANHO_PAGINA)} className="min-h-[44px] px-6 border border-navy/20 text-navy text-sm" data-testid="mostrar-mais-intimacoes">
+            <button type="button" onClick={() => setMostrar(m => m + TAMANHO_PAGINA)} title="Mostra mais 30 intimações na lista" className="min-h-[44px] px-6 border border-navy/20 text-navy text-sm" data-testid="mostrar-mais-intimacoes">
               Mostrar mais ({visiveis.length - mostrar} restantes)
             </button>
           </p>

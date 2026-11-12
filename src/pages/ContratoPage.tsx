@@ -244,7 +244,7 @@ export default function ContratoPage() {
     return (
       <Layout title="Imóvel não encontrado">
         <div className="bg-white p-10 text-center shadow-sm">
-          <button onClick={() => navigate('/imoveis')} className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4">
+          <button onClick={() => navigate('/imoveis')} title="Volta para a lista de imóveis" className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4">
             <ArrowLeft size={16} aria-hidden="true" /> Voltar para imóveis
           </button>
         </div>
@@ -257,7 +257,7 @@ export default function ContratoPage() {
       <Layout title={imovel.endereco}>
         <div className="bg-white p-10 text-center shadow-sm space-y-4">
           <p className="font-serif text-xl text-navy">Este imóvel ainda não possui contrato cadastrado.</p>
-          <Link to={`/contrato/novo?imovelId=${imovel.id}`} className="inline-flex items-center gap-2 bg-navy text-white px-5 py-2.5 rounded-sm uppercase tracking-wider text-sm">
+          <Link to={`/contrato/novo?imovelId=${imovel.id}`} title="Abre o formulário para cadastrar o contrato deste imóvel" className="inline-flex items-center gap-2 bg-navy text-white px-5 py-2.5 rounded-sm uppercase tracking-wider text-sm">
             <Plus size={16} aria-hidden="true" /> Cadastrar contrato
           </Link>
         </div>
@@ -283,7 +283,7 @@ export default function ContratoPage() {
         {avisoTopo && (
           <p role="status" className="p-3 bg-regularFundo border-l-2 border-regular text-regular text-sm">{avisoTopo}</p>
         )}
-        <Link to={`/imoveis/${imovel.id}`} className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4 -mb-2">
+        <Link to={`/imoveis/${imovel.id}`} title="Volta para a ficha completa deste imóvel" className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4 -mb-2">
           <ArrowLeft size={16} aria-hidden="true" /> Ficha do imóvel
         </Link>
         <section className="bg-white border-t-2 border-dourado p-6 shadow-sm">
@@ -299,16 +299,16 @@ export default function ContratoPage() {
                 <SeloSituacao situacao={situacaoContrato} texto={rotulosStatusContrato[statusContrato]} />
               )}
               {/* Passo 175: imprimir o contrato com o resumo. */}
-              <button type="button" onClick={() => window.print()} data-testid="imprimir-contrato" className="inline-flex items-center gap-2 min-h-[44px] px-3 border text-sm mr-2 print:hidden">Imprimir</button>
-              <button type="button" onClick={copiarResumoContrato} data-testid="copiar-contrato" className="inline-flex items-center gap-1.5 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar resumo</button>
-              <button type="button" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} data-testid="copiar-link-contrato" className="inline-flex items-center gap-1.5 min-h-[44px] px-3 border text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 206 */}
-              {contrato && <button type="button" data-testid="baixar-contrato" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Contrato — ${contrato?.parte ?? ''}\nTipo: ${contrato ? rotulosTipoContrato[contrato.tipo] : ''}\nInício: ${contrato?.dataInicio ?? ''}\nVencimento: ${contrato?.dataVencimento ?? 'indeterminado'}\nValor: ${contrato?.valor ?? ''}\nImóvel: ${imovel?.endereco ?? ''}\nDocumentos: ${documentos.length}\nCompromissos: ${compromissos.length}\nVinculados: ${vinculados.length}`], { type: 'text/plain;charset=utf-8' })); a.download = 'contrato.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="inline-flex items-center min-h-[44px] px-3 border border-navy/20 text-navy text-sm print:hidden ml-2">Baixar ficha</button>}{/* Passo 321 */}
+              <button type="button" onClick={() => window.print()} data-testid="imprimir-contrato" title="Abre a tela de impressão do navegador com o resumo do contrato" className="inline-flex items-center gap-2 min-h-[44px] px-3 border text-sm mr-2 print:hidden">Imprimir</button>
+              <button type="button" onClick={copiarResumoContrato} data-testid="copiar-contrato" title="Copia o resumo do contrato (partes, datas, valor e situação) em texto para o e-mail ou parecer" className="inline-flex items-center gap-1.5 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Copiar resumo</button>
+              <button type="button" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} data-testid="copiar-link-contrato" title="Copia o endereço desta página do contrato para compartilhar" className="inline-flex items-center gap-1.5 min-h-[44px] px-3 border text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 206 */}
+              {contrato && <button type="button" data-testid="baixar-contrato" title="Baixa a ficha do contrato em arquivo de texto com os principais dados" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Contrato — ${contrato?.parte ?? ''}\nTipo: ${contrato ? rotulosTipoContrato[contrato.tipo] : ''}\nInício: ${contrato?.dataInicio ?? ''}\nVencimento: ${contrato?.dataVencimento ?? 'indeterminado'}\nValor: ${contrato?.valor ?? ''}\nImóvel: ${imovel?.endereco ?? ''}\nDocumentos: ${documentos.length}\nCompromissos: ${compromissos.length}\nVinculados: ${vinculados.length}`], { type: 'text/plain;charset=utf-8' })); a.download = 'contrato.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="inline-flex items-center min-h-[44px] px-3 border border-navy/20 text-navy text-sm print:hidden ml-2">Baixar ficha</button>}{/* Passo 321 */}
               {!encerrado && modo === 'ver' && (
                 <>
-                  <button onClick={abrirEdicao} className="inline-flex items-center gap-1.5 min-h-[44px] px-4 border border-navy text-navy hover:bg-pergaminho text-sm">
+                  <button onClick={abrirEdicao} title="Abre o formulário para alterar os dados deste contrato (parte, valor, vencimento, índice, garantia)" className="inline-flex items-center gap-1.5 min-h-[44px] px-4 border border-navy text-navy hover:bg-pergaminho text-sm">
                     <Pencil size={14} aria-hidden="true" /> Editar
                   </button>
-                  <button onClick={() => { setModo('encerrar'); setMotivo(null) }} className="inline-flex items-center gap-1.5 min-h-[44px] px-4 border border-critico text-critico hover:bg-criticoFundo text-sm">
+                  <button onClick={() => { setModo('encerrar'); setMotivo(null) }} title="Inicia o encerramento deste contrato: ele deixa de gerar alertas e sai dos indicadores" className="inline-flex items-center gap-1.5 min-h-[44px] px-4 border border-critico text-critico hover:bg-criticoFundo text-sm">
                     <Lock size={14} aria-hidden="true" /> Encerrar
                   </button>
                 </>
@@ -355,8 +355,8 @@ export default function ContratoPage() {
               </Campo>
               {erro && <p role="alert" className="text-sm text-critico">{erro}</p>}
               <div className="flex gap-3">
-                <button onClick={salvarEdicao} className="min-h-[44px] bg-navy hover:bg-navy-700 text-white px-6 rounded-sm uppercase tracking-wider text-sm">Salvar alterações</button>
-                <button onClick={() => { setModo('ver'); setErro('') }} className="min-h-[44px] px-5 text-navy underline underline-offset-4">Cancelar</button>
+                <button onClick={salvarEdicao} title="Grava as alterações feitas neste contrato" className="min-h-[44px] bg-navy hover:bg-navy-700 text-white px-6 rounded-sm uppercase tracking-wider text-sm">Salvar alterações</button>
+                <button onClick={() => { setModo('ver'); setErro('') }} title="Fecha a edição sem gravar as alterações" className="min-h-[44px] px-5 text-navy underline underline-offset-4">Cancelar</button>
               </div>
             </div>
           )}
@@ -379,8 +379,8 @@ export default function ContratoPage() {
               <p className="text-sm text-grafite-claro">O registro continua guardado no histórico, mas deixa de gerar alertas e de contar nos indicadores.</p>
               {erro && <p role="alert" className="text-sm text-critico">{erro}</p>}
               <div className="flex gap-3">
-                <button onClick={confirmarEncerramento} disabled={!motivo} className="min-h-[44px] bg-critico text-white px-6 rounded-sm uppercase tracking-wider text-sm disabled:opacity-40 disabled:cursor-not-allowed">Confirmar encerramento</button>
-                <button onClick={() => { setModo('ver'); setMotivo(null) }} className="min-h-[44px] px-5 text-navy underline underline-offset-4">Cancelar</button>
+                <button onClick={confirmarEncerramento} title="Encerra o contrato com o motivo escolhido; o registro fica no histórico, mas para de gerar alertas" disabled={!motivo} className="min-h-[44px] bg-critico text-white px-6 rounded-sm uppercase tracking-wider text-sm disabled:opacity-40 disabled:cursor-not-allowed">Confirmar encerramento</button>
+                <button onClick={() => { setModo('ver'); setMotivo(null) }} title="Desiste do encerramento e mantém o contrato ativo" className="min-h-[44px] px-5 text-navy underline underline-offset-4">Cancelar</button>
               </div>
             </div>
           )}
@@ -439,12 +439,14 @@ export default function ContratoPage() {
             <div className="flex gap-2">
               <Link
                 to={`/contrato/novo?imovelId=${imovel.id}&paiId=${contrato.id}&natureza=aditivo`}
+                title="Abre o formulário para cadastrar um aditivo vinculado a este contrato"
                 className="inline-flex items-center gap-1.5 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm hover:bg-pergaminho"
               >
                 <Plus size={15} aria-hidden="true" /> Aditivo
               </Link>
               <Link
                 to={`/contrato/novo?imovelId=${imovel.id}&paiId=${contrato.id}&natureza=subcontrato`}
+                title="Abre o formulário para cadastrar um subcontrato vinculado a este contrato"
                 className="inline-flex items-center gap-1.5 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm hover:bg-pergaminho"
               >
                 <Plus size={15} aria-hidden="true" /> Subcontrato
@@ -461,6 +463,7 @@ export default function ContratoPage() {
                   <li key={v.id}>
                     <button
                       onClick={() => navigate(`/contrato/vinculo/${v.id}`)}
+                      title="Abre os detalhes deste aditivo ou subcontrato"
                       className="w-full text-left py-3 flex items-center justify-between gap-4 hover:bg-pergaminho"
                     >
                       <div className="min-w-0">
@@ -554,6 +557,7 @@ export default function ContratoPage() {
             <button
               onClick={() => analisar()}
               disabled={analisando}
+              title="Pede à inteligência artificial a análise do contrato: cláusulas de risco, prazos e sugestões (cada análise tem custo)"
               className="flex-shrink-0 bg-dourado hover:bg-dourado-claro disabled:opacity-60 text-navy font-medium px-5 py-2.5 rounded-sm uppercase tracking-wider text-sm"
             >
               {analisando ? 'Analisando…' : analise ? 'Analisar novamente' : 'Analisar contrato'}
@@ -597,7 +601,7 @@ export default function ContratoPage() {
                         </p>
                         <p className="text-grafite mt-0.5">{c.observacao}</p>
                         {c.trecho && <blockquote className="mt-1 text-xs italic text-grafite-claro border-l border-navy/20 pl-2" data-testid="trecho-clausula">“{c.trecho}”</blockquote>}
-                        {c.pagina ? <button type="button" onClick={() => abrirNaPagina(c.pagina!)} className="mt-1 text-xs underline text-navy print:hidden" data-testid="abrir-pagina">Abrir o PDF na página {c.pagina}</button> : null}
+                        {c.pagina ? <button type="button" onClick={() => abrirNaPagina(c.pagina!)} title="Abre o PDF do contrato em uma nova aba, direto na página citada pela análise" className="mt-1 text-xs underline text-navy print:hidden" data-testid="abrir-pagina">Abrir o PDF na página {c.pagina}</button> : null}
                       </li>
                     ))}
                   </ul>

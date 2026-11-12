@@ -63,6 +63,7 @@ export default function ImovelDetailPage() {
           <p className="text-grafite">Não encontramos este imóvel. Ele pode ter sido removido.</p>
           <button
             onClick={() => navigate('/imoveis')}
+            title="Volta para a lista de imóveis da carteira"
             className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4"
           >
             <ArrowLeft size={16} aria-hidden="true" /> Voltar para imóveis
@@ -96,6 +97,7 @@ export default function ImovelDetailPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <button
             onClick={() => navigate('/imoveis')}
+            title="Volta para a lista de imóveis da carteira"
             className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4 self-start"
           >
             <ArrowLeft size={16} aria-hidden="true" /> Imóveis
@@ -104,6 +106,7 @@ export default function ImovelDetailPage() {
             <SeloSituacao situacao={situacaoGeral} texto={proximo ? textoPrazo(proximo.diasRestantes) : 'Sem compromissos'} />
             <Link
               to={`/contrato/${imovel.id}`}
+              title={principal ? 'Abre a tela do contrato deste imóvel para editar, anexar documentos, aditivos e encerramento' : 'Abre a tela para cadastrar o primeiro contrato deste imóvel'}
               className="inline-flex items-center gap-2 min-h-[44px] bg-navy text-white px-5 rounded-sm uppercase tracking-wider text-sm"
             >
               {principal ? <Pencil size={14} aria-hidden="true" /> : <Plus size={14} aria-hidden="true" />}
@@ -117,7 +120,7 @@ export default function ImovelDetailPage() {
             <div>
               <p className="text-[11px] uppercase tracking-[0.18em] text-dourado-escuro">Ficha do imóvel</p>
               <h2 id="t-ficha" className="text-2xl mt-1">{imovel.endereco}</h2>
-              <button type="button" data-testid="copiar-link-imovel" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-2 min-h-[44px] px-3 border border-navy/20 text-navy text-xs print:hidden">Copiar link</button>{/* Passo 287 */}
+              <button type="button" data-testid="copiar-link-imovel" title="Copia o endereço desta ficha do imóvel para compartilhar com a equipe" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-2 min-h-[44px] px-3 border border-navy/20 text-navy text-xs print:hidden">Copiar link</button>{/* Passo 287 */}
             </div>
             <Building2 size={28} className="text-navy/30 flex-shrink-0" aria-hidden="true" />
           </div>
@@ -175,7 +178,7 @@ export default function ImovelDetailPage() {
           ) : (
             <div className="bg-white p-6 shadow-sm border-l-[3px] border-grafite-claro/40">
               <p className="text-grafite">Este imóvel não tem contrato vigente.</p>
-              <Link to={`/contrato/novo?imovelId=${imovel.id}`} className="inline-flex items-center gap-2 min-h-[44px] mt-2 text-navy underline underline-offset-4">
+              <Link to={`/contrato/novo?imovelId=${imovel.id}`} title="Abre a tela para cadastrar o primeiro contrato deste imóvel" className="inline-flex items-center gap-2 min-h-[44px] mt-2 text-navy underline underline-offset-4">
                 <Plus size={14} aria-hidden="true" /> Cadastrar o primeiro contrato
               </Link>
             </div>

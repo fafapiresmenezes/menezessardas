@@ -85,10 +85,10 @@ export default function DashboardPage() {
           <p className="text-sm text-grafite mb-3 flex flex-wrap items-center gap-3" data-testid="leitura-painel">
             <span>{imoveis.length === 0 ? 'Nenhum imóvel cadastrado ainda.' : vencidos > 0 ? `Atenção: ${vencidos} imóvel(is) com documento ou contrato vencido e ${criticos} vencendo em 30 dias.` : criticos > 0 ? `Carteira em ordem: nada vencido; ${criticos} imóvel(is) vencem em 30 dias.` : 'Carteira em ordem: nada vencido nem vencendo nos próximos 30 dias.'}</span>
             {/* Passo 148: imprimir o painel em uma página para a reunião. */}
-            {imoveis.length > 0 && <button type="button" data-testid="imprimir-painel" onClick={() => window.print()} className="underline text-navy print:hidden">imprimir</button>}
-            {imoveis.length > 0 && <button type="button" data-testid="copiar-painel" onClick={() => navigator.clipboard?.writeText(`Painel · ${new Date().toLocaleDateString('pt-BR')}\n` + indicadores.map(i => `${i.rotulo}: ${i.valor}`).join('\n')).then(() => setPainelCopiado(true)).catch(() => undefined)} className="underline text-navy">{painelCopiado ? 'copiado' : 'copiar'}</button>}
-            {imoveis.length > 0 && <button type="button" data-testid="copiar-link-painel" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 216 */}
-            {imoveis.length > 0 && <button type="button" data-testid="baixar-painel" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Painel · ${new Date().toLocaleDateString('pt-BR')}\n` + indicadores.map(i => `${i.rotulo}: ${i.valor}`).join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'painel.txt'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="underline text-navy print:hidden ml-2">{baixado ? 'baixado' : 'baixar'}</button>}{/* Passo 288 */}
+            {imoveis.length > 0 && <button type="button" data-testid="imprimir-painel" title="Abre a tela de impressão do navegador com o painel em uma página, para a reunião" onClick={() => window.print()} className="underline text-navy print:hidden">imprimir</button>}
+            {imoveis.length > 0 && <button type="button" data-testid="copiar-painel" title="Copia os indicadores do painel em texto para colar em e-mail ou mensagem" onClick={() => navigator.clipboard?.writeText(`Painel · ${new Date().toLocaleDateString('pt-BR')}\n` + indicadores.map(i => `${i.rotulo}: ${i.valor}`).join('\n')).then(() => setPainelCopiado(true)).catch(() => undefined)} className="underline text-navy">{painelCopiado ? 'copiado' : 'copiar'}</button>}
+            {imoveis.length > 0 && <button type="button" data-testid="copiar-link-painel" title="Copia o endereço desta página do painel para compartilhar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 216 */}
+            {imoveis.length > 0 && <button type="button" data-testid="baixar-painel" title="Baixa os indicadores do painel em arquivo de texto" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Painel · ${new Date().toLocaleDateString('pt-BR')}\n` + indicadores.map(i => `${i.rotulo}: ${i.valor}`).join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'painel.txt'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="underline text-navy print:hidden ml-2">{baixado ? 'baixado' : 'baixar'}</button>}{/* Passo 288 */}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {indicadores.map(ind => (
@@ -97,6 +97,7 @@ export default function DashboardPage() {
                 key={ind.rotulo}
                 data-testid={`indicador-${ind.chave}`}
                 onClick={() => navigate(ind.destino)}
+                title={`Abre a lista de imóveis filtrada por "${ind.rotulo}"`}
                 aria-label={`${ind.rotulo}: ${ind.valor}. Abrir lista`}
                 className="text-left bg-gradient-to-br from-white to-pergaminho/50 border-t-2 border-dourado p-5 shadow-md hover:shadow-lg hover:border-navy transition duration-300 focus:outline-none focus:ring-2 focus:ring-dourado"
               >
@@ -145,6 +146,7 @@ export default function DashboardPage() {
               <p className="text-sm text-grafite-claro mb-6">Comece adicionando um imóvel à sua carteira para rastrear contratos e prazos.</p>
               <button
                 onClick={() => navigate('/imoveis/novo')}
+                title="Abre o formulário para cadastrar um novo imóvel na carteira"
                 className="inline-flex items-center gap-2 bg-navy text-white px-5 py-3 rounded-sm uppercase tracking-wider text-sm hover:bg-navy-700 transition"
               >
                 <Plus size={16} aria-hidden="true" /> Novo imóvel
@@ -160,6 +162,7 @@ export default function DashboardPage() {
                   <button
                     key={imovel.id}
                     onClick={() => navigate(`/imoveis/${imovel.id}`)}
+                    title="Abre a página deste imóvel para gerenciar contratos e vencimentos"
                     className={`bg-gradient-to-br from-white to-pergaminho/30 shadow-md p-5 border-l-[4px] text-left transition hover:shadow-lg hover:-translate-y-1 min-h-[120px] animate-fade-in rounded-sm ${molduraPorSituacao[situacao]}`}
                     style={{ animationDelay: `${idx * 50}ms` }}
                     aria-label={`${imovel.endereco} - ${textoPrazo(dias)}`}

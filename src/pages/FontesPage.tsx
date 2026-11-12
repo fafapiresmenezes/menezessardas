@@ -87,13 +87,13 @@ export default function FontesPage() {
             <input id="termo" value={termo} onChange={e => { setTermo(e.target.value); try { localStorage.setItem('lsm-fontes-termo', e.target.value) } catch { /* sem memória local */ } }} placeholder="Nome, CNPJ, número do processo ou tema" className="flex-1 border px-3 py-2" />
           </form>
           <p className="text-sm text-grafite-claro mt-2">Escreva uma vez e clique na fonte: ela abre já com a busca feita.</p>
-          <button type="button" onClick={buscarGratis} data-testid="buscar-gratis" disabled={termo.trim().length < 4 || !!gratis?.carregando} className="mt-3 mr-2 min-h-[44px] bg-dourado text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">
+          <button type="button" onClick={buscarGratis} data-testid="buscar-gratis" title="Busca o termo nas fontes públicas gratuitas (Comunica PJe, DataJud e Querido Diário) e mostra o resultado aqui" disabled={termo.trim().length < 4 || !!gratis?.carregando} className="mt-3 mr-2 min-h-[44px] bg-dourado text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">
             {gratis?.carregando ? 'Buscando…' : 'Buscar grátis (fontes públicas)'}
           </button>
-          <button type="button" onClick={buscarEscavador} disabled={termo.trim().length < 3 || !!busca?.carregando} className="mt-3 min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">
+          <button type="button" onClick={buscarEscavador} title="Busca processos pelo termo no Escavador e lista os resultados nesta página" disabled={termo.trim().length < 3 || !!busca?.carregando} className="mt-3 min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">
             {busca?.carregando ? 'Buscando…' : 'Buscar processos no Escavador aqui'}
           </button>
-          <button type="button" onClick={salvarBusca} data-testid="salvar-busca" disabled={termo.trim().length < 4 || termo.replace(/\D/g, '').length === 20} className="mt-3 ml-2 min-h-[44px] border border-navy text-navy px-5 text-sm uppercase tracking-wider disabled:opacity-50">
+          <button type="button" onClick={salvarBusca} data-testid="salvar-busca" title="Salva esta busca para o servidor repeti-la todo dia; as novidades aparecem em Intimações e Alertas" disabled={termo.trim().length < 4 || termo.replace(/\D/g, '').length === 20} className="mt-3 ml-2 min-h-[44px] border border-navy text-navy px-5 text-sm uppercase tracking-wider disabled:opacity-50">
             Salvar e repetir todo dia
           </button>
           {msgSalva && <p role="status" className="mt-3 p-3 text-sm border-l-2 bg-regularFundo border-regular text-regular" data-testid="msg-salva">{msgSalva}</p>}
@@ -106,7 +106,7 @@ export default function FontesPage() {
                 <div><p className="font-medium">Comunicações processuais (CNJ, últimos 12 meses): {gratis.r.comunica.ok ? gratis.r.comunica.total : gratis.r.comunica.erro}</p>
                   <ul className="divide-y">{(gratis.r.comunica.itens ?? []).slice(0, 20).map((i: any, k: number) => <li key={k} className="py-2"><span className="font-mono">{i.numero}</span> · {i.tribunal} · {dt(i.data)} · {i.tipo}<span className="block text-grafite-claro">{i.trecho}</span></li>)}</ul></div>
                 <div><p className="font-medium">Diários oficiais municipais (Querido Diário): {gratis.r.queridoDiario.ok ? gratis.r.queridoDiario.total : gratis.r.queridoDiario.erro}</p>
-                  <ul className="divide-y">{(gratis.r.queridoDiario.itens ?? []).map((g: any, k: number) => <li key={k} className="py-2">{dt(g.data)} · {g.municipio} · <a href={g.link} target="_blank" rel="noreferrer" className="underline">abrir diário</a><span className="block text-grafite-claro">{g.trecho}</span></li>)}</ul></div>
+                  <ul className="divide-y">{(gratis.r.queridoDiario.itens ?? []).map((g: any, k: number) => <li key={k} className="py-2">{dt(g.data)} · {g.municipio} · <a href={g.link} target="_blank" rel="noreferrer" title="Abre esta edição do diário oficial municipal em uma nova aba" className="underline">abrir diário</a><span className="block text-grafite-claro">{g.trecho}</span></li>)}</ul></div>
               </>)}
               <p className="text-xs text-grafite-claro">Fontes públicas e gratuitas: Comunica PJe e DataJud (CNJ) e Querido Diário. Use só para a finalidade do caso (LGPD).</p>
             </div>
@@ -119,8 +119,8 @@ export default function FontesPage() {
                 {busca.processos.map(p => (
                   <li key={p.numero} className="py-2 text-sm">
                     <span className="font-mono">{p.numero}</span>{p.tribunal && ` · ${p.tribunal}`}{p.classe && ` · ${p.classe}`}
-                    <button type="button" onClick={() => navigator.clipboard?.writeText(p.numero).catch(() => undefined)} className="ml-2 underline text-navy text-xs" data-testid="copiar-numero" aria-label={`Copiar o número ${p.numero}`}>copiar número</button>
-                    {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" className="ml-2 underline text-navy text-xs">abrir no tribunal</a>}
+                    <button type="button" onClick={() => navigator.clipboard?.writeText(p.numero).catch(() => undefined)} title="Copia o número deste processo para a área de transferência" className="ml-2 underline text-navy text-xs" data-testid="copiar-numero" aria-label={`Copiar o número ${p.numero}`}>copiar número</button>
+                    {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" title="Abre a consulta deste processo no site do tribunal em uma nova aba" className="ml-2 underline text-navy text-xs">abrir no tribunal</a>}
                     {p.titulo && <span className="block text-grafite-claro">{p.titulo}</span>}
                     {p.ultimaMovimentacao && <span className="block text-xs text-grafite-claro">Última movimentação: {new Date(p.ultimaMovimentacao).toLocaleDateString('pt-BR')}</span>}
                   </li>
@@ -132,7 +132,7 @@ export default function FontesPage() {
         <p className="text-xs text-grafite-claro" data-testid="contador-fontes">{FONTES.length} fontes públicas e gratuitas{termo.trim() ? `, todas prontas para "${termo.trim()}"` : ''}; cada cartão abre a fonte já com o termo.</p>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FONTES.map(f => (
-            <a key={f.nome} data-testid="fonte" href={f.url(termo.trim())} target="_blank" rel="noopener noreferrer" className="bg-white shadow-sm p-5 border-l-4 border-navy hover:border-dourado block">
+            <a key={f.nome} data-testid="fonte" title={`Abre ${f.nome} em uma nova aba, já com a busca pelo termo digitado acima`} href={f.url(termo.trim())} target="_blank" rel="noopener noreferrer" className="bg-white shadow-sm p-5 border-l-4 border-navy hover:border-dourado block">
               <span className="flex items-center justify-between font-serif text-lg text-navy">{f.nome}<ExternalLink className="w-4 h-4" aria-hidden /></span>
               <span className="block text-sm text-grafite-claro mt-1">{f.para}</span>
               {f.direta && <span className="inline-block text-xs bg-pergaminho text-dourado-escuro px-2 py-0.5 mt-2">Ligada à plataforma: {f.direta}</span>}
@@ -143,18 +143,18 @@ export default function FontesPage() {
           <h2 className="font-serif text-lg">Buscas salvas (repetidas todo dia)</h2>
           <p className="text-sm text-grafite-claro mt-1">O servidor procura cada nome no Comunica PJe (CNJ) todas as manhãs. Comunicações novas entram em Intimações e em Alertas, sem API paga. Até 20 por pessoa. Ligue a busca a um caso para que cada novidade vire tarefa do responsável em Meu dia.</p>
           {/* Passo 169: imprimir as buscas salvas. */}
-          {salvas.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-salvas" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}
-          {salvas.length > 0 && <button type="button" data-testid="copiar-link-fontes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 227 */}
-          {salvas.length > 0 && <button type="button" data-testid="baixar-fontes" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['termo;última execução;total;novas', ...salvas.map(s => `${s.termo};${s.ultima_execucao ?? ''};${s.ultimo_total};${s.novas_ultima}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'buscas-salvas.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 296 */}
-          {salvas.length > 0 && <button type="button" onClick={copiarSalvas} data-testid="copiar-salvas" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm">{salvasCopiadas ? 'Buscas copiadas' : 'Copiar buscas salvas'}</button>}
+          {salvas.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-salvas" title="Abre a tela de impressão do navegador com a lista de buscas salvas" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>}
+          {salvas.length > 0 && <button type="button" data-testid="copiar-link-fontes" title="Copia o endereço desta página de fontes para compartilhar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 227 */}
+          {salvas.length > 0 && <button type="button" data-testid="baixar-fontes" title="Baixa a lista de buscas salvas em arquivo CSV (termo, última execução, total e novas)" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['termo;última execução;total;novas', ...salvas.map(s => `${s.termo};${s.ultima_execucao ?? ''};${s.ultimo_total};${s.novas_ultima}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'buscas-salvas.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 296 */}
+          {salvas.length > 0 && <button type="button" onClick={copiarSalvas} data-testid="copiar-salvas" title="Copia as buscas salvas em texto para o relatório semanal" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm">{salvasCopiadas ? 'Buscas copiadas' : 'Copiar buscas salvas'}</button>}
           {salvas.length ? (
             <ul className="mt-3 divide-y divide-navy/10">
               {salvas.map(s => (
                 <li key={s.id} className="py-2 flex flex-wrap items-center gap-3 text-sm">
                   <span className="font-medium text-navy">{s.termo}</span>
                   <span className="text-grafite-claro">{s.ultima_execucao ? `última rodada ${dt(s.ultima_execucao)} · ${s.ultimo_total} comunicação(ões) no ano · ${s.novas_ultima} nova(s)` : 'ainda não rodou'}</span>
-                  <label className="text-xs text-grafite-claro">Caso: <select value={s.caso_id ?? ''} onChange={e => ligarCaso(s.id, e.target.value)} data-testid="busca-caso" aria-label={`Ligar a busca ${s.termo} a um caso`} className="border border-navy/20 rounded-sm px-2 py-1 text-xs max-w-[220px]"><option value="">nenhum</option>{casos.map(c => <option key={c.id} value={c.id}>{c.titulo}</option>)}</select></label>
-                  <button type="button" onClick={() => apagarSalva(s.id)} aria-label={`Apagar busca ${s.termo}`} className="ml-auto text-xs underline text-critico min-h-[44px] px-2">Apagar</button>
+                  <label className="text-xs text-grafite-claro">Caso: <select value={s.caso_id ?? ''} onChange={e => ligarCaso(s.id, e.target.value)} data-testid="busca-caso" aria-label={`Ligar a busca ${s.termo} a um caso`} title="Liga esta busca a um caso: cada comunicação nova vira tarefa do responsável em Meu dia" className="border border-navy/20 rounded-sm px-2 py-1 text-xs max-w-[220px]"><option value="">nenhum</option>{casos.map(c => <option key={c.id} value={c.id}>{c.titulo}</option>)}</select></label>
+                  <button type="button" onClick={() => apagarSalva(s.id)} aria-label={`Apagar busca ${s.termo}`} title="Apaga esta busca salva; ela deixa de ser repetida todo dia" className="ml-auto text-xs underline text-critico min-h-[44px] px-2">Apagar</button>
                 </li>
               ))}
             </ul>

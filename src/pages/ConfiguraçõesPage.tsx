@@ -98,17 +98,17 @@ export default function ConfiguraçõesPage() {
       {/* Passo D05 (Diamante): abas para a tela não ficar com 57 botões de uma vez; "Tudo" mostra como antes. */}
       <nav aria-label="Seções das configurações" className="max-w-2xl mb-6 flex flex-wrap gap-2 print:hidden">
         {ABAS.map(a => (
-          <button key={a.id} type="button" data-testid={`aba-${a.id}`} aria-pressed={aba === a.id} onClick={() => { setAba(a.id); try { localStorage.setItem('lsm-config-aba', a.id) } catch { /* sem memória local */ } }}
+          <button key={a.id} type="button" data-testid={`aba-${a.id}`} title={a.id === 'tudo' ? 'Mostra todas as seções das configurações em uma página só' : `Mostra apenas a seção "${a.rotulo}" das configurações`} aria-pressed={aba === a.id} onClick={() => { setAba(a.id); try { localStorage.setItem('lsm-config-aba', a.id) } catch { /* sem memória local */ } }}
             className={`min-h-[44px] px-4 text-sm border ${aba === a.id ? 'bg-navy text-white border-navy' : 'border-navy/20 text-navy bg-white'}`}>{a.rotulo}</button>
         ))}
       </nav>
       <form onSubmit={salvar} className={`max-w-2xl space-y-6 ${mostra('perfil')}`} noValidate>
         {/* Passo 168: imprimir o resumo das preferências (sem segredos). */}
-        <button type="button" onClick={() => window.print()} data-testid="imprimir-preferencias" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm mr-2 print:hidden">Imprimir</button>
-        <button type="button" onClick={copiarResumoPrefs} data-testid="copiar-preferencias" className="min-h-[44px] px-4 border border-navy text-navy text-sm">{resumoCopiado ? 'Resumo copiado' : 'Copiar resumo das preferências'}</button>
-        <button type="button" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(prefs, null, 2)], { type: 'application/json' })); a.download = 'preferencias-theye.json'; a.click(); URL.revokeObjectURL(a.href) }} data-testid="baixar-preferencias" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">Baixar preferências (JSON)</button>{/* Passo 213 */}
-        <button type="button" data-testid="copiar-link-configuracoes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 233 */}
-        <button type="button" data-testid="baixar-preferencias" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Preferências — THEYE Institute\nNome: ${prefs.nomeCompleto}\nE-mail: ${prefs.email}\nNotificações: ${prefs.notificacoes ? 'sim' : 'não'}\nAlertas por e-mail: ${prefs.alertasEmail ? 'sim' : 'não'}\nDias de antecedência: ${prefs.diasAntecedencia}`], { type: 'text/plain;charset=utf-8' })); a.download = 'preferencias.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden min-h-[44px] inline-flex items-center">baixar preferências</button>{/* Passo 316 */}
+        <button type="button" onClick={() => window.print()} data-testid="imprimir-preferencias" title="Abre a tela de impressão do navegador com o resumo das preferências (sem senhas nem chaves)" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm mr-2 print:hidden">Imprimir</button>
+        <button type="button" onClick={copiarResumoPrefs} data-testid="copiar-preferencias" title="Copia o resumo das suas preferências em texto (sem senhas nem chaves) para conferir com a administradora" className="min-h-[44px] px-4 border border-navy text-navy text-sm">{resumoCopiado ? 'Resumo copiado' : 'Copiar resumo das preferências'}</button>
+        <button type="button" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(prefs, null, 2)], { type: 'application/json' })); a.download = 'preferencias-theye.json'; a.click(); URL.revokeObjectURL(a.href) }} data-testid="baixar-preferencias" title="Baixa suas preferências em arquivo JSON, como cópia de segurança" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">Baixar preferências (JSON)</button>{/* Passo 213 */}
+        <button type="button" data-testid="copiar-link-configuracoes" title="Copia o endereço desta página de configurações para compartilhar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 233 */}
+        <button type="button" data-testid="baixar-preferencias" title="Baixa o resumo das preferências em arquivo de texto simples" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Preferências — THEYE Institute\nNome: ${prefs.nomeCompleto}\nE-mail: ${prefs.email}\nNotificações: ${prefs.notificacoes ? 'sim' : 'não'}\nAlertas por e-mail: ${prefs.alertasEmail ? 'sim' : 'não'}\nDias de antecedência: ${prefs.diasAntecedencia}`], { type: 'text/plain;charset=utf-8' })); a.download = 'preferencias.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden min-h-[44px] inline-flex items-center">baixar preferências</button>{/* Passo 316 */}
         {aviso && (
           <p role="status" className="p-3 bg-regularFundo border-l-2 border-regular text-regular text-sm">
             ✓ {aviso}
@@ -211,6 +211,7 @@ export default function ConfiguraçõesPage() {
 
         <button
           type="submit"
+          title="Grava suas preferências de perfil e avisos; os e-mails de alerta passam a respeitá-las"
           className="w-full bg-navy hover:bg-navy-700 text-white py-3 rounded-sm uppercase tracking-wider text-sm flex items-center justify-center gap-2"
         >
           <Save size={18} aria-hidden="true" />
@@ -322,6 +323,7 @@ function SecaoSenha() {
           <div className="flex flex-wrap gap-3">
             <button
               type="submit"
+              title="Troca a senha do seu acesso pela nova senha informada"
               disabled={ocupado || !nova || !confirma}
               className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider"
             >
@@ -331,6 +333,7 @@ function SecaoSenha() {
               type="button"
               onClick={() => setMostrar(!mostrar)}
               aria-pressed={mostrar}
+              title={mostrar ? 'Esconde o texto das senhas digitadas' : 'Mostra o texto das senhas digitadas para conferir'}
               className="min-h-[44px] px-4 border border-navy/30 text-navy hover:bg-pergaminho text-sm"
             >
               {mostrar ? 'Ocultar senhas' : 'Mostrar senhas'}
@@ -436,7 +439,7 @@ function SecaoChaveIA() {
           </p>
           <p className="text-xs text-grafite-claro">
             A chave é criada no site da Anthropic (
-            <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 text-navy">
+            <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer" title="Abre em uma nova aba o site da Anthropic onde a chave da IA é criada" className="underline underline-offset-2 text-navy">
               console.anthropic.com
             </a>
             {' '}→ API Keys → Create Key). Ela fica guardada só no servidor, nunca aparece de novo e nunca vai para o navegador.
@@ -471,6 +474,7 @@ function SecaoChaveIA() {
                 onClick={() => setMostrar(!mostrar)}
                 aria-pressed={mostrar}
                 aria-label={mostrar ? 'Ocultar chave' : 'Mostrar chave'}
+                title={mostrar ? 'Esconde o texto da chave digitada' : 'Mostra o texto da chave digitada para conferir'}
                 className="min-h-[44px] px-3 border border-navy/30 text-navy hover:bg-pergaminho"
               >
                 {mostrar ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
@@ -482,6 +486,7 @@ function SecaoChaveIA() {
             <button
               type="button"
               onClick={salvar}
+              title="Guarda a chave da IA só no servidor; ela nunca volta ao navegador"
               disabled={!chave.trim() || ocupado !== ''}
               className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider"
             >
@@ -490,6 +495,7 @@ function SecaoChaveIA() {
             <button
               type="button"
               onClick={testar}
+              title="Faz uma chamada de teste à IA para confirmar que a chave salva funciona"
               disabled={!estado?.definida || ocupado !== ''}
               className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm"
             >
@@ -499,6 +505,7 @@ function SecaoChaveIA() {
               <button
                 type="button"
                 onClick={remover}
+                title="Remove a chave da IA do servidor; a análise de contratos fica indisponível até informar outra"
                 disabled={ocupado !== ''}
                 className="min-h-[44px] px-5 border border-critico text-critico hover:bg-criticoFundo disabled:opacity-50 text-sm"
               >
@@ -556,12 +563,12 @@ function SecaoEmail() {
         <Mail size={18} className="text-dourado" aria-hidden="true" /> Avisos de prazo
       </h2>
       <div className="space-y-3 text-sm">
-        <p>No calendário: na <a href="#/agenda" className="underline text-navy">Agenda</a>, cada pessoa clica uma vez em <strong>Conectar ao Outlook</strong> ou <strong>Conectar ao Google Agenda</strong>. Os avisos entram nos dias marcados em cada contrato.</p>
+        <p>No calendário: na <a href="#/agenda" title="Abre a página da Agenda, onde se conecta o Outlook ou o Google Agenda" className="underline text-navy">Agenda</a>, cada pessoa clica uma vez em <strong>Conectar ao Outlook</strong> ou <strong>Conectar ao Google Agenda</strong>. Os avisos entram nos dias marcados em cada contrato.</p>
         {estado && (
           <>
             <p aria-live="polite"><strong>Por e-mail:</strong> {ativo ? 'ativo. Toda manhã, às 8h, cada pessoa da equipe recebe os avisos do dia no próprio e-mail.' : 'falta ligar o serviço de envio (uma vez só, gratuito).'}</p>
             <ol className="text-xs text-grafite-claro list-decimal pl-5 space-y-1">
-              <li>Crie a conta grátis em <a href="https://www.brevo.com/" target="_blank" rel="noopener noreferrer" className="underline text-navy">brevo.com</a> com o e-mail do escritório que vai enviar os avisos.</li>
+              <li>Crie a conta grátis em <a href="https://www.brevo.com/" target="_blank" rel="noopener noreferrer" title="Abre em uma nova aba o site do Brevo, onde se cria a conta gratuita de envio de e-mails" className="underline text-navy">brevo.com</a> com o e-mail do escritório que vai enviar os avisos.</li>
               <li>Confirme o e-mail que o Brevo mandar para essa caixa.</li>
               <li>No Brevo, abra o menu do seu nome → <strong>SMTP &amp; API</strong> → <strong>API Keys</strong>, clique em <strong>Generate a new API key</strong> e copie (começa com xkeysib-).</li>
               <li>Cole abaixo, junto com o e-mail do passo 1, e clique em Salvar.</li>
@@ -574,10 +581,10 @@ function SecaoEmail() {
             <input id="chave-email" type="password" value={chave} onChange={e => setChave(e.target.value)} placeholder="xkeysib-…" autoComplete="off" spellCheck={false}
               className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white font-mono text-sm" />
             <div className="flex flex-wrap gap-3">
-              <button type="button" onClick={salvar} disabled={(!chave.trim() && !remetente.trim()) || ocupado !== ''} className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider">
+              <button type="button" onClick={salvar} title="Grava no servidor o e-mail remetente e a chave do Brevo para o envio dos avisos" disabled={(!chave.trim() && !remetente.trim()) || ocupado !== ''} className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider">
                 {ocupado === 'salvando' ? 'Salvando…' : 'Salvar'}
               </button>
-              <button type="button" onClick={testar} disabled={!ativo || ocupado !== ''} className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm">
+              <button type="button" onClick={testar} title="Envia agora um e-mail de teste para conferir se os avisos por e-mail funcionam" disabled={!ativo || ocupado !== ''} className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm">
                 {ocupado === 'testando' ? 'Enviando…' : 'Enviar e-mail de teste'}
               </button>
             </div>
@@ -623,7 +630,7 @@ function SecaoEscavador() {
       <div className="space-y-3 text-sm">
         <p><strong>Situação:</strong> {definida ? 'token salvo.' : 'ainda não ligado.'}</p>
         <ol className="text-xs text-grafite-claro list-decimal pl-5 space-y-1">
-          <li>Entre em <a href="https://api.escavador.com/" target="_blank" rel="noopener noreferrer" className="underline text-navy">api.escavador.com</a>, crie a conta e compre um pacote de créditos.</li>
+          <li>Entre em <a href="https://api.escavador.com/" target="_blank" rel="noopener noreferrer" title="Abre em uma nova aba o site do Escavador, onde se cria a conta e o token de acesso" className="underline text-navy">api.escavador.com</a>, crie a conta e compre um pacote de créditos.</li>
           <li>Abra <strong>Tokens de acesso</strong> → <strong>Gerar token</strong> e copie.</li>
           <li>Cole abaixo e clique em Salvar. Cada consulta aparece no painel Consumo.</li>
         </ol>
@@ -632,8 +639,8 @@ function SecaoEscavador() {
         <input id="chave-escavador" type="password" value={chave} onChange={e => setChave(e.target.value)} autoComplete="off" spellCheck={false}
           className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white font-mono text-sm" />
         <div className="flex flex-wrap gap-3">
-          <button type="button" onClick={salvar} disabled={!chave.trim() || ocupado !== ''} className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider">{ocupado === 'salvando' ? 'Salvando…' : 'Salvar'}</button>
-          <button type="button" onClick={testar} disabled={!definida || ocupado !== ''} className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm">{ocupado === 'testando' ? 'Testando…' : 'Testar ligação'}</button>
+          <button type="button" onClick={salvar} title="Grava o token do Escavador no servidor e já testa a ligação" disabled={!chave.trim() || ocupado !== ''} className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider">{ocupado === 'salvando' ? 'Salvando…' : 'Salvar'}</button>
+          <button type="button" onClick={testar} title="Testa a ligação com o Escavador usando o token salvo" disabled={!definida || ocupado !== ''} className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm">{ocupado === 'testando' ? 'Testando…' : 'Testar ligação'}</button>
         </div>
       </div>
     </section>
@@ -667,12 +674,12 @@ function SecaoTransparencia() {
       <div className="space-y-3 text-sm">
         <p><strong>Situação:</strong> {definida ? 'chave salva; a Checagem de contraparte consulta PEP.' : 'sem chave: a Checagem de contraparte não consulta pessoas expostas politicamente.'}</p>
         <ol className="text-xs text-grafite-claro list-decimal pl-5 space-y-1">
-          <li>Entre em <a href="https://portaldatransparencia.gov.br/api-de-dados/cadastrar-email" target="_blank" rel="noopener noreferrer" className="underline text-navy">portaldatransparencia.gov.br/api-de-dados</a> e cadastre o e-mail (gratuito).</li>
+          <li>Entre em <a href="https://portaldatransparencia.gov.br/api-de-dados/cadastrar-email" target="_blank" rel="noopener noreferrer" title="Abre em uma nova aba a página do Portal da Transparência para cadastrar o e-mail e receber a chave gratuita" className="underline text-navy">portaldatransparencia.gov.br/api-de-dados</a> e cadastre o e-mail (gratuito).</li>
           <li>A chave chega por e-mail. Cole abaixo e clique em Salvar.</li>
         </ol>
         <div className="flex flex-wrap gap-2">
           <input type="password" value={chave} onChange={e => setChave(e.target.value)} aria-label="Chave do Portal da Transparência" placeholder={definida ? 'Trocar a chave' : 'Cole a chave aqui'} className="flex-1 min-h-[44px] border border-navy/20 px-3" />
-          <button type="button" onClick={salvar} disabled={ocupado || chave.trim().length < 20} className="min-h-[44px] px-4 bg-navy text-white disabled:opacity-50">{ocupado ? 'Salvando…' : 'Salvar'}</button>
+          <button type="button" onClick={salvar} title="Grava a chave do Portal da Transparência; a Checagem de contraparte passa a consultar PEP" disabled={ocupado || chave.trim().length < 20} className="min-h-[44px] px-4 bg-navy text-white disabled:opacity-50">{ocupado ? 'Salvando…' : 'Salvar'}</button>
         </div>
         {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={msg.tipo === 'erro' ? 'text-critico' : 'text-regular'}>{msg.texto}</p>}
       </div>

@@ -283,6 +283,7 @@ export default function Layout({ children, title }: LayoutProps) {
             className="p-2 hover:bg-white/10 rounded flex-shrink-0"
             aria-label={menuAberto ? 'Recolher menu' : 'Expandir menu'}
             aria-expanded={menuAberto}
+            title={menuAberto ? 'Recolhe o menu lateral, deixando só os ícones' : 'Expande o menu lateral, mostrando os nomes das telas'}
           >
             {menuAberto ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -316,7 +317,7 @@ export default function Layout({ children, title }: LayoutProps) {
               })}
               {menuAberto && (
                 <li className="pt-4">
-                  <button type="button" onClick={() => mudarSimples(false)} className="w-full px-4 py-2 min-h-[44px] text-sm text-white/70 hover:text-white underline underline-offset-2 text-left" data-testid="menu-ver-tudo">
+                  <button type="button" onClick={() => mudarSimples(false)} className="w-full px-4 py-2 min-h-[44px] text-sm text-white/70 hover:text-white underline underline-offset-2 text-left" data-testid="menu-ver-tudo" title="Troca para o menu completo, com todas as telas da plataforma agrupadas por assunto">
                     Ver todas as telas
                   </button>
                 </li>
@@ -325,7 +326,7 @@ export default function Layout({ children, title }: LayoutProps) {
           )}
           {!simples && menuAberto && (
             <div className="px-4 pt-3">
-              <button type="button" onClick={() => mudarSimples(true)} className="text-sm text-dourado hover:underline underline-offset-2 min-h-[36px]" data-testid="menu-voltar-simples">
+              <button type="button" onClick={() => mudarSimples(true)} className="text-sm text-dourado hover:underline underline-offset-2 min-h-[36px]" data-testid="menu-voltar-simples" title="Volta ao menu simples, só com as telas usadas todo dia">
                 ← Voltar ao menu simples
               </button>
             </div>
@@ -341,6 +342,7 @@ export default function Layout({ children, title }: LayoutProps) {
                     onClick={() => mudarGrupos(Object.fromEntries(visiveis.map(g => [g.id, g.id === 'hoje' || !todosAbertos])))}
                     className="text-[11px] uppercase tracking-wider text-white/70 hover:text-white underline-offset-2 hover:underline min-h-[32px]"
                     data-testid="menu-alternar-tudo"
+                    title={todosAbertos ? 'Recolhe todos os grupos do menu, deixando só os títulos' : 'Abre todos os grupos do menu de uma vez'}
                   >
                     {todosAbertos ? 'Recolher grupos' : 'Abrir todos os grupos'}
                   </button>
@@ -361,6 +363,7 @@ export default function Layout({ children, title }: LayoutProps) {
                     onClick={() => alternarGrupo(grupo.id)}
                     aria-expanded={aberto}
                     aria-controls={`grupo-${grupo.id}`}
+                    title={aberto ? `Recolhe o grupo "${grupo.titulo}" no menu` : `Abre o grupo "${grupo.titulo}" para ver suas telas`}
                     className={`w-full flex items-center justify-between px-4 py-2 min-h-[40px] text-[11px] uppercase tracking-[0.16em] rounded hover:bg-white/5 ${grupoAtivo ? 'text-dourado' : 'text-white/70'}`}
                   >
                     <span>{grupo.titulo}</span>
@@ -417,7 +420,7 @@ export default function Layout({ children, title }: LayoutProps) {
       <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
         <header className="bg-white border-b border-navy/10 px-4 md:px-8 py-4 md:py-5 flex flex-wrap md:flex-nowrap items-center justify-between gap-3 md:gap-4">
           <div className="flex items-center gap-2 min-w-0 max-w-full">
-            {!menuAberto && <button type="button" onClick={() => setMenuAberto(true)} aria-label="Abrir menu" className="md:hidden min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/20 text-navy rounded-sm"><Menu size={20} /></button>}
+            {!menuAberto && <button type="button" onClick={() => setMenuAberto(true)} aria-label="Abrir menu" title="Abre o menu lateral com as telas da plataforma" className="md:hidden min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/20 text-navy rounded-sm"><Menu size={20} /></button>}
             {/* Em notebooks os rótulos dos botões somem (só ícones) para o título da tela caber inteiro. */}
             <h1 className="font-serif text-2xl md:text-3xl text-navy truncate min-w-0" title={title}>{title}</h1>
           </div>
@@ -461,6 +464,7 @@ export default function Layout({ children, title }: LayoutProps) {
                     onClick={() => { const t = tema === 'escuro' ? 'claro' : 'escuro'; aplicarTema(t); setTema(t); setMaisAberto(false) }}
                     className="w-full flex items-center gap-3 min-h-[44px] px-3 text-sm text-navy hover:bg-navy/5 text-left"
                     aria-label={tema === 'escuro' ? 'Usar modo claro' : 'Usar modo escuro'}
+                    title={tema === 'escuro' ? 'Muda as cores da plataforma para o modo claro' : 'Muda as cores da plataforma para o modo escuro'}
                   >
                     {tema === 'escuro' ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
                     {tema === 'escuro' ? 'Modo claro' : 'Modo escuro'}
@@ -470,6 +474,7 @@ export default function Layout({ children, title }: LayoutProps) {
                       onClick={() => { setMaisAberto(false); navigate('/laboratorio-admin') }}
                       className="w-full flex items-center gap-3 min-h-[44px] px-3 text-sm text-navy hover:bg-navy/5 text-left"
                       aria-label="Laboratório de autoavaliação, só para administradores"
+                      title="Abre o laboratório de autoavaliação da plataforma, visível só para administradores"
                       data-testid="menu-laboratorio-admin"
                     >
                       <FlaskConical size={16} aria-hidden="true" />
@@ -486,6 +491,7 @@ export default function Layout({ children, title }: LayoutProps) {
             className="flex items-center gap-2 min-h-[44px] px-3 sm:px-4 border border-navy/15 rounded-sm text-sm text-grafite-claro hover:border-dourado hover:text-navy transition flex-shrink-0"
             aria-label="Abrir busca global (Ctrl+K)"
             aria-haspopup="dialog"
+            title="Abre a busca em todas as telas da plataforma (atalho Ctrl+K)"
           >
             <Search size={16} aria-hidden="true" />
             <span className="hidden sm:inline">Buscar</span>

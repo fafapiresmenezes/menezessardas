@@ -135,16 +135,16 @@ export default function ConsumoPage() {
             </div>
             <label className="text-sm print:hidden">
               <span className="block text-grafite-claro mb-1">Mês</span>
-              <select value={mes} onChange={e => setMes(e.target.value)} className="border border-navy/20 px-3 min-h-[44px] bg-white capitalize">
+              <select value={mes} onChange={e => setMes(e.target.value)} title="Escolhe o mês cujo consumo de IA e e-mails será mostrado" className="border border-navy/20 px-3 min-h-[44px] bg-white capitalize">
                 {meses.map(m => <option key={m} value={m}>{nomeMes(m)}</option>)}
               </select>
             </label>
           </div>
           <p className="text-4xl font-serif text-navy mt-4" data-testid="total-mes">{carregando ? '…' : brl(totalBrl)}</p>
-          {!carregando && <button type="button" onClick={async () => { const t = [`Consumo de IA e e-mails — ${nomeMes(mes)}`, `Total: ${brl(totalBrl)} em ${doMes.reduce((s, l) => s + Number(l.usos), 0)} uso(s)`, ...(mes === mesAtual() ? [`Projeção para o fim do mês: ${brl(projetarMes(totalBrl, new Date()).projecao)}`] : []), cot ? `Cotação: US$ 1 = ${brl(taxa)} (${cot.data})` : '', 'THEYE Institute'].filter(Boolean).join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoResumo(true); setTimeout(() => setCopiadoResumo(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-consumo" className="mt-2 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo do mês'}</button>}
-          {!carregando && <button type="button" onClick={() => window.print()} data-testid="imprimir-consumo" className="ml-2 underline text-navy text-sm print:hidden">imprimir</button>}{/* Passo 199 */}
-          {!carregando && <button type="button" data-testid="copiar-link-consumo" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 225 */}
-          {!carregando && doMes.length > 0 && <button type="button" data-testid="baixar-consumo" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['mês;função;modelo;usuário;usos;tokens de entrada', ...doMes.map(l => `${l.mes};${l.funcao};${l.modelo ?? ''};${l.usuario};${l.usos};${l.tokens_entrada}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'consumo-ia.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 295 */}
+          {!carregando && <button type="button" onClick={async () => { const t = [`Consumo de IA e e-mails — ${nomeMes(mes)}`, `Total: ${brl(totalBrl)} em ${doMes.reduce((s, l) => s + Number(l.usos), 0)} uso(s)`, ...(mes === mesAtual() ? [`Projeção para o fim do mês: ${brl(projetarMes(totalBrl, new Date()).projecao)}`] : []), cot ? `Cotação: US$ 1 = ${brl(taxa)} (${cot.data})` : '', 'THEYE Institute'].filter(Boolean).join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoResumo(true); setTimeout(() => setCopiadoResumo(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-consumo" title="Copia o resumo do mês (total, usos, projeção e cotação) em texto para enviar à sócia" className="mt-2 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo do mês'}</button>}
+          {!carregando && <button type="button" onClick={() => window.print()} data-testid="imprimir-consumo" title="Abre a tela de impressão do navegador com o extrato de consumo do mês" className="ml-2 underline text-navy text-sm print:hidden">imprimir</button>}{/* Passo 199 */}
+          {!carregando && <button type="button" data-testid="copiar-link-consumo" title="Copia o endereço desta página de consumo para compartilhar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 225 */}
+          {!carregando && doMes.length > 0 && <button type="button" data-testid="baixar-consumo" title="Baixa o detalhamento do consumo do mês em arquivo CSV para abrir em planilha" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['mês;função;modelo;usuário;usos;tokens de entrada', ...doMes.map(l => `${l.mes};${l.funcao};${l.modelo ?? ''};${l.usuario};${l.usos};${l.tokens_entrada}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'consumo-ia.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 295 */}
           <p className="text-sm text-grafite-claro capitalize">{nomeMes(mes)} · {doMes.reduce((s, l) => s + Number(l.usos), 0)} uso(s)</p>
           {cot && <p className="text-xs text-grafite-claro mt-2">Cotação usada: US$ 1 = {brl(taxa)} ({cot.data}).</p>}
           {mes === mesAtual() && !carregando && (() => {
@@ -157,7 +157,7 @@ export default function ConsumoPage() {
                 <p>Projeção para o fim do mês: <strong data-testid="projecao-valor">{brl(pj.projecao)}</strong> <span className="text-grafite-claro">({pj.diasDecorridos} de {pj.diasMes} dias decorridos, ritmo linear{anteriores.length ? `; média dos últimos ${Math.min(3, anteriores.length)} mês(es): ${brl(sg.media)}` : ''})</span>.</p>
                 {pj.diasDecorridos < pj.diasMes && totalBrl > 0 && (() => { const resto = (totalBrl / pj.diasDecorridos) * (pj.diasMes - pj.diasDecorridos); return <p className="text-grafite-claro mt-1" data-testid="faixa-projecao">Faixa de cenários: de {brl(totalBrl + resto * 0.5)} (se o uso cair pela metade) a {brl(totalBrl + resto * 1.5)} (se subir 50%). São cenários, não intervalo estatístico.</p> })()}
                 {cot?.teto_brl ? <p className="text-grafite-claro mt-1">{pj.projecao > cot.teto_brl ? `Nesse ritmo o teto de ${brl(cot.teto_brl)} será ultrapassado.` : `Nesse ritmo o teto de ${brl(cot.teto_brl)} é suficiente.`}</p> : <p className="text-grafite-claro mt-1">Ainda não há teto mensal definido.</p>}
-                {perfil === 'admin' && <button type="button" onClick={() => { setTeto(String(sg.teto)); setMsg({ ok: true, texto: `Teto sugerido: ${brl(sg.teto)} (${sg.base} com folga de 20%). Confira o valor e clique em Salvar teto.` }); document.getElementById('teto')?.focus() }} data-testid="sugerir-teto" className="mt-2 min-h-[44px] border border-navy text-navy px-4 text-sm uppercase tracking-wider">Sugerir teto ({brl(sg.teto)})</button>}
+                {perfil === 'admin' && <button type="button" onClick={() => { setTeto(String(sg.teto)); setMsg({ ok: true, texto: `Teto sugerido: ${brl(sg.teto)} (${sg.base} com folga de 20%). Confira o valor e clique em Salvar teto.` }); document.getElementById('teto')?.focus() }} data-testid="sugerir-teto" title="Preenche o campo de teto com o valor sugerido (projeção ou média com folga de 20%) para você conferir e salvar" className="mt-2 min-h-[44px] border border-navy text-navy px-4 text-sm uppercase tracking-wider">Sugerir teto ({brl(sg.teto)})</button>}
               </div>
             )
           })()}
@@ -185,7 +185,7 @@ export default function ConsumoPage() {
           {(['funcao', 'usuario'] as const).map(chave => (
             <section key={chave} className="bg-white shadow-sm p-6">
               <div className="flex items-center justify-between gap-2 mb-3"><h3 className="text-base">{chave === 'funcao' ? 'Por função' : 'Por usuário'}</h3>
-                {somar(chave).length > 0 && <button type="button" onClick={async () => { const t = [`Consumo ${chave === 'funcao' ? 'por função' : 'por usuário'} — ${nomeMes(mes)}`, ...somar(chave).map(([k, v]) => `${k}: ${v.usos} uso(s) · ${brl(v.brl)}`)].join('\n'); try { await navigator.clipboard.writeText(t); setTabelaCopiada(chave); setTimeout(() => setTabelaCopiada(null), 2500) } catch { /* sem área de transferência */ } }} data-testid={`copiar-${chave}`} className="underline text-navy text-sm print:hidden">{tabelaCopiada === chave ? 'copiado' : 'copiar'}</button>}
+                {somar(chave).length > 0 && <button type="button" onClick={async () => { const t = [`Consumo ${chave === 'funcao' ? 'por função' : 'por usuário'} — ${nomeMes(mes)}`, ...somar(chave).map(([k, v]) => `${k}: ${v.usos} uso(s) · ${brl(v.brl)}`)].join('\n'); try { await navigator.clipboard.writeText(t); setTabelaCopiada(chave); setTimeout(() => setTabelaCopiada(null), 2500) } catch { /* sem área de transferência */ } }} data-testid={`copiar-${chave}`} title={`Copia a tabela de consumo ${chave === 'funcao' ? 'por função' : 'por usuário'} em texto para a reunião de custos`} className="underline text-navy text-sm print:hidden">{tabelaCopiada === chave ? 'copiado' : 'copiar'}</button>}
               </div>
               {somar(chave).length === 0 ? (
                 <p className="text-sm text-grafite-claro">Nenhum uso registrado neste mês.</p>
@@ -209,12 +209,12 @@ export default function ConsumoPage() {
           {faturas.length === 0 ? <p className="text-sm text-grafite-claro">Nenhuma fatura anexada a este mês.</p> : (
             <ul className="text-sm space-y-1">
               {faturas.map(f => (
-                <li key={f.name}><button onClick={() => abrirFatura(f.name)} className="inline-flex items-center gap-1 text-navy underline min-h-[32px]"><Download size={14} aria-hidden="true" />{f.name.replace(/^\d+-/, '')}</button></li>
+                <li key={f.name}><button onClick={() => abrirFatura(f.name)} title="Abre esta fatura do fornecedor em uma nova aba" className="inline-flex items-center gap-1 text-navy underline min-h-[32px]"><Download size={14} aria-hidden="true" />{f.name.replace(/^\d+-/, '')}</button></li>
               ))}
             </ul>
           )}
           {perfil === 'admin' && (
-            <label className="inline-flex items-center gap-2 mt-3 px-4 min-h-[44px] border border-navy text-navy text-sm cursor-pointer print:hidden">
+            <label title="Anexa a fatura do fornecedor (PDF ou imagem) ao extrato deste mês" className="inline-flex items-center gap-2 mt-3 px-4 min-h-[44px] border border-navy text-navy text-sm cursor-pointer print:hidden">
               <Paperclip size={16} aria-hidden="true" /> Anexar fatura
               <input type="file" accept="application/pdf,image/*" className="sr-only" onChange={e => e.target.files?.[0] && anexarFatura(e.target.files[0])} />
             </label>
@@ -247,8 +247,8 @@ export default function ConsumoPage() {
                 <span className="block mb-1">Valor em reais</span>
                 <input id="teto" inputMode="decimal" value={teto} onChange={e => setTeto(e.target.value)} placeholder="ex.: 300" className="border border-navy/20 px-3 min-h-[44px] w-40" />
               </label>
-              <button onClick={salvarTeto} className="min-h-[44px] px-5 bg-navy text-white text-sm">Salvar teto</button>
-              {sede && <button type="button" onClick={testarAviso} disabled={testandoAviso} data-testid="testar-aviso-teto" className="min-h-[44px] px-5 border border-navy text-navy text-sm disabled:opacity-50">{testandoAviso ? 'Enviando…' : 'Testar e-mail de aviso'}</button>}
+              <button onClick={salvarTeto} title="Grava o teto mensal de gasto com IA; em branco, remove o teto" className="min-h-[44px] px-5 bg-navy text-white text-sm">Salvar teto</button>
+              {sede && <button type="button" onClick={testarAviso} disabled={testandoAviso} data-testid="testar-aviso-teto" title="Envia agora um e-mail de teste do aviso de teto para conferir se o alerta automático funciona" className="min-h-[44px] px-5 border border-navy text-navy text-sm disabled:opacity-50">{testandoAviso ? 'Enviando…' : 'Testar e-mail de aviso'}</button>}
             </div>
           </section>
         )}
@@ -258,7 +258,7 @@ export default function ConsumoPage() {
         )}
 
         <div className="flex justify-end print:hidden">
-          <button onClick={() => window.print()} className="inline-flex items-center gap-2 px-4 py-2 min-h-[44px] bg-navy text-white text-sm rounded hover:bg-navy/90">
+          <button onClick={() => window.print()} title="Abre a tela de impressão do navegador para salvar o extrato do mês em PDF" className="inline-flex items-center gap-2 px-4 py-2 min-h-[44px] bg-navy text-white text-sm rounded hover:bg-navy/90">
             <Printer size={16} /> Baixar extrato do mês em PDF
           </button>
         </div>

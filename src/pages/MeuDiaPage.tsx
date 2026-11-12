@@ -137,18 +137,18 @@ export default function MeuDiaPage() {
           <p className="font-medium mb-2">Qual é a sua função?</p>
           <div role="radiogroup" className="flex flex-wrap gap-2">
             {Object.entries(PAPEIS).map(([k, v]) => (
-              <button key={k} type="button" role="radio" aria-checked={papel === k} data-testid={`papel-${k}`} onClick={() => setPapel(k)}
+              <button key={k} type="button" role="radio" aria-checked={papel === k} data-testid={`papel-${k}`} onClick={() => setPapel(k)} title={`Mostra o dia na visão de ${v.nome}: ${v.foco}`}
                 className={`min-h-[44px] px-4 text-sm border ${papel === k ? 'bg-navy text-white' : ''}`}>{v.nome}</button>
             ))}
           </div>
           <p className="text-sm text-grafite-claro mt-2">{p.foco}</p>
           <div className="flex flex-wrap gap-2 mt-3">
             {p.atalhos.map(a => <Link key={a.href + a.rotulo} to={a.href} className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy text-navy">{a.rotulo}</Link>)}
-            <button type="button" onClick={() => { copiarDia(); setDiaCopiado(true) }} data-testid="copiar-dia" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy">{diaCopiado ? 'Dia copiado' : 'Copiar meu dia'}</button>
+            <button type="button" onClick={() => { copiarDia(); setDiaCopiado(true) }} data-testid="copiar-dia" title="Copia o seu dia em texto (tarefas, intimações e contratos vencendo) para colar na agenda ou enviar" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy">{diaCopiado ? 'Dia copiado' : 'Copiar meu dia'}</button>
             {/* Passo 140: imprimir o dia em uma página. */}
-            <button type="button" onClick={() => window.print()} data-testid="imprimir-dia" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy print:hidden">Imprimir</button>
-            <button type="button" data-testid="copiar-link-meu-dia" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 240 */}
-            {tarefas.length + vencendo.length > 0 && <button type="button" data-testid="baixar-meu-dia" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['tipo;título;prazo;prioridade', ...tarefas.map(t => `tarefa;${t.titulo.replace(/;/g, ',')};${t.prazo ?? ''};${t.prioridade}`), ...vencendo.map(v => `vencimento;${v.locatario_fornecedor};${v.data_vencimento};`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'meu-dia.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 309 */}
+            <button type="button" onClick={() => window.print()} data-testid="imprimir-dia" title="Abre a janela de impressão do navegador para imprimir o seu dia em uma página" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy print:hidden">Imprimir</button>
+            <button type="button" data-testid="copiar-link-meu-dia" title="Copia o endereço desta tela para a área de transferência" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 240 */}
+            {tarefas.length + vencendo.length > 0 && <button type="button" data-testid="baixar-meu-dia" aria-live="polite" title="Baixa a planilha (meu-dia.csv) com as suas tarefas e os contratos vencendo" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['tipo;título;prazo;prioridade', ...tarefas.map(t => `tarefa;${t.titulo.replace(/;/g, ',')};${t.prazo ?? ''};${t.prioridade}`), ...vencendo.map(v => `vencimento;${v.locatario_fornecedor};${v.data_vencimento};`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'meu-dia.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 309 */}
           </div>
         </section>
 

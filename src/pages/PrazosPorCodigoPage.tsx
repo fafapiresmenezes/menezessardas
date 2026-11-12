@@ -32,7 +32,7 @@ export default function PrazosPorCodigoPage() {
           <p className="text-sm text-grafite-claro mt-1">Cada código conta o prazo de um jeito: o CPC em dias úteis, o CPP em dias corridos, o ECA em dias corridos sem prazo em dobro, a decadência em meses ou anos.</p>
           <div role="tablist" aria-label="Ramo do direito" className="flex flex-wrap gap-2 mt-3">
             {(['todos', ...ORDEM] as const).map(c => (
-              <button key={c} role="tab" aria-selected={codigo === c} onClick={() => setCodigo(c)} data-testid={`ramo-${c}`}
+              <button key={c} role="tab" aria-selected={codigo === c} onClick={() => setCodigo(c)} data-testid={`ramo-${c}`} title={c === 'todos' ? 'Mostra os atos de todos os ramos do direito na lista abaixo' : `Filtra a lista de atos pelo ${CODIGOS[c].nome} e mostra sua regra de contagem`}
                 className={`min-h-[44px] px-4 text-sm border ${codigo === c ? 'bg-navy text-white border-navy' : 'border-navy/20 text-navy'}`}>{c === 'todos' ? 'Todos' : CODIGOS[c].sigla}</button>
             ))}
           </div>
@@ -53,7 +53,7 @@ export default function PrazosPorCodigoPage() {
                     <td className="p-2">{a.ato}<span className="block text-xs text-grafite-claro">{CODIGOS[a.codigo].sigla} · {a.natureza === 'material' ? 'direito material' : a.natureza === 'improprio' ? 'prazo impróprio' : 'processual'}</span></td>
                     <td className="p-2 whitespace-nowrap">{rotuloPrazo(a)}</td>
                     <td className="p-2">{a.base}</td>
-                    <td className="p-2"><button type="button" onClick={() => { setAtoId(a.id); setPrerrogativa('nenhuma') }} aria-label={`Calcular ${a.ato}`} className="min-h-[44px] px-3 border border-navy text-navy">Calcular</button></td>
+                    <td className="p-2"><button type="button" onClick={() => { setAtoId(a.id); setPrerrogativa('nenhuma') }} aria-label={`Calcular ${a.ato}`} title={`Escolhe "${a.ato}" e abre o cálculo da data final do prazo a partir de uma data de início`} className="min-h-[44px] px-3 border border-navy text-navy">Calcular</button></td>
                   </tr>
                 ))}
                 {lista.length === 0 && <tr><td colSpan={4} className="p-4 text-grafite-claro">Nenhum ato encontrado. Tente outra palavra ou o ramo "Todos".</td></tr>}
@@ -74,7 +74,7 @@ export default function PrazosPorCodigoPage() {
               {ato.dobro && (
                 <div>
                   <label htmlFor="prerrogativa" className="block text-sm font-medium">Prazo em dobro?</label>
-                  <select id="prerrogativa" value={prerrogativa} onChange={e => setPrerrogativa(e.target.value)} className="border px-3 py-2 min-h-[44px]">
+                  <select id="prerrogativa" title="Escolhe se o prazo conta em dobro por prerrogativa (Fazenda, MP, Defensoria ou litisconsortes com advogados diferentes)" value={prerrogativa} onChange={e => setPrerrogativa(e.target.value)} className="border px-3 py-2 min-h-[44px]">
                     {Object.entries(PRERROGATIVAS_DOBRO).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                   </select>
                 </div>
@@ -86,7 +86,7 @@ export default function PrazosPorCodigoPage() {
                 <p className="text-sm">Contagem: {r.quantidade} {r.unidade === 'dias_uteis' ? 'dias úteis' : r.unidade === 'dias_corridos' ? 'dias corridos' : r.unidade === 'meses' ? 'meses' : 'anos'}, sem contar o dia do começo ({br(inicio)}). Base: {ato.base}.</p>
                 {r.pulados.length > 0 && <details className="text-sm"><summary className="cursor-pointer">Datas puladas ou prorrogadas ({r.pulados.length})</summary><ul className="list-disc pl-5 mt-1">{r.pulados.map(p => <li key={p.data}>{br(p.data)}: {p.motivo}</li>)}</ul></details>}
                 {r.avisos.map((a, i) => <p key={i} className="p-3 text-sm border-l-4 border-atencao bg-atencaoFundo" role="note">{a}</p>)}
-                <button type="button" onClick={copiar} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2" data-testid="copiar-prazo"><Copy className="w-4 h-4" aria-hidden />{copiado ? 'Resumo copiado' : 'Copiar resumo'}</button>
+                <button type="button" onClick={copiar} title="Copia para a área de transferência um resumo do cálculo: ato, datas, contagem e base legal" className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2" data-testid="copiar-prazo"><Copy className="w-4 h-4" aria-hidden />{copiado ? 'Resumo copiado' : 'Copiar resumo'}</button>
               </div>
             )}
           </section>

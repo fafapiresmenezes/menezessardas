@@ -235,39 +235,50 @@ export default function AgendaPage() {
             {(ano !== hoje.getFullYear() || mes !== hoje.getMonth()) && <button type="button" onClick={irParaHoje} data-testid="agenda-hoje" className="min-h-[44px] px-3 text-sm border border-navy text-navy rounded-sm hover:bg-white">Hoje</button>}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <a
-              href={mailto}
-              className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-white"
-            >
-              <Mail size={16} aria-hidden="true" /> Enviar por e-mail
-            </a>
             <button onClick={semanaEmPdf} data-testid="semana-pdf" title="Baixa um PDF com os prazos e compromissos dos próximos 7 dias, por dia e por responsável." className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho">
               <Download size={16} aria-hidden="true" /> Semana em PDF
             </button>
-            <label title="Traz para cá os compromissos de um arquivo .ics exportado do Outlook ou do Google Agenda, sem duplicar." className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-white cursor-pointer" data-testid="importar-ics">
-              <Plus size={16} aria-hidden="true" /> Importar .ics
-              <input type="file" accept=".ics,text/calendar" className="sr-only" data-testid="importar-ics-input" onChange={e => { importarIcs(e.target.files?.[0]); e.target.value = '' }} />
-            </label>
-            <button
-              onClick={() => baixarICS(alertas)}
-              className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho"
-            >
-              <Download size={16} aria-hidden="true" /> Exportar iCal
-            </button>
-            <button
-              onClick={() => sincronizarGoogleCalendar('outlook')}
-              disabled={sincronizando}
-              className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-navy-700 disabled:opacity-50"
-            >
-              <ExternalLink size={16} aria-hidden="true" /> Conectar ao Outlook
-            </button>
-            <button
-              onClick={() => sincronizarGoogleCalendar('google')}
-              disabled={sincronizando}
-              className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-navy-700 disabled:opacity-50"
-            >
-              <ExternalLink size={16} aria-hidden="true" /> {sincronizando ? 'Abrindo…' : 'Conectar ao Google Agenda'}
-            </button>
+            <details className="relative" data-testid="agenda-mais-opcoes">
+              <summary title="Mostra as outras ações da agenda: enviar por e-mail, importar e exportar compromissos e conectar ao Outlook ou ao Google Agenda." className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-white cursor-pointer select-none list-none">
+                Mais opções
+              </summary>
+              <div className="sm:absolute sm:right-0 z-10 mt-1 flex flex-col gap-1 bg-white border border-navy/10 shadow-md rounded-sm p-2 min-w-[240px]">
+                <a
+                  href={mailto}
+                  title="Abre o seu programa de e-mail com a lista dos próximos compromissos já escrita, pronta para enviar."
+                  className="inline-flex items-center gap-2 text-navy px-3 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho"
+                >
+                  <Mail size={16} aria-hidden="true" /> Enviar por e-mail
+                </a>
+                <label title="Traz para cá os compromissos de um arquivo .ics exportado do Outlook ou do Google Agenda, sem duplicar." className="inline-flex items-center gap-2 text-navy px-3 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho cursor-pointer" data-testid="importar-ics">
+                  <Plus size={16} aria-hidden="true" /> Importar .ics
+                  <input type="file" accept=".ics,text/calendar" className="sr-only" data-testid="importar-ics-input" onChange={e => { importarIcs(e.target.files?.[0]); e.target.value = '' }} />
+                </label>
+                <button
+                  onClick={() => baixarICS(alertas)}
+                  title="Baixa um arquivo .ics com todos os compromissos, para abrir em qualquer calendário."
+                  className="inline-flex items-center gap-2 text-navy px-3 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho"
+                >
+                  <Download size={16} aria-hidden="true" /> Exportar iCal
+                </button>
+                <button
+                  onClick={() => sincronizarGoogleCalendar('outlook')}
+                  disabled={sincronizando}
+                  title="Assina esta agenda no Outlook: os prazos passam a aparecer lá sozinhos, sem exportar de novo."
+                  className="inline-flex items-center gap-2 text-navy px-3 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho disabled:opacity-50"
+                >
+                  <ExternalLink size={16} aria-hidden="true" /> Conectar ao Outlook
+                </button>
+                <button
+                  onClick={() => sincronizarGoogleCalendar('google')}
+                  disabled={sincronizando}
+                  title="Assina esta agenda no Google Agenda: os prazos passam a aparecer lá sozinhos, sem exportar de novo."
+                  className="inline-flex items-center gap-2 text-navy px-3 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho disabled:opacity-50"
+                >
+                  <ExternalLink size={16} aria-hidden="true" /> {sincronizando ? 'Abrindo…' : 'Conectar ao Google Agenda'}
+                </button>
+              </div>
+            </details>
           </div>
           {msgSemana && <p role="status" className="text-sm mt-2" data-testid="semana-msg">{msgSemana}</p>}
           <p className="w-full text-sm p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="resumo-semana">

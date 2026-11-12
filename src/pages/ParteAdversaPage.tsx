@@ -69,7 +69,7 @@ export default function ParteAdversaPage() {
             <label className="text-sm font-medium">Caso ou contrato<input value={caso} onChange={e => setCaso(e.target.value)} className="mt-1 block w-full border px-3 py-2 min-h-[44px] font-normal" /></label>
             <label className="text-sm font-medium">Finalidade da consulta<input value={finalidade} onChange={e => setFinalidade(e.target.value)} placeholder="Ex.: verificar outras ações de despejo antes da audiência" className="mt-1 block w-full border px-3 py-2 min-h-[44px] font-normal" /></label>
           </div>
-          <button type="button" onClick={consultar} disabled={!pode} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50 inline-flex items-center gap-2"><FileSearch className="w-4 h-4" aria-hidden />{carregando ? 'Consultando fontes públicas…' : 'Montar ficha'}</button>
+          <button type="button" onClick={consultar} disabled={!pode} title="Consulta as fontes públicas (Comunica PJe, Querido Diário e, com CNPJ, Receita e sanções) e monta a ficha da parte adversa, registrando a consulta na Trilha" className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50 inline-flex items-center gap-2"><FileSearch className="w-4 h-4" aria-hidden />{carregando ? 'Consultando fontes públicas…' : 'Montar ficha'}</button>
           {erro && <p role="alert" className="p-3 text-sm border-l-2 bg-criticoFundo border-critico text-critico">{erro}</p>}
         </section>
         {ficha && (
@@ -80,7 +80,7 @@ export default function ParteAdversaPage() {
               <h3 className="font-medium">Comunicações processuais no último ano (Comunica PJe)</h3>
               {!ficha.comunica?.ok ? <p className="text-sm">Fonte fora do ar agora ({ficha.comunica?.erro ?? 'sem resposta'}).</p>
                 : !ficha.comunica.itens?.length ? <p className="text-sm">Nenhuma comunicação encontrada com esse nome.</p>
-                : <ul className="text-sm divide-y" data-testid="adversa-comunica">{ficha.comunica.itens.slice(0, 20).map((c, i) => <li key={i} className="py-1">{new Date(c.data + 'T12:00').toLocaleDateString('pt-BR')} · {c.tribunal} · {c.classe} · {c.numero}{c.link && <a href={c.link} target="_blank" rel="noreferrer" className="ml-1 text-navy underline inline-flex items-center gap-1">abrir<ExternalLink className="w-3 h-3" aria-hidden /></a>}</li>)}</ul>}
+                : <ul className="text-sm divide-y" data-testid="adversa-comunica">{ficha.comunica.itens.slice(0, 20).map((c, i) => <li key={i} className="py-1">{new Date(c.data + 'T12:00').toLocaleDateString('pt-BR')} · {c.tribunal} · {c.classe} · {c.numero}{c.link && <a href={c.link} target="_blank" rel="noreferrer" title="Abre a comunicação original no site do tribunal, em outra aba" className="ml-1 text-navy underline inline-flex items-center gap-1">abrir<ExternalLink className="w-3 h-3" aria-hidden /></a>}</li>)}</ul>}
               {ficha.comunica?.ok && <p className="text-xs text-grafite-claro mt-1">Nomes iguais podem ser de outras pessoas: confira o número do processo antes de usar.</p>}
             </div>
             <div>

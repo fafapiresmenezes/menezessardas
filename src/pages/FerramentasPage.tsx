@@ -11,7 +11,7 @@ export default function FerramentasPage() {
   return (
     <Layout title="Ferramentas do dia a dia">
       <p className="text-sm text-grafite-claro mb-4 max-w-3xl">
-        {total} ferramentas para a rotina do advogado: prazos, cálculos, Lei do Inquilinato, validação de documentos, redação em linguagem simples, modelos prontos, listas de verificação e gestão do tempo e do bem-estar. Cada uma é testada automaticamente. Para estudos para entidades, veja <Link to="/estudos" className="underline decoration-dourado">Estudos para entidades</Link>.
+        {total} ferramentas para a rotina do advogado: prazos, cálculos, Lei do Inquilinato, validação de documentos, redação em linguagem simples, modelos prontos, listas de verificação e gestão do tempo e do bem-estar. Cada uma é testada automaticamente. Para estudos para entidades, veja <Link to="/estudos" title="Abre a página de Estudos para entidades, com o catálogo e as ferramentas de estudos" className="underline decoration-dourado">Estudos para entidades</Link>.
       </p>
       <CaixaFerramentas categorias={CATS} />
     </Layout>

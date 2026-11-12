@@ -99,20 +99,20 @@ export default function ModelosPage() {
             <Search className="w-5 h-5 text-grafite-claro" aria-hidden />
             <input value={busca} onChange={e => setBusca(e.target.value)} placeholder="Procurar modelo (ex.: despejo, comodato, NDA)" className="flex-1 border px-3 py-2" aria-label="Procurar modelo" data-testid="busca-modelo" />
           </div>
-          <button type="button" onClick={() => setAberto(v => !v)} data-testid="novo-modelo" aria-expanded={aberto} className="mt-3 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy text-navy text-sm uppercase tracking-wider"><Plus size={16} aria-hidden /> Cadastrar modelo do escritório</button>
+          <button type="button" onClick={() => setAberto(v => !v)} title="Abre o formulário para cadastrar um modelo próprio do escritório, visível para toda a equipe" data-testid="novo-modelo" aria-expanded={aberto} className="mt-3 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy text-navy text-sm uppercase tracking-wider"><Plus size={16} aria-hidden /> Cadastrar modelo do escritório</button>
           {aberto && (
             <form onSubmit={e => { e.preventDefault(); salvar() }} className="mt-3 grid gap-3 md:grid-cols-2 border-t border-navy/10 pt-3" data-testid="form-modelo">
               <label className="text-sm">Título<input required minLength={3} maxLength={120} value={form.titulo} onChange={e => setForm({ ...form, titulo: e.target.value })} id="modelo-titulo" className="mt-1 w-full border px-3 py-2" placeholder="Ex.: Contrato padrão de honorários do escritório" /></label>
               <label className="text-sm">Área<input maxLength={40} value={form.area} onChange={e => setForm({ ...form, area: e.target.value })} id="modelo-area" className="mt-1 w-full border px-3 py-2" placeholder="Ex.: Escritório, Imobiliário" /></label>
-              <label className="text-sm">Agente que vai redigir<select value={form.agente} onChange={e => setForm({ ...form, agente: e.target.value })} id="modelo-agente" className="mt-1 w-full border px-3 py-2">{AGENTES.map(a => <option key={a} value={a}>{a}</option>)}</select></label>
+              <label className="text-sm">Agente que vai redigir<select value={form.agente} onChange={e => setForm({ ...form, agente: e.target.value })} title="Escolhe qual agente especializado vai redigir quando alguém usar este modelo" id="modelo-agente" className="mt-1 w-full border px-3 py-2">{AGENTES.map(a => <option key={a} value={a}>{a}</option>)}</select></label>
               <label className="text-sm md:col-span-2">Texto do modelo ou instruções (use [ ] para os campos a preencher)<textarea required minLength={20} rows={6} value={form.pedido} onChange={e => setForm({ ...form, pedido: e.target.value })} id="modelo-pedido" className="mt-1 w-full border px-3 py-2" placeholder="Cole aqui o modelo do escritório. Ex.: Redija contrato de honorários entre [escritório] e [cliente], objeto [ ], valor R$ [ ], forma de pagamento [ ]…" /></label>
-              <div className="md:col-span-2 flex gap-2"><button type="submit" data-testid="salvar-modelo" className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider">Salvar modelo</button><button type="button" onClick={() => setAberto(false)} className="min-h-[44px] px-4 text-sm underline">Cancelar</button></div>
+              <div className="md:col-span-2 flex gap-2"><button type="submit" title="Grava este modelo na biblioteca do escritório, visível para toda a equipe" data-testid="salvar-modelo" className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider">Salvar modelo</button><button type="button" onClick={() => setAberto(false)} title="Fecha o formulário sem salvar o modelo" className="min-h-[44px] px-4 text-sm underline">Cancelar</button></div>
             </form>
           )}
           {msg && <p role="status" data-testid="msg-modelo" className="mt-3 p-3 text-sm border-l-2 bg-regularFundo border-regular text-regular">{msg}</p>}
           <label className="block mt-3 text-sm" data-testid="preencher-com-caso-rotulo">
             <span className="text-grafite-claro">Preencher com o caso</span>
-            <select value={casoId} onChange={e => setCasoId(e.target.value)} data-testid="preencher-com-caso" className="mt-1 border border-navy/20 px-2 py-2 w-full max-w-md bg-white">
+            <select value={casoId} onChange={e => setCasoId(e.target.value)} title="Escolhe um caso para preencher automaticamente as variáveis e os colchetes dos modelos com os dados dele" data-testid="preencher-com-caso" className="mt-1 border border-navy/20 px-2 py-2 w-full max-w-md bg-white">
               <option value="">nenhum (modelo em branco)</option>
               {casos.map(c => <option key={c.id} value={c.id}>{c.titulo}{c.cliente ? ` · ${c.cliente}` : ''}</option>)}
             </select>
@@ -120,7 +120,7 @@ export default function ModelosPage() {
           </label>
           <label className="block mt-3 text-sm">
             <span className="text-grafite-claro">Preencher com o contrato</span>
-            <select value={contratoId} onChange={e => setContratoId(e.target.value)} data-testid="preencher-com-contrato" className="mt-1 border border-navy/20 px-2 py-2 w-full max-w-md bg-white">
+            <select value={contratoId} onChange={e => setContratoId(e.target.value)} title="Escolhe um contrato para preencher os modelos com locador, locatário, imóvel, aluguel, prazo, garantia e índice" data-testid="preencher-com-contrato" className="mt-1 border border-navy/20 px-2 py-2 w-full max-w-md bg-white">
               <option value="">nenhum</option>
               {contratos.map(c => { const im = imoveis.find(i => i.id === c.imovelId); return <option key={c.id} value={c.id}>{c.parte} · {im?.endereco ?? 'imóvel'}</option> })}
             </select>
@@ -128,25 +128,25 @@ export default function ModelosPage() {
           </label>
           <p className="text-xs text-grafite-claro mt-3" data-testid="contador-modelos">{lista.length} modelo{lista.length === 1 ? '' : 's'}{area !== 'Todas' ? ` em ${area}` : ''} · {proprios.length} do escritório · {MODELOS.length} do catálogo
             {/* Passo 118: catálogo em texto (título, área, origem), para o manual do escritório. */}
-            {lista.length > 0 && <button type="button" data-testid="copiar-catalogo" onClick={() => navigator.clipboard?.writeText(`Modelos de peças · ${new Date().toLocaleDateString('pt-BR')} · ${lista.length} modelo(s)\n` + lista.map(m => `${m.titulo} · ${m.area} · ${m.proprio ? 'do escritório' : 'catálogo'}`).join('\n')).catch(() => undefined)} className="ml-3 underline text-navy">copiar catálogo</button>}
-            {lista.length > 0 && <button type="button" data-testid="imprimir-catalogo" onClick={() => window.print()} className="ml-3 underline text-navy print:hidden">imprimir catálogo</button>}{/* Passo 185 */}
-            {lista.length > 0 && <button type="button" data-testid="copiar-link-modelos" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-3 underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 230 */}
-            {lista.length > 0 && <button type="button" data-testid="baixar-modelos" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['título;área;agente;próprio', ...lista.map(m => `${m.titulo};${m.area};${m.agente};${m.proprio ? 'sim' : 'não'}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'modelos-de-pecas.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 301 */}
+            {lista.length > 0 && <button type="button" title="Copia o catálogo de modelos em texto (título, área e origem) para o manual do escritório" data-testid="copiar-catalogo" onClick={() => navigator.clipboard?.writeText(`Modelos de peças · ${new Date().toLocaleDateString('pt-BR')} · ${lista.length} modelo(s)\n` + lista.map(m => `${m.titulo} · ${m.area} · ${m.proprio ? 'do escritório' : 'catálogo'}`).join('\n')).catch(() => undefined)} className="ml-3 underline text-navy">copiar catálogo</button>}
+            {lista.length > 0 && <button type="button" title="Abre a janela de impressão do navegador para imprimir o catálogo de modelos" data-testid="imprimir-catalogo" onClick={() => window.print()} className="ml-3 underline text-navy print:hidden">imprimir catálogo</button>}{/* Passo 185 */}
+            {lista.length > 0 && <button type="button" title="Copia o endereço desta página de modelos para compartilhar com a equipe" data-testid="copiar-link-modelos" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-3 underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 230 */}
+            {lista.length > 0 && <button type="button" title="Baixa a planilha CSV com os modelos filtrados (título, área, agente e origem)" data-testid="baixar-modelos" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['título;área;agente;próprio', ...lista.map(m => `${m.titulo};${m.area};${m.agente};${m.proprio ? 'sim' : 'não'}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'modelos-de-pecas.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 301 */}
           </p>
           <div className="flex flex-wrap gap-2 mt-2">
-            {areas.map(a => <button key={a} type="button" onClick={() => setArea(a)} aria-pressed={area === a} className={`min-h-[36px] px-3 text-sm border ${area === a ? 'bg-navy text-white' : ''}`}>{a}</button>)}
+            {areas.map(a => <button key={a} type="button" onClick={() => setArea(a)} title={a === 'Todas' ? 'Mostra os modelos de todas as áreas' : `Mostra só os modelos da área ${a}`} aria-pressed={area === a} className={`min-h-[36px] px-3 text-sm border ${area === a ? 'bg-navy text-white' : ''}`}>{a}</button>)}
           </div>
         </section>
         <div className="grid gap-3 md:grid-cols-2">
           {lista.map(m => (
             <div key={m.id ?? m.titulo} className="relative">
-              <button type="button" onClick={() => abrir(m)} data-testid={m.proprio ? 'modelo-proprio' : 'modelo'} className="w-full text-left bg-white shadow-sm p-4 hover:border-dourado border border-transparent">
+              <button type="button" onClick={() => abrir(m)} title="Abre o agente da área no Assistente, modo Redigir, com o pedido deste modelo já pronto; é só completar os colchetes e enviar" data-testid={m.proprio ? 'modelo-proprio' : 'modelo'} className="w-full text-left bg-white shadow-sm p-4 hover:border-dourado border border-transparent">
                 <p className="font-medium flex items-center gap-2"><FileText className="w-4 h-4 text-dourado" aria-hidden />{m.titulo}</p>
                 <p className="text-xs text-grafite-claro mt-1">{m.area}{m.proprio && ' · modelo do escritório'}</p>
                 {(casoId || contratoId) && (() => { const pv = previa(m); return pv ? <p className="text-xs text-navy mt-1" data-testid="previa-preenchida">{pv.preenchidas.length ? `Preenche: ${pv.preenchidas.join(', ')}` : 'Só anexa os dados do caso'} · {pv.texto.slice(0, 110)}…</p> : null })()}
               </button>
-              <button type="button" onClick={() => duplicar(m)} aria-label={`Duplicar modelo ${m.titulo}`} data-testid="duplicar-modelo" className={`absolute top-2 ${m.proprio ? 'right-10' : 'right-2'} p-2 text-navy`}><Copy size={16} aria-hidden /></button>
-              {m.proprio && m.id && <button type="button" onClick={() => apagar(m.id!)} aria-label={`Apagar modelo ${m.titulo}`} className="absolute top-2 right-2 p-2 text-critico"><Trash2 size={16} aria-hidden /></button>}
+              <button type="button" onClick={() => duplicar(m)} aria-label={`Duplicar modelo ${m.titulo}`} title="Abre o formulário de cadastro já preenchido com uma cópia deste modelo para ajustar e salvar" data-testid="duplicar-modelo" className={`absolute top-2 ${m.proprio ? 'right-10' : 'right-2'} p-2 text-navy`}><Copy size={16} aria-hidden /></button>
+              {m.proprio && m.id && <button type="button" onClick={() => apagar(m.id!)} aria-label={`Apagar modelo ${m.titulo}`} title="Apaga este modelo do escritório para toda a equipe (pede confirmação)" className="absolute top-2 right-2 p-2 text-critico"><Trash2 size={16} aria-hidden /></button>}
             </div>
           ))}
           {!lista.length && <p className="text-sm text-grafite-claro">Nenhum modelo com esse termo. Peça ao agente no Assistente jurídico, modo Redigir.</p>}

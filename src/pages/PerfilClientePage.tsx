@@ -70,7 +70,7 @@ export default function PerfilClientePage() {
             <p className="text-xs text-grafite-claro">{resultado.respondidas} de {PERGUNTAS.length} perguntas respondidas.</p>
             {resultado.resumo.length > 0 && <ul className="text-sm list-disc pl-5">{resultado.resumo.map(t => <li key={t}>{t}</li>)}</ul>}
             {resultado.sugestoes.length > 0 && <><h3 className="font-medium text-sm">Sugestões para a equipe</h3><ul className="text-sm list-disc pl-5" data-testid="perfil-sugestoes">{resultado.sugestoes.map(t => <li key={t}>{t}</li>)}</ul></>}
-            <button type="button" onClick={salvar} disabled={!podeSalvar} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">Guardar perfil</button>
+            <button type="button" onClick={salvar} disabled={!podeSalvar} title="Guarda o perfil de atendimento deste cliente; ele é apagado automaticamente em 2 anos ou antes, se o cliente pedir" className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">Guardar perfil</button>
           </section>
         )}
         {msg.ok && <p role="status" className="p-3 text-sm border-l-2 border-green-700 bg-green-50">{msg.ok}</p>}
@@ -83,7 +83,7 @@ export default function PerfilClientePage() {
                 <li key={s.id} className="py-2 flex flex-wrap items-start gap-2" data-testid="perfil-item">
                   <div className="flex-1 min-w-[200px]"><strong>{s.cliente_nome}</strong> · {new Date(s.criado_em).toLocaleDateString('pt-BR')} · apaga em {new Date(s.apagar_em).toLocaleDateString('pt-BR')}
                     <p className="text-grafite-claro">{s.resultado?.sugestoes?.slice(0, 2).join(' ')}</p></div>
-                  <button type="button" onClick={() => apagar(s)} className="min-h-[44px] px-3 border border-critico text-critico inline-flex items-center gap-1" aria-label={`Apagar perfil de ${s.cliente_nome}`}><Trash2 className="w-4 h-4" aria-hidden />Apagar</button>
+                  <button type="button" onClick={() => apagar(s)} className="min-h-[44px] px-3 border border-critico text-critico inline-flex items-center gap-1" aria-label={`Apagar perfil de ${s.cliente_nome}`} title={`Apaga definitivamente o perfil de ${s.cliente_nome}, após confirmação; não pode ser desfeito`}><Trash2 className="w-4 h-4" aria-hidden />Apagar</button>
                 </li>
               ))}
             </ul>

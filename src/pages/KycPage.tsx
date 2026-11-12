@@ -83,7 +83,7 @@ export default function KycPage() {
           <label htmlFor="cnpj" className="block font-medium mb-2">CNPJ da empresa</label>
           <div className="flex flex-wrap items-center gap-2">
             <input id="cnpj" value={cnpj} onChange={e => { setCnpj(e.target.value); try { localStorage.setItem('lsm-kyc-cnpj', e.target.value) } catch { /* sem memória local */ } }} placeholder="00.000.000/0000-00" className="flex-1 min-w-[200px] border px-3 py-2" />
-            <button type="button" onClick={consultar} disabled={cnpj.replace(/\D/g, '').length !== 14 || !!estado.carregando} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50 inline-flex items-center gap-2">
+            <button type="button" onClick={consultar} title="Consulta o CNPJ em fontes públicas (Receita Federal, sanções, OFAC, PEP) e na base do escritório para apontar risco e conflito de interesses" disabled={cnpj.replace(/\D/g, '').length !== 14 || !!estado.carregando} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50 inline-flex items-center gap-2">
               <UserCheck className="w-4 h-4" aria-hidden />{estado.carregando ? 'Consultando…' : 'Checar'}
             </button>
           </div>
@@ -92,9 +92,9 @@ export default function KycPage() {
         </section>
         {r && (
           <section className="bg-white shadow-sm p-6 space-y-4" aria-live="polite">
-            <button type="button" onClick={copiarResultado} data-testid="kyc-copiar" className="min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiado ? 'Resultado copiado' : 'Copiar resultado para o parecer'}</button>
-            <button type="button" data-testid="copiar-link-kyc" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 237 */}
-            {historico.length > 0 && <button type="button" data-testid="baixar-kyc" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['cnpj;nome;risco;alertas;consultado em;automática', ...historico.map(h => `${h.cnpj};${h.nome ?? ''};${h.risco};${h.alertas.length};${h.consultado_em};${h.automatica ? 'sim' : 'não'}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'kyc-historico.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 306 */}
+            <button type="button" onClick={copiarResultado} title="Copia o resultado da checagem em texto, pronto para colar no parecer" data-testid="kyc-copiar" className="min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiado ? 'Resultado copiado' : 'Copiar resultado para o parecer'}</button>
+            <button type="button" data-testid="copiar-link-kyc" title="Copia o endereço desta página de checagem para compartilhar com a equipe" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 237 */}
+            {historico.length > 0 && <button type="button" data-testid="baixar-kyc" title="Baixa a planilha CSV com o histórico de checagens (CNPJ, nome, risco e data)" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['cnpj;nome;risco;alertas;consultado em;automática', ...historico.map(h => `${h.cnpj};${h.nome ?? ''};${h.risco};${h.alertas.length};${h.consultado_em};${h.automatica ? 'sim' : 'não'}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'kyc-historico.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 306 */}
             <p data-testid="kyc-risco" className={`p-3 border-l-4 font-medium ${COR[r.risco]}`}>
               Risco {r.risco}{r.alertas.length ? `: ${r.alertas.join(' ')}` : '. Nenhum alerta encontrado.'}
             </p>
@@ -129,8 +129,8 @@ export default function KycPage() {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="font-serif text-xl flex items-center gap-2"><History className="w-5 h-5 text-dourado" aria-hidden />Histórico de checagens</h2>
             <div className="flex flex-wrap gap-2">
-            {historico.length > 0 && <button type="button" onClick={copiarHistorico} className="min-h-[44px] px-4 border text-sm" data-testid="kyc-copiar-historico">{histCopiado ? 'Histórico copiado' : 'Copiar histórico'}</button>}
-            <button type="button" onClick={reconsultar} className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2" data-testid="kyc-reconsultar"><RefreshCw className="w-4 h-4" aria-hidden />Reconsultar agora</button>
+            {historico.length > 0 && <button type="button" onClick={copiarHistorico} title="Copia o histórico de checagens em texto (data, contraparte, risco e próxima reconsulta)" className="min-h-[44px] px-4 border text-sm" data-testid="kyc-copiar-historico">{histCopiado ? 'Histórico copiado' : 'Copiar histórico'}</button>}
+            <button type="button" onClick={reconsultar} title="Reconsulta agora todas as contrapartes já checadas e avisa se o status de alguma mudou" className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2" data-testid="kyc-reconsultar"><RefreshCw className="w-4 h-4" aria-hidden />Reconsultar agora</button>
             </div>
           </div>
           <p className="text-sm text-grafite-claro mt-1">Cada checagem fica guardada com data e resultado. O robô reconsulta cada contraparte 90 dias depois da última checagem e avisa em Alertas quando o status muda.</p>
@@ -143,7 +143,7 @@ export default function KycPage() {
                 {histVisivel.map(h => (
                   <tr key={h.id} data-testid="kyc-item" className={h.mudou ? 'bg-atencaoFundo' : ''}>
                     <td className="py-2">{new Date(h.consultado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}{h.automatica && <span className="ml-1 text-xs text-grafite-claro">(robô)</span>}</td>
-                    <td><button type="button" onClick={() => setCnpj(fmtCnpj(h.cnpj))} className="underline text-navy text-left">{h.nome ?? fmtCnpj(h.cnpj)}</button></td>
+                    <td><button type="button" onClick={() => setCnpj(fmtCnpj(h.cnpj))} title="Preenche o campo acima com o CNPJ desta contraparte para checar de novo" className="underline text-navy text-left">{h.nome ?? fmtCnpj(h.cnpj)}</button></td>
                     <td data-testid="kyc-item-risco">{h.risco}{h.mudou && <span className="ml-1 text-xs text-atencao">mudou (era {h.risco_anterior})</span>}</td>
                     <td>{proxima(h.consultado_em).toLocaleDateString('pt-BR')}</td>
                   </tr>

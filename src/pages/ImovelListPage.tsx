@@ -59,7 +59,7 @@ export default function ImovelListPage() {
         {situacaoFiltro && (
           <p data-testid="filtro-situacao" className="flex items-center gap-3 text-sm bg-white border-l-4 border-dourado px-4 py-3 shadow-sm">
             <span>Mostrando só: <strong className="text-navy">{ROTULO_FILTRO[situacaoFiltro] ?? situacaoFiltro}</strong> ({filtrados.length})</span>
-            <button type="button" onClick={() => setParams({})} className="underline text-navy">limpar filtro</button>
+            <button type="button" onClick={() => setParams({})} title="Remove o filtro de situação e volta a mostrar todos os imóveis" className="underline text-navy">limpar filtro</button>
           </p>
         )}
         <div className="flex flex-col sm:flex-row sm:items-end gap-4">
@@ -84,19 +84,20 @@ export default function ImovelListPage() {
               {filtrados.length} {filtrados.length === 1 ? 'imóvel encontrado' : 'imóveis encontrados'}
               {/* Passo 121: lista filtrada em texto (endereço, proprietário, prazo mais próximo), para a reunião com o cliente. */}
               {/* Passo 158: imprimir a lista de imóveis filtrada. */}
-              {filtrados.length > 0 && <button type="button" data-testid="imprimir-imoveis" onClick={() => window.print()} className="mr-3 underline text-navy print:hidden min-h-[44px] inline-flex items-center">imprimir</button>}
-              {filtrados.length > 0 && <button type="button" data-testid="copiar-link-imoveis" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 underline text-navy print:hidden min-h-[44px] inline-flex items-center">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 241 */}
-              {filtrados.length > 0 && <button type="button" data-testid="baixar-imoveis" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['endereço;cidade;UF;tipo;uso;proprietário;matrícula', ...filtrados.map(i => `${i.endereco.replace(/;/g, ',')};${i.cidade};${i.uf};${i.tipo};${i.uso};${i.proprietario};${i.matricula}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'imoveis.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden min-h-[44px] inline-flex items-center">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 318 */}
-              {filtrados.length > 0 && <button type="button" data-testid="copiar-imoveis" onClick={() => navigator.clipboard?.writeText(`Imóveis · ${new Date().toLocaleDateString('pt-BR')} · ${filtrados.length}\n` + filtrados.map(i => { const d = prazoDoImovel(i.id); return `${i.endereco} · ${i.proprietario} · ${d === null ? 'sem prazo' : textoPrazo(d)}` }).join('\n')).catch(() => undefined)} className="ml-3 underline text-navy min-h-[44px] inline-flex items-center">copiar lista</button>}
+              {filtrados.length > 0 && <button type="button" data-testid="imprimir-imoveis" title="Abre a janela de impressão do navegador para imprimir a lista de imóveis filtrada" onClick={() => window.print()} className="mr-3 underline text-navy print:hidden min-h-[44px] inline-flex items-center">imprimir</button>}
+              {filtrados.length > 0 && <button type="button" data-testid="copiar-link-imoveis" title="Copia o endereço desta lista de imóveis para compartilhar com a equipe" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 underline text-navy print:hidden min-h-[44px] inline-flex items-center">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 241 */}
+              {filtrados.length > 0 && <button type="button" data-testid="baixar-imoveis" title="Baixa a planilha CSV com os imóveis filtrados (endereço, cidade, tipo, uso, proprietário e matrícula)" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['endereço;cidade;UF;tipo;uso;proprietário;matrícula', ...filtrados.map(i => `${i.endereco.replace(/;/g, ',')};${i.cidade};${i.uf};${i.tipo};${i.uso};${i.proprietario};${i.matricula}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'imoveis.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden min-h-[44px] inline-flex items-center">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 318 */}
+              {filtrados.length > 0 && <button type="button" data-testid="copiar-imoveis" title="Copia a lista filtrada em texto (endereço, proprietário e prazo mais próximo) para colar na reunião com o cliente" onClick={() => navigator.clipboard?.writeText(`Imóveis · ${new Date().toLocaleDateString('pt-BR')} · ${filtrados.length}\n` + filtrados.map(i => { const d = prazoDoImovel(i.id); return `${i.endereco} · ${i.proprietario} · ${d === null ? 'sem prazo' : textoPrazo(d)}` }).join('\n')).catch(() => undefined)} className="ml-3 underline text-navy min-h-[44px] inline-flex items-center">copiar lista</button>}
             </p>
           </div>
           <Link
             to="/imoveis/novo"
+            title="Abre o formulário para cadastrar um novo imóvel na carteira"
             className="inline-flex items-center justify-center gap-2 bg-navy text-white px-5 py-3 rounded-sm uppercase tracking-wider text-sm"
           >
             <Plus size={16} aria-hidden="true" /> Novo imóvel
           </Link>
-          <Link to="/imoveis/importar" className="inline-flex items-center justify-center gap-2 border border-navy text-navy px-5 py-3 rounded-sm uppercase tracking-wider text-sm" data-testid="importar-csv">
+          <Link to="/imoveis/importar" title="Abre a tela para importar vários imóveis de uma vez por planilha CSV" className="inline-flex items-center justify-center gap-2 border border-navy text-navy px-5 py-3 rounded-sm uppercase tracking-wider text-sm" data-testid="importar-csv">
             <Upload size={16} aria-hidden="true" /> Importar planilha
           </Link>
         </div>
@@ -149,6 +150,7 @@ export default function ImovelListPage() {
                     <td className="px-5 py-4 whitespace-nowrap">
                       <button
                         onClick={() => navigate(`/imoveis/${imovel.id}`)}
+                        title={`Abre a ficha completa do imóvel ${imovel.endereco}: contrato, documentos, compromissos e tendência`}
                         className="inline-flex items-center min-h-[44px] px-3 -mx-3 text-navy underline underline-offset-4 hover:text-dourado-escuro text-sm whitespace-nowrap"
                       >
                         <span>Ver detalhes</span>

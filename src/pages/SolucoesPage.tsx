@@ -41,7 +41,7 @@ export default function SolucoesPage() {
       <p className="text-xs text-grafite-claro mt-6 max-w-3xl">
         A proposta comercial e o contrato de cada escritório são tratados fora da plataforma. Para a
         parte de administração e parceiros, veja{' '}
-        <Link to="/instituto" className="underline decoration-dourado">THEYE Institute</Link>.
+        <Link to="/instituto" title="Abre a tela do THEYE Institute, com a administração e os parceiros" className="underline decoration-dourado">THEYE Institute</Link>.
       </p>
     </Layout>
   )
