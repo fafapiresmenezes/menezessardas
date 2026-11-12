@@ -12,7 +12,7 @@ import PesquisaDireito from '@/components/PesquisaDireito'
 import CiberQuantica from '@/components/CiberQuantica'
 import CatalogoConsultores from '@/components/CatalogoConsultores'
 import { gerarPdfTexto, quebrar } from '@/lib/pdfSimples'
-import { ehSede, perfilAtual } from '@/lib/equipe'
+import { ehInstituto } from '@/lib/equipe'
 
 type Aba = 'inovacao' | 'jurimetria' | 'esg' | 'case' | 'pesquisa' | 'tecnologia' | 'consultores'
 const ABAS: { valor: Aba; rotulo: string; Icone: typeof FlaskConical }[] = [
@@ -232,12 +232,12 @@ function CaseStudy() {
   )
 }
 
-// Área de administração do Instituto: só aparece para a administração da sede. Quem não é admin não vê nem os links.
+// Área de administração do Instituto: só aparece para quem administra o Instituto. Quem administra só o escritório de advocacia não vê nem os links.
 // A proteção de verdade está no banco (as funções de consumo e funil só respondem à sede e ao admin).
 function AdministracaoInstituto() {
   const [pode, setPode] = useState(false)
   useEffect(() => {
-    Promise.all([ehSede(), perfilAtual()]).then(([sede, perfil]) => setPode(sede && perfil === 'admin')).catch(() => setPode(false))
+    ehInstituto().then(setPode).catch(() => setPode(false))
   }, [])
   if (!pode) return null
   const atalhos = [

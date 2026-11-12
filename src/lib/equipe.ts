@@ -190,28 +190,43 @@ export async function pedidosPendentes(): Promise<PedidoPendente[]> {
 }
 
 // Em qual escritório a pessoa está: aparece na entrada e no topo de toda tela, para ninguém trabalhar no lugar errado.
-export interface MeuEscritorio { nome: string; sede: boolean; pessoa: string; email: string }
-const CHAVE_ESCRITORIO = 'gm-escritorio-v1'
+// A casa principal guarda o escritório de advocacia e o Instituto (dono da plataforma): "instituto" diz se a pessoa
+// administra o Instituto; "advocacia" é o nome do escritório de advocacia da casa principal.
+export interface MeuEscritorio { nome: string; sede: boolean; pessoa: string; email: string; instituto?: boolean; advocacia?: string }
+const CHAVE_ESCRITORIO = 'gm-escritorio-v2'
 
 export async function meuEscritorio(): Promise<MeuEscritorio | null> {
-  if (!supabaseConfigurado) return { nome: 'ESCRITÓRIO DE DEMONSTRAÇÃO', sede: true, pessoa: 'Visitante', email: '' }
+  if (!supabaseConfigurado) return { nome: 'ESCRITÓRIO DE DEMONSTRAÇÃO', sede: true, pessoa: 'Visitante', email: '', instituto: true }
   try { const k = sessionStorage.getItem(CHAVE_ESCRITORIO); if (k) return JSON.parse(k) as MeuEscritorio } catch { /* sem sessionStorage */ }
+  const lembrar = (meu: MeuEscritorio) => { try { sessionStorage.setItem(CHAVE_ESCRITORIO, JSON.stringify(meu)) } catch { /* ignora */ } return meu }
   try {
+    // O banco responde com o nome que a pessoa deve ler (migração 118). Se ainda não souber, cai na leitura direta.
+    const r = await supabase.rpc('meu_escritorio')
+    if (!r.error) {
+      const d = r.data as Record<string, unknown> | null
+      const nome = String(d?.nome ?? '').trim()
+      if (!d || !nome) return null
+      return lembrar({ nome, sede: d.sede === true, pessoa: String(d.pessoa ?? ''), email: String(d.email ?? ''), instituto: d.instituto === true, advocacia: typeof d.advocacia === 'string' ? d.advocacia : undefined })
+    }
     const { data: u } = await supabase.auth.getUser()
     const id = u?.user?.id
     if (!id) return null
-    const { data: p } = await supabase.from('usuarios_perfis').select('nome_completo, email, escritorio_id').eq('id', id).maybeSingle()
+    const { data: p } = await supabase.from('usuarios_perfis').select('nome_completo, email, escritorio_id, funcao').eq('id', id).maybeSingle()
     if (!p?.escritorio_id) return null
     const { data: e } = await supabase.from('escritorios').select('nome, nome_exibicao').eq('id', p.escritorio_id).maybeSingle()
     const nome = String(e?.nome_exibicao || e?.nome || '').trim()
     if (!nome) return null
-    const meu: MeuEscritorio = { nome, sede: p.escritorio_id === SEDE_ID, pessoa: String(p.nome_completo || p.email || ''), email: String(p.email || '') }
-    try { sessionStorage.setItem(CHAVE_ESCRITORIO, JSON.stringify(meu)) } catch { /* ignora */ }
-    return meu
+    const sede = p.escritorio_id === SEDE_ID
+    return lembrar({ nome, sede, pessoa: String(p.nome_completo || p.email || ''), email: String(p.email || ''), instituto: sede && p.funcao === 'admin' })
   } catch { return null }
+}
+
+/** Quem administra o Instituto (a plataforma inteira). Quem administra só o escritório de advocacia não entra aqui. */
+export async function ehInstituto(): Promise<boolean> {
+  return (await meuEscritorio())?.instituto === true
 }
 
 /** Ao sair ou trocar de conta: esquece o escritório lembrado nesta aba, para a próxima pessoa não herdar o anterior. */
 export function esquecerEscritorio() {
-  try { sessionStorage.removeItem(CHAVE_ESCRITORIO); sessionStorage.removeItem('gm-sede') } catch { /* ignora */ }
+  try { sessionStorage.removeItem(CHAVE_ESCRITORIO); sessionStorage.removeItem('gm-escritorio-v1'); sessionStorage.removeItem('gm-sede') } catch { /* ignora */ }
 }

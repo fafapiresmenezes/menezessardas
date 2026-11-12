@@ -13,7 +13,7 @@ vi.mock('@/lib/supabase', () => ({
   },
 }))
 const signOut = vi.fn(async () => ({}))
-type Esc = { nome: string; sede: boolean; pessoa: string; email: string }
+type Esc = { nome: string; sede: boolean; pessoa: string; email: string; instituto?: boolean; advocacia?: string }
 let escritorio: Esc | null = null
 const esquecerEscritorio = vi.fn()
 vi.mock('@/lib/equipe', () => ({ meuEscritorio: async () => escritorio, esquecerEscritorio: () => esquecerEscritorio() }))
@@ -24,7 +24,7 @@ vi.mock('@/lib/hierarquia', async original => ({
 }))
 vi.mock('@/lib/preferencias', () => ({ minhaPreferencia: async () => ({ telaInicial: '' }), telaPorCargo: () => '/meu-dia' }))
 const gravarAreaAtual = vi.fn(async (_a: string) => undefined)
-vi.mock('@/lib/assistente', () => ({ gravarAreaAtual: (a: string) => gravarAreaAtual(a) }))
+vi.mock('@/lib/assistente', async original => ({ ...(await original<typeof import('@/lib/assistente')>()), gravarAreaAtual: (a: string) => gravarAreaAtual(a) }))
 vi.mock('@/components/AceiteTermos', () => ({ default: () => null }))
 const { default: InicioPage } = await import('./InicioPage')
 function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathname}</p> }
@@ -34,9 +34,11 @@ describe('Tela de entrada por área', () => {
   beforeEach(() => { cleanup(); prefs = null; escritorio = null; alcance = null; upsert.mockClear(); gravarAreaAtual.mockClear(); signOut.mockClear(); esquecerEscritorio.mockClear(); localStorage.clear(); sessionStorage.clear() })
   afterEach(() => vi.useRealTimers())
 
-  it('mostra as 10 áreas; a busca filtra por título ou descrição e Enter abre a primeira; Imobiliário vai ao painel', async () => {
+  it('mostra todas as matérias do direito; a busca filtra por título ou descrição e Enter abre a primeira; Imobiliário vai ao painel', async () => {
     montar()
-    expect(screen.getAllByTestId(/^area-/).length).toBe(10)
+    expect(screen.getAllByTestId(/^area-/).length).toBe(44)
+    for (const m of ['constitucional', 'administrativo', 'processo_civil', 'eleitoral', 'digital', 'ambiental', 'condominial', 'recuperacao']) expect(screen.getByTestId(`area-${m}`)).toBeTruthy()
+    expect(screen.getByTestId('todas-areas').textContent).toContain('Ver todas as 44 matérias do direito')
     fireEvent.change(screen.getByTestId('busca-area'), { target: { value: 'INSS' } })
     expect(screen.getByTestId('busca-area-resultado').textContent).toBe('1 área(s); Enter abre Previdenciário.')
     expect(screen.getAllByTestId(/^area-/).length).toBe(1)
@@ -113,5 +115,23 @@ describe('Tela de entrada por área', () => {
     expect(await screen.findByTestId('ir-equipe')).toBeTruthy()
     expect(screen.getByTestId('ir-indicadores')).toBeTruthy()
     expect(screen.getByTestId('inicio-hierarquia').textContent).toContain('enxerga todos os processos')
+  })
+
+  it('quem administra o escritório lê isso na entrada; quem administra o Instituto lê que cuida da plataforma inteira', async () => {
+    sessionStorage.setItem('lsm-entrada-cargo', '1')
+    escritorio = { nome: 'SARDAS E MENEZES', sede: true, pessoa: 'Fátima', email: 'f@exemplo.com', instituto: false, advocacia: 'SARDAS E MENEZES' }
+    alcance = { id: 'u1', cargo: 'socio', admin: true, veTudo: true }
+    montar()
+    expect((await screen.findByTestId('inicio-administra')).textContent).toBe('Você administra este escritório: libera quem pede para entrar e define o cargo de cada pessoa.')
+    expect(screen.getByTestId('inicio-escritorio-nome').textContent).toBe('SARDAS E MENEZES')
+    cleanup()
+    escritorio = { nome: 'INSTITUTO THEYE', sede: true, pessoa: 'M', email: 'm@exemplo.com', instituto: true, advocacia: 'SARDAS E MENEZES' }
+    montar()
+    expect((await screen.findByTestId('inicio-administra')).textContent).toBe('Você administra o Instituto THEYE, que cuida da plataforma inteira, e também o escritório SARDAS E MENEZES.')
+    cleanup()
+    alcance = { id: 'u1', cargo: 'pleno', admin: false, veTudo: false }
+    montar()
+    await screen.findByTestId('inicio-hierarquia')
+    expect(screen.queryByTestId('inicio-administra')).toBeNull()
   })
 })

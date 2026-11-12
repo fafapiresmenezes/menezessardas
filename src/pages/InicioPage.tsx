@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { gravarAreaAtual } from '@/lib/assistente'
+import { gravarAreaAtual, ESPECIALIDADES } from '@/lib/assistente'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { meuAlcance, rotuloCargo, type Cargo } from '@/lib/hierarquia'
 import { minhaPreferencia, telaPorCargo } from '@/lib/preferencias'
 import { meuEscritorio, esquecerEscritorio, type MeuEscritorio } from '@/lib/equipe'
 import { esquecerMarca } from '@/lib/marca'
-import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck, CalendarClock, CalendarDays, Inbox, UserPlus, Search, MessageSquare, PenLine, BookOpen, BarChart3, UserCog, type LucideIcon } from 'lucide-react'
+import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck, CalendarClock, CalendarDays, Inbox, UserPlus, Search, MessageSquare, PenLine, BookOpen, BarChart3, UserCog, Scale, type LucideIcon } from 'lucide-react'
 import AceiteTermos from '@/components/AceiteTermos'
 
 // Tela de entrada: o escritório escolhe a área de trabalho antes de entrar na plataforma.
 const agente = (a: string) => `?agente=${a}#/assistente`
 // A plataforma atende todas as áreas do direito brasileiro; o imobiliário é só mais uma delas (deixou de abrir a lista).
-const AREAS = [
+const AREAS_PRINCIPAIS = [
   { chave: 'civel', titulo: 'Cível e contratos', texto: 'Contratos, cobranças e responsabilidade civil.', icone: FileSignature, destino: agente('civel') },
   { chave: 'trabalhista', titulo: 'Trabalhista', texto: 'Contratação, rescisão, verbas, FGTS e reclamações.', icone: Briefcase, destino: agente('trabalhista') },
   { chave: 'familia', titulo: 'Família e sucessões', texto: 'Divórcio, partilha, alimentos, guarda e inventário.', icone: Users, destino: agente('familia') },
@@ -23,6 +23,13 @@ const AREAS = [
   { chave: 'penal', titulo: 'Penal', texto: 'Defesa, inquérito, crimes e execução penal.', icone: Gavel, destino: agente('penal') },
   { chave: 'compliance', titulo: 'Compliance e LGPD', texto: 'Integridade, proteção de dados, ESG e due diligence.', icone: ShieldCheck, destino: '/compliance' },
   { chave: 'imobiliario', titulo: 'Imobiliário', texto: 'Imóveis, contratos, prazos, reajustes, fornecedores e agenda.', icone: Building2, destino: '/dashboard' },
+]
+// Todas as outras matérias do direito: cada uma abre o assistente já preparado para ela. A lista vem do próprio assistente.
+const JA_NA_LISTA = new Set(AREAS_PRINCIPAIS.map(a => a.chave))
+const AREAS: { chave: string; titulo: string; texto: string; icone: LucideIcon; destino: string }[] = [
+  ...AREAS_PRINCIPAIS,
+  ...ESPECIALIDADES.filter(e => !/^nivel_/.test(e.valor) && !JA_NA_LISTA.has(e.valor) && e.valor !== 'pesquisa' && e.valor !== 'geral')
+    .map(e => ({ chave: e.valor as string, titulo: e.rotulo, texto: `${e.descricao}.`, icone: Scale, destino: agente(e.valor) })),
 ]
 
 // A entrada é dividida por assunto, na mesma ordem do menu: o que se faz todo dia vem primeiro.
@@ -66,7 +73,7 @@ export default function InicioPage() {
   const [fixa, setFixa] = useState<string | null>(null)
   const [contagem, setContagem] = useState<number | null>(null)
   const [carregado, setCarregado] = useState(false)
-  // Passo 98: busca rápida ("para onde quer ir?") filtra as 10 áreas por título ou descrição; Enter abre a primeira.
+  // Passo 98: busca rápida ("para onde quer ir?") filtra as matérias por título ou descrição; Enter abre a primeira.
   // Passo 170: a busca de área é lembrada neste navegador.
   const [buscaArea, setBuscaArea] = useState(() => { try { return localStorage.getItem('lsm-inicio-busca') || '' } catch { return '' } })
   useEffect(() => { try { localStorage.setItem('lsm-inicio-busca', buscaArea) } catch { /* sem armazenamento */ } }, [buscaArea])
@@ -140,6 +147,13 @@ export default function InicioPage() {
                 <p className="text-sm text-grafite mt-1 break-words">{escritorio.pessoa}{escritorio.email && escritorio.email !== escritorio.pessoa ? ` · ${escritorio.email}` : ''}</p>
               </>
             )}
+            {escritorio && alcance?.admin && (
+              <p className="text-sm text-grafite mt-2" data-testid="inicio-administra" title="Quem administra libera as pessoas que pedem para entrar e define o cargo de cada uma, na Área do administrador.">
+                {escritorio.instituto && escritorio.sede && supabaseConfigurado
+                  ? <>Você administra o <strong>Instituto THEYE</strong>, que cuida da plataforma inteira{escritorio.advocacia ? <>, e também o escritório <strong>{escritorio.advocacia}</strong></> : null}.</>
+                  : <>Você <strong>administra este escritório</strong>: libera quem pede para entrar e define o cargo de cada pessoa.</>}
+              </p>
+            )}
             {alcance && (
               <p className="text-sm text-grafite mt-2" data-testid="inicio-hierarquia" title="O cargo de cada pessoa é definido pela administração na Área do administrador.">
                 {alcance.veTudo
@@ -203,7 +217,7 @@ export default function InicioPage() {
       )}
       {/* Só o que é preciso fica à vista: as três tarefas de cima. As áreas de trabalho abrem aqui, em um clique. */}
       <details className="w-full max-w-6xl" data-testid="todas-areas" open={!!buscaArea || undefined}>
-        <summary className="cursor-pointer text-white/90 text-center min-h-[48px] flex items-center justify-center select-none underline" title="Abre as 10 áreas do direito: cada uma leva ao assistente já preparado para aquele assunto">Ver as áreas do direito (cível, trabalhista, família…)</summary>
+        <summary className="cursor-pointer text-white/90 text-center min-h-[48px] flex items-center justify-center select-none underline" title={`Abre as ${AREAS.length} matérias do direito: cada uma leva ao assistente já preparado para aquele assunto`}>Ver todas as {AREAS.length} matérias do direito (cível, trabalhista, família, constitucional, administrativo…)</summary>
       <form className="w-full max-w-6xl mb-4 mt-3" onSubmit={e => { e.preventDefault(); const a = areasVisiveis[0]; if (a) abrir(a.destino, a.chave) }}>
         <label className="block text-white/80 text-sm">Para onde quer ir?
           <input value={buscaArea} onChange={e => setBuscaArea(e.target.value)} placeholder="Ex.: contrato, despejo, trabalhista, INSS…" data-testid="busca-area" className="mt-1 w-full max-w-md block border border-dourado/60 bg-white/95 text-navy px-3 min-h-[44px]" />
@@ -219,7 +233,7 @@ export default function InicioPage() {
         </details>
         {buscaArea && <p className="text-white/70 text-xs mt-1" data-testid="busca-area-resultado">{areasVisiveis.length ? `${areasVisiveis.length} área(s); Enter abre ${areasVisiveis[0].titulo}.` : 'Nenhuma área com esse termo. Tente "contrato" ou "cível".'}</p>}
       </form>
-      <div className="grid gap-4 w-full max-w-6xl sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 w-full max-w-6xl sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {areasVisiveis.map(a => (
           <button
             key={a.chave}
