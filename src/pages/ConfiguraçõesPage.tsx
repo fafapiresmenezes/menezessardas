@@ -6,6 +6,8 @@ import AvaliacaoSUS from '../components/AvaliacaoSUS'
 import Layout from '@/components/Layout'
 import { Save, User, Bell, Sparkles, Eye, EyeOff, KeyRound, Mail } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
+import { minhaPreferencia, definirMinhaPreferencia } from '@/lib/preferencias'
+import { ROTAS_TELAS } from '@/data/rotas'
 import { estadoChaveIA, removerChaveIA, salvarChaveIA, testarChaveIA, type EstadoChaveIA } from '@/lib/ia'
 import { perfilAtual, rotuloFuncao, type Funcao } from '@/lib/equipe'
 import SecaoPix from '@/components/SecaoPix'
@@ -88,6 +90,15 @@ export default function ConfiguraçõesPage() {
   const rotulo = 'block text-xs uppercase tracking-wider text-grafite mb-2'
 
   const [aba, setAba] = useState<string>(() => { try { return localStorage.getItem('lsm-config-aba') || 'perfil' } catch { return 'perfil' } })
+  // Passos 10 e 11 do plano: tela inicial por usuário (vale em qualquer aparelho).
+  const [telaInicial, setTelaInicial] = useState('')
+  const [msgTela, setMsgTela] = useState('')
+  useEffect(() => { minhaPreferencia().then(p => setTelaInicial(p.telaInicial ?? '')).catch(() => undefined) }, [])
+  const salvarTelaInicial = async () => {
+    setMsgTela('')
+    try { await definirMinhaPreferencia({ telaInicial: telaInicial || undefined }); setMsgTela(telaInicial ? 'Tela inicial salva.' : 'Voltou ao padrão do cargo.') }
+    catch (e) { setMsgTela(e instanceof Error ? e.message : 'Não foi possível salvar.') }
+  }
   const mostra = (id: string) => (aba === id || aba === 'tudo' ? '' : 'hidden')
 
   return (
@@ -219,6 +230,18 @@ export default function ConfiguraçõesPage() {
         </button>
       </form>
       <div className={`max-w-2xl ${mostra('perfil')}`}><AvisosCelular /></div>{/* Passo D19 */}
+      <section aria-labelledby="t-tela-inicial" className={`max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado ${mostra('perfil')}`} data-testid="tela-inicial">
+        <h2 id="t-tela-inicial" className="font-serif text-lg text-navy mb-2">Sua tela inicial</h2>
+        <p className="text-sm text-grafite-claro mb-3">Quando você entra na plataforma, esta é a primeira tela que abre. Sem escolha, vale o padrão do seu cargo: sócios e gestor abrem com os números; os demais, com o Meu dia.</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <select aria-label="Tela inicial" data-testid="tela-inicial-select" title="Escolhe a primeira tela que abre quando você entra na plataforma" value={telaInicial} onChange={e => setTelaInicial(e.target.value)} className="border px-3 py-2 min-h-[44px] text-sm">
+            <option value="">Padrão do meu cargo</option>
+            {ROTAS_TELAS.map(r => <option key={r.rota} value={r.rota}>{r.nome}</option>)}
+          </select>
+          <button type="button" data-testid="tela-inicial-salvar" title="Grava a tela inicial escolhida; vale no celular e no computador" onClick={salvarTelaInicial} className="min-h-[44px] px-4 bg-navy text-white text-sm">Salvar</button>
+          {msgTela && <span role="status" className="text-sm" data-testid="tela-inicial-msg">{msgTela}</span>}
+        </div>
+      </section>
 
       <div className={mostra('seguranca')}>
         <SecaoSenha />

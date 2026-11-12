@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { gravarAreaAtual } from '@/lib/assistente'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { meuAlcance, rotuloCargo, type Cargo } from '@/lib/hierarquia'
+import { minhaPreferencia, telaPorCargo } from '@/lib/preferencias'
 import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck, CalendarClock, UserPlus, Search } from 'lucide-react'
 import AceiteTermos from '@/components/AceiteTermos'
 
@@ -41,6 +42,21 @@ export default function InicioPage() {
   // Hierarquia (pedido do M): a primeira tela já diz quem você é e o que você enxerga.
   const [alcance, setAlcance] = useState<{ cargo: Cargo | null; admin: boolean; veTudo: boolean } | null>(null)
   useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance(null)) }, [])
+  // Passos 10 e 11 do plano: na primeira entrada da sessão, cada pessoa cai na SUA tela —
+  // a escolhida nas Configurações ou, sem escolha, a do cargo (sócio/gestor: números; demais: Meu dia).
+  // Voltar ao menu Início depois disso funciona normalmente.
+  useEffect(() => {
+    if (!supabaseConfigurado) return
+    let entrou = false
+    try { entrou = sessionStorage.getItem('lsm-entrada-cargo') === '1' } catch { return }
+    if (entrou) return
+    Promise.all([minhaPreferencia(), meuAlcance()]).then(([pref, alc]) => {
+      const destino = pref.telaInicial || (alc.cargo ? telaPorCargo(alc.veTudo) : '')
+      if (!destino || destino === '/inicio') return
+      try { sessionStorage.setItem('lsm-entrada-cargo', '1') } catch { /* sem armazenamento */ }
+      navigate(destino)
+    }).catch(() => undefined)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 276
   const copiarMapa = async () => {
     const t = ['Áreas da plataforma — THEYE Institute', ...AREAS.map((a, i) => `${i + 1}. ${a.titulo}: ${a.texto}`)].join('\n')
