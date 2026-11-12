@@ -19,6 +19,7 @@ export default function LoginPage() {
   const [erro, setErro] = useState('')
   const [avisoRecuperacao, setAvisoRecuperacao] = useState(false)
   const [primeiroAcesso, setPrimeiroAcesso] = useState(false)
+  const [escritorio, setEscritorio] = useState('')
   const [avisoCadastro, setAvisoCadastro] = useState('')
   const [pedirCodigo, setPedirCodigo] = useState(false)
   const [codigo, setCodigo] = useState('')
@@ -73,7 +74,9 @@ export default function LoginPage() {
         return
       }
       try {
-        const { data, error } = await supabase.auth.signUp({ email, password: senha })
+        // O nome do escritório segue o padrão da casa: tudo em letras maiúsculas, sem espaços sobrando.
+        const nomeEscritorio = escritorio.toUpperCase().replace(/\s+/g, ' ').trim()
+        const { data, error } = await supabase.auth.signUp({ email, password: senha, options: { data: { escritorio: nomeEscritorio } } })
         if (error) setErro(/rate limit/i.test(error.message ?? '') ? 'Muitas contas criadas em pouco tempo. Aguarde alguns minutos e tente de novo.' : 'Não foi possível criar o acesso: ' + mensagemAmigavel(error))
         else if (data?.session) navigate('/inicio') // sem confirmação de e-mail: a conta já entra, no escritório próprio
         else {
@@ -184,6 +187,27 @@ export default function LoginPage() {
                 className="w-full px-4 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado"
               />
             </div>
+
+            {primeiroAcesso && (
+              <div>
+                <label htmlFor="escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title="Escreva o nome do escritório de advocacia a que você pertence. O padrão da plataforma é tudo em LETRAS MAIÚSCULAS, para todo mundo escrever igual e ninguém errar.">
+                  Escritório (em letras maiúsculas)
+                </label>
+                <input
+                  id="escritorio"
+                  name="escritorio"
+                  type="text"
+                  data-testid="campo-escritorio"
+                  value={escritorio}
+                  onChange={(e) => setEscritorio(e.target.value.toUpperCase())}
+                  required
+                  placeholder="EX.: SARDAS E MENEZES"
+                  title="Nome do seu escritório, sempre em letras maiúsculas (a tela já converte sozinha). Quem é do mesmo escritório escreve o mesmo nome, igualzinho."
+                  className="w-full px-4 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado uppercase"
+                />
+                <p className="text-xs text-grafite-claro mt-1">Padrão da casa: TUDO EM LETRAS MAIÚSCULAS, exatamente igual para todos do mesmo escritório. A tela converte sozinha enquanto você digita.</p>
+              </div>
+            )}
 
             <button
               type="submit"

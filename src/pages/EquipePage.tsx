@@ -117,6 +117,23 @@ export default function EquipePage() {
           </section>
         ) : (
           <>
+            <section className="bg-dourado/10 p-6 shadow-sm border-l-4 border-dourado" aria-labelledby="definir-cargos" data-testid="aviso-definir-cargos">
+              <h2 id="definir-cargos" className="text-lg font-semibold">Fátima: defina aqui o cargo de cada pessoa</h2>
+              <p className="text-sm text-grafite mt-2">
+                O cargo decide o que cada pessoa <strong>enxerga</strong> na plataforma: <strong>sócio(a)</strong> e <strong>gestor(a)</strong> veem os processos, prazos e honorários do escritório inteiro; <strong>advogado(a) pleno</strong> e <strong>júnior</strong> veem somente o que está sob a responsabilidade deles (e itens ainda sem responsável, para alguém assumir).
+              </p>
+              <p className="text-sm text-grafite mt-2">
+                Para definir: na lista <strong>Pessoas com acesso</strong>, logo abaixo, escolha o cargo no campo <strong>Cargo na hierarquia</strong> da linha de cada pessoa. A mudança é salva na hora e pode ser trocada quando quiser. Quem fica <strong>sem cargo definido</strong> vê só o que é seu.
+              </p>
+              {(() => { const sem = pessoas.filter(p => p.funcao && !cargos[p.id]).length; return sem > 0 ? (
+                <p className="text-sm font-medium text-navy mt-3" data-testid="faltam-cargos">
+                  Falta definir o cargo de {sem} {sem === 1 ? 'pessoa' : 'pessoas'}.
+                </p>
+              ) : pessoas.length > 0 ? (
+                <p className="text-sm font-medium text-regular mt-3" data-testid="faltam-cargos">Todos com acesso já têm cargo definido.</p>
+              ) : null })()}
+            </section>
+
             <section className="bg-white p-6 shadow-sm border-t-2 border-dourado" aria-labelledby="como-adicionar">
               <h2 id="como-adicionar" className="text-lg flex items-center gap-2">
                 <UserPlus size={18} className="text-dourado" aria-hidden="true" />

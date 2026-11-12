@@ -185,6 +185,66 @@ export const REFERENCIAS: { nome: string; area: string; escola: Escola['id'] }[]
   { nome: 'Arnaldo Rizzardo', area: 'Contratos e imobiliário', escola: 'imobiliaria' },
   { nome: 'Maria Helena Diniz', area: 'Civil e registros', escola: 'imobiliaria' },
   { nome: 'Sílvio de Salvo Venosa', area: 'Civil e locação', escola: 'imobiliaria' },
+  { nome: 'Maurício Godinho Delgado', area: 'Trabalho (TST)', escola: 'processualista' },
+  { nome: 'Alice Monteiro de Barros', area: 'Trabalho', escola: 'classica' },
+  { nome: 'Arnaldo Süssekind', area: 'Trabalho', escola: 'classica' },
+  { nome: 'Homero Batista Mateus da Silva', area: 'Trabalho', escola: 'pragmatica' },
+  { nome: 'Vólia Bomfim Cassar', area: 'Trabalho', escola: 'didatica' },
+  { nome: 'Nelson Hungria', area: 'Penal', escola: 'classica' },
+  { nome: 'Heleno Cláudio Fragoso', area: 'Penal', escola: 'classica' },
+  { nome: 'Cezar Roberto Bitencourt', area: 'Penal', escola: 'didatica' },
+  { nome: 'Guilherme de Souza Nucci', area: 'Penal e processo penal', escola: 'didatica' },
+  { nome: 'Gustavo Badaró', area: 'Processo penal', escola: 'processualista' },
+  { nome: 'Aury Lopes Jr.', area: 'Processo penal', escola: 'combativa' },
+  { nome: 'Hugo de Brito Machado', area: 'Tributário', escola: 'didatica' },
+  { nome: 'Leandro Paulsen', area: 'Tributário', escola: 'pragmatica' },
+  { nome: 'Roque Antonio Carrazza', area: 'Tributário', escola: 'classica' },
+  { nome: 'Geraldo Ataliba', area: 'Tributário', escola: 'classica' },
+  { nome: 'Cláudia Lima Marques', area: 'Consumidor', escola: 'civil-constitucional' },
+  { nome: 'Bruno Miragem', area: 'Consumidor', escola: 'civil-constitucional' },
+  { nome: 'Antonio Herman Benjamin', area: 'Consumidor e ambiental (STJ)', escola: 'pragmatica' },
+  { nome: 'Maria Sylvia Zanella Di Pietro', area: 'Administrativo', escola: 'didatica' },
+  { nome: 'Celso Antônio Bandeira de Mello', area: 'Administrativo', escola: 'classica' },
+  { nome: 'José dos Santos Carvalho Filho', area: 'Administrativo', escola: 'didatica' },
+]
+
+/**
+ * Rating adotado (pedido de M, 12/11/2026): para juristas, os doutrinadores mais citados pelo
+ * STF e pelo STJ e mais adotados nas pós-graduações; para escritórios, os "Mais Admirados" do
+ * anuário Análise Advocacia (análise.com), o ranking nacional mais aceito, cruzado com o
+ * Chambers Brazil. As listas abaixo nomeiam as referências; nenhum texto de ninguém é copiado.
+ */
+export const RATING = {
+  juristas: 'Doutrinadores mais citados pelo STF e pelo STJ e mais adotados nas pós-graduações de direito',
+  escritorios: 'Mais Admirados do anuário Análise Advocacia (o ranking nacional mais aceito), cruzado com o Chambers Brazil',
+}
+
+/** Os dez escritórios de referência de formatação e método (rankings acima, sem ordem interna). */
+export const ESCRITORIOS: string[] = [
+  'Pinheiro Neto Advogados',
+  'Mattos Filho',
+  'Machado Meyer',
+  'Demarest',
+  'TozziniFreire',
+  'Trench Rossi Watanabe',
+  'Veirano Advogados',
+  'BMA – Barbosa Müssnich Aragão',
+  'Lefosse',
+  'Cescon Barrieu',
+]
+
+/** Os dez juristas de referência de cada setor do direito (nomes por extenso, rating acima). */
+export const JURISTAS_POR_SETOR: { setor: string; chave: string; nomes: string[] }[] = [
+  { setor: 'Civil e contratos', chave: 'civel', nomes: ['Pontes de Miranda', 'Clóvis Beviláqua', 'Orlando Gomes', 'Caio Mário da Silva Pereira', 'Gustavo Tepedino', 'Judith Martins-Costa', 'Anderson Schreiber', 'Nelson Rosenvald', 'Maria Helena Diniz', 'Flávio Tartuce'] },
+  { setor: 'Processo civil', chave: 'civel', nomes: ['José Carlos Barbosa Moreira', 'Cândido Rangel Dinamarco', 'Ada Pellegrini Grinover', 'Humberto Theodoro Júnior', 'Luiz Fux', 'Fredie Didier Jr.', 'Teresa Arruda Alvim', 'Luiz Guilherme Marinoni', 'Nelson Nery Junior', 'Cassio Scarpinella Bueno'] },
+  { setor: 'Constitucional e público', chave: 'publico', nomes: ['Rui Barbosa', 'José Afonso da Silva', 'Paulo Bonavides', 'Luís Roberto Barroso', 'Gilmar Mendes', 'Ingo Wolfgang Sarlet', 'Celso Antônio Bandeira de Mello', 'Maria Sylvia Zanella Di Pietro', 'Hely Lopes Meirelles', 'José dos Santos Carvalho Filho'] },
+  { setor: 'Trabalhista', chave: 'trabalhista', nomes: ['Maurício Godinho Delgado', 'Alice Monteiro de Barros', 'Arnaldo Süssekind', 'Homero Batista Mateus da Silva', 'Vólia Bomfim Cassar', 'Délio Maranhão', 'Amauri Mascaro Nascimento', 'Sergio Pinto Martins', 'Carlos Henrique Bezerra Leite', 'Octavio Bueno Magano'] },
+  { setor: 'Penal e processo penal', chave: 'penal', nomes: ['Nelson Hungria', 'Heleno Cláudio Fragoso', 'Evandro Lins e Silva', 'Sobral Pinto', 'Cezar Roberto Bitencourt', 'Guilherme de Souza Nucci', 'Gustavo Badaró', 'Aury Lopes Jr.', 'Juarez Tavares', 'Miguel Reale Júnior'] },
+  { setor: 'Tributário', chave: 'tributario', nomes: ['Paulo de Barros Carvalho', 'Geraldo Ataliba', 'Roque Antonio Carrazza', 'Hugo de Brito Machado', 'Leandro Paulsen', 'Luciano Amaro', 'Sacha Calmon Navarro Coêlho', 'Ives Gandra da Silva Martins', 'Regina Helena Costa', 'Humberto Ávila'] },
+  { setor: 'Consumidor', chave: 'consumidor', nomes: ['Cláudia Lima Marques', 'Bruno Miragem', 'Antonio Herman Benjamin', 'Nelson Nery Junior', 'Ada Pellegrini Grinover', 'Nancy Andrighi', 'Luis Felipe Salomão', 'Rizzatto Nunes', 'Leonardo Roscoe Bessa', 'Sergio Cavalieri Filho'] },
+  { setor: 'Empresarial e societário', chave: 'empresarial', nomes: ['Rubens Requião', 'Fábio Ulhoa Coelho', 'Modesto Carvalhosa', 'Fábio Konder Comparato', 'Tullio Ascarelli', 'Waldemar Ferreira', 'Nelson Eizirik', 'Erasmo Valladão', 'Marcelo Bertoldi', 'Sérgio Campinho'] },
+  { setor: 'Imobiliário e locação', chave: 'imobiliario', nomes: ['Sylvio Capanema de Souza', 'Gildo dos Santos', 'Arnaldo Rizzardo', 'Maria Helena Diniz', 'Sílvio de Salvo Venosa', 'Caio Mário da Silva Pereira', 'Orlando Gomes', 'Afrânio de Carvalho', 'Luiz Edson Fachin', 'Francisco Eduardo Loureiro'] },
+  { setor: 'Família e sucessões', chave: 'familia', nomes: ['Pontes de Miranda', 'Paulo Lôbo', 'Maria Berenice Dias', 'Rolf Madaleno', 'Zeno Veloso', 'Giselda Hironaka', 'Rodrigo da Cunha Pereira', 'Flávio Tartuce', 'Cristiano Chaves de Farias', 'Nelson Rosenvald'] },
 ]
 
 /**

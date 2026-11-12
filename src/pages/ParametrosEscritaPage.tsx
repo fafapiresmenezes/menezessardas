@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
-import { BANCA, NARRATIVA } from '@/lib/estiloPecas'
+import { BANCA, NARRATIVA, RATING, ESCRITORIOS, JURISTAS_POR_SETOR } from '@/lib/estiloPecas'
 import { ChevronDown, ChevronRight, Save, CheckCircle2, FileText, Scale, BookOpen, Target, Layers, Pen, Info, HelpCircle, ArrowRight } from 'lucide-react'
 
 // ─── Tooltip universal ────────────────────────────────────────────────────────
@@ -640,10 +640,13 @@ export default function ParametrosEscritaPage() {
         <section className="mt-6 border border-borda rounded-xl overflow-hidden" aria-labelledby="banca-titulo">
           <div className="px-4 py-3.5 bg-fundo-alt">
             <Tooltip texto="Os dez modos de escrever que o robô usa. Ele escolhe sozinho, pela área do processo e pelo tipo da peça, e faz rodízio para duas peças seguidas não saírem iguais." posicao="bottom">
-              <h2 id="banca-titulo" className="font-semibold text-sm text-texto cursor-help">Banca de redatores: os 10 juristas de referência</h2>
+              <h2 id="banca-titulo" className="font-semibold text-sm text-texto cursor-help">Banca de redatores: os {BANCA.length} juristas de referência</h2>
             </Tooltip>
             <p className="text-xs text-grafite/70 mt-1">
               Cada peça automática é escrita no método de um destes juristas, escolhido pela área e pelo tipo da peça. O robô mantém as forças de cada tradição e é proibido de repetir as fraquezas. São referências de estilo: nenhuma peça é escrita, revisada ou endossada por essas pessoas, e toda peça sai como rascunho para revisão do advogado.
+            </p>
+            <p className="text-xs text-grafite/70 mt-1">
+              <strong>Rating adotado</strong> — juristas: {RATING.juristas}. Escritórios: {RATING.escritorios}.
             </p>
           </div>
           <ol className="divide-y divide-borda">
@@ -657,6 +660,30 @@ export default function ParametrosEscritaPage() {
               </li>
             ))}
           </ol>
+        </section>
+
+        {/* Juristas por setor e escritórios de referência (pedido de M, 12/11/2026) */}
+        <section className="bg-superficie border border-borda rounded-xl mt-6" aria-labelledby="setores-titulo" data-testid="juristas-por-setor">
+          <div className="px-4 py-3 border-b border-borda">
+            <Tooltip texto="Para cada setor do direito há um robô redator e dez juristas de referência. O robô do setor escreve a peça no método deles, sem copiar texto de ninguém." posicao="bottom">
+              <h2 id="setores-titulo" className="font-semibold text-sm text-texto cursor-help">Os 10 juristas de referência de cada setor</h2>
+            </Tooltip>
+            <p className="text-xs text-grafite/70 mt-1">Critério: {RATING.juristas.toLowerCase()}.</p>
+          </div>
+          <ul className="divide-y divide-borda">
+            {JURISTAS_POR_SETOR.map(s => (
+              <li key={s.setor} className="px-4 py-2.5 text-xs text-grafite">
+                <strong className="text-texto">{s.setor}:</strong> {s.nomes.join(', ')}.
+              </li>
+            ))}
+          </ul>
+          <div className="px-4 py-3 border-t border-borda">
+            <Tooltip texto="O padrão de formatação das peças (fonte, margens, numeração, pedidos em alíneas) segue a prática comum destes escritórios. Nenhum manual interno é copiado." posicao="top">
+              <h3 className="font-semibold text-xs text-texto cursor-help">Os 10 escritórios de referência de formatação</h3>
+            </Tooltip>
+            <p className="text-xs text-grafite/70 mt-1">{ESCRITORIOS.join(' · ')}</p>
+            <p className="text-xs text-grafite/50 mt-1">Fonte: {RATING.escritorios}.</p>
+          </div>
         </section>
 
         <section className="bg-superficie border border-borda rounded-xl mt-6" aria-labelledby="narrativa-titulo">
