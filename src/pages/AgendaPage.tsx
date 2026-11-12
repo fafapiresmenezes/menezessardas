@@ -458,7 +458,7 @@ export default function AgendaPage() {
                     inputMode="email"
                     value={novoAlerta.email}
                     onChange={e => setNovoAlerta({ ...novoAlerta, email: e.target.value })}
-                    placeholder="fatima.menezes@lsm.law"
+                    placeholder="nome@exemplo.com"
                     className="w-full min-h-[44px] px-3 border border-navy/20 rounded-sm text-sm"
                   />
                   <p className="text-xs text-grafite-claro mt-1">Para mais de um, separe por vírgula.</p>

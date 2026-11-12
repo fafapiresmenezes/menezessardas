@@ -55,6 +55,7 @@ const ProjetosPage = lazy(() => import('@/pages/ProjetosPage'))
 const IntimacoesPage = lazy(() => import('@/pages/IntimacoesPage'))
 const AdministracaoPage = lazy(() => import('@/pages/AdministracaoPage'))
 const FerramentasPage = lazy(() => import('@/pages/FerramentasPage'))
+const SolucoesPage = lazy(() => import('@/pages/SolucoesPage'))
 const CarteiraProcessosPage = lazy(() => import('@/pages/CarteiraProcessosPage'))
 const ImportarProcessosPage = lazy(() => import('@/pages/ImportarProcessosPage'))
 const FunilVendasPage = lazy(() => import('@/pages/FunilVendasPage'))
@@ -158,6 +159,10 @@ function App() {
         <Route
           path="/ferramentas"
           element={isAuthenticated ? <FerramentasPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/solucoes"
+          element={isAuthenticated ? <SolucoesPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/estudos"

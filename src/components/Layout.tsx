@@ -22,7 +22,7 @@ import { listarPessoas, perfilAtual } from '@/lib/equipe'
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, ChevronDown, MoreHorizontal, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, ChevronDown, MoreHorizontal, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -87,6 +87,9 @@ const gruposMenu = [
     { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
     { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
     { icon: TrendingUp, label: 'Previsões', href: '/previsoes' },
+  ] },
+  { id: 'solucoes', titulo: 'Soluções jurídicas', itens: [
+    { icon: Store, label: 'Soluções jurídicas', href: '/solucoes' },
   ] },
   { id: 'admin', titulo: 'Escritório e administração', itens: [
     { icon: Cloud, label: 'Nuvem', href: '/nuvem' },
