@@ -639,7 +639,7 @@ export default function ParametrosEscritaPage() {
         {/* Banca dos dez redatores */}
         <section className="mt-6 border border-borda rounded-xl overflow-hidden" aria-labelledby="banca-titulo">
           <div className="px-4 py-3.5 bg-fundo-alt">
-            <Tooltip texto="Os dez modos de escrever que o robô usa. Ele escolhe sozinho, pela área do processo e pelo tipo da peça, e faz rodízio para duas peças seguidas não saírem iguais." posicao="bottom">
+            <Tooltip texto="Os modos de escrever que o robô usa. Cada setor do direito tem o seu redator titular; o robô escolhe sozinho, pela área do processo e pelo tipo da peça, e faz rodízio para duas peças seguidas não saírem iguais." posicao="bottom">
               <h2 id="banca-titulo" className="font-semibold text-sm text-texto cursor-help">Banca de redatores: os {BANCA.length} juristas de referência</h2>
             </Tooltip>
             <p className="text-xs text-grafite/70 mt-1">

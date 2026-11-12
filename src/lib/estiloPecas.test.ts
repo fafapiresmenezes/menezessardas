@@ -110,10 +110,10 @@ describe('rotação em todos os agentes', () => {
   })
 })
 
-describe('banca dos dez redatores', () => {
-  it('tem dez redatores, sem repetir, cada um ligado a uma escola e a uma referência conhecidas', () => {
-    expect(BANCA).toHaveLength(10)
-    expect(new Set(BANCA.map(b => b.id)).size).toBe(10)
+describe('banca de redatores', () => {
+  it('tem catorze redatores, sem repetir, cada um ligado a uma escola e a uma referência conhecidas', () => {
+    expect(BANCA).toHaveLength(14)
+    expect(new Set(BANCA.map(b => b.id)).size).toBe(14)
     const escolas = new Set(ESCOLAS.map(e => e.id))
     for (const b of BANCA) {
       expect(escolas.has(b.escola)).toBe(true)
@@ -136,6 +136,15 @@ describe('banca dos dez redatores', () => {
     expect(escolherRedator({ area: 'Família e sucessões', titulo: 'INVENTÁRIO E PARTILHA' }).id).toBe('pontes-de-miranda')
     expect(escolherRedator({ area: 'Consumidor', titulo: 'Responder à contestação (réplica)' }).id).toBe('nancy-andrighi')
     expect(escolherRedator({ area: 'Cível', titulo: 'Responder ao recurso da outra parte (contrarrazões)' }).id).toBe('barbosa-moreira')
+  })
+
+  it('cada setor tem o seu redator titular, que é a primeira escolha', () => {
+    const titulares: Record<string, string> = { 'Cível': 'tepedino', 'Constitucional': 'barroso', 'Trabalhista': 'godinho-delgado', 'Penal': 'evandro-lins', 'Tributário': 'barros-carvalho', 'Consumidor': 'lima-marques', 'Empresarial': 'ulhoa-coelho', 'Imobiliário': 'capanema', 'Família e sucessões': 'pontes-de-miranda' }
+    for (const [area, id] of Object.entries(titulares)) {
+      for (const semente of [1, 7, 42, 2026]) expect(escolherRedator({ area, titulo: 'Manifestação', semente }).id).toBe(id)
+      // o rodízio só vale onde há outro redator do mesmo setor à altura
+      if (['Cível', 'Constitucional', 'Trabalhista', 'Consumidor'].includes(area)) expect(escolherRedator({ area, titulo: 'Manifestação', anteriores: [id] }).id).not.toBe(id)
+    }
   })
 
   it('faz rodízio: quem escreveu a última peça da mesma área cede a vez quando há outro à altura', () => {

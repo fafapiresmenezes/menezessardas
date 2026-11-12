@@ -403,6 +403,8 @@ export interface Redator {
   escola: Escola['id']
   /** Áreas (chaveArea) em que este redator escreve primeiro. */
   areas: string[]
+  /** Setor (chaveArea) de que este redator é o titular: é a primeira escolha quando a peça é desse setor. */
+  titular?: string
   /** Palavras do título da tarefa que chamam este redator (recurso, execução, despejo...). */
   pecas: RegExp
   /** Como ele constrói a peça: vai para as instruções do redator. */
@@ -414,7 +416,8 @@ export interface Redator {
 }
 
 /**
- * Banca de redatores: dez modos de escrever, cada um inspirado no método de um jurista de referência.
+ * Banca de redatores: catorze modos de escrever, cada um inspirado no método de um jurista de referência,
+ * com um redator titular para cada setor do direito (pedido de M, 12/11/2026).
  * O robô escolhe o redator pela área e pelo tipo da peça e faz rodízio para não repetir o mesmo em seguida.
  * São referências de estilo e de método: nenhuma peça é escrita, revisada ou endossada por essas pessoas.
  */
@@ -422,33 +425,45 @@ export const BANCA: Redator[] = [
   { id: 'rui-barbosa', referencia: 'Rui Barbosa', especialidade: 'Constitucional e tribunais superiores', escola: 'classica', areas: ['publico', 'penal'], pecas: /mandado de seguran|habeas|extraordin|constitucional/i,
     metodo: 'Constrói a peça como defesa de um direito: expõe o fato com gravidade, ergue a tese sobre a Constituição e a encadeia em períodos amplos e bem articulados, com vocabulário preciso e fecho solene.',
     forcas: 'força do argumento, domínio do vernáculo, arquitetura do raciocínio', evitar: 'prolixidade, erudição exibida, períodos que se perdem, citação em língua estrangeira sem tradução' },
-  { id: 'pontes-de-miranda', referencia: 'Pontes de Miranda', especialidade: 'Civil, família e sucessões', escola: 'classica', areas: ['familia', 'registral', 'civel'], pecas: /invent[aá]rio|partilha|sucess|usucapi|nulidade|anula/i,
+  { id: 'pontes-de-miranda', referencia: 'Pontes de Miranda', especialidade: 'Civil, família e sucessões', escola: 'classica', areas: ['familia', 'registral', 'civel'], titular: 'familia', pecas: /invent[aá]rio|partilha|sucess|usucapi|nulidade|anula/i,
     metodo: 'Classifica antes de argumentar: identifica a natureza do fato jurídico, separa existência, validade e eficácia, e só então tira a consequência, com rigor conceitual e remissão exata ao artigo.',
     forcas: 'precisão conceitual, classificação rigorosa, remissão exata à lei', evitar: 'hermetismo, neologismos, frases truncadas, excesso de parênteses e de remissões cruzadas' },
   { id: 'barbosa-moreira', referencia: 'José Carlos Barbosa Moreira', especialidade: 'Processo civil e recursos', escola: 'processualista', areas: ['civel'], pecas: /recurso|apela|agravo|embargos|contrarraz|ac[oó]rd[aã]o|decis[aã]o/i,
     metodo: 'Abre pelo cabimento, pela tempestividade e pelo interesse; depois ataca a decisão ponto por ponto, na ordem em que foi fundamentada, com frases limpas e sem um adjetivo sobrando.',
     forcas: 'clareza, concisão, ordem lógica, elegância sem enfeite', evitar: 'ironia, tom professoral, digressão teórica que não serve ao caso' },
-  { id: 'barroso', referencia: 'Luís Roberto Barroso', especialidade: 'Constitucional e direito público', escola: 'didatica', areas: ['publico', 'compliance'], pecas: /fazenda|munic[ií]pio|\bestado do\b|\buni[aã]o federal\b|administrativ/i,
+  { id: 'barroso', referencia: 'Luís Roberto Barroso', especialidade: 'Constitucional e direito público', escola: 'didatica', areas: ['publico', 'compliance'], titular: 'publico', pecas: /fazenda|munic[ií]pio|\bestado do\b|\buni[aã]o federal\b|administrativ/i,
     metodo: 'Anuncia a tese em uma frase e a demonstra em três ou quatro proposições numeradas, uma ideia por parágrafo, em linguagem que o cliente entenderia, fechando com a consequência prática.',
     forcas: 'didatismo, síntese, estrutura visível, linguagem acessível', evitar: 'frases de efeito, generalidades de princípio sem lei que as sustente, tom de palestra' },
-  { id: 'tepedino', referencia: 'Gustavo Tepedino', especialidade: 'Contratos e responsabilidade civil', escola: 'civil-constitucional', areas: ['civel', 'familia'], pecas: /contrat|indeniza|responsabilidade|dano|obriga/i,
+  { id: 'tepedino', referencia: 'Gustavo Tepedino', especialidade: 'Contratos e responsabilidade civil', escola: 'civil-constitucional', areas: ['civel', 'familia'], titular: 'civel', pecas: /contrat|indeniza|responsabilidade|dano|obriga/i,
     metodo: 'Lê o contrato e o dano à luz da boa-fé objetiva, da função social e da dignidade, sempre ancorando o princípio em um artigo do Código Civil e na situação concreta das partes.',
     forcas: 'leitura sistemática, equilíbrio entre princípio e regra, sensibilidade ao caso concreto', evitar: 'abstração demais, princípio usado no lugar da prova, parágrafos longos de teoria' },
   { id: 'nancy-andrighi', referencia: 'Nancy Andrighi', especialidade: 'Consumidor e direito privado no STJ', escola: 'pragmatica', areas: ['consumidor', 'civel'], pecas: /consum|banc|plano de sa[uú]de|especial|r[eé]plica|contesta/i,
     metodo: 'Vai direto ao ponto que decide a causa: delimita a controvérsia, mostra o entendimento consolidado do tribunal, encaixa o caso nele e aponta o efeito concreto da decisão para a parte.',
     forcas: 'objetividade, foco no ponto decisivo, domínio do precedente, atenção ao efeito prático', evitar: 'empilhar ementas, colar trechos longos de julgados, precedente sem demonstrar a semelhança com o caso' },
-  { id: 'capanema', referencia: 'Sylvio Capanema de Souza', especialidade: 'Locação e imobiliário', escola: 'imobiliaria', areas: ['imobiliario', 'condominial'], pecas: /despejo|loca[cç]|aluguel|renovat|revisional|condom/i,
+  { id: 'capanema', referencia: 'Sylvio Capanema de Souza', especialidade: 'Locação e imobiliário', escola: 'imobiliaria', areas: ['imobiliario', 'condominial'], titular: 'imobiliario', pecas: /despejo|loca[cç]|aluguel|renovat|revisional|condom/i,
     metodo: 'Parte do contrato, da cláusula e da cronologia, com datas e valores exatos; liga cada um ao artigo da Lei do Inquilinato e resume o débito ou a obrigação antes dos pedidos.',
     forcas: 'precisão de datas, valores e cláusulas, conhecimento da prática forense, tom direto', evitar: 'casuísmo sem fundamento legal, coloquialidade, tabela sem explicação' },
-  { id: 'ulhoa-coelho', referencia: 'Fábio Ulhoa Coelho', especialidade: 'Empresarial e societário', escola: 'empresarial', areas: ['empresarial'], pecas: /societ|s[oó]cio|fal[eê]ncia|recupera[cç][aã]o judicial|t[ií]tulo|cheque|duplicata/i,
+  { id: 'ulhoa-coelho', referencia: 'Fábio Ulhoa Coelho', especialidade: 'Empresarial e societário', escola: 'empresarial', areas: ['empresarial'], titular: 'empresarial', pecas: /societ|s[oó]cio|fal[eê]ncia|recupera[cç][aã]o judicial|t[ií]tulo|cheque|duplicata/i,
     metodo: 'Abre com um resumo de três frases, trata a questão pelo risco e pelo custo para a empresa, usa seções curtas com títulos que informam e fecha com o que se pede em tópicos.',
     forcas: 'visão de negócio, clareza executiva, seções curtas, quantificação do risco', evitar: 'jargão corporativo, anglicismos, simplificação que omite o fundamento legal' },
-  { id: 'barros-carvalho', referencia: 'Paulo de Barros Carvalho', especialidade: 'Tributário e execução fiscal', escola: 'processualista', areas: ['tributario'], pecas: /fiscal|tribut|imposto|iptu|icms|\biss\b|d[ií]vida ativa|pr[eé]-executividade/i,
+  { id: 'barros-carvalho', referencia: 'Paulo de Barros Carvalho', especialidade: 'Tributário e execução fiscal', escola: 'processualista', areas: ['tributario'], titular: 'tributario', pecas: /fiscal|tribut|imposto|iptu|icms|\biss\b|d[ií]vida ativa|pr[eé]-executividade/i,
     metodo: 'Decompõe a exigência nos seus elementos (fato gerador, sujeito, base, alíquota, tempo) e testa cada um contra a lei e a prova, com linguagem exata e conclusão que decorre do exame.',
     forcas: 'rigor analítico, decomposição da norma, exatidão terminológica', evitar: 'vocabulário de lógica e semiótica, abstração, frases que só o especialista entende' },
   { id: 'sobral-pinto', referencia: 'Sobral Pinto', especialidade: 'Advocacia de defesa e trabalhista', escola: 'combativa', areas: ['trabalhista', 'penal', 'consumidor'], pecas: /defesa|tutela|urg[eê]ncia|liminar|alega[cç][oõ]es finais|memoriais|reclama/i,
     metodo: 'Narra o fato mais grave com concretude, mostra a injustiça a corrigir e sustenta a tese com firmeza e lealdade, alternando frases curtas de impacto com períodos de fundamentação.',
     forcas: 'coragem, narrativa concreta, firmeza com lealdade processual', evitar: 'indignação em excesso, ataque pessoal à parte ou ao juiz, adjetivação, pergunta retórica repetida' },
+  { id: 'godinho-delgado', referencia: 'Maurício Godinho Delgado', especialidade: 'Trabalhista', escola: 'processualista', areas: ['trabalhista'], titular: 'trabalhista', pecas: /trabalh|reclamat|verbas|rescis|horas extras|recurso ordin[aá]rio|v[ií]nculo|\bclt\b/i,
+    metodo: 'Parte do princípio da proteção e do contrato-realidade, enquadra o fato no artigo da CLT e na súmula ou orientação do TST, e trata cada verba em tópico próprio, com período, base de cálculo e reflexos.',
+    forcas: 'sistematização por verba, domínio das súmulas do TST, ligação entre fato, prova e pedido', evitar: 'períodos longos demais, excesso de classificações teóricas, repetição do mesmo fundamento em cada verba' },
+  { id: 'evandro-lins', referencia: 'Evandro Lins e Silva', especialidade: 'Penal e júri', escola: 'combativa', areas: ['penal'], titular: 'penal', pecas: /habeas|den[uú]ncia|criminal|penal|j[uú]ri|pris[aã]o|resposta [aà] acusa|liberdade/i,
+    metodo: 'Começa pela pessoa e pelo fato, aponta a dúvida que a prova não resolve, sustenta a presunção de inocência com a Constituição e o Código de Processo Penal e fecha com o pedido de liberdade ou absolvição em frase direta.',
+    forcas: 'humanidade da narrativa, foco na dúvida razoável, clareza do pedido, respeito ao julgador', evitar: 'dramatização em excesso, ataque à vítima ou à acusação, apelo emocional sem apoio na prova' },
+  { id: 'lima-marques', referencia: 'Cláudia Lima Marques', especialidade: 'Consumidor', escola: 'civil-constitucional', areas: ['consumidor'], titular: 'consumidor', pecas: /fornecedor|v[ií]cio do produto|recall|publicidade|superendivid|cl[aá]usula abusiva|oferta/i,
+    metodo: 'Identifica a relação de consumo e a vulnerabilidade, lê o contrato pela boa-fé e pelo equilíbrio, dialoga o Código de Defesa do Consumidor com o Código Civil e mostra a abusividade pela cláusula concreta e pelo dano.',
+    forcas: 'diálogo das fontes, proteção da confiança, exame da cláusula concreta', evitar: 'excesso de citações estrangeiras, parágrafos de teoria sem o fato, vulnerabilidade afirmada sem demonstração' },
+  { id: 'di-pietro', referencia: 'Maria Sylvia Zanella Di Pietro', especialidade: 'Administrativo', escola: 'didatica', areas: ['publico'], pecas: /licita|contrato administrativo|servidor|improbidade|concess|ato administrativo|concurso/i,
+    metodo: 'Examina o ato pela competência, forma, motivo, objeto e finalidade, confronta-o com a legalidade e os demais princípios do artigo 37 da Constituição e conclui pelo controle cabível, em linguagem direta e ordenada.',
+    forcas: 'ordem didática, exame do ato por elementos, apoio seguro na lei e na Constituição', evitar: 'tom de manual, enumeração de princípios sem aplicá-los ao caso, citação longa de doutrina' },
 ]
 
 /**
@@ -462,7 +477,7 @@ export function escolherRedator(opcoes: { area?: string | null; titulo?: string 
   const r = gerador(opcoes.semente ?? 1)
   const pontuados = BANCA.map(b => {
     const posicao = b.areas.indexOf(area)
-    const pontos = (posicao === 0 ? 4 : posicao > 0 ? 2.5 : 0) + (b.pecas.test(titulo) ? 3 : 0) - (recentes[0] === b.id ? 2.5 : recentes.slice(1, 3).includes(b.id) ? 1 : 0) + r() * 0.5
+    const pontos = (posicao === 0 ? 4 : posicao > 0 ? 2.5 : 0) + (b.titular === area ? 1.5 : 0) + (b.pecas.test(titulo) ? 3 : 0) - (recentes[0] === b.id ? 2.5 : recentes.slice(1, 3).includes(b.id) ? 1 : 0) + r() * 0.5
     return { b, pontos }
   })
   return pontuados.sort((x, y) => y.pontos - x.pontos)[0]!.b

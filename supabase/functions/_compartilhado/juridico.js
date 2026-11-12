@@ -580,7 +580,28 @@ var REFERENCIAS = [
   { nome: "Gildo dos Santos", area: "Locação", escola: "imobiliaria" },
   { nome: "Arnaldo Rizzardo", area: "Contratos e imobiliário", escola: "imobiliaria" },
   { nome: "Maria Helena Diniz", area: "Civil e registros", escola: "imobiliaria" },
-  { nome: "Sílvio de Salvo Venosa", area: "Civil e locação", escola: "imobiliaria" }
+  { nome: "Sílvio de Salvo Venosa", area: "Civil e locação", escola: "imobiliaria" },
+  { nome: "Maurício Godinho Delgado", area: "Trabalho (TST)", escola: "processualista" },
+  { nome: "Alice Monteiro de Barros", area: "Trabalho", escola: "classica" },
+  { nome: "Arnaldo Süssekind", area: "Trabalho", escola: "classica" },
+  { nome: "Homero Batista Mateus da Silva", area: "Trabalho", escola: "pragmatica" },
+  { nome: "Vólia Bomfim Cassar", area: "Trabalho", escola: "didatica" },
+  { nome: "Nelson Hungria", area: "Penal", escola: "classica" },
+  { nome: "Heleno Cláudio Fragoso", area: "Penal", escola: "classica" },
+  { nome: "Cezar Roberto Bitencourt", area: "Penal", escola: "didatica" },
+  { nome: "Guilherme de Souza Nucci", area: "Penal e processo penal", escola: "didatica" },
+  { nome: "Gustavo Badaró", area: "Processo penal", escola: "processualista" },
+  { nome: "Aury Lopes Jr.", area: "Processo penal", escola: "combativa" },
+  { nome: "Hugo de Brito Machado", area: "Tributário", escola: "didatica" },
+  { nome: "Leandro Paulsen", area: "Tributário", escola: "pragmatica" },
+  { nome: "Roque Antonio Carrazza", area: "Tributário", escola: "classica" },
+  { nome: "Geraldo Ataliba", area: "Tributário", escola: "classica" },
+  { nome: "Cláudia Lima Marques", area: "Consumidor", escola: "civil-constitucional" },
+  { nome: "Bruno Miragem", area: "Consumidor", escola: "civil-constitucional" },
+  { nome: "Antonio Herman Benjamin", area: "Consumidor e ambiental (STJ)", escola: "pragmatica" },
+  { nome: "Maria Sylvia Zanella Di Pietro", area: "Administrativo", escola: "didatica" },
+  { nome: "Celso Antônio Bandeira de Mello", area: "Administrativo", escola: "classica" },
+  { nome: "José dos Santos Carvalho Filho", area: "Administrativo", escola: "didatica" }
 ];
 var FORMATACAO = {
   fonte: "Times New Roman",
@@ -710,6 +731,7 @@ var BANCA = [
     especialidade: "Civil, família e sucessões",
     escola: "classica",
     areas: ["familia", "registral", "civel"],
+    titular: "familia",
     pecas: /invent[aá]rio|partilha|sucess|usucapi|nulidade|anula/i,
     metodo: "Classifica antes de argumentar: identifica a natureza do fato jurídico, separa existência, validade e eficácia, e só então tira a consequência, com rigor conceitual e remissão exata ao artigo.",
     forcas: "precisão conceitual, classificação rigorosa, remissão exata à lei",
@@ -732,6 +754,7 @@ var BANCA = [
     especialidade: "Constitucional e direito público",
     escola: "didatica",
     areas: ["publico", "compliance"],
+    titular: "publico",
     pecas: /fazenda|munic[ií]pio|\bestado do\b|\buni[aã]o federal\b|administrativ/i,
     metodo: "Anuncia a tese em uma frase e a demonstra em três ou quatro proposições numeradas, uma ideia por parágrafo, em linguagem que o cliente entenderia, fechando com a consequência prática.",
     forcas: "didatismo, síntese, estrutura visível, linguagem acessível",
@@ -743,6 +766,7 @@ var BANCA = [
     especialidade: "Contratos e responsabilidade civil",
     escola: "civil-constitucional",
     areas: ["civel", "familia"],
+    titular: "civel",
     pecas: /contrat|indeniza|responsabilidade|dano|obriga/i,
     metodo: "Lê o contrato e o dano à luz da boa-fé objetiva, da função social e da dignidade, sempre ancorando o princípio em um artigo do Código Civil e na situação concreta das partes.",
     forcas: "leitura sistemática, equilíbrio entre princípio e regra, sensibilidade ao caso concreto",
@@ -765,6 +789,7 @@ var BANCA = [
     especialidade: "Locação e imobiliário",
     escola: "imobiliaria",
     areas: ["imobiliario", "condominial"],
+    titular: "imobiliario",
     pecas: /despejo|loca[cç]|aluguel|renovat|revisional|condom/i,
     metodo: "Parte do contrato, da cláusula e da cronologia, com datas e valores exatos; liga cada um ao artigo da Lei do Inquilinato e resume o débito ou a obrigação antes dos pedidos.",
     forcas: "precisão de datas, valores e cláusulas, conhecimento da prática forense, tom direto",
@@ -776,6 +801,7 @@ var BANCA = [
     especialidade: "Empresarial e societário",
     escola: "empresarial",
     areas: ["empresarial"],
+    titular: "empresarial",
     pecas: /societ|s[oó]cio|fal[eê]ncia|recupera[cç][aã]o judicial|t[ií]tulo|cheque|duplicata/i,
     metodo: "Abre com um resumo de três frases, trata a questão pelo risco e pelo custo para a empresa, usa seções curtas com títulos que informam e fecha com o que se pede em tópicos.",
     forcas: "visão de negócio, clareza executiva, seções curtas, quantificação do risco",
@@ -787,6 +813,7 @@ var BANCA = [
     especialidade: "Tributário e execução fiscal",
     escola: "processualista",
     areas: ["tributario"],
+    titular: "tributario",
     pecas: /fiscal|tribut|imposto|iptu|icms|\biss\b|d[ií]vida ativa|pr[eé]-executividade/i,
     metodo: "Decompõe a exigência nos seus elementos (fato gerador, sujeito, base, alíquota, tempo) e testa cada um contra a lei e a prova, com linguagem exata e conclusão que decorre do exame.",
     forcas: "rigor analítico, decomposição da norma, exatidão terminológica",
@@ -802,6 +829,53 @@ var BANCA = [
     metodo: "Narra o fato mais grave com concretude, mostra a injustiça a corrigir e sustenta a tese com firmeza e lealdade, alternando frases curtas de impacto com períodos de fundamentação.",
     forcas: "coragem, narrativa concreta, firmeza com lealdade processual",
     evitar: "indignação em excesso, ataque pessoal à parte ou ao juiz, adjetivação, pergunta retórica repetida"
+  },
+  {
+    id: "godinho-delgado",
+    referencia: "Maurício Godinho Delgado",
+    especialidade: "Trabalhista",
+    escola: "processualista",
+    areas: ["trabalhista"],
+    titular: "trabalhista",
+    pecas: /trabalh|reclamat|verbas|rescis|horas extras|recurso ordin[aá]rio|v[ií]nculo|\bclt\b/i,
+    metodo: "Parte do princípio da proteção e do contrato-realidade, enquadra o fato no artigo da CLT e na súmula ou orientação do TST, e trata cada verba em tópico próprio, com período, base de cálculo e reflexos.",
+    forcas: "sistematização por verba, domínio das súmulas do TST, ligação entre fato, prova e pedido",
+    evitar: "períodos longos demais, excesso de classificações teóricas, repetição do mesmo fundamento em cada verba"
+  },
+  {
+    id: "evandro-lins",
+    referencia: "Evandro Lins e Silva",
+    especialidade: "Penal e júri",
+    escola: "combativa",
+    areas: ["penal"],
+    titular: "penal",
+    pecas: /habeas|den[uú]ncia|criminal|penal|j[uú]ri|pris[aã]o|resposta [aà] acusa|liberdade/i,
+    metodo: "Começa pela pessoa e pelo fato, aponta a dúvida que a prova não resolve, sustenta a presunção de inocência com a Constituição e o Código de Processo Penal e fecha com o pedido de liberdade ou absolvição em frase direta.",
+    forcas: "humanidade da narrativa, foco na dúvida razoável, clareza do pedido, respeito ao julgador",
+    evitar: "dramatização em excesso, ataque à vítima ou à acusação, apelo emocional sem apoio na prova"
+  },
+  {
+    id: "lima-marques",
+    referencia: "Cláudia Lima Marques",
+    especialidade: "Consumidor",
+    escola: "civil-constitucional",
+    areas: ["consumidor"],
+    titular: "consumidor",
+    pecas: /fornecedor|v[ií]cio do produto|recall|publicidade|superendivid|cl[aá]usula abusiva|oferta/i,
+    metodo: "Identifica a relação de consumo e a vulnerabilidade, lê o contrato pela boa-fé e pelo equilíbrio, dialoga o Código de Defesa do Consumidor com o Código Civil e mostra a abusividade pela cláusula concreta e pelo dano.",
+    forcas: "diálogo das fontes, proteção da confiança, exame da cláusula concreta",
+    evitar: "excesso de citações estrangeiras, parágrafos de teoria sem o fato, vulnerabilidade afirmada sem demonstração"
+  },
+  {
+    id: "di-pietro",
+    referencia: "Maria Sylvia Zanella Di Pietro",
+    especialidade: "Administrativo",
+    escola: "didatica",
+    areas: ["publico"],
+    pecas: /licita|contrato administrativo|servidor|improbidade|concess|ato administrativo|concurso/i,
+    metodo: "Examina o ato pela competência, forma, motivo, objeto e finalidade, confronta-o com a legalidade e os demais princípios do artigo 37 da Constituição e conclui pelo controle cabível, em linguagem direta e ordenada.",
+    forcas: "ordem didática, exame do ato por elementos, apoio seguro na lei e na Constituição",
+    evitar: "tom de manual, enumeração de princípios sem aplicá-los ao caso, citação longa de doutrina"
   }
 ];
 function escolherRedator(opcoes) {
@@ -811,7 +885,7 @@ function escolherRedator(opcoes) {
   const r = gerador(opcoes.semente ?? 1);
   const pontuados = BANCA.map((b) => {
     const posicao = b.areas.indexOf(area);
-    const pontos = (posicao === 0 ? 4 : posicao > 0 ? 2.5 : 0) + (b.pecas.test(titulo) ? 3 : 0) - (recentes[0] === b.id ? 2.5 : recentes.slice(1, 3).includes(b.id) ? 1 : 0) + r() * 0.5;
+    const pontos = (posicao === 0 ? 4 : posicao > 0 ? 2.5 : 0) + (b.titular === area ? 1.5 : 0) + (b.pecas.test(titulo) ? 3 : 0) - (recentes[0] === b.id ? 2.5 : recentes.slice(1, 3).includes(b.id) ? 1 : 0) + r() * 0.5;
     return { b, pontos };
   });
   return pontuados.sort((x, y) => y.pontos - x.pontos)[0].b;
