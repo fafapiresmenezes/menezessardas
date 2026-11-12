@@ -598,7 +598,7 @@ function SecaoEmail() {
             </ol>
             {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={`p-3 text-sm border-l-2 ${msg.tipo === 'ok' ? 'bg-regularFundo border-regular text-regular' : 'bg-criticoFundo border-critico text-critico'}`}>{msg.texto}</p>}
             <label htmlFor="remetente" className="block text-xs uppercase tracking-wider text-grafite">E-mail que envia os avisos {estado.remetente && <span className="normal-case">(atual: {estado.remetente})</span>}</label>
-            <input id="remetente" type="email" value={remetente} onChange={e => setRemetente(e.target.value)} placeholder="avisos@lsm.law"
+            <input id="remetente" type="email" value={remetente} onChange={e => setRemetente(e.target.value)} placeholder="avisos@theye.club"
               className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white text-sm" />
             <label htmlFor="chave-email" className="block text-xs uppercase tracking-wider text-grafite">Chave do Brevo {estado.chave && <span className="normal-case">(já salva)</span>}</label>
             <input id="chave-email" type="password" value={chave} onChange={e => setChave(e.target.value)} placeholder="xkeysib-…" autoComplete="off" spellCheck={false}
