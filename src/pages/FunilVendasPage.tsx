@@ -58,9 +58,16 @@ export default function FunilVendasPage() {
     setNovo(VAZIO); setMsg('Contato incluído no funil.'); carregar()
   }
   const mover = async (l: Lead, etapa: Etapa, motivo?: string) => {
-    setErro('')
+    setErro(''); setMsg('')
+    // Mover para "ganho" dispara a criação do caso: o botão Avançar fecha o ciclo sem precisar de um segundo clique.
+    if (etapa === 'ganho' && !l.caso_id) {
+      if (!(Number(l.valor_estimado) > 0)) return setErro('Informe o valor dos honorários antes de marcar como fechado.')
+      return converter(l)
+    }
+    // Pedir motivo da perda abre o cartão em vez de mostrar erro: o usuário ainda não errou nada.
+    if (etapa === 'perdido' && !motivo) { setPerdendo({ id: l.id, motivo: '' }); setMsg('Escolha o motivo da perda abaixo para registrar e mover.'); return }
     const problema = validarMudanca(l, etapa, motivo)
-    if (problema) { if (etapa === 'perdido') setPerdendo({ id: l.id, motivo: '' }); return setErro(problema) }
+    if (problema) return setErro(problema)
     const { error } = await supabase.from('leads').update({ etapa, motivo_perda: etapa === 'perdido' ? motivo : null }).eq('id', l.id)
     if (error) return setErro(mensagemAmigavel(error))
     setPerdendo(null); carregar()

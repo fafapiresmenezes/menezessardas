@@ -203,7 +203,6 @@ describe('Funil de vendas', () => {
     await waitFor(() => expect(within(screen.getByTestId('coluna-negociacao')).queryByTestId('lead-card')).toBeTruthy())
     fireEvent.click(screen.getByTestId('lead-avancar'))
     await waitFor(() => expect(within(screen.getByTestId('coluna-ganho')).queryByTestId('lead-card')).toBeTruthy())
-    fireEvent.click(screen.getByTestId('lead-converter'))
     await waitFor(() => expect(txt('funil-msg')).toContain('Caso criado para Maria Silva'))
     expect(falso.tabelas.tarefas[0]).toMatchObject({ cliente: 'Maria Silva', honorario_previsto: 6000, nivel: 'projeto' })
     expect(falso.tabelas.leads[0].caso_id).toBe(falso.tabelas.tarefas[0].id)
