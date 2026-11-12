@@ -9,7 +9,6 @@ import { extrairAcoes } from '@/lib/acoesConsultor'
 import { render } from '@/pages/AssistentePage'
 import { hojeLocal, isoLocal } from '@/lib/datas'
 import { AREAS_DIREITO } from '@/lib/assistente'
-import { mensagemAmigavel } from '@/lib/erros'
 
 // "Meu dia": o que cada nível do escritório precisa ver ao abrir a plataforma, num só lugar.
 // O papel escolhido define a ordem e os atalhos; os dados são os mesmos para todos (respeitando o sigilo).
@@ -69,19 +68,12 @@ export default function MeuDiaPage() {
   // Passo 20: ações do Consultor da semana marcáveis como feitas (tabela acoes_consultor).
   const [acoes, setAcoes] = useState<{ id: string; indice: number; texto: string; feito_em: string | null }[]>([])
   const [resumo, setResumo] = useState<{ conteudo: Resumo; criado_em: string; enviado_em: string | null; destinatarios: number } | null>(null)
-  const [msgResumo, setMsgResumo] = useState('')
   const [diaCopiado, setDiaCopiado] = useState(false) // Passo 209
   useEffect(() => {
     if (!supabaseConfigurado) return
     supabase.from('resumos_semanais').select('conteudo,criado_em,enviado_em,destinatarios').order('semana', { ascending: false }).limit(1).maybeSingle().then(r => setResumo(r.data ?? null))
   }, [])
-  const testarResumo = async () => {
-    setMsgResumo('Enviando o resumo de teste para o seu e-mail…')
-    const { data, error } = await supabase.functions.invoke('resumo-semanal', { body: { teste: true } })
-    if (error) return setMsgResumo(`Não foi possível enviar: ${mensagemAmigavel(error)}`)
-    if (data?.enviado) { setMsgResumo('Resumo de teste enviado para o seu e-mail. Toda segunda-feira às 8h ele vai para toda a equipe.'); if (data.resumo) setResumo(r => r ?? { conteudo: data.resumo, criado_em: new Date().toISOString(), enviado_em: null, destinatarios: 0 }) }
-    else setMsgResumo(`Não enviado: ${data?.motivo ?? data?.detalhe ?? data?.erro ?? 'erro desconhecido'}.`)
-  }
+  // O botão de "resumo de teste" saiu da tela a pedido do M (12/11/2026): cliente não testa; o resumo chega sozinho toda segunda às 8h.
   useEffect(() => {
     if (!supabaseConfigurado) { setDiagnostico(null); return }
     supabase.from('diagnosticos_semanais').select('id,resposta,criado_em').eq('nivel', NIVEL_DO_PAPEL[papel] ?? 'nivel_pleno').order('criado_em', { ascending: false }).limit(1).maybeSingle().then(async r => {
@@ -210,8 +202,6 @@ export default function MeuDiaPage() {
               </dl>
             </>
           ) : <p className="text-sm text-grafite-claro mt-2">O primeiro resumo chega na segunda-feira às 8h.</p>}
-          <button type="button" onClick={testarResumo} data-testid="testar-resumo" className="min-h-[44px] px-4 mt-3 text-sm border border-navy text-navy">Enviar-me o resumo agora (teste)</button>
-          {msgResumo && <p className="text-sm mt-2" role="status" data-testid="msg-resumo">{msgResumo}</p>}
         </section>
         <section className={cartao} data-testid="consultor-semana">
           <h2 className="font-serif text-lg flex items-center gap-2"><Briefcase className="w-5 h-5" aria-hidden />Consultor da semana</h2>

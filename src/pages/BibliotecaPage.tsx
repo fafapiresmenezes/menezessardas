@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import Vazio from '@/components/Vazio'
 import { supabase } from '@/lib/supabase'
-import { ROTULO_TIPO, filtrar, guardarNaBiblioteca, type ItemBiblioteca, type TipoBiblioteca } from '@/lib/biblioteca'
-import { Library, Trash2 } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { REPOSITORIOS_ABERTOS, ROTULO_TIPO, filtrar, guardarNaBiblioteca, type ItemBiblioteca, type TipoBiblioteca } from '@/lib/biblioteca'
+import { BookOpen, Library, Trash2 } from 'lucide-react'
 
 // Bloco B04: tudo o que já foi pesquisado (Assistente, Fontes, Parte adversa e notas), com busca e etiquetas.
 export default function BibliotecaPage() {
@@ -30,8 +31,24 @@ export default function BibliotecaPage() {
     carregar()
   }
   return (
-    <Layout title="Já pesquisado">
+    <Layout title="Repositório e biblioteca">
       <div className="space-y-6">
+        <section className="bg-white shadow-sm border-t-2 border-dourado p-6" data-testid="repositorio-aberto">
+          <h2 className="font-serif text-xl mb-1 flex items-center gap-2"><BookOpen className="w-5 h-5 text-dourado" aria-hidden />Repositório aberto para pesquisa</h2>
+          <p className="text-sm text-grafite-claro mb-3">Fontes oficiais e gratuitas de legislação, jurisprudência e teses, para qualquer pessoa do escritório pesquisar. Os <Link to="/consultores" className="underline" title="500 especialidades catalogadas a partir das ementas das melhores faculdades.">500 consultores por especialidade</Link> foram montados a partir destas fontes.</p>
+          <div className="grid gap-4 md:grid-cols-3">
+            {REPOSITORIOS_ABERTOS.map(g => (
+              <div key={g.grupo}>
+                <h3 className="text-xs uppercase tracking-wider text-dourado-escuro mb-1">{g.grupo}</h3>
+                <ul className="text-sm space-y-1">
+                  {g.itens.map(i => (
+                    <li key={i.url}><a href={i.url} target="_blank" rel="noreferrer" className="underline text-navy" title={i.desc}>{i.nome}</a></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6 space-y-3">
           <p className="text-sm text-grafite-claro">Tudo o que a equipe já buscou fica aqui: respostas do Assistente, buscas em Fontes do advogado, fichas de parte adversa e notas. CPF é escondido automaticamente.</p>
           <div className="flex flex-wrap gap-2">

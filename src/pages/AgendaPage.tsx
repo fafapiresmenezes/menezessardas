@@ -69,12 +69,7 @@ export default function AgendaPage() {
       setMsgSemana(`Importação concluída: ${r.criados} compromisso(s) criado(s), ${r.repetidos} já existia(m) e foram pulados.`)
     } catch (e) { setMsgSemana('Não foi possível importar: ' + (e instanceof Error ? mensagemAmigavel(e) : String(e))) }
   }
-  const enviarSemanaTeste = async () => {
-    setMsgSemana('Enviando…')
-    const { data, error } = await supabase.functions.invoke('semana-pdf', { body: { teste: true } })
-    const r = (data ?? {}) as { enviado?: boolean; total?: number; motivo?: string; detalhe?: string }
-    setMsgSemana(error ? mensagemAmigavel(error) : r.enviado ? `E-mail de teste enviado para você com ${r.total} item(ns).` : `Não enviado: ${r.motivo ?? r.detalhe ?? 'erro'}`)
-  }
+  // O botão "testar e-mail" saiu da tela a pedido do M (12/11/2026): cliente não testa; o envio de sexta é automático.
   // Passo 19: roteiro do Outlook por e-mail e resultado do teste (configuracoes.teste_outlook, só admin lê e grava).
   const [testeOutlook, setTesteOutlook] = useState<{ enviado_em?: string; para?: string[]; resultado?: string; em?: string } | null>(null)
   const [msgRoteiro, setMsgRoteiro] = useState('')
@@ -246,13 +241,10 @@ export default function AgendaPage() {
             >
               <Mail size={16} aria-hidden="true" /> Enviar por e-mail
             </a>
-            <button onClick={semanaEmPdf} data-testid="semana-pdf" className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho">
+            <button onClick={semanaEmPdf} data-testid="semana-pdf" title="Baixa um PDF com os prazos e compromissos dos próximos 7 dias, por dia e por responsável." className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho">
               <Download size={16} aria-hidden="true" /> Semana em PDF
             </button>
-            <button onClick={enviarSemanaTeste} data-testid="semana-email-teste" className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-white">
-              <Mail size={16} aria-hidden="true" /> Testar e-mail de sexta
-            </button>
-            <label className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-white cursor-pointer" data-testid="importar-ics">
+            <label title="Traz para cá os compromissos de um arquivo .ics exportado do Outlook ou do Google Agenda, sem duplicar." className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-white cursor-pointer" data-testid="importar-ics">
               <Plus size={16} aria-hidden="true" /> Importar .ics
               <input type="file" accept=".ics,text/calendar" className="sr-only" data-testid="importar-ics-input" onChange={e => { importarIcs(e.target.files?.[0]); e.target.value = '' }} />
             </label>
@@ -290,8 +282,7 @@ export default function AgendaPage() {
           {supabaseConfigurado && (
             <div className="mt-3 text-sm flex flex-wrap items-center gap-3" data-testid="roteiro-outlook">
               <span className="text-grafite-claro">Roteiro do Outlook (5 passos com imagens):</span>
-              <button type="button" onClick={() => enviarRoteiro('fatima')} disabled={enviandoRoteiro} className="underline text-navy disabled:opacity-50 min-h-[44px]" data-testid="enviar-roteiro-fatima">Enviar para a Fátima</button>
-              <button type="button" onClick={() => enviarRoteiro('eu')} disabled={enviandoRoteiro} className="underline text-navy disabled:opacity-50 min-h-[44px]" data-testid="enviar-roteiro-eu">Enviar para mim (teste)</button>
+              <button type="button" onClick={() => enviarRoteiro('fatima')} disabled={enviandoRoteiro} title="Envia por e-mail o passo a passo, com imagens, para conectar o Outlook à agenda." className="underline text-navy disabled:opacity-50 min-h-[44px]" data-testid="enviar-roteiro-fatima">Enviar para a Fátima</button>
               {msgRoteiro && <span aria-live="polite" data-testid="msg-roteiro">{msgRoteiro}</span>}
               {testeOutlook && (
                 <span className="flex items-center gap-2" data-testid="teste-outlook">

@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gravarAreaAtual } from '@/lib/assistente'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
+import { meuAlcance, rotuloCargo, type Cargo } from '@/lib/hierarquia'
 import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck, CalendarClock, UserPlus, Search } from 'lucide-react'
 import AceiteTermos from '@/components/AceiteTermos'
 
 // Tela de entrada: o escritório escolhe a área de trabalho antes de entrar na plataforma.
 const agente = (a: string) => `?agente=${a}#/assistente`
+// A plataforma atende todas as áreas do direito brasileiro; o imobiliário é só mais uma delas (deixou de abrir a lista).
 const AREAS = [
-  { chave: 'imobiliario', titulo: 'Imobiliário', texto: 'Imóveis, contratos, prazos, reajustes, fornecedores e agenda.', icone: Building2, destino: '/dashboard' },
   { chave: 'civel', titulo: 'Cível e contratos', texto: 'Contratos, cobranças e responsabilidade civil.', icone: FileSignature, destino: agente('civel') },
   { chave: 'trabalhista', titulo: 'Trabalhista', texto: 'Contratação, rescisão, verbas, FGTS e reclamações.', icone: Briefcase, destino: agente('trabalhista') },
   { chave: 'familia', titulo: 'Família e sucessões', texto: 'Divórcio, partilha, alimentos, guarda e inventário.', icone: Users, destino: agente('familia') },
@@ -18,6 +19,7 @@ const AREAS = [
   { chave: 'previdenciario', titulo: 'Previdenciário', texto: 'Aposentadorias, benefícios do INSS e revisões.', icone: HeartPulse, destino: agente('previdenciario') },
   { chave: 'penal', titulo: 'Penal', texto: 'Defesa, inquérito, crimes e execução penal.', icone: Gavel, destino: agente('penal') },
   { chave: 'compliance', titulo: 'Compliance e LGPD', texto: 'Integridade, proteção de dados, ESG e due diligence.', icone: ShieldCheck, destino: '/compliance' },
+  { chave: 'imobiliario', titulo: 'Imobiliário', texto: 'Imóveis, contratos, prazos, reajustes, fornecedores e agenda.', icone: Building2, destino: '/dashboard' },
 ]
 
 export default function InicioPage() {
@@ -36,6 +38,9 @@ export default function InicioPage() {
   const areasVisiveis = AREAS.filter(a => !buscaArea || norm(a.titulo + ' ' + a.texto).includes(norm(buscaArea)))
   // Passo 128: mapa das 10 áreas em texto, para orientar quem entra na equipe.
   const [mapaCopiado, setMapaCopiado] = useState(false)
+  // Hierarquia (pedido do M): a primeira tela já diz quem você é e o que você enxerga.
+  const [alcance, setAlcance] = useState<{ cargo: Cargo | null; admin: boolean; veTudo: boolean } | null>(null)
+  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance(null)) }, [])
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 276
   const copiarMapa = async () => {
     const t = ['Áreas da plataforma — THEYE Institute', ...AREAS.map((a, i) => `${i + 1}. ${a.titulo}: ${a.texto}`)].join('\n')
@@ -74,6 +79,14 @@ export default function InicioPage() {
         <h1 className="font-serif text-white text-3xl mt-2">Theye.club</h1>
         <p className="text-white/60 text-xs uppercase tracking-[0.18em] mt-2">Suporte Jurídico</p>
       </div>
+      {alcance && (
+        <p className="w-full max-w-6xl mb-5 bg-white/10 border border-dourado/50 text-white p-3 text-sm text-center" data-testid="inicio-hierarquia"
+          title="O cargo de cada pessoa é definido pela administração na tela Equipe.">
+          {alcance.veTudo
+            ? <>Você entrou como <strong>{alcance.cargo ? rotuloCargo[alcance.cargo] : 'administração'}</strong>: enxerga todos os processos e números do escritório.</>
+            : <>Você entrou como <strong>{alcance.cargo ? rotuloCargo[alcance.cargo] : 'advogado(a)'}</strong>: cada um é dono dos seus processos, e você vê os seus. Sócios e o gestor veem o conjunto.</>}
+        </p>
+      )}
       {/* Os três atalhos do dia a dia vêm antes das áreas: quem entra sabe na hora por onde começar. */}
       <div className="w-full max-w-6xl mb-8" aria-label="Por onde começar">
         <p className="text-white text-lg mb-3 text-center">O que você precisa agora?</p>
@@ -83,7 +96,7 @@ export default function InicioPage() {
             { id: 'ir-processos-antigos', destino: '/processos-antigos', titulo: 'Inserir processos antigos', texto: 'Planilha ou nome do advogado: cadastra, busca no CNJ e mostra os prazos.', icone: UserPlus },
             { id: 'ir-pesquisa', destino: '/pesquisa', titulo: 'Pesquisar', texto: 'Processo, pessoa ou empresa numa caixa só.', icone: Search },
           ].map(a => (
-            <button key={a.id} type="button" data-testid={a.id} onClick={() => navigate(a.destino)} className="bg-dourado text-navy text-left p-5 min-h-[96px] shadow-lg hover:-translate-y-0.5 transition focus:outline-none focus:ring-4 focus:ring-white/60">
+            <button key={a.id} type="button" data-testid={a.id} onClick={() => navigate(a.destino)} title={`${a.titulo} — ${a.texto}`} className="bg-dourado text-navy text-left p-5 min-h-[96px] shadow-lg hover:-translate-y-0.5 transition focus:outline-none focus:ring-4 focus:ring-white/60">
               <a.icone className="w-7 h-7 mb-2" aria-hidden />
               <span className="block font-serif text-xl">{a.titulo}</span>
               <span className="block text-sm">{a.texto}</span>

@@ -18,6 +18,7 @@ import {
   type Funcao,
   type Pessoa,
 } from '@/lib/equipe'
+import { CARGOS, definirCargo, descricaoCargo, lerCargos, rotuloCargo, type Cargo, type MapaCargos } from '@/lib/hierarquia'
 
 const OPCOES: (Funcao | 'nenhuma')[] = ['admin', 'operador', 'leitor', 'nenhuma']
 
@@ -37,6 +38,8 @@ export default function EquipePage() {
   useEffect(() => { try { localStorage.setItem('lsm-equipe-funcao', filtroFuncao) } catch { /* sem armazenamento */ } }, [filtroFuncao])
   const [ocupado, setOcupado] = useState<string>('')
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+  // Hierarquia (pedido do M): sócio e gestor veem tudo; pleno e júnior veem só os próprios processos.
+  const [cargos, setCargos] = useState<MapaCargos>({})
   // Passo 09: aceite de termos de uso e LGPD por pessoa (data, versão e hash).
   const [aceites, setAceites] = useState<Record<string, { versao: string; hash: string; aceito_em: string }>>({})
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 284
@@ -47,7 +50,7 @@ export default function EquipePage() {
       const p = await perfilAtual()
       setPerfil(p)
       if (p === 'admin') {
-        setPessoas(await listarPessoas()); setSede(await ehSede())
+        setPessoas(await listarPessoas()); setSede(await ehSede()); lerCargos().then(setCargos).catch(() => {})
         const { data } = await supabase.rpc('aceites_equipe')
         setAceites(Object.fromEntries(((data ?? []) as { usuario_id: string; versao: string; hash: string; aceito_em: string }[]).map(a => [a.usuario_id, a])))
       }
@@ -73,6 +76,16 @@ export default function EquipePage() {
     } finally {
       setOcupado('')
     }
+  }
+
+  const alterarCargo = async (pessoa: Pessoa, valor: string) => {
+    setOcupado(pessoa.id); setMsg(null)
+    try {
+      setCargos(await definirCargo(pessoa.id, valor === 'nenhum' ? null : (valor as Cargo)))
+      setMsg({ tipo: 'ok', texto: `${pessoa.nome}: ${rotuloCargo[(valor as Cargo | 'nenhum')] ?? valor}.` })
+    } catch (e) {
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
+    } finally { setOcupado('') }
   }
 
   const alterar = async (pessoa: Pessoa, valor: string) => {
@@ -197,6 +210,23 @@ export default function EquipePage() {
                         <p id={`desc-${p.id}`} className="text-xs text-grafite-claro mt-1">
                           {ocupado === p.id ? 'Salvando…' : descricaoFuncao[atual]}
                         </p>
+                        <label htmlFor={`cargo-${p.id}`} className="block text-xs uppercase tracking-wider text-grafite mb-1 mt-3" title="O cargo define o que a pessoa VÊ: sócios e o gestor veem todos os processos; pleno e júnior veem só os seus.">
+                          Cargo na hierarquia
+                        </label>
+                        <select
+                          id={`cargo-${p.id}`}
+                          data-testid={`cargo-${p.id}`}
+                          value={cargos[p.id] ?? 'nenhum'}
+                          disabled={ocupado !== ''}
+                          onChange={e => alterarCargo(p, e.target.value)}
+                          title={descricaoCargo[cargos[p.id] ?? 'nenhum']}
+                          className="w-full min-h-[44px] px-3 py-2 border border-grafite-claro/40 rounded-sm bg-white focus:border-dourado text-sm"
+                        >
+                          {([...CARGOS, 'nenhum'] as (Cargo | 'nenhum')[]).map(c => (
+                            <option key={c} value={c}>{rotuloCargo[c]}</option>
+                          ))}
+                        </select>
+                        <p className="text-xs text-grafite-claro mt-1">{descricaoCargo[cargos[p.id] ?? 'nenhum']}</p>
                         <button
                           type="button"
                           onClick={() => senhaProvisoria(p)}

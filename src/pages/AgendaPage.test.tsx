@@ -98,7 +98,7 @@ describe('Agenda', () => {
     await waitFor(() => expect(screen.queryByText('Novo Compromisso')).toBeNull())
   })
 
-  it('semana em PDF, e-mail de teste de sexta, roteiro do Outlook e resultado do teste da Fátima', async () => {
+  it('semana em PDF, roteiro do Outlook e resultado do teste da Fátima (sem botões de teste para o cliente)', async () => {
     rpc.mockImplementation(async (f: string) => f === 'semana_agenda' ? { data: { inicio: iso(amanha), fim: iso(mais(7)), total: 2, dias: [{ dia: iso(amanha), itens: [{ tipo: 'prazo', titulo: 'Contestação', detalhe: 'Caso 12', responsavel: 'Fátima' }, { tipo: 'compromisso', titulo: 'Vistoria', detalhe: '', responsavel: '' }] }] }, error: null } : { data: 'tok', error: null })
     invoke.mockImplementation(async (f: string) => f === 'semana-pdf' ? { data: { enviado: true, total: 2 }, error: null } : { data: { para: ['m@gmenezes.com'] }, error: null })
     const clique = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined)
@@ -110,12 +110,12 @@ describe('Agenda', () => {
     await waitFor(() => expect(screen.getByTestId('semana-msg').textContent).toBe('PDF da semana gerado (2 item(ns)). A secretaria recebe este PDF por e-mail toda sexta às 17h.'))
     expect(rpc).toHaveBeenCalledWith('semana_agenda', { p_inicio: iso(amanha), p_dias: 7 })
     expect(clique).toHaveBeenCalledTimes(1)
-    fireEvent.click(screen.getByTestId('semana-email-teste'))
-    await waitFor(() => expect(screen.getByTestId('semana-msg').textContent).toBe('E-mail de teste enviado para você com 2 item(ns).'))
-    expect(invoke).toHaveBeenCalledWith('semana-pdf', { body: { teste: true } })
-    fireEvent.click(screen.getByTestId('enviar-roteiro-eu'))
+    // Botões de teste saíram da tela (pedido do M, 12/11/2026): cliente não testa.
+    expect(screen.queryByTestId('semana-email-teste')).toBeNull()
+    expect(screen.queryByTestId('enviar-roteiro-eu')).toBeNull()
+    fireEvent.click(screen.getByTestId('enviar-roteiro-fatima'))
     await waitFor(() => expect(screen.getByTestId('msg-roteiro').textContent).toBe('Roteiro enviado para m@gmenezes.com.'))
-    expect(invoke).toHaveBeenCalledWith('roteiro-outlook', { body: { teste: true } })
+    expect(invoke).toHaveBeenCalledWith('roteiro-outlook', { body: { para: 'fatima' } })
     fireEvent.click(screen.getByTestId('outlook-funcionou'))
     await waitFor(() => expect(screen.getByTestId('resultado-outlook').textContent).toBe('funcionou'))
     expect(upsert).toHaveBeenCalledWith(expect.objectContaining({ chave: 'teste_outlook', valor: expect.stringContaining('"resultado":"funcionou"') }), { onConflict: 'chave' })

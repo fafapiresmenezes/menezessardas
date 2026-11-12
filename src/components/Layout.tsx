@@ -68,7 +68,7 @@ const gruposMenu = [
     { icon: MessageSquare, label: 'Assistente', href: '/assistente' },
     { icon: FileText, label: 'Modelos de peças', href: '/modelos' },
     { icon: Globe, label: 'Fontes do advogado', href: '/fontes' },
-    { icon: Library, label: 'Já pesquisado', href: '/biblioteca' },
+    { icon: Library, label: 'Repositório e biblioteca', href: '/biblioteca' },
     { icon: BookOpen, label: 'Parâmetros de escrita', href: '/parametros-escrita' },
   ] },
   { id: 'ferramentas', titulo: 'Ferramentas do dia a dia', itens: [
@@ -128,7 +128,7 @@ const DICAS: Record<string, string> = {
   '/assistente': 'Perguntar, redigir peça ou comparar caminhos com a IA',
   '/modelos': 'Modelos prontos de peças e documentos do escritório',
   '/fontes': 'Tribunais, diários e fontes oficiais em um só lugar',
-  '/biblioteca': 'Tudo o que já foi pesquisado, para não pesquisar duas vezes',
+  '/biblioteca': 'Tudo o que já foi pesquisado e os repositórios abertos de teses, legislação e jurisprudência',
   '/parametros-escrita': 'Como o robô escreve: redatores, tom e formatação das peças',
   '/meu-estilo': 'Ensinar à plataforma o seu jeito de escrever',
   '/ferramentas': 'Calculadoras, validadores e listas de verificação do dia a dia',

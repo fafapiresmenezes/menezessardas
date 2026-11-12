@@ -72,12 +72,8 @@ describe('Meu dia', () => {
     expect(update).toHaveBeenCalledWith(expect.objectContaining({ usuario_id: 'u1' }))
     fireEvent.click(screen.getByTestId('acao-2'))
     await waitFor(() => expect(screen.getByTestId('aderencia-semana').textContent).toBe('1 de 2 feitas (50%)'))
-    fireEvent.click(screen.getByTestId('testar-resumo'))
-    await waitFor(() => expect(screen.getByTestId('msg-resumo').textContent).toContain('Resumo de teste enviado para o seu e-mail'))
-    expect(invoke).toHaveBeenCalledWith('resumo-semanal', { body: { teste: true } })
-    invoke.mockResolvedValueOnce({ data: { enviado: false, motivo: 'sem e-mail' }, error: null })
-    fireEvent.click(screen.getByTestId('testar-resumo'))
-    await waitFor(() => expect(screen.getByTestId('msg-resumo').textContent).toBe('Não enviado: sem e-mail.'))
+    // O botão de resumo de teste saiu da tela (pedido do M, 12/11/2026): cliente não testa.
+    expect(screen.queryByTestId('testar-resumo')).toBeNull()
   })
 
   it('calculadora de prazo em dias úteis (em dobro lembrado) com feriados do Rio; copiar meu dia e baixar CSV', async () => {
