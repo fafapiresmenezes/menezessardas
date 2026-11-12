@@ -241,7 +241,7 @@ export default function AssumirProcessosPage() {
           {planilha && (
             <div className="mb-3 p-3 border-l-4 border-dourado bg-navy/5 text-sm" data-testid="resumo-planilha">
               <p><strong>{planilha.nome}</strong>: {planilha.linhas.length} processo(s). {planilha.linhas.filter(l => l.situacao === 'ok').length} novo(s) com número do CNJ, {planilha.linhas.filter(l => l.situacao === 'sem_numero').length} com número de outro tipo (administrativo etc.), {planilha.linhas.filter(l => l.situacao === 'ja_cadastrado').length} já cadastrado(s).</p>
-              {planilha.linhas.some(importavel) && <button type="button" onClick={() => cadastrar(planilha.linhas, 'planilha')} className="mt-2 min-h-[48px] px-5 bg-dourado text-white text-base inline-flex items-center gap-2" data-testid="cadastrar-planilha"><FolderPlus className="w-5 h-5" aria-hidden />Cadastrar os {planilha.linhas.filter(importavel).length} processo(s) novo(s)</button>}
+              {planilha.linhas.some(importavel) && <button type="button" onClick={() => cadastrar(planilha.linhas, 'planilha')} className="mt-2 min-h-[48px] px-5 bg-dourado text-white text-base inline-flex items-center gap-2" title="Cadastra na plataforma os processos novos da planilha; nada é apagado e dá para desfazer." data-testid="cadastrar-planilha"><FolderPlus className="w-5 h-5" aria-hidden />Cadastrar os {planilha.linhas.filter(importavel).length} processo(s) novo(s)</button>}
             </div>
           )}
           {cadastro && <p className="mb-2 text-sm" role="status" data-testid="msg-cadastro">{cadastro}</p>}
@@ -269,7 +269,7 @@ export default function AssumirProcessosPage() {
               <option value={3}>3 meses (recomendado)</option><option value={6}>6 meses</option><option value={12}>1 ano</option>
             </select>
             {!ocupado
-              ? <button type="button" onClick={buscar} disabled={!podeBuscar} className="min-h-[48px] px-6 bg-navy text-white text-base inline-flex items-center gap-2 disabled:opacity-40" data-testid="buscar-tudo"><Search className="w-5 h-5" aria-hidden />Buscar agora</button>
+              ? <button type="button" onClick={buscar} disabled={!podeBuscar} className="min-h-[48px] px-6 bg-navy text-white text-base inline-flex items-center gap-2 disabled:opacity-40" title="Busca cada processo no CNJ (DataJud) e mostra andamentos, prazos e intimações." data-testid="buscar-tudo"><Search className="w-5 h-5" aria-hidden />Buscar agora</button>
               : <button type="button" onClick={() => { parar.current = true }} className="min-h-[48px] px-6 border border-critico text-critico text-base inline-flex items-center gap-2" data-testid="parar"><Square className="w-4 h-4" aria-hidden />Parar</button>}
           </div>
           {!podeBuscar && <p className="text-sm text-grafite-claro mt-2">Preencha o nome (passo 1) ou cole pelo menos um número (passo 2).</p>}
@@ -304,8 +304,8 @@ export default function AssumirProcessosPage() {
                   })}
                 </div>
                 <div className="flex flex-wrap gap-2 mt-3">
-                  <button type="button" onClick={() => agendar(prazos)} className="min-h-[44px] px-4 bg-dourado text-white text-sm inline-flex items-center gap-2" data-testid="agendar-todos"><CalendarPlus className="w-4 h-4" aria-hidden />Pôr todos os prazos na agenda</button>
-                  <button type="button" onClick={baixar} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2"><Download className="w-4 h-4" aria-hidden />Baixar planilha</button>
+                  <button type="button" onClick={() => agendar(prazos)} className="min-h-[44px] px-4 bg-dourado text-white text-sm inline-flex items-center gap-2" title="Cria um compromisso na agenda para cada prazo encontrado." data-testid="agendar-todos"><CalendarPlus className="w-4 h-4" aria-hidden />Pôr todos os prazos na agenda</button>
+                  <button type="button" onClick={baixar} title="Baixa os prazos encontrados como planilha (abre no Excel)." className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2"><Download className="w-4 h-4" aria-hidden />Baixar planilha</button>
                 </div>
                 {aviso && <p className="mt-2 text-sm" role="status" data-testid="aviso-agenda">{aviso}</p>}
                 <ol className="mt-4 space-y-3" data-testid="lista-prazos">
@@ -325,9 +325,9 @@ export default function AssumirProcessosPage() {
                       <div className="flex flex-wrap gap-2 mt-3">
                         {l.vence && (s.agendados.includes(l.chave)
                           ? <span className="min-h-[44px] px-3 inline-flex items-center gap-1 text-sm text-dourado"><CheckCircle2 className="w-4 h-4" aria-hidden />Na agenda</span>
-                          : <button type="button" onClick={() => agendar([l])} className="min-h-[44px] px-4 bg-navy text-white text-sm inline-flex items-center gap-2" data-testid="agendar"><CalendarPlus className="w-4 h-4" aria-hidden />Pôr na agenda</button>)}
-                        {l.ato && <Link to={pedidoPeca(l)} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2" data-testid="escrever-peca"><FileText className="w-4 h-4" aria-hidden />Escrever a peça</Link>}
-                        <button type="button" onClick={() => mudar({ ocultos: [...s.ocultos, l.chave] })} className="min-h-[44px] px-4 text-sm text-grafite-claro inline-flex items-center gap-2" data-testid="ocultar"><EyeOff className="w-4 h-4" aria-hidden />Já resolvido</button>
+                          : <button type="button" onClick={() => agendar([l])} className="min-h-[44px] px-4 bg-navy text-white text-sm inline-flex items-center gap-2" title="Cria um compromisso na agenda para este prazo." data-testid="agendar"><CalendarPlus className="w-4 h-4" aria-hidden />Pôr na agenda</button>)}
+                        {l.ato && <Link to={pedidoPeca(l)} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2" title="Abre o assistente já com o pedido da peça deste ato preenchido." data-testid="escrever-peca"><FileText className="w-4 h-4" aria-hidden />Escrever a peça</Link>}
+                        <button type="button" onClick={() => mudar({ ocultos: [...s.ocultos, l.chave] })} className="min-h-[44px] px-4 text-sm text-grafite-claro inline-flex items-center gap-2" title="Esconde esta linha: use quando o prazo já foi tratado fora daqui." data-testid="ocultar"><EyeOff className="w-4 h-4" aria-hidden />Já resolvido</button>
                       </div>
                       <details className="mt-2 text-sm"><summary className="cursor-pointer min-h-[44px] flex items-center text-navy underline">Ver a publicação inteira</summary>
                         <p className="whitespace-pre-wrap mt-1">{l.publicacao.texto}</p>

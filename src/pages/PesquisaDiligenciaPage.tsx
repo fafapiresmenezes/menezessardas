@@ -102,7 +102,7 @@ export default function PesquisaDiligenciaPage() {
               </li>
             ))}
           </ul>
-          <button type="button" onClick={copiar} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2 mt-3" data-testid="copiar-diligencia"><Copy className="w-4 h-4" aria-hidden />{copiado ? 'Lista copiada' : 'Copiar lista para o parecer'}</button>
+          <button type="button" onClick={copiar} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2 mt-3" title="Copia a lista pronta para colar no parecer ou no e-mail ao cliente." data-testid="copiar-diligencia"><Copy className="w-4 h-4" aria-hidden />{copiado ? 'Lista copiada' : 'Copiar lista para o parecer'}</button>
           <p className="text-xs text-grafite-claro mt-3">As validades são as usuais; vale a que estiver impressa na certidão. Certidões são emitidas no site do órgão (algumas exigem confirmação humana) e devem ser anexadas ao caso.</p>
         </section>
 
