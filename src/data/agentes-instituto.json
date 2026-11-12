@@ -1,7 +1,7 @@
 {
- "total": 373,
+ "total": 404,
  "meta": 500,
- "faltam": 127,
+ "faltam": 96,
  "agentes": [
   {
    "id": "agente-001",
@@ -3755,6 +3755,316 @@
    "origem": "UFSC, PPGD, áreas e linhas 2025 (https://ppgd.ufsc.br/areas-de-concentracao-e-linhas-de-pesquisa/)",
    "status": "catalogado; ementa completa ainda não importada",
    "id": "agente-373"
+  },
+  {
+   "nome": "Consultor de History and Tradition and Constitutional Rights (Harvard)",
+   "area": "Direito comparado",
+   "nicho": "History and Tradition and Constitutional Rights (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-374"
+  },
+  {
+   "nome": "Consultor de The Spirit of the Laws and American Law (Harvard)",
+   "area": "Direito comparado",
+   "nicho": "The Spirit of the Laws and American Law (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-375"
+  },
+  {
+   "nome": "Consultor de Advanced Constitutional Law (EUA, Harvard)",
+   "area": "Direito comparado",
+   "nicho": "Advanced Constitutional Law (EUA, Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-376"
+  },
+  {
+   "nome": "Consultor de American Citizenship (Harvard)",
+   "area": "Direito comparado",
+   "nicho": "American Citizenship (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-377"
+  },
+  {
+   "nome": "Consultor de American Legal History 1776-1865 (Harvard)",
+   "area": "História do direito",
+   "nicho": "American Legal History 1776-1865 (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-378"
+  },
+  {
+   "nome": "Consultor de American Legal Theory (Harvard)",
+   "area": "Teoria do direito",
+   "nicho": "American Legal Theory (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-379"
+  },
+  {
+   "nome": "Consultor de Administrative Law (EUA, Harvard)",
+   "area": "Direito comparado",
+   "nicho": "Administrative Law (EUA, Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-380"
+  },
+  {
+   "nome": "Consultor de Advanced Issues in Administrative Law and Theory (Harvard)",
+   "area": "Direito comparado",
+   "nicho": "Advanced Issues in Administrative Law and Theory (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-381"
+  },
+  {
+   "nome": "Consultor de Statutory Interpretation (Harvard)",
+   "area": "Teoria do direito",
+   "nicho": "Statutory Interpretation (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-382"
+  },
+  {
+   "nome": "Consultor de Abortion: Law, Policy and Ethics (Harvard)",
+   "area": "Direito comparado",
+   "nicho": "Abortion: Law, Policy and Ethics (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-383"
+  },
+  {
+   "nome": "Consultor de Advanced Problems in Sex Equality (Harvard)",
+   "area": "Direitos humanos",
+   "nicho": "Advanced Problems in Sex Equality (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-384"
+  },
+  {
+   "nome": "Consultor de American Indian Law (Harvard)",
+   "area": "Direito comparado",
+   "nicho": "American Indian Law (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-385"
+  },
+  {
+   "nome": "Consultor de Analytical Methods for Lawyers (Harvard)",
+   "area": "Gestão jurídica",
+   "nicho": "Analytical Methods for Lawyers (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-386"
+  },
+  {
+   "nome": "Consultor de Legal Skills in Venture Capital Diligence (Harvard)",
+   "area": "Empresarial",
+   "nicho": "Legal Skills in Venture Capital Diligence (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-387"
+  },
+  {
+   "nome": "Consultor de Antitrust and Intellectual Property (Harvard)",
+   "area": "Concorrência",
+   "nicho": "Antitrust and Intellectual Property (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-388"
+  },
+  {
+   "nome": "Consultor de Antitrust Law and Economics (EUA, Harvard)",
+   "area": "Concorrência",
+   "nicho": "Antitrust Law and Economics (EUA, Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-389"
+  },
+  {
+   "nome": "Consultor de Advertising Law (Harvard)",
+   "area": "Consumidor e publicidade",
+   "nicho": "Advertising Law (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-390"
+  },
+  {
+   "nome": "Consultor de AI and the Future of the Legal Profession (Harvard)",
+   "area": "Tecnologia e direito",
+   "nicho": "AI and the Future of the Legal Profession (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-391"
+  },
+  {
+   "nome": "Consultor de Agentic Legal Engineering (Harvard)",
+   "area": "Tecnologia e direito",
+   "nicho": "Agentic Legal Engineering (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-392"
+  },
+  {
+   "nome": "Consultor de Algorithms, Rights, and Responsibilities (Harvard)",
+   "area": "Tecnologia e direito",
+   "nicho": "Algorithms, Rights, and Responsibilities (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-393"
+  },
+  {
+   "nome": "Consultor de Art Law Litigation (Harvard)",
+   "area": "Arte e entretenimento",
+   "nicho": "Art Law Litigation (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-394"
+  },
+  {
+   "nome": "Consultor de Art on Trial (Harvard)",
+   "area": "Arte e entretenimento",
+   "nicho": "Art on Trial (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-395"
+  },
+  {
+   "nome": "Consultor de Access to Justice in the Digital World (Harvard)",
+   "area": "Acesso à justiça",
+   "nicho": "Access to Justice in the Digital World (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-396"
+  },
+  {
+   "nome": "Consultor de Access to Justice Lab (Harvard)",
+   "area": "Acesso à justiça",
+   "nicho": "Access to Justice Lab (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-397"
+  },
+  {
+   "nome": "Consultor de Advanced Written Advocacy (Harvard)",
+   "area": "Redação jurídica",
+   "nicho": "Advanced Written Advocacy (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-398"
+  },
+  {
+   "nome": "Consultor de Advocacy: The Courtroom and Beyond (Harvard)",
+   "area": "Advocacia",
+   "nicho": "Advocacy: The Courtroom and Beyond (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-399"
+  },
+  {
+   "nome": "Consultor de Appellate Courts and Advocacy Workshop (Harvard)",
+   "area": "Advocacia",
+   "nicho": "Appellate Courts and Advocacy Workshop (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-400"
+  },
+  {
+   "nome": "Consultor de Adaptive Leadership for Lawyers (Harvard)",
+   "area": "Gestão jurídica",
+   "nicho": "Adaptive Leadership for Lawyers (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-401"
+  },
+  {
+   "nome": "Consultor de Animal Law (Harvard)",
+   "area": "Direito dos animais",
+   "nicho": "Animal Law (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-402"
+  },
+  {
+   "nome": "Consultor de Animal Law and Policy Clinic (Harvard)",
+   "area": "Direito dos animais",
+   "nicho": "Animal Law and Policy Clinic (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-403"
+  },
+  {
+   "nome": "Consultor de Agricultural Law (Harvard)",
+   "area": "Agrário",
+   "nicho": "Agricultural Law (Harvard)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-404"
   }
  ]
 }
