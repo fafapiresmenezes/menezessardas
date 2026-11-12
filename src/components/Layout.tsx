@@ -24,146 +24,19 @@ import { listarPessoas, perfilAtual, meuEscritorio, esquecerEscritorio, type Meu
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, ChevronDown, MoreHorizontal, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store } from 'lucide-react'
+import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal } from 'lucide-react'
+import { gruposMenu, gruposVisiveis, atalhosDoMenu, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao } from './menuTelas'
+import { meuAlcance } from '@/lib/hierarquia'
+import { lerMeuJeito, carregarMeuJeito, esquecerMeuJeito, aplicarLetra, EVENTO_JEITO, type MeuJeito } from '@/lib/meuJeito'
 
 interface LayoutProps {
   children: React.ReactNode
   title?: string
 }
 
-const SO_SEDE = ['/imoveis', '/fornecedores', '/alertas', '/instituto']
-const gruposMenu = [
-  { id: 'hoje', titulo: 'Hoje', itens: [
-    { icon: Home, label: 'Trocar de área', href: '/inicio' },
-    { icon: Sunrise, label: 'Meu dia', href: '/meu-dia' },
-    { icon: UserPlus, label: 'Inserir processos antigos', href: '/processos-antigos' },
-    { icon: FolderInput, label: 'Trazer do sistema antigo', href: '/migracao' },
-    { icon: LayoutGrid, label: 'Painel', href: '/dashboard' },
-    { icon: Inbox, label: 'Intimações', href: '/intimacoes' },
-    { icon: CalendarDays, label: 'Agenda', href: '/agenda' },
-    { icon: CalendarClock, label: 'Prazos por código', href: '/prazos' },
-  ] },
-  { id: 'processos', titulo: 'Processos e casos', itens: [
-    { icon: FolderKanban, label: 'Casos e projetos', href: '/projetos' },
-    { icon: Gavel, label: 'Carteira de processos', href: '/processos' },
-    { icon: SearchCheck, label: 'Pesquisa e due diligence', href: '/pesquisa' },
-    { icon: Compass, label: 'Leitura do caso e predição', href: '/leitura-do-caso' },
-    { icon: Radar, label: 'Monitoramento de processos', href: '/monitoramento' },
-    { icon: FileSearch, label: 'Parte adversa', href: '/parte-adversa' },
-    { icon: UserCheck, label: 'Checagem de contraparte', href: '/kyc' },
-    { icon: ClipboardList, label: 'Perfil do cliente', href: '/perfil-cliente' },
-  ] },
-  { id: 'financeiro', titulo: 'Clientes e dinheiro', itens: [
-    { icon: Filter, label: 'Funil de vendas', href: '/funil' },
-    { icon: PiggyBank, label: 'Financeiro', href: '/financeiro' },
-    { icon: Banknote, label: 'Honorários', href: '/honorarios' },
-    { icon: Timer, label: 'Horas e honorários', href: '/horas' },
-  ] },
-  { id: 'imoveis', titulo: 'Imóveis e locação', itens: [
-    { icon: Building2, label: 'Imóveis', href: '/imoveis' },
-    { icon: KeySquare, label: 'Administração de locação', href: '/administracao' },
-    { icon: Truck, label: 'Fornecedores', href: '/fornecedores' },
-    { icon: Bell, label: 'Alertas', href: '/alertas' },
-  ] },
-  { id: 'pesquisa', titulo: 'Pesquisa e redação', itens: [
-    { icon: Scale, label: 'Legislação', href: '/legislacao' },
-    { icon: MessageSquare, label: 'Assistente', href: '/assistente' },
-    { icon: FileText, label: 'Modelos de peças', href: '/modelos' },
-    { icon: Globe, label: 'Fontes do advogado', href: '/fontes' },
-    { icon: Library, label: 'Repositório e biblioteca', href: '/biblioteca' },
-    { icon: BookOpen, label: 'Parâmetros de escrita', href: '/parametros-escrita' },
-  ] },
-  { id: 'ferramentas', titulo: 'Ferramentas do dia a dia', itens: [
-    { icon: Wrench, label: 'Ferramentas do dia a dia', href: '/ferramentas' },
-  ] },
-  { id: 'gestao', titulo: 'Gestão e conformidade', itens: [
-    { icon: ShieldCheck, label: 'Compliance', href: '/compliance' },
-    { icon: Gauge, label: 'Indicadores', href: '/indicadores' },
-    { icon: FileBarChart, label: 'Relatórios', href: '/relatorios' },
-    { icon: ShieldCheck, label: 'Trilha', href: '/trilha' },
-  ] },
-  { id: 'instituto', titulo: 'THEYE Institute: pesquisa e estudos', itens: [
-    { icon: FlaskConical, label: 'Instituto', href: '/instituto' },
-    { icon: Briefcase, label: 'Consultores', href: '/consultores' },
-    { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
-    { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
-    { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
-    { icon: TrendingUp, label: 'Previsões', href: '/previsoes' },
-  ] },
-  { id: 'solucoes', titulo: 'Soluções jurídicas', itens: [
-    { icon: Store, label: 'Soluções jurídicas', href: '/solucoes' },
-  ] },
-  { id: 'admin', titulo: 'Escritório e administração', itens: [
-    { icon: Cloud, label: 'Nuvem', href: '/nuvem' },
-    { icon: Wallet, label: 'Consumo', href: '/consumo' },
-    { icon: Users, label: 'Equipe', href: '/equipe' },
-    { icon: Settings, label: 'Configurações', href: '/settings' },
-  ] },
-]
-// Autoexplicativo: ao passar o mouse em qualquer item do menu, uma frase diz para que a tela serve.
-const DICAS: Record<string, string> = {
-  '/inicio': 'Escolher a área do direito em que você vai trabalhar agora',
-  '/meu-dia': 'O que vence hoje e nos próximos dias, separado por área do direito',
-  '/processos-antigos': 'Trazer processos de antes da plataforma: planilha ou busca no tribunal',
-  '/migracao': 'Importar tudo do sistema antigo do escritório, com como desfazer',
-  '/dashboard': 'Números gerais do escritório em um só painel',
-  '/intimacoes': 'Publicações e intimações recebidas, com o que fazer em cada uma',
-  '/agenda': 'Audiências, reuniões e compromissos, com avisos por e-mail',
-  '/prazos': 'Prazo certo por código: CPC, CLT, CPP, Juizados e outros',
-  '/projetos': 'Casos e projetos do escritório, com tarefas dentro de cada um',
-  '/processos': 'Carteira de processos com andamentos e prazos de cada um',
-  '/pesquisa': 'Pesquisa e due diligence sobre pessoas e empresas em fontes públicas',
-  '/leitura-do-caso': 'Contexto do caso, chance de êxito e roteiro de perguntas',
-  '/monitoramento': 'Vigiar processos no tribunal e avisar quando algo sair',
-  '/parte-adversa': 'O que se sabe da parte contrária em fontes públicas',
-  '/kyc': 'Checar quem é a contraparte antes de contratar ou processar',
-  '/perfil-cliente': 'Ficha de cada cliente: casos, contatos e preferências',
-  '/funil': 'Clientes em potencial, da primeira conversa ao contrato',
-  '/financeiro': 'Entradas, saídas e saldo do escritório',
-  '/honorarios': 'Honorários combinados, cobrados e recebidos',
-  '/horas': 'Lançar horas trabalhadas e ver o ritmo da meta',
-  '/imoveis': 'Imóveis administrados, contratos e documentos',
-  '/administracao': 'Administração de locações: cobranças, repasses e reajustes',
-  '/fornecedores': 'Fornecedores do escritório e dos imóveis',
-  '/alertas': 'Avisos de vencimento e reajuste de contratos',
-  '/legislacao': 'Ler a lei direto do Planalto, artigo por artigo',
-  '/assistente': 'Perguntar, redigir peça ou comparar caminhos com a IA',
-  '/modelos': 'Modelos prontos de peças e documentos do escritório',
-  '/fontes': 'Tribunais, diários e fontes oficiais em um só lugar',
-  '/biblioteca': 'Tudo o que já foi pesquisado e os repositórios abertos de teses, legislação e jurisprudência',
-  '/parametros-escrita': 'Como o robô escreve: redatores, tom e formatação das peças',
-  '/meu-estilo': 'Ensinar à plataforma o seu jeito de escrever',
-  '/ferramentas': 'Calculadoras, validadores e listas de verificação do dia a dia',
-  '/compliance': 'LGPD, integridade e conformidade do escritório',
-  '/indicadores': 'Indicadores e metas (OKRs) do escritório',
-  '/relatorios': 'Relatórios prontos para imprimir ou exportar',
-  '/trilha': 'Registro do que foi feito, com carimbo que prova a data',
-  '/instituto': 'Pesquisa e estudos do THEYE Institute',
-  '/consultores': 'Consultores de IA por nível e por especialidade',
-  '/estudos': 'Estudos para entidades, órgãos e associações',
-  '/enquetes': 'Enquetes sobre temas do direito',
-  '/mercado': 'O mercado jurídico em números',
-  '/previsoes': 'Previsões e riscos da carteira',
-  '/solucoes': 'A plataforma oferecida a outros escritórios (vertente comercial)',
-  '/nuvem': 'Arquivos do escritório na nuvem',
-  '/consumo': 'Quanto cada pessoa consome de IA e quanto custa',
-  '/equipe': 'Pessoas do escritório, funções e permissões',
-  '/settings': 'Configurações da conta e da plataforma',
-}
 const CHAVE_GRUPOS = 'lsm-menu-grupos'
 const CHAVE_SIMPLES = 'theye-menu-simples'
-// Menu simples (padrão): só o que se usa todo dia, com nomes do dia a dia. "Ver todas as telas" abre o menu completo.
-const menuEssencial = [
-  { bloco: 'Todo dia', dica: 'Comece por aqui', icon: Home, label: 'Início', href: '/inicio' },
-  { bloco: 'Todo dia', dica: '', icon: Sunrise, label: 'Meu dia', href: '/meu-dia' },
-  { bloco: 'Todo dia', dica: '', icon: CalendarDays, label: 'Agenda', href: '/agenda' },
-  { bloco: 'Processos', dica: 'Ver, incluir e acompanhar', icon: Gavel, label: 'Meus processos', href: '/processos' },
-  { bloco: 'Processos', dica: '', icon: UserPlus, label: 'Inserir processos antigos', href: '/processos-antigos' },
-  { bloco: 'Processos', dica: '', icon: Inbox, label: 'Intimações', href: '/intimacoes' },
-  { bloco: 'Escrever peças', dica: 'Como o robô escreve por você', icon: PenLine, label: 'Meu jeito de escrever', href: '/meu-estilo' },
-  { bloco: 'Escrever peças', dica: '', icon: BookOpen, label: 'Parâmetros de escrita', href: '/parametros-escrita' },
-]
-const estaAtivo = (href: string, pathname: string) => pathname.startsWith(href) || (href === '/fornecedores' && pathname.startsWith('/fornecedor/'))
+const estaAtivo = (href: string, pathname: string) => pathname === href || pathname.startsWith(`${href}/`) || (href === '/fornecedores' && pathname.startsWith('/fornecedor/'))
 const grupoDe = (pathname: string) => gruposMenu.find(g => g.itens.some(i => estaAtivo(i.href, pathname)))?.id
 
 export default function Layout({ children, title }: LayoutProps) {
@@ -184,6 +57,18 @@ export default function Layout({ children, title }: LayoutProps) {
   // O nome do escritório fica no topo de toda tela: ninguém trabalha sem saber onde está.
   const [escritorio, setEscritorio] = useState<MeuEscritorio | null>(null)
   useEffect(() => { meuEscritorio().then(setEscritorio).catch(() => setEscritorio(null)) }, [])
+  // Hierarquia: sócios e gestor veem os números do conjunto; os demais nem veem esses grupos no menu.
+  const [veTudo, setVeTudo] = useState(false)
+  useEffect(() => { meuAlcance().then(a => setVeTudo(a.veTudo)).catch(() => setVeTudo(false)) }, [])
+  // Meu jeito de trabalhar: o menu simples e o tamanho da letra são os que a pessoa escolheu.
+  const [jeito, setJeito] = useState<MeuJeito>(lerMeuJeito)
+  useEffect(() => {
+    aplicarLetra(lerMeuJeito().letra)
+    const reler = () => setJeito(lerMeuJeito())
+    window.addEventListener(EVENTO_JEITO, reler)
+    carregarMeuJeito().catch(() => undefined)
+    return () => window.removeEventListener(EVENTO_JEITO, reler)
+  }, [])
 
   // Área do administrador: só aparece para admin, com o número de cadastros esperando liberação.
   useEffect(() => {
@@ -199,6 +84,9 @@ export default function Layout({ children, title }: LayoutProps) {
   }, [])
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const visao: Visao = { veTudo, admin, instituto: escritorio?.instituto === true, sede }
+  const gruposDaPessoa = gruposVisiveis(visao)
+  const meusAtalhos = atalhosDoMenu(jeito.atalhos, visao)
   // Com o menu recolhido só há o ícone, então a dica começa pelo nome da tela.
   const dicaDe = (item: { href: string; label: string }) =>
     menuAberto ? (DICAS[item.href] ?? item.label) : `${item.label}${DICAS[item.href] ? ` — ${DICAS[item.href]}` : ''}`
@@ -262,7 +150,7 @@ export default function Layout({ children, title }: LayoutProps) {
       window.location.reload()
       return
     }
-    esquecerMarca(); esquecerEscritorio()
+    esquecerMarca(); esquecerEscritorio(); esquecerMeuJeito()
     await supabase.auth.signOut()
     navigate('/login')
   }
@@ -302,15 +190,15 @@ export default function Layout({ children, title }: LayoutProps) {
         <nav className="flex-1 overflow-y-auto" aria-label="Menu principal">
           {simples && (
             <ul className="px-3 pt-3 space-y-1" data-testid="menu-simples">
-              {menuEssencial.map((item, i) => {
+              {meusAtalhos.map((item, i) => {
                 const ativo = estaAtivo(item.href, pathname)
-                const abreBloco = menuAberto && menuEssencial[i - 1]?.bloco !== item.bloco
+                const abreBloco = menuAberto && meusAtalhos[i - 1]?.bloco !== item.bloco
                 return (
                   <li key={item.href}>
                     {abreBloco && (
                       <div className={`px-4 pb-1 ${i ? 'pt-4' : 'pt-1'}`} data-bloco={item.bloco}>
                         <p className="text-[11px] uppercase tracking-[0.16em] text-dourado">{item.bloco}</p>
-                        {item.dica && <p className="text-xs text-white/60">{item.dica}</p>}
+                        <p className="text-xs text-white/60">{item.dica}</p>
                       </div>
                     )}
                     <button
@@ -327,6 +215,9 @@ export default function Layout({ children, title }: LayoutProps) {
               })}
               {menuAberto && (
                 <li className="pt-4">
+                  <button type="button" onClick={() => navigate('/meu-jeito')} className="w-full px-4 py-2 min-h-[44px] text-sm text-white/70 hover:text-white underline underline-offset-2 text-left" data-testid="menu-ajustar" title="Escolha quais telas aparecem neste menu, em que ordem, e o tamanho da letra">
+                    Ajustar o meu menu
+                  </button>
                   <button type="button" onClick={() => mudarSimples(false)} className="w-full px-4 py-2 min-h-[44px] text-sm text-white/70 hover:text-white underline underline-offset-2 text-left" data-testid="menu-ver-tudo" title="Troca para o menu completo, com todas as telas da plataforma agrupadas por assunto">
                     Ver todas as telas
                   </button>
@@ -344,7 +235,7 @@ export default function Layout({ children, title }: LayoutProps) {
           {!simples && menuAberto && (
             <div className="px-4 pt-3 flex justify-end">
               {(() => {
-                const visiveis = gruposMenu.filter(g => g.itens.some(i => sede || !SO_SEDE.includes(i.href)))
+                const visiveis = gruposDaPessoa
                 const todosAbertos = visiveis.every(g => grupos[g.id])
                 return (
                   <button
@@ -360,9 +251,8 @@ export default function Layout({ children, title }: LayoutProps) {
               })()}
             </div>
           )}
-          {!simples && gruposMenu.map(grupo => {
-            const itens = grupo.itens.filter(item => sede || !SO_SEDE.includes(item.href))
-            if (!itens.length) return null
+          {!simples && gruposDaPessoa.map(grupo => {
+            const itens = grupo.itens
             const aberto = !menuAberto || !!grupos[grupo.id]
             const grupoAtivo = itens.some(i => estaAtivo(i.href, pathname))
             return (
@@ -376,7 +266,7 @@ export default function Layout({ children, title }: LayoutProps) {
                     title={aberto ? `Recolhe o grupo "${grupo.titulo}" no menu` : `Abre o grupo "${grupo.titulo}" para ver suas telas`}
                     className={`w-full flex items-center justify-between px-4 py-2 min-h-[40px] text-[11px] uppercase tracking-[0.16em] rounded hover:bg-white/5 ${grupoAtivo ? 'text-dourado' : 'text-white/70'}`}
                   >
-                    <span>{grupo.titulo}</span>
+                    <span className="text-left">{grupo.titulo}{grupo.nivel !== 'todos' && <span className="block normal-case tracking-normal text-[10px] text-white/50" data-nivel={grupo.nivel} title={EXPLICA_NIVEL[grupo.nivel]}>{ROTULO_NIVEL[grupo.nivel]}</span>}</span>
                     <ChevronDown size={14} aria-hidden="true" className={`transition-transform ${aberto ? '' : '-rotate-90'}`} />
                   </button>
                 )}

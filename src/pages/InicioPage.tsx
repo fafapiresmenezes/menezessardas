@@ -5,6 +5,7 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { meuAlcance, rotuloCargo, type Cargo } from '@/lib/hierarquia'
 import { minhaPreferencia, telaPorCargo } from '@/lib/preferencias'
 import { meuEscritorio, esquecerEscritorio, type MeuEscritorio } from '@/lib/equipe'
+import { lerMeuJeito, carregarMeuJeito, esquecerMeuJeito, EVENTO_JEITO } from '@/lib/meuJeito'
 import { esquecerMarca } from '@/lib/marca'
 import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck, CalendarClock, CalendarDays, Inbox, UserPlus, Search, MessageSquare, PenLine, BookOpen, BarChart3, UserCog, Scale, type LucideIcon } from 'lucide-react'
 import AceiteTermos from '@/components/AceiteTermos'
@@ -63,7 +64,7 @@ export default function InicioPage() {
   const [escritorio, setEscritorio] = useState<MeuEscritorio | null>(null)
   useEffect(() => { meuEscritorio().then(setEscritorio).catch(() => setEscritorio(null)) }, [])
   const trocarDeConta = async () => {
-    esquecerMarca(); esquecerEscritorio()
+    esquecerMarca(); esquecerEscritorio(); esquecerMeuJeito()
     try { await supabase.auth.signOut() } catch { /* já estava fora */ }
     navigate('/login')
   }
@@ -128,6 +129,15 @@ export default function InicioPage() {
     else navigate(destino)
   }
   const areaUltima = AREAS.find(a => a.chave === ultima)
+  // Meu jeito de trabalhar: as matérias que a pessoa marcou como suas aparecem primeiro, com o nome dela em cima.
+  const [minhas, setMinhas] = useState<string[]>(() => lerMeuJeito().materias ?? [])
+  useEffect(() => {
+    const reler = () => setMinhas(lerMeuJeito().materias ?? [])
+    window.addEventListener(EVENTO_JEITO, reler)
+    carregarMeuJeito().catch(() => undefined)
+    return () => window.removeEventListener(EVENTO_JEITO, reler)
+  }, [])
+  const minhasAreas = minhas.map(m => AREAS.find(a => a.chave === m)).filter((a): a is (typeof AREAS)[number] => !!a)
   const areaFixa = AREAS.find(a => a.chave === fixa)
   return (
     <main className="min-h-screen bg-navy flex flex-col items-center justify-center px-4 py-12">
@@ -162,6 +172,9 @@ export default function InicioPage() {
               </p>
             )}
           </div>
+          <button type="button" onClick={() => navigate('/meu-jeito')} data-testid="ir-meu-jeito" title="Escolha o que aparece no seu menu, as matérias que você usa, a tela em que a plataforma abre e o tamanho da letra. Vale só para você." className="min-h-[44px] px-4 bg-navy text-white text-sm">
+            Deixar a plataforma do meu jeito
+          </button>
           {escritorio && supabaseConfigurado && (
             <button type="button" onClick={trocarDeConta} data-testid="trocar-de-conta" title="Sai desta conta para você entrar com a conta do escritório certo" className="min-h-[44px] px-4 border border-navy text-navy text-sm">
               Não é o seu escritório? Sair e trocar de conta
@@ -197,6 +210,20 @@ export default function InicioPage() {
           })}
         </div>
       </div>
+      {minhasAreas.length > 0 && (
+        <div className="w-full max-w-6xl mb-8" role="group" aria-label="As matérias que você usa" data-testid="minhas-materias">
+          <p className="text-white text-lg mb-1 text-center">As matérias que você usa</p>
+          <p className="text-white/60 text-xs text-center mb-3">Você escolheu estas em “Deixar a plataforma do meu jeito”. Cada uma abre o assistente já preparado para ela.</p>
+          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {minhasAreas.map(a => (
+              <button key={a.chave} type="button" data-testid={`minha-area-${a.chave}`} onClick={() => abrir(a.destino, a.chave)} title={`${a.titulo} — ${a.texto}`} className="bg-white text-left p-4 min-h-[64px] flex items-start gap-3 border-t-4 border-dourado hover:-translate-y-0.5 transition focus:outline-none focus:ring-4 focus:ring-dourado/50">
+                <a.icone className="w-6 h-6 text-dourado mt-0.5 shrink-0" aria-hidden />
+                <span className="min-w-0"><span className="block font-serif text-lg text-navy leading-tight">{a.titulo}</span><span className="block text-sm text-gray-600">{a.texto}</span></span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       {carregado && (areaFixa || areaUltima) && (
         <div className="w-full max-w-6xl mb-5 bg-white/10 border border-dourado/50 text-white p-4 flex flex-wrap items-center gap-3 text-sm" data-testid="area-lembrada">
           {areaFixa ? (

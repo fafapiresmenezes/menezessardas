@@ -259,3 +259,7 @@ input[type=checkbox], input[type=radio] { min-width: 1.25rem; min-height: 1.25re
 
 /* Passo 62: foco visível padronizado (anel cinza, visível no branco e no preto) em tudo que recebe teclado. */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 3px solid #75757A !important; outline-offset: 2px; }
+
+/* Meu jeito de trabalhar: a pessoa escolhe a letra maior e a plataforma inteira acompanha (tudo é medido em rem). */
+html[data-letra='grande'] { font-size: 112.5%; }
+html[data-letra='maior'] { font-size: 125%; }

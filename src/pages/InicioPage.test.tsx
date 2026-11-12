@@ -117,6 +117,22 @@ describe('Tela de entrada por área', () => {
     expect(screen.getByTestId('inicio-hierarquia').textContent).toContain('enxerga todos os processos')
   })
 
+  it('as matérias que a pessoa marcou como suas aparecem primeiro, e a entrada leva ao "meu jeito de trabalhar"', async () => {
+    sessionStorage.setItem('lsm-entrada-cargo', '1')
+    localStorage.setItem('theye-meu-jeito', JSON.stringify({ materias: ['trabalhista', 'eleitoral', 'nao_existe'] }))
+    alcance = { id: 'u1', cargo: 'pleno', admin: false, veTudo: false }
+    montar()
+    const minhas = await screen.findByTestId('minhas-materias')
+    expect([...minhas.querySelectorAll('button')].map(b => b.getAttribute('data-testid'))).toEqual(['minha-area-trabalhista', 'minha-area-eleitoral'])
+    fireEvent.click(screen.getByTestId('minha-area-eleitoral'))
+    expect(gravarAreaAtual).toHaveBeenCalledWith('eleitoral')
+    cleanup(); localStorage.clear(); montar()
+    await screen.findByTestId('inicio-hierarquia')
+    expect(screen.queryByTestId('minhas-materias')).toBeNull()
+    fireEvent.click(screen.getByTestId('ir-meu-jeito'))
+    expect(screen.getByTestId('onde').textContent).toBe('/meu-jeito')
+  })
+
   it('quem administra o escritório lê isso na entrada; quem administra o Instituto lê que cuida da plataforma inteira', async () => {
     sessionStorage.setItem('lsm-entrada-cargo', '1')
     escritorio = { nome: 'SARDAS E MENEZES', sede: true, pessoa: 'Fátima', email: 'f@exemplo.com', instituto: false, advocacia: 'SARDAS E MENEZES' }

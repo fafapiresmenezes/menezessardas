@@ -129,6 +129,16 @@ export const GUIAS: Record<string, Guia> = {
       'Nada é apagado. Se algo sair errado, use "Desfazer" para voltar ao que era antes.',
     ],
   },
+  '/meu-jeito': {
+    titulo: 'Como deixar a plataforma do seu jeito',
+    passos: [
+      'Tudo o que você mudar aqui vale só para você. Cada colega arruma a sua.',
+      'No bloco 1, escolha quais telas ficam no seu menu. As setas mudam a ordem e o X tira.',
+      'No bloco 2, escolha a tela em que a plataforma abre quando você entra.',
+      'No bloco 3, marque as matérias do direito que você usa: elas aparecem primeiro na entrada.',
+      'No bloco 4, aumente a letra se preferir. O botão do fim desfaz tudo e volta ao padrão.',
+    ],
+  },
   '/parametros-escrita': {
     titulo: 'Como ajustar o jeito de escrever do robô',
     passos: [

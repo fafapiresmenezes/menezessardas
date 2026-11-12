@@ -14,6 +14,8 @@ vi.mock('@/lib/equipe', () => ({
   esquecerEscritorio: () => undefined,
   listarPessoas: async () => [{ id: '1', funcao: 'admin' }, { id: '2', funcao: null }, { id: '3', funcao: null }],
 }))
+let alcance = { id: 'u1', cargo: null as string | null, admin: false, veTudo: false }
+vi.mock('@/lib/hierarquia', () => ({ meuAlcance: async () => alcance }))
 const aplicarTema = vi.fn()
 vi.mock('@/lib/tema', () => ({ temaAtual: () => 'claro', aplicarTema: (t: string) => aplicarTema(t) }))
 vi.mock('@/lib/authDemo', () => ({ sairDemo: vi.fn() }))
@@ -27,7 +29,7 @@ function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathn
 const montar = (rota = '/dashboard') => render(<MemoryRouter initialEntries={[rota]}><Layout title="Painel"><p>conteúdo</p></Layout><Routes><Route path="*" element={<Onde />} /></Routes></MemoryRouter>)
 
 describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
-  beforeEach(() => { cleanup(); localStorage.clear(); sede = true; perfil = 'operador'; signOut.mockClear(); aplicarTema.mockClear(); Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true }) })
+  beforeEach(() => { cleanup(); localStorage.clear(); document.documentElement.removeAttribute('data-letra'); sede = true; perfil = 'operador'; alcance = { id: 'u1', cargo: null, admin: false, veTudo: false }; signOut.mockClear(); aplicarTema.mockClear(); Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true }) })
 
   it('o topo de toda tela diz em qual escritório a pessoa está', async () => {
     montar('/meu-dia')
@@ -37,7 +39,7 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
   it('começa no menu simples, só com o essencial, e abre o menu completo num clique (e volta)', () => {
     montar('/meu-dia')
     const simples = screen.getByTestId('menu-simples')
-    expect([...simples.querySelectorAll('li button')].map(b => b.textContent)).toEqual(['Início', 'Meu dia', 'Agenda', 'Meus processos', 'Inserir processos antigos', 'Intimações', 'Meu jeito de escrever', 'Parâmetros de escrita', 'Ver todas as telas'])
+    expect([...simples.querySelectorAll('li button')].map(b => b.textContent)).toEqual(['Início', 'Meu dia', 'Agenda', 'Intimações', 'Meus processos', 'Inserir processos antigos', 'Meu jeito de escrever', 'Parâmetros de escrita', 'Ajustar o meu menu', 'Ver todas as telas'])
     expect([...simples.querySelectorAll('[data-bloco]')].map(b => b.getAttribute('data-bloco'))).toEqual(['Todo dia', 'Processos', 'Escrever peças'])
     expect(simples.querySelector('[aria-current=page]')!.textContent).toBe('Meu dia')
     expect(screen.queryByText('Imóveis e locação')).toBeNull()
@@ -69,29 +71,62 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
     expect(screen.getByTitle(/^Agenda — /)).toBeTruthy()
   })
 
-  it('o menu é dividido em grupos: abre o da tela atual e "Hoje", recolhe e abre à vontade, lembra a escolha e mostra a tela escolhida de qualquer grupo', () => {
+  it('o menu é dividido em grupos: abre o da tela atual e "Todo dia", recolhe e abre à vontade, lembra a escolha e mostra a tela escolhida de qualquer grupo', async () => {
     localStorage.setItem('theye-menu-simples', 'nao')
+    alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
     montar('/financeiro')
     const nav = screen.getByRole('navigation', { name: 'Menu principal' })
     const grupo = (nome: string) => screen.getByText(nome).closest('button') as HTMLButtonElement
-    expect(grupo('Hoje').getAttribute('aria-expanded')).toBe('true')
-    expect(grupo('Clientes e dinheiro').getAttribute('aria-expanded')).toBe('true')
+    await screen.findByText('4. Escritório: clientes e dinheiro')
+    expect(grupo('1. Todo dia').getAttribute('aria-expanded')).toBe('true')
+    expect(grupo('4. Escritório: clientes e dinheiro').getAttribute('aria-expanded')).toBe('true')
     expect(nav.querySelector('[aria-current=page]')!.textContent).toBe('Financeiro')
     expect(grupo('Imóveis e locação').getAttribute('aria-expanded')).toBe('false')
     expect(screen.queryByText('Fornecedores')).toBeNull()
     fireEvent.click(grupo('Imóveis e locação'))
     expect(screen.getByText('Fornecedores')).toBeTruthy()
-    fireEvent.click(grupo('Clientes e dinheiro'))
+    fireEvent.click(grupo('4. Escritório: clientes e dinheiro'))
     expect(screen.queryByText('Funil de vendas')).toBeNull()
     expect(JSON.parse(localStorage.getItem('lsm-menu-grupos')!)).toMatchObject({ imoveis: true, financeiro: false })
     fireEvent.click(screen.getByTestId('menu-alternar-tudo'))
-    expect(grupo('Pesquisa e redação').getAttribute('aria-expanded')).toBe('true')
+    expect(grupo('3. Escrever peças').getAttribute('aria-expanded')).toBe('true')
     fireEvent.click(screen.getByTestId('menu-alternar-tudo'))
-    expect(grupo('Pesquisa e redação').getAttribute('aria-expanded')).toBe('false')
-    expect(grupo('Hoje').getAttribute('aria-expanded')).toBe('true')
+    expect(grupo('3. Escrever peças').getAttribute('aria-expanded')).toBe('false')
+    expect(grupo('1. Todo dia').getAttribute('aria-expanded')).toBe('true')
     cleanup()
     montar('/financeiro')
-    expect(screen.getByText('Funil de vendas')).toBeTruthy()
+    expect(await screen.findByText('Funil de vendas')).toBeTruthy()
+  })
+
+  it('hierarquia no menu: cada pessoa só vê os grupos do seu nível, e o grupo restrito diz para quem é', async () => {
+    localStorage.setItem('theye-menu-simples', 'nao')
+    montar('/meu-dia')
+    const titulos = () => [...document.querySelectorAll('[data-grupo]')].map(g => g.getAttribute('data-grupo'))
+    await waitFor(() => expect(screen.getByTestId('escritorio-atual')).toBeTruthy())
+    expect(titulos()).toEqual(['hoje', 'processos', 'pesquisa', 'imoveis', 'gestao', 'conta'])
+    expect(screen.queryByText('4. Escritório: clientes e dinheiro')).toBeNull()
+    cleanup(); alcance = { id: 'u1', cargo: 'gestor', admin: false, veTudo: true }
+    montar('/meu-dia')
+    await screen.findByText('4. Escritório: clientes e dinheiro')
+    expect(titulos()).toEqual(['hoje', 'processos', 'pesquisa', 'imoveis', 'gestao', 'financeiro', 'conta'])
+    expect(document.querySelector('[data-nivel=gestao]')!.textContent).toBe('sócios e gestor')
+    cleanup(); perfil = 'admin'; alcance = { id: 'u1', cargo: null, admin: true, veTudo: true }
+    montar('/meu-dia')
+    await screen.findByText('Administração do escritório')
+    expect(titulos()).toEqual(['hoje', 'processos', 'pesquisa', 'imoveis', 'gestao', 'financeiro', 'admin', 'conta'])
+    expect(document.querySelector('[data-nivel=admin]')!.getAttribute('title')).toContain('Só quem administra o escritório')
+  })
+
+  it('meu jeito de trabalhar: o menu simples mostra as telas que a pessoa escolheu, na ordem dela, e a letra maior vale na tela toda', async () => {
+    localStorage.setItem('theye-meu-jeito', JSON.stringify({ atalhos: ['/assistente', '/meu-dia', '/financeiro', '/nao-existe'], letra: 'grande' }))
+    montar('/meu-dia')
+    const simples = screen.getByTestId('menu-simples')
+    // /financeiro é de sócios e gestor: quem não é nem vê; tela desconhecida é ignorada.
+    expect([...simples.querySelectorAll('li button')].map(b => b.textContent)).toEqual(['Assistente', 'Meu dia', 'Ajustar o meu menu', 'Ver todas as telas'])
+    expect([...simples.querySelectorAll('[data-bloco]')].map(b => b.getAttribute('data-bloco'))).toEqual(['Escrever peças', 'Todo dia'])
+    await waitFor(() => expect(document.documentElement.getAttribute('data-letra')).toBe('grande'))
+    fireEvent.click(screen.getByTestId('menu-ajustar'))
+    expect(screen.getByTestId('onde').textContent).toBe('/meu-jeito')
   })
 
   it('escritório parceiro não vê os itens só da sede; admin vê a área do administrador com os cadastros pendentes', async () => {
