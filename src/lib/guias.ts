@@ -16,6 +16,15 @@ export const GUIAS: Record<string, Guia> = {
       'Em dúvida, passe o cursor sobre o botão: toda ação tem uma dica dizendo o que acontece ao clicar.',
     ],
   },
+  '/engenharia': {
+    titulo: 'Como usar a Engenharia',
+    passos: [
+      'Esta é a plataforma de engenharia, ainda em demonstração. Ela funciona como a do direito, com as palavras da engenharia.',
+      'Em "Cálculo estrutural", preencha os dados da viga: a conta aparece inteira, passo a passo, com o item da norma.',
+      'Use "Baixar memória de cálculo" para levar a conta ao engenheiro responsável, que confere e assina com ART.',
+      'Em "Matérias e consultores", busque por matéria ou pela norma (por exemplo, NBR 6118).',
+    ],
+  },
   '/meu-dia': {
     titulo: 'Como usar o Meu dia',
     passos: [

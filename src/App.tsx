@@ -61,6 +61,7 @@ const ImportarProcessosPage = lazy(() => import('@/pages/ImportarProcessosPage')
 const FunilVendasPage = lazy(() => import('@/pages/FunilVendasPage'))
 const FinanceiroPage = lazy(() => import('@/pages/FinanceiroPage'))
 const EstudosPage = lazy(() => import('@/pages/EstudosPage'))
+const EngenhariaPage = lazy(() => import('@/pages/EngenhariaPage'))
 const ParametrosEscritaPage = lazy(() => import('@/pages/ParametrosEscritaPage'))
 
 // Com dois fatores ativos, a sessão só libera o sistema depois do código (nível aal2).
@@ -163,6 +164,10 @@ function App() {
         <Route
           path="/solucoes"
           element={isAuthenticated ? <SolucoesPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/engenharia"
+          element={isAuthenticated ? <EngenhariaPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/estudos"
