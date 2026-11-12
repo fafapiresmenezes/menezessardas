@@ -1,2 +1,0 @@
-function l(s){if(!s)return[];const i=s.search(/a[çc][õo]es da semana/i),o=(i>=0?s.slice(i):s).split(`
-`),t=[];for(const r of o){const c=r.trim();let e=c.match(/^\|\s*(\d+)\s*\|\s*([^|]+?)\s*\|/);if(e){t.push(n(e[2]));continue}if(e=c.match(/^(\d+)[.)]\s+(.+)$/),e){t.push(n(e[2]));continue}if(t.length&&/^#{1,3}\s/.test(c)&&!/a[çc][õo]es/i.test(c))break}return t.slice(0,8)}const n=s=>s.replace(/\*\*/g,"").replace(/\s+/g," ").replace(/[.:]\s*$/,"").trim().slice(0,240);export{l as e};
