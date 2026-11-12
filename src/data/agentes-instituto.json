@@ -1,7 +1,7 @@
 {
- "total": 460,
+ "total": 481,
  "meta": 500,
- "faltam": 40,
+ "faltam": 19,
  "agentes": [
   {
    "id": "agente-001",
@@ -4625,6 +4625,216 @@
    "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
    "status": "catalogado; ementa completa ainda não importada",
    "id": "agente-460"
+  },
+  {
+   "nome": "Consultor de Teorias Jurídicas Contemporâneas",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teorias Jurídicas Contemporâneas",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, linhas de pesquisa (https://ppgd.direito.ufrj.br/linhas-de-pesquisa/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-461"
+  },
+  {
+   "nome": "Consultor de Sociedade, Direitos Humanos e Arte (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Sociedade, Direitos Humanos e Arte (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, linhas de pesquisa (https://ppgd.direito.ufrj.br/linhas-de-pesquisa/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-462"
+  },
+  {
+   "nome": "Consultor de Teorias da Decisão, Interpretação e Justiça (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teorias da Decisão, Interpretação e Justiça (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, linhas de pesquisa (https://ppgd.direito.ufrj.br/linhas-de-pesquisa/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-463"
+  },
+  {
+   "nome": "Consultor de Democracia, Instituições e Desenhos Institucionais (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Democracia, Instituições e Desenhos Institucionais (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, linhas de pesquisa (https://ppgd.direito.ufrj.br/linhas-de-pesquisa/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-464"
+  },
+  {
+   "nome": "Consultor de Teoria da Sociedade",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teoria da Sociedade",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-465"
+  },
+  {
+   "nome": "Consultor de Direito, Instituições e Psicologia Comportamental",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito, Instituições e Psicologia Comportamental",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-466"
+  },
+  {
+   "nome": "Consultor de Direito, Sociedade e Direitos Humanos: Cruzos Contracoloniais",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito, Sociedade e Direitos Humanos: Cruzos Contracoloniais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-467"
+  },
+  {
+   "nome": "Consultor de Direito Internacional das Catástrofes e Mudanças Climáticas",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Internacional das Catástrofes e Mudanças Climáticas",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-468"
+  },
+  {
+   "nome": "Consultor de Linguagem, Argumentação e Aplicação do Direito",
+   "area": "Pós-graduação em direito",
+   "nicho": "Linguagem, Argumentação e Aplicação do Direito",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-469"
+  },
+  {
+   "nome": "Consultor de Metodologia Jurídica",
+   "area": "Pós-graduação em direito",
+   "nicho": "Metodologia Jurídica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-470"
+  },
+  {
+   "nome": "Consultor de Pensamento Jurídico Contemporâneo",
+   "area": "Pós-graduação em direito",
+   "nicho": "Pensamento Jurídico Contemporâneo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-471"
+  },
+  {
+   "nome": "Consultor de Relações de Trabalho e Configurações Institucionais",
+   "area": "Pós-graduação em direito",
+   "nicho": "Relações de Trabalho e Configurações Institucionais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-472"
+  },
+  {
+   "nome": "Consultor de Direito, Regulação e Tecnologia",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito, Regulação e Tecnologia",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-473"
+  },
+  {
+   "nome": "Consultor de Teorias Críticas dos Direitos Humanos",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teorias Críticas dos Direitos Humanos",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-474"
+  },
+  {
+   "nome": "Consultor de Teorias da Justiça e Democracia",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teorias da Justiça e Democracia",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-475"
+  },
+  {
+   "nome": "Consultor de Filosofia Política Contemporânea e Perspectivas Críticas do Direito",
+   "area": "Pós-graduação em direito",
+   "nicho": "Filosofia Política Contemporânea e Perspectivas Críticas do Direito",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-476"
+  },
+  {
+   "nome": "Consultor de Acesso à Justiça, Racismo Institucional e Ações Afirmativas",
+   "area": "Pós-graduação em direito",
+   "nicho": "Acesso à Justiça, Racismo Institucional e Ações Afirmativas",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-477"
+  },
+  {
+   "nome": "Consultor de Globalização e Transformação no Mundo do Trabalho",
+   "area": "Pós-graduação em direito",
+   "nicho": "Globalização e Transformação no Mundo do Trabalho",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-478"
+  },
+  {
+   "nome": "Consultor de Ética, Inteligência Artificial e Tecnologias Emergentes",
+   "area": "Pós-graduação em direito",
+   "nicho": "Ética, Inteligência Artificial e Tecnologias Emergentes",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-479"
+  },
+  {
+   "nome": "Consultor de Teorias da Decisão",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teorias da Decisão",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-480"
+  },
+  {
+   "nome": "Consultor de Teoria das Instituições e Desenhos Institucionais",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teoria das Instituições e Desenhos Institucionais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-481"
   }
  ]
 }
