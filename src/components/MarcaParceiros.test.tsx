@@ -27,7 +27,7 @@ describe('Marca dos escritórios parceiros (Portal e e-mails)', () => {
     expect(nomes[1].value).toBe('')
     const cores = screen.getAllByTestId('marca-cor') as HTMLInputElement[]
     expect(cores[0].value).toBe('#aa0000')
-    expect(cores[1].value).toBe('#14213d')
+    expect(cores[1].value).toBe('#0b0b0c')
     expect((screen.getAllByTestId('marca-logo')[0] as HTMLInputElement).value).toBe('https://x/logo.png')
   })
 
@@ -37,7 +37,7 @@ describe('Marca dos escritórios parceiros (Portal e e-mails)', () => {
     fireEvent.change(screen.getByLabelText('Nome de exibição de Beta'), { target: { value: 'Beta Jurídico' } })
     fireEvent.change(screen.getByLabelText('Logo de Beta'), { target: { value: 'https://b/logo.svg' } })
     fireEvent.click(screen.getByTestId('marca-salvar'))
-    await waitFor(() => expect(rpc).toHaveBeenCalledWith('definir_marca', { p_escritorio: 'e3', p_nome: 'Beta Jurídico', p_cor: '#14213D', p_logo_url: 'https://b/logo.svg' }))
+    await waitFor(() => expect(rpc).toHaveBeenCalledWith('definir_marca', { p_escritorio: 'e3', p_nome: 'Beta Jurídico', p_cor: '#0B0B0C', p_logo_url: 'https://b/logo.svg' }))
     expect((await screen.findByTestId('marca-msg')).textContent).toContain('Marca salva')
     expect(rpc).toHaveBeenCalledWith('definir_dominio', { p_escritorio: 'e3', p_dominio: '' })
     fireEvent.change(screen.getByLabelText('Domínio próprio de Beta'), { target: { value: 'app.beta.adv.br' } })

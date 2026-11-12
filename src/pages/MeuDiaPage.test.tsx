@@ -38,7 +38,7 @@ describe('Meu dia', () => {
     resultados.intimacoes = { count: 5 }
     resultados.contratos = { data: [{ id: 'c1', imovel_id: 'i1', locatario_fornecedor: 'Loja Centro', data_vencimento: iso(30) }] }
     resultados.resumos_semanais = { data: { conteudo: semana, criado_em: '2026-11-02T08:00:00Z', enviado_em: '2026-11-02T08:01:00Z', destinatarios: 6 } }
-    resultados.diagnosticos_semanais = { data: { id: 'd1', resposta: '## Diagnóstico\n\n### Ações\n1. Revisar os contratos vencidos\n2. Cobrar honorários atrasados', criado_em: '2026-11-02T06:00:00Z' } }
+    resultados.diagnosticos_semanais = { data: { id: 'd1', resposta: '## Resposta direta\nComece pelos contratos.\n\n### Ações da semana\n1. Revisar os contratos vencidos\n2. Cobrar honorários atrasados', criado_em: '2026-11-02T06:00:00Z' } }
     resultados.acoes_consultor = { data: [{ id: 'a1', indice: 1, texto: 'Revisar os contratos vencidos', feito_em: null }, { id: 'a2', indice: 2, texto: 'Cobrar honorários atrasados', feito_em: '2026-11-02T09:00:00Z' }] }
     resultados.horas = { data: { meta: 120, horas: 20, esperado_hoje: 60, pct_ritmo: 33, abaixo: true } }
     resultados.monitoramentos = { data: [{ id: 'm1', valor: '08012345620268190001', rotulo: 'Despejo Rua A', novidade_em: '2026-11-06T10:00:00Z', novidades: [{ data: '2026-11-05', texto: 'Sentença publicada' }, { data: '2026-11-04', texto: 'Juntada' }] }, { id: 'm2', valor: '1', rotulo: null, novidade_em: null, novidades: [] }] }
@@ -64,7 +64,7 @@ describe('Meu dia', () => {
 
   it('consultor da semana: diagnóstico do nível, ações garantidas no banco e marcáveis com aderência; resumo de teste por e-mail', async () => {
     render(<MemoryRouter><MeuDiaPage /></MemoryRouter>)
-    await waitFor(() => expect(screen.getByTestId('diagnostico-md').textContent).toContain('Revisar os contratos vencidos'))
+    await waitFor(() => expect(screen.getByTestId('diagnostico-md').textContent).toContain('Comece pelos contratos'))
     await waitFor(() => expect(screen.getByTestId('aderencia-semana').textContent).toBe('1 de 2 feitas (50%)'))
     expect(upsert).toHaveBeenCalledWith([{ diagnostico_id: 'd1', indice: 1, texto: 'Revisar os contratos vencidos' }, { diagnostico_id: 'd1', indice: 2, texto: 'Cobrar honorários atrasados' }], { onConflict: 'diagnostico_id,indice', ignoreDuplicates: true })
     fireEvent.click(screen.getByTestId('acao-1'))

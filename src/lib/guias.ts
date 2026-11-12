@@ -26,7 +26,7 @@ export const GUIAS: Record<string, Guia> = {
     ],
   },
   '/processos': {
-    titulo: 'Como usar Meus processos',
+    titulo: 'Como usar Meus processos (carteira de processos)',
     passos: [
       'Esta é a sua carteira. Você vê os processos sob a sua responsabilidade; sócios e gestor veem os de todo o escritório.',
       'Use a busca para achar um processo pelo número, pelo cliente ou pela parte contrária.',

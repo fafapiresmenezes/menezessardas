@@ -74,9 +74,9 @@ THEYE Institute` : ''
               <figure data-testid="grafico-indice">
                 <figcaption className="text-xs uppercase tracking-wider text-grafite-claro mb-1">{nomeIndice} mês a mês (%), últimos 12 meses</figcaption>
                 <svg viewBox="0 0 360 110" className="w-full max-w-xl" role="img" aria-label={`Variação mensal do ${nomeIndice}: ${res.meses.map(m => `${m.data.slice(3)} ${m.valor.toLocaleString('pt-BR')}%`).join(', ')}`}>
-                  <line x1="0" y1="60" x2="360" y2="60" stroke="#B08D57" strokeWidth="0.5" />
+                  <line x1="0" y1="60" x2="360" y2="60" stroke="#75757A" strokeWidth="0.5" />
                   {res.meses.map((m, i) => { const h = (Math.abs(m.valor) / max) * 45; const y = m.valor >= 0 ? 60 - h : 60; return (
-                    <g key={m.data}><rect x={i * 30 + 6} y={y} width={18} height={Math.max(h, 0.5)} fill={m.valor >= 0 ? '#14213D' : '#B23A48'} data-testid="barra-mes" />
+                    <g key={m.data}><rect x={i * 30 + 6} y={y} width={18} height={Math.max(h, 0.5)} fill={m.valor >= 0 ? '#0B0B0C' : '#B23A48'} data-testid="barra-mes" />
                       <text x={i * 30 + 15} y={m.valor >= 0 ? y - 2 : y + h + 7} textAnchor="middle" fontSize="6" fill="#333">{m.valor.toLocaleString('pt-BR')}</text>
                       <text x={i * 30 + 15} y="104" textAnchor="middle" fontSize="6" fill="#666">{m.data.slice(3, 5)}/{m.data.slice(8)}</text></g>) })}
                 </svg>

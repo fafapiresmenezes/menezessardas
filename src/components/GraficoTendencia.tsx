@@ -40,12 +40,12 @@ export default function GraficoTendencia({ pontos, compacto = false }: { pontos:
           const eventos = p.vencimentos + p.reajustes + p.documentosAVencer
           return (
             <g key={p.mes}>
-              <rect x={x + passo * 0.2} y={topo} width={passo * 0.6} height={h} fill="#14213D" opacity={0.85} rx={1} />
+              <rect x={x + passo * 0.2} y={topo} width={passo * 0.6} height={h} fill="#0B0B0C" opacity={0.85} rx={1} />
               {p.vencimentos > 0 && (
                 <circle cx={x + passo / 2} cy={topo - 9} r={4.5} fill="#A32020" />
               )}
               {p.reajustes > 0 && (
-                <rect x={x + passo / 2 - 4} y={topo - (p.vencimentos ? 24 : 13)} width={8} height={8} fill="#B08D57" />
+                <rect x={x + passo / 2 - 4} y={topo - (p.vencimentos ? 24 : 13)} width={8} height={8} fill="#75757A" />
               )}
               {p.documentosAVencer > 0 && (
                 <text
@@ -64,7 +64,7 @@ export default function GraficoTendencia({ pontos, compacto = false }: { pontos:
                 y={altura - 12}
                 textAnchor="middle"
                 fontSize={10}
-                fill={eventos ? '#14213D' : '#5A6372'}
+                fill={eventos ? '#0B0B0C' : '#5F6166'}
                 fontFamily="Inter, system-ui, sans-serif"
                 fontWeight={eventos ? 600 : 400}
               >
@@ -73,7 +73,7 @@ export default function GraficoTendencia({ pontos, compacto = false }: { pontos:
             </g>
           )
         })}
-        <line x1={margem.esq} x2={largura - margem.dir} y1={margem.topo + alturaUtil} y2={margem.topo + alturaUtil} stroke="#14213D" strokeOpacity={0.2} />
+        <line x1={margem.esq} x2={largura - margem.dir} y1={margem.topo + alturaUtil} y2={margem.topo + alturaUtil} stroke="#0B0B0C" strokeOpacity={0.2} />
       </svg>
 
       <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-grafite-claro" aria-hidden="true">

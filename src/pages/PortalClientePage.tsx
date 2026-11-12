@@ -40,7 +40,7 @@ export default function PortalClientePage() {
   return (
     <main className="min-h-screen bg-pergaminho">
       {marca && !marca.sede ? (
-        <header className="py-6 text-white text-center" style={{ backgroundColor: /^#[0-9A-Fa-f]{6}$/.test(marca.cor) ? marca.cor : '#14213D' }} data-testid="portal-marca-parceiro">
+        <header className="py-6 text-white text-center" style={{ backgroundColor: /^#[0-9A-Fa-f]{6}$/.test(marca.cor) ? marca.cor : '#0B0B0C' }} data-testid="portal-marca-parceiro">
           {marca.logo_url && /^https:\/\//.test(marca.logo_url) && <img src={marca.logo_url} alt="" className="mx-auto max-h-12 mb-2" />}
           <p className="font-serif text-xl">{marca.nome}</p>
         </header>

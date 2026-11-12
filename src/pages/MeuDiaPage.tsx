@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { calcularPrazo, feriadosDoRio } from '@/lib/prazos'
-import { CalendarClock, Inbox, ListChecks, FileWarning, Briefcase, Mail } from 'lucide-react'
+import { CalendarClock, Inbox, ListChecks, FileWarning, Mail } from 'lucide-react'
 import { extrairAcoes } from '@/lib/acoesConsultor'
-import { render } from '@/pages/AssistentePage'
+import ConsultorSemana from '@/components/ConsultorSemana'
 import { hojeLocal, isoLocal } from '@/lib/datas'
 import { AREAS_DIREITO } from '@/lib/assistente'
 
@@ -92,7 +92,6 @@ export default function MeuDiaPage() {
     const { error } = await supabase.from('acoes_consultor').update({ feito_em, usuario_id: feito_em ? u.user?.id ?? null : null }).eq('id', a.id)
     if (!error) setAcoes(acoes.map(x => x.id === a.id ? { ...x, feito_em } : x))
   }
-  const feitas = acoes.filter(a => a.feito_em).length
   // Passo 21: aviso quando as horas do mês estão abaixo de 80% do ritmo da meta da função.
   const [horas, setHoras] = useState<{ meta: number; horas: number; esperado_hoje: number; pct_ritmo: number | null; abaixo: boolean } | null>(null)
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 278
@@ -203,33 +202,7 @@ export default function MeuDiaPage() {
             </>
           ) : <p className="text-sm text-grafite-claro mt-2">O primeiro resumo chega na segunda-feira às 8h.</p>}
         </section>
-        <section className={cartao} data-testid="consultor-semana">
-          <h2 className="font-serif text-lg flex items-center gap-2"><Briefcase className="w-5 h-5" aria-hidden />Consultor da semana</h2>
-          {diagnostico ? (
-            <>
-              <p className="text-xs text-grafite-claro mt-1">Gerado em {new Date(diagnostico.criado_em).toLocaleDateString('pt-BR')} pelo consultor do seu nível. <Link to="/consultores" className="underline">Pedir um diagnóstico agora</Link></p>
-              <div className="prose prose-sm max-w-none mt-3">{render(diagnostico.resposta)}</div>
-              {!!acoes.length && (
-                <div className="mt-4 border-t border-navy/10 pt-3" data-testid="acoes-consultor">
-                  <p className="text-sm font-semibold flex items-center justify-between">Ações da semana <span data-testid="aderencia-semana">{feitas} de {acoes.length} feitas ({Math.round(100 * feitas / acoes.length)}%)</span></p>
-                  <ul className="mt-2 space-y-1">
-                    {acoes.map(a => (
-                      <li key={a.id}>
-                        <label className="flex items-start gap-2 text-sm min-h-[44px] cursor-pointer">
-                          <input type="checkbox" checked={!!a.feito_em} onChange={() => marcarAcao(a)} className="mt-1 w-5 h-5 shrink-0" data-testid={`acao-${a.indice}`} />
-                          <span className={a.feito_em ? 'line-through text-grafite-claro' : ''}>{a.indice}. {a.texto}{a.feito_em && <span className="text-xs ml-2">feita em {new Date(a.feito_em).toLocaleDateString('pt-BR')}</span>}</span>
-                        </label>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="text-xs text-grafite-claro mt-1">A aderência por nível aparece em <Link to="/indicadores" className="underline">Indicadores</Link>.</p>
-                </div>
-              )}
-            </>
-          ) : (
-            <p className="text-sm text-grafite-claro mt-2">O primeiro diagnóstico chega na segunda-feira. Enquanto isso, <Link to="/consultores" className="underline">peça um agora em Consultores</Link>.</p>
-          )}
-        </section>
+        <ConsultorSemana diagnostico={diagnostico} acoes={acoes} onMarcar={marcarAcao} />
         <section className={cartao}>
           <h2 className="font-serif text-lg flex items-center gap-2"><CalendarClock className="w-5 h-5" aria-hidden />Calculadora de prazo processual</h2>
           <div className="flex flex-wrap gap-3 items-end mt-3 text-sm">

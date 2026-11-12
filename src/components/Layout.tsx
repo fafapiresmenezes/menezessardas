@@ -154,7 +154,7 @@ const CHAVE_SIMPLES = 'theye-menu-simples'
 // Menu simples (padrão): só o que se usa todo dia, com nomes do dia a dia. "Ver todas as telas" abre o menu completo.
 const menuEssencial = [
   { bloco: 'Todo dia', dica: 'Comece por aqui', icon: Home, label: 'Início', href: '/inicio' },
-  { bloco: 'Todo dia', dica: '', icon: Sunrise, label: 'O que vence', href: '/meu-dia' },
+  { bloco: 'Todo dia', dica: '', icon: Sunrise, label: 'Meu dia', href: '/meu-dia' },
   { bloco: 'Todo dia', dica: '', icon: CalendarDays, label: 'Agenda', href: '/agenda' },
   { bloco: 'Processos', dica: 'Ver, incluir e acompanhar', icon: Gavel, label: 'Meus processos', href: '/processos' },
   { bloco: 'Processos', dica: '', icon: UserPlus, label: 'Inserir processos antigos', href: '/processos-antigos' },
