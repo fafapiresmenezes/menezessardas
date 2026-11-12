@@ -5,7 +5,7 @@
 //   2. os artigos mais relevantes dessas leis vão ao modelo principal, que responde citando artigo e lei.
 // O texto de cada lei fica em cache na tabela leis_texto por 7 dias.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { sortearPerfil, instrucoesDoPerfil, instrucoesDeRedacao, amostrasDoAutor, medirTexto, aderencia, hash32, type Perfil } from '../../../src/lib/estiloPecas.ts'
+import { sortearPerfil, instrucoesDoPerfil, instrucoesDeRedacao, amostrasDoAutor, medirTexto, aderencia, hash32, escolherRedator, instrucoesDoRedator, instrucoesDeNarrativa, type Perfil } from '../../../src/lib/estiloPecas.ts'
 
 const MODELO_TRIAGEM = 'claude-haiku-5-5'
 const MODELO_RESPOSTA = 'claude-sonnet-5-5'
@@ -407,7 +407,16 @@ Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"
       })
     }
     const prevalece = estiloProprio ? '\nQuando houver ESTILO DE ESCRITA DO AUTOR, ele prevalece: use a rotação só para variar ritmo, conectivos, abertura e fecho.' : ''
-    const blocoPerfil = perfil ? `\n\n${modo === 'redigir' ? instrucoesDoPerfil(perfil) : instrucoesDeRedacao(perfil)}${prevalece}` : ''
+    // Variação extra (pedido de M, 12/11/2026): cada geração também sorteia um redator da BANCA
+    // (14 juristas de referência) e uma batida de narrativa diferente da última, para não sair padronizado.
+    let blocoBanca = ''
+    if (perfil && corpo.rotacao !== false && modo === 'redigir') {
+      try {
+        const redator = escolherRedator({ area: especialidade, titulo: pergunta.slice(0, 120), semente: hash32(`banca|${usuario ?? 'x'}|${pergunta}`) })
+        blocoBanca = `\n\n${instrucoesDoRedator(redator)}\n\n${instrucoesDeNarrativa()}`
+      } catch { /* sem banca, segue perfil */ }
+    }
+    const blocoPerfil = perfil ? `\n\n${modo === 'redigir' ? instrucoesDoPerfil(perfil) : instrucoesDeRedacao(perfil)}${prevalece}${blocoBanca}` : ''
     let texto = ''
     let dados: unknown = null
 
