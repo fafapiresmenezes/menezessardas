@@ -11,6 +11,7 @@ import { MEDICOES, PLANO_M31, DECK_URL } from '@/data/medicoes'
 import PesquisaDireito from '@/components/PesquisaDireito'
 import CiberQuantica from '@/components/CiberQuantica'
 import { gerarPdfTexto, quebrar } from '@/lib/pdfSimples'
+import { ehSede, perfilAtual } from '@/lib/equipe'
 
 type Aba = 'inovacao' | 'jurimetria' | 'esg' | 'case' | 'pesquisa' | 'tecnologia'
 const ABAS: { valor: Aba; rotulo: string; Icone: typeof FlaskConical }[] = [
@@ -229,6 +230,36 @@ function CaseStudy() {
   )
 }
 
+// Área de administração do Instituto: só aparece para a administração da sede. Quem não é admin não vê nem os links.
+// A proteção de verdade está no banco (as funções de consumo e funil só respondem à sede e ao admin).
+function AdministracaoInstituto() {
+  const [pode, setPode] = useState(false)
+  useEffect(() => {
+    Promise.all([ehSede(), perfilAtual()]).then(([sede, perfil]) => setPode(sede && perfil === 'admin')).catch(() => setPode(false))
+  }, [])
+  if (!pode) return null
+  const atalhos = [
+    { to: '/consumo', titulo: 'Custo de API por usuário', texto: 'Quanto cada pessoa gastou com a inteligência artificial no mês, em dólar e em reais.' },
+    { to: '/funil', titulo: 'Funil de vendas do Instituto', texto: 'Os contatos e propostas da sede. Não se misturam com os dos escritórios parceiros.' },
+    { to: '/equipe', titulo: 'Pessoas com acesso', texto: 'Quem entra na área do Instituto e qual é o papel de cada um.' },
+    { to: '/equipe#parceiros', titulo: 'Escritórios parceiros', texto: 'Os escritórios que usam a plataforma, com a cobrança de cada um.' },
+  ]
+  return (
+    <section className="bg-navy text-white p-6 shadow-sm" aria-labelledby="adm-instituto" data-testid="administracao-instituto">
+      <h2 id="adm-instituto" className="text-xl">Administração do Instituto</h2>
+      <p className="text-sm text-white/80 mt-1">Esta área é só para a administração. Escolha o que quer ver:</p>
+      <div className="grid gap-3 mt-4 sm:grid-cols-2">
+        {atalhos.map(a => (
+          <Link key={a.to} to={a.to} className="block bg-white/10 hover:bg-white/20 p-4 min-h-[44px]">
+            <span className="block font-medium">{a.titulo}</span>
+            <span className="block text-sm text-white/80 mt-1">{a.texto}</span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 export default function InstitutoPage() {
   const [aba, setAba] = useState<Aba>(() => { try { return (localStorage.getItem('lsm-instituto-aba') as Aba | null) ?? 'inovacao' } catch { return 'inovacao' } }) // Passo 189
   useEffect(() => { try { localStorage.setItem('lsm-instituto-aba', aba) } catch { /* sem memória local */ } }, [aba])
@@ -242,6 +273,7 @@ export default function InstitutoPage() {
         <header>
           <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">THEYE Institute</p>
           <h2 className="text-3xl text-navy">Ferramentas do Instituto</h2>
+          <AdministracaoInstituto />
           <p className="text-sm text-grafite-claro mt-1">Inovação regulatória, jurimetria, ESG e pesquisa jurídica (Brasil e mundo) para o desenvolvimento do direito brasileiro.</p>
           <p className="text-sm mt-3 p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="estado-medicao">
             Última medição: <strong>M{ult.n}</strong>, nota <strong>{ult.nota.toFixed(2).replace('.', ',')}</strong>, em {new Date(ult.data + 'T12:00:00').toLocaleDateString('pt-BR')}{ult.ots ? ', selada em blockchain (OpenTimestamps)' : ''}.{' '}
