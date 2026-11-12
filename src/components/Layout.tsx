@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import GuiaDaTela from './GuiaDaTela'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { sairDemo } from '@/lib/authDemo'
@@ -501,7 +502,7 @@ export default function Layout({ children, title }: LayoutProps) {
         </header>
 
         <FaixaConexao />
-        <main className="flex-1 overflow-auto p-4 md:p-8"><AceiteTermos /><AceiteContratoSaas admin={admin} sede={sede} /><ExigirDoisFatores admin={admin} /><ErroTela chave={pathname}>{children}</ErroTela></main>
+        <main className="flex-1 overflow-auto p-4 md:p-8"><AceiteTermos /><AceiteContratoSaas admin={admin} sede={sede} /><ExigirDoisFatores admin={admin} /><GuiaDaTela caminho={pathname} /><ErroTela chave={pathname}>{children}</ErroTela></main>
         <Atalhos />
       </div>
       <Busca aberta={buscaAberta} fechar={() => setBuscaAberta(false)} />
