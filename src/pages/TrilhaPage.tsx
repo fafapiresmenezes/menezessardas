@@ -140,6 +140,16 @@ export default function TrilhaPage() {
   return (
     <Layout title="Trilha de auditoria">
       <div className="max-w-4xl mx-auto space-y-6">
+        <section className="bg-white shadow-sm border-l-4 border-dourado p-5" data-testid="explicacao-simples" aria-labelledby="t-simples">
+          <h2 id="t-simples" className="text-lg">Para que serve esta tela, em português simples</h2>
+          <p className="text-sm mt-2">É o <strong>livro de ocorrências do escritório</strong>. Tudo o que alguém faz aqui (enviar uma peça, mudar um prazo, apagar um documento) fica anotado, com dia e hora. Ninguém consegue apagar nem mudar uma anotação antiga sem que o sistema perceba.</p>
+          <ol className="list-decimal pl-5 text-sm mt-2 space-y-1">
+            <li><strong>Anotar.</strong> Cada ação vira uma linha no livro, ligada à anterior (como páginas numeradas e rubricadas).</li>
+            <li><strong>Carimbar.</strong> Uma vez por dia, a plataforma tira uma &quot;impressão digital&quot; do livro inteiro e a registra de forma pública no Bitcoin. É como reconhecer firma em cartório, só que na internet e de graça.</li>
+            <li><strong>Provar.</strong> Se alguém disser que um documento foi mudado depois, você mostra o carimbo: ele prova que o texto já existia naquele dia e que não mudou.</li>
+          </ol>
+          <p className="text-xs text-grafite-claro mt-2">Você não precisa entender de computação. O uso normal é nenhum: o carimbo é feito sozinho todo dia. Só abra esta tela se precisar provar algo a um juiz, a um cliente ou a um auditor.</p>
+        </section>
         <p className="text-sm text-grafite-claro">
           Cada ação na plataforma vira um registro imutável, encadeado por hash ao registro anterior.
           Qualquer alteração ou remoção de um registro antigo quebra a cadeia e é apontada abaixo.
