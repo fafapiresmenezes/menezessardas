@@ -7,6 +7,7 @@ import { formatarData, hojeLocal } from '@/lib/datas'
 import { tabelaAusente } from '@/lib/escritorio/tabelaAusente'
 import { CATEGORIAS_DESPESA, CATEGORIAS_RECEITA, fluxoMensal, recebiveis, aging, contasAPagar, previsao90, resultadoPorArea, despesasPorCategoria, pontoEquilibrio, reembolsosPendentes, repetirMensal, mesesAte, somarMeses, type Lancamento, type PagamentoHonorario, type ParcelaHonorario, type CasoFin } from '@/lib/escritorio/financeiro'
 import { Wallet, Plus, Download, Check } from 'lucide-react'
+import { meuAlcance, rotuloCargo } from '@/lib/hierarquia'
 
 // Financeiro do escritório: honorários recebidos e a receber (já existentes) somados às outras receitas e às despesas,
 // com fluxo de caixa, contas a receber por atraso, contas a pagar, previsão de 90 dias e resultado por área.
@@ -17,10 +18,11 @@ const hojeIso = () => hojeLocal()
 const VAZIO = { tipo: 'despesa' as 'receita' | 'despesa', categoria: CATEGORIAS_DESPESA[0], descricao: '', valor: '', vencimento: hojeIso(), pago: false, caso_id: '', cliente: '', reembolsavel: false, repetir: '1' }
 
 export default function FinanceiroPage() {
-  const [lanc, setLanc] = useState<Lancamento[]>([])
-  const [pg, setPg] = useState<PagamentoHonorario[]>([])
-  const [parcelas, setParcelas] = useState<ParcelaHonorario[]>([])
-  const [casos, setCasos] = useState<CasoFin[]>([])
+  const [lancTudo, setLanc] = useState<Lancamento[]>([])
+  const [pgTudo, setPg] = useState<PagamentoHonorario[]>([])
+  const [parcelasTudo, setParcelas] = useState<ParcelaHonorario[]>([])
+  const [casosTudo, setCasos] = useState<(CasoFin & { responsavel_id?: string | null })[]>([])
+  const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
   const [ausente, setAusente] = useState(false)
   const [novo, setNovo] = useState(VAZIO)
   const [erro, setErro] = useState('')
@@ -32,12 +34,19 @@ export default function FinanceiroPage() {
       supabase.from('lancamentos_financeiros').select('id,tipo,categoria,descricao,valor,vencimento,pago_em,caso_id,cliente,reembolsavel').order('vencimento'),
       supabase.from('pagamentos_honorarios').select('id,caso_id,data,valor'),
       supabase.from('parcelas_honorarios').select('id,caso_id,numero,vencimento,valor,pago_em'),
-      supabase.from('tarefas').select('id,titulo,cliente,area,honorario_previsto,honorario_recebido,vencimento_honorario').eq('nivel', 'projeto'),
+      supabase.from('tarefas').select('id,titulo,cliente,area,honorario_previsto,honorario_recebido,vencimento_honorario,responsavel_id').eq('nivel', 'projeto'),
     ])
     if (tabelaAusente(l.error)) setAusente(true); else if (l.error) setErro(mensagemAmigavel(l.error))
-    setLanc((l.data ?? []) as Lancamento[]); setPg((p.data ?? []) as PagamentoHonorario[]); setParcelas((pc.data ?? []) as ParcelaHonorario[]); setCasos((c.data ?? []) as CasoFin[])
+    setLanc((l.data ?? []) as Lancamento[]); setPg((p.data ?? []) as PagamentoHonorario[]); setParcelas((pc.data ?? []) as ParcelaHonorario[]); setCasos((c.data ?? []) as (CasoFin & { responsavel_id?: string | null })[])
   }
-  useEffect(() => { carregar() }, [])
+  useEffect(() => { carregar(); meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true })) }, [])
+  // Hierarquia: pleno e júnior veem só os números dos próprios casos; despesas gerais do escritório ficam com sócios e gestor.
+  const restrito = !!alcance && !alcance.veTudo
+  const casos = useMemo(() => (restrito ? casosTudo.filter(c => !c.responsavel_id || c.responsavel_id === alcance!.id) : casosTudo), [casosTudo, restrito, alcance])
+  const idsMeus = useMemo(() => new Set(casos.map(c => c.id)), [casos])
+  const lanc = useMemo(() => (restrito ? lancTudo.filter(l => l.caso_id && idsMeus.has(l.caso_id)) : lancTudo), [lancTudo, restrito, idsMeus])
+  const pg = useMemo(() => (restrito ? pgTudo.filter(x => idsMeus.has(x.caso_id)) : pgTudo), [pgTudo, restrito, idsMeus])
+  const parcelas = useMemo(() => (restrito ? parcelasTudo.filter(x => idsMeus.has(x.caso_id)) : parcelasTudo), [parcelasTudo, restrito, idsMeus])
 
   const hoje = hojeIso()
   const meses = useMemo(() => mesesAte(somarMeses(hoje, -5), 9), [hoje])
@@ -88,6 +97,11 @@ export default function FinanceiroPage() {
   return (
     <Layout title="Financeiro">
       <div className="space-y-5">
+        {restrito && alcance && (
+          <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="financeiro-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+            Você está vendo <strong>os números dos seus casos</strong> ({rotuloCargo[alcance.cargo ?? 'nenhum']}). O financeiro completo do escritório fica com sócios, gestor e administração.
+          </p>
+        )}
         {ausente && <p role="status" className="bg-white shadow-sm border-l-4 border-dourado p-4 text-sm" data-testid="financeiro-ausente">Os honorários e parcelas já aparecem aqui. Para lançar despesas e outras receitas, um administrador aplica a atualização <code>108_funil_financeiro.sql</code> no banco.</p>}
         <div className="grid gap-3 grid-cols-2 md:grid-cols-6" data-testid="financeiro-resumo">
           {cartoes.map(([r, v, alerta]) => <div key={r} className={`bg-white shadow-sm p-4 border-t-2 ${alerta ? 'border-critico' : 'border-dourado'}`}><span className="block text-xs uppercase tracking-wider text-grafite-claro">{r}</span><span className={`block text-lg font-serif ${alerta ? 'text-critico' : 'text-navy'}`}>{v}</span></div>)}

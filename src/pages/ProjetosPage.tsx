@@ -12,6 +12,7 @@ import AssinaturasCaso from '@/components/AssinaturasCaso'
 import PortalCasoEscritorio from '@/components/PortalCasoEscritorio'
 import { caminhoCritico } from '@/lib/caminhoCritico'
 import { lerHoras } from '@/lib/numero'
+import { meuAlcance, rotuloCargo } from '@/lib/hierarquia'
 
 // Gestão de projetos do escritório em hierarquia (Projeto → Tarefa → Subtarefa), no estilo Monday:
 // vale para qualquer caso (processo, contrato, consultoria, cliente externo ou projeto interno), com
@@ -57,6 +58,8 @@ export default function ProjetosPage() {
   const [listaCopiada, setListaCopiada] = useState(false) // Passo 212
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 280
   const [baixado, marcarBaixado] = useBaixado() // Passo 404
+  const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
+  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true })) }, [])
 
   const carregar = async () => {
     const { data, error } = await supabase.from('tarefas').select('id,pai_id,nivel,titulo,situacao,prioridade,responsavel_id,imovel_id,prazo,horas,cliente,area,numero_processo,tipo,portal_token,portal_expira_em,depende_de,criado_em').order('criado_em')
@@ -69,15 +72,27 @@ export default function ProjetosPage() {
     repositorio.listarImoveis().then(setImoveis).catch(() => {})
   }, [])
 
-  const projetos = tarefas.filter(t => t.nivel === 'projeto' && (!filtroArea || t.area === filtroArea))
+  // Hierarquia: pleno e júnior veem só os projetos (e tarefas) cujo dono são eles; item sem dono aparece para todos.
+  const minhas = useMemo(() => {
+    if (!alcance || alcance.veTudo) return tarefas
+    const pai = new Map(tarefas.map(t => [t.id, t.pai_id]))
+    const resp = new Map(tarefas.map(t => [t.id, t.responsavel_id]))
+    const donoDaRaiz = (id: string): string | null => {
+      let atual = id
+      for (let i = 0; i < 20; i++) { const p = pai.get(atual); if (!p) break; atual = p }
+      return resp.get(atual) ?? null
+    }
+    return tarefas.filter(t => { const dono = donoDaRaiz(t.id); return !dono || dono === alcance.id })
+  }, [tarefas, alcance])
+  const projetos = minhas.filter(t => t.nivel === 'projeto' && (!filtroArea || t.area === filtroArea))
   // Tarefas do projeto escolhido, incluindo subtarefas (descendentes em qualquer nível).
   const visiveis = useMemo(() => {
-    if (!projeto) return tarefas.filter(t => t.nivel !== 'projeto')
+    if (!projeto) return minhas.filter(t => t.nivel !== 'projeto')
     const ids = new Set([projeto])
     let mudou = true
-    while (mudou) { mudou = false; for (const t of tarefas) if (t.pai_id && ids.has(t.pai_id) && !ids.has(t.id)) { ids.add(t.id); mudou = true } }
-    return tarefas.filter(t => t.id !== projeto && ids.has(t.id))
-  }, [tarefas, projeto])
+    while (mudou) { mudou = false; for (const t of minhas) if (t.pai_id && ids.has(t.pai_id) && !ids.has(t.id)) { ids.add(t.id); mudou = true } }
+    return minhas.filter(t => t.id !== projeto && ids.has(t.id))
+  }, [minhas, projeto])
   const nome = (id: string | null) => pessoas.find(p => p.id === id)?.nome ?? '—'
   const titulo = (id: string | null) => tarefas.find(t => t.id === id)?.titulo
 
@@ -188,6 +203,11 @@ export default function ProjetosPage() {
   return (
     <Layout title="Projetos">
       <div className="space-y-6">
+        {alcance && !alcance.veTudo && (
+          <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="projetos-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+            Você está vendo <strong>os seus projetos</strong> ({rotuloCargo[alcance.cargo ?? 'nenhum']}). Sócios, gestor e administração veem o escritório inteiro.
+          </p>
+        )}
         <section className="bg-white shadow-sm border-t-2 border-dourado p-5">
           <div className="flex flex-wrap items-end gap-4">
             <div>

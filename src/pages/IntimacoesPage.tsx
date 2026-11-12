@@ -10,6 +10,7 @@ import { formatarData, diasAte } from '@/lib/datas'
 import SeloSituacao from '@/components/SeloSituacao'
 import { RefreshCw, ExternalLink } from 'lucide-react'
 import { mensagemAmigavel } from '@/lib/erros'
+import { meuAlcance, rotuloCargo } from '@/lib/hierarquia'
 
 // Caixa de intimações: publicações do Diário de Justiça Eletrônico Nacional (Comunica PJe, CNJ)
 // para as OABs do escritório. Busca diária automática e botão "Buscar agora". Gratuito.
@@ -39,11 +40,31 @@ export default function IntimacoesPage() {
   const [mostrar, setMostrar] = useState(TAMANHO_PAGINA)
   useEffect(() => { setMostrar(TAMANHO_PAGINA) }, [filtro, busca])
 
+  const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
+  const [donoPorProcesso, setDonoPorProcesso] = useState<Map<string, string>>(new Map())
   const carregar = async () => {
     const { data } = await supabase.from('intimacoes').select('id,oab,data_disponibilizacao,tribunal,orgao,tipo,classe,numero_processo,texto,link,lida,prazo_dias,prazo_final,tarefa_id').order('data_disponibilizacao', { ascending: false }).limit(300)
     setLista((data ?? []) as Intimacao[])
   }
-  useEffect(() => { carregar(); perfilAtual().then(f => setAdmin(f === 'admin')) }, [])
+  useEffect(() => {
+    carregar(); perfilAtual().then(f => setAdmin(f === 'admin'))
+    meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true }))
+    // Hierarquia: liga cada intimação ao dono do caso pelo número do processo.
+    try {
+      Promise.resolve(supabase.from('tarefas').select('numero_processo,responsavel_id').eq('nivel', 'projeto').not('numero_processo', 'is', null)).then(r => {
+        const m = new Map<string, string>()
+        for (const t of ((r as { data?: unknown[] })?.data ?? []) as { numero_processo: string; responsavel_id: string | null }[]) {
+          const d = String(t.numero_processo).replace(/\D/g, '')
+          if (d && t.responsavel_id) m.set(d, t.responsavel_id)
+        }
+        setDonoPorProcesso(m)
+      }, () => {})
+    } catch { /* ambiente de teste sem esta consulta */ }
+  }, [])
+  // Pleno e júnior veem só as intimações dos próprios casos (ou sem caso identificado, para ninguém perder prazo).
+  const minhas = alcance && !alcance.veTudo
+    ? lista.filter(i => { const dono = donoPorProcesso.get(String(i.numero_processo ?? '').replace(/\D/g, '')); return !dono || dono === alcance.id })
+    : lista
 
   const buscar = async () => {
     setOcupado(true); setMsg(null)
@@ -78,18 +99,23 @@ export default function IntimacoesPage() {
     else { setMsg({ ok: true, texto: 'Tarefa criada em Casos e projetos com o prazo estimado.' }); setLista(l => l.map(x => (x.id === i.id ? { ...x, tarefa_id: String(data) } : x))) }
   }
   const ordem = { vencido: 0, critico: 1, atencao: 2, regular: 3 } as const
-  const visiveis = (filtro === 'novas' ? lista.filter(i => !i.lida) : filtro === 'urgentes' ? lista.filter(i => { const s = urgencia(i)?.situacao; return s === 'vencido' || s === 'critico' }) : lista).filter(i => !busca.trim() || [i.numero_processo, i.tribunal, i.classe, i.orgao, i.texto, i.tipo].join(' ').toLowerCase().includes(busca.trim().toLowerCase())).sort((a, b) => (ordem[urgencia(a)?.situacao ?? 'regular'] - ordem[urgencia(b)?.situacao ?? 'regular']) || b.data_disponibilizacao.localeCompare(a.data_disponibilizacao))
+  const visiveis = (filtro === 'novas' ? minhas.filter(i => !i.lida) : filtro === 'urgentes' ? minhas.filter(i => { const s = urgencia(i)?.situacao; return s === 'vencido' || s === 'critico' }) : minhas).filter(i => !busca.trim() || [i.numero_processo, i.tribunal, i.classe, i.orgao, i.texto, i.tipo].join(' ').toLowerCase().includes(busca.trim().toLowerCase())).sort((a, b) => (ordem[urgencia(a)?.situacao ?? 'regular'] - ordem[urgencia(b)?.situacao ?? 'regular']) || b.data_disponibilizacao.localeCompare(a.data_disponibilizacao))
 
   const copiarResumo = () => {
     const linhas = visiveis.map(i => { const u = urgencia(i); return `${u?.situacao === 'vencido' ? 'VENCIDA' : u?.situacao === 'critico' ? 'CRÍTICA' : u?.situacao === 'atencao' ? 'ATENÇÃO' : 'no prazo'} · ${i.numero_processo} · ${i.tribunal ?? ''} · publicada ${formatarData(i.data_disponibilizacao)}${i.lida ? '' : ' · não lida'}` })
     navigator.clipboard?.writeText(`Intimações (${visiveis.length}) · ${new Date().toLocaleDateString('pt-BR')}\n${linhas.join('\n')}`).catch(() => undefined)
   }
   // Resumo por urgência das não lidas: o advogado vê de cara quantas vencem primeiro.
-  const resumo = lista.filter(i => !i.lida).reduce((r, i) => { const s = urgencia(i)?.situacao; if (s) r[s]++; return r }, { vencido: 0, critico: 0, atencao: 0, regular: 0 })
+  const resumo = minhas.filter(i => !i.lida).reduce((r, i) => { const s = urgencia(i)?.situacao; if (s) r[s]++; return r }, { vencido: 0, critico: 0, atencao: 0, regular: 0 })
 
   return (
     <Layout title="Intimações">
       <div className="space-y-6">
+        {alcance && !alcance.veTudo && (
+          <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="intimacoes-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+            Você está vendo <strong>as intimações dos seus casos</strong> ({rotuloCargo[alcance.cargo ?? 'nenhum']}). Intimações sem caso identificado aparecem para todos, para ninguém perder prazo.
+          </p>
+        )}
         <section className="bg-white shadow-sm border-t-2 border-dourado p-5 space-y-3">
           {admin && <ConexaoCnj />}
           <p className="text-sm">Publicações do <strong>Diário de Justiça Eletrônico Nacional</strong> (CNJ) para as OABs do escritório. A busca roda sozinha várias vezes ao dia; o botão busca na hora.</p>
@@ -99,9 +125,9 @@ export default function IntimacoesPage() {
             </button>
             <label className="text-sm flex items-center gap-2">
               <select aria-label="Quais intimações mostrar" value={filtro} onChange={e => setFiltro(e.target.value as 'novas' | 'todas' | 'urgentes')} className="border px-2 py-2 min-h-[44px]" title="Escolhe quais intimações aparecem na lista: só urgentes, só as não lidas ou todas" data-testid="filtro-intimacoes">
-                <option value="urgentes">Só urgentes ({lista.filter(i => { const s = urgencia(i)?.situacao; return s === 'vencido' || s === 'critico' }).length})</option>
-                <option value="novas">Só as não lidas ({lista.filter(i => !i.lida).length})</option>
-                <option value="todas">Todas ({lista.length})</option>
+                <option value="urgentes">Só urgentes ({minhas.filter(i => { const s = urgencia(i)?.situacao; return s === 'vencido' || s === 'critico' }).length})</option>
+                <option value="novas">Só as não lidas ({minhas.filter(i => !i.lida).length})</option>
+                <option value="todas">Todas ({minhas.length})</option>
               </select>
             </label>
             <input type="search" value={busca} onChange={e => setBusca(e.target.value)} placeholder="Buscar processo, tribunal ou texto" aria-label="Buscar nas intimações" className="border px-3 py-2 min-h-[44px] text-sm w-64" data-testid="busca-intimacoes" />

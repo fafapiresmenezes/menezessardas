@@ -104,6 +104,9 @@ export default function HorasPage() {
   return (
     <Layout title="Horas e honorários">
       <div className="space-y-5">
+        <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="horas-aviso" title="As metas por função são definidas pela administração.">
+          Os lançamentos de horas desta tela são do escritório. Lance as suas horas aqui; o relatório por cliente usa tudo o que foi lançado.
+        </p>
         <section className="bg-white shadow-sm p-5 print:hidden" data-testid="meta-horas">
           <h2 className="font-serif text-lg flex items-center gap-2"><Target className="w-5 h-5" aria-hidden />Meta mensal de horas por função</h2>
           <div className="flex flex-wrap items-center gap-3 mt-2 text-sm">
