@@ -145,7 +145,7 @@ Deno.serve(async (req: Request) => {
 
       const notif: Notificacao = {
         contrato_id: c.id,
-        email_destinatario: 'contato@menezes-sardas.com.br', // Placeholder — usar email real depois
+        email_destinatario: 'fatima@gmenezes.com.br',
         nome_destinatario: emailDestinatario,
         imovel_endereco: c.imoveis?.endereco || 'Imóvel desconhecido',
         locatario: c.locatario_fornecedor || 'Sem nome',
