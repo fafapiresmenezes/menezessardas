@@ -1,4 +1,4 @@
-# Theye.club (G. Menezes Advogados)
+# Theye.club — Soluções jurídicas do Instituto THEYE
 Repositório do escitório
 
 ## Publicação

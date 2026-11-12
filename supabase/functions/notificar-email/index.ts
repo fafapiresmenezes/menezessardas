@@ -71,7 +71,7 @@ async function enviarEmailResend(notif: Notificacao): Promise<boolean> {
       <p><em>Esta é uma notificação automática. Não responda a este email.</em></p>
     </div>
     <div class="footer">
-      <p>Plataforma de Gestão de Contratos Imobiliários | GMenezes Advogados Associados</p>
+      <p>Plataforma de Gestão de Contratos Imobiliários | Instituto THEYE</p>
     </div>
   </div>
 </body>

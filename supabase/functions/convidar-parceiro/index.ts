@@ -37,13 +37,13 @@ Deno.serve(async (req) => {
       let enviado = false, detalhe: string | undefined
       if (conf.brevo_api_key && conf.email_remetente) {
         const html = `<div style="font-family:Georgia,serif;max-width:620px;margin:auto"><div style="background:#14213d;color:#fff;padding:18px"><h2 style="margin:0">Convite: ${esc(nome_escritorio)}</h2></div>
-<div style="padding:16px;line-height:1.5"><p>O escritório GMenezes Advogados Associados convidou <b>${esc(nome_escritorio)}</b> para gerir os próprios casos, prazos, honorários e portal do cliente na plataforma, em área separada e com acesso só às suas informações.</p>
+<div style="padding:16px;line-height:1.5"><p>O escritório Instituto THEYE convidou <b>${esc(nome_escritorio)}</b> para gerir os próprios casos, prazos, honorários e portal do cliente na plataforma, em área separada e com acesso só às suas informações.</p>
 <p>Seu acesso será de <b>${funcao === 'leitor' ? 'leitor' : 'operador'}</b>. Para aceitar, escolha seu nome e uma senha pelo link abaixo (vale 14 dias):</p>
 <p><a href="${link}" style="background:#14213d;color:#fff;padding:10px 16px;text-decoration:none">Aceitar o convite</a></p><p style="font-size:12px;color:#555">Ou copie: ${link}</p>
 <p style="font-size:12px;color:#555">Preço de referência (Value Pas): R$ 390 por operador e R$ 120 por leitor ao mês, 30% de desconto no primeiro ano.</p></div>
-<p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · plataforma desenvolvida pelo THEYE Institute</p></div>`
+<p style="font-size:11px;color:#888;padding:10px">Instituto THEYE · plataforma desenvolvida pelo THEYE Institute</p></div>`
         const resp = await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
-          body: JSON.stringify({ sender: { name: 'Avisos GMenezes', email: conf.email_remetente }, to: [{ email: email.trim() }], subject: `Convite para ${nome_escritorio} na plataforma GMenezes`, htmlContent: html }) })
+          body: JSON.stringify({ sender: { name: 'Avisos THEYE', email: conf.email_remetente }, to: [{ email: email.trim() }], subject: `Convite para ${nome_escritorio} na plataforma THEYE`, htmlContent: html }) })
         enviado = resp.ok; if (!resp.ok) detalhe = `${resp.status} ${await resp.text()}`
         if (enviado) await db.from('consumo_api').insert({ funcao: 'convite de escritório parceiro', modelo: 'brevo-email', quantidade: 1 })
       } else detalhe = 'provedor de e-mail não configurado'

@@ -341,7 +341,7 @@ Deno.serve(async (req) => {
     // 3) Resposta por modo: responder (parecer curto), redigir (peça/contrato), caminhos (matriz de opções).
     const trechos = `TRECHOS DA LEGISLAÇÃO (texto compilado oficial do Planalto, consultado agora):\n\n${contexto}\n\n---\n${contextoCaso ? `CONTEXTO DO CASO: ${contextoCaso}\n` : ''}PEDIDO: ${pergunta}`
     const regrasComuns = `${papel}
-Escreva em português do Brasil, para advogados do escritório GMenezes Advogados Associados (Rio de Janeiro), em nível de pós-graduação: preciso, fundamentado e prático.
+Escreva em português do Brasil, para advogados do escritório Instituto THEYE (Rio de Janeiro), em nível de pós-graduação: preciso, fundamentado e prático.
 Fundamente cada afirmação citando artigo e lei (ex.: "art. 51 da Lei 8.245/91"), usando os trechos fornecidos; o que não estiver nos trechos deve vir marcado como "a conferir". Não invente artigos, prazos nem jurisprudência; se citar jurisprudência, diga que precisa ser verificada no tribunal.`
     const mensagens = [
       ...historico.slice(-6).map((h: { papel: string; texto: string }) => ({ role: h.papel === 'assistente' ? 'assistant' : 'user', content: h.texto })),
