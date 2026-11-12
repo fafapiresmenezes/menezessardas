@@ -1,7 +1,7 @@
 {
- "total": 357,
+ "total": 373,
  "meta": 500,
- "faltam": 143,
+ "faltam": 127,
  "agentes": [
   {
    "id": "agente-001",
@@ -3595,6 +3595,166 @@
    "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
    "status": "catalogado; ementa completa ainda não importada",
    "id": "agente-357"
+  },
+  {
+   "nome": "Consultor de Direito e Desenvolvimento",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito e Desenvolvimento",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "FGV Direito SP, mestrado e doutorado acadêmico (https://direitosp.fgv.br/mestrado-doutorado-academico)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-358"
+  },
+  {
+   "nome": "Consultor de Direito dos Negócios e Desenvolvimento Econômico e Social (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito dos Negócios e Desenvolvimento Econômico e Social (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "FGV Direito SP, mestrado e doutorado acadêmico (https://direitosp.fgv.br/mestrado-doutorado-academico)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-359"
+  },
+  {
+   "nome": "Consultor de Instituições do Estado Democrático de Direito e Desenvolvimento (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Instituições do Estado Democrático de Direito e Desenvolvimento (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "FGV Direito SP, mestrado e doutorado acadêmico (https://direitosp.fgv.br/mestrado-doutorado-academico)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-360"
+  },
+  {
+   "nome": "Consultor de Direito, Economia e Sociedade",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito, Economia e Sociedade",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "FGV Direito SP, mestrado e doutorado acadêmico (https://direitosp.fgv.br/mestrado-doutorado-academico)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-361"
+  },
+  {
+   "nome": "Consultor de Direito Administrativo e Desenvolvimento",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Administrativo e Desenvolvimento",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "FGV Direito SP, mestrado e doutorado acadêmico (https://direitosp.fgv.br/mestrado-doutorado-academico)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-362"
+  },
+  {
+   "nome": "Consultor de Efetividade do Direito",
+   "area": "Pós-graduação em direito",
+   "nicho": "Efetividade do Direito",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "PUC-SP, PPG em Direito (https://www.pucsp.br/pos-graduacao/mestrado-e-doutorado/direito)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-363"
+  },
+  {
+   "nome": "Consultor de Efetividade do Direito Público e Limitações da Intervenção Estatal (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Efetividade do Direito Público e Limitações da Intervenção Estatal (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "PUC-SP, PPG em Direito (https://www.pucsp.br/pos-graduacao/mestrado-e-doutorado/direito)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-364"
+  },
+  {
+   "nome": "Consultor de Ética, Linguagem e Justiça (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Ética, Linguagem e Justiça (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "PUC-SP, PPG em Direito (https://www.pucsp.br/pos-graduacao/mestrado-e-doutorado/direito)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-365"
+  },
+  {
+   "nome": "Consultor de Efetividade do Direito Privado e Liberdades Civis (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Efetividade do Direito Privado e Liberdades Civis (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "PUC-SP, PPG em Direito (https://www.pucsp.br/pos-graduacao/mestrado-e-doutorado/direito)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-366"
+  },
+  {
+   "nome": "Consultor de Direitos de Terceira Dimensão e Tutela da Coletividade (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direitos de Terceira Dimensão e Tutela da Coletividade (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "PUC-SP, PPG em Direito (https://www.pucsp.br/pos-graduacao/mestrado-e-doutorado/direito)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-367"
+  },
+  {
+   "nome": "Consultor de Tutela Penal e Efetividade Processual das Liberdades (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Tutela Penal e Efetividade Processual das Liberdades (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "PUC-SP, PPG em Direito (https://www.pucsp.br/pos-graduacao/mestrado-e-doutorado/direito)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-368"
+  },
+  {
+   "nome": "Consultor de Direito, Política e Sociedade",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito, Política e Sociedade",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFSC, PPGD, áreas e linhas 2025 (https://ppgd.ufsc.br/areas-de-concentracao-e-linhas-de-pesquisa/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-369"
+  },
+  {
+   "nome": "Consultor de Historicismo, Conhecimento Crítico e Controle Social (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Historicismo, Conhecimento Crítico e Controle Social (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFSC, PPGD, áreas e linhas 2025 (https://ppgd.ufsc.br/areas-de-concentracao-e-linhas-de-pesquisa/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-370"
+  },
+  {
+   "nome": "Consultor de Ordem Internacional, Justiça e Sustentabilidade (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Ordem Internacional, Justiça e Sustentabilidade (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFSC, PPGD, áreas e linhas 2025 (https://ppgd.ufsc.br/areas-de-concentracao-e-linhas-de-pesquisa/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-371"
+  },
+  {
+   "nome": "Consultor de Constitucionalismo, Democracia e Organização do Estado (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Constitucionalismo, Democracia e Organização do Estado (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFSC, PPGD, áreas e linhas 2025 (https://ppgd.ufsc.br/areas-de-concentracao-e-linhas-de-pesquisa/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-372"
+  },
+  {
+   "nome": "Consultor de Sistemas de Garantia, Relações Jurídicas Privadas e Processualidades (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Sistemas de Garantia, Relações Jurídicas Privadas e Processualidades (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFSC, PPGD, áreas e linhas 2025 (https://ppgd.ufsc.br/areas-de-concentracao-e-linhas-de-pesquisa/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-373"
   }
  ]
 }
