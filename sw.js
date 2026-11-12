@@ -1,7 +1,7 @@
 // Passo D19 (Diamante): service worker do app instalável.
 // Guarda a casca do app e os arquivos estáticos para abrir mais rápido e funcionar sem rede na tela já vista;
 // nunca guarda dados do banco (Supabase) nem funções de servidor. Mostra avisos no celular quando a página pede.
-const VERSAO = 'gmenezes-v1'
+const VERSAO = 'theye-v1'
 const NUNCA_GUARDAR = ['supabase.co', '/functions/', 'brevo', 'api.']
 
 self.addEventListener('install', () => { self.skipWaiting() })

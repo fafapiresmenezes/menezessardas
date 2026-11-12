@@ -1,0 +1,2 @@
+import{a as c,b as p,c as _}from"./pdfjs-BzYGYLtw.js";_.workerSrc=`https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${p}/pdf.worker.min.mjs`;const n=4e4;async function d(r){const s=await r.arrayBuffer(),e=await c({data:s}).promise,a=[];for(let t=1;t<=e.numPages;t++){const i=(await(await e.getPage(t)).getTextContent()).items.map(o=>"str"in o?o.str:"").join(" ");if(a.push(`[Página ${t}] ${i}`),a.join(" ").length>n)break}return a.join(`
+`).slice(0,n).trim()}export{d as extrairTextoPdf};
