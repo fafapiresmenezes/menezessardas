@@ -34,6 +34,7 @@ const PesquisaDiligenciaPage = lazy(() => import('@/pages/PesquisaDiligenciaPage
 const LeituraCasoPage = lazy(() => import('@/pages/LeituraCasoPage'))
 const PrazosPorCodigoPage = lazy(() => import('@/pages/PrazosPorCodigoPage'))
 const AssumirProcessosPage = lazy(() => import('@/pages/AssumirProcessosPage'))
+const MigracaoPage = lazy(() => import('@/pages/MigracaoPage'))
 const PerfilClientePage = lazy(() => import('@/pages/PerfilClientePage'))
 const ParteAdversaPage = lazy(() => import('@/pages/ParteAdversaPage'))
 const BibliotecaPage = lazy(() => import('@/pages/BibliotecaPage'))
@@ -333,6 +334,10 @@ function App() {
         <Route
           path="/processos-antigos"
           element={isAuthenticated ? <AssumirProcessosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/migracao"
+          element={isAuthenticated ? <MigracaoPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/consumo"

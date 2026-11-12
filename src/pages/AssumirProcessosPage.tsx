@@ -210,6 +210,7 @@ export default function AssumirProcessosPage() {
     <Layout title="Inserir processos antigos">
       <div className="space-y-5 max-w-4xl">
         <p className="text-base">Coloque aqui os processos que o escritório já tem (inclusive os de quem saiu). Em 3 passos a plataforma cadastra, procura no CNJ tudo o que saiu para eles e mostra <strong>o que fazer e até quando</strong>, do mais urgente para o menos urgente.</p>
+        <p className="text-sm">Vai trazer <strong>tudo</strong> do sistema antigo (clientes, prazos e financeiro também, em vários arquivos)? Use <Link to="/migracao" className="underline text-navy">Trazer do sistema antigo</Link>.</p>
 
         <Passo n={1} titulo="Quais processos?" feito={numeros.length > 0}>
           <label className="min-h-[52px] px-5 mb-3 bg-navy text-white text-base inline-flex items-center gap-2 cursor-pointer">
