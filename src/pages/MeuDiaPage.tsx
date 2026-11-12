@@ -180,7 +180,7 @@ export default function MeuDiaPage() {
           <section className={cartao} data-testid="movimentacoes">
             <h2 className="font-serif text-lg flex items-center gap-2"><Inbox className="w-5 h-5" aria-hidden />Movimentações nos processos (7 dias)</h2>
             {movimentacoes.length ? <ul className="text-sm mt-2 space-y-1">{movimentacoes.map(m => <li key={m.id} data-testid="movimentacao"><Link to="/monitoramento" className="underline">{m.rotulo || m.valor}</Link>: {m.novidades[0].texto}{m.novidades.length > 1 && ` (+${m.novidades.length - 1})`}</li>)}</ul>
-              : <p className="text-sm text-grafite-claro mt-2">Nenhuma novidade. Casos com número CNJ são verificados todo dia no DataJud.</p>}
+              : <p className="text-sm text-grafite-claro mt-2">Nenhuma novidade. Casos com número CNJ são verificados no CNJ a cada 4 horas.</p>}
           </section>
           <section className={cartao}>
             <h2 className="font-serif text-lg flex items-center gap-2"><FileWarning className="w-5 h-5" aria-hidden />Contratos vencendo (60 dias)</h2>
