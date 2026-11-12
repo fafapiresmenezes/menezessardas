@@ -1,7 +1,7 @@
 {
- "total": 404,
+ "total": 460,
  "meta": 500,
- "faltam": 96,
+ "faltam": 40,
  "agentes": [
   {
    "id": "agente-001",
@@ -4065,6 +4065,566 @@
    "origem": "Harvard Law School, catálogo de cursos 2026-2027, leitura parcial verbatim (https://hls.harvard.edu/wp-content/uploads/course-catalogs/hls-course-catalog-2026-2027.pdf)",
    "status": "catalogado; ementa completa ainda não importada",
    "id": "agente-404"
+  },
+  {
+   "nome": "Consultor de Direito, Estado e Constituição",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito, Estado e Constituição",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-405"
+  },
+  {
+   "nome": "Consultor de Movimentos Sociais, Conflito e Direitos Humanos (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Movimentos Sociais, Conflito e Direitos Humanos (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-406"
+  },
+  {
+   "nome": "Consultor de Direito Achado na Rua e Pluralismo Jurídico",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Achado na Rua e Pluralismo Jurídico",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-407"
+  },
+  {
+   "nome": "Consultor de Acesso à Justiça e Pesquisa Empírica",
+   "area": "Pós-graduação em direito",
+   "nicho": "Acesso à Justiça e Pesquisa Empírica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-408"
+  },
+  {
+   "nome": "Consultor de Justiça de Transição",
+   "area": "Pós-graduação em direito",
+   "nicho": "Justiça de Transição",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-409"
+  },
+  {
+   "nome": "Consultor de Constituição e Democracia (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Constituição e Democracia (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-410"
+  },
+  {
+   "nome": "Consultor de Filosofia Política, Teoria Constitucional e Democracia",
+   "area": "Pós-graduação em direito",
+   "nicho": "Filosofia Política, Teoria Constitucional e Democracia",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-411"
+  },
+  {
+   "nome": "Consultor de Direito e Instituições",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito e Instituições",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-412"
+  },
+  {
+   "nome": "Consultor de Narrativas e História Constitucional",
+   "area": "Pós-graduação em direito",
+   "nicho": "Narrativas e História Constitucional",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-413"
+  },
+  {
+   "nome": "Consultor de Internacionalização, Trabalho e Sustentabilidade (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Internacionalização, Trabalho e Sustentabilidade (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-414"
+  },
+  {
+   "nome": "Consultor de Internacionalização: Aspectos Públicos e Privados",
+   "area": "Pós-graduação em direito",
+   "nicho": "Internacionalização: Aspectos Públicos e Privados",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-415"
+  },
+  {
+   "nome": "Consultor de Mundo do Trabalho e Transformações na Ordem Social",
+   "area": "Pós-graduação em direito",
+   "nicho": "Mundo do Trabalho e Transformações na Ordem Social",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-416"
+  },
+  {
+   "nome": "Consultor de Sustentabilidade, Meio Ambiente e Direitos Humanos",
+   "area": "Pós-graduação em direito",
+   "nicho": "Sustentabilidade, Meio Ambiente e Direitos Humanos",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-417"
+  },
+  {
+   "nome": "Consultor de Regulação e Transformações na Ordem Econômica",
+   "area": "Pós-graduação em direito",
+   "nicho": "Regulação e Transformações na Ordem Econômica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-418"
+  },
+  {
+   "nome": "Consultor de Políticas Públicas de Educação, Ciência, Tecnologia e Inovação",
+   "area": "Pós-graduação em direito",
+   "nicho": "Políticas Públicas de Educação, Ciência, Tecnologia e Inovação",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-419"
+  },
+  {
+   "nome": "Consultor de Direito Privado, Empresa, Mercado e Concorrência",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Privado, Empresa, Mercado e Concorrência",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-420"
+  },
+  {
+   "nome": "Consultor de Criminologia, Política Criminal e Segurança Pública",
+   "area": "Pós-graduação em direito",
+   "nicho": "Criminologia, Política Criminal e Segurança Pública",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-421"
+  },
+  {
+   "nome": "Consultor de Estudos de Gênero e Relações Étnico-Raciais",
+   "area": "Pós-graduação em direito",
+   "nicho": "Estudos de Gênero e Relações Étnico-Raciais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-422"
+  },
+  {
+   "nome": "Consultor de Dogmáticas Críticas e Direitos Humanos",
+   "area": "Pós-graduação em direito",
+   "nicho": "Dogmáticas Críticas e Direitos Humanos",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UnB, PPGD, linhas de pesquisa (https://ppgd.unb.br/linhas-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-423"
+  },
+  {
+   "nome": "Consultor de Direitos Fundamentais e Justiça",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direitos Fundamentais e Justiça",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, linhas e áreas (https://ppgd.ufba.br/pt-br/linhas-e-grupos-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-424"
+  },
+  {
+   "nome": "Consultor de Jurisdição Constitucional e Novos Direitos",
+   "area": "Pós-graduação em direito",
+   "nicho": "Jurisdição Constitucional e Novos Direitos",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, linhas e áreas (https://ppgd.ufba.br/pt-br/linhas-e-grupos-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-425"
+  },
+  {
+   "nome": "Consultor de Direito Penal e Liberdades Públicas (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Penal e Liberdades Públicas (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, linhas e áreas (https://ppgd.ufba.br/pt-br/linhas-e-grupos-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-426"
+  },
+  {
+   "nome": "Consultor de Estado Democrático de Direito e Acesso à Justiça (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Estado Democrático de Direito e Acesso à Justiça (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, linhas e áreas (https://ppgd.ufba.br/pt-br/linhas-e-grupos-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-427"
+  },
+  {
+   "nome": "Consultor de Direitos Fundamentais, Cultura e Relações Sociais (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direitos Fundamentais, Cultura e Relações Sociais (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, linhas e áreas (https://ppgd.ufba.br/pt-br/linhas-e-grupos-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-428"
+  },
+  {
+   "nome": "Consultor de Bioética, Cibernética, Ecologia e Direito Animal (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Bioética, Cibernética, Ecologia e Direito Animal (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, linhas e áreas (https://ppgd.ufba.br/pt-br/linhas-e-grupos-de-pesquisa)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-429"
+  },
+  {
+   "nome": "Consultor de Trabalho, Estrutura Social e Políticas Sociais",
+   "area": "Pós-graduação em direito",
+   "nicho": "Trabalho, Estrutura Social e Políticas Sociais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-430"
+  },
+  {
+   "nome": "Consultor de Sindicalismo e Organização Coletiva de Trabalhadores",
+   "area": "Pós-graduação em direito",
+   "nicho": "Sindicalismo e Organização Coletiva de Trabalhadores",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-431"
+  },
+  {
+   "nome": "Consultor de Direito Autoral e Propriedade Industrial",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Autoral e Propriedade Industrial",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-432"
+  },
+  {
+   "nome": "Consultor de Microssistema dos Processos Coletivos",
+   "area": "Pós-graduação em direito",
+   "nicho": "Microssistema dos Processos Coletivos",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-433"
+  },
+  {
+   "nome": "Consultor de Sistema Brasileiro de Justiça Multiportas",
+   "area": "Pós-graduação em direito",
+   "nicho": "Sistema Brasileiro de Justiça Multiportas",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-434"
+  },
+  {
+   "nome": "Consultor de Crise Empresarial: Análise Jurídica e Econômica",
+   "area": "Pós-graduação em direito",
+   "nicho": "Crise Empresarial: Análise Jurídica e Econômica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-435"
+  },
+  {
+   "nome": "Consultor de Direito Civil e Relações Sociais Contemporâneas",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Civil e Relações Sociais Contemporâneas",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-436"
+  },
+  {
+   "nome": "Consultor de Direito, Sexualidade e Cultura",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito, Sexualidade e Cultura",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-437"
+  },
+  {
+   "nome": "Consultor de Direito e Pós-Modernidade",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito e Pós-Modernidade",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-438"
+  },
+  {
+   "nome": "Consultor de Direito, Raça e Políticas Afirmativas",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito, Raça e Políticas Afirmativas",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-439"
+  },
+  {
+   "nome": "Consultor de Direito, Arte e Literatura",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito, Arte e Literatura",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-440"
+  },
+  {
+   "nome": "Consultor de Direito Cibernético e Pós-Humanismo",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Cibernético e Pós-Humanismo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-441"
+  },
+  {
+   "nome": "Consultor de Direito Animal Comparado",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Animal Comparado",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-442"
+  },
+  {
+   "nome": "Consultor de Arbitragem Empresarial e Justiça",
+   "area": "Pós-graduação em direito",
+   "nicho": "Arbitragem Empresarial e Justiça",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-443"
+  },
+  {
+   "nome": "Consultor de O Fato Punível e as Novas Exigências de Imputação",
+   "area": "Pós-graduação em direito",
+   "nicho": "O Fato Punível e as Novas Exigências de Imputação",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-444"
+  },
+  {
+   "nome": "Consultor de Manifestações Punitivas e Tutela da Ordem Econômica",
+   "area": "Pós-graduação em direito",
+   "nicho": "Manifestações Punitivas e Tutela da Ordem Econômica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-445"
+  },
+  {
+   "nome": "Consultor de Modelos Alternativos de Intervenção Penal",
+   "area": "Pós-graduação em direito",
+   "nicho": "Modelos Alternativos de Intervenção Penal",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-446"
+  },
+  {
+   "nome": "Consultor de Teoria dos Precedentes e o Direito Processual",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teoria dos Precedentes e o Direito Processual",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-447"
+  },
+  {
+   "nome": "Consultor de Estado, Sociedade e Relações de Trabalho",
+   "area": "Pós-graduação em direito",
+   "nicho": "Estado, Sociedade e Relações de Trabalho",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-448"
+  },
+  {
+   "nome": "Consultor de Estatuto Epistemológico da Bioética",
+   "area": "Pós-graduação em direito",
+   "nicho": "Estatuto Epistemológico da Bioética",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-449"
+  },
+  {
+   "nome": "Consultor de Relações Jurídicas Privadas e Direitos Fundamentais",
+   "area": "Pós-graduação em direito",
+   "nicho": "Relações Jurídicas Privadas e Direitos Fundamentais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-450"
+  },
+  {
+   "nome": "Consultor de Garantias Fundamentais do Contribuinte",
+   "area": "Pós-graduação em direito",
+   "nicho": "Garantias Fundamentais do Contribuinte",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-451"
+  },
+  {
+   "nome": "Consultor de Tutela Constitucional do Processo",
+   "area": "Pós-graduação em direito",
+   "nicho": "Tutela Constitucional do Processo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-452"
+  },
+  {
+   "nome": "Consultor de Fundamentos e Garantias Penais",
+   "area": "Pós-graduação em direito",
+   "nicho": "Fundamentos e Garantias Penais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-453"
+  },
+  {
+   "nome": "Consultor de Direito e Ecologia",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito e Ecologia",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-454"
+  },
+  {
+   "nome": "Consultor de Estado Regulador e Serviços Públicos",
+   "area": "Pós-graduação em direito",
+   "nicho": "Estado Regulador e Serviços Públicos",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-455"
+  },
+  {
+   "nome": "Consultor de Direito Processual em Transformação",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Processual em Transformação",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-456"
+  },
+  {
+   "nome": "Consultor de Direitos Humanos e Direitos Fundamentais",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direitos Humanos e Direitos Fundamentais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-457"
+  },
+  {
+   "nome": "Consultor de Jurisdição Constitucional Comparada",
+   "area": "Pós-graduação em direito",
+   "nicho": "Jurisdição Constitucional Comparada",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-458"
+  },
+  {
+   "nome": "Consultor de Paradigmas Atuais do Conhecimento Jurídico",
+   "area": "Pós-graduação em direito",
+   "nicho": "Paradigmas Atuais do Conhecimento Jurídico",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-459"
+  },
+  {
+   "nome": "Consultor de Teorias do Direito e Justiça",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teorias do Direito e Justiça",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFBA, PPGD, ementas (https://ppgd.ufba.br/pt-br/ementas)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-460"
   }
  ]
 }
