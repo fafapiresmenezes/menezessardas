@@ -1,7 +1,7 @@
 {
- "total": 288,
+ "total": 357,
  "meta": 500,
- "faltam": 212,
+ "faltam": 143,
  "agentes": [
   {
    "id": "agente-001",
@@ -2905,6 +2905,696 @@
    "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
    "status": "catalogado; ementa completa ainda não importada",
    "id": "agente-288"
+  },
+  {
+   "nome": "Consultor de Direito Contratual Comparado (Reino Unido e EUA)",
+   "area": "Direito comparado",
+   "nicho": "Direito Contratual Comparado (Reino Unido e EUA)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-289"
+  },
+  {
+   "nome": "Consultor de Prática Forense do Direito Privado",
+   "area": "Civil",
+   "nicho": "Prática Forense do Direito Privado",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-290"
+  },
+  {
+   "nome": "Consultor de Contratos Especiais",
+   "area": "Civil",
+   "nicho": "Contratos Especiais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-291"
+  },
+  {
+   "nome": "Consultor de Responsabilidade Contratual",
+   "area": "Civil",
+   "nicho": "Responsabilidade Contratual",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-292"
+  },
+  {
+   "nome": "Consultor de Tipos Contratuais no Direito Privado Contemporâneo",
+   "area": "Civil",
+   "nicho": "Tipos Contratuais no Direito Privado Contemporâneo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-293"
+  },
+  {
+   "nome": "Consultor de Privilégios, Garantias Reais e Patrimônio Separado",
+   "area": "Civil",
+   "nicho": "Privilégios, Garantias Reais e Patrimônio Separado",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-294"
+  },
+  {
+   "nome": "Consultor de Direito Civil Francês",
+   "area": "Direito comparado",
+   "nicho": "Direito Civil Francês",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-295"
+  },
+  {
+   "nome": "Consultor de Direito dos Transportes",
+   "area": "Civil e empresarial",
+   "nicho": "Direito dos Transportes",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-296"
+  },
+  {
+   "nome": "Consultor de Disciplina Jurídica do Mercado",
+   "area": "Empresarial",
+   "nicho": "Disciplina Jurídica do Mercado",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-297"
+  },
+  {
+   "nome": "Consultor de Direito e Desenvolvimento Econômico",
+   "area": "Empresarial",
+   "nicho": "Direito e Desenvolvimento Econômico",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-298"
+  },
+  {
+   "nome": "Consultor de Teoria Crítico-Estruturalista do Direito Comercial",
+   "area": "Empresarial",
+   "nicho": "Teoria Crítico-Estruturalista do Direito Comercial",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-299"
+  },
+  {
+   "nome": "Consultor de Solução de Conflitos entre Empresas",
+   "area": "Empresarial",
+   "nicho": "Solução de Conflitos entre Empresas",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-300"
+  },
+  {
+   "nome": "Consultor de Negociação em Direito Empresarial",
+   "area": "Empresarial",
+   "nicho": "Negociação em Direito Empresarial",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-301"
+  },
+  {
+   "nome": "Consultor de Propriedade Intelectual Aplicada",
+   "area": "Propriedade intelectual",
+   "nicho": "Propriedade Intelectual Aplicada",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-302"
+  },
+  {
+   "nome": "Consultor de Direito Econômico da Infraestrutura",
+   "area": "Econômico",
+   "nicho": "Direito Econômico da Infraestrutura",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-303"
+  },
+  {
+   "nome": "Consultor de Direito Econômico Privado",
+   "area": "Econômico",
+   "nicho": "Direito Econômico Privado",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-304"
+  },
+  {
+   "nome": "Consultor de Direito Econômico Digital",
+   "area": "Econômico",
+   "nicho": "Direito Econômico Digital",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-305"
+  },
+  {
+   "nome": "Consultor de Teoria do Estado Brasileiro",
+   "area": "Constitucional",
+   "nicho": "Teoria do Estado Brasileiro",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-306"
+  },
+  {
+   "nome": "Consultor de Sociologia da Constituição",
+   "area": "Constitucional",
+   "nicho": "Sociologia da Constituição",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-307"
+  },
+  {
+   "nome": "Consultor de Fundamentos de Direito Público",
+   "area": "Constitucional",
+   "nicho": "Fundamentos de Direito Público",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-308"
+  },
+  {
+   "nome": "Consultor de Direito Constitucional Brasileiro em Perspectiva Comparada",
+   "area": "Direito comparado",
+   "nicho": "Direito Constitucional Brasileiro em Perspectiva Comparada",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-309"
+  },
+  {
+   "nome": "Consultor de História Constitucional Brasileira",
+   "area": "Constitucional",
+   "nicho": "História Constitucional Brasileira",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-310"
+  },
+  {
+   "nome": "Consultor de Representação Política, Processo Legislativo e Legística",
+   "area": "Constitucional",
+   "nicho": "Representação Política, Processo Legislativo e Legística",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-311"
+  },
+  {
+   "nome": "Consultor de Liberdades Fundamentais",
+   "area": "Constitucional",
+   "nicho": "Liberdades Fundamentais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-312"
+  },
+  {
+   "nome": "Consultor de Juiz das Garantias no Processo Penal",
+   "area": "Processo penal",
+   "nicho": "Juiz das Garantias no Processo Penal",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-313"
+  },
+  {
+   "nome": "Consultor de Criminologia do Consenso",
+   "area": "Criminologia",
+   "nicho": "Criminologia do Consenso",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-314"
+  },
+  {
+   "nome": "Consultor de Criminologia da Repressão",
+   "area": "Criminologia",
+   "nicho": "Criminologia da Repressão",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-315"
+  },
+  {
+   "nome": "Consultor de Política Criminal e Processo Penal",
+   "area": "Processo penal",
+   "nicho": "Política Criminal e Processo Penal",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-316"
+  },
+  {
+   "nome": "Consultor de História do Direito Penal",
+   "area": "Penal",
+   "nicho": "História do Direito Penal",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-317"
+  },
+  {
+   "nome": "Consultor de Criminologia Crítica e Radical",
+   "area": "Criminologia",
+   "nicho": "Criminologia Crítica e Radical",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-318"
+  },
+  {
+   "nome": "Consultor de Investigação Criminal",
+   "area": "Processo penal",
+   "nicho": "Investigação Criminal",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-319"
+  },
+  {
+   "nome": "Consultor de Medicina Forense",
+   "area": "Perícias",
+   "nicho": "Medicina Forense",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-320"
+  },
+  {
+   "nome": "Consultor de Direito Penal: Parte Especial",
+   "area": "Penal",
+   "nicho": "Direito Penal: Parte Especial",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-321"
+  },
+  {
+   "nome": "Consultor de Criminologia Clínica",
+   "area": "Criminologia",
+   "nicho": "Criminologia Clínica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-322"
+  },
+  {
+   "nome": "Consultor de Infância e Juventude: Perspectivas Penais",
+   "area": "Penal",
+   "nicho": "Infância e Juventude: Perspectivas Penais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-323"
+  },
+  {
+   "nome": "Consultor de Justiça Penal Negociada",
+   "area": "Processo penal",
+   "nicho": "Justiça Penal Negociada",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-324"
+  },
+  {
+   "nome": "Consultor de Meios de Solução de Controvérsias",
+   "area": "Processo civil",
+   "nicho": "Meios de Solução de Controvérsias",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-325"
+  },
+  {
+   "nome": "Consultor de Introdução à Arbitragem",
+   "area": "Arbitragem",
+   "nicho": "Introdução à Arbitragem",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-326"
+  },
+  {
+   "nome": "Consultor de Precedentes Judiciais",
+   "area": "Processo civil",
+   "nicho": "Precedentes Judiciais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-327"
+  },
+  {
+   "nome": "Consultor de Tecnologia na Resolução de Conflitos",
+   "area": "Processo civil",
+   "nicho": "Tecnologia na Resolução de Conflitos",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-328"
+  },
+  {
+   "nome": "Consultor de Teoria Geral dos Recursos e da Execução",
+   "area": "Processo civil",
+   "nicho": "Teoria Geral dos Recursos e da Execução",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-329"
+  },
+  {
+   "nome": "Consultor de História do Direito do Trabalho no Brasil",
+   "area": "Trabalhista",
+   "nicho": "História do Direito do Trabalho no Brasil",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-330"
+  },
+  {
+   "nome": "Consultor de Direitos Humanos nas Relações de Trabalho",
+   "area": "Trabalhista",
+   "nicho": "Direitos Humanos nas Relações de Trabalho",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-331"
+  },
+  {
+   "nome": "Consultor de Teoria da Tributação",
+   "area": "Tributário",
+   "nicho": "Teoria da Tributação",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-332"
+  },
+  {
+   "nome": "Consultor de Teoria Geral das Receitas Públicas",
+   "area": "Tributário",
+   "nicho": "Teoria Geral das Receitas Públicas",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-333"
+  },
+  {
+   "nome": "Consultor de Interpretação e Fontes do Direito Financeiro",
+   "area": "Tributário",
+   "nicho": "Interpretação e Fontes do Direito Financeiro",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-334"
+  },
+  {
+   "nome": "Consultor de Princípios Constitucionais do Direito Financeiro",
+   "area": "Tributário",
+   "nicho": "Princípios Constitucionais do Direito Financeiro",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-335"
+  },
+  {
+   "nome": "Consultor de Teoria Geral das Despesas Públicas",
+   "area": "Tributário",
+   "nicho": "Teoria Geral das Despesas Públicas",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-336"
+  },
+  {
+   "nome": "Consultor de Tributação de Petróleo, Minério e Energia",
+   "area": "Tributário",
+   "nicho": "Tributação de Petróleo, Minério e Energia",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-337"
+  },
+  {
+   "nome": "Consultor de Funções Administrativas",
+   "area": "Administrativo",
+   "nicho": "Funções Administrativas",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-338"
+  },
+  {
+   "nome": "Consultor de Princípios do Direito Administrativo",
+   "area": "Administrativo",
+   "nicho": "Princípios do Direito Administrativo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-339"
+  },
+  {
+   "nome": "Consultor de Bens Públicos",
+   "area": "Administrativo",
+   "nicho": "Bens Públicos",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-340"
+  },
+  {
+   "nome": "Consultor de Administração Indireta",
+   "area": "Administrativo",
+   "nicho": "Administração Indireta",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-341"
+  },
+  {
+   "nome": "Consultor de Transparência Administrativa",
+   "area": "Administrativo",
+   "nicho": "Transparência Administrativa",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-342"
+  },
+  {
+   "nome": "Consultor de Contratos Administrativos",
+   "area": "Administrativo",
+   "nicho": "Contratos Administrativos",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-343"
+  },
+  {
+   "nome": "Consultor de Instrumentos de Direito Privado na Proteção ao Meio Ambiente",
+   "area": "Ambiental",
+   "nicho": "Instrumentos de Direito Privado na Proteção ao Meio Ambiente",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-344"
+  },
+  {
+   "nome": "Consultor de Direito Ambiental Aplicado",
+   "area": "Ambiental",
+   "nicho": "Direito Ambiental Aplicado",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-345"
+  },
+  {
+   "nome": "Consultor de Empresa e Direitos Humanos",
+   "area": "Direitos humanos",
+   "nicho": "Empresa e Direitos Humanos",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-346"
+  },
+  {
+   "nome": "Consultor de Emergência Climática e Direitos Humanos",
+   "area": "Direitos humanos",
+   "nicho": "Emergência Climática e Direitos Humanos",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-347"
+  },
+  {
+   "nome": "Consultor de Epistemologia dos Direitos Sociais",
+   "area": "Direitos humanos",
+   "nicho": "Epistemologia dos Direitos Sociais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-348"
+  },
+  {
+   "nome": "Consultor de Prática do Direito Internacional Público",
+   "area": "Internacional",
+   "nicho": "Prática do Direito Internacional Público",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-349"
+  },
+  {
+   "nome": "Consultor de Introdução ao Direito Francês",
+   "area": "Direito comparado",
+   "nicho": "Introdução ao Direito Francês",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-350"
+  },
+  {
+   "nome": "Consultor de Lógica e Metodologia Jurídica",
+   "area": "Teoria do direito",
+   "nicho": "Lógica e Metodologia Jurídica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-351"
+  },
+  {
+   "nome": "Consultor de Metodologia da Pesquisa Sociojurídica",
+   "area": "Teoria do direito",
+   "nicho": "Metodologia da Pesquisa Sociojurídica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-352"
+  },
+  {
+   "nome": "Consultor de Filosofia do Direito: Parte Especial",
+   "area": "Teoria do direito",
+   "nicho": "Filosofia do Direito: Parte Especial",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-353"
+  },
+  {
+   "nome": "Consultor de Direito e Justiça",
+   "area": "Teoria do direito",
+   "nicho": "Direito e Justiça",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-354"
+  },
+  {
+   "nome": "Consultor de Sociologia Econômica e Direito",
+   "area": "Teoria do direito",
+   "nicho": "Sociologia Econômica e Direito",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-355"
+  },
+  {
+   "nome": "Consultor de Direito, Tecnologia e Sociedade",
+   "area": "Tecnologia e direito",
+   "nicho": "Direito, Tecnologia e Sociedade",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-356"
+  },
+  {
+   "nome": "Consultor de Inteligência Artificial e Jurisprudência",
+   "area": "Tecnologia e direito",
+   "nicho": "Inteligência Artificial e Jurisprudência",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino, optativas (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-357"
   }
  ]
 }
