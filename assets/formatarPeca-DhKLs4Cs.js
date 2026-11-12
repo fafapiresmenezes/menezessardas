@@ -1,0 +1,14 @@
+import{F as s}from"./estiloPecas-CyvccqL5.js";function h(e){const o={fonte:s.fonte,corpo:s.corpo,entrelinhas:s.entrelinhas,recuoPrimeiraLinha:s.recuoPrimeiraLinha,margens:{...s.margens}};if(!e)return o;const n=(t,l,a)=>typeof t=="number"&&Number.isFinite(t)&&t>=l&&t<=a;typeof e.fonte=="string"&&/^[\w À-ÿ-]{2,40}$/.test(e.fonte)&&(o.fonte=e.fonte),n(e.corpo,8,16)&&(o.corpo=e.corpo),n(e.entrelinhas,1,3)&&(o.entrelinhas=e.entrelinhas),n(e.recuoPrimeiraLinha,0,5)&&(o.recuoPrimeiraLinha=e.recuoPrimeiraLinha);const i=e.margens;return i&&[i.superior,i.inferior,i.esquerda,i.direita].every(t=>n(t,.5,6))&&(o.margens={...i}),o}const u=e=>e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"),f=e=>u(e).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");function g(e){const o=e.trim().replace(/^#+\s*/,"").replace(/\*\*/g,"");if(/^#+\s/.test(e.trim()))return!0;if(o.length<4||o.length>110)return!1;const n=o.replace(/[^A-Za-zÀ-ÿ]/g,"");return n.length>=4&&n===n.toUpperCase()&&!/[.;:]$/.test(o)}function d(e,o="Peça",n,i){const t={...s,...h(n)},a=e.replace(/\r/g,"").split(/\n\s*\n/).map(m=>m.trim()).filter(Boolean).map(m=>{const c=m.split(`
+`);return c.length===1&&g(m)?`<h2>${f(m.replace(/^#+\s*/,"").replace(/\*\*/g,""))}</h2>`:c.every(r=>/^\s*>/.test(r))?`<blockquote>${f(c.map(r=>r.replace(/^\s*>\s?/,"")).join(" "))}</blockquote>`:c.every(r=>/^\s*([-*•]|[a-z]\)|\d+[.)])\s+/.test(r))?`<ul class="pedidos">${c.map(r=>`<li>${f(r.replace(/^\s*[-*•]\s+/,""))}</li>`).join("")}</ul>`:c.map(r=>g(r)?`<h2>${f(r.replace(/^#+\s*/,"").replace(/\*\*/g,""))}</h2>`:`<p>${f(r)}</p>`).join("")}).join(`
+`),p=t.margens;return`<!doctype html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${u(o)}</title>
+<style>
+@page { size: 21cm 29.7cm; margin: ${p.superior}cm ${p.direita}cm ${p.inferior}cm ${p.esquerda}cm; }
+body { font-family: '${u(t.fonte)}', ${t.fonteAlternativa}, serif; font-size: ${t.corpo}pt; line-height: ${t.entrelinhas}; color: #000; }
+p { text-align: justify; text-indent: ${t.recuoPrimeiraLinha}cm; margin: 0 0 6pt 0; }
+h2 { font-size: ${t.corpo}pt; font-weight: bold; text-transform: uppercase; margin: 18pt 0 6pt 0; }
+blockquote { margin: 6pt 0 6pt ${t.recuoCitacao}cm; font-size: ${t.citacaoLonga}pt; line-height: 1; text-align: justify; }
+ul.pedidos { list-style: none; margin: 0 0 6pt ${t.recuoPrimeiraLinha}cm; padding: 0; }
+ul.pedidos li { text-align: justify; margin-bottom: 4pt; }
+</style></head><body>
+${a}
+</body></html>`}function b(e,o="peca",n){const i=d(e,o,n),t=new Blob(["\uFEFF",i],{type:"application/msword"}),l=URL.createObjectURL(t),a=document.createElement("a");a.href=l,a.download=`${o.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-zA-Z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,60).toLowerCase()||"peca"}.doc`,document.body.appendChild(a),a.click(),a.remove(),setTimeout(()=>URL.revokeObjectURL(l),1e3)}export{b,h as f};
