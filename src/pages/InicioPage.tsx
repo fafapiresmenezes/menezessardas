@@ -4,7 +4,9 @@ import { gravarAreaAtual } from '@/lib/assistente'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { meuAlcance, rotuloCargo, type Cargo } from '@/lib/hierarquia'
 import { minhaPreferencia, telaPorCargo } from '@/lib/preferencias'
-import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck, CalendarClock, UserPlus, Search } from 'lucide-react'
+import { meuEscritorio, esquecerEscritorio, type MeuEscritorio } from '@/lib/equipe'
+import { esquecerMarca } from '@/lib/marca'
+import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck, CalendarClock, CalendarDays, Inbox, UserPlus, Search, MessageSquare, PenLine, BookOpen, BarChart3, UserCog, type LucideIcon } from 'lucide-react'
 import AceiteTermos from '@/components/AceiteTermos'
 
 // Tela de entrada: o escritório escolhe a área de trabalho antes de entrar na plataforma.
@@ -23,8 +25,41 @@ const AREAS = [
   { chave: 'imobiliario', titulo: 'Imobiliário', texto: 'Imóveis, contratos, prazos, reajustes, fornecedores e agenda.', icone: Building2, destino: '/dashboard' },
 ]
 
+// A entrada é dividida por assunto, na mesma ordem do menu: o que se faz todo dia vem primeiro.
+type Atalho = { id: string; destino: string; titulo: string; texto: string; icone: LucideIcon; so?: 'admin' | 'veTudo' }
+const BLOCOS: { titulo: string; dica: string; itens: Atalho[] }[] = [
+  { titulo: 'Todo dia', dica: 'Comece por aqui', itens: [
+    { id: 'ir-meu-dia', destino: '/meu-dia', titulo: 'Ver o que vence', texto: 'Prazos, tarefas e intimações de hoje e da semana.', icone: CalendarClock },
+    { id: 'ir-agenda', destino: '/agenda', titulo: 'Agenda', texto: 'Audiências, prazos e compromissos no calendário.', icone: CalendarDays },
+    { id: 'ir-intimacoes', destino: '/intimacoes', titulo: 'Intimações', texto: 'O que chegou dos tribunais e ainda não foi lido.', icone: Inbox },
+  ] },
+  { titulo: 'Processos', dica: 'Ver, incluir e procurar', itens: [
+    { id: 'ir-processos', destino: '/processos', titulo: 'Meus processos', texto: 'Os processos que estão sob a sua responsabilidade.', icone: Gavel },
+    { id: 'ir-processos-antigos', destino: '/processos-antigos', titulo: 'Inserir processos antigos', texto: 'Planilha ou nome do advogado: cadastra, busca no CNJ e mostra os prazos.', icone: UserPlus },
+    { id: 'ir-pesquisa', destino: '/pesquisa', titulo: 'Pesquisar', texto: 'Processo, pessoa ou empresa numa caixa só.', icone: Search },
+  ] },
+  { titulo: 'Escrever peças', dica: 'O robô escreve do seu jeito', itens: [
+    { id: 'ir-assistente', destino: '/assistente', titulo: 'Pedir uma peça ou tirar uma dúvida', texto: 'O assistente redige e responde citando a lei.', icone: MessageSquare },
+    { id: 'ir-meu-estilo', destino: '/meu-estilo', titulo: 'Meu jeito de escrever', texto: 'Ensine o seu estilo com peças que você já escreveu.', icone: PenLine },
+    { id: 'ir-parametros', destino: '/parametros-escrita', titulo: 'Parâmetros de escrita', texto: 'Tamanho, linguagem e estrutura das peças.', icone: BookOpen },
+  ] },
+  { titulo: 'Escritório', dica: 'Orientação e equipe', itens: [
+    { id: 'ir-consultores', destino: '/consultores', titulo: 'Consultores do escritório', texto: 'Um consultor por área do direito diz o que fazer primeiro.', icone: Briefcase },
+    { id: 'ir-indicadores', destino: '/indicadores', titulo: 'Números do escritório', texto: 'Metas, prazos cumpridos e resultado do conjunto.', icone: BarChart3, so: 'veTudo' },
+    { id: 'ir-equipe', destino: '/equipe', titulo: 'Área do administrador', texto: 'Liberar quem pediu para entrar e definir o cargo de cada pessoa.', icone: UserCog, so: 'admin' },
+  ] },
+]
+
 export default function InicioPage() {
   const navigate = useNavigate()
+  // Separação por escritório: a primeira coisa que a tela diz é em qual escritório a pessoa está.
+  const [escritorio, setEscritorio] = useState<MeuEscritorio | null>(null)
+  useEffect(() => { meuEscritorio().then(setEscritorio).catch(() => setEscritorio(null)) }, [])
+  const trocarDeConta = async () => {
+    esquecerMarca(); esquecerEscritorio()
+    try { await supabase.auth.signOut() } catch { /* já estava fora */ }
+    navigate('/login')
+  }
   // Passo 24: lembra a última área por usuário (preferencias_usuario.area) e permite fixar uma como padrão
   // (area_fixa): com área fixa, a entrada vai direto para ela após 4 s, a não ser que a pessoa escolha outra.
   const [ultima, setUltima] = useState<string | null>(() => { try { return localStorage.getItem('lsm-area') } catch { return null } })
@@ -95,31 +130,58 @@ export default function InicioPage() {
         <h1 className="font-serif text-white text-3xl mt-2">Theye.club</h1>
         <p className="text-white/60 text-xs uppercase tracking-[0.18em] mt-2">Suporte Jurídico</p>
       </div>
-      {alcance && (
-        <p className="w-full max-w-6xl mb-5 bg-white/10 border border-dourado/50 text-white p-3 text-sm text-center" data-testid="inicio-hierarquia"
-          title="O cargo de cada pessoa é definido pela administração na tela Equipe.">
-          {alcance.veTudo
-            ? <>Você entrou como <strong>{alcance.cargo ? rotuloCargo[alcance.cargo] : 'administração'}</strong>: enxerga todos os processos e números do escritório.</>
-            : <>Você entrou como <strong>{alcance.cargo ? rotuloCargo[alcance.cargo] : 'advogado(a)'}</strong>: cada um é dono dos seus processos, e você vê os seus. Sócios e o gestor veem o conjunto.</>}
-        </p>
+      {(escritorio || alcance) && (
+        <section className="w-full max-w-6xl mb-6 bg-white text-navy p-5 flex flex-wrap items-center justify-between gap-4 shadow-lg" aria-label="Onde você está" data-testid="inicio-escritorio">
+          <div className="min-w-0">
+            {escritorio && (
+              <>
+                <p className="text-[11px] uppercase tracking-wider text-grafite-claro">Você está no escritório</p>
+                <p className="font-serif text-2xl md:text-3xl break-words" data-testid="inicio-escritorio-nome" title="Tudo o que você vê e grava aqui pertence a este escritório. Pessoas de outros escritórios não enxergam.">{escritorio.nome}</p>
+                <p className="text-sm text-grafite mt-1 break-words">{escritorio.pessoa}{escritorio.email && escritorio.email !== escritorio.pessoa ? ` · ${escritorio.email}` : ''}</p>
+              </>
+            )}
+            {alcance && (
+              <p className="text-sm text-grafite mt-2" data-testid="inicio-hierarquia" title="O cargo de cada pessoa é definido pela administração na Área do administrador.">
+                {alcance.veTudo
+                  ? <>Você entrou como <strong>{alcance.cargo ? rotuloCargo[alcance.cargo] : 'administração'}</strong>: enxerga todos os processos e números do escritório.</>
+                  : <>Você entrou como <strong>{alcance.cargo ? rotuloCargo[alcance.cargo] : 'advogado(a)'}</strong>: cada um é dono dos seus processos, e você vê os seus. Sócios e o gestor veem o conjunto.</>}
+              </p>
+            )}
+          </div>
+          {escritorio && supabaseConfigurado && (
+            <button type="button" onClick={trocarDeConta} data-testid="trocar-de-conta" title="Sai desta conta para você entrar com a conta do escritório certo" className="min-h-[44px] px-4 border border-navy text-navy text-sm">
+              Não é o seu escritório? Sair e trocar de conta
+            </button>
+          )}
+        </section>
       )}
-      {/* Os três atalhos do dia a dia vêm antes das áreas: quem entra sabe na hora por onde começar. */}
+      {/* Atalhos divididos por assunto: quem entra acha o que precisa sem abrir o menu. */}
       <div className="w-full max-w-6xl mb-8" aria-label="Por onde começar">
         <p className="text-white text-lg mb-3 text-center">O que você precisa agora?</p>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {[
-            { id: 'ir-meu-dia', destino: '/meu-dia', titulo: 'Ver o que vence', texto: 'Prazos, tarefas e intimações de hoje e da semana.', icone: CalendarClock },
-            { id: 'ir-processos-antigos', destino: '/processos-antigos', titulo: 'Inserir processos antigos', texto: 'Planilha ou nome do advogado: cadastra, busca no CNJ e mostra os prazos.', icone: UserPlus },
-            { id: 'ir-pesquisa', destino: '/pesquisa', titulo: 'Pesquisar', texto: 'Processo, pessoa ou empresa numa caixa só.', icone: Search },
-          ].map(a => (
-            <button key={a.id} type="button" data-testid={a.id} onClick={() => navigate(a.destino)} title={`${a.titulo} — ${a.texto}`} className="bg-dourado text-navy text-left p-5 min-h-[96px] shadow-lg hover:-translate-y-0.5 transition focus:outline-none focus:ring-4 focus:ring-white/60">
-              <a.icone className="w-7 h-7 mb-2" aria-hidden />
-              <span className="block font-serif text-xl">{a.titulo}</span>
-              <span className="block text-sm">{a.texto}</span>
-            </button>
-          ))}
+        <div className="grid gap-4 md:grid-cols-2">
+          {BLOCOS.map((b, n) => {
+            const itens = b.itens.filter(a => !a.so || (a.so === 'admin' ? alcance?.admin : alcance?.veTudo))
+            return (
+              <div key={b.titulo} role="group" className="border border-white/30 p-4" aria-label={b.titulo} data-testid={`bloco-${n + 1}`}>
+                <h2 className="text-white font-serif text-xl flex flex-wrap items-baseline gap-x-3">
+                  <span>{n + 1}. {b.titulo}</span>
+                  <span className="text-white/60 text-xs font-sans uppercase tracking-wider">{b.dica}</span>
+                </h2>
+                <div className="mt-3 grid gap-2">
+                  {itens.map(a => (
+                    <button key={a.id} type="button" data-testid={a.id} onClick={() => navigate(a.destino)} title={`${a.titulo} — ${a.texto}`} className="bg-dourado text-navy text-left p-4 min-h-[64px] flex items-start gap-3 hover:-translate-y-0.5 transition focus:outline-none focus:ring-4 focus:ring-white/60">
+                      <a.icone className="w-6 h-6 mt-0.5 shrink-0" aria-hidden />
+                      <span className="min-w-0">
+                        <span className="block font-serif text-lg leading-tight">{a.titulo}</span>
+                        <span className="block text-sm">{a.texto}</span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
         </div>
-        <p className="text-center mt-3"><button type="button" data-testid="ir-consultores" onClick={() => navigate('/consultores')} title="Abre os consultores especializados do escritório, um por nicho do direito" className="min-h-[44px] px-4 text-white/80 underline text-sm">Consultores do escritório</button></p>
       </div>
       {carregado && (areaFixa || areaUltima) && (
         <div className="w-full max-w-6xl mb-5 bg-white/10 border border-dourado/50 text-white p-4 flex flex-wrap items-center gap-3 text-sm" data-testid="area-lembrada">
@@ -141,7 +203,7 @@ export default function InicioPage() {
       )}
       {/* Só o que é preciso fica à vista: as três tarefas de cima. As áreas de trabalho abrem aqui, em um clique. */}
       <details className="w-full max-w-6xl" data-testid="todas-areas" open={!!buscaArea || undefined}>
-        <summary className="cursor-pointer text-white/90 text-center min-h-[48px] flex items-center justify-center select-none underline">Ver todas as áreas de trabalho</summary>
+        <summary className="cursor-pointer text-white/90 text-center min-h-[48px] flex items-center justify-center select-none underline" title="Abre as 10 áreas do direito: cada uma leva ao assistente já preparado para aquele assunto">Ver as áreas do direito (cível, trabalhista, família…)</summary>
       <form className="w-full max-w-6xl mb-4 mt-3" onSubmit={e => { e.preventDefault(); const a = areasVisiveis[0]; if (a) abrir(a.destino, a.chave) }}>
         <label className="block text-white/80 text-sm">Para onde quer ir?
           <input value={buscaArea} onChange={e => setBuscaArea(e.target.value)} placeholder="Ex.: contrato, despejo, trabalhista, INSS…" data-testid="busca-area" className="mt-1 w-full max-w-md block border border-dourado/60 bg-white/95 text-navy px-3 min-h-[44px]" />

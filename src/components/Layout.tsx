@@ -20,7 +20,7 @@ import AceiteContratoSaas from './AceiteContratoSaas'
 import AceiteTermos from './AceiteTermos'
 import { aplicarTema, temaAtual } from '@/lib/tema'
 import { NOME_PLATAFORMA } from '@/lib/plataforma'
-import { listarPessoas, perfilAtual } from '@/lib/equipe'
+import { listarPessoas, perfilAtual, meuEscritorio, esquecerEscritorio, type MeuEscritorio } from '@/lib/equipe'
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
@@ -181,6 +181,9 @@ export default function Layout({ children, title }: LayoutProps) {
   const [pendentes, setPendentes] = useState(0)
   // Quem entrou mas ainda não pertence a um escritório não vê nada da plataforma: só a tela de espera.
   const [semEscritorio, setSemEscritorio] = useState(false)
+  // O nome do escritório fica no topo de toda tela: ninguém trabalha sem saber onde está.
+  const [escritorio, setEscritorio] = useState<MeuEscritorio | null>(null)
+  useEffect(() => { meuEscritorio().then(setEscritorio).catch(() => setEscritorio(null)) }, [])
 
   // Área do administrador: só aparece para admin, com o número de cadastros esperando liberação.
   useEffect(() => {
@@ -259,7 +262,7 @@ export default function Layout({ children, title }: LayoutProps) {
       window.location.reload()
       return
     }
-    esquecerMarca()
+    esquecerMarca(); esquecerEscritorio()
     await supabase.auth.signOut()
     navigate('/login')
   }
@@ -429,7 +432,10 @@ export default function Layout({ children, title }: LayoutProps) {
           <div className="flex items-center gap-2 min-w-0 max-w-full">
             {!menuAberto && <button type="button" onClick={() => setMenuAberto(true)} aria-label="Abrir menu" title="Abre o menu lateral com as telas da plataforma" className="md:hidden min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/20 text-navy rounded-sm"><Menu size={20} /></button>}
             {/* Em notebooks os rótulos dos botões somem (só ícones) para o título da tela caber inteiro. */}
-            <h1 className="font-serif text-2xl md:text-3xl text-navy truncate min-w-0" title={title}>{title}</h1>
+            <div className="min-w-0">
+              <h1 className="font-serif text-2xl md:text-3xl text-navy truncate min-w-0" title={title}>{title}</h1>
+              {escritorio && <p className="text-xs text-grafite-claro truncate" data-testid="escritorio-atual" title="Você está trabalhando dentro deste escritório. Só as pessoas dele enxergam estes dados.">Escritório: <strong className="text-grafite">{escritorio.nome}</strong></p>}
+            </div>
           </div>
           <div className="flex flex-wrap md:flex-nowrap items-center gap-2 md:flex-shrink-0">
           <TourTela />

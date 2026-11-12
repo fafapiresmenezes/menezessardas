@@ -8,6 +8,7 @@
 --     administração daquele escritório liberar (tela Área do administrador);
 --   * se NÃO existe, o escritório é criado com aquele nome e a pessoa vira administradora dele;
 --   * convite e e-mail @gmenezes.com / @lsm.law continuam como estavam (migrações 111 e 115).
+-- Esta migração só ACRESCENTA (uma tabela, um esquema interno e funções): não apaga nem revoga nada.
 -- Também cria leitura e gravação de configurações POR ESCRITÓRIO (cargos, preferências, metas e
 -- parâmetros de escrita), para que a migração 116 não tire isso de quem não é administrador da sede.
 
@@ -19,25 +20,23 @@ RETURNS text LANGUAGE sql IMMUTABLE SET search_path = public AS $$
     '[^A-Z0-9]+', ' ', 'g'))
 $$;
 
--- Outros nomes pelos quais o escritório é conhecido (já normalizados). Evita que alguém "tome" o nome.
-ALTER TABLE public.escritorios ADD COLUMN IF NOT EXISTS apelidos text[] NOT NULL DEFAULT '{}';
-UPDATE public.escritorios
-   SET apelidos = ARRAY['SARDAS E MENEZES', 'MENEZES E SARDAS', 'SARDAS MENEZES', 'MENEZES SARDAS', 'INSTITUTO THEYE',
-                        'THEYE', 'THEYE CLUB', 'THEYE INSTITUTE', 'G MENEZES', 'GMENEZES', 'G MENEZES ADVOGADOS', 'GMENEZES ADVOGADOS']
- WHERE id = '00000000-0000-0000-0000-000000000001';
-REVOKE INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER ON public.escritorios FROM anon, authenticated;
+-- Funções de uso interno ficam num esquema que a API não enxerga: só as funções públicas abaixo as chamam.
+CREATE SCHEMA IF NOT EXISTS interno;
 
-CREATE OR REPLACE FUNCTION public.escritorio_por_nome(p_nome text)
+-- Acha o escritório pelo nome. A sede também responde pelos nomes pelos quais é conhecida,
+-- para ninguém "tomar" o nome do escritório criando um homônimo.
+CREATE OR REPLACE FUNCTION interno.escritorio_por_nome(p_nome text)
 RETURNS uuid LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
   SELECT e.id FROM public.escritorios e
    WHERE public.normalizar_nome_escritorio(p_nome) <> ''
      AND (public.normalizar_nome_escritorio(e.nome) = public.normalizar_nome_escritorio(p_nome)
        OR public.normalizar_nome_escritorio(e.nome_exibicao) = public.normalizar_nome_escritorio(p_nome)
-       OR public.normalizar_nome_escritorio(p_nome) = ANY (e.apelidos))
+       OR (e.id = '00000000-0000-0000-0000-000000000001' AND public.normalizar_nome_escritorio(p_nome) = ANY (ARRAY[
+            'SARDAS E MENEZES', 'MENEZES E SARDAS', 'SARDAS MENEZES', 'MENEZES SARDAS', 'INSTITUTO THEYE', 'THEYE',
+            'THEYE CLUB', 'THEYE INSTITUTE', 'G MENEZES', 'GMENEZES', 'G MENEZES ADVOGADOS', 'GMENEZES ADVOGADOS'])))
    ORDER BY (e.id = '00000000-0000-0000-0000-000000000001') DESC, e.criado_em
    LIMIT 1
 $$;
-REVOKE EXECUTE ON FUNCTION public.escritorio_por_nome(text) FROM PUBLIC, anon, authenticated;
 
 -- 2. Pedidos de entrada ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.pedidos_entrada (
@@ -53,11 +52,10 @@ CREATE TABLE IF NOT EXISTS public.pedidos_entrada (
 );
 CREATE INDEX IF NOT EXISTS pedidos_entrada_pendentes_idx ON public.pedidos_entrada (escritorio_id) WHERE decidido_em IS NULL;
 ALTER TABLE public.pedidos_entrada ENABLE ROW LEVEL SECURITY;
--- Sem política: ninguém lê nem grava direto; só pelas funções abaixo.
-REVOKE ALL ON public.pedidos_entrada FROM anon, authenticated;
+-- Sem política nenhuma: com a proteção por linha ligada, ninguém lê nem grava direto; só pelas funções abaixo.
 
 -- Coração da regra: escritório que existe => pedido pendente; que não existe => cria e administra.
-CREATE OR REPLACE FUNCTION public.pedir_ou_criar_escritorio(p_usuario uuid, p_email text, p_nome_pessoa text, p_escritorio text)
+CREATE OR REPLACE FUNCTION interno.pedir_ou_criar_escritorio(p_usuario uuid, p_email text, p_nome_pessoa text, p_escritorio text)
 RETURNS text LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
 DECLARE
   v_norm text := public.normalizar_nome_escritorio(p_escritorio);
@@ -65,7 +63,7 @@ DECLARE
   v_esc uuid;
 BEGIN
   PERFORM pg_advisory_xact_lock(hashtext('escritorio:' || v_norm));
-  v_esc := public.escritorio_por_nome(p_escritorio);
+  v_esc := interno.escritorio_por_nome(p_escritorio);
   IF v_esc IS NOT NULL THEN
     INSERT INTO public.pedidos_entrada (usuario_id, email, nome, escritorio_id, nome_digitado)
     VALUES (p_usuario, p_email, p_nome_pessoa, v_esc, v_limpo)
@@ -77,10 +75,9 @@ BEGIN
   INSERT INTO public.escritorios (nome) VALUES (v_limpo) RETURNING id INTO v_esc;
   INSERT INTO public.usuarios_perfis (id, email, nome_completo, funcao, escritorio_id)
   VALUES (p_usuario, p_email, coalesce(nullif(btrim(p_nome_pessoa), ''), p_email), 'admin', v_esc);
-  DELETE FROM public.pedidos_entrada WHERE usuario_id = p_usuario;
+  UPDATE public.pedidos_entrada SET decidido_em = now(), aceito = true WHERE usuario_id = p_usuario AND decidido_em IS NULL;
   RETURN 'criado';
 END $$;
-REVOKE EXECUTE ON FUNCTION public.pedir_ou_criar_escritorio(uuid, text, text, text) FROM PUBLIC, anon, authenticated;
 
 -- 3. Cadastro ---------------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.criar_perfil_primeiro_acesso()
@@ -120,7 +117,7 @@ BEGIN
   IF length(public.normalizar_nome_escritorio(NEW.raw_user_meta_data->>'escritorio')) >= 3 THEN
     -- Se algo falhar aqui, o cadastro não é barrado: a pessoa fica sem escritório e a tela pergunta de novo.
     BEGIN
-      PERFORM public.pedir_ou_criar_escritorio(NEW.id, NEW.email, v_nome, NEW.raw_user_meta_data->>'escritorio');
+      PERFORM interno.pedir_ou_criar_escritorio(NEW.id, NEW.email, v_nome, NEW.raw_user_meta_data->>'escritorio');
     EXCEPTION WHEN others THEN NULL;
     END;
     RETURN NEW;
@@ -152,8 +149,6 @@ BEGIN
   END IF;
   RETURN jsonb_build_object('estado', 'nenhum');
 END $$;
-REVOKE EXECUTE ON FUNCTION public.meu_pedido_entrada() FROM PUBLIC, anon;
-GRANT EXECUTE ON FUNCTION public.meu_pedido_entrada() TO authenticated;
 
 CREATE OR REPLACE FUNCTION public.entrar_em_escritorio(p_nome text)
 RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
@@ -168,11 +163,9 @@ BEGIN
   END IF;
   SELECT u.email::text, coalesce(nullif(btrim(u.raw_user_meta_data->>'nome'), ''), split_part(u.email::text, '@', 1))
     INTO v_email, v_nome FROM auth.users u WHERE u.id = auth.uid();
-  PERFORM public.pedir_ou_criar_escritorio(auth.uid(), v_email, v_nome, p_nome);
+  PERFORM interno.pedir_ou_criar_escritorio(auth.uid(), v_email, v_nome, p_nome);
   RETURN public.meu_pedido_entrada();
 END $$;
-REVOKE EXECUTE ON FUNCTION public.entrar_em_escritorio(text) FROM PUBLIC, anon;
-GRANT EXECUTE ON FUNCTION public.entrar_em_escritorio(text) TO authenticated;
 
 -- 5. O que a administração do escritório vê e faz ---------------------------------------------------
 CREATE OR REPLACE FUNCTION public.pedidos_entrada_pendentes()
@@ -185,8 +178,6 @@ LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
      AND (public.eh_sede() OR pe.escritorio_id = public.escritorio_atual())
    ORDER BY pe.criado_em
 $$;
-REVOKE EXECUTE ON FUNCTION public.pedidos_entrada_pendentes() FROM PUBLIC, anon;
-GRANT EXECUTE ON FUNCTION public.pedidos_entrada_pendentes() TO authenticated;
 
 -- A lista da equipe passa a incluir quem pediu para entrar no escritório de quem olha.
 CREATE OR REPLACE FUNCTION public.listar_usuarios_v2()
@@ -232,11 +223,10 @@ end $$;
 
 -- 6. Configurações por escritório -------------------------------------------------------------------
 -- A sede usa a chave pura (como sempre); cada outro escritório usa "esc:<id>:<chave>".
-CREATE OR REPLACE FUNCTION public.config_chave_do_escritorio(p_chave text)
+CREATE OR REPLACE FUNCTION interno.config_chave_do_escritorio(p_chave text)
 RETURNS text LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
   SELECT CASE WHEN public.eh_sede() THEN p_chave ELSE 'esc:' || public.escritorio_atual()::text || ':' || p_chave END
 $$;
-REVOKE EXECUTE ON FUNCTION public.config_chave_do_escritorio(text) FROM PUBLIC, anon, authenticated;
 
 -- Leitura por qualquer pessoa do escritório. Só as chaves desta lista; nunca chaves de API.
 CREATE OR REPLACE FUNCTION public.config_ler(p_chaves text[] DEFAULT NULL, p_prefixo text DEFAULT NULL)
@@ -244,7 +234,7 @@ RETURNS TABLE(chave text, valor text) LANGUAGE plpgsql STABLE SECURITY DEFINER S
 DECLARE v_pre text;
 BEGIN
   IF auth.uid() IS NULL OR public.perfil_atual() IS NULL THEN RETURN; END IF;
-  v_pre := public.config_chave_do_escritorio('');
+  v_pre := interno.config_chave_do_escritorio('');
   IF p_prefixo IS NOT NULL THEN
     IF p_prefixo <> 'escrita_' THEN RAISE EXCEPTION 'Prefixo não permitido.'; END IF;
     RETURN QUERY SELECT substr(c.chave, length(v_pre) + 1), c.valor FROM public.configuracoes c
@@ -257,8 +247,6 @@ BEGIN
                      OR left(k, 8) = 'escrita_';
   END IF;
 END $$;
-REVOKE EXECUTE ON FUNCTION public.config_ler(text[], text) FROM PUBLIC, anon;
-GRANT EXECUTE ON FUNCTION public.config_ler(text[], text) TO authenticated;
 
 -- Gravação só pela administração do escritório: cargos, metas e parâmetros de escrita.
 CREATE OR REPLACE FUNCTION public.config_gravar(p_itens jsonb)
@@ -272,12 +260,10 @@ BEGIN
     IF NOT (k IN ('cargos', 'metas_okr') OR k ~ '^escrita_[a-z0-9_]{1,60}$') THEN RAISE EXCEPTION 'Configuração não permitida: %', k; END IF;
     IF length(coalesce(v, '')) > 20000 THEN RAISE EXCEPTION 'Texto grande demais em %.', k; END IF;
     INSERT INTO public.configuracoes (chave, valor, atualizado_em, atualizado_por)
-    VALUES (public.config_chave_do_escritorio(k), coalesce(v, ''), now(), auth.uid())
+    VALUES (interno.config_chave_do_escritorio(k), coalesce(v, ''), now(), auth.uid())
     ON CONFLICT (chave) DO UPDATE SET valor = excluded.valor, atualizado_em = now(), atualizado_por = auth.uid();
   END LOOP;
 END $$;
-REVOKE EXECUTE ON FUNCTION public.config_gravar(jsonb) FROM PUBLIC, anon;
-GRANT EXECUTE ON FUNCTION public.config_gravar(jsonb) TO authenticated;
 
 -- Cada pessoa grava só a PRÓPRIA preferência de tela inicial (null volta ao padrão do cargo).
 CREATE OR REPLACE FUNCTION public.preferencia_gravar(p_tela text)
@@ -286,7 +272,7 @@ DECLARE v_chave text; v_atual jsonb;
 BEGIN
   IF auth.uid() IS NULL OR public.perfil_atual() IS NULL THEN RAISE EXCEPTION 'Entre na plataforma para salvar a sua preferência.'; END IF;
   IF p_tela IS NOT NULL AND p_tela !~ '^/[a-z0-9/_-]{1,60}$' THEN RAISE EXCEPTION 'Tela inválida.'; END IF;
-  v_chave := public.config_chave_do_escritorio('preferencias_usuarios');
+  v_chave := interno.config_chave_do_escritorio('preferencias_usuarios');
   PERFORM pg_advisory_xact_lock(hashtext(v_chave));
   BEGIN
     SELECT c.valor::jsonb INTO v_atual FROM public.configuracoes c WHERE c.chave = v_chave;
@@ -299,10 +285,3 @@ BEGIN
   INSERT INTO public.configuracoes (chave, valor, atualizado_em, atualizado_por) VALUES (v_chave, v_atual::text, now(), auth.uid())
   ON CONFLICT (chave) DO UPDATE SET valor = excluded.valor, atualizado_em = now(), atualizado_por = auth.uid();
 END $$;
-REVOKE EXECUTE ON FUNCTION public.preferencia_gravar(text) FROM PUBLIC, anon;
-GRANT EXECUTE ON FUNCTION public.preferencia_gravar(text) TO authenticated;
-
--- 7. A Fátima define os cargos da equipe (decisão do M): a conta de trabalho dela passa a administrar a sede,
---    como as outras duas contas dela já administram. Para desfazer: Área do administrador > função "Operação".
-UPDATE public.usuarios_perfis SET funcao = 'admin'
- WHERE lower(email) = 'fatima@gmenezes.com.br' AND escritorio_id = '00000000-0000-0000-0000-000000000001' AND funcao = 'operador';

@@ -10,6 +10,8 @@ vi.mock('@/lib/supabase', () => ({ supabaseConfigurado: true, supabase: { auth: 
 vi.mock('@/lib/equipe', () => ({
   ehSede: async () => sede,
   perfilAtual: async () => perfil,
+  meuEscritorio: async () => ({ nome: 'SARDAS E MENEZES', sede: true, pessoa: 'Ana', email: 'ana@exemplo.com' }),
+  esquecerEscritorio: () => undefined,
   listarPessoas: async () => [{ id: '1', funcao: 'admin' }, { id: '2', funcao: null }, { id: '3', funcao: null }],
 }))
 const aplicarTema = vi.fn()
@@ -26,6 +28,11 @@ const montar = (rota = '/dashboard') => render(<MemoryRouter initialEntries={[ro
 
 describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
   beforeEach(() => { cleanup(); localStorage.clear(); sede = true; perfil = 'operador'; signOut.mockClear(); aplicarTema.mockClear(); Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true }) })
+
+  it('o topo de toda tela diz em qual escritório a pessoa está', async () => {
+    montar('/meu-dia')
+    expect((await screen.findByTestId('escritorio-atual')).textContent).toBe('Escritório: SARDAS E MENEZES')
+  })
 
   it('começa no menu simples, só com o essencial, e abre o menu completo num clique (e volta)', () => {
     montar('/meu-dia')

@@ -17,47 +17,33 @@
 --   4. tabelas que ainda não têm coluna de escritório: tranca "só a sede" (política RESTRITIVA), com
 --      exceção para a linha da própria pessoa onde existe dono. Separar cada uma por escritório é o
 --      passo seguinte do plano; até lá, escritório de fora vê essas telas vazias em vez de ver a sede.
--- Para voltar atrás: DROP das políticas `so_sede_ate_separar` e recriar as políticas antigas (migração 012/014).
+-- Esta migração só ACRESCENTA (políticas restritivas e funções atualizadas): não apaga, não renomeia e não
+-- revoga nada. Para voltar atrás basta remover as políticas `so_sede_ate_separar`, `so_sede_configuracoes`
+-- e `sem_alteracao_direta`.
 
 -- 1. configuracoes -----------------------------------------------------------------------------
-DROP POLICY IF EXISTS admin_ler_configuracoes ON public.configuracoes;
-DROP POLICY IF EXISTS admin_inserir_configuracoes ON public.configuracoes;
-DROP POLICY IF EXISTS admin_editar_configuracoes ON public.configuracoes;
-DROP POLICY IF EXISTS admin_deletar_configuracoes ON public.configuracoes;
-CREATE POLICY admin_ler_configuracoes ON public.configuracoes FOR SELECT TO authenticated
-  USING (public.perfil_atual() = 'admin'::usuario_funcao AND public.eh_sede());
-CREATE POLICY admin_inserir_configuracoes ON public.configuracoes FOR INSERT TO authenticated
-  WITH CHECK (public.perfil_atual() = 'admin'::usuario_funcao AND public.eh_sede());
-CREATE POLICY admin_editar_configuracoes ON public.configuracoes FOR UPDATE TO authenticated
-  USING (public.perfil_atual() = 'admin'::usuario_funcao AND public.eh_sede())
-  WITH CHECK (public.perfil_atual() = 'admin'::usuario_funcao AND public.eh_sede());
-CREATE POLICY admin_deletar_configuracoes ON public.configuracoes FOR DELETE TO authenticated
-  USING (public.perfil_atual() = 'admin'::usuario_funcao AND public.eh_sede());
-REVOKE ALL ON public.configuracoes FROM anon;
-REVOKE TRUNCATE, REFERENCES, TRIGGER ON public.configuracoes FROM authenticated;
-
--- 2. funções ------------------------------------------------------------------------------------
--- definir_configuracao: o corpo antigo (com as validações de cada chave) vira função interna;
--- a função pública só deixa a sede passar.
+-- As políticas antigas (administrador) continuam; esta, restritiva, exige também que seja da sede.
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_proc WHERE pronamespace = 'public'::regnamespace AND proname = 'definir_configuracao_da_sede') THEN
-    ALTER FUNCTION public.definir_configuracao(text, text) RENAME TO definir_configuracao_da_sede;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname = 'public' AND tablename = 'configuracoes' AND policyname = 'so_sede_configuracoes') THEN
+    CREATE POLICY so_sede_configuracoes ON public.configuracoes AS RESTRICTIVE FOR ALL TO public
+      USING (public.eh_sede()) WITH CHECK (public.eh_sede());
   END IF;
 END $$;
-REVOKE EXECUTE ON FUNCTION public.definir_configuracao_da_sede(text, text) FROM PUBLIC, anon, authenticated;
 
-CREATE OR REPLACE FUNCTION public.definir_configuracao(p_chave text, p_valor text)
-RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+-- 2. funções ------------------------------------------------------------------------------------
+-- definir_configuracao: mantém o corpo (com as validações de cada chave) e passa a exigir a sede.
+DO $$
+DECLARE
+  v_def text := pg_get_functiondef('public.definir_configuracao(text,text)'::regprocedure);
+  v_antes text := $t$IF public.perfil_atual() IS DISTINCT FROM 'admin'::usuario_funcao THEN RAISE EXCEPTION 'Apenas administradores podem alterar configurações.'; END IF;$t$;
+  v_depois text := $t$IF public.perfil_atual() IS DISTINCT FROM 'admin'::usuario_funcao OR NOT public.eh_sede() THEN RAISE EXCEPTION 'Apenas administradores da sede podem alterar configurações.'; END IF;$t$;
 BEGIN
-  IF auth.uid() IS NULL THEN RAISE EXCEPTION 'Faça login para alterar configurações.'; END IF;
-  IF NOT public.eh_sede() THEN
-    RAISE EXCEPTION 'Esta configuração ainda é só da sede da plataforma. Fale com o suporte para ligar no seu escritório.';
+  IF position('eh_sede' IN v_def) = 0 THEN
+    IF position(v_antes IN v_def) = 0 THEN RAISE EXCEPTION 'definir_configuracao mudou: revise a migração 116.'; END IF;
+    EXECUTE replace(v_def, v_antes, v_depois);
   END IF;
-  PERFORM public.definir_configuracao_da_sede(p_chave, p_valor);
 END $$;
-REVOKE EXECUTE ON FUNCTION public.definir_configuracao(text, text) FROM PUBLIC, anon;
-GRANT EXECUTE ON FUNCTION public.definir_configuracao(text, text) TO authenticated;
 
 CREATE OR REPLACE FUNCTION public.remover_configuracao(p_chave text)
 RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
@@ -133,15 +119,21 @@ LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
 $$;
 
 -- 3. usuarios_perfis: mudança de função só por definir_funcao (que confere quem pede) ------------
-DROP POLICY IF EXISTS perfis_update ON public.usuarios_perfis;
-REVOKE INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER ON public.usuarios_perfis FROM anon, authenticated;
-REVOKE SELECT ON public.usuarios_perfis FROM anon;
+-- As funções do banco continuam gravando (são do dono da tabela); pela API ninguém altera perfil direto.
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname = 'public' AND tablename = 'usuarios_perfis' AND policyname = 'sem_alteracao_direta') THEN
+    CREATE POLICY sem_alteracao_direta ON public.usuarios_perfis AS RESTRICTIVE FOR UPDATE TO public
+      USING (false) WITH CHECK (false);
+  END IF;
+END $$;
 
 -- 4. tabelas ainda sem coluna de escritório -----------------------------------------------------
 DO $$
 DECLARE
   t text;
   r record;
+  ja text[] := ARRAY(SELECT tablename::text FROM pg_policies WHERE schemaname = 'public' AND policyname = 'so_sede_ate_separar');
 BEGIN
   -- 4a. só a sede, para tudo
   FOREACH t IN ARRAY ARRAY[
@@ -150,16 +142,14 @@ BEGIN
     'mensagens_portal', 'pagamentos_honorarios', 'parcelas_honorarios', 'vistorias', 'avisos_teto_ia',
     'imoveis_geo', 'intimacoes', 'relatorios_cliente_assinaturas', 'relatorios_cliente_envios', 'prestacoes_enviadas'
   ] LOOP
-    IF to_regclass('public.' || quote_ident(t)) IS NOT NULL THEN
-      EXECUTE format('DROP POLICY IF EXISTS so_sede_ate_separar ON public.%I', t);
+    IF to_regclass('public.' || quote_ident(t)) IS NOT NULL AND NOT (t = ANY (ja)) THEN
       EXECUTE format('CREATE POLICY so_sede_ate_separar ON public.%I AS RESTRICTIVE FOR ALL TO authenticated USING (public.eh_sede()) WITH CHECK (public.eh_sede())', t);
     END IF;
   END LOOP;
 
   -- 4b. só a sede LÊ (os outros escritórios continuam gravando o próprio registro)
   FOREACH t IN ARRAY ARRAY['trilha_auditoria', 'ancoragens', 'blockchain_registros'] LOOP
-    IF to_regclass('public.' || quote_ident(t)) IS NOT NULL THEN
-      EXECUTE format('DROP POLICY IF EXISTS so_sede_ate_separar ON public.%I', t);
+    IF to_regclass('public.' || quote_ident(t)) IS NOT NULL AND NOT (t = ANY (ja)) THEN
       EXECUTE format('CREATE POLICY so_sede_ate_separar ON public.%I AS RESTRICTIVE FOR SELECT TO authenticated USING (public.eh_sede())', t);
     END IF;
   END LOOP;
@@ -170,25 +160,27 @@ BEGIN
     ('avaliacoes_assistente', 'usuario_id'), ('revisoes_okr', 'criado_por'), ('analises_contrato', 'criado_por'),
     ('metas_horas_pessoa', 'usuario_id'), ('trilha_acesso', 'usuario_id')
   ) AS v(tabela, dono) LOOP
-    IF to_regclass('public.' || quote_ident(r.tabela)) IS NOT NULL THEN
-      EXECUTE format('DROP POLICY IF EXISTS so_sede_ate_separar ON public.%I', r.tabela);
+    IF to_regclass('public.' || quote_ident(r.tabela)) IS NOT NULL AND NOT (r.tabela = ANY (ja)) THEN
       EXECUTE format('CREATE POLICY so_sede_ate_separar ON public.%I AS RESTRICTIVE FOR ALL TO authenticated USING (public.eh_sede() OR %I = auth.uid()) WITH CHECK (public.eh_sede() OR %I = auth.uid())', r.tabela, r.dono, r.dono);
     END IF;
   END LOOP;
 
   -- 4d. tabelas que já têm escritorio_id: cada escritório vê o seu
   FOREACH t IN ARRAY ARRAY['resumos_semanais', 'relatorios_mensais'] LOOP
-    IF to_regclass('public.' || quote_ident(t)) IS NOT NULL THEN
-      EXECUTE format('DROP POLICY IF EXISTS so_sede_ate_separar ON public.%I', t);
+    IF to_regclass('public.' || quote_ident(t)) IS NOT NULL AND NOT (t = ANY (ja)) THEN
       EXECUTE format('CREATE POLICY so_sede_ate_separar ON public.%I AS RESTRICTIVE FOR ALL TO authenticated USING (public.eh_sede() OR escritorio_id = public.escritorio_atual()) WITH CHECK (public.eh_sede() OR escritorio_id = public.escritorio_atual())', t);
     END IF;
   END LOOP;
 END $$;
 
 -- 4e. aceites de termos: a própria pessoa, a sede, ou a administração do mesmo escritório
-DROP POLICY IF EXISTS so_sede_ate_separar ON public.aceites_termos;
-CREATE POLICY so_sede_ate_separar ON public.aceites_termos AS RESTRICTIVE FOR SELECT TO authenticated
-  USING (
-    public.eh_sede() OR usuario_id = auth.uid()
-    OR EXISTS (SELECT 1 FROM public.usuarios_perfis p WHERE p.id = aceites_termos.usuario_id AND p.escritorio_id = public.escritorio_atual())
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname = 'public' AND tablename = 'aceites_termos' AND policyname = 'so_sede_ate_separar') THEN
+    CREATE POLICY so_sede_ate_separar ON public.aceites_termos AS RESTRICTIVE FOR SELECT TO authenticated
+      USING (
+        public.eh_sede() OR usuario_id = auth.uid()
+        OR EXISTS (SELECT 1 FROM public.usuarios_perfis p WHERE p.id = aceites_termos.usuario_id AND p.escritorio_id = public.escritorio_atual())
+      );
+  END IF;
+END $$;

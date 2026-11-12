@@ -6,6 +6,7 @@ import { entrarDemo } from '@/lib/authDemo'
 import Marca from '@/components/Marca'
 import { NOME_PLATAFORMA } from '@/lib/plataforma'
 import { marcaPorDominio, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
+import { esquecerEscritorio } from '@/lib/equipe'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -14,7 +15,7 @@ export default function LoginPage() {
   const [abertoEm] = useState(() => Date.now())
   // Passo D22: em domínio próprio de parceiro, a tela de entrada mostra a marca dele.
   const [marca, setMarca] = useState<MarcaEscritorio | null>(null)
-  useEffect(() => { esquecerMarca(); marcaPorDominio().then(setMarca).catch(() => setMarca(null)) }, [])
+  useEffect(() => { esquecerMarca(); esquecerEscritorio(); marcaPorDominio().then(setMarca).catch(() => setMarca(null)) }, [])
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [avisoRecuperacao, setAvisoRecuperacao] = useState(false)

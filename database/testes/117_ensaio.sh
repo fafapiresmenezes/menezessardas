@@ -7,7 +7,6 @@ como() { # uuid sql
   printf "%s\n" "begin;" "select set_config('request.jwt.claims', '{\"sub\":\"$1\",\"role\":\"authenticated\"}', true);" "set local role authenticated;" "$2" "commit;" | $P 2>&1 | grep -v '^{"sub"' 
 }
 M=11111111-1111-1111-1111-111111111111; F=22222222-2222-2222-2222-222222222222; L=33333333-3333-3333-3333-333333333333
-echo "== Fátima virou admin da sede:"; $P -c "select funcao from usuarios_perfis where id='$F'"
 echo "== 1. cadastro 'Sardas & Menezes' (existe como apelido da sede) -> pedido pendente, sem perfil"
 $P -c "insert into auth.users (id,email,raw_user_meta_data) values ('aaaaaaaa-0000-0000-0000-000000000001','caio@fora.test','{\"escritorio\":\"Sardas & Menezes\"}')"
 $P -c "select (select count(*) from usuarios_perfis where id='aaaaaaaa-0000-0000-0000-000000000001') perfis, (select escritorio_id||' '||nome_digitado from pedidos_entrada where usuario_id='aaaaaaaa-0000-0000-0000-000000000001')"
@@ -27,7 +26,8 @@ como $B1 "select (select count(*) from configuracoes) cfg, (select count(*) from
 echo "-- não altera config da sede:"; como $B1 "select public.definir_configuracao('pecas_destinatarios','x@y');" | head -2
 como $B1 "update configuracoes set valor='x' where chave='anthropic_api_key' returning chave;" | head -2
 echo "-- link_agenda / ler_automacao / estado:"; como $B1 "select public.ler_automacao(), (select permitido from public.estado_configuracao('anthropic_api_key'));"; como $B1 "select public.link_agenda();" | head -1
-echo "-- leitor não vira admin sozinho:"; como $L "update usuarios_perfis set funcao='admin' where id='$L';" | head -2
+echo "-- leitor não vira admin sozinho (deve continuar leitor):"; como $L "update usuarios_perfis set funcao='admin' where id='$L';"; $P -c "select funcao from usuarios_perfis where id='$L'"
+echo "-- função interna não é alcançável pela API:"; como $L "select interno.escritorio_por_nome('THEYE');" | head -1
 echo "== 3. segunda pessoa escreve 'ALFA ADVOGADOS' com acento/minúsculas -> pedido para o Alfa"
 $P -c "insert into auth.users (id,email,raw_user_meta_data) values ('$B2','novo@alfa.test','{\"escritorio\":\"Alfa Advogados\"}')"
 como $B1 "select email, nome_digitado from public.pedidos_entrada_pendentes(); select count(*) from public.listar_usuarios_v2();"

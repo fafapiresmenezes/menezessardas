@@ -17,7 +17,7 @@ create function public.eh_sede() returns boolean language sql stable security de
 create function public.definir_configuracao(p_chave text, p_valor text) returns void language plpgsql security definer set search_path=public as $$
 begin
   if auth.uid() is null then raise exception 'Faça login'; end if;
-  if public.perfil_atual() is distinct from 'admin'::usuario_funcao then raise exception 'Apenas administradores podem alterar configurações.'; end if;
+  IF public.perfil_atual() IS DISTINCT FROM 'admin'::usuario_funcao THEN RAISE EXCEPTION 'Apenas administradores podem alterar configurações.'; END IF;
   insert into configuracoes(chave,valor) values (p_chave,p_valor) on conflict (chave) do update set valor=excluded.valor;
 end $$;
 create function public.remover_configuracao(p_chave text) returns void language plpgsql security definer set search_path=public as $$ begin null; end $$;

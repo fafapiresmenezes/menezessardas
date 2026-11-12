@@ -9,9 +9,20 @@ vi.mock('@/lib/supabase', () => ({
   supabaseConfigurado: true,
   supabase: {
     from: () => ({ select: () => ({ maybeSingle: async () => ({ data: prefs }) }), upsert: (r: object) => upsert(r) }),
-    auth: { getUser: async () => ({ data: { user: { id: 'u1' } } }) },
+    auth: { getUser: async () => ({ data: { user: { id: 'u1' } } }), signOut: () => signOut() },
   },
 }))
+const signOut = vi.fn(async () => ({}))
+type Esc = { nome: string; sede: boolean; pessoa: string; email: string }
+let escritorio: Esc | null = null
+const esquecerEscritorio = vi.fn()
+vi.mock('@/lib/equipe', () => ({ meuEscritorio: async () => escritorio, esquecerEscritorio: () => esquecerEscritorio() }))
+let alcance: { id: string; cargo: string | null; admin: boolean; veTudo: boolean } | null = null
+vi.mock('@/lib/hierarquia', async original => ({
+  ...(await original<typeof import('@/lib/hierarquia')>()),
+  meuAlcance: async () => { if (!alcance) throw new Error('sem alcance'); return alcance },
+}))
+vi.mock('@/lib/preferencias', () => ({ minhaPreferencia: async () => ({ telaInicial: '' }), telaPorCargo: () => '/meu-dia' }))
 const gravarAreaAtual = vi.fn(async (_a: string) => undefined)
 vi.mock('@/lib/assistente', () => ({ gravarAreaAtual: (a: string) => gravarAreaAtual(a) }))
 vi.mock('@/components/AceiteTermos', () => ({ default: () => null }))
@@ -20,7 +31,7 @@ function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathn
 const montar = () => render(<MemoryRouter initialEntries={['/inicio']}><Routes><Route path="/inicio" element={<InicioPage />} /><Route path="*" element={<Onde />} /></Routes></MemoryRouter>)
 
 describe('Tela de entrada por área', () => {
-  beforeEach(() => { cleanup(); prefs = null; upsert.mockClear(); gravarAreaAtual.mockClear(); localStorage.clear() })
+  beforeEach(() => { cleanup(); prefs = null; escritorio = null; alcance = null; upsert.mockClear(); gravarAreaAtual.mockClear(); signOut.mockClear(); esquecerEscritorio.mockClear(); localStorage.clear(); sessionStorage.clear() })
   afterEach(() => vi.useRealTimers())
 
   it('mostra as 10 áreas; a busca filtra por título ou descrição e Enter abre a primeira; Imobiliário vai ao painel', async () => {
@@ -66,5 +77,41 @@ describe('Tela de entrada por área', () => {
     await act(async () => { await Promise.resolve() })
     expect(screen.getByTestId('onde').textContent).toBe('/compliance')
     expect(gravarAreaAtual).toHaveBeenCalledWith('compliance')
+  })
+
+  it('diz em qual escritório a pessoa está e deixa sair para trocar de conta', async () => {
+    sessionStorage.setItem('lsm-entrada-cargo', '1')
+    escritorio = { nome: 'SILVA E SOUZA ADVOGADOS', sede: false, pessoa: 'Ana Silva', email: 'ana@silva.adv.br' }
+    alcance = { id: 'u1', cargo: 'pleno', admin: false, veTudo: false }
+    montar()
+    expect((await screen.findByTestId('inicio-escritorio-nome')).textContent).toBe('SILVA E SOUZA ADVOGADOS')
+    expect(screen.getByTestId('inicio-escritorio').textContent).toContain('Ana Silva · ana@silva.adv.br')
+    expect((await screen.findByTestId('inicio-hierarquia')).textContent).toContain('você vê os seus')
+    fireEvent.click(screen.getByTestId('trocar-de-conta'))
+    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/login'))
+    expect(signOut).toHaveBeenCalled()
+    expect(esquecerEscritorio).toHaveBeenCalled()
+  })
+
+  it('divide a entrada em 4 blocos por assunto; números e administração só aparecem para quem pode', async () => {
+    sessionStorage.setItem('lsm-entrada-cargo', '1')
+    alcance = { id: 'u1', cargo: 'junior', admin: false, veTudo: false }
+    montar()
+    await screen.findByTestId('inicio-hierarquia')
+    expect(screen.getAllByTestId(/^bloco-\d$/).length).toBe(4)
+    expect(screen.getByTestId('bloco-1').textContent).toContain('1. Todo dia')
+    expect(screen.getByTestId('bloco-2').textContent).toContain('2. Processos')
+    expect(screen.getByTestId('bloco-3').textContent).toContain('3. Escrever peças')
+    expect(screen.getByTestId('bloco-4').textContent).toContain('4. Escritório')
+    expect(screen.queryByTestId('ir-indicadores')).toBeNull()
+    expect(screen.queryByTestId('ir-equipe')).toBeNull()
+    fireEvent.click(screen.getByTestId('ir-processos-antigos'))
+    expect(screen.getByTestId('onde').textContent).toBe('/processos-antigos')
+    cleanup()
+    alcance = { id: 'u1', cargo: 'socio', admin: true, veTudo: true }
+    montar()
+    expect(await screen.findByTestId('ir-equipe')).toBeTruthy()
+    expect(screen.getByTestId('ir-indicadores')).toBeTruthy()
+    expect(screen.getByTestId('inicio-hierarquia').textContent).toContain('enxerga todos os processos')
   })
 })
