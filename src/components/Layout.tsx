@@ -24,7 +24,7 @@ import { listarPessoas, perfilAtual, meuEscritorio, esquecerEscritorio, type Meu
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, ChevronDown, MoreHorizontal, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, ChevronDown, MoreHorizontal, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, MapPin } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -89,6 +89,7 @@ const gruposMenu = [
     { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
     { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
     { icon: TrendingUp, label: 'Previsões', href: '/previsoes' },
+    { icon: MapPin, label: 'Geolocalização (MVP)', href: '/geolocalizacao' },
   ] },
   { id: 'solucoes', titulo: 'Soluções jurídicas', itens: [
     { icon: Store, label: 'Soluções jurídicas', href: '/solucoes' },
@@ -144,6 +145,7 @@ const DICAS: Record<string, string> = {
   '/enquetes': 'Enquetes sobre temas do direito',
   '/mercado': 'O mercado jurídico em números',
   '/previsoes': 'Previsões e riscos da carteira',
+  '/geolocalizacao': 'MVP de geolocalização em você mesmo: posição, câmera como sensor de lugar, satélites, município e notícias, tudo cifrado no aparelho',
   '/solucoes': 'A plataforma oferecida a outros escritórios (vertente comercial)',
   '/nuvem': 'Arquivos do escritório na nuvem',
   '/consumo': 'Quanto cada pessoa consome de IA e quanto custa',
