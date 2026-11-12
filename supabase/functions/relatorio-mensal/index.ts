@@ -33,7 +33,8 @@ async function gerarPdf(r: Relatorio, geradoEm: string): Promise<Uint8Array> {
   const pdf = await PDFDocument.create()
   pdf.setTitle(`Relatório mensal ${r.mes} - Instituto THEYE`); pdf.setAuthor('Plataforma THEYE')
   const serif = await pdf.embedFont('Times-Roman'), serifB = await pdf.embedFont('Times-Bold'), sans = await pdf.embedFont('Helvetica')
-  const navy = rgb(0.078, 0.129, 0.239), dourado = rgb(0.69, 0.553, 0.341), cinza = rgb(0.4, 0.4, 0.4)
+  // Paleta THEYE: preto, branco, cinza (sem azul e sem dourado).
+  const navy = rgb(0, 0, 0), dourado = rgb(0.35, 0.35, 0.35), cinza = rgb(0.4, 0.4, 0.4)
   let page = pdf.addPage([595.28, 841.89]); let y = 800
   const nova = () => { page = pdf.addPage([595.28, 841.89]); y = 800 }
   page.drawRectangle({ x: 0, y: 790, width: 595.28, height: 51.89, color: navy })

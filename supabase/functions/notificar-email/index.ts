@@ -86,7 +86,7 @@ async function enviarEmailResend(notif: Notificacao): Promise<boolean> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'noreply@menezes-sardas-contratos.vercel.app',
+        from: 'Avisos THEYE <onboarding@resend.dev>',
         to: notif.email_destinatario,
         subject: assunto,
         html,
