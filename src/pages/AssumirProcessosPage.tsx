@@ -9,7 +9,7 @@ import { hojeLocal } from '@/lib/datas'
 import { br, somarDias } from '@/lib/ferramentas/base'
 import { blocos, POLO, type Publicacao } from '@/lib/pesquisa/fontesOficiais'
 import { lerTodas, csvDosPrazos, linhaDoPrazo, ROTULO_URGENCIA, type PrazoLido, type Urgencia } from '@/lib/escritorio/lerIntimacao'
-import { rotuloPrazo } from '@/lib/prazos/codigos'
+import { rotuloPrazo, CODIGOS, type Codigo } from '@/lib/prazos/codigos'
 import { analisarPlanilha, analisarResultados, importavel, paraCaso, type LinhaImportacao } from '@/lib/escritorio/importarProcessos'
 import { xlsxParaTexto } from '@/lib/escritorio/lerXlsx'
 import RoboCnj from '@/components/RoboCnj'
@@ -64,6 +64,8 @@ export default function AssumirProcessosPage() {
   const [erro, setErro] = useState('')
   const [avisos, setAvisos] = useState<string[]>([])
   const [filtro, setFiltro] = useState<Urgencia | 'todos'>('todos')
+  // Pedido do M (12/11/2026): nada de lista única misturada — separar por tipo de direito.
+  const [ramo, setRamo] = useState<Codigo | 'todos'>('todos')
   const [aviso, setAviso] = useState('')
   const [casosCadastrados, setCasosCadastrados] = useState<string[] | null>(null)
   const [planilha, setPlanilha] = useState<{ nome: string; linhas: LinhaImportacao[] } | null>(null)
@@ -127,7 +129,14 @@ export default function AssumirProcessosPage() {
   const numeros = useMemo(() => numerosDoTexto(s.numeros), [s.numeros])
   const prazos = useMemo(() => lerTodas(s.pubs, hoje).filter(l => !s.ocultos.includes(l.chave)), [s.pubs, s.ocultos, hoje])
   const conta = useMemo(() => { const c: Record<string, number> = {}; for (const l of prazos) c[l.urgencia] = (c[l.urgencia] ?? 0) + 1; return c }, [prazos])
-  const visiveis = filtro === 'todos' ? prazos : prazos.filter(l => l.urgencia === filtro)
+  const porRamo = useMemo(() => { const c: Partial<Record<Codigo, number>> = {}; for (const l of prazos) c[l.codigo] = (c[l.codigo] ?? 0) + 1; return c }, [prazos])
+  const visiveis = prazos.filter(l => (filtro === 'todos' || l.urgencia === filtro) && (ramo === 'todos' || l.codigo === ramo))
+  // Agrupa por tipo de direito, mantendo dentro de cada grupo a ordem de urgência da lista.
+  const grupos = useMemo(() => {
+    const m = new Map<Codigo, PrazoLido[]>()
+    for (const l of visiveis) { const g = m.get(l.codigo) ?? []; g.push(l); m.set(l.codigo, g) }
+    return [...m.entries()].sort((a, b) => b[1].length - a[1].length)
+  }, [visiveis])
   const comPublicacao = useMemo(() => new Set(s.pubs.map(p => p.numero.replace(/\D/g, ''))), [s.pubs])
   const semNovidade = s.capas.filter(c => !comPublicacao.has(c.numero.replace(/\D/g, '')))
   const podeBuscar = s.nome.replace(/[^A-Za-zÀ-ÿ]/g, '').length >= 4 || numeros.length > 0 || /\d{1,7}\/[A-Za-z]{2}/.test(s.oab)
@@ -303,13 +312,26 @@ export default function AssumirProcessosPage() {
                       {u === 'todos' ? 'Todos' : ROTULO_URGENCIA[u]} ({n})</button>
                   })}
                 </div>
+                {Object.keys(porRamo).length > 1 && (
+                  <div role="tablist" aria-label="Filtrar por tipo de direito" className="flex flex-wrap gap-2 mt-2" data-testid="filtro-ramos">
+                    {(['todos', ...Object.keys(porRamo)] as const).map(c => (
+                      <button key={c} role="tab" aria-selected={ramo === c} onClick={() => setRamo(c as Codigo | 'todos')} data-testid={`ramo-filtro-${c}`} title="Mostra só os prazos deste tipo de direito"
+                        className={`min-h-[44px] px-4 text-sm border ${ramo === c ? 'bg-dourado text-white border-dourado' : 'border-navy/20 text-navy'}`}>
+                        {c === 'todos' ? 'Todos os ramos' : CODIGOS[c as Codigo].nome} {c !== 'todos' && `(${porRamo[c as Codigo]})`}</button>
+                    ))}
+                  </div>
+                )}
                 <div className="flex flex-wrap gap-2 mt-3">
                   <button type="button" onClick={() => agendar(prazos)} className="min-h-[44px] px-4 bg-dourado text-white text-sm inline-flex items-center gap-2" title="Cria um compromisso na agenda para cada prazo encontrado." data-testid="agendar-todos"><CalendarPlus className="w-4 h-4" aria-hidden />Pôr todos os prazos na agenda</button>
                   <button type="button" onClick={baixar} title="Baixa os prazos encontrados como planilha (abre no Excel)." className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2"><Download className="w-4 h-4" aria-hidden />Baixar planilha</button>
                 </div>
                 {aviso && <p className="mt-2 text-sm" role="status" data-testid="aviso-agenda">{aviso}</p>}
-                <ol className="mt-4 space-y-3" data-testid="lista-prazos">
-                  {visiveis.map(l => (
+                <div className="mt-4 space-y-5" data-testid="lista-prazos">
+                  {grupos.map(([cod, itens]) => (
+                  <section key={cod} data-testid={`ramo-${cod}`}>
+                  <p className="text-xs uppercase tracking-wider text-dourado-escuro border-b border-navy/10 pb-1">{CODIGOS[cod].nome} ({itens.length})</p>
+                  <ol className="mt-2 space-y-3">
+                  {itens.map(l => (
                     <li key={l.chave} className={`border-l-4 p-4 ${COR[l.urgencia]}`} data-testid="prazo">
                       <p className="text-lg font-semibold">
                         {l.vence ? (l.urgencia === 'vencido' ? <span className="text-critico inline-flex items-center gap-1"><AlertTriangle className="w-5 h-5" aria-hidden />Venceu em {br(l.vence)} ({l.diaSemana})</span> : `Vence ${l.diaSemana}, ${br(l.vence)}`) : 'Ler e decidir'}
@@ -335,7 +357,10 @@ export default function AssumirProcessosPage() {
                       </details>
                     </li>
                   ))}
-                </ol>
+                  </ol>
+                  </section>
+                  ))}
+                </div>
                 {s.ocultos.length > 0 && <button type="button" onClick={() => mudar({ ocultos: [] })} title="Traz de volta para a lista os prazos que foram marcados como resolvidos" className="mt-3 min-h-[44px] text-sm underline text-navy">Mostrar de novo os {s.ocultos.length} marcados como resolvidos</button>}
               </>}
             <p className="text-xs text-grafite-claro mt-4">A leitura do prazo é automática e serve para organizar o trabalho. Antes de protocolar, confira a data na publicação e no processo. Processos em segredo de justiça não aparecem no Diário.</p>
