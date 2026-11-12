@@ -1,7 +1,7 @@
 {
- "total": 237,
+ "total": 288,
  "meta": 500,
- "faltam": 263,
+ "faltam": 212,
  "agentes": [
   {
    "id": "agente-001",
@@ -2395,6 +2395,516 @@
    "origem": "UERJ, PPGD, linhas de pesquisa (https://www.direito.uerj.br/mestrado)",
    "status": "catalogado; ementa completa ainda não importada",
    "id": "agente-237"
+  },
+  {
+   "nome": "Consultor de Teoria Geral do Direito Privado",
+   "area": "Graduação em direito",
+   "nicho": "Teoria Geral do Direito Privado",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-238"
+  },
+  {
+   "nome": "Consultor de Teoria da Constituição",
+   "area": "Graduação em direito",
+   "nicho": "Teoria da Constituição",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-239"
+  },
+  {
+   "nome": "Consultor de Controle de Constitucionalidade",
+   "area": "Graduação em direito",
+   "nicho": "Controle de Constitucionalidade",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-240"
+  },
+  {
+   "nome": "Consultor de Direito Tributário",
+   "area": "Graduação em direito",
+   "nicho": "Direito Tributário",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-241"
+  },
+  {
+   "nome": "Consultor de Direito Empresarial",
+   "area": "Graduação em direito",
+   "nicho": "Direito Empresarial",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-242"
+  },
+  {
+   "nome": "Consultor de Introdução à Ciência do Direito",
+   "area": "Graduação em direito",
+   "nicho": "Introdução à Ciência do Direito",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-243"
+  },
+  {
+   "nome": "Consultor de Hermenêutica Jurídica",
+   "area": "Graduação em direito",
+   "nicho": "Hermenêutica Jurídica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-244"
+  },
+  {
+   "nome": "Consultor de Antropologia Jurídica",
+   "area": "Graduação em direito",
+   "nicho": "Antropologia Jurídica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-245"
+  },
+  {
+   "nome": "Consultor de Instituições de Direito Romano",
+   "area": "Graduação em direito",
+   "nicho": "Instituições de Direito Romano",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-246"
+  },
+  {
+   "nome": "Consultor de Psicologia Jurídica",
+   "area": "Graduação em direito",
+   "nicho": "Psicologia Jurídica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-247"
+  },
+  {
+   "nome": "Consultor de Metodologia de Pesquisa em Direito",
+   "area": "Graduação em direito",
+   "nicho": "Metodologia de Pesquisa em Direito",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-248"
+  },
+  {
+   "nome": "Consultor de Direito do Consumidor",
+   "area": "Graduação em direito",
+   "nicho": "Direito do Consumidor",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-249"
+  },
+  {
+   "nome": "Consultor de Direito Eleitoral",
+   "area": "Graduação em direito",
+   "nicho": "Direito Eleitoral",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-250"
+  },
+  {
+   "nome": "Consultor de Direito Parlamentar",
+   "area": "Graduação em direito",
+   "nicho": "Direito Parlamentar",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-251"
+  },
+  {
+   "nome": "Consultor de Criminologia",
+   "area": "Graduação em direito",
+   "nicho": "Criminologia",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-252"
+  },
+  {
+   "nome": "Consultor de Direito Urbanístico",
+   "area": "Graduação em direito",
+   "nicho": "Direito Urbanístico",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-253"
+  },
+  {
+   "nome": "Consultor de Direito das Organizações Internacionais",
+   "area": "Graduação em direito",
+   "nicho": "Direito das Organizações Internacionais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-254"
+  },
+  {
+   "nome": "Consultor de Direito Ambiental",
+   "area": "Graduação em direito",
+   "nicho": "Direito Ambiental",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-255"
+  },
+  {
+   "nome": "Consultor de Direito Previdenciário",
+   "area": "Graduação em direito",
+   "nicho": "Direito Previdenciário",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-256"
+  },
+  {
+   "nome": "Consultor de Direito Coletivo do Trabalho",
+   "area": "Graduação em direito",
+   "nicho": "Direito Coletivo do Trabalho",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-257"
+  },
+  {
+   "nome": "Consultor de Serviços Notariais e Registrais",
+   "area": "Graduação em direito",
+   "nicho": "Serviços Notariais e Registrais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-258"
+  },
+  {
+   "nome": "Consultor de Direito Agrário",
+   "area": "Graduação em direito",
+   "nicho": "Direito Agrário",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-259"
+  },
+  {
+   "nome": "Consultor de Legística",
+   "area": "Graduação em direito",
+   "nicho": "Legística",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFMG, Graduação em Direito, versão curricular 2022/2 (https://colgrad.direito.ufmg.br/wp-content/uploads/2022/09/Versao-Curricular-20222.pdf)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-260"
+  },
+  {
+   "nome": "Consultor de Teoria Geral das Obrigações",
+   "area": "Graduação em direito",
+   "nicho": "Teoria Geral das Obrigações",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-261"
+  },
+  {
+   "nome": "Consultor de Teoria Geral dos Contratos e Contratos do Código Civil",
+   "area": "Graduação em direito",
+   "nicho": "Teoria Geral dos Contratos e Contratos do Código Civil",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-262"
+  },
+  {
+   "nome": "Consultor de Responsabilidade Civil e Atos Unilaterais",
+   "area": "Graduação em direito",
+   "nicho": "Responsabilidade Civil e Atos Unilaterais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-263"
+  },
+  {
+   "nome": "Consultor de Direito das Coisas",
+   "area": "Graduação em direito",
+   "nicho": "Direito das Coisas",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-264"
+  },
+  {
+   "nome": "Consultor de Direito de Família e Sucessões",
+   "area": "Graduação em direito",
+   "nicho": "Direito de Família e Sucessões",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-265"
+  },
+  {
+   "nome": "Consultor de Seguridade Social",
+   "area": "Graduação em direito",
+   "nicho": "Seguridade Social",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-266"
+  },
+  {
+   "nome": "Consultor de Propriedade Intelectual e Acesso ao Conhecimento",
+   "area": "Graduação em direito",
+   "nicho": "Propriedade Intelectual e Acesso ao Conhecimento",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-267"
+  },
+  {
+   "nome": "Consultor de Concorrência e Mercado",
+   "area": "Graduação em direito",
+   "nicho": "Concorrência e Mercado",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-268"
+  },
+  {
+   "nome": "Consultor de Contratos Empresariais",
+   "area": "Graduação em direito",
+   "nicho": "Contratos Empresariais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-269"
+  },
+  {
+   "nome": "Consultor de Direito do Comércio Internacional",
+   "area": "Graduação em direito",
+   "nicho": "Direito do Comércio Internacional",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-270"
+  },
+  {
+   "nome": "Consultor de Metodologia do Estudo do Direito",
+   "area": "Graduação em direito",
+   "nicho": "Metodologia do Estudo do Direito",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-271"
+  },
+  {
+   "nome": "Consultor de Fundamentos e Princípios do Direito Empresarial",
+   "area": "Graduação em direito",
+   "nicho": "Fundamentos e Princípios do Direito Empresarial",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-272"
+  },
+  {
+   "nome": "Consultor de Direito da União Europeia",
+   "area": "Graduação em direito",
+   "nicho": "Direito da União Europeia",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-273"
+  },
+  {
+   "nome": "Consultor de Direito da Saúde",
+   "area": "Graduação em direito",
+   "nicho": "Direito da Saúde",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-274"
+  },
+  {
+   "nome": "Consultor de Direito e Tecnologia: Privacidade e Proteção de Dados",
+   "area": "Graduação em direito",
+   "nicho": "Direito e Tecnologia: Privacidade e Proteção de Dados",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-275"
+  },
+  {
+   "nome": "Consultor de Direito Digital",
+   "area": "Graduação em direito",
+   "nicho": "Direito Digital",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-276"
+  },
+  {
+   "nome": "Consultor de Orçamento Público",
+   "area": "Graduação em direito",
+   "nicho": "Orçamento Público",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-277"
+  },
+  {
+   "nome": "Consultor de Federalismo Fiscal",
+   "area": "Graduação em direito",
+   "nicho": "Federalismo Fiscal",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-278"
+  },
+  {
+   "nome": "Consultor de Licitações e Compras Governamentais",
+   "area": "Graduação em direito",
+   "nicho": "Licitações e Compras Governamentais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-279"
+  },
+  {
+   "nome": "Consultor de Processo Administrativo",
+   "area": "Graduação em direito",
+   "nicho": "Processo Administrativo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-280"
+  },
+  {
+   "nome": "Consultor de Acesso à Justiça",
+   "area": "Graduação em direito",
+   "nicho": "Acesso à Justiça",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-281"
+  },
+  {
+   "nome": "Consultor de Mediação e Arbitragem",
+   "area": "Graduação em direito",
+   "nicho": "Mediação e Arbitragem",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-282"
+  },
+  {
+   "nome": "Consultor de Direito e Discriminação",
+   "area": "Graduação em direito",
+   "nicho": "Direito e Discriminação",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-283"
+  },
+  {
+   "nome": "Consultor de Direito e Equidade de Gênero",
+   "area": "Graduação em direito",
+   "nicho": "Direito e Equidade de Gênero",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-284"
+  },
+  {
+   "nome": "Consultor de Comércio Eletrônico",
+   "area": "Graduação em direito",
+   "nicho": "Comércio Eletrônico",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-285"
+  },
+  {
+   "nome": "Consultor de Direito dos Seguros Privados",
+   "area": "Graduação em direito",
+   "nicho": "Direito dos Seguros Privados",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-286"
+  },
+  {
+   "nome": "Consultor de Tributação da Economia Digital",
+   "area": "Graduação em direito",
+   "nicho": "Tributação da Economia Digital",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-287"
+  },
+  {
+   "nome": "Consultor de Direito Tributário Internacional",
+   "area": "Graduação em direito",
+   "nicho": "Direito Tributário Internacional",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "USP, Faculdade de Direito, grade curricular matutino (https://uspdigital.usp.br/jupiterweb/listarGradeCurricular?codcg=2&codcur=2014&codhab=102&tipo=N)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-288"
   }
  ]
 }
