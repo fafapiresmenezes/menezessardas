@@ -1,7 +1,7 @@
 {
- "total": 172,
+ "total": 237,
  "meta": 500,
- "faltam": 328,
+ "faltam": 263,
  "agentes": [
   {
    "id": "agente-001",
@@ -1745,6 +1745,656 @@
    "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
    "niveis": "vários",
    "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "nome": "Consultor de Ethics and the Law on the Electronic Frontier (6.805)",
+   "area": "Tecnologia e direito",
+   "nicho": "Ethics and the Law on the Electronic Frontier (6.805)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "MIT OpenCourseWare (https://ocw.mit.edu/courses/6-805-ethics-and-the-law-on-the-electronic-frontier-fall-2005/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-173"
+  },
+  {
+   "nome": "Consultor de Patents, Copyrights, and the Law of Intellectual Property (15.628J)",
+   "area": "Propriedade intelectual",
+   "nicho": "Patents, Copyrights, and the Law of Intellectual Property (15.628J)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "MIT OpenCourseWare (https://ocw.mit.edu/courses/15-628j-patents-copyrights-and-the-law-of-intellectual-property-spring-2013/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-174"
+  },
+  {
+   "nome": "Consultor de Innovative Businesses and Breakthrough Technologies: The Legal Issues (15.616)",
+   "area": "Empresarial e tecnologia",
+   "nicho": "Innovative Businesses and Breakthrough Technologies: The Legal Issues (15.616)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "MIT OpenCourseWare (https://ocw.mit.edu/courses/15-616-innovative-businesses-and-breakthrough-technologies-the-legal-issues-fall-2004/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-175"
+  },
+  {
+   "nome": "Consultor de Law and Society (21A.219)",
+   "area": "Teoria do direito",
+   "nicho": "Law and Society (21A.219)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "MIT OpenCourseWare (https://ocw.mit.edu/courses/21a-219-law-and-society-spring-2003/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-176"
+  },
+  {
+   "nome": "Consultor de Introduction to Copyright Law (6.912)",
+   "area": "Propriedade intelectual",
+   "nicho": "Introduction to Copyright Law (6.912)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "MIT OpenCourseWare (https://ocw.mit.edu/courses/6-912-introduction-to-copyright-law-january-iap-2006/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-177"
+  },
+  {
+   "nome": "Consultor de Direitos Humanos",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direitos Humanos",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-178"
+  },
+  {
+   "nome": "Consultor de Metodologia da Pesquisa Jurídica",
+   "area": "Pós-graduação em direito",
+   "nicho": "Metodologia da Pesquisa Jurídica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-179"
+  },
+  {
+   "nome": "Consultor de Política e Políticas Públicas",
+   "area": "Pós-graduação em direito",
+   "nicho": "Política e Políticas Públicas",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-180"
+  },
+  {
+   "nome": "Consultor de Teoria do Estado",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teoria do Estado",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-181"
+  },
+  {
+   "nome": "Consultor de Teoria Geral do Direito",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teoria Geral do Direito",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-182"
+  },
+  {
+   "nome": "Consultor de Direito Administrativo e Estado Contemporâneo",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Administrativo e Estado Contemporâneo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-183"
+  },
+  {
+   "nome": "Consultor de Direito Civil Contemporâneo",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Civil Contemporâneo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-184"
+  },
+  {
+   "nome": "Consultor de Direito Civil e Sociedade",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Civil e Sociedade",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-185"
+  },
+  {
+   "nome": "Consultor de Direito Cooperativo e Desenvolvimento",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Cooperativo e Desenvolvimento",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-186"
+  },
+  {
+   "nome": "Consultor de Direito Criminal Contemporâneo",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Criminal Contemporâneo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-187"
+  },
+  {
+   "nome": "Consultor de Direito Econômico",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Econômico",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-188"
+  },
+  {
+   "nome": "Consultor de Direito Internacional Contemporâneo",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Internacional Contemporâneo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-189"
+  },
+  {
+   "nome": "Consultor de Direito Processual Civil e Cidadania",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Processual Civil e Cidadania",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-190"
+  },
+  {
+   "nome": "Consultor de Direito Processual Penal Contemporâneo",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Processual Penal Contemporâneo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-191"
+  },
+  {
+   "nome": "Consultor de Direito Tributário e Política Econômica",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Tributário e Política Econômica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-192"
+  },
+  {
+   "nome": "Consultor de Fundamentos do Direito do Trabalho",
+   "area": "Pós-graduação em direito",
+   "nicho": "Fundamentos do Direito do Trabalho",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-193"
+  },
+  {
+   "nome": "Consultor de Fundamentos do Direito Societário",
+   "area": "Pós-graduação em direito",
+   "nicho": "Fundamentos do Direito Societário",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-194"
+  },
+  {
+   "nome": "Consultor de Novas Tendências do Direito Civil",
+   "area": "Pós-graduação em direito",
+   "nicho": "Novas Tendências do Direito Civil",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-195"
+  },
+  {
+   "nome": "Consultor de Novas Tendências do Direito Comercial",
+   "area": "Pós-graduação em direito",
+   "nicho": "Novas Tendências do Direito Comercial",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-196"
+  },
+  {
+   "nome": "Consultor de Novas Tendências do Direito do Trabalho",
+   "area": "Pós-graduação em direito",
+   "nicho": "Novas Tendências do Direito do Trabalho",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-197"
+  },
+  {
+   "nome": "Consultor de Princípios Constitucionais do Direito Criminal",
+   "area": "Pós-graduação em direito",
+   "nicho": "Princípios Constitucionais do Direito Criminal",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-198"
+  },
+  {
+   "nome": "Consultor de Princípios Constitucionais do Direito Processual Penal",
+   "area": "Pós-graduação em direito",
+   "nicho": "Princípios Constitucionais do Direito Processual Penal",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-199"
+  },
+  {
+   "nome": "Consultor de Princípios Constitucionais do Direito Tributário",
+   "area": "Pós-graduação em direito",
+   "nicho": "Princípios Constitucionais do Direito Tributário",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-200"
+  },
+  {
+   "nome": "Consultor de Sistema Constitucional Positivo",
+   "area": "Pós-graduação em direito",
+   "nicho": "Sistema Constitucional Positivo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-201"
+  },
+  {
+   "nome": "Consultor de Sociologia do Direito",
+   "area": "Pós-graduação em direito",
+   "nicho": "Sociologia do Direito",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-202"
+  },
+  {
+   "nome": "Consultor de Teoria Crítica dos Direitos Humanos",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teoria Crítica dos Direitos Humanos",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-203"
+  },
+  {
+   "nome": "Consultor de Teoria do Direito Processual Civil Contemporâneo",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teoria do Direito Processual Civil Contemporâneo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-204"
+  },
+  {
+   "nome": "Consultor de Teoria Geral do Direito Constitucional",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teoria Geral do Direito Constitucional",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-205"
+  },
+  {
+   "nome": "Consultor de Teoria Política e Democracia",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teoria Política e Democracia",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-206"
+  },
+  {
+   "nome": "Consultor de Teorias Econômicas",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teorias Econômicas",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-207"
+  },
+  {
+   "nome": "Consultor de Autogestão e Sociedades Cooperativas",
+   "area": "Pós-graduação em direito",
+   "nicho": "Autogestão e Sociedades Cooperativas",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-208"
+  },
+  {
+   "nome": "Consultor de Crítica às Instituições do Direito Internacional",
+   "area": "Pós-graduação em direito",
+   "nicho": "Crítica às Instituições do Direito Internacional",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-209"
+  },
+  {
+   "nome": "Consultor de Crítica do Direito Administrativo",
+   "area": "Pós-graduação em direito",
+   "nicho": "Crítica do Direito Administrativo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-210"
+  },
+  {
+   "nome": "Consultor de Crítica do Direito Comercial",
+   "area": "Pós-graduação em direito",
+   "nicho": "Crítica do Direito Comercial",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-211"
+  },
+  {
+   "nome": "Consultor de Crítica do Direito Constitucional Moderno",
+   "area": "Pós-graduação em direito",
+   "nicho": "Crítica do Direito Constitucional Moderno",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-212"
+  },
+  {
+   "nome": "Consultor de Crítica do Direito Criminal",
+   "area": "Pós-graduação em direito",
+   "nicho": "Crítica do Direito Criminal",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-213"
+  },
+  {
+   "nome": "Consultor de Crítica do Direito do Trabalho",
+   "area": "Pós-graduação em direito",
+   "nicho": "Crítica do Direito do Trabalho",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-214"
+  },
+  {
+   "nome": "Consultor de Crítica do Direito Processual Civil",
+   "area": "Pós-graduação em direito",
+   "nicho": "Crítica do Direito Processual Civil",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-215"
+  },
+  {
+   "nome": "Consultor de Crítica do Direito Processual Penal",
+   "area": "Pós-graduação em direito",
+   "nicho": "Crítica do Direito Processual Penal",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-216"
+  },
+  {
+   "nome": "Consultor de Crítica do Direito Tributário",
+   "area": "Pós-graduação em direito",
+   "nicho": "Crítica do Direito Tributário",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-217"
+  },
+  {
+   "nome": "Consultor de Direito Criminal Internacional",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Criminal Internacional",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-218"
+  },
+  {
+   "nome": "Consultor de Direito do Trabalho e Direitos Fundamentais",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito do Trabalho e Direitos Fundamentais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-219"
+  },
+  {
+   "nome": "Consultor de Direito e Família",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito e Família",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-220"
+  },
+  {
+   "nome": "Consultor de Direito e Meio Ambiente",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito e Meio Ambiente",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-221"
+  },
+  {
+   "nome": "Consultor de Direito e Sociedade",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito e Sociedade",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-222"
+  },
+  {
+   "nome": "Consultor de Direito Societário",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Societário",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-223"
+  },
+  {
+   "nome": "Consultor de História do Pensamento Jurídico",
+   "area": "Pós-graduação em direito",
+   "nicho": "História do Pensamento Jurídico",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-224"
+  },
+  {
+   "nome": "Consultor de História do Trabalho e Mercado",
+   "area": "Pós-graduação em direito",
+   "nicho": "História do Trabalho e Mercado",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-225"
+  },
+  {
+   "nome": "Consultor de Regulação Pública da Economia",
+   "area": "Pós-graduação em direito",
+   "nicho": "Regulação Pública da Economia",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-226"
+  },
+  {
+   "nome": "Consultor de Processo Civil e Direitos Fundamentais",
+   "area": "Pós-graduação em direito",
+   "nicho": "Processo Civil e Direitos Fundamentais",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UFPR, PPGD, currículo e disciplinas (https://ppgd.ufpr.br/curriculo-e-disciplinas/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-227"
+  },
+  {
+   "nome": "Consultor de Direito Internacional (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Internacional (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, PPGD, linhas de pesquisa (https://www.direito.uerj.br/mestrado)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-228"
+  },
+  {
+   "nome": "Consultor de Direito Penal (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Penal (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, PPGD, linhas de pesquisa (https://www.direito.uerj.br/mestrado)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-229"
+  },
+  {
+   "nome": "Consultor de Direito Processual (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Processual (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, PPGD, linhas de pesquisa (https://www.direito.uerj.br/mestrado)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-230"
+  },
+  {
+   "nome": "Consultor de Direito Público (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Público (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, PPGD, linhas de pesquisa (https://www.direito.uerj.br/mestrado)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-231"
+  },
+  {
+   "nome": "Consultor de Finanças Públicas, Tributação e Desenvolvimento (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Finanças Públicas, Tributação e Desenvolvimento (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, PPGD, linhas de pesquisa (https://www.direito.uerj.br/mestrado)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-232"
+  },
+  {
+   "nome": "Consultor de Direito Civil (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito Civil (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, PPGD, linhas de pesquisa (https://www.direito.uerj.br/mestrado)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-233"
+  },
+  {
+   "nome": "Consultor de Direito da Cidade (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito da Cidade (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, PPGD, linhas de pesquisa (https://www.direito.uerj.br/mestrado)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-234"
+  },
+  {
+   "nome": "Consultor de Direito do Trabalho e Previdenciário (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Direito do Trabalho e Previdenciário (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, PPGD, linhas de pesquisa (https://www.direito.uerj.br/mestrado)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-235"
+  },
+  {
+   "nome": "Consultor de Empresa e Atividades Econômicas (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Empresa e Atividades Econômicas (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, PPGD, linhas de pesquisa (https://www.direito.uerj.br/mestrado)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-236"
+  },
+  {
+   "nome": "Consultor de Teoria e Filosofia do Direito (linha de pesquisa)",
+   "area": "Pós-graduação em direito",
+   "nicho": "Teoria e Filosofia do Direito (linha de pesquisa)",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, PPGD, linhas de pesquisa (https://www.direito.uerj.br/mestrado)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-237"
   }
  ]
 }
