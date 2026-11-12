@@ -66,7 +66,7 @@ export default function BibliotecaPage() {
               {visiveis.map(i => (
                 <li key={i.id} className="py-2" data-testid="biblioteca-item">
                   <div className="flex flex-wrap items-start gap-2">
-                    <button type="button" onClick={() => setAberto(aberto === i.id ? null : i.id)} aria-expanded={aberto === i.id} className="flex-1 min-w-[200px] text-left min-h-[44px]">
+                    <button type="button" onClick={() => setAberto(aberto === i.id ? null : i.id)} aria-expanded={aberto === i.id} title="Abre ou fecha o conteúdo completo deste item da biblioteca" className="flex-1 min-w-[200px] text-left min-h-[44px]">
                       <span className="text-xs uppercase tracking-wider text-dourado-escuro">{ROTULO_TIPO[i.tipo]}</span> <strong>{i.titulo}</strong>
                       <span className="block text-grafite-claro">{new Date(i.criado_em).toLocaleDateString('pt-BR')}{i.caso && ` · ${i.caso}`}{i.etiquetas.length > 0 && ` · ${i.etiquetas.map(e => `#${e}`).join(' ')}`}</span>
                     </button>
@@ -83,7 +83,7 @@ export default function BibliotecaPage() {
           <input value={nota.titulo} onChange={e => setNota({ ...nota, titulo: e.target.value })} aria-label="Título da nota" placeholder="Título" className="block w-full border px-3 py-2 min-h-[44px]" />
           <textarea value={nota.conteudo} onChange={e => setNota({ ...nota, conteudo: e.target.value })} aria-label="Conteúdo da nota" rows={4} className="block w-full border px-3 py-2" />
           <input value={nota.etiquetas} onChange={e => setNota({ ...nota, etiquetas: e.target.value })} aria-label="Etiquetas" placeholder="Etiquetas separadas por vírgula" className="block w-full border px-3 py-2 min-h-[44px]" />
-          <button type="button" onClick={salvarNota} disabled={nota.titulo.trim().length < 2 || !nota.conteudo.trim()} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">Guardar nota</button>
+          <button type="button" onClick={salvarNota} title="Guarda esta nota na biblioteca do escritório" disabled={nota.titulo.trim().length < 2 || !nota.conteudo.trim()} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">Guardar nota</button>
           {msg && <p role="status" className="text-sm">{msg}</p>}
         </section>
       </div>

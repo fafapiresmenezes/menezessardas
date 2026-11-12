@@ -80,7 +80,7 @@ export default function PesquisaDiligenciaPage() {
           <p className="text-sm text-grafite-claro mt-1">Escolha o assunto. Marque o que já foi conferido; a lista fica guardada neste aparelho para o mesmo {d.formatado ? 'termo pesquisado' : 'assunto'}.</p>
           <div role="tablist" aria-label="Assunto da diligência" className="flex flex-wrap gap-2 mt-3">
             {DILIGENCIAS.map(x => (
-              <button key={x.id} role="tab" aria-selected={assunto === x.id} onClick={() => setAssunto(x.id)} data-testid={`assunto-${x.id}`}
+              <button key={x.id} role="tab" aria-selected={assunto === x.id} onClick={() => setAssunto(x.id)} data-testid={`assunto-${x.id}`} title={`Mostra o roteiro de diligência sobre ${x.titulo}`}
                 className={`min-h-[44px] px-4 text-sm border ${assunto === x.id ? 'bg-navy text-white border-navy' : 'border-navy/20 text-navy'}`}>{x.titulo}</button>
             ))}
           </div>

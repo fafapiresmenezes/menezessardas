@@ -68,7 +68,7 @@ export default function CarteiraProcessosPage() {
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + [cab, ...corpo].join('\n')], { type: 'text/csv;charset=utf-8' })); a.download = 'carteira-de-processos.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000)
   }
   const Cartao = ({ rotulo, valor, alerta, destaque }: { rotulo: string; valor: number; alerta?: FiltroCarteira['alerta']; destaque?: boolean }) => (
-    <button type="button" onClick={() => setFiltro(f => ({ ...f, situacao: alerta === undefined ? f.situacao : 'ativos', alerta: alerta ?? '' }))} className={`text-left bg-white shadow-sm p-4 border-t-2 ${destaque && valor ? 'border-critico' : 'border-dourado'}`}>
+    <button type="button" onClick={() => setFiltro(f => ({ ...f, situacao: alerta === undefined ? f.situacao : 'ativos', alerta: alerta ?? '' }))} title={`Filtra a carteira para mostrar: ${rotulo}`} className={`text-left bg-white shadow-sm p-4 border-t-2 ${destaque && valor ? 'border-critico' : 'border-dourado'}`}>
       <span className="block text-xs uppercase tracking-wider text-grafite-claro">{rotulo}</span><span className={`block text-2xl font-serif ${destaque && valor ? 'text-critico' : 'text-navy'}`}>{valor}</span>
     </button>
   )
@@ -130,7 +130,7 @@ export default function CarteiraProcessosPage() {
                         {l.numero && <Link className="block underline text-navy" to={`/monitoramento?lt=${l.numero}`} data-testid="carteira-historico">Histórico (DataJud)</Link>}
                         {l.numero && <a className="block underline text-navy" href={`https://www.jusbrasil.com.br/busca?q=${l.numero_processo}`} target="_blank" rel="noreferrer">Jusbrasil</a>}
                         {l.numero && <a className="block underline text-navy" href={`https://www.escavador.com/busca?q=${l.numero_processo}`} target="_blank" rel="noreferrer">Escavador</a>}
-                        <button type="button" onClick={() => encerrar(l.id, l.situacao === 'feito' ? 'fazendo' : 'feito')} className="block underline text-navy" data-testid="carteira-encerrar">{l.situacao === 'feito' ? 'Reabrir' : 'Encerrar'}</button>
+                        <button type="button" onClick={() => encerrar(l.id, l.situacao === 'feito' ? 'fazendo' : 'feito')} title={l.situacao === 'feito' ? 'Reabre este processo na carteira' : 'Marca este processo como encerrado'} className="block underline text-navy" data-testid="carteira-encerrar">{l.situacao === 'feito' ? 'Reabrir' : 'Encerrar'}</button>
                       </td>
                     </tr>
                   ))}

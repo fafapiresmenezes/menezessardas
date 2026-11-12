@@ -119,22 +119,22 @@ export default function InicioPage() {
             </button>
           ))}
         </div>
-        <p className="text-center mt-3"><button type="button" data-testid="ir-consultores" onClick={() => navigate('/consultores')} className="min-h-[44px] px-4 text-white/80 underline text-sm">Consultores do escritório</button></p>
+        <p className="text-center mt-3"><button type="button" data-testid="ir-consultores" onClick={() => navigate('/consultores')} title="Abre os consultores especializados do escritório, um por nicho do direito" className="min-h-[44px] px-4 text-white/80 underline text-sm">Consultores do escritório</button></p>
       </div>
       {carregado && (areaFixa || areaUltima) && (
         <div className="w-full max-w-6xl mb-5 bg-white/10 border border-dourado/50 text-white p-4 flex flex-wrap items-center gap-3 text-sm" data-testid="area-lembrada">
           {areaFixa ? (
             <>
               <span>Sua área padrão é <strong data-testid="area-fixa-nome">{areaFixa.titulo}</strong>{contagem !== null && contagem > 0 ? ` · entrando em ${contagem} s` : ''}.</span>
-              <button type="button" onClick={() => abrir(areaFixa.destino, areaFixa.chave)} className="min-h-[44px] px-4 bg-dourado text-navy uppercase tracking-wider text-xs" data-testid="entrar-fixa">Entrar agora</button>
-              <button type="button" onClick={() => setContagem(null)} className="min-h-[44px] px-4 border border-white/60 uppercase tracking-wider text-xs" data-testid="escolher-outra">Escolher outra área</button>
-              <button type="button" onClick={() => fixar(null)} className="min-h-[44px] px-4 underline text-xs" data-testid="desfixar">Deixar de ser padrão</button>
+              <button type="button" onClick={() => abrir(areaFixa.destino, areaFixa.chave)} title="Entra agora na sua área padrão, sem esperar a contagem" className="min-h-[44px] px-4 bg-dourado text-navy uppercase tracking-wider text-xs" data-testid="entrar-fixa">Entrar agora</button>
+              <button type="button" onClick={() => setContagem(null)} title="Para a contagem para você escolher outra área nesta tela" className="min-h-[44px] px-4 border border-white/60 uppercase tracking-wider text-xs" data-testid="escolher-outra">Escolher outra área</button>
+              <button type="button" onClick={() => fixar(null)} title="Remove a área padrão: a entrada volta a mostrar todas as áreas" className="min-h-[44px] px-4 underline text-xs" data-testid="desfixar">Deixar de ser padrão</button>
             </>
           ) : areaUltima && (
             <>
               <span>Da última vez você trabalhou em <strong data-testid="area-ultima-nome">{areaUltima.titulo}</strong>.</span>
-              <button type="button" onClick={() => abrir(areaUltima.destino, areaUltima.chave)} className="min-h-[44px] px-4 bg-dourado text-navy uppercase tracking-wider text-xs" data-testid="entrar-ultima">Continuar nela</button>
-              <button type="button" onClick={() => fixar(areaUltima.chave)} className="min-h-[44px] px-4 border border-white/60 uppercase tracking-wider text-xs" data-testid="fixar-padrao">Fixar como padrão</button>
+              <button type="button" onClick={() => abrir(areaUltima.destino, areaUltima.chave)} title="Volta para a área em que você trabalhou da última vez" className="min-h-[44px] px-4 bg-dourado text-navy uppercase tracking-wider text-xs" data-testid="entrar-ultima">Continuar nela</button>
+              <button type="button" onClick={() => fixar(areaUltima.chave)} title="Faz desta a sua área padrão: a entrada vai direto para ela" className="min-h-[44px] px-4 border border-white/60 uppercase tracking-wider text-xs" data-testid="fixar-padrao">Fixar como padrão</button>
             </>
           )}
         </div>
@@ -149,10 +149,10 @@ export default function InicioPage() {
         <details className="mt-1 text-white/80 text-xs" data-testid="mais-opcoes-inicio">
           <summary className="cursor-pointer min-h-[44px] inline-flex items-center underline select-none">Mais opções do mapa de áreas</summary>
           <div className="flex flex-wrap items-center gap-2">
-          <button type="button" onClick={copiarMapa} data-testid="copiar-mapa-areas" className="mt-2 min-h-[44px] underline text-white/80 text-xs">{mapaCopiado ? 'mapa copiado' : 'copiar mapa das áreas'}</button>
-          <button type="button" onClick={() => window.print()} data-testid="imprimir-mapa" className="mt-2 ml-3 min-h-[44px] underline text-white/80 text-xs print:hidden">imprimir</button>{/* Passo 204 */}
-          <button type="button" data-testid="copiar-link-inicio" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-2 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 238 */}
-          <button type="button" data-testid="baixar-areas" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['área;descrição', ...AREAS.map(a => `${a.titulo};${a.texto}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'areas.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">baixar lista</button>{/* Passo 315 */}
+          <button type="button" onClick={copiarMapa} data-testid="copiar-mapa-areas" title="Copia a lista das áreas e do que cada uma faz, para orientar quem entra na equipe" className="mt-2 min-h-[44px] underline text-white/80 text-xs">{mapaCopiado ? 'mapa copiado' : 'copiar mapa das áreas'}</button>
+          <button type="button" onClick={() => window.print()} data-testid="imprimir-mapa" title="Abre a janela de impressão do navegador com o mapa das áreas" className="mt-2 ml-3 min-h-[44px] underline text-white/80 text-xs print:hidden">imprimir</button>{/* Passo 204 */}
+          <button type="button" data-testid="copiar-link-inicio" title="Copia o endereço desta tela de entrada" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-2 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 238 */}
+          <button type="button" data-testid="baixar-areas" title="Baixa a lista das áreas em planilha CSV" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['área;descrição', ...AREAS.map(a => `${a.titulo};${a.texto}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'areas.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">baixar lista</button>{/* Passo 315 */}
           </div>
         </details>
         {buscaArea && <p className="text-white/70 text-xs mt-1" data-testid="busca-area-resultado">{areasVisiveis.length ? `${areasVisiveis.length} área(s); Enter abre ${areasVisiveis[0].titulo}.` : 'Nenhuma área com esse termo. Tente "contrato" ou "cível".'}</p>}
@@ -163,6 +163,7 @@ export default function InicioPage() {
             key={a.chave}
             data-testid={`area-${a.chave}`}
             onClick={() => abrir(a.destino, a.chave)}
+            title={`${a.titulo} — ${a.texto}`}
             className="bg-white text-left p-5 shadow-lg border-t-4 border-dourado hover:-translate-y-1 hover:shadow-xl transition focus:outline-none focus:ring-4 focus:ring-dourado/50"
           >
             <a.icone className="w-8 h-8 text-dourado mb-3" aria-hidden />

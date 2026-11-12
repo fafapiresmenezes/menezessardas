@@ -247,7 +247,7 @@ export default function AssumirProcessosPage() {
           {cadastro && <p className="mb-2 text-sm" role="status" data-testid="msg-cadastro">{cadastro}</p>}
           <p className="text-sm text-grafite-claro mb-2">Ou cole os números (de uma planilha, e-mail ou lista). Pode colar tudo de uma vez: a plataforma separa os números sozinha.</p>
           {casosCadastrados && casosCadastrados.length > 0 && (
-            <button type="button" onClick={() => mudar({ numeros: casosCadastrados.join('\n') })} className="min-h-[44px] px-4 mb-2 border border-navy text-navy text-sm" data-testid="usar-cadastrados">
+            <button type="button" onClick={() => mudar({ numeros: casosCadastrados.join('\n') })} title="Preenche a caixa abaixo com os números dos processos que já estão cadastrados na plataforma" className="min-h-[44px] px-4 mb-2 border border-navy text-navy text-sm" data-testid="usar-cadastrados">
               Usar os {casosCadastrados.length} processos já cadastrados
             </button>
           )}
@@ -270,7 +270,7 @@ export default function AssumirProcessosPage() {
             </select>
             {!ocupado
               ? <button type="button" onClick={buscar} disabled={!podeBuscar} className="min-h-[48px] px-6 bg-navy text-white text-base inline-flex items-center gap-2 disabled:opacity-40" title="Busca cada processo no CNJ (DataJud) e mostra andamentos, prazos e intimações." data-testid="buscar-tudo"><Search className="w-5 h-5" aria-hidden />Buscar agora</button>
-              : <button type="button" onClick={() => { parar.current = true }} className="min-h-[48px] px-6 border border-critico text-critico text-base inline-flex items-center gap-2" data-testid="parar"><Square className="w-4 h-4" aria-hidden />Parar</button>}
+              : <button type="button" onClick={() => { parar.current = true }} title="Interrompe a busca no ponto em que está; o que já foi encontrado é mantido" className="min-h-[48px] px-6 border border-critico text-critico text-base inline-flex items-center gap-2" data-testid="parar"><Square className="w-4 h-4" aria-hidden />Parar</button>}
           </div>
           {!podeBuscar && <p className="text-sm text-grafite-claro mt-2">Preencha o nome (passo 1) ou cole pelo menos um número (passo 2).</p>}
           {ocupado && (
@@ -298,7 +298,7 @@ export default function AssumirProcessosPage() {
                   {(['todos', 'vencido', 'urgente', 'breve', 'depois', 'ler'] as const).map(u => {
                     const n = u === 'todos' ? prazos.length : conta[u] ?? 0
                     if (u !== 'todos' && !n) return null
-                    return <button key={u} role="tab" aria-selected={filtro === u} onClick={() => setFiltro(u)} data-testid={`filtro-${u}`}
+                    return <button key={u} role="tab" aria-selected={filtro === u} onClick={() => setFiltro(u)} data-testid={`filtro-${u}`} title="Filtra a lista de prazos por urgência"
                       className={`min-h-[44px] px-4 text-sm border ${filtro === u ? 'bg-navy text-white border-navy' : u === 'vencido' ? 'border-critico text-critico' : u === 'urgente' ? 'border-atencao text-navy' : 'border-navy/20 text-navy'}`}>
                       {u === 'todos' ? 'Todos' : ROTULO_URGENCIA[u]} ({n})</button>
                   })}
@@ -336,7 +336,7 @@ export default function AssumirProcessosPage() {
                     </li>
                   ))}
                 </ol>
-                {s.ocultos.length > 0 && <button type="button" onClick={() => mudar({ ocultos: [] })} className="mt-3 min-h-[44px] text-sm underline text-navy">Mostrar de novo os {s.ocultos.length} marcados como resolvidos</button>}
+                {s.ocultos.length > 0 && <button type="button" onClick={() => mudar({ ocultos: [] })} title="Traz de volta para a lista os prazos que foram marcados como resolvidos" className="mt-3 min-h-[44px] text-sm underline text-navy">Mostrar de novo os {s.ocultos.length} marcados como resolvidos</button>}
               </>}
             <p className="text-xs text-grafite-claro mt-4">A leitura do prazo é automática e serve para organizar o trabalho. Antes de protocolar, confira a data na publicação e no processo. Processos em segredo de justiça não aparecem no Diário.</p>
           </section>
@@ -347,7 +347,7 @@ export default function AssumirProcessosPage() {
             <h2 className="font-serif text-xl">Processos achados que ainda não estão cadastrados ({achadosFora.length})</h2>
             <p className="text-sm text-grafite-claro mt-1">Apareceram nas publicações pelo nome ou pela OAB. Cadastre para a plataforma acompanhar todo dia.</p>
             <ul className="mt-2 text-sm list-disc pl-5" data-testid="achados-fora">{achadosFora.slice(0, 30).map(p => <li key={p.numero}><span className="font-mono">{p.numero}</span> · {p.tribunal ?? ''} {p.orgao ? `· ${p.orgao}` : ''}{p.partes.length ? ` · ${p.partes.map(x => x.nome).slice(0, 2).join(' x ')}` : ''}</li>)}</ul>
-            <button type="button" onClick={cadastrarAchados} className="mt-3 min-h-[48px] px-5 bg-dourado text-white text-base inline-flex items-center gap-2" data-testid="cadastrar-achados"><FolderPlus className="w-5 h-5" aria-hidden />Cadastrar os {achadosFora.length}</button>
+            <button type="button" onClick={cadastrarAchados} title="Cadastra estes processos na plataforma para o acompanhamento diário de prazos e intimações" className="mt-3 min-h-[48px] px-5 bg-dourado text-white text-base inline-flex items-center gap-2" data-testid="cadastrar-achados"><FolderPlus className="w-5 h-5" aria-hidden />Cadastrar os {achadosFora.length}</button>
           </section>
         )}
 
