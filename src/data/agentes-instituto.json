@@ -1,7 +1,7 @@
 {
- "total": 149,
+ "total": 172,
  "meta": 500,
- "faltam": 351,
+ "faltam": 328,
  "agentes": [
   {
    "id": "agente-001",
@@ -1492,6 +1492,259 @@
    "frequencia": "a definir",
    "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
    "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-150",
+   "nome": "Consultor de Direito Civil",
+   "area": "Civil",
+   "nicho": "Direito Civil",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I a X",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-151",
+   "nome": "Consultor de Direito Constitucional",
+   "area": "Constitucional",
+   "nicho": "Direito Constitucional",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I a IV",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-152",
+   "nome": "Consultor de Direito Penal",
+   "area": "Penal",
+   "nicho": "Direito Penal",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I a IV",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-153",
+   "nome": "Consultor de Direito do Trabalho",
+   "area": "Trabalho",
+   "nicho": "Direito do Trabalho",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I e II",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-154",
+   "nome": "Consultor de Direito Financeiro",
+   "area": "Tributário e financeiro",
+   "nicho": "Direito Financeiro",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I a IV",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-155",
+   "nome": "Consultor de Direito Comercial",
+   "area": "Empresarial",
+   "nicho": "Direito Comercial",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I a IV",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-156",
+   "nome": "Consultor de Teoria Geral do Processo",
+   "area": "Processual",
+   "nicho": "Teoria Geral do Processo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I e II",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-157",
+   "nome": "Consultor de Direito Processual Civil",
+   "area": "Processual",
+   "nicho": "Direito Processual Civil",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I a IV",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-158",
+   "nome": "Consultor de Direito Processual Penal",
+   "area": "Processual",
+   "nicho": "Direito Processual Penal",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I e II",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-159",
+   "nome": "Consultor de Direito Processual do Trabalho",
+   "area": "Processual",
+   "nicho": "Direito Processual do Trabalho",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "único",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-160",
+   "nome": "Consultor de Direito Administrativo",
+   "area": "Administrativo",
+   "nicho": "Direito Administrativo",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I e II",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-161",
+   "nome": "Consultor de Direito Internacional Público",
+   "area": "Internacional",
+   "nicho": "Direito Internacional Público",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I e II",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-162",
+   "nome": "Consultor de Direito Internacional Privado",
+   "area": "Internacional",
+   "nicho": "Direito Internacional Privado",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I e II",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-163",
+   "nome": "Consultor de Introdução ao Estudo do Direito",
+   "area": "Teoria do direito",
+   "nicho": "Introdução ao Estudo do Direito",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I e II",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-164",
+   "nome": "Consultor de Sociologia Jurídica",
+   "area": "Teoria do direito",
+   "nicho": "Sociologia Jurídica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I e II",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-165",
+   "nome": "Consultor de História do Direito",
+   "area": "Teoria do direito",
+   "nicho": "História do Direito",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "único",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-166",
+   "nome": "Consultor de Direito e Pensamento Político",
+   "area": "Teoria do direito",
+   "nicho": "Direito e Pensamento Político",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I e II",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-167",
+   "nome": "Consultor de Filosofia do Direito",
+   "area": "Teoria do direito",
+   "nicho": "Filosofia do Direito",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I e II",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-168",
+   "nome": "Consultor de Métodos e Técnicas da Pesquisa Jurídica",
+   "area": "Pesquisa",
+   "nicho": "Métodos e Técnicas da Pesquisa Jurídica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "único",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-169",
+   "nome": "Consultor de Economia Política",
+   "area": "Economia",
+   "nicho": "Economia Política",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I e II",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-170",
+   "nome": "Consultor de Medicina Legal",
+   "area": "Perícia",
+   "nicho": "Medicina Legal",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "I e II",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-171",
+   "nome": "Consultor de Ética e Deontologia Jurídica",
+   "area": "Ética",
+   "nicho": "Ética e Deontologia Jurídica",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "único",
+   "status": "catalogado; ementas completas ainda não importadas"
+  },
+  {
+   "id": "agente-172",
+   "nome": "Consultor de Prática Forense Civil, Penal e Trabalhista",
+   "area": "Prática",
+   "nicho": "Prática Forense Civil, Penal e Trabalhista",
+   "base_oficial": true,
+   "frequencia": "semestral",
+   "origem": "UERJ, lista de disciplinas e ementas (https://www.direito.uerj.br/curriculodocurso)",
+   "niveis": "vários",
+   "status": "catalogado; ementas completas ainda não importadas"
   }
  ]
 }
