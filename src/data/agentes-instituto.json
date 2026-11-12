@@ -1,7 +1,7 @@
 {
- "total": 481,
+ "total": 500,
  "meta": 500,
- "faltam": 19,
+ "faltam": 0,
  "agentes": [
   {
    "id": "agente-001",
@@ -4835,6 +4835,196 @@
    "origem": "UFRJ, PPGD, grade e ementas (https://ppgd.direito.ufrj.br/grade-horaria/)",
    "status": "catalogado; ementa completa ainda não importada",
    "id": "agente-481"
+  },
+  {
+   "nome": "Consultor de Segurança Nacional e Privacidade (Columbia)",
+   "area": "Direito comparado",
+   "nicho": "Segurança Nacional e Privacidade (Columbia)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Columbia Law School, áreas de estudo (https://www.law.columbia.edu/academics/courses)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-482"
+  },
+  {
+   "nome": "Consultor de Análise Econômica do Direito (Columbia)",
+   "area": "Teoria do direito",
+   "nicho": "Análise Econômica do Direito (Columbia)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Columbia Law School, áreas de estudo (https://www.law.columbia.edu/academics/courses)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-483"
+  },
+  {
+   "nome": "Consultor de Gênero e Sexualidade no Direito (Columbia)",
+   "area": "Direitos humanos",
+   "nicho": "Gênero e Sexualidade no Direito (Columbia)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Columbia Law School, áreas de estudo (https://www.law.columbia.edu/academics/courses)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-484"
+  },
+  {
+   "nome": "Consultor de Justiça Racial, Econômica e Social (Columbia)",
+   "area": "Direitos humanos",
+   "nicho": "Justiça Racial, Econômica e Social (Columbia)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Columbia Law School, áreas de estudo (https://www.law.columbia.edu/academics/courses)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-485"
+  },
+  {
+   "nome": "Consultor de Tributação Comparada (Columbia)",
+   "area": "Direito comparado",
+   "nicho": "Tributação Comparada (Columbia)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Columbia Law School, áreas de estudo (https://www.law.columbia.edu/academics/courses)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-486"
+  },
+  {
+   "nome": "Consultor de Direito Comercial e Transações (Columbia)",
+   "area": "Direito comparado",
+   "nicho": "Direito Comercial e Transações (Columbia)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Columbia Law School, áreas de estudo (https://www.law.columbia.edu/academics/courses)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-487"
+  },
+  {
+   "nome": "Consultor de Propriedade, Imóveis e Sucessões Comparadas (Columbia)",
+   "area": "Direito comparado",
+   "nicho": "Propriedade, Imóveis e Sucessões Comparadas (Columbia)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Columbia Law School, áreas de estudo (https://www.law.columbia.edu/academics/courses)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-488"
+  },
+  {
+   "nome": "Consultor de Clima, Meio Ambiente e Energia (Columbia)",
+   "area": "Ambiental",
+   "nicho": "Clima, Meio Ambiente e Energia (Columbia)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Columbia Law School, áreas de estudo (https://www.law.columbia.edu/academics/courses)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-489"
+  },
+  {
+   "nome": "Consultor de Liderança para Advogados (Columbia)",
+   "area": "Gestão jurídica",
+   "nicho": "Liderança para Advogados (Columbia)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Columbia Law School, áreas de estudo (https://www.law.columbia.edu/academics/courses)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-490"
+  },
+  {
+   "nome": "Consultor de Litígio e Resolução de Disputas (Columbia)",
+   "area": "Direito comparado",
+   "nicho": "Litígio e Resolução de Disputas (Columbia)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Columbia Law School, áreas de estudo (https://www.law.columbia.edu/academics/courses)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-491"
+  },
+  {
+   "nome": "Consultor de Direito Migratório e Direitos Humanos (Georgetown)",
+   "area": "Direitos humanos",
+   "nicho": "Direito Migratório e Direitos Humanos (Georgetown)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Georgetown Law, áreas de estudo (https://www.law.georgetown.edu/academics/courses/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-492"
+  },
+  {
+   "nome": "Consultor de Direito Econômico Internacional (Georgetown)",
+   "area": "Internacional",
+   "nicho": "Direito Econômico Internacional (Georgetown)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Georgetown Law, áreas de estudo (https://www.law.georgetown.edu/academics/courses/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-493"
+  },
+  {
+   "nome": "Consultor de Proteção do Consumidor e Bem-Estar Social (Georgetown)",
+   "area": "Consumidor",
+   "nicho": "Proteção do Consumidor e Bem-Estar Social (Georgetown)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Georgetown Law, áreas de estudo (https://www.law.georgetown.edu/academics/courses/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-494"
+  },
+  {
+   "nome": "Consultor de Direitos Civis e Antidiscriminação (Georgetown)",
+   "area": "Direitos humanos",
+   "nicho": "Direitos Civis e Antidiscriminação (Georgetown)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Georgetown Law, áreas de estudo (https://www.law.georgetown.edu/academics/courses/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-495"
+  },
+  {
+   "nome": "Consultor de Direito, Medicina e Políticas de Saúde (Stanford)",
+   "area": "Saúde",
+   "nicho": "Direito, Medicina e Políticas de Saúde (Stanford)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Stanford Law School, categorias de cursos (https://law.stanford.edu/courses/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-496"
+  },
+  {
+   "nome": "Consultor de Ética Profissional e Profissão Jurídica (Stanford)",
+   "area": "Advocacia",
+   "nicho": "Ética Profissional e Profissão Jurídica (Stanford)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Stanford Law School, categorias de cursos (https://law.stanford.edu/courses/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-497"
+  },
+  {
+   "nome": "Consultor de Direito e Humanidades (Stanford)",
+   "area": "Teoria do direito",
+   "nicho": "Direito e Humanidades (Stanford)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Stanford Law School, categorias de cursos (https://law.stanford.edu/courses/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-498"
+  },
+  {
+   "nome": "Consultor de Direito e Ciências Sociais (Stanford)",
+   "area": "Teoria do direito",
+   "nicho": "Direito e Ciências Sociais (Stanford)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Stanford Law School, categorias de cursos (https://law.stanford.edu/courses/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-499"
+  },
+  {
+   "nome": "Consultor de Recursos Naturais e Meio Ambiente (Stanford)",
+   "area": "Ambiental",
+   "nicho": "Recursos Naturais e Meio Ambiente (Stanford)",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "Stanford Law School, categorias de cursos (https://law.stanford.edu/courses/)",
+   "status": "catalogado; ementa completa ainda não importada",
+   "id": "agente-500"
   }
  ]
 }
