@@ -10,12 +10,14 @@ import { FlaskConical, BarChart3, Leaf, ExternalLink, MessageSquare, BookOpen, S
 import { MEDICOES, PLANO_M31, DECK_URL } from '@/data/medicoes'
 import PesquisaDireito from '@/components/PesquisaDireito'
 import CiberQuantica from '@/components/CiberQuantica'
+import CatalogoConsultores from '@/components/CatalogoConsultores'
 import { gerarPdfTexto, quebrar } from '@/lib/pdfSimples'
 import { ehSede, perfilAtual } from '@/lib/equipe'
 
-type Aba = 'inovacao' | 'jurimetria' | 'esg' | 'case' | 'pesquisa' | 'tecnologia'
+type Aba = 'inovacao' | 'jurimetria' | 'esg' | 'case' | 'pesquisa' | 'tecnologia' | 'consultores'
 const ABAS: { valor: Aba; rotulo: string; Icone: typeof FlaskConical }[] = [
   { valor: 'inovacao', rotulo: 'Inovação e sandboxes', Icone: FlaskConical },
+  { valor: 'consultores', rotulo: '500 consultores', Icone: BookOpen },
   { valor: 'jurimetria', rotulo: 'Jurimetria e predição', Icone: BarChart3 },
   { valor: 'esg', rotulo: 'ESG e compliance', Icone: Leaf },
   { valor: 'pesquisa', rotulo: 'Pesquisa e desenvolvimento do direito', Icone: Scale },
@@ -289,7 +291,7 @@ export default function InstitutoPage() {
             </button>
           ))}
         </div>
-        <div role="tabpanel">{aba === 'inovacao' ? <Inovacao /> : aba === 'jurimetria' ? <Jurimetria /> : aba === 'esg' ? <Esg /> : aba === 'pesquisa' ? <PesquisaDireito /> : aba === 'tecnologia' ? <CiberQuantica /> : <CaseStudy />}</div>
+        <div role="tabpanel">{aba === 'inovacao' ? <Inovacao /> : aba === 'consultores' ? <CatalogoConsultores /> : aba === 'jurimetria' ? <Jurimetria /> : aba === 'esg' ? <Esg /> : aba === 'pesquisa' ? <PesquisaDireito /> : aba === 'tecnologia' ? <CiberQuantica /> : <CaseStudy />}</div>
       </div>
     </Layout>
   )
