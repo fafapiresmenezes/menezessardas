@@ -157,6 +157,7 @@ export const AREAS_DIREITO: { chave: string; nome: string }[] = [
   { chave: 'imobiliario', nome: 'Imobiliário' }, { chave: 'civel', nome: 'Cível e contratos' }, { chave: 'trabalhista', nome: 'Trabalhista' },
   { chave: 'familia', nome: 'Família e sucessões' }, { chave: 'tributario', nome: 'Tributário' }, { chave: 'empresarial', nome: 'Empresarial' },
   { chave: 'consumidor', nome: 'Consumidor' }, { chave: 'previdenciario', nome: 'Previdenciário' }, { chave: 'penal', nome: 'Penal' }, { chave: 'compliance', nome: 'Compliance e LGPD' },
+  { chave: 'justica', nome: 'Órgãos da justiça (MP, tribunais, OAB)' },
 ]
 export async function lerAreaAtual(): Promise<string> {
   try {
