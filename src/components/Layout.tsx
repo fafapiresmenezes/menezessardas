@@ -69,24 +69,26 @@ const gruposMenu = [
     { icon: FileText, label: 'Modelos de peças', href: '/modelos' },
     { icon: Globe, label: 'Fontes do advogado', href: '/fontes' },
     { icon: Library, label: 'Já pesquisado', href: '/biblioteca' },
-    { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
-    { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
     { icon: BookOpen, label: 'Parâmetros de escrita', href: '/parametros-escrita' },
   ] },
-  { id: 'ferramentas', titulo: 'Ferramentas e estudos', itens: [
+  { id: 'ferramentas', titulo: 'Ferramentas do dia a dia', itens: [
     { icon: Wrench, label: 'Ferramentas do dia a dia', href: '/ferramentas' },
-    { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
-    { icon: Briefcase, label: 'Consultores', href: '/consultores' },
   ] },
   { id: 'gestao', titulo: 'Gestão e conformidade', itens: [
     { icon: ShieldCheck, label: 'Compliance', href: '/compliance' },
     { icon: Gauge, label: 'Indicadores', href: '/indicadores' },
-    { icon: TrendingUp, label: 'Previsões', href: '/previsoes' },
     { icon: FileBarChart, label: 'Relatórios', href: '/relatorios' },
     { icon: ShieldCheck, label: 'Trilha', href: '/trilha' },
   ] },
-  { id: 'admin', titulo: 'Administração', itens: [
+  { id: 'instituto', titulo: 'THEYE Institute: pesquisa e estudos', itens: [
     { icon: FlaskConical, label: 'Instituto', href: '/instituto' },
+    { icon: Briefcase, label: 'Consultores', href: '/consultores' },
+    { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
+    { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
+    { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
+    { icon: TrendingUp, label: 'Previsões', href: '/previsoes' },
+  ] },
+  { id: 'admin', titulo: 'Escritório e administração', itens: [
     { icon: Cloud, label: 'Nuvem', href: '/nuvem' },
     { icon: Wallet, label: 'Consumo', href: '/consumo' },
     { icon: Users, label: 'Equipe', href: '/equipe' },
