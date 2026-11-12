@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { Play, Square, Download, Printer, Trash2, Target, ClipboardCopy } from 'lucide-react'
 import { hojeLocal, isoLocal } from '@/lib/datas'
 import { lerNumero, lerHoras } from '@/lib/numero'
+import { meuAlcance, rotuloCargo } from '@/lib/hierarquia'
 
 // Passo 21: meta mensal de horas por função (tabela metas_horas, só admin edita) e progresso da pessoa logada (RPC progresso_horas).
 const PAPEIS: Record<string, string> = { socia: 'Sócia', advogada: 'Advogada', estagiario: 'Estagiário ou paralegal', secretaria: 'Secretária', financeiro: 'Financeiro' }
@@ -13,7 +14,7 @@ type Progresso = { meta: number; horas: number; esperado_hoje: number; pct_mes: 
 
 // Controle de horas e honorários: cronômetro ou lançamento manual, totais por cliente no mês,
 // exportação CSV para faturar e relatório imprimível para o cliente.
-type Lanc = { id: string; data: string; cliente: string; descricao: string; minutos: number; valor_hora: number; faturavel: boolean }
+type Lanc = { id: string; data: string; cliente: string; descricao: string; minutos: number; valor_hora: number; faturavel: boolean; usuario_id?: string | null }
 const brl = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 const hm = (m: number) => `${Math.floor(m / 60)}h${String(m % 60).padStart(2, '0')}`
 const mesAtual = () => new Date().toISOString().slice(0, 7)
@@ -22,7 +23,12 @@ export default function HorasPage() {
   // Passo 153: o mês escolhido é lembrado neste navegador.
   const [mes, setMes] = useState(() => { try { return localStorage.getItem('lsm-horas-mes') || mesAtual() } catch { return mesAtual() } })
   useEffect(() => { try { localStorage.setItem('lsm-horas-mes', mes) } catch { /* sem armazenamento */ } }, [mes])
-  const [lista, setLista] = useState<Lanc[]>([])
+  const [todos, setTodos] = useState<Lanc[]>([])
+  // Hierarquia: sócios e gestor veem as horas de todo o escritório; os demais, só as suas.
+  const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
+  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true })) }, [])
+  const restrito = !!alcance && !alcance.veTudo
+  const lista = restrito ? todos.filter(l => !l.usuario_id || l.usuario_id === alcance!.id) : todos
   const [erro, setErro] = useState('')
   const [form, setForm] = useState({ data: hojeLocal(), cliente: '', descricao: '', horas: '', valor_hora: '', faturavel: true })
   const [inicio, setInicio] = useState<number | null>(() => { try { const v = localStorage.getItem('lsm-cronometro'); return v ? Number(v) : null } catch { return null } })
@@ -48,9 +54,9 @@ export default function HorasPage() {
   useEffect(() => { if (!inicio) return; const t = setInterval(() => setAgora(Date.now()), 1000); return () => clearInterval(t) }, [inicio])
   const carregar = async () => {
     const fim = new Date(`${mes}-01T12:00`); fim.setMonth(fim.getMonth() + 1)
-    const { data, error } = await supabase.from('lancamentos_horas').select('id,data,cliente,descricao,minutos,valor_hora,faturavel')
+    const { data, error } = await supabase.from('lancamentos_horas').select('id,data,cliente,descricao,minutos,valor_hora,faturavel,usuario_id')
       .gte('data', `${mes}-01`).lt('data', isoLocal(fim)).order('data', { ascending: false })
-    if (error) setErro('Não foi possível carregar os lançamentos.'); else setLista((data ?? []).map(l => ({ ...l, valor_hora: Number(l.valor_hora) })))
+    if (error) setErro('Não foi possível carregar os lançamentos.'); else setTodos((data ?? []).map(l => ({ ...l, valor_hora: Number(l.valor_hora) })))
   }
   useEffect(() => { carregar() }, [mes]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -104,8 +110,10 @@ export default function HorasPage() {
   return (
     <Layout title="Horas e honorários">
       <div className="space-y-5">
-        <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="horas-aviso" title="As metas por função são definidas pela administração.">
-          Os lançamentos de horas desta tela são do escritório. Lance as suas horas aqui; o relatório por cliente usa tudo o que foi lançado.
+        <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="horas-aviso" title="As metas por função são definidas pela administração; a hierarquia, na tela Equipe.">
+          {restrito
+            ? <>Você está vendo <strong>os seus lançamentos de horas</strong> ({rotuloCargo[alcance!.cargo ?? 'nenhum']}). Sócios e o gestor veem as horas de todo o escritório.</>
+            : <>Os lançamentos de horas desta tela são do escritório. Lance as suas horas aqui; o relatório por cliente usa tudo o que foi lançado.</>}
         </p>
         <section className="bg-white shadow-sm p-5 print:hidden" data-testid="meta-horas">
           <h2 className="font-serif text-lg flex items-center gap-2"><Target className="w-5 h-5" aria-hidden />Meta mensal de horas por função</h2>

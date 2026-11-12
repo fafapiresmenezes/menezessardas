@@ -12,6 +12,7 @@ import type { Periodicidade } from '@/lib/dominio'
 import { porCliente, porSocio, csvClientesSocios, type HoraLancada, type CasoHonorario, type PessoaNome } from '@/lib/relatorioClientes'
 import { listarPessoas } from '@/lib/equipe'
 import { mensagemAmigavel } from '@/lib/erros'
+import { meuAlcance, podeVer, rotuloCargo } from '@/lib/hierarquia'
 
 type Periodo = 30 | 90 | 365
 
@@ -64,6 +65,11 @@ export default function RelatóriosPage() {
   const [casosHon, setCasosHon] = useState<CasoHonorario[]>([])
   const [pessoas, setPessoas] = useState<PessoaNome[]>([])
   const [csBaixado, setCsBaixado] = useState(false)
+  // Hierarquia: sócios e gestor veem os números do escritório inteiro; os demais, só o que é deles.
+  const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
+  useEffect(() => {
+    meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true }))
+  }, [])
   useEffect(() => {
     if (!supabaseConfigurado) return
     const q = async <T,>(f: () => PromiseLike<{ data: unknown }>) => { try { return ((await f()).data ?? []) as T[] } catch { return [] as T[] } }
@@ -71,8 +77,11 @@ export default function RelatóriosPage() {
     q<CasoHonorario>(() => supabase.from('tarefas').select('cliente,responsavel_id,honorario_previsto,honorario_recebido').eq('nivel', 'projeto')).then(setCasosHon)
     listarPessoas().then(ps => setPessoas(ps.map(p => ({ id: p.id, nome: p.nome, email: p.email })))).catch(() => setPessoas([]))
   }, [])
-  const clientes = porCliente(horasLanc, casosHon)
-  const socios = porSocio(horasLanc, casosHon, pessoas)
+  const restrito = !!alcance && !alcance.veTudo
+  const horasVisiveis = restrito ? horasLanc.filter(h => !h.usuario_id || h.usuario_id === alcance!.id) : horasLanc
+  const casosVisiveis = restrito ? casosHon.filter(c => podeVer(alcance!, c.responsavel_id ?? null)) : casosHon
+  const clientes = porCliente(horasVisiveis, casosVisiveis)
+  const socios = porSocio(horasVisiveis, casosVisiveis, pessoas)
 
   useEffect(() => {
     repositorio.listarContratos().then(setContratos)
@@ -272,6 +281,11 @@ export default function RelatóriosPage() {
 
           <section className="bg-white p-6 shadow-sm lg:col-span-2" aria-labelledby="t-clientes" data-testid="por-cliente-socio">
             <h2 id="t-clientes" className="text-lg mb-2">Por cliente e por sócio</h2>
+            {restrito && (
+              <p className="border-l-2 border-dourado bg-pergaminho/50 p-2 text-xs mb-3" data-testid="relatorios-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+                Você está vendo <strong>as suas horas e os seus casos</strong> ({rotuloCargo[alcance!.cargo ?? 'nenhum']}). Sócios e o gestor veem o escritório inteiro.
+              </p>
+            )}
             <p className="text-sm text-grafite-claro mb-4">Horas lançadas (tela Horas) e honorários dos casos (tela Honorários), consolidados. Rentabilidade do cliente = recebido menos o custo das horas.</p>
             {clientes.length === 0 && socios.length === 0 ? (
               <p className="text-sm text-grafite-claro">Nada lançado ainda. Lance horas em Horas e honorários em Honorários; esta tabela se monta sozinha.</p>

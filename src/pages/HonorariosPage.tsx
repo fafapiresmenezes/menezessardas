@@ -10,10 +10,11 @@ import { planoParcelas, situacaoParcela, resumoParcelas, type Parcela } from '@/
 import { CalendarClock } from 'lucide-react'
 import { lerNumero } from '@/lib/numero'
 import { escaparHtml } from '@/lib/abrirAba'
+import { meuAlcance, filtrarPorHierarquia, rotuloCargo } from '@/lib/hierarquia'
 
 // Honorários e rentabilidade: por caso, o combinado, o recebido, o vencimento e a régua de cobrança;
 // a rentabilidade cruza honorários recebidos com as horas lançadas para o mesmo cliente.
-type Caso = { id: string; titulo: string; cliente: string | null; area: string | null; situacao: string; honorario_previsto: number; honorario_recebido: number; vencimento_honorario: string | null }
+type Caso = { id: string; titulo: string; cliente: string | null; area: string | null; situacao: string; honorario_previsto: number; honorario_recebido: number; vencimento_honorario: string | null; responsavel_id?: string | null }
 type Hora = { cliente: string; minutos: number; valor_hora: number }
 // Passo 29: baixa de pagamento (data, valor, meio); o recebido do caso é a soma das baixas (gatilho no banco).
 type Pagamento = { id: number; caso_id: string; data: string; valor: number; meio: string; observacao: string | null }
@@ -21,7 +22,10 @@ const MEIOS: Record<string, string> = { pix: 'PIX', transferencia: 'Transferênc
 const brl = (v: number) => (v ?? 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
 export default function HonorariosPage() {
-  const [casos, setCasos] = useState<Caso[]>([])
+  const [todos, setTodos] = useState<Caso[]>([])
+  // Hierarquia: sócios e gestor veem todos os casos; os demais, só os seus (itens sem dono aparecem para todos).
+  const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
+  const casos = useMemo(() => (alcance && !alcance.veTudo ? filtrarPorHierarquia(todos, alcance) : todos), [todos, alcance])
   const [horas, setHoras] = useState<Hora[]>([])
   const [erro, setErro] = useState('')
   const [editando, setEditando] = useState<Record<string, Partial<Caso>>>({})
@@ -54,13 +58,13 @@ export default function HonorariosPage() {
 
   const carregar = async () => {
     const [c, h, pg, pc] = await Promise.all([
-      supabase.from('tarefas').select('id,titulo,cliente,area,situacao,honorario_previsto,honorario_recebido,vencimento_honorario').eq('nivel', 'projeto').order('criado_em', { ascending: false }),
+      supabase.from('tarefas').select('id,titulo,cliente,area,situacao,honorario_previsto,honorario_recebido,vencimento_honorario,responsavel_id').eq('nivel', 'projeto').order('criado_em', { ascending: false }),
       supabase.from('lancamentos_horas').select('cliente,minutos,valor_hora'),
       supabase.from('pagamentos_honorarios').select('id,caso_id,data,valor,meio,observacao').order('data', { ascending: false }),
       supabase.from('parcelas_honorarios').select('id,caso_id,numero,vencimento,valor,pago_em,pagamento_id').order('numero'),
     ])
     if (c.error) setErro(mensagemAmigavel(c.error))
-    setCasos((c.data ?? []) as Caso[]); setHoras((h.data ?? []) as Hora[]); setPagamentos((pg.data ?? []) as Pagamento[]); setParcelas((pc?.data ?? []) as Parcela[])
+    setTodos((c.data ?? []) as Caso[]); setHoras((h.data ?? []) as Hora[]); setPagamentos((pg.data ?? []) as Pagamento[]); setParcelas((pc?.data ?? []) as Parcela[])
   }
   const abrirParcelar = (c: Caso) => { const aberto = Math.max(0, Number(c.honorario_previsto) - Number(c.honorario_recebido)); const d = new Date(); d.setMonth(d.getMonth() + 1); setParcelar({ caso: c, quantidade: '3', primeiro: isoLocal(d), total: aberto.toFixed(2) }); setMsgParcelas('') }
   const salvarParcelas = async () => {
@@ -77,7 +81,10 @@ export default function HonorariosPage() {
     setMsgParcelas(`Parcela ${p.numero} quitada (${brl(Number(p.valor))}).`); carregar()
   }
   const pixParcela = (c: Caso, p: Parcela) => setPix({ caso: c, valor: Number(p.valor), referencia: `${c.titulo.slice(0, 14)}P${p.numero}`, descricao: `Parcela ${p.numero} ${c.titulo}` })
-  useEffect(() => { carregar() }, [])
+  useEffect(() => {
+    carregar()
+    meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true }))
+  }, [])
 
   const custoPorCliente = useMemo(() => {
     const m: Record<string, number> = {}
@@ -130,6 +137,11 @@ export default function HonorariosPage() {
   return (
     <Layout title="Honorários e rentabilidade">
       <div className="space-y-6">
+        {alcance && !alcance.veTudo && (
+          <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="honorarios-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+            Você está vendo <strong>os honorários dos seus casos</strong> ({rotuloCargo[alcance.cargo ?? 'nenhum']}). Sócios e o gestor veem o escritório inteiro.
+          </p>
+        )}
         <section className="grid gap-4 sm:grid-cols-4">
           {[['Combinado', brl(totais.previsto)], ['Recebido', brl(totais.recebido)], ['Em aberto', brl(totais.previsto - totais.recebido)], ['Custo das horas', brl(custoTotal)]].map(([k, v]) => (
             <div key={k} className="bg-white shadow-sm border-t-2 border-dourado p-4"><p className="text-xs uppercase tracking-wider text-grafite">{k}</p><p className="text-2xl font-serif text-navy">{v}</p></div>

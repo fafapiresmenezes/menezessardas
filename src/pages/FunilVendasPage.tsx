@@ -8,6 +8,7 @@ import { formatarData, hojeLocal } from '@/lib/datas'
 import { ETAPAS, ORIGENS, MOTIVOS_PERDA, resumoFunil, proximaEtapa, validarMudanca, telefoneWhatsapp, mensagemRetorno, casoDoLead, rotuloEtapa, type Lead, type Etapa } from '@/lib/escritorio/funil'
 import { tabelaAusente } from '@/lib/escritorio/tabelaAusente'
 import { Filter, Plus, MessageCircle, ArrowRight, Trash2 } from 'lucide-react'
+import { meuAlcance, filtrarPorHierarquia, rotuloCargo } from '@/lib/hierarquia'
 
 // Funil de vendas do escritório: do primeiro contato ao contrato fechado, que vira caso com honorário no financeiro.
 const AREAS = ['Imobiliário', 'Cível', 'Trabalhista', 'Família e sucessões', 'Tributário', 'Empresarial', 'Consumidor', 'Previdenciário', 'Penal', 'Compliance']
@@ -17,7 +18,10 @@ const VAZIO = { nome: '', telefone: '', email: '', origem: 'indicacao', area: 'C
 const CAMPOS = 'id,nome,telefone,email,origem,area,assunto,etapa,valor_estimado,proximo_contato,motivo_perda,observacoes,responsavel_id,caso_id,criado_em,etapa_desde'
 
 export default function FunilVendasPage() {
-  const [leads, setLeads] = useState<Lead[]>([])
+  const [todosLeads, setLeads] = useState<Lead[]>([])
+  // Hierarquia: sócios e gestor veem o funil inteiro; os demais, os seus contatos (e os sem responsável, para alguém assumir).
+  const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
+  const leads = useMemo(() => (alcance && !alcance.veTudo ? filtrarPorHierarquia(todosLeads, alcance) : todosLeads), [todosLeads, alcance])
   const [pessoas, setPessoas] = useState<Pessoa[]>([])
   const [novo, setNovo] = useState(VAZIO)
   const [erro, setErro] = useState('')
@@ -32,7 +36,10 @@ export default function FunilVendasPage() {
     if (error) return setErro(mensagemAmigavel(error))
     setLeads((data ?? []) as Lead[])
   }
-  useEffect(() => { carregar(); listarPessoas().then(setPessoas).catch(() => {}) }, [])
+  useEffect(() => {
+    carregar(); listarPessoas().then(setPessoas).catch(() => {})
+    meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true }))
+  }, [])
 
   const resumo = useMemo(() => resumoFunil(leads), [leads])
   const filtrados = leads.filter(l => !busca || `${l.nome} ${l.assunto ?? ''} ${l.telefone ?? ''}`.toLowerCase().includes(busca.toLowerCase()))
@@ -89,6 +96,11 @@ export default function FunilVendasPage() {
   return (
     <Layout title="Funil de vendas">
       <div className="space-y-5">
+        {alcance && !alcance.veTudo && (
+          <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="funil-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+            Você está vendo <strong>os seus contatos do funil</strong> ({rotuloCargo[alcance.cargo ?? 'nenhum']}). Contatos sem responsável aparecem para todos, para alguém assumir.
+          </p>
+        )}
         <div className="grid gap-3 grid-cols-2 md:grid-cols-6" data-testid="funil-resumo">
           {[['Em aberto', String(resumo.abertos)], ['Valor no funil', brl(resumo.valorAberto)], ['Previsão (ponderada)', brl(resumo.previsao)], ['Fechado', brl(resumo.valorGanho)], ['Conversão', pct(resumo.conversao)], ['Ticket médio', brl(resumo.ticket)]].map(([r, v]) => (
             <div key={r} className="bg-white shadow-sm p-4 border-t-2 border-dourado"><span className="block text-xs uppercase tracking-wider text-grafite-claro">{r}</span><span className="block text-xl font-serif text-navy">{v}</span></div>
