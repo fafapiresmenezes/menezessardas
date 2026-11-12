@@ -1,0 +1,1497 @@
+{
+ "total": 149,
+ "meta": 500,
+ "faltam": 351,
+ "agentes": [
+  {
+   "id": "agente-001",
+   "nome": "Consultor de focos de calor por bioma",
+   "area": "Indicadores públicos",
+   "nicho": "Focos de calor por bioma",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-002",
+   "nome": "Consultor de inflação por região metropolitana",
+   "area": "Indicadores públicos",
+   "nicho": "Inflação por região metropolitana",
+   "base_oficial": true,
+   "frequencia": "evento/prazo",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-003",
+   "nome": "Consultor de municípios que publicam no PNCP",
+   "area": "Indicadores públicos",
+   "nicho": "Municípios que publicam no PNCP",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-004",
+   "nome": "Consultor de pontualidade da prestação de contas municipal",
+   "area": "Indicadores públicos",
+   "nicho": "Pontualidade da prestação de contas municipal",
+   "base_oficial": true,
+   "frequencia": "evento/prazo",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-005",
+   "nome": "Consultor de receita municipal por habitante",
+   "area": "Indicadores públicos",
+   "nicho": "Receita municipal por habitante",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-006",
+   "nome": "Consultor de qualidade do fornecimento de energia",
+   "area": "Indicadores públicos",
+   "nicho": "Qualidade do fornecimento de energia",
+   "base_oficial": true,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-007",
+   "nome": "Consultor de transferências do FPM",
+   "area": "Indicadores públicos",
+   "nicho": "Transferências do FPM",
+   "base_oficial": true,
+   "frequencia": "mensal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-008",
+   "nome": "Consultor de prazo de publicação de contratos no PNCP",
+   "area": "Indicadores públicos",
+   "nicho": "Prazo de publicação de contratos no PNCP",
+   "base_oficial": true,
+   "frequencia": "evento/prazo",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-009",
+   "nome": "Consultor de contratos públicos por habitante",
+   "area": "Indicadores públicos",
+   "nicho": "Contratos públicos por habitante",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-010",
+   "nome": "Consultor de dependência de transferências",
+   "area": "Indicadores públicos",
+   "nicho": "Dependência de transferências",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-011",
+   "nome": "Consultor de gasto em saúde e educação por habitante",
+   "area": "Indicadores públicos",
+   "nicho": "Gasto em saúde e educação por habitante",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-012",
+   "nome": "Consultor de frota por combustível",
+   "area": "Indicadores públicos",
+   "nicho": "Frota por combustível",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-013",
+   "nome": "Consultor de peso da contratação direta",
+   "area": "Indicadores públicos",
+   "nicho": "Peso da contratação direta",
+   "base_oficial": true,
+   "frequencia": "trimestral",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-014",
+   "nome": "Consultor de licitações desertas e fracassadas",
+   "area": "Indicadores públicos",
+   "nicho": "Licitações desertas e fracassadas",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-015",
+   "nome": "Consultor de óbitos registrados por mil habitantes",
+   "area": "Indicadores públicos",
+   "nicho": "Óbitos registrados por mil habitantes",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-016",
+   "nome": "Consultor de frota de veículos por habitante",
+   "area": "Indicadores públicos",
+   "nicho": "Frota de veículos por habitante",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-017",
+   "nome": "Consultor de cadastro Único em relação à população",
+   "area": "Indicadores públicos",
+   "nicho": "Cadastro Único em relação à população",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-018",
+   "nome": "Consultor de aditivos de valor e prazo",
+   "area": "Indicadores públicos",
+   "nicho": "Aditivos de valor e prazo",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-019",
+   "nome": "Consultor de obras públicas paralisadas",
+   "area": "Indicadores públicos",
+   "nicho": "Obras públicas paralisadas",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-020",
+   "nome": "Consultor de empresas impedidas de contratar",
+   "area": "Indicadores públicos",
+   "nicho": "Empresas impedidas de contratar",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-021",
+   "nome": "Consultor de como ler: foco de calor não é desmatamento",
+   "area": "Formação e leitura",
+   "nicho": "Como ler: foco de calor não é desmatamento",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-022",
+   "nome": "Consultor de como ler: gasto com pessoal e receita corrente líquida",
+   "area": "Formação e leitura",
+   "nicho": "Como ler: gasto com pessoal e receita corrente líquida",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-023",
+   "nome": "Consultor de como ler: o IPCA",
+   "area": "Formação e leitura",
+   "nicho": "Como ler: o IPCA",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-024",
+   "nome": "Consultor de como ler: a taxa de desocupação",
+   "area": "Formação e leitura",
+   "nicho": "Como ler: a taxa de desocupação",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-025",
+   "nome": "Consultor de trilha 2: dados abertos do Brasil na prática",
+   "area": "Formação e leitura",
+   "nicho": "Trilha 2: dados abertos do Brasil na prática",
+   "base_oficial": true,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-026",
+   "nome": "Consultor de trilha 3: medir uma previsão",
+   "area": "Formação e leitura",
+   "nicho": "Trilha 3: medir uma previsão",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-027",
+   "nome": "Consultor de trilha: ler um recorde de SI",
+   "area": "Formação e leitura",
+   "nicho": "Trilha: ler um recorde de SI",
+   "base_oficial": false,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-028",
+   "nome": "Consultor de oficina: comparar estados e municípios sem erro",
+   "area": "Formação e leitura",
+   "nicho": "Oficina: comparar estados e municípios sem erro",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-029",
+   "nome": "Consultor de glossário do número público",
+   "area": "Formação e leitura",
+   "nicho": "Glossário do número público",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-030",
+   "nome": "Consultor de indicadores para gestão: ficha, linha de base e meta viável",
+   "area": "Formação e leitura",
+   "nicho": "Indicadores para gestão: ficha, linha de base e meta viável",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-031",
+   "nome": "Consultor de como ler: taxa em município pequeno",
+   "area": "Formação e leitura",
+   "nicho": "Como ler: taxa em município pequeno",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-032",
+   "nome": "Consultor de meta Selic após cada reunião do Copom",
+   "area": "Predição",
+   "nicho": "Meta Selic após cada reunião do Copom",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-033",
+   "nome": "Consultor de alertas mensais de desmatamento (DETER)",
+   "area": "Predição",
+   "nicho": "Alertas mensais de desmatamento (DETER)",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-034",
+   "nome": "Consultor de bandeira tarifária do mês",
+   "area": "Predição",
+   "nicho": "Bandeira tarifária do mês",
+   "base_oficial": true,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-035",
+   "nome": "Consultor de dívida bruta do governo geral",
+   "area": "Predição",
+   "nicho": "Dívida bruta do governo geral",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-036",
+   "nome": "Consultor de pIB trimestral: cresce ou recua",
+   "area": "Predição",
+   "nicho": "PIB trimestral: cresce ou recua",
+   "base_oficial": true,
+   "frequencia": "trimestral",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-037",
+   "nome": "Consultor de resultado primário do Governo Central",
+   "area": "Predição",
+   "nicho": "Resultado primário do Governo Central",
+   "base_oficial": true,
+   "frequencia": "mensal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-038",
+   "nome": "Consultor de inadimplência no crédito das famílias",
+   "area": "Predição",
+   "nicho": "Inadimplência no crédito das famílias",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-039",
+   "nome": "Consultor de placar público de acerto",
+   "area": "Predição",
+   "nicho": "Placar público de acerto",
+   "base_oficial": true,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-040",
+   "nome": "Consultor de energia armazenada nos reservatórios do SIN",
+   "area": "Predição",
+   "nicho": "Energia armazenada nos reservatórios do SIN",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-041",
+   "nome": "Consultor de produção industrial mensal",
+   "area": "Predição",
+   "nicho": "Produção industrial mensal",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-042",
+   "nome": "Consultor de curva de calibração e decomposição de Murphy",
+   "area": "Predição",
+   "nicho": "Curva de calibração e decomposição de Murphy",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-043",
+   "nome": "Consultor de o Focus como linha de base pública",
+   "area": "Predição",
+   "nicho": "O Focus como linha de base pública",
+   "base_oficial": true,
+   "frequencia": "evento/prazo",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-044",
+   "nome": "Consultor de participação eólica e solar na geração",
+   "area": "Predição",
+   "nicho": "Participação eólica e solar na geração",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-045",
+   "nome": "Consultor de temperatura do mês nas capitais",
+   "area": "Predição",
+   "nicho": "Temperatura do mês nas capitais",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-046",
+   "nome": "Consultor de data centers e carga elétrica no Brasil",
+   "area": "Predição",
+   "nicho": "Data centers e carga elétrica no Brasil",
+   "base_oficial": true,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-047",
+   "nome": "Consultor de dengue por semana epidemiológica",
+   "area": "Predição",
+   "nicho": "Dengue por semana epidemiológica",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-048",
+   "nome": "Consultor de arrecadação federal mensal",
+   "area": "Predição",
+   "nicho": "Arrecadação federal mensal",
+   "base_oficial": true,
+   "frequencia": "mensal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-049",
+   "nome": "Consultor de recordes de SI em prazo curto",
+   "area": "Superinteligência (SI)",
+   "nicho": "Recordes de SI em prazo curto",
+   "base_oficial": false,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-050",
+   "nome": "Consultor de marco legal da SI: fases na Câmara",
+   "area": "Superinteligência (SI)",
+   "nicho": "Marco legal da SI: fases na Câmara",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-051",
+   "nome": "Consultor de data centers de SI",
+   "area": "Superinteligência (SI)",
+   "nicho": "Data centers de SI",
+   "base_oficial": false,
+   "frequencia": "mensal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-052",
+   "nome": "Consultor de interesse público por SI",
+   "area": "Superinteligência (SI)",
+   "nicho": "Interesse público por SI",
+   "base_oficial": false,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-053",
+   "nome": "Consultor de licenças dos modelos e dados de SI",
+   "area": "Superinteligência (SI)",
+   "nicho": "Licenças dos modelos e dados de SI",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-054",
+   "nome": "Consultor de pesquisa em SI feita no Brasil",
+   "area": "Superinteligência (SI)",
+   "nicho": "Pesquisa em SI feita no Brasil",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-055",
+   "nome": "Consultor de chips para SI",
+   "area": "Superinteligência (SI)",
+   "nicho": "Chips para SI",
+   "base_oficial": false,
+   "frequencia": "evento/prazo",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-056",
+   "nome": "Consultor de distância entre modelos abertos e fechados",
+   "area": "Superinteligência (SI)",
+   "nicho": "Distância entre modelos abertos e fechados",
+   "base_oficial": false,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-057",
+   "nome": "Consultor de pesquisa em segurança de SI",
+   "area": "Superinteligência (SI)",
+   "nicho": "Pesquisa em segurança de SI",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-058",
+   "nome": "Consultor de regulamento europeu de SI: calendário de aplicação",
+   "area": "Superinteligência (SI)",
+   "nicho": "Regulamento europeu de SI: calendário de aplicação",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-059",
+   "nome": "Consultor de adoção de ferramentas de SI",
+   "area": "Superinteligência (SI)",
+   "nicho": "Adoção de ferramentas de SI",
+   "base_oficial": false,
+   "frequencia": "mensal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-060",
+   "nome": "Consultor de que riscos de SI cada norma cobre",
+   "area": "Superinteligência (SI)",
+   "nicho": "Que riscos de SI cada norma cobre",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-061",
+   "nome": "Consultor de incidentes de SI por setor",
+   "area": "Superinteligência (SI)",
+   "nicho": "Incidentes de SI por setor",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-062",
+   "nome": "Consultor de regulação de SI na América Latina",
+   "area": "Superinteligência (SI)",
+   "nicho": "Regulação de SI na América Latina",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-063",
+   "nome": "Consultor de vocabulário ligado de SI em português",
+   "area": "Superinteligência (SI)",
+   "nicho": "Vocabulário ligado de SI em português",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-064",
+   "nome": "Consultor de produção agrícola (lavouras)",
+   "area": "Economia real e setor externo",
+   "nicho": "Produção agrícola (lavouras)",
+   "base_oficial": true,
+   "frequencia": "evento/prazo",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-065",
+   "nome": "Consultor de rebanhos (pecuária)",
+   "area": "Economia real e setor externo",
+   "nicho": "Rebanhos (pecuária)",
+   "base_oficial": true,
+   "frequencia": "evento/prazo",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-066",
+   "nome": "Consultor de contas externas e câmbio",
+   "area": "Economia real e setor externo",
+   "nicho": "Contas externas e câmbio",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-067",
+   "nome": "Consultor de pIX por município",
+   "area": "Economia real e setor externo",
+   "nicho": "PIX por município",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-068",
+   "nome": "Consultor de empresas e pessoal ocupado por porte",
+   "area": "Economia real e setor externo",
+   "nicho": "Empresas e pessoal ocupado por porte",
+   "base_oficial": true,
+   "frequencia": "evento/prazo",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-069",
+   "nome": "Consultor de objetivos de Desenvolvimento Sustentável no Brasil",
+   "area": "Economia real e setor externo",
+   "nicho": "Objetivos de Desenvolvimento Sustentável no Brasil",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-070",
+   "nome": "Consultor de fundos de investimento (agregado)",
+   "area": "Economia real e setor externo",
+   "nicho": "Fundos de investimento (agregado)",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-071",
+   "nome": "Consultor de jogo: fumaça",
+   "area": "Arcade",
+   "nicho": "Jogo: fumaça",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-072",
+   "nome": "Consultor de banco de perguntas de treino",
+   "area": "Arcade",
+   "nicho": "Banco de perguntas de treino",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-073",
+   "nome": "Consultor de jogo: quanto é?",
+   "area": "Arcade",
+   "nicho": "Jogo: quanto é?",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-074",
+   "nome": "Consultor de jogo: recorde ou não",
+   "area": "Arcade",
+   "nicho": "Jogo: recorde ou não",
+   "base_oficial": false,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-075",
+   "nome": "Consultor de jogo: a proposta andou?",
+   "area": "Arcade",
+   "nicho": "Jogo: a proposta andou?",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-076",
+   "nome": "Consultor de estimativa preliminar e taxa consolidada do PRODES",
+   "area": "Transparência e proveniência",
+   "nicho": "Estimativa preliminar e taxa consolidada do PRODES",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-077",
+   "nome": "Consultor de revisões do PIB trimestral",
+   "area": "Transparência e proveniência",
+   "nicho": "Revisões do PIB trimestral",
+   "base_oficial": true,
+   "frequencia": "trimestral",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-078",
+   "nome": "Consultor de qualidade dos metadados nos portais de dados abertos",
+   "area": "Transparência e proveniência",
+   "nicho": "Qualidade dos metadados nos portais de dados abertos",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-079",
+   "nome": "Consultor de frescor dos conjuntos de dados abertos",
+   "area": "Transparência e proveniência",
+   "nicho": "Frescor dos conjuntos de dados abertos",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-080",
+   "nome": "Consultor de onde falta dado",
+   "area": "Transparência e proveniência",
+   "nicho": "Onde falta dado",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-081",
+   "nome": "Consultor de ficha de origem de cada número",
+   "area": "Transparência e proveniência",
+   "nicho": "Ficha de origem de cada número",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-082",
+   "nome": "Consultor de disponibilidade das APIs públicas de dados",
+   "area": "Transparência e proveniência",
+   "nicho": "Disponibilidade das APIs públicas de dados",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-083",
+   "nome": "Consultor de licença de cada fonte usada",
+   "area": "Transparência e proveniência",
+   "nicho": "Licença de cada fonte usada",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-084",
+   "nome": "Consultor de cumprimento do calendário oficial de divulgação",
+   "area": "Transparência e proveniência",
+   "nicho": "Cumprimento do calendário oficial de divulgação",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-085",
+   "nome": "Consultor de revisões do saldo de emprego formal",
+   "area": "Transparência e proveniência",
+   "nicho": "Revisões do saldo de emprego formal",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-086",
+   "nome": "Consultor de municípios com diário oficial aberto e pesquisável",
+   "area": "Transparência e proveniência",
+   "nicho": "Municípios com diário oficial aberto e pesquisável",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-087",
+   "nome": "Consultor de o mesmo número em duas fontes oficiais",
+   "area": "Transparência e proveniência",
+   "nicho": "O mesmo número em duas fontes oficiais",
+   "base_oficial": true,
+   "frequencia": "mensal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-088",
+   "nome": "Consultor de registro público de correções",
+   "area": "Transparência e proveniência",
+   "nicho": "Registro público de correções",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-089",
+   "nome": "Consultor de pedidos de acesso à informação no governo federal",
+   "area": "Transparência e proveniência",
+   "nicho": "Pedidos de acesso à informação no governo federal",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-090",
+   "nome": "Consultor de planos de dados abertos dos órgãos federais",
+   "area": "Transparência e proveniência",
+   "nicho": "Planos de dados abertos dos órgãos federais",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-091",
+   "nome": "Consultor de vendas de chips aceleradores",
+   "area": "Ciência e tecnologia de fronteira",
+   "nicho": "Vendas de chips aceleradores",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-092",
+   "nome": "Consultor de abertura de dados do governo",
+   "area": "Ciência e tecnologia de fronteira",
+   "nicho": "Abertura de dados do governo",
+   "base_oficial": true,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-093",
+   "nome": "Consultor de ciência brasileira em acesso aberto",
+   "area": "Ciência e tecnologia de fronteira",
+   "nicho": "Ciência brasileira em acesso aberto",
+   "base_oficial": false,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-094",
+   "nome": "Consultor de pesquisa brasileira em semicondutores e microeletrônica",
+   "area": "Ciência e tecnologia de fronteira",
+   "nicho": "Pesquisa brasileira em semicondutores e microeletrônica",
+   "base_oficial": true,
+   "frequencia": "trimestral",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-095",
+   "nome": "Consultor de sI na pesquisa em saúde",
+   "area": "Ciência e tecnologia de fronteira",
+   "nicho": "SI na pesquisa em saúde",
+   "base_oficial": false,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-096",
+   "nome": "Consultor de aprendizado de máquina aberto (curso)",
+   "area": "Ciência e tecnologia de fronteira",
+   "nicho": "Aprendizado de máquina aberto (curso)",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-097",
+   "nome": "Consultor de amazônia Legal: o recorte e seus municípios",
+   "area": "Geolocalização",
+   "nicho": "Amazônia Legal: o recorte e seus municípios",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-098",
+   "nome": "Consultor de regiões metropolitanas: trabalho e renda",
+   "area": "Geolocalização",
+   "nicho": "Regiões metropolitanas: trabalho e renda",
+   "base_oficial": true,
+   "frequencia": "trimestral",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-099",
+   "nome": "Consultor de regiões de saúde: estabelecimentos por habitante",
+   "area": "Geolocalização",
+   "nicho": "Regiões de saúde: estabelecimentos por habitante",
+   "base_oficial": true,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-100",
+   "nome": "Consultor de semiárido: água, seca e saneamento",
+   "area": "Geolocalização",
+   "nicho": "Semiárido: água, seca e saneamento",
+   "base_oficial": true,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-101",
+   "nome": "Consultor de consórcios públicos entre municípios",
+   "area": "Geolocalização",
+   "nicho": "Consórcios públicos entre municípios",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-102",
+   "nome": "Consultor de faixa de fronteira",
+   "area": "Geolocalização",
+   "nicho": "Faixa de fronteira",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-103",
+   "nome": "Consultor de código IBGE: a identidade de cada lugar",
+   "area": "Ontologia",
+   "nicho": "Código IBGE: a identidade de cada lugar",
+   "base_oficial": true,
+   "frequencia": "evento/prazo",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-104",
+   "nome": "Consultor de denominadores: população por município",
+   "area": "Ontologia",
+   "nicho": "Denominadores: população por município",
+   "base_oficial": true,
+   "frequencia": "evento/prazo",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-105",
+   "nome": "Consultor de brasil entre países",
+   "area": "Ontologia",
+   "nicho": "Brasil entre países",
+   "base_oficial": true,
+   "frequencia": "evento/prazo",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-106",
+   "nome": "Consultor de dicionário aberto de indicadores",
+   "area": "Ontologia",
+   "nicho": "Dicionário aberto de indicadores",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-107",
+   "nome": "Consultor de regiões imediatas e intermediárias",
+   "area": "Ontologia",
+   "nicho": "Regiões imediatas e intermediárias",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-108",
+   "nome": "Consultor de esgoto: Censo e SINISA lado a lado",
+   "area": "Ontologia",
+   "nicho": "Esgoto: Censo e SINISA lado a lado",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-109",
+   "nome": "Consultor de terras indígenas como território",
+   "area": "Ontologia",
+   "nicho": "Terras indígenas como território",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-110",
+   "nome": "Consultor de medicamentos biológicos registrados",
+   "area": "Biotecnologia",
+   "nicho": "Medicamentos biológicos registrados",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-111",
+   "nome": "Consultor de produção científica brasileira em biotecnologia",
+   "area": "Biotecnologia",
+   "nicho": "Produção científica brasileira em biotecnologia",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-112",
+   "nome": "Consultor de pesquisa biomédica com afiliação brasileira",
+   "area": "Biotecnologia",
+   "nicho": "Pesquisa biomédica com afiliação brasileira",
+   "base_oficial": false,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-113",
+   "nome": "Consultor de modelos abertos de SI para proteínas e genomas",
+   "area": "Biotecnologia",
+   "nicho": "Modelos abertos de SI para proteínas e genomas",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-114",
+   "nome": "Consultor de curso: como a biologia organiza o conhecimento",
+   "area": "Biotecnologia",
+   "nicho": "Curso: como a biologia organiza o conhecimento",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-115",
+   "nome": "Consultor de patentes de biotecnologia depositadas no INPI",
+   "area": "Biotecnologia",
+   "nicho": "Patentes de biotecnologia depositadas no INPI",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-116",
+   "nome": "Consultor de proposições sobre SI por assunto",
+   "area": "Normas e regulação",
+   "nicho": "Proposições sobre SI por assunto",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-117",
+   "nome": "Consultor de reajustes tarifários homologados",
+   "area": "Normas e regulação",
+   "nicho": "Reajustes tarifários homologados",
+   "base_oficial": true,
+   "frequencia": "semanal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-118",
+   "nome": "Consultor de decisões de registro na ANVISA",
+   "area": "Normas e regulação",
+   "nicho": "Decisões de registro na ANVISA",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-119",
+   "nome": "Consultor de tempo de tramitação por tema",
+   "area": "Normas e regulação",
+   "nicho": "Tempo de tramitação por tema",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-120",
+   "nome": "Consultor de prazo de decisão do INPI",
+   "area": "Normas e regulação",
+   "nicho": "Prazo de decisão do INPI",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-121",
+   "nome": "Consultor de normas municipais por tema",
+   "area": "Normas e regulação",
+   "nicho": "Normas municipais por tema",
+   "base_oficial": false,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-122",
+   "nome": "Consultor de cumprimento das agendas regulatórias",
+   "area": "Normas e regulação",
+   "nicho": "Cumprimento das agendas regulatórias",
+   "base_oficial": false,
+   "frequencia": "mensal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-123",
+   "nome": "Consultor de consultas públicas das agências",
+   "area": "Normas e regulação",
+   "nicho": "Consultas públicas das agências",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-124",
+   "nome": "Consultor de aNPD: regulação de dados e SI",
+   "area": "Normas e regulação",
+   "nicho": "ANPD: regulação de dados e SI",
+   "base_oficial": true,
+   "frequencia": "evento/prazo",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-125",
+   "nome": "Consultor de pedidos de patente em SI no Brasil",
+   "area": "Normas e regulação",
+   "nicho": "Pedidos de patente em SI no Brasil",
+   "base_oficial": true,
+   "frequencia": "mensal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-126",
+   "nome": "Consultor de marcas e programas de computador por UF",
+   "area": "Normas e regulação",
+   "nicho": "Marcas e programas de computador por UF",
+   "base_oficial": true,
+   "frequencia": "mensal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-127",
+   "nome": "Consultor de normas federais por órgão e assunto",
+   "area": "Normas e regulação",
+   "nicho": "Normas federais por órgão e assunto",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-128",
+   "nome": "Consultor de processos judiciais por assunto",
+   "area": "Normas e regulação",
+   "nicho": "Processos judiciais por assunto",
+   "base_oficial": true,
+   "frequencia": "mensal",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-129",
+   "nome": "Consultor de ações de controle concentrado por tema",
+   "area": "Normas e regulação",
+   "nicho": "Ações de controle concentrado por tema",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-130",
+   "nome": "Consultor de ambiente no meu município",
+   "area": "Meu município",
+   "nicho": "Ambiente no meu município",
+   "base_oficial": true,
+   "frequencia": "diario",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-131",
+   "nome": "Consultor de contas do meu município",
+   "area": "Meu município",
+   "nicho": "Contas do meu município",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-132",
+   "nome": "Consultor de retrato do meu município",
+   "area": "Meu município",
+   "nicho": "Retrato do meu município",
+   "base_oficial": true,
+   "frequencia": "evento/prazo",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-133",
+   "nome": "Consultor de meu estado ao longo do tempo",
+   "area": "Meu município",
+   "nicho": "Meu estado ao longo do tempo",
+   "base_oficial": true,
+   "frequencia": "trimestral",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-134",
+   "nome": "Consultor de alfabetização no meu município",
+   "area": "Meu município",
+   "nicho": "Alfabetização no meu município",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-135",
+   "nome": "Consultor de comparação entre municípios semelhantes",
+   "area": "Meu município",
+   "nicho": "Comparação entre municípios semelhantes",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-136",
+   "nome": "Consultor de produção científica brasileira em física e computação quântica",
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Produção científica brasileira em física e computação quântica",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-137",
+   "nome": "Consultor de curso: qubit, superposição e ruído",
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Curso: qubit, superposição e ruído",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-138",
+   "nome": "Consultor de onde se pesquisa quântica no Brasil",
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Onde se pesquisa quântica no Brasil",
+   "base_oficial": false,
+   "frequencia": "trimestral",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-139",
+   "nome": "Consultor de ritmo mundial de pré-publicações em física quântica",
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Ritmo mundial de pré-publicações em física quântica",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-140",
+   "nome": "Consultor de curso: otimização com Max-Cut e QUBO",
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Curso: otimização com Max-Cut e QUBO",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-141",
+   "nome": "Consultor de pós-graduação em óptica e informação quântica",
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Pós-graduação em óptica e informação quântica",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-142",
+   "nome": "Consultor de fomento público à pesquisa quântica",
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Fomento público à pesquisa quântica",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-143",
+   "nome": "Consultor de marcos públicos do hardware quântico",
+   "area": "Pesquisa quântica no Brasil",
+   "nicho": "Marcos públicos do hardware quântico",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-144",
+   "nome": "Consultor de curso: hash, assinatura e prova de integridade",
+   "area": "Cibersegurança",
+   "nicho": "Curso: hash, assinatura e prova de integridade",
+   "base_oficial": false,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-145",
+   "nome": "Consultor de criptografia pós-quântica: padrões e calendário",
+   "area": "Cibersegurança",
+   "nicho": "Criptografia pós-quântica: padrões e calendário",
+   "base_oficial": true,
+   "frequencia": "evento/prazo",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-146",
+   "nome": "Consultor de curso: migrar para criptografia pós-quântica",
+   "area": "Cibersegurança",
+   "nicho": "Curso: migrar para criptografia pós-quântica",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-147",
+   "nome": "Consultor de vulnerabilidades publicadas por mês",
+   "area": "Cibersegurança",
+   "nicho": "Vulnerabilidades publicadas por mês",
+   "base_oficial": true,
+   "frequencia": "anual",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-148",
+   "nome": "Consultor de incidentes de segurança notificados no Brasil",
+   "area": "Cibersegurança",
+   "nicho": "Incidentes de segurança notificados no Brasil",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  },
+  {
+   "id": "agente-149",
+   "nome": "Consultor de incidentes na administração pública federal",
+   "area": "Cibersegurança",
+   "nicho": "Incidentes na administração pública federal",
+   "base_oficial": true,
+   "frequencia": "a definir",
+   "origem": "inventario do PC (05_ONTOLOGIA_PREDICAO)",
+   "status": "catalogado; falta conteúdo de Harvard/MIT"
+  }
+ ]
+}
