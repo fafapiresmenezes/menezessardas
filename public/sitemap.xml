@@ -1,27 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Só a raiz, e de propósito. A plataforma é privada e os endereços de dentro vivem depois do #,
+     que nenhum buscador segue: as entradas /imoveis, /indicadores e /legislacao que estavam aqui
+     apontavam para páginas que respondem 404. O domínio antigo também estava errado. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://menezes-sardas-contratos.vercel.app/</loc>
-    <lastmod>2026-10-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://menezes-sardas-contratos.vercel.app/imoveis</loc>
-    <lastmod>2026-10-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://menezes-sardas-contratos.vercel.app/indicadores</loc>
-    <lastmod>2026-10-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://menezes-sardas-contratos.vercel.app/legislacao</loc>
-    <lastmod>2026-10-26</lastmod>
+    <loc>https://theye.club/</loc>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>1.0</priority>
   </url>
 </urlset>

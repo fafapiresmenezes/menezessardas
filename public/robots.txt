@@ -1,7 +1,7 @@
+# Plataforma privada: só a porta de entrada é pública. O que está depois do # exige login e
+# nenhum buscador alcança, mas fica dito aqui de todo jeito.
 User-agent: *
-Allow: /
-Disallow: /admin
-Disallow: /login
-Disallow: /configuracoes
+Allow: /$
+Disallow: /
 
-Sitemap: https://menezes-sardas-contratos.vercel.app/sitemap.xml
+Sitemap: https://theye.club/sitemap.xml

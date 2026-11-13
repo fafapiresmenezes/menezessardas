@@ -14,8 +14,9 @@ rm -rf dist-prod
 grep -q hlraekzvgxdpiiigdxdo dist-prod/assets/*.js || { echo "ERRO: build sem a URL do Supabase"; exit 1; }
 
 git fetch -q origin gh-pages
-git show FETCH_HEAD:robots.txt > dist-prod/robots.txt
-git show FETCH_HEAD:sitemap.xml > dist-prod/sitemap.xml
+# robots.txt e sitemap.xml saem de public/, como todo o resto. Antes eram copiados de volta do
+# gh-pages a cada publicação, o que congelava os dois arquivos na versão de outubro de 2026: eles
+# ainda anunciavam o domínio antigo, e qualquer correção feita no repositório nunca chegava ao ar.
 touch dist-prod/.nojekyll
 
 INDICE=$(mktemp -u)
@@ -31,6 +32,19 @@ done
 grep -q '\.css' dist-prod/index.html || { echo "ERRO: index.html sem CSS"; exit 1; }
 
 git push -q origin "$COMMIT:refs/heads/gh-pages"
-sed "s#\./assets/#https://cdn.jsdelivr.net/gh/fafapiresmenezes/menezessardas@$COMMIT/assets/#g" dist-prod/index.html > "$SAIDA"
+CDN="https://cdn.jsdelivr.net/gh/fafapiresmenezes/menezessardas@$COMMIT"
+PASTA="$(dirname "$SAIDA")/vercel"
+rm -rf "$PASTA"; mkdir -p "$PASTA"
+
+# O index.html e o manifesto passam a apontar para o CDN; os três ícones PNG ficam só no gh-pages,
+# de onde o jsDelivr os serve. Assim nenhum arquivo binário precisa viajar para a Vercel.
+sed "s#\./assets/#$CDN/assets/#g; s#\./apple-touch-icon\.png#$CDN/apple-touch-icon.png#g" dist-prod/index.html > "$SAIDA"
+# O manifesto, ao contrário dos ícones, TEM de ser servido pelo próprio domínio: é dele que saem o
+# `scope` e o `start_url`, e um manifesto de outro domínio deixa o aplicativo não instalável.
+sed "s#\"src\": \"icone-#\"src\": \"$CDN/icone-#g" dist-prod/manifest.webmanifest > "$PASTA/manifest.webmanifest"
+cp dist-prod/robots.txt dist-prod/sitemap.xml dist-prod/sw.js "$PASTA/"
+cp "$SAIDA" "$PASTA/index.html"
+
 echo "gh-pages: $COMMIT"
 echo "index.html pronto: $SAIDA (enviar este arquivo exatamente como está)"
+echo "arquivos da Vercel: $PASTA (index.html, manifest.webmanifest, robots.txt, sitemap.xml, sw.js)"
