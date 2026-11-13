@@ -36,9 +36,9 @@ describe('Tela de entrada por área', () => {
 
   it('mostra todas as matérias do direito; a busca filtra por título ou descrição e Enter abre a primeira; Imobiliário vai ao painel', async () => {
     montar()
-    expect(screen.getAllByTestId(/^area-/).length).toBe(44)
+    expect(screen.getAllByTestId(/^area-/).length).toBe(45)
     for (const m of ['constitucional', 'administrativo', 'processo_civil', 'eleitoral', 'digital', 'ambiental', 'condominial', 'recuperacao']) expect(screen.getByTestId(`area-${m}`)).toBeTruthy()
-    expect(screen.getByTestId('todas-areas').textContent).toContain('Ver todas as 44 matérias do direito')
+    expect(screen.getByTestId('todas-areas').textContent).toContain('Ver todas as 45 matérias do direito')
     fireEvent.change(screen.getByTestId('busca-area'), { target: { value: 'INSS' } })
     expect(screen.getByTestId('busca-area-resultado').textContent).toBe('1 área(s); Enter abre Previdenciário.')
     expect(screen.getAllByTestId(/^area-/).length).toBe(1)

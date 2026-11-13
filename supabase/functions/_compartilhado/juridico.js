@@ -108,7 +108,13 @@ var CODIGOS = {
   LOC: { nome: "Locação (Lei 8.245/91)", sigla: "LOC", regra: "Prazos de direito material em dias corridos (CC, art. 132); os processuais seguem o CPC." },
   CDC: { nome: "Consumidor (CDC)", sigla: "CDC", regra: "Prazos de decadência e prescrição de direito material (Lei 8.078/90)." },
   FAL: { nome: "Recuperação e falência (Lei 11.101/2005)", sigla: "FAL", regra: "Dias corridos (Lei 11.101/2005, art. 189, § 1º, I). Confira se o ato é da recuperação, da falência ou do CPC subsidiário." },
-  PRESC: { nome: "Prescrição e decadência", sigla: "PRESC", regra: 'Meses e anos "de data a data" (CC, art. 132, § 3º). Vencendo em dia sem expediente, a data passa ao dia útil seguinte.' }
+  PRESC: { nome: "Prescrição e decadência", sigla: "PRESC", regra: 'Meses e anos "de data a data" (CC, art. 132, § 3º). Vencendo em dia sem expediente, a data passa ao dia útil seguinte.' },
+  ELE: { nome: "Eleitoral (Código Eleitoral e Lei 9.504/97)", sigla: "ELE", regra: "Em ano eleitoral, os prazos correm em dias corridos e em todos os dias, inclusive sábados, domingos e feriados (Lei 9.504/97, art. 16). Confira resolução do TSE do pleito." },
+  CPPM: { nome: "Processo penal militar (CPPM)", sigla: "CPPM", regra: "Dias corridos; exclui o dia do começo e inclui o do vencimento (CPPM, art. 100). Vencendo sem expediente, passa ao dia útil seguinte." },
+  LPA: { nome: "Processo administrativo federal (Lei 9.784/99)", sigla: "LPA", regra: "Dias corridos, exclui o dia do começo e inclui o do vencimento (Lei 9.784/99, art. 66); se vence em dia sem expediente, passa ao dia útil seguinte." },
+  LIC: { nome: "Licitações e contratos (Lei 14.133/21)", sigla: "LIC", regra: "Dias úteis, salvo disposição em contrário (Lei 14.133/21, art. 183). Recursos administrativos em 3 dias úteis." },
+  ARB: { nome: "Arbitragem (Lei 9.307/96)", sigla: "ARB", regra: "Os prazos da arbitragem são os fixados pela convenção arbitral ou pelo tribunal arbitral; só os prazos de controle judicial seguem a lei processual." },
+  CTB: { nome: "Trânsito (CTB)", sigla: "CTB", regra: "Dias corridos (CTB, art. 282, § 4º e Resoluções do CONTRAN). Defesas e recursos administrativos têm prazo próprio em cada fase da autuação." }
 };
 var ATOS_POR_CODIGO = [
   // ---------- CPC ----------
@@ -228,7 +234,41 @@ var ATOS_POR_CODIGO = [
   { id: "presc-tributo-cobranca", codigo: "PRESC", ato: "Prescrição da cobrança do crédito tributário", quantidade: 5, unidade: "anos", base: "CTN, art. 174", natureza: "material", marco: "Constituição definitiva do crédito" },
   { id: "presc-repeticao", codigo: "PRESC", ato: "Repetição de indébito tributário", quantidade: 5, unidade: "anos", base: "CTN, art. 168", natureza: "material", marco: "Pagamento indevido" },
   { id: "presc-improbidade", codigo: "PRESC", ato: "Ação de improbidade administrativa", quantidade: 8, unidade: "anos", base: "Lei 8.429/92, art. 23 (Lei 14.230/2021)", natureza: "material", marco: "Fato (ou cessação da permanência)" },
-  { id: "presc-acao-popular", codigo: "PRESC", ato: "Ação popular", quantidade: 5, unidade: "anos", base: "Lei 4.717/65, art. 21", natureza: "material", marco: "Ato lesivo" }
+  { id: "presc-acao-popular", codigo: "PRESC", ato: "Ação popular", quantidade: 5, unidade: "anos", base: "Lei 4.717/65, art. 21", natureza: "material", marco: "Ato lesivo" },
+  // ---------- Eleitoral (A26) ----------
+  { id: "ele-aije", codigo: "ELE", ato: "Ação de investigação judicial eleitoral (AIJE) — propositura", quantidade: 15, unidade: "dias_corridos", base: "LC 64/90, art. 22", natureza: "material", marco: "Diplomação (ou ciência do abuso, conforme o caso)", nota: "A confirmar na resolução do TSE do pleito." },
+  { id: "ele-aime", codigo: "ELE", ato: "Ação de impugnação de mandato eletivo (AIME)", quantidade: 15, unidade: "dias_corridos", base: "CF, art. 14, §§ 10 e 11", natureza: "material", marco: "Diplomação" },
+  { id: "ele-registro-impugnacao", codigo: "ELE", ato: "Impugnação ao registro de candidatura", quantidade: 5, unidade: "dias_corridos", base: "LC 64/90, art. 3º", marco: "Publicação do edital do pedido de registro" },
+  { id: "ele-contas-impugnacao", codigo: "ELE", ato: "Impugnação à prestação de contas de campanha", quantidade: 3, unidade: "dias_corridos", base: "Lei 9.504/97, art. 30, § 1º; resolução do TSE", nota: "A confirmar na resolução do TSE do pleito." },
+  { id: "ele-rec-rce", codigo: "ELE", ato: "Recurso contra expedição de diploma (RCED)", quantidade: 3, unidade: "dias_corridos", base: "Código Eleitoral, art. 262", marco: "Diplomação" },
+  { id: "ele-recurso-geral", codigo: "ELE", ato: "Recurso eleitoral (regra geral)", quantidade: 3, unidade: "dias_corridos", base: "Código Eleitoral, art. 258" },
+  // ---------- Processo penal militar ----------
+  { id: "cppm-resposta", codigo: "CPPM", ato: "Resposta à acusação (defesa escrita)", quantidade: 5, unidade: "dias_corridos", base: "CPPM, art. 407", marco: "Citação do acusado", nota: "A confirmar: há jurisprudência aplicando subsidiariamente o CPP (art. 396)." },
+  { id: "cppm-apelacao", codigo: "CPPM", ato: "Apelação (interposição)", quantidade: 5, unidade: "dias_corridos", base: "CPPM, art. 529" },
+  { id: "cppm-razoes", codigo: "CPPM", ato: "Razões de apelação", quantidade: 8, unidade: "dias_corridos", base: "CPPM, art. 531", marco: "Intimação para apresentar razões" },
+  { id: "cppm-ed", codigo: "CPPM", ato: "Embargos de declaração", quantidade: 2, unidade: "dias_corridos", base: "CPPM, art. 540" },
+  { id: "cppm-rese", codigo: "CPPM", ato: "Recurso em sentido estrito", quantidade: 5, unidade: "dias_corridos", base: "CPPM, art. 516" },
+  // ---------- Processo administrativo federal (Lei 9.784/99) ----------
+  { id: "lpa-recurso", codigo: "LPA", ato: "Recurso administrativo", quantidade: 10, unidade: "dias_corridos", base: "Lei 9.784/99, art. 59" },
+  { id: "lpa-manifestacao", codigo: "LPA", ato: "Manifestação do interessado (regra geral)", quantidade: 5, unidade: "dias_corridos", base: "Lei 9.784/99, art. 24", nota: "Pode ser prorrogado por mais 5 dias a critério da autoridade." },
+  { id: "lpa-alegacoes-finais", codigo: "LPA", ato: "Alegações finais", quantidade: 10, unidade: "dias_corridos", base: "Lei 9.784/99, art. 44", marco: "Encerramento da instrução" },
+  { id: "lpa-decisao", codigo: "LPA", ato: "Decisão da autoridade", quantidade: 30, unidade: "dias_corridos", base: "Lei 9.784/99, art. 49", natureza: "improprio", marco: "Encerramento da instrução", nota: "Prazo impróprio, prorrogável por igual período com motivação." },
+  { id: "lpa-prescricao", codigo: "LPA", ato: "Prescrição da pretensão punitiva da Administração", quantidade: 5, unidade: "anos", base: "Lei 9.784/99, art. 54", natureza: "material", marco: "Data da prática do ato" },
+  // ---------- Licitações e contratos (Lei 14.133/21) ----------
+  { id: "lic-recurso", codigo: "LIC", ato: "Recurso administrativo (regra geral)", quantidade: 3, unidade: "dias_uteis", base: "Lei 14.133/21, art. 165, I" },
+  { id: "lic-contrarrazoes", codigo: "LIC", ato: "Contrarrazões ao recurso", quantidade: 3, unidade: "dias_uteis", base: "Lei 14.133/21, art. 165, § 2º" },
+  { id: "lic-pedido-reajuste", codigo: "LIC", ato: "Pedido de reequilíbrio econômico-financeiro", quantidade: 60, unidade: "dias_corridos", base: "Lei 14.133/21, art. 124 (interpretação)", nota: "A confirmar: a lei não fixa prazo expresso; tribunais de contas recomendam até 60 dias da ocorrência do fato." },
+  { id: "lic-publicacao-contrato", codigo: "LIC", ato: "Publicação do contrato no PNCP", quantidade: 20, unidade: "dias_uteis", base: "Lei 14.133/21, art. 94, I", marco: "Assinatura do contrato" },
+  { id: "lic-garantia-devolucao", codigo: "LIC", ato: "Devolução da garantia contratual", quantidade: 90, unidade: "dias_corridos", base: "Lei 14.133/21, art. 100 (prática forense)", marco: "Encerramento do contrato", nota: "A confirmar: depende da cláusula contratual e do tipo de garantia." },
+  // ---------- Arbitragem (Lei 9.307/96) ----------
+  { id: "arb-anulacao", codigo: "ARB", ato: "Ação de anulação da sentença arbitral", quantidade: 90, unidade: "dias_corridos", base: "Lei 9.307/96, art. 33, § 1º", natureza: "material", marco: "Recebimento da notificação da sentença arbitral (ou do aditamento)" },
+  { id: "arb-esclarecimentos", codigo: "ARB", ato: "Pedido de esclarecimentos ao árbitro", quantidade: 5, unidade: "dias_corridos", base: "Lei 9.307/96, art. 30", marco: "Recebimento da sentença arbitral", nota: "Pode ser outro prazo se as partes convencionarem." },
+  { id: "arb-sentenca", codigo: "ARB", ato: "Prolação da sentença arbitral", quantidade: 6, unidade: "meses", base: "Lei 9.307/96, art. 23", natureza: "improprio", marco: "Instituição da arbitragem", nota: "Prazo supletivo: a convenção pode dispor de forma diversa." },
+  // ---------- Trânsito (CTB) ----------
+  { id: "ctb-defesa-previa", codigo: "CTB", ato: "Defesa prévia da autuação", quantidade: 30, unidade: "dias_corridos", base: "CTB, art. 281, parágrafo único, II; Resolução CONTRAN 918/2022", marco: "Notificação da autuação", nota: "A confirmar na resolução vigente do CONTRAN." },
+  { id: "ctb-recurso-jari", codigo: "CTB", ato: "Recurso à JARI", quantidade: 30, unidade: "dias_corridos", base: "CTB, art. 285", marco: "Notificação da penalidade" },
+  { id: "ctb-recurso-cetran", codigo: "CTB", ato: "Recurso ao CETRAN/CONTRAN", quantidade: 30, unidade: "dias_corridos", base: "CTB, art. 288", marco: "Notificação da decisão da JARI" },
+  { id: "ctb-indicacao-condutor", codigo: "CTB", ato: "Indicação do condutor infrator", quantidade: 30, unidade: "dias_corridos", base: "CTB, art. 257, § 7º", marco: "Notificação da autuação" }
 ];
 var rotuloPrazo = (a) => {
   const u = a.unidade === "dias_uteis" ? a.quantidade === 1 ? "dia útil" : "dias úteis" : a.unidade === "dias_corridos" ? a.quantidade === 1 ? "dia corrido" : "dias corridos" : a.unidade === "meses" ? a.quantidade === 1 ? "mês" : "meses" : a.quantidade === 1 ? "ano" : "anos";
