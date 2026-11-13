@@ -1,1 +1,0 @@
-import{a as t}from"./vendor-C2-Q7n6C.js";function i(e,o=3e3){let a;return{marcar(){e(!0),a&&clearTimeout(a),a=setTimeout(()=>{e(!1),a=void 0},o)},limpar(){a&&clearTimeout(a),a=void 0}}}function u(e=3e3){const[o,a]=t.useState(!1),r=t.useMemo(()=>i(a,e),[e]);return t.useEffect(()=>()=>r.limpar(),[r]),[o,r.marcar]}export{u};
