@@ -121,3 +121,27 @@ dentro do banco com os poderes de quem as definiu e por isso passam por cima de 
 auditadas em 13/11/2026 e estão na seção acima, com a migração `129`. O que continua **não**
 coberto é o esquema `instituto`, que tem funções próprias, e as seis funções que a 129 deixa
 abertas por dependerem de mudança em código de servidor.
+
+## Os ARQUIVOS, perímetro que faltava (13/11/2026)
+
+O inventário acima olhou tabelas e funções. O armazenamento ficou de fora, e é um perímetro à
+parte, com políticas próprias em `storage.objects`. Medido no banco:
+
+| o que | está certo? | por quê |
+| --- | --- | --- |
+| `storage.buckets.public` nos dois baldes (`nuvem`, `documentos`) | **sim**, `false` nos dois | nada aberto na internet |
+| `nuvem`, pasta `pessoal/<uid>/` | **sim** | a política exige `pasta[2] = auth.uid()` |
+| `nuvem`, pasta `escritorio/` | **não** | `nuvem_select` só pede `perfil_atual() is not null`: qualquer pessoa logada de **qualquer** escritório lê |
+| balde `documentos` inteiro | **não** | `documentos_storage_select` também só pede `perfil_atual() is not null` |
+
+Existem 6 escritórios no banco e 7 arquivos (6 em `nuvem/escritorio/`, 1 em
+`documentos/contratos/`). Os 7 são da época em que só a sede usava a plataforma, então o que está
+exposto hoje são arquivos da própria sede. Mas a política vaza para valer no dia em que o segundo
+escritório subir um arquivo, e `documentos/faturas/<mes>/` é a fatura de consumo, que é de um
+escritório só.
+
+A migração `130` põe o escritório no caminho do arquivo e fecha as políticas. Ela **não** foi
+aplicada: move 7 arquivos que já existem, troca políticas que estão valendo, e só funciona junto
+com a mudança de caminho no código das telas (`NuvemPage`, `ConsumoPage` e quem mais grava em
+`documentos`). Aplicar só o SQL deixaria a Nuvem e as faturas parecendo vazias para todo mundo.
+Espera o toque de M.

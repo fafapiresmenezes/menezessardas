@@ -9,6 +9,13 @@ cd "$(dirname "$0")/.."
 MSG="${1:-Deploy}"
 SAIDA="${SAIDA:-/tmp/claude-0/index.html}"
 
+# A tela /lastro confere a corrente do trilho, e o arquivo em public/ e' uma COPIA: sem este passo
+# ele envelhece a cada volta e a tela mostra uma corrente mais curta do que a de verdade. A fonte
+# viva fica na pasta do projeto, que existe so' na maquina do agente: quando ela nao estiver ai,
+# segue com a copia que ja esta no repositorio, em vez de falhar a publicacao.
+CORRENTE=/mnt/project-files/predicao/trilho-v4-andamento.jsonl
+if [ -r "$CORRENTE" ]; then cp "$CORRENTE" public/trilho-v4.jsonl; echo "corrente do trilho atualizada: $(wc -l < public/trilho-v4.jsonl) elos"; fi
+
 rm -rf dist-prod
 ./node_modules/.bin/vite build --outDir dist-prod >/dev/null
 grep -q hlraekzvgxdpiiigdxdo dist-prod/assets/*.js || { echo "ERRO: build sem a URL do Supabase"; exit 1; }
