@@ -119,11 +119,35 @@ Deno.serve(async (req) => {
   const escritorioId = pessoa?.escritorio ?? '00000000-0000-0000-0000-000000000001'
   // Próximos 7 dias a partir de amanhã (sexta 17h → sábado a sexta seguinte).
   const amanha = new Date(Date.now() + 86400000).toISOString().slice(0, 10)
+  // Quem pede a semana muda o que a semana pode mostrar.
+  //
+  // O robô de sexta (cronOk, sem pessoa) monta o PDF da secretaria: ele precisa da casa inteira, e
+  // pede pela `semana_agenda_completa`, apresentando o segredo que vive só no banco. Uma pessoa que
+  // aperta "Semana em PDF" na tela Agenda pede pela `semana_agenda` de sempre, que a partir da
+  // migração 126 devolve só os prazos dela — é esse o furo que a 126 fecha.
+  //
+  // O `catch` existe porque esta função pode estar no ar antes da migração 126: enquanto a
+  // `semana_agenda_completa` não existir, o banco responde que não encontrou a função e aqui se
+  // volta para a `semana_agenda`, que hoje já devolve a casa inteira para a service_role. Assim as
+  // duas coisas não precisam acontecer no mesmo minuto, e nenhuma ordem de aplicação deixa o e-mail
+  // de sexta sair vazio.
+  const semanaDaCasa = async () => {
+    if (!cronOk || !conf.cron_segredo) return db.rpc('semana_agenda', { p_inicio: amanha, p_dias: 7, p_escritorio: escritorioId })
+    const r = await db.rpc('semana_agenda_completa', { p_segredo: conf.cron_segredo, p_inicio: amanha, p_dias: 7, p_escritorio: escritorioId })
+    const naoExiste = r.error && /semana_agenda_completa|PGRST202|42883|does not exist|not find/i.test(`${r.error.code ?? ''} ${r.error.message ?? ''}`)
+    if (naoExiste) return db.rpc('semana_agenda', { p_inicio: amanha, p_dias: 7, p_escritorio: escritorioId })
+    return r
+  }
   const [{ data: semana, error }, { data: marca }] = await Promise.all([
-    db.rpc('semana_agenda', { p_inicio: amanha, p_dias: 7, p_escritorio: escritorioId }),
+    semanaDaCasa(),
     db.rpc('marca_escritorio', { p_id: escritorioId }),
   ])
   if (error) return json({ erro: error.message }, 500)
+  // A `semana_agenda_completa` recusa segredo errado devolvendo { erro }. Melhor dizer isso do que
+  // gerar um PDF de uma semana que não veio.
+  if (semana && typeof semana === 'object' && 'erro' in (semana as Record<string, unknown>)) {
+    return json({ erro: `A semana não foi montada: ${(semana as { erro: string }).erro}` }, 500)
+  }
   const s = semana as Semana
   const nomeEsc = ((marca ?? {}) as { nome?: string }).nome ?? 'Instituto THEYE'
   const pdf = gerarPdfTexto(`Semana ${s.inicio}`, linhasSemana(s, nomeEsc))

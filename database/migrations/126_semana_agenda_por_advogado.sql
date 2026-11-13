@@ -108,7 +108,16 @@ $function$;
 --   -- com a credencial de um advogado pleno: só os prazos dele e os sem dono
 --   select public.semana_agenda() -> 'total';
 
--- JUNTO COM ESTA MIGRAÇÃO, NA MESMA HORA ----------------------------------------------------------
+-- A FUNÇÃO DO E-MAIL DE SEXTA JÁ ESTÁ PREPARADA (13/11/2026) --------------------------------------
+-- `supabase/functions/semana-pdf/index.ts` já foi reescrita e não depende mais da ordem: o robô de
+-- sexta pede pela `semana_agenda_completa` levando o segredo e, enquanto essa função não existir no
+-- banco, volta sozinho para a `semana_agenda`. Quer dizer: esta migração pode ser aplicada antes ou
+-- depois de a função ir para o ar, e em nenhuma das ordens o e-mail de sexta sai vazio. A função
+-- preparada ainda NÃO foi publicada; publicar é um passo à parte.
+--
+-- O aviso original, que valia enquanto a função não estava preparada, fica abaixo como história.
+--
+-- JUNTO COM ESTA MIGRAÇÃO, NA MESMA HORA (não vale mais; ver acima) --------------------------------
 -- `supabase/functions/semana-pdf/index.ts` (o e-mail de sexta à secretaria) chama hoje
 -- `semana_agenda` com a service_role. Depois desta migração essa chamada passa a devolver zero
 -- prazos, porque `public.pode_ver_dono` exige usuário autenticado e o robô não tem sessão. A função
