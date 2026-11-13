@@ -3,10 +3,12 @@ import Layout from '@/components/Layout'
 import Vazio from '@/components/Vazio'
 import { supabase } from '@/lib/supabase'
 import { PERGUNTAS, avaliarPerfil, type Respostas, type ResultadoPerfil } from '@/lib/perfilCliente'
+import { filtrarPorCriador, meuAlcance, type Cargo } from '@/lib/hierarquia'
 import { ClipboardList, Trash2 } from 'lucide-react'
 
 // Bloco B02: perfil de atendimento do cliente, preenchido com o cliente e só com o consentimento dele (termo B01).
-type Salvo = { id: number; cliente_nome: string; criado_em: string; apagar_em: string; resultado: ResultadoPerfil }
+// Privacidade (pedido do M, 12/11/2026): cada pessoa só vê os perfis que ela mesma cadastrou; sócio(a) e gestor(a) veem tudo.
+type Salvo = { id: number; cliente_nome: string; criado_em: string; apagar_em: string; resultado: ResultadoPerfil; criado_por?: string | null }
 
 export const TERMO = 'O cliente leu e aceitou o termo "Perfil de atendimento" (versão B01-2026-11-06): as respostas servem só para adaptar a comunicação e o atendimento; nada de gravação, imagem, rosto ou voz; nenhuma pergunta sensível; pode ver, corrigir ou apagar a qualquer momento; recusar não muda o serviço.'
 
@@ -16,9 +18,11 @@ export default function PerfilClientePage() {
   const [respostas, setRespostas] = useState<Respostas>({})
   const [msg, setMsg] = useState<{ ok?: string; erro?: string }>({})
   const [salvos, setSalvos] = useState<Salvo[]>([])
-  const carregar = () => supabase.from('perfis_cliente').select('id,cliente_nome,criado_em,apagar_em,resultado').order('criado_em', { ascending: false }).limit(100)
+  const [alcance, setAlcance] = useState<{ id: string; cargo: Cargo | null; admin: boolean; veTudo: boolean } | null>(null)
+  const carregar = () => supabase.from('perfis_cliente').select('id,cliente_nome,criado_em,apagar_em,resultado,criado_por').order('criado_em', { ascending: false }).limit(100)
     .then(({ data }) => setSalvos((data ?? []) as Salvo[]))
-  useEffect(() => { carregar() }, [])
+  useEffect(() => { carregar(); meuAlcance().then(setAlcance) }, [])
+  const visiveis = alcance ? filtrarPorCriador(salvos, alcance) : salvos
   const resultado = avaliarPerfil(respostas)
   const podeSalvar = aceite && nome.trim().length >= 2 && resultado.respondidas > 0
 
@@ -77,9 +81,9 @@ export default function PerfilClientePage() {
         {msg.erro && <p role="alert" className="p-3 text-sm border-l-2 bg-criticoFundo border-critico text-critico">{msg.erro}</p>}
         <section className="bg-white shadow-sm p-6" data-testid="perfil-salvos">
           <h2 className="font-serif text-xl mb-2">Perfis guardados</h2>
-          {salvos.length === 0 ? <Vazio testid="perfil-vazio" titulo="Nenhum perfil guardado ainda" texto="Depois do consentimento do cliente, responda as perguntas e clique em Guardar perfil." /> : (
+          {visiveis.length === 0 ? <Vazio testid="perfil-vazio" titulo="Nenhum perfil guardado ainda" texto="Depois do consentimento do cliente, responda as perguntas e clique em Guardar perfil." /> : (
             <ul className="divide-y divide-navy/10 text-sm">
-              {salvos.map(s => (
+              {visiveis.map(s => (
                 <li key={s.id} className="py-2 flex flex-wrap items-start gap-2" data-testid="perfil-item">
                   <div className="flex-1 min-w-[200px]"><strong>{s.cliente_nome}</strong> · {new Date(s.criado_em).toLocaleDateString('pt-BR')} · apaga em {new Date(s.apagar_em).toLocaleDateString('pt-BR')}
                     <p className="text-grafite-claro">{s.resultado?.sugestoes?.slice(0, 2).join(' ')}</p></div>

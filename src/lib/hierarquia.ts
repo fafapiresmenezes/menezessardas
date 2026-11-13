@@ -58,6 +58,14 @@ export function filtrarPorUsuario<T extends { usuario_id?: string | null }>(
   return itens.filter(i => podeVer(viewer, i.usuario_id ?? null))
 }
 
+/** Variante para tabelas que marcam o dono em criado_por (biblioteca de pesquisa). */
+export function filtrarPorCriador<T extends { criado_por?: string | null }>(
+  itens: T[],
+  viewer: { id: string; cargo: Cargo | null; admin?: boolean },
+): T[] {
+  return itens.filter(i => podeVer(viewer, i.criado_por ?? null))
+}
+
 function limpar(mapa: unknown): MapaCargos {
   if (!mapa || typeof mapa !== 'object') return {}
   const saida: MapaCargos = {}

@@ -5,9 +5,11 @@ import Vazio from '@/components/Vazio'
 import { supabase } from '@/lib/supabase'
 import { Link } from 'react-router-dom'
 import { REPOSITORIOS_ABERTOS, ROTULO_TIPO, filtrar, guardarNaBiblioteca, type ItemBiblioteca, type TipoBiblioteca } from '@/lib/biblioteca'
+import { filtrarPorCriador, meuAlcance, type Cargo } from '@/lib/hierarquia'
 import { BookOpen, Library, Trash2 } from 'lucide-react'
 
 // Bloco B04: tudo o que já foi pesquisado (Assistente, Fontes, Parte adversa e notas), com busca e etiquetas.
+// Privacidade (pedido do M, 12/11/2026): cada pessoa só vê o que ela mesma guardou; sócio(a) e gestor(a) veem tudo.
 export default function BibliotecaPage() {
   const [itens, setItens] = useState<ItemBiblioteca[]>([])
   const [busca, setBusca] = useState('')
@@ -15,10 +17,12 @@ export default function BibliotecaPage() {
   const [aberto, setAberto] = useState<number | null>(null)
   const [nota, setNota] = useState({ titulo: '', conteudo: '', etiquetas: '' })
   const [msg, setMsg] = useState('')
-  const carregar = () => supabase.from('biblioteca_pesquisas').select('id,tipo,titulo,conteudo,etiquetas,caso,criado_em').order('criado_em', { ascending: false }).limit(500)
+  const [alcance, setAlcance] = useState<{ id: string; cargo: Cargo | null; admin: boolean; veTudo: boolean } | null>(null)
+  const carregar = () => supabase.from('biblioteca_pesquisas').select('id,tipo,titulo,conteudo,etiquetas,caso,criado_em,criado_por').order('criado_em', { ascending: false }).limit(500)
     .then(({ data }) => setItens((data ?? []) as ItemBiblioteca[]))
-  useEffect(() => { carregar() }, [])
-  const visiveis = filtrar(itens, busca, tipo)
+  useEffect(() => { carregar(); meuAlcance().then(setAlcance) }, [])
+  const meus = alcance ? filtrarPorCriador(itens, alcance) : itens
+  const visiveis = filtrar(meus, busca, tipo)
   const salvarNota = async () => {
     const ok = await guardarNaBiblioteca({ tipo: 'nota', titulo: nota.titulo, conteudo: nota.conteudo, etiquetas: nota.etiquetas.split(',') })
     setMsg(ok ? 'Nota guardada.' : 'Não foi possível guardar agora. Tente de novo.')

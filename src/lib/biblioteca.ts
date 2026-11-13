@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase'
 
 export type TipoBiblioteca = 'assistente' | 'fontes' | 'parte_adversa' | 'nota'
 export const ROTULO_TIPO: Record<TipoBiblioteca, string> = { assistente: 'Assistente', fontes: 'Fontes do advogado', parte_adversa: 'Parte adversa', nota: 'Nota' }
-export type ItemBiblioteca = { id: number; tipo: TipoBiblioteca; titulo: string; conteudo: string; etiquetas: string[]; caso: string | null; criado_em: string }
+export type ItemBiblioteca = { id: number; tipo: TipoBiblioteca; titulo: string; conteudo: string; etiquetas: string[]; caso: string | null; criado_em: string; criado_por?: string | null }
 
 /** Esconde CPF (com ou sem pontuação) antes de guardar. CNPJ e número de processo continuam visíveis. */
 export function mascarar(texto: string): string {
