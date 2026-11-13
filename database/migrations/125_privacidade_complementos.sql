@@ -1,6 +1,8 @@
--- 125: completa a privacidade por advogado onde a 124 deixou buraco.
+-- 125 — APLICADA em producao em 13/11/2026, apos o toque de M no cartao.
 --
--- Por que uma migração nova e não um remendo na 124: a 124 já está APLICADA em produção
+-- Completa a privacidade por advogado onde a 124 deixou buraco.
+--
+-- Por que uma migração nova e não um remendo na 124: a 124 já estava APLICADA em produção
 -- (13/11/2026). O arquivo dela descreve o que o banco tem hoje e por isso não se mexe mais nele.
 -- Tudo o que vem depois entra aqui.
 --

@@ -12,6 +12,7 @@ import PassosImportacao from '@/components/PassosImportacao'
 import { janelas, lerOabs } from '@/lib/escritorio/historicoOab'
 import { Download, Upload, CheckCircle2, FileSpreadsheet, ListOrdered, Inbox, Search } from 'lucide-react'
 import { meuAlcance, ALCANCE_FECHADO } from '@/lib/hierarquia'
+import AbasProcessosAntigos from '@/components/AbasProcessosAntigos'
 
 // Importar processos anteriores: o escritório traz a carteira que já tem e não começa do zero.
 // Quatro caminhos: planilha (Excel/CSV de outro sistema), lista de números, intimações das OABs do escritório
@@ -188,6 +189,7 @@ export default function ImportarProcessosPage() {
   return (
     <Layout title="Importar processos anteriores">
       <div className="space-y-6">
+        <AbasProcessosAntigos aqui="/processos/importar" />
         <section className="bg-white shadow-sm border-t-2 border-dourado p-5">
           <p className="text-sm">Traga a carteira que o escritório já tem. Cada processo vira um caso em Projetos, com cliente, área, parte contrária, vara e honorários, e (se quiser) entra no monitoramento diário do DataJud. Nada é gravado antes da conferência: número CNJ com dígito errado, repetido ou já cadastrado fica de fora.</p>
           <div role="tablist" aria-label="De onde vêm os processos" className="flex flex-wrap gap-2 mt-4">

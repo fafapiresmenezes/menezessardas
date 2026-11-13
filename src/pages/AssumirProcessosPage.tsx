@@ -13,6 +13,7 @@ import { rotuloPrazo, CODIGOS, type Codigo } from '@/lib/prazos/codigos'
 import { analisarPlanilha, analisarResultados, importavel, paraCaso, type LinhaImportacao } from '@/lib/escritorio/importarProcessos'
 import { xlsxParaTexto } from '@/lib/escritorio/lerXlsx'
 import RoboCnj from '@/components/RoboCnj'
+import AbasProcessosAntigos from '@/components/AbasProcessosAntigos'
 
 // Inserir processos antigos (inclusive os de quem saiu do escritório), numa tela só:
 // 1) a planilha (Excel ou CSV), os números colados ou os já cadastrados; 2) o nome e a OAB do advogado;
@@ -238,6 +239,7 @@ export default function AssumirProcessosPage() {
   return (
     <Layout title="Inserir processos antigos">
       <div className="space-y-5 max-w-4xl">
+        <AbasProcessosAntigos aqui="/processos-antigos" />
         <p className="text-base">Coloque aqui os processos que o escritório já tem (inclusive os de quem saiu). Em 3 passos a plataforma cadastra, procura no CNJ tudo o que saiu para eles e mostra <strong>o que fazer e até quando</strong>, do mais urgente para o menos urgente.</p>
         <p className="text-sm">Vai trazer <strong>tudo</strong> do sistema antigo (clientes, prazos e financeiro também, em vários arquivos)? Use <Link to="/migracao" className="underline text-navy">Trazer do sistema antigo</Link>.</p>
         <p className="text-sm border-l-4 border-dourado bg-navy/5 p-3" data-testid="aviso-privacidade">

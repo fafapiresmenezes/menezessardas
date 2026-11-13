@@ -1,4 +1,4 @@
--- 123 — NÃO APLICADA. Depende de aprovação do dono do banco.
+-- 123 — APLICADA em producao em 13/11/2026, apos o toque de M no cartao.
 --
 -- Achado do passo C2 (ingestão do GDELT). O arquivo 122 diz, no comentário de desenho nº 3, que
 -- toda linha das quatro tabelas carrega "um hash do próprio conteúdo, para a ingestão ser

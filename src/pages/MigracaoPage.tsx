@@ -8,6 +8,7 @@ import { listarPessoas, type Pessoa } from '@/lib/equipe'
 import { importavel, paraCaso, ROTULO_SITUACAO, type LinhaImportacao } from '@/lib/escritorio/importarProcessos'
 import { TIPOS, montarTabela, tabelaDoTexto, textoEmLinhas, pareceTabela, prepararProcessos, prepararClientes, prepararPrazos, prepararFinanceiro, lerHistorico, gravarHistorico, type Tabela, type Tipo, type Pronto, type Lote } from '@/lib/escritorio/migracao'
 import { lerArquivo } from '@/lib/escritorio/migracaoArquivos'
+import AbasProcessosAntigos from '@/components/AbasProcessosAntigos'
 
 // Trazer do sistema antigo: uma aba só para a migração inteira. Solta todos os arquivos de uma vez,
 // a plataforma separa o que é processo, cliente, prazo e financeiro, mostra organizado e só grava depois do "Trazer".
@@ -168,6 +169,7 @@ export default function MigracaoPage() {
   return (
     <Layout title="Trazer do sistema antigo">
       <div className="space-y-5 max-w-4xl">
+        <AbasProcessosAntigos aqui="/migracao" />
         <p className="text-base">Aqui você traz <strong>tudo</strong> o que o escritório tinha no sistema antigo: processos, clientes, prazos e financeiro. Solte os arquivos, confira o que a plataforma encontrou e clique em <strong>Trazer</strong>. Nada é gravado antes disso, nada é cadastrado duas vezes, e dá para desfazer.</p>
 
         <Passo n={1} titulo="Solte aqui os arquivos do sistema antigo" feito={tabelas.length > 0 || !!resultado}>
