@@ -1,7 +1,7 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
 import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
-import { idiomaEscolhido } from '@/lib/idioma'
+import { useIdiomaEscolhido } from '@/lib/i18n'
 import LoginPage from '@/pages/LoginPage'
 import BoasVindasPage from '@/pages/BoasVindasPage'
 const StokasticosPage = lazy(() => import('@/pages/StokasticosPage'))
@@ -188,7 +188,7 @@ function App() {
         <Route path="/stokasticos/magia" element={<StokasticosPage />} />
         <Route
           path="/login"
-          element={isAuthenticated ? <Navigate to="/inicio" /> : (idiomaEscolhido() ? <LoginPage /> : <Navigate to="/boas-vindas" />)}
+          element={<Entrada autenticado={isAuthenticated} />}
         />
         <Route
           path="/inicio"
@@ -386,8 +386,8 @@ function App() {
           path="/settings"
           element={isAuthenticated ? <ConfiguraçõesPage /> : <Navigate to="/login" />}
         />
-        <Route path="/" element={<Navigate to={isAuthenticated ? "/inicio" : (idiomaEscolhido() ? "/login" : "/boas-vindas")} />} />
-        <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : (idiomaEscolhido() ? "/login" : "/boas-vindas")} replace />} />
+        <Route path="/" element={<ParaOnde autenticado={isAuthenticated} logado="/inicio" />} />
+        <Route path="*" element={<ParaOnde autenticado={isAuthenticated} logado="/dashboard" substituir />} />
       </Routes>
       </Suspense>
       </ProtecaoRotas>
@@ -397,6 +397,31 @@ function App() {
 
 // Erro no corpo de uma tela (fora do Layout) derrubava o app inteiro: todas as telas seguintes ficavam em branco
 // até recarregar. Esta proteção mostra o aviso só naquela tela e se desarma ao mudar de endereço.
+/**
+ * Quem entra na plataforma sem estar logado: a tela de entrada, se já escolheu o idioma; a tela de
+ * idiomas, se ainda não.
+ *
+ * Por que isto é um componente, e não um `?:` escrito dentro do `element` da rota: o `element` é
+ * montado quando o App se desenha, e o App não se desenha de novo a cada navegação — o roteador vive
+ * dentro dele. Uma pergunta feita ali fica congelada na resposta da primeira vez. Era o que
+ * acontecia: a pessoa escolhia a língua, a tela de idiomas falava a língua nova, mas a entrada ainda
+ * achava que ninguém tinha escolhido e a mandava de volta. Ela ficava presa até recarregar a página.
+ * Dentro de um componente a pergunta é feita na hora de desenhar a rota, e o hook ainda avisa quando
+ * a escolha muda.
+ */
+function Entrada({ autenticado }: { autenticado: boolean }) {
+  const idioma = useIdiomaEscolhido()
+  if (autenticado) return <Navigate to="/inicio" />
+  return idioma ? <LoginPage /> : <Navigate to="/boas-vindas" />
+}
+
+/** Para onde manda quem chega na raiz ou num endereço que não existe. Mesmo motivo acima. */
+function ParaOnde({ autenticado, logado, substituir }: { autenticado: boolean; logado: string; substituir?: boolean }) {
+  const idioma = useIdiomaEscolhido()
+  const destino = autenticado ? logado : (idioma ? '/login' : '/boas-vindas')
+  return <Navigate to={destino} replace={substituir} />
+}
+
 function ProtecaoRotas({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation()
   return <ErroTela chave={pathname} topo>{children}</ErroTela>

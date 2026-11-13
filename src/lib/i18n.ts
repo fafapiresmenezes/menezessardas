@@ -323,6 +323,20 @@ export function useIdioma(): Idioma {
   return useSyncExternalStore(assinar, idiomaAtual, idiomaAtual)
 }
 
+/**
+ * O idioma que a pessoa ESCOLHEU, ou null se ela ainda não escolheu.
+ *
+ * Diferente de `useIdioma`, que nunca devolve null porque cai no português quando ninguém escolheu.
+ * Quem decide se a pessoa já passou pela tela de boas-vindas precisa saber a diferença, e precisa
+ * saber na hora: por isso isto é um hook ligado à mesma loja, e não uma leitura solta do
+ * localStorage. Uma leitura solta feita durante o desenho de quem está acima do roteador congela a
+ * resposta, e a pessoa fica presa na tela de idiomas até recarregar a página.
+ */
+export function useIdiomaEscolhido(): Idioma | null {
+  const ler = () => atual ?? idiomaEscolhido()
+  return useSyncExternalStore(assinar, ler, ler)
+}
+
 /** Tradutor da tela: t('login.entrar') devolve o texto no idioma em uso. */
 export function useTexto(): (chave: Chave) => string {
   const idioma = useIdioma()
