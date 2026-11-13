@@ -102,10 +102,26 @@ BEGIN
     CREATE POLICY so_meu_intimacoes ON public.intimacoes AS RESTRICTIVE FOR SELECT TO public
       USING (public.pode_ver_processo(numero_processo));
   END IF;
+  -- Monitoramento de PROCESSO: vale o dono do caso daquele número. Monitoramento de NOME (cliente ou
+  -- contraparte): não há caso a que ligar, então vale quem o cadastrou (criado_por); monitoramento antigo,
+  -- sem autor, continua à vista de todos. Mesma regra que a tela de Monitoramento aplica no navegador.
   IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'monitoramentos' AND column_name = 'valor')
      AND NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname = 'public' AND tablename = 'monitoramentos' AND policyname = 'so_meu_monitoramentos') THEN
     CREATE POLICY so_meu_monitoramentos ON public.monitoramentos AS RESTRICTIVE FOR SELECT TO public
-      USING (tipo <> 'processo' OR public.pode_ver_processo(valor));
+      USING (CASE WHEN tipo = 'processo' THEN public.pode_ver_processo(valor) ELSE public.pode_ver_dono(criado_por) END);
+  END IF;
+END $$;
+
+-- Diagnósticos de compliance: o diagnóstico segue o dono do caso (plano de ação) aberto com ele.
+-- Diagnóstico sem caso continua à vista de todos. Mesma regra que a tela de Compliance aplica no navegador.
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'diagnosticos_compliance' AND column_name = 'caso_id')
+     AND NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname = 'public' AND tablename = 'diagnosticos_compliance' AND policyname = 'so_meu_diagnosticos_compliance') THEN
+    CREATE POLICY so_meu_diagnosticos_compliance ON public.diagnosticos_compliance AS RESTRICTIVE FOR SELECT TO public
+      USING (public.ve_tudo_no_escritorio() OR caso_id IS NULL OR EXISTS (
+        SELECT 1 FROM public.tarefas c WHERE c.id = caso_id
+          AND (c.responsavel_id IS NULL OR c.responsavel_id = auth.uid())));
   END IF;
 END $$;
 
@@ -127,6 +143,18 @@ END $$;
 -- 3. Índices que estas políticas usam ------------------------------------------------------------
 CREATE INDEX IF NOT EXISTS idx_tarefas_responsavel ON public.tarefas(responsavel_id);
 
+-- 4. O QUE ESTA MIGRAÇÃO DE PROPÓSITO NÃO ESCONDE ------------------------------------------------
+-- `compromissos` (vencimentos de contrato, reajustes, vistorias, eventos importados do .ics): é a agenda
+-- comum da carteira de locação, não tem advogado dono e vale para o escritório inteiro.
+-- `imoveis`, `contratos`, `modelos` e a legislação acompanhada: acervo comum da casa.
+--
+-- 5. AINDA FALTA (fora do alcance do navegador) --------------------------------------------------
+-- A função `semana_agenda` (PDF "Semana em PDF" da tela Agenda, e o e-mail de sexta à secretaria) monta a
+-- lista DENTRO do banco e por isso não passa pelo filtro do navegador: hoje ela devolve a semana do
+-- escritório inteiro a quem a chama. Quando esta migração for aplicada, a função precisa, na mesma
+-- oportunidade, filtrar `tarefas` por `public.pode_ver_dono(t.responsavel_id)` — senão o PDF continua
+-- entregando ao júnior os prazos dos colegas. O mesmo vale para a função do resumo semanal por e-mail.
+--
 -- COMO CONFERIR DEPOIS DE APLICAR (com a credencial de um advogado pleno, não a de serviço):
 --   select count(*) from tarefas;                 -- só os casos dele e os sem dono
 --   select public.meu_cargo(), public.ve_tudo_no_escritorio();

@@ -8,6 +8,7 @@ import { repositorio, type Contrato, type Imovel } from '@/lib/repositorio'
 import { rotulosGarantia, rotulosIndice } from '@/lib/rotulos'
 import { mensagemAmigavel } from '@/lib/erros'
 import Vazio from '@/components/Vazio'
+import { meuAlcance, filtrarPorHierarquia, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // Biblioteca de modelos: cada modelo abre o agente da área no modo Redigir com o pedido pronto.
 // O advogado completa os dados do caso entre colchetes e o agente redige citando a lei do Planalto.
@@ -61,7 +62,15 @@ export default function ModelosPage() {
     const { data } = await supabase.from('modelos_escritorio').select('id, titulo, area, agente, pedido').order('criado_em')
     setProprios((data ?? []).map(d => ({ ...d, proprio: true })) as Modelo[])
   }
-  useEffect(() => { carregar(); supabase.from('tarefas').select('id, titulo, cliente, area, numero_processo, imovel:imoveis(endereco), contrato:contratos(locatario_fornecedor)').eq('nivel', 'projeto').neq('situacao', 'feito').order('criado_em', { ascending: false }).limit(100).then(({ data }) => setCasos(((data ?? []) as unknown as { id: string; titulo: string; cliente: string | null; area: string | null; numero_processo: string | null; imovel: { endereco: string } | null; contrato: { locatario_fornecedor: string } | null }[]).map(c => ({ id: c.id, titulo: c.titulo, cliente: c.cliente, area: c.area, numero_processo: c.numero_processo, imovel: c.imovel?.endereco ?? null, contrato: c.contrato?.locatario_fornecedor ?? null })))) }, [])
+  // Privacidade por advogado: a lista de casos para preencher o modelo é a de quem olha (caso sem dono aparece para todos).
+  useEffect(() => {
+    carregar()
+    Promise.all([
+      Promise.resolve(supabase.from('tarefas').select('id, titulo, cliente, area, numero_processo, responsavel_id, imovel:imoveis(endereco), contrato:contratos(locatario_fornecedor)').eq('nivel', 'projeto').neq('situacao', 'feito').order('criado_em', { ascending: false }).limit(100)),
+      meuAlcance().catch(() => ALCANCE_FECHADO),
+    ]).then(([r, alc]) => setCasos(filtrarPorHierarquia((r.data ?? []) as unknown as { id: string; titulo: string; cliente: string | null; area: string | null; numero_processo: string | null; responsavel_id: string | null; imovel: { endereco: string } | null; contrato: { locatario_fornecedor: string } | null }[], alc)
+      .map(c => ({ id: c.id, titulo: c.titulo, cliente: c.cliente, area: c.area, numero_processo: c.numero_processo, imovel: c.imovel?.endereco ?? null, contrato: c.contrato?.locatario_fornecedor ?? null }))))
+  }, [])
   const salvar = async () => {
     setMsg('')
     const { error } = await supabase.from('modelos_escritorio').insert({ titulo: form.titulo.trim(), area: form.area.trim() || 'Escritório', agente: form.agente, pedido: form.pedido.trim() })

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
 import { useAlertas, salvarCompromisso, importarCompromissosIcs } from '@/hooks/useAlertas'
+import { meuAlcance, ALCANCE_FECHADO, rotuloCargo, type Alcance } from '@/lib/hierarquia'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { baixarICS, lerIcs } from '@/lib/ics'
 import { gerarPdfTexto, quebrar } from '@/lib/pdfSimples'
@@ -29,7 +30,13 @@ const corPonto: Record<string, string> = {
 }
 
 export default function AgendaPage() {
+  // Privacidade por advogado: prazos de casos e parcelas de honorários já vêm filtrados do useAlertas;
+  // aqui só se diz à pessoa o que ela está vendo. Vencimentos de contrato, reajustes e compromissos do
+  // calendário são da carteira de locação e valem para o escritório inteiro.
   const { alertas, loading, recarregar } = useAlertas()
+  const [alcance, setAlcance] = useState<Alcance | null>(null)
+  const alc = alcance ?? ALCANCE_FECHADO
+  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
   const navigate = useNavigate()
   const hoje = new Date()
   const [ano, setAno] = useState(hoje.getFullYear())
@@ -40,6 +47,9 @@ export default function AgendaPage() {
   const semanaEmPdf = async () => {
     setMsgSemana('')
     const inicio = isoLocal(new Date(Date.now() + 86400000))
+    // A semana em PDF é montada no banco (função semana_agenda), não no navegador: o filtro por advogado
+    // dela tem de ser feito lá dentro. Enquanto a migração 124 não for aplicada, este PDF traz a semana do
+    // escritório inteiro — ver a nota em database/migrations/124_privacidade_por_advogado.sql.
     const { data, error } = await supabase.rpc('semana_agenda', { p_inicio: inicio, p_dias: 7 })
     if (error) { setMsgSemana(mensagemAmigavel(error)); return }
     const sem = data as { inicio: string; fim: string; total: number; dias: { dia: string; itens: { tipo: string; titulo: string; detalhe: string; responsavel: string }[] }[] }
@@ -221,6 +231,11 @@ export default function AgendaPage() {
   return (
     <Layout title="Agenda">
       <div className="space-y-6">
+        {!alc.veTudo && (
+          <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="agenda-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+            Você está vendo <strong>os prazos dos seus casos</strong> ({rotuloCargo[alc.cargo ?? 'nenhum']}) e os compromissos do escritório. Prazo sem responsável aparece para todos, para ninguém perder data; sócios e o gestor veem o conjunto.
+          </p>
+        )}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
             <button onClick={() => mudarMes(-1)} className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-sm hover:bg-white" aria-label="Mês anterior" title="Mostra o mês anterior na agenda">

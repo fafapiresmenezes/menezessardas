@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { perguntar } from '@/lib/assistente'
 import { ExternalLink, FlaskConical, Globe2, Scale } from 'lucide-react'
 import { mensagemAmigavel } from '@/lib/erros'
+import { meuAlcance, filtrarPorHierarquia, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // Pesquisa e desenvolvimento do direito (pedido de M, 30/10/2026): jurisprudência brasileira, direito estrangeiro
 // e comparado, e o programa do Instituto THEYE de pesquisas para o desenvolvimento do direito brasileiro,
@@ -44,7 +45,11 @@ export default function PesquisaDireito() {
   }
   useEffect(() => {
     carregar()
-    supabase.from('tarefas').select('id,titulo,cliente').is('pai_id', null).order('criado_em', { ascending: false }).limit(100).then(({ data }) => setCasos((data ?? []) as Caso[]))
+    // Privacidade por advogado: a lista de casos para ligar à pesquisa é a de quem olha (caso sem dono aparece para todos).
+    Promise.all([
+      Promise.resolve(supabase.from('tarefas').select('id,titulo,cliente,responsavel_id').is('pai_id', null).order('criado_em', { ascending: false }).limit(100)),
+      meuAlcance().catch(() => ALCANCE_FECHADO),
+    ]).then(([r, alc]) => setCasos(filtrarPorHierarquia((r.data ?? []) as (Caso & { responsavel_id?: string | null })[], alc) as Caso[]))
   }, [])
   const salvar = async (e: React.FormEvent) => {
     e.preventDefault(); setMsg('')

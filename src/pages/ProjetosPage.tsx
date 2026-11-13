@@ -12,7 +12,7 @@ import AssinaturasCaso from '@/components/AssinaturasCaso'
 import PortalCasoEscritorio from '@/components/PortalCasoEscritorio'
 import { caminhoCritico } from '@/lib/caminhoCritico'
 import { lerHoras } from '@/lib/numero'
-import { meuAlcance, rotuloCargo } from '@/lib/hierarquia'
+import { meuAlcance, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // Gestão de projetos do escritório em hierarquia (Projeto → Tarefa → Subtarefa), no estilo Monday:
 // vale para qualquer caso (processo, contrato, consultoria, cliente externo ou projeto interno), com
@@ -59,7 +59,9 @@ export default function ProjetosPage() {
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 280
   const [baixado, marcarBaixado] = useBaixado() // Passo 404
   const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
-  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true })) }, [])
+  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza.
+  const alc = alcance ?? ALCANCE_FECHADO
 
   const carregar = async () => {
     const { data, error } = await supabase.from('tarefas').select('id,pai_id,nivel,titulo,situacao,prioridade,responsavel_id,imovel_id,prazo,horas,cliente,area,numero_processo,tipo,portal_token,portal_expira_em,depende_de,criado_em').order('criado_em')
@@ -74,7 +76,7 @@ export default function ProjetosPage() {
 
   // Hierarquia: pleno e júnior veem só os projetos (e tarefas) cujo dono são eles; item sem dono aparece para todos.
   const minhas = useMemo(() => {
-    if (!alcance || alcance.veTudo) return tarefas
+    if (alc.veTudo) return tarefas
     const pai = new Map(tarefas.map(t => [t.id, t.pai_id]))
     const resp = new Map(tarefas.map(t => [t.id, t.responsavel_id]))
     const donoDaRaiz = (id: string): string | null => {
@@ -82,8 +84,8 @@ export default function ProjetosPage() {
       for (let i = 0; i < 20; i++) { const p = pai.get(atual); if (!p) break; atual = p }
       return resp.get(atual) ?? null
     }
-    return tarefas.filter(t => { const dono = donoDaRaiz(t.id); return !dono || dono === alcance.id })
-  }, [tarefas, alcance])
+    return tarefas.filter(t => { const dono = donoDaRaiz(t.id); return !dono || dono === alc.id })
+  }, [tarefas, alc])
   const projetos = minhas.filter(t => t.nivel === 'projeto' && (!filtroArea || t.area === filtroArea))
   // Tarefas do projeto escolhido, incluindo subtarefas (descendentes em qualquer nível).
   const visiveis = useMemo(() => {

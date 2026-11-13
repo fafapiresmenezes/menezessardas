@@ -7,6 +7,7 @@ import SeloSituacao from '@/components/SeloSituacao'
 import { SkeletonIndicator, SkeletonTable } from '@/components/Skeleton'
 import { useAlertas } from '@/hooks/useAlertas'
 import { formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
+import { meuAlcance, filtrarPorUsuario, ALCANCE_FECHADO, rotuloCargo, type Alcance } from '@/lib/hierarquia'
 import { BellOff, Circle } from 'lucide-react'
 import Vazio from '@/components/Vazio'
 
@@ -19,9 +20,21 @@ export default function AlertasPage() {
   type AvisoTeto = { id: number; mes: string; nivel: number; pct: number; gasto_brl: number; teto_brl: number; criado_em: string; email_enviado_em: string | null }
   const [avisosTeto, setAvisosTeto] = useState<AvisoTeto[]>([])
   // Passo 26: contrapartes cuja checagem KYC mudou de status na reconsulta e ainda não foi vista.
-  type MudancaKyc = { id: number; cnpj: string; nome: string | null; risco: string; risco_anterior: string | null; consultado_em: string }
+  type MudancaKyc = { id: number; cnpj: string; nome: string | null; risco: string; risco_anterior: string | null; consultado_em: string; usuario_id?: string | null }
   const [mudancasKyc, setMudancasKyc] = useState<MudancaKyc[]>([])
-  const carregarKyc = () => supabase.from('checagens_kyc').select('id,cnpj,nome,risco,risco_anterior,consultado_em').eq('mudou', true).is('visto_em', null).order('consultado_em', { ascending: false }).limit(20)
+  // Privacidade por advogado: a checagem de contraparte do colega e a intimação do caso dele não são alerta de quem não os vê.
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza o caso do colega.
+  const [alcance, setAlcance] = useState<Alcance | null>(null)
+  const alc = alcance ?? ALCANCE_FECHADO
+  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
+  // Dono do caso de cada número de processo: a intimação segue o caso (mesma regra da migração 124 e de Meu dia).
+  const [donoPorProcesso, setDonoPorProcesso] = useState<Map<string, string | null>>(new Map())
+  useEffect(() => {
+    supabase.from('tarefas').select('numero_processo,responsavel_id').eq('nivel', 'projeto')
+      .then(({ data }) => setDonoPorProcesso(new Map(((data ?? []) as { numero_processo: string | null; responsavel_id: string | null }[])
+        .map(t => [String(t.numero_processo ?? '').replace(/\D/g, ''), t.responsavel_id]))))
+  }, [])
+  const carregarKyc = () => supabase.from('checagens_kyc').select('id,cnpj,nome,risco,risco_anterior,consultado_em,usuario_id').eq('mudou', true).is('visto_em', null).order('consultado_em', { ascending: false }).limit(20)
     .then(({ data }) => setMudancasKyc((data ?? []) as MudancaKyc[]))
   useEffect(() => { carregarKyc() }, [])
   const verKyc = async (id: number) => { await supabase.from('checagens_kyc').update({ visto_em: new Date().toISOString() }).eq('id', id); carregarKyc() }
@@ -61,6 +74,13 @@ export default function AlertasPage() {
     )
   }
 
+  // Só o que quem olha pode ver: checagem feita por ele (ou sem dono) e intimação de caso dele (ou sem caso).
+  const kycVisiveis = alc.veTudo ? mudancasKyc : filtrarPorUsuario(mudancasKyc, alc)
+  const novidadesVisiveis = alc.veTudo ? novidades : novidades.filter(n => {
+    const dono = donoPorProcesso.get(String(n.numero_processo ?? '').replace(/\D/g, ''))
+    return !dono || dono === alc.id
+  })
+
   const vencidos = alertas.filter(a => a.diasRestantes < 0).length
   const documentos = alertas.filter(a => a.tipo === 'documento').length
 
@@ -83,6 +103,11 @@ export default function AlertasPage() {
           <p className="text-sm text-grafite-claro mb-6">
             Todos os vencimentos cadastrados, ordenados por urgência. Clique em um alerta para gerenciar o contrato correspondente.
           </p>
+          {!alc.veTudo && (
+            <p className="bg-white border-l-2 border-dourado p-3 text-sm mb-6" data-testid="alertas-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+              Você está vendo <strong>os alertas dos seus casos</strong> ({rotuloCargo[alc.cargo ?? 'nenhum']}) e os do escritório (contratos e imóveis). Prazo sem responsável aparece para todos; sócios e o gestor veem o conjunto.
+            </p>
+          )}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {indicadores.map(ind => (
               <button type="button" key={ind.rotulo} onClick={() => setFiltro(ind.chave)} aria-pressed={filtro === ind.chave} data-testid={`filtro-${ind.chave}`} title={`Filtra a lista abaixo para mostrar apenas os alertas de "${ind.rotulo}"`}
@@ -118,12 +143,12 @@ export default function AlertasPage() {
             <button type="button" onClick={() => navigate('/consumo')} title="Abre a página de Consumo para ver o gasto de IA do mês em detalhe" className="mt-2 underline text-navy text-sm">Abrir Consumo</button>
           </section>
         )}
-        {mudancasKyc.length > 0 && (
+        {kycVisiveis.length > 0 && (
           <section role="alert" className="shadow-sm border-l-4 border-atencao bg-atencaoFundo p-5" data-testid="kyc-mudancas">
             <h2 className="font-serif text-lg">Contraparte mudou de status na checagem KYC</h2>
             <p className="text-sm mt-1">A reconsulta automática (a cada 90 dias) encontrou mudança no risco destas empresas. Confira antes de seguir com o contrato.</p>
             <ul className="mt-3 divide-y divide-navy/10 text-sm">
-              {mudancasKyc.map(m => (
+              {kycVisiveis.map(m => (
                 <li key={m.id} className="py-2 flex flex-wrap items-center gap-2" data-testid="kyc-mudanca">
                   <span className="text-grafite-claro">{formatarData(m.consultado_em)}</span>
                   <span className="font-medium text-navy">{m.nome ?? m.cnpj}</span>
@@ -135,12 +160,12 @@ export default function AlertasPage() {
             </ul>
           </section>
         )}
-        {novidades.length > 0 && (
+        {novidadesVisiveis.length > 0 && (
           <section className="bg-white shadow-sm border-l-4 border-dourado p-5" data-testid="novidades-buscas">
             <h2 className="font-serif text-lg">Novidades das buscas salvas</h2>
             <p className="text-sm text-grafite-claro mt-1">Comunicações encontradas pelas buscas que você salvou em Fontes do advogado. Marque como lidas em Intimações.</p>
             <ul className="mt-3 divide-y divide-navy/10 text-sm">
-              {novidades.map(n => (
+              {novidadesVisiveis.map(n => (
                 <li key={n.id} className="py-2 flex flex-wrap gap-2">
                   <span className="text-grafite-claro">{formatarData(n.data_disponibilizacao)}</span>
                   <span className="font-medium text-navy">{(n.oab ?? '').replace(/^busca:/, '')}</span>

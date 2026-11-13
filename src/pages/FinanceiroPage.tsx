@@ -7,7 +7,7 @@ import { formatarData, hojeLocal } from '@/lib/datas'
 import { tabelaAusente } from '@/lib/escritorio/tabelaAusente'
 import { CATEGORIAS_DESPESA, CATEGORIAS_RECEITA, fluxoMensal, recebiveis, aging, contasAPagar, previsao90, resultadoPorArea, despesasPorCategoria, pontoEquilibrio, reembolsosPendentes, repetirMensal, mesesAte, somarMeses, type Lancamento, type PagamentoHonorario, type ParcelaHonorario, type CasoFin } from '@/lib/escritorio/financeiro'
 import { Wallet, Plus, Download, Check } from 'lucide-react'
-import { meuAlcance, rotuloCargo } from '@/lib/hierarquia'
+import { meuAlcance, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // Financeiro do escritório: honorários recebidos e a receber (já existentes) somados às outras receitas e às despesas,
 // com fluxo de caixa, contas a receber por atraso, contas a pagar, previsão de 90 dias e resultado por área.
@@ -39,10 +39,11 @@ export default function FinanceiroPage() {
     if (tabelaAusente(l.error)) setAusente(true); else if (l.error) setErro(mensagemAmigavel(l.error))
     setLanc((l.data ?? []) as Lancamento[]); setPg((p.data ?? []) as PagamentoHonorario[]); setParcelas((pc.data ?? []) as ParcelaHonorario[]); setCasos((c.data ?? []) as (CasoFin & { responsavel_id?: string | null })[])
   }
-  useEffect(() => { carregar(); meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true })) }, [])
+  useEffect(() => { carregar(); meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
   // Hierarquia: pleno e júnior veem só os números dos próprios casos; despesas gerais do escritório ficam com sócios e gestor.
-  const restrito = !!alcance && !alcance.veTudo
-  const casos = useMemo(() => (restrito ? casosTudo.filter(c => !c.responsavel_id || c.responsavel_id === alcance!.id) : casosTudo), [casosTudo, restrito, alcance])
+  const alc = alcance ?? ALCANCE_FECHADO
+  const restrito = !alc.veTudo
+  const casos = useMemo(() => (restrito ? casosTudo.filter(c => !c.responsavel_id || c.responsavel_id === alc.id) : casosTudo), [casosTudo, restrito, alc])
   const idsMeus = useMemo(() => new Set(casos.map(c => c.id)), [casos])
   const lanc = useMemo(() => (restrito ? lancTudo.filter(l => l.caso_id && idsMeus.has(l.caso_id)) : lancTudo), [lancTudo, restrito, idsMeus])
   const pg = useMemo(() => (restrito ? pgTudo.filter(x => idsMeus.has(x.caso_id)) : pgTudo), [pgTudo, restrito, idsMeus])

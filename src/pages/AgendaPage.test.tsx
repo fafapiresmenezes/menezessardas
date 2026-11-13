@@ -23,6 +23,12 @@ vi.mock('@/hooks/useAlertas', () => ({
 const invoke = vi.fn(async (_f: string, _o?: object): Promise<{ data?: unknown; error: { message: string } | null }> => ({ data: {}, error: null }))
 const rpc = vi.fn(async (_f: string, _p?: object): Promise<{ data?: unknown; error: { message: string } | null }> => ({ data: null, error: null }))
 const upsert = vi.fn(async (_r: object, _o?: object) => ({ error: null }))
+// Quem está olhando: o aviso da tela diz que os prazos são dos casos dele (o filtro vive no useAlertas).
+let alcance: { id: string; cargo: string | null; admin: boolean; veTudo: boolean } | null = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+vi.mock('@/lib/hierarquia', async (original) => ({
+  ...(await original<typeof import('@/lib/hierarquia')>()),
+  meuAlcance: async () => { if (!alcance) throw new Error('não deu para saber quem está logado'); return alcance },
+}))
 vi.mock('@/lib/supabase', () => ({
   supabaseConfigurado: true,
   supabase: {
@@ -44,6 +50,24 @@ describe('Agenda', () => {
     cleanup(); recarregar.mockClear(); salvarCompromisso.mockClear(); invoke.mockReset().mockResolvedValue({ data: {}, error: null }); rpc.mockReset().mockResolvedValue({ data: null, error: null }); upsert.mockClear()
     window.alert = vi.fn(); window.print = vi.fn()
     Object.assign(navigator, { clipboard: { writeText: vi.fn(async (_t: string) => undefined) } })
+    alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+  })
+
+  // Privacidade por advogado: a Agenda diz a quem olha que os prazos são dos casos dele (o filtro vive no useAlertas).
+  it('para o júnior avisa que a agenda é a dos casos dele; para o sócio não avisa nada', async () => {
+    alcance = { id: 'u1', cargo: 'junior', admin: false, veTudo: false }
+    montar()
+    await waitFor(() => expect(screen.getByTestId('agenda-alcance').textContent).toContain('os prazos dos seus casos'))
+    expect(screen.getByTestId('agenda-alcance').textContent).toContain('Advogado(a) júnior')
+    cleanup(); alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+    montar()
+    await waitFor(() => expect(screen.queryByTestId('agenda-alcance')).toBeNull())
+  })
+
+  it('sem saber quem está logado, a Agenda já avisa que mostra só o que é dela', async () => {
+    alcance = null
+    montar()
+    await waitFor(() => expect(screen.getByTestId('agenda-alcance').textContent).toContain('Sem cargo definido'))
   })
 
   it('mês atual, resumo dos 7 dias, lista do mês, navegação entre meses, "hoje" e ida ao contrato', async () => {

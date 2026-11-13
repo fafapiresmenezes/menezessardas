@@ -19,6 +19,12 @@ vi.mock('@/lib/supabase', () => ({
   },
 }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
+// Quem está olhando: sócio e gestor veem as horas do escritório; os demais, só as suas.
+let alcance: { id: string; cargo: string | null; admin: boolean; veTudo: boolean } | null = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+vi.mock('@/lib/hierarquia', async (original) => ({
+  ...(await original<typeof import('@/lib/hierarquia')>()),
+  meuAlcance: async () => { if (!alcance) throw new Error('não deu para saber quem está logado'); return alcance },
+}))
 const { default: HorasPage } = await import('./HorasPage')
 
 const mes = new Date().toISOString().slice(0, 7)
@@ -30,7 +36,39 @@ describe('Horas trabalhadas', () => {
     lista = [
       { id: 'l1', data: `${mes}-03`, cliente: 'Ana', descricao: 'Petição', minutos: 90, valor_hora: '400', faturavel: true },
       { id: 'l2', data: `${mes}-02`, cliente: 'Bruno', descricao: 'Reunião', minutos: 60, valor_hora: '300', faturavel: false },
-    ] })
+    ]
+    alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true } })
+
+  // Privacidade por advogado: a hora lançada pelo colega não entra na tela de quem não é sócio nem gestor.
+  it('júnior não vê a hora do colega; o sócio vê as duas', async () => {
+    lista = [
+      { id: 'l1', data: `${mes}-03`, cliente: 'Ana', descricao: 'Petição minha', minutos: 90, valor_hora: '400', faturavel: true, usuario_id: 'u1' },
+      { id: 'l2', data: `${mes}-02`, cliente: 'Bruno', descricao: 'Reunião do colega', minutos: 60, valor_hora: '300', faturavel: false, usuario_id: 'u2' },
+    ]
+    alcance = { id: 'u1', cargo: 'junior', admin: false, veTudo: false }
+    render(<HorasPage />)
+    await waitFor(() => expect(screen.getByTestId('h-total').textContent).toBe('1h30'))
+    expect(screen.getByText(/Petição minha/)).toBeTruthy()
+    expect(screen.queryByText(/Reunião do colega/)).toBeNull()
+
+    cleanup(); alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+    render(<HorasPage />)
+    await waitFor(() => expect(screen.getByTestId('h-total').textContent).toBe('2h30'))
+    expect(screen.getByText(/Reunião do colega/)).toBeTruthy()
+  })
+
+  // Cargo que não dá para descobrir vale o alcance MAIS ESTREITO, nunca o mais largo.
+  it('sem saber quem está logado, esconde as horas com dono em vez de mostrar todas', async () => {
+    lista = [
+      { id: 'l1', data: `${mes}-03`, cliente: 'Ana', descricao: 'Petição minha', minutos: 90, valor_hora: '400', faturavel: true, usuario_id: 'u1' },
+      { id: 'l2', data: `${mes}-02`, cliente: 'Bruno', descricao: 'Reunião do colega', minutos: 60, valor_hora: '300', faturavel: false, usuario_id: 'u2' },
+    ]
+    alcance = null
+    render(<HorasPage />)
+    await waitFor(() => expect(screen.getByTestId('h-total').textContent).toBe('0h00'))
+    expect(screen.queryByText(/Petição minha/)).toBeNull()
+    expect(screen.queryByText(/Reunião do colega/)).toBeNull()
+  })
 
   it('totais do mês e por cliente; meta por função com progresso; admin define meta; mês lembrado', async () => {
     render(<HorasPage />)

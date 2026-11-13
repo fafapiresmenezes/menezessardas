@@ -81,7 +81,7 @@ describe('Importar processos anteriores', () => {
     fireEvent.change(screen.getByTestId('oabs-meses'), { target: { value: '12' } })
     fireEvent.click(screen.getByTestId('buscar-historico'))
     await waitFor(() => expect(screen.getByTestId('oabs-progresso').textContent).toContain('24 intimação'), { timeout: 10000 })
-    expect(falso.rpcs.filter(r => r.nome !== 'config_ler')).toEqual([{ nome: 'definir_configuracao', args: { p_chave: 'oabs_monitoradas', p_valor: '12345/RJ, 999/SP' } }])
+    expect(falso.rpcs.filter(r => r.nome !== 'config_ler' && r.nome !== 'perfil_atual')).toEqual([{ nome: 'definir_configuracao', args: { p_chave: 'oabs_monitoradas', p_valor: '12345/RJ, 999/SP' } }])
     expect(falso.invocacoes).toHaveLength(12)
     expect(falso.invocacoes[0]).toMatchObject({ nome: 'intimacoes', body: { historico: true } })
     expect((await screen.findAllByTestId('linha-processo')).length).toBe(1)
@@ -300,6 +300,46 @@ describe('Financeiro', () => {
     fireEvent.change(screen.getByTestId('saldo-inicial'), { target: { value: '10.000' } })
     expect(txt('previsao-90')).toContain('R$')
   })
+  // Privacidade por advogado: pleno e júnior veem só os números dos próprios casos.
+  it('júnior não vê os honorários do caso do colega; o sócio vê os dois', async () => {
+    falso = criarSupabaseFalso({
+      lancamentos_financeiros: [],
+      pagamentos_honorarios: [{ id: 'p1', caso_id: 'c1', data: hoje, valor: 1500 }, { id: 'p2', caso_id: 'c2', data: hoje, valor: 9000 }],
+      parcelas_honorarios: [],
+      tarefas: [
+        { id: 'c1', nivel: 'projeto', titulo: 'Meu caso', cliente: 'Maria', area: 'Imobiliário', honorario_previsto: 3000, honorario_recebido: 1500, vencimento_honorario: null, responsavel_id: 'u1' },
+        { id: 'c2', nivel: 'projeto', titulo: 'Caso do colega', cliente: 'Bruno', area: 'Trabalhista', honorario_previsto: 9000, honorario_recebido: 9000, vencimento_honorario: null, responsavel_id: 'u2' },
+      ],
+    })
+    falso.definirUsuario('u1')
+    const cargos = (c: Record<string, string>) => falso.responderRpc((nome, args) => nome === 'config_ler' && (args as { p_chaves?: string[] })?.p_chaves?.includes('cargos')
+      ? { data: [{ chave: 'cargos', valor: JSON.stringify(c) }], error: null }
+      : { data: null, error: null })
+    cargos({ u1: 'junior' })
+    tela(<FinanceiroPage />)
+    await waitFor(() => expect(screen.getByTestId('financeiro-alcance').textContent).toContain('os números dos seus casos'))
+    await waitFor(() => expect(txt('financeiro-resumo')).toContain('Recebido no mêsR$ 1.500,00'))
+
+    cleanup(); cargos({ u1: 'socio' })
+    tela(<FinanceiroPage />)
+    await waitFor(() => expect(txt('financeiro-resumo')).toContain('Recebido no mêsR$ 10.500,00'))
+    expect(screen.queryByTestId('financeiro-alcance')).toBeNull()
+  })
+
+  // Cargo que não dá para descobrir vale o alcance MAIS ESTREITO, nunca o mais largo.
+  it('sem saber quem está logado, o financeiro mostra zero em vez do escritório inteiro', async () => {
+    falso = criarSupabaseFalso({
+      lancamentos_financeiros: [],
+      pagamentos_honorarios: [{ id: 'p1', caso_id: 'c1', data: hoje, valor: 1500 }],
+      parcelas_honorarios: [],
+      tarefas: [{ id: 'c1', nivel: 'projeto', titulo: 'Meu caso', cliente: 'Maria', area: 'Imobiliário', honorario_previsto: 3000, honorario_recebido: 1500, vencimento_honorario: null, responsavel_id: 'u1' }],
+    })
+    falso.definirUsuario(null)
+    tela(<FinanceiroPage />)
+    await waitFor(() => expect(screen.getByTestId('financeiro-alcance')).toBeTruthy())
+    expect(txt('financeiro-resumo')).toContain('Recebido no mêsR$ 0,00')
+  })
+
   it('sem a tabela de lançamentos, ainda mostra os honorários e explica', async () => {
     falso.falhar('lancamentos_financeiros', { code: '42P01', message: 'relation does not exist' })
     tela(<FinanceiroPage />)

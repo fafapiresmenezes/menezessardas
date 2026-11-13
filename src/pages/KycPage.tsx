@@ -5,7 +5,7 @@ import Vazio from '@/components/Vazio'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { UserCheck, History, RefreshCw } from 'lucide-react'
-import { meuAlcance, filtrarPorUsuario } from '@/lib/hierarquia'
+import { meuAlcance, filtrarPorUsuario, ALCANCE_FECHADO } from '@/lib/hierarquia'
 import { irParaCampo } from '@/lib/foco'
 
 type Certidao = { emissor: string; cadastro: string; situacao: string; descricao: string }
@@ -38,13 +38,15 @@ export default function KycPage() {
   const [todoHistorico, setTodoHistorico] = useState<Historico[]>([])
   const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
   // Privacidade (pedido do M, 12/11/2026): cada advogado só vê as próprias checagens; sócios e gestor veem todas.
-  const historico = alcance && !alcance.veTudo ? filtrarPorUsuario(todoHistorico, alcance) : todoHistorico
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza.
+  const alc = alcance ?? ALCANCE_FECHADO
+  const historico = alc.veTudo ? todoHistorico : filtrarPorUsuario(todoHistorico, alc)
   const [msgRecon, setMsgRecon] = useState('')
   const carregarHistorico = () => supabase.from('checagens_kyc').select('id,cnpj,nome,risco,alertas,consultado_em,automatica,risco_anterior,mudou,usuario_id').order('consultado_em', { ascending: false }).limit(50)
     .then(({ data }) => setTodoHistorico((data ?? []) as Historico[]))
   useEffect(() => {
     carregarHistorico()
-    meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true }))
+    meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO))
   }, [])
   const reconsultar = async () => {
     setMsgRecon('Reconsultando as contrapartes já checadas…')

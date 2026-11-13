@@ -26,7 +26,7 @@ import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
 import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal } from 'lucide-react'
 import { gruposMenu, gruposVisiveis, atalhosDoMenu, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao } from './menuTelas'
-import { meuAlcance } from '@/lib/hierarquia'
+import { meuAlcance, ALCANCE_FECHADO } from '@/lib/hierarquia'
 import { lerMeuJeito, carregarMeuJeito, esquecerMeuJeito, aplicarLetra, EVENTO_JEITO, type MeuJeito } from '@/lib/meuJeito'
 
 interface LayoutProps {
@@ -119,12 +119,21 @@ export default function Layout({ children, title }: LayoutProps) {
   // conferidos ao abrir e a cada 30 minutos enquanto a tela estiver aberta.
   useEffect(() => {
     if (!supabaseConfigurado) return
+    // Privacidade por advogado: o aviso no celular é do caso de quem está logado. Intimação de processo
+    // que ainda não é caso de ninguém avisa todo mundo, para ninguém perder prazo. Compromissos do
+    // calendário são da locação e do escritório inteiro, e por isso seguem sem filtro.
     const conferir = () => verificarAvisosCriticos(async () => {
-      const [i, c] = await Promise.all([
+      const [i, c, casos, alc] = await Promise.all([
         supabase.from('intimacoes').select('id,lida,prazo_final,tribunal,numero_processo,tipo').eq('lida', false).not('prazo_final', 'is', null).lte('prazo_final', emDias(2)).limit(50),
         supabase.from('compromissos').select('id,titulo,data_evento').eq('data_evento', emDias(0)).limit(20),
+        Promise.resolve(supabase.from('tarefas').select('numero_processo,responsavel_id').eq('nivel', 'projeto')).then(r => (r.data ?? []) as { numero_processo: string | null; responsavel_id: string | null }[], () => []),
+        meuAlcance().catch(() => ALCANCE_FECHADO),
       ])
-      return { intimacoes: i.data ?? [], compromissos: c.data ?? [] }
+      const so = (n: string | null | undefined) => String(n ?? '').replace(/\D/g, '')
+      const meus = new Set(casos.filter(t => t.responsavel_id === alc.id).map(t => so(t.numero_processo)))
+      const comDono = new Set(casos.filter(t => t.responsavel_id).map(t => so(t.numero_processo)))
+      const visivel = (n: string | null | undefined) => alc.veTudo || !comDono.has(so(n)) || meus.has(so(n))
+      return { intimacoes: (i.data ?? []).filter(x => visivel((x as { numero_processo: string | null }).numero_processo)), compromissos: c.data ?? [] }
     }).catch(() => undefined)
     conferir()
     const t = setInterval(conferir, 30 * 60 * 1000)

@@ -8,6 +8,7 @@ import { ExternalLink, Search } from 'lucide-react'
 import { mensagemAmigavel } from '@/lib/erros'
 import Vazio from '@/components/Vazio'
 import { irParaCampo } from '@/lib/foco'
+import { meuAlcance, filtrarPorHierarquia, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // Fontes que o advogado usa todo dia: digita uma vez (nome, CNPJ, número do processo ou tema)
 // e abre cada site já com a busca feita. As que têm ligação direta estão marcadas.
@@ -63,7 +64,14 @@ export default function FontesPage() {
   const carregarSalvas = async () => { const { data } = await supabase.from('buscas_salvas').select('id, termo, ultima_execucao, ultimo_total, novas_ultima, caso_id').order('criado_em'); setSalvas((data ?? []) as Salva[]) }
   // Passo 46: ligar a busca a um caso; comunicação nova vira tarefa do responsável (Meu dia e Alertas).
   const ligarCaso = async (id: string, caso_id: string) => { await supabase.from('buscas_salvas').update({ caso_id: caso_id || null }).eq('id', id); carregarSalvas() }
-  useEffect(() => { carregarSalvas(); supabase.from('tarefas').select('id, titulo').eq('nivel', 'projeto').neq('situacao', 'feito').order('criado_em', { ascending: false }).limit(100).then(({ data }) => setCasos((data ?? []) as { id: string; titulo: string }[])) }, [])
+  // Privacidade por advogado: a lista de casos para ligar à busca é a de quem olha (caso sem dono aparece para todos).
+  useEffect(() => {
+    carregarSalvas()
+    Promise.all([
+      Promise.resolve(supabase.from('tarefas').select('id, titulo, responsavel_id').eq('nivel', 'projeto').neq('situacao', 'feito').order('criado_em', { ascending: false }).limit(100)),
+      meuAlcance().catch(() => ALCANCE_FECHADO),
+    ]).then(([r, alc]) => setCasos(filtrarPorHierarquia((r.data ?? []) as { id: string; titulo: string; responsavel_id?: string | null }[], alc)))
+  }, [])
   const salvarBusca = async () => {
     setMsgSalva('')
     const { error } = await supabase.from('buscas_salvas').insert({ termo: termo.trim() })

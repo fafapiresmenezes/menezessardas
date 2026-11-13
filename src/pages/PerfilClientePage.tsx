@@ -3,7 +3,7 @@ import Layout from '@/components/Layout'
 import Vazio from '@/components/Vazio'
 import { supabase } from '@/lib/supabase'
 import { PERGUNTAS, avaliarPerfil, type Respostas, type ResultadoPerfil } from '@/lib/perfilCliente'
-import { filtrarPorCriador, meuAlcance, type Cargo } from '@/lib/hierarquia'
+import { filtrarPorCriador, meuAlcance, ALCANCE_FECHADO, type Cargo } from '@/lib/hierarquia'
 import { ClipboardList, Trash2 } from 'lucide-react'
 import { irParaCampo } from '@/lib/foco'
 
@@ -22,8 +22,9 @@ export default function PerfilClientePage() {
   const [alcance, setAlcance] = useState<{ id: string; cargo: Cargo | null; admin: boolean; veTudo: boolean } | null>(null)
   const carregar = () => supabase.from('perfis_cliente').select('id,cliente_nome,criado_em,apagar_em,resultado,criado_por').order('criado_em', { ascending: false }).limit(100)
     .then(({ data }) => setSalvos((data ?? []) as Salvo[]))
-  useEffect(() => { carregar(); meuAlcance().then(setAlcance) }, [])
-  const visiveis = alcance ? filtrarPorCriador(salvos, alcance) : salvos
+  useEffect(() => { carregar(); meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza.
+  const visiveis = filtrarPorCriador(salvos, alcance ?? ALCANCE_FECHADO)
   const resultado = avaliarPerfil(respostas)
   const podeSalvar = aceite && nome.trim().length >= 2 && resultado.respondidas > 0
 

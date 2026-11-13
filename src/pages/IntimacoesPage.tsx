@@ -10,7 +10,7 @@ import { formatarData, diasAte } from '@/lib/datas'
 import SeloSituacao from '@/components/SeloSituacao'
 import { RefreshCw, ExternalLink } from 'lucide-react'
 import { mensagemAmigavel } from '@/lib/erros'
-import { meuAlcance, rotuloCargo } from '@/lib/hierarquia'
+import { meuAlcance, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // Caixa de intimações: publicações do Diário de Justiça Eletrônico Nacional (Comunica PJe, CNJ)
 // para as OABs do escritório. Busca diária automática e botão "Buscar agora". Gratuito.
@@ -48,7 +48,7 @@ export default function IntimacoesPage() {
   }
   useEffect(() => {
     carregar(); perfilAtual().then(f => setAdmin(f === 'admin'))
-    meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true }))
+    meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO))
     // Hierarquia: liga cada intimação ao dono do caso pelo número do processo.
     try {
       Promise.resolve(supabase.from('tarefas').select('numero_processo,responsavel_id').eq('nivel', 'projeto').not('numero_processo', 'is', null)).then(r => {
@@ -62,8 +62,10 @@ export default function IntimacoesPage() {
     } catch { /* ambiente de teste sem esta consulta */ }
   }, [])
   // Pleno e júnior veem só as intimações dos próprios casos (ou sem caso identificado, para ninguém perder prazo).
-  const minhas = alcance && !alcance.veTudo
-    ? lista.filter(i => { const dono = donoPorProcesso.get(String(i.numero_processo ?? '').replace(/\D/g, '')); return !dono || dono === alcance.id })
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza.
+  const alc = alcance ?? ALCANCE_FECHADO
+  const minhas = !alc.veTudo
+    ? lista.filter(i => { const dono = donoPorProcesso.get(String(i.numero_processo ?? '').replace(/\D/g, '')); return !dono || dono === alc.id })
     : lista
 
   const buscar = async () => {

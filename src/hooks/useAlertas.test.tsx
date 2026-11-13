@@ -21,11 +21,18 @@ const imoveis = [{ id: 'i1', endereco: 'Rua A 1', cidade: 'Rio de Janeiro', uf: 
 let contratos: Record<string, unknown>[] = []
 let listarImoveis = vi.fn(async () => imoveis)
 vi.mock('@/lib/repositorio', async (orig) => ({ ...(await orig() as object), repositorio: { listarImoveis: () => listarImoveis(), listarContratos: async () => contratos } }))
+// Quem está olhando: prazos de casos e parcelas de honorários do colega não entram na agenda nem nos alertas.
+let alcance: { id: string; cargo: string | null; admin: boolean; veTudo: boolean } | null = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+vi.mock('@/lib/hierarquia', async (original) => ({
+  ...(await original<typeof import('@/lib/hierarquia')>()),
+  meuAlcance: async () => { if (!alcance) throw new Error('não deu para saber quem está logado'); return alcance },
+}))
 const { useAlertas, salvarCompromisso, importarCompromissosIcs } = await import('./useAlertas')
 
 describe('useAlertas', () => {
   beforeEach(() => {
     configurado = false; localStorage.clear(); insert.mockClear(); linhas = []; existentes = []; tarefas = []; parcelas = []; listarImoveis = vi.fn(async () => imoveis)
+    alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
     contratos = [{ id: 'c1', imovelId: 'i1', tipo: 'locacao_residencial', parte: 'Ana', dataInicio: '2025-01-01', dataVencimento: emDias(20), valor: 1000, periodicidade: 'mensal', indice: 'fixo', garantia: 'caucao', dataUltimoReajuste: null, notas: '', criadoEm: '2025-01-01', documentos: [] }]
   })
 
@@ -70,6 +77,51 @@ describe('useAlertas', () => {
     await waitFor(() => expect(result.current.loading).toBe(false))
     expect(result.current.alertas.find(a => a.id === 'comp-tarefa-t1')).toMatchObject({ tipo: 'compromisso', titulo: 'Prazo: Contestar: processo 0001', imovel: '0001-22.2026.8.19.0001', diasRestantes: 4 })
     expect(result.current.getCriticos()).toBe(2)
+  })
+
+  // Privacidade por advogado (Agenda e Alertas): o prazo e a parcela do colega não entram na agenda de quem
+  // não vê o caso dele; prazo sem responsável continua aparecendo para todos, para ninguém perder data.
+  it('júnior não vê o prazo nem a parcela do colega na agenda; o sócio vê os dois', async () => {
+    configurado = true
+    tarefas = [
+      { id: 't1', titulo: 'Meu prazo', cliente: 'Ana', numero_processo: '0001', prazo: emDias(4), situacao: 'a_fazer', responsavel_id: 'u1' },
+      { id: 't2', titulo: 'Prazo do colega', cliente: 'Bruno', numero_processo: '0002', prazo: emDias(5), situacao: 'a_fazer', responsavel_id: 'u2' },
+      { id: 't3', titulo: 'Prazo sem dono', cliente: 'Caio', numero_processo: '0003', prazo: emDias(6), situacao: 'a_fazer', responsavel_id: null },
+    ]
+    parcelas = [
+      { id: 'p1', caso_id: 'c1', numero: 1, vencimento: emDias(8), valor: 100, pago_em: null, tarefas: { titulo: 'Meu caso', cliente: 'Ana', responsavel_id: 'u1' } },
+      { id: 'p2', caso_id: 'c2', numero: 1, vencimento: emDias(9), valor: 200, pago_em: null, tarefas: { titulo: 'Caso do colega', cliente: 'Bruno', responsavel_id: 'u2' } },
+    ]
+    alcance = { id: 'u1', cargo: 'junior', admin: false, veTudo: false }
+    const junior = renderHook(() => useAlertas())
+    await waitFor(() => expect(junior.result.current.loading).toBe(false))
+    const titulosJunior = junior.result.current.alertas.map(a => a.titulo)
+    expect(titulosJunior).toContain('Prazo: Meu prazo')
+    expect(titulosJunior).toContain('Prazo: Prazo sem dono')
+    expect(titulosJunior).not.toContain('Prazo: Prazo do colega')
+    expect(titulosJunior.some(t => t.includes('Caso do colega'))).toBe(false)
+    expect(titulosJunior.some(t => t.includes('Meu caso'))).toBe(true)
+
+    alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+    const socio = renderHook(() => useAlertas())
+    await waitFor(() => expect(socio.result.current.loading).toBe(false))
+    const titulosSocio = socio.result.current.alertas.map(a => a.titulo)
+    expect(titulosSocio).toContain('Prazo: Prazo do colega')
+    expect(titulosSocio.some(t => t.includes('Caso do colega'))).toBe(true)
+  })
+
+  it('sem saber quem está logado, a agenda mostra só o que não tem dono', async () => {
+    configurado = true
+    tarefas = [
+      { id: 't1', titulo: 'Meu prazo', cliente: 'Ana', numero_processo: '0001', prazo: emDias(4), situacao: 'a_fazer', responsavel_id: 'u1' },
+      { id: 't3', titulo: 'Prazo sem dono', cliente: 'Caio', numero_processo: '0003', prazo: emDias(6), situacao: 'a_fazer', responsavel_id: null },
+    ]
+    alcance = null
+    const { result } = renderHook(() => useAlertas())
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    const titulos = result.current.alertas.map(a => a.titulo)
+    expect(titulos).toContain('Prazo: Prazo sem dono')
+    expect(titulos).not.toContain('Prazo: Meu prazo')
   })
 
   it('importa .ics pulando os UIDs já existentes e os repetidos no próprio arquivo; sem eventos não grava', async () => {

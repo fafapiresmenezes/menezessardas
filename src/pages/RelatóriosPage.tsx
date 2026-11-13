@@ -12,7 +12,7 @@ import type { Periodicidade } from '@/lib/dominio'
 import { porCliente, porSocio, csvClientesSocios, type HoraLancada, type CasoHonorario, type PessoaNome } from '@/lib/relatorioClientes'
 import { listarPessoas } from '@/lib/equipe'
 import { mensagemAmigavel } from '@/lib/erros'
-import { meuAlcance, podeVer, rotuloCargo } from '@/lib/hierarquia'
+import { meuAlcance, podeVer, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 type Periodo = 30 | 90 | 365
 
@@ -68,7 +68,7 @@ export default function RelatóriosPage() {
   // Hierarquia: sócios e gestor veem os números do escritório inteiro; os demais, só o que é deles.
   const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
   useEffect(() => {
-    meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true }))
+    meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO))
   }, [])
   useEffect(() => {
     if (!supabaseConfigurado) return
@@ -77,9 +77,10 @@ export default function RelatóriosPage() {
     q<CasoHonorario>(() => supabase.from('tarefas').select('cliente,responsavel_id,honorario_previsto,honorario_recebido').eq('nivel', 'projeto')).then(setCasosHon)
     listarPessoas().then(ps => setPessoas(ps.map(p => ({ id: p.id, nome: p.nome, email: p.email })))).catch(() => setPessoas([]))
   }, [])
-  const restrito = !!alcance && !alcance.veTudo
-  const horasVisiveis = restrito ? horasLanc.filter(h => !h.usuario_id || h.usuario_id === alcance!.id) : horasLanc
-  const casosVisiveis = restrito ? casosHon.filter(c => podeVer(alcance!, c.responsavel_id ?? null)) : casosHon
+  const alc = alcance ?? ALCANCE_FECHADO
+  const restrito = !alc.veTudo
+  const horasVisiveis = restrito ? horasLanc.filter(h => !h.usuario_id || h.usuario_id === alc.id) : horasLanc
+  const casosVisiveis = restrito ? casosHon.filter(c => podeVer(alc, c.responsavel_id ?? null)) : casosHon
   const clientes = porCliente(horasVisiveis, casosVisiveis)
   const socios = porSocio(horasVisiveis, casosVisiveis, pessoas)
 
@@ -283,7 +284,7 @@ export default function RelatóriosPage() {
             <h2 id="t-clientes" className="text-lg mb-2">Por cliente e por sócio</h2>
             {restrito && (
               <p className="border-l-2 border-dourado bg-pergaminho/50 p-2 text-xs mb-3" data-testid="relatorios-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
-                Você está vendo <strong>as suas horas e os seus casos</strong> ({rotuloCargo[alcance!.cargo ?? 'nenhum']}). Sócios e o gestor veem o escritório inteiro.
+                Você está vendo <strong>as suas horas e os seus casos</strong> ({rotuloCargo[alc.cargo ?? 'nenhum']}). Sócios e o gestor veem o escritório inteiro.
               </p>
             )}
             <p className="text-sm text-grafite-claro mb-4">Horas lançadas (tela Horas) e honorários dos casos (tela Honorários), consolidados. Rentabilidade do cliente = recebido menos o custo das horas.</p>

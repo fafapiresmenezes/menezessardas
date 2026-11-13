@@ -8,7 +8,7 @@ import { formatarData, hojeLocal } from '@/lib/datas'
 import { ETAPAS, ORIGENS, MOTIVOS_PERDA, resumoFunil, proximaEtapa, validarMudanca, telefoneWhatsapp, mensagemRetorno, casoDoLead, rotuloEtapa, type Lead, type Etapa } from '@/lib/escritorio/funil'
 import { tabelaAusente } from '@/lib/escritorio/tabelaAusente'
 import { Filter, Plus, MessageCircle, ArrowRight, Trash2 } from 'lucide-react'
-import { meuAlcance, filtrarPorHierarquia, rotuloCargo } from '@/lib/hierarquia'
+import { meuAlcance, filtrarPorHierarquia, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // Funil de vendas do escritório: do primeiro contato ao contrato fechado, que vira caso com honorário no financeiro.
 const AREAS = ['Imobiliário', 'Cível', 'Trabalhista', 'Família e sucessões', 'Tributário', 'Empresarial', 'Consumidor', 'Previdenciário', 'Penal', 'Compliance']
@@ -21,7 +21,9 @@ export default function FunilVendasPage() {
   const [todosLeads, setLeads] = useState<Lead[]>([])
   // Hierarquia: sócios e gestor veem o funil inteiro; os demais, os seus contatos (e os sem responsável, para alguém assumir).
   const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
-  const leads = useMemo(() => (alcance && !alcance.veTudo ? filtrarPorHierarquia(todosLeads, alcance) : todosLeads), [todosLeads, alcance])
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza.
+  const alc = alcance ?? ALCANCE_FECHADO
+  const leads = useMemo(() => (alc.veTudo ? todosLeads : filtrarPorHierarquia(todosLeads, alc)), [todosLeads, alc])
   const [pessoas, setPessoas] = useState<Pessoa[]>([])
   const [novo, setNovo] = useState(VAZIO)
   const [erro, setErro] = useState('')
@@ -38,7 +40,7 @@ export default function FunilVendasPage() {
   }
   useEffect(() => {
     carregar(); listarPessoas().then(setPessoas).catch(() => {})
-    meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true }))
+    meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO))
   }, [])
 
   const resumo = useMemo(() => resumoFunil(leads), [leads])

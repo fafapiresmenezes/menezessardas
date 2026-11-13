@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { Play, Square, Download, Printer, Trash2, Target, ClipboardCopy } from 'lucide-react'
 import { hojeLocal, isoLocal } from '@/lib/datas'
 import { lerNumero, lerHoras } from '@/lib/numero'
-import { meuAlcance, rotuloCargo } from '@/lib/hierarquia'
+import { meuAlcance, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
 import Vazio from '@/components/Vazio'
 import { irParaCampo } from '@/lib/foco'
 
@@ -28,9 +28,11 @@ export default function HorasPage() {
   const [todos, setTodos] = useState<Lanc[]>([])
   // Hierarquia: sócios e gestor veem as horas de todo o escritório; os demais, só as suas.
   const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
-  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true })) }, [])
-  const restrito = !!alcance && !alcance.veTudo
-  const lista = restrito ? todos.filter(l => !l.usuario_id || l.usuario_id === alcance!.id) : todos
+  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
+  // Enquanto não se sabe quem olha (alcance null), vale o alcance mais estreito.
+  const alc = alcance ?? ALCANCE_FECHADO
+  const restrito = !alc.veTudo
+  const lista = restrito ? todos.filter(l => !l.usuario_id || l.usuario_id === alc.id) : todos
   const [erro, setErro] = useState('')
   const [form, setForm] = useState({ data: hojeLocal(), cliente: '', descricao: '', horas: '', valor_hora: '', faturavel: true })
   const [inicio, setInicio] = useState<number | null>(() => { try { const v = localStorage.getItem('lsm-cronometro'); return v ? Number(v) : null } catch { return null } })
@@ -114,7 +116,7 @@ export default function HorasPage() {
       <div className="space-y-5">
         <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="horas-aviso" title="As metas por função são definidas pela administração; a hierarquia, na tela Equipe.">
           {restrito
-            ? <>Você está vendo <strong>os seus lançamentos de horas</strong> ({rotuloCargo[alcance!.cargo ?? 'nenhum']}). Sócios e o gestor veem as horas de todo o escritório.</>
+            ? <>Você está vendo <strong>os seus lançamentos de horas</strong> ({rotuloCargo[alc.cargo ?? 'nenhum']}). Sócios e o gestor veem as horas de todo o escritório.</>
             : <>Os lançamentos de horas desta tela são do escritório. Lance as suas horas aqui; o relatório por cliente usa tudo o que foi lançado.</>}
         </p>
         <section className="bg-white shadow-sm p-5 print:hidden" data-testid="meta-horas">

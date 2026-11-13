@@ -11,6 +11,7 @@ import ConexaoCnj from '@/components/ConexaoCnj'
 import PassosImportacao from '@/components/PassosImportacao'
 import { janelas, lerOabs } from '@/lib/escritorio/historicoOab'
 import { Download, Upload, CheckCircle2, FileSpreadsheet, ListOrdered, Inbox, Search } from 'lucide-react'
+import { meuAlcance, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // Importar processos anteriores: o escritório traz a carteira que já tem e não começa do zero.
 // Quatro caminhos: planilha (Excel/CSV de outro sistema), lista de números, intimações das OABs do escritório
@@ -94,12 +95,20 @@ export default function ImportarProcessosPage() {
   const buscarIntimacoes = async () => {
     setBuscando(true); setErro('')
     const ex = await carregarExistentes()
-    const { data, error } = await supabase.from('intimacoes').select('numero_processo,tribunal,orgao,classe,data_disponibilizacao').order('data_disponibilizacao', { ascending: false })
+    // Privacidade por advogado: intimação de processo que já é caso de um colega não entra na sugestão.
+    // Processo que ainda não é caso de ninguém aparece para todos — é justamente o que há para importar.
+    const [{ data, error }, casos, alc] = await Promise.all([
+      supabase.from('intimacoes').select('numero_processo,tribunal,orgao,classe,data_disponibilizacao').order('data_disponibilizacao', { ascending: false }),
+      Promise.resolve(supabase.from('tarefas').select('numero_processo,responsavel_id').eq('nivel', 'projeto')).then(r => (r.data ?? []) as { numero_processo: string | null; responsavel_id: string | null }[], () => []),
+      meuAlcance().catch(() => ALCANCE_FECHADO),
+    ])
+    const dig = (n: string | null | undefined) => String(n ?? '').replace(/\D/g, '')
+    const deOutro = new Set(casos.filter(t => t.responsavel_id && t.responsavel_id !== alc.id).map(t => dig(t.numero_processo)))
     setBuscando(false)
     if (error) return setErro(mensagemAmigavel(error))
     const vistos = new Set<string>()
     const itens = ((data ?? []) as { numero_processo: string | null; tribunal: string | null; orgao: string | null; classe: string | null }[])
-      .filter(i => { const n = String(i.numero_processo ?? '').replace(/\D/g, ''); if (n.length !== 20 || vistos.has(n)) return false; vistos.add(n); return true })
+      .filter(i => { const n = dig(i.numero_processo); if (n.length !== 20 || vistos.has(n) || (!alc.veTudo && deOutro.has(n))) return false; vistos.add(n); return true })
       .map(i => ({ numero: String(i.numero_processo), titulo: i.classe ?? undefined, vara: i.orgao ?? undefined, tribunal: i.tribunal ?? undefined }))
     if (!itens.length) setErro('Nenhuma intimação com número de processo. Confira as OABs em Intimações e clique em "Buscar agora" lá.')
     mostrar(analisarResultados(itens, ex))

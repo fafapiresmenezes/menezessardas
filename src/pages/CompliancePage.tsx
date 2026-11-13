@@ -7,6 +7,7 @@ import { gerarRelatorioSelado } from '@/lib/relatorioCompliance'
 import { baixarArquivo } from '@/lib/ancoragem'
 import { mensagemAmigavel } from '@/lib/erros'
 import { hojeLocal, isoLocal } from '@/lib/datas'
+import { meuAlcance, podeVer, ALCANCE_FECHADO, rotuloCargo, type Alcance } from '@/lib/hierarquia'
 
 // Diagnóstico de integridade vendável a clientes: perguntas baseadas nos parâmetros de avaliação do
 // programa de integridade (Decreto 11.129/2022, art. 57) e na LGPD (Lei 13.709/2018). Gera nota por
@@ -61,21 +62,30 @@ export default function CompliancePage() {
   // Passo 100: resultado e plano de ação em texto para o e-mail ao cliente.
   const [copiadoDiag, setCopiadoDiag] = useState(false)
   // Passo 12: diagnóstico salvo, plano de ação em Casos e projetos e evolução trimestral da nota.
-  type Diag = { id: string; empresa: string; nota: number; lacunas: number; caso_id: string | null; criado_em: string }
+  type Diag = { id: string; empresa: string; nota: number; lacunas: number; caso_id: string | null; criado_em: string; tarefas?: { responsavel_id: string | null } | { responsavel_id: string | null }[] | null }
   const [historico, setHistorico] = useState<Diag[]>([])
   const [salvando, setSalvando] = useState(false)
   const [msg, setMsg] = useState<{ ok: boolean; texto: string } | null>(null)
-  const carregarHistorico = () => { if (supabaseConfigurado) supabase.from('diagnosticos_compliance').select('id,empresa,nota,lacunas,caso_id,criado_em').order('criado_em').then(({ data }) => setHistorico((data ?? []) as Diag[])) }
+  const carregarHistorico = () => { if (supabaseConfigurado) supabase.from('diagnosticos_compliance').select('id,empresa,nota,lacunas,caso_id,criado_em,tarefas(responsavel_id)').order('criado_em').then(({ data }) => setHistorico((data ?? []) as Diag[])) }
   useEffect(carregarHistorico, [])
+  // Privacidade por advogado: o diagnóstico segue o dono do caso (plano de ação) que ele abriu — o diagnóstico
+  // da empresa do colega não é assunto de quem não cuida dela. Diagnóstico sem caso aparece para todos.
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza o caso do colega.
+  const [alcance, setAlcance] = useState<Alcance | null>(null)
+  const alc = alcance ?? ALCANCE_FECHADO
+  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
+  const donoDoDiag = (h: Diag) => { const t = Array.isArray(h.tarefas) ? h.tarefas[0] : h.tarefas; return t?.responsavel_id ?? null }
+  const visiveis = alc.veTudo ? historico : historico.filter(h => podeVer(alc, donoDoDiag(h)))
   const trimestre = (iso: string) => { const d = new Date(iso); return `${Math.floor(d.getMonth() / 3) + 1}T/${d.getFullYear()}` }
-  const doCliente = historico.filter(h => !empresa.trim() || h.empresa.toLowerCase() === empresa.trim().toLowerCase())
+  const doCliente = visiveis.filter(h => !empresa.trim() || h.empresa.toLowerCase() === empresa.trim().toLowerCase())
   const porTrimestre = [...new Map(doCliente.map(h => [trimestre(h.criado_em), h])).entries()] // última nota de cada trimestre
   async function salvarPlano() {
     if (geral === null) return
     setSalvando(true); setMsg(null)
     const nome = empresa.trim() || 'Cliente sem nome'
     const dia = (n: number) => { const d = new Date(); d.setDate(d.getDate() + n); return isoLocal(d) }
-    const { data: caso, error } = await supabase.from('tarefas').insert({ titulo: `Plano de ação de compliance · ${nome}`, nivel: 'projeto', prioridade: 'alta', cliente: nome, area: 'Compliance', tipo: 'projeto' }).select('id').single()
+    // O caso nasce com dono (quem fez o diagnóstico), em vez de nascer sem responsável e, por isso, visível para o escritório todo.
+    const { data: caso, error } = await supabase.from('tarefas').insert({ titulo: `Plano de ação de compliance · ${nome}`, nivel: 'projeto', prioridade: 'alta', cliente: nome, area: 'Compliance', tipo: 'projeto', responsavel_id: alc.id || null }).select('id').single()
     if (error || !caso) { setSalvando(false); setMsg({ ok: false, texto: 'Não deu para criar o caso: ' + (error ? mensagemAmigavel(error) : 'erro') }); return }
     const ordenadas = [...lacunas].sort((a, b) => (a.v ?? 0) - (b.v ?? 0))
     if (ordenadas.length) {
@@ -175,6 +185,11 @@ export default function CompliancePage() {
           <section className="bg-white shadow-sm p-6 print:break-inside-avoid" data-testid="evolucao-trimestral" aria-labelledby="t-evolucao">
             <h2 id="t-evolucao" className="font-serif text-xl mb-1">Evolução trimestral da nota{empresa.trim() && ` · ${empresa.trim()}`}</h2>
             <p className="text-sm text-grafite-claro mb-4">Última nota gravada em cada trimestre. Refaça o diagnóstico a cada trimestre para acompanhar o plano de ação.</p>
+            {!alc.veTudo && (
+              <p className="border-l-2 border-dourado p-3 text-sm mb-4" data-testid="compliance-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+                Você está vendo <strong>os diagnósticos dos seus casos</strong> ({rotuloCargo[alc.cargo ?? 'nenhum']}). Sócios e o gestor veem o escritório inteiro.
+              </p>
+            )}
             <ul className="flex items-end gap-4 h-32" aria-label="Nota por trimestre">
               {porTrimestre.map(([t, h]) => (
                 <li key={t} className="flex-1 flex flex-col items-center justify-end gap-1 h-full" data-testid="trimestre">
