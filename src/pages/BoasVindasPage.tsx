@@ -2,6 +2,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { IDIOMAS, type Idioma } from '@/lib/idioma'
 import { trocarIdioma, useTexto, textoEm, chaveIdioma } from '@/lib/i18n'
 import Marca from '@/components/Marca'
+import Vertentes from '@/components/Vertentes'
 
 // Tela anterior ao login (pedido de M, 13/11/2026): o visitante escolhe o idioma e entra nele.
 // A escolha vale de verdade: a tela de entrada, a criação de conta e a recuperação de senha
@@ -15,7 +16,7 @@ export default function BoasVindasPage() {
   }
   return (
     <div className="min-h-screen flex items-center justify-center bg-black text-white px-4 py-10">
-      <div className="w-full max-w-xl text-center">
+      <div className="w-full max-w-3xl text-center">
         <div className="flex justify-center mb-8"><Marca subtitulo={t('marca.suporteJuridico')} /></div>
         <h1 className="text-2xl font-serif mb-2">{t('boasVindas.instituto')}</h1>
         {/* O convite aparece nas quatro línguas: quem chega lê na sua antes de escolher. */}
@@ -37,6 +38,10 @@ export default function BoasVindasPage() {
           ))}
         </div>
         <p className="text-xs text-white/40 mt-8">{t('boasVindas.dica')}</p>
+
+        {/* Pedido de M (13/11/2026): todas as vertentes aparecem aqui, na língua escolhida, mesmo
+            as que ainda estão em desenvolvimento. Nada abre sem senha. */}
+        <Vertentes />
       </div>
       <Link
         to="/stokasticos"
