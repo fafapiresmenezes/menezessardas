@@ -274,9 +274,9 @@ html[data-letra='maior'] { font-size: 125%; }
 /* O cartão de entrada (passo V13): preto com linha fina, igual nos dois modos, com UM botão forte.
    Antes era branco no modo claro e cinza no escuro, e o botão de entrar era cinza sobre cinza. */
 .cartao-entrada { background: #0A0A0A !important; border: 1px solid #525252; }
-.cartao-entrada h1, .cartao-entrada .text-navy { color: #FFFFFF; }
-.cartao-entrada .text-grafite { color: #E5E5E5; }
-.cartao-entrada .text-grafite-claro { color: #D4D4D4; }
+.cartao-entrada h1, .cartao-entrada .text-navy, .cartao-entrada [class*="text-navy"] { color: #FFFFFF !important; }
+.cartao-entrada .text-grafite, .cartao-entrada [class*="text-grafite"] { color: #E5E5E5 !important; }
+.cartao-entrada .text-grafite-claro, .cartao-entrada [class*="text-grafite-claro"] { color: #D4D4D4 !important; }
 .cartao-entrada input { background-color: #000000; color: #FFFFFF; border-color: #737373; }
 .cartao-entrada input:focus { border-color: #FFFFFF; }
 .cartao-entrada input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #000000 inset; -webkit-text-fill-color: #FFFFFF; caret-color: #FFFFFF; }

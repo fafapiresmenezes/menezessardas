@@ -189,7 +189,7 @@ export default function LoginPage() {
 
         <div>
         <div className="cartao-entrada rounded-sm p-8 md:p-10" data-testid="cartao-entrada">
-          {!doSegmento && !marca && (
+          {!marca && (
             <p data-testid="so-membros" className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-grafite">{t('login.soMembros')}</p>
           )}
           <h1 className="font-serif text-2xl text-navy text-center" data-testid="titulo-do-cartao">

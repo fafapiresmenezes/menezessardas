@@ -23,7 +23,7 @@ export default function PortalInstitutoPage() {
       <div className="min-h-screen bg-black text-white px-4 py-10">
         <div className="max-w-2xl mx-auto text-center">
           <div className="flex justify-center mb-8"><Marca /></div>
-          <h1 className="text-2xl font-serif mb-3">Esta porta não existe</h1>
+          <h1 className="text-2xl font-serif text-white mb-3">Esta porta não existe</h1>
           <p className="text-sm text-white/70">
             Veja as portas do Instituto em <Link to="/portais" title="Lista de todas as portas do Instituto, com o estado de cada uma" className="underline decoration-white/40">Portais</Link>.
           </p>
@@ -37,8 +37,8 @@ export default function PortalInstitutoPage() {
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-center mb-10"><Marca /></div>
 
-        <p className="text-xs uppercase tracking-[0.2em] text-white/40">THEYE Institute</p>
-        <h1 className="text-3xl font-serif mt-2 mb-3">{portal.nome}</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-neutral-300">Instituto DI</p>
+        <h1 className="text-3xl font-serif text-white mt-2 mb-3">{portal.nome}</h1>
         <p className="text-base text-white/80">{portal.resumo}</p>
 
         <p
@@ -50,22 +50,22 @@ export default function PortalInstitutoPage() {
         </p>
         <p className="text-sm text-white/60 mt-3">{portal.comoEsta}</p>
 
-        <h2 className="text-lg font-serif mt-10 mb-3">O que esta porta vai fazer</h2>
+        <h2 className="text-lg font-serif text-white mt-10 mb-3">O que esta porta vai fazer</h2>
         <ul className="space-y-3" data-testid="escopo-portal">
           {portal.escopo.map(item => (
             <li key={item} className="text-sm text-white/80 flex gap-3">
-              <span aria-hidden="true" className="text-white/30">—</span>
+              <span aria-hidden="true" className="text-neutral-400">—</span>
               <span>{item}</span>
             </li>
           ))}
         </ul>
 
         {/* Sem prazo, de propósito: é regra do plano, e fica dito na própria página. */}
-        <p className="text-xs text-white/40 mt-6">
+        <p className="text-xs text-neutral-300 mt-6">
           Esta página diz o escopo e o estado, e não promete data. Quando houver o que usar, ela deixa de ser esta página.
         </p>
 
-        <h2 className="text-lg font-serif mt-10 mb-3">Quer acompanhar?</h2>
+        <h2 className="text-lg font-serif text-white mt-10 mb-3">Quer acompanhar?</h2>
         <p className="text-sm text-white/70">
           O endereço de contato do Instituto está sendo ligado. Até ele responder, quem já usa a
           plataforma de direito fala pela própria plataforma, e quem ainda não usa pode começar pela{' '}

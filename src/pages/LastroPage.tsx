@@ -62,8 +62,8 @@ export default function LastroPage() {
     <div className="min-h-screen bg-black text-white px-4 py-10">
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-center mb-10"><Marca /></div>
-        <p className="text-xs uppercase tracking-[0.2em] text-white/40">THEYE Institute</p>
-        <h1 className="text-3xl font-serif mt-2 mb-4">Conferir o lastro</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-neutral-300">Instituto DI</p>
+        <h1 className="text-3xl font-serif text-white mt-2 mb-4">Conferir o lastro</h1>
 
         <p className="text-base text-white/80">
           Cada volta de trabalho nesta plataforma vira um registro, e cada registro carrega o código
@@ -105,7 +105,7 @@ export default function LastroPage() {
               </div>
             )}
 
-            <h2 className="text-lg font-serif mt-10 mb-3">Até onde o plano andou</h2>
+            <h2 className="text-lg font-serif text-white mt-10 mb-3">Até onde o plano andou</h2>
             <div className="border border-white/20 p-5" data-testid="painel-avanco">
               <p className="text-sm text-white/60">Passos do plano registrados na corrente</p>
               <p className="text-3xl font-serif mt-1">{av.passos.length}</p>
@@ -143,7 +143,7 @@ export default function LastroPage() {
               </div>
             )}
 
-            <h2 className="text-lg font-serif mt-10 mb-3">Como conferir por fora, sem acreditar em nós</h2>
+            <h2 className="text-lg font-serif text-white mt-10 mb-3">Como conferir por fora, sem acreditar em nós</h2>
             <ol className="space-y-3 text-sm text-white/80 list-decimal pl-5">
               <li>Baixe o arquivo do registro: <a href={ONDE[1]} title="Baixa o arquivo com todos os registros, um por linha, direto do repositório publicado" className="underline decoration-white/40">trilho-v4.jsonl</a>. É texto; cada linha é um registro.</li>
               <li>De cada linha, tire o campo <code>hash</code>. Escreva o resto em ordem alfabética de campo, no formato do Python <code>json.dumps(…, ensure_ascii=False, sort_keys=True)</code>.</li>
@@ -154,7 +154,7 @@ export default function LastroPage() {
               Último código da corrente: <code className="break-all" data-testid="ultimo-hash">{conf.ultimoHash}</code>
             </p>
 
-            <h2 className="text-lg font-serif mt-10 mb-3">O que ainda falta</h2>
+            <h2 className="text-lg font-serif text-white mt-10 mb-3">O que ainda falta</h2>
             <p className="text-sm text-white/70">
               Falta gravar esse último código numa blockchain pública, para a data ficar provada por
               fora da nossa casa. O programa para isso já existe aqui; o que falta é a autorização do
@@ -167,7 +167,7 @@ export default function LastroPage() {
               <ul className="mt-4 space-y-1 text-xs" data-testid="lista-elos">
                 {conf.elos.map(e => (
                   <li key={e.n} className="flex gap-3">
-                    <span className="text-white/30 w-8 shrink-0 text-right">{e.n}</span>
+                    <span className="text-neutral-400 w-8 shrink-0 text-right">{e.n}</span>
                     <span className="flex-1">{e.passo}</span>
                     <span className={e.ligado ? 'text-white/50' : 'text-white'} title={e.ligado ? 'Aponta para o código do registro anterior' : 'NÃO aponta para o código do registro anterior'}>{e.ligado ? 'ligado' : 'solto'}</span>
                     <span className={e.reproduzido ? 'text-white/50' : 'text-white/80'} title={e.reproduzido ? 'Código recalculado igual ao escrito' : 'Receita antiga: não foi recalculado'}>{e.reproduzido ? 'recalculado' : 'receita antiga'}</span>

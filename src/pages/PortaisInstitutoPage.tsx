@@ -14,8 +14,8 @@ export default function PortaisInstitutoPage() {
     <div className="min-h-screen bg-black text-white px-4 py-10">
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-center mb-10"><Marca /></div>
-        <p className="text-xs uppercase tracking-[0.2em] text-white/40">THEYE Institute</p>
-        <h1 className="text-3xl font-serif mt-2 mb-3">Portas em desenvolvimento</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-neutral-300">Instituto DI</p>
+        <h1 className="text-3xl font-serif text-white mt-2 mb-3">Portas em desenvolvimento</h1>
         <p className="text-base text-white/80">
           Cada porta abaixo diz o que vai fazer e em que pé está. Nenhuma promete data. A plataforma
           de direito, que já está no ar, entra pela{' '}
@@ -26,7 +26,7 @@ export default function PortaisInstitutoPage() {
             <li key={p.rota} className="border-t border-white/10 pt-5">
               <Link to={p.rota} title={`Abre a página de ${p.nome}, com o escopo e o estado`} className="text-xl font-serif hover:text-white/70 no-underline">{p.nome}</Link>
               <p className="text-sm text-white/70 mt-1">{p.resumo}</p>
-              <p className="text-xs uppercase tracking-wider text-white/40 mt-2" title={EXPLICACAO_ESTADO[p.estado]}>{ROTULO_ESTADO[p.estado]}</p>
+              <p className="text-xs uppercase tracking-wider text-neutral-300 mt-2" title={EXPLICACAO_ESTADO[p.estado]}>{ROTULO_ESTADO[p.estado]}</p>
             </li>
           ))}
         </ul>

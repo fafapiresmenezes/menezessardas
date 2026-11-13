@@ -52,6 +52,8 @@ sed "s#\"src\": \"icone-#\"src\": \"$CDN/icone-#g" dist-prod/manifest.webmanifes
 # O trilho vai junto: a tela /lastro o baixa para recalcular a corrente no navegador de quem
 # duvida. Sem ele em theye.club, a tela cai na reserva pelo jsDelivr, que atrasa até 12 h.
 cp dist-prod/robots.txt dist-prod/sitemap.xml dist-prod/sw.js dist-prod/trilho-v4.jsonl "$PASTA/"
+# Imagem social (og:image): crawlers de WhatsApp, Facebook e Twitter preferem o mesmo domínio.
+[ -f dist-prod/og-instituto.png ] && cp dist-prod/og-instituto.png "$PASTA/"
 # Os cabeçalhos de segurança (pedido de M, 13/11/2026 21:38: "blinde"). Sem ESTE arquivo no envio,
 # a Vercel serve o site sem Content-Security-Policy, sem HSTS e sem anti-moldura: foi o que estava
 # acontecendo até 13/11/2026, porque o vercel.json existia no repositório e nunca era enviado.
