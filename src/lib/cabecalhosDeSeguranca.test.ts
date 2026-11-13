@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
+import { createHash } from 'node:crypto'
 
 /**
  * Pedido de M em 13/11/2026 21:38 UTC: "Proteja o site e todas as páginas e a plataforma com a
@@ -72,6 +73,24 @@ describe('cabeçalhos de segurança do site', () => {
     expect(pp).toContain('payment=()')
     // a tela de geolocalização precisa do próprio domínio, e só dele
     expect(pp).toContain('geolocation=(self)')
+  })
+
+  it('o script de tema que vive dentro do index.html continua liberado pelo seu hash', () => {
+    // script-src sem 'unsafe-inline' bloqueia TODO script escrito na página. O que libera este, e
+    // só este, é o hash do seu conteúdo. Se alguém mexer no script e esquecer o hash, o tema
+    // escuro para de carregar antes da tela — e o navegador reclama no console. Daí este teste
+    // recalcular o hash do arquivo em vez de confiar no que está escrito no vercel.json.
+    const html = readFileSync('index.html', 'utf-8')
+    const inline = [...html.matchAll(/<script(?![^>]*\ssrc=)[^>]*>([\s\S]*?)<\/script>/g)].map(m => m[1])
+    expect(inline.length).toBe(1)
+    const hash = createHash('sha256').update(inline[0]).digest('base64')
+    expect(valor('Content-Security-Policy')).toContain(`'sha256-${hash}'`)
+  })
+
+  it('as fontes do Google continuam permitidas, senão a tela abre sem a letra certa', () => {
+    const csp = valor('Content-Security-Policy')
+    expect(csp.match(/style-src[^;]*/)![0]).toContain('https://fonts.googleapis.com')
+    expect(csp.match(/font-src[^;]*/)![0]).toContain('https://fonts.gstatic.com')
   })
 
   it('a página inicial nunca fica guardada em cache do navegador', () => {
