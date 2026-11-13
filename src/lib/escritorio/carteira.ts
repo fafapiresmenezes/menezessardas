@@ -3,6 +3,7 @@
 // que reduzem ruído: variações de grafia do nome, filtros "contém / não contém" e aviso de processo novo.
 import { validarCnj } from '@/lib/ferramentas/documentos'
 import { extrairNumeros, lerDescricao } from './importarProcessos'
+import { chaveDaArea } from '@/lib/areaDoDireito'
 
 export type CasoCarteira = { id: string; titulo: string; cliente: string | null; area: string | null; numero_processo: string | null; situacao: string; responsavel_id: string | null; descricao?: string | null; criado_em?: string; honorario_previsto?: number }
 export type MonCarteira = { valor: string; tipo: string; ultimo_estado: { classe?: string | null; orgao?: string | null; encontrado?: boolean; chaves?: string[] } | null; novidades: { data: string; texto: string }[]; verificado_em: string | null }
@@ -57,7 +58,7 @@ export function filtrarCarteira(linhas: LinhaCarteira[], f: FiltroCarteira): Lin
   const td = so(f.texto)
   return linhas.filter(l =>
     (!t || norm(`${l.titulo} ${l.cliente ?? ''} ${l.parteContraria ?? ''} ${l.classe ?? ''} ${l.orgao ?? ''}`).includes(t) || (td.length >= 4 && l.numero.includes(td))) &&
-    (!f.area || l.area === f.area) && (!f.tribunal || l.tribunal === f.tribunal) && (!f.responsavel || l.responsavel_id === f.responsavel) &&
+    (!f.area || chaveDaArea(l.area) === chaveDaArea(f.area)) && (!f.tribunal || l.tribunal === f.tribunal) && (!f.responsavel || l.responsavel_id === f.responsavel) &&
     (f.situacao === 'todos' || (f.situacao === 'encerrados' ? l.situacao === 'feito' : l.situacao !== 'feito')) &&
     (!f.alerta || (f.alerta === 'parado90' && (l.parado ?? 0) > 90) || (f.alerta === 'parado180' && (l.parado ?? 0) > 180) || (f.alerta === 'intimacao' && l.intimacoesNaoLidas > 0) ||
       (f.alerta === 'sem_monitor' && !!l.numero && !l.monitorado) || (f.alerta === 'nao_encontrado' && l.naoEncontrado)))

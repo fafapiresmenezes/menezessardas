@@ -30,6 +30,16 @@ export const descricaoCargo: Record<Cargo | 'nenhum', string> = {
 
 export type MapaCargos = Record<string, Cargo>
 
+/** Quem está olhando: identidade, cargo e se enxerga o escritório inteiro. */
+export type Alcance = { id: string; cargo: Cargo | null; admin: boolean; veTudo: boolean }
+
+/**
+ * Alcance mais estreito que existe: ninguém conhecido, nenhum cargo, nada além do que não tem dono.
+ * É o valor com que as telas começam e o que usam quando não conseguem saber quem está logado:
+ * errar para o lado de esconder é só um incômodo; errar para o lado de mostrar vaza o caso do colega.
+ */
+export const ALCANCE_FECHADO: Alcance = { id: '', cargo: null, admin: false, veTudo: false }
+
 /** Sócio e gestor enxergam o escritório inteiro; os demais, só o que é deles. */
 export function veTudo(cargo: Cargo | null | undefined): boolean {
   return cargo === 'socio' || cargo === 'gestor'
@@ -94,7 +104,7 @@ export async function definirCargo(usuarioId: string, cargo: Cargo | null): Prom
 }
 
 /** Cargo e visão de quem está logado, numa chamada só. */
-export async function meuAlcance(): Promise<{ id: string; cargo: Cargo | null; admin: boolean; veTudo: boolean }> {
+export async function meuAlcance(): Promise<Alcance> {
   if (!supabaseConfigurado) return { id: 'demo', cargo: 'socio', admin: true, veTudo: true }
   const [u, cargos, perfil] = await Promise.all([
     Promise.resolve(supabase.auth?.getUser?.()).then(r => r?.data?.user?.id ?? '', () => ''),
@@ -104,6 +114,7 @@ export async function meuAlcance(): Promise<{ id: string; cargo: Cargo | null; a
   const id = u
   const cargo = cargos[id] ?? null
   const admin = perfil === 'admin'
-  // Sem identidade conhecida não dá para personalizar: mostra tudo e deixa a RLS do banco proteger.
-  return { id, cargo, admin, veTudo: admin || veTudo(cargo) || !id }
+  // Sem cargo definido (ou sem saber quem está logado) vale o alcance mais estreito, nunca o mais largo:
+  // a hierarquia do escritório ainda vai ser nomeada, e até lá cada pessoa vê o que é seu.
+  return { id, cargo, admin, veTudo: admin || veTudo(cargo) }
 }

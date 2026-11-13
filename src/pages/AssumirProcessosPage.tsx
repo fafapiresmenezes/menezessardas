@@ -68,6 +68,8 @@ export default function AssumirProcessosPage() {
   const [ramo, setRamo] = useState<Codigo | 'todos'>('todos')
   const [aviso, setAviso] = useState('')
   const [casosCadastrados, setCasosCadastrados] = useState<string[] | null>(null)
+  // Privacidade por advogado: tudo que esta tela cria nasce no nome de quem está assumindo os processos.
+  const [eu, setEu] = useState('')
   const [planilha, setPlanilha] = useState<{ nome: string; linhas: LinhaImportacao[] } | null>(null)
   const [cadastro, setCadastro] = useState('')
   const parar = useRef(false)
@@ -85,6 +87,7 @@ export default function AssumirProcessosPage() {
     supabase.auth?.getUser?.().then(({ data }) => {
       const id = data?.user?.id
       if (!id) return
+      setEu(id)
       const minha = `${CHAVE}:${id}`
       const migrar = chaveAtual === CHAVE && !localStorage.getItem(minha) && localStorage.getItem(CHAVE)
       chaveAtual = minha
@@ -112,7 +115,7 @@ export default function AssumirProcessosPage() {
     const novos = linhas.filter(importavel)
     if (!novos.length) return setCadastro('Todos já estão cadastrados.')
     setCadastro(`Cadastrando ${novos.length} processo(s)…`)
-    const casos = novos.map(l => paraCaso(l, origem, null))
+    const casos = novos.map(l => paraCaso(l, origem, eu || null))
     let gravados = 0
     const falhas: string[] = []
     for (let i = 0; i < casos.length; i += 50) {
@@ -203,7 +206,7 @@ export default function AssumirProcessosPage() {
       let caso = porNumero.get(dig)
       if (!caso) {
         const titulo = `Processo ${l.publicacao.numero}${l.publicacao.partes[0] ? ` · ${l.publicacao.partes.map(p => p.nome).slice(0, 2).join(' x ')}` : ''}`.slice(0, 200)
-        const { data: novo, error } = await supabase.from('tarefas').insert({ titulo, nivel: 'projeto', tipo: 'caso', numero_processo: l.publicacao.numero, situacao: 'fazendo', prioridade: 'media', descricao: `Caso aberto ao assumir processos de ${s.nome || 'outro advogado'} em ${br(hoje)}.` }).select('id,numero_processo,cliente,area').single()
+        const { data: novo, error } = await supabase.from('tarefas').insert({ titulo, nivel: 'projeto', tipo: 'caso', numero_processo: l.publicacao.numero, situacao: 'fazendo', prioridade: 'media', responsavel_id: eu || null, descricao: `Caso aberto ao assumir processos de ${s.nome || 'outro advogado'} em ${br(hoje)}.` }).select('id,numero_processo,cliente,area').single()
         if (error || !novo) { falhas.push(`${l.publicacao.numero}: ${mensagemAmigavel(error)}`); continue }
         caso = novo as Caso
         porNumero.set(dig, caso)
@@ -213,7 +216,7 @@ export default function AssumirProcessosPage() {
       const rascunho = sete > hoje ? sete : hoje
       const { error } = await supabase.from('tarefas').insert({
         titulo: `${l.oQueFazer.split('.')[0]} · ${l.publicacao.numero}`.slice(0, 200), nivel: 'tarefa', pai_id: caso!.id, prazo: l.vence, numero_processo: l.publicacao.numero,
-        cliente: caso!.cliente, area: caso!.area, situacao: 'a_fazer', prioridade: l.urgencia === 'vencido' || l.urgencia === 'urgente' ? 'alta' : 'media',
+        cliente: caso!.cliente, area: caso!.area, situacao: 'a_fazer', prioridade: l.urgencia === 'vencido' || l.urgencia === 'urgente' ? 'alta' : 'media', responsavel_id: eu || null,
         descricao: `${linhaDoPrazo(l)}\nTer o rascunho pronto até ${br(rascunho)}.\nTrecho da publicação: ${l.trecho}\nLeitura automática: confira o prazo na publicação antes de protocolar.`,
       })
       if (error) falhas.push(`${l.publicacao.numero}: ${mensagemAmigavel(error)}`); else feitos.push(l.chave)

@@ -33,6 +33,7 @@ export default function ImportarProcessosPage() {
   const [existentes, setExistentes] = useState<string[]>([])
   const [pessoas, setPessoas] = useState<Pessoa[]>([])
   const [responsavel, setResponsavel] = useState('')
+  const [eu, setEu] = useState('')
   const [monitorar, setMonitorar] = useState(true)
   const [marcadas, setMarcadas] = useState<Set<number>>(new Set())
   const [termo, setTermo] = useState('')
@@ -46,6 +47,14 @@ export default function ImportarProcessosPage() {
   const [avisoHistorico, setAvisoHistorico] = useState('')
   const [progresso, setProgresso] = useState<{ feitos: number; total: number; novas: number } | null>(null)
   const parar = useRef(false)
+  // Privacidade por advogado: o caso importado nasce com dono (quem importa), senão o escritório inteiro o vê.
+  useEffect(() => {
+    Promise.resolve(supabase.auth?.getUser?.()).then(r => {
+      const id = r?.data?.user?.id
+      if (!id) return
+      setEu(id); setResponsavel(atual => atual || id)
+    }, () => undefined)
+  }, [])
   useEffect(() => {
     ;(async () => {
       try {
@@ -246,7 +255,7 @@ export default function ImportarProcessosPage() {
             <div className="flex flex-wrap items-center gap-4 mt-4 text-sm">
               <label className="inline-flex items-center gap-2"><input type="checkbox" checked={monitorar} onChange={e => setMonitorar(e.target.checked)} data-testid="importar-monitorar" /> Monitorar no DataJud (andamentos novos todo dia)</label>
               <label className="inline-flex items-center gap-2">Responsável
-                <select value={responsavel} onChange={e => setResponsavel(e.target.value)} className="border px-2 py-1" title="Escolhe quem fica responsável pelos casos que serão importados" aria-label="Responsável pelos casos importados"><option value="">Ninguém por enquanto</option>{pessoas.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}</select></label>
+                <select value={responsavel} onChange={e => setResponsavel(e.target.value)} className="border px-2 py-1" title="Escolhe quem fica responsável pelos casos importados. Só o responsável, os sócios e o gestor veem o caso; sem responsável, o escritório inteiro vê." aria-label="Responsável pelos casos importados"><option value="">Ninguém (o escritório inteiro vê)</option>{eu && !pessoas.some(p => p.id === eu) && <option value={eu}>Eu</option>}{pessoas.map(p => <option key={p.id} value={p.id}>{p.nome}{p.id === eu ? ' (eu)' : ''}</option>)}</select></label>
               <button type="button" onClick={importar} disabled={importando || !prontas.length} title="Grava os processos marcados como casos em Projetos e, se marcado, coloca cada um no monitoramento diário do DataJud" data-testid="importar-processos" className="min-h-[44px] px-5 bg-dourado text-navy uppercase tracking-wider text-sm disabled:opacity-50">{importando ? 'Importando…' : `Importar ${prontas.length} processo(s)`}</button>
             </div>
           </section>

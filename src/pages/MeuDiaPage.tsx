@@ -8,7 +8,8 @@ import { CalendarClock, Inbox, ListChecks, FileWarning, Mail } from 'lucide-reac
 import { extrairAcoes } from '@/lib/acoesConsultor'
 import ConsultorSemana from '@/components/ConsultorSemana'
 import { hojeLocal, isoLocal } from '@/lib/datas'
-import { AREAS_DIREITO } from '@/lib/assistente'
+import { agruparPorArea } from '@/lib/areaDoDireito'
+import { meuAlcance, filtrarPorHierarquia, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // "Meu dia": o que cada nível do escritório precisa ver ao abrir a plataforma, num só lugar.
 // O papel escolhido define a ordem e os atalhos; os dados são os mesmos para todos (respeitando o sigilo).
@@ -39,20 +40,11 @@ const DINHEIRO = new Set(['valor_60_dias', 'honorarios_em_aberto'])
 const brl = (v: number) => 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 type Resumo = { semana: string; socia: Record<string, string | number>; advogada: Record<string, string | number>; secretaria: Record<string, string | number> }
 const hoje = () => hojeLocal()
+const so = (n: string | null | undefined) => String(n ?? '').replace(/\D/g, '') // número do processo só com dígitos
 const fmt = (d: string) => new Date(`${d}T12:00`).toLocaleDateString('pt-BR')
 
-// Tarefas separadas por área do direito (pedido do M, 12/11/2026): a mais urgente primeiro dentro de cada bloco.
-export function agruparPorArea<T extends { area: string | null; prazo: string | null }>(tarefas: T[]): { area: string; nome: string; itens: T[] }[] {
-  const nomes = new Map(AREAS_DIREITO.map(a => [a.chave, a.nome]))
-  const grupos = new Map<string, T[]>()
-  for (const t of tarefas) {
-    const chave = t.area && nomes.has(t.area) ? t.area : (t.area || 'geral')
-    grupos.set(chave, [...(grupos.get(chave) ?? []), t])
-  }
-  return [...grupos.entries()]
-    .map(([area, itens]) => ({ area, nome: nomes.get(area) ?? (area === 'geral' ? 'Geral (sem área marcada)' : area), itens }))
-    .sort((a, b) => (a.itens[0]?.prazo ?? '9999').localeCompare(b.itens[0]?.prazo ?? '9999'))
-}
+// Tarefas separadas por tipo de direito: o agrupamento vive em @/lib/areaDoDireito e é o mesmo
+// usado na carteira de processos, para "Trabalhista" (planilha) e "trabalhista" (chave) caírem no mesmo bloco.
 
 export default function MeuDiaPage() {
   const [papel, setPapel] = useState(() => { try { return localStorage.getItem('lsm-papel') || 'advogada' } catch { return 'advogada' } })
@@ -106,13 +98,22 @@ export default function MeuDiaPage() {
       const em7 = isoLocal(new Date(Date.now() + 7 * 86400000))
       const em60 = isoLocal(new Date(Date.now() + 60 * 86400000))
       const ha7 = new Date(Date.now() - 7 * 86400000).toISOString()
-      const [t, i, c, mv] = await Promise.all([
+      const [t, alc, casos, i, c, mv] = await Promise.all([
         supabase.from('tarefas').select('id,titulo,prazo,prioridade,area').eq('responsavel_id', u.user?.id ?? '').neq('situacao', 'feito').lte('prazo', em7).order('prazo').limit(40),
-        supabase.from('intimacoes').select('id', { count: 'exact', head: true }).eq('lida', false),
+        meuAlcance().catch(() => ALCANCE_FECHADO),
+        supabase.from('tarefas').select('numero_processo,responsavel_id').eq('nivel', 'projeto'),
+        supabase.from('intimacoes').select('id,numero_processo').eq('lida', false),
         supabase.from('contratos').select('id,imovel_id,locatario_fornecedor,data_vencimento').is('encerrado_em', null).gte('data_vencimento', hoje()).lte('data_vencimento', em60).order('data_vencimento').limit(10),
         supabase.from('monitoramentos').select('id,valor,rotulo,novidade_em,novidades').gte('novidade_em', ha7).order('novidade_em', { ascending: false }).limit(5),
       ])
-      setTarefas(t.data ?? []); setIntimacoes(i.count ?? 0); setVencendo(c.data ?? []); setMovimentacoes((mv?.data ?? []).filter(m => (m.novidades ?? []).length > 0))
+      // Privacidade por advogado: intimações e movimentações do dia só aparecem se o caso é visível para quem olha.
+      // Processo que ainda não é caso do escritório não tem dono e continua aparecendo para todos — alguém precisa assumi-lo.
+      const meusCasos = new Set(filtrarPorHierarquia((casos.data ?? []) as { numero_processo: string | null; responsavel_id: string | null }[], alc).map(x => so(x.numero_processo)))
+      const comDono = new Set(((casos.data ?? []) as { numero_processo: string | null; responsavel_id: string | null }[]).filter(x => x.responsavel_id).map(x => so(x.numero_processo)))
+      const meu = (numero: string | null | undefined) => { const n = so(numero); return alc.veTudo || !comDono.has(n) || meusCasos.has(n) }
+      setTarefas(t.data ?? [])
+      setIntimacoes(((i.data ?? []) as { numero_processo: string | null }[]).filter(x => meu(x.numero_processo)).length)
+      setVencendo(c.data ?? []); setMovimentacoes((mv?.data ?? []).filter(m => (m.novidades ?? []).length > 0 && meu(m.valor)))
     })()
   }, [])
   const p = PAPEIS[papel]

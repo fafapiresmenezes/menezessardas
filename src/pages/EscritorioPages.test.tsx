@@ -21,7 +21,7 @@ const txt = (id: string) => (screen.getByTestId(id).textContent ?? '').replace(/
 beforeEach(() => { cleanup(); localStorage.clear(); window.confirm = () => true })
 
 describe('Importar processos anteriores', () => {
-  beforeEach(() => { falso = criarSupabaseFalso({ tarefas: [{ id: 't0', nivel: 'projeto', numero_processo: B, titulo: 'Já existe' }] }) })
+  beforeEach(() => { falso = criarSupabaseFalso({ tarefas: [{ id: 't0', nivel: 'projeto', numero_processo: B, titulo: 'Já existe' }] }); falso.definirUsuario('u9') })
 
   it('planilha colada: confere, mostra situação de cada linha e importa como casos monitorados', async () => {
     tela(<ImportarProcessosPage />)
@@ -37,6 +37,7 @@ describe('Importar processos anteriores', () => {
     await screen.findByTestId('importar-relatorio')
     expect(txt('importar-relatorio')).toContain('2 caso(s) criado(s), 1 no monitoramento')
     const novos = falso.tabelas.tarefas.filter(t => t.id !== 't0')
+    expect(novos.every(t => t.responsavel_id === 'u9')).toBe(true) // nasce com dono: só ele e os sócios veem
     expect(novos).toEqual(expect.arrayContaining([expect.objectContaining({ titulo: 'Maria x Imob X', numero_processo: A, area: 'Imobiliário', honorario_previsto: 5000, nivel: 'projeto', tipo: 'caso' }), expect.objectContaining({ cliente: 'Pedro', numero_processo: null, honorario_previsto: 3000 })]))
     expect(falso.tabelas.monitoramentos).toEqual([expect.objectContaining({ tipo: 'processo', valor: d(A) })])
     expect(screen.getAllByTestId('linha-processo')[0].textContent).toContain('Já cadastrado')
@@ -150,6 +151,8 @@ describe('Carteira de processos', () => {
       monitoramentos: [{ tipo: 'processo', valor: d(A), ultimo_estado: { classe: 'Despejo', encontrado: true, chaves: ['2025-01-10T00:00:00|Despacho'] }, novidades: [], verificado_em: '2026-11-09' }],
       intimacoes: [{ numero_processo: A, lida: false, data_disponibilizacao: '2026-11-08', prazo_final: '2099-01-01' }],
     })
+    // Privacidade por advogado: quem olha é a Dra. Ana (u1), sem cargo definido — vê o que é dela e o que não tem dono.
+    falso.definirUsuario('u1')
   })
   it('lista só processos, com alertas, filtros, monitoramento em lote e encerramento', async () => {
     tela(<CarteiraProcessosPage />)
@@ -174,6 +177,44 @@ describe('Carteira de processos', () => {
     fireEvent.change(screen.getByTestId('carteira-situacao'), { target: { value: 'encerrados' } })
     expect(screen.getAllByTestId('carteira-linha')).toHaveLength(1)
   })
+  it('privacidade por advogado: sem cargo definido, cada um vê só os seus processos e os sem dono', async () => {
+    falso.tabelas.tarefas.push({ id: 'c4', nivel: 'projeto', tipo: 'caso', titulo: 'Reclamação do colega', cliente: 'Pedro', area: 'trabalhista', numero_processo: cnj(4321), situacao: 'fazendo', responsavel_id: 'u2', criado_em: '2026-01-04' })
+    tela(<CarteiraProcessosPage />)
+    const linhas = await screen.findAllByTestId('carteira-linha')
+    expect(linhas).toHaveLength(2)
+    expect(screen.queryByText('Reclamação do colega')).toBeNull()
+    expect(screen.getByTestId('carteira-alcance').textContent).toContain('só os seus processos')
+  })
+
+  it('sócio vê a carteira inteira do escritório, inclusive o processo do colega', async () => {
+    falso.tabelas.tarefas.push({ id: 'c4', nivel: 'projeto', tipo: 'caso', titulo: 'Reclamação do colega', cliente: 'Pedro', area: 'trabalhista', numero_processo: cnj(4321), situacao: 'fazendo', responsavel_id: 'u2', criado_em: '2026-01-04' })
+    falso.responderRpc(nome => (nome === 'config_ler' ? { data: [{ chave: 'cargos', valor: JSON.stringify({ u1: 'socio' }) }], error: null } : { data: null, error: null }))
+    tela(<CarteiraProcessosPage />)
+    expect(await screen.findByText('Reclamação do colega')).toBeTruthy()
+    expect(screen.getAllByTestId('carteira-linha')).toHaveLength(3)
+    expect(screen.getByTestId('carteira-alcance').textContent).toContain('carteira inteira')
+  })
+
+  it('sem saber quem está logado, mostra o alcance mais estreito: só os processos sem dono', async () => {
+    falso.definirUsuario(null)
+    tela(<CarteiraProcessosPage />)
+    const linhas = await screen.findAllByTestId('carteira-linha')
+    expect(linhas).toHaveLength(1)
+    expect(linhas[0].textContent).toContain('Cobrança João')
+  })
+
+  it('separa a carteira por tipo de direito: "Trabalhista: 2" junta a chave e o rótulo da planilha', async () => {
+    falso.tabelas.tarefas.push(
+      { id: 'c4', nivel: 'projeto', tipo: 'caso', titulo: 'Verbas Ana', area: 'trabalhista', numero_processo: cnj(4321), situacao: 'fazendo', responsavel_id: 'u1', criado_em: '2026-01-04' },
+      { id: 'c5', nivel: 'projeto', tipo: 'caso', titulo: 'Rescisão Bia', area: 'Trabalhista', numero_processo: cnj(8765), situacao: 'fazendo', responsavel_id: 'u1', criado_em: '2026-01-05' },
+    )
+    tela(<CarteiraProcessosPage />)
+    const chips = await screen.findByTestId('carteira-por-area')
+    expect(chips.textContent).toContain('Trabalhista: 2')
+    fireEvent.click(screen.getByTestId('carteira-area-trabalhista'))
+    expect(screen.getAllByTestId('carteira-linha')).toHaveLength(2)
+  })
+
   it('carteira vazia leva para a importação', async () => {
     falso = criarSupabaseFalso({ tarefas: [] })
     tela(<CarteiraProcessosPage />)
@@ -223,6 +264,9 @@ describe('Financeiro', () => {
       parcelas_honorarios: [{ id: 1, caso_id: 'c1', numero: 2, vencimento: '2020-01-01', valor: 800, pago_em: null }],
       tarefas: [{ id: 'c1', nivel: 'projeto', titulo: 'Despejo', cliente: 'Maria', area: 'Imobiliário', honorario_previsto: 3000, honorario_recebido: 1500, vencimento_honorario: null }],
     })
+    // Quem abre o financeiro aqui é a administração do escritório, que vê os números do conjunto.
+    falso.definirUsuario('u1')
+    falso.responderRpc(nome => ({ data: nome === 'perfil_atual' ? 'admin' : null, error: null }))
   })
   it('mostra honorários no fluxo, lança despesa recorrente, marca como paga e calcula reembolso', async () => {
     tela(<FinanceiroPage />)
