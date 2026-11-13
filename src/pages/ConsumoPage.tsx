@@ -246,7 +246,7 @@ export default function ConsumoPage() {
             <div className="flex flex-wrap gap-3 items-end">
               <label className="text-sm">
                 <span className="block mb-1">Valor em reais</span>
-                <input id="teto" inputMode="decimal" value={teto} onChange={e => setTeto(e.target.value)} placeholder="ex.: 300" className="border border-navy/20 px-3 min-h-[44px] w-40" />
+                <input id="teto" title="Quanto o escritório aceita gastar com IA por mês. Chegando perto, a plataforma avisa; em branco, não há teto." inputMode="decimal" value={teto} onChange={e => setTeto(e.target.value)} placeholder="ex.: 300" className="border border-navy/20 px-3 min-h-[44px] w-40" />
               </label>
               <button onClick={salvarTeto} title="Grava o teto mensal de gasto com IA; em branco, remove o teto" className="min-h-[44px] px-5 bg-navy text-white text-sm">Salvar teto</button>
               {sede && <button type="button" onClick={testarAviso} disabled={testandoAviso} data-testid="testar-aviso-teto" title="Envia agora um e-mail de teste do aviso de teto para conferir se o alerta automático funciona" className="min-h-[44px] px-5 border border-navy text-navy text-sm disabled:opacity-50">{testandoAviso ? 'Enviando…' : 'Testar e-mail de aviso'}</button>}

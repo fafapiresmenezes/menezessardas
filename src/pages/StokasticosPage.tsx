@@ -33,7 +33,7 @@ export default function StokasticosPage() {
     <div className="min-h-screen bg-black text-white font-serif">
       <header className="border-b border-white/15 px-4 sm:px-6 py-6">
         <div className="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-4">
-          <Link to="/stokasticos" className="block no-underline text-white hover:text-white">
+          <Link to="/stokasticos" title="Volta à entrada" className="block no-underline text-white hover:text-white">
             <p className="text-[11px] tracking-[0.3em] text-white/50 uppercase">Stokasticos</p>
             <h1 className="text-xl mt-1">Escola de magia do caos</h1>
             <p className="text-xs text-white/50 mt-1">homenagem a Peter J. Carroll</p>
@@ -200,7 +200,7 @@ function Raiz() {
 
 function Cartao({ numero, titulo, descricao, destino }: { numero: string; titulo: string; descricao: string; destino: string }) {
   return (
-    <Link to={destino} className="block no-underline text-white border border-white/20 hover:border-white p-6 transition">
+    <Link to={destino} title={descricao} className="block no-underline text-white border border-white/20 hover:border-white p-6 transition">
       <div className="text-xs tracking-widest uppercase text-white/50">{numero}</div>
       <div className="text-xl mt-2">{titulo}</div>
       <div className="text-sm text-white/60 mt-2">{descricao}</div>

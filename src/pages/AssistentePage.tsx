@@ -238,7 +238,7 @@ export default function AssistentePage() {
           )}
           {/* Bloco E: o estilo próprio vale para todos os modos (perguntas, peças e caminhos). */}
           <label className="flex items-center gap-2 mt-3 text-sm min-h-[44px]">
-            <input type="checkbox" checked={usarEstilo} onChange={e => setUsarEstilo(e.target.checked)} data-testid="usar-estilo" />
+            <input type="checkbox" title="Marcado, o robô escreve imitando as suas peças enviadas em Configurações, em vez do padrão da casa." checked={usarEstilo} onChange={e => setUsarEstilo(e.target.checked)} data-testid="usar-estilo" />
             Escrever no meu estilo e na minha formatação (peças enviadas em <a href="#/settings" title="Abre a página de Configurações, onde você envia peças para definir seu estilo e formatação" className="underline decoration-dourado">Configurações</a>)
           </label>
           <div className="flex flex-wrap items-center gap-2 mt-3">

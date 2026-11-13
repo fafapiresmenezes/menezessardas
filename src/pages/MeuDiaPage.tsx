@@ -143,7 +143,7 @@ export default function MeuDiaPage() {
           </div>
           <p className="text-sm text-grafite-claro mt-2">{p.foco}</p>
           <div className="flex flex-wrap gap-2 mt-3">
-            {p.atalhos.map(a => <Link key={a.href + a.rotulo} to={a.href} className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy text-navy">{a.rotulo}</Link>)}
+            {p.atalhos.map(a => <Link key={a.href + a.rotulo} to={a.href} title={`Abre ${a.rotulo}, um atalho da visão de ${p.nome}`} className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy text-navy">{a.rotulo}</Link>)}
             <button type="button" onClick={() => { copiarDia(); setDiaCopiado(true) }} data-testid="copiar-dia" title="Copia o seu dia em texto (tarefas, intimações e contratos vencendo) para colar na agenda ou enviar" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy">{diaCopiado ? 'Dia copiado' : 'Copiar meu dia'}</button>
             {/* Passo 140: imprimir o dia em uma página. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-dia" title="Abre a janela de impressão do navegador para imprimir o seu dia em uma página" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy print:hidden">Imprimir</button>
@@ -154,7 +154,7 @@ export default function MeuDiaPage() {
 
         {horas && horas.meta > 0 && (
           <section className={`${cartao} ${horas.abaixo ? 'border-l-4 border-critico' : ''}`} data-testid="alerta-horas" role={horas.abaixo ? 'alert' : undefined}>
-            <p className="text-sm"><strong>Horas do mês:</strong> {horas.horas}h lançadas, esperado até hoje {horas.esperado_hoje}h (meta {horas.meta}h). {horas.abaixo ? <span className="text-critico font-medium" data-testid="horas-abaixo">Abaixo de 80% do ritmo. </span> : <span data-testid="horas-ok">No ritmo. </span>}<Link to="/horas" className="underline">Lançar horas</Link></p>
+            <p className="text-sm"><strong>Horas do mês:</strong> {horas.horas}h lançadas, esperado até hoje {horas.esperado_hoje}h (meta {horas.meta}h). {horas.abaixo ? <span className="text-critico font-medium" data-testid="horas-abaixo">Abaixo de 80% do ritmo. </span> : <span data-testid="horas-ok">No ritmo. </span>}<Link to="/horas" title="Abre Horas trabalhadas para lançar as horas de hoje e fechar o ritmo do mês" className="underline">Lançar horas</Link></p>
           </section>
         )}
         <div className="grid gap-4 md:grid-cols-3">
@@ -175,16 +175,16 @@ export default function MeuDiaPage() {
           <section className={cartao}>
             <h2 className="font-serif text-lg flex items-center gap-2"><Inbox className="w-5 h-5" aria-hidden />Intimações</h2>
             <p className="text-3xl font-serif mt-2" data-testid="intimacoes-nao-lidas">{intimacoes}</p>
-            <p className="text-sm text-grafite-claro">não lidas · <Link to="/intimacoes" className="underline">abrir</Link></p>
+            <p className="text-sm text-grafite-claro">não lidas · <Link to="/intimacoes" title="Abre Intimações, com o texto de cada uma e o prazo que ela faz correr" className="underline">abrir</Link></p>
           </section>
           <section className={cartao} data-testid="movimentacoes">
             <h2 className="font-serif text-lg flex items-center gap-2"><Inbox className="w-5 h-5" aria-hidden />Movimentações nos processos (7 dias)</h2>
-            {movimentacoes.length ? <ul className="text-sm mt-2 space-y-1">{movimentacoes.map(m => <li key={m.id} data-testid="movimentacao"><Link to="/monitoramento" className="underline">{m.rotulo || m.valor}</Link>: {m.novidades[0].texto}{m.novidades.length > 1 && ` (+${m.novidades.length - 1})`}</li>)}</ul>
+            {movimentacoes.length ? <ul className="text-sm mt-2 space-y-1">{movimentacoes.map(m => <li key={m.id} data-testid="movimentacao"><Link to="/monitoramento" title="Abre o histórico deste processo no CNJ (DataJud), com todos os andamentos" className="underline">{m.rotulo || m.valor}</Link>: {m.novidades[0].texto}{m.novidades.length > 1 && ` (+${m.novidades.length - 1})`}</li>)}</ul>
               : <p className="text-sm text-grafite-claro mt-2">Nenhuma novidade. Casos com número CNJ são verificados no CNJ a cada 4 horas.</p>}
           </section>
           <section className={cartao}>
             <h2 className="font-serif text-lg flex items-center gap-2"><FileWarning className="w-5 h-5" aria-hidden />Contratos vencendo (60 dias)</h2>
-            {vencendo.length ? <ul className="text-sm mt-2 space-y-1">{vencendo.map(c => <li key={c.id}><Link to={`/contrato/${c.imovel_id}`} className="underline">{fmt(c.data_vencimento)} · {c.locatario_fornecedor}</Link></li>)}</ul>
+            {vencendo.length ? <ul className="text-sm mt-2 space-y-1">{vencendo.map(c => <li key={c.id}><Link to={`/contrato/${c.imovel_id}`} title={`Abre o contrato de ${c.locatario_fornecedor}, que vence em ${fmt(c.data_vencimento)}`} className="underline">{fmt(c.data_vencimento)} · {c.locatario_fornecedor}</Link></li>)}</ul>
               : <p className="text-sm text-grafite-claro mt-2">Nenhum nos próximos 60 dias.</p>}
           </section>
         </div>
@@ -207,9 +207,9 @@ export default function MeuDiaPage() {
         <section className={cartao}>
           <h2 className="font-serif text-lg flex items-center gap-2"><CalendarClock className="w-5 h-5" aria-hidden />Calculadora de prazo processual</h2>
           <div className="flex flex-wrap gap-3 items-end mt-3 text-sm">
-            <label>Data da intimação ou publicação<input type="date" value={calc.inicio} onChange={e => setCalc({ ...calc, inicio: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="prazo-inicio" /></label>
-            <label>Dias úteis<input type="number" min={1} max={365} value={calc.dias} onChange={e => setCalc({ ...calc, dias: Number(e.target.value) })} className="block border px-3 py-2 min-h-[44px] mt-1 w-24" data-testid="prazo-dias" /></label>
-            <label className="flex items-center gap-2 min-h-[44px]"><input type="checkbox" className="w-5 h-5 shrink-0" checked={calc.dobro} onChange={e => setCalc({ ...calc, dobro: e.target.checked })} />Em dobro (Fazenda, MP, Defensoria, litisconsortes)</label>
+            <label>Data da intimação ou publicação<input type="date" title="O dia em que a intimação saiu. A contagem começa no dia útil seguinte, não neste." value={calc.inicio} onChange={e => setCalc({ ...calc, inicio: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="prazo-inicio" /></label>
+            <label>Dias úteis<input type="number" title="Quantos dias úteis o prazo tem. Sábado, domingo e feriado não contam (art. 219 do CPC)." min={1} max={365} value={calc.dias} onChange={e => setCalc({ ...calc, dias: Number(e.target.value) })} className="block border px-3 py-2 min-h-[44px] mt-1 w-24" data-testid="prazo-dias" /></label>
+            <label className="flex items-center gap-2 min-h-[44px]"><input type="checkbox" title="Dobra o prazo. Vale para Fazenda Pública, Ministério Público, Defensoria e litisconsortes com advogados diferentes." className="w-5 h-5 shrink-0" checked={calc.dobro} onChange={e => setCalc({ ...calc, dobro: e.target.checked })} />Em dobro (Fazenda, MP, Defensoria, litisconsortes)</label>
           </div>
           {prazo && (
             <div className="mt-3" aria-live="polite">

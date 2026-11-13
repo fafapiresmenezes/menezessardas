@@ -68,14 +68,14 @@ export default function EnquetesPage() {
         {admin && criando && (
           <section className="bg-white shadow-sm p-6 space-y-3" data-testid="form-enquete">
             <h2 className="font-serif text-xl">Nova enquete</h2>
-            <label className="block text-sm"><span className="font-medium">Tema</span><input value={nova.tema} onChange={e => setNova({ ...nova, tema: e.target.value })} className="border w-full px-3 py-2 mt-1 min-h-[44px]" placeholder="ex.: IA no Judiciário" /></label>
-            <label className="block text-sm"><span className="font-medium">Pergunta</span><textarea value={nova.pergunta} onChange={e => setNova({ ...nova, pergunta: e.target.value })} rows={2} className="border w-full px-3 py-2 mt-1" /></label>
+            <label className="block text-sm"><span className="font-medium">Tema</span><input title="Em uma ou duas palavras, sobre o que é a enquete. Serve para achar depois." value={nova.tema} onChange={e => setNova({ ...nova, tema: e.target.value })} className="border w-full px-3 py-2 mt-1 min-h-[44px]" placeholder="ex.: IA no Judiciário" /></label>
+            <label className="block text-sm"><span className="font-medium">Pergunta</span><textarea title="A pergunta como as pessoas vão ler. Pergunta clara, resposta útil." value={nova.pergunta} onChange={e => setNova({ ...nova, pergunta: e.target.value })} rows={2} className="border w-full px-3 py-2 mt-1" /></label>
             <fieldset className="space-y-2"><legend className="text-sm font-medium">Opções (2 a 6)</legend>
               {nova.opcoes.map((o, i) => <input key={i} aria-label={`Opção ${i + 1}`} value={o} onChange={e => setNova({ ...nova, opcoes: nova.opcoes.map((x, j) => j === i ? e.target.value : x) })} className="border w-full px-3 py-2 min-h-[44px]" />)}
               {nova.opcoes.length < 6 && <button type="button" onClick={() => setNova({ ...nova, opcoes: [...nova.opcoes, ''] })} title="Acrescenta mais um campo de opção de resposta à enquete (máximo 6)" className="text-sm underline min-h-[44px]">Mais uma opção</button>}
             </fieldset>
             <div className="flex flex-wrap gap-4 items-center text-sm">
-              <label className="flex items-center gap-2"><input type="checkbox" checked={nova.publica} onChange={e => setNova({ ...nova, publica: e.target.checked })} className="w-5 h-5" />Pública no site do Instituto (só agregado, a partir de 10 votos)</label>
+              <label className="flex items-center gap-2"><input type="checkbox" title="Marcado, qualquer pessoa do escritório vê o resultado. Desmarcado, só a administração." checked={nova.publica} onChange={e => setNova({ ...nova, publica: e.target.checked })} className="w-5 h-5" />Pública no site do Instituto (só agregado, a partir de 10 votos)</label>
               <label className="flex items-center gap-2">Aberta por <input type="number" min={1} max={90} value={nova.dias} onChange={e => setNova({ ...nova, dias: Number(e.target.value) || 14 })} className="border w-20 px-2 py-1 min-h-[44px]" aria-label="Dias aberta" /> dias</label>
             </div>
             <button type="button" onClick={criar} title="Publica a enquete para a equipe votar pelo prazo definido" className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider">Criar enquete</button>

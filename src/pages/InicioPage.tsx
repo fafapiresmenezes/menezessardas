@@ -227,7 +227,7 @@ export default function InicioPage() {
         <summary className="cursor-pointer text-white/90 text-center min-h-[48px] flex items-center justify-center select-none underline" title={`Abre as ${AREAS.length} matérias do direito: cada uma leva ao assistente já preparado para aquele assunto`}>Ver todas as {AREAS.length} matérias do direito (cível, trabalhista, família, constitucional, administrativo…)</summary>
       <form className="w-full max-w-6xl mb-4 mt-3" onSubmit={e => { e.preventDefault(); const a = areasVisiveis[0]; if (a) abrir(a.destino, a.chave) }}>
         <label className="block text-white/80 text-sm">Para onde quer ir?
-          <input value={buscaArea} onChange={e => setBuscaArea(e.target.value)} placeholder="Ex.: contrato, despejo, trabalhista, INSS…" data-testid="busca-area" className="mt-1 w-full max-w-md block border border-dourado/60 bg-white/95 text-navy px-3 min-h-[44px]" />
+          <input title="Escreva o assunto, não o nome da tela: a plataforma acha a tela certa. Enter abre a primeira." value={buscaArea} onChange={e => setBuscaArea(e.target.value)} placeholder="Ex.: contrato, despejo, trabalhista, INSS…" data-testid="busca-area" className="mt-1 w-full max-w-md block border border-dourado/60 bg-white/95 text-navy px-3 min-h-[44px]" />
         </label>
         <details className="mt-1 text-white/80 text-xs" data-testid="mais-opcoes-inicio">
           <summary className="cursor-pointer min-h-[44px] inline-flex items-center underline select-none">Mais opções do mapa de áreas</summary>

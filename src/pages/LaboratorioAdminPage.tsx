@@ -97,7 +97,7 @@ export default function LaboratorioAdminPage() {
           {!assinado ? (
             <div className="space-y-3" data-testid="lab-aviso">
               <p className="text-sm border border-navy/20 p-4 bg-marfim/40">{AVISO}</p>
-              <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={marcado} onChange={e => setMarcado(e.target.checked)} className="mt-1 w-5 h-5 shrink-0" /><span>Li e assino este aviso como administrador(a).</span></label>
+              <label className="flex items-start gap-2 text-sm"><input type="checkbox" title="Marque para dizer que leu o aviso e concorda. Sem isso o laboratório não abre." checked={marcado} onChange={e => setMarcado(e.target.checked)} className="mt-1 w-5 h-5 shrink-0" /><span>Li e assino este aviso como administrador(a).</span></label>
               <button type="button" disabled={!marcado} onClick={assinar} title="Registra a sua assinatura do aviso LGPD neste navegador e libera o laboratório de autoavaliação" className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-40">Assinar e liberar o laboratório</button>
             </div>
           ) : (
@@ -116,7 +116,7 @@ export default function LaboratorioAdminPage() {
               <div className="space-y-3 text-sm">
                 <p><b>Tempo de sessão:</b> <span data-testid="lab-segundos">{segundos}</span> s</p>
                 <p><b>Agitação (0 a 100):</b> <span data-testid="lab-indice">{indice == null ? '—' : indice.toFixed(1)}</span> <span className="text-grafite-claro">· quanto a imagem muda de um segundo para o outro; não é emoção</span></p>
-                <label className="block"><span className="font-medium">Como me sinto agora (só para mim, apaga ao encerrar)</span><textarea value={nota} onChange={e => setNota(e.target.value)} rows={3} className="border w-full px-3 py-2 mt-1" /></label>
+                <label className="block"><span className="font-medium">Como me sinto agora (só para mim, apaga ao encerrar)</span><textarea title="Anotação só sua, guardada neste navegador e apagada quando a sessão encerra. Ninguém mais lê." value={nota} onChange={e => setNota(e.target.value)} rows={3} className="border w-full px-3 py-2 mt-1" /></label>
                 <div className="flex gap-2">
                   {camera === 'ligada'
                     ? <button type="button" onClick={desligar} title="Desliga a câmera e apaga todas as medidas e a nota desta sessão" className="min-h-[44px] px-4 border border-navy text-sm uppercase tracking-wider inline-flex items-center gap-2"><VideoOff className="w-4 h-4" aria-hidden />Encerrar e apagar</button>

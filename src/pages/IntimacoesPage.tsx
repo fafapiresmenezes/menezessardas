@@ -149,7 +149,7 @@ export default function IntimacoesPage() {
           {admin && (
             <div className="flex flex-wrap gap-2 items-end">
               <label className="text-xs uppercase tracking-wider text-grafite block">OABs do escritório (número/UF, separadas por vírgula)
-                <input value={oabs} onChange={e => setOabs(e.target.value)} placeholder="123456/RJ, 98765/RJ" className="block border px-3 py-2 min-h-[44px] mt-1 w-72 normal-case" />
+                <input title="As OABs em cujo nome as intimações saem. Sem elas a plataforma não tem o que procurar nos diários." value={oabs} onChange={e => setOabs(e.target.value)} placeholder="123456/RJ, 98765/RJ" className="block border px-3 py-2 min-h-[44px] mt-1 w-72 normal-case" />
               </label>
               <button onClick={salvarOabs} title="Grava as OABs informadas como monitoradas e já dispara uma busca de intimações" disabled={!oabs.trim()} className="min-h-[44px] px-4 border border-navy text-navy text-sm disabled:opacity-50">Salvar OABs</button>
             </div>

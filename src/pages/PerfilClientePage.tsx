@@ -50,7 +50,7 @@ export default function PerfilClientePage() {
           <label htmlFor="cliente" className="block font-medium">Nome do cliente</label>
           <input id="cliente" value={nome} onChange={e => setNome(e.target.value)} className="border px-3 py-2 min-h-[44px] w-full max-w-md" />
           <label className="flex items-start gap-2 text-sm" data-testid="perfil-aceite">
-            <input type="checkbox" checked={aceite} onChange={e => setAceite(e.target.checked)} className="mt-1 w-5 h-5 shrink-0" />
+            <input type="checkbox" title="O cliente precisa consentir antes das perguntas. Sem a marca, as perguntas ficam bloqueadas." checked={aceite} onChange={e => setAceite(e.target.checked)} className="mt-1 w-5 h-5 shrink-0" />
             <span>{TERMO}</span>
           </label>
         </section>
@@ -63,7 +63,7 @@ export default function PerfilClientePage() {
               <div className="flex flex-wrap gap-2">
                 {p.opcoes.map(o => (
                   <label key={o.valor} className={`min-h-[44px] px-3 py-2 border text-sm cursor-pointer inline-flex items-center gap-2 ${respostas[p.id] === o.valor ? 'border-navy bg-navy/5' : 'border-navy/20'}`}>
-                    <input type="radio" name={p.id} value={o.valor} checked={respostas[p.id] === o.valor} onChange={() => setRespostas(r => ({ ...r, [p.id]: o.valor }))} />{o.rotulo}
+                    <input type="radio" title={`Responder "${o.rotulo ?? o.valor}" à pergunta: ${p.texto}`} name={p.id} value={o.valor} checked={respostas[p.id] === o.valor} onChange={() => setRespostas(r => ({ ...r, [p.id]: o.valor }))} />{o.rotulo}
                   </label>
                 ))}
               </div>

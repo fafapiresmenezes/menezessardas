@@ -383,7 +383,7 @@ export default function LeituraCasoPage() {
                   <ul className="space-y-2">
                     {g.itens.map(i => (
                       <li key={i.id} className="border border-navy/10 p-3">
-                        <label className="flex items-start gap-3 text-sm cursor-pointer">
+                        <label title="Marque o que já foi cumprido neste roteiro. O que fica sem marca é o que falta antes da audiência." className="flex items-start gap-3 text-sm cursor-pointer">
                           <input type="checkbox" className="mt-1 w-5 h-5" checked={!!caso.roteiro[i.id]} data-testid={`rot-${i.id}`} onChange={() => muda({ roteiro: { ...caso.roteiro, [i.id]: !caso.roteiro[i.id] } })} />
                           <span>{i.texto}{i.base && <span className="text-grafite-claro"> · {i.base}</span>}</span>
                         </label>

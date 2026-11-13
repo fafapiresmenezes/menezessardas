@@ -241,7 +241,7 @@ export default function AssumirProcessosPage() {
       <div className="space-y-5 max-w-4xl">
         <AbasProcessosAntigos aqui="/processos-antigos" />
         <p className="text-base">Coloque aqui os processos que o escritório já tem (inclusive os de quem saiu). Em 3 passos a plataforma cadastra, procura no CNJ tudo o que saiu para eles e mostra <strong>o que fazer e até quando</strong>, do mais urgente para o menos urgente.</p>
-        <p className="text-sm">Vai trazer <strong>tudo</strong> do sistema antigo (clientes, prazos e financeiro também, em vários arquivos)? Use <Link to="/migracao" className="underline text-navy">Trazer do sistema antigo</Link>.</p>
+        <p className="text-sm">Vai trazer <strong>tudo</strong> do sistema antigo (clientes, prazos e financeiro também, em vários arquivos)? Use <Link to="/migracao" title="Abre a tela que traz o sistema antigo inteiro de uma vez: processos, clientes, prazos e financeiro" className="underline text-navy">Trazer do sistema antigo</Link>.</p>
         <p className="text-sm border-l-4 border-dourado bg-navy/5 p-3" data-testid="aviso-privacidade">
           <strong>Este espaço é só seu.</strong> O que você preenche e busca aqui fica guardado para o seu usuário, do seu jeito.
           Só o que você decidir <em>cadastrar</em> vai para a carteira do escritório — onde os sócios e o gestor enxergam o conjunto.
@@ -250,7 +250,7 @@ export default function AssumirProcessosPage() {
         <Passo n={1} titulo="Quais processos?" feito={numeros.length > 0}>
           <label className="min-h-[52px] px-5 mb-3 bg-navy text-white text-base inline-flex items-center gap-2 cursor-pointer">
             <Upload className="w-5 h-5" aria-hidden />Enviar a planilha (Excel ou CSV)
-            <input type="file" accept=".xlsx,.xls,.csv,.txt,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="sr-only" data-testid="arquivo-planilha" onChange={e => { lerPlanilha(e.target.files?.[0]); e.target.value = '' }} />
+            <input type="file" title="Escolhe a planilha com os processos antigos (Excel ou CSV). Nada é gravado antes da conferência." accept=".xlsx,.xls,.csv,.txt,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="sr-only" data-testid="arquivo-planilha" onChange={e => { lerPlanilha(e.target.files?.[0]); e.target.value = '' }} />
           </label>
           {planilha && (
             <div className="mb-3 p-3 border-l-4 border-dourado bg-navy/5 text-sm" data-testid="resumo-planilha">
@@ -358,7 +358,7 @@ export default function AssumirProcessosPage() {
                       </div>
                       <details className="mt-2 text-sm"><summary className="cursor-pointer min-h-[44px] flex items-center text-navy underline">Ver a publicação inteira</summary>
                         <p className="whitespace-pre-wrap mt-1">{l.publicacao.texto}</p>
-                        {l.publicacao.link && <a href={l.publicacao.link} target="_blank" rel="noopener noreferrer" className="underline text-navy">Abrir no tribunal<span className="sr-only"> (nova aba)</span></a>}
+                        {l.publicacao.link && <a href={l.publicacao.link} target="_blank" rel="noopener noreferrer" title="Abre a publicação no diário oficial, em outra aba. É site de fora da plataforma." className="underline text-navy">Abrir no tribunal<span className="sr-only"> (nova aba)</span></a>}
                       </details>
                     </li>
                   ))}
@@ -389,7 +389,7 @@ export default function AssumirProcessosPage() {
               {semNovidade.map(c => (
                 <li key={c.numero} className="py-2 text-sm flex flex-wrap items-center justify-between gap-2">
                   <span><span className="font-mono">{c.numero}</span> · {c.achou ? `último andamento: ${c.ultimo ?? '—'}${c.quando ? ` em ${new Date(c.quando).toLocaleDateString('pt-BR')}` : ''}` : 'não achado no CNJ (confira o número ou o tribunal)'}</span>
-                  <Link to={`/monitoramento?lt=${c.numero.replace(/\D/g, '')}`} className="min-h-[44px] inline-flex items-center underline text-navy">Ver andamentos</Link>
+                  <Link to={`/monitoramento?lt=${c.numero.replace(/\D/g, '')}`} title="Mostra todos os andamentos deste processo no DataJud (CNJ)" className="min-h-[44px] inline-flex items-center underline text-navy">Ver andamentos</Link>
                 </li>
               ))}
             </ul>

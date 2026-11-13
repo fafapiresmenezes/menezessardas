@@ -185,6 +185,7 @@ export default function ConfiguraçõesPage() {
               <input
                 type="checkbox"
                 checked={prefs.notificacoes}
+                title="Desmarcado, a plataforma para de mostrar o aviso no alto da tela. Os prazos continuam valendo do mesmo jeito."
                 onChange={e => setPrefs({ ...prefs, notificacoes: e.target.checked })}
                 className="h-5 w-5 shrink-0 accent-navy cursor-pointer"
               />
@@ -194,6 +195,7 @@ export default function ConfiguraçõesPage() {
               <input
                 type="checkbox"
                 checked={prefs.alertasEmail}
+                title="Marcado, os alertas também chegam no seu e-mail, para você ver sem abrir a plataforma."
                 onChange={e => setPrefs({ ...prefs, alertasEmail: e.target.checked })}
                 className="h-5 w-5 shrink-0 accent-navy cursor-pointer"
               />
@@ -805,7 +807,7 @@ function SecaoIcs() {
     <section aria-labelledby="ics" className="max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado" data-testid="secao-ics">
       <h2 id="ics" className="text-lg mb-3">Convite .ics por e-mail</h2>
       <label className="flex items-center gap-3 text-sm">
-        <input type="checkbox" checked={ligado} onChange={e => mudar(e.target.checked)} className="h-5 w-5" data-testid="ics-por-email" />
+        <input type="checkbox" title="Marcado, cada prazo ou compromisso seu chega por e-mail como convite de calendário, e o Outlook ou o Google Agenda já marca sozinho." checked={ligado} onChange={e => mudar(e.target.checked)} className="h-5 w-5" data-testid="ics-por-email" />
         Receber por e-mail um convite de calendário (.ics) a cada prazo ou compromisso novo ou alterado em que eu seja responsável. O Outlook e o Google Agenda atualizam o evento pelo mesmo código (sem duplicar).
       </label>
       {msg && <p role="status" className="text-sm mt-2" data-testid="ics-msg">{msg}</p>}

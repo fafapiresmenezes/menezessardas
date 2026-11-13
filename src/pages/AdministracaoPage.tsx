@@ -139,7 +139,7 @@ export default function AdministracaoPage() {
           </select>
         </label>
         <label className="text-sm">Taxa de administração (%)
-          <input data-testid="taxa" type="number" min={0} max={50} step={0.5} className={campo} value={adm?.taxa_pct ?? 10} onChange={e => salvarAdm({ taxa_pct: Number(e.target.value) })} />
+          <input data-testid="taxa" title="Quanto o escritório fica de cada aluguel recebido, em porcentagem. Entra sozinho no lançamento do mês." type="number" min={0} max={50} step={0.5} className={campo} value={adm?.taxa_pct ?? 10} onChange={e => salvarAdm({ taxa_pct: Number(e.target.value) })} />
         </label>
       </div>
       {contratos.length === 0 && <Vazio testid="administracao-vazio" titulo="Nenhum contrato de locação ativo" texto="A administração de locação trabalha sobre contratos. Cadastre o imóvel e o contrato para cobrar, repassar e reajustar aqui." acao={{ rotulo: 'Cadastrar imóvel e contrato', para: '/imoveis', dica: 'Abre a tela de Imóveis para cadastrar o imóvel e o contrato de locação' }} />}
@@ -152,7 +152,7 @@ export default function AdministracaoPage() {
         <section className="space-y-4">
           <div className={cartao}>
             <div className="flex flex-wrap gap-2 items-end">
-              <label className="text-sm">Mês<input data-testid="mes" type="month" className={campo} value={mes} onChange={e => setMes(e.target.value)} /></label>
+              <label className="text-sm">Mês<input data-testid="mes" title="O mês dos lançamentos mostrados e o mês que o botão Gerar cria." type="month" className={campo} value={mes} onChange={e => setMes(e.target.value)} /></label>
               <button type="button" onClick={gerarMes} data-testid="gerar-mes" title="Cria automaticamente os lançamentos de aluguel e taxa de administração do mês escolhido" className={botao}><Plus size={16} className="inline mr-1" aria-hidden="true" />Lançar aluguel e taxa do mês</button>
               <button type="button" onClick={() => setNovo({ tipo: 'despesa', descricao: '', valor: '' })} data-testid="novo-lancamento" title="Abre o formulário para registrar uma despesa, receita ou outro lançamento neste mês" className={botao}>Novo lançamento</button>
               <button type="button" onClick={baixarPrestacao} data-testid="baixar-prestacao" title="Baixa a prestação de contas do mês em PDF para enviar ao proprietário" className={botao}><FileDown size={16} className="inline mr-1" aria-hidden="true" />Prestação de contas (PDF)</button>
@@ -199,9 +199,9 @@ export default function AdministracaoPage() {
             <div className={cartao} data-testid="form-vistoria">
               <h2 className="text-lg mb-2">{TIPOS_VISTORIA[nova.tipo]} · {cab.imovel}</h2>
               <div className="grid gap-2 md:grid-cols-3 mb-3">
-                <label className="text-sm">Data<input type="date" className={campo} value={nova.data} onChange={e => setNova({ ...nova, data: e.target.value })} /></label>
-                <label className="text-sm">Responsável<input className={campo} value={nova.responsavel ?? ''} onChange={e => setNova({ ...nova, responsavel: e.target.value })} /></label>
-                <label className="text-sm" title="Anexa fotos do imóvel à vistoria (até 30 imagens, pode usar a câmera do celular)">Fotos<input type="file" accept="image/*" multiple capture="environment" className={campo} data-testid="fotos" onChange={e => anexarFotos(e.target.files)} /></label>
+                <label className="text-sm">Data<input type="date" title="O dia em que a vistoria foi feita no imóvel." className={campo} value={nova.data} onChange={e => setNova({ ...nova, data: e.target.value })} /></label>
+                <label className="text-sm">Responsável<input title="Quem esteve no imóvel e responde pelo que está escrito aqui." className={campo} value={nova.responsavel ?? ''} onChange={e => setNova({ ...nova, responsavel: e.target.value })} /></label>
+                <label className="text-sm" title="Anexa fotos do imóvel à vistoria (até 30 imagens, pode usar a câmera do celular)">Fotos<input type="file" title="Anexa fotos do imóvel à vistoria (até 30 imagens, pode usar a câmera do celular)" accept="image/*" multiple capture="environment" className={campo} data-testid="fotos" onChange={e => anexarFotos(e.target.files)} /></label>
               </div>
               {enviando && <p className="text-sm text-grafite-claro"><Camera size={14} className="inline mr-1" aria-hidden="true" />Guardando fotos…</p>}
               {nova.fotos.length > 0 && <p className="text-sm mb-2" data-testid="fotos-anexadas">{nova.fotos.length} foto(s) anexada(s)</p>}
@@ -214,7 +214,7 @@ export default function AdministracaoPage() {
                     <td><input aria-label={`Observação de ${it.item}`} className="min-h-[36px] w-full border border-navy/20 px-2 bg-white" value={it.obs ?? ''} onChange={e => mudarItem(i, { obs: e.target.value })} /></td>
                   </tr>))}</tbody>
               </table>
-              <label className="text-sm block mt-3">Observações gerais<textarea className={campo} rows={3} value={nova.observacoes ?? ''} onChange={e => setNova({ ...nova, observacoes: e.target.value })} /></label>
+              <label className="text-sm block mt-3">Observações gerais<textarea title="O que não cabe em nenhum item da tabela: cheiro, infiltração, obra vizinha, o que o inquilino disse." className={campo} rows={3} value={nova.observacoes ?? ''} onChange={e => setNova({ ...nova, observacoes: e.target.value })} /></label>
               <p className="text-sm mt-2">Estado geral: <b data-testid="estado-geral">{ESTADOS[estadoGeral(nova.itens)]}</b></p>
               <div className="flex gap-2 mt-3"><button type="button" onClick={salvarVistoria} data-testid="salvar-vistoria" title="Grava esta vistoria com os itens, fotos e observações preenchidos" className={botaoCheio}>Salvar vistoria</button><button type="button" onClick={() => setNova(null)} title="Fecha o formulário sem gravar a vistoria" className={botao}>Cancelar</button></div>
             </div>

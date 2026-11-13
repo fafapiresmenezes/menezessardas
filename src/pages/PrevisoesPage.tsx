@@ -146,7 +146,7 @@ function PainelJurimetria() {
           <select value={tribunal} onChange={e => setTribunal(e.target.value)} title="Escolhe o tribunal cujas sentenças do DataJud serão consultadas" className={campo}>{TRIBUNAIS.map(t => <option key={t} value={t}>{t.toUpperCase()}</option>)}</select>
         </label>
         <label className="text-xs uppercase tracking-wider text-grafite-claro">Vara (opcional)
-          <input value={orgao} onChange={e => { setOrgao(e.target.value); try { localStorage.setItem('lsm-previsoes-orgao', e.target.value) } catch { /* sem memória local */ } }} className={campo} placeholder="Ex.: 10ª Vara Cível" />
+          <input title="Vara ou órgão julgador. Com ele a previsão usa só as decisões daquela vara, que costuma ter mão própria." value={orgao} onChange={e => { setOrgao(e.target.value); try { localStorage.setItem('lsm-previsoes-orgao', e.target.value) } catch { /* sem memória local */ } }} className={campo} placeholder="Ex.: 10ª Vara Cível" />
         </label>
       </div>
       <button onClick={consultar} disabled={ocupado} title="Consulta as estatísticas públicas do DataJud (CNJ) e calcula a chance de êxito para a ação, o tribunal e a vara escolhidos" className="mt-3 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">{ocupado ? 'Consultando o CNJ…' : 'Calcular'}</button>

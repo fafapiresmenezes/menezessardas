@@ -157,7 +157,7 @@ export default function NovoImovelPage() {
             <fieldset className="space-y-3">
               <legend className="sr-only">Documentos necessários para este imóvel</legend>
               {checklist.map(item => (
-                <label key={item.tipo} className="flex items-start gap-3 p-3 border-l-2 border-navy/10 bg-white cursor-pointer">
+                <label key={item.tipo} title={`${item.motivo} Marque quando o escritório já tiver ${item.rotulo} em mãos.`} className="flex items-start gap-3 p-3 border-l-2 border-navy/10 bg-white cursor-pointer">
                   <input
                     type="checkbox"
                     checked={!!tem[item.tipo]}

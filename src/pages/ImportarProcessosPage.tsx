@@ -200,15 +200,15 @@ export default function ImportarProcessosPage() {
             <p className="text-xs text-grafite-claro">Serve a planilha exportada de outro sistema (Astrea, Projuris, ADVBOX, Legal One, Excel próprio). Reconheço colunas como "Número do processo", "Cliente", "Parte contrária", "Área", "Vara", "Valor da causa", "Fase", "Honorários" e "Observações", em qualquer ordem.</p>
             <div className="flex flex-wrap gap-3">
               <button type="button" onClick={baixarModelo} title="Baixa o arquivo modelo-processos.csv com as colunas esperadas para preencher e enviar de volta" data-testid="baixar-modelo-processos" className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2"><Download size={16} aria-hidden /> Baixar modelo</button>
-              <label title="Escolhe o arquivo CSV com os processos no seu computador; as linhas são conferidas antes de gravar" className="min-h-[44px] px-4 bg-navy text-white text-sm inline-flex items-center gap-2 cursor-pointer"><Upload size={16} aria-hidden /> Enviar CSV<input type="file" accept=".csv,.txt,.xlsx,.xls,text/csv" className="sr-only" data-testid="arquivo-processos" onChange={e => lerArquivo(e.target.files?.[0])} /></label>
+              <label title="Escolhe o arquivo CSV com os processos no seu computador; as linhas são conferidas antes de gravar" className="min-h-[44px] px-4 bg-navy text-white text-sm inline-flex items-center gap-2 cursor-pointer"><Upload size={16} aria-hidden /> Enviar CSV<input type="file" title="Escolhe a planilha exportada do outro sistema (Excel ou CSV). Nada é gravado antes da conferência." accept=".csv,.txt,.xlsx,.xls,text/csv" className="sr-only" data-testid="arquivo-processos" onChange={e => lerArquivo(e.target.files?.[0])} /></label>
               {nomeArquivo && <span className="text-sm self-center">{nomeArquivo}</span>}
             </div>
             <label className="block text-sm">Ou cole aqui as células copiadas do Excel (com a linha de cabeçalho)
-              <textarea value={texto} onChange={e => analisar(e.target.value)} rows={5} className="w-full border px-3 py-2 mt-1 font-mono text-xs" data-testid="planilha-texto" /></label>
+              <textarea title="Cole aqui o conteúdo da planilha, com a primeira linha de títulos. A plataforma descobre as colunas sozinha." value={texto} onChange={e => analisar(e.target.value)} rows={5} className="w-full border px-3 py-2 mt-1 font-mono text-xs" data-testid="planilha-texto" /></label>
           </div>}
 
           {fonte === 'lista' && <label className="block text-sm mt-4">Cole os números dos processos (um por linha, ou no meio de qualquer texto: e-mail, relatório, PDF copiado)
-            <textarea value={texto} onChange={e => analisar(e.target.value, 'lista')} rows={6} placeholder="0001234-56.2023.8.19.0001" className="w-full border px-3 py-2 mt-1 font-mono text-xs" data-testid="lista-texto" /></label>}
+            <textarea title="Cole os números dos processos, um por linha. Número com dígito errado, repetido ou já cadastrado fica de fora." value={texto} onChange={e => analisar(e.target.value, 'lista')} rows={6} placeholder="0001234-56.2023.8.19.0001" className="w-full border px-3 py-2 mt-1 font-mono text-xs" data-testid="lista-texto" /></label>}
 
           {fonte === 'intimacoes' && <div className="mt-4">
             <p className="text-sm font-medium mb-2">Como importar tudo, em 5 passos</p>
@@ -220,7 +220,7 @@ export default function ImportarProcessosPage() {
               <p className="text-xs text-grafite-claro mt-1">Escreva a OAB de cada advogado (inclusive a de quem já saiu). A plataforma busca no Diário de Justiça Eletrônico Nacional todos os processos em que cada um recebeu intimação e mostra a lista aqui para você conferir. Ela também passa a avisar das próximas intimações dessas OABs, todo dia.</p>
               <div className="flex flex-wrap items-end gap-3 mt-2">
                 <label className="text-sm">OABs (separe por vírgula)
-                  <input value={oabsTexto} onChange={e => setOabsTexto(e.target.value)} placeholder="123456/RJ, 98765/RJ" data-testid="oabs-texto" className="block border px-3 py-2 min-h-[44px] mt-1 w-72" /></label>
+                  <input title="As OABs do escritório, no formato número/UF, separadas por vírgula. É por elas que a plataforma acha as intimações." value={oabsTexto} onChange={e => setOabsTexto(e.target.value)} placeholder="123456/RJ, 98765/RJ" data-testid="oabs-texto" className="block border px-3 py-2 min-h-[44px] mt-1 w-72" /></label>
                 <label className="text-sm">Voltar quanto tempo
                   <select value={meses} onChange={e => setMeses(Number(e.target.value))} title="Escolhe quanto tempo para trás buscar as intimações no Diário de Justiça (quanto maior, mais demorada a busca)" data-testid="oabs-meses" className="block border px-2 py-2 min-h-[44px] mt-1"><option value={12}>12 meses</option><option value={24}>24 meses</option><option value={36}>3 anos</option><option value={60}>5 anos</option></select></label>
                 <button type="button" onClick={buscarHistorico} disabled={buscando} title="Busca no Diário de Justiça Eletrônico Nacional todos os processos em que as OABs informadas receberam intimação no período escolhido" data-testid="buscar-historico" className="min-h-[44px] px-4 bg-dourado text-navy uppercase tracking-wider text-sm disabled:opacity-50">{buscando ? 'Buscando…' : 'Buscar todos os processos'}</button>
@@ -264,7 +264,7 @@ export default function ImportarProcessosPage() {
               </table>
             </div>
             <div className="flex flex-wrap items-center gap-4 mt-4 text-sm">
-              <label className="inline-flex items-center gap-2"><input type="checkbox" checked={monitorar} onChange={e => setMonitorar(e.target.checked)} data-testid="importar-monitorar" /> Monitorar no DataJud (andamentos novos todo dia)</label>
+              <label className="inline-flex items-center gap-2"><input type="checkbox" title="Marcado, cada processo trazido entra no acompanhamento do CNJ e o robô avisa quando andar." checked={monitorar} onChange={e => setMonitorar(e.target.checked)} data-testid="importar-monitorar" /> Monitorar no DataJud (andamentos novos todo dia)</label>
               <label className="inline-flex items-center gap-2">Responsável
                 <select value={responsavel} onChange={e => setResponsavel(e.target.value)} className="border px-2 py-1" title="Escolhe quem fica responsável pelos casos importados. Só o responsável, os sócios e o gestor veem o caso; sem responsável, o escritório inteiro vê." aria-label="Responsável pelos casos importados"><option value="">Ninguém (o escritório inteiro vê)</option>{eu && !pessoas.some(p => p.id === eu) && <option value={eu}>Eu</option>}{pessoas.map(p => <option key={p.id} value={p.id}>{p.nome}{p.id === eu ? ' (eu)' : ''}</option>)}</select></label>
               <button type="button" onClick={importar} disabled={importando || !prontas.length} title="Grava os processos marcados como casos em Projetos e, se marcado, coloca cada um no monitoramento diário do DataJud" data-testid="importar-processos" className="min-h-[44px] px-5 bg-dourado text-navy uppercase tracking-wider text-sm disabled:opacity-50">{importando ? 'Importando…' : `Importar ${prontas.length} processo(s)`}</button>
