@@ -1,0 +1,473 @@
+{
+ "passo": "E10",
+ "emitido": "2026-11-13",
+ "pedido_de_M": "13/11/2026 21:23 UTC: ver todo o conteudo programatico das 10 melhores universidades de engenharia do mundo.",
+ "aviso_que_manda_neste_arquivo": "Disciplina so entra aqui se veio da pagina oficial da escola, com a URL registrada. Nada aqui foi completado com conhecimento do modelo. Cada grade tem um campo 'procedencia' que diz se o texto e literal da pagina, resumo de modelo (a conferir) ou nao colhido, e um campo 'conferido' que so vira true quando uma pessoa comparar com a pagina.",
+ "o_que_a_colheita_de_13_11_2026_descobriu": "A maior parte dos catalogos nao se deixa ler por programa. catalog.mit.edu recusa pelo robots.txt na maioria das paginas de grade; tudelft.nl e ethz.ch devolveram erro de cliente. Logo, a colheita completa das 10 escolas NAO e questao de rodar mais vezes: precisa de outra rota (PDF oficial do programa, catalogo em PDF, ou o navegador de M). Isso fica dito aqui em vez de a tela mostrar grade que ninguem conferiu.",
+ "escolas": [
+  {
+   "escola": "Massachusetts Institute of Technology",
+   "pais": "Estados Unidos",
+   "catalogo": "https://catalog.mit.edu/subjects/",
+   "grades": [
+    {
+     "curso": "Mechanical Engineering (SB, Course 2)",
+     "url": "https://catalog.mit.edu/degree-charts/mechanical-engineering-course-2/",
+     "estado": "colhido_parcial",
+     "procedencia": "resumo_de_modelo_a_conferir",
+     "conferido": false,
+     "mostra_ano_ou_semestre": false,
+     "requisitos_gerais_do_instituto": {
+      "ciencia": 6,
+      "humanidades_artes_ciencias_sociais": 8,
+      "eletivas_restritas_em_ciencia_e_tecnologia": 2,
+      "laboratorio": 1,
+      "total_de_disciplinas": 17
+     },
+     "nucleo_obrigatorio": [
+      {
+       "codigo": "2.001",
+       "titulo": "Mechanics and Materials I",
+       "unidades": 12
+      },
+      {
+       "codigo": "2.002",
+       "titulo": "Mechanics and Materials II",
+       "unidades": 12
+      },
+      {
+       "codigo": "2.003[J]",
+       "titulo": "Dynamics and Control I",
+       "unidades": 12
+      },
+      {
+       "codigo": "2.004",
+       "titulo": "Dynamics and Control II",
+       "unidades": 12
+      },
+      {
+       "codigo": "2.005",
+       "titulo": "Thermal-Fluids Engineering I",
+       "unidades": 12
+      },
+      {
+       "codigo": "2.006",
+       "titulo": "Thermal-Fluids Engineering II",
+       "unidades": 12
+      },
+      {
+       "codigo": "2.007",
+       "titulo": "Design and Manufacturing I",
+       "unidades": 12,
+       "alternativa": "2.017[J] Design of Electromechanical Robotic Systems"
+      },
+      {
+       "codigo": "2.008",
+       "titulo": "Design and Manufacturing II",
+       "unidades": 12
+      },
+      {
+       "codigo": "2.086",
+       "titulo": "Numerical Computation for Mechanical Engineers",
+       "unidades": 12
+      },
+      {
+       "codigo": "2.670",
+       "titulo": "Mechanical Engineering Tools",
+       "unidades": 3
+      },
+      {
+       "codigo": "2.671",
+       "titulo": "Measurement and Instrumentation",
+       "unidades": 12
+      },
+      {
+       "codigo": "2.THU",
+       "titulo": "Undergraduate Thesis",
+       "unidades": 6
+      },
+      {
+       "codigo": "18.03",
+       "titulo": "Differential Equations",
+       "unidades": 12
+      }
+     ],
+     "escolher_uma": [
+      "2.009 The Product Engineering Process",
+      "2.013 Engineering Systems Design",
+      "2.750[J] Medical Device Design",
+      "2.760 Global Engineering: Green Machines"
+     ],
+     "eletivas_restritas_escolher_duas": [
+      "2.014 Engineering Systems Development",
+      "2.016 Hydrodynamics",
+      "2.017[J] Design of Electromechanical Robotic Systems",
+      "2.019 Design of Ocean Systems",
+      "2.050[J] Nonlinear Dynamics: Chaos",
+      "2.12 Introduction to Robotics",
+      "2.132 Instrumentation and Measurement: MICA Projects",
+      "2.14 Analysis and Design of Feedback Control Systems",
+      "2.184 Biomechanics and Neural Control of Movement",
+      "2.370 Fundamentals of Nanoengineering",
+      "2.51 Intermediate Heat and Mass Transfer",
+      "2.60[J] Fundamentals of Advanced Energy Conversion",
+      "2.650[J] Introduction to Sustainable Energy",
+      "2.71 Optics",
+      "2.72 Elements of Mechanical Design",
+      "2.744 Product Design",
+      "2.777 Systems Thinking and Complex Problem Solving",
+      "2.782[J] Design of Medical Devices and Implants",
+      "2.797[J] Molecular, Cellular, and Tissue Biomechanics",
+      "2.813 Energy, Materials, and Manufacturing",
+      "2.853 Introduction to Manufacturing Systems",
+      "2.96 Management in Engineering",
+      "2.C01 e 6.C01 Physical Systems Modeling and Design Using Machine Learning",
+      "2.C27[J] Computational Imaging: Physics and Algorithms"
+     ],
+     "unidades": {
+      "na_habilitacao": "177-180",
+      "eletivas_livres": 48,
+      "da_habilitacao_que_tambem_cumprem_requisitos_gerais": 36,
+      "total_alem_dos_requisitos_gerais": "189-192"
+     }
+    },
+    {
+     "curso": "Civil Engineering (Course 1-C)",
+     "url": "https://catalog.mit.edu/degree-charts/civil-engineering-course-1-c/",
+     "estado": "nao_colhido",
+     "motivo": "robots.txt do catalog.mit.edu recusa a leitura por programa",
+     "procedencia": "nao_colhido",
+     "conferido": false
+    },
+    {
+     "curso": "Environmental Engineering Science (Course 1-E)",
+     "url": "https://catalog.mit.edu/degree-charts/environmental-engineering-science-course-1-e/",
+     "estado": "nao_colhido",
+     "motivo": "robots.txt do catalog.mit.edu recusa a leitura por programa",
+     "procedencia": "nao_colhido",
+     "conferido": false
+    }
+   ]
+  },
+  {
+   "escola": "Delft University of Technology",
+   "pais": "Paises Baixos",
+   "catalogo": "https://studiegids.tudelft.nl/",
+   "grades": [
+    {
+     "curso": "BSc Civil Engineering e BSc Mechanical Engineering",
+     "url": "https://www.tudelft.nl/en/education/programmes/bachelors/civil-engineering/bsc-civil-engineering/study-programme",
+     "estado": "nao_colhido",
+     "motivo": "erro de cliente (client_error) nas paginas do tudelft.nl",
+     "procedencia": "nao_colhido",
+     "conferido": false
+    }
+   ]
+  },
+  {
+   "escola": "ETH Zurich",
+   "pais": "Suica",
+   "catalogo": "https://www.vvz.ethz.ch/",
+   "grades": [
+    {
+     "curso": "Bachelor Bauingenieurwissenschaften (engenharia civil)",
+     "url": "https://ethz.ch/en/studies/bachelor/degree-programmes/engineering-sciences/civil-engineering.html",
+     "estado": "nao_colhido",
+     "motivo": "erro de cliente (client_error)",
+     "procedencia": "nao_colhido",
+     "conferido": false
+    }
+   ]
+  },
+  {
+   "escola": "Stanford University",
+   "pais": "Estados Unidos",
+   "catalogo": "https://explorecourses.stanford.edu/",
+   "grades": []
+  },
+  {
+   "escola": "University of California, Berkeley",
+   "pais": "Estados Unidos",
+   "catalogo": "https://guide.berkeley.edu/courses/",
+   "grades": [
+    {
+     "curso": "Civil Engineering (bacharelado)",
+     "url": "https://engineering.berkeley.edu/students/undergraduate-guide/degree-requirements/major-programs/cee/",
+     "estado": "colhido",
+     "procedencia": "transcricao_da_tabela_da_pagina",
+     "conferido": false,
+     "ano_do_catalogo": "2026-2027",
+     "minimo_para_formar": "120 unidades",
+     "organizacao_da_pagina": "por ano (Freshman, Sophomore, Junior, Senior), com um programa separado para transferencia",
+     "anos": [
+      {
+       "ano": "Freshman",
+       "total_outono": 15,
+       "total_primavera": 14,
+       "disciplinas": [
+        {
+         "codigo": "CHEM 1A",
+         "titulo": "General Chemistry",
+         "outono": 3
+        },
+        {
+         "codigo": "CIVENG 60",
+         "titulo": "Structure and Properties of Civil Engineering Materials",
+         "primavera": 3
+        },
+        {
+         "codigo": "CIVENG 93",
+         "titulo": "Engineering Data Analysis",
+         "primavera": 3
+        },
+        {
+         "codigo": "COMPSCI/DATA/INFO/STAT C8",
+         "titulo": "Foundations of Data Science",
+         "outono": 4
+        },
+        {
+         "codigo": "MATH 51",
+         "titulo": "Calculus I",
+         "outono": 4
+        },
+        {
+         "codigo": "MATH 52",
+         "titulo": "Calculus II",
+         "primavera": 4
+        },
+        {
+         "codigo": "PHYSICS 7A",
+         "titulo": "Physics for Scientists and Engineers",
+         "primavera": 4
+        },
+        {
+         "codigo": "R&C A",
+         "titulo": "Reading & Composition Part A",
+         "outono": 4
+        }
+       ]
+      },
+      {
+       "ano": "Sophomore",
+       "total_outono": "14-15",
+       "total_primavera": "14-15",
+       "disciplinas": [
+        {
+         "codigo": "CIVENG C30 / MECENG C85",
+         "titulo": "Introduction to Solid Mechanics",
+         "primavera": 3
+        },
+        {
+         "codigo": "CIVENG 11",
+         "titulo": "Engineered Systems and Sustainability",
+         "outono": 3
+        },
+        {
+         "codigo": "ENGIN 7",
+         "titulo": "Introduction to Computer Programming and Numerical Methods",
+         "primavera": 4
+        },
+        {
+         "codigo": "MATH 53",
+         "titulo": "Multivariable Calculus",
+         "outono": 4
+        },
+        {
+         "codigo": "MATH 54",
+         "titulo": "Linear Algebra and Differential Equations",
+         "primavera": 4
+        },
+        {
+         "codigo": "—",
+         "titulo": "Basic Science Elective",
+         "outono": "3-4"
+        },
+        {
+         "codigo": "R&C B",
+         "titulo": "Reading & Composition Part B",
+         "outono": 4
+        },
+        {
+         "codigo": "—",
+         "titulo": "Humanities/Social Sciences Course",
+         "primavera": "3-4"
+        }
+       ]
+      },
+      {
+       "ano": "Junior",
+       "total_outono": "16-18",
+       "total_primavera": "15-17",
+       "disciplinas": [
+        {
+         "codigo": "CIVENG 100 ou CIVENG 132",
+         "titulo": "Elementary Fluid Mechanics ou Applied Structural Mechanics",
+         "outono": "3-4"
+        },
+        {
+         "codigo": "PHYSICS 7B",
+         "titulo": "Physics for Scientists and Engineers",
+         "outono": 4
+        },
+        {
+         "codigo": "—",
+         "titulo": "Engineering Fundamentals Elective",
+         "primavera": "3-4"
+        },
+        {
+         "codigo": "—",
+         "titulo": "Civil and Environmental Engineering Applications Electives",
+         "outono": 3,
+         "primavera": 6
+        },
+        {
+         "codigo": "—",
+         "titulo": "Humanities/Social Sciences Courses",
+         "outono": "3-4",
+         "primavera": "3-4"
+        },
+        {
+         "codigo": "—",
+         "titulo": "Free Electives",
+         "outono": 3,
+         "primavera": 3
+        }
+       ]
+      },
+      {
+       "ano": "Senior",
+       "total_outono": "15-17",
+       "total_primavera": 15,
+       "disciplinas": [
+        {
+         "codigo": "—",
+         "titulo": "Civil and Environmental Engineering Extensions Electives",
+         "outono": 3,
+         "primavera": 6
+        },
+        {
+         "codigo": "—",
+         "titulo": "Capstone Design Elective",
+         "outono": "3-4"
+        },
+        {
+         "codigo": "CIVENG 167",
+         "titulo": "Engineering Project Management",
+         "outono": 3
+        },
+        {
+         "codigo": "—",
+         "titulo": "Humanities/Social Sciences Course",
+         "outono": "3-4"
+        },
+        {
+         "codigo": "—",
+         "titulo": "Free Electives",
+         "outono": 3,
+         "primavera": 9
+        }
+       ]
+      }
+     ],
+     "regras_de_escolha": {
+      "basic_science_elective": "um de CIVENG 70, BIOLOGY 1B, CHEM 1B",
+      "engineering_fundamentals_elective": "um de: termodinamica (ENGIN 40 ou MECENG 40); mecanica dos solidos (MECENG 104 ou CIVENG 126, sem credito para as duas); ciencia de dados (COMPSCI/DATA/STAT C100 ou EECS 127)",
+      "cee_applications": "nove unidades de CIVENG C103N/ESPM C130/GEOG C136, 111, 120, 155, 175 ou 191",
+      "cee_extensions": "nove unidades com nota em letra, de disciplinas CIVENG de graduacao nao contadas em outro requisito (ate tres unidades de pos, CIVENG 200-295)",
+      "capstone_design": "um de CIVENG 105, 112, 122, 123, 153, 179, 180, 186",
+      "humanidades_e_ciencias_sociais": "dois cursos de Reading & Composition e quatro cursos aprovados",
+      "free_electives": "qualquer curso, para fechar as 120 unidades"
+     },
+     "programa_de_transferencia": "A pagina traz tambem um programa de cinco semestres para quem entra transferido, com as mesmas disciplinas CIVENG 11, C30, 60, 93, 100/132, 167 e as mesmas eletivas."
+    },
+    {
+     "curso": "Civil Engineering — pagina do catalogo geral",
+     "url": "https://guide.berkeley.edu/undergraduate/degree-programs/civil-engineering",
+     "estado": "nao_colhido",
+     "motivo": "responde 302 para o indice geral do catalogo",
+     "procedencia": "nao_colhido",
+     "conferido": false
+    }
+   ]
+  },
+  {
+   "escola": "California Institute of Technology",
+   "pais": "Estados Unidos",
+   "catalogo": "https://catalog.caltech.edu/",
+   "grades": [
+    {
+     "curso": "catalogo completo em PDF",
+     "url": "https://www.catalog.caltech.edu/documents/155/caltech_catalog_24_25.pdf",
+     "estado": "nao_colhido",
+     "motivo": "erro de cliente (client_error) no proprio site",
+     "procedencia": "nao_colhido",
+     "conferido": false
+    }
+   ]
+  },
+  {
+   "escola": "University of Cambridge",
+   "pais": "Reino Unido",
+   "catalogo": "https://www.undergraduate.study.cam.ac.uk/courses/engineering",
+   "grades": []
+  },
+  {
+   "escola": "University of Oxford",
+   "pais": "Reino Unido",
+   "catalogo": "https://www.ox.ac.uk/admissions/undergraduate/courses",
+   "grades": []
+  },
+  {
+   "escola": "Imperial College London",
+   "pais": "Reino Unido",
+   "catalogo": "https://www.imperial.ac.uk/study/courses/",
+   "grades": []
+  },
+  {
+   "escola": "National University of Singapore",
+   "pais": "Singapura",
+   "catalogo": "https://nus.edu.sg/registrar/academic-information-policies",
+   "grades": []
+  },
+  {
+   "escola": "Nanyang Technological University",
+   "pais": "Singapura",
+   "catalogo": "https://www.ntu.edu.sg/education/undergraduate-programme",
+   "grades": []
+  },
+  {
+   "escola": "Tsinghua University",
+   "pais": "China",
+   "catalogo": "https://www.tsinghua.edu.cn/en/",
+   "grades": []
+  }
+ ],
+ "resumo_da_colheita": {
+  "em": "2026-11-13",
+  "grades_colhidas": 2,
+  "literal_da_pagina": [
+   "Berkeley, Civil Engineering (transcricao da tabela)"
+  ],
+  "resumo_de_modelo_a_conferir": [
+   "MIT, Mechanical Engineering (Course 2)"
+  ],
+  "recusadas_ou_com_erro": [
+   "MIT Civil (robots.txt)",
+   "MIT Environmental (robots.txt)",
+   "TU Delft Civil e Mechanical (client_error, quatro rotas)",
+   "ETH Zurich Civil (client_error e robots.txt)",
+   "Caltech catalogo PDF (client_error)",
+   "Berkeley guide (302 para indice)"
+  ],
+  "ainda_nao_tentadas": [
+   "Stanford",
+   "Cambridge",
+   "Oxford",
+   "Imperial",
+   "NUS",
+   "NTU",
+   "Tsinghua"
+  ],
+  "conclusao_honesta": "A colheita completa das dez escolas nao se resolve rodando mais vezes: a maioria dos catalogos recusa leitura por programa (robots.txt) ou devolve erro. Para fechar, serve o PDF oficial de cada programa ou o navegador de M. Enquanto nao fechar, a plataforma nao mostra grade como conferida."
+ }
+}
