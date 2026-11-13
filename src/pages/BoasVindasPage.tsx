@@ -48,8 +48,8 @@ export default function BoasVindasPage() {
       </div>
       <button
         type="button"
-        aria-label="Escola de magia do caos dedicada a Peter Carroll"
-        title="Escola de magia do caos dedicada a Peter Carroll"
+        aria-label="Stokasticos — escola de magia do caos dedicada a Peter J. Carroll"
+        title="Stokasticos — escola de magia do caos dedicada a Peter J. Carroll"
         className="fixed right-2 bottom-2 text-white/10 hover:text-white/70 transition text-[11px] tracking-widest font-serif cursor-default select-none"
       >
         ☉ → ∞ +
