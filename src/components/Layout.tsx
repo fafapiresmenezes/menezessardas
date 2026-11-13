@@ -24,7 +24,7 @@ import { listarPessoas, perfilAtual, meuEscritorio, esquecerEscritorio, type Meu
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, ChevronDown, MoreHorizontal, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store } from 'lucide-react'
+import { Menu, X, LogOut, LayoutGrid, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, Search, Moon, Sun, MessageSquare, UserCog, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, ChevronDown, MoreHorizontal, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, Stethoscope } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -87,6 +87,7 @@ const gruposMenu = [
     { icon: Briefcase, label: 'Consultores', href: '/consultores' },
     { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
     { icon: Wrench, label: 'Engenharia', href: '/engenharia' },
+    { icon: Stethoscope, label: 'Saúde', href: '/saude' },
     { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
     { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
     { icon: TrendingUp, label: 'Previsões', href: '/previsoes' },
@@ -142,6 +143,7 @@ const DICAS: Record<string, string> = {
   '/instituto': 'Pesquisa e estudos do THEYE Institute',
   '/consultores': 'Consultores de IA por nível e por especialidade',
   '/estudos': 'Estudos para entidades, órgãos e associações',
+  '/saude': 'Plataforma de saúde: 55 especialidades, consultores com prompt pronto e lastreado, dados e mercado da saúde',
   '/engenharia': 'Plataforma de engenharia: cálculo estrutural com memória, matérias, consultores e estudos para órgãos públicos',
   '/enquetes': 'Enquetes sobre temas do direito',
   '/mercado': 'O mercado jurídico em números',
