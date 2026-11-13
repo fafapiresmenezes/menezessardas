@@ -42,7 +42,9 @@ sed "s#\./assets/#$CDN/assets/#g; s#\./apple-touch-icon\.png#$CDN/apple-touch-ic
 # O manifesto, ao contrário dos ícones, TEM de ser servido pelo próprio domínio: é dele que saem o
 # `scope` e o `start_url`, e um manifesto de outro domínio deixa o aplicativo não instalável.
 sed "s#\"src\": \"icone-#\"src\": \"$CDN/icone-#g" dist-prod/manifest.webmanifest > "$PASTA/manifest.webmanifest"
-cp dist-prod/robots.txt dist-prod/sitemap.xml dist-prod/sw.js "$PASTA/"
+# O trilho vai junto: a tela /lastro o baixa para recalcular a corrente no navegador de quem
+# duvida. Sem ele em theye.club, a tela cai na reserva pelo jsDelivr, que atrasa até 12 h.
+cp dist-prod/robots.txt dist-prod/sitemap.xml dist-prod/sw.js dist-prod/trilho-v4.jsonl "$PASTA/"
 cp "$SAIDA" "$PASTA/index.html"
 
 echo "gh-pages: $COMMIT"
