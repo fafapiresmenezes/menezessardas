@@ -29,7 +29,8 @@ let horasLanc: Record<string, unknown>[] = []
 let casosHon: Record<string, unknown>[] = []
 const from = (t: string) => { const o: Record<string, unknown> = {}; for (const m of ['select', 'order', 'limit', 'maybeSingle', 'eq']) o[m] = () => o; o.then = (f: (v: unknown) => unknown) => Promise.resolve({ data: t === 'relatorios_mensais' ? ultimo : t === 'lancamentos_horas' ? horasLanc : t === 'tarefas' ? casosHon : null }).then(f); return o }
 vi.mock('@/lib/equipe', () => ({ listarPessoas: async () => [{ id: 'u1', nome: 'Letícia', email: 'l@x' }] }))
-vi.mock('@/lib/supabase', () => ({ supabaseConfigurado: true, supabase: { from, functions: { invoke: (n: string, o: object) => invoke(n, o) } } }))
+// Privacidade por advogado: a tela precisa saber quem está logado (aqui, a própria Letícia) para mostrar as horas e os casos dela.
+vi.mock('@/lib/supabase', () => ({ supabaseConfigurado: true, supabase: { from, functions: { invoke: (n: string, o: object) => invoke(n, o) }, auth: { getUser: async () => ({ data: { user: { id: 'u1' } } }) } } }))
 vi.mock('@/hooks/useImoveis', () => ({ useImoveis: () => ({ imoveis, loading: carregando }) }))
 vi.mock('@/hooks/useAlertas', () => ({ useAlertas: () => ({ alertas, loading: false }) }))
 vi.mock('@/lib/repositorio', () => ({ repositorio: { listarContratos: async () => contratos } }))
@@ -112,7 +113,7 @@ describe('Relatórios', () => {
     montar()
     await waitFor(() => expect(screen.getByText('Nenhum compromisso neste horizonte')).toBeTruthy())
     expect(cartao('Compromissos no período')).toBe('0'); expect(cartao('Pendências vencidas')).toBe('0')
-    expect(screen.getByText(/Escolha um horizonte maior ou cadastre prazos/)).toBeTruthy()
+    expect(screen.getByText(/Escolha um horizonte maior/)).toBeTruthy()
     expect(screen.getByTestId('relatorio-mensal').textContent).toContain('O primeiro vai no próximo dia 1.')
   })
 
