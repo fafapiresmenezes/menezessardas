@@ -170,7 +170,11 @@ export default function MeuDiaPage() {
                   </div>
                 ))}
               </div>
-            ) : <p className="text-sm text-grafite-claro mt-2">Nada vencendo para você.</p>}
+            ) : (
+              // Passo A27: tela vazia diz o que fazer primeiro. Vazia aqui quase sempre quer dizer
+              // "os processos ainda não entraram", não "não há nada a fazer".
+              <p className="text-sm text-grafite-claro mt-2">Nada vencendo para você. Se os seus processos ainda não estão aqui, comece por <Link to="/processos-antigos" title="Abre Inserir processos antigos: pela planilha ou pelo nome do advogado, a plataforma cadastra, busca no CNJ e traz os prazos" className="underline text-navy">Inserir processos antigos</Link>: a plataforma busca os prazos no CNJ.</p>
+            )}
           </section>
           <section className={cartao}>
             <h2 className="font-serif text-lg flex items-center gap-2"><Inbox className="w-5 h-5" aria-hidden />Intimações</h2>
@@ -185,7 +189,7 @@ export default function MeuDiaPage() {
           <section className={cartao}>
             <h2 className="font-serif text-lg flex items-center gap-2"><FileWarning className="w-5 h-5" aria-hidden />Contratos vencendo (60 dias)</h2>
             {vencendo.length ? <ul className="text-sm mt-2 space-y-1">{vencendo.map(c => <li key={c.id}><Link to={`/contrato/${c.imovel_id}`} title={`Abre o contrato de ${c.locatario_fornecedor}, que vence em ${fmt(c.data_vencimento)}`} className="underline">{fmt(c.data_vencimento)} · {c.locatario_fornecedor}</Link></li>)}</ul>
-              : <p className="text-sm text-grafite-claro mt-2">Nenhum nos próximos 60 dias.</p>}
+              : <p className="text-sm text-grafite-claro mt-2">Nenhum nos próximos 60 dias. Os contratos de locação ficam em <Link to="/imoveis" title="Abre Imóveis, onde cada imóvel guarda o seu contrato, o reajuste e o vencimento" className="underline text-navy">Imóveis</Link>.</p>}
           </section>
         </div>
 
