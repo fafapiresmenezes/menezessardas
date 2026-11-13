@@ -33,6 +33,7 @@ const pt = {
 
   // Tela de entrada
   'login.subtitulo': 'Entre com o seu e-mail e a sua senha',
+  'marca.suporteJuridico': 'Suporte Jurídico',
   'login.subtituloCadastro': 'Crie a sua conta e diga de qual escritório você é',
   'login.email': 'E-mail',
   'login.senha': 'Senha',
@@ -102,6 +103,7 @@ const en: Dicionario = {
   'idioma.atual': 'Current language',
 
   'login.subtitulo': 'Sign in with your email and password',
+  'marca.suporteJuridico': 'Legal Support',
   'login.subtituloCadastro': 'Create your account and tell us which firm you are from',
   'login.email': 'Email',
   'login.senha': 'Password',
@@ -165,6 +167,7 @@ const zh: Dicionario = {
   'idioma.atual': '当前语言',
 
   'login.subtitulo': '请使用您的邮箱和密码登录',
+  'marca.suporteJuridico': '法律支持',
   'login.subtituloCadastro': '创建账户，并填写您所属的事务所',
   'login.email': '邮箱',
   'login.senha': '密码',
@@ -228,6 +231,7 @@ const es: Dicionario = {
   'idioma.atual': 'Idioma actual',
 
   'login.subtitulo': 'Entre con su correo electrónico y su contraseña',
+  'marca.suporteJuridico': 'Soporte Jurídico',
   'login.subtituloCadastro': 'Cree su cuenta e indique de qué despacho es',
   'login.email': 'Correo electrónico',
   'login.senha': 'Contraseña',

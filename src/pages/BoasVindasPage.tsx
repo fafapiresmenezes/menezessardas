@@ -16,7 +16,7 @@ export default function BoasVindasPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-black text-white px-4 py-10">
       <div className="w-full max-w-xl text-center">
-        <div className="flex justify-center mb-8"><Marca /></div>
+        <div className="flex justify-center mb-8"><Marca subtitulo={t('marca.suporteJuridico')} /></div>
         <h1 className="text-2xl font-serif mb-2">{t('boasVindas.instituto')}</h1>
         {/* O convite aparece nas quatro línguas: quem chega lê na sua antes de escolher. */}
         <p className="text-sm text-white/70 mb-8">

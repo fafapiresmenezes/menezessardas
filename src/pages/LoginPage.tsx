@@ -109,7 +109,7 @@ export default function LoginPage() {
     <main className="min-h-screen bg-navy flex items-center justify-center p-4" style={marca ? { backgroundColor: marca.cor } : undefined}>
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
-          <Marca tamanho="grande" marca={marca} />
+          <Marca tamanho="grande" marca={marca} subtitulo={t('marca.suporteJuridico')} />
         </div>
 
         <div className="bg-white rounded-sm shadow-xl border-t-2 border-dourado p-8">

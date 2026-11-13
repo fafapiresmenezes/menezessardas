@@ -7,14 +7,17 @@ interface MarcaProps {
   className?: string
   /** Passo D22: marca do escritório parceiro (white-label). Sem ela, o lockup THEYE Institute. */
   marca?: MarcaEscritorio | null
+  /** Subtítulo já traduzido. Sem ele, fica o português padrão da plataforma. */
+  subtitulo?: string
 }
 
 /**
  * Lockup tipográfico provisório. Quando o escritório enviar o arquivo da
  * logo oficial, basta trocar o conteúdo deste componente por uma <img>.
  */
-export default function Marca({ tamanho = 'pequena', comSubtitulo = true, className = '', marca = null }: MarcaProps) {
+export default function Marca({ tamanho = 'pequena', comSubtitulo = true, className = '', marca = null, subtitulo }: MarcaProps) {
   const grande = tamanho === 'grande'
+  const legenda = subtitulo ?? SUBTITULO_PLATAFORMA
   if (marca) {
     return (
       <div className={`flex flex-col items-center ${className}`} data-testid="marca-parceiro">
@@ -47,7 +50,7 @@ export default function Marca({ tamanho = 'pequena', comSubtitulo = true, classN
               grande ? 'text-[11px]' : 'text-[9px]'
             }`}
           >
-            {SUBTITULO_PLATAFORMA}
+            {legenda}
           </div>
         </>
       )}
