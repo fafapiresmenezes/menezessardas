@@ -25,6 +25,12 @@
 -- faz em toda função nova; `anon` herda de PUBLIC. O que funciona é `revoke ... from PUBLIC`
 -- seguido de `grant` para quem precisa.
 --
+-- APLICADA em 13/11/2026 22:07 UTC, com o toque de M no cartao das 22:02 ('Aplicar tudo agora').
+-- A linha 7 (DROP da funcao de teste da 129) foi tirada do que se aplicou, porque o conector do
+-- Supabase abre uma confirmacao propria para comando destrutivo e a primeira tentativa expirou
+-- esperando resposta. A funcao de teste segue la, inofensiva; o resto entrou.
+-- Fechou 58 das 110. As outras 52 precisaram das migracoes 136 e 137: ver o porque lá.
+--
 -- ADITIVA quanto a dados: não cria, não altera e não apaga nenhuma linha. Só mexe em permissão.
 -- REVERSÍVEL: o fim do arquivo traz o comando que devolve tudo como estava.
 
