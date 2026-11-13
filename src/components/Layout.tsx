@@ -9,6 +9,7 @@ import { ehSede } from '@/lib/equipe'
 import Busca from './Busca'
 import BoasVindas from './BoasVindas'
 import ParametrizarPlataforma from './ParametrizarPlataforma'
+import Ajudante from './Ajudante'
 import TourTela from './TourTela'
 import PerguntarTela from './PerguntarTela'
 import SinoNotificacoes from './SinoNotificacoes'
@@ -428,6 +429,7 @@ export default function Layout({ children, title }: LayoutProps) {
       <Busca aberta={buscaAberta} fechar={() => setBuscaAberta(false)} />
       <BoasVindas />
       <ParametrizarPlataforma />
+      <Ajudante />
     </div>
   )
 }
