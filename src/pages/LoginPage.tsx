@@ -6,6 +6,8 @@ import Marca from '@/components/Marca'
 import { NOME_PLATAFORMA } from '@/lib/plataforma'
 import { marcaPorDominio, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { esquecerEscritorio } from '@/lib/equipe'
+import { useTexto } from '@/lib/i18n'
+import SeletorIdioma from '@/components/SeletorIdioma'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -24,6 +26,9 @@ export default function LoginPage() {
   const [pedirCodigo, setPedirCodigo] = useState(false)
   const [codigo, setCodigo] = useState('')
   const navigate = useNavigate()
+  // Entrada multilingue (pedido de M, 13/11/2026): a tela fala o idioma escolhido nas boas-vindas
+  // e a fileira de idiomas no pe troca na hora. Padrao: portugues.
+  const t = useTexto()
 
 
   // Dois fatores: se a conta tem aplicativo autenticador, a sessão só vale depois do código (nível aal2).
@@ -37,9 +42,9 @@ export default function LoginPage() {
     try {
       const { data: f } = await supabase.auth.mfa.listFactors()
       const fator = f?.totp?.find(x => x.status === 'verified')
-      if (!fator) { setErro('Nenhum aplicativo autenticador ativo nesta conta.'); return }
+      if (!fator) { setErro(t('erro.semAutenticador')); return }
       const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId: fator.id, code: codigo.replace(/\s/g, '') })
-      if (error) setErro('Código não confere. Tente de novo.')
+      if (error) setErro(t('erro.codigoErrado'))
       else navigate('/inicio')
     } finally { setCarregando(false) }
   }
@@ -52,7 +57,7 @@ export default function LoginPage() {
 
     if (!supabaseConfigurado) {
       // Modo demonstração sem senha foi desligado (pedido de M, 13/11/2026). Em produção a plataforma exige Supabase.
-      setErro('A plataforma não está configurada para entrar neste ambiente. Entre pelo endereço oficial.')
+      setErro(t('erro.naoConfigurada'))
       setCarregando(false)
       return
     }
@@ -60,12 +65,12 @@ export default function LoginPage() {
     if (primeiroAcesso) {
       // Anti-robô simples: campo invisível preenchido ou formulário enviado em menos de 3 s = robô.
       if (armadilha || Date.now() - abertoEm < 3000) {
-        setErro('Não foi possível criar o acesso. Tente novamente em alguns segundos.')
+        setErro(t('erro.robo'))
         setCarregando(false)
         return
       }
       if (senha.length < 8) {
-        setErro('A senha precisa ter pelo menos 8 caracteres.')
+        setErro(t('erro.senhaCurta'))
         setCarregando(false)
         return
       }
@@ -73,14 +78,14 @@ export default function LoginPage() {
         // O nome do escritório segue o padrão da casa: tudo em letras maiúsculas, sem espaços sobrando.
         const nomeEscritorio = escritorio.toUpperCase().replace(/\s+/g, ' ').trim()
         const { data, error } = await supabase.auth.signUp({ email, password: senha, options: { data: { escritorio: nomeEscritorio } } })
-        if (error) setErro(/rate limit/i.test(error.message ?? '') ? 'Muitas contas criadas em pouco tempo. Aguarde alguns minutos e tente de novo.' : 'Não foi possível criar o acesso: ' + mensagemAmigavel(error))
+        if (error) setErro(/rate limit/i.test(error.message ?? '') ? t('erro.muitasContas') : t('erro.criarAcessoPrefixo') + mensagemAmigavel(error))
         else if (data?.session) navigate('/inicio') // sem confirmação de e-mail: já entra; se o escritório existe, cai na tela de espera
         else {
-          setAvisoCadastro('Conta criada. Abra o e-mail que enviamos e toque no link de confirmação; depois entre com este e-mail e senha. Se o seu escritório já usa a plataforma, a pessoa que administra lá precisa liberar a sua entrada.')
+          setAvisoCadastro(t('login.avisoContaCriada'))
           setPrimeiroAcesso(false)
         }
       } catch {
-        setErro('Não foi possível criar o acesso. Tente novamente.')
+        setErro(t('erro.criarAcesso'))
       } finally {
         setCarregando(false)
       }
@@ -90,11 +95,11 @@ export default function LoginPage() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password: senha })
       if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else navigate('/inicio') }
-      else if (/not confirmed/i.test(error.message ?? '')) setErro('Falta confirmar o seu e-mail: abra a mensagem que enviamos quando a conta foi criada e toque no link. Depois entre de novo.')
-      else if (error.status === 400 || error.status === 401 || /invalid/i.test(mensagemAmigavel(error))) setErro('E-mail ou senha incorretos.')
-      else setErro('Não foi possível falar com o servidor (' + mensagemAmigavel(error) + '). Verifique a conexão e tente de novo.')
+      else if (/not confirmed/i.test(error.message ?? '')) setErro(t('erro.emailNaoConfirmado'))
+      else if (error.status === 400 || error.status === 401 || /invalid/i.test(mensagemAmigavel(error))) setErro(t('erro.credenciais'))
+      else setErro(t('erro.servidorPrefixo') + mensagemAmigavel(error) + t('erro.servidorSufixo'))
     } catch {
-      setErro('Não foi possível falar com o servidor. Verifique a conexão e tente de novo.')
+      setErro(t('erro.servidor'))
     } finally {
       setCarregando(false)
     }
@@ -110,7 +115,7 @@ export default function LoginPage() {
         <div className="bg-white rounded-sm shadow-xl border-t-2 border-dourado p-8">
           <h1 className="font-serif text-2xl text-navy text-center">{NOME_PLATAFORMA}</h1>
           <p className="text-sm text-grafite-claro text-center mt-2 mb-7">
-            {primeiroAcesso ? 'Crie a sua conta e diga de qual escritório você é' : 'Entre com o seu e-mail e a sua senha'}
+            {primeiroAcesso ? t('login.subtituloCadastro') : t('login.subtitulo')}
           </p>
 
           {erro && (
@@ -127,34 +132,30 @@ export default function LoginPage() {
 
           {primeiroAcesso && (
             <div role="status" className="mb-5 p-3 bg-atencaoFundo border-l-2 border-atencao text-atencao text-sm">
-              Crie sua conta com e-mail, senha e o nome do seu escritório. Se o escritório já usa a
-              plataforma, o seu pedido vai para quem administra lá e você só entra depois que essa pessoa
-              liberar. Se ele ainda não usa, é criado agora, vazio, e você passa a administrá-lo.
+              {t('login.avisoPrimeiroAcesso')}
             </div>
           )}
 
           {avisoRecuperacao && (
             <div role="status" className="mb-5 p-3 bg-atencaoFundo border-l-2 border-atencao text-atencao text-sm">
-              {supabaseConfigurado
-                ? 'Esqueceu a senha? Peça a uma pessoa administradora da sua equipe uma senha provisória (menu Equipe). Depois de entrar, troque-a em Configurações → Senha.'
-                : 'Entrada exige senha válida da plataforma. Fale com a administração.'}
+              {supabaseConfigurado ? t('login.avisoRecuperacao') : t('login.avisoRecuperacaoSemBanco')}
             </div>
           )}
 
           {pedirCodigo ? (
             <form onSubmit={verificarCodigo} className="space-y-5" data-testid="form-2fa">
-              <p className="text-sm text-grafite">Digite o código de 6 dígitos do seu aplicativo autenticador.</p>
-              <input aria-label="Código de 6 dígitos" inputMode="numeric" autoFocus maxLength={7} value={codigo} onChange={e => setCodigo(e.target.value)} className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm tracking-widest" />
+              <p className="text-sm text-grafite">{t('login.codigoPedido')}</p>
+              <input aria-label={t('login.codigoRotulo')} inputMode="numeric" autoFocus maxLength={7} value={codigo} onChange={e => setCodigo(e.target.value)} className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm tracking-widest" />
               {erro && <p role="alert" className="text-sm text-critico">{erro}</p>}
-              <button type="submit" disabled={carregando} title="Confere o código do aplicativo autenticador e conclui a entrada na plataforma" className="w-full bg-navy text-white py-3 rounded-sm uppercase tracking-wider text-sm">Confirmar código</button>
-              <button type="button" onClick={async () => { await supabase.auth.signOut(); setPedirCodigo(false); setCodigo('') }} title="Sai desta conta e volta à tela de e-mail e senha para entrar com outra" className="w-full text-sm underline text-grafite">Entrar com outra conta</button>
+              <button type="submit" disabled={carregando} title={t('login.confirmarCodigoTitulo')} className="w-full bg-navy text-white py-3 rounded-sm uppercase tracking-wider text-sm">{t('login.confirmarCodigo')}</button>
+              <button type="button" onClick={async () => { await supabase.auth.signOut(); setPedirCodigo(false); setCodigo('') }} title={t('login.outraContaTitulo')} className="w-full text-sm underline text-grafite">{t('login.outraConta')}</button>
             </form>
           ) : (
           <form onSubmit={entrar} className="space-y-5">
             <input type="text" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" value={armadilha} onChange={e => setArmadilha(e.target.value)} className="absolute opacity-0 h-0 w-0 pointer-events-none" />
             <div>
               <label htmlFor="email" className="block text-xs uppercase tracking-wider text-grafite mb-2">
-                E-mail
+                {t('login.email')}
               </label>
               <input
                 id="email"
@@ -170,7 +171,7 @@ export default function LoginPage() {
 
             <div>
               <label htmlFor="senha" className="block text-xs uppercase tracking-wider text-grafite mb-2">
-                Senha
+                {t('login.senha')}
               </label>
               <input
                 id="senha"
@@ -186,8 +187,8 @@ export default function LoginPage() {
 
             {primeiroAcesso && (
               <div>
-                <label htmlFor="escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title="Escreva o nome do escritório de advocacia a que você pertence. O padrão da plataforma é tudo em LETRAS MAIÚSCULAS, para todo mundo escrever igual e ninguém errar.">
-                  Escritório (em letras maiúsculas)
+                <label htmlFor="escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title={t('login.escritorioRotuloTitulo')}>
+                  {t('login.escritorio')}
                 </label>
                 <input
                   id="escritorio"
@@ -197,21 +198,21 @@ export default function LoginPage() {
                   value={escritorio}
                   onChange={(e) => setEscritorio(e.target.value.toUpperCase())}
                   required
-                  placeholder="EX.: SARDAS E MENEZES"
-                  title="Nome do seu escritório, sempre em letras maiúsculas (a tela já converte sozinha). Quem é do mesmo escritório escreve o mesmo nome, igualzinho."
+                  placeholder={t('login.escritorioExemplo')}
+                  title={t('login.escritorioCampoTitulo')}
                   className="w-full px-4 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado uppercase"
                 />
-                <p className="text-xs text-grafite-claro mt-1">Padrão da casa: TUDO EM LETRAS MAIÚSCULAS, exatamente igual para todos do mesmo escritório. A tela converte sozinha enquanto você digita.</p>
+                <p className="text-xs text-grafite-claro mt-1">{t('login.escritorioAjuda')}</p>
               </div>
             )}
 
             <button
               type="submit"
               disabled={carregando}
-              title={primeiroAcesso ? 'Cria a sua conta e envia o pedido de entrada ao escritório informado (ou cria o escritório, se ele ainda não existe)' : 'Entra na plataforma com o e-mail e a senha informados'}
+              title={primeiroAcesso ? t('login.criarAcessoTitulo') : t('login.entrarTitulo')}
               className="w-full bg-navy hover:bg-navy-700 disabled:bg-grafite-claro text-white tracking-wider uppercase text-sm py-3 rounded-sm transition"
             >
-              {carregando ? 'Aguarde…' : primeiroAcesso ? 'Criar acesso' : 'Entrar'}
+              {carregando ? t('login.aguarde') : primeiroAcesso ? t('login.criarAcesso') : t('login.entrar')}
             </button>
           </form>
           )}
@@ -223,10 +224,10 @@ export default function LoginPage() {
                 setErro('')
                 setAvisoRecuperacao(true)
               }}
-              title="Mostra as instruções para recuperar a senha com uma pessoa administradora da sua equipe"
+              title={t('login.esqueciSenhaTitulo')}
               className="inline-flex items-center min-h-[44px] text-sm text-navy underline underline-offset-4 hover:text-dourado-escuro"
             >
-              Esqueci minha senha
+              {t('login.esqueciSenha')}
             </button>
             {supabaseConfigurado && (
               <button
@@ -236,18 +237,21 @@ export default function LoginPage() {
                   setAvisoCadastro('')
                   setPrimeiroAcesso(v => !v)
                 }}
-                title={primeiroAcesso ? 'Volta à tela de entrada para quem já tem conta' : 'Muda o formulário para criar uma conta nova e dizer de qual escritório você é'}
+                title={primeiroAcesso ? t('login.jaTenhoAcessoTitulo') : t('login.criarContaTitulo')}
                 className="block mx-auto mt-3 min-h-[44px] text-sm text-navy underline underline-offset-4 hover:text-dourado-escuro"
               >
-                {primeiroAcesso ? 'Já tenho acesso' : 'Criar conta'}
+                {primeiroAcesso ? t('login.jaTenhoAcesso') : t('login.criarConta')}
               </button>
             )}
           </div>
         </div>
 
         <p className="text-center text-white/60 text-xs mt-8">
-          Theye.club
+          {NOME_PLATAFORMA}
         </p>
+
+        {/* Fileira de idiomas: sempre visivel na primeira tela, troca a lingua na hora. */}
+        <SeletorIdioma />
       </div>
     </main>
   )

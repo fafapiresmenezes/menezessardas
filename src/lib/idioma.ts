@@ -1,14 +1,16 @@
-// Escolha de idioma do visitante. Guarda em localStorage para não repetir na próxima visita.
-// Pedido de M (13/11/2026): tela anterior ao login com português, inglês, chinês e espanhol.
+// Escolha de idioma do visitante. Guarda em localStorage para valer na próxima visita.
+// Pedido de M (13/11/2026): a entrada do instituto fala português, inglês, chinês e espanhol.
+// Os textos traduzidos ficam em src/lib/i18n.ts; aqui só mora a escolha e a lista de idiomas.
 export type Idioma = 'pt' | 'en' | 'zh' | 'es'
 
 const CHAVE = 'theye-idioma'
 
-export const IDIOMAS: { codigo: Idioma; nome: string; nativo: string }[] = [
-  { codigo: 'pt', nome: 'Português', nativo: 'Português' },
-  { codigo: 'en', nome: 'English', nativo: 'English' },
-  { codigo: 'zh', nome: 'Chinese', nativo: '中文' },
-  { codigo: 'es', nome: 'Spanish', nativo: 'Español' },
+// Cada idioma aparece escrito na própria língua; o nome traduzido vem do dicionário (i18n).
+export const IDIOMAS: { codigo: Idioma; nativo: string }[] = [
+  { codigo: 'pt', nativo: 'Português' },
+  { codigo: 'en', nativo: 'English' },
+  { codigo: 'zh', nativo: '中文' },
+  { codigo: 'es', nativo: 'Español' },
 ]
 
 export function idiomaEscolhido(): Idioma | null {
