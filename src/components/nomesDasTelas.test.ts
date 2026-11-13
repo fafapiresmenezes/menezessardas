@@ -17,8 +17,11 @@ function arquivoDaRota(rota: string): string {
   const re = new RegExp(`path="${rota.replace(/[/]/g, '\\/')}"[\\s\\S]{0,240}?<([A-ZÀ-Ý][\\wÀ-ÿ]+)\\s*/>`)
   const comp = app.match(re)?.[1]
   expect(comp, `o endereço ${rota} não está no App.tsx`).toBeTruthy()
-  const imp = app.match(new RegExp(`${comp}\\s*=\\s*lazy\\(\\(\\) => import\\('@/pages/([^']+)'\\)`))
-    ?? app.match(new RegExp(`import ${comp} from '@/pages/([^']+)'`))
+  // `const ` e `^` importam: sem eles, o nome de um componente que TERMINA com o nome de outro
+  // (PortalInstitutoPage e InstitutoPage) casa com a linha errada e o teste passa a ler o arquivo
+  // de outra tela. Aconteceu em 13/11/2026, quando as páginas das portas do Instituto entraram.
+  const imp = app.match(new RegExp(`^const ${comp}\\s*=\\s*lazy\\(\\(\\) => import\\('@/pages/([^']+)'\\)`, 'm'))
+    ?? app.match(new RegExp(`^import ${comp} from '@/pages/([^']+)'`, 'm'))
   expect(imp, `a tela ${comp} (${rota}) não é importada de @/pages`).toBeTruthy()
   return `src/pages/${imp![1]}.tsx`
 }

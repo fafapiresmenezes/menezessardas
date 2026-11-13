@@ -5,6 +5,11 @@ import { useIdiomaEscolhido } from '@/lib/i18n'
 import LoginPage from '@/pages/LoginPage'
 import BoasVindasPage from '@/pages/BoasVindasPage'
 const StokasticosPage = lazy(() => import('@/pages/StokasticosPage'))
+// Passo B7: as portas do Instituto que ainda estão em desenvolvimento, uma página por endereço.
+// Os oito endereços estão escritos à mão aqui, e não lidos de src/data/portais-instituto.ts, de
+// propósito: importar a lista no App.tsx puxaria o texto das oito páginas para o primeiro acesso.
+const PortalInstitutoPage = lazy(() => import('@/pages/PortalInstitutoPage'))
+const PortaisInstitutoPage = lazy(() => import('@/pages/PortaisInstitutoPage'))
 import DashboardPage from '@/pages/DashboardPage'
 const ImovelListPage = lazy(() => import('@/pages/ImovelListPage'))
 const NovoImovelPage = lazy(() => import('@/pages/NovoImovelPage'))
@@ -186,6 +191,15 @@ function App() {
         <Route path="/stokasticos/blog" element={<StokasticosPage />} />
         <Route path="/stokasticos/ciencia" element={<StokasticosPage />} />
         <Route path="/stokasticos/magia" element={<StokasticosPage />} />
+        <Route path="/portais" element={<PortaisInstitutoPage />} />
+        <Route path="/preditiva" element={<PortalInstitutoPage />} />
+        <Route path="/geomapeamento" element={<PortalInstitutoPage />} />
+        <Route path="/governo" element={<PortalInstitutoPage />} />
+        <Route path="/educacao" element={<PortalInstitutoPage />} />
+        <Route path="/civico" element={<PortalInstitutoPage />} />
+        <Route path="/ciberseguranca" element={<PortalInstitutoPage />} />
+        <Route path="/quantum" element={<PortalInstitutoPage />} />
+        <Route path="/ia" element={<PortalInstitutoPage />} />
         <Route
           path="/login"
           element={<Entrada autenticado={isAuthenticated} />}
