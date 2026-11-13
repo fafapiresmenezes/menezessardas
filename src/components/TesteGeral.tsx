@@ -105,16 +105,16 @@ export default function TesteGeral() {
           )}
         </div>
         <div className="flex flex-wrap gap-2">
-          <button onClick={rodar} disabled={rodando || !supabaseConfigurado} className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">
+          <button onClick={rodar} disabled={rodando || !supabaseConfigurado} title="Roda agora todas as verificações da plataforma (banco, e-mail, blockchain, publicações) e mostra o que funcionou" className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">
             <PlayCircle size={16} aria-hidden="true" /> {rodando ? 'Testando…' : 'Testar tudo'}
           </button>
           {/* Passo 103: relatório do último teste em texto, para colar num e-mail ou no Compliance. */}
           {Object.keys(estados).length > 0 && (<>
             {/* Passo 165: imprimir o relatório do Testar tudo. */}
-            <button type="button" onClick={() => window.print()} data-testid="imprimir-relatorio" className="inline-flex items-center gap-2 border px-3 min-h-[44px] text-sm mr-2 print:hidden">Imprimir</button>
-            <button type="button" data-testid="copiar-link-testes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="inline-flex items-center gap-2 border px-3 min-h-[44px] text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 224 */}
-            {Object.keys(estados).length > 0 && <button type="button" data-testid="baixar-testes" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['teste;estado;mensagem;ms', ...Object.entries(estados).map(([n, s]) => `${n};${s.e};${(s.msg ?? '').replace(/[;\n]/g, ' ')};${s.ms ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'testar-tudo.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 313 */}
-            <button type="button" onClick={() => { copiarRelatorio(); setRelCopiado(true) }} data-testid="copiar-relatorio" className="inline-flex items-center gap-2 border border-navy/20 text-navy min-h-[44px] px-4 text-sm">
+            <button type="button" onClick={() => window.print()} data-testid="imprimir-relatorio" title="Abre a janela de impressão do navegador para imprimir o relatório do teste" className="inline-flex items-center gap-2 border px-3 min-h-[44px] text-sm mr-2 print:hidden">Imprimir</button>
+            <button type="button" data-testid="copiar-link-testes" title="Copia o endereço desta página para compartilhar o relatório do teste" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="inline-flex items-center gap-2 border px-3 min-h-[44px] text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 224 */}
+            {Object.keys(estados).length > 0 && <button type="button" data-testid="baixar-testes" aria-live="polite" title="Baixa a planilha CSV com cada verificação, seu estado, mensagem e tempo em milissegundos" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['teste;estado;mensagem;ms', ...Object.entries(estados).map(([n, s]) => `${n};${s.e};${(s.msg ?? '').replace(/[;\n]/g, ' ')};${s.ms ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'testar-tudo.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 313 */}
+            <button type="button" onClick={() => { copiarRelatorio(); setRelCopiado(true) }} data-testid="copiar-relatorio" title="Copia o relatório do teste em texto, pronto para colar em e-mail ou no Compliance" className="inline-flex items-center gap-2 border border-navy/20 text-navy min-h-[44px] px-4 text-sm">
               {relCopiado ? 'Relatório copiado' : 'Copiar relatório'}
             </button>
           </>)}
