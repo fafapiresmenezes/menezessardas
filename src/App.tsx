@@ -17,6 +17,7 @@ const RoyaltiesPage = lazy(() => import('@/pages/RoyaltiesPage'))
 const MedicoesContratosPage = lazy(() => import('@/pages/MedicoesContratosPage'))
 const SuperficieAtaquePage = lazy(() => import('@/pages/SuperficieAtaquePage'))
 const AguaPage = lazy(() => import('@/pages/AguaPage'))
+const TrilhasPage = lazy(() => import('@/pages/TrilhasPage'))
 import DashboardPage from '@/pages/DashboardPage'
 const ImovelListPage = lazy(() => import('@/pages/ImovelListPage'))
 const NovoImovelPage = lazy(() => import('@/pages/NovoImovelPage'))
@@ -191,6 +192,10 @@ function App() {
         <Route
           path="/agua"
           element={isAuthenticated ? <AguaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/trilhas"
+          element={isAuthenticated ? <TrilhasPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/ferramentas"

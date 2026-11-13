@@ -90,6 +90,7 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: HeartPulse, label: 'Saúde', href: '/saude' },
     { icon: ShieldCheck, label: 'Superfície de ataque', href: '/superficie-de-ataque' },
     { icon: Droplets, label: 'Água dos reservatórios (ANA)', href: '/agua' },
+    { icon: GraduationCap, label: 'Trilhas de estudo', href: '/trilhas' },
     { icon: Banknote, label: 'Royalties', href: '/royalties' },
   ] },
   { id: 'conta', titulo: 'Minha conta', bloco: 'Minha conta', nivel: 'todos', dica: 'Do seu jeito', itens: [
@@ -197,6 +198,7 @@ export const DICAS: Record<string, string> = {
   '/engenharia': 'A plataforma de engenharia: matérias, consultores e cálculo de estrutura com memória de cálculo',
   '/superficie-de-ataque': 'Mapa do que um invasor alcançaria e o que fazer em cada ponto, por enquanto com dados de exemplo',
   '/agua': 'Medição diária dos reservatórios publicada pela ANA: volume, nível e vazões, com a data em que cada número chegou',
+  '/trilhas': 'Plano de estudo por nicho, montado sobre a ementa dos consultores, com a fonte de cada módulo',
   '/saude': 'A plataforma de saúde: especialidades médicas, consultores e o lastro dos prompts',
   '/geolocalizacao': 'MVP de geolocalização no próprio titular: posição, câmera como sensor de lugar, satélites e município, tudo cifrado no aparelho',
   '/honorarios': 'Honorários combinados, cobrados e recebidos, caso por caso',
