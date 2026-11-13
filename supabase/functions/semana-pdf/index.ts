@@ -134,8 +134,9 @@ Deno.serve(async (req) => {
   const semanaDaCasa = async () => {
     if (!cronOk || !conf.cron_segredo) return db.rpc('semana_agenda', { p_inicio: amanha, p_dias: 7, p_escritorio: escritorioId })
     const r = await db.rpc('semana_agenda_completa', { p_segredo: conf.cron_segredo, p_inicio: amanha, p_dias: 7, p_escritorio: escritorioId })
-    const naoExiste = r.error && /semana_agenda_completa|PGRST202|42883|does not exist|not find/i.test(`${r.error.code ?? ''} ${r.error.message ?? ''}`)
-    if (naoExiste) return db.rpc('semana_agenda', { p_inicio: amanha, p_dias: 7, p_escritorio: escritorioId })
+    // Sem a função no banco, a resposta vem com erro ou simplesmente sem semana nenhuma. Nos dois
+    // casos se volta para a `semana_agenda`, que é o que existe hoje.
+    if (r.error || r.data == null) return db.rpc('semana_agenda', { p_inicio: amanha, p_dias: 7, p_escritorio: escritorioId })
     return r
   }
   const [{ data: semana, error }, { data: marca }] = await Promise.all([
