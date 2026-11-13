@@ -1,7 +1,7 @@
 {
-  "name": "Plataforma THEYE",
-  "short_name": "THEYE",
-  "description": "Gestão do escritório: prazos, intimações, contratos, honorários e agenda, com avisos no celular.",
+  "name": "Instituto DI",
+  "short_name": "INSTITUTO DI",
+  "description": "Uma casa de soluções multidisciplinares em direito, engenharia, saúde e dados.",
   "lang": "pt-BR",
   "start_url": "./#/inicio",
   "scope": "./",
@@ -9,7 +9,7 @@
   "orientation": "portrait",
   "background_color": "#F5F2EC",
   "theme_color": "#0B0B0C",
-  "categories": ["business", "productivity"],
+  "categories": ["business", "productivity", "education"],
   "icons": [
     { "src": "icone-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
@@ -17,7 +17,7 @@
   ],
   "shortcuts": [
     { "name": "Meu dia", "url": "./#/meu-dia", "icons": [{ "src": "icone-192.png", "sizes": "192x192" }] },
-    { "name": "Intimações", "url": "./#/intimacoes", "icons": [{ "src": "icone-192.png", "sizes": "192x192" }] },
-    { "name": "Agenda", "url": "./#/agenda", "icons": [{ "src": "icone-192.png", "sizes": "192x192" }] }
+    { "name": "Frentes do Instituto", "url": "./#/boas-vindas", "icons": [{ "src": "icone-192.png", "sizes": "192x192" }] },
+    { "name": "Caderno de produtos", "url": "./#/caderno-de-produtos", "icons": [{ "src": "icone-192.png", "sizes": "192x192" }] }
   ]
 }
