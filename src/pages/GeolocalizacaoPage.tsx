@@ -215,7 +215,7 @@ export default function GeolocalizacaoPage() {
   // ---------- Telas ----------
   if (!cofre || !dados) {
     return (
-      <Layout>
+      <Layout title="Geolocalização (MVP)">
         <div className="max-w-xl mx-auto space-y-4">
           <h1 className="text-2xl font-semibold text-navy">Geolocalização: MVP em você mesmo</h1>
           {msg && <p className="text-sm text-regular">{msg}</p>}
@@ -234,7 +234,7 @@ export default function GeolocalizacaoPage() {
 
   if (!dados.consentimento) {
     return (
-      <Layout>
+      <Layout title="Geolocalização (MVP)">
         <div className="max-w-2xl mx-auto space-y-4">
           <h1 className="text-2xl font-semibold text-navy">Antes de gravar: o termo</h1>
           <div className={cartao}>
@@ -250,7 +250,7 @@ export default function GeolocalizacaoPage() {
   }
 
   return (
-    <Layout>
+    <Layout title="Geolocalização (MVP)">
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h1 className="text-2xl font-semibold text-navy">Geolocalização e geomapeamento</h1>
@@ -306,7 +306,7 @@ export default function GeolocalizacaoPage() {
         {aba === 'mapa' && calc && (
           <div className="grid md:grid-cols-2 gap-4">
             <div className={cartao}>
-              <div className="flex items-center justify-between gap-2"><h2 className="font-semibold text-navy">Linha do tempo</h2><input type="date" className="border border-navy/20 px-2 min-h-[40px] text-sm" value={dia} onChange={e => setDia(e.target.value)} /></div>
+              <div className="flex items-center justify-between gap-2"><h2 className="font-semibold text-navy">Linha do tempo</h2><input type="date" title="Escolha o dia que a linha do tempo vai mostrar" className="border border-navy/20 px-2 min-h-[40px] text-sm" value={dia} onChange={e => setDia(e.target.value)} /></div>
               <p className="text-xs text-grafite-claro mb-2">{calc.doDia.km.toFixed(1)} km no dia · {calc.doDia.pontos} pontos</p>
               {calc.linha.length === 0 ? <p className="text-sm text-grafite">Nenhuma parada de 5 minutos ou mais neste dia.</p> :
                 <ol className="text-sm space-y-1">{calc.linha.map((x, i) => <li key={i} className={x.tipo === 'parado' ? 'text-navy' : 'text-grafite-claro'}>{hora(x.de)}–{hora(x.ate)} · {x.texto}</li>)}</ol>}
@@ -363,7 +363,7 @@ export default function GeolocalizacaoPage() {
                 <p><b>{municipio.nome}/{municipio.uf}</b> · código IBGE {municipio.codigo} · população (Censo 2022): {municipio.populacao2022?.toLocaleString('pt-BR') ?? 'não veio'}</p>
                 <p className="text-xs text-grafite-claro">Fontes: {municipio.fontes.join('; ')}</p>
                 <h3 className="font-semibold text-navy pt-2">Notícias dos últimos 7 dias (GDELT)</h3>
-                {noticias.length === 0 ? <p className="text-grafite">Nenhuma notícia encontrada.</p> : <ul className="text-xs space-y-1">{noticias.slice(0, 20).map(n => <li key={n.url}><a className="underline" href={n.url} target="_blank" rel="noreferrer noopener">{n.titulo}</a> · {n.fonte} · {n.data}</li>)}</ul>}
+                {noticias.length === 0 ? <p className="text-grafite">Nenhuma notícia encontrada.</p> : <ul className="text-xs space-y-1">{noticias.slice(0, 20).map(n => <li key={n.url}><a className="underline" href={n.url} target="_blank" rel="noreferrer noopener" title="Abre a notícia no site de origem, numa aba nova">{n.titulo}</a> · {n.fonte} · {n.data}</li>)}</ul>}
               </div>}
             </div>
             <div className={cartao}>
@@ -400,14 +400,14 @@ export default function GeolocalizacaoPage() {
               <div className="flex flex-wrap gap-2">
                 <button className={botao} onClick={() => exportar('geojson')} title="Mapa inteiro: trajeto, pontos, paradas e lugares">GeoJSON</button>
                 <button className={botao} onClick={() => exportar('csv')} title="Todos os pontos em planilha">CSV</button>
-                <button className={botao} onClick={() => exportar('grafo')} title="Nós e ligações do grafo, com a fonte de cada ligação">Grafo (JSON)</button>
+                <button className={botao} onClick={() => exportar('grafo')} title="Nós e ligações do grafo, com a fonte de cada ligação">Ligações do mapa (arquivo JSON)</button>
               </div>
-              <button className={botao} onClick={conferir} title="Refaz a conta de hash de cada registro e diz se algo foi mexido">Conferir corrente de hash</button>
+              <button className={botao} onClick={conferir} title="Refaz a conta de hash de cada registro e diz se algo foi mexido">Conferir o lastro (corrente de códigos)</button>
               {corrente && <p className="text-xs text-navy">{corrente}</p>}
             </div>
             <div className={cartao + ' space-y-2'}>
               <h2 className="font-semibold text-navy"><Trash2 className="inline w-4 h-4 mr-1" />Apagar</h2>
-              <div className="flex gap-2 items-center"><input type="date" className="border border-navy/20 px-2 min-h-[44px] text-sm" value={dia} onChange={e => setDia(e.target.value)} /><button className={botao} onClick={() => apagar({ dia })} title="Apagar pontos e leituras de câmera deste dia">Apagar o dia</button></div>
+              <div className="flex gap-2 items-center"><input type="date" title="Escolha o dia que vai ser apagado" className="border border-navy/20 px-2 min-h-[44px] text-sm" value={dia} onChange={e => setDia(e.target.value)} /><button className={botao} onClick={() => apagar({ dia })} title="Apagar pontos e leituras de câmera deste dia">Apagar o dia</button></div>
               {calc && calc.lugares.length > 0 && <div className="flex flex-wrap gap-1">{calc.lugares.slice(0, 8).map(l => <button key={l.id} className="px-2 py-1 border border-navy/20 text-xs" onClick={() => apagar({ lugar: l })} title="Apagar tudo num raio de 150 m deste lugar">Apagar “{l.nome || 'sem nome'}”</button>)}</div>}
               <div className="flex flex-wrap gap-2 pt-2">
                 <button className={botao} onClick={async () => { pararGravacao(); desligarCamera(); await cofre.revogar(); atualizar(cofre) }} title="Retirar o consentimento: para de gravar e volta ao termo">Revogar consentimento</button>
