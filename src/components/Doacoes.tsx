@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useTexto } from '@/lib/i18n'
+import { entradaPara } from '@/lib/destino'
 
 /**
  * Espaço de doação na porta do Instituto (pedido de M, 13/11/2026 21:35: "já coloque, por favor,
@@ -26,7 +27,7 @@ export default function Doacoes() {
         </ul>
         <p className="text-sm text-neutral-300 mt-7" data-testid="doacao-destino">{t('doacoes.destino')}</p>
         <Link
-          to="/login"
+          to={entradaPara('/instituto')}
           title={t('doacoes.entrar')}
           data-testid="doacoes-entrar"
           className="inline-block mt-6 border border-[#fff] px-5 py-3 text-sm font-medium uppercase tracking-wider text-[#fff] no-underline transition hover:bg-neutral-800"

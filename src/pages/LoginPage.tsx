@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { mensagemAmigavel } from '@/lib/erros'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import Marca from '@/components/Marca'
 import { NOME_PLATAFORMA } from '@/lib/plataforma'
@@ -11,7 +11,8 @@ import SeletorIdioma from '@/components/SeletorIdioma'
 import Vertentes from '@/components/Vertentes'
 import Produtos from '@/components/Produtos'
 import Doacoes from '@/components/Doacoes'
-import { destinoSeguro, DESTINO_PADRAO } from '@/lib/destino'
+import { destinoSeguro, DESTINO_PADRAO, DESTINOS_PERMITIDOS, lembrarUltimaFrente } from '@/lib/destino'
+import ProvaDaPorta from '@/components/ProvaDaPorta'
 import { VERTENTES } from '@/data/vertentes'
 import type { Chave } from '@/lib/i18n'
 
@@ -38,11 +39,22 @@ export default function LoginPage() {
   // Pedido de M (13/11/2026 22:45): quem clicou num quadradinho entra direto na tela dele, e não
   // na plataforma jurídica. O destino vem no endereço e só vale se estiver na lista permitida.
   const [busca] = useSearchParams()
-  const destino = destinoSeguro(busca.get('ir'))
-  const vertenteDestino = VERTENTES.find(v => v.rota === destino && destino !== DESTINO_PADRAO)
+  const pedido = busca.get('ir')
+  const pedidoValido = !!pedido && DESTINOS_PERMITIDOS.includes(pedido)
+  const destino = pedidoValido ? destinoSeguro(pedido) : DESTINO_PADRAO
+  // Entrada de UM segmento (M, 13/11/2026 23:11): quem clica num quadradinho vê a tela mudar para a
+  // entrada daquele segmento, no topo, com o nome dele. Antes o clique caía na mesma tela, lá
+  // embaixo, e parecia que o botão não funcionava.
+  const vertenteDestino = pedidoValido ? VERTENTES.find(v => v.rota === destino) : undefined
   const nomeDestino = vertenteDestino ? t(`vertente.${vertenteDestino.id}.nome` as Chave)
-    : destino === '/caderno-de-produtos' ? t('produtos.titulo') : ''
-
+    : !pedidoValido ? '' : destino === '/caderno-de-produtos' ? t('produtos.titulo') : destino === '/instituto' ? t('login.entradaApoio') : ''
+  const doSegmento = !!nomeDestino
+  useEffect(() => {
+    if (!doSegmento) return
+    window.scrollTo({ top: 0 })
+    document.getElementById('email')?.focus({ preventScroll: true })
+  }, [doSegmento, destino])
+  const seguir = () => { lembrarUltimaFrente(destino); navigate(destino) }
 
   // Dois fatores: se a conta tem aplicativo autenticador, a sessão só vale depois do código (nível aal2).
   const precisaCodigo = async () => {
@@ -58,7 +70,7 @@ export default function LoginPage() {
       if (!fator) { setErro(t('erro.semAutenticador')); return }
       const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId: fator.id, code: codigo.replace(/\s/g, '') })
       if (error) setErro(t('erro.codigoErrado'))
-      else navigate(destino)
+      else seguir()
     } finally { setCarregando(false) }
   }
 
@@ -92,7 +104,7 @@ export default function LoginPage() {
         const nomeEscritorio = escritorio.toUpperCase().replace(/\s+/g, ' ').trim()
         const { data, error } = await supabase.auth.signUp({ email, password: senha, options: { data: { escritorio: nomeEscritorio } } })
         if (error) setErro(/rate limit/i.test(error.message ?? '') ? t('erro.muitasContas') : t('erro.criarAcessoPrefixo') + mensagemAmigavel(error))
-        else if (data?.session) navigate(destino) // sem confirmação de e-mail: já entra; se o escritório existe, cai na tela de espera
+        else if (data?.session) seguir() // sem confirmação de e-mail: já entra; se o escritório existe, cai na tela de espera
         else {
           setAvisoCadastro(t('login.avisoContaCriada'))
           setPrimeiroAcesso(false)
@@ -107,7 +119,7 @@ export default function LoginPage() {
 
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password: senha })
-      if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else navigate(destino) }
+      if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else seguir() }
       else if (/not confirmed/i.test(error.message ?? '')) setErro(t('erro.emailNaoConfirmado'))
       else if (error.status === 400 || error.status === 401 || /invalid/i.test(mensagemAmigavel(error))) setErro(t('erro.credenciais'))
       else setErro(t('erro.servidorPrefixo') + mensagemAmigavel(error) + t('erro.servidorSufixo'))
@@ -126,38 +138,66 @@ export default function LoginPage() {
             parceiro (marca própria) este lado mostra só a marca dele. */}
         <div className="porta text-center lg:text-left" data-testid="porta-instituto">
           <div className="flex justify-center lg:justify-start mb-6">
-            <Marca tamanho="grande" marca={marca} subtitulo={t('marca.instituto')} />
+            <Marca tamanho="grande" marca={marca} tipo="instituto" subtitulo={t('marca.instituto')} />
           </div>
-          {!marca && (
+          {!marca && doSegmento && (
+            <div data-testid="entrada-do-segmento">
+              <p className="text-sm font-medium uppercase tracking-[0.25em] text-neutral-300">{t('login.entradaDoSegmento')}</p>
+              <h1 className="mt-4 font-serif text-5xl leading-[1.05] md:text-6xl">{nomeDestino}</h1>
+              {vertenteDestino && (
+                <>
+                  <p className="mt-6 text-lg leading-relaxed text-neutral-100">{t(`vertente.${vertenteDestino.id}.resumo` as Chave)}</p>
+                  <ul className="mt-6 space-y-2 text-left">
+                    {t(`vertente.${vertenteDestino.id}.dentro` as Chave).split(' | ').map(item => (
+                      <li key={item} className="flex gap-3 text-base text-neutral-100">
+                        <span aria-hidden="true" className="text-neutral-400">—</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              <Link
+                to="/login"
+                title={t('login.voltarTodasDica')}
+                data-testid="voltar-todos-segmentos"
+                className="mt-8 inline-flex items-center py-3 text-base text-[#fff] underline decoration-neutral-400 underline-offset-4 hover:decoration-[#fff]"
+              >
+                <span aria-hidden="true">←&nbsp;</span>{t('login.voltarTodas')}
+              </Link>
+            </div>
+          )}
+          {!marca && !doSegmento && (
             <>
-              <h1 className="font-serif text-4xl md:text-5xl">{t('boasVindas.instituto')}</h1>
-              <p className="mt-4 text-lg leading-relaxed text-neutral-100">{t('porta.chamada')}</p>
+              <p className="text-sm font-medium uppercase tracking-[0.25em] text-neutral-300">{t('boasVindas.instituto')}</p>
+              <h1 className="mt-4 font-serif text-5xl leading-[1.05] md:text-6xl">{t('porta.promessa')}</h1>
+              <p className="mt-6 text-lg leading-relaxed text-neutral-100">{t('porta.chamada')}</p>
               <p className="mt-2 text-base text-neutral-300">{t('porta.apoio')}</p>
               <a
                 href="#frentes"
                 onClick={e => { e.preventDefault(); document.getElementById('frentes')?.scrollIntoView({ behavior: 'smooth' }) }}
                 title={t('porta.verFrentesDica')}
                 data-testid="porta-ver-frentes"
-                className="mt-6 inline-block text-base text-[#fff] underline decoration-neutral-400 underline-offset-4 hover:decoration-[#fff]"
+                className="mt-8 inline-block bg-[#fff] px-6 py-3 text-sm font-semibold uppercase tracking-wider text-[#000] no-underline transition hover:bg-neutral-200"
               >
-                {t('porta.verFrentes')} <span aria-hidden="true">↓</span>
+                {t('porta.conhecer')} <span aria-hidden="true">↓</span>
               </a>
+              <ProvaDaPorta />
             </>
           )}
         </div>
 
         <div>
-        <div className="bg-white rounded-sm shadow-xl border-t-2 border-dourado p-8">
-          <h1 className="font-serif text-2xl text-navy text-center">{NOME_PLATAFORMA}</h1>
+        <div className="cartao-entrada rounded-sm p-8 md:p-10" data-testid="cartao-entrada">
+          {!doSegmento && !marca && (
+            <p data-testid="so-membros" className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-grafite">{t('login.soMembros')}</p>
+          )}
+          <h1 className="font-serif text-2xl text-navy text-center" data-testid="titulo-do-cartao">
+            {doSegmento ? `${t('vertentes.entrarEm')} ${nomeDestino}` : NOME_PLATAFORMA}
+          </h1>
           <p className="text-sm text-grafite-claro text-center mt-2 mb-7">
             {primeiroAcesso ? t('login.subtituloCadastro') : t('login.subtitulo')}
           </p>
-
-          {nomeDestino && (
-            <div role="status" data-testid="login-destino" className="mb-5 p-3 bg-pergaminho border-l-2 border-navy text-navy text-sm">
-              {t('login.indoPara')} <strong>{nomeDestino}</strong>
-            </div>
-          )}
 
           {erro && (
             <div role="alert" className="mb-5 p-3 bg-criticoFundo border-l-2 border-critico text-critico text-sm">
@@ -287,9 +327,11 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <p className="text-center text-neutral-300 text-sm mt-6">
-          {NOME_PLATAFORMA}
-        </p>
+        {!doSegmento && !marca && (
+          <p data-testid="outros-segmentos" className="mt-5 text-center text-base leading-relaxed text-neutral-100">
+            {t('login.outrosSegmentos')}
+          </p>
+        )}
 
         {/* Fileira de idiomas: sempre visivel na primeira tela, troca a lingua na hora. */}
         <SeletorIdioma />
@@ -299,10 +341,17 @@ export default function LoginPage() {
         {/* Pedido de M (13/11/2026): depois de escolher a lingua, a pessoa tem de ver TODAS as
             vertentes do Instituto, nao so a juridica, mesmo as que estao em desenvolvimento.
             Nada aqui abre sem senha: cada quadradinho traz a pessoa de volta a esta entrada,
-            lembrando para qual tela ela quer ir depois da senha. */}
-        <Produtos />
-        <Vertentes />
-        <Doacoes />
+            lembrando para qual tela ela quer ir depois da senha.
+            Ordem (passo V13): primeiro as frentes, que respondem "o que é isto", depois o caderno
+            de produtos e o apoio. Em 21:35 M tinha pedido os produtos em cima; às 23:04 pediu a
+            página na ordem de quem compra, e é esta. */}
+        {!doSegmento && (
+          <>
+            <Vertentes />
+            <Produtos />
+            <Doacoes />
+          </>
+        )}
       </div>
     </main>
   )

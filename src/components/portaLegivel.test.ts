@@ -24,6 +24,7 @@ const ARQUIVOS = [
   'src/components/Vertentes.tsx',
   'src/components/Doacoes.tsx',
   'src/components/SeletorIdioma.tsx',
+  'src/components/ProvaDaPorta.tsx',
   'src/pages/BoasVindasPage.tsx',
 ]
 
@@ -65,7 +66,7 @@ describe('cada quadradinho leva à sua própria tela', () => {
 
   it('o quadradinho manda para a entrada lembrando o destino', () => {
     expect(entradaPara('/engenharia')).toBe('/login?ir=%2Fengenharia')
-    expect(entradaPara('/inicio')).toBe('/login')
+    expect(entradaPara('/inicio')).toBe('/login?ir=%2Finicio')
   })
 
   it('destino que não está na lista é ignorado, para ninguém usar a nossa entrada como desvio', () => {
@@ -84,5 +85,22 @@ describe('cada quadradinho leva à sua própria tela', () => {
         for (const i of itens) expect(i.length, `${lingua} ${v.id}`).toBeGreaterThan(3)
       }
     }
+  })
+})
+
+describe('o cartão de entrada tem um botão forte só', () => {
+  const css = readFileSync(join(process.cwd(), 'src/index.css'), 'utf-8')
+  it('o botão de entrar é branco com letra preta, nos dois modos', () => {
+    expect(css).toContain('.cartao-entrada button[type="submit"] { background-color: #FFFFFF !important; color: #000000 !important;')
+  })
+  it('o cartão é preto nos dois modos, e não cinza', () => {
+    expect(css).toContain('.cartao-entrada { background: #0A0A0A !important;')
+  })
+  it('a tela de entrada usa o cartão, a promessa e a faixa de prova', () => {
+    const tela = readFileSync(join(process.cwd(), 'src/pages/LoginPage.tsx'), 'utf-8')
+    expect(tela).toContain('cartao-entrada')
+    expect(tela).toContain("t('porta.promessa')")
+    expect(tela).toContain('<ProvaDaPorta />')
+    expect(tela.indexOf('<Vertentes />')).toBeLessThan(tela.indexOf('<Produtos />'))
   })
 })

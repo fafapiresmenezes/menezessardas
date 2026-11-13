@@ -270,3 +270,18 @@ html[data-letra='maior'] { font-size: 125%; }
    geral de `section` logo acima — era o "cinza com letra branca" que M apontou em 13/11/2026. */
 .porta, .porta h1, .porta h2, .porta h3 { color: #FFFFFF; }
 .dark section.porta, .dark .porta section { background: transparent; border-color: transparent; }
+
+/* O cartão de entrada (passo V13): preto com linha fina, igual nos dois modos, com UM botão forte.
+   Antes era branco no modo claro e cinza no escuro, e o botão de entrar era cinza sobre cinza. */
+.cartao-entrada { background: #0A0A0A !important; border: 1px solid #525252; }
+.cartao-entrada h1, .cartao-entrada .text-navy { color: #FFFFFF; }
+.cartao-entrada .text-grafite { color: #E5E5E5; }
+.cartao-entrada .text-grafite-claro { color: #D4D4D4; }
+.cartao-entrada input { background-color: #000000; color: #FFFFFF; border-color: #737373; }
+.cartao-entrada input:focus { border-color: #FFFFFF; }
+.cartao-entrada input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #000000 inset; -webkit-text-fill-color: #FFFFFF; caret-color: #FFFFFF; }
+.cartao-entrada button[type="submit"] { background-color: #FFFFFF !important; color: #000000 !important; font-weight: 600; }
+.cartao-entrada button[type="submit"]:hover { background-color: #E5E5E5 !important; }
+.cartao-entrada button[type="submit"]:disabled { background-color: #A3A3A3 !important; }
+.cartao-entrada .bg-pergaminho { background-color: #171717; border-color: #FFFFFF; }
+.cartao-entrada .hover\:text-dourado-escuro:hover { color: #D4D4D4; }

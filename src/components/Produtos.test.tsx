@@ -78,7 +78,7 @@ describe('espaço de doação', () => {
     const texto = screen.getByTestId('doacoes').textContent!
     expect(texto).not.toMatch(/pix|cart[ãa]o|iban|swift|ag[êe]ncia|conta n|\d{3}\.\d{3}\.\d{3}/i)
     expect(screen.getByTestId('doacao-destino').textContent).toBeTruthy()
-    expect(screen.getByTestId('doacoes-entrar').getAttribute('href')).toBe('/login')
+    expect(screen.getByTestId('doacoes-entrar').getAttribute('href')).toBe('/login?ir=%2Finstituto')
   })
 
   it('em espanhol a doação fala espanhol', () => {

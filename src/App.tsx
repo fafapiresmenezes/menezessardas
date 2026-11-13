@@ -500,8 +500,11 @@ function Entrada({ autenticado }: { autenticado: boolean }) {
   const [busca] = useSearchParams()
   const pedido = busca.get('ir')
   if (autenticado) return <Navigate to={destinoSeguro(pedido)} />
-  if (idioma) return <LoginPage />
-  return <Navigate to={pedido && destinoSeguro(pedido) === pedido ? `/boas-vindas?ir=${encodeURIComponent(pedido)}` : '/boas-vindas'} />
+  // Quem clicou num segmento antes de escolher a língua entra na entrada daquele segmento, em
+  // português, e troca a língua lá mesmo. Mandar de volta para a tela de línguas fazia o botão
+  // parecer quebrado (M, 13/11/2026 23:11).
+  if (idioma || (pedido && destinoSeguro(pedido) === pedido)) return <LoginPage />
+  return <Navigate to="/boas-vindas" />
 }
 
 /** Para onde manda quem chega na raiz ou num endereço que não existe. Mesmo motivo acima. */

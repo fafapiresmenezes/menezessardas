@@ -6,6 +6,7 @@ import Marca from '@/components/Marca'
 import Vertentes from '@/components/Vertentes'
 import Produtos from '@/components/Produtos'
 import Doacoes from '@/components/Doacoes'
+import ProvaDaPorta from '@/components/ProvaDaPorta'
 
 // Tela anterior ao login (pedido de M, 13/11/2026): o visitante escolhe o idioma e entra nele.
 // A escolha vale de verdade: a tela de entrada, a criação de conta e a recuperação de senha
@@ -22,14 +23,15 @@ export default function BoasVindasPage() {
   const escolher = (codigo: Idioma) => {
     trocarIdioma(codigo)
     // Quem chegou por um quadradinho continua indo para a tela daquele quadradinho.
-    navigate(entradaPara(destinoSeguro(busca.get('ir'))))
+    const ir = busca.get('ir'); navigate(ir ? entradaPara(destinoSeguro(ir)) : '/login')
   }
   return (
     <div className="porta min-h-screen bg-black px-4 py-12 md:py-16">
       <div className="mx-auto w-full max-w-6xl text-center">
-        <div className="flex justify-center mb-8"><Marca tamanho="grande" subtitulo={t('marca.instituto')} /></div>
-        <h1 className="text-4xl md:text-5xl font-serif">{t('boasVindas.instituto')}</h1>
-        <p className="text-lg text-neutral-100 mt-4 max-w-3xl mx-auto leading-relaxed">{t('porta.chamada')}</p>
+        <div className="flex justify-center mb-8"><Marca tamanho="grande" tipo="instituto" subtitulo={t('marca.instituto')} /></div>
+        <p className="text-sm font-medium uppercase tracking-[0.25em] text-neutral-300">{t('boasVindas.instituto')}</p>
+        <h1 className="mt-4 text-5xl md:text-6xl font-serif leading-[1.05] max-w-4xl mx-auto">{t('porta.promessa')}</h1>
+        <p className="text-lg text-neutral-100 mt-6 max-w-3xl mx-auto leading-relaxed">{t('porta.chamada')}</p>
         <p className="text-base text-neutral-300 mt-2 max-w-3xl mx-auto">{t('porta.apoio')}</p>
 
         {/* O convite aparece nas quatro línguas: quem chega lê na sua antes de escolher. */}
@@ -61,13 +63,16 @@ export default function BoasVindasPage() {
           {t('porta.verFrentes')} <span aria-hidden="true">↓</span>
         </a>
 
-        {/* Pedido de M (13/11/2026 21:35): a aba Produtos vem ACIMA do quadro das vertentes, e o
-            espaço de doação depois. A plataforma é um dos produtos: as vertentes logo abaixo. */}
-        <Produtos />
+        {/* Ordem de quem compra (passo V13, 13/11/2026 23:04): o que é, a prova, as frentes, o
+            caderno de produtos e o apoio. Às 21:35 os produtos vinham em cima; mudou com o pedido
+            de pensar a página pela jornada de quem chega. */}
+        <ProvaDaPorta centro />
 
         {/* Pedido de M (13/11/2026): todas as vertentes aparecem aqui, na língua escolhida, mesmo
             as que ainda estão em desenvolvimento. Nada abre sem senha. */}
         <Vertentes />
+
+        <Produtos />
 
         <Doacoes />
       </div>
