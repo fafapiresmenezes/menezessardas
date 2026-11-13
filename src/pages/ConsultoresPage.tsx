@@ -89,7 +89,7 @@ export default function ConsultoresPage() {
                 <p className="text-[11px] uppercase tracking-[0.18em] text-grafite-claro mb-2">{g}</p>
                 <div className="space-y-1">
                   {NIVEIS.filter(n => n.nivel === g).map(n => (
-                    <button key={n.chave} type="button" data-testid={`consultor-${n.chave}`} onClick={() => { setSel(n); setResposta(null); setErro(''); try { localStorage.setItem('lsm-consultor', n.chave) } catch { /* sem memória local */ } }}
+                    <button key={n.chave} type="button" data-testid={`consultor-${n.chave}`} title={`Seleciona o consultor de ${n.titulo} (foco: ${n.foco.toLowerCase()}) para fazer o diagnóstico ou perguntas`} onClick={() => { setSel(n); setResposta(null); setErro(''); try { localStorage.setItem('lsm-consultor', n.chave) } catch { /* sem memória local */ } }}
                       className={`w-full text-left px-4 py-3 border min-h-[44px] ${sel.chave === n.chave ? 'bg-navy text-white border-navy' : 'bg-white border-navy/10 hover:border-dourado'}`}>
                       <span className="block font-medium text-sm">{n.titulo}</span>
                       <span className={`block text-xs ${sel.chave === n.chave ? 'text-white/70' : 'text-grafite'}`}>{n.foco}</span>
@@ -102,7 +102,7 @@ export default function ConsultoresPage() {
           <section className="bg-white border border-navy/10 p-6">
             <div className="flex items-center gap-3"><Briefcase className="text-dourado" size={22} aria-hidden="true" /><h2 className="font-serif text-2xl text-navy">{sel.titulo}</h2></div>
             <p className="text-sm text-grafite mt-1">{sel.foco}</p>
-            <button type="button" data-testid="diagnostico" onClick={diagnostico} disabled={carregando}
+            <button type="button" data-testid="diagnostico" onClick={diagnostico} disabled={carregando} title="Envia os números agregados do escritório ao consultor e recebe as 5 ações prioritárias para 30 dias"
               className="mt-5 inline-flex items-center gap-2 min-h-[44px] px-5 bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-50">
               <Sparkles size={16} aria-hidden="true" /> Diagnóstico agora
             </button>
@@ -110,7 +110,7 @@ export default function ConsultoresPage() {
               <label className="sr-only" htmlFor="perg-consultor">Pergunta ao consultor</label>
               <input id="perg-consultor" value={pergunta} onChange={e => { setPergunta(e.target.value); try { localStorage.setItem('lsm-consultor-pergunta', e.target.value) } catch { /* sem memória local */ } }} placeholder="Ou pergunte algo específico a este consultor"
                 className="flex-1 min-h-[44px] border border-navy/20 px-3 text-sm" />
-              <button type="submit" disabled={carregando} className="min-h-[44px] px-4 border border-navy text-navy" aria-label="Enviar"><Send size={16} /></button>
+              <button type="submit" disabled={carregando} title="Envia sua pergunta ao consultor selecionado" className="min-h-[44px] px-4 border border-navy text-navy" aria-label="Enviar"><Send size={16} /></button>
             </form>
             {carregando && <p className="text-sm text-grafite mt-6">O consultor está analisando o escritório…</p>}
             {erro && <p role="alert" className="text-sm text-critico mt-6">{erro}</p>}
@@ -118,13 +118,13 @@ export default function ConsultoresPage() {
             {resposta && (
               <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-grafite-claro" data-testid="acoes-consultor">
                 {respondidoEm && <span>Respondido em {respondidoEm.toLocaleString('pt-BR')} pelo {sel.titulo}.</span>}
-                <button type="button" onClick={() => navigator.clipboard?.writeText(resposta.resposta).then(() => setCopiado(true)).catch(() => undefined)} className="underline text-navy" data-testid="copiar-resposta">{copiado ? 'Copiado' : 'Copiar resposta'}</button>
+                <button type="button" onClick={() => navigator.clipboard?.writeText(resposta.resposta).then(() => setCopiado(true)).catch(() => undefined)} title="Copia o texto da resposta do consultor para a área de transferência" className="underline text-navy" data-testid="copiar-resposta">{copiado ? 'Copiado' : 'Copiar resposta'}</button>
                 {/* Passo 144: imprimir a resposta do consultor em uma página. */}
-                <button type="button" onClick={() => window.print()} className="underline text-navy print:hidden" data-testid="imprimir-consultor">Imprimir</button>
-                <button type="button" data-testid="copiar-link-consultores" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 underline text-navy print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 246 */}
-                {resposta && <button type="button" data-testid="baixar-consultor" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Consultor (${resposta.especialidade}) · ${new Date(resposta.criadoEm).toLocaleString('pt-BR')}\n\nPergunta: ${resposta.pergunta}\n\n${resposta.resposta}\n\nFontes: ${resposta.fontes.length}`], { type: 'text/plain;charset=utf-8' })); a.download = 'consultor.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="underline text-navy print:hidden ml-2">Baixar resposta</button>}{/* Passo 304 */}
-                <button type="button" onClick={() => { setResposta(null); setPergunta(''); setErro(''); try { localStorage.removeItem('lsm-consultor-pergunta') } catch { /* sem memória local */ } }} className="underline text-navy" data-testid="nova-consulta">Nova consulta</button>
-                <a href={`#/projetos?novo=${encodeURIComponent(`Ação do ${sel.titulo}: ${resposta.resposta.replace(/\s+/g, ' ').slice(0, 120)}`)}`} className="underline text-navy" data-testid="virar-tarefa">Virar tarefa em Casos e projetos</a>
+                <button type="button" onClick={() => window.print()} title="Abre a tela de impressão do navegador com a resposta do consultor" className="underline text-navy print:hidden" data-testid="imprimir-consultor">Imprimir</button>
+                <button type="button" data-testid="copiar-link-consultores" title="Copia o endereço desta página de consultores para compartilhar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 underline text-navy print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 246 */}
+                {resposta && <button type="button" data-testid="baixar-consultor" title="Baixa a pergunta e a resposta do consultor em arquivo de texto" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Consultor (${resposta.especialidade}) · ${new Date(resposta.criadoEm).toLocaleString('pt-BR')}\n\nPergunta: ${resposta.pergunta}\n\n${resposta.resposta}\n\nFontes: ${resposta.fontes.length}`], { type: 'text/plain;charset=utf-8' })); a.download = 'consultor.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="underline text-navy print:hidden ml-2">Baixar resposta</button>}{/* Passo 304 */}
+                <button type="button" onClick={() => { setResposta(null); setPergunta(''); setErro(''); try { localStorage.removeItem('lsm-consultor-pergunta') } catch { /* sem memória local */ } }} title="Limpa a resposta e o campo de pergunta para começar uma nova consulta" className="underline text-navy" data-testid="nova-consulta">Nova consulta</button>
+                <a href={`#/projetos?novo=${encodeURIComponent(`Ação do ${sel.titulo}: ${resposta.resposta.replace(/\s+/g, ' ').slice(0, 120)}`)}`} title="Abre Casos e projetos com uma nova tarefa pré-preenchida a partir desta resposta" className="underline text-navy" data-testid="virar-tarefa">Virar tarefa em Casos e projetos</a>
               </div>
             )}
             {/* Passo D02/D03 (Diamante): cada ação do diagnóstico vira tarefa em Casos e projetos com prazo de 7 dias, em 1 clique. */}
@@ -134,10 +134,10 @@ export default function ConsultoresPage() {
                 <ul className="mt-2 space-y-1 text-sm text-grafite">
                   {acoes.map((a, i) => <li key={i} className="flex items-start gap-2"><span className="text-dourado-escuro">{i + 1}.</span><span className="flex-1">{a}</span></li>)}
                 </ul>
-                <button type="button" disabled={criando || tarefasCriadas !== null} onClick={virarTarefas} className="mt-3 min-h-[44px] px-4 bg-navy text-white text-sm disabled:opacity-60" data-testid="virar-tarefas">
+                <button type="button" disabled={criando || tarefasCriadas !== null} onClick={virarTarefas} className="mt-3 min-h-[44px] px-4 bg-navy text-white text-sm disabled:opacity-60" data-testid="virar-tarefas" title="Cria uma tarefa em Casos e projetos para cada ação sugerida, com prazo de 7 dias">
                   {tarefasCriadas !== null ? `${tarefasCriadas} tarefa(s) criada(s) em Casos e projetos` : criando ? 'Criando…' : 'Virar todas em tarefas (prazo: 7 dias)'}
                 </button>
-                {tarefasCriadas !== null && <a href="#/projetos" className="ml-3 underline text-navy text-sm">Abrir Casos e projetos</a>}
+                {tarefasCriadas !== null && <a href="#/projetos" title="Abre a página de Casos e projetos para ver as tarefas criadas" className="ml-3 underline text-navy text-sm">Abrir Casos e projetos</a>}
               </div>
             )}
           </section>

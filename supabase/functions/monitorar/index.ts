@@ -91,11 +91,11 @@ async function avisarEquipe(s: ReturnType<typeof sb>, movs: Movimento[]): Promis
   const desligou = new Set((prefs ?? []).filter(p => p.alertas_email === false).map(p => p.usuario_id))
   const para = (equipe ?? []).filter(u => u.email && !desligou.has(u.id)).map(u => u.email as string)
   const linhas = movs.slice(0, 40).map(m => `<tr><td style="padding:10px;border-bottom:1px solid #eee"><strong>${esc(m.rotulo || m.valor)}</strong><br><span style="color:#555">${esc(m.valor)}</span><br>${esc(m.data.slice(0, 10).split('-').reverse().join('/'))} — ${esc(m.texto)}</td></tr>`).join('')
-  const html = `<div style="font-family:Georgia,serif;max-width:600px;margin:auto"><div style="background:#14213d;color:#fff;padding:18px"><h2 style="margin:0">Movimentações nos processos</h2></div><table style="width:100%;border-collapse:collapse">${linhas}</table><p style="padding:10px"><a href="https://gmenezes-advogados.vercel.app/#/monitoramento">Abrir o Monitoramento</a></p><p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · fonte: DataJud (CNJ) e Comunica PJe · aviso automático</p></div>`
+  const html = `<div style="font-family:Georgia,serif;max-width:600px;margin:auto"><div style="background:#14213d;color:#fff;padding:18px"><h2 style="margin:0">Movimentações nos processos</h2></div><table style="width:100%;border-collapse:collapse">${linhas}</table><p style="padding:10px"><a href="https://gmenezes-advogados.vercel.app/#/monitoramento">Abrir o Monitoramento</a></p><p style="font-size:11px;color:#888;padding:10px">Instituto THEYE · fonte: DataJud (CNJ) e Comunica PJe · aviso automático</p></div>`
   let enviados = 0, erro: string | undefined
   for (const email of para) {
     const r = await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify({ sender: { name: 'Avisos GMenezes', email: conf.email_remetente }, to: [{ email }], subject: `${movs.length} movimentação(ões) nova(s) nos processos`, htmlContent: html }) })
+      body: JSON.stringify({ sender: { name: 'Avisos THEYE', email: conf.email_remetente }, to: [{ email }], subject: `${movs.length} movimentação(ões) nova(s) nos processos`, htmlContent: html }) })
     if (r.ok) enviados++; else erro = `${r.status}`
   }
   return { enviados, erro }

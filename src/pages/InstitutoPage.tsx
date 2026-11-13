@@ -10,12 +10,14 @@ import { FlaskConical, BarChart3, Leaf, ExternalLink, MessageSquare, BookOpen, S
 import { MEDICOES, PLANO_M31, DECK_URL } from '@/data/medicoes'
 import PesquisaDireito from '@/components/PesquisaDireito'
 import CiberQuantica from '@/components/CiberQuantica'
+import CatalogoConsultores from '@/components/CatalogoConsultores'
 import { gerarPdfTexto, quebrar } from '@/lib/pdfSimples'
-import { ehSede, perfilAtual } from '@/lib/equipe'
+import { ehInstituto } from '@/lib/equipe'
 
-type Aba = 'inovacao' | 'jurimetria' | 'esg' | 'case' | 'pesquisa' | 'tecnologia'
+type Aba = 'inovacao' | 'jurimetria' | 'esg' | 'case' | 'pesquisa' | 'tecnologia' | 'consultores'
 const ABAS: { valor: Aba; rotulo: string; Icone: typeof FlaskConical }[] = [
   { valor: 'inovacao', rotulo: 'Inovação e sandboxes', Icone: FlaskConical },
+  { valor: 'consultores', rotulo: '500 consultores', Icone: BookOpen },
   { valor: 'jurimetria', rotulo: 'Jurimetria e predição', Icone: BarChart3 },
   { valor: 'esg', rotulo: 'ESG e compliance', Icone: Leaf },
   { valor: 'pesquisa', rotulo: 'Pesquisa e desenvolvimento do direito', Icone: Scale },
@@ -34,7 +36,7 @@ const SANDBOXES = [
 
 function Agente({ agente, texto }: { agente: string; texto: string }) {
   return (
-    <Link to={`/assistente?agente=${agente}`} className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm">
+    <Link to={`/assistente?agente=${agente}`} title="Abre o Assistente já conversando com este agente especializado" className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm">
       <MessageSquare size={16} aria-hidden="true" /> {texto}
     </Link>
   )
@@ -56,7 +58,7 @@ function Inovacao() {
               {SANDBOXES.map(s => (
                 <tr key={s.nome} className="border-t border-navy/10 align-top">
                   <td className="py-2 pr-3 font-medium text-navy">{s.orgao}</td>
-                  <td className="py-2 pr-3"><a href={s.url} target="_blank" rel="noreferrer" className="underline decoration-dourado inline-flex items-center gap-1">{s.nome} <ExternalLink size={12} aria-hidden="true" /></a><span className="block text-xs text-grafite-claro">{s.base}</span></td>
+                  <td className="py-2 pr-3"><a href={s.url} target="_blank" rel="noreferrer" title={`Abre em nova aba a página oficial do ${s.orgao} sobre este programa`} className="underline decoration-dourado inline-flex items-center gap-1">{s.nome} <ExternalLink size={12} aria-hidden="true" /></a><span className="block text-xs text-grafite-claro">{s.base}</span></td>
                   <td className="py-2">{s.uso}</td>
                 </tr>
               ))}
@@ -70,9 +72,9 @@ function Inovacao() {
         <p className="text-sm text-grafite-claro mb-3">Itens do radar diário (Câmara e imprensa jurídica) sobre sandboxes, startups, tokenização e IA.</p>
         {filtrados.length ? (
           <ul className="space-y-2">{filtrados.slice(0, 12).map(n => (
-            <li key={n.id} className="text-sm"><a href={n.link} target="_blank" rel="noreferrer" className="text-navy underline decoration-dourado">{n.titulo}</a><span className="text-xs text-grafite-claro"> · {n.fonte}{n.data ? ` · ${n.data}` : ''}</span></li>
+            <li key={n.id} className="text-sm"><a href={n.link} target="_blank" rel="noreferrer" title={`Abre em nova aba a notícia na fonte original (${n.fonte})`} className="text-navy underline decoration-dourado">{n.titulo}</a><span className="text-xs text-grafite-claro"> · {n.fonte}{n.data ? ` · ${n.data}` : ''}</span></li>
           ))}</ul>
-        ) : <p className="text-sm text-grafite-claro">Nada sobre inovação na captura mais recente. O radar roda todo dia às 8h30; veja tudo em <Link to="/legislacao" className="underline decoration-dourado">Legislação</Link>.</p>}
+        ) : <p className="text-sm text-grafite-claro">Nada sobre inovação na captura mais recente. O radar roda todo dia às 8h30; veja tudo em <Link to="/legislacao" title="Abre a tela de Legislação com todos os itens do radar diário" className="underline decoration-dourado">Legislação</Link>.</p>}
       </section>
     </div>
   )
@@ -89,7 +91,7 @@ function Jurimetria() {
           <li>Perfil do julgador descreve padrões decisórios do órgão, nunca traços psicológicos.</li>
           <li>Risco de contrato é índice de exposição com fatores declarados, até existir histórico de pagamentos para calibrar.</li>
         </ul>
-        <Link to="/previsoes" className="mt-4 inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm"><BarChart3 size={16} aria-hidden="true" /> Abrir Previsões</Link>
+        <Link to="/previsoes" title="Abre a tela de Previsões com as estimativas de jurimetria da plataforma" className="mt-4 inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm"><BarChart3 size={16} aria-hidden="true" /> Abrir Previsões</Link>
       </section>
       <PerfilJulgador />
     </div>
@@ -120,7 +122,7 @@ function Esg() {
             <tbody>
               {linhas.map(l => (
                 <tr key={l.i.id} className="border-t border-navy/10">
-                  <td className="py-2 pr-3"><Link to={`/imoveis/${l.i.id}`} className="text-navy underline decoration-dourado">{l.i.endereco}</Link></td>
+                  <td className="py-2 pr-3"><Link to={`/imoveis/${l.i.id}`} title="Abre a ficha completa deste imóvel para resolver as pendências" className="text-navy underline decoration-dourado">{l.i.endereco}</Link></td>
                   {[l.regulatorio, l.ambiental, l.lgpd].map((n, k) => <td key={k} className="pr-2"><span className={`inline-block w-8 text-center py-1 ${cor(n)}`}>{n}</span></td>)}
                   <td className="text-xs text-grafite">{l.vencidos ? `${l.vencidos} vencido(s)` : ''}{l.vencidos && l.faltando ? ' · ' : ''}{l.faltando ? `${l.faltando} ausente(s)` : ''}{!l.vencidos && !l.faltando ? 'Em dia' : ''}</td>
                 </tr>
@@ -187,9 +189,9 @@ function CaseStudy() {
         </div>
         <div className="flex gap-1 text-[10px] text-grafite-claro mt-1">{MEDICOES.map(m => <span key={m.n} className="flex-1 text-center">{m.n}</span>)}</div>
         <div className="mt-4 flex flex-wrap gap-3">
-          <a href={DECK_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm">Deck de apresentação <ExternalLink size={14} aria-hidden="true" /></a>
-          <Link to="/testar" className="inline-flex items-center gap-2 border border-navy text-navy min-h-[44px] px-5 uppercase tracking-wider text-sm">Testar tudo agora</Link>
-          <button type="button" onClick={caseEmPdf} data-testid="case-study-pdf" className="inline-flex items-center gap-2 border border-navy text-navy min-h-[44px] px-5 uppercase tracking-wider text-sm">Case study em PDF</button>
+          <a href={DECK_URL} target="_blank" rel="noreferrer" title="Abre em nova aba o deck de apresentação da plataforma" className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm">Deck de apresentação <ExternalLink size={14} aria-hidden="true" /></a>
+          <Link to="/testar" title="Abre o roteiro guiado para testar todas as ferramentas da plataforma" className="inline-flex items-center gap-2 border border-navy text-navy min-h-[44px] px-5 uppercase tracking-wider text-sm">Testar tudo agora</Link>
+          <button type="button" onClick={caseEmPdf} title="Gera e baixa o case study em PDF com a trajetória das medições, os hashes SHA-256 e as provas .ots" data-testid="case-study-pdf" className="inline-flex items-center gap-2 border border-navy text-navy min-h-[44px] px-5 uppercase tracking-wider text-sm">Case study em PDF</button>
         </div>
         {msgPdf && <p role="status" className="text-sm mt-2" data-testid="case-study-msg">{msgPdf}</p>}
       </section>
@@ -197,10 +199,10 @@ function CaseStudy() {
         <h2 className="text-lg mb-1">Cadeia de medições (PDFs e hashes)</h2>
         <p className="text-sm text-grafite-claro mb-3">Os PDFs ficam na Biblioteca do projeto. Para conferir um arquivo, calcule o SHA-256 e compare com a coluna abaixo; o arquivo .ots prova a data no Bitcoin.</p>
         {/* Passo 155: imprimir a cadeia de medições em papel. */}
-        <button type="button" onClick={() => window.print()} data-testid="imprimir-cadeia" className="mb-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
-        <button type="button" data-testid="copiar-link-instituto" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mb-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 235 */}
-        <button type="button" data-testid="baixar-medicoes" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['medição;data;nota;arquivo;sha256', ...MEDICOES.map(m => `M${m.n};${m.data};${m.nota};${m.arquivo};${m.sha256}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'medicoes.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mb-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>{/* Passo 314 */}
-        <button type="button" onClick={copiarCadeia} data-testid="copiar-cadeia" className="mb-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{cadeiaCopiada ? 'Cadeia copiada' : 'Copiar cadeia completa'}</button>
+        <button type="button" onClick={() => window.print()} title="Abre a janela de impressão do navegador para imprimir a cadeia de medições" data-testid="imprimir-cadeia" className="mb-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
+        <button type="button" data-testid="copiar-link-instituto" title="Copia o endereço desta página do Instituto para compartilhar com a equipe" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mb-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 235 */}
+        <button type="button" data-testid="baixar-medicoes" title="Baixa a planilha CSV com todas as medições (número, data, nota, arquivo e hash SHA-256)" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['medição;data;nota;arquivo;sha256', ...MEDICOES.map(m => `M${m.n};${m.data};${m.nota};${m.arquivo};${m.sha256}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'medicoes.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mb-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>{/* Passo 314 */}
+        <button type="button" onClick={copiarCadeia} title="Copia a cadeia completa de medições (data, nota e hash de cada uma) em texto para auditoria externa" data-testid="copiar-cadeia" className="mb-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{cadeiaCopiada ? 'Cadeia copiada' : 'Copiar cadeia completa'}</button>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite-claro"><th className="py-2 pr-3">Medição</th><th className="pr-3">Data</th><th className="pr-3">Nota</th><th className="pr-3">Entregue</th><th>SHA-256</th></tr></thead>
@@ -230,12 +232,12 @@ function CaseStudy() {
   )
 }
 
-// Área de administração do Instituto: só aparece para a administração da sede. Quem não é admin não vê nem os links.
+// Área de administração do Instituto: só aparece para quem administra o Instituto. Quem administra só o escritório de advocacia não vê nem os links.
 // A proteção de verdade está no banco (as funções de consumo e funil só respondem à sede e ao admin).
 function AdministracaoInstituto() {
   const [pode, setPode] = useState(false)
   useEffect(() => {
-    Promise.all([ehSede(), perfilAtual()]).then(([sede, perfil]) => setPode(sede && perfil === 'admin')).catch(() => setPode(false))
+    ehInstituto().then(setPode).catch(() => setPode(false))
   }, [])
   if (!pode) return null
   const atalhos = [
@@ -250,7 +252,7 @@ function AdministracaoInstituto() {
       <p className="text-sm text-white/80 mt-1">Esta área é só para a administração. Escolha o que quer ver:</p>
       <div className="grid gap-3 mt-4 sm:grid-cols-2">
         {atalhos.map(a => (
-          <Link key={a.to} to={a.to} className="block bg-white/10 hover:bg-white/20 p-4 min-h-[44px]">
+          <Link key={a.to} to={a.to} title={a.texto} className="block bg-white/10 hover:bg-white/20 p-4 min-h-[44px]">
             <span className="block font-medium">{a.titulo}</span>
             <span className="block text-sm text-white/80 mt-1">{a.texto}</span>
           </Link>
@@ -277,19 +279,19 @@ export default function InstitutoPage() {
           <p className="text-sm text-grafite-claro mt-1">Inovação regulatória, jurimetria, ESG e pesquisa jurídica (Brasil e mundo) para o desenvolvimento do direito brasileiro.</p>
           <p className="text-sm mt-3 p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="estado-medicao">
             Última medição: <strong>M{ult.n}</strong>, nota <strong>{ult.nota.toFixed(2).replace('.', ',')}</strong>, em {new Date(ult.data + 'T12:00:00').toLocaleDateString('pt-BR')}{ult.ots ? ', selada em blockchain (OpenTimestamps)' : ''}.{' '}
-            <button type="button" onClick={copiarHash} data-testid="copiar-hash" className="underline text-navy">{hashCopiado ? 'hash copiado' : 'copiar hash'}</button>
-            {' · '}<button type="button" onClick={() => setAba('case')} className="underline text-navy">ver a cadeia completa</button>
+            <button type="button" onClick={copiarHash} title="Copia o nome do arquivo e o hash SHA-256 da última medição para conferência externa" data-testid="copiar-hash" className="underline text-navy">{hashCopiado ? 'hash copiado' : 'copiar hash'}</button>
+            {' · '}<button type="button" onClick={() => setAba('case')} title="Abre a aba do case study com a cadeia completa de medições e hashes" className="underline text-navy">ver a cadeia completa</button>
           </p>
         </header>
         <div role="tablist" aria-label="Temas do Instituto" className="flex flex-wrap gap-2">
           {ABAS.map(({ valor, rotulo, Icone }) => (
-            <button key={valor} role="tab" aria-selected={aba === valor} onClick={() => setAba(valor)}
+            <button key={valor} role="tab" aria-selected={aba === valor} onClick={() => setAba(valor)} title={`Mostra a seção ${rotulo} do Instituto`}
               className={`inline-flex items-center gap-2 min-h-[44px] px-4 text-sm border ${aba === valor ? 'bg-navy text-white border-navy' : 'bg-white text-navy border-navy/20'}`}>
               <Icone size={16} aria-hidden="true" /> {rotulo}
             </button>
           ))}
         </div>
-        <div role="tabpanel">{aba === 'inovacao' ? <Inovacao /> : aba === 'jurimetria' ? <Jurimetria /> : aba === 'esg' ? <Esg /> : aba === 'pesquisa' ? <PesquisaDireito /> : aba === 'tecnologia' ? <CiberQuantica /> : <CaseStudy />}</div>
+        <div role="tabpanel">{aba === 'inovacao' ? <Inovacao /> : aba === 'consultores' ? <CatalogoConsultores /> : aba === 'jurimetria' ? <Jurimetria /> : aba === 'esg' ? <Esg /> : aba === 'pesquisa' ? <PesquisaDireito /> : aba === 'tecnologia' ? <CiberQuantica /> : <CaseStudy />}</div>
       </div>
     </Layout>
   )

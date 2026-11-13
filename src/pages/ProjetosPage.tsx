@@ -12,6 +12,7 @@ import AssinaturasCaso from '@/components/AssinaturasCaso'
 import PortalCasoEscritorio from '@/components/PortalCasoEscritorio'
 import { caminhoCritico } from '@/lib/caminhoCritico'
 import { lerHoras } from '@/lib/numero'
+import { meuAlcance, rotuloCargo } from '@/lib/hierarquia'
 
 // Gestão de projetos do escritório em hierarquia (Projeto → Tarefa → Subtarefa), no estilo Monday:
 // vale para qualquer caso (processo, contrato, consultoria, cliente externo ou projeto interno), com
@@ -57,6 +58,8 @@ export default function ProjetosPage() {
   const [listaCopiada, setListaCopiada] = useState(false) // Passo 212
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 280
   const [baixado, marcarBaixado] = useBaixado() // Passo 404
+  const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
+  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true })) }, [])
 
   const carregar = async () => {
     const { data, error } = await supabase.from('tarefas').select('id,pai_id,nivel,titulo,situacao,prioridade,responsavel_id,imovel_id,prazo,horas,cliente,area,numero_processo,tipo,portal_token,portal_expira_em,depende_de,criado_em').order('criado_em')
@@ -69,15 +72,27 @@ export default function ProjetosPage() {
     repositorio.listarImoveis().then(setImoveis).catch(() => {})
   }, [])
 
-  const projetos = tarefas.filter(t => t.nivel === 'projeto' && (!filtroArea || t.area === filtroArea))
+  // Hierarquia: pleno e júnior veem só os projetos (e tarefas) cujo dono são eles; item sem dono aparece para todos.
+  const minhas = useMemo(() => {
+    if (!alcance || alcance.veTudo) return tarefas
+    const pai = new Map(tarefas.map(t => [t.id, t.pai_id]))
+    const resp = new Map(tarefas.map(t => [t.id, t.responsavel_id]))
+    const donoDaRaiz = (id: string): string | null => {
+      let atual = id
+      for (let i = 0; i < 20; i++) { const p = pai.get(atual); if (!p) break; atual = p }
+      return resp.get(atual) ?? null
+    }
+    return tarefas.filter(t => { const dono = donoDaRaiz(t.id); return !dono || dono === alcance.id })
+  }, [tarefas, alcance])
+  const projetos = minhas.filter(t => t.nivel === 'projeto' && (!filtroArea || t.area === filtroArea))
   // Tarefas do projeto escolhido, incluindo subtarefas (descendentes em qualquer nível).
   const visiveis = useMemo(() => {
-    if (!projeto) return tarefas.filter(t => t.nivel !== 'projeto')
+    if (!projeto) return minhas.filter(t => t.nivel !== 'projeto')
     const ids = new Set([projeto])
     let mudou = true
-    while (mudou) { mudou = false; for (const t of tarefas) if (t.pai_id && ids.has(t.pai_id) && !ids.has(t.id)) { ids.add(t.id); mudou = true } }
-    return tarefas.filter(t => t.id !== projeto && ids.has(t.id))
-  }, [tarefas, projeto])
+    while (mudou) { mudou = false; for (const t of minhas) if (t.pai_id && ids.has(t.pai_id) && !ids.has(t.id)) { ids.add(t.id); mudou = true } }
+    return minhas.filter(t => t.id !== projeto && ids.has(t.id))
+  }, [minhas, projeto])
   const nome = (id: string | null) => pessoas.find(p => p.id === id)?.nome ?? '—'
   const titulo = (id: string | null) => tarefas.find(t => t.id === id)?.titulo
 
@@ -188,28 +203,33 @@ export default function ProjetosPage() {
   return (
     <Layout title="Projetos">
       <div className="space-y-6">
+        {alcance && !alcance.veTudo && (
+          <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="projetos-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+            Você está vendo <strong>os seus projetos</strong> ({rotuloCargo[alcance.cargo ?? 'nenhum']}). Sócios, gestor e administração veem o escritório inteiro.
+          </p>
+        )}
         <section className="bg-white shadow-sm border-t-2 border-dourado p-5">
           <div className="flex flex-wrap items-end gap-4">
             <div>
               <label htmlFor="filtro-area" className="block text-xs uppercase tracking-wider text-grafite mb-1">Área</label>
-              <select id="filtro-area" value={filtroArea} onChange={e => { setFiltroArea(e.target.value); setProjeto('') }} className="border px-3 py-2">
+              <select id="filtro-area" title="Filtra a lista de projetos pela área do direito escolhida" value={filtroArea} onChange={e => { setFiltroArea(e.target.value); setProjeto('') }} className="border px-3 py-2">
                 <option value="">Todas</option>{AREAS.map(a => <option key={a}>{a}</option>)}
               </select>
               {/* Passo 147: lista de projetos copiável (título, área, cliente, situação, prazo). */}
-              {projetos.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Casos e projetos — ${projetos.length}${filtroArea ? ` (${filtroArea})` : ''}`, ...projetos.map(t => `${t.titulo} · ${t.area ?? 'sem área'}${t.cliente ? ` · ${t.cliente}` : ''} · ${t.situacao}${t.prazo ? ` · prazo ${t.prazo.split('-').reverse().join('/')}` : ''}`)].join('\n')).then(() => setListaCopiada(true)).catch(() => undefined)} data-testid="copiar-projetos" className="ml-2 underline text-navy text-sm">{listaCopiada ? 'lista copiada' : 'copiar lista'}</button>}
-              {projetos.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-projetos" className="ml-2 underline text-navy text-sm print:hidden">imprimir</button>}{/* Passo 181 */}
-              {projetos.length > 0 && <button type="button" data-testid="copiar-link-projetos" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 247 */}
-            {visiveis.length > 0 && <button type="button" data-testid="baixar-projetos" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['nível;título;situação;prioridade;prazo;horas;cliente;área', ...visiveis.map(t => `${t.nivel};${t.titulo.replace(/;/g, ',')};${t.situacao};${t.prioridade};${t.prazo ?? ''};${t.horas};${t.cliente ?? ''};${t.area ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'casos-e-projetos.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 311 */}
+              {projetos.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Casos e projetos — ${projetos.length}${filtroArea ? ` (${filtroArea})` : ''}`, ...projetos.map(t => `${t.titulo} · ${t.area ?? 'sem área'}${t.cliente ? ` · ${t.cliente}` : ''} · ${t.situacao}${t.prazo ? ` · prazo ${t.prazo.split('-').reverse().join('/')}` : ''}`)].join('\n')).then(() => setListaCopiada(true)).catch(() => undefined)} data-testid="copiar-projetos" title="Copia a lista dos projetos (título, área, cliente, situação e prazo) para a área de transferência" className="ml-2 underline text-navy text-sm">{listaCopiada ? 'lista copiada' : 'copiar lista'}</button>}
+              {projetos.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-projetos" title="Abre a janela de impressão do navegador para imprimir esta tela" className="ml-2 underline text-navy text-sm print:hidden">imprimir</button>}{/* Passo 181 */}
+              {projetos.length > 0 && <button type="button" data-testid="copiar-link-projetos" title="Copia o endereço desta tela para a área de transferência" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 247 */}
+            {visiveis.length > 0 && <button type="button" data-testid="baixar-projetos" aria-live="polite" title="Baixa a planilha (casos-e-projetos.csv) com as tarefas visíveis: nível, situação, prazo, horas, cliente e área" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['nível;título;situação;prioridade;prazo;horas;cliente;área', ...visiveis.map(t => `${t.nivel};${t.titulo.replace(/;/g, ',')};${t.situacao};${t.prioridade};${t.prazo ?? ''};${t.horas};${t.cliente ?? ''};${t.area ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'casos-e-projetos.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 311 */}
             </div>
             <div>
               <label htmlFor="projeto" className="block text-xs uppercase tracking-wider text-grafite mb-1">Projeto</label>
-              <select id="projeto" value={projeto} onChange={e => setProjeto(e.target.value)} className="border px-3 py-2 min-w-[220px]">
+              <select id="projeto" title="Escolhe o projeto cujas tarefas aparecem no quadro abaixo" value={projeto} onChange={e => setProjeto(e.target.value)} className="border px-3 py-2 min-w-[220px]">
                 <option value="">Todas as tarefas</option>
                 {projetos.map(p => <option key={p.id} value={p.id}>{p.titulo}{p.numero_processo ? ` · ${p.numero_processo}` : ''}</option>)}
               </select>
             </div>
-            {projeto && <button data-testid="link-cliente" onClick={linkCliente} className="min-h-[44px] px-4 border border-dourado text-navy text-sm uppercase tracking-wider">Link para o cliente</button>}
-            {visiveis.length > 0 && <button type="button" data-testid="copiar-andamento" onClick={copiarAndamento} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar andamento</button>}
+            {projeto && <button data-testid="link-cliente" onClick={linkCliente} title="Gera (ou reaproveita) o link público do Portal do cliente para este caso, válido por 90 dias, e já o copia" className="min-h-[44px] px-4 border border-dourado text-navy text-sm uppercase tracking-wider">Link para o cliente</button>}
+            {visiveis.length > 0 && <button type="button" data-testid="copiar-andamento" onClick={copiarAndamento} title="Copia o andamento em texto (progresso, atrasadas e cada tarefa com prazo) para enviar ao cliente ou à sócia" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Copiar andamento</button>}
             <dl className="flex gap-6 text-sm">
               <div><dt className="text-grafite-claro">Concluído</dt><dd className="text-2xl font-serif text-navy" data-testid="progresso">{visiveis.length ? Math.round((feitas / visiveis.length) * 100) : 0}%</dd></div>
               <div><dt className="text-grafite-claro">Atrasadas</dt><dd className={`text-2xl font-serif ${atrasadas ? 'text-critico' : 'text-navy'}`}>{atrasadas}</dd></div>
@@ -220,12 +240,12 @@ export default function ProjetosPage() {
           {cronograma && cronograma.caminho.length > 0 && (
             <p className="text-xs text-grafite mt-3" data-testid="caminho-critico">Caminho crítico ({cronograma.caminho.length} etapas{cronograma.atraso ? `, ${cronograma.atraso} dia(s) além do último prazo` : ', no prazo'}): {cronograma.caminho.map(id => titulo(id)).join(' → ')}. Etapas marcadas com ★ não podem atrasar sem atrasar o caso.</p>
           )}
-          {linkPortal && <p className="text-xs text-grafite mt-3" data-testid="link-portal">Link copiado. O cliente vê só as etapas e os honorários, sem login: <a className="underline text-navy break-all" href={linkPortal} target="_blank" rel="noreferrer">{linkPortal}</a></p>}
+          {linkPortal && <p className="text-xs text-grafite mt-3" data-testid="link-portal">Link copiado. O cliente vê só as etapas e os honorários, sem login: <a className="underline text-navy break-all" title="Abre o Portal do cliente deste caso em outra aba, como o cliente vê" href={linkPortal} target="_blank" rel="noreferrer">{linkPortal}</a></p>}
           {casoAtual?.portal_token && (
             <p className="text-xs text-grafite mt-2 flex flex-wrap items-center gap-3" data-testid="portal-validade">
               <span>Link do Portal {casoAtual.portal_expira_em && new Date(casoAtual.portal_expira_em) < new Date() ? <strong className="text-critico">expirado</strong> : <>válido até <strong>{casoAtual.portal_expira_em ? formatarData(casoAtual.portal_expira_em.slice(0, 10)) : 'sem data'}</strong></>}.</span>
-              <button type="button" onClick={renovarLink} className="underline text-navy" data-testid="renovar-link">Renovar por 90 dias</button>
-              <button type="button" onClick={revogarLink} className="underline text-critico" data-testid="revogar-link">Revogar link</button>
+              <button type="button" onClick={renovarLink} className="underline text-navy" data-testid="renovar-link" title="Estende a validade do link do Portal por mais 90 dias, mantendo o mesmo endereço">Renovar por 90 dias</button>
+              <button type="button" onClick={revogarLink} className="underline text-critico" data-testid="revogar-link" title="Apaga o código do Portal: o link do cliente para de funcionar na hora">Revogar link</button>
             </p>
           )}
         </section>
@@ -237,22 +257,22 @@ export default function ProjetosPage() {
           <h2 id="t-caso" className="text-lg mb-1 flex items-center gap-2"><FolderKanban size={18} className="text-dourado" aria-hidden="true" /> Novo caso pronto (com etapas e prazos)</h2>
           <p className="text-xs text-grafite-claro mb-3">Para cada processo, contrato, consultoria ou cliente que o escritório ganhar. Escolha o modelo e a plataforma cria o projeto com todas as etapas.</p>
           <div className="grid gap-3 sm:grid-cols-6">
-            <select aria-label="Modelo" value={caso.modelo} onChange={e => setCaso({ ...caso, modelo: e.target.value })} className="border px-3 py-2 sm:col-span-2">
+            <select aria-label="Modelo" title="Escolhe o modelo de caso: define as etapas e os prazos que serão criados automaticamente" value={caso.modelo} onChange={e => setCaso({ ...caso, modelo: e.target.value })} className="border px-3 py-2 sm:col-span-2">
               {Object.entries(MODELOS).map(([k, m]) => <option key={k} value={k}>{m.nome}</option>)}
             </select>
-            <select aria-label="Tipo" value={caso.tipo} onChange={e => setCaso({ ...caso, tipo: e.target.value })} className="border px-3 py-2 sm:col-span-2">
+            <select aria-label="Tipo" title="Classifica o caso: processo judicial, contrato, projeto interno ou gestão para terceiros" value={caso.tipo} onChange={e => setCaso({ ...caso, tipo: e.target.value })} className="border px-3 py-2 sm:col-span-2">
               {Object.entries(TIPOS).map(([k, t]) => <option key={k} value={k}>{t}</option>)}
             </select>
-            <select aria-label="Área do caso" value={caso.area} onChange={e => setCaso({ ...caso, area: e.target.value })} className="border px-3 py-2 sm:col-span-2">
+            <select aria-label="Área do caso" title="Define a área do direito do novo caso, usada depois no filtro por área" value={caso.area} onChange={e => setCaso({ ...caso, area: e.target.value })} className="border px-3 py-2 sm:col-span-2">
               {AREAS.map(a => <option key={a}>{a}</option>)}
             </select>
             <input aria-label="Cliente" placeholder="Cliente" value={caso.cliente} onChange={e => setCaso({ ...caso, cliente: e.target.value })} className="border px-3 py-2 sm:col-span-2" />
             <input aria-label="Número do processo" placeholder="Nº do processo (se houver)" value={caso.numero} onChange={e => setCaso({ ...caso, numero: e.target.value })} className="border px-3 py-2 sm:col-span-2" />
-            <select aria-label="Responsável pelo caso" value={caso.responsavel_id} onChange={e => setCaso({ ...caso, responsavel_id: e.target.value })} className="border px-3 py-2 sm:col-span-2">
+            <select aria-label="Responsável pelo caso" title="Escolhe quem da equipe fica responsável pelo caso e por todas as etapas criadas" value={caso.responsavel_id} onChange={e => setCaso({ ...caso, responsavel_id: e.target.value })} className="border px-3 py-2 sm:col-span-2">
               <option value="">Responsável</option>{pessoas.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
             </select>
             <input aria-label="Nome do caso" placeholder="Nome do caso (opcional)" value={caso.titulo} onChange={e => setCaso({ ...caso, titulo: e.target.value })} className="border px-3 py-2 sm:col-span-4" />
-            <button data-testid="criar-caso" onClick={criarCaso} className="min-h-[44px] bg-dourado text-navy px-5 text-sm uppercase tracking-wider sm:col-span-2">Criar caso</button>
+            <button data-testid="criar-caso" onClick={criarCaso} title="Cria o caso inteiro de uma vez: o projeto e todas as etapas do modelo escolhido, com prazos já calculados" className="min-h-[44px] bg-dourado text-navy px-5 text-sm uppercase tracking-wider sm:col-span-2">Criar caso</button>
           </div>
         </section>
 
@@ -260,20 +280,20 @@ export default function ProjetosPage() {
           <h2 id="t-novo" className="text-lg mb-3 flex items-center gap-2"><Plus size={18} className="text-dourado" aria-hidden="true" /> Novo item avulso</h2>
           <div className="grid gap-3 sm:grid-cols-6">
             <input aria-label="Título" placeholder="Ex.: Renovatória da loja 3" value={novo.titulo} onChange={e => setNovo({ ...novo, titulo: e.target.value })} className="border px-3 py-2 sm:col-span-2" />
-            <select aria-label="Nível" value={novo.nivel} onChange={e => setNovo({ ...novo, nivel: e.target.value })} className="border px-3 py-2">
+            <select aria-label="Nível" title="Define se o novo item é um projeto, uma tarefa ou uma subtarefa dentro do projeto escolhido" value={novo.nivel} onChange={e => setNovo({ ...novo, nivel: e.target.value })} className="border px-3 py-2">
               <option value="projeto">Projeto</option><option value="tarefa">Tarefa</option><option value="subtarefa">Subtarefa</option>
             </select>
-            <select aria-label="Responsável" value={novo.responsavel_id} onChange={e => setNovo({ ...novo, responsavel_id: e.target.value })} className="border px-3 py-2">
+            <select aria-label="Responsável" title="Escolhe quem da equipe fica responsável por este item" value={novo.responsavel_id} onChange={e => setNovo({ ...novo, responsavel_id: e.target.value })} className="border px-3 py-2">
               <option value="">Responsável</option>{pessoas.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
             </select>
             <input aria-label="Prazo" type="date" value={novo.prazo} onChange={e => setNovo({ ...novo, prazo: e.target.value })} className="border px-3 py-2" />
-            <select aria-label="Prioridade" value={novo.prioridade} onChange={e => setNovo({ ...novo, prioridade: e.target.value })} className="border px-3 py-2">
+            <select aria-label="Prioridade" title="Define a prioridade do item; ela muda a cor do cartão no quadro" value={novo.prioridade} onChange={e => setNovo({ ...novo, prioridade: e.target.value })} className="border px-3 py-2">
               <option value="alta">Alta</option><option value="media">Média</option><option value="baixa">Baixa</option>
             </select>
-            <select aria-label="Imóvel" value={novo.imovel_id} onChange={e => setNovo({ ...novo, imovel_id: e.target.value })} className="border px-3 py-2 sm:col-span-2">
+            <select aria-label="Imóvel" title="Liga o item a um imóvel da carteira, quando o trabalho for sobre ele (opcional)" value={novo.imovel_id} onChange={e => setNovo({ ...novo, imovel_id: e.target.value })} className="border px-3 py-2 sm:col-span-2">
               <option value="">Sem imóvel ligado</option>{imoveis.map(i => <option key={i.id} value={i.id}>{i.endereco}</option>)}
             </select>
-            <button onClick={criar} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider sm:col-span-1">Criar</button>
+            <button onClick={criar} title="Cria o item avulso com o título, o responsável, o prazo e a prioridade preenchidos acima" className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider sm:col-span-1">Criar</button>
           </div>
           {novo.nivel !== 'projeto' && <p className="text-xs text-grafite-claro mt-2">{projeto ? <>Entra dentro de <strong>{titulo(projeto)}</strong>.</> : 'Escolha um projeto acima para colocar a tarefa dentro dele.'}</p>}
           {erro && <p role="alert" className="text-sm text-critico mt-2">{erro}</p>}
@@ -295,11 +315,11 @@ export default function ProjetosPage() {
                       {t.depende_de && <p className="text-[11px] text-grafite-claro">depende de: {titulo(t.depende_de)}{cronograma?.fins[t.id] && t.situacao !== 'feito' && cronograma.fins[t.id] !== t.prazo ? ` · previsto ${formatarData(cronograma.fins[t.id])}` : ''}</p>}
                       <p className="text-xs text-grafite-claro mt-1">{nome(t.responsavel_id)}{t.prazo && <> · <span className={dias !== null && dias < 0 && t.situacao !== 'feito' ? 'text-critico' : ''}>{formatarData(t.prazo)}</span></>}{Number(t.horas) > 0 && ` · ${t.horas} h`}</p>
                       <div className="flex flex-wrap gap-1 mt-2">
-                        <select aria-label={`Mover ${t.titulo}`} value={t.situacao} onChange={e => mover(t, e.target.value as Situacao)} className="text-xs border px-1 py-0.5">
+                        <select aria-label={`Mover ${t.titulo}`} title="Move esta tarefa para outra coluna do quadro (a fazer, fazendo, em revisão ou feito)" value={t.situacao} onChange={e => mover(t, e.target.value as Situacao)} className="text-xs border px-1 py-0.5">
                           {COLUNAS.map(x => <option key={x.valor} value={x.valor}>{x.rotulo}</option>)}
                         </select>
-                        <button onClick={() => somarHoras(t)} className="text-xs underline text-navy">+ horas</button>
-                        {projeto && <select aria-label={`Depende de (${t.titulo})`} value={t.depende_de ?? ''} onChange={e => dependerDe(t, e.target.value)} className="text-xs border px-1 py-0.5 max-w-[150px]" data-testid="depende-de">
+                        <button onClick={() => somarHoras(t)} title="Lança horas trabalhadas nesta tarefa, somando ao total já registrado" className="text-xs underline text-navy">+ horas</button>
+                        {projeto && <select aria-label={`Depende de (${t.titulo})`} value={t.depende_de ?? ''} onChange={e => dependerDe(t, e.target.value)} title="Marca de qual outra tarefa esta depende, para o cálculo do caminho crítico e da conclusão prevista" className="text-xs border px-1 py-0.5 max-w-[150px]" data-testid="depende-de">
                           <option value="">Não depende</option>{visiveis.filter(x => x.id !== t.id).map(x => <option key={x.id} value={x.id}>{x.titulo}</option>)}
                         </select>}
                       </div>

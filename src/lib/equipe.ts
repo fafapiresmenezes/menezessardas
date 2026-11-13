@@ -148,3 +148,85 @@ export async function escritorioDasPessoas(): Promise<Record<string, string>> {
   for (const r of (data ?? []) as Record<string, unknown>[]) if (r.escritorio_id) m[String(r.id)] = String(r.escritorio_id)
   return m
 }
+
+// Entrar dizendo de qual escritório você é (migração 117): escritório que já existe exige liberação da administração dele.
+export type EstadoEntrada = 'dentro' | 'pendente' | 'recusado' | 'convite' | 'nenhum' | 'suspenso' | 'indisponivel'
+export interface PedidoEntrada { estado: EstadoEntrada; escritorio?: string; desde?: string }
+export interface PedidoPendente { id: string; email: string; nome: string; nomeDigitado: string; criadoEm: string; escritorioNome: string }
+
+/** Padrão da casa: nome do escritório em LETRAS MAIÚSCULAS, sem espaços sobrando. */
+export const nomeDeEscritorio = (texto: string) => texto.toUpperCase().replace(/\s+/g, ' ').trim()
+
+const ESTADOS: EstadoEntrada[] = ['dentro', 'pendente', 'recusado', 'convite', 'nenhum', 'suspenso']
+function lerPedido(d: unknown): PedidoEntrada {
+  const m = (d && typeof d === 'object' ? d : {}) as Record<string, unknown>
+  const estado = ESTADOS.includes(m.estado as EstadoEntrada) ? (m.estado as EstadoEntrada) : 'indisponivel'
+  return { estado, escritorio: typeof m.escritorio === 'string' ? m.escritorio : undefined, desde: typeof m.desde === 'string' ? m.desde : undefined }
+}
+
+/** Situação de quem entrou e ainda não tem escritório. "indisponivel" = o banco ainda não sabe responder. */
+export async function meuPedidoEntrada(): Promise<PedidoEntrada> {
+  if (!supabaseConfigurado) return { estado: 'dentro' }
+  const { data, error } = await supabase.rpc('meu_pedido_entrada')
+  return error ? { estado: 'indisponivel' } : lerPedido(data)
+}
+
+/** Pede para entrar no escritório com este nome; se ele ainda não existe, é criado e a pessoa passa a administrá-lo. */
+export async function entrarEmEscritorio(nome: string): Promise<PedidoEntrada> {
+  const { data, error } = await supabase.rpc('entrar_em_escritorio', { p_nome: nomeDeEscritorio(nome) })
+  if (error) throw new Error(error.message)
+  return lerPedido(data)
+}
+
+/** Pessoas que pediram para entrar no escritório de quem administra (a sede vê os pedidos de todos). */
+export async function pedidosPendentes(): Promise<PedidoPendente[]> {
+  if (!supabaseConfigurado) return []
+  const { data, error } = await supabase.rpc('pedidos_entrada_pendentes')
+  if (error) return []
+  return ((data ?? []) as Record<string, unknown>[]).map(r => ({
+    id: String(r.usuario_id), email: String(r.email ?? ''), nome: String(r.nome ?? r.email ?? ''),
+    nomeDigitado: String(r.nome_digitado ?? ''), criadoEm: String(r.criado_em ?? ''), escritorioNome: String(r.escritorio_nome ?? ''),
+  }))
+}
+
+// Em qual escritório a pessoa está: aparece na entrada e no topo de toda tela, para ninguém trabalhar no lugar errado.
+// A casa principal guarda o escritório de advocacia e o Instituto (dono da plataforma): "instituto" diz se a pessoa
+// administra o Instituto; "advocacia" é o nome do escritório de advocacia da casa principal.
+export interface MeuEscritorio { nome: string; sede: boolean; pessoa: string; email: string; instituto?: boolean; advocacia?: string }
+const CHAVE_ESCRITORIO = 'gm-escritorio-v2'
+
+export async function meuEscritorio(): Promise<MeuEscritorio | null> {
+  if (!supabaseConfigurado) return { nome: 'ESCRITÓRIO DE DEMONSTRAÇÃO', sede: true, pessoa: 'Visitante', email: '', instituto: true }
+  try { const k = sessionStorage.getItem(CHAVE_ESCRITORIO); if (k) return JSON.parse(k) as MeuEscritorio } catch { /* sem sessionStorage */ }
+  const lembrar = (meu: MeuEscritorio) => { try { sessionStorage.setItem(CHAVE_ESCRITORIO, JSON.stringify(meu)) } catch { /* ignora */ } return meu }
+  try {
+    // O banco responde com o nome que a pessoa deve ler (migração 118). Se ainda não souber, cai na leitura direta.
+    const r = await supabase.rpc('meu_escritorio')
+    if (!r.error) {
+      const d = r.data as Record<string, unknown> | null
+      const nome = String(d?.nome ?? '').trim()
+      if (!d || !nome) return null
+      return lembrar({ nome, sede: d.sede === true, pessoa: String(d.pessoa ?? ''), email: String(d.email ?? ''), instituto: d.instituto === true, advocacia: typeof d.advocacia === 'string' ? d.advocacia : undefined })
+    }
+    const { data: u } = await supabase.auth.getUser()
+    const id = u?.user?.id
+    if (!id) return null
+    const { data: p } = await supabase.from('usuarios_perfis').select('nome_completo, email, escritorio_id, funcao').eq('id', id).maybeSingle()
+    if (!p?.escritorio_id) return null
+    const { data: e } = await supabase.from('escritorios').select('nome, nome_exibicao').eq('id', p.escritorio_id).maybeSingle()
+    const nome = String(e?.nome_exibicao || e?.nome || '').trim()
+    if (!nome) return null
+    const sede = p.escritorio_id === SEDE_ID
+    return lembrar({ nome, sede, pessoa: String(p.nome_completo || p.email || ''), email: String(p.email || ''), instituto: sede && p.funcao === 'admin' })
+  } catch { return null }
+}
+
+/** Quem administra o Instituto (a plataforma inteira). Quem administra só o escritório de advocacia não entra aqui. */
+export async function ehInstituto(): Promise<boolean> {
+  return (await meuEscritorio())?.instituto === true
+}
+
+/** Ao sair ou trocar de conta: esquece o escritório lembrado nesta aba, para a próxima pessoa não herdar o anterior. */
+export function esquecerEscritorio() {
+  try { sessionStorage.removeItem(CHAVE_ESCRITORIO); sessionStorage.removeItem('gm-escritorio-v1'); sessionStorage.removeItem('gm-sede') } catch { /* ignora */ }
+}

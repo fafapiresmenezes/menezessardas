@@ -76,7 +76,7 @@ function gerarPdfTexto(titulo: string, linhas: Linha[]): Uint8Array {
   }
   const pags = add(`<< /Type /Pages /Kids [${ids.map(i => `${i} 0 R`).join(' ')}] /Count ${ids.length} >>`)
   const catalogo = add(`<< /Type /Catalog /Pages ${pags} 0 R >>`)
-  const info = add(`<< /Title (${winAnsi(titulo)}) /Producer (Plataforma GMenezes) >>`)
+  const info = add(`<< /Title (${winAnsi(titulo)}) /Producer (Plataforma THEYE) >>`)
 
   let saida = '%PDF-1.4\n%\xe2\xe3\xcf\xd3\n'
   const offsets: number[] = []
@@ -95,7 +95,7 @@ export function linhasSemana(s: Semana, escritorio: string): Linha[] {
     for (const i of d.itens) for (const q of quebrar(`- [${i.tipo === 'prazo' ? 'Prazo' : 'Compromisso'}] ${i.titulo}${i.detalhe ? ' · ' + i.detalhe : ''}${i.responsavel ? ' · resp.: ' + i.responsavel : ''}`, 9.5)) L.push({ texto: q, tamanho: 9.5 })
     L.push({ texto: ' ' })
   }
-  L.push({ texto: 'Gerado automaticamente pela plataforma GMenezes (THEYE Institute). Confira os autos antes de agir.', tamanho: 8 })
+  L.push({ texto: 'Gerado automaticamente pela plataforma THEYE (THEYE Institute). Confira os autos antes de agir.', tamanho: 8 })
   return L
 }
 
@@ -125,7 +125,7 @@ Deno.serve(async (req) => {
   ])
   if (error) return json({ erro: error.message }, 500)
   const s = semana as Semana
-  const nomeEsc = ((marca ?? {}) as { nome?: string }).nome ?? 'GMenezes Advogados Associados'
+  const nomeEsc = ((marca ?? {}) as { nome?: string }).nome ?? 'Instituto THEYE'
   const pdf = gerarPdfTexto(`Semana ${s.inicio}`, linhasSemana(s, nomeEsc))
   let b64 = ''; { let bin = ''; for (let i = 0; i < pdf.length; i++) bin += String.fromCharCode(pdf[i]); b64 = btoa(bin) }
 
@@ -143,7 +143,7 @@ ${teste ? '<p style="color:#888">Envio de teste pedido por você na Agenda.</p>'
   let falha: string | undefined
   for (const email of para) {
     const resp = await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify({ sender: { name: 'Agenda GMenezes', email: conf.email_remetente }, to: [{ email }], subject: `Semana de ${dataBr(s.inicio)} a ${dataBr(s.fim)} · ${s.total} item(ns)`, htmlContent: html, attachment: [{ name: `semana-${s.inicio}.pdf`, content: b64 }] }) })
+      body: JSON.stringify({ sender: { name: 'Agenda THEYE', email: conf.email_remetente }, to: [{ email }], subject: `Semana de ${dataBr(s.inicio)} a ${dataBr(s.fim)} · ${s.total} item(ns)`, htmlContent: html, attachment: [{ name: `semana-${s.inicio}.pdf`, content: b64 }] }) })
     if (!resp.ok) falha = `${resp.status} ${(await resp.text()).slice(0, 200)}`
   }
   if (!falha && para.length) await db.from('consumo_api').insert({ funcao: 'semana em PDF por e-mail', modelo: 'brevo-email', quantidade: para.length })

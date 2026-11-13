@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Layout from '@/components/Layout'
-import { supabase } from '@/lib/supabase'
-import { BANCA, NARRATIVA } from '@/lib/estiloPecas'
+import { lerConfigPrefixo, gravarConfig } from '@/lib/config'
+import { BANCA, NARRATIVA, RATING, ESCRITORIOS, JURISTAS_POR_SETOR } from '@/lib/estiloPecas'
 import { ChevronDown, ChevronRight, Save, CheckCircle2, FileText, Scale, BookOpen, Target, Layers, Pen, Info, HelpCircle, ArrowRight } from 'lucide-react'
 
 // ─── Tooltip universal ────────────────────────────────────────────────────────
@@ -433,17 +433,10 @@ export default function ParametrosEscritaPage() {
   useEffect(() => {
     async function carregar() {
       try {
-        const { data } = await supabase
-          .from('configuracoes')
-          .select('chave, valor')
-          .like('chave', 'escrita_%')
-        if (data) {
-          const mapa: Record<string, string> = {}
-          data.forEach((r: { chave: string; valor: string }) => {
-            mapa[r.chave.replace(/^escrita_/, '')] = r.valor
-          })
-          setValores(mapa)
-        }
+        const lido = await lerConfigPrefixo('escrita_')
+        const mapa: Record<string, string> = {}
+        for (const [chave, valor] of Object.entries(lido)) mapa[chave.replace(/^escrita_/, '')] = valor
+        if (Object.keys(mapa).length) setValores(mapa)
       } catch { /* usa defaults */ }
       setCarregando(false)
     }
@@ -465,14 +458,9 @@ export default function ParametrosEscritaPage() {
   async function salvar() {
     setSalvando(true)
     try {
-      const linhas = SECOES.flatMap(s =>
-        s.parametros.map(p => ({
-          chave: `escrita_${p.chave}`,
-          valor: getValor(p),
-        }))
-      )
-      const { error } = await supabase.from('configuracoes').upsert(linhas, { onConflict: 'chave' })
-      if (error) throw error
+      const itens: Record<string, string> = {}
+      for (const s of SECOES) for (const p of s.parametros) itens[`escrita_${p.chave}`] = getValor(p)
+      await gravarConfig(itens)
       setErroSalvar(false)
       setSalvo(true)
       setTimeout(() => setSalvo(false), 3000)
@@ -577,6 +565,7 @@ export default function ParametrosEscritaPage() {
 
                         {p.tipo === 'selecao' && (
                           <select
+                            title={p.dica}
                             value={getValor(p)}
                             onChange={e => setValor(p.chave, e.target.value)}
                             onFocus={() => setCampoAtivo(p.chave)}
@@ -591,7 +580,7 @@ export default function ParametrosEscritaPage() {
 
                         {p.tipo === 'numero' && (
                           <input
-                            type="number"
+                            aria-label={p.label} title={p.dica} type="number"
                             value={getValor(p)}
                             onChange={e => setValor(p.chave, e.target.value)}
                             onFocus={() => setCampoAtivo(p.chave)}
@@ -602,7 +591,7 @@ export default function ParametrosEscritaPage() {
 
                         {p.tipo === 'texto' && (
                           <input
-                            type="text"
+                            aria-label={p.label} title={p.dica} type="text"
                             value={getValor(p)}
                             onChange={e => setValor(p.chave, e.target.value)}
                             onFocus={() => setCampoAtivo(p.chave)}
@@ -617,7 +606,7 @@ export default function ParametrosEscritaPage() {
                             onChange={e => setValor(p.chave, e.target.value)}
                             onFocus={() => setCampoAtivo(p.chave)}
                             onBlur={() => setCampoAtivo(null)}
-                            rows={Math.max(3, getValor(p).split('\n').length + 1)}
+                            aria-label={p.label} title={p.dica} rows={Math.max(3, getValor(p).split('\n').length + 1)}
                             className="mt-1 w-full border border-borda rounded-lg px-3 py-2 text-sm bg-fundo text-texto font-mono focus:outline-none focus:ring-2 focus:ring-dourado/50 focus:border-dourado resize-y"
                           />
                         )}
@@ -638,11 +627,14 @@ export default function ParametrosEscritaPage() {
         {/* Banca dos dez redatores */}
         <section className="mt-6 border border-borda rounded-xl overflow-hidden" aria-labelledby="banca-titulo">
           <div className="px-4 py-3.5 bg-fundo-alt">
-            <Tooltip texto="Os dez modos de escrever que o robô usa. Ele escolhe sozinho, pela área do processo e pelo tipo da peça, e faz rodízio para duas peças seguidas não saírem iguais." posicao="bottom">
-              <h2 id="banca-titulo" className="font-semibold text-sm text-texto cursor-help">Banca de redatores: os 10 juristas de referência</h2>
+            <Tooltip texto="Os modos de escrever que o robô usa. Cada setor do direito tem o seu redator titular; o robô escolhe sozinho, pela área do processo e pelo tipo da peça, e faz rodízio para duas peças seguidas não saírem iguais." posicao="bottom">
+              <h2 id="banca-titulo" className="font-semibold text-sm text-texto cursor-help">Banca de redatores: os {BANCA.length} juristas de referência</h2>
             </Tooltip>
             <p className="text-xs text-grafite/70 mt-1">
               Cada peça automática é escrita no método de um destes juristas, escolhido pela área e pelo tipo da peça. O robô mantém as forças de cada tradição e é proibido de repetir as fraquezas. São referências de estilo: nenhuma peça é escrita, revisada ou endossada por essas pessoas, e toda peça sai como rascunho para revisão do advogado.
+            </p>
+            <p className="text-xs text-grafite/70 mt-1">
+              <strong>Rating adotado</strong> — juristas: {RATING.juristas}. Escritórios: {RATING.escritorios}.
             </p>
           </div>
           <ol className="divide-y divide-borda">
@@ -656,6 +648,30 @@ export default function ParametrosEscritaPage() {
               </li>
             ))}
           </ol>
+        </section>
+
+        {/* Juristas por setor e escritórios de referência (pedido de M, 12/11/2026) */}
+        <section className="bg-superficie border border-borda rounded-xl mt-6" aria-labelledby="setores-titulo" data-testid="juristas-por-setor">
+          <div className="px-4 py-3 border-b border-borda">
+            <Tooltip texto="Para cada setor do direito há um robô redator e dez juristas de referência. O robô do setor escreve a peça no método deles, sem copiar texto de ninguém." posicao="bottom">
+              <h2 id="setores-titulo" className="font-semibold text-sm text-texto cursor-help">Os 10 juristas de referência de cada setor</h2>
+            </Tooltip>
+            <p className="text-xs text-grafite/70 mt-1">Critério: {RATING.juristas.toLowerCase()}.</p>
+          </div>
+          <ul className="divide-y divide-borda">
+            {JURISTAS_POR_SETOR.map(s => (
+              <li key={s.setor} className="px-4 py-2.5 text-xs text-grafite">
+                <strong className="text-texto">{s.setor}:</strong> {s.nomes.join(', ')}.
+              </li>
+            ))}
+          </ul>
+          <div className="px-4 py-3 border-t border-borda">
+            <Tooltip texto="O padrão de formatação das peças (fonte, margens, numeração, pedidos em alíneas) segue a prática comum destes escritórios. Nenhum manual interno é copiado." posicao="top">
+              <h3 className="font-semibold text-xs text-texto cursor-help">Os 10 escritórios de referência de formatação</h3>
+            </Tooltip>
+            <p className="text-xs text-grafite/70 mt-1">{ESCRITORIOS.join(' · ')}</p>
+            <p className="text-xs text-grafite/50 mt-1">Fonte: {RATING.escritorios}.</p>
+          </div>
         </section>
 
         <section className="bg-superficie border border-borda rounded-xl mt-6" aria-labelledby="narrativa-titulo">

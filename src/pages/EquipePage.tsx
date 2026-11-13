@@ -14,10 +14,13 @@ import {
   listarPessoas,
   perfilAtual,
   ehSede,
+  pedidosPendentes,
   rotuloFuncao,
   type Funcao,
+  type PedidoPendente,
   type Pessoa,
 } from '@/lib/equipe'
+import { CARGOS, definirCargo, descricaoCargo, lerCargos, rotuloCargo, type Cargo, type MapaCargos } from '@/lib/hierarquia'
 
 const OPCOES: (Funcao | 'nenhuma')[] = ['admin', 'operador', 'leitor', 'nenhuma']
 
@@ -27,6 +30,8 @@ const dataPt = (iso: string | null) =>
 export default function EquipePage() {
   const [perfil, setPerfil] = useState<Funcao | null | 'carregando'>('carregando')
   const [pessoas, setPessoas] = useState<Pessoa[]>([])
+  // Quem pediu para entrar neste escritório e ainda espera a liberação.
+  const [pedidos, setPedidos] = useState<PedidoPendente[]>([])
   // Passo 102: lista de pessoas em texto para o controle de acessos.
   const [copiadoLista, setCopiadoLista] = useState(false)
   const [sede, setSede] = useState(false)
@@ -37,6 +42,8 @@ export default function EquipePage() {
   useEffect(() => { try { localStorage.setItem('lsm-equipe-funcao', filtroFuncao) } catch { /* sem armazenamento */ } }, [filtroFuncao])
   const [ocupado, setOcupado] = useState<string>('')
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+  // Hierarquia (pedido do M): sócio e gestor veem tudo; pleno e júnior veem só os próprios processos.
+  const [cargos, setCargos] = useState<MapaCargos>({})
   // Passo 09: aceite de termos de uso e LGPD por pessoa (data, versão e hash).
   const [aceites, setAceites] = useState<Record<string, { versao: string; hash: string; aceito_em: string }>>({})
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 284
@@ -47,7 +54,8 @@ export default function EquipePage() {
       const p = await perfilAtual()
       setPerfil(p)
       if (p === 'admin') {
-        setPessoas(await listarPessoas()); setSede(await ehSede())
+        setPessoas(await listarPessoas()); setSede(await ehSede()); lerCargos().then(setCargos).catch(() => {})
+        pedidosPendentes().then(setPedidos).catch(() => setPedidos([]))
         const { data } = await supabase.rpc('aceites_equipe')
         setAceites(Object.fromEntries(((data ?? []) as { usuario_id: string; versao: string; hash: string; aceito_em: string }[]).map(a => [a.usuario_id, a])))
       }
@@ -73,6 +81,29 @@ export default function EquipePage() {
     } finally {
       setOcupado('')
     }
+  }
+
+  const alterarCargo = async (pessoa: Pessoa, valor: string) => {
+    setOcupado(pessoa.id); setMsg(null)
+    try {
+      setCargos(await definirCargo(pessoa.id, valor === 'nenhum' ? null : (valor as Cargo)))
+      setMsg({ tipo: 'ok', texto: `${pessoa.nome}: ${rotuloCargo[(valor as Cargo | 'nenhum')] ?? valor}.` })
+    } catch (e) {
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
+    } finally { setOcupado('') }
+  }
+
+  const decidirPedido = async (pedido: PedidoPendente, funcao: Funcao | null) => {
+    if (!funcao && !window.confirm(`Recusar o pedido de ${pedido.nome}? Ela não entra no escritório e pode pedir de novo.`)) return
+    setOcupado(pedido.id); setMsg(null)
+    try {
+      const pessoa = pessoas.find(p => p.id === pedido.id) ?? { id: pedido.id, email: pedido.email, nome: pedido.nome, funcao: null, criadoEm: pedido.criadoEm, confirmado: true, ultimoAcesso: null }
+      await definirFuncao(pessoa, funcao)
+      setMsg({ tipo: 'ok', texto: funcao ? `${pedido.nome} entrou no escritório como ${rotuloFuncao[funcao]}. Agora defina o cargo dela na lista abaixo.` : `Pedido de ${pedido.nome} recusado.` })
+      setPedidos(await pedidosPendentes()); setPessoas(await listarPessoas())
+    } catch (e) {
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
+    } finally { setOcupado('') }
   }
 
   const alterar = async (pessoa: Pessoa, valor: string) => {
@@ -104,15 +135,57 @@ export default function EquipePage() {
           </section>
         ) : (
           <>
+            {pedidos.length > 0 && (
+              <section className="bg-white p-6 shadow-sm border-l-4 border-navy" aria-labelledby="pedidos-entrada" data-testid="pedidos-entrada">
+                <h2 id="pedidos-entrada" className="text-lg font-semibold">{pedidos.length === 1 ? '1 pessoa pediu' : `${pedidos.length} pessoas pediram`} para entrar no escritório</h2>
+                <p className="text-sm text-grafite mt-2">
+                  Elas criaram conta dizendo que são deste escritório. Enquanto você não liberar, não enxergam nada. Libere só quem você conhece; na dúvida, recuse.
+                </p>
+                <ul className="mt-3 divide-y divide-navy/10">
+                  {pedidos.map(pd => (
+                    <li key={pd.id} className="py-3 flex flex-col md:flex-row md:items-center gap-3" data-testid={`pedido-${pd.id}`}>
+                      <div className="min-w-0 flex-1 text-sm">
+                        <p className="font-medium truncate">{pd.nome}</p>
+                        <p className="text-grafite-claro truncate">{pd.email}</p>
+                        <p className="text-xs text-grafite-claro">Escreveu “{pd.nomeDigitado}”{sede && pd.escritorioNome ? <> (escritório: {pd.escritorioNome})</> : null} em {dataPt(pd.criadoEm)}</p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <button type="button" disabled={ocupado === pd.id} onClick={() => decidirPedido(pd, 'operador')} data-testid={`liberar-${pd.id}`} title="Deixa a pessoa entrar e trabalhar: cadastrar e editar processos, prazos e documentos" className="min-h-[44px] px-3 bg-navy text-white text-sm disabled:bg-grafite-claro">Liberar para trabalhar</button>
+                        <button type="button" disabled={ocupado === pd.id} onClick={() => decidirPedido(pd, 'leitor')} data-testid={`liberar-leitura-${pd.id}`} title="Deixa a pessoa entrar só para consultar, sem alterar nada" className="min-h-[44px] px-3 border border-navy text-navy text-sm">Liberar só para consultar</button>
+                        <button type="button" disabled={ocupado === pd.id} onClick={() => decidirPedido(pd, null)} data-testid={`recusar-${pd.id}`} title="Não deixa a pessoa entrar neste escritório" className="min-h-[44px] px-3 border border-critico text-critico text-sm">Recusar</button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            <section className="bg-dourado/10 p-6 shadow-sm border-l-4 border-dourado" aria-labelledby="definir-cargos" data-testid="aviso-definir-cargos">
+              <h2 id="definir-cargos" className="text-lg font-semibold">Fátima: defina aqui o cargo de cada pessoa</h2>
+              <p className="text-sm text-grafite mt-2">
+                O cargo decide o que cada pessoa <strong>enxerga</strong> na plataforma: <strong>sócio(a)</strong> e <strong>gestor(a)</strong> veem os processos, prazos e honorários do escritório inteiro; <strong>advogado(a) pleno</strong> e <strong>júnior</strong> veem somente o que está sob a responsabilidade deles (e itens ainda sem responsável, para alguém assumir).
+              </p>
+              <p className="text-sm text-grafite mt-2">
+                Para definir: na lista <strong>Pessoas com acesso</strong>, logo abaixo, escolha o cargo no campo <strong>Cargo na hierarquia</strong> da linha de cada pessoa. A mudança é salva na hora e pode ser trocada quando quiser. Quem fica <strong>sem cargo definido</strong> vê só o que é seu.
+              </p>
+              {(() => { const sem = pessoas.filter(p => p.funcao && !cargos[p.id]).length; return sem > 0 ? (
+                <p className="text-sm font-medium text-navy mt-3" data-testid="faltam-cargos">
+                  Falta definir o cargo de {sem} {sem === 1 ? 'pessoa' : 'pessoas'}.
+                </p>
+              ) : pessoas.length > 0 ? (
+                <p className="text-sm font-medium text-regular mt-3" data-testid="faltam-cargos">Todos com acesso já têm cargo definido.</p>
+              ) : null })()}
+            </section>
+
             <section className="bg-white p-6 shadow-sm border-t-2 border-dourado" aria-labelledby="como-adicionar">
               <h2 id="como-adicionar" className="text-lg flex items-center gap-2">
                 <UserPlus size={18} className="text-dourado" aria-hidden="true" />
                 Como adicionar alguém
               </h2>
               <ol className="list-decimal pl-5 text-sm text-grafite mt-3 space-y-1">
-                <li>Envie um convite pelo e-mail da pessoa (a administração da sede faz isso em Escritórios parceiros).</li>
-                <li>Ao aceitar o convite, ela entra <strong>no seu escritório</strong>, com a função do convite. Quem cria conta sem convite ganha um escritório próprio e vazio, separado do seu.</li>
-                <li>Na lista abaixo você muda a função dela para operador ou administrador, ou retira o acesso escolhendo <strong>Sem acesso</strong>.</li>
+                <li>Peça para a pessoa abrir a plataforma, tocar em <strong>Criar conta</strong> e escrever o nome do escritório igualzinho ao seu, em letras maiúsculas.</li>
+                <li>O pedido dela aparece no topo desta tela. Toque em <strong>Liberar para trabalhar</strong> (ou <strong>só para consultar</strong>). Antes disso ela não enxerga nada.</li>
+                <li>Na lista abaixo você muda a função dela, define o cargo, ou retira o acesso escolhendo <strong>Sem acesso</strong>.</li>
               </ol>
               <p className="text-sm text-grafite mt-3">
                 Alguém esqueceu a senha? Use <strong>Senha provisória</strong> na linha da pessoa, entregue a senha gerada e peça para ela trocar em Configurações → Senha.
@@ -137,10 +210,10 @@ export default function EquipePage() {
                 Pessoas com acesso ({pessoas.length})
               </h2>
               <div className="px-6 pb-3 flex flex-wrap items-center gap-3">
-                <button type="button" onClick={async () => { const rot = (f: string | null) => f === 'admin' ? 'administrador' : f === 'operador' ? 'operador' : f === 'leitor' ? 'leitor' : 'esperando liberação'; const t = [`Equipe com acesso — ${new Date().toLocaleDateString('pt-BR')}`, ...pessoas.map(p => `• ${p.nome || p.email} <${p.email}> — ${rot(p.funcao)}`), 'THEYE Institute'].join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoLista(true); setTimeout(() => setCopiadoLista(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-equipe" className="min-h-[44px] px-3 border border-navy text-navy text-xs">{copiadoLista ? 'Lista copiada' : 'Copiar lista'}</button>
-                <button type="button" onClick={() => window.print()} data-testid="imprimir-equipe" className="min-h-[44px] px-3 border border-navy/20 text-navy text-xs ml-2 print:hidden">Imprimir</button>{/* Passo 222 */}
-                <button type="button" data-testid="copiar-link-equipe" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-3 border border-navy/20 text-navy text-xs ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 256 */}
-                {pessoas.length > 0 && <button type="button" data-testid="baixar-equipe" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['nome;e-mail;função;confirmado;último acesso', ...pessoas.map(p => `${p.nome};${p.email};${p.funcao ?? ''};${p.confirmado ? 'sim' : 'não'};${p.ultimoAcesso ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'equipe.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 320 */}
+                <button type="button" onClick={async () => { const rot = (f: string | null) => f === 'admin' ? 'administrador' : f === 'operador' ? 'operador' : f === 'leitor' ? 'leitor' : 'esperando liberação'; const t = [`Equipe com acesso — ${new Date().toLocaleDateString('pt-BR')}`, ...pessoas.map(p => `• ${p.nome || p.email} <${p.email}> — ${rot(p.funcao)}`), 'THEYE Institute'].join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoLista(true); setTimeout(() => setCopiadoLista(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-equipe" title="Copia a lista das pessoas com acesso (nome, e-mail e função) para o controle de acessos" className="min-h-[44px] px-3 border border-navy text-navy text-xs">{copiadoLista ? 'Lista copiada' : 'Copiar lista'}</button>
+                <button type="button" onClick={() => window.print()} data-testid="imprimir-equipe" title="Abre a janela de impressão do navegador para imprimir a lista da equipe" className="min-h-[44px] px-3 border border-navy/20 text-navy text-xs ml-2 print:hidden">Imprimir</button>{/* Passo 222 */}
+                <button type="button" data-testid="copiar-link-equipe" title="Copia o endereço desta tela para a área de transferência" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-3 border border-navy/20 text-navy text-xs ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 256 */}
+                {pessoas.length > 0 && <button type="button" data-testid="baixar-equipe" aria-live="polite" title="Baixa a planilha (equipe.csv) com nome, e-mail, função e último acesso de cada pessoa" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['nome;e-mail;função;confirmado;último acesso', ...pessoas.map(p => `${p.nome};${p.email};${p.funcao ?? ''};${p.confirmado ? 'sim' : 'não'};${p.ultimoAcesso ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'equipe.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 320 */}
                 <input type="search" value={busca} onChange={e => { setBusca(e.target.value); try { localStorage.setItem('lsm-equipe-busca', e.target.value) } catch { /* sem memória local */ } }} placeholder="Buscar por nome ou e-mail" aria-label="Buscar pessoa por nome ou e-mail" className="border px-3 py-2 text-sm w-64" data-testid="busca-equipe" />
                 <select value={filtroFuncao} onChange={e => setFiltroFuncao(e.target.value)} aria-label="Filtrar por função" data-testid="filtro-funcao" className="border px-2 py-2 text-sm min-h-[44px]">
                   <option value="">Todas as funções</option>
@@ -197,10 +270,28 @@ export default function EquipePage() {
                         <p id={`desc-${p.id}`} className="text-xs text-grafite-claro mt-1">
                           {ocupado === p.id ? 'Salvando…' : descricaoFuncao[atual]}
                         </p>
+                        <label htmlFor={`cargo-${p.id}`} className="block text-xs uppercase tracking-wider text-grafite mb-1 mt-3" title="O cargo define o que a pessoa VÊ: sócios e o gestor veem todos os processos; pleno e júnior veem só os seus.">
+                          Cargo na hierarquia
+                        </label>
+                        <select
+                          id={`cargo-${p.id}`}
+                          data-testid={`cargo-${p.id}`}
+                          value={cargos[p.id] ?? 'nenhum'}
+                          disabled={ocupado !== ''}
+                          onChange={e => alterarCargo(p, e.target.value)}
+                          title={descricaoCargo[cargos[p.id] ?? 'nenhum']}
+                          className="w-full min-h-[44px] px-3 py-2 border border-grafite-claro/40 rounded-sm bg-white focus:border-dourado text-sm"
+                        >
+                          {([...CARGOS, 'nenhum'] as (Cargo | 'nenhum')[]).map(c => (
+                            <option key={c} value={c}>{rotuloCargo[c]}</option>
+                          ))}
+                        </select>
+                        <p className="text-xs text-grafite-claro mt-1">{descricaoCargo[cargos[p.id] ?? 'nenhum']}</p>
                         <button
                           type="button"
                           onClick={() => senhaProvisoria(p)}
                           disabled={ocupado !== ''}
+                          title={`Gera uma senha provisória para ${p.nome}, após confirmação; a senha atual dela deixa de valer`}
                           className="mt-2 min-h-[44px] inline-flex items-center gap-2 px-3 border border-navy/30 text-navy hover:bg-pergaminho disabled:opacity-50 text-sm"
                         >
                           <KeyRound size={14} aria-hidden="true" /> Senha provisória

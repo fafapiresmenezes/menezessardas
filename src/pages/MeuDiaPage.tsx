@@ -4,12 +4,11 @@ import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { calcularPrazo, feriadosDoRio } from '@/lib/prazos'
-import { CalendarClock, Inbox, ListChecks, FileWarning, Briefcase, Mail } from 'lucide-react'
+import { CalendarClock, Inbox, ListChecks, FileWarning, Mail } from 'lucide-react'
 import { extrairAcoes } from '@/lib/acoesConsultor'
-import { render } from '@/pages/AssistentePage'
+import ConsultorSemana from '@/components/ConsultorSemana'
 import { hojeLocal, isoLocal } from '@/lib/datas'
 import { AREAS_DIREITO } from '@/lib/assistente'
-import { mensagemAmigavel } from '@/lib/erros'
 
 // "Meu dia": o que cada nível do escritório precisa ver ao abrir a plataforma, num só lugar.
 // O papel escolhido define a ordem e os atalhos; os dados são os mesmos para todos (respeitando o sigilo).
@@ -69,19 +68,12 @@ export default function MeuDiaPage() {
   // Passo 20: ações do Consultor da semana marcáveis como feitas (tabela acoes_consultor).
   const [acoes, setAcoes] = useState<{ id: string; indice: number; texto: string; feito_em: string | null }[]>([])
   const [resumo, setResumo] = useState<{ conteudo: Resumo; criado_em: string; enviado_em: string | null; destinatarios: number } | null>(null)
-  const [msgResumo, setMsgResumo] = useState('')
   const [diaCopiado, setDiaCopiado] = useState(false) // Passo 209
   useEffect(() => {
     if (!supabaseConfigurado) return
     supabase.from('resumos_semanais').select('conteudo,criado_em,enviado_em,destinatarios').order('semana', { ascending: false }).limit(1).maybeSingle().then(r => setResumo(r.data ?? null))
   }, [])
-  const testarResumo = async () => {
-    setMsgResumo('Enviando o resumo de teste para o seu e-mail…')
-    const { data, error } = await supabase.functions.invoke('resumo-semanal', { body: { teste: true } })
-    if (error) return setMsgResumo(`Não foi possível enviar: ${mensagemAmigavel(error)}`)
-    if (data?.enviado) { setMsgResumo('Resumo de teste enviado para o seu e-mail. Toda segunda-feira às 8h ele vai para toda a equipe.'); if (data.resumo) setResumo(r => r ?? { conteudo: data.resumo, criado_em: new Date().toISOString(), enviado_em: null, destinatarios: 0 }) }
-    else setMsgResumo(`Não enviado: ${data?.motivo ?? data?.detalhe ?? data?.erro ?? 'erro desconhecido'}.`)
-  }
+  // O botão de "resumo de teste" saiu da tela a pedido do M (12/11/2026): cliente não testa; o resumo chega sozinho toda segunda às 8h.
   useEffect(() => {
     if (!supabaseConfigurado) { setDiagnostico(null); return }
     supabase.from('diagnosticos_semanais').select('id,resposta,criado_em').eq('nivel', NIVEL_DO_PAPEL[papel] ?? 'nivel_pleno').order('criado_em', { ascending: false }).limit(1).maybeSingle().then(async r => {
@@ -100,7 +92,6 @@ export default function MeuDiaPage() {
     const { error } = await supabase.from('acoes_consultor').update({ feito_em, usuario_id: feito_em ? u.user?.id ?? null : null }).eq('id', a.id)
     if (!error) setAcoes(acoes.map(x => x.id === a.id ? { ...x, feito_em } : x))
   }
-  const feitas = acoes.filter(a => a.feito_em).length
   // Passo 21: aviso quando as horas do mês estão abaixo de 80% do ritmo da meta da função.
   const [horas, setHoras] = useState<{ meta: number; horas: number; esperado_hoje: number; pct_ritmo: number | null; abaixo: boolean } | null>(null)
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 278
@@ -145,18 +136,18 @@ export default function MeuDiaPage() {
           <p className="font-medium mb-2">Qual é a sua função?</p>
           <div role="radiogroup" className="flex flex-wrap gap-2">
             {Object.entries(PAPEIS).map(([k, v]) => (
-              <button key={k} type="button" role="radio" aria-checked={papel === k} data-testid={`papel-${k}`} onClick={() => setPapel(k)}
+              <button key={k} type="button" role="radio" aria-checked={papel === k} data-testid={`papel-${k}`} onClick={() => setPapel(k)} title={`Mostra o dia na visão de ${v.nome}: ${v.foco}`}
                 className={`min-h-[44px] px-4 text-sm border ${papel === k ? 'bg-navy text-white' : ''}`}>{v.nome}</button>
             ))}
           </div>
           <p className="text-sm text-grafite-claro mt-2">{p.foco}</p>
           <div className="flex flex-wrap gap-2 mt-3">
             {p.atalhos.map(a => <Link key={a.href + a.rotulo} to={a.href} className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy text-navy">{a.rotulo}</Link>)}
-            <button type="button" onClick={() => { copiarDia(); setDiaCopiado(true) }} data-testid="copiar-dia" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy">{diaCopiado ? 'Dia copiado' : 'Copiar meu dia'}</button>
+            <button type="button" onClick={() => { copiarDia(); setDiaCopiado(true) }} data-testid="copiar-dia" title="Copia o seu dia em texto (tarefas, intimações e contratos vencendo) para colar na agenda ou enviar" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy">{diaCopiado ? 'Dia copiado' : 'Copiar meu dia'}</button>
             {/* Passo 140: imprimir o dia em uma página. */}
-            <button type="button" onClick={() => window.print()} data-testid="imprimir-dia" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy print:hidden">Imprimir</button>
-            <button type="button" data-testid="copiar-link-meu-dia" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 240 */}
-            {tarefas.length + vencendo.length > 0 && <button type="button" data-testid="baixar-meu-dia" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['tipo;título;prazo;prioridade', ...tarefas.map(t => `tarefa;${t.titulo.replace(/;/g, ',')};${t.prazo ?? ''};${t.prioridade}`), ...vencendo.map(v => `vencimento;${v.locatario_fornecedor};${v.data_vencimento};`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'meu-dia.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 309 */}
+            <button type="button" onClick={() => window.print()} data-testid="imprimir-dia" title="Abre a janela de impressão do navegador para imprimir o seu dia em uma página" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy print:hidden">Imprimir</button>
+            <button type="button" data-testid="copiar-link-meu-dia" title="Copia o endereço desta tela para a área de transferência" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 240 */}
+            {tarefas.length + vencendo.length > 0 && <button type="button" data-testid="baixar-meu-dia" aria-live="polite" title="Baixa a planilha (meu-dia.csv) com as suas tarefas e os contratos vencendo" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['tipo;título;prazo;prioridade', ...tarefas.map(t => `tarefa;${t.titulo.replace(/;/g, ',')};${t.prazo ?? ''};${t.prioridade}`), ...vencendo.map(v => `vencimento;${v.locatario_fornecedor};${v.data_vencimento};`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'meu-dia.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 309 */}
           </div>
         </section>
 
@@ -188,7 +179,7 @@ export default function MeuDiaPage() {
           <section className={cartao} data-testid="movimentacoes">
             <h2 className="font-serif text-lg flex items-center gap-2"><Inbox className="w-5 h-5" aria-hidden />Movimentações nos processos (7 dias)</h2>
             {movimentacoes.length ? <ul className="text-sm mt-2 space-y-1">{movimentacoes.map(m => <li key={m.id} data-testid="movimentacao"><Link to="/monitoramento" className="underline">{m.rotulo || m.valor}</Link>: {m.novidades[0].texto}{m.novidades.length > 1 && ` (+${m.novidades.length - 1})`}</li>)}</ul>
-              : <p className="text-sm text-grafite-claro mt-2">Nenhuma novidade. Casos com número CNJ são verificados todo dia no DataJud.</p>}
+              : <p className="text-sm text-grafite-claro mt-2">Nenhuma novidade. Casos com número CNJ são verificados no CNJ a cada 4 horas.</p>}
           </section>
           <section className={cartao}>
             <h2 className="font-serif text-lg flex items-center gap-2"><FileWarning className="w-5 h-5" aria-hidden />Contratos vencendo (60 dias)</h2>
@@ -210,36 +201,8 @@ export default function MeuDiaPage() {
               </dl>
             </>
           ) : <p className="text-sm text-grafite-claro mt-2">O primeiro resumo chega na segunda-feira às 8h.</p>}
-          <button type="button" onClick={testarResumo} data-testid="testar-resumo" className="min-h-[44px] px-4 mt-3 text-sm border border-navy text-navy">Enviar-me o resumo agora (teste)</button>
-          {msgResumo && <p className="text-sm mt-2" role="status" data-testid="msg-resumo">{msgResumo}</p>}
         </section>
-        <section className={cartao} data-testid="consultor-semana">
-          <h2 className="font-serif text-lg flex items-center gap-2"><Briefcase className="w-5 h-5" aria-hidden />Consultor da semana</h2>
-          {diagnostico ? (
-            <>
-              <p className="text-xs text-grafite-claro mt-1">Gerado em {new Date(diagnostico.criado_em).toLocaleDateString('pt-BR')} pelo consultor do seu nível. <Link to="/consultores" className="underline">Pedir um diagnóstico agora</Link></p>
-              <div className="prose prose-sm max-w-none mt-3">{render(diagnostico.resposta)}</div>
-              {!!acoes.length && (
-                <div className="mt-4 border-t border-navy/10 pt-3" data-testid="acoes-consultor">
-                  <p className="text-sm font-semibold flex items-center justify-between">Ações da semana <span data-testid="aderencia-semana">{feitas} de {acoes.length} feitas ({Math.round(100 * feitas / acoes.length)}%)</span></p>
-                  <ul className="mt-2 space-y-1">
-                    {acoes.map(a => (
-                      <li key={a.id}>
-                        <label className="flex items-start gap-2 text-sm min-h-[44px] cursor-pointer">
-                          <input type="checkbox" checked={!!a.feito_em} onChange={() => marcarAcao(a)} className="mt-1 w-5 h-5 shrink-0" data-testid={`acao-${a.indice}`} />
-                          <span className={a.feito_em ? 'line-through text-grafite-claro' : ''}>{a.indice}. {a.texto}{a.feito_em && <span className="text-xs ml-2">feita em {new Date(a.feito_em).toLocaleDateString('pt-BR')}</span>}</span>
-                        </label>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="text-xs text-grafite-claro mt-1">A aderência por nível aparece em <Link to="/indicadores" className="underline">Indicadores</Link>.</p>
-                </div>
-              )}
-            </>
-          ) : (
-            <p className="text-sm text-grafite-claro mt-2">O primeiro diagnóstico chega na segunda-feira. Enquanto isso, <Link to="/consultores" className="underline">peça um agora em Consultores</Link>.</p>
-          )}
-        </section>
+        <ConsultorSemana diagnostico={diagnostico} acoes={acoes} onMarcar={marcarAcao} />
         <section className={cartao}>
           <h2 className="font-serif text-lg flex items-center gap-2"><CalendarClock className="w-5 h-5" aria-hidden />Calculadora de prazo processual</h2>
           <div className="flex flex-wrap gap-3 items-end mt-3 text-sm">

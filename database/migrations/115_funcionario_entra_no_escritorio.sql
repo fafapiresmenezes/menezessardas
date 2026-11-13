@@ -1,4 +1,4 @@
--- 115: funcionário com e-mail @gmenezes.com ou @lsm.law entra direto no escritório (Menezes Sardas Advogados)
+-- 115: funcionário com e-mail @gmenezes.com ou @lsm.law entra direto no escritório (G. Menezes Advogados)
 -- como operador (trabalha os processos), sem aprovação. Decisão do M em 11/11/2026.
 -- O e-mail precisa ser confirmado no cadastro, então só quem recebe e-mail nesses domínios entra.
 -- Demais e-mails: continua a 111 (escritório próprio vazio).

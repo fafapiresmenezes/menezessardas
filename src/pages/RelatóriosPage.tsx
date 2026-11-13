@@ -12,6 +12,7 @@ import type { Periodicidade } from '@/lib/dominio'
 import { porCliente, porSocio, csvClientesSocios, type HoraLancada, type CasoHonorario, type PessoaNome } from '@/lib/relatorioClientes'
 import { listarPessoas } from '@/lib/equipe'
 import { mensagemAmigavel } from '@/lib/erros'
+import { meuAlcance, podeVer, rotuloCargo } from '@/lib/hierarquia'
 
 type Periodo = 30 | 90 | 365
 
@@ -64,6 +65,11 @@ export default function RelatóriosPage() {
   const [casosHon, setCasosHon] = useState<CasoHonorario[]>([])
   const [pessoas, setPessoas] = useState<PessoaNome[]>([])
   const [csBaixado, setCsBaixado] = useState(false)
+  // Hierarquia: sócios e gestor veem os números do escritório inteiro; os demais, só o que é deles.
+  const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
+  useEffect(() => {
+    meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true }))
+  }, [])
   useEffect(() => {
     if (!supabaseConfigurado) return
     const q = async <T,>(f: () => PromiseLike<{ data: unknown }>) => { try { return ((await f()).data ?? []) as T[] } catch { return [] as T[] } }
@@ -71,8 +77,11 @@ export default function RelatóriosPage() {
     q<CasoHonorario>(() => supabase.from('tarefas').select('cliente,responsavel_id,honorario_previsto,honorario_recebido').eq('nivel', 'projeto')).then(setCasosHon)
     listarPessoas().then(ps => setPessoas(ps.map(p => ({ id: p.id, nome: p.nome, email: p.email })))).catch(() => setPessoas([]))
   }, [])
-  const clientes = porCliente(horasLanc, casosHon)
-  const socios = porSocio(horasLanc, casosHon, pessoas)
+  const restrito = !!alcance && !alcance.veTudo
+  const horasVisiveis = restrito ? horasLanc.filter(h => !h.usuario_id || h.usuario_id === alcance!.id) : horasLanc
+  const casosVisiveis = restrito ? casosHon.filter(c => podeVer(alcance!, c.responsavel_id ?? null)) : casosHon
+  const clientes = porCliente(horasVisiveis, casosVisiveis)
+  const socios = porSocio(horasVisiveis, casosVisiveis, pessoas)
 
   useEffect(() => {
     repositorio.listarContratos().then(setContratos)
@@ -180,6 +189,7 @@ export default function RelatóriosPage() {
                 key={p.dias}
                 onClick={() => setPeriodo(p.dias)}
                 aria-pressed={periodo === p.dias}
+                title={`Recalcula todos os números desta tela para os próximos ${p.dias} dias`}
                 className={`px-4 py-2 rounded-sm text-sm transition ${
                   periodo === p.dias
                     ? 'bg-navy text-white'
@@ -191,10 +201,10 @@ export default function RelatóriosPage() {
             ))}
           </div>
           {/* Passo 172: imprimir o relatório do período. */}
-          <button type="button" onClick={() => window.print()} data-testid="imprimir-periodo" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
-          <button type="button" data-testid="copiar-link-relatorios" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 228 */}
-          <button type="button" data-testid="baixar-relatorio" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['indicador;valor', `imóveis;${imoveis.length}`, `contratos;${(contratos ?? []).length}`, `alertas no período (${periodo} dias);${noPeriodo.length}`, `vencidos em aberto;${vencidosAbertos.length}`, `receita estimada no período;${receitaNoPeriodo.toFixed(2)}`, ...porTipoAlerta.map(([t, n]) => `alertas ${t};${n}`), ...porTipoImovel.map(([t, n]) => `imóveis ${t};${n}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'relatorio-periodo.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>{/* Passo 305 */}
-          <button type="button" onClick={() => { copiarResumoPeriodo(); setPeriodoCopiado(true) }} data-testid="copiar-periodo" className="mt-3 min-h-[44px] px-4 border border-navy/20 text-navy text-sm">{periodoCopiado ? 'Resumo copiado' : 'Copiar resumo do período'}</button>
+          <button type="button" onClick={() => window.print()} data-testid="imprimir-periodo" title="Abre a janela de impressão do navegador para imprimir o relatório do período" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
+          <button type="button" data-testid="copiar-link-relatorios" title="Copia o endereço desta tela para a área de transferência" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 228 */}
+          <button type="button" data-testid="baixar-relatorio" aria-live="polite" title="Baixa a planilha (relatorio-periodo.csv) com os indicadores do período: imóveis, contratos, alertas e receita" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['indicador;valor', `imóveis;${imoveis.length}`, `contratos;${(contratos ?? []).length}`, `alertas no período (${periodo} dias);${noPeriodo.length}`, `vencidos em aberto;${vencidosAbertos.length}`, `receita estimada no período;${receitaNoPeriodo.toFixed(2)}`, ...porTipoAlerta.map(([t, n]) => `alertas ${t};${n}`), ...porTipoImovel.map(([t, n]) => `imóveis ${t};${n}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'relatorio-periodo.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>{/* Passo 305 */}
+          <button type="button" onClick={() => { copiarResumoPeriodo(); setPeriodoCopiado(true) }} data-testid="copiar-periodo" title="Copia um resumo em texto do período (alertas, vencidos e receita) para colar em e-mail" className="mt-3 min-h-[44px] px-4 border border-navy/20 text-navy text-sm">{periodoCopiado ? 'Resumo copiado' : 'Copiar resumo do período'}</button>
           <p className="text-xs text-grafite-claro mt-3" data-testid="datas-periodo">
             Este relatório cobre de {new Date().toLocaleDateString('pt-BR')} até {new Date(Date.now() + periodo * 86400000).toLocaleDateString('pt-BR')}, gerado em {new Date().toLocaleString('pt-BR')}.
           </p>
@@ -204,8 +214,8 @@ export default function RelatóriosPage() {
           <h2 id="t-mensal" className="text-lg">Relatório mensal automático</h2>
           <p className="text-sm text-grafite mt-1">No dia 1 de cada mês, às 8h, a plataforma gera o relatório do mês anterior em PDF (contratos, imóveis, casos, horas, honorários, intimações, assinaturas, compliance e IA) e envia por e-mail à sócia. {ultimo ? `Último enviado: ${ultimo.mes.slice(5, 7)}/${ultimo.mes.slice(0, 4)}${ultimo.enviado_em ? ` em ${new Date(ultimo.enviado_em).toLocaleDateString('pt-BR')} a ${ultimo.destinatarios} pessoa(s)` : ''}.` : 'O primeiro vai no próximo dia 1.'}</p>
           <div className="flex flex-wrap gap-2 mt-3">
-            <button type="button" onClick={testarMensal} disabled={ocupado} data-testid="testar-mensal" className="min-h-[44px] px-4 text-sm bg-navy text-white disabled:opacity-60">Enviar-me o relatório agora (teste)</button>
-            <button type="button" onClick={baixarMensal} disabled={ocupado} data-testid="baixar-mensal" className="min-h-[44px] px-4 text-sm border border-navy text-navy disabled:opacity-60">Baixar o PDF deste mês</button>
+            <button type="button" onClick={testarMensal} disabled={ocupado} data-testid="testar-mensal" title="Gera o relatório mensal em PDF agora e envia só para o seu e-mail, como teste" className="min-h-[44px] px-4 text-sm bg-navy text-white disabled:opacity-60">Enviar-me o relatório agora (teste)</button>
+            <button type="button" onClick={baixarMensal} disabled={ocupado} data-testid="baixar-mensal" title="Gera o relatório mensal em PDF e baixa o arquivo neste computador, sem enviar e-mail" className="min-h-[44px] px-4 text-sm border border-navy text-navy disabled:opacity-60">Baixar o PDF deste mês</button>
           </div>
           {msgMensal && <p className="text-sm mt-2" role="status" data-testid="msg-mensal">{msgMensal}</p>}
         </section>
@@ -271,6 +281,11 @@ export default function RelatóriosPage() {
 
           <section className="bg-white p-6 shadow-sm lg:col-span-2" aria-labelledby="t-clientes" data-testid="por-cliente-socio">
             <h2 id="t-clientes" className="text-lg mb-2">Por cliente e por sócio</h2>
+            {restrito && (
+              <p className="border-l-2 border-dourado bg-pergaminho/50 p-2 text-xs mb-3" data-testid="relatorios-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+                Você está vendo <strong>as suas horas e os seus casos</strong> ({rotuloCargo[alcance!.cargo ?? 'nenhum']}). Sócios e o gestor veem o escritório inteiro.
+              </p>
+            )}
             <p className="text-sm text-grafite-claro mb-4">Horas lançadas (tela Horas) e honorários dos casos (tela Honorários), consolidados. Rentabilidade do cliente = recebido menos o custo das horas.</p>
             {clientes.length === 0 && socios.length === 0 ? (
               <p className="text-sm text-grafite-claro">Nada lançado ainda. Lance horas em Horas e honorários em Honorários; esta tabela se monta sozinha.</p>
@@ -293,8 +308,8 @@ export default function RelatóriosPage() {
               </div>
             )}
             <div className="mt-4 flex flex-wrap gap-3 print:hidden">
-              <button type="button" data-testid="baixar-clientes-socios" disabled={clientes.length === 0 && socios.length === 0} onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csvClientesSocios(clientes, socios)], { type: 'text/csv;charset=utf-8' })); a.download = 'clientes-e-socios.csv'; a.click(); setCsBaixado(true); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm disabled:opacity-50">{csBaixado ? 'Baixado' : 'Baixar CSV (clientes e sócios)'}</button>
-              <button type="button" onClick={() => window.print()} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Imprimir (PDF)</button>
+              <button type="button" data-testid="baixar-clientes-socios" title="Baixa a planilha (clientes-e-socios.csv) com horas, recebidos e rentabilidade por cliente e por sócio" disabled={clientes.length === 0 && socios.length === 0} onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csvClientesSocios(clientes, socios)], { type: 'text/csv;charset=utf-8' })); a.download = 'clientes-e-socios.csv'; a.click(); setCsBaixado(true); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm disabled:opacity-50">{csBaixado ? 'Baixado' : 'Baixar CSV (clientes e sócios)'}</button>
+              <button type="button" onClick={() => window.print()} title="Abre a janela de impressão do navegador; escolha 'Salvar como PDF' para gerar o arquivo" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm">Imprimir (PDF)</button>
             </div>
           </section>
 

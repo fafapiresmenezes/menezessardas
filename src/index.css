@@ -6,7 +6,7 @@
 @layer base {
   body {
     @apply bg-pergaminho text-grafite font-sans antialiased;
-    background: linear-gradient(135deg, #FAF8F5 0%, #FEF9F7 100%);
+    background: #F5F5F6;
   }
 
   h1 {
@@ -163,24 +163,24 @@
   }
 
   .shadow {
-    box-shadow: 0 1px 3px 0 rgba(20, 33, 61, 0.08), 0 1px 2px 0 rgba(20, 33, 61, 0.04);
+    box-shadow: 0 1px 3px 0 rgba(11, 11, 12, 0.08), 0 1px 2px 0 rgba(11, 11, 12, 0.04);
   }
 
   .shadow-md {
-    box-shadow: 0 4px 6px -1px rgba(20, 33, 61, 0.1), 0 2px 4px -1px rgba(20, 33, 61, 0.06);
+    box-shadow: 0 4px 6px -1px rgba(11, 11, 12, 0.1), 0 2px 4px -1px rgba(11, 11, 12, 0.06);
   }
 
   .shadow-lg {
-    box-shadow: 0 10px 15px -3px rgba(20, 33, 61, 0.12), 0 4px 6px -2px rgba(20, 33, 61, 0.05);
+    box-shadow: 0 10px 15px -3px rgba(11, 11, 12, 0.12), 0 4px 6px -2px rgba(11, 11, 12, 0.05);
   }
 
   .shadow-xl {
-    box-shadow: 0 20px 25px -5px rgba(20, 33, 61, 0.15), 0 10px 10px -5px rgba(20, 33, 61, 0.04);
+    box-shadow: 0 20px 25px -5px rgba(11, 11, 12, 0.15), 0 10px 10px -5px rgba(11, 11, 12, 0.04);
   }
 
   /* Subtle borders with color transparency */
   section, main, .card {
-    border-color: rgba(20, 33, 61, 0.08);
+    border-color: rgba(11, 11, 12, 0.08);
   }
 
   /* Gradient background for sections */
@@ -191,7 +191,7 @@
   /* Enhanced button focus depth */
   button:hover:not(:disabled) {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px 0 rgba(20, 33, 61, 0.15);
+    box-shadow: 0 4px 12px 0 rgba(11, 11, 12, 0.15);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 }
@@ -200,38 +200,45 @@
   box-sizing: border-box;
 }
 
-/* Modo escuro: classe .dark no <html>. Mantém a identidade navy/dourado com contraste AA. */
+/* Paleta do theye.club (pedido do M, 12/11/2026): preto, grafite, cinzas e branco. Os nomes das classes
+   (navy, dourado, pergaminho) ficaram por compatibilidade; os valores estão no tailwind.config.js. */
+.bg-navy .text-dourado, .bg-navy.text-dourado, .bg-navy .text-dourado-escuro { color: #C9C9CD; }
+.bg-dourado.text-navy { background-color: #0B0B0C; color: #FFFFFF; }
+.bg-dourado.text-navy:hover { background-color: #2A2D31; }
+.bg-navy .bg-dourado.text-navy { background-color: #F2F2F2; color: #0B0B0C; }
+
+/* Modo escuro: classe .dark no <html>. Mesmos tons da página do theye.club, com contraste AA. */
 html.dark { color-scheme: dark; }
-.dark body { background: #0B1220; color: #D6DAE1; }
-.dark h1, .dark h2, .dark h3, .dark .text-navy { color: #E8D9BC; }
-.dark .text-grafite { color: #D6DAE1; }
-.dark .text-grafite-claro { color: #A7B0BE; }
-.dark .bg-white { background-color: #131C2E; }
-.dark .bg-pergaminho, .dark .hover\:bg-pergaminho:hover, .dark .hover\:bg-white:hover { background-color: #1B2740; }
-.dark .bg-navy { background-color: #0A101C; }
-.dark .bg-navy.text-white, .dark button.bg-navy { background-color: #2C4474; }
-.dark .hover\:bg-navy-700:hover { background-color: #36528A; }
-.dark .border-navy, .dark .border-navy\/30, .dark .border-navy\/20 { border-color: #3B4A66; }
-.dark .border-navy\/10, .dark .border-navy\/15, .dark .border-navy\/5, .dark .divide-navy\/10 > * + * { border-color: #26324A; }
-.dark .border-grafite-claro\/40, .dark .border-grafite-claro\/30 { border-color: #3B4A66; }
-.dark input, .dark select, .dark textarea { background-color: #0F1726; color: #E5E9F0; }
-.dark input::placeholder, .dark textarea::placeholder { color: #7D8798; }
+.dark body { background: #0B0B0C; color: #E6E6E6; }
+.dark h1, .dark h2, .dark h3, .dark .text-navy { color: #F2F2F2; }
+.dark .text-grafite { color: #E6E6E6; }
+.dark .text-grafite-claro { color: #B9B9BD; }
+.dark .text-dourado, .dark .text-dourado-escuro { color: #B9B9BD; }
+.dark .bg-white { background-color: #141618; }
+.dark .bg-pergaminho, .dark .hover\:bg-pergaminho:hover, .dark .hover\:bg-white:hover { background-color: #1C1E21; }
+.dark .bg-navy { background-color: #000000; }
+.dark .bg-navy.text-white, .dark button.bg-navy { background-color: #2A2D31; }
+.dark .hover\:bg-navy-700:hover { background-color: #3A3A3D; }
+.dark .border-navy, .dark .border-navy\/30, .dark .border-navy\/20 { border-color: #3A3A3D; }
+.dark .border-navy\/10, .dark .border-navy\/15, .dark .border-navy\/5, .dark .divide-navy\/10 > * + * { border-color: #2A2D31; }
+.dark .border-grafite-claro\/40, .dark .border-grafite-claro\/30 { border-color: #3A3A3D; }
+.dark input, .dark select, .dark textarea { background-color: #0F1011; color: #F2F2F2; }
+.dark input::placeholder, .dark textarea::placeholder { color: #8A8A8F; }
 .dark .bg-regularFundo { background-color: #12301F; } .dark .text-regular { color: #7CD3A3; }
 .dark .bg-atencaoFundo { background-color: #33270C; } .dark .text-atencao { color: #F0C063; }
 .dark .bg-criticoFundo { background-color: #3A1515; } .dark .text-critico { color: #F2918C; }
 .dark .shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,.5); }
-.dark a:focus-visible, .dark button:focus-visible, .dark input:focus-visible, .dark select:focus-visible, .dark textarea:focus-visible { --tw-ring-offset-color: #0B1220; }
-.dark section { background: #131C2E; border-color: #26324A; }
-.dark .from-white { --tw-gradient-from: #131C2E var(--tw-gradient-from-position); --tw-gradient-to: rgb(19 28 46 / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
-.dark .to-pergaminho { --tw-gradient-to: #1B2740 var(--tw-gradient-to-position); }
-.dark .bg-gray-100 { background-color: #0B1220; } .dark .text-gray-600 { color: #A7B0BE; }
-/* Revisão R01 (06/11): no modo escuro a barra lateral fica #2C4474 e o dourado caía a 3,1:1; monograma mais claro (4,9:1). Botão dourado mantém texto navy (5,2:1) em vez do creme do modo escuro (2,2:1). */
-.dark .bg-navy.text-white .text-dourado { color: #D4B57A; }
-.dark .bg-dourado.text-navy, .dark .bg-dourado .text-navy { color: #14213D; }
-.dark .text-dourado-escuro { color: #D4B57A; }
+.dark a:focus-visible, .dark button:focus-visible, .dark input:focus-visible, .dark select:focus-visible, .dark textarea:focus-visible { --tw-ring-offset-color: #0B0B0C; }
+.dark section { background: #141618; border-color: #2A2D31; }
+.dark .from-white { --tw-gradient-from: #141618 var(--tw-gradient-from-position); --tw-gradient-to: rgb(20 22 24 / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+.dark .to-pergaminho { --tw-gradient-to: #1C1E21 var(--tw-gradient-to-position); }
+.dark .bg-gray-100 { background-color: #0B0B0C; } .dark .text-gray-600 { color: #B9B9BD; }
+.dark .bg-navy.text-white .text-dourado { color: #C9C9CD; }
+.dark .bg-dourado.text-navy { background-color: #E6E6E6; color: #0B0B0C; }
+.dark .bg-dourado .text-navy { color: #0B0B0C; }
 
 /* Passo 52: destaque do tour guiado */
-.tour-destaque { outline: 3px solid #B08D57 !important; outline-offset: 3px; box-shadow: 0 0 0 6px rgba(176, 141, 87, 0.25); transition: outline-color .2s; }
+.tour-destaque { outline: 3px solid #0B0B0C !important; outline-offset: 3px; box-shadow: 0 0 0 6px rgba(117, 117, 122, 0.35); transition: outline-color .2s; }
 
 /* Passo 56: no celular (toque), botões, listas e campos ganham alvo mínimo de 44 px (WCAG 2.5.5/2.5.8).
    Links dentro de frases ficam isentos pela própria regra WCAG. */
@@ -250,5 +257,9 @@ input[type=checkbox], input[type=radio] { min-width: 1.25rem; min-height: 1.25re
   .overflow-x-auto { position: relative; }
 }
 
-/* Passo 62: foco visível padronizado (anel dourado) em tudo que recebe teclado. */
-:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 3px solid #B08D57 !important; outline-offset: 2px; }
+/* Passo 62: foco visível padronizado (anel cinza, visível no branco e no preto) em tudo que recebe teclado. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 3px solid #75757A !important; outline-offset: 2px; }
+
+/* Meu jeito de trabalhar: a pessoa escolhe a letra maior e a plataforma inteira acompanha (tudo é medido em rem). */
+html[data-letra='grande'] { font-size: 112.5%; }
+html[data-letra='maior'] { font-size: 125%; }

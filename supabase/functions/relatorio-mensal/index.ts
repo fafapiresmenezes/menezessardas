@@ -31,13 +31,14 @@ const ansi = (s: string) => s.replace(/—/g, '-').replace(/[^\x00-\xff]/g, '?')
 
 async function gerarPdf(r: Relatorio, geradoEm: string): Promise<Uint8Array> {
   const pdf = await PDFDocument.create()
-  pdf.setTitle(`Relatório mensal ${r.mes} - GMenezes Advogados Associados`); pdf.setAuthor('Plataforma GMenezes')
+  pdf.setTitle(`Relatório mensal ${r.mes} - Instituto THEYE`); pdf.setAuthor('Plataforma THEYE')
   const serif = await pdf.embedFont('Times-Roman'), serifB = await pdf.embedFont('Times-Bold'), sans = await pdf.embedFont('Helvetica')
-  const navy = rgb(0.078, 0.129, 0.239), dourado = rgb(0.69, 0.553, 0.341), cinza = rgb(0.4, 0.4, 0.4)
+  // Paleta THEYE: preto, branco, cinza (sem azul e sem dourado).
+  const navy = rgb(0, 0, 0), dourado = rgb(0.35, 0.35, 0.35), cinza = rgb(0.4, 0.4, 0.4)
   let page = pdf.addPage([595.28, 841.89]); let y = 800
   const nova = () => { page = pdf.addPage([595.28, 841.89]); y = 800 }
   page.drawRectangle({ x: 0, y: 790, width: 595.28, height: 51.89, color: navy })
-  page.drawText(ansi('GMenezes Advogados Associados'), { x: 40, y: 812, size: 16, font: serifB, color: rgb(1, 1, 1) })
+  page.drawText(ansi('Instituto THEYE'), { x: 40, y: 812, size: 16, font: serifB, color: rgb(1, 1, 1) })
   page.drawText(ansi(`Relatório mensal do escritório · ${r.mes}`), { x: 40, y: 797, size: 10, font: sans, color: dourado })
   y = 760
   page.drawText(ansi(`Período: ${r.periodo}. Gerado automaticamente em ${geradoEm} a partir dos dados da plataforma, sem inteligência artificial.`), { x: 40, y, size: 9, font: sans, color: cinza }); y -= 24
@@ -121,12 +122,12 @@ Deno.serve(async (req) => {
       ${teste ? '<p style="color:#888">Este é um envio de teste pedido por você em Relatórios. O envio automático acontece no dia 1 de cada mês, às 8h.</p>' : ''}
       <p><a href="${APP}/relatorios">Abrir Relatórios</a> · <a href="${APP}/indicadores">Abrir Indicadores</a></p>
     </div>
-    <p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · relatório automático</p></div>`
+    <p style="font-size:11px;color:#888;padding:10px">Instituto THEYE · relatório automático</p></div>`
   let falha: string | undefined
   for (const email of para) {
     const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify({ sender: { name: 'Relatórios GMenezes', email: conf.email_remetente }, to: [{ email }], subject: titulo, htmlContent: html, attachment: [{ name: nomeArquivo, content: b64(pdfBytes) }] }),
+      body: JSON.stringify({ sender: { name: 'Relatórios THEYE', email: conf.email_remetente }, to: [{ email }], subject: titulo, htmlContent: html, attachment: [{ name: nomeArquivo, content: b64(pdfBytes) }] }),
     })
     if (!resp.ok) falha = `${resp.status} ${await resp.text()}`
   }

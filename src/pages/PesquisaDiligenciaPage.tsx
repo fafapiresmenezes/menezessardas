@@ -80,7 +80,7 @@ export default function PesquisaDiligenciaPage() {
           <p className="text-sm text-grafite-claro mt-1">Escolha o assunto. Marque o que já foi conferido; a lista fica guardada neste aparelho para o mesmo {d.formatado ? 'termo pesquisado' : 'assunto'}.</p>
           <div role="tablist" aria-label="Assunto da diligência" className="flex flex-wrap gap-2 mt-3">
             {DILIGENCIAS.map(x => (
-              <button key={x.id} role="tab" aria-selected={assunto === x.id} onClick={() => setAssunto(x.id)} data-testid={`assunto-${x.id}`}
+              <button key={x.id} role="tab" aria-selected={assunto === x.id} onClick={() => setAssunto(x.id)} data-testid={`assunto-${x.id}`} title={`Mostra o roteiro de diligência sobre ${x.titulo}`}
                 className={`min-h-[44px] px-4 text-sm border ${assunto === x.id ? 'bg-navy text-white border-navy' : 'border-navy/20 text-navy'}`}>{x.titulo}</button>
             ))}
           </div>
@@ -102,7 +102,7 @@ export default function PesquisaDiligenciaPage() {
               </li>
             ))}
           </ul>
-          <button type="button" onClick={copiar} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2 mt-3" data-testid="copiar-diligencia"><Copy className="w-4 h-4" aria-hidden />{copiado ? 'Lista copiada' : 'Copiar lista para o parecer'}</button>
+          <button type="button" onClick={copiar} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2 mt-3" title="Copia a lista pronta para colar no parecer ou no e-mail ao cliente." data-testid="copiar-diligencia"><Copy className="w-4 h-4" aria-hidden />{copiado ? 'Lista copiada' : 'Copiar lista para o parecer'}</button>
           <p className="text-xs text-grafite-claro mt-3">As validades são as usuais; vale a que estiver impressa na certidão. Certidões são emitidas no site do órgão (algumas exigem confirmação humana) e devem ser anexadas ao caso.</p>
         </section>
 

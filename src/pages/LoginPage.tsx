@@ -6,6 +6,7 @@ import { entrarDemo } from '@/lib/authDemo'
 import Marca from '@/components/Marca'
 import { NOME_PLATAFORMA } from '@/lib/plataforma'
 import { marcaPorDominio, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
+import { esquecerEscritorio } from '@/lib/equipe'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -14,11 +15,12 @@ export default function LoginPage() {
   const [abertoEm] = useState(() => Date.now())
   // Passo D22: em domínio próprio de parceiro, a tela de entrada mostra a marca dele.
   const [marca, setMarca] = useState<MarcaEscritorio | null>(null)
-  useEffect(() => { esquecerMarca(); marcaPorDominio().then(setMarca).catch(() => setMarca(null)) }, [])
+  useEffect(() => { esquecerMarca(); esquecerEscritorio(); marcaPorDominio().then(setMarca).catch(() => setMarca(null)) }, [])
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [avisoRecuperacao, setAvisoRecuperacao] = useState(false)
   const [primeiroAcesso, setPrimeiroAcesso] = useState(false)
+  const [escritorio, setEscritorio] = useState('')
   const [avisoCadastro, setAvisoCadastro] = useState('')
   const [pedirCodigo, setPedirCodigo] = useState(false)
   const [codigo, setCodigo] = useState('')
@@ -73,11 +75,13 @@ export default function LoginPage() {
         return
       }
       try {
-        const { data, error } = await supabase.auth.signUp({ email, password: senha })
+        // O nome do escritório segue o padrão da casa: tudo em letras maiúsculas, sem espaços sobrando.
+        const nomeEscritorio = escritorio.toUpperCase().replace(/\s+/g, ' ').trim()
+        const { data, error } = await supabase.auth.signUp({ email, password: senha, options: { data: { escritorio: nomeEscritorio } } })
         if (error) setErro(/rate limit/i.test(error.message ?? '') ? 'Muitas contas criadas em pouco tempo. Aguarde alguns minutos e tente de novo.' : 'Não foi possível criar o acesso: ' + mensagemAmigavel(error))
-        else if (data?.session) navigate('/inicio') // sem confirmação de e-mail: a conta já entra, no escritório próprio
+        else if (data?.session) navigate('/inicio') // sem confirmação de e-mail: já entra; se o escritório existe, cai na tela de espera
         else {
-          setAvisoCadastro('Conta criada. Abra o e-mail que enviamos e toque no link de confirmação; depois é só entrar com este e-mail e senha. Não precisa esperar aprovação.')
+          setAvisoCadastro('Conta criada. Abra o e-mail que enviamos e toque no link de confirmação; depois entre com este e-mail e senha. Se o seu escritório já usa a plataforma, a pessoa que administra lá precisa liberar a sua entrada.')
           setPrimeiroAcesso(false)
         }
       } catch {
@@ -111,7 +115,7 @@ export default function LoginPage() {
         <div className="bg-white rounded-sm shadow-xl border-t-2 border-dourado p-8">
           <h1 className="font-serif text-2xl text-navy text-center">{NOME_PLATAFORMA}</h1>
           <p className="text-sm text-grafite-claro text-center mt-2 mb-7">
-            Entre com o seu e-mail e a sua senha
+            {primeiroAcesso ? 'Crie a sua conta e diga de qual escritório você é' : 'Entre com o seu e-mail e a sua senha'}
           </p>
 
           {erro && (
@@ -128,9 +132,9 @@ export default function LoginPage() {
 
           {primeiroAcesso && (
             <div role="status" className="mb-5 p-3 bg-atencaoFundo border-l-2 border-atencao text-atencao text-sm">
-              Crie sua conta com e-mail e senha. Ela nasce com um escritório próprio e vazio, do qual
-              você é a pessoa administradora — seus dados ficam só com a sua equipe. Para entrar
-              no escritório de outra pessoa, peça um convite a ela.
+              Crie sua conta com e-mail, senha e o nome do seu escritório. Se o escritório já usa a
+              plataforma, o seu pedido vai para quem administra lá e você só entra depois que essa pessoa
+              liberar. Se ele ainda não usa, é criado agora, vazio, e você passa a administrá-lo.
             </div>
           )}
 
@@ -147,8 +151,8 @@ export default function LoginPage() {
               <p className="text-sm text-grafite">Digite o código de 6 dígitos do seu aplicativo autenticador.</p>
               <input aria-label="Código de 6 dígitos" inputMode="numeric" autoFocus maxLength={7} value={codigo} onChange={e => setCodigo(e.target.value)} className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm tracking-widest" />
               {erro && <p role="alert" className="text-sm text-critico">{erro}</p>}
-              <button type="submit" disabled={carregando} className="w-full bg-navy text-white py-3 rounded-sm uppercase tracking-wider text-sm">Confirmar código</button>
-              <button type="button" onClick={async () => { await supabase.auth.signOut(); setPedirCodigo(false); setCodigo('') }} className="w-full text-sm underline text-grafite">Entrar com outra conta</button>
+              <button type="submit" disabled={carregando} title="Confere o código do aplicativo autenticador e conclui a entrada na plataforma" className="w-full bg-navy text-white py-3 rounded-sm uppercase tracking-wider text-sm">Confirmar código</button>
+              <button type="button" onClick={async () => { await supabase.auth.signOut(); setPedirCodigo(false); setCodigo('') }} title="Sai desta conta e volta à tela de e-mail e senha para entrar com outra" className="w-full text-sm underline text-grafite">Entrar com outra conta</button>
             </form>
           ) : (
           <form onSubmit={entrar} className="space-y-5">
@@ -185,9 +189,31 @@ export default function LoginPage() {
               />
             </div>
 
+            {primeiroAcesso && (
+              <div>
+                <label htmlFor="escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title="Escreva o nome do escritório de advocacia a que você pertence. O padrão da plataforma é tudo em LETRAS MAIÚSCULAS, para todo mundo escrever igual e ninguém errar.">
+                  Escritório (em letras maiúsculas)
+                </label>
+                <input
+                  id="escritorio"
+                  name="escritorio"
+                  type="text"
+                  data-testid="campo-escritorio"
+                  value={escritorio}
+                  onChange={(e) => setEscritorio(e.target.value.toUpperCase())}
+                  required
+                  placeholder="EX.: SARDAS E MENEZES"
+                  title="Nome do seu escritório, sempre em letras maiúsculas (a tela já converte sozinha). Quem é do mesmo escritório escreve o mesmo nome, igualzinho."
+                  className="w-full px-4 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado uppercase"
+                />
+                <p className="text-xs text-grafite-claro mt-1">Padrão da casa: TUDO EM LETRAS MAIÚSCULAS, exatamente igual para todos do mesmo escritório. A tela converte sozinha enquanto você digita.</p>
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={carregando}
+              title={primeiroAcesso ? 'Cria a sua conta e envia o pedido de entrada ao escritório informado (ou cria o escritório, se ele ainda não existe)' : 'Entra na plataforma com o e-mail e a senha informados'}
               className="w-full bg-navy hover:bg-navy-700 disabled:bg-grafite-claro text-white tracking-wider uppercase text-sm py-3 rounded-sm transition"
             >
               {carregando ? 'Aguarde…' : primeiroAcesso ? 'Criar acesso' : 'Entrar'}
@@ -202,6 +228,7 @@ export default function LoginPage() {
                 setErro('')
                 setAvisoRecuperacao(true)
               }}
+              title="Mostra as instruções para recuperar a senha com uma pessoa administradora da sua equipe"
               className="inline-flex items-center min-h-[44px] text-sm text-navy underline underline-offset-4 hover:text-dourado-escuro"
             >
               Esqueci minha senha
@@ -214,6 +241,7 @@ export default function LoginPage() {
                   setAvisoCadastro('')
                   setPrimeiroAcesso(v => !v)
                 }}
+                title={primeiroAcesso ? 'Volta à tela de entrada para quem já tem conta' : 'Muda o formulário para criar uma conta nova e dizer de qual escritório você é'}
                 className="block mx-auto mt-3 min-h-[44px] text-sm text-navy underline underline-offset-4 hover:text-dourado-escuro"
               >
                 {primeiroAcesso ? 'Já tenho acesso' : 'Criar conta'}

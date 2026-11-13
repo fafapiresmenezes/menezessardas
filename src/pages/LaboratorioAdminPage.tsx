@@ -98,7 +98,7 @@ export default function LaboratorioAdminPage() {
             <div className="space-y-3" data-testid="lab-aviso">
               <p className="text-sm border border-navy/20 p-4 bg-marfim/40">{AVISO}</p>
               <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={marcado} onChange={e => setMarcado(e.target.checked)} className="mt-1 w-5 h-5 shrink-0" /><span>Li e assino este aviso como administrador(a).</span></label>
-              <button type="button" disabled={!marcado} onClick={assinar} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-40">Assinar e liberar o laboratório</button>
+              <button type="button" disabled={!marcado} onClick={assinar} title="Registra a sua assinatura do aviso LGPD neste navegador e libera o laboratório de autoavaliação" className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-40">Assinar e liberar o laboratório</button>
             </div>
           ) : (
             <p className="text-sm text-grafite-claro" data-testid="lab-assinado">Aviso assinado em {new Date(assinado.em).toLocaleString('pt-BR')} (versão {assinado.versao}). A assinatura fica só neste navegador; a trilha de auditoria registra apenas o fato.</p>
@@ -119,8 +119,8 @@ export default function LaboratorioAdminPage() {
                 <label className="block"><span className="font-medium">Como me sinto agora (só para mim, apaga ao encerrar)</span><textarea value={nota} onChange={e => setNota(e.target.value)} rows={3} className="border w-full px-3 py-2 mt-1" /></label>
                 <div className="flex gap-2">
                   {camera === 'ligada'
-                    ? <button type="button" onClick={desligar} className="min-h-[44px] px-4 border border-navy text-sm uppercase tracking-wider inline-flex items-center gap-2"><VideoOff className="w-4 h-4" aria-hidden />Encerrar e apagar</button>
-                    : <button type="button" onClick={ligar} disabled={camera === 'ligando'} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider inline-flex items-center gap-2 disabled:opacity-40"><Video className="w-4 h-4" aria-hidden />Ligar câmera</button>}
+                    ? <button type="button" onClick={desligar} title="Desliga a câmera e apaga todas as medidas e a nota desta sessão" className="min-h-[44px] px-4 border border-navy text-sm uppercase tracking-wider inline-flex items-center gap-2"><VideoOff className="w-4 h-4" aria-hidden />Encerrar e apagar</button>
+                    : <button type="button" onClick={ligar} disabled={camera === 'ligando'} title="Pede a câmera ao navegador e inicia a sessão de autoavaliação; nada é gravado ou enviado" className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider inline-flex items-center gap-2 disabled:opacity-40"><Video className="w-4 h-4" aria-hidden />Ligar câmera</button>}
                 </div>
               </div>
             </div>

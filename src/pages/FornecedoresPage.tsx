@@ -94,6 +94,7 @@ export default function FornecedoresPage() {
           </p>
           <button
             onClick={() => setNovo(v => !v)}
+            title="Abre ou fecha o formulário para cadastrar um novo prestador de serviço"
             className="inline-flex items-center gap-2 min-h-[44px] bg-navy hover:bg-navy-700 text-white px-5 rounded-sm uppercase tracking-wider text-sm"
           >
             <Plus size={16} aria-hidden="true" /> Novo fornecedor
@@ -131,7 +132,7 @@ export default function FornecedoresPage() {
               <legend className="block text-xs uppercase tracking-wider text-grafite mb-2">Atende quais imóveis?</legend>
               <div className="grid sm:grid-cols-2 gap-2 max-h-48 overflow-auto">
                 {imoveis.map(i => (
-                  <label key={i.id} className="flex items-center gap-3 min-h-[44px] px-3 border border-navy/10 bg-white cursor-pointer">
+                  <label key={i.id} title="Marca ou desmarca este imóvel entre os atendidos pelo fornecedor" className="flex items-center gap-3 min-h-[44px] px-3 border border-navy/10 bg-white cursor-pointer">
                     <input type="checkbox" checked={imovelIds.includes(i.id)} onChange={() => alternarImovel(i.id)} />
                     <span className="text-sm">{i.endereco}, {i.cidade}</span>
                   </label>
@@ -141,6 +142,7 @@ export default function FornecedoresPage() {
             {erro && <p role="alert" className="text-sm text-critico">{erro}</p>}
             <button
               onClick={cadastrar}
+              title="Cadastra o fornecedor e abre a página dele para preencher KYC, certidões e metas de serviço"
               className="min-h-[44px] bg-navy hover:bg-navy-700 text-white px-6 rounded-sm uppercase tracking-wider text-sm"
             >
               Cadastrar e abrir
@@ -160,6 +162,7 @@ export default function FornecedoresPage() {
                 <li key={i}>
                   <button
                     onClick={() => navigate(`/fornecedor/${a.fornecedorId}`)}
+                    title="Abre a página deste fornecedor para resolver o alerta de KYC ou SLA"
                     className="w-full text-left min-h-[44px] flex items-start gap-3 px-3 py-2 hover:bg-pergaminho transition"
                   >
                     {a.gravidade === 'critico' ? (
@@ -185,15 +188,15 @@ export default function FornecedoresPage() {
             <p className="text-sm text-grafite-claro">Clique em um fornecedor para gerenciar KYC, certificados e metas de serviço.</p>
             <input type="search" value={buscaF} onChange={e => { setBuscaF(e.target.value); try { localStorage.setItem('lsm-fornecedores-busca', e.target.value) } catch { /* sem memória local */ } }} placeholder="Buscar nome, CNPJ ou categoria" aria-label="Buscar fornecedor" className="border px-3 py-2 text-sm w-64 min-h-[44px]" data-testid="busca-fornecedores" />
             <label className="text-sm flex items-center gap-2">Ordenar por
-              <select value={ordem} onChange={e => setOrdem(e.target.value as typeof ordem)} className="border px-2 py-2 min-h-[44px]" data-testid="ordem-fornecedores">
+              <select value={ordem} onChange={e => setOrdem(e.target.value as typeof ordem)} title="Muda a ordem da lista de fornecedores (nome, ranking de SLA ou metas descumpridas)" className="border px-2 py-2 min-h-[44px]" data-testid="ordem-fornecedores">
                 <option value="nome">Nome</option>
                 <option value="sla">Ranking de SLA (melhor primeiro)</option>
                 <option value="descumpridas">Mais metas descumpridas</option>
               </select>
             </label>
           </div>
-          {!carregando && lista.length > 0 && <p className="text-xs text-grafite-claro mb-3" data-testid="contador-fornecedores">Mostrando {ordenados.length} de {lista.length} fornecedor(es). <button type="button" onClick={copiarLista} data-testid="copiar-fornecedores" className="inline-block min-h-[32px] px-1 underline text-navy">{listaCopiada ? 'lista copiada' : 'copiar lista'}</button> <button type="button" onClick={() => window.print()} data-testid="imprimir-fornecedores" className="inline-block min-h-[32px] px-1 underline text-navy print:hidden">imprimir</button>{/* Passo 221 */} <button type="button" data-testid="copiar-link-fornecedores" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="inline-block min-h-[32px] px-1 underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 255 */}</p>}
-          {!carregando && ordenados.length > 0 && <button type="button" data-testid="baixar-fornecedores" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['nome;CNPJ;categoria;imóveis;certidões;SLAs', ...ordenados.map(f => `${f.nome.replace(/;/g, ',')};${f.cnpj};${f.categoria};${f.imovelIds.length};${f.certidoes.length};${f.slas.length}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'fornecedores.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mb-3 ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 319 */}
+          {!carregando && lista.length > 0 && <p className="text-xs text-grafite-claro mb-3" data-testid="contador-fornecedores">Mostrando {ordenados.length} de {lista.length} fornecedor(es). <button type="button" onClick={copiarLista} data-testid="copiar-fornecedores" title="Copia a lista de fornecedores (nome, CNPJ, categoria e SLA) em texto para a reunião de compras" className="inline-block min-h-[32px] px-1 underline text-navy">{listaCopiada ? 'lista copiada' : 'copiar lista'}</button> <button type="button" onClick={() => window.print()} data-testid="imprimir-fornecedores" title="Abre a tela de impressão do navegador com a lista de fornecedores" className="inline-block min-h-[32px] px-1 underline text-navy print:hidden">imprimir</button>{/* Passo 221 */} <button type="button" data-testid="copiar-link-fornecedores" title="Copia o endereço desta página de fornecedores para compartilhar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="inline-block min-h-[32px] px-1 underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 255 */}</p>}
+          {!carregando && ordenados.length > 0 && <button type="button" data-testid="baixar-fornecedores" title="Baixa a lista de fornecedores em arquivo CSV para abrir em planilha" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['nome;CNPJ;categoria;imóveis;certidões;SLAs', ...ordenados.map(f => `${f.nome.replace(/;/g, ',')};${f.cnpj};${f.categoria};${f.imovelIds.length};${f.certidoes.length};${f.slas.length}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'fornecedores.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mb-3 ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 319 */}
           {carregando ? (
             <p className="text-grafite-claro">Carregando…</p>
           ) : lista.length === 0 ? (
@@ -211,6 +214,7 @@ export default function FornecedoresPage() {
                   <button
                     key={f.id}
                     onClick={() => navigate(`/fornecedor/${f.id}`)}
+                    title="Abre a página deste fornecedor para gerenciar KYC, certidões e metas de serviço"
                     className="text-left bg-white shadow-sm border-t-2 border-transparent hover:border-dourado p-5 transition min-h-[140px]"
                     aria-label={`${f.nome} - ${rotuloCategoria[f.categoria]}`}
                   >
