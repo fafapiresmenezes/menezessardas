@@ -20,7 +20,6 @@ import {
   type PedidoPendente,
   type Pessoa,
 } from '@/lib/equipe'
-import { CARGOS, definirCargo, descricaoCargo, lerCargos, rotuloCargo, type Cargo, type MapaCargos } from '@/lib/hierarquia'
 
 const OPCOES: (Funcao | 'nenhuma')[] = ['admin', 'operador', 'leitor', 'nenhuma']
 
@@ -42,8 +41,6 @@ export default function EquipePage() {
   useEffect(() => { try { localStorage.setItem('lsm-equipe-funcao', filtroFuncao) } catch { /* sem armazenamento */ } }, [filtroFuncao])
   const [ocupado, setOcupado] = useState<string>('')
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
-  // Hierarquia (pedido do M): sócio e gestor veem tudo; pleno e júnior veem só os próprios processos.
-  const [cargos, setCargos] = useState<MapaCargos>({})
   // Passo 09: aceite de termos de uso e LGPD por pessoa (data, versão e hash).
   const [aceites, setAceites] = useState<Record<string, { versao: string; hash: string; aceito_em: string }>>({})
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 284
@@ -54,7 +51,7 @@ export default function EquipePage() {
       const p = await perfilAtual()
       setPerfil(p)
       if (p === 'admin') {
-        setPessoas(await listarPessoas()); setSede(await ehSede()); lerCargos().then(setCargos).catch(() => {})
+        setPessoas(await listarPessoas()); setSede(await ehSede())
         pedidosPendentes().then(setPedidos).catch(() => setPedidos([]))
         const { data } = await supabase.rpc('aceites_equipe')
         setAceites(Object.fromEntries(((data ?? []) as { usuario_id: string; versao: string; hash: string; aceito_em: string }[]).map(a => [a.usuario_id, a])))
@@ -83,23 +80,13 @@ export default function EquipePage() {
     }
   }
 
-  const alterarCargo = async (pessoa: Pessoa, valor: string) => {
-    setOcupado(pessoa.id); setMsg(null)
-    try {
-      setCargos(await definirCargo(pessoa.id, valor === 'nenhum' ? null : (valor as Cargo)))
-      setMsg({ tipo: 'ok', texto: `${pessoa.nome}: ${rotuloCargo[(valor as Cargo | 'nenhum')] ?? valor}.` })
-    } catch (e) {
-      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
-    } finally { setOcupado('') }
-  }
-
   const decidirPedido = async (pedido: PedidoPendente, funcao: Funcao | null) => {
     if (!funcao && !window.confirm(`Recusar o pedido de ${pedido.nome}? Ela não entra no escritório e pode pedir de novo.`)) return
     setOcupado(pedido.id); setMsg(null)
     try {
       const pessoa = pessoas.find(p => p.id === pedido.id) ?? { id: pedido.id, email: pedido.email, nome: pedido.nome, funcao: null, criadoEm: pedido.criadoEm, confirmado: true, ultimoAcesso: null }
       await definirFuncao(pessoa, funcao)
-      setMsg({ tipo: 'ok', texto: funcao ? `${pedido.nome} entrou no escritório como ${rotuloFuncao[funcao]}. Agora defina o cargo dela na lista abaixo.` : `Pedido de ${pedido.nome} recusado.` })
+      setMsg({ tipo: 'ok', texto: funcao ? `${pedido.nome} entrou no escritório como ${rotuloFuncao[funcao]}. Agora defina o cargo dela na tela Hierarquia.` : `Pedido de ${pedido.nome} recusado.` })
       setPedidos(await pedidosPendentes()); setPessoas(await listarPessoas())
     } catch (e) {
       setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
@@ -160,22 +147,9 @@ export default function EquipePage() {
               </section>
             )}
 
-            <section className="bg-dourado/10 p-6 shadow-sm border-l-4 border-dourado" aria-labelledby="definir-cargos" data-testid="aviso-definir-cargos">
-              <h2 id="definir-cargos" className="text-lg font-semibold">Fátima: defina aqui o cargo de cada pessoa</h2>
-              <p className="text-sm text-grafite mt-2">
-                O cargo decide o que cada pessoa <strong>enxerga</strong> na plataforma: <strong>sócio(a)</strong> e <strong>gestor(a)</strong> veem os processos, prazos e honorários do escritório inteiro; <strong>advogado(a) pleno</strong> e <strong>júnior</strong> veem somente o que está sob a responsabilidade deles (e itens ainda sem responsável, para alguém assumir).
-              </p>
-              <p className="text-sm text-grafite mt-2">
-                Para definir: na lista <strong>Pessoas com acesso</strong>, logo abaixo, escolha o cargo no campo <strong>Cargo na hierarquia</strong> da linha de cada pessoa. A mudança é salva na hora e pode ser trocada quando quiser. Quem fica <strong>sem cargo definido</strong> vê só o que é seu.
-              </p>
-              {(() => { const sem = pessoas.filter(p => p.funcao && !cargos[p.id]).length; return sem > 0 ? (
-                <p className="text-sm font-medium text-navy mt-3" data-testid="faltam-cargos">
-                  Falta definir o cargo de {sem} {sem === 1 ? 'pessoa' : 'pessoas'}.
-                </p>
-              ) : pessoas.length > 0 ? (
-                <p className="text-sm font-medium text-regular mt-3" data-testid="faltam-cargos">Todos com acesso já têm cargo definido.</p>
-              ) : null })()}
-            </section>
+            <p className="bg-dourado/10 p-4 text-sm shadow-sm border-l-4 border-dourado" data-testid="aviso-definir-cargos">
+              O cargo de cada pessoa (sócio, gestor, pleno, júnior) — o que decide o que ela <strong>enxerga</strong> — agora fica na tela <a href="/hierarquia" title="Abrir a tela Hierarquia, onde se define o cargo de cada pessoa" className="underline text-navy">Hierarquia</a>.
+            </p>
 
             <section className="bg-white p-6 shadow-sm border-t-2 border-dourado" aria-labelledby="como-adicionar">
               <h2 id="como-adicionar" className="text-lg flex items-center gap-2">
@@ -185,7 +159,7 @@ export default function EquipePage() {
               <ol className="list-decimal pl-5 text-sm text-grafite mt-3 space-y-1">
                 <li>Peça para a pessoa abrir a plataforma, tocar em <strong>Criar conta</strong> e escrever o nome do escritório igualzinho ao seu, em letras maiúsculas.</li>
                 <li>O pedido dela aparece no topo desta tela. Toque em <strong>Liberar para trabalhar</strong> (ou <strong>só para consultar</strong>). Antes disso ela não enxerga nada.</li>
-                <li>Na lista abaixo você muda a função dela, define o cargo, ou retira o acesso escolhendo <strong>Sem acesso</strong>.</li>
+                <li>Na lista abaixo você muda a função dela ou retira o acesso escolhendo <strong>Sem acesso</strong>. O cargo na hierarquia fica na tela <strong>Hierarquia</strong>.</li>
               </ol>
               <p className="text-sm text-grafite mt-3">
                 Alguém esqueceu a senha? Use <strong>Senha provisória</strong> na linha da pessoa, entregue a senha gerada e peça para ela trocar em Configurações → Senha.
@@ -270,23 +244,6 @@ export default function EquipePage() {
                         <p id={`desc-${p.id}`} className="text-xs text-grafite-claro mt-1">
                           {ocupado === p.id ? 'Salvando…' : descricaoFuncao[atual]}
                         </p>
-                        <label htmlFor={`cargo-${p.id}`} className="block text-xs uppercase tracking-wider text-grafite mb-1 mt-3" title="O cargo define o que a pessoa VÊ: sócios e o gestor veem todos os processos; pleno e júnior veem só os seus.">
-                          Cargo na hierarquia
-                        </label>
-                        <select
-                          id={`cargo-${p.id}`}
-                          data-testid={`cargo-${p.id}`}
-                          value={cargos[p.id] ?? 'nenhum'}
-                          disabled={ocupado !== ''}
-                          onChange={e => alterarCargo(p, e.target.value)}
-                          title={descricaoCargo[cargos[p.id] ?? 'nenhum']}
-                          className="w-full min-h-[44px] px-3 py-2 border border-grafite-claro/40 rounded-sm bg-white focus:border-dourado text-sm"
-                        >
-                          {([...CARGOS, 'nenhum'] as (Cargo | 'nenhum')[]).map(c => (
-                            <option key={c} value={c}>{rotuloCargo[c]}</option>
-                          ))}
-                        </select>
-                        <p className="text-xs text-grafite-claro mt-1">{descricaoCargo[cargos[p.id] ?? 'nenhum']}</p>
                         <button
                           type="button"
                           onClick={() => senhaProvisoria(p)}
