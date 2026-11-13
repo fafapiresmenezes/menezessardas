@@ -6,7 +6,7 @@
 // (src/data/rotas.ts) leem daqui, por `nomeDaTela`. Assim uma tela não volta a ter três nomes diferentes.
 // Cada tela (ou bloco) tem um NÍVEL: quem não é daquele nível nem vê o item no menu. O banco continua sendo quem
 // protege os dados; aqui é só arrumação, para ninguém ver botão que não é para si.
-import { Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, Network, MapPin, HeartPulse, type LucideIcon, Droplets, Ruler} from 'lucide-react'
+import { Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, Network, MapPin, HeartPulse, type LucideIcon, Droplets, Ruler, Target} from 'lucide-react'
 
 export type Nivel = 'todos' | 'gestao' | 'admin' | 'instituto'
 export interface Tela { icon: LucideIcon; label: string; href: string; nivel?: Nivel }
@@ -93,6 +93,7 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: GraduationCap, label: 'Trilhas de estudo', href: '/trilhas' },
     { icon: FlaskConical, label: 'Agenda de pesquisa em IA', href: '/pesquisa-ia' },
     { icon: Ruler, label: 'Régua de acerto dos modelos', href: '/regua' },
+    { icon: Target, label: 'Escolha do mercado', href: '/escolha-do-mercado' },
     { icon: Banknote, label: 'Royalties', href: '/royalties' },
   ] },
   { id: 'conta', titulo: 'Minha conta', bloco: 'Minha conta', nivel: 'todos', dica: 'Do seu jeito', itens: [
@@ -203,6 +204,7 @@ export const DICAS: Record<string, string> = {
   '/trilhas': 'Plano de estudo por nicho, montado sobre a ementa dos consultores, com a fonte de cada módulo',
   '/pesquisa-ia': 'O que a frente de IA está tentando descobrir, como mede e o que faria abandonar cada hipótese',
   '/regua': 'Quanto cada modelo erra fora da amostra e se ele bate o palpite simples de repetir o último valor',
+  '/escolha-do-mercado': 'Matriz com os mercados candidatos pontuados, a fonte do dado de cada um e o que derruba cada um',
   '/saude': 'A plataforma de saúde: especialidades médicas, consultores e o lastro dos prompts',
   '/geolocalizacao': 'MVP de geolocalização no próprio titular: posição, câmera como sensor de lugar, satélites e município, tudo cifrado no aparelho',
   '/honorarios': 'Honorários combinados, cobrados e recebidos, caso por caso',

@@ -20,6 +20,7 @@ const AguaPage = lazy(() => import('@/pages/AguaPage'))
 const TrilhasPage = lazy(() => import('@/pages/TrilhasPage'))
 const PesquisaIaPage = lazy(() => import('@/pages/PesquisaIaPage'))
 const ReguaPage = lazy(() => import('@/pages/ReguaPage'))
+const EscolhaDoMercadoPage = lazy(() => import('@/pages/EscolhaDoMercadoPage'))
 import DashboardPage from '@/pages/DashboardPage'
 const ImovelListPage = lazy(() => import('@/pages/ImovelListPage'))
 const NovoImovelPage = lazy(() => import('@/pages/NovoImovelPage'))
@@ -206,6 +207,10 @@ function App() {
         <Route
           path="/regua"
           element={isAuthenticated ? <ReguaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/escolha-do-mercado"
+          element={isAuthenticated ? <EscolhaDoMercadoPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/ferramentas"
