@@ -88,6 +88,7 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: MapPin, label: 'Geolocalização (MVP)', href: '/geolocalizacao' },
     { icon: Wrench, label: 'Engenharia', href: '/engenharia' },
     { icon: HeartPulse, label: 'Saúde', href: '/saude' },
+    { icon: ShieldCheck, label: 'Superfície de ataque', href: '/superficie-de-ataque' },
     { icon: Banknote, label: 'Royalties', href: '/royalties' },
   ] },
   { id: 'conta', titulo: 'Minha conta', bloco: 'Minha conta', nivel: 'todos', dica: 'Do seu jeito', itens: [
@@ -193,6 +194,7 @@ export const DICAS: Record<string, string> = {
   '/medicoes': 'Medição de cada contrato, público e privado, e o aviso quando o pagamento atrasa',
   '/royalties': 'Os 5% do Instituto em cada venda de serviço, e em que conta eles caem',
   '/engenharia': 'A plataforma de engenharia: matérias, consultores e cálculo de estrutura com memória de cálculo',
+  '/superficie-de-ataque': 'Mapa do que um invasor alcançaria e o que fazer em cada ponto, por enquanto com dados de exemplo',
   '/saude': 'A plataforma de saúde: especialidades médicas, consultores e o lastro dos prompts',
   '/geolocalizacao': 'MVP de geolocalização no próprio titular: posição, câmera como sensor de lugar, satélites e município, tudo cifrado no aparelho',
   '/honorarios': 'Honorários combinados, cobrados e recebidos, caso por caso',
