@@ -6,7 +6,7 @@
 // (src/data/rotas.ts) leem daqui, por `nomeDaTela`. Assim uma tela não volta a ter três nomes diferentes.
 // Cada tela (ou bloco) tem um NÍVEL: quem não é daquele nível nem vê o item no menu. O banco continua sendo quem
 // protege os dados; aqui é só arrumação, para ninguém ver botão que não é para si.
-import { Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, Network, MapPin, type LucideIcon } from 'lucide-react'
+import { Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, Network, MapPin, HeartPulse, type LucideIcon } from 'lucide-react'
 
 export type Nivel = 'todos' | 'gestao' | 'admin' | 'instituto'
 export interface Tela { icon: LucideIcon; label: string; href: string; nivel?: Nivel }
@@ -86,6 +86,8 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
     { icon: Store, label: 'Soluções jurídicas', href: '/solucoes' },
     { icon: MapPin, label: 'Geolocalização (MVP)', href: '/geolocalizacao' },
+    { icon: Wrench, label: 'Engenharia', href: '/engenharia' },
+    { icon: HeartPulse, label: 'Saúde', href: '/saude' },
     { icon: Banknote, label: 'Royalties', href: '/royalties' },
   ] },
   { id: 'conta', titulo: 'Minha conta', bloco: 'Minha conta', nivel: 'todos', dica: 'Do seu jeito', itens: [
@@ -190,6 +192,8 @@ export const DICAS: Record<string, string> = {
   '/financeiro': 'Entradas, saídas e saldo do escritório',
   '/medicoes': 'Medição de cada contrato, público e privado, e o aviso quando o pagamento atrasa',
   '/royalties': 'Os 5% do Instituto em cada venda de serviço, e em que conta eles caem',
+  '/engenharia': 'A plataforma de engenharia: matérias, consultores e cálculo de estrutura com memória de cálculo',
+  '/saude': 'A plataforma de saúde: especialidades médicas, consultores e o lastro dos prompts',
   '/geolocalizacao': 'MVP de geolocalização no próprio titular: posição, câmera como sensor de lugar, satélites e município, tudo cifrado no aparelho',
   '/honorarios': 'Honorários combinados, cobrados e recebidos, caso por caso',
   '/horas': 'Lançar as horas trabalhadas e ver o ritmo da meta',

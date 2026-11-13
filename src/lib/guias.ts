@@ -26,6 +26,24 @@ export const GUIAS: Record<string, Guia> = {
       'Em dúvida, passe o cursor sobre o botão: toda ação tem uma dica dizendo o que acontece ao clicar.',
     ],
   },
+  '/engenharia': {
+    titulo: 'Como usar a Engenharia',
+    passos: [
+      'Esta é a plataforma de engenharia, ainda em demonstração. Ela funciona como a do direito, com as palavras da engenharia.',
+      'Em "Cálculo estrutural", preencha os dados da viga: a conta aparece inteira, passo a passo, com o item da norma.',
+      'Use "Baixar memória de cálculo" para levar a conta ao engenheiro responsável, que confere e assina com ART.',
+      'Em "Matérias e consultores", busque por matéria ou pela norma (por exemplo, NBR 6118).',
+    ],
+  },
+  '/saude': {
+    titulo: 'Como usar a Saúde',
+    passos: [
+      'Esta é a plataforma de saúde, ainda em demonstração. Ela não substitui consulta nem decisão do médico assistente.',
+      'Em "Especialidades e consultores", abra uma especialidade para ver os módulos da residência, as diretrizes e o prompt do consultor.',
+      'Use "Copiar prompt" para levar o consultor ao assistente. Cada prompt tem o número do elo da corrente que o lastreia.',
+      'Em "Conferir o lastro", a corrente inteira é recalculada no seu navegador: se algum prompt mudou, a tela diz em qual elo.',
+    ],
+  },
   '/meu-dia': {
     titulo: 'Como usar o Meu dia',
     passos: [
