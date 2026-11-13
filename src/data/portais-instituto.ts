@@ -120,7 +120,7 @@ export const PORTAIS_INSTITUTO: PortalInstituto[] = [
       'Publicar o que se aprende, inclusive quando a conclusão é "ainda não muda nada"',
     ],
     estado: 'estudo',
-    comoEsta: 'Pesquisa em leitura. Não há produto, e não haverá promessa de prazo.',
+    comoEsta: 'Pesquisa em leitura, sem promessa de prazo. O que já existe para contratar é tempo de processador quântico da IBM, revendido pelo Instituto: preços, usos e limites em /cotas-quanticas.',
   },
   {
     rota: '/ia',

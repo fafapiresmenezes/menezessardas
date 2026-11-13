@@ -84,6 +84,7 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
     { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
     { icon: Store, label: 'Soluções jurídicas', href: '/solucoes' },
+    { icon: Banknote, label: 'Royalties', href: '/royalties' },
   ] },
   { id: 'conta', titulo: 'Minha conta', bloco: 'Minha conta', nivel: 'todos', dica: 'Do seu jeito', itens: [
     { icon: SlidersHorizontal, label: 'Meu jeito de trabalhar', href: '/meu-jeito' },
@@ -185,6 +186,7 @@ export const DICAS: Record<string, string> = {
   '/perfil-cliente': 'Ficha de cada cliente: casos, contatos e preferências',
   '/funil': 'Clientes em potencial, da primeira conversa ao contrato',
   '/financeiro': 'Entradas, saídas e saldo do escritório',
+  '/royalties': 'Os 5% do Instituto em cada venda de serviço, e em que conta eles caem',
   '/honorarios': 'Honorários combinados, cobrados e recebidos, caso por caso',
   '/horas': 'Lançar as horas trabalhadas e ver o ritmo da meta',
   '/imoveis': 'Imóveis administrados, contratos e documentos',

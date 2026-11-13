@@ -12,6 +12,8 @@ const PortalInstitutoPage = lazy(() => import('@/pages/PortalInstitutoPage'))
 const PortaisInstitutoPage = lazy(() => import('@/pages/PortaisInstitutoPage'))
 // Passo T2: conferir a corrente do trilho no navegador de quem duvida.
 const LastroPage = lazy(() => import('@/pages/LastroPage'))
+const CotasQuanticasPage = lazy(() => import('@/pages/CotasQuanticasPage'))
+const RoyaltiesPage = lazy(() => import('@/pages/RoyaltiesPage'))
 import DashboardPage from '@/pages/DashboardPage'
 const ImovelListPage = lazy(() => import('@/pages/ImovelListPage'))
 const NovoImovelPage = lazy(() => import('@/pages/NovoImovelPage'))
@@ -169,6 +171,10 @@ function App() {
           element={isAuthenticated ? <FinanceiroPage /> : <Navigate to="/login" />}
         />
         <Route
+          path="/royalties"
+          element={isAuthenticated ? <RoyaltiesPage /> : <Navigate to="/login" />}
+        />
+        <Route
           path="/ferramentas"
           element={isAuthenticated ? <FerramentasPage /> : <Navigate to="/login" />}
         />
@@ -202,6 +208,7 @@ function App() {
         <Route path="/civico" element={<PortalInstitutoPage />} />
         <Route path="/ciberseguranca" element={<PortalInstitutoPage />} />
         <Route path="/quantum" element={<PortalInstitutoPage />} />
+        <Route path="/cotas-quanticas" element={<CotasQuanticasPage />} />
         <Route path="/ia" element={<PortalInstitutoPage />} />
         <Route
           path="/login"
