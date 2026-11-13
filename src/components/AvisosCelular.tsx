@@ -31,10 +31,10 @@ export default function AvisosCelular() {
       <p className="text-sm text-grafite-claro mb-4">Instale a plataforma como aplicativo e receba no aparelho os prazos processuais em até 2 dias, intimações vencidas e os compromissos do dia. Os avisos são gerados no próprio aparelho, sem enviar dados a terceiros.</p>
       <div className="flex flex-wrap gap-2 items-center">
         {instalado ? <span className="text-sm text-regular" data-testid="app-instalado">✓ Aberto como aplicativo</span>
-          : instalavel ? <button type="button" onClick={instalar} data-testid="instalar-app" className={botao}>Instalar aplicativo</button>
+          : instalavel ? <button title="Põe a plataforma na tela inicial do aparelho, como um aplicativo" type="button" onClick={instalar} data-testid="instalar-app" className={botao}>Instalar aplicativo</button>
           : <span className="text-sm text-grafite-claro" data-testid="instalar-manual">{ehIos() ? 'No iPhone: toque em Compartilhar e em "Adicionar à Tela de Início".' : 'No navegador: menu ⋮ > "Instalar aplicativo" (Chrome/Edge) ou "Adicionar à tela de início".'}</span>}
-        {estado === 'pedir' && <button type="button" onClick={ligar} data-testid="ligar-avisos" className={botao}>Ligar avisos neste aparelho</button>}
-        {estado === 'permitido' && <><span className="text-sm text-regular" data-testid="avisos-ligados">✓ Avisos ligados</span><button type="button" onClick={testar} data-testid="testar-aviso" className={botao}>Testar aviso</button></>}
+        {estado === 'pedir' && <button title="Pede permissão ao aparelho para avisar de prazo e intimação" type="button" onClick={ligar} data-testid="ligar-avisos" className={botao}>Ligar avisos neste aparelho</button>}
+        {estado === 'permitido' && <><span className="text-sm text-regular" data-testid="avisos-ligados">✓ Avisos ligados</span><button title="Manda um aviso de teste agora, para você ver como ele aparece" type="button" onClick={testar} data-testid="testar-aviso" className={botao}>Testar aviso</button></>}
         {estado === 'negado' && <span className="text-sm text-critico" data-testid="avisos-negados">Avisos bloqueados pelo navegador. Libere em Configurações do site &gt; Notificações.</span>}
         {estado === 'sem-suporte' && <span className="text-sm text-grafite-claro" data-testid="avisos-sem-suporte">Este navegador não mostra avisos; no iPhone, instale o app primeiro.</span>}
       </div>

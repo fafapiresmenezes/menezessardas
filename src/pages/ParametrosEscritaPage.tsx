@@ -381,7 +381,7 @@ function PainelBoasVindas({ onFechar }: { onFechar: () => void }) {
           <span className="font-semibold text-texto text-sm">O que é esta tela?</span>
         </div>
         <Tooltip texto="Fecha este painel de ajuda. Você pode reabri-lo clicando em 'Como usar' no topo da página." posicao="bottom">
-          <button
+          <button title="Fecha esta explicação; ela volta pelo link Como usar"
             onClick={onFechar}
             className="text-xs text-grafite/60 hover:text-grafite underline underline-offset-2 shrink-0"
           >
@@ -489,7 +489,7 @@ export default function ParametrosEscritaPage() {
             Regras que o robô segue ao rascunhar peças — calibradas nos benchmarks <strong>PMO/MIT</strong> e <strong>PMI/Stanford</strong>.
             {!mostrarBoas && (
               <Tooltip texto="Abre o painel explicativo com instruções de uso desta tela — como editar, salvar e aplicar os parâmetros." posicao="bottom">
-                <button
+                <button title="Abre a explicação de para que servem estes parâmetros"
                   onClick={() => setMostrarBoas(true)}
                   className="ml-2 inline-flex items-center gap-1 text-dourado underline underline-offset-2"
                 >
@@ -500,7 +500,7 @@ export default function ParametrosEscritaPage() {
           </p>
           <div className="flex items-center gap-2 shrink-0 ml-4">
             <Tooltip texto="Grava todas as alterações feitas nesta tela. As regras entram em vigor na próxima peça que o robô rascunhar." posicao="bottom">
-              <button
+              <button title="Guarda os parâmetros; as próximas peças já saem com eles"
                 onClick={salvar}
                 disabled={salvando}
                 className="flex items-center gap-1.5 bg-dourado text-white text-sm font-medium px-4 py-2 rounded hover:opacity-90 disabled:opacity-50 transition"
@@ -524,7 +524,7 @@ export default function ParametrosEscritaPage() {
             <div key={secao.id} className="border border-borda rounded-xl overflow-hidden">
               {/* Cabeçalho da seção — clicável */}
               <Tooltip texto={secao.dica} posicao="bottom">
-                <button
+                <button title="Abre ou fecha este grupo de parâmetros"
                   onClick={() => toggleSecao(secao.id)}
                   className="w-full flex items-center justify-between px-4 py-3.5 bg-fundo-alt hover:bg-borda/40 transition text-left gap-3"
                 >
@@ -704,7 +704,7 @@ export default function ParametrosEscritaPage() {
         {/* Botão salvar no final */}
         <div className="flex items-center gap-3 mt-6 pt-4 border-t border-borda">
           <Tooltip texto="Grava todas as alterações feitas nesta tela. As regras entram em vigor na próxima peça que o robô rascunhar." posicao="top">
-            <button
+            <button title="Guarda os parâmetros; as próximas peças já saem com eles"
               onClick={salvar}
               disabled={salvando}
               className="flex items-center gap-2 bg-dourado text-white text-sm font-medium px-5 py-2.5 rounded-lg hover:opacity-90 disabled:opacity-50 transition"

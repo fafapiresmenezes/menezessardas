@@ -40,7 +40,7 @@ export default function AssinarPortal({ token }: { token: string }) {
                 <label className="block text-xs uppercase tracking-wider text-grafite">Nome completo<input required value={f.nome} onChange={e => setForm({ ...form, [d.id]: { ...f, nome: e.target.value } })} className="block w-full border px-3 py-2 mt-1 normal-case tracking-normal" data-testid="assin-nome" /></label>
                 <label className="block text-xs uppercase tracking-wider text-grafite">CPF ou CNPJ<input required value={f.doc} onChange={e => setForm({ ...form, [d.id]: { ...f, doc: e.target.value } })} className="block w-full border px-3 py-2 mt-1 normal-case tracking-normal" data-testid="assin-doc" /></label>
                 <label className="sm:col-span-2 flex items-start gap-2 text-grafite"><input type="checkbox" required checked={f.aceite} onChange={e => setForm({ ...form, [d.id]: { ...f, aceite: e.target.checked } })} className="mt-1" data-testid="assin-aceite" /> Li o documento acima e concordo em assiná-lo eletronicamente. Entendo que ficam registrados meu nome, documento, data e hora.</label>
-                <button type="submit" disabled={!f.aceite} className="sm:col-span-2 min-h-[44px] bg-navy text-white text-sm uppercase tracking-wider disabled:bg-grafite-claro/40" data-testid="assinar">Assinar</button>
+                <button title="Registra a sua assinatura neste documento, com data, hora e o seu nome" type="submit" disabled={!f.aceite} className="sm:col-span-2 min-h-[44px] bg-navy text-white text-sm uppercase tracking-wider disabled:bg-grafite-claro/40" data-testid="assinar">Assinar</button>
               </form>
             )}
           </article>

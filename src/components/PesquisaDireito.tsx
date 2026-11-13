@@ -101,7 +101,7 @@ export default function PesquisaDireito() {
           <label className="text-sm">Origem<select value={form.origem} onChange={e => setForm({ ...form, origem: e.target.value })} id="pesq-origem" className="mt-1 w-full border px-3 py-2"><option value="caso interno">Caso interno do escritório</option><option value="mundo">Solução ou pergunta do mundo</option><option value="academia">Academia</option></select></label>
           <label className="text-sm">Caso relacionado (opcional)<select value={form.caso_id} onChange={e => setForm({ ...form, caso_id: e.target.value })} id="pesq-caso" className="mt-1 w-full border px-3 py-2"><option value="">Nenhum</option>{casos.map(c => <option key={c.id} value={c.id}>{c.titulo}{c.cliente ? ` (${c.cliente})` : ''}</option>)}</select></label>
           <label className="text-sm md:col-span-2">Jurisdições a comparar<input value={form.jurisdicoes} onChange={e => setForm({ ...form, jurisdicoes: e.target.value })} id="pesq-jurisdicoes" className="mt-1 w-full border px-3 py-2" /></label>
-          <div className="md:col-span-2"><button type="submit" data-testid="salvar-pesquisa" className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider">Registrar pesquisa</button></div>
+          <div className="md:col-span-2"><button title="Guarda esta pesquisa no caso, com data, para você retomar depois" type="submit" data-testid="salvar-pesquisa" className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider">Registrar pesquisa</button></div>
         </form>
         {msg && <p role="status" data-testid="msg-pesquisa" className="mt-3 p-3 text-sm border-l-2 bg-regularFundo border-regular text-regular">{msg}</p>}
         <ul className="mt-5 divide-y divide-navy/10" data-testid="lista-pesquisas">
@@ -112,7 +112,7 @@ export default function PesquisaDireito() {
                 <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 border border-navy/20 text-grafite-claro">{p.status}</span>
                 <span className="text-xs text-grafite-claro">{p.origem}{p.caso_id ? ` · ${casoNome(p.caso_id)}` : ''} · {p.jurisdicoes}</span>
                 <div className="ml-auto flex gap-2">
-                  <button type="button" onClick={() => gerar(p)} disabled={gerando === p.id} data-testid="gerar-nota" className="min-h-[36px] px-3 text-xs uppercase tracking-wider border border-navy text-navy disabled:opacity-50">{gerando === p.id ? 'Pesquisando…' : p.nota ? 'Refazer nota' : 'Gerar nota de pesquisa'}</button>
+                  <button title="Escreve um rascunho de nota sobre a pesquisa; você revisa e assina" type="button" onClick={() => gerar(p)} disabled={gerando === p.id} data-testid="gerar-nota" className="min-h-[36px] px-3 text-xs uppercase tracking-wider border border-navy text-navy disabled:opacity-50">{gerando === p.id ? 'Pesquisando…' : p.nota ? 'Refazer nota' : 'Gerar nota de pesquisa'}</button>
                   <button type="button" onClick={() => apagar(p.id)} aria-label={`Apagar pesquisa ${p.titulo}`} className="text-xs underline text-critico px-2">Apagar</button>
                 </div>
               </div>

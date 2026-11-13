@@ -164,7 +164,7 @@ export default function Busca({ aberta, fechar }: { aberta: boolean; fechar: () 
                 {cabecalho && (
                   <p className="px-4 pt-3 pb-1 text-[10px] uppercase tracking-[0.16em] text-dourado-escuro">{r.grupo}</p>
                 )}
-                <button
+                <button title="Abre esta tela"
                   role="option"
                   aria-selected={i === ativo}
                   onMouseEnter={() => setAtivo(i)}

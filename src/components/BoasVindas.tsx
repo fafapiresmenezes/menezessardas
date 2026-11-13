@@ -58,14 +58,14 @@ export default function BoasVindas() {
           ))}
         </div>
         <div className="flex flex-wrap gap-2 mt-6 justify-between">
-          <button onClick={() => { fechar(); navigate(p.rota) }} className="min-h-[44px] px-4 border border-navy text-navy hover:bg-pergaminho text-sm">
+          <button title="Fecha esta apresentação e abre a tela de que este passo fala" onClick={() => { fechar(); navigate(p.rota) }} className="min-h-[44px] px-4 border border-navy text-navy hover:bg-pergaminho text-sm">
             {p.acao}
           </button>
           <div className="flex gap-2">
             {passo > 0 && (
-              <button onClick={() => setPasso(passo - 1)} className="min-h-[44px] px-4 text-navy hover:bg-pergaminho text-sm">Voltar</button>
+              <button title="Volta ao passo anterior da apresentação" onClick={() => setPasso(passo - 1)} className="min-h-[44px] px-4 text-navy hover:bg-pergaminho text-sm">Voltar</button>
             )}
-            <button onClick={() => (ultimo ? fechar() : setPasso(passo + 1))} className="min-h-[44px] px-5 bg-navy hover:bg-navy-700 text-white text-sm uppercase tracking-wider">
+            <button title="Segue para o próximo passo da apresentação" onClick={() => (ultimo ? fechar() : setPasso(passo + 1))} className="min-h-[44px] px-5 bg-navy hover:bg-navy-700 text-white text-sm uppercase tracking-wider">
               {ultimo ? 'Começar' : 'Próximo'}
             </button>
           </div>

@@ -51,12 +51,12 @@ export default function PortalCasoEscritorio({ tarefaId, cliente }: { tarefaId: 
       </ol>
       <div className="mt-3 flex flex-col sm:flex-row gap-2">
         <textarea value={texto} onChange={e => setTexto(e.target.value)} rows={2} maxLength={4000} placeholder="Responder ao cliente" aria-label="Resposta ao cliente" className="border px-3 py-2 flex-1 min-h-[44px] text-sm" data-testid="esc-texto" />
-        <button type="button" onClick={responder} className="min-h-[44px] px-4 bg-navy text-white text-sm inline-flex items-center justify-center gap-2" data-testid="esc-responder"><Send size={14} aria-hidden="true" /> Responder</button>
+        <button title="Manda a sua resposta ao cliente pelo portal dele" type="button" onClick={responder} className="min-h-[44px] px-4 bg-navy text-white text-sm inline-flex items-center justify-center gap-2" data-testid="esc-responder"><Send size={14} aria-hidden="true" /> Responder</button>
       </div>
       {docs.length > 0 && (
         <div className="mt-4 text-sm">
           <h3 className="font-medium text-navy flex items-center gap-2"><Paperclip size={16} className="text-dourado" aria-hidden="true" /> Documentos enviados pelo cliente</h3>
-          <ul className="mt-1 space-y-1" data-testid="esc-documentos">{docs.map(d => <li key={d.id}><button type="button" onClick={() => abrir(d)} className="underline text-navy" data-testid="esc-abrir-doc">{d.nome}</button> · {Math.max(1, Math.round(d.tamanho / 1024))} KB · {formatarData(d.enviado_em.slice(0, 10))}{d.visto_em ? '' : <span className="ml-2 text-xs bg-dourado/20 text-dourado-escuro px-1">novo</span>}</li>)}</ul>
+          <ul className="mt-1 space-y-1" data-testid="esc-documentos">{docs.map(d => <li key={d.id}><button title="Abre este documento enviado pelo cliente" type="button" onClick={() => abrir(d)} className="underline text-navy" data-testid="esc-abrir-doc">{d.nome}</button> · {Math.max(1, Math.round(d.tamanho / 1024))} KB · {formatarData(d.enviado_em.slice(0, 10))}{d.visto_em ? '' : <span className="ml-2 text-xs bg-dourado/20 text-dourado-escuro px-1">novo</span>}</li>)}</ul>
         </div>
       )}
     </section>

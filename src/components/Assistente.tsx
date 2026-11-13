@@ -34,13 +34,13 @@ export function Passo({ numero, total, titulo, ajuda, children, podeAvancar, ult
       <div className="mt-6">{children}</div>
       <div className="flex items-center justify-between mt-8 pt-5 border-t border-navy/10">
         {onVoltar ? (
-          <button type="button" onClick={onVoltar} className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4">
+          <button title="Volta ao passo anterior sem perder o que você já preencheu" type="button" onClick={onVoltar} className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4">
             <ArrowLeft size={16} aria-hidden="true" /> Voltar
           </button>
         ) : (
           <span />
         )}
-        <button
+        <button title="Guarda este passo e segue para o próximo"
           type="button"
           onClick={onAvancar}
           disabled={!podeAvancar}

@@ -37,8 +37,8 @@ export default function AceiteContratoSaas({ admin, sede }: { admin: boolean; se
         </label>
         {erro && <p role="alert" className="text-sm text-critico mt-2">{erro}</p>}
         <div className="flex flex-wrap gap-3 mt-4">
-          <button type="button" disabled={!lido || salvando} onClick={aceitar} data-testid="aceitar-saas" className="min-h-[44px] px-5 bg-navy text-white text-sm disabled:opacity-50">{salvando ? 'Gravando…' : 'Aceitar e continuar'}</button>
-          <button type="button" onClick={() => supabase.auth.signOut().then(() => window.location.assign('#/'))} className="min-h-[44px] px-5 border border-navy/30 text-sm">Não aceito (sair)</button>
+          <button title="Guarda o seu aceite do contrato, com data e hora, e abre a plataforma" type="button" disabled={!lido || salvando} onClick={aceitar} data-testid="aceitar-saas" className="min-h-[44px] px-5 bg-navy text-white text-sm disabled:opacity-50">{salvando ? 'Gravando…' : 'Aceitar e continuar'}</button>
+          <button title="Sai da plataforma sem aceitar; você pode voltar e aceitar depois" type="button" onClick={() => supabase.auth.signOut().then(() => window.location.assign('#/'))} className="min-h-[44px] px-5 border border-navy/30 text-sm">Não aceito (sair)</button>
         </div>
       </div>
     </div>

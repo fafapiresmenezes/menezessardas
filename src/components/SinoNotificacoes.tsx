@@ -63,13 +63,13 @@ export default function SinoNotificacoes() {
           className="absolute right-0 mt-2 w-[min(92vw,380px)] bg-white shadow-2xl border-t-2 border-dourado z-50">
           <div className="flex items-center justify-between px-4 py-3 border-b border-navy/10">
             <p className="text-sm font-medium text-navy">Notificações</p>
-            {naoLidas > 0 && <button type="button" onClick={todasLidas} className="text-xs underline text-navy min-h-[44px]">Marcar todas como lidas</button>}
+            {naoLidas > 0 && <button title="Marca todos os avisos como lidos e apaga o ponto vermelho" type="button" onClick={todasLidas} className="text-xs underline text-navy min-h-[44px]">Marcar todas como lidas</button>}
           </div>
           <ul className="max-h-[60vh] overflow-y-auto divide-y divide-navy/10">
             {lista.length === 0 && <li className="px-4 py-6 text-sm text-grafite-claro text-center">Nada por aqui. Quando chegar intimação, tarefa ou norma que afete seus casos, aparece aqui.</li>}
             {lista.map(n => (
               <li key={n.id}>
-                <button type="button" onClick={() => abrir(n)} data-testid="sino-item"
+                <button title="Abre o que este aviso fala e marca o aviso como lido" type="button" onClick={() => abrir(n)} data-testid="sino-item"
                   className={`w-full text-left px-4 py-3 min-h-[44px] hover:bg-pergaminho ${n.lida_em ? 'opacity-70' : 'border-l-2 border-dourado'}`}>
                   <span className="block text-[10px] uppercase tracking-[0.14em] text-dourado-escuro">{ROTULO[n.tipo] ?? n.tipo} · {quando(n.criado_em)}</span>
                   <span className="block text-sm text-navy">{n.titulo}</span>
