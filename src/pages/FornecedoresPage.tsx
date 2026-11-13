@@ -223,7 +223,7 @@ export default function FornecedoresPage() {
                     <p className="text-xs text-grafite-claro mt-0.5 font-mono">{formatarCnpj(f.cnpj)}</p>
                     <div className="flex flex-wrap items-center gap-2 mt-4">
                       <span className="inline-flex items-center gap-1 text-xs text-grafite-claro">
-                        <ShieldCheck size={14} aria-hidden="true" /> KYC
+                        <ShieldCheck size={14} aria-hidden="true" /> Checagem cadastral
                       </span>
                       <SeloSituacao
                         situacao={kyc.nivel === 'critico' ? 'critico' : kyc.nivel === 'atencao' ? 'atencao' : 'regular'}

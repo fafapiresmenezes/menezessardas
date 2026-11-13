@@ -677,7 +677,7 @@ function SecaoEmail() {
             <ol className="text-xs text-grafite-claro list-decimal pl-5 space-y-1">
               <li>Crie a conta grátis em <a href="https://www.brevo.com/" target="_blank" rel="noopener noreferrer" title="Abre em uma nova aba o site do Brevo, onde se cria a conta gratuita de envio de e-mails" className="underline text-navy">brevo.com</a> com o e-mail do escritório que vai enviar os avisos.</li>
               <li>Confirme o e-mail que o Brevo mandar para essa caixa.</li>
-              <li>No Brevo, abra o menu do seu nome → <strong>SMTP &amp; API</strong> → <strong>API Keys</strong>, clique em <strong>Generate a new API key</strong> e copie (começa com xkeysib-).</li>
+              <li>No Brevo, abra o menu do seu nome → <strong lang="en">SMTP &amp; API</strong> → <strong lang="en">API Keys</strong>, clique em <strong lang="en">Generate a new API key</strong> e copie a chave (começa com xkeysib-). O site do Brevo está em inglês; esses três nomes aparecem lá exatamente assim.</li>
               <li>Cole abaixo, junto com o e-mail do passo 1, e clique em Salvar.</li>
             </ol>
             {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={`p-3 text-sm border-l-2 ${msg.tipo === 'ok' ? 'bg-regularFundo border-regular text-regular' : 'bg-criticoFundo border-critico text-critico'}`}>{msg.texto}</p>}

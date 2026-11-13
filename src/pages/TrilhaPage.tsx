@@ -294,7 +294,7 @@ export default function TrilhaPage() {
                         title="Baixa a prova OpenTimestamps (.ots) deste selo, para verificar a data no Bitcoin em opentimestamps.org"
                         className="min-h-[44px] inline-flex items-center gap-1 px-3 border border-navy/30 text-sm hover:bg-pergaminho"
                       >
-                        <Download size={14} aria-hidden="true" /> Prova (.ots)
+                        <Download size={14} aria-hidden="true" /> Prova de data (.ots)
                       </button>
                     </div>
                   </li>

@@ -79,7 +79,7 @@ describe('Trilha de auditoria', () => {
     expect(itens[0].textContent).toContain('Lastro quebrado: registro nº 2 reescrito')
     fireEvent.click(within(itens[0]).getByText('Selo (.txt)'))
     await waitFor(() => expect(baixar).toHaveBeenLastCalledWith('selo-2.txt', expect.stringContaining('selo: selo-dois-'), 'text/plain'))
-    fireEvent.click(within(itens[0]).getByText('Prova (.ots)'))
+    fireEvent.click(within(itens[0]).getByText('Prova de data (.ots)'))
     expect(baixar).toHaveBeenLastCalledWith('selo-2.txt.ots', new Uint8Array([7]), undefined)
     fireEvent.click(screen.getByTestId('copiar-selo'))
     expect(write.mock.calls[0][0]).toContain('Selo (SHA-256): selo-dois-'); expect(write.mock.calls[0][0]).toContain('Total de selos ancorados: 2')

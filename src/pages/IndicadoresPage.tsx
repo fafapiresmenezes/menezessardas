@@ -271,7 +271,7 @@ export default function IndicadoresPage() {
 
         {supabaseConfigurado && (
           <section className="bg-white p-6 shadow-sm" aria-labelledby="t-ciclo-okr" data-testid="ciclo-okr">
-            <h2 id="t-ciclo-okr" className="text-xl mb-1 flex items-center gap-2"><CalendarCheck className="w-5 h-5 text-dourado" aria-hidden />Ciclo trimestral de OKR</h2>
+            <h2 id="t-ciclo-okr" className="text-xl mb-1 flex items-center gap-2"><CalendarCheck className="w-5 h-5 text-dourado" aria-hidden />Ciclo trimestral de metas (OKR)</h2>
             <p className="text-sm text-grafite-claro">Trimestre <strong data-testid="okr-trimestre">{trimestre}</strong> termina em {fimTri.toLocaleDateString('pt-BR')} ({diasParaFim} dias). O lembrete de revisão chega por e-mail e vira tarefa em {dataLembrete.toLocaleDateString('pt-BR')} (15 dias antes). A ata gravada recebe SHA-256 e selo OpenTimestamps.</p>
             <label className="block mt-3 text-sm">Ata da revisão do trimestre (o que foi atingido, o que ficou, metas do próximo)
               <textarea title="O que ficou combinado na revisão do trimestre. Fica guardado e aparece na revisão seguinte, para comparar." value={ata} onChange={e => setAta(e.target.value)} rows={4} className="border w-full px-3 py-2 mt-1" data-testid="okr-ata" placeholder="Ex.: Carteira regular ficou em 92% (meta 90%). Documentação em dia 88% (meta 95%): cobrar laudos de incêndio em outubro…" />
@@ -287,7 +287,7 @@ export default function IndicadoresPage() {
                 {revisoes.map(r => (
                   <li key={r.id} className="py-2" data-testid="okr-revisao">
                     <p><strong>{r.trimestre}</strong> · {new Date(r.criado_em).toLocaleString('pt-BR')} · <span className="font-mono text-xs">{r.sha256.slice(0, 20)}…</span>
-                      {r.ots_b64 && <>{' · '}<button type="button" title="Baixa o arquivo .ots que prova a data desta ata no selo OpenTimestamps" className="underline" onClick={() => baixarArquivo(`ata-okr-${r.trimestre}.ots`, Uint8Array.from(atob(r.ots_b64!), c => c.charCodeAt(0)) as BlobPart)}>prova .ots</button></>}
+                      {r.ots_b64 && <>{' · '}<button type="button" title="Baixa o arquivo .ots que prova a data desta ata no selo OpenTimestamps" className="underline" onClick={() => baixarArquivo(`ata-okr-${r.trimestre}.ots`, Uint8Array.from(atob(r.ots_b64!), c => c.charCodeAt(0)) as BlobPart)}>prova de data (.ots)</button></>}
                     </p>
                     <p className="text-grafite-claro whitespace-pre-wrap">{r.ata.slice(0, 400)}{r.ata.length > 400 ? '…' : ''}</p>
                   </li>
@@ -407,7 +407,7 @@ export default function IndicadoresPage() {
 
         <section className="bg-white p-6 shadow-sm" aria-labelledby="t-okr">
           <h2 id="t-okr" className="text-xl mb-5">
-            OKRs do trimestre
+            Metas do trimestre (OKR)
           </h2>
           <div className="mb-3 flex flex-wrap items-center gap-3 text-sm print:hidden">
             {!editandoMetas

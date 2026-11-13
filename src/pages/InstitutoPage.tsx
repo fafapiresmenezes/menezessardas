@@ -205,7 +205,7 @@ function CaseStudy() {
         <button type="button" onClick={copiarCadeia} title="Copia a cadeia completa de medições (data, nota e hash de cada uma) em texto para auditoria externa" data-testid="copiar-cadeia" className="mb-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{cadeiaCopiada ? 'Cadeia copiada' : 'Copiar cadeia completa'}</button>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite-claro"><th className="py-2 pr-3">Medição</th><th className="pr-3">Data</th><th className="pr-3">Nota</th><th className="pr-3">Entregue</th><th>SHA-256</th></tr></thead>
+            <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite-claro"><th className="py-2 pr-3">Medição</th><th className="pr-3">Data</th><th className="pr-3">Nota</th><th className="pr-3">Entregue</th><th>Código do arquivo (SHA-256)</th></tr></thead>
             <tbody>
               {[...MEDICOES].reverse().map(m => (
                 <tr key={m.n} className="border-t border-navy/10 align-top">
