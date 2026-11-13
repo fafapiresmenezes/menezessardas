@@ -17,10 +17,14 @@ import { conferirCorrente, lerElos, GENESE, type Conferencia } from '@/lib/trilh
  * que falta é a autorização, não o programa.
  */
 const ONDE = [
+  // 1) Ao lado do pacote publicado: é assim que funciona no gh-pages e na conferência local.
   './trilho-v4.jsonl',
-  // Reserva: em theye.club só vão os arquivos de texto do site, e o trilho vive junto do pacote
-  // publicado. Pelo ramo (e não pelo sha) para esta tela não precisar saber qual é a versão.
+  // 2 e 3) Reservas, porque em theye.club só vão os arquivos de texto do site. Pelo RAMO, e não
+  // pelo sha, para esta tela não precisar saber qual é a versão publicada. O jsDelivr guarda o
+  // ramo por até 12 horas, então a reserva pode mostrar uma versão um pouco atrás da última volta;
+  // o número de registros e o último código, logo acima, dizem qual versão esta tela leu.
   'https://cdn.jsdelivr.net/gh/fafapiresmenezes/menezessardas@gh-pages/trilho-v4.jsonl',
+  'https://fafapiresmenezes.github.io/menezessardas/trilho-v4.jsonl',
 ]
 
 export default function LastroPage() {
@@ -37,7 +41,7 @@ export default function LastroPage() {
           return
         } catch { /* tenta o próximo */ }
       }
-      setErro('Não deu para baixar o arquivo do trilho agora. Recarregue a página em um minuto.')
+      setErro('Não deu para baixar o arquivo do trilho agora. O arquivo fica em cdn.jsdelivr.net/gh/fafapiresmenezes/menezessardas@gh-pages/trilho-v4.jsonl, e os quatro passos abaixo valem para conferir na mão.')
     })()
   }, [])
 
@@ -92,7 +96,7 @@ export default function LastroPage() {
 
             <h2 className="text-lg font-serif mt-10 mb-3">Como conferir por fora, sem acreditar em nós</h2>
             <ol className="space-y-3 text-sm text-white/80 list-decimal pl-5">
-              <li>Baixe o arquivo do registro: <a href={ONDE[0]} download title="Baixa o arquivo com todos os registros, um por linha" className="underline decoration-white/40">trilho-v4.jsonl</a>. É texto; cada linha é um registro.</li>
+              <li>Baixe o arquivo do registro: <a href={ONDE[1]} title="Baixa o arquivo com todos os registros, um por linha, direto do repositório publicado" className="underline decoration-white/40">trilho-v4.jsonl</a>. É texto; cada linha é um registro.</li>
               <li>De cada linha, tire o campo <code>hash</code>. Escreva o resto em ordem alfabética de campo, no formato do Python <code>json.dumps(…, ensure_ascii=False, sort_keys=True)</code>.</li>
               <li>Junte o campo <code>anterior</code> (o código do registro de cima) na frente desse texto e tire o SHA-256 do resultado.</li>
               <li>O número tem de ser igual ao <code>hash</code> daquela linha. O primeiro registro aponta para a gênese do plano: <code className="break-all">{GENESE}</code>.</li>
