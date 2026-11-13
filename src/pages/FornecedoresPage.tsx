@@ -143,7 +143,7 @@ export default function FornecedoresPage() {
             {erro && <p role="alert" className="text-sm text-critico">{erro}</p>}
             <button
               onClick={cadastrar}
-              title="Cadastra o fornecedor e abre a página dele para preencher KYC, certidões e metas de serviço"
+              title="Cadastra o fornecedor e abre a tela dele para preencher a checagem cadastral (KYC), as certidões e as metas de serviço"
               className="min-h-[44px] bg-navy hover:bg-navy-700 text-white px-6 rounded-sm uppercase tracking-wider text-sm"
             >
               Cadastrar e abrir
@@ -163,7 +163,7 @@ export default function FornecedoresPage() {
                 <li key={i}>
                   <button
                     onClick={() => navigate(`/fornecedor/${a.fornecedorId}`)}
-                    title="Abre a página deste fornecedor para resolver o alerta de KYC ou SLA"
+                    title="Abre a tela deste fornecedor para resolver o aviso de checagem cadastral (KYC) ou de meta de serviço (SLA)"
                     className="w-full text-left min-h-[44px] flex items-start gap-3 px-3 py-2 hover:bg-pergaminho transition"
                   >
                     {a.gravidade === 'critico' ? (
@@ -214,7 +214,7 @@ export default function FornecedoresPage() {
                   <button
                     key={f.id}
                     onClick={() => navigate(`/fornecedor/${f.id}`)}
-                    title="Abre a página deste fornecedor para gerenciar KYC, certidões e metas de serviço"
+                    title="Abre a tela deste fornecedor para cuidar da checagem cadastral (KYC), das certidões e das metas de serviço"
                     className="text-left bg-white shadow-sm border-t-2 border-transparent hover:border-dourado p-5 transition min-h-[140px]"
                     aria-label={`${f.nome} - ${rotuloCategoria[f.categoria]}`}
                   >

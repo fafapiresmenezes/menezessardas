@@ -194,7 +194,7 @@ export default function TrilhaPage() {
             </span>
             <label>De<input type="date" title="Começo do período do relatório de acessos." value={periodo.de} max={periodo.ate} onChange={e => setPeriodo({ ...periodo, de: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="exportar-de" /></label>
             <label>Até<input type="date" title="Fim do período do relatório. Não passa de hoje." value={periodo.ate} min={periodo.de} max={hojeIso} onChange={e => setPeriodo({ ...periodo, ate: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="exportar-ate" /></label>
-            <button type="button" onClick={exportarPeriodo} disabled={exportando || !periodo.de || !periodo.ate} data-testid="exportar-pdf-selo" title="Gera e baixa o PDF com os registros do período e o selo OpenTimestamps (.ots) que prova a data no Bitcoin" className="min-h-[44px] px-4 bg-navy text-white disabled:opacity-60 inline-flex items-center gap-2"><Download size={16} aria-hidden="true" />{exportando ? 'Gerando e selando…' : 'Baixar PDF + selo'}</button>
+            <button type="button" onClick={exportarPeriodo} disabled={exportando || !periodo.de || !periodo.ate} data-testid="exportar-pdf-selo" title="Gera e baixa o PDF com os registros do período e o selo de tempo (OpenTimestamps, arquivo .ots) que prova a data no Bitcoin" className="min-h-[44px] px-4 bg-navy text-white disabled:opacity-60 inline-flex items-center gap-2"><Download size={16} aria-hidden="true" />{exportando ? 'Gerando e selando…' : 'Baixar PDF + selo'}</button>
           </div>
           {exportacao && (
             <p className="text-xs mt-3 break-all" role="status" data-testid="msg-exportacao">
@@ -291,7 +291,7 @@ export default function TrilhaPage() {
                       </button>
                       <button
                         onClick={() => baixarArquivo(`selo-${a.seq}.txt.ots`, montarOts(a) as BlobPart)}
-                        title="Baixa a prova OpenTimestamps (.ots) deste selo, para verificar a data no Bitcoin em opentimestamps.org"
+                        title="Baixa a prova de data deste selo (OpenTimestamps, arquivo .ots), para conferir no Bitcoin em opentimestamps.org"
                         className="min-h-[44px] inline-flex items-center gap-1 px-3 border border-navy/30 text-sm hover:bg-pergaminho"
                       >
                         <Download size={14} aria-hidden="true" /> Prova de data (.ots)
@@ -320,7 +320,7 @@ export default function TrilhaPage() {
             {/* Passo 164: imprimir os registros filtrados da trilha. */}
             {filtrados.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-registros" title="Abre a janela de impressão do navegador para imprimir os registros filtrados" className="min-h-[44px] px-3 border text-sm mr-2 print:hidden">Imprimir</button>}
             {filtrados.length > 0 && <button type="button" data-testid="copiar-link-trilha" title="Copia o endereço desta tela para a área de transferência" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setTrilhaLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-3 border print:hidden">{trilhaLinkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 223 */}
-            {filtrados.length > 0 && <button type="button" data-testid="baixar-trilha" aria-live="polite" title="Baixa a planilha (trilha-auditoria.csv) com os registros filtrados: sequência, data, tipo, resumo e hash" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['sequência;data;tipo;resumo;hash', ...filtrados.map(e => `${e.seq};${e.em};${e.tipo};${e.resumo.replace(/;/g, ',')};${e.hash}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'trilha-auditoria.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-3 border print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 293 */}
+            {filtrados.length > 0 && <button type="button" data-testid="baixar-trilha" aria-live="polite" title="Baixa a planilha com os registros filtrados: sequência, data, tipo, resumo e código de conferência" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['sequência;data;tipo;resumo;hash', ...filtrados.map(e => `${e.seq};${e.em};${e.tipo};${e.resumo.replace(/;/g, ',')};${e.hash}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'trilha-auditoria.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-3 border print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 293 */}
             {filtrados.length > 0 && <button type="button" onClick={copiarRegistros} data-testid="copiar-registros" title="Copia os registros filtrados (número, data, ação, resumo e hash) para colar no relatório" className="min-h-[44px] px-3 border">{registrosCopiados ? 'Copiados' : 'Copiar registros'}</button>}
           </section>
         )}

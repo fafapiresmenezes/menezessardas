@@ -153,7 +153,7 @@ export default function AlertasPage() {
                   <span className="text-grafite-claro">{formatarData(m.consultado_em)}</span>
                   <span className="font-medium text-navy">{m.nome ?? m.cnpj}</span>
                   <span>era <strong>{m.risco_anterior}</strong>, agora <strong>{m.risco}</strong></span>
-                  <button type="button" onClick={() => navigate('/kyc')} title="Abre a página de KYC para ver os detalhes da checagem desta empresa" className="ml-auto underline text-navy">abrir a checagem</button>
+                  <button type="button" onClick={() => navigate('/kyc')} title="Abre a tela de checagem cadastral (KYC) para ver os detalhes da conferência desta empresa" className="ml-auto underline text-navy">abrir a checagem</button>
                   <button type="button" onClick={() => verKyc(m.id)} title="Marca esta mudança de status como vista e a remove desta lista de alertas" className="underline text-navy" data-testid="kyc-visto">marcar como visto</button>
                 </li>
               ))}

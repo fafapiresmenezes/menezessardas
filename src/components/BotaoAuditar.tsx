@@ -46,7 +46,7 @@ export default function BotaoAuditar({ tabela, id }: { tabela: 'documentos' | 'c
           {r.ots && r.manifesto && (
             <>
               {' '}<button title="Baixa a lista do que foi selado, em texto, para você guardar" className="underline" onClick={() => baixar(`lote-${r.seloId}.txt`, r.manifesto!, 'text/plain')}>manifesto</button>
-              {' · '}<button title="Baixa a prova de data do selo, no formato .ots, para conferir em qualquer lugar" className="underline" onClick={() => baixar(`lote-${r.seloId}.txt.ots`, Uint8Array.from(atob(r.ots!), c => c.charCodeAt(0)), 'application/octet-stream')}>prova de data (.ots)</button>
+              {' · '}<button title="Baixa a prova de data do selo (OpenTimestamps, arquivo .ots), para conferir em qualquer lugar" className="underline" onClick={() => baixar(`lote-${r.seloId}.txt.ots`, Uint8Array.from(atob(r.ots!), c => c.charCodeAt(0)), 'application/octet-stream')}>prova de data (.ots)</button>
               {' · '}<button title="Confere a prova de data agora, direto na rede pública" className="underline" onClick={verificar} disabled={verificando} data-testid="verificar-ots">{verificando ? 'verificando…' : 'Verificar agora'}</button>
             </>
           )}

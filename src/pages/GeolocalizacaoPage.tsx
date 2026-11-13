@@ -242,7 +242,7 @@ export default function GeolocalizacaoPage() {
             <p className="text-xs text-grafite-claro mt-2">Versão {VERSAO_TERMO}. Ao aceitar, a data e o hash do termo entram no registro.</p>
             <label className="text-sm text-grafite mt-3 block" htmlFor="titular-geo">Seu nome (titular)</label>
             <input id="titular-geo" className={campo} value={titular} onChange={e => setTitular(e.target.value)} />
-            <button className={botaoCheio + ' mt-3'} disabled={!titular.trim()} onClick={consentir} title="Registrar seu consentimento com data e hash"><ShieldCheck className="inline w-4 h-4 mr-1" />Li e aceito</button>
+            <button className={botaoCheio + ' mt-3'} disabled={!titular.trim()} onClick={consentir} title="Registra o seu consentimento com data e com um código que prova que o registro não foi alterado (hash)"><ShieldCheck className="inline w-4 h-4 mr-1" />Li e aceito</button>
           </div>
         </div>
       </Layout>
@@ -402,7 +402,7 @@ export default function GeolocalizacaoPage() {
                 <button className={botao} onClick={() => exportar('csv')} title="Todos os pontos em planilha">CSV</button>
                 <button className={botao} onClick={() => exportar('grafo')} title="Nós e ligações do grafo, com a fonte de cada ligação">Ligações do mapa (arquivo JSON)</button>
               </div>
-              <button className={botao} onClick={conferir} title="Refaz a conta de hash de cada registro e diz se algo foi mexido">Conferir o lastro (corrente de códigos)</button>
+              <button className={botao} onClick={conferir} title="Refaz a conta do código de conferência de cada registro (hash) e diz se algo foi mexido">Conferir o lastro (corrente de códigos)</button>
               {corrente && <p className="text-xs text-navy">{corrente}</p>}
             </div>
             <div className={cartao + ' space-y-2'}>

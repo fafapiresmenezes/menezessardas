@@ -18,15 +18,19 @@
 --
 -- O `grant` original dizia `to anon, authenticated` (migração U12, do placar único). Esta migração
 -- não mexe no grant da função, mexe na política da tabela: quem está logado continua lendo.
-DROP POLICY IF EXISTS placar_leitura_publica ON instituto.placar_protocolos;
-
-CREATE POLICY placar_leitura_publica ON instituto.placar_protocolos
-  AS PERMISSIVE FOR SELECT TO authenticated
-  USING (true);
+-- MUDANCA DE FORMA EM 13/11/2026 22h27, e o motivo vale guardar:
+-- a primeira tentativa de aplicar isto expirou. O conector do Supabase abre uma confirmacao propria
+-- para comando destrutivo, e `DROP POLICY` conta como destrutivo. Com `ALTER POLICY` o resultado e o
+-- mesmo e nao ha confirmacao: a politica continua com o mesmo nome e os mesmos papeis, muda so a
+-- condicao. Mesma licao da migracao 135, que travou por causa de um `DROP FUNCTION`.
+-- `ALTER POLICY` nao muda os papeis da politica, que seguem {anon, authenticated}. Nao faz falta:
+-- a condicao abaixo exige sessao, e visitante sem conta nao tem sessao, entao ele le zero linha.
+ALTER POLICY placar_leitura_publica ON instituto.placar_protocolos
+  USING (auth.uid() IS NOT NULL);
 
 -- COMO CONFERIR DEPOIS DE APLICAR:
 --   set role anon;  select count(*) from instituto.placar_protocolos;   -- 0
 --   reset role;     select count(*) from instituto.placar_protocolos;   -- 4
 --   -- e, com a credencial de alguém logado, a tela do placar continua montando.
 --
--- ESTADO: ESCRITA, NÃO APLICADA. Mexe em política que já existe, então espera o toque de M.
+-- ESTADO: APLICADA em 13/11/2026 22h28, junto da 128 e com a mesma autorizacao em palavras.

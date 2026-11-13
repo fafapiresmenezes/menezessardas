@@ -191,7 +191,7 @@ function CaseStudy() {
         <div className="mt-4 flex flex-wrap gap-3">
           <a href={DECK_URL} target="_blank" rel="noreferrer" title="Abre em nova aba o deck de apresentação da plataforma" className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm">Deck de apresentação <ExternalLink size={14} aria-hidden="true" /></a>
           <Link to="/testar" title="Abre o roteiro guiado para testar todas as ferramentas da plataforma" className="inline-flex items-center gap-2 border border-navy text-navy min-h-[44px] px-5 uppercase tracking-wider text-sm">Testar tudo agora</Link>
-          <button type="button" onClick={caseEmPdf} title="Gera e baixa o case study em PDF com a trajetória das medições, os hashes SHA-256 e as provas .ots" data-testid="case-study-pdf" className="inline-flex items-center gap-2 border border-navy text-navy min-h-[44px] px-5 uppercase tracking-wider text-sm">Case study em PDF</button>
+          <button type="button" onClick={caseEmPdf} title="Gera e baixa o estudo de caso em PDF com a trajetória das medições, os códigos de conferência (SHA-256) e as provas de data (arquivos .ots)" data-testid="case-study-pdf" className="inline-flex items-center gap-2 border border-navy text-navy min-h-[44px] px-5 uppercase tracking-wider text-sm">Case study em PDF</button>
         </div>
         {msgPdf && <p role="status" className="text-sm mt-2" data-testid="case-study-msg">{msgPdf}</p>}
       </section>
@@ -279,7 +279,7 @@ export default function InstitutoPage() {
           <p className="text-sm text-grafite-claro mt-1">Inovação regulatória, jurimetria, ESG e pesquisa jurídica (Brasil e mundo) para o desenvolvimento do direito brasileiro.</p>
           <p className="text-sm mt-3 p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="estado-medicao">
             Última medição: <strong>M{ult.n}</strong>, nota <strong>{ult.nota.toFixed(2).replace('.', ',')}</strong>, em {new Date(ult.data + 'T12:00:00').toLocaleDateString('pt-BR')}{ult.ots ? ', selada em blockchain (OpenTimestamps)' : ''}.{' '}
-            <button type="button" onClick={copiarHash} title="Copia o nome do arquivo e o hash SHA-256 da última medição para conferência externa" data-testid="copiar-hash" className="underline text-navy">{hashCopiado ? 'hash copiado' : 'copiar hash'}</button>
+            <button type="button" onClick={copiarHash} title="Copia o nome do arquivo e o código de conferência da última medição (SHA-256), para alguém de fora checar" data-testid="copiar-hash" className="underline text-navy">{hashCopiado ? 'hash copiado' : 'copiar hash'}</button>
             {' · '}<button type="button" onClick={() => setAba('case')} title="Abre a aba do case study com a cadeia completa de medições e hashes" className="underline text-navy">ver a cadeia completa</button>
           </p>
         </header>

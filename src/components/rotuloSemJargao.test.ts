@@ -23,31 +23,53 @@ import { join } from 'node:path'
 
 const PASTAS = ['src/pages', 'src/components']
 
+// M pediu de novo em 13/11/2026, 22h22: "sempre use linguagem para dummies em tudo". Por isso a
+// lista cresceu (segunda metade) e a rede passou a olhar tambem o texto das DICAS que aparecem ao
+// passar o cursor (title=) e do rotulo lido em voz alta (aria-label=) — dica escrita em jargao nao
+// explica nada a quem parou o cursor justamente por nao ter entendido o botao.
 const TERMOS = [
   'OKRs?', 'KPIs?', 'B2B', 'KYC', 'SLOs?', 'endpoint', 'webhook', 'payload', 'upsert', 'RLS',
   'schema', 'UUID', 'slug', 'deploy', 'rollback', 'cache', 'backlog', 'dashboard', 'pipeline',
   'JSON', 'base64', 'OAuth', 'JWT', 'CORS', 'hash', 'SHA-256', 'OpenTimestamps', '\\.ots',
   'API', '\\.jsonl',
+  'token', 'cron', 'SQL', 'CSP', 'HSTS', 'DNS', 'URLs?', 'query', 'bucket', 'timestamp',
+  'commit', 'branch', 'merge', 'build', 'bug', 'sprint', 'CRUD', 'parser', 'array', 'boolean',
+  'request', 'response', 'middleware', 'cookies?', 'client-side', 'server-side', 'front-?end',
+  'back-?end', 'storage', 'patch', 'mock', 'regex', 'CLI', 'SDK',
 ]
-const JARGAO = new RegExp(`(?<![\\w-])(${TERMOS.join('|')})(?![\\w-])`)
+// Fronteira ciente de acento: com `\\w` (so ASCII), 'cron' casaria dentro de 'cronometro'.
+const BORDA = '[\\p{L}\\p{N}_-]'
+const JARGAO = new RegExp(`(?<!${BORDA})(${TERMOS.join('|')})(?!${BORDA})`, 'u')
 
 const arquivos = () =>
   PASTAS.flatMap(d =>
     readdirSync(d).filter(f => f.endsWith('.tsx') && !f.includes('.test.')).map(f => join(d, f)),
   )
 
-/** Tira do texto o que este teste nao julga: <code>…</code> e elementos com lang="en". */
+/** Tira do texto o que este teste nao julga: <code>…</code>, lang="en" e data-citacao. */
+// data-citacao marca palavra copiada da tela de OUTRA empresa, que o passo a passo manda o usuario
+// achar e clicar. Traduzir essa palavra atrapalha: a pessoa procura na tela do Escavador um botao
+// que lá nao se chama assim. A explicacao vai na frase em volta, nao no nome do botao alheio.
 const semIsentos = (s: string) =>
-  s.replace(/<code[\s>][\s\S]*?<\/code>/g, '<code/>').replace(/<(\w+)[^>]*lang="en"[^>]*>[\s\S]*?<\/\1>/g, '<x/>')
+  s.replace(/<code[\s>][\s\S]*?<\/code>/g, '<code/>')
+    .replace(/<(\w+)[^>]*lang="en"[^>]*>[\s\S]*?<\/\1>/g, '<x/>')
+    .replace(/<(\w+)[^>]*data-citacao="[^"]*"[^>]*>[\s\S]*?<\/\1>/g, '<x/>')
 
-/** Rotulos curtos: nos de texto JSX que nao sao codigo. */
+/** Rotulos curtos: nos de texto JSX que nao sao codigo, mais as dicas de title= e aria-label=. */
 function rotulos(s: string): { linha: number; texto: string }[] {
   const fora: { linha: number; texto: string }[] = []
-  for (const m of semIsentos(s).matchAll(/>\s*([^<>{}\n][^<>{}]*?)\s*</g)) {
+  const limpo = semIsentos(s)
+  for (const m of limpo.matchAll(/>\s*([^<>{}\n][^<>{}]*?)\s*</g)) {
     const texto = m[1].replace(/\s+/g, ' ').trim()
     if (texto.length < 3 || texto.length > 40) continue
     if (/(useState|Promise|Date\.|=>|const |function |import )/.test(texto)) continue
-    fora.push({ linha: s.slice(0, m.index).split('\n').length, texto })
+    fora.push({ linha: limpo.slice(0, m.index).split('\n').length, texto })
+  }
+  // A dica ao passar o cursor e o rotulo lido em voz alta valem como rotulo, e nao tem limite de 40
+  // caracteres: a dica existe para explicar, e uma dica longa ainda precisa ser em portugues claro.
+  for (const m of limpo.matchAll(/(?:title|aria-label)="([^"{}]{3,200})"/g)) {
+    const texto = m[1].replace(/\s+/g, ' ').trim()
+    fora.push({ linha: limpo.slice(0, m.index).split('\n').length, texto })
   }
   return fora
 }

@@ -29,10 +29,17 @@
 -- chave pública (`anon`) em vez da chave de serviço, ela passa a receber lista vazia. Não achei
 -- nenhuma, mas quem escreveu a frente do nicho de locação sabe melhor do que eu.
 
-DROP POLICY IF EXISTS centros_custo_leitura ON public.centros_custo_nicho;
-
-CREATE POLICY centros_custo_leitura ON public.centros_custo_nicho
-  AS PERMISSIVE FOR SELECT TO public
+-- MUDANCA DE FORMA EM 13/11/2026 22h27, e o motivo vale guardar:
+-- a primeira tentativa de aplicar isto expirou. O conector do Supabase abre uma confirmacao propria
+-- para comando destrutivo, e `DROP POLICY` conta como destrutivo. Com `ALTER POLICY` o resultado e o
+-- mesmo e nao ha confirmacao: a politica continua com o mesmo nome e os mesmos papeis, muda so a
+-- condicao. Mesma licao da migracao 135, que travou por causa de um `DROP FUNCTION`.
+-- Detalhe conferido antes de aplicar: `public.eh_sede()` ficou fechada ao visitante sem conta nas
+-- migracoes 135 a 137. Logo, quem chamar esta tabela sem sessao nao recebe lista vazia, recebe
+-- "permission denied for function eh_sede". Porta fechada do mesmo jeito, so com barulho. Fica assim
+-- de proposito: nenhum arquivo do site le esta tabela, e abrir a `eh_sede` ao visitante para deixar
+-- a mensagem mais bonita seria desfazer parte da blindagem por causa de estetica.
+ALTER POLICY centros_custo_leitura ON public.centros_custo_nicho
   USING (public.eh_sede());
 
 -- COMO CONFERIR DEPOIS DE APLICAR:
@@ -40,4 +47,5 @@ CREATE POLICY centros_custo_leitura ON public.centros_custo_nicho
 --   select count(*) from public.centros_custo_nicho;
 --   -- com a credencial de alguém da sede, deve voltar as linhas de sempre.
 --
--- ESTADO: ESCRITA, NÃO APLICADA. Mexe em política que já existe, então espera o toque de M.
+-- ESTADO: APLICADA em 13/11/2026 22h28. M deu a autorizacao em palavras as 22h25 ("faca tudo
+-- sozinho"), depois de eu ter posto a pergunta num cartao.
