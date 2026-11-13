@@ -5,10 +5,12 @@ import Layout from '@/components/Layout'
 import catalogo from '@/lib/engenharia/catalogo.json'
 import { EQUIVALENCIAS, ESTUDOS_ENGENHARIA } from '@/lib/engenharia/plataforma'
 import { vigaConcreto, memoriaDeCalculo, AVISO_ENGENHARIA, type DadosViga } from '@/lib/engenharia/calculo'
+import MedicaoDeObra from '@/components/MedicaoDeObra'
 
-type Aba = 'calculo' | 'catalogo' | 'equivalencias' | 'estudos'
+type Aba = 'calculo' | 'medicao' | 'catalogo' | 'equivalencias' | 'estudos'
 const ABAS: { id: Aba; nome: string; dica: string }[] = [
   { id: 'calculo', nome: 'Cálculo estrutural', dica: 'Dimensiona uma viga de concreto armado e mostra toda a conta, item por item da norma' },
+  { id: 'medicao', nome: 'Medição de obra', dica: 'Mede quanto da obra está pronto e quanto se paga no período, com a lista de serviços que o cliente monta do jeito dele' },
   { id: 'catalogo', nome: 'Matérias e consultores', dica: 'Todas as matérias de engenharia e do Instituto, com ementa, normas e escolas de origem' },
   { id: 'equivalencias', nome: 'Como a plataforma muda', dica: 'O que cada tela da plataforma jurídica vira na plataforma de engenharia' },
   { id: 'estudos', nome: 'Estudos para órgãos públicos', dica: 'Estudos do Instituto em IA, cibersegurança, nuvem e superinteligência aplicadas à engenharia' },
@@ -138,6 +140,7 @@ export default function EngenhariaPage() {
         </div>
       </section>
       {aba === 'calculo' && <Calculo />}
+      {aba === 'medicao' && <MedicaoDeObra />}
       {aba === 'catalogo' && <Catalogo />}
       {aba === 'equivalencias' && (
         <section className="bg-white p-5 shadow-sm overflow-x-auto">
