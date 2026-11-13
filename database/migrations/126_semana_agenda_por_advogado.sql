@@ -102,6 +102,21 @@ AS $function$
     else jsonb_build_object('erro', 'segredo invalido') end
 $function$;
 
+-- 3. Permissao de execucao, por causa da blindagem de 13/11/2026 ----------------------------------
+-- As migracoes 135, 136 e 137 fecharam a execucao de funcao por padrao neste banco: funcao nova
+-- nasce sem permissao para ninguem. Logo, a `semana_agenda_completa` precisa dizer quem a chama, e
+-- quem a chama e o robo de sexta (service_role) e mais ninguem. Nem `anon` nem `authenticated`:
+-- a visao do escritorio inteiro nao e para o navegador, e o segredo sozinho nao seria desculpa para
+-- deixar a porta destrancada. A `semana_agenda`, por ser substituicao de funcao que ja existe,
+-- conserva as permissoes que a 135 lhe deu (authenticated e service_role).
+-- Sem `revoke` aqui de proposito: o `alter default privileges` da 135 ja faz a funcao nova nascer
+-- sem concessao a PUBLIC, e um `revoke` nesta migracao faria o conector abrir a confirmacao dele de
+-- comando destrutivo, que foi o que travou a aplicacao da 135 na primeira tentativa. Em vez de
+-- confiar nisso, confira depois de aplicar:
+--   select has_function_privilege('anon', 'public.semana_agenda_completa(text,date,integer,uuid)', 'EXECUTE');
+-- Se vier verdadeiro, ai sim entra um `revoke` em migracao propria.
+GRANT EXECUTE ON FUNCTION public.semana_agenda_completa(text, date, integer, uuid) TO service_role;
+
 -- COMO CONFERIR DEPOIS DE APLICAR:
 --   select public.semana_agenda_completa('errado') -> 'erro';   -- "segredo invalido"
 --   select public.semana_agenda_completa(null) -> 'erro';        -- "segredo invalido"
@@ -125,6 +140,7 @@ $function$;
 -- `configuracoes.cron_segredo` — exatamente como `coletor-instituto` e `perfil-julgador` já fazem.
 -- Enquanto as duas coisas não forem feitas juntas, o e-mail de sexta sai vazio.
 --
--- ESTADO: ESCRITA, NÃO APLICADA. A tentativa de aplicar foi recusada pelo verificador que me cerca
--- (trocar uma função SECURITY DEFINER que já existe é mexer em coisa viva), então ela espera o toque
--- de M no cartão. O furo descrito acima continua aberto até lá.
+-- ESTADO: APLICADA em 13/11/2026, com a aprovação de M no cartão daquele dia às 14h38. A primeira
+-- tentativa tinha sido recusada pelo verificador que me cerca (trocar uma função SECURITY DEFINER
+-- que já existe é mexer em coisa viva); a aprovação de M destravou. O bloco 3 acima foi acrescentado
+-- depois da blindagem das migrações 135 a 137, que mudou o privilégio padrão do esquema.
