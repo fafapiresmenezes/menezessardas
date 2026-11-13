@@ -91,6 +91,7 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: ShieldCheck, label: 'Superfície de ataque', href: '/superficie-de-ataque' },
     { icon: Droplets, label: 'Água dos reservatórios (ANA)', href: '/agua' },
     { icon: GraduationCap, label: 'Trilhas de estudo', href: '/trilhas' },
+    { icon: FlaskConical, label: 'Agenda de pesquisa em IA', href: '/pesquisa-ia' },
     { icon: Banknote, label: 'Royalties', href: '/royalties' },
   ] },
   { id: 'conta', titulo: 'Minha conta', bloco: 'Minha conta', nivel: 'todos', dica: 'Do seu jeito', itens: [
@@ -199,6 +200,7 @@ export const DICAS: Record<string, string> = {
   '/superficie-de-ataque': 'Mapa do que um invasor alcançaria e o que fazer em cada ponto, por enquanto com dados de exemplo',
   '/agua': 'Medição diária dos reservatórios publicada pela ANA: volume, nível e vazões, com a data em que cada número chegou',
   '/trilhas': 'Plano de estudo por nicho, montado sobre a ementa dos consultores, com a fonte de cada módulo',
+  '/pesquisa-ia': 'O que a frente de IA está tentando descobrir, como mede e o que faria abandonar cada hipótese',
   '/saude': 'A plataforma de saúde: especialidades médicas, consultores e o lastro dos prompts',
   '/geolocalizacao': 'MVP de geolocalização no próprio titular: posição, câmera como sensor de lugar, satélites e município, tudo cifrado no aparelho',
   '/honorarios': 'Honorários combinados, cobrados e recebidos, caso por caso',
