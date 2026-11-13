@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { PenLine, Trash2, Upload } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '../lib/supabase'
-import { extrairTextoPdf } from '../lib/pdf'
 import { ESCOLAS, REFERENCIAS, FORMATACAO } from '../lib/estiloPecas'
 import { lerDocx } from '../lib/docx'
 import { formatacaoFinal, type Formatacao } from '../lib/formatarPeca'
@@ -42,7 +41,13 @@ export default function EstiloEscrita() {
           await salvarFormatacao(d.formatacao, f.name)
           setFormatacao(d.formatacao)
         }
-      } else t = f.type === 'application/pdf' || nome.endsWith('.pdf') ? await extrairTextoPdf(f) : await f.text()
+      } else if (f.type === 'application/pdf' || nome.endsWith('.pdf')) {
+        // Importado só na hora: o leitor de PDF tem 294 kB e era baixado no primeiro acesso de
+        // todo mundo, inclusive de quem só ia abrir a tela de entrada. Agora ele chega quando
+        // alguém de fato envia um PDF. Todas as outras telas que leem PDF já faziam assim.
+        const { extrairTextoPdf } = await import('@/lib/pdf')
+        t = await extrairTextoPdf(f)
+      } else t = await f.text()
       setTexto(t.trim().slice(0, 60000))
       if (!titulo) setTitulo(f.name.replace(/\.[^.]+$/, '').slice(0, 120))
     } catch { setMsg('Não consegui ler o arquivo. Cole o texto no campo ou envie em Word, PDF ou TXT.') }
