@@ -32,6 +32,7 @@ const AssistentePage = lazy(() => import('@/pages/AssistentePage'))
 const ImportarImoveisPage = lazy(() => import('@/pages/ImportarImoveisPage'))
 const PrevisoesPage = lazy(() => import('@/pages/PrevisoesPage'))
 const InstitutoPage = lazy(() => import('@/pages/InstitutoPage'))
+const GeolocalizacaoPage = lazy(() => import('@/pages/GeolocalizacaoPage'))
 const LegislacaoPage = lazy(() => import('@/pages/LegislacaoPage'))
 const FornecedoresPage = lazy(() => import('@/pages/FornecedoresPage'))
 const FornecedorPage = lazy(() => import('@/pages/FornecedorPage'))
@@ -286,6 +287,10 @@ function App() {
         <Route
           path="/previsoes"
           element={isAuthenticated ? <PrevisoesPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/geolocalizacao"
+          element={isAuthenticated ? <GeolocalizacaoPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/instituto"

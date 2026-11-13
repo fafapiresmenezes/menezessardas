@@ -7,6 +7,16 @@ export interface Guia {
 }
 
 export const GUIAS: Record<string, Guia> = {
+  '/geolocalizacao': {
+    titulo: 'Como usar a geolocalização (MVP em você mesmo)',
+    passos: [
+      'Crie uma senha: ela gera a chave que cifra tudo neste aparelho. Sem ela ninguém lê, nem a plataforma.',
+      'Leia o termo e aceite. Sem o aceite nada é gravado.',
+      'Em "Onde estou", aperte "Gravar minha posição". O botão vermelho "Pausar" para na hora.',
+      'Em "Meu mapa" aparecem paradas e lugares; dê nome a cada um (casa, escritório, fórum).',
+      'Em "Exportar e apagar" você baixa tudo em arquivo aberto ou apaga por dia, por lugar ou tudo.',
+    ],
+  },
   '/inicio': {
     titulo: 'Como começar',
     passos: [
