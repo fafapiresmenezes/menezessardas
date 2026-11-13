@@ -71,7 +71,7 @@ export default function RoyaltiesPage() {
           funciona, e os números aparecem assim que ela for aplicada.
         </p>
       )}
-      {erro && <p className="text-sm text-vermelho mb-4">{erro}</p>}
+      {erro && <p className="text-sm text-critico mb-4">{erro}</p>}
 
       <h2 className="text-lg font-serif mt-8 mb-2">Em que conta o Instituto recebe</h2>
       <ul className="space-y-2 mb-4">
