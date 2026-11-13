@@ -4,6 +4,7 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { idiomaEscolhido } from '@/lib/idioma'
 import LoginPage from '@/pages/LoginPage'
 import BoasVindasPage from '@/pages/BoasVindasPage'
+const StokasticosPage = lazy(() => import('@/pages/StokasticosPage'))
 import DashboardPage from '@/pages/DashboardPage'
 const ImovelListPage = lazy(() => import('@/pages/ImovelListPage'))
 const NovoImovelPage = lazy(() => import('@/pages/NovoImovelPage'))
@@ -179,6 +180,11 @@ function App() {
           path="/boas-vindas"
           element={isAuthenticated ? <Navigate to="/inicio" /> : <BoasVindasPage />}
         />
+        <Route path="/stokasticos" element={<StokasticosPage />} />
+        <Route path="/stokasticos/biblioteca" element={<StokasticosPage />} />
+        <Route path="/stokasticos/blog" element={<StokasticosPage />} />
+        <Route path="/stokasticos/ciencia" element={<StokasticosPage />} />
+        <Route path="/stokasticos/magia" element={<StokasticosPage />} />
         <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/inicio" /> : (idiomaEscolhido() ? <LoginPage /> : <Navigate to="/boas-vindas" />)}

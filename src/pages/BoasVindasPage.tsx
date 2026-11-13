@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { IDIOMAS, definirIdioma, type Idioma } from '@/lib/idioma'
 import Marca from '@/components/Marca'
 
@@ -46,14 +46,14 @@ export default function BoasVindasPage() {
         </div>
         <p className="text-xs text-white/40 mt-8">{DICA.pt}</p>
       </div>
-      <button
-        type="button"
+      <Link
+        to="/stokasticos"
         aria-label="Stokasticos — escola de magia do caos dedicada a Peter J. Carroll"
         title="Stokasticos — escola de magia do caos dedicada a Peter J. Carroll"
-        className="fixed right-2 bottom-2 text-white/10 hover:text-white/70 transition text-[11px] tracking-widest font-serif cursor-default select-none"
+        className="fixed right-2 bottom-2 text-white/10 hover:text-white/70 transition text-[11px] tracking-widest font-serif no-underline select-none"
       >
         ☉ → ∞ +
-      </button>
+      </Link>
     </div>
   )
 }
