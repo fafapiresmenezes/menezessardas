@@ -1,0 +1,1 @@
+const o=200,C=15e3,S=3,e=5e3,A=s=>s.toLocaleString("pt-BR",{style:"currency",currency:"BRL"}),O=()=>`instalação de ${A(15e3)} em 3 vezes sem juros e ${A(200)} por usuário ao mês`;export{o as P,S as a,C as b,e as c,O as r};
