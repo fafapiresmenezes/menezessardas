@@ -16,6 +16,7 @@ const CotasQuanticasPage = lazy(() => import('@/pages/CotasQuanticasPage'))
 const RoyaltiesPage = lazy(() => import('@/pages/RoyaltiesPage'))
 const MedicoesContratosPage = lazy(() => import('@/pages/MedicoesContratosPage'))
 const SuperficieAtaquePage = lazy(() => import('@/pages/SuperficieAtaquePage'))
+const AguaPage = lazy(() => import('@/pages/AguaPage'))
 import DashboardPage from '@/pages/DashboardPage'
 const ImovelListPage = lazy(() => import('@/pages/ImovelListPage'))
 const NovoImovelPage = lazy(() => import('@/pages/NovoImovelPage'))
@@ -186,6 +187,10 @@ function App() {
         <Route
           path="/superficie-de-ataque"
           element={isAuthenticated ? <SuperficieAtaquePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/agua"
+          element={isAuthenticated ? <AguaPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/ferramentas"

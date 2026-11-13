@@ -28,11 +28,11 @@
 // "on conflict do nothing". Rodar duas vezes o mesmo período insere zero.
 //
 // MODOS:
-//   conferir  (precisa do segredo) — só bate na ANA e descreve o que voltou. Não grava nada.
-//   coletar   (precisa do segredo) — grava reservatórios e medições.
+//   conferir  (aberto, diagnóstico) — só bate na ANA e descreve o que voltou. Não grava nada.
+//   coletar   (precisa do segredo)  — grava reservatórios e medições.
 //   serie     (aberto, só leitura)  — devolve a série de um reservatório para o gráfico da tela.
 //
-// GUARDA: cabeçalho x-cron-secret conferido contra configuracoes.cron_segredo, igual a
+// GUARDA: cabeçalho x-cron-secret conferido contra configuracoes (chave 'cron_segredo'), igual a
 // gdelt-coleta. O modo "serie" é leitura de dado público e não exige segredo.
 //
 // Deploy: supabase functions deploy ana-agua
@@ -463,8 +463,9 @@ function servico() {
 export async function segredoOk(req: Request): Promise<boolean> {
   const dado = req.headers.get('x-cron-secret')
   if (!dado) return false
-  const { data } = await servico().from('configuracoes').select('cron_segredo').limit(1).maybeSingle()
-  const esperado = (data as { cron_segredo?: string } | null)?.cron_segredo
+  // configuracoes é chave/valor (chave, valor), igual a gdelt-coleta e aos robôs do CNJ.
+  const { data } = await servico().from('configuracoes').select('valor').eq('chave', 'cron_segredo').maybeSingle()
+  const esperado = (data as { valor?: string } | null)?.valor
   return !!esperado && dado === esperado
 }
 
