@@ -95,6 +95,7 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: Ruler, label: 'Régua de acerto dos modelos', href: '/regua' },
     { icon: Target, label: 'Escolha do mercado', href: '/escolha-do-mercado' },
     { icon: Coins, label: 'Mapa de receita', href: '/mapa-de-receita' },
+    { icon: BookOpen, label: 'Caderno de produtos', href: '/caderno-de-produtos' },
     { icon: Banknote, label: 'Royalties', href: '/royalties' },
   ] },
   { id: 'conta', titulo: 'Minha conta', bloco: 'Minha conta', nivel: 'todos', dica: 'Do seu jeito', itens: [
@@ -206,6 +207,7 @@ export const DICAS: Record<string, string> = {
   '/pesquisa-ia': 'O que a frente de IA está tentando descobrir, como mede e o que faria abandonar cada hipótese',
   '/regua': 'Quanto cada modelo erra fora da amostra e se ele bate o palpite simples de repetir o último valor',
   '/escolha-do-mercado': 'Matriz com os mercados candidatos pontuados, a fonte do dado de cada um e o que derruba cada um',
+  '/caderno-de-produtos': 'Os 21 produtos do Instituto com preço médio de referência, entregas e a chancela sugerida de cada um',
   '/mapa-de-receita': 'Cada produto com quem compra, o preço quando já foi decidido, o custo de atender e o que falta para vender',
   '/saude': 'A plataforma de saúde: especialidades médicas, consultores e o lastro dos prompts',
   '/geolocalizacao': 'MVP de geolocalização no próprio titular: posição, câmera como sensor de lugar, satélites e município, tudo cifrado no aparelho',

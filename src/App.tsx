@@ -22,6 +22,7 @@ const PesquisaIaPage = lazy(() => import('@/pages/PesquisaIaPage'))
 const ReguaPage = lazy(() => import('@/pages/ReguaPage'))
 const EscolhaDoMercadoPage = lazy(() => import('@/pages/EscolhaDoMercadoPage'))
 const MapaDeReceitaPage = lazy(() => import('@/pages/MapaDeReceitaPage'))
+const CadernoDeProdutosPage = lazy(() => import('@/pages/CadernoDeProdutosPage'))
 import DashboardPage from '@/pages/DashboardPage'
 const ImovelListPage = lazy(() => import('@/pages/ImovelListPage'))
 const NovoImovelPage = lazy(() => import('@/pages/NovoImovelPage'))
@@ -216,6 +217,10 @@ function App() {
         <Route
           path="/mapa-de-receita"
           element={isAuthenticated ? <MapaDeReceitaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/caderno-de-produtos"
+          element={isAuthenticated ? <CadernoDeProdutosPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/ferramentas"

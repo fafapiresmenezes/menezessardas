@@ -3,6 +3,8 @@ import { IDIOMAS, type Idioma } from '@/lib/idioma'
 import { trocarIdioma, useTexto, textoEm, chaveIdioma } from '@/lib/i18n'
 import Marca from '@/components/Marca'
 import Vertentes from '@/components/Vertentes'
+import Produtos from '@/components/Produtos'
+import Doacoes from '@/components/Doacoes'
 
 // Tela anterior ao login (pedido de M, 13/11/2026): o visitante escolhe o idioma e entra nele.
 // A escolha vale de verdade: a tela de entrada, a criação de conta e a recuperação de senha
@@ -39,9 +41,15 @@ export default function BoasVindasPage() {
         </div>
         <p className="text-xs text-white/40 mt-8">{t('boasVindas.dica')}</p>
 
+        {/* Pedido de M (13/11/2026 21:35): a aba Produtos vem ACIMA do quadro das vertentes, e o
+            espaço de doação depois. A plataforma é um dos produtos: as vertentes logo abaixo. */}
+        <Produtos />
+
         {/* Pedido de M (13/11/2026): todas as vertentes aparecem aqui, na língua escolhida, mesmo
             as que ainda estão em desenvolvimento. Nada abre sem senha. */}
         <Vertentes />
+
+        <Doacoes />
       </div>
       <Link
         to="/stokasticos"

@@ -9,6 +9,8 @@ import { esquecerEscritorio } from '@/lib/equipe'
 import { useTexto } from '@/lib/i18n'
 import SeletorIdioma from '@/components/SeletorIdioma'
 import Vertentes from '@/components/Vertentes'
+import Produtos from '@/components/Produtos'
+import Doacoes from '@/components/Doacoes'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -257,7 +259,9 @@ export default function LoginPage() {
         {/* Pedido de M (13/11/2026): depois de escolher a lingua, a pessoa tem de ver TODAS as
             vertentes do Instituto, nao so a juridica, mesmo as que estao em desenvolvimento.
             Nada aqui abre sem senha: cada item leva de volta a esta mesma tela de entrada. */}
+        <Produtos />
         <Vertentes />
+        <Doacoes />
       </div>
     </main>
   )

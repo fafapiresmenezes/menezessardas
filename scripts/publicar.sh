@@ -52,8 +52,13 @@ sed "s#\"src\": \"icone-#\"src\": \"$CDN/icone-#g" dist-prod/manifest.webmanifes
 # O trilho vai junto: a tela /lastro o baixa para recalcular a corrente no navegador de quem
 # duvida. Sem ele em theye.club, a tela cai na reserva pelo jsDelivr, que atrasa até 12 h.
 cp dist-prod/robots.txt dist-prod/sitemap.xml dist-prod/sw.js dist-prod/trilho-v4.jsonl "$PASTA/"
+# Os cabeçalhos de segurança (pedido de M, 13/11/2026 21:38: "blinde"). Sem ESTE arquivo no envio,
+# a Vercel serve o site sem Content-Security-Policy, sem HSTS e sem anti-moldura: foi o que estava
+# acontecendo até 13/11/2026, porque o vercel.json existia no repositório e nunca era enviado.
+# Conferido na implantação dpl_HUsuJzedrSx3TMNgHarkfVu4Tz6X, que tinha só cinco arquivos.
+cp deploy/vercel.json "$PASTA/"
 cp "$SAIDA" "$PASTA/index.html"
 
 echo "gh-pages: $COMMIT"
 echo "index.html pronto: $SAIDA (enviar este arquivo exatamente como está)"
-echo "arquivos da Vercel: $PASTA (index.html, manifest.webmanifest, robots.txt, sitemap.xml, sw.js)"
+echo "arquivos da Vercel: $PASTA (index.html, manifest.webmanifest, robots.txt, sitemap.xml, sw.js, trilho-v4.jsonl, vercel.json)"
