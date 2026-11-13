@@ -19,6 +19,7 @@ const SuperficieAtaquePage = lazy(() => import('@/pages/SuperficieAtaquePage'))
 const AguaPage = lazy(() => import('@/pages/AguaPage'))
 const TrilhasPage = lazy(() => import('@/pages/TrilhasPage'))
 const PesquisaIaPage = lazy(() => import('@/pages/PesquisaIaPage'))
+const ReguaPage = lazy(() => import('@/pages/ReguaPage'))
 import DashboardPage from '@/pages/DashboardPage'
 const ImovelListPage = lazy(() => import('@/pages/ImovelListPage'))
 const NovoImovelPage = lazy(() => import('@/pages/NovoImovelPage'))
@@ -201,6 +202,10 @@ function App() {
         <Route
           path="/pesquisa-ia"
           element={isAuthenticated ? <PesquisaIaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/regua"
+          element={isAuthenticated ? <ReguaPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/ferramentas"
