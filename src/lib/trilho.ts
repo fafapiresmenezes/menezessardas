@@ -108,3 +108,68 @@ export async function conferirCorrente(elos: Elo[]): Promise<Conferencia> {
     ultimoHash: esperado,
   }
 }
+
+/* ──────────────────────────────────────────────────────────────────────────────
+ * Passo C13, tarefa 3: o painel de avanço.
+ *
+ * O painel diz o que a CORRENTE registra, e só isso. A porcentagem do plano vive no arquivo do
+ * plano, não na corrente, e por isso não é calculada aqui: inventar uma conta a partir dos elos
+ * daria um número que ninguém pode conferir, que é o oposto do que esta tela existe para fazer.
+ * O que a corrente sabe dizer, e é bastante: quantas voltas houve, quais passos foram registrados,
+ * e o que cada passo registrou como ainda pendente — nas palavras do próprio elo.
+ * ────────────────────────────────────────────────────────────────────────────── */
+
+export interface PassoRegistrado {
+  /** Código do passo no plano: A26, C7, D1… */
+  codigo: string
+  /** O campo `passo` do elo, como está escrito. */
+  passo: string
+  titulo?: string
+  quando?: string
+  /** O que o próprio elo declarou que falta. Ausente quer dizer que o elo não declarou nada. */
+  pendente?: string
+  hash: string
+  /** Posição do elo na corrente, contando de 1. */
+  n: number
+}
+
+export interface Avanco {
+  /** Voltas registradas na corrente, inclusive marcos como a emissão do plano. */
+  voltas: number
+  /** Um por passo do plano, na ordem em que apareceram; se um passo voltou, vale o último elo. */
+  passos: PassoRegistrado[]
+  /** Os passos cujo elo declarou pendência, com o texto da pendência. */
+  comPendencia: PassoRegistrado[]
+  ultimaVolta?: string
+}
+
+const CODIGO_DE_PASSO = /^([A-Z])(\d+)\b/
+
+export function avanco(elos: Elo[]): Avanco {
+  const porCodigo = new Map<string, PassoRegistrado>()
+  elos.forEach((elo, i) => {
+    const passo = String(elo.passo ?? '')
+    const achado = CODIGO_DE_PASSO.exec(passo)
+    if (!achado) return
+    const codigo = achado[1] + achado[2]
+    const titulo = typeof elo.titulo === 'string' ? elo.titulo : undefined
+    const pendente = typeof elo.pendente === 'string' && elo.pendente.trim() ? elo.pendente : undefined
+    porCodigo.set(codigo, {
+      codigo,
+      passo,
+      titulo,
+      quando: typeof elo.quando === 'string' ? elo.quando : undefined,
+      pendente,
+      hash: elo.hash,
+      n: i + 1,
+    })
+  })
+  const passos = [...porCodigo.values()].sort((a, b) => a.n - b.n)
+  const ultimo = elos[elos.length - 1]
+  return {
+    voltas: elos.length,
+    passos,
+    comPendencia: passos.filter(p => p.pendente),
+    ultimaVolta: typeof ultimo?.quando === 'string' ? ultimo.quando : undefined,
+  }
+}

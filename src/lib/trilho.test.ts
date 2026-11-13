@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'fs'
-import { corpoCanonico, conferirCorrente, lerElos, anteriorDe, recalcular, GENESE } from './trilho'
+import { corpoCanonico, conferirCorrente, lerElos, anteriorDe, recalcular, GENESE, avanco, type Elo } from './trilho'
 
 // Passo T2: a conferência da corrente roda no navegador, e quem confere não pode depender de mim.
 // Este teste roda contra o arquivo DE VERDADE que vai publicado em public/trilho-v4.jsonl.
@@ -53,5 +53,48 @@ describe('a corrente do trilho publicada', () => {
     expect(await recalcular(alvo)).toBe(alvo.hash)
     const mexido = { ...alvo, passo: `${alvo.passo} ` }
     expect(await recalcular(mexido)).not.toBe(alvo.hash)
+  })
+})
+
+describe('painel de avanço, feito só do que a corrente registra', () => {
+  const elos = [
+    { passo: 'EMISSAO', hash: 'h0' },
+    { passo: 'C6-grafo-liga-tudo-parcial', titulo: 'C6 - Grafo', quando: '2026-11-13T17:00:00Z', pendente: 'faltam as coletas', hash: 'h1' },
+    { passo: 'C7', titulo: 'C7 - Régua', quando: '2026-11-13T19:00:00Z', pendente: 'nenhuma série coletada', hash: 'h2' },
+    { passo: 'C7', titulo: 'C7 - Régua, segunda volta', quando: '2026-11-13T20:00:00Z', hash: 'h3' },
+  ] as unknown as Elo[]
+
+  it('conta as voltas e lista um registro por passo', () => {
+    const a = avanco(elos)
+    expect(a.voltas).toBe(4)
+    expect(a.passos.map(p => p.codigo)).toEqual(['C6', 'C7'])
+  })
+
+  it('passo registrado duas vezes vale pelo elo mais recente', () => {
+    const c7 = avanco(elos).passos.find(p => p.codigo === 'C7')!
+    expect(c7.titulo).toBe('C7 - Régua, segunda volta')
+    expect(c7.pendente).toBeUndefined()
+  })
+
+  it('marco sem código de passo não entra na lista de passos', () => {
+    expect(avanco(elos).passos.some(p => p.passo === 'EMISSAO')).toBe(false)
+  })
+
+  it('a pendência sai nas palavras do próprio elo, não nas minhas', () => {
+    const a = avanco(elos)
+    expect(a.comPendencia.map(p => p.codigo)).toEqual(['C6'])
+    expect(a.comPendencia[0].pendente).toBe('faltam as coletas')
+  })
+
+  it('não existe porcentagem aqui: a conta do plano não vive na corrente', () => {
+    expect(Object.keys(avanco(elos))).toEqual(['voltas', 'passos', 'comPendencia', 'ultimaVolta'])
+  })
+
+  it('a corrente de verdade publicada tem passos e pendências legíveis', () => {
+    const a = avanco(lerElos(readFileSync('public/trilho-v4.jsonl', 'utf8')))
+    expect(a.voltas).toBeGreaterThan(40)
+    expect(a.passos.length).toBeGreaterThan(20)
+    expect(a.comPendencia.length).toBeGreaterThan(0)
+    for (const p of a.comPendencia) expect(p.pendente!.length).toBeGreaterThan(20)
   })
 })

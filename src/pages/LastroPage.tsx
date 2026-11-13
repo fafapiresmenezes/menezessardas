@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Marca from '@/components/Marca'
-import { conferirCorrente, lerElos, GENESE, type Conferencia } from '@/lib/trilho'
+import { avanco, conferirCorrente, lerElos, GENESE, type Avanco, type Conferencia } from '@/lib/trilho'
 
 /**
  * Passo T2, tarefa 3: a tela "Conferir o lastro", escrita para leigo.
@@ -27,8 +27,17 @@ const ONDE = [
   'https://fafapiresmenezes.github.io/menezessardas/trilho-v4.jsonl',
 ]
 
+/** 13/11/2026 19:04 → "13/11/2026, 19h04". */
+function dataHoraBr(iso: string): string {
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return iso
+  const dois = (n: number) => String(n).padStart(2, '0')
+  return `${dois(d.getUTCDate())}/${dois(d.getUTCMonth() + 1)}/${d.getUTCFullYear()}, ${dois(d.getUTCHours())}h${dois(d.getUTCMinutes())}`
+}
+
 export default function LastroPage() {
   const [conf, setConf] = useState<Conferencia | null>(null)
+  const [av, setAv] = useState<Avanco | null>(null)
   const [erro, setErro] = useState('')
 
   useEffect(() => {
@@ -37,7 +46,9 @@ export default function LastroPage() {
         try {
           const r = await fetch(onde)
           if (!r.ok) continue
-          setConf(await conferirCorrente(lerElos(await r.text())))
+          const elos = lerElos(await r.text())
+          setAv(avanco(elos))
+          setConf(await conferirCorrente(elos))
           return
         } catch { /* tenta o próximo */ }
       }
@@ -64,7 +75,7 @@ export default function LastroPage() {
         {erro && <p role="alert" className="mt-8 border border-white/30 p-4 text-sm">{erro}</p>}
         {!conf && !erro && <p className="mt-8 text-sm text-white/60">Baixando o registro e recalculando…</p>}
 
-        {conf && (
+        {conf && av && (
           <>
             <div className="mt-8 border border-white/20 p-5" data-testid="resumo-lastro">
               <p className="text-sm text-white/60">Registros conferidos</p>
@@ -91,6 +102,44 @@ export default function LastroPage() {
                   apontam para o código do registro anterior — e é isso que impede trocar um registro
                   pelo outro. Fica dito aqui em vez de escondido numa conta redonda.
                 </p>
+              </div>
+            )}
+
+            <h2 className="text-lg font-serif mt-10 mb-3">Até onde o plano andou</h2>
+            <div className="border border-white/20 p-5" data-testid="painel-avanco">
+              <p className="text-sm text-white/60">Passos do plano registrados na corrente</p>
+              <p className="text-3xl font-serif mt-1">{av.passos.length}</p>
+              <p className="mt-3 text-sm text-white/70">
+                em <strong>{av.voltas}</strong> voltas de trabalho
+                {av.ultimaVolta && <> · última em {dataHoraBr(av.ultimaVolta)}</>}
+              </p>
+              <p className="mt-4 text-xs text-white/50">
+                Este painel conta o que a corrente registra, e nada além disso. A porcentagem do
+                plano vive no arquivo do plano, não aqui: um número tirado de conta própria não dá
+                para o leitor conferir, e é justamente isso que esta página existe para evitar.
+              </p>
+            </div>
+
+            {av.comPendencia.length > 0 && (
+              <div className="mt-5" data-testid="pendencias">
+                <p className="text-sm text-white/80">
+                  <strong>{av.comPendencia.length}</strong>{' '}
+                  {av.comPendencia.length === 1 ? 'passo registrou pendência' : 'passos registraram pendência'},
+                  nas palavras do próprio registro:
+                </p>
+                <ul className="mt-3 space-y-3 text-sm text-white/70">
+                  {av.comPendencia.map(p => (
+                    <li key={p.codigo} className="border-l-2 border-white/30 pl-4">
+                      <span
+                        className="text-white/90"
+                        title={`Registro número ${p.n} da corrente, código ${p.hash.slice(0, 12)}…`}
+                      >
+                        {p.titulo ?? p.passo}
+                      </span>
+                      <span className="block mt-1">{p.pendente}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
 
