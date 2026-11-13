@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { mensagemAmigavel } from '@/lib/erros'
 import { useNavigate } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
-import { entrarDemo } from '@/lib/authDemo'
 import Marca from '@/components/Marca'
 import { NOME_PLATAFORMA } from '@/lib/plataforma'
 import { marcaPorDominio, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
@@ -52,12 +51,8 @@ export default function LoginPage() {
     setCarregando(true)
 
     if (!supabaseConfigurado) {
-      if (entrarDemo(email, senha)) {
-        navigate('/inicio')
-        window.location.reload()
-      } else {
-        setErro('E-mail ou senha incorretos.')
-      }
+      // Modo demonstração sem senha foi desligado (pedido de M, 13/11/2026). Em produção a plataforma exige Supabase.
+      setErro('A plataforma não está configurada para entrar neste ambiente. Entre pelo endereço oficial.')
       setCarregando(false)
       return
     }
@@ -142,7 +137,7 @@ export default function LoginPage() {
             <div role="status" className="mb-5 p-3 bg-atencaoFundo border-l-2 border-atencao text-atencao text-sm">
               {supabaseConfigurado
                 ? 'Esqueceu a senha? Peça a uma pessoa administradora da sua equipe uma senha provisória (menu Equipe). Depois de entrar, troque-a em Configurações → Senha.'
-                : 'Na demonstração, entre com admin@exemplo.com e a senha senha123.'}
+                : 'Entrada exige senha válida da plataforma. Fale com a administração.'}
             </div>
           )}
 

@@ -1,8 +1,9 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
 import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
-import { sessaoDemoAtiva } from '@/lib/authDemo'
+import { idiomaEscolhido } from '@/lib/idioma'
 import LoginPage from '@/pages/LoginPage'
+import BoasVindasPage from '@/pages/BoasVindasPage'
 import DashboardPage from '@/pages/DashboardPage'
 const ImovelListPage = lazy(() => import('@/pages/ImovelListPage'))
 const NovoImovelPage = lazy(() => import('@/pages/NovoImovelPage'))
@@ -90,7 +91,8 @@ function App() {
 
   useEffect(() => {
     if (!supabaseConfigurado) {
-      setIsAuthenticated(sessaoDemoAtiva())
+      // Sem Supabase configurado, ninguém entra. M (13/11/2026): "Não deixe ninguém sem senha acessar nada."
+      setIsAuthenticated(false)
       setIsLoading(false)
       return
     }
@@ -174,8 +176,12 @@ function App() {
           element={isAuthenticated ? <HonorariosPage /> : <Navigate to="/login" />}
         />
         <Route
+          path="/boas-vindas"
+          element={isAuthenticated ? <Navigate to="/inicio" /> : <BoasVindasPage />}
+        />
+        <Route
           path="/login"
-          element={isAuthenticated ? <Navigate to="/inicio" /> : <LoginPage />}
+          element={isAuthenticated ? <Navigate to="/inicio" /> : (idiomaEscolhido() ? <LoginPage /> : <Navigate to="/boas-vindas" />)}
         />
         <Route
           path="/inicio"
@@ -369,8 +375,8 @@ function App() {
           path="/settings"
           element={isAuthenticated ? <ConfiguraçõesPage /> : <Navigate to="/login" />}
         />
-        <Route path="/" element={<Navigate to={isAuthenticated ? "/inicio" : "/login"} />} />
-        <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />
+        <Route path="/" element={<Navigate to={isAuthenticated ? "/inicio" : (idiomaEscolhido() ? "/login" : "/boas-vindas")} />} />
+        <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : (idiomaEscolhido() ? "/login" : "/boas-vindas")} replace />} />
       </Routes>
       </Suspense>
       </ProtecaoRotas>
