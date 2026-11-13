@@ -25,6 +25,15 @@ export const GUIAS: Record<string, Guia> = {
       'Em "Matérias e consultores", busque por matéria ou pela norma (por exemplo, NBR 6118).',
     ],
   },
+  '/saude': {
+    titulo: 'Como usar a Saúde',
+    passos: [
+      'Esta é a plataforma de saúde, ainda em demonstração. Ela não substitui consulta nem decisão do médico assistente.',
+      'Em "Especialidades e consultores", abra uma especialidade para ver os módulos da residência, as diretrizes e o prompt do consultor.',
+      'Use "Copiar prompt" para levar o consultor ao assistente. Cada prompt tem o número do elo da corrente que o lastreia.',
+      'Em "Conferir o lastro", a corrente inteira é recalculada no seu navegador: se algum prompt mudou, a tela diz em qual elo.',
+    ],
+  },
   '/meu-dia': {
     titulo: 'Como usar o Meu dia',
     passos: [
