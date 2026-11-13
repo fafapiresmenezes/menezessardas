@@ -5,6 +5,7 @@ import Vazio from '@/components/Vazio'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { UserCheck, History, RefreshCw } from 'lucide-react'
+import { meuAlcance, filtrarPorUsuario } from '@/lib/hierarquia'
 
 type Certidao = { emissor: string; cadastro: string; situacao: string; descricao: string }
 type Resultado = {
@@ -21,7 +22,7 @@ type Resultado = {
   proximaEm?: string
 }
 // Passo 26: histórico de checagens gravado no banco; reconsulta automática a cada 90 dias.
-type Historico = { id: number; cnpj: string; nome: string | null; risco: string; alertas: string[]; consultado_em: string; automatica: boolean; risco_anterior: string | null; mudou: boolean }
+type Historico = { id: number; cnpj: string; nome: string | null; risco: string; alertas: string[]; consultado_em: string; automatica: boolean; risco_anterior: string | null; mudou: boolean; usuario_id: string | null }
 const fmtCnpj = (c: string) => c.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
 const proxima = (iso: string) => new Date(new Date(iso).getTime() + 90 * 86400000)
 
@@ -33,11 +34,17 @@ export default function KycPage() {
   const [params] = useSearchParams()
   const [cnpj, setCnpj] = useState(() => { const d = params.get('doc'); if (d) return d; try { return localStorage.getItem('lsm-kyc-cnpj') ?? '' } catch { return '' } }) // Passo 191
   const [estado, setEstado] = useState<{ carregando?: boolean; erro?: string; r?: Resultado }>({})
-  const [historico, setHistorico] = useState<Historico[]>([])
+  const [todoHistorico, setTodoHistorico] = useState<Historico[]>([])
+  const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
+  // Privacidade (pedido do M, 12/11/2026): cada advogado só vê as próprias checagens; sócios e gestor veem todas.
+  const historico = alcance && !alcance.veTudo ? filtrarPorUsuario(todoHistorico, alcance) : todoHistorico
   const [msgRecon, setMsgRecon] = useState('')
-  const carregarHistorico = () => supabase.from('checagens_kyc').select('id,cnpj,nome,risco,alertas,consultado_em,automatica,risco_anterior,mudou').order('consultado_em', { ascending: false }).limit(50)
-    .then(({ data }) => setHistorico((data ?? []) as Historico[]))
-  useEffect(() => { carregarHistorico() }, [])
+  const carregarHistorico = () => supabase.from('checagens_kyc').select('id,cnpj,nome,risco,alertas,consultado_em,automatica,risco_anterior,mudou,usuario_id').order('consultado_em', { ascending: false }).limit(50)
+    .then(({ data }) => setTodoHistorico((data ?? []) as Historico[]))
+  useEffect(() => {
+    carregarHistorico()
+    meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true }))
+  }, [])
   const reconsultar = async () => {
     setMsgRecon('Reconsultando as contrapartes já checadas…')
     const { data, error } = await supabase.functions.invoke('kyc', { body: { reconsultar: true } })

@@ -50,6 +50,14 @@ export function filtrarPorHierarquia<T extends { responsavel_id?: string | null 
   return itens.filter(i => podeVer(viewer, i.responsavel_id ?? null))
 }
 
+/** Variante para tabelas que marcam o dono em usuario_id (checagens KYC, perfis de cliente, biblioteca pessoal). */
+export function filtrarPorUsuario<T extends { usuario_id?: string | null }>(
+  itens: T[],
+  viewer: { id: string; cargo: Cargo | null; admin?: boolean },
+): T[] {
+  return itens.filter(i => podeVer(viewer, i.usuario_id ?? null))
+}
+
 function limpar(mapa: unknown): MapaCargos {
   if (!mapa || typeof mapa !== 'object') return {}
   const saida: MapaCargos = {}
