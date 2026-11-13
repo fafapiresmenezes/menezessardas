@@ -46,6 +46,14 @@ export default function BoasVindasPage() {
         </div>
         <p className="text-xs text-white/40 mt-8">{DICA.pt}</p>
       </div>
+      <button
+        type="button"
+        aria-label="Escola de magia do caos dedicada a Peter Carroll"
+        title="Escola de magia do caos dedicada a Peter Carroll"
+        className="fixed right-2 bottom-2 text-white/10 hover:text-white/70 transition text-[11px] tracking-widest font-serif cursor-default select-none"
+      >
+        ☉ → ∞ +
+      </button>
     </div>
   )
 }
