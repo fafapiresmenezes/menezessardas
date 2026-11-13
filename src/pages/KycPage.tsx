@@ -6,6 +6,7 @@ import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { UserCheck, History, RefreshCw } from 'lucide-react'
 import { meuAlcance, filtrarPorUsuario } from '@/lib/hierarquia'
+import { irParaCampo } from '@/lib/foco'
 
 type Certidao = { emissor: string; cadastro: string; situacao: string; descricao: string }
 type Resultado = {
@@ -143,7 +144,7 @@ export default function KycPage() {
           <p className="text-sm text-grafite-claro mt-1">Cada checagem fica guardada com data e resultado. O robô reconsulta cada contraparte 90 dias depois da última checagem e avisa em Alertas quando o status muda.</p>
           {msgRecon && <p role="status" className="text-sm mt-2" data-testid="kyc-msg-recon">{msgRecon}</p>}
           {historico.length > 0 && <input value={buscaHist} onChange={e => setBuscaHist(e.target.value)} placeholder="Procurar no histórico (nome ou CNPJ)" aria-label="Procurar no histórico" data-testid="kyc-busca" className="mt-3 border px-3 py-2 min-h-[44px] w-full max-w-md" />}
-          {historico.length === 0 ? <Vazio testid="kyc-historico-vazio" titulo="Nenhuma checagem guardada ainda" texto="Digite um CPF ou CNPJ acima e clique em Checar: o resultado fica guardado aqui com data." /> : (
+          {historico.length === 0 ? <Vazio testid="kyc-historico-vazio" titulo="Nenhuma checagem guardada ainda" texto="Escreva o CPF ou o CNPJ da contraparte e clique em Checar: o resultado fica guardado aqui, com data e risco." acao={{ rotulo: 'Fazer a primeira checagem', onClick: () => irParaCampo('[data-testid="kyc-busca"]'), dica: 'Leva o cursor ao campo onde se escreve o CPF ou o CNPJ a checar' }} /> : (
             <table className="w-full text-sm mt-3">
               <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite-claro"><th className="py-1">Data</th><th>Contraparte</th><th>Risco</th><th>Próxima reconsulta</th></tr></thead>
               <tbody className="divide-y divide-navy/10">

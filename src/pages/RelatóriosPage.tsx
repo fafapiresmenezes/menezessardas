@@ -240,7 +240,7 @@ export default function RelatóriosPage() {
               Compromissos por natureza
             </h2>
             {porTipoAlerta.length === 0 ? (
-              <Vazio titulo="Nenhum compromisso neste horizonte" texto="Escolha um horizonte maior ou cadastre prazos nos contratos." />
+              <Vazio titulo="Nenhum compromisso neste horizonte" texto="Nenhum vencimento cai dentro do período escolhido. Escolha um horizonte maior, ou cadastre as datas nos contratos." acao={{ rotulo: 'Ver os contratos', para: '/imoveis', dica: 'Abre a carteira de imóveis para conferir e cadastrar as datas dos contratos' }} />
             ) : (
               <div className="space-y-3">
                 {porTipoAlerta.map(([tipo, n]) => (
@@ -288,7 +288,7 @@ export default function RelatóriosPage() {
             )}
             <p className="text-sm text-grafite-claro mb-4">Horas lançadas (tela Horas) e honorários dos casos (tela Honorários), consolidados. Rentabilidade do cliente = recebido menos o custo das horas.</p>
             {clientes.length === 0 && socios.length === 0 ? (
-              <p className="text-sm text-grafite-claro">Nada lançado ainda. Lance horas em Horas e honorários em Honorários; esta tabela se monta sozinha.</p>
+              <p className="text-sm text-grafite-claro">Nada lançado ainda. Lance as horas em Horas trabalhadas e os valores em Honorários; esta tabela se monta sozinha.</p>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="overflow-x-auto">

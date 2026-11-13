@@ -20,6 +20,7 @@ import {
   slaCumprido,
 } from '@/lib/fornecedores'
 import { Plus, AlertOctagon, AlertTriangle, ShieldCheck, Gauge } from 'lucide-react'
+import Vazio from '@/components/Vazio'
 
 const rotuloCategoria = Object.fromEntries(CATEGORIAS.map(c => [c.valor, c.rotulo])) as Record<CategoriaFornecedor, string>
 
@@ -200,9 +201,8 @@ export default function FornecedoresPage() {
           {carregando ? (
             <p className="text-grafite-claro">Carregando…</p>
           ) : lista.length === 0 ? (
-            <div className="bg-white p-12 text-center shadow-sm border-l-4 border-grafite-claro/30">
-              <p className="text-grafite-claro font-medium mb-2">Nenhum fornecedor cadastrado</p>
-              <p className="text-sm text-grafite-claro">Comece adicionando um prestador de serviço para rastrear sua conformidade.</p>
+            <div className="bg-white shadow-sm border-l-4 border-grafite-claro/30">
+              <Vazio testid="fornecedores-vazio" titulo="Nenhum fornecedor cadastrado" texto="Cadastre o primeiro prestador de serviço para acompanhar certidões, metas de atendimento e conformidade." acao={{ rotulo: 'Cadastrar fornecedor', onClick: () => setNovo(true), dica: 'Abre o formulário para cadastrar o primeiro prestador de serviço' }} />
             </div>
           ) : (
             <div className="grid md:grid-cols-2 gap-4">

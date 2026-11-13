@@ -142,7 +142,7 @@ describe('Trilha de auditoria', () => {
     expect(screen.queryByTestId('msg-exportacao')).toBeNull()
     cleanup(); eventos = []; verificacao = { integra: true, total: 0, selo: '' }
     render(<TrilhaPage />)
-    await waitFor(() => expect(screen.getByText('Nenhum registro ainda. Cadastre um imóvel ou contrato para iniciar a trilha.')).toBeTruthy())
+    await waitFor(() => expect(screen.getByText('Nenhum registro ainda')).toBeTruthy())
     expect(screen.queryByTestId('filtros-trilha')).toBeNull()
     expect(screen.getByTestId('estado-selo').textContent).toContain('Nenhum selo ainda.')
     expect((screen.getByText('Ancorar selo agora').closest('button') as HTMLButtonElement).disabled).toBe(true)

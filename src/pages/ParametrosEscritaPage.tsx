@@ -470,14 +470,14 @@ export default function ParametrosEscritaPage() {
 
   if (carregando) {
     return (
-      <Layout title="Parâmetros de escrita de peças">
+      <Layout title="Parâmetros de escrita">
         <p className="text-grafite text-sm">Carregando parâmetros…</p>
       </Layout>
     )
   }
 
   return (
-    <Layout title="Parâmetros de escrita de peças">
+    <Layout title="Parâmetros de escrita">
       <div className="max-w-3xl">
 
         {/* Painel de boas-vindas */}

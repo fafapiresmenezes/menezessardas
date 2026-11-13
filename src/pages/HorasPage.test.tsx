@@ -25,7 +25,7 @@ const mes = new Date().toISOString().slice(0, 7)
 // Apagar agora pede confirmação: nos testes, a pessoa sempre confirma.
 beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true) })
 
-describe('Horas e honorários', () => {
+describe('Horas trabalhadas', () => {
   beforeEach(() => { cleanup(); insert.mockClear(); upsert.mockClear(); del.mockClear(); rpc.mockClear(); localStorage.clear(); funcao = 'admin'
     lista = [
       { id: 'l1', data: `${mes}-03`, cliente: 'Ana', descricao: 'Petição', minutos: 90, valor_hora: '400', faturavel: true },

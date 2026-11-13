@@ -11,6 +11,7 @@ import { CalendarClock } from 'lucide-react'
 import { lerNumero } from '@/lib/numero'
 import { escaparHtml } from '@/lib/abrirAba'
 import { meuAlcance, filtrarPorHierarquia, rotuloCargo } from '@/lib/hierarquia'
+import Vazio from '@/components/Vazio'
 
 // Honorários e rentabilidade: por caso, o combinado, o recebido, o vencimento e a régua de cobrança;
 // a rentabilidade cruza honorários recebidos com as horas lançadas para o mesmo cliente.
@@ -135,7 +136,7 @@ export default function HonorariosPage() {
   }
 
   return (
-    <Layout title="Honorários e rentabilidade">
+    <Layout title="Honorários">
       <div className="space-y-6">
         {alcance && !alcance.veTudo && (
           <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="honorarios-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
@@ -184,7 +185,7 @@ export default function HonorariosPage() {
                   </tr>
                 )
               })}
-              {!casos.length && <tr><td colSpan={7} className="py-6 text-grafite-claro">Nenhum caso ainda. Crie um em Casos e projetos.</td></tr>}
+              {!casos.length && <tr><td colSpan={7}><Vazio testid="honorarios-vazio" titulo="Nenhum caso ainda" texto="Os honorários são lançados por caso. Crie o primeiro caso e ele aparece nesta tabela." acao={{ rotulo: 'Criar um caso', para: '/projetos', dica: 'Abre Casos e projetos para criar o caso que receberá os honorários' }} /></td></tr>}
             </tbody>
           </table></div>
         </section>

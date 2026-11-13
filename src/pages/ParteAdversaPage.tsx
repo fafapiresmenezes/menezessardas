@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase'
 import { registrarEvento } from '@/lib/trilha'
 import { guardarNaBiblioteca } from '@/lib/biblioteca'
 import { ExternalLink, FileSearch } from 'lucide-react'
+import { irParaCampo } from '@/lib/foco'
 
 // Bloco B03: ficha da parte adversa montada só com fontes públicas e oficiais, com finalidade e caso obrigatórios.
 // Reaproveita as funções buscar-partes (Comunica PJe e Querido Diário) e kyc (Receita, sanções e conflito).
@@ -64,7 +65,7 @@ export default function ParteAdversaPage() {
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6 space-y-3">
           <p className="text-sm p-3 bg-navy/5 border-l-2 border-navy" data-testid="adversa-regras">{REGRAS}</p>
           <div className="grid md:grid-cols-2 gap-3">
-            <label className="text-sm font-medium">Nome da parte adversa<input value={parte} onChange={e => setParte(e.target.value)} className="mt-1 block w-full border px-3 py-2 min-h-[44px] font-normal" /></label>
+            <label className="text-sm font-medium">Nome da parte adversa<input data-testid="adversa-parte" value={parte} onChange={e => setParte(e.target.value)} className="mt-1 block w-full border px-3 py-2 min-h-[44px] font-normal" /></label>
             <label className="text-sm font-medium">CNPJ (se for empresa, opcional)<input value={cnpj} onChange={e => setCnpj(e.target.value)} placeholder="00.000.000/0000-00" className="mt-1 block w-full border px-3 py-2 min-h-[44px] font-normal" /></label>
             <label className="text-sm font-medium">Caso ou contrato<input value={caso} onChange={e => setCaso(e.target.value)} className="mt-1 block w-full border px-3 py-2 min-h-[44px] font-normal" /></label>
             <label className="text-sm font-medium">Finalidade da consulta<input value={finalidade} onChange={e => setFinalidade(e.target.value)} placeholder="Ex.: verificar outras ações de despejo antes da audiência" className="mt-1 block w-full border px-3 py-2 min-h-[44px] font-normal" /></label>
@@ -93,7 +94,7 @@ export default function ParteAdversaPage() {
         )}
         <section className="bg-white shadow-sm p-6" data-testid="adversa-salvas">
           <h2 className="font-serif text-xl mb-2">Consultas registradas</h2>
-          {salvas.length === 0 ? <Vazio testid="adversa-vazio" titulo="Nenhuma ficha montada ainda" texto="Preencha o nome, o caso e a finalidade e clique em Montar ficha." /> : (
+          {salvas.length === 0 ? <Vazio testid="adversa-vazio" titulo="Nenhuma ficha montada ainda" texto="Preencha o nome da parte contrária, o caso e a finalidade e clique em Montar ficha: ela fica guardada aqui." acao={{ rotulo: 'Montar a primeira ficha', onClick: () => irParaCampo('[data-testid="adversa-parte"]'), dica: 'Leva o cursor ao campo do nome da parte adversa' }} /> : (
             <ul className="divide-y divide-navy/10 text-sm">{salvas.map(s => <li key={s.id} className="py-2" data-testid="adversa-item"><strong>{s.parte}</strong> · {s.caso} · {new Date(s.consultado_em).toLocaleDateString('pt-BR')}<p className="text-grafite-claro">Finalidade: {s.finalidade}</p></li>)}</ul>
           )}
         </section>

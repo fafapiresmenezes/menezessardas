@@ -2,7 +2,7 @@
 import { chromium } from 'playwright'
 const BASE = process.env.BASE || 'https://gmenezes-advogados.vercel.app/'
 // Passo 53: todas as telas (mesma lista de src/data/rotas.ts)
-const ROTAS = ['inicio','dashboard','meu-dia','imoveis','imoveis/novo','imoveis/importar','contrato/novo','projetos','agenda','intimacoes','alertas','monitoramento','assistente','processos','processos/importar','funil','financeiro','ferramentas','estudos','consultores','modelos','legislacao','fontes','previsoes','indicadores','relatorios','mercado','horas','honorarios','administracao','consumo','fornecedores','kyc','perfil-cliente','parte-adversa','pesquisa','leitura-do-caso','prazos','processos-antigos','biblioteca','laboratorio-admin','enquetes','compliance','nuvem','trilha','instituto','equipe','settings']
+const ROTAS = ['inicio','dashboard','meu-dia','imoveis','imoveis/novo','imoveis/importar','contrato/novo','projetos','agenda','intimacoes','alertas','monitoramento','assistente','processos','processos/importar','funil','financeiro','ferramentas','estudos','consultores','modelos','legislacao','fontes','previsoes','indicadores','relatorios','mercado','horas','honorarios','administracao','consumo','fornecedores','kyc','perfil-cliente','parte-adversa','pesquisa','leitura-do-caso','prazos','processos-antigos','migracao','biblioteca','laboratorio-admin','enquetes','compliance','nuvem','trilha','instituto','solucoes','equipe','settings','meu-estilo','parametros-escrita','meu-jeito']
 const res = []
 const b = await chromium.launch()
 for (const [nome, vw] of [['desktop',{width:1366,height:800}],['celular',{width:390,height:844}]]) {

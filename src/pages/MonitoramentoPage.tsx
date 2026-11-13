@@ -10,6 +10,7 @@ import { Radar, Trash2, RefreshCw, History } from 'lucide-react'
 import { variacoesNome, filtrarNovidades, processosNovos } from '@/lib/escritorio/carteira'
 import { formatarCnj } from '@/lib/escritorio/importarProcessos'
 import { hojeLocal, isoLocal } from '@/lib/datas'
+import { irParaCampo } from '@/lib/foco'
 
 // Passo 22: linha do tempo dos andamentos (DataJud) por processo, com filtro por período.
 type Mov = { data: string; nome: string }
@@ -181,7 +182,7 @@ export default function MonitoramentoPage() {
                 {movsFiltrados.slice(0, 200).map((m, i) => (
                   <li key={i} className="relative" data-testid="lt-mov"><span className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-dourado" aria-hidden /><span className="text-grafite-claro w-28 inline-block">{dt(m.data)}</span>{m.nome}</li>
                 ))}
-                {!movsFiltrados.length && <li><Vazio titulo="Nenhum andamento no período" texto="Amplie o período ou consulte a linha do tempo completa do processo." /></li>}
+                {!movsFiltrados.length && <li><Vazio titulo="Nenhum andamento no período" texto="Nada saiu no tribunal entre as datas escolhidas. Amplie o período para ver mais andamentos." acao={{ rotulo: 'Mudar o período', onClick: () => irParaCampo('[data-testid="lt-de"]'), dica: 'Leva o cursor à data inicial do período da linha do tempo' }} /></li>}
               </ol>
               <p className="text-xs text-grafite-claro mt-2">Fonte: API pública do DataJud (CNJ). Os andamentos seguem a Tabela Processual Unificada e podem chegar com atraso em relação ao sistema do tribunal.</p>
             </div>

@@ -6,6 +6,8 @@ import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { ExternalLink, Search } from 'lucide-react'
 import { mensagemAmigavel } from '@/lib/erros'
+import Vazio from '@/components/Vazio'
+import { irParaCampo } from '@/lib/foco'
 
 // Fontes que o advogado usa todo dia: digita uma vez (nome, CNPJ, número do processo ou tema)
 // e abre cada site já com a busca feita. As que têm ligação direta estão marcadas.
@@ -158,7 +160,7 @@ export default function FontesPage() {
                 </li>
               ))}
             </ul>
-          ) : <p className="text-sm text-grafite-claro mt-3">Nenhuma busca salva ainda. Digite um nome acima e clique em "Salvar e repetir todo dia".</p>}
+          ) : <Vazio testid="fontes-sem-busca" titulo="Nenhuma busca salva ainda" texto="Escreva um nome, um CNPJ ou um número de processo no campo do alto e salve: o servidor repete a busca todas as manhãs e avisa o que for novo." acao={{ rotulo: 'Escrever o que vigiar', onClick: () => irParaCampo('#termo'), dica: 'Leva o cursor ao campo do alto, onde se escreve o nome ou o número a vigiar' }} />}
         </section>
       </div>
     </Layout>

@@ -201,7 +201,7 @@ export default function ProjetosPage() {
   }
 
   return (
-    <Layout title="Projetos">
+    <Layout title="Casos e projetos">
       <div className="space-y-6">
         {alcance && !alcance.veTudo && (
           <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="projetos-alcance" title="A hierarquia é definida pela administração na tela Equipe.">

@@ -454,7 +454,7 @@ export default function ContratoPage() {
             </div>
           </div>
           {vinculados.length === 0 ? (
-            <Vazio titulo="Nenhum aditivo ou subcontrato" texto="Quando houver um aditivo, vincule-o aqui para manter a cadeia do contrato." />
+            <Vazio titulo="Nenhum aditivo ou subcontrato" texto="Aditivos e subcontratos ficam ligados a este contrato, para manter a cadeia inteira em um lugar só." acao={{ rotulo: 'Cadastrar aditivo', para: '/contrato/novo', dica: 'Abre o cadastro de contrato para lançar o aditivo ou o subcontrato' }} />
           ) : (
             <ul className="divide-y divide-navy/10">
               {vinculados.map(v => {

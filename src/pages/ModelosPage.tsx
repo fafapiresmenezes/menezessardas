@@ -7,6 +7,7 @@ import { preencherModelo, VARIAVEIS_MODELO, type CasoParaModelo, type ContratoPa
 import { repositorio, type Contrato, type Imovel } from '@/lib/repositorio'
 import { rotulosGarantia, rotulosIndice } from '@/lib/rotulos'
 import { mensagemAmigavel } from '@/lib/erros'
+import Vazio from '@/components/Vazio'
 
 // Biblioteca de modelos: cada modelo abre o agente da área no modo Redigir com o pedido pronto.
 // O advogado completa os dados do caso entre colchetes e o agente redige citando a lei do Planalto.
@@ -91,7 +92,7 @@ export default function ModelosPage() {
   }
   const previa = (m: Modelo) => { const caso = casos.find(c => c.id === casoId); const ct = contratoParaModelo(); return caso || ct ? preencherModelo(m.pedido, caso ?? { titulo: 'Contrato' }, ct) : null }
   return (
-    <Layout title="Modelos de peças e contratos">
+    <Layout title="Modelos de peças">
       <div className="space-y-5">
         <section className="bg-white shadow-sm border-t-2 border-dourado p-5">
           <p className="text-sm mb-3">Escolha o modelo: o agente da área abre pronto para redigir. Troque os <strong>[ ]</strong> pelos dados do caso e clique em enviar. O texto sai com a lei citada e uma lista do que conferir.</p>
@@ -149,7 +150,7 @@ export default function ModelosPage() {
               {m.proprio && m.id && <button type="button" onClick={() => apagar(m.id!)} aria-label={`Apagar modelo ${m.titulo}`} title="Apaga este modelo do escritório para toda a equipe (pede confirmação)" className="absolute top-2 right-2 p-2 text-critico"><Trash2 size={16} aria-hidden /></button>}
             </div>
           ))}
-          {!lista.length && <p className="text-sm text-grafite-claro">Nenhum modelo com esse termo. Peça ao agente no Assistente jurídico, modo Redigir.</p>}
+          {!lista.length && <Vazio testid="modelos-vazio" titulo="Nenhum modelo com esse termo" texto="Nenhum modelo do escritório bate com a busca. Peça a peça ao robô no Assistente jurídico, modo Redigir, e guarde como modelo." acao={{ rotulo: 'Pedir ao Assistente jurídico', para: '/assistente', dica: 'Abre o Assistente jurídico para redigir a peça e guardá-la como modelo' }} />}
         </div>
       </div>
     </Layout>

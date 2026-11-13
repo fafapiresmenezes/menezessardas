@@ -7,7 +7,7 @@ const CHAVE = 'lsm-boas-vindas-v1'
 // Apresentação pensada para o advogado brasileiro: prazos, processos, peças e avisos (12/11/2026).
 const PASSOS = [
   { icone: Scale, titulo: 'Boas-vindas à plataforma', texto: 'Comece pelo Meu dia: os prazos, as intimações e as tarefas de hoje, já em ordem de urgência, num só lugar.', rota: '/meu-dia', acao: 'Ver o Meu dia' },
-  { icone: FileText, titulo: 'Seus processos, vigiados', texto: 'Em Meus processos, o robô consulta o CNJ a cada 4 horas, lê as publicações e já conta os prazos pelo código certo (CPC, CLT, CPP…).', rota: '/processos', acao: 'Abrir Meus processos' },
+  { icone: FileText, titulo: 'Seus processos, vigiados', texto: 'Na Carteira de processos, o robô consulta o CNJ a cada 4 horas, lê as publicações e já conta os prazos pelo código certo (CPC, CLT, CPP…).', rota: '/processos', acao: 'Abrir a Carteira de processos' },
   { icone: CalendarDays, titulo: 'Peças com o seu jeito', texto: 'No Assistente, cada peça sai com um estilo diferente, inspirado nos grandes juristas, ajustada a quem vai julgar — e sempre revisada e assinada por você.', rota: '/assistente', acao: 'Escrever uma peça' },
   { icone: Bell, titulo: 'Avisos no celular', texto: 'Na Agenda, "Conectar ao Outlook" ou "Conectar ao Google Agenda" leva todos os prazos para o seu computador e celular, atualizados sozinhos.', rota: '/agenda', acao: 'Conectar agora' },
 ]

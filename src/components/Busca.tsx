@@ -4,7 +4,7 @@ import { ROTAS_TELAS } from '@/data/rotas'
 import { useNavigate } from 'react-router-dom'
 import { repositorio, type Imovel, type Contrato } from '@/lib/repositorio'
 import { listarFornecedores, type Fornecedor } from '@/lib/fornecedores'
-import { Search, Building2, FileText, Truck, LayoutGrid, CalendarDays, Bell, Gauge, FileBarChart, ShieldCheck, Scale, Users, Settings, HelpCircle, X, FolderKanban, FileCheck2 } from 'lucide-react'
+import { Search, Building2, FileText, Truck, LayoutGrid, X, FolderKanban, FileCheck2 } from 'lucide-react'
 
 interface Resultado {
   grupo: 'Páginas' | 'Imóveis' | 'Contratos' | 'Fornecedores' | 'Casos e projetos' | 'Documentos'
@@ -14,21 +14,11 @@ interface Resultado {
   icone: typeof Search
 }
 
+// Passo A27: o nome de cada tela não é escrito aqui — vem do mapa das telas (ROTAS_TELAS), o mesmo do menu.
+// Nesta lista ficam só as telas internas que ganham um ícone próprio na busca.
 const PAGINAS: Resultado[] = [
-  { grupo: 'Páginas', rotulo: 'Painel', href: '/dashboard', icone: LayoutGrid },
-  { grupo: 'Páginas', rotulo: 'Imóveis', href: '/imoveis', icone: Building2 },
   { grupo: 'Páginas', rotulo: 'Novo imóvel', href: '/imoveis/novo', icone: Building2 },
   { grupo: 'Páginas', rotulo: 'Novo contrato', href: '/contrato/novo', icone: FileText },
-  { grupo: 'Páginas', rotulo: 'Agenda', href: '/agenda', icone: CalendarDays },
-  { grupo: 'Páginas', rotulo: 'Alertas', href: '/alertas', icone: Bell },
-  { grupo: 'Páginas', rotulo: 'Fornecedores', href: '/fornecedores', icone: Truck },
-  { grupo: 'Páginas', rotulo: 'Legislação', href: '/legislacao', icone: Scale },
-  { grupo: 'Páginas', rotulo: 'Indicadores', href: '/indicadores', icone: Gauge },
-  { grupo: 'Páginas', rotulo: 'Relatórios', href: '/relatorios', icone: FileBarChart },
-  { grupo: 'Páginas', rotulo: 'Trilha de auditoria', href: '/trilha', icone: ShieldCheck },
-  { grupo: 'Páginas', rotulo: 'Equipe', href: '/equipe', icone: Users },
-  { grupo: 'Páginas', rotulo: 'Configurações', href: '/settings', icone: Settings },
-  { grupo: 'Páginas', rotulo: 'Ajuda', href: '/ajuda', icone: HelpCircle },
 ]
 
 // Passo 58: todas as telas do mapa de rotas entram na busca, sem repetir as já listadas.

@@ -24,6 +24,7 @@ import {
 import { Printer, ShieldCheck, ShieldAlert, Link2, Anchor, Download, FileDown } from 'lucide-react'
 import { exportarTrilhaPeriodo } from '@/lib/exportarTrilha'
 import { hojeLocal, isoLocal } from '@/lib/datas'
+import Vazio from '@/components/Vazio'
 
 const rotuloTipo: Record<TipoEvento, string> = {
   imovel_criado: 'Imóvel cadastrado',
@@ -327,9 +328,7 @@ export default function TrilhaPage() {
           {carregando ? (
             <p className="p-6 text-sm text-grafite-claro">Verificando a cadeia…</p>
           ) : eventos.length === 0 ? (
-            <p className="p-6 text-sm text-grafite-claro">
-              Nenhum registro ainda. Cadastre um imóvel ou contrato para iniciar a trilha.
-            </p>
+            <Vazio testid="trilha-vazia" titulo="Nenhum registro ainda" texto="A trilha guarda, com data provada, tudo o que o escritório faz na plataforma. O primeiro cadastro já inicia a cadeia." acao={{ rotulo: 'Cadastrar imóvel ou contrato', para: '/imoveis', dica: 'Abre a carteira de imóveis para fazer o primeiro cadastro e iniciar a trilha' }} />
           ) : (
             <ol className="divide-y divide-navy/5">
               {filtrados.map(e => (

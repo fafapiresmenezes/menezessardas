@@ -12,6 +12,7 @@ import { useAlertas } from '@/hooks/useAlertas'
 import { formatarData, situacaoPorPrazo, textoPrazo, type Situacao } from '@/lib/datas'
 import { rotulosTipoImovel } from '@/lib/rotulos'
 import { AlertTriangle, CheckCircle2, Clock, Building2, Plus } from 'lucide-react'
+import Vazio from '@/components/Vazio'
 
 // Cartões brancos (padrão premium): a urgência aparece só na borda lateral e no selo.
 const molduraPorSituacao: Record<Situacao, string> = {
@@ -191,10 +192,8 @@ export default function DashboardPage() {
             Compromissos ordenados por urgência. Clique em um imóvel para gerenciar vencimentos.
           </p>
           {proximos.length === 0 ? (
-            <div className="bg-white p-12 text-center shadow-sm border-l-4 border-regular">
-              <CheckCircle2 size={40} className="mx-auto text-regular/40 mb-3" aria-hidden="true" />
-              <p className="text-grafite-claro font-medium mb-2">Nenhum compromisso próximo</p>
-              <p className="text-sm text-grafite-claro">Você está em dia! Todos os vencimentos estão sob controle.</p>
+            <div className="bg-white shadow-sm border-l-4 border-regular">
+              <Vazio testid="painel-sem-compromissos" icone={<CheckCircle2 size={28} />} titulo="Nenhum compromisso próximo" texto="Você está em dia: nenhum vencimento de contrato à frente. Veja o mês inteiro na agenda." acao={{ rotulo: 'Abrir a agenda', para: '/agenda', dica: 'Abre a agenda com audiências, prazos e compromissos do mês' }} />
             </div>
           ) : (
             <div className="relative bg-white shadow-lg overflow-x-auto rounded-sm" tabIndex={0} role="region" aria-label="Tabela de próximos compromissos">

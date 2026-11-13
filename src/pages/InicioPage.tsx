@@ -7,8 +7,9 @@ import { minhaPreferencia, telaPorCargo } from '@/lib/preferencias'
 import { meuEscritorio, esquecerEscritorio, type MeuEscritorio } from '@/lib/equipe'
 import { lerMeuJeito, carregarMeuJeito, esquecerMeuJeito, EVENTO_JEITO } from '@/lib/meuJeito'
 import { esquecerMarca } from '@/lib/marca'
-import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck, CalendarClock, CalendarDays, Inbox, UserPlus, Search, MessageSquare, PenLine, BookOpen, BarChart3, UserCog, Scale, type LucideIcon } from 'lucide-react'
+import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck, Scale, type LucideIcon } from 'lucide-react'
 import AceiteTermos from '@/components/AceiteTermos'
+import { BLOCOS_INICIO } from '@/components/menuTelas'
 
 // Tela de entrada: o escritório escolhe a área de trabalho antes de entrar na plataforma.
 const agente = (a: string) => `?agente=${a}#/assistente`
@@ -23,7 +24,7 @@ const AREAS_PRINCIPAIS = [
   { chave: 'previdenciario', titulo: 'Previdenciário', texto: 'Aposentadorias, benefícios do INSS e revisões.', icone: HeartPulse, destino: agente('previdenciario') },
   { chave: 'penal', titulo: 'Penal', texto: 'Defesa, inquérito, crimes e execução penal.', icone: Gavel, destino: agente('penal') },
   { chave: 'compliance', titulo: 'Compliance e LGPD', texto: 'Integridade, proteção de dados, ESG e due diligence.', icone: ShieldCheck, destino: '/compliance' },
-  { chave: 'imobiliario', titulo: 'Imobiliário', texto: 'Imóveis, contratos, prazos, reajustes, fornecedores e agenda.', icone: Building2, destino: '/dashboard' },
+  { chave: 'imobiliario', titulo: 'Imobiliário', texto: 'Imóveis, contratos de locação, prazos, reajustes e fornecedores.', icone: Building2, destino: '/imoveis' },
 ]
 // Todas as outras matérias do direito: cada uma abre o assistente já preparado para ela. A lista vem do próprio assistente.
 const JA_NA_LISTA = new Set(AREAS_PRINCIPAIS.map(a => a.chave))
@@ -33,30 +34,9 @@ const AREAS: { chave: string; titulo: string; texto: string; icone: LucideIcon; 
     .map(e => ({ chave: e.valor as string, titulo: e.rotulo, texto: `${e.descricao}.`, icone: Scale, destino: agente(e.valor) })),
 ]
 
-// A entrada é dividida por assunto, na mesma ordem do menu: o que se faz todo dia vem primeiro.
-type Atalho = { id: string; destino: string; titulo: string; texto: string; icone: LucideIcon; so?: 'admin' | 'veTudo' }
-const BLOCOS: { titulo: string; dica: string; itens: Atalho[] }[] = [
-  { titulo: 'Todo dia', dica: 'Comece por aqui', itens: [
-    { id: 'ir-meu-dia', destino: '/meu-dia', titulo: 'Ver o que vence', texto: 'Prazos, tarefas e intimações de hoje e da semana.', icone: CalendarClock },
-    { id: 'ir-agenda', destino: '/agenda', titulo: 'Agenda', texto: 'Audiências, prazos e compromissos no calendário.', icone: CalendarDays },
-    { id: 'ir-intimacoes', destino: '/intimacoes', titulo: 'Intimações', texto: 'O que chegou dos tribunais e ainda não foi lido.', icone: Inbox },
-  ] },
-  { titulo: 'Processos', dica: 'Ver, incluir e procurar', itens: [
-    { id: 'ir-processos', destino: '/processos', titulo: 'Meus processos', texto: 'Os processos que estão sob a sua responsabilidade.', icone: Gavel },
-    { id: 'ir-processos-antigos', destino: '/processos-antigos', titulo: 'Inserir processos antigos', texto: 'Planilha ou nome do advogado: cadastra, busca no CNJ e mostra os prazos.', icone: UserPlus },
-    { id: 'ir-pesquisa', destino: '/pesquisa', titulo: 'Pesquisar', texto: 'Processo, pessoa ou empresa numa caixa só.', icone: Search },
-  ] },
-  { titulo: 'Escrever peças', dica: 'O robô escreve do seu jeito', itens: [
-    { id: 'ir-assistente', destino: '/assistente', titulo: 'Pedir uma peça ou tirar uma dúvida', texto: 'O assistente redige e responde citando a lei.', icone: MessageSquare },
-    { id: 'ir-meu-estilo', destino: '/meu-estilo', titulo: 'Meu jeito de escrever', texto: 'Ensine o seu estilo com peças que você já escreveu.', icone: PenLine },
-    { id: 'ir-parametros', destino: '/parametros-escrita', titulo: 'Parâmetros de escrita', texto: 'Tamanho, linguagem e estrutura das peças.', icone: BookOpen },
-  ] },
-  { titulo: 'Escritório', dica: 'Orientação e equipe', itens: [
-    { id: 'ir-consultores', destino: '/consultores', titulo: 'Consultores do escritório', texto: 'Um consultor por área do direito diz o que fazer primeiro.', icone: Briefcase },
-    { id: 'ir-indicadores', destino: '/indicadores', titulo: 'Números do escritório', texto: 'Metas, prazos cumpridos e resultado do conjunto.', icone: BarChart3, so: 'veTudo' },
-    { id: 'ir-equipe', destino: '/equipe', titulo: 'Área do administrador', texto: 'Liberar quem pediu para entrar e definir o cargo de cada pessoa.', icone: UserCog, so: 'admin' },
-  ] },
-]
+// Passo A27: a entrada tem os MESMOS quatro blocos do menu, com os MESMOS nomes de tela. Blocos, nomes e atalhos
+// vêm do mapa das telas (src/components/menuTelas.ts): assim a mesma tela não ganha um nome aqui e outro no menu.
+const BLOCOS = BLOCOS_INICIO
 
 export default function InicioPage() {
   const navigate = useNavigate()

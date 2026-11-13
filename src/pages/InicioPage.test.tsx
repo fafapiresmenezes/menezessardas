@@ -34,7 +34,7 @@ describe('Tela de entrada por área', () => {
   beforeEach(() => { cleanup(); prefs = null; escritorio = null; alcance = null; upsert.mockClear(); gravarAreaAtual.mockClear(); signOut.mockClear(); esquecerEscritorio.mockClear(); localStorage.clear(); sessionStorage.clear() })
   afterEach(() => vi.useRealTimers())
 
-  it('mostra todas as matérias do direito; a busca filtra por título ou descrição e Enter abre a primeira; Imobiliário vai ao painel', async () => {
+  it('mostra todas as matérias do direito; a busca filtra por título ou descrição e Enter abre a primeira; Imobiliário é uma área como as outras e abre os Imóveis', async () => {
     montar()
     expect(screen.getAllByTestId(/^area-/).length).toBe(45)
     for (const m of ['constitucional', 'administrativo', 'processo_civil', 'eleitoral', 'digital', 'ambiental', 'condominial', 'recuperacao']) expect(screen.getByTestId(`area-${m}`)).toBeTruthy()
@@ -46,7 +46,7 @@ describe('Tela de entrada por área', () => {
     expect(screen.getByTestId('busca-area-resultado').textContent).toContain('Nenhuma área com esse termo')
     fireEvent.change(screen.getByTestId('busca-area'), { target: { value: '' } })
     fireEvent.click(screen.getByTestId('area-imobiliario'))
-    expect(screen.getByTestId('onde').textContent).toBe('/dashboard')
+    expect(screen.getByTestId('onde').textContent).toBe('/imoveis')
     expect(gravarAreaAtual).toHaveBeenCalledWith('imobiliario')
     cleanup(); montar()
     fireEvent.click(screen.getByTestId('ir-meu-dia'))

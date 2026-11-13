@@ -113,7 +113,7 @@ export default function CompliancePage() {
     crypto.subtle?.digest('SHA-256', new TextEncoder().encode(texto)).then(b => setCodigo(Array.from(new Uint8Array(b), x => x.toString(16).padStart(2, '0')).join(''))).catch(() => setCodigo(''))
   }, [resp, empresa, geral])
   return (
-    <Layout title="Compliance: diagnóstico de integridade">
+    <Layout title="Compliance e LGPD">
       <div className="space-y-6">
         <header className="hidden print:block border-b-2 border-dourado pb-3" data-testid="cabecalho-relatorio">
           <p className="font-serif text-2xl text-navy">THEYE Institute</p>

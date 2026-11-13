@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { PERGUNTAS, avaliarPerfil, type Respostas, type ResultadoPerfil } from '@/lib/perfilCliente'
 import { filtrarPorCriador, meuAlcance, type Cargo } from '@/lib/hierarquia'
 import { ClipboardList, Trash2 } from 'lucide-react'
+import { irParaCampo } from '@/lib/foco'
 
 // Bloco B02: perfil de atendimento do cliente, preenchido com o cliente e só com o consentimento dele (termo B01).
 // Privacidade (pedido do M, 12/11/2026): cada pessoa só vê os perfis que ela mesma cadastrou; sócio(a) e gestor(a) veem tudo.
@@ -81,7 +82,7 @@ export default function PerfilClientePage() {
         {msg.erro && <p role="alert" className="p-3 text-sm border-l-2 bg-criticoFundo border-critico text-critico">{msg.erro}</p>}
         <section className="bg-white shadow-sm p-6" data-testid="perfil-salvos">
           <h2 className="font-serif text-xl mb-2">Perfis guardados</h2>
-          {visiveis.length === 0 ? <Vazio testid="perfil-vazio" titulo="Nenhum perfil guardado ainda" texto="Depois do consentimento do cliente, responda as perguntas e clique em Guardar perfil." /> : (
+          {visiveis.length === 0 ? <Vazio testid="perfil-vazio" titulo="Nenhum perfil guardado ainda" texto="Com o consentimento do cliente, escreva o nome, responda as perguntas e clique em Guardar perfil." acao={{ rotulo: 'Montar o primeiro perfil', onClick: () => irParaCampo('#cliente'), dica: 'Leva o cursor ao campo do nome do cliente' }} /> : (
             <ul className="divide-y divide-navy/10 text-sm">
               {visiveis.map(s => (
                 <li key={s.id} className="py-2 flex flex-wrap items-start gap-2" data-testid="perfil-item">

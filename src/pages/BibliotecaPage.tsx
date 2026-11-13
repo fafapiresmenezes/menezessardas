@@ -65,7 +65,7 @@ export default function BibliotecaPage() {
         </section>
         <section className="bg-white shadow-sm p-6" data-testid="biblioteca-lista">
           <h2 className="font-serif text-xl mb-2 flex items-center gap-2"><Library className="w-5 h-5 text-dourado" aria-hidden />{visiveis.length} item(ns)</h2>
-          {itens.length === 0 ? <Vazio testid="biblioteca-vazia" titulo="Nada guardado ainda" texto="Use o botão Guardar na biblioteca no Assistente, ou monte uma ficha de parte adversa: tudo aparece aqui." /> : (
+          {itens.length === 0 ? <Vazio testid="biblioteca-vazia" titulo="Nada guardado ainda" texto="Pergunte ou peça uma peça no Assistente jurídico e clique em Guardar na biblioteca: tudo o que você guardar aparece aqui." acao={{ rotulo: 'Abrir o Assistente jurídico', para: '/assistente', dica: 'Abre o Assistente jurídico para pesquisar ou redigir e guardar o resultado aqui' }} /> : (
             <ul className="divide-y divide-navy/10 text-sm">
               {visiveis.map(i => (
                 <li key={i.id} className="py-2" data-testid="biblioteca-item">

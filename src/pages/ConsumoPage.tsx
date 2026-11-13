@@ -8,6 +8,7 @@ import { Printer, Wallet, AlertTriangle, Paperclip, Download } from 'lucide-reac
 import { lerNumero } from '@/lib/numero'
 import { abrirEmNovaAba } from '@/lib/abrirAba'
 import { mensagemAmigavel } from '@/lib/erros'
+import Vazio from '@/components/Vazio'
 
 // Transparência de custos: cada uso de IA e cada e-mail é registrado no servidor com quem usou,
 // a função e os tokens; o custo vem da tabela pública de preços e da cotação PTAX do Banco Central.
@@ -188,7 +189,7 @@ export default function ConsumoPage() {
                 {somar(chave).length > 0 && <button type="button" onClick={async () => { const t = [`Consumo ${chave === 'funcao' ? 'por função' : 'por usuário'} — ${nomeMes(mes)}`, ...somar(chave).map(([k, v]) => `${k}: ${v.usos} uso(s) · ${brl(v.brl)}`)].join('\n'); try { await navigator.clipboard.writeText(t); setTabelaCopiada(chave); setTimeout(() => setTabelaCopiada(null), 2500) } catch { /* sem área de transferência */ } }} data-testid={`copiar-${chave}`} title={`Copia a tabela de consumo ${chave === 'funcao' ? 'por função' : 'por usuário'} em texto para a reunião de custos`} className="underline text-navy text-sm print:hidden">{tabelaCopiada === chave ? 'copiado' : 'copiar'}</button>}
               </div>
               {somar(chave).length === 0 ? (
-                <p className="text-sm text-grafite-claro">Nenhum uso registrado neste mês.</p>
+                <Vazio testid="consumo-vazio" titulo="Nenhum uso registrado neste mês" texto="O consumo aparece aqui depois do primeiro pedido de IA do escritório no mês." acao={{ rotulo: 'Abrir o Assistente jurídico', para: '/assistente', dica: 'Abre o Assistente jurídico: o primeiro pedido do mês já aparece neste quadro' }} />
               ) : (
                 <table className="w-full text-sm">
                   <thead><tr className="text-left text-grafite-claro"><th className="font-normal py-1">{chave === 'funcao' ? 'Função' : 'Usuário'}</th><th className="font-normal text-right">Usos</th><th className="font-normal text-right">Custo</th></tr></thead>

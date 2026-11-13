@@ -12,6 +12,7 @@ import { brl, competenciaDe, compararVistorias, estadoGeral, ESTADOS, lancamento
 import { ClipboardCheck, Camera, FileDown, Coins, Plus, Receipt } from 'lucide-react'
 import { lerNumero } from '@/lib/numero'
 import { abrirEmNovaAba } from '@/lib/abrirAba'
+import Vazio from '@/components/Vazio'
 
 const cartao = 'bg-white shadow-sm p-5 border-t-2 border-dourado'
 const botao = 'min-h-[44px] px-4 text-sm border border-navy text-navy bg-white'
@@ -141,7 +142,7 @@ export default function AdministracaoPage() {
           <input data-testid="taxa" type="number" min={0} max={50} step={0.5} className={campo} value={adm?.taxa_pct ?? 10} onChange={e => salvarAdm({ taxa_pct: Number(e.target.value) })} />
         </label>
       </div>
-      {contratos.length === 0 && <p className="text-sm text-grafite-claro">Nenhum contrato de locação ativo. Cadastre um contrato em Imóveis para administrar.</p>}
+      {contratos.length === 0 && <Vazio testid="administracao-vazio" titulo="Nenhum contrato de locação ativo" texto="A administração de locação trabalha sobre contratos. Cadastre o imóvel e o contrato para cobrar, repassar e reajustar aqui." acao={{ rotulo: 'Cadastrar imóvel e contrato', para: '/imoveis', dica: 'Abre a tela de Imóveis para cadastrar o imóvel e o contrato de locação' }} />}
       <div className="flex gap-2 mb-4" role="tablist">
         <button type="button" role="tab" aria-selected={aba === 'contas'} data-testid="aba-contas" title="Mostra os lançamentos do mês, o repasse e a prestação de contas deste contrato" onClick={() => setAba('contas')} className={aba === 'contas' ? botaoCheio : botao}><Receipt size={16} className="inline mr-1" aria-hidden="true" />Prestação de contas</button>
         <button type="button" role="tab" aria-selected={aba === 'vistoria'} data-testid="aba-vistoria" title="Mostra as vistorias do imóvel deste contrato e permite registrar novas" onClick={() => setAba('vistoria')} className={aba === 'vistoria' ? botaoCheio : botao}><ClipboardCheck size={16} className="inline mr-1" aria-hidden="true" />Vistorias</button>

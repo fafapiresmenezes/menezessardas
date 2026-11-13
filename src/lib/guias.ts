@@ -12,7 +12,7 @@ export const GUIAS: Record<string, Guia> = {
     passos: [
       'Esta é a sua tela de entrada. Ela mostra o que precisa da sua atenção hoje.',
       'O menu fica à esquerda. Passe o cursor sobre qualquer item e aparece a explicação do que ele faz.',
-      'Comece por "Meu dia" para ver prazos e tarefas, ou por "Meus processos" para ver a sua carteira.',
+      'Comece por "Meu dia" para ver prazos e tarefas, ou por "Carteira de processos" para ver os seus processos.',
       'Em dúvida, passe o cursor sobre o botão: toda ação tem uma dica dizendo o que acontece ao clicar.',
     ],
   },
@@ -26,7 +26,7 @@ export const GUIAS: Record<string, Guia> = {
     ],
   },
   '/processos': {
-    titulo: 'Como usar Meus processos (carteira de processos)',
+    titulo: 'Como usar a Carteira de processos',
     passos: [
       'Esta é a sua carteira. Você vê os processos sob a sua responsabilidade; sócios e gestor veem os de todo o escritório.',
       'Use a busca para achar um processo pelo número, pelo cliente ou pela parte contrária.',
@@ -53,7 +53,7 @@ export const GUIAS: Record<string, Guia> = {
     ],
   },
   '/prazos': {
-    titulo: 'Como usar a calculadora de prazos',
+    titulo: 'Como usar os Prazos por código',
     passos: [
       'Escolha o tipo de direito (processo civil, trabalhista, penal e outros).',
       'Escolha o ato (contestação, apelação, embargos e outros). Dá para procurar pelo nome.',
@@ -79,7 +79,7 @@ export const GUIAS: Record<string, Guia> = {
     ],
   },
   '/equipe': {
-    titulo: 'Como organizar a equipe',
+    titulo: 'Como usar a Área do administrador',
     passos: [
       'Esta tela é de quem administra o escritório.',
       'Se alguém pediu para entrar, o pedido aparece no topo: toque em "Liberar para trabalhar" ou em "Recusar".',
@@ -137,6 +137,38 @@ export const GUIAS: Record<string, Guia> = {
       'No bloco 2, escolha a tela em que a plataforma abre quando você entra.',
       'No bloco 3, marque as matérias do direito que você usa: elas aparecem primeiro na entrada.',
       'No bloco 4, aumente a letra se preferir. O botão do fim desfaz tudo e volta ao padrão.',
+    ],
+  },
+  '/projetos': {
+    titulo: 'Como usar Casos e projetos',
+    passos: [
+      'Cada caso reúne o processo, o cliente, as tarefas e as horas lançadas.',
+      'Crie o caso, escolha o responsável e vá acrescentando tarefas com prazo.',
+      'As tarefas com prazo aparecem sozinhas em "Meu dia" de quem é responsável.',
+    ],
+  },
+  '/imoveis': {
+    titulo: 'Como usar os Imóveis',
+    passos: [
+      'O imobiliário é uma área do direito como as outras: fica dentro de Processos, no menu.',
+      'Cadastre o imóvel e depois o contrato de locação, com datas e valor.',
+      'Com as datas no contrato, os vencimentos e reajustes aparecem em Alertas e na Agenda.',
+    ],
+  },
+  '/modelos': {
+    titulo: 'Como usar os Modelos de peças',
+    passos: [
+      'Aqui ficam os modelos do escritório: petições, contratos e documentos.',
+      'Procure pelo nome. Clicando no modelo, ele abre já preenchido com os dados do caso escolhido.',
+      'Não achou? Peça a peça no Assistente jurídico, modo Redigir, e guarde como modelo do escritório.',
+    ],
+  },
+  '/biblioteca': {
+    titulo: 'Como usar o Repositório e biblioteca',
+    passos: [
+      'Tudo o que você guardar no Assistente jurídico fica aqui, com data e autor.',
+      'Use a busca para achar uma pesquisa antiga antes de pedir a mesma coisa de novo.',
+      'Na parte de baixo estão os repositórios abertos de teses, legislação e jurisprudência.',
     ],
   },
   '/parametros-escrita': {

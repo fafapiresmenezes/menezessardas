@@ -8,6 +8,7 @@ import { SkeletonIndicator, SkeletonTable } from '@/components/Skeleton'
 import { useAlertas } from '@/hooks/useAlertas'
 import { formatarData, situacaoPorPrazo, textoPrazo } from '@/lib/datas'
 import { BellOff, Circle } from 'lucide-react'
+import Vazio from '@/components/Vazio'
 
 export default function AlertasPage() {
   const { alertas, loading, getCriticos } = useAlertas()
@@ -151,10 +152,16 @@ export default function AlertasPage() {
           </section>
         )}
         {visiveis.length === 0 ? (
-          <div className="bg-white p-12 text-center shadow-sm border-l-4 border-regular">
-            <BellOff className="mx-auto mb-4 text-regular/40" size={40} aria-hidden="true" />
-            <p className="text-grafite-claro font-medium mb-2">{filtro === 'todos' ? 'Nenhum alerta no momento' : 'Nenhum alerta neste filtro'}</p>
-            <p className="text-sm text-grafite-claro">{filtro === 'todos' ? 'Você está em dia com todos os compromissos.' : 'Clique em "Total" para ver todos.'}</p>
+          <div className="bg-white shadow-sm border-l-4 border-regular">
+            <Vazio
+              testid="alertas-vazio"
+              icone={<BellOff size={28} />}
+              titulo={filtro === 'todos' ? 'Nenhum alerta no momento' : 'Nenhum alerta neste filtro'}
+              texto={filtro === 'todos' ? 'Você está em dia: nenhum contrato vence nem reajusta por agora. Confira o mês na agenda.' : 'Este filtro está vazio. Veja todos os alertas para saber o que existe.'}
+              acao={filtro === 'todos'
+                ? { rotulo: 'Ver a agenda do mês', para: '/agenda', dica: 'Abre a agenda com audiências, prazos e compromissos do mês' }
+                : { rotulo: 'Ver todos os alertas', onClick: () => setFiltro('todos'), dica: 'Tira o filtro e mostra todos os alertas' }}
+            />
           </div>
         ) : (
           <div className="bg-white shadow-sm divide-y divide-navy/10">

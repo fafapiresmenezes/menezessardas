@@ -22,6 +22,7 @@ import {
   type StatusAcompanhamento,
 } from '@/lib/legislacao'
 import { ExternalLink, RefreshCw, Printer, Search } from 'lucide-react'
+import Vazio from '@/components/Vazio'
 
 const ESTILO_STATUS: Record<StatusAcompanhamento, 'atencao' | 'critico' | 'regular' | 'sem_prazo'> = {
   nova: 'critico',
@@ -244,7 +245,7 @@ export default function LegislacaoPage() {
           {radar.length > 0 && <button type="button" title="Copia o endereço desta página de legislação para compartilhar com a equipe" data-testid="copiar-link-radar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mb-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 229 */}
           {radar.length > 0 && <button type="button" title="Baixa a planilha CSV com os itens do radar (fonte, tipo, título, data e link)" data-testid="baixar-radar" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['fonte;tipo;título;data;link', ...radar.map(r => `${r.fonte};${r.tipo};${r.titulo.replace(/;/g, ',')};${r.data ?? ''};${r.link}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'radar-legislacao.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 299 */}
           {radar.length === 0 ? (
-            <p className="text-sm text-grafite-claro" data-testid="radar-vazio">Nada captado ainda para esta área. A varredura roda todo dia às 8h30; escolha "Todas as áreas" para ver o que já existe.</p>
+            <Vazio testid="radar-vazio" titulo="Nada captado ainda para esta área" texto="A varredura roda todo dia às 8h30. Veja todas as áreas para conhecer o que já foi captado." acao={{ rotulo: 'Ver todas as áreas', onClick: () => setAreaRadar(''), dica: 'Tira o filtro de área e mostra tudo o que o radar já captou' }} />
           ) : (
             <ul className="divide-y divide-navy/5">
               {radar.filter(n => filtroRadar === 'todos' || n.tipo === filtroRadar).slice(0, 25).map(n => (

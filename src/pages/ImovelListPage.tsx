@@ -9,6 +9,7 @@ import { useAlertas } from '@/hooks/useAlertas'
 import { situacaoPorPrazo, textoPrazo } from '@/lib/datas'
 import { rotulosTipoImovel, rotulosUso, siglaDocumento } from '@/lib/rotulos'
 import { Search, Plus, Upload } from 'lucide-react'
+import Vazio from '@/components/Vazio'
 
 export default function ImovelListPage() {
   const [busca, setBusca] = useState(() => { try { return localStorage.getItem('lsm-imoveis-busca') ?? '' } catch { return '' } }) // Passo 192
@@ -165,12 +166,15 @@ export default function ImovelListPage() {
         </div>
 
         {filtrados.length === 0 && (
-          <div className="bg-white p-12 text-center shadow-sm">
-            <p className="text-grafite-claro">
-              {busca
-                ? 'Nenhum imóvel encontrado.'
-                : 'Nenhum imóvel cadastrado.'}
-            </p>
+          <div className="bg-white shadow-sm">
+            <Vazio
+              testid="imoveis-vazio"
+              titulo={busca ? 'Nenhum imóvel com esse termo' : 'Nenhum imóvel cadastrado'}
+              texto={busca ? 'Nenhum imóvel bate com o que você escreveu na busca. Limpe a busca para ver a carteira inteira.' : 'Cadastre o primeiro imóvel para acompanhar contratos, prazos, reajustes e documentos.'}
+              acao={busca
+                ? { rotulo: 'Limpar a busca', onClick: () => { setBusca(''); try { localStorage.removeItem('lsm-imoveis-busca') } catch { /* sem memória local */ } }, dica: 'Apaga o que está escrito na busca e mostra todos os imóveis' }
+                : { rotulo: 'Cadastrar imóvel', para: '/imoveis/novo', dica: 'Abre o formulário para cadastrar o primeiro imóvel da carteira' }}
+            />
           </div>
         )}
       </div>

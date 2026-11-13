@@ -19,7 +19,7 @@ vi.mock('@/lib/ancoragem', () => ({ baixarArquivo: (n: string, c: unknown, t?: s
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 const { default: CompliancePage } = await import('./CompliancePage')
 
-describe('Compliance: diagnóstico de integridade', () => {
+describe('Compliance e LGPD', () => {
   beforeEach(() => { cleanup(); localStorage.clear(); historico = []; inserts.length = 0; insertTarefa.mockClear(); insertDiag.mockClear() })
 
   it('18 perguntas em 6 pilares; nota por pilar e geral, nível e plano de ação ordenado por prioridade; empresa lembrada; código de integridade', async () => {

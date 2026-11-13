@@ -7,6 +7,8 @@ import { Play, Square, Download, Printer, Trash2, Target, ClipboardCopy } from '
 import { hojeLocal, isoLocal } from '@/lib/datas'
 import { lerNumero, lerHoras } from '@/lib/numero'
 import { meuAlcance, rotuloCargo } from '@/lib/hierarquia'
+import Vazio from '@/components/Vazio'
+import { irParaCampo } from '@/lib/foco'
 
 // Passo 21: meta mensal de horas por função (tabela metas_horas, só admin edita) e progresso da pessoa logada (RPC progresso_horas).
 const PAPEIS: Record<string, string> = { socia: 'Sócia', advogada: 'Advogada', estagiario: 'Estagiário ou paralegal', secretaria: 'Secretária', financeiro: 'Financeiro' }
@@ -108,7 +110,7 @@ export default function HorasPage() {
     try { await navigator.clipboard.writeText(texto); setCopiado(true); setTimeout(() => setCopiado(false), 2500) } catch { setErro('Não foi possível copiar; use a planilha ou o relatório.') }
   }
   return (
-    <Layout title="Horas e honorários">
+    <Layout title="Horas trabalhadas">
       <div className="space-y-5">
         <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="horas-aviso" title="As metas por função são definidas pela administração; a hierarquia, na tela Equipe.">
           {restrito
@@ -195,7 +197,7 @@ export default function HorasPage() {
                 <button type="button" onClick={() => apagar(l.id)} aria-label="Apagar lançamento" title="Apaga este lançamento de horas (pede confirmação)" className="print:hidden p-2"><Trash2 className="w-4 h-4" aria-hidden /></button>
               </li>
             ))}
-            {!lista.length && <li className="py-3 text-grafite-claro">Nenhum lançamento neste mês.</li>}
+            {!lista.length && <li><Vazio testid="horas-vazio" titulo="Nenhum lançamento neste mês" texto="Lance as horas assim que terminar o trabalho: cliente, tempo e uma frase do que foi feito." acao={{ rotulo: 'Lançar horas agora', onClick: () => irParaCampo('[data-testid="h-cliente"]'), dica: 'Leva o cursor ao campo do cliente, no formulário de lançamento de horas' }} /></li>}
           </ul>
         </section>
       </div>

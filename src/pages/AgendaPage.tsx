@@ -366,7 +366,7 @@ export default function AgendaPage() {
             Compromissos de {MESES[mes]}
           </h3>
           {doMes.length === 0 ? (
-            <Vazio titulo="Nenhum compromisso neste mês" texto="Toque em um dia para criar o primeiro, ou importe um .ics do Outlook." />
+            <Vazio titulo="Nenhum compromisso neste mês" texto="Toque em um dia do calendário para criar o primeiro, ou traga a sua agenda do Outlook ou do Google Agenda." acao={{ rotulo: 'Trazer do Outlook (.ics)', onClick: () => { const d = document.querySelector('[data-testid="agenda-mais-opcoes"]') as HTMLDetailsElement | null; if (d) d.open = true; (document.querySelector('[data-testid="importar-ics-input"]') as HTMLInputElement | null)?.click() }, dica: 'Abre o seu computador para escolher o arquivo .ics exportado do Outlook ou do Google Agenda' }} />
           ) : (
             <ul className="divide-y divide-navy/10 mt-3">
               {doMes.map(a => (

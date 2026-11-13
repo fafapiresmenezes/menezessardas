@@ -24,6 +24,7 @@ import { Printer, Building2, Percent, FileCheck2, CalendarClock, TrendingUp, Ale
 import { selarDigest } from '@/lib/exportarTrilha'
 import { baixarArquivo } from '@/lib/ancoragem'
 import { lerNumero } from '@/lib/numero'
+import Vazio from '@/components/Vazio'
 
 // Passo 23: ciclo trimestral de OKR (lembrete 15 dias antes do fim do trimestre, revisão e ata com selo).
 const trimestreDe = (d: Date) => `${d.getFullYear()}-T${Math.floor(d.getMonth() / 3) + 1}`
@@ -301,7 +302,7 @@ export default function IndicadoresPage() {
             <h2 id="t-aderencia" className="text-xl mb-1 flex items-center gap-2"><ListChecks className="w-5 h-5 text-dourado" aria-hidden />Aderência às ações dos Consultores da semana</h2>
             <p className="text-sm text-grafite-claro mb-4">Percentual das ações do último diagnóstico de cada nível marcadas como feitas em Meu dia.</p>
             {aderencia.length === 0 ? (
-              <p className="text-sm text-grafite-claro" data-testid="aderencia-vazia">Nenhum diagnóstico semanal ainda. Eles chegam toda segunda-feira, ou peça um em Consultores.</p>
+              <Vazio testid="aderencia-vazia" titulo="Nenhum diagnóstico semanal ainda" texto="Os diagnósticos chegam toda segunda-feira. Para não esperar, peça um agora ao consultor do seu nível." acao={{ rotulo: 'Pedir um diagnóstico', para: '/consultores', dica: 'Abre os Consultores do escritório para pedir o diagnóstico da semana' }} />
             ) : (
               <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {aderencia.map(a => (

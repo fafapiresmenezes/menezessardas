@@ -287,7 +287,14 @@ export default function Layout({ children, title }: LayoutProps) {
                             title={dicaDe(item)}
                           >
                             <item.icon size={19} className="flex-shrink-0" />
-                            {menuAberto && <span className="text-sm">{item.label}</span>}
+                            {menuAberto && (
+                              <span className="text-sm text-left">
+                                <span className="block">{item.label}</span>
+                                {item.nivel && item.nivel !== 'todos' && (
+                                  <span className="block text-[10px] text-white/50" data-nivel={item.nivel} title={EXPLICA_NIVEL[item.nivel]}>{ROTULO_NIVEL[item.nivel]}</span>
+                                )}
+                              </span>
+                            )}
                           </button>
                         </li>
                       )
@@ -372,7 +379,8 @@ export default function Layout({ children, title }: LayoutProps) {
                     {tema === 'escuro' ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
                     {tema === 'escuro' ? 'Modo claro' : 'Modo escuro'}
                   </button>
-                  {admin && (
+                  {/* Passo A27: o laboratório é do Instituto, não do escritório cliente: só aparece para quem entra pelo Instituto. */}
+                  {admin && visao.instituto && (
                     <button
                       onClick={() => { setMaisAberto(false); navigate('/laboratorio-admin') }}
                       className="w-full flex items-center gap-3 min-h-[44px] px-3 text-sm text-navy hover:bg-navy/5 text-left"

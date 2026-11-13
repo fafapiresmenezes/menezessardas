@@ -1,11 +1,15 @@
-// O mapa de todas as telas da plataforma, em hierarquia (pedido de M, 12/11/2026: "organizar, separar de maneira hierárquica").
-// A divisão é a mesma da tela de entrada: 1. Todo dia, 2. Processos, 3. Escrever peças, 4. Escritório.
-// Cada grupo tem um NÍVEL: quem não é daquele nível nem vê o grupo no menu. O banco continua sendo quem protege os dados;
-// aqui é só arrumação, para ninguém ver botão que não é para si.
+// O mapa de todas as telas da plataforma (pedido de M, 12/11/2026: "organizar, separar de maneira hierárquica").
+// Passo A27: o menu tem os MESMOS quatro blocos da tela de entrada — 1. Todo dia, 2. Processos, 3. Escrever peças,
+// 4. Escritório — mais "Minha conta" e, só para o THEYE Institute, o bloco do Instituto. Nada de um bloco por assunto
+// solto: menu e entrada contam a mesma história.
+// Este arquivo é a ÚNICA fonte do nome de cada tela: o menu, a tela de entrada, a busca global e a lista de telas
+// (src/data/rotas.ts) leem daqui, por `nomeDaTela`. Assim uma tela não volta a ter três nomes diferentes.
+// Cada tela (ou bloco) tem um NÍVEL: quem não é daquele nível nem vê o item no menu. O banco continua sendo quem
+// protege os dados; aqui é só arrumação, para ninguém ver botão que não é para si.
 import { Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, type LucideIcon } from 'lucide-react'
 
 export type Nivel = 'todos' | 'gestao' | 'admin' | 'instituto'
-export interface Tela { icon: LucideIcon; label: string; href: string }
+export interface Tela { icon: LucideIcon; label: string; href: string; nivel?: Nivel }
 export interface GrupoMenu { id: string; titulo: string; bloco: string; nivel: Nivel; dica: string; itens: Tela[] }
 /** O que a pessoa pode ver: vem do cargo (sócio e gestor veem o conjunto), da função de administrador e do Instituto. */
 export interface Visao { veTudo: boolean; admin: boolean; instituto: boolean; sede: boolean }
@@ -13,9 +17,9 @@ export interface Visao { veTudo: boolean; admin: boolean; instituto: boolean; se
 export const ROTULO_NIVEL: Record<Nivel, string> = { todos: '', gestao: 'sócios e gestor', admin: 'administrador', instituto: 'só o Instituto' }
 export const EXPLICA_NIVEL: Record<Nivel, string> = {
   todos: 'Todas as pessoas do escritório veem este grupo.',
-  gestao: 'Só sócios, o gestor e a administração veem este grupo: são os números e o dinheiro do escritório inteiro.',
-  admin: 'Só quem administra o escritório vê este grupo: liberar pessoas, definir cargos e acompanhar o consumo.',
-  instituto: 'Só a administração do THEYE Institute vê este grupo: é o que cuida da plataforma inteira.',
+  gestao: 'Só sócios, o gestor e a administração veem isto: são os números e o dinheiro do escritório inteiro.',
+  admin: 'Só quem administra o escritório vê isto: liberar pessoas, definir cargos e acompanhar o consumo.',
+  instituto: 'Só a administração do THEYE Institute vê isto: é o que cuida da plataforma inteira.',
 }
 
 export const SO_SEDE = ['/imoveis', '/fornecedores', '/alertas', '/instituto']
@@ -25,14 +29,17 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: Sunrise, label: 'Meu dia', href: '/meu-dia' },
     { icon: CalendarDays, label: 'Agenda', href: '/agenda' },
     { icon: Inbox, label: 'Intimações', href: '/intimacoes' },
+    { icon: Bell, label: 'Alertas', href: '/alertas' },
     { icon: CalendarClock, label: 'Prazos por código', href: '/prazos' },
-    { icon: Timer, label: 'Horas e honorários', href: '/horas' },
+    { icon: Timer, label: 'Horas trabalhadas', href: '/horas' },
     { icon: Wrench, label: 'Ferramentas do dia a dia', href: '/ferramentas' },
-    { icon: Cloud, label: 'Nuvem', href: '/nuvem' },
+    { icon: Cloud, label: 'Nuvem do escritório', href: '/nuvem' },
     { icon: LayoutGrid, label: 'Painel', href: '/dashboard' },
   ] },
+  // Passo A27: o imobiliário é uma área do direito como as outras — imóveis, locação e fornecedores entram aqui,
+  // junto com os processos, em vez de formarem um mundo à parte no menu.
   { id: 'processos', titulo: '2. Processos', bloco: 'Processos', nivel: 'todos', dica: 'Ver, incluir e acompanhar', itens: [
-    { icon: Gavel, label: 'Meus processos', href: '/processos' },
+    { icon: Gavel, label: 'Carteira de processos', href: '/processos' },
     { icon: FolderKanban, label: 'Casos e projetos', href: '/projetos' },
     { icon: UserPlus, label: 'Inserir processos antigos', href: '/processos-antigos' },
     { icon: FolderInput, label: 'Trazer do sistema antigo', href: '/migracao' },
@@ -42,44 +49,39 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: FileSearch, label: 'Parte adversa', href: '/parte-adversa' },
     { icon: UserCheck, label: 'Checagem de contraparte', href: '/kyc' },
     { icon: ClipboardList, label: 'Perfil do cliente', href: '/perfil-cliente' },
+    { icon: Building2, label: 'Imóveis', href: '/imoveis' },
+    { icon: KeySquare, label: 'Administração de locação', href: '/administracao' },
+    { icon: Truck, label: 'Fornecedores', href: '/fornecedores' },
   ] },
-  { id: 'pesquisa', titulo: '3. Escrever peças', bloco: 'Escrever peças', nivel: 'todos', dica: 'O robô escreve do seu jeito', itens: [
-    { icon: MessageSquare, label: 'Assistente', href: '/assistente' },
+  { id: 'pecas', titulo: '3. Escrever peças', bloco: 'Escrever peças', nivel: 'todos', dica: 'O robô escreve do seu jeito', itens: [
+    { icon: MessageSquare, label: 'Assistente jurídico', href: '/assistente' },
     { icon: FileText, label: 'Modelos de peças', href: '/modelos' },
     { icon: Scale, label: 'Legislação', href: '/legislacao' },
     { icon: Globe, label: 'Fontes do advogado', href: '/fontes' },
     { icon: Library, label: 'Repositório e biblioteca', href: '/biblioteca' },
-    { icon: Briefcase, label: 'Consultores', href: '/consultores' },
     { icon: PenLine, label: 'Meu jeito de escrever', href: '/meu-estilo' },
     { icon: BookOpen, label: 'Parâmetros de escrita', href: '/parametros-escrita' },
   ] },
-  { id: 'imoveis', titulo: 'Imóveis e locação', bloco: 'Imóveis e locação', nivel: 'todos', dica: 'Para quem cuida de imóveis', itens: [
-    { icon: Building2, label: 'Imóveis', href: '/imoveis' },
-    { icon: KeySquare, label: 'Administração de locação', href: '/administracao' },
-    { icon: Truck, label: 'Fornecedores', href: '/fornecedores' },
-    { icon: Bell, label: 'Alertas', href: '/alertas' },
+  { id: 'escritorio', titulo: '4. Escritório', bloco: 'Escritório', nivel: 'todos', dica: 'Orientação, números e equipe', itens: [
+    { icon: Briefcase, label: 'Consultores do escritório', href: '/consultores' },
+    { icon: ShieldCheck, label: 'Compliance e LGPD', href: '/compliance' },
+    { icon: ShieldCheck, label: 'Trilha de auditoria', href: '/trilha' },
+    { icon: Gauge, label: 'Indicadores', href: '/indicadores', nivel: 'gestao' },
+    { icon: Filter, label: 'Funil de vendas', href: '/funil', nivel: 'gestao' },
+    { icon: PiggyBank, label: 'Financeiro', href: '/financeiro', nivel: 'gestao' },
+    { icon: Banknote, label: 'Honorários', href: '/honorarios', nivel: 'gestao' },
+    { icon: FileBarChart, label: 'Relatórios', href: '/relatorios', nivel: 'gestao' },
+    { icon: TrendingUp, label: 'Previsões', href: '/previsoes', nivel: 'gestao' },
+    { icon: Users, label: 'Área do administrador', href: '/equipe', nivel: 'admin' },
+    { icon: Wallet, label: 'Consumo', href: '/consumo', nivel: 'admin' },
   ] },
-  { id: 'gestao', titulo: 'Conformidade e registro', bloco: 'Conformidade', nivel: 'todos', dica: 'LGPD e prova do que foi feito', itens: [
-    { icon: ShieldCheck, label: 'Compliance', href: '/compliance' },
-    { icon: ShieldCheck, label: 'Trilha', href: '/trilha' },
-  ] },
-  { id: 'financeiro', titulo: '4. Escritório: clientes e dinheiro', bloco: 'Escritório', nivel: 'gestao', dica: 'Números do conjunto', itens: [
-    { icon: Gauge, label: 'Indicadores', href: '/indicadores' },
-    { icon: Filter, label: 'Funil de vendas', href: '/funil' },
-    { icon: PiggyBank, label: 'Financeiro', href: '/financeiro' },
-    { icon: Banknote, label: 'Honorários', href: '/honorarios' },
-    { icon: FileBarChart, label: 'Relatórios', href: '/relatorios' },
-    { icon: TrendingUp, label: 'Previsões', href: '/previsoes' },
-    { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
-  ] },
-  { id: 'admin', titulo: 'Administração do escritório', bloco: 'Administração', nivel: 'admin', dica: 'Pessoas, cargos e consumo', itens: [
-    { icon: Users, label: 'Equipe', href: '/equipe' },
-    { icon: Wallet, label: 'Consumo', href: '/consumo' },
-  ] },
+  // Passo A27: as telas do Instituto saem do menu do escritório. O escritório cliente não vê a administração
+  // da plataforma nem a pesquisa do Instituto; só quem entra pelo THEYE Institute vê este bloco.
   { id: 'instituto', titulo: 'THEYE Institute', bloco: 'Instituto', nivel: 'instituto', dica: 'A plataforma inteira', itens: [
-    { icon: FlaskConical, label: 'Instituto', href: '/instituto' },
+    { icon: FlaskConical, label: 'THEYE Institute', href: '/instituto' },
     { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
     { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
+    { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
     { icon: Store, label: 'Soluções jurídicas', href: '/solucoes' },
   ] },
   { id: 'conta', titulo: 'Minha conta', bloco: 'Minha conta', nivel: 'todos', dica: 'Do seu jeito', itens: [
@@ -87,6 +89,48 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: Settings, label: 'Configurações', href: '/settings' },
   ] },
 ]
+
+const NOMES: Record<string, string> = Object.fromEntries(gruposMenu.flatMap(g => g.itens.map(i => [i.href, i.label])))
+/** O nome da tela, um só, para o menu, a entrada, a busca e a lista de telas. */
+export const nomeDaTela = (href: string): string | undefined => NOMES[href]
+
+/** Os atalhos de cada bloco na tela de entrada: só o destino e a frase que explica. O NOME vem do menu. */
+export interface AtalhoInicio { id: string; destino: string; texto: string; icone: LucideIcon; so?: 'admin' | 'veTudo' }
+const ATALHOS_INICIO: Record<string, AtalhoInicio[]> = {
+  hoje: [
+    { id: 'ir-meu-dia', destino: '/meu-dia', texto: 'Prazos, tarefas e intimações de hoje e da semana.', icone: CalendarClock },
+    { id: 'ir-agenda', destino: '/agenda', texto: 'Audiências, prazos e compromissos no calendário.', icone: CalendarDays },
+    { id: 'ir-intimacoes', destino: '/intimacoes', texto: 'O que chegou dos tribunais e ainda não foi lido.', icone: Inbox },
+  ],
+  processos: [
+    { id: 'ir-processos', destino: '/processos', texto: 'Os processos que estão sob a sua responsabilidade.', icone: Gavel },
+    { id: 'ir-processos-antigos', destino: '/processos-antigos', texto: 'Planilha ou nome do advogado: cadastra, busca no CNJ e mostra os prazos.', icone: UserPlus },
+    { id: 'ir-pesquisa', destino: '/pesquisa', texto: 'Processo, pessoa ou empresa numa caixa só.', icone: SearchCheck },
+  ],
+  pecas: [
+    { id: 'ir-assistente', destino: '/assistente', texto: 'Pede uma peça ou tira uma dúvida: o robô redige e responde citando a lei.', icone: MessageSquare },
+    { id: 'ir-meu-estilo', destino: '/meu-estilo', texto: 'Ensine o seu estilo com peças que você já escreveu.', icone: PenLine },
+    { id: 'ir-parametros', destino: '/parametros-escrita', texto: 'Tamanho, linguagem e estrutura das peças.', icone: BookOpen },
+  ],
+  escritorio: [
+    { id: 'ir-consultores', destino: '/consultores', texto: 'Um consultor por área do direito diz o que fazer primeiro.', icone: Briefcase },
+    { id: 'ir-indicadores', destino: '/indicadores', texto: 'Metas, prazos cumpridos e resultado do conjunto.', icone: Gauge, so: 'veTudo' },
+    { id: 'ir-equipe', destino: '/equipe', texto: 'Liberar quem pediu para entrar e definir o cargo de cada pessoa.', icone: Users, so: 'admin' },
+  ],
+}
+
+/**
+ * Os quatro blocos da tela de entrada, na ordem e com os nomes do menu: a entrada lê daqui, e por isso
+ * nenhuma tela pode ter um nome na entrada e outro no menu.
+ */
+export const BLOCOS_INICIO = gruposMenu
+  .filter(g => /^\d\. /.test(g.titulo))
+  .map(g => ({
+    id: g.id,
+    titulo: g.bloco,
+    dica: g.dica,
+    itens: (ATALHOS_INICIO[g.id] ?? []).map(a => ({ ...a, titulo: nomeDaTela(a.destino) ?? a.destino })),
+  }))
 
 /** Menu simples de quem ainda não escolheu o seu: só o que se usa todo dia. */
 export const ATALHOS_PADRAO = ['/inicio', '/meu-dia', '/agenda', '/intimacoes', '/processos', '/processos-antigos', '/meu-estilo', '/parametros-escrita']
@@ -103,7 +147,7 @@ export function podeVerNivel(nivel: Nivel, v: Visao): boolean {
 export function gruposVisiveis(v: Visao): GrupoMenu[] {
   return gruposMenu
     .filter(g => podeVerNivel(g.nivel, v))
-    .map(g => ({ ...g, itens: g.itens.filter(i => v.sede || !SO_SEDE.includes(i.href)) }))
+    .map(g => ({ ...g, itens: g.itens.filter(i => (v.sede || !SO_SEDE.includes(i.href)) && podeVerNivel(i.nivel ?? 'todos', v)) }))
     .filter(g => g.itens.length > 0)
 }
 
@@ -140,8 +184,8 @@ export const DICAS: Record<string, string> = {
   '/perfil-cliente': 'Ficha de cada cliente: casos, contatos e preferências',
   '/funil': 'Clientes em potencial, da primeira conversa ao contrato',
   '/financeiro': 'Entradas, saídas e saldo do escritório',
-  '/honorarios': 'Honorários combinados, cobrados e recebidos',
-  '/horas': 'Lançar horas trabalhadas e ver o ritmo da meta',
+  '/honorarios': 'Honorários combinados, cobrados e recebidos, caso por caso',
+  '/horas': 'Lançar as horas trabalhadas e ver o ritmo da meta',
   '/imoveis': 'Imóveis administrados, contratos e documentos',
   '/administracao': 'Administração de locações: cobranças, repasses e reajustes',
   '/fornecedores': 'Fornecedores do escritório e dos imóveis',
@@ -162,10 +206,10 @@ export const DICAS: Record<string, string> = {
   '/consultores': 'Consultores de IA por nível e por especialidade',
   '/estudos': 'Estudos para entidades, órgãos e associações',
   '/enquetes': 'Enquetes sobre temas do direito',
-  '/mercado': 'O mercado jurídico em números',
+  '/mercado': 'O mercado jurídico em números, pela pesquisa do Instituto',
   '/previsoes': 'Previsões e riscos da carteira',
   '/solucoes': 'A plataforma oferecida a outros escritórios (vertente comercial)',
-  '/nuvem': 'Arquivos do escritório na nuvem',
+  '/nuvem': 'Arquivos do escritório guardados na nuvem',
   '/consumo': 'Quanto cada pessoa consome de IA e quanto custa',
   '/equipe': 'Pessoas do escritório, funções e permissões',
   '/settings': 'Configurações da conta e da plataforma',
