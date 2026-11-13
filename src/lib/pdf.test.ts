@@ -20,7 +20,10 @@ const pdfjs = await import('pdfjs-dist')
 const arquivo = new File(['%PDF'], 'c.pdf', { type: 'application/pdf' })
 
 describe('extração de texto do PDF', () => {
-  it('usa o worker do cdnjs na mesma versão do pacote', () => {
+  it('só carrega o pdfjs no primeiro uso e então usa o worker do cdnjs na mesma versão do pacote', async () => {
+    expect(pdfjs.GlobalWorkerOptions.workerSrc).toBe('') // nada carregado na abertura (passo A02)
+    paginas = []
+    await extrairTextoPdf(arquivo)
     expect(pdfjs.GlobalWorkerOptions.workerSrc).toBe('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.0/pdf.worker.min.mjs')
   })
 
