@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
+import catalogo from '../data/stokasticos-biblioteca.json'
 
 // Stokasticos — homenagem à Arcanorum College de Peter J. Carroll, no estilo do Specularium.
 // Pedido de M (13/11/2026): rota oculta, só pelo símbolo ☉→∞+. Tem Biblioteca, Blog mensal do M,
@@ -86,15 +87,80 @@ function Biblioteca() {
         Catálogo aberto. Cada entrada traz autor, obra, assunto e link para o original. Não hospedamos o
         texto das obras; para ler, siga o link ou procure a edição em livraria ou biblioteca.
       </p>
-      <div className="grid sm:grid-cols-2 gap-4">
-        <Secao titulo="Por autor" nota="Peter J. Carroll, Phil Hine, Ramsey Dukes, Austin Osman Spare, Gordon White e outros — em preparação."/>
-        <Secao titulo="Por tema" nota="Sigilos, gnose, egregors, paradigma, cibermagia, magia do caos, teoria da magia — em preparação."/>
-        <Secao titulo="Specularium" nota="Índice dos posts do blog de Peter J. Carroll (specularium.org), com título, data e link para o original."/>
-        <Secao titulo="Mandrake Books" nota="Catálogo da editora (temas e dados bibliográficos). Quem quiser comprar o livro vai ao site da Mandrake."/>
-        <Secao titulo="Teses e artigos" nota="Trabalhos acadêmicos abertos (DOAJ, SciELO, BDTD, PhilPapers) sobre os temas das obras — em preparação."/>
-        <Secao titulo="Cursos abertos" nota="Cursos de universidades abertas sobre ciência da religião, antropologia da magia, história das ideias — em preparação."/>
+      <p className="text-xs text-white/40 max-w-3xl">
+        {catalogo.aviso} Atualizado em {catalogo.atualizado_em}.
+      </p>
+      <div className="space-y-10">
+        {catalogo.prateleiras.map((prateleira) => (
+          <Prateleira key={prateleira.id} prateleira={prateleira} />
+        ))}
       </div>
     </div>
+  )
+}
+
+type ItemCatalogo = {
+  titulo: string
+  autor: string
+  ano: string
+  tipo: string
+  editora: string
+  assunto: string
+  nota: string
+  url: string
+  acesso: string
+}
+
+type PrateleiraCatalogo = {
+  id: string
+  titulo: string
+  descricao: string
+  itens: ItemCatalogo[]
+}
+
+function Prateleira({ prateleira }: { prateleira: PrateleiraCatalogo }) {
+  return (
+    <section className="border-t border-white/15 pt-6">
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <h3 className="text-sm uppercase tracking-[0.2em]">{prateleira.titulo}</h3>
+        <span className="text-[11px] uppercase tracking-widest text-white/40">
+          {prateleira.itens.length} {prateleira.itens.length === 1 ? 'entrada' : 'entradas'}
+        </span>
+      </div>
+      <p className="text-xs text-white/50 mt-2 max-w-3xl">{prateleira.descricao}</p>
+      <ul className="mt-5 space-y-0 list-none p-0">
+        {prateleira.itens.map((item) => (
+          <ItemPrateleira key={`${prateleira.id}-${item.url}-${item.titulo}`} item={item} />
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+function ItemPrateleira({ item }: { item: ItemCatalogo }) {
+  const ficha = [item.autor, item.ano, item.tipo, item.editora].filter(Boolean).join(' · ')
+  return (
+    <li className="border-b border-white/15 py-4">
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <a
+          href={item.url}
+          target="_blank"
+          rel="noreferrer"
+          title={`Abrir a fonte original de ${item.titulo} (${item.url})`}
+          className="text-base text-white underline decoration-white/30 hover:decoration-white break-words"
+        >
+          {item.titulo}
+        </a>
+        <span className="text-[10px] uppercase tracking-widest text-white/50 border border-white/25 px-2 py-0.5 shrink-0">
+          {item.acesso}
+        </span>
+      </div>
+      <div className="text-xs text-white/50 mt-1 break-words">{ficha}</div>
+      {item.assunto && (
+        <div className="text-[11px] uppercase tracking-wider text-white/40 mt-1 break-words">{item.assunto}</div>
+      )}
+      {item.nota && <p className="text-sm text-white/70 mt-2 max-w-3xl">{item.nota}</p>}
+    </li>
   )
 }
 
