@@ -158,7 +158,7 @@ function PainelJurimetria() {
           ) : (
             <>
               <p className="font-serif text-3xl text-navy">{res.chanceExito}% <span className="text-base text-grafite">de êxito do autor</span></p>
-              {ic && <p className="text-sm text-grafite">Margem (95%): entre {ic.min}% e {ic.max}% · amostra de {res.amostra.toLocaleString('pt-BR')} sentenças · confiança {res.confianca === 'alta' ? 'alta' : res.confianca === 'media' ? 'média' : 'baixa'}</p>}
+              {ic && <p className="text-sm text-grafite">Margem (95%): entre {ic.min}% e {ic.max}% · amostra de {(res.amostra ?? 0).toLocaleString('pt-BR')} sentenças · confiança {res.confianca === 'alta' ? 'alta' : res.confianca === 'media' ? 'média' : 'baixa'}</p>}
               {ic && (
                 <div className="relative h-3 bg-navy/10" aria-hidden="true">
                   <span className="absolute h-3 bg-dourado/50" style={{ left: `${ic.min}%`, width: `${ic.max - ic.min}%` }} />
@@ -173,7 +173,7 @@ function PainelJurimetria() {
               </ul>
             </>
           )}
-          <p className="text-xs text-grafite-claro">Fonte: {res.fonte} · {res.tribunal} · {res.acao}{res.orgao ? ` · ${res.orgao}` : ''} · {res.processos.toLocaleString('pt-BR')} processos. O DataJud registra o movimento da sentença, não o mérito de cada caso: o número mede tendência, não o seu processo.</p>
+          <p className="text-xs text-grafite-claro">Fonte: {res.fonte} · {res.tribunal} · {res.acao}{res.orgao ? ` · ${res.orgao}` : ''} · {(res.processos ?? 0).toLocaleString('pt-BR')} processos. O DataJud registra o movimento da sentença, não o mérito de cada caso: o número mede tendência, não o seu processo.</p>
         </div>
       )}
     </section>

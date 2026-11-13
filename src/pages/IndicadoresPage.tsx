@@ -390,7 +390,7 @@ export default function IndicadoresPage() {
               <div>
                 <p className="text-sm font-medium mb-2">Próximos passos</p>
                 <ul className="text-sm space-y-1">
-                  {resumoDiario.proximosPassos.map((p, i) => (
+                  {(resumoDiario.proximosPassos ?? []).map((p, i) => (
                     <li key={i} className="flex gap-2">
                       <span className="text-dourado">•</span>
                       <span>{p}</span>

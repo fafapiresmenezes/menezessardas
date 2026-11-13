@@ -36,8 +36,11 @@ export default function CalibracaoPrevisoes({ compacto = false, versao = 0 }: { 
   useEffect(() => { lerCalibracao().then(setC); lerPares().then(setPares) }, [versao])
   if (!c) return null
   const linhas: [string, number | null, number, number | null][] = [
-    ['Inadimplência', c.brier_inadimplencia, c.n_inadimplencia, c.acerto_inadimplencia_pct],
-    ['Renovação', c.brier_renovacao, c.n_renovacao, c.acerto_renovacao_pct],
+    // `?? null` de propósito: campo ausente é diferente de `null` em JavaScript, e a tabela abaixo
+    // só sabe desenhar o travessão quando recebe `null`. Sem isto, uma linha sem o número vinda do
+    // banco derruba a tela inteira em vez de mostrar "—".
+    ['Inadimplência', c.brier_inadimplencia ?? null, c.n_inadimplencia ?? 0, c.acerto_inadimplencia_pct ?? null],
+    ['Renovação', c.brier_renovacao ?? null, c.n_renovacao ?? 0, c.acerto_renovacao_pct ?? null],
   ]
   return (
     <section data-testid="calibracao" className={`bg-white shadow-sm ${compacto ? 'border-t-2 border-dourado p-5' : 'p-6'}`} aria-labelledby="t-calib">

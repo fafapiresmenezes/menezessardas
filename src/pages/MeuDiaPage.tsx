@@ -192,9 +192,9 @@ export default function MeuDiaPage() {
         <section className={cartao} data-testid="resumo-semanal">
           <h2 className="font-serif text-lg flex items-center gap-2"><Mail className="w-5 h-5" aria-hidden />Resumo semanal de alertas</h2>
           <p className="text-xs text-grafite-claro mt-1">Toda segunda-feira às 8h a plataforma consolida os alertas por função e envia por e-mail a toda a equipe. Aqui está a parte da sua função.</p>
-          {resumo ? (
+          {resumo?.conteudo ? (
             <>
-              <p className="text-xs text-grafite-claro mt-2">Semana de {resumo.conteudo.semana}{resumo.enviado_em ? ` · enviado a ${resumo.destinatarios} pessoa(s) em ${new Date(resumo.enviado_em).toLocaleDateString('pt-BR')}` : ''}</p>
+              <p className="text-xs text-grafite-claro mt-2">Semana de {resumo.conteudo.semana ?? '—'}{resumo.enviado_em ? ` · enviado a ${resumo.destinatarios} pessoa(s) em ${new Date(resumo.enviado_em).toLocaleDateString('pt-BR')}` : ''}</p>
               <dl className="grid gap-x-6 gap-y-1 sm:grid-cols-2 text-sm mt-2">
                 {Object.entries(resumo.conteudo[SECAO_DO_PAPEL[papel] ?? 'advogada'] ?? {}).map(([k, v]) => (
                   <div key={k} className="flex justify-between gap-3 border-b border-navy/10 py-1" data-testid={`resumo-${k}`}><dt>{ROTULOS_RESUMO[k] ?? k}</dt><dd className="font-medium text-right">{DINHEIRO.has(k) ? brl(Number(v)) : (v === '' ? '—' : String(v))}</dd></div>
