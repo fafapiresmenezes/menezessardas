@@ -1,5 +1,6 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
-import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate, useLocation, useSearchParams } from 'react-router-dom'
+import { destinoSeguro } from '@/lib/destino'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { useIdiomaEscolhido } from '@/lib/i18n'
 import LoginPage from '@/pages/LoginPage'
@@ -495,8 +496,12 @@ function App() {
  */
 function Entrada({ autenticado }: { autenticado: boolean }) {
   const idioma = useIdiomaEscolhido()
-  if (autenticado) return <Navigate to="/inicio" />
-  return idioma ? <LoginPage /> : <Navigate to="/boas-vindas" />
+  // Quem veio de um quadradinho da porta (?ir=/engenharia) vai para a tela dele depois da senha.
+  const [busca] = useSearchParams()
+  const pedido = busca.get('ir')
+  if (autenticado) return <Navigate to={destinoSeguro(pedido)} />
+  if (idioma) return <LoginPage />
+  return <Navigate to={pedido && destinoSeguro(pedido) === pedido ? `/boas-vindas?ir=${encodeURIComponent(pedido)}` : '/boas-vindas'} />
 }
 
 /** Para onde manda quem chega na raiz ou num endereço que não existe. Mesmo motivo acima. */

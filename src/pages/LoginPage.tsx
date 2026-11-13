@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { mensagemAmigavel } from '@/lib/erros'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import Marca from '@/components/Marca'
 import { NOME_PLATAFORMA } from '@/lib/plataforma'
@@ -11,6 +11,9 @@ import SeletorIdioma from '@/components/SeletorIdioma'
 import Vertentes from '@/components/Vertentes'
 import Produtos from '@/components/Produtos'
 import Doacoes from '@/components/Doacoes'
+import { destinoSeguro, DESTINO_PADRAO } from '@/lib/destino'
+import { VERTENTES } from '@/data/vertentes'
+import type { Chave } from '@/lib/i18n'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -32,6 +35,13 @@ export default function LoginPage() {
   // Entrada multilingue (pedido de M, 13/11/2026): a tela fala o idioma escolhido nas boas-vindas
   // e a fileira de idiomas no pe troca na hora. Padrao: portugues.
   const t = useTexto()
+  // Pedido de M (13/11/2026 22:45): quem clicou num quadradinho entra direto na tela dele, e não
+  // na plataforma jurídica. O destino vem no endereço e só vale se estiver na lista permitida.
+  const [busca] = useSearchParams()
+  const destino = destinoSeguro(busca.get('ir'))
+  const vertenteDestino = VERTENTES.find(v => v.rota === destino && destino !== DESTINO_PADRAO)
+  const nomeDestino = vertenteDestino ? t(`vertente.${vertenteDestino.id}.nome` as Chave)
+    : destino === '/caderno-de-produtos' ? t('produtos.titulo') : ''
 
 
   // Dois fatores: se a conta tem aplicativo autenticador, a sessão só vale depois do código (nível aal2).
@@ -48,7 +58,7 @@ export default function LoginPage() {
       if (!fator) { setErro(t('erro.semAutenticador')); return }
       const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId: fator.id, code: codigo.replace(/\s/g, '') })
       if (error) setErro(t('erro.codigoErrado'))
-      else navigate('/inicio')
+      else navigate(destino)
     } finally { setCarregando(false) }
   }
 
@@ -82,7 +92,7 @@ export default function LoginPage() {
         const nomeEscritorio = escritorio.toUpperCase().replace(/\s+/g, ' ').trim()
         const { data, error } = await supabase.auth.signUp({ email, password: senha, options: { data: { escritorio: nomeEscritorio } } })
         if (error) setErro(/rate limit/i.test(error.message ?? '') ? t('erro.muitasContas') : t('erro.criarAcessoPrefixo') + mensagemAmigavel(error))
-        else if (data?.session) navigate('/inicio') // sem confirmação de e-mail: já entra; se o escritório existe, cai na tela de espera
+        else if (data?.session) navigate(destino) // sem confirmação de e-mail: já entra; se o escritório existe, cai na tela de espera
         else {
           setAvisoCadastro(t('login.avisoContaCriada'))
           setPrimeiroAcesso(false)
@@ -97,7 +107,7 @@ export default function LoginPage() {
 
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password: senha })
-      if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else navigate('/inicio') }
+      if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else navigate(destino) }
       else if (/not confirmed/i.test(error.message ?? '')) setErro(t('erro.emailNaoConfirmado'))
       else if (error.status === 400 || error.status === 401 || /invalid/i.test(mensagemAmigavel(error))) setErro(t('erro.credenciais'))
       else setErro(t('erro.servidorPrefixo') + mensagemAmigavel(error) + t('erro.servidorSufixo'))
@@ -109,17 +119,45 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-navy flex items-center justify-center p-4" style={marca ? { backgroundColor: marca.cor } : undefined}>
-      <div className="w-full max-w-md">
-        <div className="text-center mb-10">
-          <Marca tamanho="grande" marca={marca} subtitulo={t('marca.suporteJuridico')} />
+    <main className="min-h-screen bg-navy px-4 py-10 md:py-14" style={marca ? { backgroundColor: marca.cor } : undefined}>
+      <div className="mx-auto w-full max-w-6xl">
+      <div className="grid items-center gap-10 lg:grid-cols-[1fr_minmax(0,28rem)]">
+        {/* Lado de quem chega: o Instituto inteiro, não só o jurídico. Em domínio de escritório
+            parceiro (marca própria) este lado mostra só a marca dele. */}
+        <div className="porta text-center lg:text-left" data-testid="porta-instituto">
+          <div className="flex justify-center lg:justify-start mb-6">
+            <Marca tamanho="grande" marca={marca} subtitulo={t('marca.instituto')} />
+          </div>
+          {!marca && (
+            <>
+              <h1 className="font-serif text-4xl md:text-5xl">{t('boasVindas.instituto')}</h1>
+              <p className="mt-4 text-lg leading-relaxed text-neutral-100">{t('porta.chamada')}</p>
+              <p className="mt-2 text-base text-neutral-300">{t('porta.apoio')}</p>
+              <a
+                href="#frentes"
+                onClick={e => { e.preventDefault(); document.getElementById('frentes')?.scrollIntoView({ behavior: 'smooth' }) }}
+                title={t('porta.verFrentesDica')}
+                data-testid="porta-ver-frentes"
+                className="mt-6 inline-block text-base text-[#fff] underline decoration-neutral-400 underline-offset-4 hover:decoration-[#fff]"
+              >
+                {t('porta.verFrentes')} <span aria-hidden="true">↓</span>
+              </a>
+            </>
+          )}
         </div>
 
+        <div>
         <div className="bg-white rounded-sm shadow-xl border-t-2 border-dourado p-8">
           <h1 className="font-serif text-2xl text-navy text-center">{NOME_PLATAFORMA}</h1>
           <p className="text-sm text-grafite-claro text-center mt-2 mb-7">
             {primeiroAcesso ? t('login.subtituloCadastro') : t('login.subtitulo')}
           </p>
+
+          {nomeDestino && (
+            <div role="status" data-testid="login-destino" className="mb-5 p-3 bg-pergaminho border-l-2 border-navy text-navy text-sm">
+              {t('login.indoPara')} <strong>{nomeDestino}</strong>
+            </div>
+          )}
 
           {erro && (
             <div role="alert" className="mb-5 p-3 bg-criticoFundo border-l-2 border-critico text-critico text-sm">
@@ -249,16 +287,19 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <p className="text-center text-white/60 text-xs mt-8">
+        <p className="text-center text-neutral-300 text-sm mt-6">
           {NOME_PLATAFORMA}
         </p>
 
         {/* Fileira de idiomas: sempre visivel na primeira tela, troca a lingua na hora. */}
         <SeletorIdioma />
+        </div>
+      </div>
 
         {/* Pedido de M (13/11/2026): depois de escolher a lingua, a pessoa tem de ver TODAS as
             vertentes do Instituto, nao so a juridica, mesmo as que estao em desenvolvimento.
-            Nada aqui abre sem senha: cada item leva de volta a esta mesma tela de entrada. */}
+            Nada aqui abre sem senha: cada quadradinho traz a pessoa de volta a esta entrada,
+            lembrando para qual tela ela quer ir depois da senha. */}
         <Produtos />
         <Vertentes />
         <Doacoes />

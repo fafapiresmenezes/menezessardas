@@ -13,22 +13,26 @@
  *
  * Nada aqui abre sem senha. Esta lista é vitrine, não porta destrancada: quem clica vai para a
  * tela de entrada.
+ *
+ * `rota` (pedido de M em 13/11/2026 22:45): cada quadradinho leva à SUA tela. Antes todos caíam na
+ * mesma entrada e, depois da senha, na plataforma jurídica — por isso a pessoa via só o jurídico.
+ * Agora o quadradinho manda para a entrada lembrando o destino, e a entrada entrega a pessoa lá.
  */
 export type EstadoVertente = 'no-ar' | 'em-teste' | 'em-desenvolvimento' | 'em-estudo'
 
 export const VERTENTES = [
-  { id: 'direito', estado: 'no-ar' },
-  { id: 'predicao', estado: 'em-desenvolvimento' },
-  { id: 'geolocalizacao', estado: 'em-desenvolvimento' },
-  { id: 'engenharia', estado: 'em-desenvolvimento' },
-  { id: 'saude', estado: 'em-desenvolvimento' },
-  { id: 'educacao', estado: 'no-ar' },
-  { id: 'ciberseguranca', estado: 'em-teste' },
-  { id: 'geomapeamento', estado: 'em-estudo' },
-  { id: 'governo', estado: 'em-estudo' },
-  { id: 'civico', estado: 'em-estudo' },
-  { id: 'quantum', estado: 'em-estudo' },
-  { id: 'ia', estado: 'em-teste' },
-] as const satisfies readonly { id: string; estado: EstadoVertente }[]
+  { id: 'direito', estado: 'no-ar', rota: '/inicio' },
+  { id: 'predicao', estado: 'em-desenvolvimento', rota: '/preditiva' },
+  { id: 'geolocalizacao', estado: 'em-desenvolvimento', rota: '/geolocalizacao' },
+  { id: 'engenharia', estado: 'em-desenvolvimento', rota: '/engenharia' },
+  { id: 'saude', estado: 'em-desenvolvimento', rota: '/saude' },
+  { id: 'educacao', estado: 'no-ar', rota: '/educacao' },
+  { id: 'ciberseguranca', estado: 'em-teste', rota: '/ciberseguranca' },
+  { id: 'geomapeamento', estado: 'em-estudo', rota: '/geomapeamento' },
+  { id: 'governo', estado: 'em-estudo', rota: '/governo' },
+  { id: 'civico', estado: 'em-estudo', rota: '/civico' },
+  { id: 'quantum', estado: 'em-estudo', rota: '/quantum' },
+  { id: 'ia', estado: 'em-teste', rota: '/ia' },
+] as const satisfies readonly { id: string; estado: EstadoVertente; rota: string }[]
 
 export type IdVertente = (typeof VERTENTES)[number]['id']

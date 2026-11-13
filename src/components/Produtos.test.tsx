@@ -40,7 +40,7 @@ describe('vitrine de produtos na porta', () => {
 
   it('o caderno só abre depois da senha: o botão leva à entrada', () => {
     montar()
-    expect(screen.getByTestId('produtos-entrar').getAttribute('href')).toBe('/login')
+    expect(screen.getByTestId('produtos-entrar').getAttribute('href')).toBe('/login?ir=%2Fcaderno-de-produtos')
   })
 
   it('cada eixo diz quantos produtos tem, e a soma fecha com o caderno', () => {

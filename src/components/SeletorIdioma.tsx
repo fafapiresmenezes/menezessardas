@@ -7,13 +7,13 @@ export default function SeletorIdioma() {
   const atual = useIdioma()
   const t = useTexto()
   return (
-    <nav aria-label={t('idioma.trocar')} data-testid="seletor-idioma" className="mt-6 border-t border-white/15 pt-4">
+    <nav aria-label={t('idioma.trocar')} data-testid="seletor-idioma" className="mt-6 border-t border-neutral-600 pt-4">
       <ul className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
         {IDIOMAS.map((id, i) => {
           const ativo = id.codigo === atual
           return (
             <li key={id.codigo} className="flex items-center">
-              {i > 0 && <span aria-hidden="true" className="text-white/25 mr-3">·</span>}
+              {i > 0 && <span aria-hidden="true" className="text-neutral-400 mr-3">·</span>}
               <button
                 type="button"
                 onClick={() => trocarIdioma(id.codigo)}
@@ -22,7 +22,7 @@ export default function SeletorIdioma() {
                 title={ativo
                   ? `${t('idioma.atual')}: ${t(chaveIdioma(id.codigo))}`
                   : `${textoEm(id.codigo, 'idioma.trocarPara')} ${textoEm(id.codigo, chaveIdioma(id.codigo))}`}
-                className={`min-h-[44px] px-1 font-serif text-sm transition ${ativo ? 'text-white underline underline-offset-4' : 'text-white/50 hover:text-white'}`}
+                className={`min-h-[44px] px-1 font-serif text-base transition ${ativo ? 'text-[#fff] underline underline-offset-4' : 'text-neutral-300 hover:text-[#fff]'}`}
               >
                 {id.nativo}
               </button>

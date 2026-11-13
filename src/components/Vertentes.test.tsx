@@ -39,7 +39,8 @@ describe('vitrine das vertentes', () => {
   it('todo item leva à tela de entrada: a vitrine não abre nada sem senha', () => {
     montar()
     for (const v of VERTENTES) {
-      expect(screen.getByTestId(`vertente-${v.id}`).getAttribute('href'), v.id).toBe('/login')
+      // Sempre a entrada (nada abre sem senha), e agora lembrando a tela daquele quadradinho.
+      expect(screen.getByTestId(`vertente-${v.id}`).getAttribute('href'), v.id).toMatch(/^\/login(\?ir=%2F[a-z-]+)?$/)
     }
   })
 

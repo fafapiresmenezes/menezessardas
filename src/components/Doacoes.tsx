@@ -13,21 +13,23 @@ import { useTexto } from '@/lib/i18n'
 export default function Doacoes() {
   const t = useTexto()
   return (
-    <section className="mt-10 text-left" data-testid="doacoes">
-      <h2 className="text-lg font-serif text-center">{t('doacoes.titulo')}</h2>
-      <p className="text-xs text-white/60 mt-2 mb-4 text-center max-w-2xl mx-auto">{t('doacoes.resumo')}</p>
-      <div className="border border-white/20 p-4">
-        <ul className="space-y-2 text-xs text-white/70">
-          <li data-testid="doacao-forma-1">{t('doacoes.forma1')}</li>
-          <li data-testid="doacao-forma-2">{t('doacoes.forma2')}</li>
-          <li data-testid="doacao-forma-3">{t('doacoes.forma3')}</li>
+    <section className="porta mt-16 text-left" data-testid="doacoes">
+      <h2 className="text-3xl font-serif text-center">{t('doacoes.titulo')}</h2>
+      <p className="text-base text-neutral-200 mt-3 mb-8 text-center max-w-3xl mx-auto">{t('doacoes.resumo')}</p>
+      <div className="border border-neutral-600 bg-neutral-950 p-5 md:p-7">
+        <ul className="grid gap-4 md:grid-cols-3">
+          {(['doacoes.forma1', 'doacoes.forma2', 'doacoes.forma3'] as const).map((chave, i) => (
+            <li key={chave} data-testid={`doacao-forma-${i + 1}`} className="border-l-2 border-neutral-400 pl-4 text-sm leading-relaxed text-neutral-100">
+              {t(chave)}
+            </li>
+          ))}
         </ul>
-        <p className="text-[11px] text-white/45 mt-4" data-testid="doacao-destino">{t('doacoes.destino')}</p>
+        <p className="text-sm text-neutral-300 mt-7" data-testid="doacao-destino">{t('doacoes.destino')}</p>
         <Link
           to="/login"
           title={t('doacoes.entrar')}
           data-testid="doacoes-entrar"
-          className="inline-block mt-4 border border-white/40 hover:border-white px-4 py-2 text-xs uppercase tracking-wider no-underline"
+          className="inline-block mt-6 border border-[#fff] px-5 py-3 text-sm font-medium uppercase tracking-wider text-[#fff] no-underline transition hover:bg-neutral-800"
         >
           {t('doacoes.entrar')}
         </Link>

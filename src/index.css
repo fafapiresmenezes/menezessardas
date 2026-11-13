@@ -263,3 +263,10 @@ input[type=checkbox], input[type=radio] { min-width: 1.25rem; min-height: 1.25re
 /* Meu jeito de trabalhar: a pessoa escolhe a letra maior e a plataforma inteira acompanha (tudo é medido em rem). */
 html[data-letra='grande'] { font-size: 112.5%; }
 html[data-letra='maior'] { font-size: 125%; }
+
+/* A porta do Instituto (tela de idiomas e tela de entrada) é sempre preta com letra clara, no modo
+   claro e no escuro. Sem estas linhas o título herdava a cor escura dos títulos do resto da
+   plataforma e sumia no preto, e no modo escuro cada quadro ganhava fundo cinza por causa da regra
+   geral de `section` logo acima — era o "cinza com letra branca" que M apontou em 13/11/2026. */
+.porta, .porta h1, .porta h2, .porta h3 { color: #FFFFFF; }
+.dark section.porta, .dark .porta section { background: transparent; border-color: transparent; }
