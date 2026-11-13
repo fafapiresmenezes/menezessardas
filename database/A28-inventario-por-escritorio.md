@@ -84,10 +84,40 @@ era `USING (true)`, com `SELECT` concedido ao papel `anon`: **qualquer pessoa co
 site podia ler esses números sem fazer login**. A migração `128` troca isso por "quem está logado na
 sede". Escrita, não aplicada.
 
+## As funções SECURITY DEFINER, agora auditadas (13/11/2026)
+
+A pergunta "quem vê o que" não para nas tabelas. Uma função `SECURITY DEFINER` roda com os poderes
+de quem a definiu e por isso passa por cima de **toda** política de tabela. Medido no banco:
+
+| Medida | Número |
+| --- | --- |
+| Funções `SECURITY DEFINER` no esquema `public` | 177 |
+| Executáveis pelo papel `anon`, isto é, **sem login** | 116 |
+| Dessas, sem nenhuma tranca no corpo (nem `auth.uid()`, nem `eh_sede()`, nem token, nem segredo) | 53 |
+
+`anon` as alcança porque o Postgres concede EXECUTE a PUBLIC por padrão em toda função nova, e
+`anon` herda de PUBLIC. Não foi escolha de ninguém: é o padrão do banco.
+
+Conferido executando de verdade, com `set role anon` e sem nenhum JWT: `instituto_pendencias()`
+devolveu 7.251 caracteres, `instituto_okr()` 4.869, `instituto_placar_unico()` 3.327,
+`instituto_cobertura()` 3.273, `instituto_negocio(30)` 3.157. Dentro vinham a regra de preço do
+Instituto, o custo de infraestrutura, a série de receita por dia e a lista de decisões pendentes.
+
+**O achado mais sério:** `kyc_pendentes_reconsulta()` devolve CNPJ, nome e grau de risco de todas as
+empresas que o escritório mandou checar, sem login nenhum — passando por cima da política
+`so_sede_ate_separar` da tabela `checagens_kyc`, que é das mais fechadas que existem.
+
+A migração `129` fecha o "sem login" de 26 funções, sem tocar em nenhum corpo: `revoke execute from
+public` e depois `grant` para quem precisa. Ela fecha só o sem-login; quem, entre as pessoas já
+logadas, deve ver os números do Instituto é decisão do M. O que a 129 de propósito deixa aberto, e
+por quê, está escrito no fim do arquivo dela — inclusive as seis funções que ficam abertas porque
+fechá-las exige mudar código de servidor, não privilégio.
+
 ## O que este inventário não cobre
 
 A pergunta "quem vê o que" também depende das funções `SECURITY DEFINER`, que montam respostas
 dentro do banco com os poderes de quem as definiu e por isso passam por cima de toda política. A
-`semana_agenda` era uma delas, e é o que a migração `126` fecha. **As outras funções
-`SECURITY DEFINER` do banco ainda não foram auditadas uma por uma** — é o próximo passo natural
-depois da 126, e é onde eu esperaria encontrar o que sobrou.
+`semana_agenda` era uma delas, e é o que a migração `126` fecha. As outras funções `SECURITY DEFINER` foram
+auditadas em 13/11/2026 e estão na seção acima, com a migração `129`. O que continua **não**
+coberto é o esquema `instituto`, que tem funções próprias, e as seis funções que a 129 deixa
+abertas por dependerem de mudança em código de servidor.
