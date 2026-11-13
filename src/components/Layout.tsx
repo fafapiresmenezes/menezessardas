@@ -24,7 +24,7 @@ import { listarPessoas, perfilAtual, meuEscritorio, esquecerEscritorio, type Meu
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal } from 'lucide-react'
+import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal, AppWindow } from 'lucide-react'
 import { gruposMenu, gruposVisiveis, atalhosDoMenu, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao } from './menuTelas'
 import { meuAlcance } from '@/lib/hierarquia'
 import { lerMeuJeito, carregarMeuJeito, esquecerMeuJeito, aplicarLetra, EVENTO_JEITO, type MeuJeito } from '@/lib/meuJeito'
@@ -331,6 +331,17 @@ export default function Layout({ children, title }: LayoutProps) {
           <TourTela />
           <PerguntarTela />
           {!simples && <BotaoExportar />}
+          <button
+            type="button"
+            onClick={() => navigate('/navegador')}
+            className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center gap-2 px-3 border border-navy/15 rounded-sm text-navy hover:border-dourado transition text-sm"
+            aria-label="Navegador interno"
+            title="Navegador interno: abrir tribunais, diários e pesquisa sem sair da plataforma"
+            data-testid="abrir-navegador"
+          >
+            <AppWindow size={18} aria-hidden="true" />
+            <span className="hidden 2xl:inline">Navegador</span>
+          </button>
           <SinoNotificacoes />
           {admin && (
             <button

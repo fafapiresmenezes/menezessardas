@@ -1,7 +1,7 @@
 import { FunctionRegion } from '@supabase/supabase-js'
 import { useBaixado } from '@/hooks/useBaixado'
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { ExternalLink, Search } from 'lucide-react'
@@ -129,7 +129,7 @@ export default function FontesPage() {
             </div>
           )}
         </section>
-        <p className="text-xs text-grafite-claro" data-testid="contador-fontes">{FONTES.length} fontes públicas e gratuitas{termo.trim() ? `, todas prontas para "${termo.trim()}"` : ''}; cada cartão abre a fonte já com o termo.</p>
+        <p className="text-xs text-grafite-claro" data-testid="contador-fontes">{FONTES.length} fontes públicas e gratuitas{termo.trim() ? `, todas prontas para "${termo.trim()}"` : ''}; cada cartão abre a fonte já com o termo. Prefere não sair da plataforma? Use o <Link to={`/navegador${termo.trim() ? `?u=${encodeURIComponent(termo.trim())}` : ''}`} className="underline decoration-dourado text-navy" data-testid="fontes-navegador">navegador interno</Link>.</p>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FONTES.map(f => (
             <a key={f.nome} data-testid="fonte" title={`Abre ${f.nome} em uma nova aba, já com a busca pelo termo digitado acima`} href={f.url(termo.trim())} target="_blank" rel="noopener noreferrer" className="bg-white shadow-sm p-5 border-l-4 border-navy hover:border-dourado block">

@@ -2,7 +2,7 @@
 // A divisão é a mesma da tela de entrada: 1. Todo dia, 2. Processos, 3. Escrever peças, 4. Escritório.
 // Cada grupo tem um NÍVEL: quem não é daquele nível nem vê o grupo no menu. O banco continua sendo quem protege os dados;
 // aqui é só arrumação, para ninguém ver botão que não é para si.
-import { Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, type LucideIcon } from 'lucide-react'
+import { Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, AppWindow, type LucideIcon } from 'lucide-react'
 
 export type Nivel = 'todos' | 'gestao' | 'admin' | 'instituto'
 export interface Tela { icon: LucideIcon; label: string; href: string }
@@ -47,6 +47,7 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: MessageSquare, label: 'Assistente', href: '/assistente' },
     { icon: FileText, label: 'Modelos de peças', href: '/modelos' },
     { icon: Scale, label: 'Legislação', href: '/legislacao' },
+    { icon: AppWindow, label: 'Navegador interno', href: '/navegador' },
     { icon: Globe, label: 'Fontes do advogado', href: '/fontes' },
     { icon: Library, label: 'Repositório e biblioteca', href: '/biblioteca' },
     { icon: Briefcase, label: 'Consultores', href: '/consultores' },
@@ -149,6 +150,7 @@ export const DICAS: Record<string, string> = {
   '/legislacao': 'Ler a lei direto do Planalto, artigo por artigo',
   '/assistente': 'Perguntar, redigir peça ou comparar caminhos com a IA',
   '/modelos': 'Modelos prontos de peças e documentos do escritório',
+  '/navegador': 'Abrir tribunais, diários e pesquisa sem sair da plataforma',
   '/fontes': 'Tribunais, diários e fontes oficiais em um só lugar',
   '/biblioteca': 'Tudo o que já foi pesquisado e os repositórios abertos de teses, legislação e jurisprudência',
   '/parametros-escrita': 'Como o robô escreve: redatores, tom e formatação das peças',
