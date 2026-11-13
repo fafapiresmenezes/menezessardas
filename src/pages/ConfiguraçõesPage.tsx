@@ -10,6 +10,7 @@ import { minhaPreferencia, definirMinhaPreferencia } from '@/lib/preferencias'
 import { ROTAS_TELAS } from '@/data/rotas'
 import { estadoChaveIA, removerChaveIA, salvarChaveIA, testarChaveIA, type EstadoChaveIA } from '@/lib/ia'
 import { perfilAtual, rotuloFuncao, type Funcao } from '@/lib/equipe'
+import { lerConfig, gravarConfig } from '@/lib/config'
 import SecaoPix from '@/components/SecaoPix'
 import AvisosCelular from '@/components/AvisosCelular'
 
@@ -257,11 +258,92 @@ export default function ConfiguraçõesPage() {
         <SecaoTransparencia />
         <SecaoIcs />
         <SecaoPix />
+        <SecaoStokasticos />
       </div>
       <div className={mostra('avaliacao')}>
         <AvaliacaoSUS />
       </div>
     </Layout>
+  )
+}
+
+/**
+ * Senha única de entrada do Stokasticos (a escola oculta). Só a administração vê esta seção.
+ * A senha atual nunca aparece na tela: a seção diz apenas se existe uma.
+ */
+function SecaoStokasticos() {
+  const [admin, setAdmin] = useState(false)
+  const [definida, setDefinida] = useState<boolean | null>(null)
+  const [senha, setSenha] = useState('')
+  const [ocupado, setOcupado] = useState(false)
+  const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+
+  // Guardamos só se existe senha, nunca o texto dela.
+  const carregar = async () => {
+    try { setDefinida(Boolean((await lerConfig(['stokasticos_senha'])).stokasticos_senha?.trim())) }
+    catch { setDefinida(null) }
+  }
+
+  useEffect(() => {
+    if (!supabaseConfigurado) return
+    perfilAtual().then(p => { setAdmin(p === 'admin'); if (p === 'admin') carregar() }).catch(() => undefined)
+  }, [])
+
+  if (!supabaseConfigurado || !admin) return null
+
+  const salvar = async () => {
+    setOcupado(true)
+    setMsg(null)
+    try {
+      await gravarConfig({ stokasticos_senha: senha.trim() })
+      setSenha('')
+      setMsg({ tipo: 'ok', texto: 'Senha salva. Passe-a a quem você quer deixar entrar.' })
+      await carregar()
+    } catch (e) {
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
+    } finally {
+      setOcupado(false)
+    }
+  }
+
+  return (
+    <section aria-labelledby="stokasticos" className="max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado" data-testid="secao-stokasticos">
+      <h2 id="stokasticos" className="text-lg mb-1 flex items-center gap-2">
+        <KeyRound size={18} className="text-dourado" aria-hidden="true" />
+        Stokasticos
+      </h2>
+      <p className="text-sm text-grafite-claro mb-3">
+        Senha única de entrada da escola oculta. Enquanto ela estiver em branco, ninguém entra. Os pedidos de
+        acesso chegam por e-mail no endereço guardado em <code>stokasticos_email_admin</code>.
+      </p>
+      <p className="text-sm mb-3" aria-live="polite">
+        {definida === null ? 'Consultando…' : definida ? 'Senha definida. Para trocá-la, escreva outra abaixo e salve.' : 'Nenhuma senha definida: a entrada está fechada para todos.'}
+      </p>
+      {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={`p-3 text-sm border-l-2 mb-3 ${msg.tipo === 'ok' ? 'bg-regularFundo border-regular text-regular' : 'bg-criticoFundo border-critico text-critico'}`}>{msg.texto}</p>}
+      <label htmlFor="stokasticos-senha" className="block text-xs uppercase tracking-wider text-grafite mb-2">
+        {definida ? 'Nova senha do Stokasticos' : 'Senha do Stokasticos'}
+      </label>
+      <input
+        id="stokasticos-senha"
+        type="password"
+        autoComplete="off"
+        value={senha}
+        onChange={e => setSenha(e.target.value)}
+        title="Senha única que abre o Stokasticos; ela é guardada no servidor e nunca volta para esta tela"
+        className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white"
+        data-testid="stokasticos-senha"
+      />
+      <button
+        type="button"
+        onClick={salvar}
+        disabled={!senha.trim() || ocupado}
+        title="Grava a senha de entrada do Stokasticos no servidor"
+        className="mt-3 min-h-[44px] px-5 bg-navy text-white text-sm uppercase tracking-wider disabled:bg-grafite-claro/40"
+        data-testid="stokasticos-salvar"
+      >
+        {ocupado ? 'Salvando…' : 'Salvar senha'}
+      </button>
+    </section>
   )
 }
 
