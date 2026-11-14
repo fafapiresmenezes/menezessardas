@@ -21,12 +21,12 @@ import ExigirDoisFatores from './ExigirDoisFatores'
 import AceiteContratoSaas from './AceiteContratoSaas'
 import AceiteTermos from './AceiteTermos'
 import { aplicarTema, temaAtual } from '@/lib/tema'
-import { NOME_PLATAFORMA } from '@/lib/plataforma'
+import { NOME_PLATAFORMA, NOME_INSTITUTO_COMPLETO } from '@/lib/plataforma'
 import { listarPessoas, perfilAtual, meuEscritorio, esquecerEscritorio, type MeuEscritorio } from '@/lib/equipe'
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal, Compass, LayoutGrid } from 'lucide-react'
+import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal, Compass, LayoutGrid, AppWindow } from 'lucide-react'
 import { gruposMenu, gruposVisiveis, atalhosDoMenu, frenteDe, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao } from './menuTelas'
 import { meuAlcance, ALCANCE_FECHADO } from '@/lib/hierarquia'
 import { lerMeuJeito, carregarMeuJeito, esquecerMeuJeito, aplicarLetra, EVENTO_JEITO, type MeuJeito } from '@/lib/meuJeito'
@@ -369,7 +369,8 @@ export default function Layout({ children, title }: LayoutProps) {
           {menuAberto && (
             <p className="text-[11px] text-white/70 px-4 text-center">
               Desenvolvido pelo<br />
-              THEYE Institute
+              THEYE Institute<br />
+              <span className="italic">{NOME_INSTITUTO_COMPLETO}</span>
             </p>
           )}
         </div>
@@ -390,6 +391,17 @@ export default function Layout({ children, title }: LayoutProps) {
           <TourTela />
           <PerguntarTela />
           {!simples && <BotaoExportar />}
+          <button
+            type="button"
+            onClick={() => navigate('/navegador')}
+            className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center gap-2 px-3 border border-navy/15 rounded-sm text-navy hover:border-dourado transition text-sm"
+            aria-label="Navegador interno"
+            title="Navegador interno: abrir tribunais, diários e pesquisa sem sair da plataforma"
+            data-testid="abrir-navegador"
+          >
+            <AppWindow size={18} aria-hidden="true" />
+            <span className="hidden 2xl:inline">Navegador</span>
+          </button>
           <SinoNotificacoes />
           {admin && !frente && (
             <button

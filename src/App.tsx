@@ -92,6 +92,7 @@ const EstudosPage = lazy(() => import('@/pages/EstudosPage'))
 const EngenhariaPage = lazy(() => import('@/pages/EngenhariaPage'))
 const SaudePage = lazy(() => import('@/pages/SaudePage'))
 const ParametrosEscritaPage = lazy(() => import('@/pages/ParametrosEscritaPage'))
+const NavegadorPage = lazy(() => import('@/pages/NavegadorPage'))
 
 // Com dois fatores ativos, a sessão só libera o sistema depois do código (nível aal2).
 async function segundoFatorOk() {
@@ -230,6 +231,10 @@ function App() {
         <Route
           path="/ferramentas"
           element={isAuthenticated ? <FerramentasPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/navegador"
+          element={isAuthenticated ? <NavegadorPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/solucoes"
