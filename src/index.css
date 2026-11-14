@@ -270,6 +270,9 @@ html[data-letra='maior'] { font-size: 125%; }
    geral de `section` logo acima — era o "cinza com letra branca" que M apontou em 13/11/2026. */
 .porta, .porta h1, .porta h2, .porta h3 { color: #FFFFFF; }
 .dark section.porta, .dark .porta section { background: transparent; border-color: transparent; }
+/* A porta é preta NOS DOIS modos: no claro, o gradiente global de <section> abria uma caixa cinza
+   atrás de "Já tenho acesso" e das vertentes (V13). Aqui ele é desligado dentro da porta. */
+section.porta, .porta section { background: transparent; }
 
 /* O cartão de entrada (passo V13): preto com linha fina, igual nos dois modos, com UM botão forte.
    Antes era branco no modo claro e cinza no escuro, e o botão de entrar era cinza sobre cinza. */

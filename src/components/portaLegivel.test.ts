@@ -51,6 +51,11 @@ describe('a porta do Instituto dá para ler', () => {
     expect(css).toContain('.porta, .porta h1, .porta h2, .porta h3 { color: #FFFFFF; }')
     expect(css).toContain('.dark section.porta, .dark .porta section { background: transparent;')
   })
+
+  it('a porta fica preta também no modo claro: sem a caixa cinza do gradiente de section', () => {
+    const css = readFileSync(join(process.cwd(), 'src/index.css'), 'utf-8')
+    expect(css).toContain('section.porta, .porta section { background: transparent;')
+  })
 })
 
 describe('cada quadradinho leva à sua própria tela', () => {
