@@ -15,6 +15,7 @@ const FrentesDoInstitutoPage = lazy(() => import('@/pages/FrentesDoInstitutoPage
 // Passo T2: conferir a corrente do trilho no navegador de quem duvida.
 const LastroPage = lazy(() => import('@/pages/LastroPage'))
 const CotasQuanticasPage = lazy(() => import('@/pages/CotasQuanticasPage'))
+const AdmissaoPage = lazy(() => import('@/pages/AdmissaoPage'))
 const RoyaltiesPage = lazy(() => import('@/pages/RoyaltiesPage'))
 const MedicoesContratosPage = lazy(() => import('@/pages/MedicoesContratosPage'))
 const SuperficieAtaquePage = lazy(() => import('@/pages/SuperficieAtaquePage'))
@@ -263,6 +264,8 @@ function App() {
           element={isAuthenticated ? <FrentesDoInstitutoPage /> : <Navigate to="/login" />}
         />
         <Route path="/lastro" element={<LastroPage />} />
+        <Route path="/admissao" element={<AdmissaoPage />} />
+        <Route path="/pedir-entrada" element={<AdmissaoPage />} />
         <Route path="/preditiva" element={<PortalInstitutoPage />} />
         <Route path="/geomapeamento" element={<PortalInstitutoPage />} />
         <Route path="/governo" element={<PortalInstitutoPage />} />

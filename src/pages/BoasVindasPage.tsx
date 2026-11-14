@@ -63,6 +63,19 @@ export default function BoasVindasPage() {
           {t('porta.verFrentes')} <span aria-hidden="true">↓</span>
         </a>
 
+        {/* Problema #1 do planejamento: quem não é membro não tinha como falar com o Instituto.
+            Agora a porta tem um caminho de verdade, sem senha. */}
+        <div className="mt-8">
+          <Link
+            to="/admissao"
+            data-testid="porta-pedir-entrada"
+            title="Deixe um pedido: uma pessoa do Instituto lê e responde"
+            className="inline-block min-h-[48px] px-7 py-3 border border-[#fff] bg-[#fff] text-[#000] font-medium uppercase tracking-[0.15em] text-sm no-underline hover:bg-transparent hover:text-[#fff] transition"
+          >
+            Pedir entrada
+          </Link>
+        </div>
+
         {/* Ordem de quem compra (passo V13, 13/11/2026 23:04): o que é, a prova, as frentes, o
             caderno de produtos e o apoio. Às 21:35 os produtos vinham em cima; mudou com o pedido
             de pensar a página pela jornada de quem chega. */}

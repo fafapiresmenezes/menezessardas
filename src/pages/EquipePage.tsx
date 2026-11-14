@@ -5,6 +5,7 @@ import Layout from '@/components/Layout'
 import TesteGeral from '@/components/TesteGeral'
 import TesteTelas from '@/components/TesteTelas'
 import EscritoriosParceiros from '@/components/EscritoriosParceiros'
+import PedidosEntradaAdmin from '@/components/PedidosEntradaAdmin'
 import { Users, UserPlus, KeyRound } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import {
@@ -259,6 +260,7 @@ export default function EquipePage() {
                 })}
               </ul>
             </section>
+            {sede && <PedidosEntradaAdmin />}
             {sede && <EscritoriosParceiros pessoas={pessoas} aoMudar={carregar} />}
           </>
         )}
