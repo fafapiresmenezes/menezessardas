@@ -26,8 +26,8 @@ import { listarPessoas, perfilAtual, meuEscritorio, esquecerEscritorio, type Meu
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal, Compass } from 'lucide-react'
-import { gruposMenu, gruposVisiveis, atalhosDoMenu, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao } from './menuTelas'
+import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal, Compass, LayoutGrid } from 'lucide-react'
+import { gruposMenu, gruposVisiveis, atalhosDoMenu, frenteDe, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao } from './menuTelas'
 import { meuAlcance, ALCANCE_FECHADO } from '@/lib/hierarquia'
 import { lerMeuJeito, carregarMeuJeito, esquecerMeuJeito, aplicarLetra, EVENTO_JEITO, type MeuJeito } from '@/lib/meuJeito'
 
@@ -88,6 +88,8 @@ export default function Layout({ children, title }: LayoutProps) {
   const { pathname } = useLocation()
   const visao: Visao = { veTudo, admin, instituto: escritorio?.instituto === true, sede }
   const gruposDaPessoa = gruposVisiveis(visao)
+  // Cada frente do Instituto é uma plataforma à parte: dentro dela, o menu do direito some.
+  const frente = frenteDe(pathname)
   const meusAtalhos = atalhosDoMenu(jeito.atalhos, visao)
   // Com o menu recolhido só há o ícone, então a dica começa pelo nome da tela.
   const dicaDe = (item: { href: string; label: string }) =>
@@ -199,7 +201,45 @@ export default function Layout({ children, title }: LayoutProps) {
         </div>
 
         <nav className="flex-1 overflow-y-auto" aria-label="Menu principal">
-          {simples && (
+          {frente && (
+            <ul className="px-3 pt-3 space-y-1" data-testid="menu-frente" data-frente={frente.id}>
+              {menuAberto && (
+                <li className="px-4 pb-2 pt-1">
+                  <p className="text-[11px] uppercase tracking-[0.16em] text-dourado">Instituto THEYE</p>
+                  <p className="text-base text-white">{frente.nome}</p>
+                </li>
+              )}
+              {frente.itens.map(item => {
+                const ativo = estaAtivo(item.href, pathname)
+                return (
+                  <li key={item.href}>
+                    <button
+                      onClick={() => navigate(item.href)}
+                      aria-current={ativo ? 'page' : undefined}
+                      className={`w-full flex items-center gap-3 px-4 py-3 min-h-[48px] rounded transition border-l-2 ${ativo ? 'bg-white/10 border-dourado text-white' : 'border-transparent text-white/85 hover:bg-white/5 hover:text-white'}`}
+                      title={dicaDe(item)}
+                    >
+                      <item.icon size={20} className="flex-shrink-0" />
+                      {menuAberto && <span className="text-base">{item.label}</span>}
+                    </button>
+                  </li>
+                )
+              })}
+              <li className="pt-4">
+                <button
+                  type="button"
+                  onClick={() => navigate('/frentes-do-instituto')}
+                  className="w-full flex items-center gap-3 px-4 py-3 min-h-[48px] rounded text-white/85 hover:bg-white/5 hover:text-white"
+                  data-testid="menu-frente-voltar"
+                  title="Volta para a lista das frentes do Instituto, para abrir outra"
+                >
+                  <LayoutGrid size={20} className="flex-shrink-0" />
+                  {menuAberto && <span className="text-sm">Todas as frentes do Instituto</span>}
+                </button>
+              </li>
+            </ul>
+          )}
+          {!frente && simples && (
             <ul className="px-3 pt-3 space-y-1" data-testid="menu-simples">
               {meusAtalhos.map((item, i) => {
                 const ativo = estaAtivo(item.href, pathname)
@@ -236,14 +276,14 @@ export default function Layout({ children, title }: LayoutProps) {
               )}
             </ul>
           )}
-          {!simples && menuAberto && (
+          {!frente && !simples && menuAberto && (
             <div className="px-4 pt-3">
               <button type="button" onClick={() => mudarSimples(true)} className="text-sm text-dourado hover:underline underline-offset-2 min-h-[36px]" data-testid="menu-voltar-simples" title="Volta ao menu simples, só com as telas usadas todo dia">
                 ← Voltar ao menu simples
               </button>
             </div>
           )}
-          {!simples && menuAberto && (
+          {!frente && !simples && menuAberto && (
             <div className="px-4 pt-3 flex justify-end">
               {(() => {
                 const visiveis = gruposDaPessoa
@@ -262,7 +302,7 @@ export default function Layout({ children, title }: LayoutProps) {
               })()}
             </div>
           )}
-          {!simples && gruposDaPessoa.map(grupo => {
+          {!frente && !simples && gruposDaPessoa.map(grupo => {
             const itens = grupo.itens
             const aberto = !menuAberto || !!grupos[grupo.id]
             const grupoAtivo = itens.some(i => estaAtivo(i.href, pathname))
@@ -342,7 +382,8 @@ export default function Layout({ children, title }: LayoutProps) {
             {/* Em notebooks os rótulos dos botões somem (só ícones) para o título da tela caber inteiro. */}
             <div className="min-w-0">
               <h1 className="font-serif text-2xl md:text-3xl text-navy truncate min-w-0" title={title}>{title}</h1>
-              {escritorio && <p className="text-xs text-grafite-claro truncate" data-testid="escritorio-atual" title="Você está trabalhando dentro deste escritório. Só as pessoas dele enxergam estes dados.">Escritório: <strong className="text-grafite">{escritorio.nome}</strong></p>}
+              {frente && <p className="text-xs text-grafite-claro truncate" data-testid="frente-atual" title="Você está numa frente do Instituto THEYE, separada da plataforma de direito.">Instituto THEYE · <strong className="text-grafite">{frente.nome}</strong></p>}
+              {!frente && escritorio && <p className="text-xs text-grafite-claro truncate" data-testid="escritorio-atual" title="Você está trabalhando dentro deste escritório. Só as pessoas dele enxergam estes dados.">Escritório: <strong className="text-grafite">{escritorio.nome}</strong></p>}
             </div>
           </div>
           <div className="flex flex-wrap md:flex-nowrap items-center gap-2 md:flex-shrink-0">
@@ -350,7 +391,7 @@ export default function Layout({ children, title }: LayoutProps) {
           <PerguntarTela />
           {!simples && <BotaoExportar />}
           <SinoNotificacoes />
-          {admin && (
+          {admin && !frente && (
             <button
               onClick={() => navigate('/equipe')}
               className="relative flex items-center gap-2 min-h-[44px] px-3 sm:px-4 bg-navy text-white rounded-sm text-sm hover:bg-navy-700 transition"
