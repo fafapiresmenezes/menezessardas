@@ -20,3 +20,10 @@ verify_jwt = false
 # sem o segredo responde 401, para ninguém disparar coleta anonimamente.
 [functions.gdelt-coleta]
 verify_jwt = false
+
+# Passo C3: água (ANA/SAR). Mesma regra do gdelt-coleta: chamada pelo pg_cron com x-cron-secret,
+# sem login. Com verify_jwt=true (o padrão de quem esqueceu de marcar aqui) o próprio portão da
+# Edge Function devolvia 401 antes do código rodar, e a coleta diária nunca escreveu nada — foi
+# isso que fez C3 ficar em zero eventos até 14/11/2026, mesmo com o cron marcando "succeeded".
+[functions.ana-agua]
+verify_jwt = false

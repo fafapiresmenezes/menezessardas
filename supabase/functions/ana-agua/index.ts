@@ -35,7 +35,13 @@
 // GUARDA: cabeçalho x-cron-secret conferido contra configuracoes (chave 'cron_segredo'), igual a
 // gdelt-coleta. O modo "serie" é leitura de dado público e não exige segredo.
 //
-// Deploy: supabase functions deploy ana-agua
+// verify_jwt=false (supabase/config.toml): igual a gdelt-coleta, porque o agendador (pg_cron, via
+// net.http_post) não manda cabeçalho de autorização nenhum, só x-cron-secret. Com verify_jwt=true
+// o próprio portão da Edge Function devolvia 401 antes do código rodar, e a coleta diária nunca
+// escrevia nada — foi isso que fez C3 ficar em 0 eventos até 14/11/2026 22h53, mesmo com o cron
+// marcando "succeeded". A proteção de quem pode gravar continua sendo o x-cron-secret, abaixo.
+//
+// Deploy: supabase functions deploy ana-agua (ou publicar de novo com verify_jwt=false lido daqui)
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 
 const cors = {
