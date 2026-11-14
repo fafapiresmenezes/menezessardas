@@ -1,0 +1,2 @@
+import{getDocument as c,version as p,GlobalWorkerOptions as _}from"./pdf-D7E6TBK2.js";import"./index-qTZCcWnh.js";import"./vendor-D_ufswWq.js";_.workerSrc=`https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${p}/pdf.worker.min.mjs`;const n=4e4;async function d(r){const s=await r.arrayBuffer(),e=await c({data:s}).promise,o=[];for(let t=1;t<=e.numPages;t++){const i=(await(await e.getPage(t)).getTextContent()).items.map(a=>"str"in a?a.str:"").join(" ");if(o.push(`[Página ${t}] ${i}`),o.join(" ").length>n)break}return o.join(`
+`).slice(0,n).trim()}export{d as extrairTextoPdf};
