@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Layout from '@/components/Layout'
 import { EIXOS, PRODUTOS, porEixo, CADERNO_EM, type Eixo } from '@/data/produtos'
+import { PRECOS_CADERNO } from '@/data/precos-caderno'
 
 /**
  * Caderno de produtos do Instituto THEYE.
@@ -103,7 +104,7 @@ export default function CadernoDeProdutosPage() {
                         <span className="block text-sm text-grafite mt-1">{p.paraQuem}</span>
                       </span>
                       <span className="text-right shrink-0">
-                        <span className="block font-serif text-lg text-navy tabular-nums">{p.preco}</span>
+                        <span className="block font-serif text-lg text-navy tabular-nums">{PRECOS_CADERNO[p.numero]}</span>
                         <span className="block text-xs text-grafite">{p.prazo}</span>
                       </span>
                       <span aria-hidden="true" className="text-navy text-lg leading-none mt-1">{isAberto ? '−' : '+'}</span>
@@ -136,7 +137,7 @@ export default function CadernoDeProdutosPage() {
                           <dt className="text-xs uppercase tracking-wider text-grafite">Prazo</dt>
                           <dd className="text-navy tabular-nums text-right">{p.prazo}</dd>
                           <dt className="text-xs uppercase tracking-wider text-grafite">Preço médio de referência</dt>
-                          <dd className="text-navy tabular-nums text-right">{p.preco}</dd>
+                          <dd className="text-navy tabular-nums text-right">{PRECOS_CADERNO[p.numero]}</dd>
                         </dl>
                         <p className="text-xs text-grafite italic">
                           Preço médio é referência de conversa, não proposta. Proposta fechada vem escrita, com escopo, chancela e prazo acertados para o caso.

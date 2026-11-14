@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom'
 import Produtos from './Produtos'
 import Doacoes from './Doacoes'
 import { PRODUTOS, EIXOS } from '@/data/produtos'
+import { PRECOS_CADERNO } from '@/data/precos-caderno'
 import { DICIONARIOS, reiniciarIdioma, trocarIdioma, type Chave } from '@/lib/i18n'
 import { IDIOMAS } from '@/lib/idioma'
 
@@ -34,7 +35,7 @@ describe('vitrine de produtos na porta', () => {
     montar()
     const texto = screen.getByTestId('produtos').textContent!
     expect(texto).not.toMatch(/R\$/)
-    for (const p of PRODUTOS) expect(texto, p.preco).not.toContain(p.preco)
+    for (const p of PRODUTOS) expect(texto, String(p.numero)).not.toContain(PRECOS_CADERNO[p.numero])
     expect(screen.getByTestId('produtos-sem-preco').textContent).toBeTruthy()
   })
 

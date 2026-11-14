@@ -3,6 +3,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
 import CadernoDeProdutosPage from './CadernoDeProdutosPage'
 import { PRODUTOS, EIXOS, porEixo } from '@/data/produtos'
+import { PRECOS_CADERNO } from '@/data/precos-caderno'
 
 vi.mock('@/components/Layout', () => ({
   default: ({ title, children }: { title: string; children: React.ReactNode }) => (
@@ -18,7 +19,7 @@ describe('caderno de produtos refeito (M, 13/11/2026 23h12)', () => {
     render(<CadernoDeProdutosPage />)
     for (const p of PRODUTOS) {
       const li = screen.getByTestId(`caderno-produto-${p.numero}`)
-      expect(li.textContent, String(p.numero)).toContain(p.preco)
+      expect(li.textContent, String(p.numero)).toContain(PRECOS_CADERNO[p.numero])
       expect(li.textContent, String(p.numero)).toContain(p.prazo)
     }
   })
