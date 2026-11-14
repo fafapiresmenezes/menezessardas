@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { combinacaoUltimaNormal, vigaBiapoiada, flexaoSimples, cortanteModeloI, taxaMinima, vigaConcreto, memoriaDeCalculo } from './calculo'
+import { combinacaoUltimaNormal, vigaBiapoiada, flexaoSimples, cortanteModeloI, taxaMinima, vigaConcreto, memoriaDeCalculo, pilarCompressaoCentrada } from './calculo'
 import catalogo from './catalogo.json'
 import { ESTUDOS_ENGENHARIA, EQUIVALENCIAS } from './plataforma'
 
@@ -111,5 +111,59 @@ describe('E1 · catálogo e E7 · estudos', () => {
   it('há pelo menos 12 estudos para órgãos públicos e o mapa de equivalências cobre as 6 telas', () => {
     expect(ESTUDOS_ENGENHARIA.length).toBeGreaterThanOrEqual(12)
     expect(EQUIVALENCIAS.length).toBeGreaterThanOrEqual(6)
+  })
+})
+
+// Passo E4 (continuação, 14/11/2026): pilar curto, compressão centrada.
+// Verificação por caminho independente: para cada caso, recalcula o equilíbrio
+// Nd = 0,85·fcd·(Ac − As,adotar) + fyd·As,adotar com a armadura ADOTADA e confere que fica
+// igual ou acima do Nd pedido (o pilar resiste com a armadura que a função recomenda).
+describe('E4 (continuação) · pilar, compressão centrada', () => {
+  const PILARES: [number, number, number, number, number][] = [
+    // bw, h, fck, fyk, Nd (kN)
+    [20, 20, 25, 500, 500],
+    [25, 25, 30, 500, 1200],
+    [30, 30, 20, 500, 1500],
+    [20, 40, 35, 500, 2000],
+    [40, 40, 25, 500, 3500],
+    [20, 30, 30, 600, 900],
+    [35, 35, 40, 500, 2800],
+    [15, 25, 25, 500, 350],
+    [50, 50, 30, 500, 5000],
+    [20, 25, 20, 500, 600],
+  ]
+  it.each(PILARES)('pilar %i×%i, fck %i, Nd %i kN: a armadura adotada equilibra a carga', (bw, h, fck, fyk, nd) => {
+    const res = pilarCompressaoCentrada({ bw, h, fck, fyk, nd })
+    const gamaC = 1.4, gamaS = 1.15
+    const fcd = (fck / 10) / gamaC
+    const fyd = (fyk / 10) / gamaS
+    const ac = bw * h
+    const ndVerificado = 0.85 * fcd * (ac - res.valores.asAdotar) + fyd * res.valores.asAdotar
+    expect(ndVerificado).toBeGreaterThanOrEqual(nd - 0.5) // tolerância de arredondamento
+  })
+
+  it('carga baixa: adota a armadura mínima de 0,4% de Ac', () => {
+    const res = pilarCompressaoCentrada({ bw: 20, h: 20, fck: 25, fyk: 500, nd: 100 })
+    expect(res.valores.asMin).toBeCloseTo(1.6, 2)
+    expect(res.valores.asAdotar).toBe(res.valores.asMin)
+    expect(res.avisos.some(a => a.includes('armadura mínima'))).toBe(true)
+  })
+
+  it('carga além do limite: avisa que passa da armadura máxima de 8% de Ac', () => {
+    const res = pilarCompressaoCentrada({ bw: 20, h: 20, fck: 20, fyk: 500, nd: 5000 })
+    expect(res.valores.asAdotar).toBeGreaterThan(res.valores.asMax)
+    expect(res.avisos.some(a => a.includes('máximo permitido'))).toBe(true)
+  })
+
+  it('sempre avisa que vale só para pilar curto, carga centrada', () => {
+    const res = pilarCompressaoCentrada({ bw: 25, h: 25, fck: 30, fyk: 500, nd: 1200 })
+    expect(res.avisos.some(a => a.includes('pilar curto'))).toBe(true)
+  })
+
+  it('a memória de cálculo do pilar traz a NBR 6118 e o campo de ART', () => {
+    const res = pilarCompressaoCentrada({ bw: 30, h: 30, fck: 25, fyk: 500, nd: 1500 })
+    const texto = memoriaDeCalculo('Pilar P1', { seção: '30×30 cm' }, res.passos, res.avisos)
+    expect(texto).toContain('NBR 6118')
+    expect(texto).toContain('ART')
   })
 })

@@ -199,6 +199,52 @@ export function vigaConcreto(dados: DadosViga) {
   }
 }
 
+// ---------------------------------------------------------------- concreto armado: pilar, compressão centrada (pilar curto)
+// Passo E4 (continuação, 14/11/2026): falta pilares. Esta fatia cobre o caso mais simples e mais
+// comum em pré-dimensionamento — pilar curto (não esbelto) de seção retangular, com carga centrada
+// (sem momento). Pilares com flexo-compressão, esbeltez alta ou seção circular ficam de fora desta
+// versão; o aviso abaixo diz isso sempre.
+export interface DadosPilar {
+  bw: number // cm (menor lado)
+  h: number // cm (maior lado)
+  fck: number // MPa
+  fyk: number // MPa
+  nd: number // kN (força normal de cálculo, já majorada)
+  gamaC?: number
+  gamaS?: number
+}
+
+/** Taxa mínima e máxima de armadura longitudinal de pilar (NBR 6118, item 17.3.5.3), em %. */
+export const RHO_MIN_PILAR = 0.4 // % de Ac, ou 0,15·Nd/fyd, o que for maior (aqui aplicado o percentual simplificado)
+export const RHO_MAX_PILAR = 8 // % de Ac (incluindo a sobreposição em emendas, item 17.3.5.3.1)
+
+export function pilarCompressaoCentrada(dados: DadosPilar): Resultado<{ ac: number; as: number; asMin: number; asMax: number; asAdotar: number; taxaAdotada: number }> {
+  const { bw, h, fck, fyk, nd, gamaC = 1.4, gamaS = 1.15 } = dados
+  const avisos: string[] = [
+    'Vale só para pilar curto (não esbelto) com carga centrada, sem momento. Pilar com flexo-compressão, esbeltez alta ou seção circular não entra nesta versão.',
+  ]
+  const fcd = fck / 10 / gamaC // kN/cm²
+  const fyd = fyk / 10 / gamaS // kN/cm²
+  const ac = bw * h // cm²
+  const asMin = (RHO_MIN_PILAR / 100) * ac
+  const asMax = (RHO_MAX_PILAR / 100) * ac
+  // Nd = 0,85 · fcd · (Ac − As) + fyd · As  →  As = (Nd − 0,85 · fcd · Ac) / (fyd − 0,85 · fcd)
+  const as = (nd - 0.85 * fcd * ac) / (fyd - 0.85 * fcd)
+  const passos: Passo[] = [
+    { titulo: 'Resistência de cálculo do concreto', formula: 'fcd = fck / γc', conta: `${fmt(fck, 0)} MPa / ${fmt(gamaC, 2)}`, resultado: r(fcd * 10), unidade: 'MPa', referencia: 'NBR 6118, item 12.3.3' },
+    { titulo: 'Resistência de cálculo do aço', formula: 'fyd = fyk / γs', conta: `${fmt(fyk, 0)} MPa / ${fmt(gamaS, 2)}`, resultado: r(fyd * 10), unidade: 'MPa', referencia: 'NBR 6118, item 12.3.1' },
+    { titulo: 'Área da seção de concreto', formula: 'Ac = bw · h', conta: `${fmt(bw, 0)} · ${fmt(h, 0)}`, resultado: r(ac), unidade: 'cm²' },
+    { titulo: 'Armadura longitudinal (compressão centrada)', formula: 'Nd = 0,85 · fcd · (Ac − As) + fyd · As  →  As', conta: `(${fmt(nd)} − 0,85 · ${fmt(fcd, 4)} · ${fmt(ac)}) / (${fmt(fyd, 3)} − 0,85 · ${fmt(fcd, 4)})`, resultado: r(as), unidade: 'cm²', referencia: 'NBR 6118, item 17.2.4 (pilar curto, carga centrada)' },
+    { titulo: 'Armadura longitudinal mínima', formula: 'As,mín = 0,4% · Ac', conta: `0,4% · ${fmt(ac)}`, resultado: r(asMin), unidade: 'cm²', referencia: 'NBR 6118, item 17.3.5.3.1' },
+    { titulo: 'Armadura longitudinal máxima', formula: 'As,máx = 8% · Ac', conta: `8% · ${fmt(ac)}`, resultado: r(asMax), unidade: 'cm²', referencia: 'NBR 6118, item 17.3.5.3.1' },
+  ]
+  if (as < 0) avisos.push('O concreto, sozinho, já resiste à carga: a armadura calculada seria negativa. Adote a armadura mínima.')
+  const asAdotar = Math.max(as, asMin)
+  if (asAdotar > asMax) avisos.push('A armadura necessária passa do máximo permitido (8% de Ac). Aumente a seção ou a classe do concreto.')
+  const taxaAdotada = (asAdotar / ac) * 100
+  return { valores: { ac: r(ac), as: r(Math.max(as, 0)), asMin: r(asMin), asMax: r(asMax), asAdotar: r(asAdotar), taxaAdotada: r(taxaAdotada, 2) }, passos, avisos }
+}
+
 export function memoriaDeCalculo(titulo: string, entrada: Record<string, string | number>, passos: Passo[], avisos: string[]): string {
   const linhas = [
     `MEMÓRIA DE CÁLCULO — ${titulo}`,
