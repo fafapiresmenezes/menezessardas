@@ -113,6 +113,14 @@ export default function BoasVindasPage() {
             >
               Pedir entrada
             </Link>
+            <Link
+              to="/exemplos"
+              data-testid="porta-ver-exemplos"
+              title="Exemplos de verdade de cada frente, sem senha"
+              className="text-[#fff] underline decoration-neutral-400 underline-offset-4 hover:decoration-[#fff]"
+            >
+              {t('porta.verExemplos')}
+            </Link>
           </div>
         </div>
 

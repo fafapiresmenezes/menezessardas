@@ -16,6 +16,7 @@ const FrentesDoInstitutoPage = lazy(() => import('@/pages/FrentesDoInstitutoPage
 const LastroPage = lazy(() => import('@/pages/LastroPage'))
 const CotasQuanticasPage = lazy(() => import('@/pages/CotasQuanticasPage'))
 const AdmissaoPage = lazy(() => import('@/pages/AdmissaoPage'))
+const ExemplosPage = lazy(() => import('@/pages/ExemplosPage'))
 const RoyaltiesPage = lazy(() => import('@/pages/RoyaltiesPage'))
 const MedicoesContratosPage = lazy(() => import('@/pages/MedicoesContratosPage'))
 const SuperficieAtaquePage = lazy(() => import('@/pages/SuperficieAtaquePage'))
@@ -264,6 +265,7 @@ function App() {
           element={isAuthenticated ? <FrentesDoInstitutoPage /> : <Navigate to="/login" />}
         />
         <Route path="/lastro" element={<LastroPage />} />
+        <Route path="/exemplos" element={<ExemplosPage />} />
         <Route path="/admissao" element={<AdmissaoPage />} />
         <Route path="/pedir-entrada" element={<AdmissaoPage />} />
         <Route path="/preditiva" element={<PortalInstitutoPage />} />
