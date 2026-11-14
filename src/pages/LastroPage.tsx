@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Marca from '@/components/Marca'
 import { avanco, conferirCorrente, lerElos, GENESE, type Avanco, type Conferencia } from '@/lib/trilho'
+import {
+  carimbarPlano, montarOtsPlano, baixarArquivo, ultimaAncoraPlano, type AncoraPlano,
+} from '@/lib/ancoraPlano'
 
 /**
  * Passo T2, tarefa 3: a tela "Conferir o lastro", escrita para leigo.
@@ -11,10 +14,11 @@ import { avanco, conferirCorrente, lerElos, GENESE, type Avanco, type Conferenci
  * trilho e recalcula TODOS os hashes aqui, no navegador de quem está lendo. Nada é conferido no
  * nosso servidor: se o número bate, bate na máquina de quem duvida.
  *
- * O que esta tela ainda NÃO faz, e está dito nela mesma: gravar o hash final numa blockchain
- * pública (Bitcoin, por OpenTimestamps). Isso manda um dado para fora do projeto, e mandar coisa
- * para fora depende do sim do dono. O caminho já existe na plataforma (a função ancorar-hash); o
- * que falta é a autorização, não o programa.
+ * Carimbo público (C13/T2): o dono autorizou em 14/11/2026 mandar o código do topo para um
+ * registro de tempo público (OpenTimestamps → Bitcoin). O botão "Carimbar agora" roda na sessão
+ * de quem está na administração e baixa a prova (.ots). Só um hash sai; nenhum dado de pessoa.
+ * A lógica mora em src/lib/ancoraPlano.ts; o envio em si usa os calendários públicos, com a
+ * função de servidor ancorar-hash como reserva quando o navegador não os alcança.
  */
 const ONDE = [
   // 1) Ao lado do pacote publicado: é assim que funciona no gh-pages e na conferência local.
@@ -39,6 +43,22 @@ export default function LastroPage() {
   const [conf, setConf] = useState<Conferencia | null>(null)
   const [av, setAv] = useState<Avanco | null>(null)
   const [erro, setErro] = useState('')
+  const [ancora, setAncora] = useState<AncoraPlano | null>(ultimaAncoraPlano())
+  const [carimbando, setCarimbando] = useState(false)
+  const [erroCarimbo, setErroCarimbo] = useState('')
+
+  async function carimbar() {
+    if (!conf) return
+    setCarimbando(true); setErroCarimbo('')
+    try {
+      const a = await carimbarPlano(conf.elos.length, conf.ultimoHash)
+      setAncora(a)
+    } catch (e) {
+      setErroCarimbo(e instanceof Error ? e.message : String(e))
+    } finally {
+      setCarimbando(false)
+    }
+  }
 
   useEffect(() => {
     (async () => {
@@ -154,13 +174,73 @@ export default function LastroPage() {
               Último código da corrente: <code className="break-all" data-testid="ultimo-hash">{conf.ultimoHash}</code>
             </p>
 
-            <h2 className="text-lg font-serif text-white mt-10 mb-3">O que ainda falta</h2>
+            <h2 className="text-lg font-serif text-white mt-10 mb-3">Carimbar a data fora do Instituto</h2>
             <p className="text-sm text-white/70">
-              Falta gravar esse último código numa blockchain pública, para a data ficar provada
-              fora do Instituto. O programa para isso já existe aqui; o que falta é a autorização do
-              dono, porque mandar qualquer coisa para fora do projeto depende do sim dele. Enquanto
-              não houver, esta página não finge que há.
+              Dá para provar, fora daqui, a data em que este topo já existia: mandamos só o código
+              (um número, nenhum dado de pessoa) a um registro de tempo público do OpenTimestamps,
+              que o grava numa transação do Bitcoin. Depois, qualquer pessoa confere em
+              opentimestamps.org com o selo e o arquivo de prova, sem acreditar em nós.
             </p>
+
+            <div className="mt-5 border border-white/20 p-5" data-testid="carimbo-plano">
+              {ancora ? (
+                <>
+                  <p className="text-sm text-white/80">
+                    Carimbado em <strong>{dataHoraBr(ancora.em)}</strong> · {ancora.registros} registros
+                    <span className="block text-white/50 mt-1">calendário: {ancora.calendario}</span>
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    <button
+                      type="button"
+                      onClick={() => baixarArquivo('selo-plano.txt', ancora.selo, 'text/plain')}
+                      title="Baixa o selo: o textinho cujo código (SHA-256) foi carimbado"
+                      className="min-h-[44px] px-4 py-2 border border-white/40 text-sm text-white hover:bg-white hover:text-black transition"
+                    >
+                      Baixar o selo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => baixarArquivo('selo-plano.txt.ots', montarOtsPlano(ancora) as BlobPart)}
+                      title="Baixa o arquivo de prova (.ots), para conferir em opentimestamps.org junto com o selo"
+                      className="min-h-[44px] px-4 py-2 border border-white/40 text-sm text-white hover:bg-white hover:text-black transition"
+                    >
+                      Baixar a prova (.ots)
+                    </button>
+                  </div>
+                  <p className="mt-4 text-xs text-white/50">
+                    A confirmação no Bitcoin leva algumas horas; depois disso a prova fica completa.
+                    Carimbar de novo, quando a corrente crescer, prova a data do novo topo.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={carimbar}
+                    disabled={carimbando}
+                    title="Carimba o topo de agora e baixa uma prova nova"
+                    className="mt-4 text-sm text-white/60 underline decoration-white/30 hover:text-white disabled:opacity-50"
+                  >
+                    {carimbando ? 'Carimbando…' : 'Carimbar de novo o topo de agora'}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm text-white/80">
+                    Autorizado pelo dono. Aperte para carimbar o topo de agora; a prova (.ots) baixa
+                    para você guardar.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={carimbar}
+                    disabled={carimbando}
+                    data-testid="botao-carimbar"
+                    title="Manda o código do topo a um registro de tempo público e baixa a prova"
+                    className="mt-4 min-h-[48px] px-6 py-3 border border-white bg-white text-black text-sm uppercase tracking-[0.12em] hover:bg-transparent hover:text-white transition disabled:opacity-50"
+                  >
+                    {carimbando ? 'Carimbando…' : 'Carimbar agora'}
+                  </button>
+                </>
+              )}
+              {erroCarimbo && <p role="alert" className="mt-4 text-sm text-white/80 border-l-2 border-white/40 pl-3">{erroCarimbo}</p>}
+            </div>
 
             <details className="mt-10 border-t border-white/10 pt-5">
               <summary className="text-sm text-white/60 cursor-pointer" title="Abre a lista com cada registro, na ordem, e o resultado da conferência">Ver registro por registro</summary>
