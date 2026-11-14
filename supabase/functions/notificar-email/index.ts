@@ -66,12 +66,12 @@ async function enviarEmailResend(notif: Notificacao): Promise<boolean> {
       </div>
 
       <p>Acesse sua plataforma para visualizar todas as informações e tomar as ações necessárias:</p>
-      <p><a href="https://gmenezes-advogados.vercel.app/" style="color: #1a3a3a; font-weight: bold;">Abrir Plataforma</a></p>
+      <p><a href="https://theye.club/" style="color: #1a3a3a; font-weight: bold;">Abrir Plataforma</a></p>
 
       <p><em>Esta é uma notificação automática. Não responda a este email.</em></p>
     </div>
     <div class="footer">
-      <p>Plataforma de Gestão de Contratos Imobiliários | GMenezes Advogados Associados</p>
+      <p>Plataforma de Gestão de Contratos Imobiliários | Instituto THEYE</p>
     </div>
   </div>
 </body>
@@ -86,7 +86,7 @@ async function enviarEmailResend(notif: Notificacao): Promise<boolean> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'noreply@menezes-sardas-contratos.vercel.app',
+        from: 'Avisos THEYE <onboarding@resend.dev>',
         to: notif.email_destinatario,
         subject: assunto,
         html,
@@ -145,7 +145,7 @@ Deno.serve(async (req: Request) => {
 
       const notif: Notificacao = {
         contrato_id: c.id,
-        email_destinatario: 'contato@menezes-sardas.com.br', // Placeholder — usar email real depois
+        email_destinatario: 'fatima@gmenezes.com.br',
         nome_destinatario: emailDestinatario,
         imovel_endereco: c.imoveis?.endereco || 'Imóvel desconhecido',
         locatario: c.locatario_fornecedor || 'Sem nome',

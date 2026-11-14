@@ -60,7 +60,7 @@ async function enviarLink(email: string, token: string, primeiro: boolean, site 
 <p style="font-family:Arial,sans-serif;font-size:12px;color:#7a8190">Se você não pediu isto, ignore esta mensagem. Desenvolvido pelo THEYE Institute.</p></div>`
   const r = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST', headers: { 'api-key': c.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
-    body: JSON.stringify({ sender: { name: 'THEYE Institute', email: c.email_remetente }, to: [{ email }], subject: primeiro ? 'Confirme seu cadastro no THEYE Institute' : 'Seu link de entrada no THEYE Institute', htmlContent: html }),
+    body: JSON.stringify({ sender: { name: 'THEYE Institute', email: c.email_remetente }, to: [{ email }], subject: primeiro ? 'Confirme seu cadastro na Plataforma THEYE' : 'Seu link de entrada no THEYE Institute', htmlContent: html }),
   }).catch(() => null)
   if (r?.ok) await db().from('consumo_api').insert({ funcao: 'Instituto: link de acesso', modelo: 'brevo-email', quantidade: 1 })
   return !!r?.ok

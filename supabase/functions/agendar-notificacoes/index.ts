@@ -11,7 +11,7 @@ const cors = {
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
 
-const APP = 'https://gmenezes-advogados.vercel.app'
+const APP = 'https://theye.club'
 const diasAte = (d: string) => Math.round((new Date(d + 'T00:00:00Z').getTime() - Date.parse(new Date().toISOString().slice(0, 10))) / 86400000)
 const br = (d: string) => new Date(d + 'T12:00:00Z').toLocaleDateString('pt-BR')
 const esc = (s: string) => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
@@ -37,7 +37,7 @@ async function enviar(p: Provedor, para: string[], itens: Item[]) {
     <div style="background:#14213d;color:#fff;padding:18px"><h2 style="margin:0">Avisos de prazos contratuais</h2></div>
     <table style="width:100%;border-collapse:collapse">${linhas}</table>
     <p style="padding:10px"><a href="${APP}/agenda">Abrir a Agenda</a></p>
-    <p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · aviso automático</p></div>`
+    <p style="font-size:11px;color:#888;padding:10px">Instituto THEYE · aviso automático</p></div>`
   const assunto = `${itens.length} prazo(s) se aproximando`
   if (p.brevo && p.remetente) {
     // Um envio por pessoa, para ninguém ver o e-mail dos outros.
@@ -46,7 +46,7 @@ async function enviar(p: Provedor, para: string[], itens: Item[]) {
       const r = await fetch('https://api.brevo.com/v3/smtp/email', {
         method: 'POST',
         headers: { 'api-key': p.brevo, 'Content-Type': 'application/json', accept: 'application/json' },
-        body: JSON.stringify({ sender: { name: 'Avisos GMenezes', email: p.remetente }, to: [{ email }], subject: assunto, htmlContent: html }),
+        body: JSON.stringify({ sender: { name: 'Avisos THEYE', email: p.remetente }, to: [{ email }], subject: assunto, htmlContent: html }),
       })
       if (!r.ok) falha = `${r.status} ${await r.text()}`
     }
@@ -55,7 +55,7 @@ async function enviar(p: Provedor, para: string[], itens: Item[]) {
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${p.resend}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: 'Avisos GMenezes <onboarding@resend.dev>', to: para, subject: assunto, html }),
+    body: JSON.stringify({ from: 'Avisos THEYE <onboarding@resend.dev>', to: para, subject: assunto, html }),
   })
   return { ok: r.ok, corpo: r.ok ? undefined : await r.text() }
 }

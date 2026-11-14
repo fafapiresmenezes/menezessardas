@@ -171,6 +171,7 @@ export const REFERENCIAS: { nome: string; area: string; escola: Escola['id'] }[]
   { nome: 'Paulo de Tarso Sanseverino', area: 'Direito privado (STJ)', escola: 'pragmatica' },
   { nome: 'Alexandre de Moraes', area: 'Constitucional (STF)', escola: 'pragmatica' },
   { nome: 'Hely Lopes Meirelles', area: 'Administrativo', escola: 'pragmatica' },
+  { nome: 'Paulo de Barros Carvalho', area: 'Tributário', escola: 'processualista' },
   { nome: 'Fábio Ulhoa Coelho', area: 'Empresarial', escola: 'empresarial' },
   { nome: 'Rubens Requião', area: 'Empresarial', escola: 'empresarial' },
   { nome: 'Modesto Carvalhosa', area: 'Societário', escola: 'empresarial' },
@@ -184,6 +185,66 @@ export const REFERENCIAS: { nome: string; area: string; escola: Escola['id'] }[]
   { nome: 'Arnaldo Rizzardo', area: 'Contratos e imobiliário', escola: 'imobiliaria' },
   { nome: 'Maria Helena Diniz', area: 'Civil e registros', escola: 'imobiliaria' },
   { nome: 'Sílvio de Salvo Venosa', area: 'Civil e locação', escola: 'imobiliaria' },
+  { nome: 'Maurício Godinho Delgado', area: 'Trabalho (TST)', escola: 'processualista' },
+  { nome: 'Alice Monteiro de Barros', area: 'Trabalho', escola: 'classica' },
+  { nome: 'Arnaldo Süssekind', area: 'Trabalho', escola: 'classica' },
+  { nome: 'Homero Batista Mateus da Silva', area: 'Trabalho', escola: 'pragmatica' },
+  { nome: 'Vólia Bomfim Cassar', area: 'Trabalho', escola: 'didatica' },
+  { nome: 'Nelson Hungria', area: 'Penal', escola: 'classica' },
+  { nome: 'Heleno Cláudio Fragoso', area: 'Penal', escola: 'classica' },
+  { nome: 'Cezar Roberto Bitencourt', area: 'Penal', escola: 'didatica' },
+  { nome: 'Guilherme de Souza Nucci', area: 'Penal e processo penal', escola: 'didatica' },
+  { nome: 'Gustavo Badaró', area: 'Processo penal', escola: 'processualista' },
+  { nome: 'Aury Lopes Jr.', area: 'Processo penal', escola: 'combativa' },
+  { nome: 'Hugo de Brito Machado', area: 'Tributário', escola: 'didatica' },
+  { nome: 'Leandro Paulsen', area: 'Tributário', escola: 'pragmatica' },
+  { nome: 'Roque Antonio Carrazza', area: 'Tributário', escola: 'classica' },
+  { nome: 'Geraldo Ataliba', area: 'Tributário', escola: 'classica' },
+  { nome: 'Cláudia Lima Marques', area: 'Consumidor', escola: 'civil-constitucional' },
+  { nome: 'Bruno Miragem', area: 'Consumidor', escola: 'civil-constitucional' },
+  { nome: 'Antonio Herman Benjamin', area: 'Consumidor e ambiental (STJ)', escola: 'pragmatica' },
+  { nome: 'Maria Sylvia Zanella Di Pietro', area: 'Administrativo', escola: 'didatica' },
+  { nome: 'Celso Antônio Bandeira de Mello', area: 'Administrativo', escola: 'classica' },
+  { nome: 'José dos Santos Carvalho Filho', area: 'Administrativo', escola: 'didatica' },
+]
+
+/**
+ * Rating adotado (pedido de M, 12/11/2026): para juristas, os doutrinadores mais citados pelo
+ * STF e pelo STJ e mais adotados nas pós-graduações; para escritórios, os "Mais Admirados" do
+ * anuário Análise Advocacia (análise.com), o ranking nacional mais aceito, cruzado com o
+ * Chambers Brazil. As listas abaixo nomeiam as referências; nenhum texto de ninguém é copiado.
+ */
+export const RATING = {
+  juristas: 'Doutrinadores mais citados pelo STF e pelo STJ e mais adotados nas pós-graduações de direito',
+  escritorios: 'Mais Admirados do anuário Análise Advocacia (o ranking nacional mais aceito), cruzado com o Chambers Brazil',
+}
+
+/** Os dez escritórios de referência de formatação e método (rankings acima, sem ordem interna). */
+export const ESCRITORIOS: string[] = [
+  'Pinheiro Neto Advogados',
+  'Mattos Filho',
+  'Machado Meyer',
+  'Demarest',
+  'TozziniFreire',
+  'Trench Rossi Watanabe',
+  'Veirano Advogados',
+  'BMA – Barbosa Müssnich Aragão',
+  'Lefosse',
+  'Cescon Barrieu',
+]
+
+/** Os dez juristas de referência de cada setor do direito (nomes por extenso, rating acima). */
+export const JURISTAS_POR_SETOR: { setor: string; chave: string; nomes: string[] }[] = [
+  { setor: 'Civil e contratos', chave: 'civel', nomes: ['Pontes de Miranda', 'Clóvis Beviláqua', 'Orlando Gomes', 'Caio Mário da Silva Pereira', 'Gustavo Tepedino', 'Judith Martins-Costa', 'Anderson Schreiber', 'Nelson Rosenvald', 'Maria Helena Diniz', 'Flávio Tartuce'] },
+  { setor: 'Processo civil', chave: 'civel', nomes: ['José Carlos Barbosa Moreira', 'Cândido Rangel Dinamarco', 'Ada Pellegrini Grinover', 'Humberto Theodoro Júnior', 'Luiz Fux', 'Fredie Didier Jr.', 'Teresa Arruda Alvim', 'Luiz Guilherme Marinoni', 'Nelson Nery Junior', 'Cassio Scarpinella Bueno'] },
+  { setor: 'Constitucional e público', chave: 'publico', nomes: ['Rui Barbosa', 'José Afonso da Silva', 'Paulo Bonavides', 'Luís Roberto Barroso', 'Gilmar Mendes', 'Ingo Wolfgang Sarlet', 'Celso Antônio Bandeira de Mello', 'Maria Sylvia Zanella Di Pietro', 'Hely Lopes Meirelles', 'José dos Santos Carvalho Filho'] },
+  { setor: 'Trabalhista', chave: 'trabalhista', nomes: ['Maurício Godinho Delgado', 'Alice Monteiro de Barros', 'Arnaldo Süssekind', 'Homero Batista Mateus da Silva', 'Vólia Bomfim Cassar', 'Délio Maranhão', 'Amauri Mascaro Nascimento', 'Sergio Pinto Martins', 'Carlos Henrique Bezerra Leite', 'Octavio Bueno Magano'] },
+  { setor: 'Penal e processo penal', chave: 'penal', nomes: ['Nelson Hungria', 'Heleno Cláudio Fragoso', 'Evandro Lins e Silva', 'Sobral Pinto', 'Cezar Roberto Bitencourt', 'Guilherme de Souza Nucci', 'Gustavo Badaró', 'Aury Lopes Jr.', 'Juarez Tavares', 'Miguel Reale Júnior'] },
+  { setor: 'Tributário', chave: 'tributario', nomes: ['Paulo de Barros Carvalho', 'Geraldo Ataliba', 'Roque Antonio Carrazza', 'Hugo de Brito Machado', 'Leandro Paulsen', 'Luciano Amaro', 'Sacha Calmon Navarro Coêlho', 'Ives Gandra da Silva Martins', 'Regina Helena Costa', 'Humberto Ávila'] },
+  { setor: 'Consumidor', chave: 'consumidor', nomes: ['Cláudia Lima Marques', 'Bruno Miragem', 'Antonio Herman Benjamin', 'Nelson Nery Junior', 'Ada Pellegrini Grinover', 'Nancy Andrighi', 'Luis Felipe Salomão', 'Rizzatto Nunes', 'Leonardo Roscoe Bessa', 'Sergio Cavalieri Filho'] },
+  { setor: 'Empresarial e societário', chave: 'empresarial', nomes: ['Rubens Requião', 'Fábio Ulhoa Coelho', 'Modesto Carvalhosa', 'Fábio Konder Comparato', 'Tullio Ascarelli', 'Waldemar Ferreira', 'Nelson Eizirik', 'Erasmo Valladão', 'Marcelo Bertoldi', 'Sérgio Campinho'] },
+  { setor: 'Imobiliário e locação', chave: 'imobiliario', nomes: ['Sylvio Capanema de Souza', 'Gildo dos Santos', 'Arnaldo Rizzardo', 'Maria Helena Diniz', 'Sílvio de Salvo Venosa', 'Caio Mário da Silva Pereira', 'Orlando Gomes', 'Afrânio de Carvalho', 'Luiz Edson Fachin', 'Francisco Eduardo Loureiro'] },
+  { setor: 'Família e sucessões', chave: 'familia', nomes: ['Pontes de Miranda', 'Paulo Lôbo', 'Maria Berenice Dias', 'Rolf Madaleno', 'Zeno Veloso', 'Giselda Hironaka', 'Rodrigo da Cunha Pereira', 'Flávio Tartuce', 'Cristiano Chaves de Farias', 'Nelson Rosenvald'] },
 ]
 
 /**
@@ -316,6 +377,190 @@ const AFINIDADE: Record<string, Escola['id'][]> = {
   civel: ['civil-constitucional', 'processualista'],
 }
 
+/** "Cível", "Família e sucessões", "Imobiliário": vira a chave sem acento usada nas tabelas de afinidade. */
+export function chaveArea(area?: string | null) {
+  const a = String(area ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+  if (/famil|sucess|inventar/.test(a)) return 'familia'
+  if (/imobili|locac|condomin/.test(a)) return /condomin/.test(a) ? 'condominial' : 'imobiliario'
+  if (/tribut|fiscal/.test(a)) return 'tributario'
+  if (/trabalh/.test(a)) return 'trabalhista'
+  if (/consum/.test(a)) return 'consumidor'
+  if (/empres|societ|recupera/.test(a)) return 'empresarial'
+  if (/penal|crim/.test(a)) return 'penal'
+  if (/constituc|administr|fazenda|public/.test(a)) return 'publico'
+  if (/registr/.test(a)) return 'registral'
+  if (/complian/.test(a)) return 'compliance'
+  if (/civ/.test(a)) return 'civel'
+  return a
+}
+
+/** Um redator da banca: um modo de escrever, descrito pelo método de um grande jurista brasileiro. */
+export interface Redator {
+  id: string
+  /** Jurista cuja tradição de escrita serve de referência. O texto nunca é atribuído a ele. */
+  referencia: string
+  especialidade: string
+  escola: Escola['id']
+  /** Áreas (chaveArea) em que este redator escreve primeiro. */
+  areas: string[]
+  /** Setor (chaveArea) de que este redator é o titular: é a primeira escolha quando a peça é desse setor. */
+  titular?: string
+  /** Palavras do título da tarefa que chamam este redator (recurso, execução, despejo...). */
+  pecas: RegExp
+  /** Como ele constrói a peça: vai para as instruções do redator. */
+  metodo: string
+  /** O que se aproveita dessa tradição. */
+  forcas: string
+  /** Os defeitos de estilo dessa tradição, que o robô é proibido de reproduzir. */
+  evitar: string
+}
+
+/**
+ * Banca de redatores: catorze modos de escrever, cada um inspirado no método de um jurista de referência,
+ * com um redator titular para cada setor do direito (pedido de M, 12/11/2026).
+ * O robô escolhe o redator pela área e pelo tipo da peça e faz rodízio para não repetir o mesmo em seguida.
+ * São referências de estilo e de método: nenhuma peça é escrita, revisada ou endossada por essas pessoas.
+ */
+export const BANCA: Redator[] = [
+  { id: 'rui-barbosa', referencia: 'Rui Barbosa', especialidade: 'Constitucional e tribunais superiores', escola: 'classica', areas: ['publico', 'penal'], pecas: /mandado de seguran|habeas|extraordin|constitucional/i,
+    metodo: 'Constrói a peça como defesa de um direito: expõe o fato com gravidade, ergue a tese sobre a Constituição e a encadeia em períodos amplos e bem articulados, com vocabulário preciso e fecho solene.',
+    forcas: 'força do argumento, domínio do vernáculo, arquitetura do raciocínio', evitar: 'prolixidade, erudição exibida, períodos que se perdem, citação em língua estrangeira sem tradução' },
+  { id: 'pontes-de-miranda', referencia: 'Pontes de Miranda', especialidade: 'Civil, família e sucessões', escola: 'classica', areas: ['familia', 'registral', 'civel'], titular: 'familia', pecas: /invent[aá]rio|partilha|sucess|usucapi|nulidade|anula/i,
+    metodo: 'Classifica antes de argumentar: identifica a natureza do fato jurídico, separa existência, validade e eficácia, e só então tira a consequência, com rigor conceitual e remissão exata ao artigo.',
+    forcas: 'precisão conceitual, classificação rigorosa, remissão exata à lei', evitar: 'hermetismo, neologismos, frases truncadas, excesso de parênteses e de remissões cruzadas' },
+  { id: 'barbosa-moreira', referencia: 'José Carlos Barbosa Moreira', especialidade: 'Processo civil e recursos', escola: 'processualista', areas: ['civel'], pecas: /recurso|apela|agravo|embargos|contrarraz|ac[oó]rd[aã]o|decis[aã]o/i,
+    metodo: 'Abre pelo cabimento, pela tempestividade e pelo interesse; depois ataca a decisão ponto por ponto, na ordem em que foi fundamentada, com frases limpas e sem um adjetivo sobrando.',
+    forcas: 'clareza, concisão, ordem lógica, elegância sem enfeite', evitar: 'ironia, tom professoral, digressão teórica que não serve ao caso' },
+  { id: 'barroso', referencia: 'Luís Roberto Barroso', especialidade: 'Constitucional e direito público', escola: 'didatica', areas: ['publico', 'compliance'], titular: 'publico', pecas: /fazenda|munic[ií]pio|\bestado do\b|\buni[aã]o federal\b|administrativ/i,
+    metodo: 'Anuncia a tese em uma frase e a demonstra em três ou quatro proposições numeradas, uma ideia por parágrafo, em linguagem que o cliente entenderia, fechando com a consequência prática.',
+    forcas: 'didatismo, síntese, estrutura visível, linguagem acessível', evitar: 'frases de efeito, generalidades de princípio sem lei que as sustente, tom de palestra' },
+  { id: 'tepedino', referencia: 'Gustavo Tepedino', especialidade: 'Contratos e responsabilidade civil', escola: 'civil-constitucional', areas: ['civel', 'familia'], titular: 'civel', pecas: /contrat|indeniza|responsabilidade|dano|obriga/i,
+    metodo: 'Lê o contrato e o dano à luz da boa-fé objetiva, da função social e da dignidade, sempre ancorando o princípio em um artigo do Código Civil e na situação concreta das partes.',
+    forcas: 'leitura sistemática, equilíbrio entre princípio e regra, sensibilidade ao caso concreto', evitar: 'abstração demais, princípio usado no lugar da prova, parágrafos longos de teoria' },
+  { id: 'nancy-andrighi', referencia: 'Nancy Andrighi', especialidade: 'Consumidor e direito privado no STJ', escola: 'pragmatica', areas: ['consumidor', 'civel'], pecas: /consum|banc|plano de sa[uú]de|especial|r[eé]plica|contesta/i,
+    metodo: 'Vai direto ao ponto que decide a causa: delimita a controvérsia, mostra o entendimento consolidado do tribunal, encaixa o caso nele e aponta o efeito concreto da decisão para a parte.',
+    forcas: 'objetividade, foco no ponto decisivo, domínio do precedente, atenção ao efeito prático', evitar: 'empilhar ementas, colar trechos longos de julgados, precedente sem demonstrar a semelhança com o caso' },
+  { id: 'capanema', referencia: 'Sylvio Capanema de Souza', especialidade: 'Locação e imobiliário', escola: 'imobiliaria', areas: ['imobiliario', 'condominial'], titular: 'imobiliario', pecas: /despejo|loca[cç]|aluguel|renovat|revisional|condom/i,
+    metodo: 'Parte do contrato, da cláusula e da cronologia, com datas e valores exatos; liga cada um ao artigo da Lei do Inquilinato e resume o débito ou a obrigação antes dos pedidos.',
+    forcas: 'precisão de datas, valores e cláusulas, conhecimento da prática forense, tom direto', evitar: 'casuísmo sem fundamento legal, coloquialidade, tabela sem explicação' },
+  { id: 'ulhoa-coelho', referencia: 'Fábio Ulhoa Coelho', especialidade: 'Empresarial e societário', escola: 'empresarial', areas: ['empresarial'], titular: 'empresarial', pecas: /societ|s[oó]cio|fal[eê]ncia|recupera[cç][aã]o judicial|t[ií]tulo|cheque|duplicata/i,
+    metodo: 'Abre com um resumo de três frases, trata a questão pelo risco e pelo custo para a empresa, usa seções curtas com títulos que informam e fecha com o que se pede em tópicos.',
+    forcas: 'visão de negócio, clareza executiva, seções curtas, quantificação do risco', evitar: 'jargão corporativo, anglicismos, simplificação que omite o fundamento legal' },
+  { id: 'barros-carvalho', referencia: 'Paulo de Barros Carvalho', especialidade: 'Tributário e execução fiscal', escola: 'processualista', areas: ['tributario'], titular: 'tributario', pecas: /fiscal|tribut|imposto|iptu|icms|\biss\b|d[ií]vida ativa|pr[eé]-executividade/i,
+    metodo: 'Decompõe a exigência nos seus elementos (fato gerador, sujeito, base, alíquota, tempo) e testa cada um contra a lei e a prova, com linguagem exata e conclusão que decorre do exame.',
+    forcas: 'rigor analítico, decomposição da norma, exatidão terminológica', evitar: 'vocabulário de lógica e semiótica, abstração, frases que só o especialista entende' },
+  { id: 'sobral-pinto', referencia: 'Sobral Pinto', especialidade: 'Advocacia de defesa e trabalhista', escola: 'combativa', areas: ['trabalhista', 'penal', 'consumidor'], pecas: /defesa|tutela|urg[eê]ncia|liminar|alega[cç][oõ]es finais|memoriais|reclama/i,
+    metodo: 'Narra o fato mais grave com concretude, mostra a injustiça a corrigir e sustenta a tese com firmeza e lealdade, alternando frases curtas de impacto com períodos de fundamentação.',
+    forcas: 'coragem, narrativa concreta, firmeza com lealdade processual', evitar: 'indignação em excesso, ataque pessoal à parte ou ao juiz, adjetivação, pergunta retórica repetida' },
+  { id: 'godinho-delgado', referencia: 'Maurício Godinho Delgado', especialidade: 'Trabalhista', escola: 'processualista', areas: ['trabalhista'], titular: 'trabalhista', pecas: /trabalh|reclamat|verbas|rescis|horas extras|recurso ordin[aá]rio|v[ií]nculo|\bclt\b/i,
+    metodo: 'Parte do princípio da proteção e do contrato-realidade, enquadra o fato no artigo da CLT e na súmula ou orientação do TST, e trata cada verba em tópico próprio, com período, base de cálculo e reflexos.',
+    forcas: 'sistematização por verba, domínio das súmulas do TST, ligação entre fato, prova e pedido', evitar: 'períodos longos demais, excesso de classificações teóricas, repetição do mesmo fundamento em cada verba' },
+  { id: 'evandro-lins', referencia: 'Evandro Lins e Silva', especialidade: 'Penal e júri', escola: 'combativa', areas: ['penal'], titular: 'penal', pecas: /habeas|den[uú]ncia|criminal|penal|j[uú]ri|pris[aã]o|resposta [aà] acusa|liberdade/i,
+    metodo: 'Começa pela pessoa e pelo fato, aponta a dúvida que a prova não resolve, sustenta a presunção de inocência com a Constituição e o Código de Processo Penal e fecha com o pedido de liberdade ou absolvição em frase direta.',
+    forcas: 'humanidade da narrativa, foco na dúvida razoável, clareza do pedido, respeito ao julgador', evitar: 'dramatização em excesso, ataque à vítima ou à acusação, apelo emocional sem apoio na prova' },
+  { id: 'lima-marques', referencia: 'Cláudia Lima Marques', especialidade: 'Consumidor', escola: 'civil-constitucional', areas: ['consumidor'], titular: 'consumidor', pecas: /fornecedor|v[ií]cio do produto|recall|publicidade|superendivid|cl[aá]usula abusiva|oferta/i,
+    metodo: 'Identifica a relação de consumo e a vulnerabilidade, lê o contrato pela boa-fé e pelo equilíbrio, dialoga o Código de Defesa do Consumidor com o Código Civil e mostra a abusividade pela cláusula concreta e pelo dano.',
+    forcas: 'diálogo das fontes, proteção da confiança, exame da cláusula concreta', evitar: 'excesso de citações estrangeiras, parágrafos de teoria sem o fato, vulnerabilidade afirmada sem demonstração' },
+  { id: 'di-pietro', referencia: 'Maria Sylvia Zanella Di Pietro', especialidade: 'Administrativo', escola: 'didatica', areas: ['publico'], pecas: /licita|contrato administrativo|servidor|improbidade|concess|ato administrativo|concurso/i,
+    metodo: 'Examina o ato pela competência, forma, motivo, objeto e finalidade, confronta-o com a legalidade e os demais princípios do artigo 37 da Constituição e conclui pelo controle cabível, em linguagem direta e ordenada.',
+    forcas: 'ordem didática, exame do ato por elementos, apoio seguro na lei e na Constituição', evitar: 'tom de manual, enumeração de princípios sem aplicá-los ao caso, citação longa de doutrina' },
+]
+
+/**
+ * Escolhe o redator da banca para uma peça: soma pontos pela área e pelo tipo da peça (título da tarefa)
+ * e, em caso de empate ou repetição, prefere quem não escreveu as últimas peças.
+ */
+export function escolherRedator(opcoes: { area?: string | null; titulo?: string | null; anteriores?: string[]; semente?: number }): Redator {
+  const area = chaveArea(opcoes.area)
+  const titulo = String(opcoes.titulo ?? '')
+  const recentes = opcoes.anteriores ?? []
+  const r = gerador(opcoes.semente ?? 1)
+  const pontuados = BANCA.map(b => {
+    const posicao = b.areas.indexOf(area)
+    const pontos = (posicao === 0 ? 4 : posicao > 0 ? 2.5 : 0) + (b.titular === area ? 1.5 : 0) + (b.pecas.test(titulo) ? 3 : 0) - (recentes[0] === b.id ? 2.5 : recentes.slice(1, 3).includes(b.id) ? 1 : 0) + r() * 0.5
+    return { b, pontos }
+  })
+  return pontuados.sort((x, y) => y.pontos - x.pontos)[0]!.b
+}
+
+/** Bloco das instruções com o redator escolhido. */
+export function instrucoesDoRedator(b: Redator) {
+  return `REDATOR DESTA PEÇA (banca de redatores do escritório): tradição de escrita de ${b.referencia} (${b.especialidade}).
+Método: ${b.metodo}
+Mantenha as forças dessa tradição: ${b.forcas}.
+É proibido reproduzir as fraquezas dela: ${b.evitar}.
+Siga o método e o padrão de qualidade dessa tradição. Não copie trechos de obra nenhuma, não cite ${b.referencia} como autor do texto e não lhe atribua frases; se citar obra dele como doutrina, só com certeza, senão "[doutrina a conferir]".`
+}
+
+/** As dez técnicas de narrativa (storytelling forense) aplicadas à exposição dos fatos de toda peça. */
+export const NARRATIVA: { nome: string; regra: string }[] = [
+  { nome: 'Tema do caso', regra: 'uma frase, logo no começo, que diga do que o caso trata e por que o cliente tem razão; tudo o mais serve a ela' },
+  { nome: 'Abertura pelo que está em jogo', regra: 'antes da lei, dizer quem é o cliente e o que ele pode perder ou ganhar com a decisão' },
+  { nome: 'Pessoa, não rótulo', regra: 'chamar o cliente pelo nome ou pelo papel na vida (a locadora, o pai, a empresa), sem repetir "o autor" a cada linha' },
+  { nome: 'Ordem do tempo', regra: 'contar na ordem em que aconteceu, com data em cada passo decisivo' },
+  { nome: 'Fato concreto no lugar do adjetivo', regra: 'valor, data, documento e conduta; nada de "absurdo", "flagrante" ou "inaceitável"' },
+  { nome: 'Conflito claro', regra: 'mostrar o que o cliente buscava, o que a outra parte fez e o dano que resultou' },
+  { nome: 'Fato desfavorável enfrentado', regra: 'tratar de frente o ponto fraco e explicar por que não muda o resultado, em vez de escondê-lo' },
+  { nome: 'Cada fato com sua prova', regra: 'todo fato relevante aponta o documento ou a folha dos autos; se faltar, vai entre colchetes' },
+  { nome: 'Ponte para o direito', regra: 'cada fato narrado reaparece na fundamentação; fato que não sustenta pedido sai do texto' },
+  { nome: 'Fecho pela consequência', regra: 'terminar mostrando ao julgador o efeito prático de acolher ou negar o pedido' },
+]
+
+/** Bloco das instruções com as dez técnicas de narrativa. */
+export function instrucoesDeNarrativa() {
+  return `NARRATIVA DOS FATOS (dez técnicas; aplique todas na medida do tipo da peça):
+${NARRATIVA.map((n, i) => `${i + 1}. ${n.nome}: ${n.regra}.`).join('\n')}
+A narrativa nunca cria fato: usa só o que está na publicação e nos dados do caso; o que faltar vai entre colchetes.`
+}
+
+export interface TomDoJulgador {
+  /** Palavras lidas do próprio julgador (decisões e despachos publicados). */
+  amostra: number
+  suficiente: boolean
+  extensao: 'conciso' | 'medio' | 'extenso'
+  tracos: ('leve' | 'humanista' | 'tecnico' | 'rigoroso')[]
+}
+
+const MARCAS_DO_JULGADOR: Record<TomDoJulgador['tracos'][number], RegExp> = {
+  leve: /!|\bora,|convenhamos|pasme|francamente|diga-se de passagem|como diria|curios[oa]mente|salta aos olhos|com o perdao d|poeta|\bverso\b/g,
+  humanista: /dignidade|sofrimento|vulnerab|sensib|humanidade|afeto|melhor interesse|hipossufici|drama|angustia/g,
+  tecnico: /\bart\.|§|sumula|tema \d|precedente|repetitiv|enunciado|\bresp\b|informativo/g,
+  rigoroso: /preclus|intempestiv|nao conheco|inepcia|sob pena de|deserc|indefiro|litigancia de ma-fe|advirto/g,
+}
+
+/**
+ * Lê o modo de escrever do julgador nas decisões e despachos dele já publicados no processo.
+ * É leitura de texto público, não perfil psicológico. Com pouca amostra, não conclui nada.
+ */
+export function tomDoJulgador(textos: string[]): TomDoJulgador {
+  const bruto = textos.join('\n')
+  const t = bruto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+  const palavras = t.split(/\s+/).filter(Boolean).length
+  const frases = Math.max(1, t.split(/[.;!?]+\s/).filter(f => f.trim().split(/\s+/).length > 2).length)
+  const media = palavras / frases
+  const suficiente = palavras >= 150
+  const porMil = (re: RegExp) => ((t.match(re) ?? []).length * 1000) / Math.max(1, palavras)
+  const limites: Record<TomDoJulgador['tracos'][number], number> = { leve: 4, humanista: 4, tecnico: 12, rigoroso: 5 }
+  const tracos = suficiente ? (Object.keys(MARCAS_DO_JULGADOR) as TomDoJulgador['tracos']).filter(k => porMil(MARCAS_DO_JULGADOR[k]) >= limites[k]) : []
+  return { amostra: palavras, suficiente, extensao: media < 20 ? 'conciso' : media > 34 ? 'extenso' : 'medio', tracos }
+}
+
+/** Bloco das instruções que ajusta o tom da peça a quem vai julgá-la. */
+export function instrucoesDoJulgador(tom: TomDoJulgador, orgao?: string | null) {
+  const quem = orgao ? ` (${orgao})` : ''
+  const base = `TOM AJUSTADO AO JULGADOR${quem}: a peça é escrita para quem vai decidir.`
+  const respeito = 'Em qualquer caso: respeito ao julgador e à parte contrária; nunca piada, nunca ironia contra pessoa alguma, nunca imitar ou comentar o estilo do julgador.'
+  if (!tom.suficiente) return `${base} Há pouco texto do julgador nos autos para conhecer o estilo dele: use tom sóbrio, direto e respeitoso, sem humor. ${respeito}`
+  const linhas = [
+    tom.extensao === 'conciso' ? 'O julgador escreve curto: vá direto ao ponto, parágrafos breves, pedido logo visível, sem repetição.' : tom.extensao === 'extenso' ? 'O julgador fundamenta com fôlego: desenvolva o raciocínio por inteiro, sem pular etapas.' : 'O julgador escreve em extensão média: equilíbrio entre síntese e fundamentação.',
+    tom.tracos.includes('tecnico') ? 'Ele decide com artigo, súmula e precedente: ancore cada tese na norma e no precedente aplicável (marcado "[conferir no tribunal]").' : '',
+    tom.tracos.includes('humanista') ? 'Ele dá peso ao lado humano do caso: deixe a narrativa mostrar as pessoas e a consequência concreta da decisão.' : '',
+    tom.tracos.includes('rigoroso') ? 'Ele é rigoroso com forma e prazo: demonstre tempestividade, cabimento e cumprimento de cada requisito logo no início.' : '',
+    tom.tracos.includes('leve') ? 'Ele escreve com leveza: cabe, no máximo uma vez, uma imagem bem escolhida ou frase de espírito elegante, se servir ao argumento.' : 'Ele escreve em tom sério: nenhuma leveza, nenhuma figura de efeito.',
+  ].filter(Boolean)
+  return `${base} Leitura feita sobre ${tom.amostra} palavras de decisões e despachos dele neste processo.\n${linhas.map(l => `- ${l}`).join('\n')}\n${respeito}`
+}
+
 /**
  * Sorteia o perfil de escrita de uma peça.
  * 1. Escolhe 2 ou 3 escolas (com preferência pela área) e pesos de Dirichlet.
@@ -324,10 +569,10 @@ const AFINIDADE: Record<string, Escola['id'][]> = {
  *    (até 24 vezes) e fica com o perfil mais distante.
  * 4. Sorteia conectivos (2 por grupo), evitando os usados nas peças anteriores.
  */
-export function sortearPerfil(opcoes: { semente: number; especialidade?: string; anteriores?: Perfil[] | Parametros[]; usados?: string[] }): Perfil {
+export function sortearPerfil(opcoes: { semente: number; especialidade?: string; escolas?: Escola['id'][]; anteriores?: Perfil[] | Parametros[]; usados?: string[] }): Perfil {
   const r = gerador(opcoes.semente)
   const anteriores = (opcoes.anteriores ?? []).map(a => ('parametros' in a ? a.parametros : a) as Parametros)
-  const preferidas = AFINIDADE[opcoes.especialidade ?? ''] ?? []
+  const preferidas = opcoes.escolas?.length ? opcoes.escolas : AFINIDADE[chaveArea(opcoes.especialidade)] ?? []
   let melhor: Perfil | null = null
 
   for (let t = 1; t <= 24; t++) {
@@ -335,7 +580,7 @@ export function sortearPerfil(opcoes: { semente: number; especialidade?: string;
     const pool = [...ESCOLAS]
     const escolhidas: Escola[] = []
     while (escolhidas.length < quantas) {
-      const pesos = pool.map(e => (preferidas.includes(e.id) ? 3 : 1))
+      const pesos = pool.map(e => (preferidas.includes(e.id) ? (opcoes.escolas?.length ? 8 : 3) : 1))
       let alvo = r() * pesos.reduce((s, p) => s + p, 0)
       let i = 0
       while (alvo > pesos[i]! && i < pool.length - 1) { alvo -= pesos[i]!; i++ }

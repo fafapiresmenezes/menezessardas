@@ -58,11 +58,11 @@ THEYE Institute` : ''
       <p className="text-sm text-grafite-claro mb-4">Calcula pelo índice oficial do Banco Central e prepara a carta ao locatário.</p>
       <div className="flex flex-wrap items-center gap-2 mb-3" role="radiogroup" aria-label="Índice do simulador" data-testid="simulador-indice">
         <span className="text-xs uppercase tracking-wider text-grafite-claro">Simular com</span>
-        {INDICES.map(i => <button key={i.valor} type="button" role="radio" aria-checked={indiceSim === i.valor} onClick={() => calcular(i.valor)} disabled={carregando} className={`min-h-[44px] px-3 text-sm border ${indiceSim === i.valor ? 'bg-navy text-white' : 'border-navy/20'}`} data-testid={`indice-${i.valor}`}>{i.rotulo}{contrato.indice === i.valor ? ' (do contrato)' : ''}</button>)}
+        {INDICES.map(i => <button title="Calcula o reajuste por este índice" key={i.valor} type="button" role="radio" aria-checked={indiceSim === i.valor} onClick={() => calcular(i.valor)} disabled={carregando} className={`min-h-[44px] px-3 text-sm border ${indiceSim === i.valor ? 'bg-navy text-white' : 'border-navy/20'}`} data-testid={`indice-${i.valor}`}>{i.rotulo}{contrato.indice === i.valor ? ' (do contrato)' : ''}</button>)}
       </div>
       {!suportado && <p className="text-sm text-grafite mb-3">O {nomeContrato} não tem série pública no Banco Central; use o simulador acima como referência e informe o percentual manualmente.</p>}
       {!res ? (
-        <button onClick={() => calcular()} disabled={carregando} className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 rounded-sm uppercase tracking-wider text-sm disabled:opacity-60" data-testid="calcular-reajuste">
+        <button title="Busca o índice no Banco Central e calcula o reajuste do contrato" onClick={() => calcular()} disabled={carregando} className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 rounded-sm uppercase tracking-wider text-sm disabled:opacity-60" data-testid="calcular-reajuste">
           {carregando ? 'Consultando o Banco Central…' : `Calcular reajuste pelo ${nomeIndice}`}
         </button>
       ) : (
@@ -74,9 +74,9 @@ THEYE Institute` : ''
               <figure data-testid="grafico-indice">
                 <figcaption className="text-xs uppercase tracking-wider text-grafite-claro mb-1">{nomeIndice} mês a mês (%), últimos 12 meses</figcaption>
                 <svg viewBox="0 0 360 110" className="w-full max-w-xl" role="img" aria-label={`Variação mensal do ${nomeIndice}: ${res.meses.map(m => `${m.data.slice(3)} ${m.valor.toLocaleString('pt-BR')}%`).join(', ')}`}>
-                  <line x1="0" y1="60" x2="360" y2="60" stroke="#B08D57" strokeWidth="0.5" />
+                  <line x1="0" y1="60" x2="360" y2="60" stroke="#75757A" strokeWidth="0.5" />
                   {res.meses.map((m, i) => { const h = (Math.abs(m.valor) / max) * 45; const y = m.valor >= 0 ? 60 - h : 60; return (
-                    <g key={m.data}><rect x={i * 30 + 6} y={y} width={18} height={Math.max(h, 0.5)} fill={m.valor >= 0 ? '#14213D' : '#B23A48'} data-testid="barra-mes" />
+                    <g key={m.data}><rect x={i * 30 + 6} y={y} width={18} height={Math.max(h, 0.5)} fill={m.valor >= 0 ? '#0B0B0C' : '#B23A48'} data-testid="barra-mes" />
                       <text x={i * 30 + 15} y={m.valor >= 0 ? y - 2 : y + h + 7} textAnchor="middle" fontSize="6" fill="#333">{m.valor.toLocaleString('pt-BR')}</text>
                       <text x={i * 30 + 15} y="104" textAnchor="middle" fontSize="6" fill="#666">{m.data.slice(3, 5)}/{m.data.slice(8)}</text></g>) })}
                 </svg>
@@ -90,7 +90,7 @@ THEYE Institute` : ''
             <div><dt className="text-xs uppercase tracking-wider text-grafite-claro">Novo valor</dt><dd className="font-serif text-2xl text-navy" data-testid="novo-valor">{brl(novo)}</dd></div>
           </dl>
           <textarea readOnly value={carta} rows={12} className="w-full border border-navy/15 p-3 text-sm font-mono" aria-label="Carta de reajuste" />
-          <button onClick={() => { navigator.clipboard.writeText(carta); setCopiado(true) }} className="inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
+          <button title="Copia a carta de reajuste, para colar no e-mail ao inquilino" onClick={() => { navigator.clipboard.writeText(carta); setCopiado(true) }} className="inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
             <Copy size={16} aria-hidden="true" /> {copiado ? 'Carta copiada' : 'Copiar carta'}
           </button>
         </div>

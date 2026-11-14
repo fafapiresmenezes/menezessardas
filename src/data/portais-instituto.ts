@@ -1,0 +1,137 @@
+/**
+ * Passo B7 do plano mestre: cada porta do Instituto que ainda está em desenvolvimento ganha
+ * endereço próprio, para o visitante ler o escopo em vez de encontrar uma porta que não abre.
+ *
+ * O que cada campo quer dizer:
+ *  - `rota`: o endereço, no padrão pedido por M (/preditiva, /governo, …).
+ *  - `nome`: o nome da porta, o mesmo em todo lugar que aponte para ela.
+ *  - `resumo`: uma frase que um leigo entende, sem jargão.
+ *  - `escopo`: o que a porta vai fazer. Só escopo: **nunca prazo**, por decisão de M.
+ *  - `estado`: em que pé está, dito com honestidade, inclusive quando a resposta é "nada feito".
+ *
+ * /geolocalizacao de propósito NÃO está aqui: essa frente (fase G) anda em conversa própria do
+ * projeto e já tem tela em desenvolvimento lá. Criar uma página de apresentação para ela aqui
+ * atropelaria aquele trabalho.
+ */
+export type EstadoPortal = 'estudo' | 'prototipo' | 'piloto'
+
+export interface PortalInstituto {
+  rota: string
+  nome: string
+  resumo: string
+  escopo: string[]
+  estado: EstadoPortal
+  /** Como está hoje, em uma frase. */
+  comoEsta: string
+}
+
+export const ROTULO_ESTADO: Record<EstadoPortal, string> = {
+  estudo: 'Em estudo',
+  prototipo: 'Protótipo em construção',
+  piloto: 'Piloto com quem já usa',
+}
+
+export const EXPLICACAO_ESTADO: Record<EstadoPortal, string> = {
+  estudo: 'Existe o desenho e a pesquisa; ainda não existe programa para usar.',
+  prototipo: 'Já existe parte funcionando, em teste, e ainda não está aberta ao público.',
+  piloto: 'Está em uso real com um grupo pequeno, antes de abrir para todos.',
+}
+
+export const PORTAIS_INSTITUTO: PortalInstituto[] = [
+  {
+    rota: '/preditiva',
+    nome: 'Plataforma preditiva',
+    resumo: 'Estimar, com incerteza declarada, como um processo ou um mercado tende a andar.',
+    escopo: [
+      'Previsão de desfecho e de prazo a partir de decisões já publicadas, sempre com a margem de erro à vista',
+      'Séries públicas de água, minério, desmatamento e agro, com a fonte oficial de cada número',
+      'Boletim que qualquer pessoa pode conferir: todo número leva ao dado de origem',
+    ],
+    estado: 'prototipo',
+    comoEsta: 'A previsão de processo já funciona dentro da plataforma de direito, na tela Previsões, com a calibragem à vista. As séries de mercado estão sendo ligadas uma a uma.',
+  },
+  {
+    rota: '/geomapeamento',
+    nome: 'Geomapeamento',
+    resumo: 'Juntar num mapa as camadas públicas de um município para enxergar o que está em volta de um imóvel ou de uma obra.',
+    escopo: [
+      'Camadas públicas por município: zoneamento, área de proteção, risco, bacia',
+      'Cruzamento com a ficha do imóvel que o escritório já tem na plataforma',
+      'Exportar o mapa e a lista de camadas usadas, com a data de cada fonte',
+    ],
+    estado: 'estudo',
+    comoEsta: 'Levantamento das fontes públicas em andamento. Ainda não há mapa para usar.',
+  },
+  {
+    rota: '/governo',
+    nome: 'Estudos para governo',
+    resumo: 'Estudos técnicos para órgãos públicos, com método aberto e dado de fonte oficial.',
+    escopo: [
+      'Estudo por encomenda, com a pergunta, o método e os limites escritos antes de começar',
+      'Dado só de fonte pública e oficial, citada uma por uma',
+      'Entrega com o caminho para qualquer pessoa repetir a conta',
+    ],
+    estado: 'estudo',
+    comoEsta: 'O método está escrito e a biblioteca de fontes existe. Nenhum estudo foi encomendado ainda.',
+  },
+  {
+    rota: '/educacao',
+    nome: 'Educação e capacitação em IA',
+    resumo: 'Ensinar uma equipe a usar inteligência artificial no trabalho dela, sem promessa mágica.',
+    escopo: [
+      'Trilha curta por profissão, com exercício no trabalho real de quem está aprendendo',
+      'O que a ferramenta não faz, dito com a mesma clareza do que ela faz',
+      'Material que fica com a equipe depois do curso',
+    ],
+    estado: 'estudo',
+    comoEsta: 'Em desenho. O conteúdo está sendo montado a partir do que já se usa dentro da plataforma.',
+  },
+  {
+    rota: '/civico',
+    nome: 'Portal Cívico',
+    resumo: 'Pôr na mão de qualquer cidadão as contas e os dados públicos que hoje só quem é da área consegue ler.',
+    escopo: [
+      'Pergunta em português simples, resposta com o dado oficial atrás',
+      'Nada de opinião: o portal mostra o número e de onde ele veio',
+      'Aberto, sem login, sem cobrar',
+    ],
+    estado: 'estudo',
+    comoEsta: 'Em desenho. Ainda não há página pública com dado nenhum.',
+  },
+  {
+    rota: '/ciberseguranca',
+    nome: 'Cibersegurança',
+    resumo: 'Cuidar do que o escritório guarda: dado de cliente, peça, contrato e prazo.',
+    escopo: [
+      'Revisão de quem alcança o quê, no banco e não só na tela',
+      'Segundo fator na entrada e trilha de acesso para auditoria',
+      'Resposta a incidente: o que fazer, em que ordem, e quem avisar',
+    ],
+    estado: 'piloto',
+    comoEsta: 'As três coisas já estão em uso na plataforma de direito: segundo fator, trilha de acesso e auditoria das regras do banco. O que falta é virar serviço para outras casas.',
+  },
+  {
+    rota: '/quantum',
+    nome: 'Quantum computing',
+    resumo: 'Pesquisa, sem venda: entender o que a computação quântica muda na segurança do que guardamos hoje.',
+    escopo: [
+      'Acompanhar o que já é consenso e o que ainda é promessa',
+      'Preparar a troca das cifras que um computador quântico quebraria',
+      'Publicar o que se aprende, inclusive quando a conclusão é "ainda não muda nada"',
+    ],
+    estado: 'estudo',
+    comoEsta: 'Pesquisa em leitura, sem promessa de prazo. O que já existe para contratar é tempo de processador quântico da IBM, revendido pelo Instituto: preços, usos e limites em /cotas-quanticas.',
+  },
+  {
+    rota: '/ia',
+    nome: 'IA e superinteligência',
+    resumo: 'Onde a inteligência artificial entra no trabalho sério e onde ela não deve entrar.',
+    escopo: [
+      'Toda peça sai como rascunho, e o advogado revisa e assina: isso não é negociável',
+      'Toda previsão sai com a incerteza declarada',
+      'O que a plataforma se recusa a fazer, escrito: nada de análise de rosto, de emoção, de mentira ou de perfil psicológico, e nada de vasculhar rede social de parte, advogado ou julgador',
+    ],
+    estado: 'piloto',
+    comoEsta: 'Em uso real dentro da plataforma de direito, com estas regras valendo hoje, não como intenção.',
+  },
+]

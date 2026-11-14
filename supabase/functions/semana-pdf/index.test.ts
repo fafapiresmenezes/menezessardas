@@ -31,6 +31,29 @@ beforeEach(() => {
 const amanha = () => new Date(Date.now() + 86400000).toISOString().slice(0, 10)
 
 describe('semana-pdf', () => {
+  it('com a função trancada no banco: o robô leva o segredo, a pessoa logada usa a filtrada, segredo recusado não gera PDF', async () => {
+    estado.rpcResposta.semana_agenda_completa = SEMANA
+    const b = await (await chamar({}, { 'x-cron-secret': 'segredo' })).json()
+    expect(b.enviado).toBe(true)
+    expect(estado.rpcs.map(r => r.nome)).not.toContain('semana_agenda')
+    expect(estado.rpcs[0]!.args).toEqual({ p_segredo: 'segredo', p_inicio: amanha(), p_dias: 7, p_escritorio: SEDE })
+
+    // Pessoa logada: continua pela `semana_agenda`, que é a que a migração 126 filtra por advogado.
+    estado.rpcs.length = 0
+    estado.usuario = { id: 'u1', email: 'fatima@gmenezes.com' }
+    const r = await chamar({ teste: true }, { Authorization: 'Bearer t' })
+    expect(r.status).toBe(200)
+    expect(estado.rpcs[0]!.nome).toBe('semana_agenda')
+
+    // Segredo recusado: a função devolve { erro } e aqui não se inventa um PDF de semana nenhuma.
+    estado.rpcs.length = 0
+    estado.usuario = null
+    estado.rpcResposta.semana_agenda_completa = { erro: 'segredo invalido' }
+    const ruim = await chamar({}, { 'x-cron-secret': 'segredo' })
+    expect(ruim.status).toBe(500)
+    expect((await ruim.json()).erro).toContain('segredo invalido')
+  })
+
   it('linhasSemana: cabeçalho, um bloco por dia com o dia da semana, itens quebrados e rodapé; semana vazia avisa', () => {
     const L = linhasSemana(SEMANA, 'Escritório X')
     expect(L[0]).toMatchObject({ texto: 'Semana de 07/11/2026 a 13/11/2026', negrito: true })
@@ -52,7 +75,10 @@ describe('semana-pdf', () => {
   it('cron: pede os 7 dias a partir de amanhã para a sede, manda o PDF anexo à secretaria configurada, limpa HTML dos títulos e registra consumo', async () => {
     const b = await (await chamar({}, { 'x-cron-secret': 'segredo' })).json()
     expect(b).toEqual({ enviado: true, destinatarios: 2, teste: false, total: 2, inicio: '2026-11-07', fim: '2026-11-13', detalhe: undefined })
-    expect(estado.rpcs[0]).toEqual({ nome: 'semana_agenda', args: { p_inicio: amanha(), p_dias: 7, p_escritorio: SEDE } })
+    // O robô tenta primeiro a função trancada por segredo, que é a que mostra a casa inteira; como
+    // neste cenário ela ainda não existe no banco, cai sozinho na `semana_agenda` de sempre.
+    expect(estado.rpcs[0]).toEqual({ nome: 'semana_agenda_completa', args: { p_segredo: 'segredo', p_inicio: amanha(), p_dias: 7, p_escritorio: SEDE } })
+    expect(estado.rpcs.find(r => r.nome === 'semana_agenda')).toEqual({ nome: 'semana_agenda', args: { p_inicio: amanha(), p_dias: 7, p_escritorio: SEDE } })
     expect(envios.map(e => e.to)).toEqual(['sec@gmenezes.com', 'sec2@gmenezes.com'])
     expect(envios[0]!.subject).toBe('Semana de 07/11/2026 a 13/11/2026 · 2 item(ns)')
     expect(envios[0]!.anexo.name).toBe('semana-2026-11-07.pdf')

@@ -1,8 +1,33 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
-import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate, useLocation, useSearchParams } from 'react-router-dom'
+import { destinoSeguro } from '@/lib/destino'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
-import { sessaoDemoAtiva } from '@/lib/authDemo'
+import { useIdiomaEscolhido } from '@/lib/i18n'
 import LoginPage from '@/pages/LoginPage'
+import BoasVindasPage from '@/pages/BoasVindasPage'
+const StokasticosPage = lazy(() => import('@/pages/StokasticosPage'))
+// Passo B7: as portas do Instituto que ainda estão em desenvolvimento, uma página por endereço.
+// Os oito endereços estão escritos à mão aqui, e não lidos de src/data/portais-instituto.ts, de
+// propósito: importar a lista no App.tsx puxaria o texto das oito páginas para o primeiro acesso.
+const PortalInstitutoPage = lazy(() => import('@/pages/PortalInstitutoPage'))
+const PortaisInstitutoPage = lazy(() => import('@/pages/PortaisInstitutoPage'))
+const FrentesDoInstitutoPage = lazy(() => import('@/pages/FrentesDoInstitutoPage'))
+// Passo T2: conferir a corrente do trilho no navegador de quem duvida.
+const LastroPage = lazy(() => import('@/pages/LastroPage'))
+const AreasPage = lazy(() => import('@/pages/AreasPage'))
+const CotasQuanticasPage = lazy(() => import('@/pages/CotasQuanticasPage'))
+const AdmissaoPage = lazy(() => import('@/pages/AdmissaoPage'))
+const ExemplosPage = lazy(() => import('@/pages/ExemplosPage'))
+const RoyaltiesPage = lazy(() => import('@/pages/RoyaltiesPage'))
+const MedicoesContratosPage = lazy(() => import('@/pages/MedicoesContratosPage'))
+const SuperficieAtaquePage = lazy(() => import('@/pages/SuperficieAtaquePage'))
+const AguaPage = lazy(() => import('@/pages/AguaPage'))
+const TrilhasPage = lazy(() => import('@/pages/TrilhasPage'))
+const PesquisaIaPage = lazy(() => import('@/pages/PesquisaIaPage'))
+const ReguaPage = lazy(() => import('@/pages/ReguaPage'))
+const EscolhaDoMercadoPage = lazy(() => import('@/pages/EscolhaDoMercadoPage'))
+const MapaDeReceitaPage = lazy(() => import('@/pages/MapaDeReceitaPage'))
+const CadernoDeProdutosPage = lazy(() => import('@/pages/CadernoDeProdutosPage'))
 import DashboardPage from '@/pages/DashboardPage'
 const ImovelListPage = lazy(() => import('@/pages/ImovelListPage'))
 const NovoImovelPage = lazy(() => import('@/pages/NovoImovelPage'))
@@ -20,16 +45,21 @@ const AssistentePage = lazy(() => import('@/pages/AssistentePage'))
 const ImportarImoveisPage = lazy(() => import('@/pages/ImportarImoveisPage'))
 const PrevisoesPage = lazy(() => import('@/pages/PrevisoesPage'))
 const InstitutoPage = lazy(() => import('@/pages/InstitutoPage'))
+const GeolocalizacaoPage = lazy(() => import('@/pages/GeolocalizacaoPage'))
 const LegislacaoPage = lazy(() => import('@/pages/LegislacaoPage'))
 const FornecedoresPage = lazy(() => import('@/pages/FornecedoresPage'))
 const FornecedorPage = lazy(() => import('@/pages/FornecedorPage'))
 const ConfiguraçõesPage = lazy(() => import('@/pages/ConfiguraçõesPage'))
+const MeuEstiloPage = lazy(() => import('@/pages/MeuEstiloPage'))
+const MeuJeitoPage = lazy(() => import('@/pages/MeuJeitoPage'))
 const EquipePage = lazy(() => import('@/pages/EquipePage'))
+const HierarquiaPage = lazy(() => import('@/pages/HierarquiaPage'))
 import InicioPage from '@/pages/InicioPage'
 import ErroTela from '@/components/ErroTela'
 const FontesPage = lazy(() => import('@/pages/FontesPage'))
 const KycPage = lazy(() => import('@/pages/KycPage'))
 const PesquisaDiligenciaPage = lazy(() => import('@/pages/PesquisaDiligenciaPage'))
+const LeituraCasoPage = lazy(() => import('@/pages/LeituraCasoPage'))
 const PrazosPorCodigoPage = lazy(() => import('@/pages/PrazosPorCodigoPage'))
 const AssumirProcessosPage = lazy(() => import('@/pages/AssumirProcessosPage'))
 const MigracaoPage = lazy(() => import('@/pages/MigracaoPage'))
@@ -53,11 +83,15 @@ const ProjetosPage = lazy(() => import('@/pages/ProjetosPage'))
 const IntimacoesPage = lazy(() => import('@/pages/IntimacoesPage'))
 const AdministracaoPage = lazy(() => import('@/pages/AdministracaoPage'))
 const FerramentasPage = lazy(() => import('@/pages/FerramentasPage'))
+const SolucoesPage = lazy(() => import('@/pages/SolucoesPage'))
 const CarteiraProcessosPage = lazy(() => import('@/pages/CarteiraProcessosPage'))
 const ImportarProcessosPage = lazy(() => import('@/pages/ImportarProcessosPage'))
 const FunilVendasPage = lazy(() => import('@/pages/FunilVendasPage'))
 const FinanceiroPage = lazy(() => import('@/pages/FinanceiroPage'))
 const EstudosPage = lazy(() => import('@/pages/EstudosPage'))
+const EngenhariaPage = lazy(() => import('@/pages/EngenhariaPage'))
+const SaudePage = lazy(() => import('@/pages/SaudePage'))
+const ParametrosEscritaPage = lazy(() => import('@/pages/ParametrosEscritaPage'))
 
 // Com dois fatores ativos, a sessão só libera o sistema depois do código (nível aal2).
 async function segundoFatorOk() {
@@ -85,7 +119,8 @@ function App() {
 
   useEffect(() => {
     if (!supabaseConfigurado) {
-      setIsAuthenticated(sessaoDemoAtiva())
+      // Sem Supabase configurado, ninguém entra. M (13/11/2026): "Não deixe ninguém sem senha acessar nada."
+      setIsAuthenticated(false)
       setIsLoading(false)
       return
     }
@@ -153,8 +188,60 @@ function App() {
           element={isAuthenticated ? <FinanceiroPage /> : <Navigate to="/login" />}
         />
         <Route
+          path="/royalties"
+          element={isAuthenticated ? <RoyaltiesPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/medicoes"
+          element={isAuthenticated ? <MedicoesContratosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/superficie-de-ataque"
+          element={isAuthenticated ? <SuperficieAtaquePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/agua"
+          element={isAuthenticated ? <AguaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/trilhas"
+          element={isAuthenticated ? <TrilhasPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/pesquisa-ia"
+          element={isAuthenticated ? <PesquisaIaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/regua"
+          element={isAuthenticated ? <ReguaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/escolha-do-mercado"
+          element={isAuthenticated ? <EscolhaDoMercadoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/mapa-de-receita"
+          element={isAuthenticated ? <MapaDeReceitaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/caderno-de-produtos"
+          element={isAuthenticated ? <CadernoDeProdutosPage /> : <Navigate to="/login" />}
+        />
+        <Route
           path="/ferramentas"
           element={isAuthenticated ? <FerramentasPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/solucoes"
+          element={isAuthenticated ? <SolucoesPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/engenharia"
+          element={isAuthenticated ? <EngenhariaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/saude"
+          element={isAuthenticated ? <SaudePage /> : <Navigate to="/login" />}
         />
         <Route
           path="/estudos"
@@ -165,8 +252,38 @@ function App() {
           element={isAuthenticated ? <HonorariosPage /> : <Navigate to="/login" />}
         />
         <Route
+          path="/boas-vindas"
+          element={isAuthenticated ? <Navigate to="/inicio" /> : <BoasVindasPage />}
+        />
+        <Route path="/stokasticos" element={<StokasticosPage />} />
+        <Route path="/stokasticos/biblioteca" element={<StokasticosPage />} />
+        <Route path="/stokasticos/blog" element={<StokasticosPage />} />
+        <Route path="/stokasticos/ciencia" element={<StokasticosPage />} />
+        <Route path="/stokasticos/magia" element={<StokasticosPage />} />
+        <Route path="/portais" element={<PortaisInstitutoPage />} />
+        <Route
+          path="/frentes-do-instituto"
+          element={isAuthenticated ? <FrentesDoInstitutoPage /> : <Navigate to="/login" />}
+        />
+        <Route path="/lastro" element={<LastroPage />} />
+        <Route path="/exemplos" element={<ExemplosPage />} />
+        <Route path="/admissao" element={<AdmissaoPage />} />
+        <Route path="/pedir-entrada" element={<AdmissaoPage />} />
+        <Route path="/preditiva" element={<PortalInstitutoPage />} />
+        <Route path="/geomapeamento" element={<PortalInstitutoPage />} />
+        <Route path="/governo" element={<PortalInstitutoPage />} />
+        <Route path="/educacao" element={<PortalInstitutoPage />} />
+        <Route path="/civico" element={<PortalInstitutoPage />} />
+        <Route path="/ciberseguranca" element={<PortalInstitutoPage />} />
+        <Route path="/quantum" element={<PortalInstitutoPage />} />
+        <Route
+          path="/cotas-quanticas"
+          element={isAuthenticated ? <CotasQuanticasPage /> : <Navigate to="/login" />}
+        />
+        <Route path="/ia" element={<PortalInstitutoPage />} />
+        <Route
           path="/login"
-          element={isAuthenticated ? <Navigate to="/inicio" /> : <LoginPage />}
+          element={<Entrada autenticado={isAuthenticated} />}
         />
         <Route
           path="/inicio"
@@ -235,6 +352,10 @@ function App() {
         <Route
           path="/previsoes"
           element={isAuthenticated ? <PrevisoesPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/geolocalizacao"
+          element={isAuthenticated ? <GeolocalizacaoPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/instituto"
@@ -309,6 +430,10 @@ function App() {
           element={isAuthenticated ? <LaboratorioAdminPage /> : <Navigate to="/login" />}
         />
         <Route
+          path="/areas"
+          element={isAuthenticated ? <AreasPage /> : <Navigate to="/login" />}
+        />
+        <Route
           path="/enquetes"
           element={isAuthenticated ? <EnquetesPage /> : <Navigate to="/login" />}
         />
@@ -319,6 +444,10 @@ function App() {
         <Route
           path="/pesquisa"
           element={isAuthenticated ? <PesquisaDiligenciaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/leitura-do-caso"
+          element={isAuthenticated ? <LeituraCasoPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/prazos"
@@ -337,15 +466,31 @@ function App() {
           element={isAuthenticated ? <ConsumoPage /> : <Navigate to="/login" />}
         />
         <Route
+          path="/hierarquia"
+          element={isAuthenticated ? <HierarquiaPage /> : <Navigate to="/login" />}
+        />
+        <Route
           path="/equipe"
           element={isAuthenticated ? <EquipePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/meu-estilo"
+          element={isAuthenticated ? <MeuEstiloPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/meu-jeito"
+          element={isAuthenticated ? <MeuJeitoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/parametros-escrita"
+          element={isAuthenticated ? <ParametrosEscritaPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/settings"
           element={isAuthenticated ? <ConfiguraçõesPage /> : <Navigate to="/login" />}
         />
-        <Route path="/" element={<Navigate to={isAuthenticated ? "/inicio" : "/login"} />} />
-        <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />
+        <Route path="/" element={<ParaOnde autenticado={isAuthenticated} logado="/inicio" />} />
+        <Route path="*" element={<ParaOnde autenticado={isAuthenticated} logado="/dashboard" substituir />} />
       </Routes>
       </Suspense>
       </ProtecaoRotas>
@@ -355,6 +500,38 @@ function App() {
 
 // Erro no corpo de uma tela (fora do Layout) derrubava o app inteiro: todas as telas seguintes ficavam em branco
 // até recarregar. Esta proteção mostra o aviso só naquela tela e se desarma ao mudar de endereço.
+/**
+ * Quem entra na plataforma sem estar logado: a tela de entrada, se já escolheu o idioma; a tela de
+ * idiomas, se ainda não.
+ *
+ * Por que isto é um componente, e não um `?:` escrito dentro do `element` da rota: o `element` é
+ * montado quando o App se desenha, e o App não se desenha de novo a cada navegação — o roteador vive
+ * dentro dele. Uma pergunta feita ali fica congelada na resposta da primeira vez. Era o que
+ * acontecia: a pessoa escolhia a língua, a tela de idiomas falava a língua nova, mas a entrada ainda
+ * achava que ninguém tinha escolhido e a mandava de volta. Ela ficava presa até recarregar a página.
+ * Dentro de um componente a pergunta é feita na hora de desenhar a rota, e o hook ainda avisa quando
+ * a escolha muda.
+ */
+function Entrada({ autenticado }: { autenticado: boolean }) {
+  const idioma = useIdiomaEscolhido()
+  // Quem veio de um quadradinho da porta (?ir=/engenharia) vai para a tela dele depois da senha.
+  const [busca] = useSearchParams()
+  const pedido = busca.get('ir')
+  if (autenticado) return <Navigate to={destinoSeguro(pedido)} />
+  // Quem clicou num segmento antes de escolher a língua entra na entrada daquele segmento, em
+  // português, e troca a língua lá mesmo. Mandar de volta para a tela de línguas fazia o botão
+  // parecer quebrado (M, 13/11/2026 23:11).
+  if (idioma || (pedido && destinoSeguro(pedido) === pedido)) return <LoginPage />
+  return <Navigate to="/boas-vindas" />
+}
+
+/** Para onde manda quem chega na raiz ou num endereço que não existe. Mesmo motivo acima. */
+function ParaOnde({ autenticado, logado, substituir }: { autenticado: boolean; logado: string; substituir?: boolean }) {
+  const idioma = useIdiomaEscolhido()
+  const destino = autenticado ? logado : (idioma ? '/login' : '/boas-vindas')
+  return <Navigate to={destino} replace={substituir} />
+}
+
 function ProtecaoRotas({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation()
   return <ErroTela chave={pathname} topo>{children}</ErroTela>

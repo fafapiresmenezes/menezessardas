@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Building2, CalendarDays, FileText, Bell, X } from 'lucide-react'
+import { Scale, CalendarDays, FileText, Bell, X } from 'lucide-react'
 
 const CHAVE = 'lsm-boas-vindas-v1'
 
+// Apresentação pensada para o advogado brasileiro: prazos, processos, peças e avisos (12/11/2026).
 const PASSOS = [
-  { icone: Building2, titulo: 'Boas-vindas à gestão de contratos', texto: 'Aqui ficam todos os imóveis do escritório, com seus contratos, documentos e prazos, num só lugar.', rota: '/dashboard', acao: 'Ver o painel' },
-  { icone: FileText, titulo: 'Cadastre arrastando', texto: 'Em Imóveis, arraste o PDF do contrato para a tela. A plataforma lê o arquivo e preenche os campos para você conferir.', rota: '/imoveis', acao: 'Abrir Imóveis' },
-  { icone: CalendarDays, titulo: 'Clique no dia para marcar', texto: 'Na Agenda, toque em "Novo" em qualquer dia para criar um compromisso e escolher com quantos dias de antecedência quer o aviso.', rota: '/agenda', acao: 'Abrir a Agenda' },
+  { icone: Scale, titulo: 'Boas-vindas à plataforma', texto: 'Comece pelo Meu dia: os prazos, as intimações e as tarefas de hoje, já em ordem de urgência, num só lugar.', rota: '/meu-dia', acao: 'Ver o Meu dia' },
+  { icone: FileText, titulo: 'Seus processos, vigiados', texto: 'Na Carteira de processos, o robô consulta o CNJ a cada 4 horas, lê as publicações e já conta os prazos pelo código certo (CPC, CLT, CPP…).', rota: '/processos', acao: 'Abrir a Carteira de processos' },
+  { icone: CalendarDays, titulo: 'Peças com o seu jeito', texto: 'No Assistente, cada peça sai com um estilo diferente, inspirado nos grandes juristas, ajustada a quem vai julgar — e sempre revisada e assinada por você.', rota: '/assistente', acao: 'Escrever uma peça' },
   { icone: Bell, titulo: 'Avisos no celular', texto: 'Na Agenda, "Conectar ao Outlook" ou "Conectar ao Google Agenda" leva todos os prazos para o seu computador e celular, atualizados sozinhos.', rota: '/agenda', acao: 'Conectar agora' },
 ]
 
@@ -57,14 +58,14 @@ export default function BoasVindas() {
           ))}
         </div>
         <div className="flex flex-wrap gap-2 mt-6 justify-between">
-          <button onClick={() => { fechar(); navigate(p.rota) }} className="min-h-[44px] px-4 border border-navy text-navy hover:bg-pergaminho text-sm">
+          <button title="Fecha esta apresentação e abre a tela de que este passo fala" onClick={() => { fechar(); navigate(p.rota) }} className="min-h-[44px] px-4 border border-navy text-navy hover:bg-pergaminho text-sm">
             {p.acao}
           </button>
           <div className="flex gap-2">
             {passo > 0 && (
-              <button onClick={() => setPasso(passo - 1)} className="min-h-[44px] px-4 text-navy hover:bg-pergaminho text-sm">Voltar</button>
+              <button title="Volta ao passo anterior da apresentação" onClick={() => setPasso(passo - 1)} className="min-h-[44px] px-4 text-navy hover:bg-pergaminho text-sm">Voltar</button>
             )}
-            <button onClick={() => (ultimo ? fechar() : setPasso(passo + 1))} className="min-h-[44px] px-5 bg-navy hover:bg-navy-700 text-white text-sm uppercase tracking-wider">
+            <button title="Segue para o próximo passo da apresentação" onClick={() => (ultimo ? fechar() : setPasso(passo + 1))} className="min-h-[44px] px-5 bg-navy hover:bg-navy-700 text-white text-sm uppercase tracking-wider">
               {ultimo ? 'Começar' : 'Próximo'}
             </button>
           </div>

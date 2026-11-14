@@ -8,6 +8,7 @@ import { formatarData, hojeLocal } from '@/lib/datas'
 import { ETAPAS, ORIGENS, MOTIVOS_PERDA, resumoFunil, proximaEtapa, validarMudanca, telefoneWhatsapp, mensagemRetorno, casoDoLead, rotuloEtapa, type Lead, type Etapa } from '@/lib/escritorio/funil'
 import { tabelaAusente } from '@/lib/escritorio/tabelaAusente'
 import { Filter, Plus, MessageCircle, ArrowRight, Trash2 } from 'lucide-react'
+import { meuAlcance, filtrarPorHierarquia, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // Funil de vendas do escritório: do primeiro contato ao contrato fechado, que vira caso com honorário no financeiro.
 const AREAS = ['Imobiliário', 'Cível', 'Trabalhista', 'Família e sucessões', 'Tributário', 'Empresarial', 'Consumidor', 'Previdenciário', 'Penal', 'Compliance']
@@ -17,7 +18,12 @@ const VAZIO = { nome: '', telefone: '', email: '', origem: 'indicacao', area: 'C
 const CAMPOS = 'id,nome,telefone,email,origem,area,assunto,etapa,valor_estimado,proximo_contato,motivo_perda,observacoes,responsavel_id,caso_id,criado_em,etapa_desde'
 
 export default function FunilVendasPage() {
-  const [leads, setLeads] = useState<Lead[]>([])
+  const [todosLeads, setLeads] = useState<Lead[]>([])
+  // Hierarquia: sócios e gestor veem o funil inteiro; os demais, os seus contatos (e os sem responsável, para alguém assumir).
+  const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza.
+  const alc = alcance ?? ALCANCE_FECHADO
+  const leads = useMemo(() => (alc.veTudo ? todosLeads : filtrarPorHierarquia(todosLeads, alc)), [todosLeads, alc])
   const [pessoas, setPessoas] = useState<Pessoa[]>([])
   const [novo, setNovo] = useState(VAZIO)
   const [erro, setErro] = useState('')
@@ -32,7 +38,10 @@ export default function FunilVendasPage() {
     if (error) return setErro(mensagemAmigavel(error))
     setLeads((data ?? []) as Lead[])
   }
-  useEffect(() => { carregar(); listarPessoas().then(setPessoas).catch(() => {}) }, [])
+  useEffect(() => {
+    carregar(); listarPessoas().then(setPessoas).catch(() => {})
+    meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO))
+  }, [])
 
   const resumo = useMemo(() => resumoFunil(leads), [leads])
   const filtrados = leads.filter(l => !busca || `${l.nome} ${l.assunto ?? ''} ${l.telefone ?? ''}`.toLowerCase().includes(busca.toLowerCase()))
@@ -51,9 +60,16 @@ export default function FunilVendasPage() {
     setNovo(VAZIO); setMsg('Contato incluído no funil.'); carregar()
   }
   const mover = async (l: Lead, etapa: Etapa, motivo?: string) => {
-    setErro('')
+    setErro(''); setMsg('')
+    // Mover para "ganho" dispara a criação do caso: o botão Avançar fecha o ciclo sem precisar de um segundo clique.
+    if (etapa === 'ganho' && !l.caso_id) {
+      if (!(Number(l.valor_estimado) > 0)) return setErro('Informe o valor dos honorários antes de marcar como fechado.')
+      return converter(l)
+    }
+    // Pedir motivo da perda abre o cartão em vez de mostrar erro: o usuário ainda não errou nada.
+    if (etapa === 'perdido' && !motivo) { setPerdendo({ id: l.id, motivo: '' }); setMsg('Escolha o motivo da perda abaixo para registrar e mover.'); return }
     const problema = validarMudanca(l, etapa, motivo)
-    if (problema) { if (etapa === 'perdido') setPerdendo({ id: l.id, motivo: '' }); return setErro(problema) }
+    if (problema) return setErro(problema)
     const { error } = await supabase.from('leads').update({ etapa, motivo_perda: etapa === 'perdido' ? motivo : null }).eq('id', l.id)
     if (error) return setErro(mensagemAmigavel(error))
     setPerdendo(null); carregar()
@@ -89,6 +105,11 @@ export default function FunilVendasPage() {
   return (
     <Layout title="Funil de vendas">
       <div className="space-y-5">
+        {alcance && !alcance.veTudo && (
+          <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="funil-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+            Você está vendo <strong>os seus contatos do funil</strong> ({rotuloCargo[alcance.cargo ?? 'nenhum']}). Contatos sem responsável aparecem para todos, para alguém assumir.
+          </p>
+        )}
         <div className="grid gap-3 grid-cols-2 md:grid-cols-6" data-testid="funil-resumo">
           {[['Em aberto', String(resumo.abertos)], ['Valor no funil', brl(resumo.valorAberto)], ['Previsão (ponderada)', brl(resumo.previsao)], ['Fechado', brl(resumo.valorGanho)], ['Conversão', pct(resumo.conversao)], ['Ticket médio', brl(resumo.ticket)]].map(([r, v]) => (
             <div key={r} className="bg-white shadow-sm p-4 border-t-2 border-dourado"><span className="block text-xs uppercase tracking-wider text-grafite-claro">{r}</span><span className="block text-xl font-serif text-navy">{v}</span></div>
@@ -108,14 +129,14 @@ export default function FunilVendasPage() {
             <input aria-label="Nome" placeholder="Nome" value={novo.nome} onChange={e => setNovo({ ...novo, nome: e.target.value })} className="border px-3 py-2 sm:col-span-2" data-testid="lead-nome" />
             <input aria-label="Telefone / WhatsApp" placeholder="Telefone / WhatsApp" value={novo.telefone} onChange={e => setNovo({ ...novo, telefone: e.target.value })} className="border px-3 py-2 sm:col-span-2" data-testid="lead-telefone" />
             <input aria-label="E-mail" placeholder="E-mail" type="email" value={novo.email} onChange={e => setNovo({ ...novo, email: e.target.value })} className="border px-3 py-2 sm:col-span-2" />
-            <select aria-label="Origem" value={novo.origem} onChange={e => setNovo({ ...novo, origem: e.target.value })} className="border px-2 py-2 sm:col-span-2">{ORIGENS.map(([v, r]) => <option key={v} value={v}>{r}</option>)}</select>
-            <select aria-label="Área do caso" value={novo.area} onChange={e => setNovo({ ...novo, area: e.target.value })} className="border px-2 py-2">{AREAS.map(a => <option key={a}>{a}</option>)}</select>
+            <select aria-label="Origem" title="Registra de onde veio este contato, para o relatório de origem dos clientes" value={novo.origem} onChange={e => setNovo({ ...novo, origem: e.target.value })} className="border px-2 py-2 sm:col-span-2">{ORIGENS.map(([v, r]) => <option key={v} value={v}>{r}</option>)}</select>
+            <select aria-label="Área do caso" title="Define a área do direito do caso deste contato" value={novo.area} onChange={e => setNovo({ ...novo, area: e.target.value })} className="border px-2 py-2">{AREAS.map(a => <option key={a}>{a}</option>)}</select>
             <input aria-label="Assunto" placeholder="Assunto (ex.: despejo)" value={novo.assunto} onChange={e => setNovo({ ...novo, assunto: e.target.value })} className="border px-3 py-2 sm:col-span-3" data-testid="lead-assunto" />
             <input aria-label="Honorários estimados (R$)" placeholder="Honorários estimados (R$)" inputMode="decimal" value={novo.valor_estimado} onChange={e => setNovo({ ...novo, valor_estimado: e.target.value })} className="border px-3 py-2 sm:col-span-2" data-testid="lead-valor" />
-            <label className="sm:col-span-2 text-xs text-grafite">Próximo contato<input type="date" value={novo.proximo_contato} onChange={e => setNovo({ ...novo, proximo_contato: e.target.value })} className="border px-3 py-2 w-full text-sm" data-testid="lead-proximo" /></label>
-            <select aria-label="Responsável" value={novo.responsavel_id} onChange={e => setNovo({ ...novo, responsavel_id: e.target.value })} className="border px-2 py-2 sm:col-span-2"><option value="">Responsável</option>{pessoas.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}</select>
+            <label className="sm:col-span-2 text-xs text-grafite">Próximo contato<input type="date" title="Quando você vai falar com esta pessoa de novo. A plataforma cobra você quando a data chegar." value={novo.proximo_contato} onChange={e => setNovo({ ...novo, proximo_contato: e.target.value })} className="border px-3 py-2 w-full text-sm" data-testid="lead-proximo" /></label>
+            <select aria-label="Responsável" title="Define quem da equipe cuida deste contato" value={novo.responsavel_id} onChange={e => setNovo({ ...novo, responsavel_id: e.target.value })} className="border px-2 py-2 sm:col-span-2"><option value="">Responsável</option>{pessoas.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}</select>
             <input aria-label="Observações" placeholder="Observações" value={novo.observacoes} onChange={e => setNovo({ ...novo, observacoes: e.target.value })} className="border px-3 py-2 sm:col-span-4" />
-            <button type="button" onClick={criar} data-testid="lead-criar" className="min-h-[44px] bg-navy text-white px-5 uppercase tracking-wider sm:col-span-2">Incluir no funil</button>
+            <button type="button" onClick={criar} data-testid="lead-criar" title="Grava este contato na primeira etapa do funil de vendas" className="min-h-[44px] bg-navy text-white px-5 uppercase tracking-wider sm:col-span-2">Incluir no funil</button>
           </div>
           {(erro || msg) && <p role={erro ? 'alert' : 'status'} className={`text-sm mt-3 ${erro ? 'text-critico' : ''}`} data-testid="funil-msg">{erro || msg}</p>}
         </section>
@@ -144,17 +165,17 @@ export default function FunilVendasPage() {
                           {l.motivo_perda && <p className="text-xs text-critico">Motivo: {l.motivo_perda}</p>}
                           {!['ganho', 'perdido'].includes(l.etapa) && <label className="block text-[11px] text-grafite-claro mt-1">Próximo contato<input type="date" value={l.proximo_contato ?? ''} onChange={ev => atualizar(l, { proximo_contato: ev.target.value || null })} className="border px-1 py-0.5 block text-xs" aria-label={`Próximo contato de ${l.nome}`} /></label>}
                           <div className="flex flex-wrap items-center gap-2 mt-2">
-                            <select value={l.etapa} onChange={ev => mover(l, ev.target.value as Etapa)} aria-label={`Etapa de ${l.nome}`} className="text-xs border px-1 py-0.5">{ETAPAS.map(x => <option key={x.valor} value={x.valor}>{x.rotulo}</option>)}</select>
-                            {prox && <button type="button" onClick={() => mover(l, prox)} className="text-xs underline text-navy inline-flex items-center gap-1" data-testid="lead-avancar">{rotuloEtapa(prox)} <ArrowRight size={12} aria-hidden /></button>}
-                            {wa && <a href={`https://wa.me/${wa}?text=${encodeURIComponent(mensagemRetorno(l))}`} target="_blank" rel="noreferrer" className="text-xs underline text-navy inline-flex items-center gap-1" data-testid="lead-whatsapp"><MessageCircle size={12} aria-hidden /> WhatsApp</a>}
-                            {l.etapa === 'ganho' && !l.caso_id && <button type="button" onClick={() => converter(l)} className="text-xs underline text-navy" data-testid="lead-converter">Criar caso</button>}
-                            {l.caso_id && <Link to={`/projetos?caso=${l.caso_id}`} className="text-xs underline text-navy">Ver caso</Link>}
-                            <button type="button" onClick={() => apagar(l)} aria-label={`Apagar ${l.nome}`} className="text-xs text-grafite-claro"><Trash2 size={12} aria-hidden /></button>
+                            <select value={l.etapa} onChange={ev => mover(l, ev.target.value as Etapa)} aria-label={`Etapa de ${l.nome}`} title="Move este contato para outra etapa do funil" className="text-xs border px-1 py-0.5">{ETAPAS.map(x => <option key={x.valor} value={x.valor}>{x.rotulo}</option>)}</select>
+                            {prox && <button type="button" onClick={() => mover(l, prox)} title={`Avança este contato para a etapa "${rotuloEtapa(prox)}"`} className="text-xs underline text-navy inline-flex items-center gap-1" data-testid="lead-avancar">{rotuloEtapa(prox)} <ArrowRight size={12} aria-hidden /></button>}
+                            {wa && <a href={`https://wa.me/${wa}?text=${encodeURIComponent(mensagemRetorno(l))}`} target="_blank" rel="noreferrer" title="Abre o WhatsApp com a mensagem de retorno já escrita para este contato" className="text-xs underline text-navy inline-flex items-center gap-1" data-testid="lead-whatsapp"><MessageCircle size={12} aria-hidden /> WhatsApp</a>}
+                            {l.etapa === 'ganho' && !l.caso_id && <button type="button" onClick={() => converter(l)} title="Cria um caso em Casos e projetos a partir deste contato, com os honorários estimados" className="text-xs underline text-navy" data-testid="lead-converter">Criar caso</button>}
+                            {l.caso_id && <Link to={`/projetos?caso=${l.caso_id}`} title="Abre em Casos e projetos o caso criado a partir deste contato" className="text-xs underline text-navy">Ver caso</Link>}
+                            <button type="button" onClick={() => apagar(l)} aria-label={`Apagar ${l.nome}`} title="Apaga este contato do funil de forma definitiva, após confirmação" className="text-xs text-grafite-claro"><Trash2 size={12} aria-hidden /></button>
                           </div>
                           {perdendo?.id === l.id && (
                             <div className="mt-2 flex flex-wrap gap-1" data-testid="lead-motivo">
-                              <select value={perdendo.motivo} onChange={ev => setPerdendo({ id: l.id, motivo: ev.target.value })} aria-label="Motivo da perda" className="text-xs border px-1 py-0.5"><option value="">Motivo da perda</option>{MOTIVOS_PERDA.map(m => <option key={m}>{m}</option>)}</select>
-                              <button type="button" onClick={() => mover(l, 'perdido', perdendo.motivo)} className="text-xs underline text-critico" data-testid="lead-confirmar-perda">Confirmar</button>
+                              <select value={perdendo.motivo} onChange={ev => setPerdendo({ id: l.id, motivo: ev.target.value })} aria-label="Motivo da perda" title="Escolhe o motivo pelo qual este contato foi perdido, para o relatório de perdas" className="text-xs border px-1 py-0.5"><option value="">Motivo da perda</option>{MOTIVOS_PERDA.map(m => <option key={m}>{m}</option>)}</select>
+                              <button type="button" onClick={() => mover(l, 'perdido', perdendo.motivo)} title="Confirma a perda deste contato com o motivo escolhido e o move para a etapa de perdidos" className="text-xs underline text-critico" data-testid="lead-confirmar-perda">Confirmar</button>
                             </div>
                           )}
                         </li>

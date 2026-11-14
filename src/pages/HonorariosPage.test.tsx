@@ -26,7 +26,7 @@ const n = (s: string | null | undefined) => (s ?? '').replace(/ /g, ' ')
 // Apagar agora pede confirmação: nos testes, a pessoa sempre confirma.
 beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true) })
 
-describe('Honorários e rentabilidade', () => {
+describe('Honorários', () => {
   beforeEach(() => { cleanup(); insert.mockClear(); update.mockClear(); del.mockClear(); rpc.mockClear(); pagamentos = []; parcelas = []
     casos = [
       { id: 'c1', titulo: 'Despejo Rua A', cliente: 'Ana', area: 'Imobiliário', situacao: 'andamento', honorario_previsto: 5000, honorario_recebido: 2000, vencimento_honorario: iso(-10) },

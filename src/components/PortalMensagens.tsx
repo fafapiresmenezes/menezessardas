@@ -68,7 +68,7 @@ export default function PortalMensagens({ token, caso }: { token: string; caso: 
       </ol>
       <div className="mt-3 flex flex-col sm:flex-row gap-2">
         <textarea value={texto} onChange={e => setTexto(e.target.value)} rows={2} maxLength={4000} placeholder="Escreva sua mensagem ao advogado" aria-label="Mensagem ao escritório" className="border px-3 py-2 flex-1 min-h-[44px]" data-testid="portal-texto" />
-        <button type="button" onClick={enviar} disabled={ocupado} className="min-h-[44px] px-4 bg-navy text-white text-sm inline-flex items-center justify-center gap-2 disabled:opacity-50" data-testid="portal-enviar"><Send size={14} aria-hidden="true" /> Enviar</button>
+        <button title="Manda a mensagem ao escritório; você recebe a resposta aqui mesmo" type="button" onClick={enviar} disabled={ocupado} className="min-h-[44px] px-4 bg-navy text-white text-sm inline-flex items-center justify-center gap-2 disabled:opacity-50" data-testid="portal-enviar"><Send size={14} aria-hidden="true" /> Enviar</button>
       </div>
       <div className="mt-5">
         <h3 className="font-medium text-navy flex items-center gap-2"><Paperclip size={16} className="text-dourado" aria-hidden="true" /> Seus documentos</h3>

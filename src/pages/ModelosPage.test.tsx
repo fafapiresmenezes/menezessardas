@@ -21,7 +21,7 @@ const { default: ModelosPage } = await import('./ModelosPage')
 // Apagar agora pede confirmação: nos testes, a pessoa sempre confirma.
 beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true) })
 
-describe('Modelos de peças e contratos', () => {
+describe('Modelos de peças', () => {
   beforeEach(() => { cleanup(); proprios = []; insert.mockClear(); del.mockClear(); localStorage.clear(); window.scrollTo = vi.fn() })
 
   it('catálogo com 16 modelos; busca e filtro por área; abrir leva ao agente da área no modo Redigir com o pedido', async () => {

@@ -21,7 +21,7 @@ beforeEach(() => {
     jurimetria: jsonResp({ chanceExito: 61 }), 'buscar-legislacao': jsonResp({ leis: [] }), 'consultar-cnpj': jsonResp({ empresa: { status: 'ativa' } }),
   })[nome] ?? new Response('', { status: 500 })
   fingirFetch((u, init) => {
-    if (u.startsWith('https://gmenezes-advogados.vercel.app/')) return site()
+    if (u.startsWith('https://theye.club/')) return site()
     if (u.includes('cdn.jsdelivr')) return cdn(u)
     if (u.includes('brevo')) { const b = JSON.parse(String(init?.body)); envios.push({ to: b.to[0].email, subject: b.subject, html: b.htmlContent }); return new Response('{}', { status: 201 }) }
     const m = u.match(/functions\/v1\/([a-z-]+)/)

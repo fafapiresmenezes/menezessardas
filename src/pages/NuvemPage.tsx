@@ -118,19 +118,19 @@ export default function NuvemPage() {
         <p className="text-grafite mt-2 text-sm flex items-start gap-2"><Lock size={16} className="mt-0.5 shrink-0" aria-hidden="true" />Armazenamento privado no Brasil (São Paulo), criptografado em trânsito e em repouso. Cada download gera um link que expira em 60 segundos. A pasta Pessoal só você vê; a do Escritório, só a equipe liberada. Ao enviar um arquivo com o mesmo nome, a versão anterior fica guardada (últimas {MAX_VERSOES}) e pode ser restaurada.</p>
         <div className="flex gap-2 mt-6" role="tablist">
           {(['escritorio', 'pessoal'] as const).map(a => (
-            <button key={a} role="tab" aria-selected={area === a} onClick={() => { setArea(a); setSub('') }}
+            <button key={a} role="tab" aria-selected={area === a} title={a === 'escritorio' ? 'Mostra a pasta do Escritório, compartilhada com a equipe liberada' : 'Mostra a sua pasta Pessoal, que só você vê'} onClick={() => { setArea(a); setSub('') }}
               className={`min-h-[44px] px-5 text-sm uppercase tracking-wider border ${area === a ? 'bg-navy text-white border-navy' : 'border-navy/20 text-navy'}`}>{a === 'escritorio' ? 'Escritório' : 'Pessoal'}</button>
           ))}
         </div>
         <div className="bg-white border border-navy/10 mt-4 p-5">
           <div className="flex flex-wrap items-center gap-3 justify-between">
             <nav aria-label="Caminho" className="text-sm text-grafite">
-              <button className="underline" onClick={() => setSub('')}>{area === 'escritorio' ? 'Escritório' : 'Pessoal'}</button>
-              {sub.split('/').filter(Boolean).map((p, i, arr) => <span key={i}> / <button className="underline" onClick={() => setSub(arr.slice(0, i + 1).join('/'))}>{p}</button></span>)}
+              <button className="underline" title="Volta à raiz desta área da nuvem" onClick={() => setSub('')}>{area === 'escritorio' ? 'Escritório' : 'Pessoal'}</button>
+              {sub.split('/').filter(Boolean).map((p, i, arr) => <span key={i}> / <button className="underline" title={`Volta para a pasta ${p}`} onClick={() => setSub(arr.slice(0, i + 1).join('/'))}>{p}</button></span>)}
             </nav>
             <div className="flex gap-2">
-              <button onClick={novaPasta} className="min-h-[44px] px-4 border border-navy/20 text-sm inline-flex items-center gap-2"><FolderPlus size={16} aria-hidden="true" />Nova pasta</button>
-              <label className="min-h-[44px] px-4 bg-navy text-white text-sm inline-flex items-center gap-2 cursor-pointer">
+              <button onClick={novaPasta} title="Pede o nome e cria uma nova pasta dentro da pasta aberta" className="min-h-[44px] px-4 border border-navy/20 text-sm inline-flex items-center gap-2"><FolderPlus size={16} aria-hidden="true" />Nova pasta</button>
+              <label title="Escolhe arquivos do computador para enviar à pasta aberta (até 50 MB cada); um nome repetido guarda a versão anterior" className="min-h-[44px] px-4 bg-navy text-white text-sm inline-flex items-center gap-2 cursor-pointer">
                 <Upload size={16} aria-hidden="true" />{ocupado ? 'Enviando…' : 'Enviar arquivos'}
                 <input data-testid="nuvem-enviar" type="file" multiple className="sr-only" onChange={e => enviar(e.target.files)} />
               </label>
@@ -138,25 +138,25 @@ export default function NuvemPage() {
           </div>
           <div className="flex flex-wrap items-center gap-3 mt-3 text-xs text-grafite">
             <input type="search" value={filtroNome} onChange={e => { setFiltroNome(e.target.value); try { localStorage.setItem('lsm-nuvem-filtro', e.target.value) } catch { /* sem memória local */ } }} placeholder="Filtrar por nome" aria-label="Filtrar arquivos desta pasta por nome" className="border px-3 py-2 text-sm w-56" data-testid="nuvem-filtro" />
-            <button type="button" onClick={() => window.print()} data-testid="imprimir-nuvem" className="ml-2 underline text-navy text-sm print:hidden">imprimir lista</button>{/* Passo 210 */}
-            <button type="button" data-testid="copiar-link-nuvem" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 242 */}
-            {itens.length > 0 && <button type="button" data-testid="baixar-nuvem" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['arquivo;tamanho (bytes);atualizado em', ...itens.map(i => `${i.name};${i.metadata?.size ?? ''};${i.updated_at ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'nuvem-arquivos.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar lista'}</button>}{/* Passo 297 */}
+            <button type="button" onClick={() => window.print()} title="Abre a janela de impressão do navegador para imprimir a lista de arquivos desta pasta" data-testid="imprimir-nuvem" className="ml-2 underline text-navy text-sm print:hidden">imprimir lista</button>{/* Passo 210 */}
+            <button type="button" title="Copia o endereço desta página da nuvem para compartilhar com a equipe" data-testid="copiar-link-nuvem" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 242 */}
+            {itens.length > 0 && <button type="button" title="Baixa a planilha CSV com a lista de arquivos desta pasta (nome, tamanho e data)" data-testid="baixar-nuvem" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['arquivo;tamanho (bytes);atualizado em', ...itens.map(i => `${i.name};${i.metadata?.size ?? ''};${i.updated_at ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'nuvem-arquivos.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar lista'}</button>}{/* Passo 297 */}
             <span data-testid="nuvem-total">{itens.filter(i => i.id !== null).length} arquivo(s) nesta pasta · {kb(itens.reduce((t, i) => t + (i.metadata?.size ?? 0), 0))}</span>
             {/* Passo 110: lista da pasta em texto (nome, tamanho, data), para conferência ou inventário. */}
-            {itens.some(i => i.id !== null) && <button type="button" data-testid="nuvem-copiar" onClick={() => navigator.clipboard?.writeText(`Nuvem · ${area === 'escritorio' ? 'Escritório' : 'Pessoal'}${sub ? '/' + sub : ''} · ${new Date().toLocaleDateString('pt-BR')}\n` + itens.filter(i => i.id !== null).map(i => `${i.name} · ${kb(i.metadata?.size)}${i.updated_at ? ' · ' + new Date(i.updated_at).toLocaleDateString('pt-BR') : ''}`).join('\n')).catch(() => undefined)} className="min-h-[44px] px-3 border border-navy/20 text-navy">Copiar lista</button>}
+            {itens.some(i => i.id !== null) && <button type="button" title="Copia a lista desta pasta em texto (nome, tamanho e data) para conferência ou inventário" data-testid="nuvem-copiar" onClick={() => navigator.clipboard?.writeText(`Nuvem · ${area === 'escritorio' ? 'Escritório' : 'Pessoal'}${sub ? '/' + sub : ''} · ${new Date().toLocaleDateString('pt-BR')}\n` + itens.filter(i => i.id !== null).map(i => `${i.name} · ${kb(i.metadata?.size)}${i.updated_at ? ' · ' + new Date(i.updated_at).toLocaleDateString('pt-BR') : ''}`).join('\n')).catch(() => undefined)} className="min-h-[44px] px-3 border border-navy/20 text-navy">Copiar lista</button>}
           </div>
           {msg && <p role="alert" className="text-sm text-critico mt-3">{msg}</p>}
           <ul className="mt-4 divide-y divide-navy/10" data-testid="nuvem-lista">
             {!itens.length && <li className="py-6 text-sm text-grafite">Pasta vazia. Arraste ou envie arquivos (até 50 MB cada).</li>}
             {itens.filter(i => !filtroNome.trim() || i.name.toLowerCase().includes(filtroNome.trim().toLowerCase())).map(i => i.id === null ? (
-              <li key={i.name} className="py-3"><button onClick={() => setSub(sub ? `${sub}/${i.name}` : i.name)} className="inline-flex items-center gap-2 text-navy font-medium"><Folder size={18} className="text-dourado" aria-hidden="true" />{i.name}</button></li>
+              <li key={i.name} className="py-3"><button onClick={() => setSub(sub ? `${sub}/${i.name}` : i.name)} title={`Abre a pasta ${i.name}`} className="inline-flex items-center gap-2 text-navy font-medium"><Folder size={18} className="text-dourado" aria-hidden="true" />{i.name}</button></li>
             ) : (
               <li key={i.name} className="py-3 flex items-center justify-between gap-3">
                 <span className="text-sm text-navy break-all">{i.name} <span className="text-grafite text-xs ml-2">{kb(i.metadata?.size)}</span></span>
                 <span className="flex gap-1 shrink-0">
-                  <button onClick={() => baixar(i.name)} aria-label={`Baixar ${i.name}`} className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/20"><Download size={16} /></button>
-                  <button onClick={() => abrirVersoes(i.name)} aria-label={`Versões de ${i.name}`} aria-expanded={versoesDe === i.name} data-testid={`versoes-${i.name}`} className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/20"><History size={16} /></button>
-                  <button onClick={() => apagar(i.name)} aria-label={`Apagar ${i.name}`} className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/20"><Trash2 size={16} /></button>
+                  <button onClick={() => baixar(i.name)} aria-label={`Baixar ${i.name}`} title={`Baixa o arquivo ${i.name} por um link seguro que expira em 60 segundos`} className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/20"><Download size={16} /></button>
+                  <button onClick={() => abrirVersoes(i.name)} aria-label={`Versões de ${i.name}`} title={`Mostra as versões anteriores guardadas de ${i.name}, com opção de restaurar`} aria-expanded={versoesDe === i.name} data-testid={`versoes-${i.name}`} className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/20"><History size={16} /></button>
+                  <button onClick={() => apagar(i.name)} aria-label={`Apagar ${i.name}`} title={`Apaga o arquivo ${i.name} desta pasta (pede confirmação)`} className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-navy/20"><Trash2 size={16} /></button>
                 </span>
               </li>
             )).flatMap((el, idx) => {
@@ -170,7 +170,7 @@ export default function NuvemPage() {
                     {versoes.map(v => (
                       <li key={v.name} className="text-sm flex items-center justify-between gap-3" data-testid="versao">
                         <span>{fmtCarimbo(v.name)} <span className="text-grafite text-xs ml-2">{kb(v.metadata?.size)}</span></span>
-                        <button onClick={() => restaurar(i.name, v.name)} disabled={ocupado} className="min-h-[36px] px-3 text-xs border border-navy text-navy">Restaurar</button>
+                        <button onClick={() => restaurar(i.name, v.name)} title="Restaura esta versão como o arquivo atual; a versão de agora fica guardada no histórico" disabled={ocupado} className="min-h-[36px] px-3 text-xs border border-navy text-navy">Restaurar</button>
                       </li>
                     ))}
                   </ul>

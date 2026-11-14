@@ -1,14 +1,14 @@
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 
 export type Especialidade =
-  | `nivel_${string}` | 'imobiliario' | 'condominial' | 'registral' | 'consumidor' | 'tributario' | 'trabalhista' | 'familia' | 'lgpd' | 'inovacao' | 'compliance' | 'empresarial' | 'previdenciario' | 'penal' | 'civel' | 'ambiental' | 'pesquisa' | 'geral'
+  | `nivel_${string}` | 'imobiliario' | 'condominial' | 'registral' | 'consumidor' | 'tributario' | 'trabalhista' | 'familia' | 'lgpd' | 'inovacao' | 'compliance' | 'empresarial' | 'previdenciario' | 'penal' | 'civel' | 'ambiental' | 'constitucional' | 'administrativo' | 'processo_civil' | 'processo_penal' | 'eleitoral' | 'bancario' | 'digital' | 'propriedade_intelectual' | 'internacional' | 'agrario' | 'saude' | 'concorrencial' | 'urbanistico' | 'energia' | 'securitario' | 'transito' | 'maritimo' | 'militar' | 'desportivo' | 'infancia_idoso' | 'direitos_humanos' | 'financeiro_publico' | 'arbitragem' | 'terceiro_setor' | 'sindical' | 'educacional' | 'recuperacao' | 'etica_advocacia' | 'teoria' | 'pesquisa' | 'quantica' | 'geral'
 
 export const ESPECIALIDADES: { valor: Especialidade; rotulo: string; descricao: string }[] = [
   { valor: 'imobiliario', rotulo: 'Imobiliário', descricao: 'Locação, comodato, compra e venda, garantias, despejo' },
   { valor: 'condominial', rotulo: 'Condominial', descricao: 'Convenção, assembleias, cotas, obras' },
   { valor: 'registral', rotulo: 'Registral e notarial', descricao: 'Matrícula, averbação, ITBI, usucapião' },
-  { valor: 'consumidor', rotulo: 'Consumidor', descricao: 'Incorporadoras, distrato, vícios' },
-  { valor: 'tributario', rotulo: 'Tributário', descricao: 'IPTU, ITBI, ganho de capital' },
+  { valor: 'consumidor', rotulo: 'Consumidor', descricao: 'Relações de consumo, vícios, cobranças indevidas, distrato, indenizações' },
+  { valor: 'tributario', rotulo: 'Tributário', descricao: 'Impostos e contribuições, reforma tributária, defesas, execução fiscal, planejamento' },
   { valor: 'trabalhista', rotulo: 'Trabalhista', descricao: 'Contrato de trabalho, rescisão, verbas e reclamações' },
   { valor: 'familia', rotulo: 'Família e sucessões', descricao: 'Divórcio, alimentos, guarda, união estável, inventário' },
   { valor: 'lgpd', rotulo: 'LGPD', descricao: 'Dados de locatários, fiadores e fornecedores' },
@@ -19,7 +19,37 @@ export const ESPECIALIDADES: { valor: Especialidade; rotulo: string; descricao: 
   { valor: 'penal', rotulo: 'Penal', descricao: 'Crimes, defesa, inquérito, execução penal' },
   { valor: 'civel', rotulo: 'Cível e contratos', descricao: 'Contratos em geral, responsabilidade civil, cobranças' },
   { valor: 'ambiental', rotulo: 'Ambiental', descricao: 'Licenciamento, passivo ambiental, áreas protegidas' },
+  { valor: 'constitucional', rotulo: 'Constitucional', descricao: 'Direitos fundamentais, mandado de segurança, controle de constitucionalidade' },
+  { valor: 'administrativo', rotulo: 'Administrativo e licitações', descricao: 'Licitações e contratos públicos, servidores, improbidade, concessões' },
+  { valor: 'processo_civil', rotulo: 'Processo civil e recursos', descricao: 'Tutelas de urgência, execução, cumprimento de sentença, recursos ao STJ e STF' },
+  { valor: 'processo_penal', rotulo: 'Processo penal e execução penal', descricao: 'Inquérito, prisão e liberdade, júri, recursos, execução da pena' },
+  { valor: 'eleitoral', rotulo: 'Eleitoral', descricao: 'Registro de candidatura, propaganda, prestação de contas, inelegibilidade' },
+  { valor: 'bancario', rotulo: 'Bancário e financeiro', descricao: 'Contratos bancários, juros, superendividamento, mercado de capitais' },
+  { valor: 'digital', rotulo: 'Digital e tecnologia', descricao: 'Marco Civil da Internet, crimes digitais, inteligência artificial, comércio eletrônico' },
+  { valor: 'propriedade_intelectual', rotulo: 'Propriedade intelectual', descricao: 'Marcas, patentes, direitos autorais, software e franquia' },
+  { valor: 'internacional', rotulo: 'Internacional e comércio exterior', descricao: 'Tratados, contratos internacionais, sentença estrangeira, migração e aduana' },
+  { valor: 'agrario', rotulo: 'Agrário e agronegócio', descricao: 'Arrendamento e parceria rural, CPR, crédito rural, regularização de terras' },
+  { valor: 'saude', rotulo: 'Médico e da saúde', descricao: 'Planos de saúde, erro médico, SUS, medicamentos e bioética' },
+  { valor: 'concorrencial', rotulo: 'Concorrencial e regulatório', descricao: 'CADE, agências reguladoras, atos de concentração, defesa da concorrência' },
+  { valor: 'urbanistico', rotulo: 'Urbanístico', descricao: 'Estatuto da Cidade, plano diretor, zoneamento, loteamento e regularização' },
+  { valor: 'energia', rotulo: 'Energia, mineração e infraestrutura', descricao: 'Setor elétrico, petróleo e gás, mineração, saneamento e PPPs' },
+  { valor: 'securitario', rotulo: 'Seguros', descricao: 'Contrato de seguro, sinistro, resseguro, previdência privada' },
+  { valor: 'transito', rotulo: 'Trânsito e transportes', descricao: 'Multas, CNH, acidentes, transporte de cargas e passageiros' },
+  { valor: 'maritimo', rotulo: 'Marítimo, portuário e aeronáutico', descricao: 'Navegação, portos, transporte aéreo, responsabilidade do transportador' },
+  { valor: 'militar', rotulo: 'Militar', descricao: 'Crimes militares, processo disciplinar, carreira e previdência dos militares' },
+  { valor: 'desportivo', rotulo: 'Desportivo', descricao: 'Contratos de atletas, justiça desportiva, clubes e SAF' },
+  { valor: 'infancia_idoso', rotulo: 'Infância, pessoa idosa e pessoa com deficiência', descricao: 'ECA, adoção, ato infracional, Estatuto da Pessoa Idosa, inclusão' },
+  { valor: 'direitos_humanos', rotulo: 'Direitos humanos', descricao: 'Sistema interamericano, igualdade, combate à discriminação, grupos vulneráveis' },
+  { valor: 'financeiro_publico', rotulo: 'Financeiro e contas públicas', descricao: 'Orçamento, responsabilidade fiscal, tribunais de contas, precatórios' },
+  { valor: 'arbitragem', rotulo: 'Arbitragem e mediação', descricao: 'Cláusula arbitral, procedimento, mediação, acordos e negociação' },
+  { valor: 'terceiro_setor', rotulo: 'Terceiro setor', descricao: 'Associações, fundações, parcerias com o poder público, imunidades' },
+  { valor: 'sindical', rotulo: 'Sindical e coletivo do trabalho', descricao: 'Negociação coletiva, greve, dissídios, representação sindical' },
+  { valor: 'educacional', rotulo: 'Educacional', descricao: 'Escolas e universidades, mensalidades, financiamento estudantil, regulação do MEC' },
+  { valor: 'recuperacao', rotulo: 'Recuperação judicial e falência', descricao: 'Recuperação judicial e extrajudicial, falência, habilitação de créditos' },
+  { valor: 'etica_advocacia', rotulo: 'Ética e estatuto da advocacia', descricao: 'Estatuto da OAB, Código de Ética, honorários, prerrogativas' },
+  { valor: 'teoria', rotulo: 'Teoria e filosofia do direito', descricao: 'Hermenêutica, argumentação, história e sociologia do direito' },
   { valor: 'pesquisa', rotulo: 'Pesquisador do Instituto', descricao: 'Jurisprudência brasileira, direito comparado e propostas para o direito brasileiro' },
+  { valor: 'quantica', rotulo: 'Direito e computação quântica', descricao: 'Criptografia pós-quântica (NIST FIPS 203/204/205), impacto na LGPD, assinatura eletrônica, segredo de Estado, contratos de longo prazo e cadeia de custódia probatória' },
   { valor: 'geral', rotulo: 'Geral', descricao: 'Qualquer tema do direito brasileiro' },
 ]
 
@@ -157,6 +187,9 @@ export const AREAS_DIREITO: { chave: string; nome: string }[] = [
   { chave: 'imobiliario', nome: 'Imobiliário' }, { chave: 'civel', nome: 'Cível e contratos' }, { chave: 'trabalhista', nome: 'Trabalhista' },
   { chave: 'familia', nome: 'Família e sucessões' }, { chave: 'tributario', nome: 'Tributário' }, { chave: 'empresarial', nome: 'Empresarial' },
   { chave: 'consumidor', nome: 'Consumidor' }, { chave: 'previdenciario', nome: 'Previdenciário' }, { chave: 'penal', nome: 'Penal' }, { chave: 'compliance', nome: 'Compliance e LGPD' },
+  { chave: 'justica', nome: 'Órgãos da justiça (MP, tribunais, OAB)' },
+  // As demais matérias do direito vêm da lista de especialidades do assistente, para as duas listas nunca divergirem.
+  ...ESPECIALIDADES.filter(e => !/^nivel_/.test(e.valor) && !['imobiliario', 'civel', 'trabalhista', 'familia', 'tributario', 'empresarial', 'consumidor', 'previdenciario', 'penal', 'compliance', 'pesquisa', 'geral'].includes(e.valor)).map(e => ({ chave: e.valor as string, nome: e.rotulo })),
 ]
 export async function lerAreaAtual(): Promise<string> {
   try {

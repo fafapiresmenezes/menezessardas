@@ -9,7 +9,7 @@ const chamar = (body: unknown = {}, headers: Record<string, string> = { 'x-cron-
   caixa.handler!(new Request('https://x.functions.supabase.co/pecas-automaticas', { method: 'POST', headers, body: JSON.stringify(body) }))
 const hoje = new Date(Date.now() - 3 * 3600000).toISOString().slice(0, 10)
 const emDias = (n: number) => new Date(Date.parse(hoje) + n * 86400000).toISOString().slice(0, 10)
-const PECA = 'EXCELENTÍSSIMO SENHOR DOUTOR JUIZ DE DIREITO DA 5ª VARA CÍVEL\n\nI – DOS FATOS\n\n' + 'O apelante recorreu da sentença. A decisão deve ser mantida. '.repeat(20) + '\n\nPONTOS A CONFERIR ANTES DE PROTOCOLAR\n\n- documentos'
+const PECA = 'EXCELENTÍSSIMO SENHOR DOUTOR JUIZ DE DIREITO DA 5ª VARA CÍVEL\n\nI – DOS FATOS\n\n' + 'O apelante recorreu da sentença. A decisão deve ser mantida. '.repeat(90) + '\n\nPONTOS A CONFERIR ANTES DE PROTOCOLAR\n\n- documentos'
 
 let chamadas: { url: string; body: any }[] = []
 beforeEach(() => {
@@ -44,14 +44,31 @@ describe('pecas-automaticas', () => {
   it('escreve só as que vencem em até 7 dias, pula audiência e as já feitas', async () => {
     const b = await (await chamar()).json()
     expect(b.feitas.map((f: any) => f.tarefa)).toEqual(['t-perto'])
-    expect(b.feitas[0].enviada).toBe(true)
+    // O rascunho não sai por e-mail: só depois das 4 revisões.
+    expect(b.feitas[0].enviada).toBe(false)
+    expect(b.feitas[0].detalhe).toMatch(/4 revisões/)
+    expect(chamadas.some(c => c.url.includes('brevo'))).toBe(false)
   })
 
-  it('usa o estilo do escritório e a rotação, e manda o .doc formatado por e-mail para todos', async () => {
+  const revisar = async (vezes: number) => { for (let i = 0; i < vezes; i++) await (await chamar({ revisar: true })).json() }
+
+  it('usa o estilo do escritório e a rotação, e depois de 4 revisões manda o .doc formatado por e-mail para todos', async () => {
     await chamar()
+    expect(chamadas.some(c => c.url.includes('brevo'))).toBe(false)
+    await revisar(3)
+    expect(chamadas.some(c => c.url.includes('brevo'))).toBe(false)
+    await revisar(1)
     const ia = chamadas.find(c => c.url.includes('anthropic'))!.body
+    const iaRev = chamadas.filter(c => c.url.includes('anthropic')).map(c => c.body)
+    expect(iaRev).toHaveLength(5)
+    expect(iaRev.slice(1).map(b => (b.system.match(/REVISÃO (\d) DE 4/) ?? [])[1])).toEqual(['1', '2', '3', '4'])
+    expect(iaRev[1].messages[0].content).toMatch(/TEXTO ATUAL DA PEÇA/)
+    expect(iaRev[3].system).toMatch(/REDATOR DESTA PEÇA/)
+    expect(iaRev[3].system).toMatch(/NARRATIVA DOS FATOS/)
     expect(ia.system).toMatch(/ESTILO DE ESCRITA DO ESCRITÓRIO/)
     expect(ia.system).toMatch(/PERFIL DE ESCRITA DESTA PEÇA/)
+    // Cível + contrarrazões a recurso: quem escreve é o redator de processo civil e recursos.
+    expect(ia.system).toMatch(/REDATOR DESTA PEÇA .*José Carlos Barbosa Moreira/)
     expect(ia.messages[0].content).toMatch(/Ao apelado para contrarrazões/)
     const email = chamadas.find(c => c.url.includes('brevo'))!.body
     expect(email.to).toEqual([{ email: 'fatima@exemplo.com.br' }, { email: 'outro@exemplo.com.br' }])
@@ -63,14 +80,28 @@ describe('pecas-automaticas', () => {
     expect(doc).toMatch(/<meta name="formatacao" content="[a-z-]+">/)
     const salva = estado.inseridos.find(i => i.tabela === 'pecas_automaticas')!.linha as Record<string, unknown>
     expect((salva.perfil as { formato?: string }).formato).toMatch(/^[a-z-]+$/)
+    expect((salva.perfil as { redator?: string }).redator).toBe('barbosa-moreira')
     expect(salva).toMatchObject({ tarefa_id: 't-perto', enviada_para: ['fatima@exemplo.com.br', 'outro@exemplo.com.br'] })
+    expect(salva.perfil).toMatchObject({ rev: 4, pend: false })
     expect(estado.atualizados.find(a => a.tabela === 'tarefas')!.valores).toMatchObject({ peca_automatica_em: expect.any(String) })
+  })
+
+  it('segue os parâmetros de escrita salvos pelo escritório', async () => {
+    estado.tabelas.configuracoes.push({ chave: 'escrita_arg_metodo', valor: 'IRAC' }, { chave: 'escrita_linguagem_voz', valor: 'ativa' })
+    await chamar()
+    const ia = chamadas.find(c => c.url.includes('anthropic'))!.body
+    expect(ia.system).toMatch(/PARÂMETROS DE ESCRITA DO ESCRITÓRIO/)
+    expect(ia.system).toContain('- Método de argumentação: IRAC')
+    expect(ia.system).toContain('- Voz preferencial: ativa')
   })
 
   it('sem destinatário, escreve e guarda, e avisa', async () => {
     estado.tabelas.configuracoes = estado.tabelas.configuracoes.filter(c => c.chave !== 'pecas_destinatarios')
-    const b = await (await chamar()).json()
-    expect(b.feitas[0]).toMatchObject({ enviada: false, detalhe: 'Ninguém cadastrado para receber as peças.' })
+    await chamar()
+    await revisar(4)
+    const salva = estado.inseridos.find(i => i.tabela === 'pecas_automaticas')!.linha as Record<string, unknown>
+    expect(salva).toMatchObject({ enviada_para: [], erro: 'Ninguém cadastrado para receber as peças.' })
+    expect(salva.perfil).toMatchObject({ rev: 4, pend: false })
     expect(chamadas.some(c => c.url.includes('brevo'))).toBe(false)
   })
 
@@ -79,4 +110,53 @@ describe('pecas-automaticas', () => {
     const b = await (await chamar({ tarefa_id: 't-longe' }, { authorization: `Bearer ${jwt}` })).json()
     expect(b.feitas.map((f: any) => f.tarefa)).toEqual(['t-longe'])
   })
+
+  it('resposta curta da IA: pede de novo uma vez, sem aceitar recusa', async () => {
+    let n = 0
+    fingirFetch((u, init) => {
+      const body = init?.body ? JSON.parse(String(init.body)) : null
+      chamadas.push({ url: u, body })
+      if (u.includes('anthropic')) return jsonResp({ model: 'claude-sonnet-5-5', content: [{ type: 'text', text: ++n === 1 ? 'Não tenho dados suficientes.' : PECA }], usage: { input_tokens: 1, output_tokens: 1 } })
+      return jsonResp({ messageId: 'm1' }, 201)
+    })
+    const b = await (await chamar()).json()
+    const ias = chamadas.filter(c => c.url.includes('anthropic'))
+    expect(ias).toHaveLength(2)
+    expect(ias[1]!.body.messages.map((m: any) => m.role)).toEqual(['user', 'assistant', 'user'])
+    expect(ias[1]!.body.messages[2].content).toMatch(/Não responda com explicações nem recusas/)
+    expect(b.feitas[0].detalhe).toMatch(/4 revisões/)
+  })
+
+  it('revisão que devolve texto truncado não vale: tenta de novo e, na 2ª falha, segue com o texto anterior', async () => {
+    await chamar()
+    fingirFetch((u, init) => {
+      chamadas.push({ url: u, body: init?.body ? JSON.parse(String(init.body)) : null })
+      if (u.includes('anthropic')) return jsonResp({ model: 'm', content: [{ type: 'text', text: 'Curto.' }], usage: { input_tokens: 1, output_tokens: 1 } })
+      return jsonResp({ messageId: 'm1' }, 201)
+    })
+    await revisar(1)
+    const linha = () => estado.tabelas.pecas_automaticas[0] as Record<string, any>
+    expect(linha().perfil.rev).toBe(0)
+    expect(linha().erro).toMatch(/^revisão 1:/)
+    await revisar(1)
+    expect(linha().perfil.rev).toBe(1)
+    expect(linha().erro).toMatch(/revisão 1 não aplicada/)
+    expect(String(linha().texto)).toContain('EXCELENTÍSSIMO')
+  })
+
+  it('falha do serviço de IA (crédito, limite) não pula revisão: a peça espera, sem ir para o e-mail', async () => {
+    await chamar()
+    fingirFetch((u, init) => {
+      chamadas.push({ url: u, body: init?.body ? JSON.parse(String(init.body)) : null })
+      if (u.includes('anthropic')) return new Response('{"error":{"message":"Your credit balance is too low"}}', { status: 400 })
+      return jsonResp({ messageId: 'm1' }, 201)
+    })
+    await revisar(5)
+    const linha = estado.tabelas.pecas_automaticas[0] as Record<string, any>
+    expect(linha.perfil.rev).toBe(0)
+    expect(linha.perfil.pend).toBe(true)
+    expect(linha.erro).toMatch(/credit balance/)
+    expect(chamadas.some(c => c.url.includes('brevo'))).toBe(false)
+  })
 })
+

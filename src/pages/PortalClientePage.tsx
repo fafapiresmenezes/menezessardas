@@ -40,7 +40,7 @@ export default function PortalClientePage() {
   return (
     <main className="min-h-screen bg-pergaminho">
       {marca && !marca.sede ? (
-        <header className="py-6 text-white text-center" style={{ backgroundColor: /^#[0-9A-Fa-f]{6}$/.test(marca.cor) ? marca.cor : '#14213D' }} data-testid="portal-marca-parceiro">
+        <header className="py-6 text-white text-center" style={{ backgroundColor: /^#[0-9A-Fa-f]{6}$/.test(marca.cor) ? marca.cor : '#0B0B0C' }} data-testid="portal-marca-parceiro">
           {marca.logo_url && /^https:\/\//.test(marca.logo_url) && <img src={marca.logo_url} alt="" className="mx-auto max-h-12 mb-2" />}
           <p className="font-serif text-xl">{marca.nome}</p>
         </header>
@@ -54,9 +54,9 @@ export default function PortalClientePage() {
             <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">Acompanhamento do seu caso</p>
             <h1 className="font-serif text-2xl text-navy mt-1">{caso.titulo}</h1>
             {/* Passo 174: o cliente imprime o andamento do caso. */}
-            <button type="button" onClick={() => window.print()} data-testid="imprimir-portal" className="mt-2 underline text-navy text-sm print:hidden">imprimir este andamento</button>
-            <button type="button" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} data-testid="copiar-link-portal" className="mt-2 ml-3 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link desta página'}</button>{/* Passo 205 */}
-            <button type="button" data-testid="baixar-andamento" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([[caso.titulo, `Andamento: ${feitas} de ${total} etapas`, ...caso.etapas.map(e => `${e.situacao === 'feito' ? '✓' : '○'} ${e.titulo}`), `Gerado em ${new Date().toLocaleDateString('pt-BR')} · THEYE Institute`].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'andamento.txt'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-2 ml-3 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar andamento'}</button>{/* Passo 289 */}
+            <button type="button" onClick={() => window.print()} data-testid="imprimir-portal" title="Abre a janela de impressão do navegador para imprimir este andamento" className="mt-2 underline text-navy text-sm print:hidden">imprimir este andamento</button>
+            <button type="button" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} data-testid="copiar-link-portal" title="Copia o endereço desta página para a área de transferência, para guardar ou compartilhar" className="mt-2 ml-3 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link desta página'}</button>{/* Passo 205 */}
+            <button type="button" data-testid="baixar-andamento" aria-live="polite" title="Baixa um arquivo de texto (andamento.txt) com as etapas do caso" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([[caso.titulo, `Andamento: ${feitas} de ${total} etapas`, ...caso.etapas.map(e => `${e.situacao === 'feito' ? '✓' : '○'} ${e.titulo}`), `Gerado em ${new Date().toLocaleDateString('pt-BR')} · THEYE Institute`].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'andamento.txt'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-2 ml-3 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar andamento'}</button>{/* Passo 289 */}
             <p className="text-sm text-grafite mt-1">{[caso.area, caso.numero_processo && `Processo ${caso.numero_processo}`].filter(Boolean).join(' · ')}</p>
             <div className="mt-5">
               <div className="flex justify-between text-sm text-grafite"><span>Andamento</span><span>{feitas} de {total} etapas</span></div>

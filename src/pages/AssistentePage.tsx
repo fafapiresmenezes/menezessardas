@@ -105,6 +105,9 @@ export default function AssistentePage() {
   const [pergunta, setPergunta] = useState(() => { try { return localStorage.getItem('lsm-assistente-pergunta') ?? '' } catch { return '' } }) // Passo 203
   const [modo, setModo] = useState<Modo>('responder')
   const [contexto, setContexto] = useState('')
+  // Pedido do M (12/11/2026): toda peça pergunta quem vai ler. O perfil vem só de fontes legítimas
+  // (decisões publicadas do próprio juízo), nunca de redes sociais: adapta o tom, sem bajulação.
+  const [receptor, setReceptor] = useState('')
   const [usarEstilo, setUsarEstilo] = useState(true)
   const [formatacao, setFormatacao] = useState<Partial<Formatacao> | null>(null)
   useEffect(() => { carregarFormatacao().then(setFormatacao).catch(() => undefined) }, [])
@@ -155,7 +158,10 @@ export default function AssistentePage() {
     setOcupado(true)
     setErro('')
     try {
-      const c = await perguntar(p, especialidade, historico.filter(h => h.especialidade === especialidade && h.modo === 'responder'), modo, contexto, usarEstilo)
+      const comReceptor = receptor.trim()
+        ? `${contexto}\n\nQuem vai ler (receptor): ${receptor.trim()}. Adapte o tom e a ordem dos argumentos ao padrão das decisões publicadas desse juízo ou destinatário (fontes públicas e oficiais apenas), em registro formal e sóbrio, sem bajulação e sem mencionar esta adaptação no texto.`
+        : contexto
+      const c = await perguntar(p, especialidade, historico.filter(h => h.especialidade === especialidade && h.modo === 'responder'), modo, comReceptor, usarEstilo)
       setHistorico(h => [c, ...h])
       setPergunta('')
     } catch (e) {
@@ -223,17 +229,23 @@ export default function AssistentePage() {
               <textarea id="contexto" value={contexto} onChange={e => setContexto(e.target.value)} rows={3}
                 placeholder="Partes, datas, valores, o que já aconteceu. Quanto mais fatos, melhor a peça ou a matriz."
                 className="w-full border border-navy/15 p-3 text-sm focus:outline-none focus:border-dourado" />
+              <label htmlFor="receptor" className="block text-xs uppercase tracking-wider text-grafite-claro mt-3 mb-1">Quem vai ler? (juízo, desembargador, parte contrária — opcional)</label>
+              <input id="receptor" data-testid="receptor" value={receptor} onChange={e => setReceptor(e.target.value)}
+                placeholder="Ex.: 35ª Vara Cível do Rio, Des. Fulano (2ª Câmara), diretoria da empresa ré"
+                className="w-full border border-navy/15 p-3 text-sm focus:outline-none focus:border-dourado" />
+              <p className="text-xs text-grafite-claro mt-1">O texto é adaptado ao padrão das <strong>decisões publicadas</strong> desse juízo (fontes oficiais). A plataforma não vasculha redes sociais de ninguém.</p>
             </>
           )}
           {/* Bloco E: o estilo próprio vale para todos os modos (perguntas, peças e caminhos). */}
           <label className="flex items-center gap-2 mt-3 text-sm min-h-[44px]">
-            <input type="checkbox" checked={usarEstilo} onChange={e => setUsarEstilo(e.target.checked)} data-testid="usar-estilo" />
-            Escrever no meu estilo e na minha formatação (peças enviadas em <a href="#/settings" className="underline decoration-dourado">Configurações</a>)
+            <input type="checkbox" title="Marcado, o robô escreve imitando as suas peças enviadas em Configurações, em vez do padrão da casa." checked={usarEstilo} onChange={e => setUsarEstilo(e.target.checked)} data-testid="usar-estilo" />
+            Escrever no meu estilo e na minha formatação (peças enviadas em <a href="#/settings" title="Abre a página de Configurações, onde você envia peças para definir seu estilo e formatação" className="underline decoration-dourado">Configurações</a>)
           </label>
           <div className="flex flex-wrap items-center gap-2 mt-3">
             <button
               onClick={() => enviar()}
               disabled={ocupado || pergunta.trim().length < 5}
+              title="Envia a pergunta ao agente, que lê a lei no site do Planalto e responde citando artigo e lei"
               className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 rounded-sm uppercase tracking-wider text-sm disabled:opacity-50"
             >
               <Send size={16} aria-hidden="true" /> {ocupado ? 'Lendo a lei e preparando…' : MODOS.find(m => m.valor === modo)?.rotulo}
@@ -247,7 +259,7 @@ export default function AssistentePage() {
               <ul className="flex flex-wrap gap-2">
                 {EXEMPLOS.map(ex => (
                   <li key={ex}>
-                    <button onClick={() => { setPergunta(ex); campo.current?.focus() }} className="text-left text-xs border border-navy/15 px-3 py-2 hover:border-dourado">
+                    <button onClick={() => { setPergunta(ex); campo.current?.focus() }} title="Preenche o campo de pergunta com este exemplo para você editar e enviar" className="text-left text-xs border border-navy/15 px-3 py-2 hover:border-dourado">
                       {ex}
                     </button>
                   </li>
@@ -266,10 +278,10 @@ export default function AssistentePage() {
         {historico.length > 0 && (
           <div className="flex justify-end">
             {/* Passo 171: imprimir o histórico da conversa. */}
-            <button type="button" onClick={() => window.print()} data-testid="imprimir-historico" className="inline-flex items-center gap-2 min-h-[44px] px-3 border text-sm mr-2 print:hidden">Imprimir</button>
-            <button type="button" data-testid="copiar-link-assistente" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 239 */}
-            {historico.length > 0 && <button type="button" data-testid="baixar-assistente" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['criado em;especialidade;modo;pergunta;fontes', ...historico.map(h => `${h.criadoEm};${h.especialidade};${h.modo};${h.pergunta.replace(/[;\n]/g, ' ')};${h.fontes.length}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'assistente-historico.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">baixar histórico</button>}{/* Passo 312 */}
-            <button type="button" onClick={copiarHistorico} data-testid="copiar-historico" className="inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm"><Copy size={14} aria-hidden="true" /> Copiar histórico ({historico.length})</button>
+            <button type="button" onClick={() => window.print()} data-testid="imprimir-historico" title="Abre a tela de impressão do navegador com todo o histórico de consultas" className="inline-flex items-center gap-2 min-h-[44px] px-3 border text-sm mr-2 print:hidden">Imprimir</button>
+            <button type="button" data-testid="copiar-link-assistente" title="Copia o endereço desta página do assistente para compartilhar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 239 */}
+            {historico.length > 0 && <button type="button" data-testid="baixar-assistente" title="Baixa o histórico de consultas em arquivo CSV (data, especialidade, modo, pergunta e fontes)" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['criado em;especialidade;modo;pergunta;fontes', ...historico.map(h => `${h.criadoEm};${h.especialidade};${h.modo};${h.pergunta.replace(/[;\n]/g, ' ')};${h.fontes.length}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'assistente-historico.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">baixar histórico</button>}{/* Passo 312 */}
+            <button type="button" onClick={copiarHistorico} data-testid="copiar-historico" title="Copia todas as perguntas e respostas em texto para anexar ao caso ou enviar ao cliente" className="inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm"><Copy size={14} aria-hidden="true" /> Copiar histórico ({historico.length})</button>
           </div>
         )}
         {historico.map(c => (
@@ -282,7 +294,7 @@ export default function AssistentePage() {
                 </p>
                 <p className="font-serif text-lg text-navy mt-1">{c.pergunta}</p>
               </div>
-              <button onClick={() => apagar(c.id)} className="p-2 text-grafite-claro hover:text-critico" aria-label="Apagar esta consulta">
+              <button onClick={() => apagar(c.id)} title="Apaga esta consulta do histórico de forma definitiva" className="p-2 text-grafite-claro hover:text-critico" aria-label="Apagar esta consulta">
                 <Trash2 size={16} aria-hidden="true" />
               </button>
             </div>
@@ -291,16 +303,16 @@ export default function AssistentePage() {
             )}
             <div className="mt-3 flex flex-wrap items-center gap-2 text-sm" data-testid={`avaliacao-${c.id}`}>
               <span className="text-grafite-claro">Esta resposta foi útil?</span>
-              <button type="button" onClick={() => avaliar(c.id, true)} aria-pressed={avaliacoes[c.id] === true} data-testid="avaliar-util" className={`min-h-[44px] px-3 border inline-flex items-center gap-1 ${avaliacoes[c.id] === true ? 'bg-navy text-white' : 'border-navy/20'}`}><ThumbsUp size={14} aria-hidden="true" /> Útil</button>
-              <button type="button" onClick={() => avaliar(c.id, false)} aria-pressed={avaliacoes[c.id] === false} data-testid="avaliar-inutil" className={`min-h-[44px] px-3 border inline-flex items-center gap-1 ${avaliacoes[c.id] === false ? 'bg-navy text-white' : 'border-navy/20'}`}><ThumbsDown size={14} aria-hidden="true" /> Não útil</button>
+              <button type="button" onClick={() => avaliar(c.id, true)} aria-pressed={avaliacoes[c.id] === true} data-testid="avaliar-util" title="Marca esta resposta como útil; a avaliação entra na taxa mensal em Indicadores" className={`min-h-[44px] px-3 border inline-flex items-center gap-1 ${avaliacoes[c.id] === true ? 'bg-navy text-white' : 'border-navy/20'}`}><ThumbsUp size={14} aria-hidden="true" /> Útil</button>
+              <button type="button" onClick={() => avaliar(c.id, false)} aria-pressed={avaliacoes[c.id] === false} data-testid="avaliar-inutil" title="Marca esta resposta como não útil; a avaliação entra na taxa mensal em Indicadores" className={`min-h-[44px] px-3 border inline-flex items-center gap-1 ${avaliacoes[c.id] === false ? 'bg-navy text-white' : 'border-navy/20'}`}><ThumbsDown size={14} aria-hidden="true" /> Não útil</button>
               {avaliacoes[c.id] !== undefined && <span className="text-grafite-claro" data-testid="avaliacao-ok">Obrigado. Sua avaliação entra na taxa mensal em Indicadores.</span>}
             </div>
             {/* Passo 138: toda resposta é copiável (pergunta + resposta + fontes), não só as peças. */}
-            <button type="button" onClick={() => navigator.clipboard?.writeText(c.modo === 'redigir' ? c.resposta : `Pergunta: ${c.pergunta}\n\n${c.resposta}${c.fontes.length ? `\n\nFontes: ${c.fontes.map(f => f.titulo || f.url).join('; ')}` : ''}`).catch(() => undefined)} data-testid="copiar-resposta" className="mt-3 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
+            <button type="button" onClick={() => navigator.clipboard?.writeText(c.modo === 'redigir' ? c.resposta : `Pergunta: ${c.pergunta}\n\n${c.resposta}${c.fontes.length ? `\n\nFontes: ${c.fontes.map(f => f.titulo || f.url).join('; ')}` : ''}`).catch(() => undefined)} data-testid="copiar-resposta" title={c.modo === 'redigir' ? 'Copia o texto completo da peça para colar no editor' : 'Copia a pergunta, a resposta e as fontes em texto'} className="mt-3 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
               <Copy size={16} aria-hidden="true" /> {c.modo === 'redigir' ? 'Copiar texto da peça' : 'Copiar resposta'}
             </button>
             {c.modo !== 'caminhos' && (
-              <button type="button" onClick={() => baixarPecaWord(c.resposta, c.pergunta.slice(0, 60), usarEstilo ? formatacao : null)} data-testid="baixar-peca-word" className="mt-3 ml-2 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
+              <button type="button" onClick={() => baixarPecaWord(c.resposta, c.pergunta.slice(0, 60), usarEstilo ? formatacao : null)} data-testid="baixar-peca-word" title="Baixa este texto como documento Word já formatado com a sua formatação" className="mt-3 ml-2 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
                 <FileDown size={16} aria-hidden="true" /> {c.modo === 'redigir' ? 'Baixar peça formatada (Word)' : 'Baixar parecer formatado (Word)'}
               </button>
             )}
@@ -310,7 +322,7 @@ export default function AssistentePage() {
               </p>
             )}
             {/* Bloco B04: guardar a resposta na pasta interna "Já pesquisado". */}
-            <button type="button" onClick={() => guardarNaBiblioteca({ tipo: 'assistente', titulo: c.pergunta.slice(0, 200), conteudo: `${c.resposta}${c.fontes.length ? `\n\nFontes: ${c.fontes.map(f => f.titulo || f.url).join('; ')}` : ''}`, etiquetas: [c.especialidade ?? 'geral'] }).then(ok => setGuardados(g => ({ ...g, [c.id]: ok })))} data-testid="guardar-biblioteca" className="mt-3 ml-2 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
+            <button type="button" onClick={() => guardarNaBiblioteca({ tipo: 'assistente', titulo: c.pergunta.slice(0, 200), conteudo: `${c.resposta}${c.fontes.length ? `\n\nFontes: ${c.fontes.map(f => f.titulo || f.url).join('; ')}` : ''}`, etiquetas: [c.especialidade ?? 'geral'] }).then(ok => setGuardados(g => ({ ...g, [c.id]: ok })))} data-testid="guardar-biblioteca" title="Guarda esta resposta na pasta 'Já pesquisado' da biblioteca interna, para reaproveitar depois" className="mt-3 ml-2 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy/20 text-sm">
               {guardados[c.id] === true ? 'Guardado em Já pesquisado' : guardados[c.id] === false ? 'Não foi possível guardar' : 'Guardar na biblioteca'}
             </button>
             {c.fontes.length > 0 && (
@@ -319,7 +331,7 @@ export default function AssistentePage() {
                 <ul className="flex flex-wrap gap-x-4 gap-y-1">
                   {c.fontes.map(f => (
                     <li key={f.id}>
-                      <a href={f.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm text-navy underline decoration-dourado">
+                      <a href={f.url} target="_blank" rel="noreferrer" title="Abre o texto oficial da lei consultada em uma nova aba" className="inline-flex items-center gap-1 text-sm text-navy underline decoration-dourado">
                         {f.titulo} <ExternalLink size={12} aria-hidden="true" />
                       </a>
                     </li>

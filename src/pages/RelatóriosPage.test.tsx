@@ -29,7 +29,14 @@ let horasLanc: Record<string, unknown>[] = []
 let casosHon: Record<string, unknown>[] = []
 const from = (t: string) => { const o: Record<string, unknown> = {}; for (const m of ['select', 'order', 'limit', 'maybeSingle', 'eq']) o[m] = () => o; o.then = (f: (v: unknown) => unknown) => Promise.resolve({ data: t === 'relatorios_mensais' ? ultimo : t === 'lancamentos_horas' ? horasLanc : t === 'tarefas' ? casosHon : null }).then(f); return o }
 vi.mock('@/lib/equipe', () => ({ listarPessoas: async () => [{ id: 'u1', nome: 'Letícia', email: 'l@x' }] }))
-vi.mock('@/lib/supabase', () => ({ supabaseConfigurado: true, supabase: { from, functions: { invoke: (n: string, o: object) => invoke(n, o) } } }))
+// Privacidade por advogado: a tela precisa saber quem está logado (aqui, a própria Letícia) para mostrar as horas e os casos dela.
+// Quem está olhando: sócio e gestor veem os números do escritório; os demais, só os seus.
+let alcance: { id: string; cargo: string | null; admin: boolean; veTudo: boolean } | null = { id: 'u1', cargo: null, admin: false, veTudo: false }
+vi.mock('@/lib/hierarquia', async (original) => ({
+  ...(await original<typeof import('@/lib/hierarquia')>()),
+  meuAlcance: async () => { if (!alcance) throw new Error('não deu para saber quem está logado'); return alcance },
+}))
+vi.mock('@/lib/supabase', () => ({ supabaseConfigurado: true, supabase: { from, functions: { invoke: (n: string, o: object) => invoke(n, o) }, auth: { getUser: async () => ({ data: { user: { id: 'u1' } } }) } } }))
 vi.mock('@/hooks/useImoveis', () => ({ useImoveis: () => ({ imoveis, loading: carregando }) }))
 vi.mock('@/hooks/useAlertas', () => ({ useAlertas: () => ({ alertas, loading: false }) }))
 vi.mock('@/lib/repositorio', () => ({ repositorio: { listarContratos: async () => contratos } }))
@@ -40,7 +47,7 @@ const cartao = (r: string) => nb(screen.getByText(r).nextElementSibling!.textCon
 const valorDe = (secao: string, r: string) => within(document.querySelector(`section[aria-labelledby="${secao}"]`) as HTMLElement).getByText(r).nextElementSibling!.textContent
 
 describe('Relatórios', () => {
-  beforeEach(() => { cleanup(); localStorage.clear(); invoke.mockReset().mockImplementation(async () => ({ data: { enviado: true, mes: '2026-10-01', sha256: 'abcdef1234567890' }, error: null })); carregando = false; ultimo = { mes: '2026-10-01', enviado_em: '2026-11-01T11:00:00Z', destinatarios: 2, sha256: 'abc' } })
+  beforeEach(() => { cleanup(); localStorage.clear(); invoke.mockReset().mockImplementation(async () => ({ data: { enviado: true, mes: '2026-10-01', sha256: 'abcdef1234567890' }, error: null })); carregando = false; ultimo = { mes: '2026-10-01', enviado_em: '2026-11-01T11:00:00Z', destinatarios: 2, sha256: 'abc' }; alcance = { id: 'u1', cargo: null, admin: false, veTudo: false } })
 
   it('mostra preparação, depois os indicadores do trimestre: compromissos, vencidos, receita no período e mensal, contratos, documentos e carteira; horizonte lembrado', async () => {
     montar()
@@ -112,11 +119,49 @@ describe('Relatórios', () => {
     montar()
     await waitFor(() => expect(screen.getByText('Nenhum compromisso neste horizonte')).toBeTruthy())
     expect(cartao('Compromissos no período')).toBe('0'); expect(cartao('Pendências vencidas')).toBe('0')
-    expect(screen.getByText(/Escolha um horizonte maior ou cadastre prazos/)).toBeTruthy()
+    expect(screen.getByText(/Escolha um horizonte maior/)).toBeTruthy()
     expect(screen.getByTestId('relatorio-mensal').textContent).toContain('O primeiro vai no próximo dia 1.')
   })
 
+  // Privacidade por advogado: as horas e os casos do colega não entram nos números de quem não é sócio nem gestor.
+  it('júnior não vê as horas nem os casos do colega; o sócio vê os dois', async () => {
+    horasLanc = [
+      { usuario_id: 'u1', cliente: 'Ana', minutos: 120, valor_hora: 200, faturavel: true },
+      { usuario_id: 'u2', cliente: 'Cliente do colega', minutos: 60, valor_hora: 300, faturavel: true },
+    ]
+    casosHon = [
+      { cliente: 'Ana', responsavel_id: 'u1', honorario_previsto: 5000, honorario_recebido: 1500 },
+      { cliente: 'Cliente do colega', responsavel_id: 'u2', honorario_previsto: 9000, honorario_recebido: 9000 },
+    ]
+    alcance = { id: 'u1', cargo: 'junior', admin: false, veTudo: false }
+    render(<RelatoriosPage />)
+    const sec = await screen.findByTestId('por-cliente-socio')
+    await waitFor(() => expect(sec.textContent).toContain('Ana'))
+    expect(sec.textContent).not.toContain('Cliente do colega')
+    expect(screen.getByTestId('relatorios-alcance').textContent).toContain('as suas horas e os seus casos')
+
+    cleanup(); alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+    render(<RelatoriosPage />)
+    const sec2 = await screen.findByTestId('por-cliente-socio')
+    await waitFor(() => expect(sec2.textContent).toContain('Cliente do colega'))
+    expect(screen.queryByTestId('relatorios-alcance')).toBeNull()
+    horasLanc = []; casosHon = []
+  })
+
+  // Cargo que não dá para descobrir vale o alcance MAIS ESTREITO, nunca o mais largo.
+  it('sem saber quem está logado, esconde horas e casos com dono em vez de mostrar tudo', async () => {
+    horasLanc = [{ usuario_id: 'u1', cliente: 'Ana', minutos: 120, valor_hora: 200, faturavel: true }]
+    casosHon = [{ cliente: 'Ana', responsavel_id: 'u1', honorario_previsto: 5000, honorario_recebido: 1500 }]
+    alcance = null
+    render(<RelatoriosPage />)
+    const sec = await screen.findByTestId('por-cliente-socio')
+    await waitFor(() => expect(screen.getByTestId('relatorios-alcance')).toBeTruthy())
+    expect(sec.textContent).not.toContain('Ana')
+    horasLanc = []; casosHon = []
+  })
+
   it('D10: por cliente e por sócio consolida horas e honorários; vazio explica; CSV', async () => {
+    alcance = { id: 'u1', cargo: null, admin: false, veTudo: false }
     horasLanc = [{ usuario_id: 'u1', cliente: 'Ana', minutos: 120, valor_hora: 200, faturavel: true }]
     casosHon = [{ cliente: 'Ana', responsavel_id: 'u1', honorario_previsto: 5000, honorario_recebido: 1500 }]
     render(<RelatoriosPage />)

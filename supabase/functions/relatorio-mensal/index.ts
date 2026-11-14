@@ -9,7 +9,7 @@ const cors = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
-const APP = 'https://gmenezes-advogados.vercel.app/#'
+const APP = 'https://theye.club/#'
 const brl = (v: unknown) => 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 type Bloco = Record<string, number | string | null>
 type Relatorio = { mes: string; periodo: string; contratos: Bloco; imoveis: Bloco; casos: Bloco; financeiro: Bloco; intimacoes: Bloco; ia: Bloco; assinaturas: Bloco; compliance: Bloco }
@@ -31,13 +31,14 @@ const ansi = (s: string) => s.replace(/—/g, '-').replace(/[^\x00-\xff]/g, '?')
 
 async function gerarPdf(r: Relatorio, geradoEm: string): Promise<Uint8Array> {
   const pdf = await PDFDocument.create()
-  pdf.setTitle(`Relatório mensal ${r.mes} - GMenezes Advogados Associados`); pdf.setAuthor('Plataforma GMenezes')
+  pdf.setTitle(`Relatório mensal ${r.mes} - Instituto THEYE`); pdf.setAuthor('Plataforma THEYE')
   const serif = await pdf.embedFont('Times-Roman'), serifB = await pdf.embedFont('Times-Bold'), sans = await pdf.embedFont('Helvetica')
-  const navy = rgb(0.078, 0.129, 0.239), dourado = rgb(0.69, 0.553, 0.341), cinza = rgb(0.4, 0.4, 0.4)
+  // Paleta THEYE: preto, branco, cinza (sem azul e sem dourado).
+  const navy = rgb(0, 0, 0), dourado = rgb(0.35, 0.35, 0.35), cinza = rgb(0.4, 0.4, 0.4)
   let page = pdf.addPage([595.28, 841.89]); let y = 800
   const nova = () => { page = pdf.addPage([595.28, 841.89]); y = 800 }
   page.drawRectangle({ x: 0, y: 790, width: 595.28, height: 51.89, color: navy })
-  page.drawText(ansi('GMenezes Advogados Associados'), { x: 40, y: 812, size: 16, font: serifB, color: rgb(1, 1, 1) })
+  page.drawText(ansi('Instituto THEYE'), { x: 40, y: 812, size: 16, font: serifB, color: rgb(1, 1, 1) })
   page.drawText(ansi(`Relatório mensal do escritório · ${r.mes}`), { x: 40, y: 797, size: 10, font: sans, color: dourado })
   y = 760
   page.drawText(ansi(`Período: ${r.periodo}. Gerado automaticamente em ${geradoEm} a partir dos dados da plataforma, sem inteligência artificial.`), { x: 40, y, size: 9, font: sans, color: cinza }); y -= 24
@@ -56,7 +57,7 @@ async function gerarPdf(r: Relatorio, geradoEm: string): Promise<Uint8Array> {
   }
   if (y < 90) nova()
   page.drawText(ansi('Como ler: contratos e documentos são a fotografia no fim do mês; tarefas, horas, intimações e IA são o movimento dentro do mês; honorários recebidos são o acumulado dos casos.'), { x: 40, y, size: 8, font: sans, color: cinza, maxWidth: 515, lineHeight: 10 }); y -= 24
-  page.drawText(ansi(`Abra a plataforma em gmenezes-advogados.vercel.app · Relatórios. Desenvolvido pelo THEYE Institute.`), { x: 40, y, size: 8, font: sans, color: cinza })
+  page.drawText(ansi(`Abra a plataforma em theye.club · Relatórios. Desenvolvido pelo THEYE Institute.`), { x: 40, y, size: 8, font: sans, color: cinza })
   return await pdf.save()
 }
 
@@ -121,12 +122,12 @@ Deno.serve(async (req) => {
       ${teste ? '<p style="color:#888">Este é um envio de teste pedido por você em Relatórios. O envio automático acontece no dia 1 de cada mês, às 8h.</p>' : ''}
       <p><a href="${APP}/relatorios">Abrir Relatórios</a> · <a href="${APP}/indicadores">Abrir Indicadores</a></p>
     </div>
-    <p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · relatório automático</p></div>`
+    <p style="font-size:11px;color:#888;padding:10px">Instituto THEYE · relatório automático</p></div>`
   let falha: string | undefined
   for (const email of para) {
     const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify({ sender: { name: 'Relatórios GMenezes', email: conf.email_remetente }, to: [{ email }], subject: titulo, htmlContent: html, attachment: [{ name: nomeArquivo, content: b64(pdfBytes) }] }),
+      body: JSON.stringify({ sender: { name: 'Relatórios THEYE', email: conf.email_remetente }, to: [{ email }], subject: titulo, htmlContent: html, attachment: [{ name: nomeArquivo, content: b64(pdfBytes) }] }),
     })
     if (!resp.ok) falha = `${resp.status} ${await resp.text()}`
   }

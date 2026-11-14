@@ -71,7 +71,7 @@ function LinhaContrato({ p, aoRegistrar }: { p: PrevisaoContrato; aoRegistrar?: 
   }
   return (
     <li className="border-b border-navy/10 py-3">
-      <button onClick={() => setAberto(!aberto)} className="w-full text-left grid gap-2 sm:grid-cols-[1fr_180px_140px_24px] items-center" aria-expanded={aberto}>
+      <button onClick={() => setAberto(!aberto)} title={aberto ? 'Recolhe os detalhes deste contrato' : 'Mostra os fatores que explicam o risco e a chance de renovação deste contrato'} className="w-full text-left grid gap-2 sm:grid-cols-[1fr_180px_140px_24px] items-center" aria-expanded={aberto}>
         <span>
           <span className="block text-sm text-navy font-medium">{p.contrato.parte}</span>
           <span className="block text-xs text-grafite-claro truncate">{p.imovel?.endereco ?? 'Imóvel'}</span>
@@ -94,14 +94,14 @@ function LinhaContrato({ p, aoRegistrar }: { p: PrevisaoContrato; aoRegistrar?: 
             <p className="text-xs uppercase tracking-wider text-grafite-claro mb-1">Por que essa chance de renovação</p>
             <ul className="space-y-1">{p.fatoresRenovacao.map(f => <li key={f.fator} className="flex justify-between gap-2"><span>{f.fator}</span><span className="text-grafite-claro">{f.pontos > 0 ? '+' : ''}{f.pontos}</span></li>)}</ul>
           </div>
-          <p className="md:col-span-2 bg-pergaminho border-l-2 border-dourado px-3 py-2"><b>Ação sugerida:</b> {p.acao} <Link className="underline decoration-dourado ml-1" to={`/contrato/${p.contrato.id}`}>Abrir contrato</Link></p>
+          <p className="md:col-span-2 bg-pergaminho border-l-2 border-dourado px-3 py-2"><b>Ação sugerida:</b> {p.acao} <Link className="underline decoration-dourado ml-1" title="Abre a tela deste contrato para ver os detalhes e agir" to={`/contrato/${p.contrato.id}`}>Abrir contrato</Link></p>
           <div className="md:col-span-2 border-t border-navy/10 pt-3" data-testid={`desfecho-${p.contrato.id}`}>
             <p className="text-xs uppercase tracking-wider text-grafite-claro mb-2">O que aconteceu de fato? (calibra a previsão)</p>
             <div className="flex flex-wrap gap-2">
-              <button type="button" onClick={() => desfecho({ inadimplente: false })} className="min-h-[40px] px-3 border border-navy text-navy text-xs">Pagou em dia</button>
-              <button type="button" onClick={() => desfecho({ inadimplente: true })} className="min-h-[40px] px-3 border border-critico text-critico text-xs">Ficou inadimplente</button>
-              <button type="button" onClick={() => desfecho({ renovou: true })} className="min-h-[40px] px-3 border border-navy text-navy text-xs">Renovou</button>
-              <button type="button" onClick={() => desfecho({ renovou: false })} className="min-h-[40px] px-3 border border-atencao text-atencao text-xs">Não renovou</button>
+              <button type="button" onClick={() => desfecho({ inadimplente: false })} title="Registra que este contrato foi pago em dia, para calibrar as próximas previsões" className="min-h-[40px] px-3 border border-navy text-navy text-xs">Pagou em dia</button>
+              <button type="button" onClick={() => desfecho({ inadimplente: true })} title="Registra que este contrato ficou inadimplente, para calibrar as próximas previsões" className="min-h-[40px] px-3 border border-critico text-critico text-xs">Ficou inadimplente</button>
+              <button type="button" onClick={() => desfecho({ renovou: true })} title="Registra que o contrato foi renovado, para calibrar as próximas previsões" className="min-h-[40px] px-3 border border-navy text-navy text-xs">Renovou</button>
+              <button type="button" onClick={() => desfecho({ renovou: false })} title="Registra que o contrato não foi renovado, para calibrar as próximas previsões" className="min-h-[40px] px-3 border border-atencao text-atencao text-xs">Não renovou</button>
             </div>
             {msg && <p role="status" className="text-xs mt-2 text-grafite" data-testid="msg-desfecho">{msg}</p>}
           </div>
@@ -140,16 +140,16 @@ function PainelJurimetria() {
       <p className="text-sm text-grafite-claro mb-4">Estatística pública do DataJud (CNJ): sentenças registradas de procedência, procedência parcial e improcedência. Mostra a margem de erro (95%) e avisa quando a amostra é pequena.</p>
       <div className="grid gap-3 sm:grid-cols-3">
         <label className="text-xs uppercase tracking-wider text-grafite-claro">Ação
-          <select value={acao} onChange={e => setAcao(e.target.value)} className={campo}>{ACOES.map(a => <option key={a.valor} value={a.valor}>{a.rotulo}</option>)}</select>
+          <select value={acao} onChange={e => setAcao(e.target.value)} title="Escolhe o tipo de ação judicial cuja chance de êxito será calculada" className={campo}>{ACOES.map(a => <option key={a.valor} value={a.valor}>{a.rotulo}</option>)}</select>
         </label>
         <label className="text-xs uppercase tracking-wider text-grafite-claro">Tribunal
-          <select value={tribunal} onChange={e => setTribunal(e.target.value)} className={campo}>{TRIBUNAIS.map(t => <option key={t} value={t}>{t.toUpperCase()}</option>)}</select>
+          <select value={tribunal} onChange={e => setTribunal(e.target.value)} title="Escolhe o tribunal cujas sentenças do DataJud serão consultadas" className={campo}>{TRIBUNAIS.map(t => <option key={t} value={t}>{t.toUpperCase()}</option>)}</select>
         </label>
         <label className="text-xs uppercase tracking-wider text-grafite-claro">Vara (opcional)
-          <input value={orgao} onChange={e => { setOrgao(e.target.value); try { localStorage.setItem('lsm-previsoes-orgao', e.target.value) } catch { /* sem memória local */ } }} className={campo} placeholder="Ex.: 10ª Vara Cível" />
+          <input title="Vara ou órgão julgador. Com ele a previsão usa só as decisões daquela vara, que costuma ter mão própria." value={orgao} onChange={e => { setOrgao(e.target.value); try { localStorage.setItem('lsm-previsoes-orgao', e.target.value) } catch { /* sem memória local */ } }} className={campo} placeholder="Ex.: 10ª Vara Cível" />
         </label>
       </div>
-      <button onClick={consultar} disabled={ocupado} className="mt-3 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">{ocupado ? 'Consultando o CNJ…' : 'Calcular'}</button>
+      <button onClick={consultar} disabled={ocupado} title="Consulta as estatísticas públicas do DataJud (CNJ) e calcula a chance de êxito para a ação, o tribunal e a vara escolhidos" className="mt-3 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">{ocupado ? 'Consultando o CNJ…' : 'Calcular'}</button>
       {erro && <p role="alert" className="text-sm text-critico mt-3">{erro}</p>}
       {res && (
         <div className="mt-5 border-t border-navy/10 pt-4 space-y-3">
@@ -158,7 +158,7 @@ function PainelJurimetria() {
           ) : (
             <>
               <p className="font-serif text-3xl text-navy">{res.chanceExito}% <span className="text-base text-grafite">de êxito do autor</span></p>
-              {ic && <p className="text-sm text-grafite">Margem (95%): entre {ic.min}% e {ic.max}% · amostra de {res.amostra.toLocaleString('pt-BR')} sentenças · confiança {res.confianca === 'alta' ? 'alta' : res.confianca === 'media' ? 'média' : 'baixa'}</p>}
+              {ic && <p className="text-sm text-grafite">Margem (95%): entre {ic.min}% e {ic.max}% · amostra de {(res.amostra ?? 0).toLocaleString('pt-BR')} sentenças · confiança {res.confianca === 'alta' ? 'alta' : res.confianca === 'media' ? 'média' : 'baixa'}</p>}
               {ic && (
                 <div className="relative h-3 bg-navy/10" aria-hidden="true">
                   <span className="absolute h-3 bg-dourado/50" style={{ left: `${ic.min}%`, width: `${ic.max - ic.min}%` }} />
@@ -173,7 +173,7 @@ function PainelJurimetria() {
               </ul>
             </>
           )}
-          <p className="text-xs text-grafite-claro">Fonte: {res.fonte} · {res.tribunal} · {res.acao}{res.orgao ? ` · ${res.orgao}` : ''} · {res.processos.toLocaleString('pt-BR')} processos. O DataJud registra o movimento da sentença, não o mérito de cada caso: o número mede tendência, não o seu processo.</p>
+          <p className="text-xs text-grafite-claro">Fonte: {res.fonte} · {res.tribunal} · {res.acao}{res.orgao ? ` · ${res.orgao}` : ''} · {(res.processos ?? 0).toLocaleString('pt-BR')} processos. O DataJud registra o movimento da sentença, não o mérito de cada caso: o número mede tendência, não o seu processo.</p>
         </div>
       )}
     </section>
@@ -211,10 +211,10 @@ function PainelInstituto() {
       <p className="text-sm text-grafite-claro mb-4">Ações de locação em seis tribunais, pela base do Instituto (DataJud anonimizado). Mostra o modelo convencional com margem de erro e o modelo por grafo, que está em teste pré-registrado. Nada do escritório é enviado ao Instituto.</p>
       <div className="grid gap-3 sm:grid-cols-3">
         <label className="text-xs uppercase tracking-wider text-grafite-claro sm:col-span-2">Tipo de ação
-          <select value={classe} onChange={e => setClasse(e.target.value)} className={campo} data-testid="instituto-classe">{CLASSES_LOCACAO.map(c => <option key={c} value={c}>{c}</option>)}</select>
+          <select value={classe} onChange={e => setClasse(e.target.value)} title="Escolhe o tipo de ação de locação cuja probabilidade será consultada na base do Instituto" className={campo} data-testid="instituto-classe">{CLASSES_LOCACAO.map(c => <option key={c} value={c}>{c}</option>)}</select>
         </label>
         <label className="text-xs uppercase tracking-wider text-grafite-claro">Tribunal
-          <select value={tribunal} onChange={e => setTribunal(e.target.value)} className={campo} data-testid="instituto-tribunal">{['TJRJ', 'TJSP', 'TJMG', 'TJRS', 'TJPR', 'TJDFT'].map(t => <option key={t} value={t}>{t}</option>)}</select>
+          <select value={tribunal} onChange={e => setTribunal(e.target.value)} title="Escolhe o tribunal usado na consulta à base do Instituto" className={campo} data-testid="instituto-tribunal">{['TJRJ', 'TJSP', 'TJMG', 'TJRS', 'TJPR', 'TJDFT'].map(t => <option key={t} value={t}>{t}</option>)}</select>
         </label>
       </div>
       {chances.length > 0 && (
@@ -222,8 +222,8 @@ function PainelInstituto() {
           {chances.slice(0, 6).map(c => <li key={c.classe}>{textoChanceClasse(c)}</li>)}
         </ul>
       )}
-      <p className="mt-2 text-sm"><a href="https://instituto-theye.vercel.app/imovel.html" target="_blank" rel="noreferrer" className="underline text-navy" data-testid="instituto-checklist">Documentos que o imóvel precisa ter para a locação, por função</a> (o checklist também aparece na ficha de cada imóvel).</p>
-      <button onClick={consultar} disabled={ocupado} data-testid="instituto-calcular" className="mt-3 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">{ocupado ? 'Consultando o Instituto…' : 'Calcular'}</button>
+      <p className="mt-2 text-sm"><a href="https://instituto-theye.vercel.app/imovel.html" target="_blank" rel="noreferrer" title="Abre, em outra aba, o checklist do Instituto com os documentos que o imóvel precisa ter para a locação" className="underline text-navy" data-testid="instituto-checklist">Documentos que o imóvel precisa ter para a locação, por função</a> (o checklist também aparece na ficha de cada imóvel).</p>
+      <button onClick={consultar} disabled={ocupado} data-testid="instituto-calcular" title="Consulta a base do THEYE Institute e mostra a probabilidade para o tipo de ação e o tribunal escolhidos" className="mt-3 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">{ocupado ? 'Consultando o Instituto…' : 'Calcular'}</button>
       {erro && <p role="alert" className="text-sm text-critico mt-3" data-testid="instituto-erro">{erro}</p>}
       {res && r && (
         <div className="mt-5 border-t border-navy/10 pt-4 space-y-2" data-testid="instituto-resultado">
@@ -233,7 +233,7 @@ function PainelInstituto() {
           {(() => { const u = probabilidadeUnica(res); return u && <p className="text-sm text-navy" data-testid="instituto-unica"><strong>{u.texto}</strong> <span className="text-grafite-claro">({u.explicacao})</span></p> })()}
           <p className="text-sm p-3 bg-atencaoFundo border-l-4 border-atencao" role="note" data-testid="instituto-aviso">{res.aviso}</p>
           <p className="text-xs text-grafite-claro">Fonte: {res.fonte} · {tribunal} · {classe}. Mede tendência do tribunal, não o seu processo.</p>
-          <button type="button" onClick={copiarInstituto} data-testid="instituto-copiar" className="min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{resCopiado ? 'Resultado copiado' : 'Copiar para o parecer'}</button>
+          <button type="button" onClick={copiarInstituto} data-testid="instituto-copiar" title="Copia o resultado do Instituto, com fonte e aviso, para colar no parecer" className="min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{resCopiado ? 'Resultado copiado' : 'Copiar para o parecer'}</button>
         </div>
       )}
     </section>
@@ -284,10 +284,10 @@ export default function PrevisoesPage() {
           <h2 className="text-3xl text-navy">Desfechos, calibração e carteira</h2>
           <p className="text-sm text-grafite-claro mt-1">Risco, renovação e receita da carteira, e chance de êxito na Justiça. Cada número mostra de onde vem; nada é estimado sem dado.</p>
           {/* Passo 160: imprimir as previsões com as fontes. */}
-          <button type="button" onClick={() => window.print()} data-testid="imprimir-previsoes" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
-          <button type="button" onClick={copiarResumo} data-testid="copiar-previsoes" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo da carteira'}</button>
-          <button type="button" data-testid="copiar-link-previsoes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 219 */}
-          <button type="button" data-testid="baixar-previsoes" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['contrato;risco;faixa', ...previsoes.map(p => `${p.contrato.parte || 'contrato'};${p.risco};${p.faixaRisco}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'previsoes.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>{/* Passo 291 */}
+          <button type="button" onClick={() => window.print()} data-testid="imprimir-previsoes" title="Abre a janela de impressão do navegador para imprimir as previsões com as fontes" className="mt-3 mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
+          <button type="button" onClick={copiarResumo} data-testid="copiar-previsoes" title="Copia um resumo em texto da carteira (receita, riscos e renovação) para colar em e-mail ou reunião" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo da carteira'}</button>
+          <button type="button" data-testid="copiar-link-previsoes" title="Copia o endereço desta tela para a área de transferência" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 219 */}
+          <button type="button" data-testid="baixar-previsoes" aria-live="polite" title="Baixa a planilha (previsoes.csv) com o risco de cada contrato da carteira" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['contrato;risco;faixa', ...previsoes.map(p => `${p.contrato.parte || 'contrato'};${p.risco};${p.faixaRisco}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'previsoes.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>{/* Passo 291 */}
         </header>
         <div className="grid gap-4 sm:grid-cols-4">
           {[

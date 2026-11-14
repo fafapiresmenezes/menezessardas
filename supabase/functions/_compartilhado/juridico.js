@@ -108,7 +108,13 @@ var CODIGOS = {
   LOC: { nome: "Locação (Lei 8.245/91)", sigla: "LOC", regra: "Prazos de direito material em dias corridos (CC, art. 132); os processuais seguem o CPC." },
   CDC: { nome: "Consumidor (CDC)", sigla: "CDC", regra: "Prazos de decadência e prescrição de direito material (Lei 8.078/90)." },
   FAL: { nome: "Recuperação e falência (Lei 11.101/2005)", sigla: "FAL", regra: "Dias corridos (Lei 11.101/2005, art. 189, § 1º, I). Confira se o ato é da recuperação, da falência ou do CPC subsidiário." },
-  PRESC: { nome: "Prescrição e decadência", sigla: "PRESC", regra: 'Meses e anos "de data a data" (CC, art. 132, § 3º). Vencendo em dia sem expediente, a data passa ao dia útil seguinte.' }
+  PRESC: { nome: "Prescrição e decadência", sigla: "PRESC", regra: 'Meses e anos "de data a data" (CC, art. 132, § 3º). Vencendo em dia sem expediente, a data passa ao dia útil seguinte.' },
+  ELE: { nome: "Eleitoral (Código Eleitoral e Lei 9.504/97)", sigla: "ELE", regra: "Em ano eleitoral, os prazos correm em dias corridos e em todos os dias, inclusive sábados, domingos e feriados (Lei 9.504/97, art. 16). Confira resolução do TSE do pleito." },
+  CPPM: { nome: "Processo penal militar (CPPM)", sigla: "CPPM", regra: "Dias corridos; exclui o dia do começo e inclui o do vencimento (CPPM, art. 100). Vencendo sem expediente, passa ao dia útil seguinte." },
+  LPA: { nome: "Processo administrativo federal (Lei 9.784/99)", sigla: "LPA", regra: "Dias corridos, exclui o dia do começo e inclui o do vencimento (Lei 9.784/99, art. 66); se vence em dia sem expediente, passa ao dia útil seguinte." },
+  LIC: { nome: "Licitações e contratos (Lei 14.133/21)", sigla: "LIC", regra: "Dias úteis, salvo disposição em contrário (Lei 14.133/21, art. 183). Recursos administrativos em 3 dias úteis." },
+  ARB: { nome: "Arbitragem (Lei 9.307/96)", sigla: "ARB", regra: "Os prazos da arbitragem são os fixados pela convenção arbitral ou pelo tribunal arbitral; só os prazos de controle judicial seguem a lei processual." },
+  CTB: { nome: "Trânsito (CTB)", sigla: "CTB", regra: "Dias corridos (CTB, art. 282, § 4º e Resoluções do CONTRAN). Defesas e recursos administrativos têm prazo próprio em cada fase da autuação." }
 };
 var ATOS_POR_CODIGO = [
   // ---------- CPC ----------
@@ -228,7 +234,41 @@ var ATOS_POR_CODIGO = [
   { id: "presc-tributo-cobranca", codigo: "PRESC", ato: "Prescrição da cobrança do crédito tributário", quantidade: 5, unidade: "anos", base: "CTN, art. 174", natureza: "material", marco: "Constituição definitiva do crédito" },
   { id: "presc-repeticao", codigo: "PRESC", ato: "Repetição de indébito tributário", quantidade: 5, unidade: "anos", base: "CTN, art. 168", natureza: "material", marco: "Pagamento indevido" },
   { id: "presc-improbidade", codigo: "PRESC", ato: "Ação de improbidade administrativa", quantidade: 8, unidade: "anos", base: "Lei 8.429/92, art. 23 (Lei 14.230/2021)", natureza: "material", marco: "Fato (ou cessação da permanência)" },
-  { id: "presc-acao-popular", codigo: "PRESC", ato: "Ação popular", quantidade: 5, unidade: "anos", base: "Lei 4.717/65, art. 21", natureza: "material", marco: "Ato lesivo" }
+  { id: "presc-acao-popular", codigo: "PRESC", ato: "Ação popular", quantidade: 5, unidade: "anos", base: "Lei 4.717/65, art. 21", natureza: "material", marco: "Ato lesivo" },
+  // ---------- Eleitoral (A26) ----------
+  { id: "ele-aije", codigo: "ELE", ato: "Ação de investigação judicial eleitoral (AIJE) — propositura", quantidade: 15, unidade: "dias_corridos", base: "LC 64/90, art. 22", natureza: "material", marco: "Diplomação (ou ciência do abuso, conforme o caso)", nota: "A confirmar na resolução do TSE do pleito." },
+  { id: "ele-aime", codigo: "ELE", ato: "Ação de impugnação de mandato eletivo (AIME)", quantidade: 15, unidade: "dias_corridos", base: "CF, art. 14, §§ 10 e 11", natureza: "material", marco: "Diplomação" },
+  { id: "ele-registro-impugnacao", codigo: "ELE", ato: "Impugnação ao registro de candidatura", quantidade: 5, unidade: "dias_corridos", base: "LC 64/90, art. 3º", marco: "Publicação do edital do pedido de registro" },
+  { id: "ele-contas-impugnacao", codigo: "ELE", ato: "Impugnação à prestação de contas de campanha", quantidade: 3, unidade: "dias_corridos", base: "Lei 9.504/97, art. 30, § 1º; resolução do TSE", nota: "A confirmar na resolução do TSE do pleito." },
+  { id: "ele-rec-rce", codigo: "ELE", ato: "Recurso contra expedição de diploma (RCED)", quantidade: 3, unidade: "dias_corridos", base: "Código Eleitoral, art. 262", marco: "Diplomação" },
+  { id: "ele-recurso-geral", codigo: "ELE", ato: "Recurso eleitoral (regra geral)", quantidade: 3, unidade: "dias_corridos", base: "Código Eleitoral, art. 258" },
+  // ---------- Processo penal militar ----------
+  { id: "cppm-resposta", codigo: "CPPM", ato: "Resposta à acusação (defesa escrita)", quantidade: 5, unidade: "dias_corridos", base: "CPPM, art. 407", marco: "Citação do acusado", nota: "A confirmar: há jurisprudência aplicando subsidiariamente o CPP (art. 396)." },
+  { id: "cppm-apelacao", codigo: "CPPM", ato: "Apelação (interposição)", quantidade: 5, unidade: "dias_corridos", base: "CPPM, art. 529" },
+  { id: "cppm-razoes", codigo: "CPPM", ato: "Razões de apelação", quantidade: 8, unidade: "dias_corridos", base: "CPPM, art. 531", marco: "Intimação para apresentar razões" },
+  { id: "cppm-ed", codigo: "CPPM", ato: "Embargos de declaração", quantidade: 2, unidade: "dias_corridos", base: "CPPM, art. 540" },
+  { id: "cppm-rese", codigo: "CPPM", ato: "Recurso em sentido estrito", quantidade: 5, unidade: "dias_corridos", base: "CPPM, art. 516" },
+  // ---------- Processo administrativo federal (Lei 9.784/99) ----------
+  { id: "lpa-recurso", codigo: "LPA", ato: "Recurso administrativo", quantidade: 10, unidade: "dias_corridos", base: "Lei 9.784/99, art. 59" },
+  { id: "lpa-manifestacao", codigo: "LPA", ato: "Manifestação do interessado (regra geral)", quantidade: 5, unidade: "dias_corridos", base: "Lei 9.784/99, art. 24", nota: "Pode ser prorrogado por mais 5 dias a critério da autoridade." },
+  { id: "lpa-alegacoes-finais", codigo: "LPA", ato: "Alegações finais", quantidade: 10, unidade: "dias_corridos", base: "Lei 9.784/99, art. 44", marco: "Encerramento da instrução" },
+  { id: "lpa-decisao", codigo: "LPA", ato: "Decisão da autoridade", quantidade: 30, unidade: "dias_corridos", base: "Lei 9.784/99, art. 49", natureza: "improprio", marco: "Encerramento da instrução", nota: "Prazo impróprio, prorrogável por igual período com motivação." },
+  { id: "lpa-prescricao", codigo: "LPA", ato: "Prescrição da pretensão punitiva da Administração", quantidade: 5, unidade: "anos", base: "Lei 9.784/99, art. 54", natureza: "material", marco: "Data da prática do ato" },
+  // ---------- Licitações e contratos (Lei 14.133/21) ----------
+  { id: "lic-recurso", codigo: "LIC", ato: "Recurso administrativo (regra geral)", quantidade: 3, unidade: "dias_uteis", base: "Lei 14.133/21, art. 165, I" },
+  { id: "lic-contrarrazoes", codigo: "LIC", ato: "Contrarrazões ao recurso", quantidade: 3, unidade: "dias_uteis", base: "Lei 14.133/21, art. 165, § 2º" },
+  { id: "lic-pedido-reajuste", codigo: "LIC", ato: "Pedido de reequilíbrio econômico-financeiro", quantidade: 60, unidade: "dias_corridos", base: "Lei 14.133/21, art. 124 (interpretação)", nota: "A confirmar: a lei não fixa prazo expresso; tribunais de contas recomendam até 60 dias da ocorrência do fato." },
+  { id: "lic-publicacao-contrato", codigo: "LIC", ato: "Publicação do contrato no PNCP", quantidade: 20, unidade: "dias_uteis", base: "Lei 14.133/21, art. 94, I", marco: "Assinatura do contrato" },
+  { id: "lic-garantia-devolucao", codigo: "LIC", ato: "Devolução da garantia contratual", quantidade: 90, unidade: "dias_corridos", base: "Lei 14.133/21, art. 100 (prática forense)", marco: "Encerramento do contrato", nota: "A confirmar: depende da cláusula contratual e do tipo de garantia." },
+  // ---------- Arbitragem (Lei 9.307/96) ----------
+  { id: "arb-anulacao", codigo: "ARB", ato: "Ação de anulação da sentença arbitral", quantidade: 90, unidade: "dias_corridos", base: "Lei 9.307/96, art. 33, § 1º", natureza: "material", marco: "Recebimento da notificação da sentença arbitral (ou do aditamento)" },
+  { id: "arb-esclarecimentos", codigo: "ARB", ato: "Pedido de esclarecimentos ao árbitro", quantidade: 5, unidade: "dias_corridos", base: "Lei 9.307/96, art. 30", marco: "Recebimento da sentença arbitral", nota: "Pode ser outro prazo se as partes convencionarem." },
+  { id: "arb-sentenca", codigo: "ARB", ato: "Prolação da sentença arbitral", quantidade: 6, unidade: "meses", base: "Lei 9.307/96, art. 23", natureza: "improprio", marco: "Instituição da arbitragem", nota: "Prazo supletivo: a convenção pode dispor de forma diversa." },
+  // ---------- Trânsito (CTB) ----------
+  { id: "ctb-defesa-previa", codigo: "CTB", ato: "Defesa prévia da autuação", quantidade: 30, unidade: "dias_corridos", base: "CTB, art. 281, parágrafo único, II; Resolução CONTRAN 918/2022", marco: "Notificação da autuação", nota: "A confirmar na resolução vigente do CONTRAN." },
+  { id: "ctb-recurso-jari", codigo: "CTB", ato: "Recurso à JARI", quantidade: 30, unidade: "dias_corridos", base: "CTB, art. 285", marco: "Notificação da penalidade" },
+  { id: "ctb-recurso-cetran", codigo: "CTB", ato: "Recurso ao CETRAN/CONTRAN", quantidade: 30, unidade: "dias_corridos", base: "CTB, art. 288", marco: "Notificação da decisão da JARI" },
+  { id: "ctb-indicacao-condutor", codigo: "CTB", ato: "Indicação do condutor infrator", quantidade: 30, unidade: "dias_corridos", base: "CTB, art. 257, § 7º", marco: "Notificação da autuação" }
 ];
 var rotuloPrazo = (a) => {
   const u = a.unidade === "dias_uteis" ? a.quantidade === 1 ? "dia útil" : "dias úteis" : a.unidade === "dias_corridos" ? a.quantidade === 1 ? "dia corrido" : "dias corridos" : a.unidade === "meses" ? a.quantidade === 1 ? "mês" : "meses" : a.quantidade === 1 ? "ano" : "anos";
@@ -294,9 +334,9 @@ function prazoEscrito(texto) {
 }
 function audienciaNoTexto(texto) {
   const t = semAcento(texto);
-  const i = t.search(/audiencia|sessao de julgamento|pauta de julgamento/);
+  const i = t.search(/audiencia|sessao de julgamento|pauta de julgamento|edital[- ]?pauta|sessao (presencial|virtual|ordinaria|extraordinaria|do dia)/);
   if (i < 0) return null;
-  const janela = t.slice(Math.max(0, i - 120), i + 260);
+  const janela = t.slice(Math.max(0, i - 120), i + 600);
   const m = janela.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/) ?? janela.match(/(\d{1,2}) de (janeiro|fevereiro|marco|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro) de (\d{4})/);
   if (!m) return null;
   const meses = ["janeiro", "fevereiro", "marco", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
@@ -332,11 +372,26 @@ var REGRAS = [
   { re: /impugna\w* (ao )?cumprimento|art\.? 525/, id: () => "cpc-impugnacao", texto: "Contestar o cumprimento de sentença (impugnação)", confianca: "media", legal: true },
   { re: /especifi\w* (as )?provas|provas que pretende/, id: () => "cpc-generico", texto: "Dizer quais provas quer produzir", confianca: "media" },
   { re: /para contestar|apresentar contestacao|prazo de contestacao|ofere\w* contestacao|cite-se|fica citad/, id: () => "cpc-contestacao", texto: "Defender o cliente (contestação). Confira de quando conta: audiência, juntada do mandado ou do aviso de recebimento", confianca: "media", legal: true },
+  { re: /cumpra-se o (v\.?|venerando|r\.?|respeitavel)?\s*acordao|retorno dos autos|baixa dos autos/, id: () => "cpc-generico", texto: "O processo voltou do tribunal. Dizer ao juiz o que o cliente requer (manifestação)", confianca: "media" },
+  { re: /embargos[^.]{0,60}(rejeitad|inadmitid|nao acolh)|rejeito os embargos|inadmito os embargos|deixo de acolh\w+ os embargos/, id: (c) => recursoDaSentenca(c), texto: "Embargos de declaração rejeitados: o prazo do recurso principal volta a correr por inteiro. Se o cliente era o embargante, recorrer; se era o embargado, nada a fazer", confianca: "media", legal: true },
   { re: /julgo (im)?procedente|julgo parcialmente|julgo extint|homologo|resolvo o merito|sentenca/, id: (c) => edDo(c), texto: "Saiu a sentença. Ler com o cliente; se houver ponto omisso ou contraditório, embargos de declaração", confianca: "media", outra: outraRecurso, legal: true },
   { re: /acordao|acordam|negaram provimento|deram provimento|por unanimidade|por maioria/, id: (c) => edDo(c), texto: "Saiu o acórdão (decisão do tribunal). Ler; se houver omissão, embargos de declaração", confianca: "media", outra: (c) => c === "CLT" ? "Se for recorrer: recurso de revista em 8 dias úteis (CLT, art. 896)." : c === "JEC" ? void 0 : "Se for recorrer: recurso especial ou extraordinário em 15 dias úteis (CPC, art. 1.003, § 5º).", legal: true },
   { re: /defiro|indefiro|decisao interlocutoria|tutela (de urgencia|antecipada)|liminar/, id: (c) => edDo(c), texto: "Saiu uma decisão no meio do processo. Ler; se prejudicar o cliente, avaliar recurso", confianca: "baixa", outra: (c) => c === "CPC" ? "Se couber agravo de instrumento: 15 dias úteis (CPC, arts. 1.015 e 1.003, § 5º)." : void 0, legal: true },
   { re: /manifest|diga(m)? |digam|ciencia|fale(m)? sobre|cumpra|junte|providencie|recolh\w* (as )?custas|comprove/, id: () => "cpc-generico", texto: "Responder ao que o juiz pediu (manifestação)", confianca: "media" }
 ];
+var SEM_PRAZO = [
+  { re: /migrad\w+ (do sistema \w+ )?para o sistema eproc|foram migrados.{0,40}eproc|processo.{0,40}migrado.{0,40}eproc/, texto: "Processo migrado para o eproc: não há prazo. Cada advogado deve fazer o primeiro acesso com certificado digital e conferir os dados", outra: "Depois do primeiro acesso, os prazos passam a correr pelo eproc." },
+  { re: /(de-se|remetam-se (os autos )?|vista )(ao|a) (mp|ministerio publico|parquet)|ao ministerio publico para parecer|para parecer de merito/, texto: "Vista ao Ministério Público: o prazo é do MP, não do cliente. Acompanhar o parecer", outra: "Quando o parecer sair, responder só se for contrário ao cliente." },
+  { re: /(ao|a|ao\(s\)|a\(s\)) (parte\(s\) )?recorrente\(?s?\)? (para|sobre)|intime-?se,? derradeiramente,? a subscritora|ao recorrente,? para regulariza|vista a\(s\) parte\(s\) recorrente/, texto: "Ordem dirigida à parte que recorreu: o prazo é dela, não do cliente. Acompanhar se ela cumpre; se não cumprir, o recurso pode não ser conhecido" },
+  { re: /remetam-se os autos ao contador|ao contador judicial para|ao administrador judicial\.?$|a inventariante\.?$/, texto: "Os autos vão para o contador ou para outro auxiliar: ainda não há prazo para o cliente. O prazo nasce quando houver nova vista" },
+  { re: /nada a prover.{0,80}(sentenca|acordao).{0,60}(transitad|cumpra-se)|ja ha sentenca nos autos|sentenca.{0,40}transitada em julgado.{0,30}cumpra-se/, texto: "O juiz negou o pedido porque já há sentença transitada em julgado. Não é uma sentença nova: o caminho é o cumprimento da sentença (se o cliente ganhou)", outra: "Se o pedido negado era do cliente e prejudica: embargos de declaração em 5 dias úteis, só se houver vício." },
+  { re: /distribua-se o processo|distribuido ao|redistribuid/, texto: "O processo foi distribuído a um relator: não há prazo. Anotar o relator e acompanhar" },
+  { re: /^\s*(\w+ )?(oficie-se|expeca-se (oficio|mandado|alvara|certidao)|anote-se|junte-se|certifique-se)[^.]{0,200}\.?\s*$/, texto: "Ato de cartório (ofício, anotação ou mandado): não há prazo para o cliente. Conferir se o cliente precisa acompanhar o cumprimento" }
+];
+function lerSemPrazo(texto, t) {
+  if (t.length > 1200 || prazoEscrito(texto)) return null;
+  return SEM_PRAZO.find((r) => r.re.test(t)) ?? null;
+}
 function atoAdHoc(id, codigo, dias, corridos) {
   if (id === "ad-agravo") return { id, codigo: "CPC", ato: "Contraminuta de agravo", quantidade: 15, unidade: "dias_uteis", base: "CPC, arts. 1.019, II, e 1.021, § 2º", dobro: true };
   const corr = corridos || codigo === "CPP" || codigo === "ECA" || codigo === "FAL";
@@ -357,6 +412,10 @@ function lerIntimacao(p, hoje) {
   const aud = /pauta|audiencia|sessao de julgamento/.test(t) ? audienciaNoTexto(texto) : null;
   if (aud && aud.data >= p.data) {
     return { ...base, oQueFazer: `Comparecer à audiência ou sessão${aud.hora ? ` às ${aud.hora}` : ""}. Avisar o cliente e as testemunhas`, ato: null, vence: aud.data, diaSemana: diaDaSemana(aud.data), urgencia: urgenciaPara(aud.data, hoje), confianca: "media", trecho: trechoEm(texto, /audiencia|sessao de julgamento|pauta/), avisos: ["Data lida do texto da publicação: confira no processo."] };
+  }
+  const semPrazo = lerSemPrazo(texto, t);
+  if (semPrazo) {
+    return { ...base, oQueFazer: semPrazo.texto, ato: null, vence: null, diaSemana: null, urgencia: "ler", confianca: "alta", trecho: trechoEm(texto, semPrazo.re), outra: semPrazo.outra, avisos: ["Não há prazo para o cliente nesta publicação. Se o prazo anotado antes for diferente, vale esta leitura."] };
   }
   const escrito = prazoEscrito(texto);
   const regra = REGRAS.find((r2) => r2.re.test(t));
@@ -548,6 +607,7 @@ var REFERENCIAS = [
   { nome: "Paulo de Tarso Sanseverino", area: "Direito privado (STJ)", escola: "pragmatica" },
   { nome: "Alexandre de Moraes", area: "Constitucional (STF)", escola: "pragmatica" },
   { nome: "Hely Lopes Meirelles", area: "Administrativo", escola: "pragmatica" },
+  { nome: "Paulo de Barros Carvalho", area: "Tributário", escola: "processualista" },
   { nome: "Fábio Ulhoa Coelho", area: "Empresarial", escola: "empresarial" },
   { nome: "Rubens Requião", area: "Empresarial", escola: "empresarial" },
   { nome: "Modesto Carvalhosa", area: "Societário", escola: "empresarial" },
@@ -560,7 +620,28 @@ var REFERENCIAS = [
   { nome: "Gildo dos Santos", area: "Locação", escola: "imobiliaria" },
   { nome: "Arnaldo Rizzardo", area: "Contratos e imobiliário", escola: "imobiliaria" },
   { nome: "Maria Helena Diniz", area: "Civil e registros", escola: "imobiliaria" },
-  { nome: "Sílvio de Salvo Venosa", area: "Civil e locação", escola: "imobiliaria" }
+  { nome: "Sílvio de Salvo Venosa", area: "Civil e locação", escola: "imobiliaria" },
+  { nome: "Maurício Godinho Delgado", area: "Trabalho (TST)", escola: "processualista" },
+  { nome: "Alice Monteiro de Barros", area: "Trabalho", escola: "classica" },
+  { nome: "Arnaldo Süssekind", area: "Trabalho", escola: "classica" },
+  { nome: "Homero Batista Mateus da Silva", area: "Trabalho", escola: "pragmatica" },
+  { nome: "Vólia Bomfim Cassar", area: "Trabalho", escola: "didatica" },
+  { nome: "Nelson Hungria", area: "Penal", escola: "classica" },
+  { nome: "Heleno Cláudio Fragoso", area: "Penal", escola: "classica" },
+  { nome: "Cezar Roberto Bitencourt", area: "Penal", escola: "didatica" },
+  { nome: "Guilherme de Souza Nucci", area: "Penal e processo penal", escola: "didatica" },
+  { nome: "Gustavo Badaró", area: "Processo penal", escola: "processualista" },
+  { nome: "Aury Lopes Jr.", area: "Processo penal", escola: "combativa" },
+  { nome: "Hugo de Brito Machado", area: "Tributário", escola: "didatica" },
+  { nome: "Leandro Paulsen", area: "Tributário", escola: "pragmatica" },
+  { nome: "Roque Antonio Carrazza", area: "Tributário", escola: "classica" },
+  { nome: "Geraldo Ataliba", area: "Tributário", escola: "classica" },
+  { nome: "Cláudia Lima Marques", area: "Consumidor", escola: "civil-constitucional" },
+  { nome: "Bruno Miragem", area: "Consumidor", escola: "civil-constitucional" },
+  { nome: "Antonio Herman Benjamin", area: "Consumidor e ambiental (STJ)", escola: "pragmatica" },
+  { nome: "Maria Sylvia Zanella Di Pietro", area: "Administrativo", escola: "didatica" },
+  { nome: "Celso Antônio Bandeira de Mello", area: "Administrativo", escola: "classica" },
+  { nome: "José dos Santos Carvalho Filho", area: "Administrativo", escola: "didatica" }
 ];
 var FORMATACAO = {
   fonte: "Times New Roman",
@@ -657,17 +738,267 @@ var AFINIDADE = {
   familia: ["civil-constitucional", "didatica"],
   civel: ["civil-constitucional", "processualista"]
 };
+function chaveArea(area) {
+  const a = String(area ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  if (/famil|sucess|inventar/.test(a)) return "familia";
+  if (/imobili|locac|condomin/.test(a)) return /condomin/.test(a) ? "condominial" : "imobiliario";
+  if (/tribut|fiscal/.test(a)) return "tributario";
+  if (/trabalh/.test(a)) return "trabalhista";
+  if (/consum/.test(a)) return "consumidor";
+  if (/empres|societ|recupera/.test(a)) return "empresarial";
+  if (/penal|crim/.test(a)) return "penal";
+  if (/constituc|administr|fazenda|public/.test(a)) return "publico";
+  if (/registr/.test(a)) return "registral";
+  if (/complian/.test(a)) return "compliance";
+  if (/civ/.test(a)) return "civel";
+  return a;
+}
+var BANCA = [
+  {
+    id: "rui-barbosa",
+    referencia: "Rui Barbosa",
+    especialidade: "Constitucional e tribunais superiores",
+    escola: "classica",
+    areas: ["publico", "penal"],
+    pecas: /mandado de seguran|habeas|extraordin|constitucional/i,
+    metodo: "Constrói a peça como defesa de um direito: expõe o fato com gravidade, ergue a tese sobre a Constituição e a encadeia em períodos amplos e bem articulados, com vocabulário preciso e fecho solene.",
+    forcas: "força do argumento, domínio do vernáculo, arquitetura do raciocínio",
+    evitar: "prolixidade, erudição exibida, períodos que se perdem, citação em língua estrangeira sem tradução"
+  },
+  {
+    id: "pontes-de-miranda",
+    referencia: "Pontes de Miranda",
+    especialidade: "Civil, família e sucessões",
+    escola: "classica",
+    areas: ["familia", "registral", "civel"],
+    titular: "familia",
+    pecas: /invent[aá]rio|partilha|sucess|usucapi|nulidade|anula/i,
+    metodo: "Classifica antes de argumentar: identifica a natureza do fato jurídico, separa existência, validade e eficácia, e só então tira a consequência, com rigor conceitual e remissão exata ao artigo.",
+    forcas: "precisão conceitual, classificação rigorosa, remissão exata à lei",
+    evitar: "hermetismo, neologismos, frases truncadas, excesso de parênteses e de remissões cruzadas"
+  },
+  {
+    id: "barbosa-moreira",
+    referencia: "José Carlos Barbosa Moreira",
+    especialidade: "Processo civil e recursos",
+    escola: "processualista",
+    areas: ["civel"],
+    pecas: /recurso|apela|agravo|embargos|contrarraz|ac[oó]rd[aã]o|decis[aã]o/i,
+    metodo: "Abre pelo cabimento, pela tempestividade e pelo interesse; depois ataca a decisão ponto por ponto, na ordem em que foi fundamentada, com frases limpas e sem um adjetivo sobrando.",
+    forcas: "clareza, concisão, ordem lógica, elegância sem enfeite",
+    evitar: "ironia, tom professoral, digressão teórica que não serve ao caso"
+  },
+  {
+    id: "barroso",
+    referencia: "Luís Roberto Barroso",
+    especialidade: "Constitucional e direito público",
+    escola: "didatica",
+    areas: ["publico", "compliance"],
+    titular: "publico",
+    pecas: /fazenda|munic[ií]pio|\bestado do\b|\buni[aã]o federal\b|administrativ/i,
+    metodo: "Anuncia a tese em uma frase e a demonstra em três ou quatro proposições numeradas, uma ideia por parágrafo, em linguagem que o cliente entenderia, fechando com a consequência prática.",
+    forcas: "didatismo, síntese, estrutura visível, linguagem acessível",
+    evitar: "frases de efeito, generalidades de princípio sem lei que as sustente, tom de palestra"
+  },
+  {
+    id: "tepedino",
+    referencia: "Gustavo Tepedino",
+    especialidade: "Contratos e responsabilidade civil",
+    escola: "civil-constitucional",
+    areas: ["civel", "familia"],
+    titular: "civel",
+    pecas: /contrat|indeniza|responsabilidade|dano|obriga/i,
+    metodo: "Lê o contrato e o dano à luz da boa-fé objetiva, da função social e da dignidade, sempre ancorando o princípio em um artigo do Código Civil e na situação concreta das partes.",
+    forcas: "leitura sistemática, equilíbrio entre princípio e regra, sensibilidade ao caso concreto",
+    evitar: "abstração demais, princípio usado no lugar da prova, parágrafos longos de teoria"
+  },
+  {
+    id: "nancy-andrighi",
+    referencia: "Nancy Andrighi",
+    especialidade: "Consumidor e direito privado no STJ",
+    escola: "pragmatica",
+    areas: ["consumidor", "civel"],
+    pecas: /consum|banc|plano de sa[uú]de|especial|r[eé]plica|contesta/i,
+    metodo: "Vai direto ao ponto que decide a causa: delimita a controvérsia, mostra o entendimento consolidado do tribunal, encaixa o caso nele e aponta o efeito concreto da decisão para a parte.",
+    forcas: "objetividade, foco no ponto decisivo, domínio do precedente, atenção ao efeito prático",
+    evitar: "empilhar ementas, colar trechos longos de julgados, precedente sem demonstrar a semelhança com o caso"
+  },
+  {
+    id: "capanema",
+    referencia: "Sylvio Capanema de Souza",
+    especialidade: "Locação e imobiliário",
+    escola: "imobiliaria",
+    areas: ["imobiliario", "condominial"],
+    titular: "imobiliario",
+    pecas: /despejo|loca[cç]|aluguel|renovat|revisional|condom/i,
+    metodo: "Parte do contrato, da cláusula e da cronologia, com datas e valores exatos; liga cada um ao artigo da Lei do Inquilinato e resume o débito ou a obrigação antes dos pedidos.",
+    forcas: "precisão de datas, valores e cláusulas, conhecimento da prática forense, tom direto",
+    evitar: "casuísmo sem fundamento legal, coloquialidade, tabela sem explicação"
+  },
+  {
+    id: "ulhoa-coelho",
+    referencia: "Fábio Ulhoa Coelho",
+    especialidade: "Empresarial e societário",
+    escola: "empresarial",
+    areas: ["empresarial"],
+    titular: "empresarial",
+    pecas: /societ|s[oó]cio|fal[eê]ncia|recupera[cç][aã]o judicial|t[ií]tulo|cheque|duplicata/i,
+    metodo: "Abre com um resumo de três frases, trata a questão pelo risco e pelo custo para a empresa, usa seções curtas com títulos que informam e fecha com o que se pede em tópicos.",
+    forcas: "visão de negócio, clareza executiva, seções curtas, quantificação do risco",
+    evitar: "jargão corporativo, anglicismos, simplificação que omite o fundamento legal"
+  },
+  {
+    id: "barros-carvalho",
+    referencia: "Paulo de Barros Carvalho",
+    especialidade: "Tributário e execução fiscal",
+    escola: "processualista",
+    areas: ["tributario"],
+    titular: "tributario",
+    pecas: /fiscal|tribut|imposto|iptu|icms|\biss\b|d[ií]vida ativa|pr[eé]-executividade/i,
+    metodo: "Decompõe a exigência nos seus elementos (fato gerador, sujeito, base, alíquota, tempo) e testa cada um contra a lei e a prova, com linguagem exata e conclusão que decorre do exame.",
+    forcas: "rigor analítico, decomposição da norma, exatidão terminológica",
+    evitar: "vocabulário de lógica e semiótica, abstração, frases que só o especialista entende"
+  },
+  {
+    id: "sobral-pinto",
+    referencia: "Sobral Pinto",
+    especialidade: "Advocacia de defesa e trabalhista",
+    escola: "combativa",
+    areas: ["trabalhista", "penal", "consumidor"],
+    pecas: /defesa|tutela|urg[eê]ncia|liminar|alega[cç][oõ]es finais|memoriais|reclama/i,
+    metodo: "Narra o fato mais grave com concretude, mostra a injustiça a corrigir e sustenta a tese com firmeza e lealdade, alternando frases curtas de impacto com períodos de fundamentação.",
+    forcas: "coragem, narrativa concreta, firmeza com lealdade processual",
+    evitar: "indignação em excesso, ataque pessoal à parte ou ao juiz, adjetivação, pergunta retórica repetida"
+  },
+  {
+    id: "godinho-delgado",
+    referencia: "Maurício Godinho Delgado",
+    especialidade: "Trabalhista",
+    escola: "processualista",
+    areas: ["trabalhista"],
+    titular: "trabalhista",
+    pecas: /trabalh|reclamat|verbas|rescis|horas extras|recurso ordin[aá]rio|v[ií]nculo|\bclt\b/i,
+    metodo: "Parte do princípio da proteção e do contrato-realidade, enquadra o fato no artigo da CLT e na súmula ou orientação do TST, e trata cada verba em tópico próprio, com período, base de cálculo e reflexos.",
+    forcas: "sistematização por verba, domínio das súmulas do TST, ligação entre fato, prova e pedido",
+    evitar: "períodos longos demais, excesso de classificações teóricas, repetição do mesmo fundamento em cada verba"
+  },
+  {
+    id: "evandro-lins",
+    referencia: "Evandro Lins e Silva",
+    especialidade: "Penal e júri",
+    escola: "combativa",
+    areas: ["penal"],
+    titular: "penal",
+    pecas: /habeas|den[uú]ncia|criminal|penal|j[uú]ri|pris[aã]o|resposta [aà] acusa|liberdade/i,
+    metodo: "Começa pela pessoa e pelo fato, aponta a dúvida que a prova não resolve, sustenta a presunção de inocência com a Constituição e o Código de Processo Penal e fecha com o pedido de liberdade ou absolvição em frase direta.",
+    forcas: "humanidade da narrativa, foco na dúvida razoável, clareza do pedido, respeito ao julgador",
+    evitar: "dramatização em excesso, ataque à vítima ou à acusação, apelo emocional sem apoio na prova"
+  },
+  {
+    id: "lima-marques",
+    referencia: "Cláudia Lima Marques",
+    especialidade: "Consumidor",
+    escola: "civil-constitucional",
+    areas: ["consumidor"],
+    titular: "consumidor",
+    pecas: /fornecedor|v[ií]cio do produto|recall|publicidade|superendivid|cl[aá]usula abusiva|oferta/i,
+    metodo: "Identifica a relação de consumo e a vulnerabilidade, lê o contrato pela boa-fé e pelo equilíbrio, dialoga o Código de Defesa do Consumidor com o Código Civil e mostra a abusividade pela cláusula concreta e pelo dano.",
+    forcas: "diálogo das fontes, proteção da confiança, exame da cláusula concreta",
+    evitar: "excesso de citações estrangeiras, parágrafos de teoria sem o fato, vulnerabilidade afirmada sem demonstração"
+  },
+  {
+    id: "di-pietro",
+    referencia: "Maria Sylvia Zanella Di Pietro",
+    especialidade: "Administrativo",
+    escola: "didatica",
+    areas: ["publico"],
+    pecas: /licita|contrato administrativo|servidor|improbidade|concess|ato administrativo|concurso/i,
+    metodo: "Examina o ato pela competência, forma, motivo, objeto e finalidade, confronta-o com a legalidade e os demais princípios do artigo 37 da Constituição e conclui pelo controle cabível, em linguagem direta e ordenada.",
+    forcas: "ordem didática, exame do ato por elementos, apoio seguro na lei e na Constituição",
+    evitar: "tom de manual, enumeração de princípios sem aplicá-los ao caso, citação longa de doutrina"
+  }
+];
+function escolherRedator(opcoes) {
+  const area = chaveArea(opcoes.area);
+  const titulo = String(opcoes.titulo ?? "");
+  const recentes = opcoes.anteriores ?? [];
+  const r = gerador(opcoes.semente ?? 1);
+  const pontuados = BANCA.map((b) => {
+    const posicao = b.areas.indexOf(area);
+    const pontos = (posicao === 0 ? 4 : posicao > 0 ? 2.5 : 0) + (b.titular === area ? 1.5 : 0) + (b.pecas.test(titulo) ? 3 : 0) - (recentes[0] === b.id ? 2.5 : recentes.slice(1, 3).includes(b.id) ? 1 : 0) + r() * 0.5;
+    return { b, pontos };
+  });
+  return pontuados.sort((x, y) => y.pontos - x.pontos)[0].b;
+}
+function instrucoesDoRedator(b) {
+  return `REDATOR DESTA PEÇA (banca de redatores do escritório): tradição de escrita de ${b.referencia} (${b.especialidade}).
+Método: ${b.metodo}
+Mantenha as forças dessa tradição: ${b.forcas}.
+É proibido reproduzir as fraquezas dela: ${b.evitar}.
+Siga o método e o padrão de qualidade dessa tradição. Não copie trechos de obra nenhuma, não cite ${b.referencia} como autor do texto e não lhe atribua frases; se citar obra dele como doutrina, só com certeza, senão "[doutrina a conferir]".`;
+}
+var NARRATIVA = [
+  { nome: "Tema do caso", regra: "uma frase, logo no começo, que diga do que o caso trata e por que o cliente tem razão; tudo o mais serve a ela" },
+  { nome: "Abertura pelo que está em jogo", regra: "antes da lei, dizer quem é o cliente e o que ele pode perder ou ganhar com a decisão" },
+  { nome: "Pessoa, não rótulo", regra: 'chamar o cliente pelo nome ou pelo papel na vida (a locadora, o pai, a empresa), sem repetir "o autor" a cada linha' },
+  { nome: "Ordem do tempo", regra: "contar na ordem em que aconteceu, com data em cada passo decisivo" },
+  { nome: "Fato concreto no lugar do adjetivo", regra: 'valor, data, documento e conduta; nada de "absurdo", "flagrante" ou "inaceitável"' },
+  { nome: "Conflito claro", regra: "mostrar o que o cliente buscava, o que a outra parte fez e o dano que resultou" },
+  { nome: "Fato desfavorável enfrentado", regra: "tratar de frente o ponto fraco e explicar por que não muda o resultado, em vez de escondê-lo" },
+  { nome: "Cada fato com sua prova", regra: "todo fato relevante aponta o documento ou a folha dos autos; se faltar, vai entre colchetes" },
+  { nome: "Ponte para o direito", regra: "cada fato narrado reaparece na fundamentação; fato que não sustenta pedido sai do texto" },
+  { nome: "Fecho pela consequência", regra: "terminar mostrando ao julgador o efeito prático de acolher ou negar o pedido" }
+];
+function instrucoesDeNarrativa() {
+  return `NARRATIVA DOS FATOS (dez técnicas; aplique todas na medida do tipo da peça):
+${NARRATIVA.map((n, i) => `${i + 1}. ${n.nome}: ${n.regra}.`).join("\n")}
+A narrativa nunca cria fato: usa só o que está na publicação e nos dados do caso; o que faltar vai entre colchetes.`;
+}
+var MARCAS_DO_JULGADOR = {
+  leve: /!|\bora,|convenhamos|pasme|francamente|diga-se de passagem|como diria|curios[oa]mente|salta aos olhos|com o perdao d|poeta|\bverso\b/g,
+  humanista: /dignidade|sofrimento|vulnerab|sensib|humanidade|afeto|melhor interesse|hipossufici|drama|angustia/g,
+  tecnico: /\bart\.|§|sumula|tema \d|precedente|repetitiv|enunciado|\bresp\b|informativo/g,
+  rigoroso: /preclus|intempestiv|nao conheco|inepcia|sob pena de|deserc|indefiro|litigancia de ma-fe|advirto/g
+};
+function tomDoJulgador(textos) {
+  const bruto = textos.join("\n");
+  const t = bruto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const palavras = t.split(/\s+/).filter(Boolean).length;
+  const frases = Math.max(1, t.split(/[.;!?]+\s/).filter((f) => f.trim().split(/\s+/).length > 2).length);
+  const media = palavras / frases;
+  const suficiente = palavras >= 150;
+  const porMil = (re) => (t.match(re) ?? []).length * 1e3 / Math.max(1, palavras);
+  const limites = { leve: 4, humanista: 4, tecnico: 12, rigoroso: 5 };
+  const tracos = suficiente ? Object.keys(MARCAS_DO_JULGADOR).filter((k) => porMil(MARCAS_DO_JULGADOR[k]) >= limites[k]) : [];
+  return { amostra: palavras, suficiente, extensao: media < 20 ? "conciso" : media > 34 ? "extenso" : "medio", tracos };
+}
+function instrucoesDoJulgador(tom, orgao) {
+  const quem = orgao ? ` (${orgao})` : "";
+  const base = `TOM AJUSTADO AO JULGADOR${quem}: a peça é escrita para quem vai decidir.`;
+  const respeito = "Em qualquer caso: respeito ao julgador e à parte contrária; nunca piada, nunca ironia contra pessoa alguma, nunca imitar ou comentar o estilo do julgador.";
+  if (!tom.suficiente) return `${base} Há pouco texto do julgador nos autos para conhecer o estilo dele: use tom sóbrio, direto e respeitoso, sem humor. ${respeito}`;
+  const linhas = [
+    tom.extensao === "conciso" ? "O julgador escreve curto: vá direto ao ponto, parágrafos breves, pedido logo visível, sem repetição." : tom.extensao === "extenso" ? "O julgador fundamenta com fôlego: desenvolva o raciocínio por inteiro, sem pular etapas." : "O julgador escreve em extensão média: equilíbrio entre síntese e fundamentação.",
+    tom.tracos.includes("tecnico") ? 'Ele decide com artigo, súmula e precedente: ancore cada tese na norma e no precedente aplicável (marcado "[conferir no tribunal]").' : "",
+    tom.tracos.includes("humanista") ? "Ele dá peso ao lado humano do caso: deixe a narrativa mostrar as pessoas e a consequência concreta da decisão." : "",
+    tom.tracos.includes("rigoroso") ? "Ele é rigoroso com forma e prazo: demonstre tempestividade, cabimento e cumprimento de cada requisito logo no início." : "",
+    tom.tracos.includes("leve") ? "Ele escreve com leveza: cabe, no máximo uma vez, uma imagem bem escolhida ou frase de espírito elegante, se servir ao argumento." : "Ele escreve em tom sério: nenhuma leveza, nenhuma figura de efeito."
+  ].filter(Boolean);
+  return `${base} Leitura feita sobre ${tom.amostra} palavras de decisões e despachos dele neste processo.
+${linhas.map((l) => `- ${l}`).join("\n")}
+${respeito}`;
+}
 function sortearPerfil(opcoes) {
   const r = gerador(opcoes.semente);
   const anteriores = (opcoes.anteriores ?? []).map((a) => "parametros" in a ? a.parametros : a);
-  const preferidas = AFINIDADE[opcoes.especialidade ?? ""] ?? [];
+  const preferidas = opcoes.escolas?.length ? opcoes.escolas : AFINIDADE[chaveArea(opcoes.especialidade)] ?? [];
   let melhor = null;
   for (let t = 1; t <= 24; t++) {
     const quantas = r() < 0.6 ? 2 : 3;
     const pool = [...ESCOLAS];
     const escolhidas = [];
     while (escolhidas.length < quantas) {
-      const pesos2 = pool.map((e) => preferidas.includes(e.id) ? 3 : 1);
+      const pesos2 = pool.map((e) => preferidas.includes(e.id) ? opcoes.escolas?.length ? 8 : 3 : 1);
       let alvo = r() * pesos2.reduce((s, p) => s + p, 0);
       let i = 0;
       while (alvo > pesos2[i] && i < pool.length - 1) {
@@ -853,69 +1184,128 @@ ul.pedidos li { text-align: justify; margin-bottom: 4pt; }
 ${corpo}
 </body></html>`;
 }
+var SO_TRACOS = /^\s*(?:[-–—_*=]\s*){3,}$/;
+var INICIO_ENDERECAMENTO = /^\**\s*(EXCELENT|EXMO|EXMA|EGR[ÉE]GI|COLEND|AO\s+JU[ÍI]Z|À\s|AO\s|ILUSTR[ÍI]SSIM|MERIT[ÍI]SSIM|DOUTO|SENHOR)/i;
+var INICIO_ANEXO = /^\s*(?:#+\s*)?\**\s*PONTOS\s+A\s+CONFERIR/i;
+var INICIO_FECHO = /^\s*(nest[ea]s\s+termos|termos\s+em\s+que|pede\s+(e\s+espera\s+)?deferimento|p\.\s*deferimento|pede-se\s+deferimento)/i;
+var DATA_DO_FECHO = /(\d{1,2}|\[[^\]]*\])\s+de\s+[a-zç\[\]]+\s+de\s+(\d{4}|\[[^\]]*\])/i;
+var ESPACO_DESPACHO = /^\s*[([]\s*espa[çc]o\s+para\s+despacho\s*[)\]]\s*$/i;
+var ITEM = /^\s*(?:([-*•])|([a-z]\)|\d+[.)]))\s+/;
+function separarPeca(texto) {
+  const linhas = texto.replace(/\r/g, "").split("\n").filter((l) => !SO_TRACOS.test(l));
+  const iAnexo = linhas.findIndex((l) => INICIO_ANEXO.test(l));
+  let corpo = iAnexo >= 0 ? linhas.slice(0, iAnexo) : linhas;
+  const anexo = iAnexo >= 0 ? linhas.slice(iAnexo + 1) : [];
+  const iEnd = corpo.findIndex((l) => INICIO_ENDERECAMENTO.test(l.trim()));
+  const avisos = iEnd > 0 && corpo.slice(0, iEnd).some((l) => l.trim()) && iEnd <= 12 ? corpo.slice(0, iEnd) : [];
+  if (avisos.length) corpo = corpo.slice(iEnd);
+  return { corpo: corpo.join("\n").trim(), conferir: [...avisos, ...avisos.length && anexo.length ? [""] : [], ...anexo].join("\n").trim() };
+}
 function pecaComModelo(texto, titulo, propria, md) {
   const f = { ...FORMATACAO, ...md.base, ...propria ? formatacaoFinal({ ...md.base, ...propria }) : {} };
-  let nTitulo = 0, nPar = 0, depoisDoPrimeiroTitulo = false;
+  const { corpo: textoDaPeca, conferir } = separarPeca(texto);
+  let nTitulo = 0, nPar = 0, depoisDoPrimeiroTitulo = false, houveParagrafo = false, noFecho = false, assinaturas = 0;
   const tituloHtml = (bruto) => {
     const sem = bruto.replace(/^#+\s*/, "").replace(/\*\*/g, "").trim();
     const limpo = semNumero(sem);
     const secao = limpo !== sem || /^(D[OA]S?\s|PRELIMINAR|M[ÉE]RITO|S[ÍI]NTESE|CONCLUS|PEDIDO|REQUERIMENTO|TEMPESTIVIDADE|CABIMENTO|RESUMO|BREVE|RAZ[ÕO]ES|FUNDAMENT|INTRODU)/.test(limpo);
-    if (!secao) return `<p class="cx"><b>${negrito(limpo)}</b></p>`;
+    if (!secao) return houveParagrafo ? `<p class="nome"><b>${negrito(limpo)}</b></p>` : `<p class="cx"><b>${negrito(limpo)}</b></p>`;
     nTitulo++;
     depoisDoPrimeiroTitulo = true;
     const prefixo = md.numeracaoTitulos === "romano" ? `${ROMANOS[nTitulo - 1] ?? nTitulo} – ` : md.numeracaoTitulos === "arabico" ? `${nTitulo}. ` : "";
     return `<h2>${negrito(prefixo + limpo)}</h2>`;
   };
-  const paragrafo = (l) => {
+  const item = (l) => {
+    const m2 = l.match(ITEM);
+    const marca = m2[1] ? "–" : m2[2];
+    return `<p class="item"><span class="marca">${esc(marca)}</span> ${negrito(l.replace(ITEM, ""))}</p>`;
+  };
+  const linhaHtml = (l) => {
+    if (ESPACO_DESPACHO.test(l)) return '<p class="despacho">&nbsp;</p>';
+    if (noFecho) {
+      if (DATA_DO_FECHO.test(l)) return `<p class="data">${negrito(l)}</p>`;
+      assinaturas++;
+      return `<p class="${assinaturas === 1 ? "ass primeira" : "ass"}">${negrito(l.replace(/\*\*/g, ""))}</p>`;
+    }
+    if (INICIO_FECHO.test(l)) {
+      noFecho = true;
+      return `<p class="fecho">${negrito(l)}</p>`;
+    }
+    if (ehTitulo(l)) return tituloHtml(l);
+    if (ITEM.test(l)) return item(l);
+    if (!houveParagrafo && !depoisDoPrimeiroTitulo && l.length < 110 && !/,\s*$/.test(l)) return `<p class="ref">${negrito(l)}</p>`;
+    houveParagrafo = true;
     if (md.paragrafosNumerados && depoisDoPrimeiroTitulo) {
       nPar++;
       return `<p class="num"><span class="n">${nPar}.</span> ${negrito(l)}</p>`;
     }
     return `<p>${negrito(l)}</p>`;
   };
-  const blocos = texto.replace(/\r/g, "").split(/\n\s*\n/).map((b) => b.trim()).filter(Boolean);
+  const blocos = textoDaPeca.split(/\n\s*\n/).map((b) => b.trim()).filter(Boolean);
   const corpo = blocos.map((b) => {
-    const linhas = b.split("\n");
-    if (linhas.length === 1 && ehTitulo(b)) return tituloHtml(b);
-    if (linhas.every((l) => /^\s*>/.test(l))) return `<blockquote>${negrito(linhas.map((l) => l.replace(/^\s*>\s?/, "")).join(" "))}</blockquote>`;
-    if (linhas.every((l) => /^\s*([-*•]|[a-z]\)|\d+[.)])\s+/.test(l))) return `<ul class="pedidos">${linhas.map((l) => `<li>${negrito(l.replace(/^\s*[-*•]\s+/, ""))}</li>`).join("")}</ul>`;
-    return linhas.map((l) => ehTitulo(l) ? tituloHtml(l) : paragrafo(l)).join("");
+    const linhas = b.split("\n").filter((l) => l.trim());
+    if (linhas.length && linhas.every((l) => /^\s*>/.test(l))) return `<blockquote>${negrito(linhas.map((l) => l.replace(/^\s*>\s?/, "")).join(" "))}</blockquote>`;
+    return linhas.map(linhaHtml).join("");
   }).join("\n");
+  const folha = conferir ? `
+<br clear="all" style="page-break-before:always; mso-break-type:section-break">
+<div class="conferir"><p class="conferir-titulo"><b>PONTOS A CONFERIR ANTES DE PROTOCOLAR</b></p>
+<p class="conferir-aviso">Esta folha é só para o advogado responsável. Não faz parte da peça: apague antes de protocolar.</p>
+${conferir.split("\n").filter((l) => l.trim()).map((l) => `<p class="conferir-item">${negrito(l)}</p>`).join("\n")}</div>` : "";
   const m = f.margens;
   return `<!doctype html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${esc(titulo)}</title>
 <meta name="formatacao" content="${esc(md.id)}">
 <style>
 @page { size: 21cm 29.7cm; margin: ${m.superior}cm ${m.direita}cm ${m.inferior}cm ${m.esquerda}cm; }
 body { font-family: '${esc(f.fonte)}', ${f.fonteAlternativa}, serif; font-size: ${f.corpo}pt; line-height: ${f.entrelinhas}; color: #000; }
-p { text-align: justify; text-indent: ${f.recuoPrimeiraLinha}cm; margin: 0 0 ${md.espacoDepois}pt 0; }
-p.num, p.cx { text-indent: 0; }
+p { text-align: justify; text-indent: ${f.recuoPrimeiraLinha}cm; margin: 0 0 ${md.espacoDepois}pt 0; orphans: 2; widows: 2; }
+p.num, p.cx, p.ref, p.nome, p.data, p.ass, p.despacho, p.item, .conferir p { text-indent: 0; }
+p.cx { text-align: left; margin-bottom: 0; }
+p.despacho { margin: 0; height: 3cm; line-height: 3cm; }
+p.ref { text-align: left; margin-bottom: 0; }
+p.nome { text-align: center; margin: 14pt 0; letter-spacing: 0.06em; }
 p.num .n { font-weight: bold; display: inline-block; min-width: 1cm; }
-h2 { font-size: ${f.corpo}pt; font-weight: bold; text-transform: uppercase; text-align: ${md.tituloAlinhado}; margin: 18pt 0 ${md.espacoDepois}pt 0;${md.tituloVersalete ? " font-variant: small-caps; letter-spacing: 0.04em;" : ""} }
+p.item { margin-left: ${(f.recuoPrimeiraLinha || 1.25) + 0.75}cm; text-indent: -0.75cm; }
+p.item .marca { display: inline-block; min-width: 0.75cm; text-indent: 0; }
+p.fecho { margin-top: 12pt; }
+p.data { text-align: right; margin: 12pt 0 0 0; }
+p.ass { text-align: center; margin: 0; font-weight: normal; }
+p.ass.primeira { margin-top: 42pt; font-weight: bold; }
+h2 { font-size: ${f.corpo}pt; font-weight: bold; text-transform: uppercase; text-align: ${md.tituloAlinhado}; margin: 18pt 0 ${md.espacoDepois}pt 0; page-break-after: avoid;${md.tituloVersalete ? " font-variant: small-caps; letter-spacing: 0.04em;" : ""} }
 blockquote { margin: 6pt 0 ${md.espacoDepois}pt ${f.recuoCitacao}cm; font-size: ${f.citacaoLonga}pt; line-height: 1; text-align: justify; }
-ul.pedidos { list-style: none; margin: 0 0 ${md.espacoDepois}pt ${f.recuoPrimeiraLinha || 1}cm; padding: 0; }
-ul.pedidos li { text-align: justify; margin-bottom: 4pt; }
+.conferir { font-family: Arial, Helvetica, sans-serif; font-size: 10.5pt; line-height: 1.3; }
+.conferir p { text-align: left; margin: 0 0 6pt 0; }
+p.conferir-titulo { font-size: 12pt; margin-bottom: 2pt; }
+p.conferir-aviso { font-style: italic; border-bottom: 1px solid #000; padding-bottom: 6pt; margin-bottom: 10pt; }
 </style></head><body>
-${corpo}
+${corpo}${folha}
 </body></html>`;
 }
 export {
   ATOS_POR_CODIGO,
+  BANCA,
   CODIGOS,
   FORMATOS,
+  NARRATIVA,
   ROTULO_URGENCIA,
   aderencia,
   amostrasDoAutor,
   audienciaNoTexto,
   br,
   calcularPrazoPorCodigo,
+  chaveArea,
   codigoDoProcesso,
   csvDosPrazos,
   dataDaPublicacao,
   diasEntre,
+  escolherRedator,
   formatacaoFinal,
   hash32,
+  instrucoesDeNarrativa,
   instrucoesDeRedacao,
+  instrucoesDoJulgador,
   instrucoesDoPerfil,
+  instrucoesDoRedator,
   lerIntimacao,
   lerTodas,
   linhaDoPrazo,
@@ -927,5 +1317,6 @@ export {
   somarDias,
   sortearFormato,
   sortearPerfil,
+  tomDoJulgador,
   urgenciaPara
 };

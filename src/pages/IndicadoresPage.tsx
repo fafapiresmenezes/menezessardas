@@ -8,6 +8,7 @@ import { useImoveis } from '@/hooks/useImoveis'
 import { useAlertas } from '@/hooks/useAlertas'
 import { repositorio, type Contrato } from '@/lib/repositorio'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
+import { lerConfig, gravarConfig } from '@/lib/config'
 import {
   calcularKPIs,
   calcularOKRs,
@@ -23,6 +24,7 @@ import { Printer, Building2, Percent, FileCheck2, CalendarClock, TrendingUp, Ale
 import { selarDigest } from '@/lib/exportarTrilha'
 import { baixarArquivo } from '@/lib/ancoragem'
 import { lerNumero } from '@/lib/numero'
+import Vazio from '@/components/Vazio'
 
 // Passo 23: ciclo trimestral de OKR (lembrete 15 dias antes do fim do trimestre, revisão e ata com selo).
 const trimestreDe = (d: Date) => `${d.getFullYear()}-T${Math.floor(d.getMonth() / 3) + 1}`
@@ -187,13 +189,13 @@ export default function IndicadoresPage() {
   const [msgMetas, setMsgMetas] = useState('')
   useEffect(() => {
     if (!supabaseConfigurado) return
-    supabase.from('configuracoes').select('valor').eq('chave', 'metas_okr').maybeSingle().then(r => { try { setMetas(r.data ? JSON.parse(r.data.valor) : null) } catch { setMetas(null) } })
+    lerConfig(['metas_okr']).then(c => { try { setMetas(c.metas_okr ? JSON.parse(c.metas_okr) : null) } catch { setMetas(null) } }).catch(() => setMetas(null))
   }, [])
   const salvarMetas = async () => {
     const novas: MetasOKR = { ...(metas ?? {}) }
     for (const [k, v] of Object.entries(rascunhoMetas)) { const n = lerNumero(v); if (v.trim() !== '' && Number.isFinite(n) && n >= 0) novas[k] = n }
-    const { error } = await supabase.from('configuracoes').upsert({ chave: 'metas_okr', valor: JSON.stringify(novas) }, { onConflict: 'chave' })
-    if (error) { setMsgMetas(mensagemAmigavel(error, 'Não deu para salvar as metas.')); return }
+    try { await gravarConfig({ metas_okr: JSON.stringify(novas) }) }
+    catch (e) { setMsgMetas(mensagemAmigavel(e, 'Não deu para salvar as metas.')); return }
     setMetas(novas); setEditandoMetas(false); setRascunhoMetas({}); setMsgMetas('Metas salvas. Valem para toda a equipe e entram na próxima ata do trimestre.')
   }
 
@@ -232,12 +234,13 @@ export default function IndicadoresPage() {
         <div className="flex justify-end -mb-2 print:hidden">
           {/* Passo 111: indicadores em texto, para a reunião de OKR ou o e-mail da sócia. */}
           {/* Passo 177: imprimir os indicadores. */}
-          <button type="button" data-testid="imprimir-indicadores" onClick={() => window.print()} className="mr-3 underline text-navy text-sm print:hidden">imprimir</button>
-          <button type="button" data-testid="copiar-link-indicadores" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mr-3 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 245 */}
-          <button type="button" data-testid="baixar-indicadores" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['objetivo;resultado-chave;atual;meta;unidade', ...okrs.flatMap(o => o.keyResults.map(k => `${o.titulo};${k.descricao};${k.atual};${k.meta};${k.unidade}`))].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'okrs.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>{/* Passo 307 */}
-          <button type="button" data-testid="copiar-indicadores" onClick={() => navigator.clipboard?.writeText(`Indicadores · ${new Date().toLocaleDateString('pt-BR')}\n` + tiles.map(t => `${t.rotulo}: ${t.valor} — ${t.explica}`).join('\n')).then(() => setIndCopiado(true)).catch(() => undefined)} className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm mr-2">{indCopiado ? 'Indicadores copiados' : 'Copiar indicadores'}</button>
+          <button type="button" title="Abre a janela de impressão do navegador para imprimir esta página de indicadores" data-testid="imprimir-indicadores" onClick={() => window.print()} className="mr-3 underline text-navy text-sm print:hidden">imprimir</button>
+          <button type="button" title="Copia o endereço desta página de indicadores para compartilhar com a equipe" data-testid="copiar-link-indicadores" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mr-3 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 245 */}
+          <button type="button" title="Baixa a planilha com os objetivos e metas do trimestre (OKRs): objetivo, resultado-chave, valor atual e meta" data-testid="baixar-indicadores" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['objetivo;resultado-chave;atual;meta;unidade', ...okrs.flatMap(o => o.keyResults.map(k => `${o.titulo};${k.descricao};${k.atual};${k.meta};${k.unidade}`))].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'okrs.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>{/* Passo 307 */}
+          <button type="button" title="Copia os indicadores-chave em texto para colar na reunião de metas (OKR) ou no e-mail da sócia" data-testid="copiar-indicadores" onClick={() => navigator.clipboard?.writeText(`Indicadores · ${new Date().toLocaleDateString('pt-BR')}\n` + tiles.map(t => `${t.rotulo}: ${t.valor} — ${t.explica}`).join('\n')).then(() => setIndCopiado(true)).catch(() => undefined)} className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 rounded-sm text-sm mr-2">{indCopiado ? 'Indicadores copiados' : 'Copiar indicadores'}</button>
           <button
             onClick={() => window.print()}
+            title="Abre a janela de impressão do navegador; escolha 'Salvar como PDF' para gerar o PDF dos indicadores"
             className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 rounded-sm text-sm"
           >
             <Printer size={16} aria-hidden="true" /> Exportar PDF
@@ -247,7 +250,7 @@ export default function IndicadoresPage() {
         <section aria-label="Indicadores-chave">
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
             {tiles.map(t => (
-              <a key={t.rotulo} href={`#${t.para}`} className="block bg-white border-t-2 border-dourado p-5 shadow-sm hover:shadow-md transition" aria-label={`${t.rotulo}: ${t.valor}. ${t.explica} Abrir tela relacionada.`} data-testid="kpi-tile">
+              <a key={t.rotulo} href={`#${t.para}`} title={`${t.explica} Clique para abrir a tela relacionada a este indicador.`} className="block bg-white border-t-2 border-dourado p-5 shadow-sm hover:shadow-md transition" aria-label={`${t.rotulo}: ${t.valor}. ${t.explica} Abrir tela relacionada.`} data-testid="kpi-tile">
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-xs uppercase tracking-wider text-grafite-claro">{t.rotulo}</p>
@@ -268,23 +271,23 @@ export default function IndicadoresPage() {
 
         {supabaseConfigurado && (
           <section className="bg-white p-6 shadow-sm" aria-labelledby="t-ciclo-okr" data-testid="ciclo-okr">
-            <h2 id="t-ciclo-okr" className="text-xl mb-1 flex items-center gap-2"><CalendarCheck className="w-5 h-5 text-dourado" aria-hidden />Ciclo trimestral de OKR</h2>
+            <h2 id="t-ciclo-okr" className="text-xl mb-1 flex items-center gap-2"><CalendarCheck className="w-5 h-5 text-dourado" aria-hidden />Ciclo trimestral de metas (OKR)</h2>
             <p className="text-sm text-grafite-claro">Trimestre <strong data-testid="okr-trimestre">{trimestre}</strong> termina em {fimTri.toLocaleDateString('pt-BR')} ({diasParaFim} dias). O lembrete de revisão chega por e-mail e vira tarefa em {dataLembrete.toLocaleDateString('pt-BR')} (15 dias antes). A ata gravada recebe SHA-256 e selo OpenTimestamps.</p>
             <label className="block mt-3 text-sm">Ata da revisão do trimestre (o que foi atingido, o que ficou, metas do próximo)
-              <textarea value={ata} onChange={e => setAta(e.target.value)} rows={4} className="border w-full px-3 py-2 mt-1" data-testid="okr-ata" placeholder="Ex.: Carteira regular ficou em 92% (meta 90%). Documentação em dia 88% (meta 95%): cobrar laudos de incêndio em outubro…" />
+              <textarea title="O que ficou combinado na revisão do trimestre. Fica guardado e aparece na revisão seguinte, para comparar." value={ata} onChange={e => setAta(e.target.value)} rows={4} className="border w-full px-3 py-2 mt-1" data-testid="okr-ata" placeholder="Ex.: Carteira regular ficou em 92% (meta 90%). Documentação em dia 88% (meta 95%): cobrar laudos de incêndio em outubro…" />
             </label>
             <div className="flex flex-wrap items-center gap-3 mt-2">
-              <button type="button" onClick={gravarAta} disabled={gravandoAta} className="min-h-[44px] px-4 bg-navy text-white text-sm disabled:opacity-60" data-testid="okr-gravar">{gravandoAta ? 'Gravando…' : 'Gravar ata com selo'}</button>
+              <button type="button" onClick={gravarAta} disabled={gravandoAta} className="min-h-[44px] px-4 bg-navy text-white text-sm disabled:opacity-60" title="Grava a ata da revisão do trimestre com o código que prova que ela não foi alterada (SHA-256) e o selo que prova a data (OpenTimestamps)" data-testid="okr-gravar">{gravandoAta ? 'Gravando…' : 'Gravar ata com selo'}</button>
               {msgAta && <span className="text-sm" aria-live="polite" data-testid="okr-msg">{msgAta}</span>}
             </div>
             {/* Passo 143: revisões de OKR copiáveis (trimestre, data, hash) para a ata da reunião. */}
-            {!!revisoes.length && <button type="button" onClick={() => navigator.clipboard?.writeText(['Revisões de OKR — THEYE Institute', ...revisoes.map(r => `${r.trimestre} · ${new Date(r.criado_em).toLocaleString('pt-BR')} · SHA-256 ${r.sha256}${r.ots_b64 ? ' · OTS' : ''}`)].join('\n')).catch(() => undefined)} data-testid="copiar-revisoes" className="mt-3 underline text-navy text-sm">copiar revisões</button>}
+            {!!revisoes.length && <button type="button" onClick={() => navigator.clipboard?.writeText(['Revisões de OKR — THEYE Institute', ...revisoes.map(r => `${r.trimestre} · ${new Date(r.criado_em).toLocaleString('pt-BR')} · SHA-256 ${r.sha256}${r.ots_b64 ? ' · OTS' : ''}`)].join('\n')).catch(() => undefined)} title="Copia a lista de revisões de metas em texto para a ata da reunião: trimestre, data e código de conferência" data-testid="copiar-revisoes" className="mt-3 underline text-navy text-sm">copiar revisões</button>}
             {!!revisoes.length && (
               <ul className="mt-4 divide-y text-sm" data-testid="okr-revisoes">
                 {revisoes.map(r => (
                   <li key={r.id} className="py-2" data-testid="okr-revisao">
                     <p><strong>{r.trimestre}</strong> · {new Date(r.criado_em).toLocaleString('pt-BR')} · <span className="font-mono text-xs">{r.sha256.slice(0, 20)}…</span>
-                      {r.ots_b64 && <>{' · '}<button type="button" className="underline" onClick={() => baixarArquivo(`ata-okr-${r.trimestre}.ots`, Uint8Array.from(atob(r.ots_b64!), c => c.charCodeAt(0)) as BlobPart)}>prova .ots</button></>}
+                      {r.ots_b64 && <>{' · '}<button type="button" title="Baixa o arquivo que prova em que data esta ata existia, pelo selo de tempo (OpenTimestamps, arquivo .ots)" className="underline" onClick={() => baixarArquivo(`ata-okr-${r.trimestre}.ots`, Uint8Array.from(atob(r.ots_b64!), c => c.charCodeAt(0)) as BlobPart)}>prova de data (.ots)</button></>}
                     </p>
                     <p className="text-grafite-claro whitespace-pre-wrap">{r.ata.slice(0, 400)}{r.ata.length > 400 ? '…' : ''}</p>
                   </li>
@@ -299,7 +302,7 @@ export default function IndicadoresPage() {
             <h2 id="t-aderencia" className="text-xl mb-1 flex items-center gap-2"><ListChecks className="w-5 h-5 text-dourado" aria-hidden />Aderência às ações dos Consultores da semana</h2>
             <p className="text-sm text-grafite-claro mb-4">Percentual das ações do último diagnóstico de cada nível marcadas como feitas em Meu dia.</p>
             {aderencia.length === 0 ? (
-              <p className="text-sm text-grafite-claro" data-testid="aderencia-vazia">Nenhum diagnóstico semanal ainda. Eles chegam toda segunda-feira, ou peça um em Consultores.</p>
+              <Vazio testid="aderencia-vazia" titulo="Nenhum diagnóstico semanal ainda" texto="Os diagnósticos chegam toda segunda-feira. Para não esperar, peça um agora ao consultor do seu nível." acao={{ rotulo: 'Pedir um diagnóstico', para: '/consultores', dica: 'Abre os Consultores do escritório para pedir o diagnóstico da semana' }} />
             ) : (
               <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {aderencia.map(a => (
@@ -387,7 +390,7 @@ export default function IndicadoresPage() {
               <div>
                 <p className="text-sm font-medium mb-2">Próximos passos</p>
                 <ul className="text-sm space-y-1">
-                  {resumoDiario.proximosPassos.map((p, i) => (
+                  {(resumoDiario.proximosPassos ?? []).map((p, i) => (
                     <li key={i} className="flex gap-2">
                       <span className="text-dourado">•</span>
                       <span>{p}</span>
@@ -404,12 +407,12 @@ export default function IndicadoresPage() {
 
         <section className="bg-white p-6 shadow-sm" aria-labelledby="t-okr">
           <h2 id="t-okr" className="text-xl mb-5">
-            OKRs do trimestre
+            Metas do trimestre (OKR)
           </h2>
           <div className="mb-3 flex flex-wrap items-center gap-3 text-sm print:hidden">
             {!editandoMetas
-              ? <button type="button" data-testid="editar-metas" onClick={() => { setEditandoMetas(true); setMsgMetas('') }} className="underline text-navy">Editar metas</button>
-              : <><button type="button" data-testid="salvar-metas" onClick={salvarMetas} className="min-h-[44px] px-4 bg-navy text-white">Salvar metas</button><button type="button" onClick={() => { setEditandoMetas(false); setRascunhoMetas({}) }} className="underline text-navy">Cancelar</button></>}
+              ? <button type="button" title="Abre a edição dos objetivos e metas do trimestre (OKRs); os novos valores valem para toda a equipe" data-testid="editar-metas" onClick={() => { setEditandoMetas(true); setMsgMetas('') }} className="underline text-navy">Editar metas</button>
+              : <><button type="button" data-testid="salvar-metas" onClick={salvarMetas} title="Grava as novas metas do trimestre (OKRs) para toda a equipe; elas entram na próxima ata" className="min-h-[44px] px-4 bg-navy text-white">Salvar metas</button><button type="button" onClick={() => { setEditandoMetas(false); setRascunhoMetas({}) }} title="Fecha a edição das metas sem salvar as alterações" className="underline text-navy">Cancelar</button></>}
             {msgMetas && <span role="status" className="text-grafite-claro">{msgMetas}</span>}
           </div>
           <div className="space-y-6">

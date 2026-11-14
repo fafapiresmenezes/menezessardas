@@ -10,7 +10,7 @@ const { minhaMarca, marcaPorDominio, ehDominioProprio, corValida, logoValida, es
 describe('white-label (D22)', () => {
   beforeEach(() => { rpc.mockClear(); mem.clear(); resposta = null })
   it('validações: cor #RRGGBB, logo https, domínio próprio fora da plataforma', () => {
-    expect(corValida('#AA0000')).toBe('#AA0000'); expect(corValida('red')).toBe('#14213D'); expect(corValida(null)).toBe('#14213D')
+    expect(corValida('#AA0000')).toBe('#AA0000'); expect(corValida('#14213D')).toBe('#0B0B0C'); expect(corValida('red')).toBe('#0B0B0C'); expect(corValida(null)).toBe('#0B0B0C')
     expect(logoValida('https://x/l.png')).toBe('https://x/l.png'); expect(logoValida('http://x/l.png')).toBeNull()
     expect(ehDominioProprio('gmenezes-advogados.vercel.app')).toBe(false)
     expect(ehDominioProprio('fafapiresmenezes.github.io')).toBe(false)
@@ -18,13 +18,13 @@ describe('white-label (D22)', () => {
     expect(ehDominioProprio('app.alfaadvocacia.com.br')).toBe(true)
   })
   it('sede: sem marca própria; parceiro: nome, cor e logo válidos, guardados na sessão', async () => {
-    resposta = { nome: 'GMenezes', cor: '#14213D', logo_url: null, sede: true }
+    resposta = { nome: 'GMenezes', cor: '#0B0B0C', logo_url: null, sede: true }
     expect(await minhaMarca()).toBeNull()
     expect(mem.get('gm-marca-v1')).toBe('')
     expect(await minhaMarca()).toBeNull(); expect(rpc).toHaveBeenCalledTimes(1)
     esquecerMarca()
     resposta = { nome: 'Alfa Advocacia', cor: 'zzz', logo_url: 'ftp://x', sede: false }
-    expect(await minhaMarca()).toEqual({ nome: 'Alfa Advocacia', cor: '#14213D', logo_url: null, sede: false })
+    expect(await minhaMarca()).toEqual({ nome: 'Alfa Advocacia', cor: '#0B0B0C', logo_url: null, sede: false })
     expect(JSON.parse(mem.get('gm-marca-v1')!).nome).toBe('Alfa Advocacia')
   })
   it('marca por domínio: só em domínio próprio, sem www, nula quando não há parceiro', async () => {

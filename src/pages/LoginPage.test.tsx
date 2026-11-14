@@ -23,6 +23,8 @@ const { default: LoginPage } = await import('./LoginPage')
 function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathname}</p> }
 const montar = () => render(<MemoryRouter initialEntries={['/login']}><Routes><Route path="/login" element={<LoginPage />} /><Route path="*" element={<Onde />} /></Routes></MemoryRouter>)
 const preencher = (email: string, senha: string) => { fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: email } }); fireEvent.change(screen.getByLabelText('Senha'), { target: { value: senha } }) }
+// No cadastro há também o campo do escritório (pedido de M, 12/11/2026), sempre em maiúsculas.
+const preencherEscritorio = (nome = 'sardas e menezes') => fireEvent.change(screen.getByTestId('campo-escritorio'), { target: { value: nome } })
 
 describe('Tela de login', () => {
   beforeEach(() => { cleanup(); configurado = true; nivel = { nextLevel: 'aal1', currentLevel: 'aal1' }; signInWithPassword.mockClear(); signUp.mockClear(); challengeAndVerify.mockClear() })
@@ -62,8 +64,10 @@ describe('Tela de login', () => {
     vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date('2026-11-02T10:00:00Z'))
     montar()
     fireEvent.click(screen.getByText('Criar conta'))
-    expect(screen.getByText(/Crie sua conta com e-mail e senha/)).toBeTruthy()
+    expect(screen.getByText(/Crie sua conta com e-mail, senha e o nome do seu escritório/)).toBeTruthy()
     preencher('novo@gmenezes.com', 'senhaforte1')
+    preencherEscritorio()
+    expect((screen.getByTestId('campo-escritorio') as HTMLInputElement).value).toBe('SARDAS E MENEZES')
     fireEvent.click(screen.getByText('Criar acesso'))
     expect((await screen.findByRole('alert')).textContent).toContain('Tente novamente em alguns segundos')
     vi.setSystemTime(new Date('2026-11-02T10:00:05Z'))
@@ -72,8 +76,8 @@ describe('Tela de login', () => {
     await waitFor(() => expect(screen.getByRole('alert').textContent).toBe('A senha precisa ter pelo menos 8 caracteres.'))
     fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'senhaforte1' } })
     fireEvent.click(screen.getByText('Criar acesso'))
-    await waitFor(() => expect(signUp).toHaveBeenCalledWith({ email: 'novo@gmenezes.com', password: 'senhaforte1' }))
-    expect((await screen.findByRole('status')).textContent).toContain('Não precisa esperar aprovação')
+    await waitFor(() => expect(signUp).toHaveBeenCalledWith({ email: 'novo@gmenezes.com', password: 'senhaforte1', options: { data: { escritorio: 'SARDAS E MENEZES' } } }))
+    expect((await screen.findByRole('status')).textContent).toContain('precisa liberar a sua entrada')
     expect(screen.getByText('Entrar')).toBeTruthy()
     fireEvent.click(screen.getByText('Esqueci minha senha'))
     expect(screen.getAllByRole('status').some(s => s.textContent!.includes('senha provisória (menu Equipe)'))).toBe(true)
@@ -84,8 +88,9 @@ describe('Tela de login', () => {
     vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date('2026-11-10T10:00:00Z'))
     montar()
     fireEvent.click(screen.getByText('Criar conta'))
-    expect(screen.getByText(/nasce com um escritório próprio e vazio/)).toBeTruthy()
+    expect(screen.getByText(/só entra depois que essa pessoa\s+liberar/)).toBeTruthy()
     preencher('aluna@escritorio.com', 'senhaforte1')
+    preencherEscritorio('ESCRITÓRIO NOVO')
     vi.setSystemTime(new Date('2026-11-10T10:00:05Z'))
     signUp.mockResolvedValueOnce({ data: { session: { access_token: 't' } }, error: null })
     fireEvent.click(screen.getByText('Criar acesso'))
@@ -99,20 +104,22 @@ describe('Tela de login', () => {
     fireEvent.click(screen.getByText('Criar conta'))
     signUp.mockResolvedValueOnce({ error: { message: 'email rate limit exceeded' } })
     preencher('outra@escritorio.com', 'senhaforte1')
+    preencherEscritorio()
     await new Promise(r => setTimeout(r, 3100))
     fireEvent.click(screen.getByText('Criar acesso'))
     expect((await screen.findByRole('alert')).textContent).toContain('Muitas contas criadas em pouco tempo')
   }, 15000)
 
-  it('sem banco (demonstração) entra com as credenciais de exemplo e recusa outras', async () => {
+  it('sem banco (modo demonstração) bloqueia a entrada — ninguém sem senha real passa', async () => {
+    // M em 13/11/2026: "Não deixe ninguém sem senha acessar nada."
     configurado = false
     Object.defineProperty(window, 'location', { value: { ...window.location, reload: vi.fn() }, writable: true })
     montar()
     expect(screen.queryByText('Criar conta')).toBeNull()
-    preencher('x@y.com', 'errada'); fireEvent.click(screen.getByText('Entrar'))
-    expect((await screen.findByRole('alert')).textContent).toBe('E-mail ou senha incorretos.')
     preencher('admin@exemplo.com', 'senha123'); fireEvent.click(screen.getByText('Entrar'))
-    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/inicio'))
+    expect((await screen.findByRole('alert')).textContent).toContain('não está configurada')
+    expect(screen.queryByTestId('onde')).toBeNull()
     expect(signInWithPassword).not.toHaveBeenCalled()
+    expect(entrarDemo).not.toHaveBeenCalled()
   })
 })

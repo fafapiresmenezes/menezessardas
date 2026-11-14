@@ -19,7 +19,7 @@ function gerarIcal(contratos: Contrato[]): string {
   const linhas = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Menezes Sardas//Contratos//PT',
+    'PRODID:-//Instituto THEYE//Agenda//PT',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     'X-WR-CALNAME:Vencimentos de Contratos',

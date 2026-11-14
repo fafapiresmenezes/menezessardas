@@ -9,13 +9,21 @@ cd "$(dirname "$0")/.."
 MSG="${1:-Deploy}"
 SAIDA="${SAIDA:-/tmp/claude-0/index.html}"
 
+# A tela /lastro confere a corrente do trilho, e o arquivo em public/ e' uma COPIA: sem este passo
+# ele envelhece a cada volta e a tela mostra uma corrente mais curta do que a de verdade. A fonte
+# viva fica na pasta do projeto, que existe so' na maquina do agente: quando ela nao estiver ai,
+# segue com a copia que ja esta no repositorio, em vez de falhar a publicacao.
+CORRENTE=/mnt/project-files/predicao/trilho-v4-andamento.jsonl
+if [ -r "$CORRENTE" ]; then cp "$CORRENTE" public/trilho-v4.jsonl; echo "corrente do trilho atualizada: $(wc -l < public/trilho-v4.jsonl) elos"; fi
+
 rm -rf dist-prod
 ./node_modules/.bin/vite build --outDir dist-prod >/dev/null
 grep -q hlraekzvgxdpiiigdxdo dist-prod/assets/*.js || { echo "ERRO: build sem a URL do Supabase"; exit 1; }
 
 git fetch -q origin gh-pages
-git show FETCH_HEAD:robots.txt > dist-prod/robots.txt
-git show FETCH_HEAD:sitemap.xml > dist-prod/sitemap.xml
+# robots.txt e sitemap.xml saem de public/, como todo o resto. Antes eram copiados de volta do
+# gh-pages a cada publicação, o que congelava os dois arquivos na versão de outubro de 2026: eles
+# ainda anunciavam o domínio antigo, e qualquer correção feita no repositório nunca chegava ao ar.
 touch dist-prod/.nojekyll
 
 INDICE=$(mktemp -u)
@@ -31,6 +39,28 @@ done
 grep -q '\.css' dist-prod/index.html || { echo "ERRO: index.html sem CSS"; exit 1; }
 
 git push -q origin "$COMMIT:refs/heads/gh-pages"
-sed "s#\./assets/#https://cdn.jsdelivr.net/gh/fafapiresmenezes/menezessardas@$COMMIT/assets/#g" dist-prod/index.html > "$SAIDA"
+CDN="https://cdn.jsdelivr.net/gh/fafapiresmenezes/menezessardas@$COMMIT"
+PASTA="$(dirname "$SAIDA")/vercel"
+rm -rf "$PASTA"; mkdir -p "$PASTA"
+
+# O index.html e o manifesto passam a apontar para o CDN; os três ícones PNG ficam só no gh-pages,
+# de onde o jsDelivr os serve. Assim nenhum arquivo binário precisa viajar para a Vercel.
+sed "s#\./assets/#$CDN/assets/#g; s#\./apple-touch-icon\.png#$CDN/apple-touch-icon.png#g" dist-prod/index.html > "$SAIDA"
+# O manifesto, ao contrário dos ícones, TEM de ser servido pelo próprio domínio: é dele que saem o
+# `scope` e o `start_url`, e um manifesto de outro domínio deixa o aplicativo não instalável.
+sed "s#\"src\": \"icone-#\"src\": \"$CDN/icone-#g" dist-prod/manifest.webmanifest > "$PASTA/manifest.webmanifest"
+# O trilho vai junto: a tela /lastro o baixa para recalcular a corrente no navegador de quem
+# duvida. Sem ele em theye.club, a tela cai na reserva pelo jsDelivr, que atrasa até 12 h.
+cp dist-prod/robots.txt dist-prod/sitemap.xml dist-prod/sw.js dist-prod/trilho-v4.jsonl "$PASTA/"
+# Imagem social (og:image): crawlers de WhatsApp, Facebook e Twitter preferem o mesmo domínio.
+[ -f dist-prod/og-instituto.png ] && cp dist-prod/og-instituto.png "$PASTA/"
+# Os cabeçalhos de segurança (pedido de M, 13/11/2026 21:38: "blinde"). Sem ESTE arquivo no envio,
+# a Vercel serve o site sem Content-Security-Policy, sem HSTS e sem anti-moldura: foi o que estava
+# acontecendo até 13/11/2026, porque o vercel.json existia no repositório e nunca era enviado.
+# Conferido na implantação dpl_HUsuJzedrSx3TMNgHarkfVu4Tz6X, que tinha só cinco arquivos.
+cp deploy/vercel.json "$PASTA/"
+cp "$SAIDA" "$PASTA/index.html"
+
 echo "gh-pages: $COMMIT"
 echo "index.html pronto: $SAIDA (enviar este arquivo exatamente como está)"
+echo "arquivos da Vercel: $PASTA (index.html, manifest.webmanifest, robots.txt, sitemap.xml, sw.js, trilho-v4.jsonl, vercel.json)"

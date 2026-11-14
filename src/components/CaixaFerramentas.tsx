@@ -26,14 +26,14 @@ export default function CaixaFerramentas({ categorias }: { categorias: Categoria
         {categorias.length > 1 && (
           <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrar por categoria">
             {(['todas', ...categorias] as const).map(c => (
-              <button key={c} type="button" aria-pressed={categoria === c} onClick={() => setCategoria(c)} className={`min-h-[36px] px-3 text-xs border ${categoria === c ? 'bg-navy text-white border-navy' : 'border-navy/20 text-navy bg-white'}`}>{c === 'todas' ? `Todas (${base.length})` : c}</button>
+              <button key={c} type="button" aria-pressed={categoria === c} onClick={() => setCategoria(c)} title={c === "todas" ? `Mostra todas as ${base.length} ferramentas desta tela` : `Mostra só as ferramentas de ${c}`} className={`min-h-[36px] px-3 text-xs border ${categoria === c ? 'bg-navy text-white border-navy' : 'border-navy/20 text-navy bg-white'}`}>{c === 'todas' ? `Todas (${base.length})` : c}</button>
             ))}
           </div>
         )}
         <ul className="bg-white shadow-sm divide-y divide-navy/10 max-h-[70vh] overflow-y-auto" data-testid="lista-ferramentas">
           {lista.map(f => (
             <li key={f.id}>
-              <button type="button" onClick={() => abrir(f.id)} aria-current={escolhida?.id === f.id ? 'true' : undefined} className={`w-full text-left px-4 py-3 min-h-[44px] ${escolhida?.id === f.id ? 'bg-dourado/15' : 'hover:bg-gray-50'}`}>
+              <button type="button" onClick={() => abrir(f.id)} aria-current={escolhida?.id === f.id ? 'true' : undefined} title={f.descricao} className={`w-full text-left px-4 py-3 min-h-[44px] ${escolhida?.id === f.id ? 'bg-dourado/15' : 'hover:bg-gray-50'}`}>
                 <span className="block text-sm font-medium text-navy">{f.nome}</span>
                 <span className="block text-xs text-grafite-claro">{f.categoria}</span>
               </button>

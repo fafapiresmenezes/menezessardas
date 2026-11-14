@@ -60,7 +60,7 @@ export default function ZonaArrastar({ rotulo, tipoFixo, onArquivo }: Props) {
               </option>
             ))}
           </select>
-          <button
+          <button title="Junta os arquivos escolhidos ao caso"
             type="button"
             onClick={confirmar}
             className="bg-navy text-white px-5 py-2.5 rounded-sm uppercase tracking-wider text-sm"
@@ -91,7 +91,7 @@ export default function ZonaArrastar({ rotulo, tipoFixo, onArquivo }: Props) {
       <Upload size={28} className="mx-auto text-dourado mb-3" aria-hidden="true" />
       <p className="text-sm text-grafite">
         {rotulo}{' '}
-        <button
+        <button title="Abre a janela do computador para você escolher os arquivos"
           type="button"
           onClick={() => entrada.current?.click()}
           className="text-navy underline underline-offset-4 hover:text-dourado-escuro"

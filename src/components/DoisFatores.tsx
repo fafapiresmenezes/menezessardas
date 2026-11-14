@@ -65,11 +65,11 @@ export default function DoisFatores() {
           {ativos.map(f => (
             <div key={f.id} className="flex items-center justify-between text-sm border px-3 py-2 mb-2">
               <span>{f.friendly_name || 'Aplicativo autenticador'}</span>
-              <button onClick={() => desativar(f.id)} className="text-critico underline text-xs">Desativar</button>
+              <button title="Desliga este segundo fator; a conta volta a entrar só com a senha" onClick={() => desativar(f.id)} className="text-critico underline text-xs">Desativar</button>
             </div>
           ))}
           {!qr && !ativos.length && (
-            <button data-testid="ativar-2fa" onClick={ativar} disabled={ocupado} className="bg-navy text-white px-5 py-2.5 rounded-sm uppercase tracking-wider text-sm">Ativar dois fatores</button>
+            <button title="Mostra o código de barras para você cadastrar no aplicativo do celular" data-testid="ativar-2fa" onClick={ativar} disabled={ocupado} className="bg-navy text-white px-5 py-2.5 rounded-sm uppercase tracking-wider text-sm">Ativar dois fatores</button>
           )}
           {qr && (
             <div className="grid gap-4 sm:grid-cols-[180px_1fr] items-start">
@@ -80,7 +80,7 @@ export default function DoisFatores() {
                 <p>2. Digite o código de 6 dígitos que apareceu:</p>
                 <div className="flex gap-2">
                   <input aria-label="Código de 6 dígitos" inputMode="numeric" maxLength={7} value={codigo} onChange={e => setCodigo(e.target.value)} className="border px-3 py-2 w-32 tracking-widest" />
-                  <button data-testid="confirmar-2fa" onClick={confirmar} disabled={ocupado || codigo.length < 6} className="bg-dourado text-navy px-4 py-2 text-sm uppercase tracking-wider">Confirmar</button>
+                  <button title="Confirma o código do celular e passa a pedir o segundo fator na entrada" data-testid="confirmar-2fa" onClick={confirmar} disabled={ocupado || codigo.length < 6} className="bg-dourado text-navy px-4 py-2 text-sm uppercase tracking-wider">Confirmar</button>
                 </div>
               </div>
             </div>

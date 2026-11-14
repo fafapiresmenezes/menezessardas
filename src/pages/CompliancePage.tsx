@@ -7,6 +7,7 @@ import { gerarRelatorioSelado } from '@/lib/relatorioCompliance'
 import { baixarArquivo } from '@/lib/ancoragem'
 import { mensagemAmigavel } from '@/lib/erros'
 import { hojeLocal, isoLocal } from '@/lib/datas'
+import { meuAlcance, podeVer, ALCANCE_FECHADO, rotuloCargo, type Alcance } from '@/lib/hierarquia'
 
 // Diagnóstico de integridade vendável a clientes: perguntas baseadas nos parâmetros de avaliação do
 // programa de integridade (Decreto 11.129/2022, art. 57) e na LGPD (Lei 13.709/2018). Gera nota por
@@ -61,21 +62,30 @@ export default function CompliancePage() {
   // Passo 100: resultado e plano de ação em texto para o e-mail ao cliente.
   const [copiadoDiag, setCopiadoDiag] = useState(false)
   // Passo 12: diagnóstico salvo, plano de ação em Casos e projetos e evolução trimestral da nota.
-  type Diag = { id: string; empresa: string; nota: number; lacunas: number; caso_id: string | null; criado_em: string }
+  type Diag = { id: string; empresa: string; nota: number; lacunas: number; caso_id: string | null; criado_em: string; tarefas?: { responsavel_id: string | null } | { responsavel_id: string | null }[] | null }
   const [historico, setHistorico] = useState<Diag[]>([])
   const [salvando, setSalvando] = useState(false)
   const [msg, setMsg] = useState<{ ok: boolean; texto: string } | null>(null)
-  const carregarHistorico = () => { if (supabaseConfigurado) supabase.from('diagnosticos_compliance').select('id,empresa,nota,lacunas,caso_id,criado_em').order('criado_em').then(({ data }) => setHistorico((data ?? []) as Diag[])) }
+  const carregarHistorico = () => { if (supabaseConfigurado) supabase.from('diagnosticos_compliance').select('id,empresa,nota,lacunas,caso_id,criado_em,tarefas(responsavel_id)').order('criado_em').then(({ data }) => setHistorico((data ?? []) as Diag[])) }
   useEffect(carregarHistorico, [])
+  // Privacidade por advogado: o diagnóstico segue o dono do caso (plano de ação) que ele abriu — o diagnóstico
+  // da empresa do colega não é assunto de quem não cuida dela. Diagnóstico sem caso aparece para todos.
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza o caso do colega.
+  const [alcance, setAlcance] = useState<Alcance | null>(null)
+  const alc = alcance ?? ALCANCE_FECHADO
+  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
+  const donoDoDiag = (h: Diag) => { const t = Array.isArray(h.tarefas) ? h.tarefas[0] : h.tarefas; return t?.responsavel_id ?? null }
+  const visiveis = alc.veTudo ? historico : historico.filter(h => podeVer(alc, donoDoDiag(h)))
   const trimestre = (iso: string) => { const d = new Date(iso); return `${Math.floor(d.getMonth() / 3) + 1}T/${d.getFullYear()}` }
-  const doCliente = historico.filter(h => !empresa.trim() || h.empresa.toLowerCase() === empresa.trim().toLowerCase())
+  const doCliente = visiveis.filter(h => !empresa.trim() || h.empresa.toLowerCase() === empresa.trim().toLowerCase())
   const porTrimestre = [...new Map(doCliente.map(h => [trimestre(h.criado_em), h])).entries()] // última nota de cada trimestre
   async function salvarPlano() {
     if (geral === null) return
     setSalvando(true); setMsg(null)
     const nome = empresa.trim() || 'Cliente sem nome'
     const dia = (n: number) => { const d = new Date(); d.setDate(d.getDate() + n); return isoLocal(d) }
-    const { data: caso, error } = await supabase.from('tarefas').insert({ titulo: `Plano de ação de compliance · ${nome}`, nivel: 'projeto', prioridade: 'alta', cliente: nome, area: 'Compliance', tipo: 'projeto' }).select('id').single()
+    // O caso nasce com dono (quem fez o diagnóstico), em vez de nascer sem responsável e, por isso, visível para o escritório todo.
+    const { data: caso, error } = await supabase.from('tarefas').insert({ titulo: `Plano de ação de compliance · ${nome}`, nivel: 'projeto', prioridade: 'alta', cliente: nome, area: 'Compliance', tipo: 'projeto', responsavel_id: alc.id || null }).select('id').single()
     if (error || !caso) { setSalvando(false); setMsg({ ok: false, texto: 'Não deu para criar o caso: ' + (error ? mensagemAmigavel(error) : 'erro') }); return }
     const ordenadas = [...lacunas].sort((a, b) => (a.v ?? 0) - (b.v ?? 0))
     if (ordenadas.length) {
@@ -113,7 +123,7 @@ export default function CompliancePage() {
     crypto.subtle?.digest('SHA-256', new TextEncoder().encode(texto)).then(b => setCodigo(Array.from(new Uint8Array(b), x => x.toString(16).padStart(2, '0')).join(''))).catch(() => setCodigo(''))
   }, [resp, empresa, geral])
   return (
-    <Layout title="Compliance: diagnóstico de integridade">
+    <Layout title="Compliance e LGPD">
       <div className="space-y-6">
         <header className="hidden print:block border-b-2 border-dourado pb-3" data-testid="cabecalho-relatorio">
           <p className="font-serif text-2xl text-navy">THEYE Institute</p>
@@ -124,8 +134,8 @@ export default function CompliancePage() {
           <label htmlFor="empresa" className="block font-medium mb-1">Empresa avaliada</label>
           <input id="empresa" value={empresa} onChange={e => { setEmpresa(e.target.value); try { localStorage.setItem('lsm-compliance-empresa', e.target.value) } catch { /* sem memória local */ } }} className="w-full border px-3 py-2" placeholder="Nome do cliente" />
           <div className="flex flex-wrap gap-2 mt-3 print:hidden">
-            <a href="#/kyc" className="min-h-[44px] inline-flex items-center gap-2 border px-4 text-sm"><UserCheck className="w-4 h-4" aria-hidden />Checar contraparte</a>
-            <a href="?agente=compliance#/assistente" className="min-h-[44px] inline-flex items-center gap-2 border px-4 text-sm"><MessageSquare className="w-4 h-4" aria-hidden />Perguntar ao agente de compliance</a>
+            <a href="#/kyc" title="Abre a tela de checagem cadastral (KYC) para conferir o CNPJ da outra parte antes do contrato" className="min-h-[44px] inline-flex items-center gap-2 border px-4 text-sm"><UserCheck className="w-4 h-4" aria-hidden />Checar contraparte</a>
+            <a href="?agente=compliance#/assistente" title="Abre o Assistente jurídico já com o agente de compliance selecionado" className="min-h-[44px] inline-flex items-center gap-2 border px-4 text-sm"><MessageSquare className="w-4 h-4" aria-hidden />Perguntar ao agente de compliance</a>
           </div>
         </section>
         {PILARES.map((p, pi) => (
@@ -138,6 +148,7 @@ export default function CompliancePage() {
                   <div role="radiogroup" aria-label={q.texto} className="flex gap-2 mt-1">
                     {OPCOES.map(o => (
                       <button key={o.v} type="button" role="radio" aria-checked={resp[`${pi}-${i}`] === o.v} data-testid={`resp-${pi}-${i}-${o.v}`}
+                        title={`Registra a resposta "${o.r}" para esta pergunta e recalcula a nota do pilar`}
                         onClick={() => setResp(r => ({ ...r, [`${pi}-${i}`]: o.v }))}
                         className={`min-h-[36px] px-3 text-sm border ${resp[`${pi}-${i}`] === o.v ? 'bg-navy text-white' : ''}`}>{o.r}</button>
                     ))}
@@ -156,24 +167,29 @@ export default function CompliancePage() {
               {lacunas.sort((a, b) => (a.v ?? 0) - (b.v ?? 0)).map((l, i) => <li key={i}><strong>{l.pilar}:</strong> {l.acao} <span className="text-xs text-grafite-claro">({l.v === 0 ? 'prioridade alta' : 'prioridade média'}; {l.base})</span></li>)}
             </ol>
             {/* Passo 161: imprimir o diagnóstico de compliance com o código de integridade. */}
-            <button type="button" onClick={() => window.print()} data-testid="imprimir-compliance" className="mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
-            <button type="button" data-testid="copiar-link-compliance" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 220 */}
-            <button type="button" data-testid="baixar-diagnostico" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([[`Diagnóstico de compliance — ${new Date().toLocaleDateString('pt-BR')}`, `Nota geral: ${geral}% (${nivel}) · ${respondidas} de ${total} perguntas`, ...lacunas.map((l, i) => `${i + 1}. ${l.pilar}: ${l.acao}`), codigo ? `Código de integridade: ${codigo}` : '', 'THEYE Institute'].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'diagnostico-compliance.txt'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar'}</button>{/* Passo 292 */}
-            <button type="button" onClick={async () => { const t = [`Diagnóstico de compliance${empresa.trim() ? ` — ${empresa.trim()}` : ''} — ${new Date().toLocaleDateString('pt-BR')}`, `Nota geral: ${geral}% (${nivel}) · ${respondidas} de ${total} perguntas`, '', `Plano de ação (${lacunas.length} lacunas):`, ...[...lacunas].sort((a, b) => (a.v ?? 0) - (b.v ?? 0)).map((l, i) => `${i + 1}. ${l.pilar}: ${l.acao} (${l.v === 0 ? 'prioridade alta' : 'prioridade média'})`), codigo ? `\nCódigo de integridade: ${codigo}` : '', 'THEYE Institute'].filter(x => x !== '' || true).join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoDiag(true); setTimeout(() => setCopiadoDiag(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-diagnostico" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoDiag ? 'Diagnóstico copiado' : 'Copiar diagnóstico para o cliente'}</button>
-            {codigo && <p className="text-xs text-grafite-claro mt-4 break-all" data-testid="codigo-integridade">Código de integridade (SHA-256 das respostas, empresa e data): {codigo}. Qualquer alteração nas respostas muda este código. <button type="button" onClick={copiarCodigo} data-testid="copiar-codigo" className="underline text-navy print:hidden">{codigoCopiado ? 'código copiado' : 'copiar código'}</button></p>}
+            <button type="button" onClick={() => window.print()} data-testid="imprimir-compliance" title="Abre a tela de impressão do navegador com o diagnóstico e o código de integridade" className="mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
+            <button type="button" data-testid="copiar-link-compliance" title="Copia o endereço desta página de diagnóstico para compartilhar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 220 */}
+            <button type="button" data-testid="baixar-diagnostico" title="Baixa o diagnóstico em arquivo de texto com a nota, o plano de ação e o código de integridade" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([[`Diagnóstico de compliance — ${new Date().toLocaleDateString('pt-BR')}`, `Nota geral: ${geral}% (${nivel}) · ${respondidas} de ${total} perguntas`, ...lacunas.map((l, i) => `${i + 1}. ${l.pilar}: ${l.acao}`), codigo ? `Código de integridade: ${codigo}` : '', 'THEYE Institute'].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'diagnostico-compliance.txt'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar'}</button>{/* Passo 292 */}
+            <button type="button" onClick={async () => { const t = [`Diagnóstico de compliance${empresa.trim() ? ` — ${empresa.trim()}` : ''} — ${new Date().toLocaleDateString('pt-BR')}`, `Nota geral: ${geral}% (${nivel}) · ${respondidas} de ${total} perguntas`, '', `Plano de ação (${lacunas.length} lacunas):`, ...[...lacunas].sort((a, b) => (a.v ?? 0) - (b.v ?? 0)).map((l, i) => `${i + 1}. ${l.pilar}: ${l.acao} (${l.v === 0 ? 'prioridade alta' : 'prioridade média'})`), codigo ? `\nCódigo de integridade: ${codigo}` : '', 'THEYE Institute'].filter(x => x !== '' || true).join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoDiag(true); setTimeout(() => setCopiadoDiag(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-diagnostico" title="Copia o diagnóstico completo em texto (nota, plano de ação e código) para enviar ao cliente por e-mail" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoDiag ? 'Diagnóstico copiado' : 'Copiar diagnóstico para o cliente'}</button>
+            {codigo && <p className="text-xs text-grafite-claro mt-4 break-all" data-testid="codigo-integridade">Código de integridade (SHA-256 das respostas, empresa e data): {codigo}. Qualquer alteração nas respostas muda este código. <button type="button" onClick={copiarCodigo} data-testid="copiar-codigo" title="Copia o código que prova que o relatório não foi alterado (SHA-256) para colar no e-mail ao cliente" className="underline text-navy print:hidden">{codigoCopiado ? 'código copiado' : 'copiar código'}</button></p>}
             <div className="flex flex-wrap gap-3 mt-4 print:hidden">
-              <button type="button" onClick={() => window.print()} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2"><Printer className="w-4 h-4" aria-hidden />Imprimir ou salvar em PDF</button>
-              <button type="button" onClick={baixarSelado} disabled={selando || geral === null} data-testid="baixar-pdf-selado" className="min-h-[44px] border border-navy text-navy px-5 text-sm uppercase tracking-wider disabled:opacity-50">{selando ? 'Selando…' : 'Baixar PDF selado (cliente)'}</button>
-              {supabaseConfigurado && <button type="button" onClick={salvarPlano} disabled={salvando} data-testid="salvar-plano" className="min-h-[44px] border border-navy text-navy px-5 text-sm uppercase tracking-wider disabled:opacity-50">{salvando ? 'Criando…' : 'Gravar diagnóstico e criar plano em Casos e projetos'}</button>}
+              <button type="button" onClick={() => window.print()} title="Abre a tela de impressão do navegador, onde você pode imprimir o relatório ou salvá-lo em PDF" className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2"><Printer className="w-4 h-4" aria-hidden />Imprimir ou salvar em PDF</button>
+              <button type="button" onClick={baixarSelado} disabled={selando || geral === null} data-testid="baixar-pdf-selado" title="Gera e baixa o relatório em PDF com o código que prova que nada foi alterado e o selo que prova a data (OpenTimestamps), para entregar ao cliente" className="min-h-[44px] border border-navy text-navy px-5 text-sm uppercase tracking-wider disabled:opacity-50">{selando ? 'Selando…' : 'Baixar PDF selado (cliente)'}</button>
+              {supabaseConfigurado && <button type="button" onClick={salvarPlano} disabled={salvando} data-testid="salvar-plano" title="Grava este diagnóstico e cria o plano de ação como caso com tarefas em Casos e projetos" className="min-h-[44px] border border-navy text-navy px-5 text-sm uppercase tracking-wider disabled:opacity-50">{salvando ? 'Criando…' : 'Gravar diagnóstico e criar plano em Casos e projetos'}</button>}
             </div>
             {msgSelo && <p role="status" data-testid="msg-selo" className="text-sm text-grafite-claro mt-2">{msgSelo}</p>}
-            {msg && <p role="status" data-testid="msg-plano" className={`text-sm mt-3 ${msg.ok ? 'text-regular' : 'text-critico'}`}>{msg.texto}{msg.ok && <> <a className="underline" href="#/projetos">Abrir Casos e projetos</a></>}</p>}
+            {msg && <p role="status" data-testid="msg-plano" className={`text-sm mt-3 ${msg.ok ? 'text-regular' : 'text-critico'}`}>{msg.texto}{msg.ok && <> <a className="underline" href="#/projetos" title="Abre a página de Casos e projetos para ver o plano de ação criado">Abrir Casos e projetos</a></>}</p>}
           </section>
         )}
         {doCliente.length > 0 && (
           <section className="bg-white shadow-sm p-6 print:break-inside-avoid" data-testid="evolucao-trimestral" aria-labelledby="t-evolucao">
             <h2 id="t-evolucao" className="font-serif text-xl mb-1">Evolução trimestral da nota{empresa.trim() && ` · ${empresa.trim()}`}</h2>
             <p className="text-sm text-grafite-claro mb-4">Última nota gravada em cada trimestre. Refaça o diagnóstico a cada trimestre para acompanhar o plano de ação.</p>
+            {!alc.veTudo && (
+              <p className="border-l-2 border-dourado p-3 text-sm mb-4" data-testid="compliance-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+                Você está vendo <strong>os diagnósticos dos seus casos</strong> ({rotuloCargo[alc.cargo ?? 'nenhum']}). Sócios e o gestor veem o escritório inteiro.
+              </p>
+            )}
             <ul className="flex items-end gap-4 h-32" aria-label="Nota por trimestre">
               {porTrimestre.map(([t, h]) => (
                 <li key={t} className="flex-1 flex flex-col items-center justify-end gap-1 h-full" data-testid="trimestre">
@@ -184,7 +200,7 @@ export default function CompliancePage() {
               ))}
             </ul>
             <ul className="mt-4 text-sm divide-y divide-navy/10">
-              {[...doCliente].reverse().slice(0, 6).map(h => <li key={h.id} className="py-1 flex flex-wrap gap-2"><span className="text-grafite-claro">{new Date(h.criado_em).toLocaleDateString('pt-BR')}</span><span className="font-medium">{h.empresa}</span><span>{h.nota}% · {h.lacunas} lacuna(s)</span>{h.caso_id && <a className="underline text-navy" href="#/projetos">plano de ação</a>}</li>)}
+              {[...doCliente].reverse().slice(0, 6).map(h => <li key={h.id} className="py-1 flex flex-wrap gap-2"><span className="text-grafite-claro">{new Date(h.criado_em).toLocaleDateString('pt-BR')}</span><span className="font-medium">{h.empresa}</span><span>{h.nota}% · {h.lacunas} lacuna(s)</span>{h.caso_id && <a className="underline text-navy" href="#/projetos" title="Abre a página de Casos e projetos onde está o plano de ação deste diagnóstico">plano de ação</a>}</li>)}
             </ul>
           </section>
         )}

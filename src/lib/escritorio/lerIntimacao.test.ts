@@ -26,6 +26,12 @@ describe('leitura do texto', () => {
   })
   it('acha a data e a hora da audiência', () => {
     expect(audienciaNoTexto('Designo audiência de conciliação para o dia 02/12/2026, às 14:30h.')).toEqual({ data: '2026-12-02', hora: '14:30' })
+    // Pauta de câmara: a palavra "MEMORIAIS" no edital não pode virar prazo de alegações finais.
+    const pauta = '*** SECRETARIA DA 22ª CÂMARA DE DIREITO PRIVADO ***\n-------------------------\nEDITAL-PAUTA\n-------------------------\nSESSÃO DE JULGAMENTO - PRESENCIAL\nFAÇO PÚBLICO, DE ORDEM DO EXMO. SR. DES. PRESIDENTE, QUE SERÃO JULGADOS EM SESSÃO PRESENCIAL DA 22ª CÂMARA DE DIREITO PRIVADO DO DIA 04/11/2026, quarta-feira , A PARTIR DE 13:30, OU NAS SESSÕES ULTERIORES, os processos abaixo relacionados.\nOs endereços eletrônicos dos gabinetes para o envio de MEMORIAIS estão disponíveis na intranet.\n- 009. APELAÇÃO 0029929-04.2022.8.19.0002'
+    expect(audienciaNoTexto(pauta)?.data).toBe('2026-11-04')
+    const lida = lerIntimacao(pub(pauta, { data: '2026-10-21' }), '2026-10-22')
+    expect(lida.oQueFazer).toMatch(/^Comparecer à audiência ou sessão/)
+    expect(lida.vence).toBe('2026-11-04')
   })
   it('publicação é o 1º dia útil depois da disponibilização (sexta → segunda)', () => {
     expect(dataDaPublicacao('2026-11-06')).toBe('2026-11-09')
@@ -55,6 +61,9 @@ describe('o que fazer e até quando', () => {
   })
   it('réplica e laudo', () => {
     expect(lerIntimacao(pub('Em réplica, no prazo legal.'), HOJE).ato?.id).toBe('cpc-replica')
+    const volta = lerIntimacao(pub('Cumpra-se o V. Acórdão. Digam as partes, em 5 (cinco) dias, se há algo a ser requerido.'), HOJE)
+    expect(volta.oQueFazer).toMatch(/voltou do tribunal/)
+    expect(volta.oQueFazer).not.toMatch(/Saiu o acórdão/)
     expect(lerIntimacao(pub('Manifestem-se as partes sobre o laudo pericial.'), HOJE).ato?.id).toBe('cpc-laudo')
   })
   it('manifestação usa o prazo escrito pelo juiz', () => {
@@ -93,5 +102,42 @@ describe('lista completa', () => {
     expect(ls[0].urgencia).toBe('vencido')
     const csv = csvDosPrazos(ls)
     expect(csv.split('\n')).toHaveLength(4); expect(csv).toMatch(/^Vence;Situação;Processo/)
+  })
+})
+
+describe('publicações sem prazo para o cliente (não inventar prazo)', () => {
+  const sem = (texto: string) => lerIntimacao(pub(texto), HOJE)
+  it('processo migrado para o eproc: sem prazo, ação operacional', () => {
+    const l = sem('ATO ORDINATÓRIO Notifico o destinatário que os autos do processo 0136350-50.2024.8.19.0001 foram migrados do sistema DCP para o sistema eproc. O destinatário fica ciente da vedação ao peticionamento pelo DCP.')
+    expect(l.vence).toBeNull()
+    expect(l.ato).toBeNull()
+    expect(l.oQueFazer).toMatch(/eproc/)
+  })
+  it('vista ao MP é prazo do MP', () => {
+    const l = sem('Remetam-se os autos, com urgência, ao MP para parecer de mérito. Após a manifestação do parquet, voltem conclusos.')
+    expect(l.vence).toBeNull()
+    expect(l.oQueFazer).toMatch(/Ministério Público/)
+    expect(sem('Dê-se vista ao MP acerca de todo acrescido, em especial a sentença de fls. 2159.').vence).toBeNull()
+  })
+  it('ordem ao recorrente não é prazo do cliente', () => {
+    expect(sem('Ao recorrente, para regularização do preparo, conforme certidão de autuação.').vence).toBeNull()
+    expect(sem('Vista à(s) parte(s) recorrente(s) para manifestação acerca de vício certificado nos autos.').vence).toBeNull()
+  })
+  it('"já há sentença transitada" não vira "saiu a sentença"', () => {
+    const l = sem('Fls. 885/905: Nada a prover. Já há sentença nos autos, transitada em julgado. Cumpra-se-a.')
+    expect(l.vence).toBeNull()
+    expect(l.oQueFazer).toMatch(/negou o pedido|transitada/)
+  })
+  it('distribuição no STJ: sem prazo', () => {
+    expect(sem('Por meio da análise preliminar dos autos, verifica-se que o feito encontra-se regular. Ante o exposto, distribua-se o processo.').vence).toBeNull()
+  })
+  it('se a publicação traz prazo escrito, a regra normal decide (não esconde prazo real)', () => {
+    const l = sem('Ao recorrente, para regularização do preparo, no prazo de 05 dias, sob pena de deserção.')
+    expect(l.vence).not.toBeNull()
+  })
+  it('embargos rejeitados: o prazo do recurso principal volta a correr', () => {
+    const l = sem('Embargos Declaratórios de fls 1666/1678 tempestivos que são rejeitados em razão de inexistir qualquer vício do art. 1022 do CPC. P.I.')
+    expect(l.oQueFazer).toMatch(/Embargos de declaração rejeitados/)
+    expect(l.vence).not.toBeNull()
   })
 })

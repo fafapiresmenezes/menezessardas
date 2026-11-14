@@ -9,7 +9,7 @@ const cors = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
-const APP = 'https://gmenezes-advogados.vercel.app/#'
+const APP = 'https://theye.club/#'
 const brl = (v: number) => 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 type Secao = Record<string, string | number>
 
@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
   const { data: marcaBruta } = await db.rpc('marca_escritorio', { p_id: escritorioId })
   const marca = (marcaBruta ?? {}) as { nome?: string; cor?: string; logo_url?: string | null; sede?: boolean }
   const corMarca = /^#[0-9A-Fa-f]{6}$/.test(marca.cor ?? '') ? marca.cor! : '#14213d'
-  const nomeMarca = (marca.nome ?? 'GMenezes Advogados Associados').replace(/[<>&]/g, '')
+  const nomeMarca = (marca.nome ?? 'Instituto THEYE').replace(/[<>&]/g, '')
   const logoMarca = marca.logo_url && /^https:\/\//.test(marca.logo_url) ? `<img src="${marca.logo_url}" alt="" style="max-height:40px;margin-bottom:8px">` : ''
   const titulo = `Resumo semanal do escritório · semana de ${r.semana}`
   const bloco = (nome: string, s: Secao, rota: string) => `<h3 style="margin:18px 0 6px;color:#14213d">${nome}</h3><table style="width:100%;border-collapse:collapse;font-size:14px">${linhas(s)}</table><p style="margin:6px 0 0"><a href="${APP}${rota}">Abrir</a></p>`
@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
       ${teste ? '<p style="color:#888">Este é um envio de teste pedido por você em Meu dia.</p>' : ''}
       <p><a href="${APP}/meu-dia">Abrir Meu dia</a> · <a href="${APP}/alertas">Abrir Alertas</a></p>
     </div>
-    <p style="font-size:11px;color:#888;padding:10px">${nomeMarca} · resumo automático de segunda-feira${marca.sede === false ? ' · plataforma GMenezes, desenvolvida pelo THEYE Institute' : ''}</p></div>`
+    <p style="font-size:11px;color:#888;padding:10px">${nomeMarca} · resumo automático de segunda-feira${marca.sede === false ? ' · plataforma do THEYE Institute' : ''}</p></div>`
   let falha: string | undefined
   for (const email of para) {
     const resp = await fetch('https://api.brevo.com/v3/smtp/email', {

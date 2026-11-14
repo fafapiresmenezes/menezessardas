@@ -38,7 +38,7 @@ describe('Lista de imóveis', () => {
     expect(localStorage.getItem('lsm-imoveis-busca')).toBe('maria')
     fireEvent.change(screen.getByLabelText('Buscar imóvel por endereço ou proprietário'), { target: { value: 'xyz' } })
     expect(screen.queryAllByRole('row').length).toBe(1)
-    expect(screen.getByText('Nenhum imóvel encontrado.')).toBeTruthy()
+    expect(screen.getByText('Nenhum imóvel com esse termo')).toBeTruthy()
   })
 
   it('filtro por situação vindo do Painel (?situacao=) com rótulo e limpar; ver detalhes navega; atalhos novo e importar', () => {

@@ -38,7 +38,7 @@ export default function ChecklistExigencias({ funcaoInicial, anexos, imovel }: {
         ))}
       </ul>
       {faltam > 0 && imovel && (
-        <button type="button" data-testid="exig-agenda" onClick={() => baixarICS(prazosFaltantes(funcao, anexos, imovel), 'documentos-faltantes.ics')}
+        <button title="Baixa um arquivo de agenda com prazo de 30 dias para cada documento que falta" type="button" data-testid="exig-agenda" onClick={() => baixarICS(prazosFaltantes(funcao, anexos, imovel), 'documentos-faltantes.ics')}
           className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm">
           Pôr os {faltam} documentos faltantes na agenda (prazo de 30 dias)
         </button>

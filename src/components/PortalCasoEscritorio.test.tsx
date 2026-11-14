@@ -16,7 +16,7 @@ vi.mock('@/lib/supabase', () => ({
       insert: (r: object) => insert(r),
       update: (r: object) => { const o = { eq: () => o, is: async () => update(t, r), then: (f: (v: unknown) => unknown) => update(t, r).then(f) }; return o },
     }),
-    auth: { getUser: async () => ({ data: { user: { id: 'u1', email: 'leticia@x', user_metadata: { nome_completo: 'Letícia Sardas' } } } }) },
+    auth: { getUser: async () => ({ data: { user: { id: 'u1', email: 'leticia@x', user_metadata: { nome_completo: 'Letícia Alves' } } } }) },
   },
 }))
 vi.mock('@/lib/arquivos', () => ({ urlAssinada: async (c: string) => `https://assinada/${c}` }))
@@ -35,7 +35,7 @@ describe('Conversa e documentos do Portal, lado do escritório (D18)', () => {
     expect(screen.getByRole('alert').textContent).toBe('Escreva a resposta.')
     fireEvent.change(screen.getByTestId('esc-texto'), { target: { value: 'Dia 20/11 às 14h.' } })
     fireEvent.click(screen.getByTestId('esc-responder'))
-    await waitFor(() => expect(insert).toHaveBeenCalledWith({ tarefa_id: 'c1', autor: 'escritorio', autor_nome: 'Letícia Sardas', texto: 'Dia 20/11 às 14h.' }))
+    await waitFor(() => expect(insert).toHaveBeenCalledWith({ tarefa_id: 'c1', autor: 'escritorio', autor_nome: 'Letícia Alves', texto: 'Dia 20/11 às 14h.' }))
   })
 
   it('abre documento do cliente por link assinado e marca como visto', async () => {

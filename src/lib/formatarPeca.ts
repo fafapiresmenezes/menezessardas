@@ -111,47 +111,104 @@ ${corpo}
 </body></html>`
 }
 
+const SO_TRACOS = /^\s*(?:[-–—_*=]\s*){3,}$/
+const INICIO_ENDERECAMENTO = /^\**\s*(EXCELENT|EXMO|EXMA|EGR[ÉE]GI|COLEND|AO\s+JU[ÍI]Z|À\s|AO\s|ILUSTR[ÍI]SSIM|MERIT[ÍI]SSIM|DOUTO|SENHOR)/i
+const INICIO_ANEXO = /^\s*(?:#+\s*)?\**\s*PONTOS\s+A\s+CONFERIR/i
+const INICIO_FECHO = /^\s*(nest[ea]s\s+termos|termos\s+em\s+que|pede\s+(e\s+espera\s+)?deferimento|p\.\s*deferimento|pede-se\s+deferimento)/i
+const DATA_DO_FECHO = /(\d{1,2}|\[[^\]]*\])\s+de\s+[a-zç\[\]]+\s+de\s+(\d{4}|\[[^\]]*\])/i
+const ESPACO_DESPACHO = /^\s*[([]\s*espa[çc]o\s+para\s+despacho\s*[)\]]\s*$/i
+const ITEM = /^\s*(?:([-*•])|([a-z]\)|\d+[.)]))\s+/
+
+/**
+ * Separa o que é peça do que é recado para o advogado: tudo o que vier antes do endereçamento (avisos) e a seção
+ * "PONTOS A CONFERIR" saem do corpo e vão para uma folha à parte, no fim, que não se protocola.
+ */
+export function separarPeca(texto: string): { corpo: string; conferir: string } {
+  const linhas = texto.replace(/\r/g, '').split('\n').filter(l => !SO_TRACOS.test(l))
+  const iAnexo = linhas.findIndex(l => INICIO_ANEXO.test(l))
+  let corpo = iAnexo >= 0 ? linhas.slice(0, iAnexo) : linhas
+  const anexo = iAnexo >= 0 ? linhas.slice(iAnexo + 1) : []
+  const iEnd = corpo.findIndex(l => INICIO_ENDERECAMENTO.test(l.trim()))
+  const avisos = iEnd > 0 && corpo.slice(0, iEnd).some(l => l.trim()) && iEnd <= 12 ? corpo.slice(0, iEnd) : []
+  if (avisos.length) corpo = corpo.slice(iEnd)
+  return { corpo: corpo.join('\n').trim(), conferir: [...avisos, ...(avisos.length && anexo.length ? [''] : []), ...anexo].join('\n').trim() }
+}
+
 function pecaComModelo(texto: string, titulo: string, propria: Partial<Formatacao> | null | undefined, md: ModeloFormatacao) {
   // A formatação da própria pessoa (Word que ela enviou) vale por cima do modelo; o resto vem do modelo sorteado.
   const f = { ...FORMATACAO, ...md.base, ...(propria ? formatacaoFinal({ ...md.base, ...propria }) : {}) }
-  let nTitulo = 0, nPar = 0, depoisDoPrimeiroTitulo = false
+  const { corpo: textoDaPeca, conferir } = separarPeca(texto)
+  let nTitulo = 0, nPar = 0, depoisDoPrimeiroTitulo = false, houveParagrafo = false, noFecho = false, assinaturas = 0
   const tituloHtml = (bruto: string) => {
     const sem = bruto.replace(/^#+\s*/, '').replace(/\*\*/g, '').trim()
     const limpo = semNumero(sem)
     // Endereçamento, nome das partes e nome da peça também vêm em caixa alta, mas não são seção: ficam sem número.
     const secao = limpo !== sem || /^(D[OA]S?\s|PRELIMINAR|M[ÉE]RITO|S[ÍI]NTESE|CONCLUS|PEDIDO|REQUERIMENTO|TEMPESTIVIDADE|CABIMENTO|RESUMO|BREVE|RAZ[ÕO]ES|FUNDAMENT|INTRODU)/.test(limpo)
-    if (!secao) return `<p class="cx"><b>${negrito(limpo)}</b></p>`
+    // Depois da qualificação, caixa alta que não é seção é o nome da peça ("CONTESTAÇÃO", "MEMORIAIS"): centralizado.
+    if (!secao) return houveParagrafo ? `<p class="nome"><b>${negrito(limpo)}</b></p>` : `<p class="cx"><b>${negrito(limpo)}</b></p>`
     nTitulo++; depoisDoPrimeiroTitulo = true
     const prefixo = md.numeracaoTitulos === 'romano' ? `${ROMANOS[nTitulo - 1] ?? nTitulo} – ` : md.numeracaoTitulos === 'arabico' ? `${nTitulo}. ` : ''
     return `<h2>${negrito(prefixo + limpo)}</h2>`
   }
-  const paragrafo = (l: string) => {
+  const item = (l: string) => {
+    const m = l.match(ITEM)!
+    const marca = m[1] ? '–' : m[2]!
+    return `<p class="item"><span class="marca">${esc(marca)}</span> ${negrito(l.replace(ITEM, ''))}</p>`
+  }
+  const linhaHtml = (l: string) => {
+    if (ESPACO_DESPACHO.test(l)) return '<p class="despacho">&nbsp;</p>'
+    if (noFecho) {
+      if (DATA_DO_FECHO.test(l)) return `<p class="data">${negrito(l)}</p>`
+      assinaturas++
+      return `<p class="${assinaturas === 1 ? 'ass primeira' : 'ass'}">${negrito(l.replace(/\*\*/g, ''))}</p>`
+    }
+    if (INICIO_FECHO.test(l)) { noFecho = true; return `<p class="fecho">${negrito(l)}</p>` }
+    if (ehTitulo(l)) return tituloHtml(l)
+    if (ITEM.test(l)) return item(l)
+    // Antes da qualificação, linhas curtas (classe e número do processo, origem) ficam sem recuo, como referência.
+    if (!houveParagrafo && !depoisDoPrimeiroTitulo && l.length < 110 && !/,\s*$/.test(l)) return `<p class="ref">${negrito(l)}</p>`
+    houveParagrafo = true
     if (md.paragrafosNumerados && depoisDoPrimeiroTitulo) { nPar++; return `<p class="num"><span class="n">${nPar}.</span> ${negrito(l)}</p>` }
     return `<p>${negrito(l)}</p>`
   }
-  const blocos = texto.replace(/\r/g, '').split(/\n\s*\n/).map(b => b.trim()).filter(Boolean)
+  const blocos = textoDaPeca.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean)
   const corpo = blocos.map(b => {
-    const linhas = b.split('\n')
-    if (linhas.length === 1 && ehTitulo(b)) return tituloHtml(b)
-    if (linhas.every(l => /^\s*>/.test(l))) return `<blockquote>${negrito(linhas.map(l => l.replace(/^\s*>\s?/, '')).join(' '))}</blockquote>`
-    if (linhas.every(l => /^\s*([-*•]|[a-z]\)|\d+[.)])\s+/.test(l))) return `<ul class="pedidos">${linhas.map(l => `<li>${negrito(l.replace(/^\s*[-*•]\s+/, ''))}</li>`).join('')}</ul>`
-    return linhas.map(l => (ehTitulo(l) ? tituloHtml(l) : paragrafo(l))).join('')
+    const linhas = b.split('\n').filter(l => l.trim())
+    if (linhas.length && linhas.every(l => /^\s*>/.test(l))) return `<blockquote>${negrito(linhas.map(l => l.replace(/^\s*>\s?/, '')).join(' '))}</blockquote>`
+    return linhas.map(linhaHtml).join('')
   }).join('\n')
+  // Folha de conferência: página separada, com aviso de que não faz parte da peça.
+  const folha = conferir ? `\n<br clear="all" style="page-break-before:always; mso-break-type:section-break">
+<div class="conferir"><p class="conferir-titulo"><b>PONTOS A CONFERIR ANTES DE PROTOCOLAR</b></p>
+<p class="conferir-aviso">Esta folha é só para o advogado responsável. Não faz parte da peça: apague antes de protocolar.</p>
+${conferir.split('\n').filter(l => l.trim()).map(l => `<p class="conferir-item">${negrito(l)}</p>`).join('\n')}</div>` : ''
   const m = f.margens
   return `<!doctype html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${esc(titulo)}</title>
 <meta name="formatacao" content="${esc(md.id)}">
 <style>
 @page { size: 21cm 29.7cm; margin: ${m.superior}cm ${m.direita}cm ${m.inferior}cm ${m.esquerda}cm; }
 body { font-family: '${esc(f.fonte)}', ${f.fonteAlternativa}, serif; font-size: ${f.corpo}pt; line-height: ${f.entrelinhas}; color: #000; }
-p { text-align: justify; text-indent: ${f.recuoPrimeiraLinha}cm; margin: 0 0 ${md.espacoDepois}pt 0; }
-p.num, p.cx { text-indent: 0; }
+p { text-align: justify; text-indent: ${f.recuoPrimeiraLinha}cm; margin: 0 0 ${md.espacoDepois}pt 0; orphans: 2; widows: 2; }
+p.num, p.cx, p.ref, p.nome, p.data, p.ass, p.despacho, p.item, .conferir p { text-indent: 0; }
+p.cx { text-align: left; margin-bottom: 0; }
+p.despacho { margin: 0; height: 3cm; line-height: 3cm; }
+p.ref { text-align: left; margin-bottom: 0; }
+p.nome { text-align: center; margin: 14pt 0; letter-spacing: 0.06em; }
 p.num .n { font-weight: bold; display: inline-block; min-width: 1cm; }
-h2 { font-size: ${f.corpo}pt; font-weight: bold; text-transform: uppercase; text-align: ${md.tituloAlinhado}; margin: 18pt 0 ${md.espacoDepois}pt 0;${md.tituloVersalete ? ' font-variant: small-caps; letter-spacing: 0.04em;' : ''} }
+p.item { margin-left: ${(f.recuoPrimeiraLinha || 1.25) + 0.75}cm; text-indent: -0.75cm; }
+p.item .marca { display: inline-block; min-width: 0.75cm; text-indent: 0; }
+p.fecho { margin-top: 12pt; }
+p.data { text-align: right; margin: 12pt 0 0 0; }
+p.ass { text-align: center; margin: 0; font-weight: normal; }
+p.ass.primeira { margin-top: 42pt; font-weight: bold; }
+h2 { font-size: ${f.corpo}pt; font-weight: bold; text-transform: uppercase; text-align: ${md.tituloAlinhado}; margin: 18pt 0 ${md.espacoDepois}pt 0; page-break-after: avoid;${md.tituloVersalete ? ' font-variant: small-caps; letter-spacing: 0.04em;' : ''} }
 blockquote { margin: 6pt 0 ${md.espacoDepois}pt ${f.recuoCitacao}cm; font-size: ${f.citacaoLonga}pt; line-height: 1; text-align: justify; }
-ul.pedidos { list-style: none; margin: 0 0 ${md.espacoDepois}pt ${f.recuoPrimeiraLinha || 1}cm; padding: 0; }
-ul.pedidos li { text-align: justify; margin-bottom: 4pt; }
+.conferir { font-family: Arial, Helvetica, sans-serif; font-size: 10.5pt; line-height: 1.3; }
+.conferir p { text-align: left; margin: 0 0 6pt 0; }
+p.conferir-titulo { font-size: 12pt; margin-bottom: 2pt; }
+p.conferir-aviso { font-style: italic; border-bottom: 1px solid #000; padding-bottom: 6pt; margin-bottom: 10pt; }
 </style></head><body>
-${corpo}
+${corpo}${folha}
 </body></html>`
 }
 

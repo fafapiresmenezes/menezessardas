@@ -52,7 +52,7 @@ describe('resumo-semanal', () => {
     expect(e.html).toContain('Contratos vencidos')
     expect(e.html).toMatch(/R\$.1\.234,50/)
     expect(e.html).toContain('<strong>—</strong>')
-    expect(e.html).toContain('desenvolvida pelo THEYE Institute')
+    expect(e.html).toContain('plataforma do THEYE Institute')
     expect(e.html).not.toContain('envio de teste')
     expect(estado.inseridos[0]).toMatchObject({ tabela: 'consumo_api', linha: { funcao: 'resumo semanal por e-mail', quantidade: 2 } })
     expect(estado.atualizados[0]).toMatchObject({ tabela: 'resumos_semanais', valores: { destinatarios: 2 }, filtros: [['id', 'eq', 'novo-1']] })
@@ -69,7 +69,7 @@ describe('resumo-semanal', () => {
     expect(envios.map(e => e.to)).toEqual(['fatima@gmenezes.com'])
     expect(envios[0]!.html).toContain('envio de teste')
     expect(envios[0]!.html).toContain('background:#14213d')
-    expect(envios[0]!.html).toContain('GMenezes Advogados Associados')
+    expect(envios[0]!.html).toContain('Instituto THEYE')
     expect(envios[0]!.html).not.toContain('<img')
   })
 

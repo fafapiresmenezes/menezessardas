@@ -29,7 +29,7 @@ export default function MetasDoMes() {
     <section aria-labelledby="titulo-metas" data-testid="metas-do-mes" className="bg-white border-t-2 border-dourado p-5 shadow-md">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 id="titulo-metas" className="text-lg">Metas do mês por função</h2>
-        <p className="text-xs text-grafite-claro">{m.dias_uteis_ate_hoje} de {m.dias_uteis_mes} dias úteis · metas de horas em Horas e honorários · cada pessoa escolhe sua função em Meu dia</p>
+        <p className="text-xs text-grafite-claro">{m.dias_uteis_ate_hoje} de {m.dias_uteis_mes} dias úteis · metas de horas em Horas trabalhadas · cada pessoa escolhe sua função em Meu dia</p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 mt-4">
         {m.por_funcao.map(f => {

@@ -24,6 +24,7 @@ import {
 import { Printer, ShieldCheck, ShieldAlert, Link2, Anchor, Download, FileDown } from 'lucide-react'
 import { exportarTrilhaPeriodo } from '@/lib/exportarTrilha'
 import { hojeLocal, isoLocal } from '@/lib/datas'
+import Vazio from '@/components/Vazio'
 
 const rotuloTipo: Record<TipoEvento, string> = {
   imovel_criado: 'Imóvel cadastrado',
@@ -140,6 +141,16 @@ export default function TrilhaPage() {
   return (
     <Layout title="Trilha de auditoria">
       <div className="max-w-4xl mx-auto space-y-6">
+        <section className="bg-white shadow-sm border-l-4 border-dourado p-5" data-testid="explicacao-simples" aria-labelledby="t-simples">
+          <h2 id="t-simples" className="text-lg">Para que serve esta tela, em português simples</h2>
+          <p className="text-sm mt-2">É o <strong>livro de ocorrências do escritório</strong>. Tudo o que alguém faz aqui (enviar uma peça, mudar um prazo, apagar um documento) fica anotado, com dia e hora. Ninguém consegue apagar nem mudar uma anotação antiga sem que o sistema perceba.</p>
+          <ol className="list-decimal pl-5 text-sm mt-2 space-y-1">
+            <li><strong>Anotar.</strong> Cada ação vira uma linha no livro, ligada à anterior (como páginas numeradas e rubricadas).</li>
+            <li><strong>Carimbar.</strong> Uma vez por dia, a plataforma tira uma &quot;impressão digital&quot; do livro inteiro e a registra de forma pública no Bitcoin. É como reconhecer firma em cartório, só que na internet e de graça.</li>
+            <li><strong>Provar.</strong> Se alguém disser que um documento foi mudado depois, você mostra o carimbo: ele prova que o texto já existia naquele dia e que não mudou.</li>
+          </ol>
+          <p className="text-xs text-grafite-claro mt-2">Você não precisa entender de computação. O uso normal é nenhum: o carimbo é feito sozinho todo dia. Só abra esta tela se precisar provar algo a um juiz, a um cliente ou a um auditor.</p>
+        </section>
         <p className="text-sm text-grafite-claro">
           Cada ação na plataforma vira um registro imutável, encadeado por hash ao registro anterior.
           Qualquer alteração ou remoção de um registro antigo quebra a cadeia e é apontada abaixo.
@@ -178,12 +189,12 @@ export default function TrilhaPage() {
           <p className="text-sm text-grafite-claro mt-1">Gera um PDF com todos os registros do período (hash e elo de cada um), calcula o SHA-256 do arquivo e baixa junto o selo OpenTimestamps (.ots), que prova no Bitcoin a data do documento. Entregue os dois arquivos ao auditor.</p>
           <div className="flex flex-wrap items-end gap-3 mt-3 text-sm">
             <span className="flex gap-1" role="group" aria-label="Períodos prontos" data-testid="atalhos-periodo">
-              {[['7 dias', 7], ['30 dias', 30], ['90 dias', 90]].map(([r, n]) => <button key={r as string} type="button" onClick={() => setPeriodo({ de: isoLocal(new Date(Date.now() - (n as number) * 86400000)), ate: hojeIso })} className="min-h-[44px] px-3 border border-navy/30 text-navy text-xs">{r as string}</button>)}
-              <button type="button" onClick={() => { const d = new Date(); const ini = new Date(d.getFullYear(), d.getMonth() - 1, 1); const fim = new Date(d.getFullYear(), d.getMonth(), 0); setPeriodo({ de: isoLocal(ini), ate: isoLocal(fim) }) }} className="min-h-[44px] px-3 border border-navy/30 text-navy text-xs">mês passado</button>
+              {[['7 dias', 7], ['30 dias', 30], ['90 dias', 90]].map(([r, n]) => <button key={r as string} type="button" onClick={() => setPeriodo({ de: isoLocal(new Date(Date.now() - (n as number) * 86400000)), ate: hojeIso })} title={`Preenche as datas de exportação com os últimos ${n} dias`} className="min-h-[44px] px-3 border border-navy/30 text-navy text-xs">{r as string}</button>)}
+              <button type="button" onClick={() => { const d = new Date(); const ini = new Date(d.getFullYear(), d.getMonth() - 1, 1); const fim = new Date(d.getFullYear(), d.getMonth(), 0); setPeriodo({ de: isoLocal(ini), ate: isoLocal(fim) }) }} title="Preenche as datas de exportação com o mês passado inteiro" className="min-h-[44px] px-3 border border-navy/30 text-navy text-xs">mês passado</button>
             </span>
-            <label>De<input type="date" value={periodo.de} max={periodo.ate} onChange={e => setPeriodo({ ...periodo, de: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="exportar-de" /></label>
-            <label>Até<input type="date" value={periodo.ate} min={periodo.de} max={hojeIso} onChange={e => setPeriodo({ ...periodo, ate: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="exportar-ate" /></label>
-            <button type="button" onClick={exportarPeriodo} disabled={exportando || !periodo.de || !periodo.ate} data-testid="exportar-pdf-selo" className="min-h-[44px] px-4 bg-navy text-white disabled:opacity-60 inline-flex items-center gap-2"><Download size={16} aria-hidden="true" />{exportando ? 'Gerando e selando…' : 'Baixar PDF + selo'}</button>
+            <label>De<input type="date" title="Começo do período do relatório de acessos." value={periodo.de} max={periodo.ate} onChange={e => setPeriodo({ ...periodo, de: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="exportar-de" /></label>
+            <label>Até<input type="date" title="Fim do período do relatório. Não passa de hoje." value={periodo.ate} min={periodo.de} max={hojeIso} onChange={e => setPeriodo({ ...periodo, ate: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="exportar-ate" /></label>
+            <button type="button" onClick={exportarPeriodo} disabled={exportando || !periodo.de || !periodo.ate} data-testid="exportar-pdf-selo" title="Gera e baixa o PDF com os registros do período e o selo de tempo (OpenTimestamps, arquivo .ots) que prova a data no Bitcoin" className="min-h-[44px] px-4 bg-navy text-white disabled:opacity-60 inline-flex items-center gap-2"><Download size={16} aria-hidden="true" />{exportando ? 'Gerando e selando…' : 'Baixar PDF + selo'}</button>
           </div>
           {exportacao && (
             <p className="text-xs mt-3 break-all" role="status" data-testid="msg-exportacao">
@@ -195,6 +206,7 @@ export default function TrilhaPage() {
         <div className="flex justify-end print:hidden">
           <button
             onClick={() => window.print()}
+            title="Abre a janela de impressão do navegador; escolha 'Salvar como PDF' para exportar a trilha"
             className="inline-flex items-center gap-2 px-4 py-2 min-h-[44px] bg-navy text-white text-sm rounded hover:bg-navy/90"
           >
             <Printer size={16} /> Exportar em PDF
@@ -217,7 +229,7 @@ export default function TrilhaPage() {
               <p className={`text-sm mt-3 ${atrasado ? 'text-atencao' : 'text-regular'}`} data-testid="estado-selo">
                 {ancoragens.length} selo(s) ancorado(s). Último há {horas < 1 ? 'menos de 1 hora' : `${horas} hora(s)`} ({dataHora(ult.em)}){atrasado ? '. O selo diário deveria ter rodado; use "Ancorar selo agora".' : '. O selo diário está em dia.'}
                 {/* Passo 113: o último selo em texto (data e código), para colar no e-mail do auditor. */}
-                <button type="button" data-testid="copiar-selo" onClick={() => navigator.clipboard?.writeText(`Selo blockchain da trilha · THEYE Institute\nAncorado em: ${dataHora(ult.em)}\nSelo (SHA-256): ${ult.selo}\nTotal de selos ancorados: ${ancoragens.length}\nConferência pública: opentimestamps.org`).catch(() => undefined)} className="ml-3 underline text-navy">copiar último selo</button>
+                <button type="button" data-testid="copiar-selo" title="Copia o último selo (data e código SHA-256) em texto, para colar no e-mail do auditor" onClick={() => navigator.clipboard?.writeText(`Selo blockchain da trilha · THEYE Institute\nAncorado em: ${dataHora(ult.em)}\nSelo (SHA-256): ${ult.selo}\nTotal de selos ancorados: ${ancoragens.length}\nConferência pública: opentimestamps.org`).catch(() => undefined)} className="ml-3 underline text-navy">copiar último selo</button>
               </p>
             )
           })()}
@@ -227,6 +239,7 @@ export default function TrilhaPage() {
             <button
               onClick={ancorar}
               disabled={ancorando || !verificacao?.integra || verificacao.total === 0}
+              title="Envia agora o selo da trilha (só um código, nunca dados de clientes) ao registro público de datas no Bitcoin"
               className="min-h-[44px] inline-flex items-center gap-2 bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider"
             >
               <Anchor size={16} aria-hidden="true" /> {ancorando ? 'Enviando…' : 'Ancorar selo agora'}
@@ -234,6 +247,7 @@ export default function TrilhaPage() {
             <button
               onClick={verificar}
               disabled={ancoragens.length === 0}
+              title="Confere cada selo ancorado contra os registros atuais e mostra se algo foi alterado desde a ancoragem"
               className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm"
             >
               Verificar lastro
@@ -248,10 +262,10 @@ export default function TrilhaPage() {
             </p>
           )}
           {/* Passo 145: lista de selos copiável (registro, data, selo) para conferência externa. */}
-          {ancoragens.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Selos blockchain da trilha — ${ancoragens.length}`, ...ancoragens.map(a => `nº ${a.seq} · ${dataHora(a.em)} · ${a.selo}`)].join('\n')).then(() => setSelosCopiados(true)).catch(() => undefined)} data-testid="copiar-selos" className="mt-3 min-h-[44px] px-3 border text-sm print:hidden">{selosCopiados ? 'Lista de selos copiada' : 'Copiar lista de selos'}</button>}
-          {ancoragens.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-selos" className="mt-3 ml-2 min-h-[44px] px-3 border text-sm print:hidden">Imprimir selos</button>}{/* Passo 179 */}
-          {ancoragens.length > 0 && <button type="button" data-testid="copiar-link-selos" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setSelosLinkCopiado(true)).catch(() => undefined)} className="mt-3 ml-2 min-h-[44px] px-3 border text-sm print:hidden">{selosLinkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 248 */}
-          {ancoragens.length > 0 && <button type="button" data-testid="baixar-selos" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['sequência;selo;digest;calendário;em', ...ancoragens.map(s => `${s.seq};${s.selo};${s.digest};${s.calendario};${s.em}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'selos-blockchain.csv'; a.click(); marcarBaixadoSelos(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-3 border print:hidden">{baixadoSelos ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 302 */}
+          {ancoragens.length > 0 && <button type="button" onClick={() => navigator.clipboard?.writeText([`Selos blockchain da trilha — ${ancoragens.length}`, ...ancoragens.map(a => `nº ${a.seq} · ${dataHora(a.em)} · ${a.selo}`)].join('\n')).then(() => setSelosCopiados(true)).catch(() => undefined)} data-testid="copiar-selos" title="Copia a lista de todos os selos (registro, data e código) para conferência externa" className="mt-3 min-h-[44px] px-3 border text-sm print:hidden">{selosCopiados ? 'Lista de selos copiada' : 'Copiar lista de selos'}</button>}
+          {ancoragens.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-selos" title="Abre a janela de impressão do navegador para imprimir a lista de selos" className="mt-3 ml-2 min-h-[44px] px-3 border text-sm print:hidden">Imprimir selos</button>}{/* Passo 179 */}
+          {ancoragens.length > 0 && <button type="button" data-testid="copiar-link-selos" title="Copia o endereço desta tela para a área de transferência" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setSelosLinkCopiado(true)).catch(() => undefined)} className="mt-3 ml-2 min-h-[44px] px-3 border text-sm print:hidden">{selosLinkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 248 */}
+          {ancoragens.length > 0 && <button type="button" data-testid="baixar-selos" aria-live="polite" title="Baixa a planilha (selos-blockchain.csv) com todos os selos ancorados: sequência, código, calendário e data" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['sequência;selo;digest;calendário;em', ...ancoragens.map(s => `${s.seq};${s.selo};${s.digest};${s.calendario};${s.em}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'selos-blockchain.csv'; a.click(); marcarBaixadoSelos(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-3 border print:hidden">{baixadoSelos ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 302 */}
           {ancoragens.length > 0 && (
             <ul className="divide-y divide-navy/5 mt-4">
               {ancoragens.map(a => {
@@ -270,15 +284,17 @@ export default function TrilhaPage() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => { void textoDoSeloAncorado(a).then(t => baixarArquivo(`selo-${a.seq}.txt`, t, 'text/plain')) }}
+                        title="Baixa o arquivo de texto deste selo, para conferir junto com a prova em opentimestamps.org"
                         className="min-h-[44px] inline-flex items-center gap-1 px-3 border border-navy/30 text-sm hover:bg-pergaminho"
                       >
                         <Download size={14} aria-hidden="true" /> Selo (.txt)
                       </button>
                       <button
                         onClick={() => baixarArquivo(`selo-${a.seq}.txt.ots`, montarOts(a) as BlobPart)}
+                        title="Baixa a prova de data deste selo (OpenTimestamps, arquivo .ots), para conferir no Bitcoin em opentimestamps.org"
                         className="min-h-[44px] inline-flex items-center gap-1 px-3 border border-navy/30 text-sm hover:bg-pergaminho"
                       >
-                        <Download size={14} aria-hidden="true" /> Prova (.ots)
+                        <Download size={14} aria-hidden="true" /> Prova de data (.ots)
                       </button>
                     </div>
                   </li>
@@ -296,25 +312,23 @@ export default function TrilhaPage() {
 
         {eventos.length > 0 && (
           <section className="bg-white shadow-sm p-4 flex flex-wrap items-end gap-3 text-sm print:hidden" aria-label="Filtrar registros" data-testid="filtros-trilha">
-            <label>Ação<select value={filtro.tipo} onChange={e => setFiltro({ ...filtro, tipo: e.target.value })} className="block border px-2 py-2 mt-1 min-h-[44px]" data-testid="filtro-tipo"><option value="">Todas</option>{Object.entries(rotuloTipo).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></label>
-            <label>Contém<input value={filtro.texto} onChange={e => { setFiltro({ ...filtro, texto: e.target.value }); try { localStorage.setItem('lsm-trilha-texto', e.target.value) } catch { /* sem memória local */ } }} placeholder="nome, endereço, parte…" className="block border px-3 py-2 mt-1 min-h-[44px]" data-testid="filtro-texto" /></label>
-            <label>Dia<input type="date" value={filtro.dia} onChange={e => setFiltro({ ...filtro, dia: e.target.value })} className="block border px-3 py-2 mt-1 min-h-[44px]" data-testid="filtro-dia" /></label>
-            {(filtro.tipo || filtro.texto || filtro.dia) && <button type="button" onClick={() => setFiltro({ tipo: '', texto: '', dia: '' })} className="min-h-[44px] px-3 border">Limpar</button>}
+            <label>Ação<select value={filtro.tipo} title="Filtra a lista de registros pelo tipo de ação escolhido" onChange={e => setFiltro({ ...filtro, tipo: e.target.value })} className="block border px-2 py-2 mt-1 min-h-[44px]" data-testid="filtro-tipo"><option value="">Todas</option>{Object.entries(rotuloTipo).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></label>
+            <label>Contém<input title="Procura em quem agiu, no que foi feito e na tela. Vazio, mostra tudo do período." value={filtro.texto} onChange={e => { setFiltro({ ...filtro, texto: e.target.value }); try { localStorage.setItem('lsm-trilha-texto', e.target.value) } catch { /* sem memória local */ } }} placeholder="nome, endereço, parte…" className="block border px-3 py-2 mt-1 min-h-[44px]" data-testid="filtro-texto" /></label>
+            <label>Dia<input type="date" title="Mostra só o que aconteceu neste dia. Vazio, mostra o período inteiro." value={filtro.dia} onChange={e => setFiltro({ ...filtro, dia: e.target.value })} className="block border px-3 py-2 mt-1 min-h-[44px]" data-testid="filtro-dia" /></label>
+            {(filtro.tipo || filtro.texto || filtro.dia) && <button type="button" onClick={() => setFiltro({ tipo: '', texto: '', dia: '' })} title="Limpa os três filtros e volta a mostrar todos os registros" className="min-h-[44px] px-3 border">Limpar</button>}
             <p className="text-grafite-claro" data-testid="contagem-trilha">{filtrados.length} de {eventos.length} registros</p>
             {/* Passo 164: imprimir os registros filtrados da trilha. */}
-            {filtrados.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-registros" className="min-h-[44px] px-3 border text-sm mr-2 print:hidden">Imprimir</button>}
-            {filtrados.length > 0 && <button type="button" data-testid="copiar-link-trilha" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setTrilhaLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-3 border print:hidden">{trilhaLinkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 223 */}
-            {filtrados.length > 0 && <button type="button" data-testid="baixar-trilha" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['sequência;data;tipo;resumo;hash', ...filtrados.map(e => `${e.seq};${e.em};${e.tipo};${e.resumo.replace(/;/g, ',')};${e.hash}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'trilha-auditoria.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-3 border print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 293 */}
-            {filtrados.length > 0 && <button type="button" onClick={copiarRegistros} data-testid="copiar-registros" className="min-h-[44px] px-3 border">{registrosCopiados ? 'Copiados' : 'Copiar registros'}</button>}
+            {filtrados.length > 0 && <button type="button" onClick={() => window.print()} data-testid="imprimir-registros" title="Abre a janela de impressão do navegador para imprimir os registros filtrados" className="min-h-[44px] px-3 border text-sm mr-2 print:hidden">Imprimir</button>}
+            {filtrados.length > 0 && <button type="button" data-testid="copiar-link-trilha" title="Copia o endereço desta tela para a área de transferência" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setTrilhaLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-3 border print:hidden">{trilhaLinkCopiado ? 'Link copiado' : 'Copiar link'}</button>}{/* Passo 223 */}
+            {filtrados.length > 0 && <button type="button" data-testid="baixar-trilha" aria-live="polite" title="Baixa a planilha com os registros filtrados: sequência, data, tipo, resumo e código de conferência" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['sequência;data;tipo;resumo;hash', ...filtrados.map(e => `${e.seq};${e.em};${e.tipo};${e.resumo.replace(/;/g, ',')};${e.hash}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'trilha-auditoria.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 min-h-[44px] px-3 border print:hidden">{baixado ? 'Baixado' : 'Baixar CSV'}</button>}{/* Passo 293 */}
+            {filtrados.length > 0 && <button type="button" onClick={copiarRegistros} data-testid="copiar-registros" title="Copia os registros filtrados (número, data, ação, resumo e hash) para colar no relatório" className="min-h-[44px] px-3 border">{registrosCopiados ? 'Copiados' : 'Copiar registros'}</button>}
           </section>
         )}
         <section className="bg-white shadow-sm" aria-label="Registros da trilha">
           {carregando ? (
             <p className="p-6 text-sm text-grafite-claro">Verificando a cadeia…</p>
           ) : eventos.length === 0 ? (
-            <p className="p-6 text-sm text-grafite-claro">
-              Nenhum registro ainda. Cadastre um imóvel ou contrato para iniciar a trilha.
-            </p>
+            <Vazio testid="trilha-vazia" titulo="Nenhum registro ainda" texto="A trilha guarda, com data provada, tudo o que o escritório faz na plataforma. O primeiro cadastro já inicia a cadeia." acao={{ rotulo: 'Cadastrar imóvel ou contrato', para: '/imoveis', dica: 'Abre a carteira de imóveis para fazer o primeiro cadastro e iniciar a trilha' }} />
           ) : (
             <ol className="divide-y divide-navy/5">
               {filtrados.map(e => (
