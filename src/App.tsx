@@ -14,6 +14,7 @@ const PortaisInstitutoPage = lazy(() => import('@/pages/PortaisInstitutoPage'))
 const FrentesDoInstitutoPage = lazy(() => import('@/pages/FrentesDoInstitutoPage'))
 // Passo T2: conferir a corrente do trilho no navegador de quem duvida.
 const LastroPage = lazy(() => import('@/pages/LastroPage'))
+const AreasPage = lazy(() => import('@/pages/AreasPage'))
 const CotasQuanticasPage = lazy(() => import('@/pages/CotasQuanticasPage'))
 const AdmissaoPage = lazy(() => import('@/pages/AdmissaoPage'))
 const ExemplosPage = lazy(() => import('@/pages/ExemplosPage'))
@@ -427,6 +428,10 @@ function App() {
         <Route
           path="/laboratorio-admin"
           element={isAuthenticated ? <LaboratorioAdminPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/areas"
+          element={isAuthenticated ? <AreasPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/enquetes"

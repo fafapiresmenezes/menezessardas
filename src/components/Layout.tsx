@@ -26,7 +26,7 @@ import { listarPessoas, perfilAtual, meuEscritorio, esquecerEscritorio, type Meu
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal } from 'lucide-react'
+import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal, Compass } from 'lucide-react'
 import { gruposMenu, gruposVisiveis, atalhosDoMenu, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao } from './menuTelas'
 import { meuAlcance, ALCANCE_FECHADO } from '@/lib/hierarquia'
 import { lerMeuJeito, carregarMeuJeito, esquecerMeuJeito, aplicarLetra, EVENTO_JEITO, type MeuJeito } from '@/lib/meuJeito'
@@ -389,6 +389,20 @@ export default function Layout({ children, title }: LayoutProps) {
                   >
                     {tema === 'escuro' ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
                     {tema === 'escuro' ? 'Modo claro' : 'Modo escuro'}
+                  </button>
+                  {/* Pedido de M (14/11/2026 07h26): a tela de início só mostra direito, e dá a
+                      impressão de que o Instituto é só a parte jurídica. Este item leva a uma tela
+                      com todas as áreas, sem mudar o /inicio em si (a Dra. Fátima continua caindo
+                      direto no dela todo dia). */}
+                  <button
+                    onClick={() => { setMaisAberto(false); navigate('/areas') }}
+                    className="w-full flex items-center gap-3 min-h-[44px] px-3 text-sm text-navy hover:bg-navy/5 text-left"
+                    aria-label="Trocar de área do Instituto"
+                    title="Mostra todas as áreas do Instituto THEYE para você escolher para onde ir"
+                    data-testid="menu-trocar-area"
+                  >
+                    <Compass size={16} aria-hidden="true" />
+                    Trocar de área
                   </button>
                   {/* Passo A27: o laboratório é do Instituto, não do escritório cliente: só aparece para quem entra pelo Instituto. */}
                   {admin && visao.instituto && (
