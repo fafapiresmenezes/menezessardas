@@ -270,7 +270,7 @@ export default function InstitutoPage() {
   const [hashCopiado, setHashCopiado] = useState(false)
   const copiarHash = async () => { try { await navigator.clipboard.writeText(`${ult.arquivo} SHA-256 ${ult.sha256}`); setHashCopiado(true); setTimeout(() => setHashCopiado(false), 2500) } catch { /* sem área de transferência */ } }
   return (
-    <Layout title="THEYE Institute">
+    <Layout title="Administração do Instituto">
       <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-6">
         <header>
           <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">THEYE Institute</p>

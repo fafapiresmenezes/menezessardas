@@ -215,7 +215,7 @@ export default function GeolocalizacaoPage() {
   // ---------- Telas ----------
   if (!cofre || !dados) {
     return (
-      <Layout title="Geolocalização (MVP)">
+      <Layout title="Geolocalização">
         <div className="max-w-xl mx-auto space-y-4">
           <h1 className="text-2xl font-semibold text-navy">Geolocalização: MVP em você mesmo</h1>
           {msg && <p className="text-sm text-regular">{msg}</p>}
@@ -234,7 +234,7 @@ export default function GeolocalizacaoPage() {
 
   if (!dados.consentimento) {
     return (
-      <Layout title="Geolocalização (MVP)">
+      <Layout title="Geolocalização">
         <div className="max-w-2xl mx-auto space-y-4">
           <h1 className="text-2xl font-semibold text-navy">Antes de gravar: o termo</h1>
           <div className={cartao}>
@@ -250,7 +250,7 @@ export default function GeolocalizacaoPage() {
   }
 
   return (
-    <Layout title="Geolocalização (MVP)">
+    <Layout title="Geolocalização">
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h1 className="text-2xl font-semibold text-navy">Geolocalização e geomapeamento</h1>

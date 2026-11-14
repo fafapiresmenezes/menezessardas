@@ -1,6 +1,6 @@
 // O mapa de todas as telas da plataforma (pedido de M, 12/11/2026: "organizar, separar de maneira hierárquica").
 // Passo A27: o menu tem os MESMOS quatro blocos da tela de entrada — 1. Todo dia, 2. Processos, 3. Escrever peças,
-// 4. Escritório — mais "Minha conta" e, só para o THEYE Institute, o bloco do Instituto. Nada de um bloco por assunto
+// 4. Escritório — mais "Minha conta" e, só para o Instituto DI, o bloco do Instituto. Nada de um bloco por assunto
 // solto: menu e entrada contam a mesma história.
 // Este arquivo é a ÚNICA fonte do nome de cada tela: o menu, a tela de entrada, a busca global e a lista de telas
 // (src/data/rotas.ts) leem daqui, por `nomeDaTela`. Assim uma tela não volta a ter três nomes diferentes.
@@ -19,7 +19,7 @@ export const EXPLICA_NIVEL: Record<Nivel, string> = {
   todos: 'Todas as pessoas do escritório veem este grupo.',
   gestao: 'Só sócios, o gestor e a administração veem isto: são os números e o dinheiro do escritório inteiro.',
   admin: 'Só quem administra o escritório vê isto: liberar pessoas, definir cargos e acompanhar o consumo.',
-  instituto: 'Só a administração do THEYE Institute vê isto: é o que cuida da plataforma inteira.',
+  instituto: 'Só a administração do Instituto DI vê isto: é o que cuida da plataforma inteira.',
 }
 
 export const SO_SEDE = ['/imoveis', '/fornecedores', '/alertas', '/instituto']
@@ -78,16 +78,25 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: Wallet, label: 'Consumo', href: '/consumo', nivel: 'admin' },
   ] },
   // Passo A27: as telas do Instituto saem do menu do escritório. O escritório cliente não vê a administração
-  // da plataforma nem a pesquisa do Instituto; só quem entra pelo THEYE Institute vê este bloco.
-  { id: 'instituto', titulo: 'THEYE Institute', bloco: 'Instituto', nivel: 'instituto', dica: 'A plataforma inteira', itens: [
-    { icon: FlaskConical, label: 'THEYE Institute', href: '/instituto' },
-    { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
-    { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
-    { icon: TrendingUp, label: 'Mercado jurídico', href: '/mercado' },
-    { icon: Store, label: 'Soluções jurídicas', href: '/solucoes' },
-    { icon: MapPin, label: 'Geolocalização (MVP)', href: '/geolocalizacao' },
+  // da plataforma nem a pesquisa do Instituto; só quem entra pelo Instituto DI vê este bloco.
+  { id: 'instituto', titulo: 'Instituto DI', bloco: 'Instituto', nivel: 'instituto', dica: 'Todas as frentes', itens: [
+    { icon: LayoutGrid, label: 'Frentes do Instituto', href: '/frentes-do-instituto' },
+    { icon: FlaskConical, label: 'Administração do Instituto', href: '/instituto' },
+    { icon: BookOpen, label: 'Caderno de produtos', href: '/caderno-de-produtos' },
+    { icon: TrendingUp, label: 'Predição (mercado)', href: '/preditiva' },
+    { icon: MapPin, label: 'Geolocalização', href: '/geolocalizacao' },
     { icon: Wrench, label: 'Engenharia', href: '/engenharia' },
     { icon: HeartPulse, label: 'Saúde', href: '/saude' },
+    { icon: GraduationCap, label: 'Educação e capacitação', href: '/educacao' },
+    { icon: ShieldCheck, label: 'Cibersegurança', href: '/ciberseguranca' },
+    { icon: Compass, label: 'Geomapeamento', href: '/geomapeamento' },
+    { icon: Building2, label: 'Governo', href: '/governo' },
+    { icon: Vote, label: 'Cívico', href: '/civico' },
+    { icon: FlaskConical, label: 'Computação quântica', href: '/quantum' },
+    { icon: FlaskConical, label: 'IA e superinteligência', href: '/ia' },
+    { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
+    { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
+    { icon: Store, label: 'Soluções jurídicas', href: '/solucoes' },
     { icon: ShieldCheck, label: 'Superfície de ataque', href: '/superficie-de-ataque' },
     { icon: Droplets, label: 'Água dos reservatórios (ANA)', href: '/agua' },
     { icon: GraduationCap, label: 'Trilhas de estudo', href: '/trilhas' },
@@ -95,7 +104,6 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: Ruler, label: 'Régua de acerto dos modelos', href: '/regua' },
     { icon: Target, label: 'Escolha do mercado', href: '/escolha-do-mercado' },
     { icon: Coins, label: 'Mapa de receita', href: '/mapa-de-receita' },
-    { icon: BookOpen, label: 'Caderno de produtos', href: '/caderno-de-produtos' },
     { icon: Banknote, label: 'Royalties', href: '/royalties' },
   ] },
   { id: 'conta', titulo: 'Minha conta', bloco: 'Minha conta', nivel: 'todos', dica: 'Do seu jeito', itens: [
@@ -229,7 +237,16 @@ export const DICAS: Record<string, string> = {
   '/indicadores': 'Indicadores e metas (OKRs) do escritório',
   '/relatorios': 'Relatórios prontos para imprimir ou exportar',
   '/trilha': 'Registro do que foi feito, com carimbo que prova a data',
-  '/instituto': 'Pesquisa e estudos do THEYE Institute',
+  '/instituto': 'Pesquisa e estudos do Instituto DI',
+  '/frentes-do-instituto': 'Lista das doze frentes do Instituto: cada uma abre direto, você já entrou',
+  '/preditiva': 'Plataforma preditiva: previsões de mercado com incerteza declarada',
+  '/educacao': 'Educação e capacitação do Instituto: trilhas, cursos e materiais',
+  '/ciberseguranca': 'Cibersegurança: rastros, superfície de ataque e resposta a incidentes',
+  '/geomapeamento': 'Geomapeamento: camadas e mapas por tema, para análise e laudo',
+  '/governo': 'Governo: estudos para órgãos e políticas públicas',
+  '/civico': 'Cívico: enquetes e participação cidadã',
+  '/quantum': 'Computação quântica e direito: cenários e preparo',
+  '/ia': 'IA e superinteligência: modelos, agentes e consultores',
   '/consultores': 'Consultores de IA por nível e por especialidade',
   '/estudos': 'Estudos para entidades, órgãos e associações',
   '/enquetes': 'Enquetes sobre temas do direito',

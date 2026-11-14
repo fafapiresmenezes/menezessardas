@@ -9,8 +9,22 @@ import { ROTAS_TELAS } from '@/data/rotas'
 
 const app = readFileSync('src/App.tsx', 'utf8')
 
-/** A tela de entrada não usa a moldura (Layout): ela é a própria entrada, com a marca no alto. */
-const SEM_MOLDURA = ['/inicio']
+/** Telas de vitrine/porta não usam a moldura (Layout): elas são a própria entrada, com a marca
+ * no alto. /inicio é a entrada depois do login; /frentes-do-instituto (V5) é a vitrine das 12
+ * frentes para quem administra o Instituto DI; as oito frentes abaixo usam a página genérica do
+ * portal do Instituto (PortalInstitutoPage), que já traz seu próprio cabeçalho. */
+const SEM_MOLDURA = [
+  '/inicio',
+  '/frentes-do-instituto',
+  '/preditiva',
+  '/educacao',
+  '/ciberseguranca',
+  '/geomapeamento',
+  '/governo',
+  '/civico',
+  '/quantum',
+  '/ia',
+]
 
 /** rota -> arquivo da tela, lido do App.tsx (é ele quem decide qual tela abre em cada endereço). */
 function arquivoDaRota(rota: string): string {

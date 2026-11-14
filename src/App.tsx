@@ -11,6 +11,7 @@ const StokasticosPage = lazy(() => import('@/pages/StokasticosPage'))
 // propósito: importar a lista no App.tsx puxaria o texto das oito páginas para o primeiro acesso.
 const PortalInstitutoPage = lazy(() => import('@/pages/PortalInstitutoPage'))
 const PortaisInstitutoPage = lazy(() => import('@/pages/PortaisInstitutoPage'))
+const FrentesDoInstitutoPage = lazy(() => import('@/pages/FrentesDoInstitutoPage'))
 // Passo T2: conferir a corrente do trilho no navegador de quem duvida.
 const LastroPage = lazy(() => import('@/pages/LastroPage'))
 const CotasQuanticasPage = lazy(() => import('@/pages/CotasQuanticasPage'))
@@ -257,6 +258,7 @@ function App() {
         <Route path="/stokasticos/ciencia" element={<StokasticosPage />} />
         <Route path="/stokasticos/magia" element={<StokasticosPage />} />
         <Route path="/portais" element={<PortaisInstitutoPage />} />
+        <Route path="/frentes-do-instituto" element={<FrentesDoInstitutoPage />} />
         <Route path="/lastro" element={<LastroPage />} />
         <Route path="/preditiva" element={<PortalInstitutoPage />} />
         <Route path="/geomapeamento" element={<PortalInstitutoPage />} />

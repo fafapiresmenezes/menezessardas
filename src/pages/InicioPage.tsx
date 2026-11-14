@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { gravarAreaAtual, ESPECIALIDADES } from '@/lib/assistente'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { meuAlcance, rotuloCargo, type Cargo } from '@/lib/hierarquia'
@@ -140,7 +140,7 @@ export default function InicioPage() {
             {escritorio && alcance?.admin && (
               <p className="text-sm text-grafite mt-2" data-testid="inicio-administra" title="Quem administra libera as pessoas que pedem para entrar e define o cargo de cada uma, na Área do administrador.">
                 {escritorio.instituto && escritorio.sede && supabaseConfigurado
-                  ? <>Você administra o <strong>Instituto THEYE</strong>, que cuida da plataforma inteira{escritorio.advocacia ? <>, e também o escritório <strong>{escritorio.advocacia}</strong></> : null}.</>
+                  ? <>Você administra o <strong>Instituto DI</strong>, que cuida da plataforma inteira{escritorio.advocacia ? <>, e também o escritório <strong>{escritorio.advocacia}</strong></> : null}. <Link to="/frentes-do-instituto" className="underline underline-offset-4" data-testid="atalho-frentes-instituto" title="Abre a lista das 12 frentes do Instituto, cada uma leva direto ao seu segmento.">Ver todas as frentes →</Link></>
                   : <>Você <strong>administra este escritório</strong>: libera quem pede para entrar e define o cargo de cada pessoa.</>}
               </p>
             )}
