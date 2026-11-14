@@ -1,8 +1,9 @@
 import { Link, useLocation } from 'react-router-dom'
 import Marca from '@/components/Marca'
 import { PORTAIS_INSTITUTO } from '@/data/portais-instituto'
-import { PORTAIS_I18N, ROTULO_ESTADO_I18N, EXPLICACAO_ESTADO_I18N } from '@/data/portais-instituto-i18n'
+import { PORTAIS_I18N, ROTULO_ESTADO_I18N, EXPLICACAO_ESTADO_I18N, type RotaPortal } from '@/data/portais-instituto-i18n'
 import { useIdioma } from '@/lib/i18n'
+import SeletorIdioma from '@/components/SeletorIdioma'
 
 /**
  * Passo B7: uma página por porta do Instituto que ainda está em desenvolvimento.
@@ -45,6 +46,14 @@ const TEXTO_CONTATO: Record<string, (entrada: string) => JSX.Element> = {
 const NOME_ENTRADA: Record<string, string> = { pt: 'entrada', en: 'entrance', zh: '入口', es: 'entrada' }
 const TODAS_AS_PORTAS: Record<string, string> = { pt: 'Todas as portas', en: 'All doors', zh: '所有门', es: 'Todas las puertas' }
 const PORTA_NAO_EXISTE: Record<string, string> = { pt: 'Esta porta não existe', en: 'This door does not exist', zh: '此门不存在', es: 'Esta puerta no existe' }
+// Tradução por máquina erra termo jurídico e de engenharia. Até um revisor humano ler, a versão
+// de referência é a portuguesa, e a página diz isso (restrição do passo V6).
+const REFERENCIA_PT: Record<string, string> = {
+  pt: 'Versão de referência: português. As traduções ainda não passaram por revisor humano.',
+  en: 'Reference version: Portuguese. The translations have not yet been reviewed by a human.',
+  zh: '基准版本:葡萄牙语。译文尚未经过人工审校。',
+  es: 'Versión de referencia: portugués. Las traducciones aún no las revisó una persona.',
+}
 const VEJA_PORTAS: Record<string, (link: JSX.Element) => JSX.Element> = {
   pt: link => <>Veja as portas do Instituto em {link}.</>,
   en: link => <>See the Institute's doors at {link}.</>,
@@ -57,7 +66,7 @@ export default function PortalInstitutoPage() {
   const idioma = useIdioma()
   const rota = pathname.replace(/\/$/, '')
   const portal = PORTAIS_INSTITUTO.find(p => p.rota === rota)
-  const traduzido = portal ? PORTAIS_I18N[portal.rota]?.[idioma] ?? PORTAIS_I18N[portal.rota]?.pt : null
+  const traduzido = portal ? PORTAIS_I18N[portal.rota as RotaPortal]?.[idioma] ?? PORTAIS_I18N[portal.rota as RotaPortal]?.pt : null
   const nome = traduzido?.nome ?? portal?.nome ?? ''
   const resumo = traduzido?.resumo ?? portal?.resumo ?? ''
   const escopo = traduzido?.escopo ?? portal?.escopo ?? []
@@ -74,6 +83,7 @@ export default function PortalInstitutoPage() {
               <Link to="/portais" title={TODAS_AS_PORTAS[idioma]} className="underline decoration-white/40">{TODAS_AS_PORTAS[idioma]}</Link>,
             )}
           </p>
+          <SeletorIdioma />
         </div>
       </div>
     )
@@ -120,7 +130,7 @@ export default function PortalInstitutoPage() {
         <nav className="mt-12 pt-6 border-t border-neutral-500 flex flex-wrap gap-x-5 gap-y-2 text-sm">
           <Link to="/portais" title={TODAS_AS_PORTAS[idioma]} className="text-neutral-500 hover:text-white underline decoration-white/20">{TODAS_AS_PORTAS[idioma]}</Link>
           {PORTAIS_INSTITUTO.filter(p => p.rota !== portal.rota).map(p => {
-            const outro = PORTAIS_I18N[p.rota]?.[idioma] ?? PORTAIS_I18N[p.rota]?.pt
+            const outro = PORTAIS_I18N[p.rota as RotaPortal]?.[idioma] ?? PORTAIS_I18N[p.rota as RotaPortal]?.pt
             const nomeOutro = outro?.nome ?? p.nome
             const resumoOutro = outro?.resumo ?? p.resumo
             return (
@@ -128,6 +138,12 @@ export default function PortalInstitutoPage() {
             )
           })}
         </nav>
+
+        {idioma !== 'pt' && (
+          <p className="text-xs text-neutral-400 mt-6" data-testid="referencia-pt">{REFERENCIA_PT[idioma]}</p>
+        )}
+
+        <SeletorIdioma />
       </div>
     </div>
   )

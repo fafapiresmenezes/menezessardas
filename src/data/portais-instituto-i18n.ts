@@ -47,7 +47,21 @@ export const EXPLICACAO_ESTADO_I18N: Record<Idioma, Record<EstadoPortal, string>
   },
 }
 
-export const PORTAIS_I18N: Record<string, Record<Idioma, PortalTraduzido>> = {
+// As oito portas do Instituto, listadas uma a uma. Tipar PORTAIS_I18N por esta união faz com que
+// uma porta sem tradução — ou uma porta nova sem as quatro línguas — vire ERRO ao montar o
+// programa (tarefa 2 do passo V6), em vez de português aparecendo na tela em chinês. O teste
+// portais-instituto-i18n.test.ts confere que esta lista bate com PORTAIS_INSTITUTO.
+export type RotaPortal =
+  | '/preditiva'
+  | '/geomapeamento'
+  | '/governo'
+  | '/educacao'
+  | '/civico'
+  | '/ciberseguranca'
+  | '/quantum'
+  | '/ia'
+
+export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> = {
   '/preditiva': {
     pt: {
       nome: 'Plataforma preditiva',
