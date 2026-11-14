@@ -9,7 +9,7 @@ const cors = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
-const APP = 'https://gmenezes-advogados.vercel.app/#'
+const APP = 'https://theye.club/#'
 const brl = (v: unknown) => 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 type Bloco = Record<string, number | string | null>
 type Relatorio = { mes: string; periodo: string; contratos: Bloco; imoveis: Bloco; casos: Bloco; financeiro: Bloco; intimacoes: Bloco; ia: Bloco; assinaturas: Bloco; compliance: Bloco }
@@ -57,7 +57,7 @@ async function gerarPdf(r: Relatorio, geradoEm: string): Promise<Uint8Array> {
   }
   if (y < 90) nova()
   page.drawText(ansi('Como ler: contratos e documentos são a fotografia no fim do mês; tarefas, horas, intimações e IA são o movimento dentro do mês; honorários recebidos são o acumulado dos casos.'), { x: 40, y, size: 8, font: sans, color: cinza, maxWidth: 515, lineHeight: 10 }); y -= 24
-  page.drawText(ansi(`Abra a plataforma em gmenezes-advogados.vercel.app · Relatórios. Desenvolvido pelo THEYE Institute.`), { x: 40, y, size: 8, font: sans, color: cinza })
+  page.drawText(ansi(`Abra a plataforma em theye.club · Relatórios. Desenvolvido pelo THEYE Institute.`), { x: 40, y, size: 8, font: sans, color: cinza })
   return await pdf.save()
 }
 
