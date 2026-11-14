@@ -5,6 +5,10 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render, screen, fireEvent, cleanup } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { reiniciarIdioma } from '@/lib/i18n'
+
+const contarVisita = vi.fn()
+vi.mock('@/lib/visitas', () => ({ contarVisita: (...a: unknown[]) => contarVisita(...a) }))
+
 import BoasVindasPage from './BoasVindasPage'
 import Vertentes from '@/components/Vertentes'
 
@@ -57,5 +61,35 @@ describe('porta redesenhada (V13)', () => {
     render(<MemoryRouter><Vertentes /></MemoryRouter>)
     fireEvent.click(screen.getByTestId('vertente-engenharia'))
     expect(localStorage.getItem('theye-ultima-frente')).toBe('/engenharia')
+  })
+})
+
+describe('contagem de visitas na porta (V10)', () => {
+  beforeEach(() => {
+    cleanup(); localStorage.clear(); reiniciarIdioma(); contarVisita.mockReset()
+    Element.prototype.scrollIntoView = vi.fn()
+  })
+  afterEach(() => { localStorage.clear(); reiniciarIdioma() })
+
+  it('a porta diz que conta visitas e não segue pessoas', () => {
+    montar()
+    expect(screen.getByTestId('porta-sem-rastreio').textContent).toContain('não seguimos pessoas')
+  })
+
+  it('abrir a porta conta uma visita', () => {
+    montar()
+    expect(contarVisita).toHaveBeenCalledWith('visita')
+  })
+
+  it('escolher a língua conta o idioma', () => {
+    montar()
+    fireEvent.click(screen.getByTestId('idioma-zh'))
+    expect(contarVisita).toHaveBeenCalledWith('idioma', 'zh')
+  })
+
+  it('clicar num quadradinho conta aquele quadradinho', () => {
+    render(<MemoryRouter><Vertentes /></MemoryRouter>)
+    fireEvent.click(screen.getByTestId('vertente-saude'))
+    expect(contarVisita).toHaveBeenCalledWith('quadradinho', 'saude')
   })
 })

@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { IDIOMAS, type Idioma } from '@/lib/idioma'
 import { trocarIdioma, useTexto, textoEm, chaveIdioma, type Chave } from '@/lib/i18n'
 import { destinoSeguro, entradaPara, ultimaFrente, esquecerUltimaFrente } from '@/lib/destino'
+import { contarVisita } from '@/lib/visitas'
 import { VERTENTES } from '@/data/vertentes'
 import Marca from '@/components/Marca'
 import Vertentes from '@/components/Vertentes'
@@ -26,12 +27,16 @@ export default function BoasVindasPage() {
   const t = useTexto()
   const [retomar, setRetomar] = useState<string | null>(ultimaFrente())
 
+  // Contagem de visitas (V10): soma uma visita ao abrir a porta, sem identificar ninguém.
+  useEffect(() => { contarVisita('visita') }, [])
+
   const nomeDaFrente = (rota: string) => {
     const v = VERTENTES.find(x => x.rota === rota)
     return v ? t(`vertente.${v.id}.nome` as Chave) : ''
   }
   const escolher = (codigo: Idioma) => {
     trocarIdioma(codigo)
+    contarVisita('idioma', codigo)
     // Quem chegou por um quadradinho continua indo para a tela daquele quadradinho.
     const ir = busca.get('ir'); navigate(ir ? entradaPara(destinoSeguro(ir)) : '/login')
   }
@@ -133,6 +138,8 @@ export default function BoasVindasPage() {
             ))}
           </div>
           <p className="text-sm text-neutral-300 mt-6">{t('boasVindas.dica')}</p>
+          {/* Regra escrita na porta (V10 tarefa 5): deixamos claro o que a contagem é e o que não é. */}
+          <p className="text-sm text-neutral-300 mt-2" data-testid="porta-sem-rastreio">{t('porta.semRastreio')}</p>
         </section>
 
         {/* Tarefa 7: ordem de quem compra — o que é (frentes), o caderno de produtos e o apoio. */}
