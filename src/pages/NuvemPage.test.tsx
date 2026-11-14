@@ -11,8 +11,13 @@ const upload = vi.fn(async (_p: string, _f: unknown, _o?: object): Promise<{ err
 const createSignedUrl = vi.fn(async (p: string) => ({ data: { signedUrl: `https://assinado/${p}` }, error: null }))
 vi.mock('@/lib/supabase', () => ({
   supabaseConfigurado: true,
-  supabase: { auth: { getUser: async () => ({ data: { user: { id: 'u1' } } }) }, storage: { from: () => ({ list, move, copy, remove, upload, createSignedUrl }) } },
+  supabase: {
+    auth: { getUser: async () => ({ data: { user: { id: 'u1' } } }) },
+    storage: { from: () => ({ list, move, copy, remove, upload, createSignedUrl }) },
+    rpc: async () => ({ data: 'esc-1', error: null }),
+  },
 }))
+vi.mock('@/lib/equipe', () => ({ meuEscritorio: vi.fn(async () => ({ nome: 'SARDAS E MENEZES', sede: true, pessoa: '', email: '' })) }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 const { default: NuvemPage } = await import('./NuvemPage')
 
@@ -85,5 +90,14 @@ describe('Nuvem do escritório', () => {
     fireEvent.click(screen.getByRole('tab', { name: 'Pessoal' }))
     await waitFor(() => expect(screen.getByRole('alert')).toBeTruthy())
     click.mockRestore()
+  })
+
+  it('A33: escritório parceiro (não sede) usa pasta própria, escritorio/<id>, nunca a raiz da sede', async () => {
+    const { meuEscritorio } = await import('@/lib/equipe')
+    vi.mocked(meuEscritorio).mockResolvedValueOnce({ nome: 'ESCRITÓRIO PARCEIRO', sede: false, pessoa: '', email: '' })
+    pastas['escritorio/esc-1'] = [arq('contrato-parceiro.pdf')]
+    render(<NuvemPage />)
+    await waitFor(() => expect(screen.getByText('contrato-parceiro.pdf', { exact: false })).toBeTruthy())
+    expect(list).toHaveBeenLastCalledWith('escritorio/esc-1', expect.anything())
   })
 })

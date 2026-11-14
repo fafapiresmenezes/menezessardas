@@ -3,6 +3,7 @@ import { useBaixado } from '@/hooks/useBaixado'
 import { mensagemAmigavel } from '@/lib/erros'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
+import { meuEscritorio } from '@/lib/equipe'
 import { Cloud, Download, Folder, FolderPlus, History, Lock, Trash2, Upload } from 'lucide-react'
 
 // Nuvem do escritório: arquivos no armazenamento privado do Supabase (bucket "nuvem").
@@ -27,13 +28,22 @@ export default function NuvemPage() {
   // Passo 176: o filtro por nome é lembrado neste navegador.
   const [filtroNome, setFiltroNome] = useState(() => { try { return localStorage.getItem('lsm-nuvem-filtro') || '' } catch { return '' } })
   const [baixado, marcarBaixado] = useBaixado() // Passo 403
+  // A33: escritório parceiro (não sede) ganha pasta própria, "escritorio/<id do escritório>"; a sede
+  // continua em "escritorio" (caminho de sempre, com os arquivos que já existem lá).
+  const [escritorioId, setEscritorioId] = useState<string | null>(null)
+  const [souSede, setSouSede] = useState(true)
   useEffect(() => { try { localStorage.setItem('lsm-nuvem-filtro', filtroNome) } catch { /* sem armazenamento */ } }, [filtroNome])
-  const base = area === 'escritorio' ? 'escritorio' : `pessoal/${uid}`
-  const pasta = sub ? `${base}/${sub}` : base
+  const base = area === 'pessoal' ? `pessoal/${uid}` : souSede ? 'escritorio' : escritorioId ? `escritorio/${escritorioId}` : null
+  const pasta = base && sub ? `${base}/${sub}` : base
 
   useEffect(() => { supabase.auth.getUser().then(r => setUid(r.data.user?.id ?? '')) }, [])
+  useEffect(() => {
+    meuEscritorio().then(m => setSouSede(m?.sede !== false))
+    supabase.rpc('escritorio_atual').then(r => setEscritorioId(typeof r.data === 'string' ? r.data : null))
+  }, [])
   const carregar = useCallback(async () => {
     if (area === 'pessoal' && !uid) return
+    if (!pasta) return
     const { data, error } = await supabase.storage.from('nuvem').list(pasta, { limit: 500, sortBy: { column: 'name', order: 'asc' } })
     if (error) setMsg(mensagemAmigavel(error))
     setItens((data ?? []).filter(i => i.name !== '.pasta' && i.name !== '.versoes') as Item[])
@@ -78,7 +88,7 @@ export default function NuvemPage() {
   }
 
   const enviar = async (arqs: FileList | null) => {
-    if (!arqs?.length) return
+    if (!arqs?.length || !pasta) return
     setOcupado(true); setMsg('')
     for (const a of Array.from(arqs)) {
       const nome = a.name.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\w.\- ]/g, '_')
@@ -103,7 +113,7 @@ export default function NuvemPage() {
   }
   const novaPasta = async () => {
     const n = prompt('Nome da nova pasta')?.trim().replace(/[^\w\- ]/g, '_')
-    if (!n) return
+    if (!n || !pasta) return
     const { error } = await supabase.storage.from('nuvem').upload(`${pasta}/${n}/.pasta`, new Blob(['']))
     if (error) setMsg(mensagemAmigavel(error))
     carregar()
