@@ -45,7 +45,7 @@ export default function MercadoPage() {
   }
   const ranking = [...prontas].filter(x => nivel(x) === 'alta' || nivel(x) === 'media').sort((x, y) => (y.previsao!.variacao ?? -999) - (x.previsao!.variacao ?? -999))
   return (
-    <Layout title="Previsão de mercado jurídico">
+    <Layout title="Mercado jurídico">
       <div className="space-y-6">
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6">
           <p className="text-sm">Quantos processos novos cada área recebe por ano nos tribunais do Rio, em duas fontes públicas do CNJ (DataJud por classe processual e Justiça em Números por tribunal), e a tendência para os próximos 3 anos, com margem de erro de 95%. Mede <strong>demanda</strong>: mais processos significam mais clientes potenciais, não necessariamente honorários maiores.</p>

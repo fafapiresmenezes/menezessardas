@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { repositorio, calcularAlertas, type Alerta } from '@/lib/repositorio'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
+import { meuAlcance, podeVer, ALCANCE_FECHADO, type Alcance } from '@/lib/hierarquia'
 import { diasAte } from '@/lib/datas'
 
 export { type Alerta }
@@ -22,6 +23,9 @@ function lerLocal(): CompromissoGuardado[] {
   try { return JSON.parse(localStorage.getItem(CHAVE_LOCAL) || '[]') } catch { return [] }
 }
 
+// Compromissos do calendário (vencimentos de contrato, reajustes, vistorias, eventos importados do .ics)
+// são da carteira de locação e valem para o escritório inteiro: não têm advogado dono e ficam sem filtro
+// de propósito — é a agenda comum da casa, não o caso de ninguém.
 async function listarCompromissos(): Promise<CompromissoGuardado[]> {
   if (!supabaseConfigurado) return lerLocal()
   const { data, error } = await supabase.from('compromissos').select('id,titulo,imovel,data_evento,dias_antes,avisos_dias')
@@ -30,22 +34,28 @@ async function listarCompromissos(): Promise<CompromissoGuardado[]> {
 }
 
 // Passo D02 (Diamante): prazos das tarefas abertas (inclusive as criadas a partir de intimações) entram na Agenda e nos Alertas.
-async function listarPrazosDeTarefas(): Promise<CompromissoGuardado[]> {
+// Privacidade por advogado: o prazo do colega não entra na agenda nem nos alertas de quem não pode vê-lo.
+// Tarefa sem responsável continua aparecendo para todos — alguém precisa assumi-la, ninguém pode perder o prazo.
+async function listarPrazosDeTarefas(alc: Alcance): Promise<CompromissoGuardado[]> {
   if (!supabaseConfigurado) return []
   try {
-    const { data, error } = await supabase.from('tarefas').select('id,titulo,cliente,numero_processo,prazo,situacao').not('prazo', 'is', null).neq('situacao', 'feito')
+    const { data, error } = await supabase.from('tarefas').select('id,titulo,cliente,numero_processo,prazo,situacao,responsavel_id').not('prazo', 'is', null).neq('situacao', 'feito')
     if (error || !data) return []
-    return data.map(t => ({ id: `tarefa-${t.id}`, titulo: `Prazo: ${t.titulo}`, imovel: t.numero_processo || t.cliente || 'Casos e projetos', dataEvento: String(t.prazo).slice(0, 10), diasAntes: 1, avisosDias: [1] }))
+    return data.filter(t => podeVer(alc, (t as { responsavel_id?: string | null }).responsavel_id ?? null))
+      .map(t => ({ id: `tarefa-${t.id}`, titulo: `Prazo: ${t.titulo}`, imovel: t.numero_processo || t.cliente || 'Casos e projetos', dataEvento: String(t.prazo).slice(0, 10), diasAntes: 1, avisosDias: [1] }))
   } catch { return [] }
 }
 
 // Passo D13 (Diamante): parcelas de honorários em aberto entram na Agenda e nos Alertas (aviso 7 dias antes).
-async function listarParcelasDeHonorarios(): Promise<CompromissoGuardado[]> {
+// O dinheiro segue o caso: a parcela só aparece para quem pode ver o caso dela (mesma regra da migração 124).
+async function listarParcelasDeHonorarios(alc: Alcance): Promise<CompromissoGuardado[]> {
   if (!supabaseConfigurado) return []
   try {
-    const { data, error } = await supabase.from('parcelas_honorarios').select('id,caso_id,numero,vencimento,valor,pago_em,tarefas(titulo,cliente)').is('pago_em', null)
+    const { data, error } = await supabase.from('parcelas_honorarios').select('id,caso_id,numero,vencimento,valor,pago_em,tarefas(titulo,cliente,responsavel_id)').is('pago_em', null)
     if (error || !data) return []
-    return data.map(p => { const t = (Array.isArray(p.tarefas) ? p.tarefas[0] : p.tarefas) as { titulo?: string; cliente?: string | null } | null; return { id: `parcela-${p.id}`, titulo: `Parcela ${p.numero} de honorários: ${t?.titulo ?? 'caso'}`, imovel: t?.cliente || 'Honorários', dataEvento: String(p.vencimento).slice(0, 10), diasAntes: 7, avisosDias: [7, 1] } })
+    return data.map(p => ({ p, t: (Array.isArray(p.tarefas) ? p.tarefas[0] : p.tarefas) as { titulo?: string; cliente?: string | null; responsavel_id?: string | null } | null }))
+      .filter(({ t }) => podeVer(alc, t?.responsavel_id ?? null))
+      .map(({ p, t }) => ({ id: `parcela-${p.id}`, titulo: `Parcela ${p.numero} de honorários: ${t?.titulo ?? 'caso'}`, imovel: t?.cliente || 'Honorários', dataEvento: String(p.vencimento).slice(0, 10), diasAntes: 7, avisosDias: [7, 1] }))
   } catch { return [] }
 }
 
@@ -84,12 +94,15 @@ export function useAlertas() {
 
   const recarregar = useCallback(async () => {
     try {
+      // Quem está olhando decide o que entra: prazos e parcelas do colega ficam de fora.
+      // Imóveis, contratos e compromissos do calendário são da locação e do escritório inteiro (ver comentário acima).
+      const alc = await meuAlcance().catch(() => ALCANCE_FECHADO)
       const [imoveis, contratos, proprios0, prazos, parcelas] = await Promise.all([
         repositorio.listarImoveis(),
         repositorio.listarContratos(),
         listarCompromissos(),
-        listarPrazosDeTarefas(),
-        listarParcelasDeHonorarios(),
+        listarPrazosDeTarefas(alc),
+        listarParcelasDeHonorarios(alc),
       ])
       const compromissos = [...proprios0, ...prazos, ...parcelas]
       const proprios: Alerta[] = compromissos.map(c => ({

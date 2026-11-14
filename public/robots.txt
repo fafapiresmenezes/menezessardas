@@ -1,7 +1,59 @@
+# Plataforma privada: só a porta de entrada é pública. O que está depois do # exige login e
+# nenhum buscador alcança, mas fica dito aqui de todo jeito.
 User-agent: *
-Allow: /
-Disallow: /admin
-Disallow: /login
-Disallow: /configuracoes
+Allow: /$
+Disallow: /
 
-Sitemap: https://menezes-sardas-contratos.vercel.app/sitemap.xml
+# Pedido de M em 13/11/2026: dificultar raspagem. robots.txt é pedido, não tranca — quem ignora,
+# ignora. A tranca de verdade é o banco (migração 135) e o limite de chamadas. Aqui ficam os
+# raspadores que ANUNCIAM quem são, e que respeitam o arquivo: estes param por aqui.
+User-agent: GPTBot
+Disallow: /
+User-agent: OAI-SearchBot
+Disallow: /
+User-agent: ChatGPT-User
+Disallow: /
+User-agent: ClaudeBot
+Disallow: /
+User-agent: Claude-Web
+Disallow: /
+User-agent: anthropic-ai
+Disallow: /
+User-agent: CCBot
+Disallow: /
+User-agent: Google-Extended
+Disallow: /
+User-agent: Applebot-Extended
+Disallow: /
+User-agent: PerplexityBot
+Disallow: /
+User-agent: Bytespider
+Disallow: /
+User-agent: Amazonbot
+Disallow: /
+User-agent: meta-externalagent
+Disallow: /
+User-agent: FacebookBot
+Disallow: /
+User-agent: Diffbot
+Disallow: /
+User-agent: omgili
+Disallow: /
+User-agent: SemrushBot
+Disallow: /
+User-agent: AhrefsBot
+Disallow: /
+User-agent: MJ12bot
+Disallow: /
+User-agent: DotBot
+Disallow: /
+User-agent: PetalBot
+Disallow: /
+User-agent: DataForSeoBot
+Disallow: /
+User-agent: ImagesiftBot
+Disallow: /
+User-agent: Scrapy
+Disallow: /
+
+Sitemap: https://theye.club/sitemap.xml

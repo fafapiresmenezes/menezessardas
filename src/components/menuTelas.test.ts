@@ -14,20 +14,24 @@ describe('mapa das telas em hierarquia', () => {
     for (const a of ATALHOS_PADRAO) expect(telas.some(t => t.href === a), a).toBe(true)
   })
 
-  it('os quatro primeiros blocos têm o mesmo nome dos blocos da tela de entrada', () => {
-    const inicio = readFileSync('src/pages/InicioPage.tsx', 'utf8')
-    for (const bloco of ['Todo dia', 'Processos', 'Escrever peças', 'Escritório']) { expect(inicio).toContain(`titulo: '${bloco}'`); expect(gruposMenu.some(g => g.bloco === bloco), bloco).toBe(true) }
-  })
+  // Os quatro blocos, os nomes das telas e o título de cada tela são conferidos em nomesDasTelas.test.ts.
 
-  it('cada nível vê só o que é seu: dinheiro para sócios e gestor, pessoas para o administrador, plataforma para o Instituto', () => {
+  it('cada nível vê só o que é seu: o dinheiro para sócios e gestor, as pessoas para o administrador, a plataforma para o Instituto', () => {
     const ids = (v: Visao) => gruposVisiveis(v).map(g => g.id)
-    expect(ids(ninguem)).toEqual(['hoje', 'processos', 'pesquisa', 'imoveis', 'gestao', 'conta'])
-    expect(ids({ ...ninguem, veTudo: true })).toContain('financeiro')
-    expect(ids({ ...ninguem, veTudo: true })).not.toContain('admin')
-    expect(ids({ ...ninguem, admin: true })).toEqual(expect.arrayContaining(['financeiro', 'admin']))
+    const telasDe = (v: Visao, id: string) => gruposVisiveis(v).find(g => g.id === id)?.itens.map(i => i.href) ?? []
+    expect(ids(ninguem)).toEqual(['hoje', 'processos', 'pecas', 'escritorio', 'conta'])
+    // o bloco do Escritório existe para todos (conformidade e consultores), mas o dinheiro só aparece para quem pode
+    expect(telasDe(ninguem, 'escritorio')).toEqual(['/consultores', '/compliance', '/trilha'])
+    expect(telasDe({ ...ninguem, veTudo: true }, 'escritorio')).toContain('/financeiro')
+    expect(telasDe({ ...ninguem, veTudo: true }, 'escritorio')).not.toContain('/equipe')
+    expect(telasDe({ ...ninguem, admin: true }, 'escritorio')).toEqual(expect.arrayContaining(['/financeiro', '/equipe', '/consumo']))
+    // as telas do Instituto ficam fora do menu do escritório
     expect(ids({ ...ninguem, admin: true })).not.toContain('instituto')
-    expect(ids({ veTudo: true, admin: true, instituto: true, sede: true })).toHaveLength(gruposMenu.length)
+    expect(ids({ veTudo: true, admin: true, instituto: true, sede: true })).toContain('instituto')
     expect(podeVerNivel('instituto', { ...ninguem, admin: true })).toBe(false)
+    for (const h of ['/instituto', '/estudos', '/enquetes', '/mercado', '/solucoes']) {
+      expect(gruposVisiveis({ veTudo: true, admin: true, instituto: false, sede: true }).flatMap(g => g.itens.map(i => i.href)), h).not.toContain(h)
+    }
     // Escritório de fora da casa principal não tem imóveis, fornecedores, alertas nem a tela do Instituto.
     const fora = gruposVisiveis({ veTudo: true, admin: true, instituto: false, sede: false }).flatMap(g => g.itens.map(i => i.href))
     for (const h of ['/imoveis', '/fornecedores', '/alertas', '/instituto']) expect(fora).not.toContain(h)
@@ -38,7 +42,7 @@ describe('mapa das telas em hierarquia', () => {
     expect(atalhosDoMenu(undefined, ninguem).map(a => a.href)).toEqual(ATALHOS_PADRAO)
     expect(atalhosDoMenu([], ninguem).map(a => a.href)).toEqual(ATALHOS_PADRAO)
     const meus = atalhosDoMenu(['/equipe', '/assistente', '/assistente', '/meu-dia', '/x'], ninguem)
-    expect(meus.map(a => `${a.bloco}:${a.label}`)).toEqual(['Escrever peças:Assistente', 'Todo dia:Meu dia'])
+    expect(meus.map(a => `${a.bloco}:${a.label}`)).toEqual(['Escrever peças:Assistente jurídico', 'Todo dia:Meu dia'])
     expect(atalhosDoMenu(['/equipe', '/assistente'], { ...ninguem, admin: true }).map(a => a.href)).toEqual(['/equipe', '/assistente'])
   })
 })

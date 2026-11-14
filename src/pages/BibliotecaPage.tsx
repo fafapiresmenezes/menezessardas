@@ -5,9 +5,11 @@ import Vazio from '@/components/Vazio'
 import { supabase } from '@/lib/supabase'
 import { Link } from 'react-router-dom'
 import { REPOSITORIOS_ABERTOS, ROTULO_TIPO, filtrar, guardarNaBiblioteca, type ItemBiblioteca, type TipoBiblioteca } from '@/lib/biblioteca'
+import { filtrarPorCriador, meuAlcance, ALCANCE_FECHADO, type Cargo } from '@/lib/hierarquia'
 import { BookOpen, Library, Trash2 } from 'lucide-react'
 
 // Bloco B04: tudo o que já foi pesquisado (Assistente, Fontes, Parte adversa e notas), com busca e etiquetas.
+// Privacidade (pedido do M, 12/11/2026): cada pessoa só vê o que ela mesma guardou; sócio(a) e gestor(a) veem tudo.
 export default function BibliotecaPage() {
   const [itens, setItens] = useState<ItemBiblioteca[]>([])
   const [busca, setBusca] = useState('')
@@ -15,10 +17,13 @@ export default function BibliotecaPage() {
   const [aberto, setAberto] = useState<number | null>(null)
   const [nota, setNota] = useState({ titulo: '', conteudo: '', etiquetas: '' })
   const [msg, setMsg] = useState('')
-  const carregar = () => supabase.from('biblioteca_pesquisas').select('id,tipo,titulo,conteudo,etiquetas,caso,criado_em').order('criado_em', { ascending: false }).limit(500)
+  const [alcance, setAlcance] = useState<{ id: string; cargo: Cargo | null; admin: boolean; veTudo: boolean } | null>(null)
+  const carregar = () => supabase.from('biblioteca_pesquisas').select('id,tipo,titulo,conteudo,etiquetas,caso,criado_em,criado_por').order('criado_em', { ascending: false }).limit(500)
     .then(({ data }) => setItens((data ?? []) as ItemBiblioteca[]))
-  useEffect(() => { carregar() }, [])
-  const visiveis = filtrar(itens, busca, tipo)
+  useEffect(() => { carregar(); meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza.
+  const meus = filtrarPorCriador(itens, alcance ?? ALCANCE_FECHADO)
+  const visiveis = filtrar(meus, busca, tipo)
   const salvarNota = async () => {
     const ok = await guardarNaBiblioteca({ tipo: 'nota', titulo: nota.titulo, conteudo: nota.conteudo, etiquetas: nota.etiquetas.split(',') })
     setMsg(ok ? 'Nota guardada.' : 'Não foi possível guardar agora. Tente de novo.')
@@ -61,7 +66,7 @@ export default function BibliotecaPage() {
         </section>
         <section className="bg-white shadow-sm p-6" data-testid="biblioteca-lista">
           <h2 className="font-serif text-xl mb-2 flex items-center gap-2"><Library className="w-5 h-5 text-dourado" aria-hidden />{visiveis.length} item(ns)</h2>
-          {itens.length === 0 ? <Vazio testid="biblioteca-vazia" titulo="Nada guardado ainda" texto="Use o botão Guardar na biblioteca no Assistente, ou monte uma ficha de parte adversa: tudo aparece aqui." /> : (
+          {itens.length === 0 ? <Vazio testid="biblioteca-vazia" titulo="Nada guardado ainda" texto="Pergunte ou peça uma peça no Assistente jurídico e clique em Guardar na biblioteca: tudo o que você guardar aparece aqui." acao={{ rotulo: 'Abrir o Assistente jurídico', para: '/assistente', dica: 'Abre o Assistente jurídico para pesquisar ou redigir e guardar o resultado aqui' }} /> : (
             <ul className="divide-y divide-navy/10 text-sm">
               {visiveis.map(i => (
                 <li key={i.id} className="py-2" data-testid="biblioteca-item">

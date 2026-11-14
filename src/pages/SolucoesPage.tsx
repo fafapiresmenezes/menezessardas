@@ -62,7 +62,7 @@ export default function SolucoesPage() {
   return (
     <Layout title="Soluções jurídicas">
       <p className="text-sm text-grafite-claro mb-6 max-w-3xl">
-        <strong>Soluções para escritórios jurídicos</strong> é a vertente que leva o Theye.club a
+        <strong>Soluções para escritórios jurídicos</strong> é a frente que leva o Theye.club a
         outros escritórios de advocacia. É o produto comercial: o mesmo sistema do Instituto,
         oferecido como serviço para quem quer modernizar a gestão e a rotina jurídica.
       </p>

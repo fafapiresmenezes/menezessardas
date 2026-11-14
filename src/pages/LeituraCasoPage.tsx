@@ -10,7 +10,9 @@ import { decidir, faixaDecisao, encolher, ajustarTaxaBase, zonaDeAcordo, FATORES
 import { REFERENCIAS, ROTULO_TEMA, type TemaRef } from '@/lib/leituraCaso/referencias'
 import { confrontar, soUmMenciona } from '@/lib/leituraCaso/contradicoes'
 import { ROTEIRO, novaLeitura, lerLeituras, gravarLeituras, type LeituraCaso, type Desfecho } from '@/lib/leituraCaso/roteiro'
-import { placar, nivelBrier } from '@/lib/leituraCaso/placar'
+import { placar, nivelBrier, paresDoPlacar } from '@/lib/leituraCaso/placar'
+import { comparacaoComBase } from '@/lib/reguaDeErro'
+import { faixaComPrecedentes, ROTULO_DESFECHO } from '@/lib/leituraCaso/precedentes'
 import { Compass, Scale, MessagesSquare, ClipboardCheck, Plus, Trash2, Copy, ShieldCheck, Info, BookMarked } from 'lucide-react'
 
 // Leitura do caso: contexto, predição com dados públicos, confronto de depoimentos e roteiro de audiência.
@@ -76,6 +78,7 @@ export default function LeituraCasoPage() {
   const isolados = useMemo(() => soUmMenciona(caso.depoimentos), [caso.depoimentos])
   const tipo = tipoAcao(caso.acao)
   const pl = useMemo(() => placar(casos), [casos])
+  const comparacaoBase = useMemo(() => comparacaoComBase(paresDoPlacar(casos)), [casos])
 
   const faixa = juri && juri.amostra ? intervaloWilson(juri.resultados.procedencia + juri.resultados.parcial / 2, juri.amostra) : null
   // Taxa base: a da vara, puxada para a do tribunal quando a vara tem poucas sentenças (Efron e Morris).
@@ -88,6 +91,7 @@ export default function LeituraCasoPage() {
   const decisao = chance !== null && caso.valorPedido > 0 ? decidir(premissas) : null
   const sensib = decisao && caso.chanceManual === null && !ajustada && !enc ? faixaDecisao(premissas, faixa) : null
   const zona = decisao && caso.chanceOutroLado !== null ? zonaDeAcordo(premissas, { chanceAutor: caso.chanceOutroLado, custos: caso.custosOutro }) : null
+  const precedentes = useMemo(() => faixaComPrecedentes(caso, casos), [caso, casos])
 
   const consultar = async () => {
     setOcupado(true); setErro('')
@@ -269,6 +273,11 @@ export default function LeituraCasoPage() {
                     {caso.proposta > 0 && <> A proposta de {moeda(caso.proposta)} {decisao.recomendacao === 'aceitar' ? 'compensa' : decisao.recomendacao === 'recusar' ? 'não compensa' : 'fica praticamente empatada'} pelas premissas.</>}
                   </p>
                   {sensib && <p className="text-sm text-grafite" data-testid="sensibilidade">Na margem de erro do CNJ, o acordo equivalente vai de {moeda(Math.min(sensib.pior.acordoEquivalente, sensib.melhor.acordoEquivalente))} a {moeda(Math.max(sensib.pior.acordoEquivalente, sensib.melhor.acordoEquivalente))}.</p>}
+                  {precedentes && (
+                    <p className="text-sm text-grafite" data-testid="precedentes" title="Casos do próprio escritório com a mesma ação e tribunal, já com sentença">
+                      Entre {precedentes.n} precedentes próprios da mesma ação e tribunal: {Object.entries(precedentes.distribuicao).filter(([, pct]) => pct > 0).map(([d, pct]) => `${pct}% ${ROTULO_DESFECHO[d as keyof typeof ROTULO_DESFECHO]}`).join(', ')}.
+                    </p>
+                  )}
                   <details className="text-sm"><summary className="cursor-pointer text-navy">Ver a conta passo a passo</summary><ul className="list-disc pl-5 mt-2 space-y-1">{decisao.passos.map(p => <li key={p}>{p}</li>)}</ul></details>
                   <div className="border-t border-navy/10 pt-3">
                     <p className="font-medium text-sm mb-2">Zona de acordo (Cooter e Rubinfeld): como a outra parte deve enxergar o caso</p>
@@ -314,6 +323,9 @@ export default function LeituraCasoPage() {
                 <div><p className={rotulo}>Acerto do lado</p><p className="font-serif text-2xl text-navy">{pl.acertoPct === null ? '—' : `${pl.acertoPct}%`}</p></div>
               </div>
               {pl.contam > 0 && pl.contam < 100 && <p className="text-xs text-grafite-claro mt-2">Com {pl.contam} caso(s) o placar ainda oscila muito; a leitura firme começa perto de 100 desfechos (mesma regra da calibração da carteira).</p>}
+              <p className="text-xs text-grafite-claro mt-2" data-testid="regua-de-erro" title="A previsão só vale publicada se ganhar do palpite de repetir sempre a taxa histórica, com amostra suficiente">
+                Régua de erro: {comparacaoBase.motivo}{comparacaoBase.brierModelo !== null && comparacaoBase.brierBase !== null ? ` (Brier do escritório ${comparacaoBase.brierModelo.toFixed(3)} vs. palpite simples ${comparacaoBase.brierBase.toFixed(3)})` : ''}.
+              </p>
             </section>
 
             <PerfilJulgador />
@@ -383,7 +395,7 @@ export default function LeituraCasoPage() {
                   <ul className="space-y-2">
                     {g.itens.map(i => (
                       <li key={i.id} className="border border-navy/10 p-3">
-                        <label className="flex items-start gap-3 text-sm cursor-pointer">
+                        <label title="Marque o que já foi cumprido neste roteiro. O que fica sem marca é o que falta antes da audiência." className="flex items-start gap-3 text-sm cursor-pointer">
                           <input type="checkbox" className="mt-1 w-5 h-5" checked={!!caso.roteiro[i.id]} data-testid={`rot-${i.id}`} onChange={() => muda({ roteiro: { ...caso.roteiro, [i.id]: !caso.roteiro[i.id] } })} />
                           <span>{i.texto}{i.base && <span className="text-grafite-claro"> · {i.base}</span>}</span>
                         </label>

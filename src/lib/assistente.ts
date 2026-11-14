@@ -1,7 +1,7 @@
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 
 export type Especialidade =
-  | `nivel_${string}` | 'imobiliario' | 'condominial' | 'registral' | 'consumidor' | 'tributario' | 'trabalhista' | 'familia' | 'lgpd' | 'inovacao' | 'compliance' | 'empresarial' | 'previdenciario' | 'penal' | 'civel' | 'ambiental' | 'constitucional' | 'administrativo' | 'processo_civil' | 'processo_penal' | 'eleitoral' | 'bancario' | 'digital' | 'propriedade_intelectual' | 'internacional' | 'agrario' | 'saude' | 'concorrencial' | 'urbanistico' | 'energia' | 'securitario' | 'transito' | 'maritimo' | 'militar' | 'desportivo' | 'infancia_idoso' | 'direitos_humanos' | 'financeiro_publico' | 'arbitragem' | 'terceiro_setor' | 'sindical' | 'educacional' | 'recuperacao' | 'etica_advocacia' | 'teoria' | 'pesquisa' | 'geral'
+  | `nivel_${string}` | 'imobiliario' | 'condominial' | 'registral' | 'consumidor' | 'tributario' | 'trabalhista' | 'familia' | 'lgpd' | 'inovacao' | 'compliance' | 'empresarial' | 'previdenciario' | 'penal' | 'civel' | 'ambiental' | 'constitucional' | 'administrativo' | 'processo_civil' | 'processo_penal' | 'eleitoral' | 'bancario' | 'digital' | 'propriedade_intelectual' | 'internacional' | 'agrario' | 'saude' | 'concorrencial' | 'urbanistico' | 'energia' | 'securitario' | 'transito' | 'maritimo' | 'militar' | 'desportivo' | 'infancia_idoso' | 'direitos_humanos' | 'financeiro_publico' | 'arbitragem' | 'terceiro_setor' | 'sindical' | 'educacional' | 'recuperacao' | 'etica_advocacia' | 'teoria' | 'pesquisa' | 'quantica' | 'geral'
 
 export const ESPECIALIDADES: { valor: Especialidade; rotulo: string; descricao: string }[] = [
   { valor: 'imobiliario', rotulo: 'Imobiliário', descricao: 'Locação, comodato, compra e venda, garantias, despejo' },
@@ -49,6 +49,7 @@ export const ESPECIALIDADES: { valor: Especialidade; rotulo: string; descricao: 
   { valor: 'etica_advocacia', rotulo: 'Ética e estatuto da advocacia', descricao: 'Estatuto da OAB, Código de Ética, honorários, prerrogativas' },
   { valor: 'teoria', rotulo: 'Teoria e filosofia do direito', descricao: 'Hermenêutica, argumentação, história e sociologia do direito' },
   { valor: 'pesquisa', rotulo: 'Pesquisador do Instituto', descricao: 'Jurisprudência brasileira, direito comparado e propostas para o direito brasileiro' },
+  { valor: 'quantica', rotulo: 'Direito e computação quântica', descricao: 'Criptografia pós-quântica (NIST FIPS 203/204/205), impacto na LGPD, assinatura eletrônica, segredo de Estado, contratos de longo prazo e cadeia de custódia probatória' },
   { valor: 'geral', rotulo: 'Geral', descricao: 'Qualquer tema do direito brasileiro' },
 ]
 

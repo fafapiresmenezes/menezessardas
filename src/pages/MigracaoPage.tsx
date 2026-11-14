@@ -8,6 +8,7 @@ import { listarPessoas, type Pessoa } from '@/lib/equipe'
 import { importavel, paraCaso, ROTULO_SITUACAO, type LinhaImportacao } from '@/lib/escritorio/importarProcessos'
 import { TIPOS, montarTabela, tabelaDoTexto, textoEmLinhas, pareceTabela, prepararProcessos, prepararClientes, prepararPrazos, prepararFinanceiro, lerHistorico, gravarHistorico, type Tabela, type Tipo, type Pronto, type Lote } from '@/lib/escritorio/migracao'
 import { lerArquivo } from '@/lib/escritorio/migracaoArquivos'
+import AbasProcessosAntigos from '@/components/AbasProcessosAntigos'
 
 // Trazer do sistema antigo: uma aba só para a migração inteira. Solta todos os arquivos de uma vez,
 // a plataforma separa o que é processo, cliente, prazo e financeiro, mostra organizado e só grava depois do "Trazer".
@@ -168,6 +169,7 @@ export default function MigracaoPage() {
   return (
     <Layout title="Trazer do sistema antigo">
       <div className="space-y-5 max-w-4xl">
+        <AbasProcessosAntigos aqui="/migracao" />
         <p className="text-base">Aqui você traz <strong>tudo</strong> o que o escritório tinha no sistema antigo: processos, clientes, prazos e financeiro. Solte os arquivos, confira o que a plataforma encontrou e clique em <strong>Trazer</strong>. Nada é gravado antes disso, nada é cadastrado duas vezes, e dá para desfazer.</p>
 
         <Passo n={1} titulo="Solte aqui os arquivos do sistema antigo" feito={tabelas.length > 0 || !!resultado}>
@@ -178,7 +180,7 @@ export default function MigracaoPage() {
             <Upload className="w-8 h-8 text-navy" aria-hidden />
             <span className="text-lg">{lendo ? 'Lendo os arquivos…' : 'Arraste os arquivos para cá ou clique para escolher'}</span>
             <span className="text-sm text-grafite-claro">Pode ser vários de uma vez. Excel (todas as abas), CSV, LibreOffice, Word, PDF, texto, JSON e calendário (.ics).</span>
-            <input type="file" multiple className="sr-only" data-testid="arquivos-migracao" onChange={e => { receber(e.target.files); e.target.value = '' }}
+            <input type="file" title="Escolhe os arquivos do sistema antigo, vários de uma vez. Nada é gravado antes de você conferir." multiple className="sr-only" data-testid="arquivos-migracao" onChange={e => { receber(e.target.files); e.target.value = '' }}
               accept=".xlsx,.xlsm,.xls,.ods,.csv,.tsv,.txt,.tab,.json,.ics,.docx,.pdf,.html,.htm,.xml,.eml" />
           </label>
           <details className="mt-3">
@@ -245,7 +247,7 @@ export default function MigracaoPage() {
           <div className="flex flex-wrap items-center gap-4 text-sm mb-3">
             <label className="inline-flex items-center gap-2">Responsável pelos processos
               <select value={responsavel} onChange={e => setResponsavel(e.target.value)} title="Escolhe quem fica responsável pelos processos trazidos do sistema antigo" className="border px-2 py-1 min-h-[40px]"><option value="">Ninguém por enquanto</option>{pessoas.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}</select></label>
-            <label className="inline-flex items-center gap-2"><input type="checkbox" checked={monitorar} onChange={e => setMonitorar(e.target.checked)} /> Acompanhar os processos no CNJ todo dia (prazos e peças automáticas)</label>
+            <label className="inline-flex items-center gap-2"><input type="checkbox" title="Marcado, cada processo trazido entra no acompanhamento do CNJ e o robô avisa quando andar." checked={monitorar} onChange={e => setMonitorar(e.target.checked)} /> Acompanhar os processos no CNJ todo dia (prazos e peças automáticas)</label>
           </div>
           <button type="button" onClick={trazer} disabled={!totalTrazer || !!trazendo} title="Grava na plataforma tudo o que foi conferido (processos, clientes, prazos e financeiro); dá para desfazer depois" data-testid="trazer-tudo" className="min-h-[52px] px-6 bg-dourado text-white text-base inline-flex items-center gap-2 disabled:opacity-50">
             <FolderInput className="w-5 h-5" aria-hidden />{trazendo || (totalTrazer ? `Trazer ${totalTrazer} registro(s)` : 'Nada para trazer ainda')}

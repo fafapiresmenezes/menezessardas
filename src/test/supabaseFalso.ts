@@ -16,6 +16,8 @@ export function criarSupabaseFalso(inicial: Record<string, Linha[]> = {}, padroe
   const invocacoes: { nome: string; body: unknown }[] = []
   const rpcs: { nome: string; args: unknown }[] = []
   let respostaFuncao: (nome: string, body: Record<string, unknown>) => { data?: unknown; error: Erro | null } = () => ({ data: null, error: null })
+  let respostaRpc: (nome: string, args: unknown) => { data?: unknown; error: Erro | null } = () => ({ data: null, error: null })
+  let usuario: { id: string } | null = null
   let seq = 1
 
   function consulta(tabela: string, op: 'select' | 'insert' | 'upsert' | 'update' | 'delete', dados?: Linha | Linha[], opcoes?: { onConflict?: string; ignoreDuplicates?: boolean }) {
@@ -59,12 +61,15 @@ export function criarSupabaseFalso(inicial: Record<string, Linha[]> = {}, padroe
       delete: () => consulta(t, 'delete'),
     }),
     functions: { invoke: async (nome: string, o: { body: Record<string, unknown> }) => { invocacoes.push({ nome, body: o.body }); return respostaFuncao(nome, o.body) } },
-    rpc: async (nome: string, args?: unknown) => { rpcs.push({ nome, args }); return { data: null, error: null } },
-    auth: { getUser: async () => ({ data: { user: null } }) },
+    rpc: async (nome: string, args?: unknown) => { rpcs.push({ nome, args }); return respostaRpc(nome, args) },
+    auth: { getUser: async () => ({ data: { user: usuario } }) },
   }
   return {
     supabase, tabelas, chamadas, invocacoes, rpcs,
     falhar: (t: string, e: Erro | undefined) => { erros[t] = e },
     responderFuncao: (f: typeof respostaFuncao) => { respostaFuncao = f },
+    // Quem está logado (as telas usam para a privacidade por advogado) e as respostas de RPC (perfil_atual, cargos).
+    definirUsuario: (id: string | null) => { usuario = id ? { id } : null },
+    responderRpc: (f: typeof respostaRpc) => { respostaRpc = f },
   }
 }

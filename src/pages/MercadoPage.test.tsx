@@ -22,7 +22,7 @@ vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: 
 vi.mock('@/components/ComparacaoJustica', () => ({ default: () => <div data-testid="comparacao" /> }))
 const { default: MercadoPage } = await import('./MercadoPage')
 
-describe('Previsão de mercado jurídico (demanda por área)', () => {
+describe('Mercado jurídico (demanda por área)', () => {
   beforeEach(() => { cleanup(); invoke.mockClear() })
 
   it('resposta incompleta do CNJ e Justiça em Números sem série não derrubam a tela', async () => {

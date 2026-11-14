@@ -191,7 +191,7 @@ function CaseStudy() {
         <div className="mt-4 flex flex-wrap gap-3">
           <a href={DECK_URL} target="_blank" rel="noreferrer" title="Abre em nova aba o deck de apresentação da plataforma" className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm">Deck de apresentação <ExternalLink size={14} aria-hidden="true" /></a>
           <Link to="/testar" title="Abre o roteiro guiado para testar todas as ferramentas da plataforma" className="inline-flex items-center gap-2 border border-navy text-navy min-h-[44px] px-5 uppercase tracking-wider text-sm">Testar tudo agora</Link>
-          <button type="button" onClick={caseEmPdf} title="Gera e baixa o case study em PDF com a trajetória das medições, os hashes SHA-256 e as provas .ots" data-testid="case-study-pdf" className="inline-flex items-center gap-2 border border-navy text-navy min-h-[44px] px-5 uppercase tracking-wider text-sm">Case study em PDF</button>
+          <button type="button" onClick={caseEmPdf} title="Gera e baixa o estudo de caso em PDF com a trajetória das medições, os códigos de conferência (SHA-256) e as provas de data (arquivos .ots)" data-testid="case-study-pdf" className="inline-flex items-center gap-2 border border-navy text-navy min-h-[44px] px-5 uppercase tracking-wider text-sm">Case study em PDF</button>
         </div>
         {msgPdf && <p role="status" className="text-sm mt-2" data-testid="case-study-msg">{msgPdf}</p>}
       </section>
@@ -205,7 +205,7 @@ function CaseStudy() {
         <button type="button" onClick={copiarCadeia} title="Copia a cadeia completa de medições (data, nota e hash de cada uma) em texto para auditoria externa" data-testid="copiar-cadeia" className="mb-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{cadeiaCopiada ? 'Cadeia copiada' : 'Copiar cadeia completa'}</button>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite-claro"><th className="py-2 pr-3">Medição</th><th className="pr-3">Data</th><th className="pr-3">Nota</th><th className="pr-3">Entregue</th><th>SHA-256</th></tr></thead>
+            <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite-claro"><th className="py-2 pr-3">Medição</th><th className="pr-3">Data</th><th className="pr-3">Nota</th><th className="pr-3">Entregue</th><th>Código do arquivo (SHA-256)</th></tr></thead>
             <tbody>
               {[...MEDICOES].reverse().map(m => (
                 <tr key={m.n} className="border-t border-navy/10 align-top">
@@ -270,7 +270,7 @@ export default function InstitutoPage() {
   const [hashCopiado, setHashCopiado] = useState(false)
   const copiarHash = async () => { try { await navigator.clipboard.writeText(`${ult.arquivo} SHA-256 ${ult.sha256}`); setHashCopiado(true); setTimeout(() => setHashCopiado(false), 2500) } catch { /* sem área de transferência */ } }
   return (
-    <Layout title="THEYE Institute">
+    <Layout title="Administração do Instituto">
       <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-6">
         <header>
           <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">THEYE Institute</p>
@@ -279,7 +279,7 @@ export default function InstitutoPage() {
           <p className="text-sm text-grafite-claro mt-1">Inovação regulatória, jurimetria, ESG e pesquisa jurídica (Brasil e mundo) para o desenvolvimento do direito brasileiro.</p>
           <p className="text-sm mt-3 p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="estado-medicao">
             Última medição: <strong>M{ult.n}</strong>, nota <strong>{ult.nota.toFixed(2).replace('.', ',')}</strong>, em {new Date(ult.data + 'T12:00:00').toLocaleDateString('pt-BR')}{ult.ots ? ', selada em blockchain (OpenTimestamps)' : ''}.{' '}
-            <button type="button" onClick={copiarHash} title="Copia o nome do arquivo e o hash SHA-256 da última medição para conferência externa" data-testid="copiar-hash" className="underline text-navy">{hashCopiado ? 'hash copiado' : 'copiar hash'}</button>
+            <button type="button" onClick={copiarHash} title="Copia o nome do arquivo e o código de conferência da última medição (SHA-256), para alguém de fora checar" data-testid="copiar-hash" className="underline text-navy">{hashCopiado ? 'hash copiado' : 'copiar hash'}</button>
             {' · '}<button type="button" onClick={() => setAba('case')} title="Abre a aba do case study com a cadeia completa de medições e hashes" className="underline text-navy">ver a cadeia completa</button>
           </p>
         </header>

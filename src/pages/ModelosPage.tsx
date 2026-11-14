@@ -7,6 +7,8 @@ import { preencherModelo, VARIAVEIS_MODELO, type CasoParaModelo, type ContratoPa
 import { repositorio, type Contrato, type Imovel } from '@/lib/repositorio'
 import { rotulosGarantia, rotulosIndice } from '@/lib/rotulos'
 import { mensagemAmigavel } from '@/lib/erros'
+import Vazio from '@/components/Vazio'
+import { meuAlcance, filtrarPorHierarquia, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // Biblioteca de modelos: cada modelo abre o agente da área no modo Redigir com o pedido pronto.
 // O advogado completa os dados do caso entre colchetes e o agente redige citando a lei do Planalto.
@@ -60,7 +62,15 @@ export default function ModelosPage() {
     const { data } = await supabase.from('modelos_escritorio').select('id, titulo, area, agente, pedido').order('criado_em')
     setProprios((data ?? []).map(d => ({ ...d, proprio: true })) as Modelo[])
   }
-  useEffect(() => { carregar(); supabase.from('tarefas').select('id, titulo, cliente, area, numero_processo, imovel:imoveis(endereco), contrato:contratos(locatario_fornecedor)').eq('nivel', 'projeto').neq('situacao', 'feito').order('criado_em', { ascending: false }).limit(100).then(({ data }) => setCasos(((data ?? []) as unknown as { id: string; titulo: string; cliente: string | null; area: string | null; numero_processo: string | null; imovel: { endereco: string } | null; contrato: { locatario_fornecedor: string } | null }[]).map(c => ({ id: c.id, titulo: c.titulo, cliente: c.cliente, area: c.area, numero_processo: c.numero_processo, imovel: c.imovel?.endereco ?? null, contrato: c.contrato?.locatario_fornecedor ?? null })))) }, [])
+  // Privacidade por advogado: a lista de casos para preencher o modelo é a de quem olha (caso sem dono aparece para todos).
+  useEffect(() => {
+    carregar()
+    Promise.all([
+      Promise.resolve(supabase.from('tarefas').select('id, titulo, cliente, area, numero_processo, responsavel_id, imovel:imoveis(endereco), contrato:contratos(locatario_fornecedor)').eq('nivel', 'projeto').neq('situacao', 'feito').order('criado_em', { ascending: false }).limit(100)),
+      meuAlcance().catch(() => ALCANCE_FECHADO),
+    ]).then(([r, alc]) => setCasos(filtrarPorHierarquia((r.data ?? []) as unknown as { id: string; titulo: string; cliente: string | null; area: string | null; numero_processo: string | null; responsavel_id: string | null; imovel: { endereco: string } | null; contrato: { locatario_fornecedor: string } | null }[], alc)
+      .map(c => ({ id: c.id, titulo: c.titulo, cliente: c.cliente, area: c.area, numero_processo: c.numero_processo, imovel: c.imovel?.endereco ?? null, contrato: c.contrato?.locatario_fornecedor ?? null }))))
+  }, [])
   const salvar = async () => {
     setMsg('')
     const { error } = await supabase.from('modelos_escritorio').insert({ titulo: form.titulo.trim(), area: form.area.trim() || 'Escritório', agente: form.agente, pedido: form.pedido.trim() })
@@ -91,7 +101,7 @@ export default function ModelosPage() {
   }
   const previa = (m: Modelo) => { const caso = casos.find(c => c.id === casoId); const ct = contratoParaModelo(); return caso || ct ? preencherModelo(m.pedido, caso ?? { titulo: 'Contrato' }, ct) : null }
   return (
-    <Layout title="Modelos de peças e contratos">
+    <Layout title="Modelos de peças">
       <div className="space-y-5">
         <section className="bg-white shadow-sm border-t-2 border-dourado p-5">
           <p className="text-sm mb-3">Escolha o modelo: o agente da área abre pronto para redigir. Troque os <strong>[ ]</strong> pelos dados do caso e clique em enviar. O texto sai com a lei citada e uma lista do que conferir.</p>
@@ -102,10 +112,10 @@ export default function ModelosPage() {
           <button type="button" onClick={() => setAberto(v => !v)} title="Abre o formulário para cadastrar um modelo próprio do escritório, visível para toda a equipe" data-testid="novo-modelo" aria-expanded={aberto} className="mt-3 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy text-navy text-sm uppercase tracking-wider"><Plus size={16} aria-hidden /> Cadastrar modelo do escritório</button>
           {aberto && (
             <form onSubmit={e => { e.preventDefault(); salvar() }} className="mt-3 grid gap-3 md:grid-cols-2 border-t border-navy/10 pt-3" data-testid="form-modelo">
-              <label className="text-sm">Título<input required minLength={3} maxLength={120} value={form.titulo} onChange={e => setForm({ ...form, titulo: e.target.value })} id="modelo-titulo" className="mt-1 w-full border px-3 py-2" placeholder="Ex.: Contrato padrão de honorários do escritório" /></label>
-              <label className="text-sm">Área<input maxLength={40} value={form.area} onChange={e => setForm({ ...form, area: e.target.value })} id="modelo-area" className="mt-1 w-full border px-3 py-2" placeholder="Ex.: Escritório, Imobiliário" /></label>
+              <label className="text-sm">Título<input title="O nome pelo qual a equipe vai achar este modelo na lista." required minLength={3} maxLength={120} value={form.titulo} onChange={e => setForm({ ...form, titulo: e.target.value })} id="modelo-titulo" className="mt-1 w-full border px-3 py-2" placeholder="Ex.: Contrato padrão de honorários do escritório" /></label>
+              <label className="text-sm">Área<input title="O ramo do direito a que o modelo serve. Serve para filtrar a lista depois." maxLength={40} value={form.area} onChange={e => setForm({ ...form, area: e.target.value })} id="modelo-area" className="mt-1 w-full border px-3 py-2" placeholder="Ex.: Escritório, Imobiliário" /></label>
               <label className="text-sm">Agente que vai redigir<select value={form.agente} onChange={e => setForm({ ...form, agente: e.target.value })} title="Escolhe qual agente especializado vai redigir quando alguém usar este modelo" id="modelo-agente" className="mt-1 w-full border px-3 py-2">{AGENTES.map(a => <option key={a} value={a}>{a}</option>)}</select></label>
-              <label className="text-sm md:col-span-2">Texto do modelo ou instruções (use [ ] para os campos a preencher)<textarea required minLength={20} rows={6} value={form.pedido} onChange={e => setForm({ ...form, pedido: e.target.value })} id="modelo-pedido" className="mt-1 w-full border px-3 py-2" placeholder="Cole aqui o modelo do escritório. Ex.: Redija contrato de honorários entre [escritório] e [cliente], objeto [ ], valor R$ [ ], forma de pagamento [ ]…" /></label>
+              <label className="text-sm md:col-span-2">Texto do modelo ou instruções (use [ ] para os campos a preencher)<textarea title="O texto do modelo, ou as instruções para o robô. Escreva [ ] onde o advogado preenche: [NOME DO CLIENTE], [VALOR]." required minLength={20} rows={6} value={form.pedido} onChange={e => setForm({ ...form, pedido: e.target.value })} id="modelo-pedido" className="mt-1 w-full border px-3 py-2" placeholder="Cole aqui o modelo do escritório. Ex.: Redija contrato de honorários entre [escritório] e [cliente], objeto [ ], valor R$ [ ], forma de pagamento [ ]…" /></label>
               <div className="md:col-span-2 flex gap-2"><button type="submit" title="Grava este modelo na biblioteca do escritório, visível para toda a equipe" data-testid="salvar-modelo" className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider">Salvar modelo</button><button type="button" onClick={() => setAberto(false)} title="Fecha o formulário sem salvar o modelo" className="min-h-[44px] px-4 text-sm underline">Cancelar</button></div>
             </form>
           )}
@@ -149,7 +159,7 @@ export default function ModelosPage() {
               {m.proprio && m.id && <button type="button" onClick={() => apagar(m.id!)} aria-label={`Apagar modelo ${m.titulo}`} title="Apaga este modelo do escritório para toda a equipe (pede confirmação)" className="absolute top-2 right-2 p-2 text-critico"><Trash2 size={16} aria-hidden /></button>}
             </div>
           ))}
-          {!lista.length && <p className="text-sm text-grafite-claro">Nenhum modelo com esse termo. Peça ao agente no Assistente jurídico, modo Redigir.</p>}
+          {!lista.length && <Vazio testid="modelos-vazio" titulo="Nenhum modelo com esse termo" texto="Nenhum modelo do escritório bate com a busca. Peça a peça ao robô no Assistente jurídico, modo Redigir, e guarde como modelo." acao={{ rotulo: 'Pedir ao Assistente jurídico', para: '/assistente', dica: 'Abre o Assistente jurídico para redigir a peça e guardá-la como modelo' }} />}
         </div>
       </div>
     </Layout>

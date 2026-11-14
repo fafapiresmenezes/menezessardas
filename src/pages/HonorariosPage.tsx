@@ -10,12 +10,13 @@ import { planoParcelas, situacaoParcela, resumoParcelas, type Parcela } from '@/
 import { CalendarClock } from 'lucide-react'
 import { lerNumero } from '@/lib/numero'
 import { escaparHtml } from '@/lib/abrirAba'
-import { meuAlcance, filtrarPorHierarquia, rotuloCargo } from '@/lib/hierarquia'
+import { meuAlcance, filtrarPorHierarquia, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
+import Vazio from '@/components/Vazio'
 
 // Honorários e rentabilidade: por caso, o combinado, o recebido, o vencimento e a régua de cobrança;
 // a rentabilidade cruza honorários recebidos com as horas lançadas para o mesmo cliente.
 type Caso = { id: string; titulo: string; cliente: string | null; area: string | null; situacao: string; honorario_previsto: number; honorario_recebido: number; vencimento_honorario: string | null; responsavel_id?: string | null }
-type Hora = { cliente: string; minutos: number; valor_hora: number }
+type Hora = { cliente: string; minutos: number; valor_hora: number; usuario_id?: string | null }
 // Passo 29: baixa de pagamento (data, valor, meio); o recebido do caso é a soma das baixas (gatilho no banco).
 type Pagamento = { id: number; caso_id: string; data: string; valor: number; meio: string; observacao: string | null }
 const MEIOS: Record<string, string> = { pix: 'PIX', transferencia: 'Transferência', boleto: 'Boleto', cartao: 'Cartão', dinheiro: 'Dinheiro', outro: 'Outro' }
@@ -25,7 +26,9 @@ export default function HonorariosPage() {
   const [todos, setTodos] = useState<Caso[]>([])
   // Hierarquia: sócios e gestor veem todos os casos; os demais, só os seus (itens sem dono aparecem para todos).
   const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
-  const casos = useMemo(() => (alcance && !alcance.veTudo ? filtrarPorHierarquia(todos, alcance) : todos), [todos, alcance])
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza.
+  const alc = alcance ?? ALCANCE_FECHADO
+  const casos = useMemo(() => (alc.veTudo ? todos : filtrarPorHierarquia(todos, alc)), [todos, alc])
   const [horas, setHoras] = useState<Hora[]>([])
   const [erro, setErro] = useState('')
   const [editando, setEditando] = useState<Record<string, Partial<Caso>>>({})
@@ -59,7 +62,7 @@ export default function HonorariosPage() {
   const carregar = async () => {
     const [c, h, pg, pc] = await Promise.all([
       supabase.from('tarefas').select('id,titulo,cliente,area,situacao,honorario_previsto,honorario_recebido,vencimento_honorario,responsavel_id').eq('nivel', 'projeto').order('criado_em', { ascending: false }),
-      supabase.from('lancamentos_horas').select('cliente,minutos,valor_hora'),
+      supabase.from('lancamentos_horas').select('cliente,minutos,valor_hora,usuario_id'),
       supabase.from('pagamentos_honorarios').select('id,caso_id,data,valor,meio,observacao').order('data', { ascending: false }),
       supabase.from('parcelas_honorarios').select('id,caso_id,numero,vencimento,valor,pago_em,pagamento_id').order('numero'),
     ])
@@ -83,14 +86,18 @@ export default function HonorariosPage() {
   const pixParcela = (c: Caso, p: Parcela) => setPix({ caso: c, valor: Number(p.valor), referencia: `${c.titulo.slice(0, 14)}P${p.numero}`, descricao: `Parcela ${p.numero} ${c.titulo}` })
   useEffect(() => {
     carregar()
-    meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true }))
+    meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO))
   }, [])
 
+  // O custo por cliente só soma as horas que quem olha pode ver: a hora do colega não entra na conta dele.
   const custoPorCliente = useMemo(() => {
     const m: Record<string, number> = {}
-    for (const h of horas) m[h.cliente] = (m[h.cliente] ?? 0) + (h.minutos / 60) * Number(h.valor_hora)
+    for (const h of horas) {
+      if (!alc.veTudo && h.usuario_id && h.usuario_id !== alc.id) continue
+      m[h.cliente] = (m[h.cliente] ?? 0) + (h.minutos / 60) * Number(h.valor_hora)
+    }
     return m
-  }, [horas])
+  }, [horas, alc])
 
   const salvar = async (c: Caso) => {
     const e = editando[c.id]; if (!e) return
@@ -135,7 +142,7 @@ export default function HonorariosPage() {
   }
 
   return (
-    <Layout title="Honorários e rentabilidade">
+    <Layout title="Honorários">
       <div className="space-y-6">
         {alcance && !alcance.veTudo && (
           <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="honorarios-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
@@ -184,7 +191,7 @@ export default function HonorariosPage() {
                   </tr>
                 )
               })}
-              {!casos.length && <tr><td colSpan={7} className="py-6 text-grafite-claro">Nenhum caso ainda. Crie um em Casos e projetos.</td></tr>}
+              {!casos.length && <tr><td colSpan={7}><Vazio testid="honorarios-vazio" titulo="Nenhum caso ainda" texto="Os honorários são lançados por caso. Crie o primeiro caso e ele aparece nesta tabela." acao={{ rotulo: 'Criar um caso', para: '/projetos', dica: 'Abre Casos e projetos para criar o caso que receberá os honorários' }} /></td></tr>}
             </tbody>
           </table></div>
         </section>
@@ -194,10 +201,10 @@ export default function HonorariosPage() {
             <h2 className="text-lg mb-1">Registrar pagamento · {baixa.caso.titulo}</h2>
             <p className="text-xs text-grafite-claro mb-3">Em aberto: {brl(Math.max(0, Number(baixa.caso.honorario_previsto) - Number(baixa.caso.honorario_recebido)))}. O recebido do caso e a régua de cobrança são atualizados na hora.</p>
             <div className="grid gap-3 sm:grid-cols-5">
-              <label className="text-xs">Data<input type="date" value={baixa.data} onChange={e => setBaixa({ ...baixa, data: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="baixa-data" /></label>
-              <label className="text-xs">Valor (R$)<input type="number" min="0.01" step="0.01" value={baixa.valor} onChange={e => setBaixa({ ...baixa, valor: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="baixa-valor" /></label>
+              <label className="text-xs">Data<input type="date" title="O dia em que o dinheiro entrou, não o dia em que você está lançando." value={baixa.data} onChange={e => setBaixa({ ...baixa, data: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="baixa-data" /></label>
+              <label className="text-xs">Valor (R$)<input type="number" title="Quanto entrou agora. Pode ser menos que o total em aberto: o resto continua em aberto no caso." min="0.01" step="0.01" value={baixa.valor} onChange={e => setBaixa({ ...baixa, valor: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="baixa-valor" /></label>
               <label className="text-xs">Meio<select value={baixa.meio} onChange={e => setBaixa({ ...baixa, meio: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="baixa-meio" title="Escolhe o meio pelo qual o pagamento foi recebido (PIX, transferência, boleto, cartão, dinheiro ou outro)">{Object.entries(MEIOS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></label>
-              <label className="text-xs sm:col-span-2">Observação<input value={baixa.observacao} onChange={e => setBaixa({ ...baixa, observacao: e.target.value })} placeholder="Ex.: comprovante PIX 1234" className="block border px-2 py-2 w-full min-h-[44px]" /></label>
+              <label className="text-xs sm:col-span-2">Observação<input title="Onde encontrar o comprovante depois: número do PIX, banco, número do depósito." value={baixa.observacao} onChange={e => setBaixa({ ...baixa, observacao: e.target.value })} placeholder="Ex.: comprovante PIX 1234" className="block border px-2 py-2 w-full min-h-[44px]" /></label>
             </div>
             <div className="flex gap-2 mt-3">
               <button onClick={salvarBaixa} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider" data-testid="baixa-salvar" title="Grava este pagamento no caso e atualiza o valor recebido e a régua de cobrança">Salvar pagamento</button>
@@ -211,9 +218,9 @@ export default function HonorariosPage() {
             <h2 className="text-lg mb-1">Parcelar · {parcelar.caso.titulo}</h2>
             <p className="text-xs text-grafite-claro mb-3">Parcelas mensais com os centavos na última. Cada parcela tem QR PIX com o próprio valor; as parcelas já pagas são preservadas. Vencimentos entram na Agenda e no resumo semanal por e-mail.</p>
             <div className="grid gap-3 sm:grid-cols-4">
-              <label className="text-xs">Total (R$)<input type="number" min="0.01" step="0.01" value={parcelar.total} onChange={e => setParcelar({ ...parcelar, total: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="parcelar-total" /></label>
-              <label className="text-xs">Parcelas<input type="number" min="1" max="120" value={parcelar.quantidade} onChange={e => setParcelar({ ...parcelar, quantidade: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="parcelar-quantidade" /></label>
-              <label className="text-xs">1º vencimento<input type="date" value={parcelar.primeiro} onChange={e => setParcelar({ ...parcelar, primeiro: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="parcelar-primeiro" /></label>
+              <label className="text-xs">Total (R$)<input type="number" title="O valor cheio a parcelar. Os centavos que não dividem exato vão para a última parcela." min="0.01" step="0.01" value={parcelar.total} onChange={e => setParcelar({ ...parcelar, total: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="parcelar-total" /></label>
+              <label className="text-xs">Parcelas<input type="number" title="Em quantas vezes. Uma por mês, a partir do primeiro vencimento. Parcela já paga não é mexida." min="1" max="120" value={parcelar.quantidade} onChange={e => setParcelar({ ...parcelar, quantidade: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="parcelar-quantidade" /></label>
+              <label className="text-xs">1º vencimento<input type="date" title="Quando vence a primeira. As outras caem no mesmo dia dos meses seguintes." value={parcelar.primeiro} onChange={e => setParcelar({ ...parcelar, primeiro: e.target.value })} className="block border px-2 py-2 w-full min-h-[44px]" data-testid="parcelar-primeiro" /></label>
               <div className="text-xs self-end pb-2" data-testid="parcelar-previa">{(() => { const pl = planoParcelas(lerNumero(parcelar.total), Number(parcelar.quantidade), parcelar.primeiro); return pl.length ? `${pl.length}× ${brl(pl[0].valor)}${pl.length > 1 && pl[pl.length - 1].valor !== pl[0].valor ? ` (última ${brl(pl[pl.length - 1].valor)})` : ''} até ${formatarData(pl[pl.length - 1].vencimento)}` : 'Preencha os campos' })()}</div>
             </div>
             <div className="flex gap-2 mt-3">

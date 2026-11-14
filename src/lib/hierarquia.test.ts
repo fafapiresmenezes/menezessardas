@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { veTudo, podeVer, filtrarPorHierarquia, rotuloCargo, CARGOS } from './hierarquia'
+import { veTudo, podeVer, filtrarPorHierarquia, filtrarPorUsuario, filtrarPorCriador, rotuloCargo, CARGOS, ALCANCE_FECHADO } from './hierarquia'
 
 describe('Hierarquia do escritório (sócio, gestor, pleno, júnior)', () => {
   it('sócio e gestor veem tudo; pleno e júnior não', () => {
@@ -26,6 +26,21 @@ describe('Hierarquia do escritório (sócio, gestor, pleno, júnior)', () => {
     const itens = [{ responsavel_id: 'u1' }, { responsavel_id: 'u2' }, { responsavel_id: null }]
     expect(filtrarPorHierarquia(itens, { id: 'u1', cargo: 'junior' })).toHaveLength(2)
     expect(filtrarPorHierarquia(itens, { id: 'u1', cargo: 'socio' })).toHaveLength(3)
+  })
+
+  it('cargo desconhecido recebe o alcance mais estreito, nunca o mais largo', () => {
+    const semCargo = { id: 'u1', cargo: null }
+    expect(veTudo(undefined)).toBe(false)
+    expect(podeVer(semCargo, 'u2')).toBe(false)
+    expect(filtrarPorHierarquia([{ responsavel_id: 'u2' }], semCargo)).toHaveLength(0)
+  })
+
+  it('sem saber quem está logado (ALCANCE_FECHADO), só o que não tem dono aparece', () => {
+    expect(ALCANCE_FECHADO.veTudo).toBe(false)
+    const itens = [{ responsavel_id: 'u1' }, { responsavel_id: 'u2' }, { responsavel_id: null }]
+    expect(filtrarPorHierarquia(itens, ALCANCE_FECHADO)).toEqual([{ responsavel_id: null }])
+    expect(filtrarPorUsuario([{ usuario_id: 'u1' }, { usuario_id: null }], ALCANCE_FECHADO)).toHaveLength(1)
+    expect(filtrarPorCriador([{ criado_por: 'u1' }, { criado_por: null }], ALCANCE_FECHADO)).toHaveLength(1)
   })
 
   it('todo cargo tem rótulo em português para a tela', () => {

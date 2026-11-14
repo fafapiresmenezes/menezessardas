@@ -1,0 +1,7301 @@
+{
+ "passo": "S1 · Catálogo da saúde: especialidades, grade, escolas e acervo",
+ "emitido": "13/11/2026",
+ "base_legal": "Resolução CFM 2.472/2026 (55 especialidades, 64 áreas de atuação); Resolução CNE/CES 3/2014 (graduação)",
+ "aviso": "Grade de referência montada a partir da matriz de competências da residência e das escolas listadas; conferência com a grade vigente de cada escola pendente. Artigos sem DOI conferido. Nota CAPES dos programas a conferir na Sucupira. Nada aqui é conduta clínica.",
+ "escolas_mundo": [
+  {
+   "posicao_qs_2025": "1",
+   "nome": "Harvard University",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "2",
+   "nome": "University of Oxford",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "3",
+   "nome": "Stanford University",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "4",
+   "nome": "Johns Hopkins University",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "5",
+   "nome": "University of Cambridge",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "6",
+   "nome": "University of California, San Francisco",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "7",
+   "nome": "Imperial College London",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "8",
+   "nome": "University College London",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "9",
+   "nome": "Karolinska Institutet",
+   "pais": "Suécia"
+  },
+  {
+   "posicao_qs_2025": "10",
+   "nome": "Yale University",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "11",
+   "nome": "Massachusetts Institute of Technology",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "12",
+   "nome": "University of California, Los Angeles",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "13",
+   "nome": "University of Pennsylvania",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "14",
+   "nome": "University of Toronto",
+   "pais": "Canadá"
+  },
+  {
+   "posicao_qs_2025": "15",
+   "nome": "King's College London",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "16",
+   "nome": "Duke University",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "17",
+   "nome": "Columbia University",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "18",
+   "nome": "National University of Singapore",
+   "pais": "Singapura"
+  },
+  {
+   "posicao_qs_2025": "19",
+   "nome": "University of Michigan",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "20",
+   "nome": "University of Edinburgh",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "21",
+   "nome": "London School of Hygiene & Tropical Medicine",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "22",
+   "nome": "University of California San Diego",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "23",
+   "nome": "University of Washington",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "24",
+   "nome": "University of Hong Kong",
+   "pais": "Hong Kong"
+  },
+  {
+   "posicao_qs_2025": "25=",
+   "nome": "Chinese University of Hong Kong",
+   "pais": "Hong Kong"
+  },
+  {
+   "posicao_qs_2025": "25=",
+   "nome": "The University of Melbourne",
+   "pais": "Austrália"
+  },
+  {
+   "posicao_qs_2025": "27",
+   "nome": "The University of Sydney",
+   "pais": "Austrália"
+  },
+  {
+   "posicao_qs_2025": "28",
+   "nome": "McGill University",
+   "pais": "Canadá"
+  },
+  {
+   "posicao_qs_2025": "29=",
+   "nome": "Peking University",
+   "pais": "China"
+  },
+  {
+   "posicao_qs_2025": "29=",
+   "nome": "University of California, Berkeley",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "31",
+   "nome": "Cornell University",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "32",
+   "nome": "Heidelberg University",
+   "pais": "Alemanha"
+  },
+  {
+   "posicao_qs_2025": "33",
+   "nome": "University of Manchester",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "34",
+   "nome": "University of Chicago",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "35",
+   "nome": "New York University",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "36=",
+   "nome": "KU Leuven",
+   "pais": "Bélgica"
+  },
+  {
+   "posicao_qs_2025": "36=",
+   "nome": "University of Amsterdam",
+   "pais": "Países Baixos"
+  },
+  {
+   "posicao_qs_2025": "38=",
+   "nome": "Emory University",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "38=",
+   "nome": "Seoul National University",
+   "pais": "Coreia do Sul"
+  },
+  {
+   "posicao_qs_2025": "38=",
+   "nome": "University of British Columbia",
+   "pais": "Canadá"
+  },
+  {
+   "posicao_qs_2025": "41",
+   "nome": "McMaster University",
+   "pais": "Canadá"
+  },
+  {
+   "posicao_qs_2025": "42=",
+   "nome": "Erasmus University Rotterdam",
+   "pais": "Países Baixos"
+  },
+  {
+   "posicao_qs_2025": "42=",
+   "nome": "Northwestern University",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "44",
+   "nome": "University of Glasgow",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "45",
+   "nome": "Sorbonne Université",
+   "pais": "França"
+  },
+  {
+   "posicao_qs_2025": "46",
+   "nome": "Washington University in St. Louis",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "47",
+   "nome": "Monash University",
+   "pais": "Austrália"
+  },
+  {
+   "posicao_qs_2025": "48",
+   "nome": "The University of Tokyo",
+   "pais": "Japão"
+  },
+  {
+   "posicao_qs_2025": "49",
+   "nome": "University of Pittsburgh",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "50",
+   "nome": "The University of Texas MD Anderson Cancer Center",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "51",
+   "nome": "Boston University",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "52",
+   "nome": "University of Copenhagen",
+   "pais": "Dinamarca"
+  },
+  {
+   "posicao_qs_2025": "53",
+   "nome": "Ludwig-Maximilians-Universität München",
+   "pais": "Alemanha"
+  },
+  {
+   "posicao_qs_2025": "54",
+   "nome": "University of North Carolina at Chapel Hill",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "55",
+   "nome": "Yonsei University",
+   "pais": "Coreia do Sul"
+  },
+  {
+   "posicao_qs_2025": "56=",
+   "nome": "Baylor College of Medicine",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "56=",
+   "nome": "Universitat de Barcelona",
+   "pais": "Espanha"
+  },
+  {
+   "posicao_qs_2025": "58",
+   "nome": "Universidade de São Paulo",
+   "pais": "Brasil"
+  },
+  {
+   "posicao_qs_2025": "59=",
+   "nome": "Fudan University",
+   "pais": "China"
+  },
+  {
+   "posicao_qs_2025": "59=",
+   "nome": "Queen Mary University of London",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "59=",
+   "nome": "Tsinghua University",
+   "pais": "China"
+  },
+  {
+   "posicao_qs_2025": "59=",
+   "nome": "University of Bristol",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "63",
+   "nome": "UNSW Sydney",
+   "pais": "Austrália"
+  },
+  {
+   "posicao_qs_2025": "64",
+   "nome": "Utrecht University",
+   "pais": "Países Baixos"
+  },
+  {
+   "posicao_qs_2025": "65",
+   "nome": "Leiden University",
+   "pais": "Países Baixos"
+  },
+  {
+   "posicao_qs_2025": "66",
+   "nome": "University of Zurich",
+   "pais": "Suíça"
+  },
+  {
+   "posicao_qs_2025": "67",
+   "nome": "University of Birmingham",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "68",
+   "nome": "Medical University of Vienna",
+   "pais": "Áustria"
+  },
+  {
+   "posicao_qs_2025": "69",
+   "nome": "Maastricht University",
+   "pais": "Países Baixos"
+  },
+  {
+   "posicao_qs_2025": "70",
+   "nome": "Vanderbilt University",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "71",
+   "nome": "Shanghai Jiao Tong University",
+   "pais": "China"
+  },
+  {
+   "posicao_qs_2025": "72=",
+   "nome": "ETH Zurich",
+   "pais": "Suíça"
+  },
+  {
+   "posicao_qs_2025": "72=",
+   "nome": "Kyoto University",
+   "pais": "Japão"
+  },
+  {
+   "posicao_qs_2025": "74",
+   "nome": "University of Liverpool",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "75",
+   "nome": "The University of Queensland",
+   "pais": "Austrália"
+  },
+  {
+   "posicao_qs_2025": "76",
+   "nome": "National Taiwan University",
+   "pais": "Taiwan"
+  },
+  {
+   "posicao_qs_2025": "77",
+   "nome": "Université Paris Cité",
+   "pais": "França"
+  },
+  {
+   "posicao_qs_2025": "78=",
+   "nome": "Mayo Clinic College of Medicine and Science",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "78=",
+   "nome": "Technical University of Munich",
+   "pais": "Alemanha"
+  },
+  {
+   "posicao_qs_2025": "80",
+   "nome": "University of Milan",
+   "pais": "Itália"
+  },
+  {
+   "posicao_qs_2025": "81",
+   "nome": "University of Southampton",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "82",
+   "nome": "University of Oslo",
+   "pais": "Noruega"
+  },
+  {
+   "posicao_qs_2025": "83",
+   "nome": "Trinity College Dublin",
+   "pais": "Irlanda"
+  },
+  {
+   "posicao_qs_2025": "84=",
+   "nome": "Nanyang Technological University",
+   "pais": "Singapura"
+  },
+  {
+   "posicao_qs_2025": "84=",
+   "nome": "The Ohio State University",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "86=",
+   "nome": "University of Alberta",
+   "pais": "Canadá"
+  },
+  {
+   "posicao_qs_2025": "86=",
+   "nome": "Université de Montréal",
+   "pais": "Canadá"
+  },
+  {
+   "posicao_qs_2025": "88",
+   "nome": "Case Western Reserve University",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "89=",
+   "nome": "Icahn School of Medicine at Mount Sinai",
+   "pais": "Estados Unidos"
+  },
+  {
+   "posicao_qs_2025": "89=",
+   "nome": "University of Groningen",
+   "pais": "Países Baixos"
+  },
+  {
+   "posicao_qs_2025": "89=",
+   "nome": "Zhejiang University",
+   "pais": "China"
+  },
+  {
+   "posicao_qs_2025": "92",
+   "nome": "Lund University",
+   "pais": "Suécia"
+  },
+  {
+   "posicao_qs_2025": "93",
+   "nome": "Charité - Universitätsmedizin Berlin",
+   "pais": "Alemanha"
+  },
+  {
+   "posicao_qs_2025": "94",
+   "nome": "Sapienza University of Rome",
+   "pais": "Itália"
+  },
+  {
+   "posicao_qs_2025": "95",
+   "nome": "Newcastle University",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "96=",
+   "nome": "University of Bologna",
+   "pais": "Itália"
+  },
+  {
+   "posicao_qs_2025": "96=",
+   "nome": "University of Leeds",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "96=",
+   "nome": "University of Nottingham",
+   "pais": "Reino Unido"
+  },
+  {
+   "posicao_qs_2025": "99=",
+   "nome": "Pontificia Universidad Católica de Chile",
+   "pais": "Chile"
+  },
+  {
+   "posicao_qs_2025": "99=",
+   "nome": "University of Cape Town",
+   "pais": "África do Sul"
+  }
+ ],
+ "escolas_brasil": [
+  {
+   "nome": "Faculdade de Medicina da USP (FMUSP)",
+   "uf": "SP",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina de Ribeirão Preto da USP (FMRP-USP)",
+   "uf": "SP",
+   "conferido": false
+  },
+  {
+   "nome": "Escola Paulista de Medicina da Unifesp",
+   "uf": "SP",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Ciências Médicas da Unicamp",
+   "uf": "SP",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina de Botucatu da Unesp",
+   "uf": "SP",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina da UFRJ",
+   "uf": "RJ",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina da UFMG",
+   "uf": "MG",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina da UFRGS",
+   "uf": "RS",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal de Ciências da Saúde de Porto Alegre (UFCSPA)",
+   "uf": "RS",
+   "conferido": false
+  },
+  {
+   "nome": "Escola de Medicina da PUCRS",
+   "uf": "RS",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina da Universidade Federal Fluminense (UFF)",
+   "uf": "RJ",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Ciências Médicas da UERJ",
+   "uf": "RJ",
+   "conferido": false
+  },
+  {
+   "nome": "Escola de Medicina e Cirurgia da Unirio",
+   "uf": "RJ",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal do Paraná (UFPR), curso de Medicina",
+   "uf": "PR",
+   "conferido": false
+  },
+  {
+   "nome": "Pontifícia Universidade Católica do Paraná (PUCPR), Escola de Medicina",
+   "uf": "PR",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal de Santa Catarina (UFSC), curso de Medicina",
+   "uf": "SC",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina da Universidade de Brasília (UnB)",
+   "uf": "DF",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina da Universidade Federal de Goiás (UFG)",
+   "uf": "GO",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina da Universidade Federal da Bahia (UFBA)",
+   "uf": "BA",
+   "conferido": false
+  },
+  {
+   "nome": "Escola Bahiana de Medicina e Saúde Pública",
+   "uf": "BA",
+   "conferido": false
+  },
+  {
+   "nome": "Centro de Ciências Médicas da Universidade Federal de Pernambuco (UFPE)",
+   "uf": "PE",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina da Universidade Federal do Ceará (UFC)",
+   "uf": "CE",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal do Rio Grande do Norte (UFRN), curso de Medicina",
+   "uf": "RN",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal da Paraíba (UFPB), curso de Medicina",
+   "uf": "PB",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal de Sergipe (UFS), curso de Medicina",
+   "uf": "SE",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal de Alagoas (Ufal), Faculdade de Medicina",
+   "uf": "AL",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal do Pará (UFPA), Faculdade de Medicina",
+   "uf": "PA",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal do Amazonas (Ufam), Faculdade de Medicina",
+   "uf": "AM",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal de Mato Grosso do Sul (UFMS), Faculdade de Medicina",
+   "uf": "MS",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal de Uberlândia (UFU), Faculdade de Medicina",
+   "uf": "MG",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal de Juiz de Fora (UFJF), Faculdade de Medicina",
+   "uf": "MG",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal do Triângulo Mineiro (UFTM)",
+   "uf": "MG",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal de São Carlos (UFSCar), curso de Medicina",
+   "uf": "SP",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina de São José do Rio Preto (Famerp)",
+   "uf": "SP",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Ciências Médicas da Santa Casa de São Paulo",
+   "uf": "SP",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade Israelita de Ciências da Saúde Albert Einstein",
+   "uf": "SP",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina da PUC-Campinas",
+   "uf": "SP",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina do ABC (Centro Universitário FMABC)",
+   "uf": "SP",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina de Jundiaí",
+   "uf": "SP",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Medicina de Marília (Famema)",
+   "uf": "SP",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Estadual de Londrina (UEL), curso de Medicina",
+   "uf": "PR",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Estadual de Maringá (UEM), curso de Medicina",
+   "uf": "PR",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal de Pelotas (UFPel), Faculdade de Medicina",
+   "uf": "RS",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal de Santa Maria (UFSM), curso de Medicina",
+   "uf": "RS",
+   "conferido": false
+  },
+  {
+   "nome": "Faculdade de Ciências Médicas de Minas Gerais",
+   "uf": "MG",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal do Espírito Santo (Ufes), curso de Medicina",
+   "uf": "ES",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal de Campina Grande (UFCG), curso de Medicina",
+   "uf": "PB",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal do Maranhão (UFMA), curso de Medicina",
+   "uf": "MA",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal do Piauí (UFPI), curso de Medicina",
+   "uf": "PI",
+   "conferido": false
+  },
+  {
+   "nome": "Universidade Federal de Mato Grosso (UFMT), Faculdade de Medicina",
+   "uf": "MT",
+   "conferido": false
+  }
+ ],
+ "especialidades": [
+  {
+   "id": "acupuntura",
+   "nome": "Acupuntura",
+   "acesso": "acesso direto",
+   "anos_residencia": 2,
+   "sociedade": "Colégio Médico Brasileiro de Acupuntura (CMBA)",
+   "diretrizes": [
+    "Normas CFM sobre acupuntura como ato médico",
+    "Diretrizes do CMBA",
+    "WHO Benchmarks for Training in Acupuncture"
+   ],
+   "bibliografia": [
+    "Maciocia, Os Fundamentos da Medicina Chinesa",
+    "Filshie e White, Medical Acupuncture: A Western Scientific Approach"
+   ],
+   "modulos": [
+    "acupuntura-bases-neurofisiologicas-da-acupuntura",
+    "acupuntura-anatomia-de-pontos-e-meridianos",
+    "acupuntura-acupuntura-na-dor-cronica",
+    "acupuntura-acupuntura-em-nausea-e-vomito",
+    "acupuntura-eletroacupuntura-e-tecnicas-associadas",
+    "acupuntura-pesquisa-em-acupuntura"
+   ],
+   "artigos": [
+    "acupuntura-01",
+    "acupuntura-02"
+   ]
+  },
+  {
+   "id": "alergia",
+   "nome": "Alergia e Imunologia",
+   "acesso": "pré-requisito: Clínica Médica ou Pediatria",
+   "anos_residencia": 2,
+   "sociedade": "Associação Brasileira de Alergia e Imunologia (ASBAI)",
+   "diretrizes": [
+    "GINA (Global Initiative for Asthma)",
+    "ARIA (rinite alérgica)",
+    "Diretrizes da ASBAI",
+    "WAO Anaphylaxis Guidance"
+   ],
+   "bibliografia": [
+    "Middleton, Allergy: Principles and Practice",
+    "Abbas, Imunologia Celular e Molecular"
+   ],
+   "modulos": [
+    "alergia-imunologia-basica-e-clinica",
+    "alergia-asma-e-rinite-alergica",
+    "alergia-anafilaxia-e-urticaria",
+    "alergia-alergia-alimentar-e-a-medicamentos",
+    "alergia-erros-inatos-da-imunidade",
+    "alergia-imunoterapia-alergeno-especifica"
+   ],
+   "artigos": [
+    "alergia-01"
+   ]
+  },
+  {
+   "id": "anestesio",
+   "nome": "Anestesiologia",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Anestesiologia (SBA)",
+   "diretrizes": [
+    "Resolução CFM 2.174/2017 (prática do ato anestésico)",
+    "ASA Practice Guidelines",
+    "Difficult Airway Society Guidelines"
+   ],
+   "bibliografia": [
+    "Miller, Anesthesia",
+    "Barash, Clinical Anesthesia",
+    "Stoelting, Pharmacology and Physiology in Anesthetic Practice"
+   ],
+   "modulos": [
+    "anestesio-farmacologia-anestesica",
+    "anestesio-via-aerea",
+    "anestesio-monitorizacao-e-seguranca",
+    "anestesio-anestesia-regional",
+    "anestesio-anestesia-em-situacoes-especiais",
+    "anestesio-dor-aguda-e-recuperacao"
+   ],
+   "artigos": [
+    "anestesio-01",
+    "anestesio-02"
+   ]
+  },
+  {
+   "id": "angio",
+   "nome": "Angiologia",
+   "acesso": "pré-requisito: Clínica Médica",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Angiologia e de Cirurgia Vascular (SBACV)",
+   "diretrizes": [
+    "Diretrizes da SBACV",
+    "ESVS Guidelines",
+    "CHEST Antithrombotic Guidelines"
+   ],
+   "bibliografia": [
+    "Rutherford, Vascular Surgery and Endovascular Therapy",
+    "Maffei, Doenças Vasculares Periféricas"
+   ],
+   "modulos": [
+    "angio-doenca-arterial-periferica",
+    "angio-trombose-venosa-e-embolia",
+    "angio-insuficiencia-venosa-cronica",
+    "angio-linfedema-e-doencas-linfaticas",
+    "angio-eco-doppler-vascular",
+    "angio-vasculites-e-acrossindromes"
+   ],
+   "artigos": [
+    "angio-01"
+   ]
+  },
+  {
+   "id": "cardio",
+   "nome": "Cardiologia",
+   "acesso": "pré-requisito: Clínica Médica",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Cardiologia (SBC)",
+   "diretrizes": [
+    "Diretrizes da SBC",
+    "ESC Guidelines",
+    "ACC/AHA Guidelines"
+   ],
+   "bibliografia": [
+    "Braunwald, Tratado de Doenças Cardiovasculares",
+    "Hurst, The Heart"
+   ],
+   "modulos": [
+    "cardio-sindromes-coronarianas",
+    "cardio-insuficiencia-cardiaca",
+    "cardio-arritmias",
+    "cardio-hipertensao-arterial-e-prevencao",
+    "cardio-valvopatias-e-cardiomiopatias",
+    "cardio-metodos-diagnosticos",
+    "cardio-doenca-de-chagas"
+   ],
+   "artigos": [
+    "cardio-01",
+    "cardio-02",
+    "cardio-03",
+    "cardio-04",
+    "cardio-05",
+    "cardio-06",
+    "cardio-07",
+    "cardio-08"
+   ]
+  },
+  {
+   "id": "cir-cardio",
+   "nome": "Cirurgia Cardiovascular",
+   "acesso": "acesso direto",
+   "anos_residencia": 5,
+   "sociedade": "Sociedade Brasileira de Cirurgia Cardiovascular (SBCCV)",
+   "diretrizes": [
+    "Diretrizes da SBCCV",
+    "EACTS/ESC Guidelines",
+    "STS Practice Guidelines"
+   ],
+   "bibliografia": [
+    "Kirklin/Barratt-Boyes, Cardiac Surgery",
+    "Cohn, Cardiac Surgery in the Adult"
+   ],
+   "modulos": [
+    "cir-cardio-circulacao-extracorporea",
+    "cir-cardio-revascularizacao-do-miocardio",
+    "cir-cardio-cirurgia-valvar",
+    "cir-cardio-cirurgia-da-aorta",
+    "cir-cardio-cardiopatias-congenitas",
+    "cir-cardio-assistencia-circulatoria-e-transplante"
+   ],
+   "artigos": [
+    "cir-cardio-01",
+    "cir-cardio-02"
+   ]
+  },
+  {
+   "id": "cir-mao",
+   "nome": "Cirurgia da Mão",
+   "acesso": "pré-requisito: Ortopedia e Traumatologia ou Cirurgia Plástica",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Cirurgia da Mão (SBCM)",
+   "diretrizes": [
+    "Diretrizes da SBCM",
+    "AAOS Clinical Practice Guidelines"
+   ],
+   "bibliografia": [
+    "Green's Operative Hand Surgery",
+    "Tubiana, The Hand"
+   ],
+   "modulos": [
+    "cir-mao-anatomia-funcional-da-mao",
+    "cir-mao-traumatismos-da-mao",
+    "cir-mao-compressoes-nervosas",
+    "cir-mao-doencas-degenerativas-e-inflamatorias",
+    "cir-mao-microcirurgia",
+    "cir-mao-mao-congenita-e-reabilitacao"
+   ],
+   "artigos": []
+  },
+  {
+   "id": "cir-cabeca",
+   "nome": "Cirurgia de Cabeça e Pescoço",
+   "acesso": "pré-requisito: Cirurgia Geral (ou Cirurgia Básica)",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Cirurgia de Cabeça e Pescoço (SBCCP)",
+   "diretrizes": [
+    "NCCN Head and Neck Cancers",
+    "ATA Thyroid Guidelines",
+    "Diretrizes da SBCCP"
+   ],
+   "bibliografia": [
+    "Shah, Head and Neck Surgery and Oncology",
+    "Cummings, Otolaryngology"
+   ],
+   "modulos": [
+    "cir-cabeca-tireoide-e-paratireoide",
+    "cir-cabeca-cancer-de-boca-e-orofaringe",
+    "cir-cabeca-laringe-e-hipofaringe",
+    "cir-cabeca-glandulas-salivares",
+    "cir-cabeca-esvaziamento-cervical",
+    "cir-cabeca-reconstrucao-em-cabeca-e-pescoco"
+   ],
+   "artigos": [
+    "cir-cabeca-01",
+    "cir-cabeca-02"
+   ]
+  },
+  {
+   "id": "cir-digestivo",
+   "nome": "Cirurgia do Aparelho Digestivo",
+   "acesso": "pré-requisito: Cirurgia Geral (ou Cirurgia Básica)",
+   "anos_residencia": 2,
+   "sociedade": "Colégio Brasileiro de Cirurgia Digestiva (CBCD)",
+   "diretrizes": [
+    "Diretrizes do CBCD",
+    "NCCN Esophageal, Gastric, Pancreatic Cancers",
+    "Tokyo Guidelines (vias biliares)"
+   ],
+   "bibliografia": [
+    "Sabiston, Tratado de Cirurgia",
+    "Blumgart, Surgery of the Liver, Biliary Tract and Pancreas"
+   ],
+   "modulos": [
+    "cir-digestivo-esofago-e-estomago",
+    "cir-digestivo-figado-e-vias-biliares",
+    "cir-digestivo-pancreas",
+    "cir-digestivo-cirurgia-bariatrica-e-metabolica",
+    "cir-digestivo-intestino-delgado-e-colon",
+    "cir-digestivo-videolaparoscopia-e-robotica"
+   ],
+   "artigos": [
+    "cir-digestivo-01",
+    "cir-digestivo-02"
+   ]
+  },
+  {
+   "id": "cir-geral",
+   "nome": "Cirurgia Geral",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Colégio Brasileiro de Cirurgiões (CBC)",
+   "diretrizes": [
+    "ATLS (American College of Surgeons)",
+    "Diretrizes do CBC",
+    "WSES Guidelines"
+   ],
+   "bibliografia": [
+    "Sabiston, Tratado de Cirurgia",
+    "Schwartz, Principles of Surgery"
+   ],
+   "modulos": [
+    "cir-geral-bases-da-cirurgia",
+    "cir-geral-trauma",
+    "cir-geral-abdome-agudo",
+    "cir-geral-hernias-da-parede-abdominal",
+    "cir-geral-cirurgia-ambulatorial-e-pequenas-cirurgias",
+    "cir-geral-cuidados-perioperatorios"
+   ],
+   "artigos": [
+    "cir-geral-01",
+    "cir-geral-02"
+   ]
+  },
+  {
+   "id": "cir-onco",
+   "nome": "Cirurgia Oncológica",
+   "acesso": "pré-requisito: Cirurgia Geral (ou Cirurgia Básica)",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Cirurgia Oncológica (SBCO)",
+   "diretrizes": [
+    "NCCN Guidelines",
+    "Diretrizes da SBCO",
+    "AJCC Cancer Staging Manual"
+   ],
+   "bibliografia": [
+    "DeVita, Cancer: Principles and Practice of Oncology",
+    "MD Anderson Surgical Oncology Handbook"
+   ],
+   "modulos": [
+    "cir-onco-principios-da-cirurgia-oncologica",
+    "cir-onco-tumores-do-aparelho-digestivo",
+    "cir-onco-sarcomas-e-melanoma",
+    "cir-onco-tumores-ginecologicos-e-de-mama",
+    "cir-onco-cirurgia-citorredutora-e-hipec",
+    "cir-onco-tratamento-multimodal"
+   ],
+   "artigos": [
+    "cir-onco-01",
+    "cir-onco-02"
+   ]
+  },
+  {
+   "id": "cir-ped",
+   "nome": "Cirurgia Pediátrica",
+   "acesso": "pré-requisito: Cirurgia Geral (ou Cirurgia Básica)",
+   "anos_residencia": 3,
+   "sociedade": "Associação Brasileira de Cirurgia Pediátrica (CIPE)",
+   "diretrizes": [
+    "Diretrizes da CIPE",
+    "APSA Guidelines"
+   ],
+   "bibliografia": [
+    "Ashcraft's Pediatric Surgery",
+    "Coran, Pediatric Surgery"
+   ],
+   "modulos": [
+    "cir-ped-malformacoes-congenitas",
+    "cir-ped-abdome-agudo-na-crianca",
+    "cir-ped-urologia-pediatrica",
+    "cir-ped-oncologia-pediatrica-cirurgica",
+    "cir-ped-trauma-pediatrico",
+    "cir-ped-cirurgia-neonatal"
+   ],
+   "artigos": []
+  },
+  {
+   "id": "cir-plastica",
+   "nome": "Cirurgia Plástica",
+   "acesso": "pré-requisito: Cirurgia Geral (ou Cirurgia Básica)",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Cirurgia Plástica (SBCP)",
+   "diretrizes": [
+    "Diretrizes da SBCP",
+    "ASPS Evidence-Based Guidelines"
+   ],
+   "bibliografia": [
+    "Grabb and Smith's Plastic Surgery",
+    "Neligan, Plastic Surgery"
+   ],
+   "modulos": [
+    "cir-plastica-principios-e-retalhos",
+    "cir-plastica-queimaduras",
+    "cir-plastica-cirurgia-craniofacial",
+    "cir-plastica-reconstrucao-de-mama",
+    "cir-plastica-cirurgia-estetica",
+    "cir-plastica-seguranca-do-paciente-na-cirurgia-plastica"
+   ],
+   "artigos": []
+  },
+  {
+   "id": "cir-toracica",
+   "nome": "Cirurgia Torácica",
+   "acesso": "pré-requisito: Cirurgia Geral (ou Cirurgia Básica)",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Cirurgia Torácica (SBCT)",
+   "diretrizes": [
+    "Diretrizes da SBCT",
+    "NCCN Non-Small Cell Lung Cancer",
+    "ESTS Guidelines"
+   ],
+   "bibliografia": [
+    "Shields' General Thoracic Surgery",
+    "Pearson, Thoracic and Esophageal Surgery"
+   ],
+   "modulos": [
+    "cir-toracica-cancer-de-pulmao",
+    "cir-toracica-pleura",
+    "cir-toracica-mediastino",
+    "cir-toracica-via-aerea",
+    "cir-toracica-trauma-toracico",
+    "cir-toracica-transplante-pulmonar"
+   ],
+   "artigos": [
+    "cir-toracica-01",
+    "cir-toracica-02"
+   ]
+  },
+  {
+   "id": "cir-vascular",
+   "nome": "Cirurgia Vascular",
+   "acesso": "pré-requisito: Cirurgia Geral (ou Cirurgia Básica)",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Angiologia e de Cirurgia Vascular (SBACV)",
+   "diretrizes": [
+    "Diretrizes da SBACV",
+    "ESVS Guidelines",
+    "SVS Practice Guidelines"
+   ],
+   "bibliografia": [
+    "Rutherford, Vascular Surgery and Endovascular Therapy"
+   ],
+   "modulos": [
+    "cir-vascular-aneurismas-de-aorta",
+    "cir-vascular-doenca-carotidea",
+    "cir-vascular-isquemia-de-membros",
+    "cir-vascular-acessos-para-hemodialise",
+    "cir-vascular-cirurgia-endovascular",
+    "cir-vascular-trauma-vascular"
+   ],
+   "artigos": [
+    "cir-vascular-01",
+    "cir-vascular-02"
+   ]
+  },
+  {
+   "id": "clinica",
+   "nome": "Clínica Médica",
+   "acesso": "acesso direto",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Clínica Médica (SBCM)",
+   "diretrizes": [
+    "Diretrizes das sociedades de especialidade",
+    "Protocolos Clínicos e Diretrizes Terapêuticas do Ministério da Saúde (PCDT)",
+    "UpToDate e DynaMed como apoio"
+   ],
+   "bibliografia": [
+    "Harrison's Principles of Internal Medicine",
+    "Goldman-Cecil Medicine"
+   ],
+   "modulos": [
+    "clinica-raciocinio-clinico",
+    "clinica-doencas-cronicas-nao-transmissiveis",
+    "clinica-doencas-infecciosas-na-enfermaria",
+    "clinica-medicina-hospitalar",
+    "clinica-emergencias-clinicas",
+    "clinica-cuidados-paliativos-e-decisao-compartilhada"
+   ],
+   "artigos": [
+    "clinica-01",
+    "clinica-02"
+   ]
+  },
+  {
+   "id": "colo",
+   "nome": "Coloproctologia",
+   "acesso": "pré-requisito: Cirurgia Geral (ou Cirurgia Básica)",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Coloproctologia (SBCP)",
+   "diretrizes": [
+    "Diretrizes da Sociedade Brasileira de Coloproctologia",
+    "ASCRS Clinical Practice Guidelines"
+   ],
+   "bibliografia": [
+    "Corman, Colon and Rectal Surgery",
+    "Gordon e Nivatvongs, Principles and Practice of Surgery for the Colon, Rectum and Anus"
+   ],
+   "modulos": [
+    "colo-doencas-anorretais-benignas",
+    "colo-cancer-colorretal",
+    "colo-doenca-inflamatoria-intestinal",
+    "colo-doenca-diverticular",
+    "colo-fisiologia-anorretal",
+    "colo-colonoscopia"
+   ],
+   "artigos": [
+    "colo-01",
+    "colo-02"
+   ]
+  },
+  {
+   "id": "dermato",
+   "nome": "Dermatologia",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Dermatologia (SBD)",
+   "diretrizes": [
+    "Consensos da SBD",
+    "AAD Guidelines",
+    "Diretriz brasileira de psoríase"
+   ],
+   "bibliografia": [
+    "Bolognia, Dermatology",
+    "Fitzpatrick, Dermatology",
+    "Azulay, Dermatologia"
+   ],
+   "modulos": [
+    "dermato-dermatologia-clinica",
+    "dermato-infeccoes-cutaneas",
+    "dermato-oncologia-cutanea",
+    "dermato-doencas-bolhosas-e-autoimunes",
+    "dermato-cirurgia-dermatologica",
+    "dermato-cosmiatria-e-laser"
+   ],
+   "artigos": [
+    "dermato-01"
+   ]
+  },
+  {
+   "id": "endocrino",
+   "nome": "Endocrinologia e Metabologia",
+   "acesso": "pré-requisito: Clínica Médica",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Endocrinologia e Metabologia (SBEM)",
+   "diretrizes": [
+    "Diretrizes da Sociedade Brasileira de Diabetes",
+    "ADA Standards of Care in Diabetes",
+    "Diretrizes da SBEM"
+   ],
+   "bibliografia": [
+    "Williams Textbook of Endocrinology",
+    "Vilar, Endocrinologia Clínica"
+   ],
+   "modulos": [
+    "endocrino-diabetes-mellitus",
+    "endocrino-obesidade",
+    "endocrino-tireoide",
+    "endocrino-hipofise-e-adrenal",
+    "endocrino-metabolismo-osseo",
+    "endocrino-gonadas-e-endocrinologia-reprodutiva"
+   ],
+   "artigos": [
+    "endocrino-01",
+    "endocrino-02",
+    "endocrino-03",
+    "endocrino-04",
+    "endocrino-05"
+   ]
+  },
+  {
+   "id": "endoscopia",
+   "nome": "Endoscopia",
+   "acesso": "pré-requisito: Clínica Médica, Cirurgia Geral ou Gastroenterologia",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Endoscopia Digestiva (SOBED)",
+   "diretrizes": [
+    "Diretrizes da SOBED",
+    "ASGE Guidelines",
+    "ESGE Guidelines"
+   ],
+   "bibliografia": [
+    "Cotton and Williams' Practical Gastrointestinal Endoscopy",
+    "Classen, Gastroenterological Endoscopy"
+   ],
+   "modulos": [
+    "endoscopia-endoscopia-digestiva-alta",
+    "endoscopia-colonoscopia",
+    "endoscopia-cpre-e-ecoendoscopia",
+    "endoscopia-endoscopia-terapeutica-avancada",
+    "endoscopia-sedacao-e-seguranca",
+    "endoscopia-qualidade-em-endoscopia"
+   ],
+   "artigos": [
+    "endoscopia-01"
+   ]
+  },
+  {
+   "id": "gastro",
+   "nome": "Gastroenterologia",
+   "acesso": "pré-requisito: Clínica Médica",
+   "anos_residencia": 2,
+   "sociedade": "Federação Brasileira de Gastroenterologia (FBG)",
+   "diretrizes": [
+    "Diretrizes da FBG",
+    "ACG Clinical Guidelines",
+    "AASLD Practice Guidance"
+   ],
+   "bibliografia": [
+    "Sleisenger and Fordtran's Gastrointestinal and Liver Disease",
+    "Yamada, Textbook of Gastroenterology"
+   ],
+   "modulos": [
+    "gastro-esofago-e-estomago",
+    "gastro-intestino",
+    "gastro-figado",
+    "gastro-pancreas-e-vias-biliares",
+    "gastro-hemorragia-digestiva",
+    "gastro-nutricao-em-gastroenterologia"
+   ],
+   "artigos": [
+    "gastro-01",
+    "gastro-02"
+   ]
+  },
+  {
+   "id": "genetica",
+   "nome": "Genética Médica",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Genética Médica e Genômica (SBGM)",
+   "diretrizes": [
+    "ACMG Standards for Interpretation of Sequence Variants",
+    "Diretrizes da SBGM",
+    "Política Nacional de Atenção às Pessoas com Doenças Raras"
+   ],
+   "bibliografia": [
+    "Thompson & Thompson, Genética Médica",
+    "Emery and Rimoin's Principles and Practice of Medical Genetics"
+   ],
+   "modulos": [
+    "genetica-genetica-clinica-e-dismorfologia",
+    "genetica-erros-inatos-do-metabolismo",
+    "genetica-genomica-diagnostica",
+    "genetica-oncogenetica",
+    "genetica-aconselhamento-genetico",
+    "genetica-farmacogenomica-e-terapias-genicas"
+   ],
+   "artigos": [
+    "genetica-01",
+    "genetica-02"
+   ]
+  },
+  {
+   "id": "geriatria",
+   "nome": "Geriatria",
+   "acesso": "pré-requisito: Clínica Médica",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Geriatria e Gerontologia (SBGG)",
+   "diretrizes": [
+    "Critérios de Beers (AGS)",
+    "Diretrizes da SBGG",
+    "Política Nacional de Saúde da Pessoa Idosa"
+   ],
+   "bibliografia": [
+    "Hazzard's Geriatric Medicine and Gerontology",
+    "Freitas, Tratado de Geriatria e Gerontologia"
+   ],
+   "modulos": [
+    "geriatria-avaliacao-geriatrica-ampla",
+    "geriatria-sindromes-geriatricas",
+    "geriatria-demencias-e-delirium",
+    "geriatria-polifarmacia",
+    "geriatria-cuidados-paliativos-no-idoso",
+    "geriatria-instituicoes-de-longa-permanencia-e-cuidado-domiciliar"
+   ],
+   "artigos": [
+    "geriatria-01",
+    "geriatria-02"
+   ]
+  },
+  {
+   "id": "go",
+   "nome": "Ginecologia e Obstetrícia",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Federação Brasileira das Associações de Ginecologia e Obstetrícia (Febrasgo)",
+   "diretrizes": [
+    "Protocolos da Febrasgo",
+    "Manuais do Ministério da Saúde (pré-natal, gestação de alto risco)",
+    "ACOG Practice Bulletins"
+   ],
+   "bibliografia": [
+    "Williams Obstetrics",
+    "Berek & Novak, Ginecologia",
+    "Rezende, Obstetrícia"
+   ],
+   "modulos": [
+    "go-pre-natal-e-assistencia-ao-parto",
+    "go-gestacao-de-alto-risco",
+    "go-emergencias-obstetricas",
+    "go-ginecologia-geral",
+    "go-oncologia-ginecologica",
+    "go-reproducao-humana-e-planejamento-familiar"
+   ],
+   "artigos": [
+    "go-01",
+    "go-02",
+    "go-03"
+   ]
+  },
+  {
+   "id": "hemato",
+   "nome": "Hematologia e Hemoterapia",
+   "acesso": "pré-requisito: Clínica Médica",
+   "anos_residencia": 2,
+   "sociedade": "Associação Brasileira de Hematologia, Hemoterapia e Terapia Celular (ABHH)",
+   "diretrizes": [
+    "Diretrizes da ABHH",
+    "NCCN Hematologic Malignancies",
+    "Portaria de Consolidação MS sobre hemoterapia"
+   ],
+   "bibliografia": [
+    "Williams Hematology",
+    "Hoffman, Hematology: Basic Principles and Practice"
+   ],
+   "modulos": [
+    "hemato-anemias",
+    "hemato-hemostasia-e-trombose",
+    "hemato-leucemias",
+    "hemato-linfomas-e-mieloma",
+    "hemato-hemoterapia",
+    "hemato-transplante-de-medula-e-terapia-celular"
+   ],
+   "artigos": [
+    "hemato-01",
+    "hemato-02"
+   ]
+  },
+  {
+   "id": "homeopatia",
+   "nome": "Homeopatia",
+   "acesso": "acesso direto",
+   "anos_residencia": 2,
+   "sociedade": "Associação Médica Homeopática Brasileira (AMHB)",
+   "diretrizes": [
+    "Normas da AMHB",
+    "Farmacopeia Homeopática Brasileira"
+   ],
+   "bibliografia": [
+    "Hahnemann, Organon da Arte de Curar"
+   ],
+   "modulos": [
+    "homeopatia-fundamentos-historicos-da-homeopatia",
+    "homeopatia-semiologia-homeopatica",
+    "homeopatia-farmacotecnica-homeopatica",
+    "homeopatia-avaliacao-critica-da-evidencia",
+    "homeopatia-etica-e-limites-terapeuticos"
+   ],
+   "artigos": [
+    "homeopatia-01"
+   ]
+  },
+  {
+   "id": "infecto",
+   "nome": "Infectologia",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Infectologia (SBI)",
+   "diretrizes": [
+    "PCDT do Ministério da Saúde (HIV, hepatites, tuberculose)",
+    "IDSA Guidelines",
+    "Surviving Sepsis Campaign"
+   ],
+   "bibliografia": [
+    "Mandell, Douglas and Bennett's Principles and Practice of Infectious Diseases",
+    "Veronesi, Tratado de Infectologia"
+   ],
+   "modulos": [
+    "infecto-antimicrobianos",
+    "infecto-hiv-e-infeccoes-sexualmente-transmissiveis",
+    "infecto-tuberculose-e-micobacterioses",
+    "infecto-doencas-tropicais-e-arboviroses",
+    "infecto-infeccoes-relacionadas-a-assistencia",
+    "infecto-sepse-e-infeccoes-graves"
+   ],
+   "artigos": [
+    "infecto-01",
+    "infecto-02",
+    "infecto-03"
+   ]
+  },
+  {
+   "id": "mastologia",
+   "nome": "Mastologia",
+   "acesso": "pré-requisito: Cirurgia Geral ou Ginecologia e Obstetrícia",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Mastologia (SBM)",
+   "diretrizes": [
+    "Diretrizes da SBM",
+    "NCCN Breast Cancer",
+    "Consenso de St. Gallen"
+   ],
+   "bibliografia": [
+    "Harris, Diseases of the Breast",
+    "Bland & Copeland, The Breast"
+   ],
+   "modulos": [
+    "mastologia-rastreamento-e-imagem",
+    "mastologia-doencas-benignas-da-mama",
+    "mastologia-cancer-de-mama",
+    "mastologia-linfonodo-sentinela-e-axila",
+    "mastologia-tratamento-sistemico",
+    "mastologia-oncoplastia-e-reconstrucao"
+   ],
+   "artigos": [
+    "mastologia-01",
+    "mastologia-02",
+    "mastologia-03"
+   ]
+  },
+  {
+   "id": "emergencia",
+   "nome": "Medicina de Emergência",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Associação Brasileira de Medicina de Emergência (ABRAMEDE)",
+   "diretrizes": [
+    "ACLS e diretrizes da AHA para ressuscitação",
+    "ATLS",
+    "Diretrizes da ABRAMEDE"
+   ],
+   "bibliografia": [
+    "Tintinalli's Emergency Medicine",
+    "Rosen's Emergency Medicine"
+   ],
+   "modulos": [
+    "emergencia-ressuscitacao",
+    "emergencia-trauma",
+    "emergencia-emergencias-cardiovasculares-e-neurologicas",
+    "emergencia-toxicologia",
+    "emergencia-ultrassom-a-beira-do-leito",
+    "emergencia-gestao-do-pronto-socorro"
+   ],
+   "artigos": [
+    "emergencia-01",
+    "emergencia-02"
+   ]
+  },
+  {
+   "id": "mfc",
+   "nome": "Medicina de Família e Comunidade",
+   "acesso": "acesso direto",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Medicina de Família e Comunidade (SBMFC)",
+   "diretrizes": [
+    "Cadernos de Atenção Básica do Ministério da Saúde",
+    "Política Nacional de Atenção Básica",
+    "Guia de Prevenção Quaternária"
+   ],
+   "bibliografia": [
+    "Gusso e Lopes, Tratado de Medicina de Família e Comunidade",
+    "McWhinney, Manual de Medicina de Família"
+   ],
+   "modulos": [
+    "mfc-principios-da-atencao-primaria",
+    "mfc-abordagem-centrada-na-pessoa",
+    "mfc-problemas-comuns-na-atencao-primaria",
+    "mfc-saude-da-familia-e-da-comunidade",
+    "mfc-prevencao-e-rastreamento",
+    "mfc-gestao-da-clinica"
+   ],
+   "artigos": [
+    "mfc-01"
+   ]
+  },
+  {
+   "id": "trabalho",
+   "nome": "Medicina do Trabalho",
+   "acesso": "acesso direto",
+   "anos_residencia": 2,
+   "sociedade": "Associação Nacional de Medicina do Trabalho (ANAMT)",
+   "diretrizes": [
+    "Normas Regulamentadoras do MTE (NR-7, NR-9, NR-15, NR-17)",
+    "Lista de Doenças Relacionadas ao Trabalho (Ministério da Saúde)",
+    "Diretrizes da ANAMT"
+   ],
+   "bibliografia": [
+    "Mendes, Patologia do Trabalho",
+    "LaDou, Current Occupational and Environmental Medicine"
+   ],
+   "modulos": [
+    "trabalho-saude-do-trabalhador-e-legislacao",
+    "trabalho-toxicologia-ocupacional",
+    "trabalho-doencas-ocupacionais",
+    "trabalho-ergonomia-e-saude-mental-no-trabalho",
+    "trabalho-pericia-e-capacidade-laborativa",
+    "trabalho-vigilancia-em-saude-do-trabalhador"
+   ],
+   "artigos": []
+  },
+  {
+   "id": "trafego",
+   "nome": "Medicina do Tráfego",
+   "acesso": "acesso direto",
+   "anos_residencia": 2,
+   "sociedade": "Associação Brasileira de Medicina de Tráfego (Abramet)",
+   "diretrizes": [
+    "Código de Trânsito Brasileiro (Lei 9.503/1997)",
+    "Resoluções do Contran sobre exame de aptidão física e mental",
+    "Diretrizes da Abramet"
+   ],
+   "bibliografia": [
+    "Diretrizes da Abramet",
+    "Organização Mundial da Saúde, Global Status Report on Road Safety"
+   ],
+   "modulos": [
+    "trafego-exame-de-aptidao-fisica-e-mental",
+    "trafego-epidemiologia-da-violencia-no-transito",
+    "trafego-alcool-drogas-e-direcao",
+    "trafego-ergonomia-e-fatores-humanos-do-condutor",
+    "trafego-atendimento-e-prevencao-de-lesoes-no-transito"
+   ],
+   "artigos": []
+  },
+  {
+   "id": "esporte",
+   "nome": "Medicina Esportiva",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Medicina do Exercício e do Esporte (SBMEE)",
+   "diretrizes": [
+    "Diretrizes da SBMEE",
+    "ACSM Guidelines for Exercise Testing and Prescription",
+    "Código Mundial Antidopagem (WADA)"
+   ],
+   "bibliografia": [
+    "Brukner & Khan's Clinical Sports Medicine",
+    "ACSM, Guidelines for Exercise Testing and Prescription"
+   ],
+   "modulos": [
+    "esporte-fisiologia-do-exercicio",
+    "esporte-avaliacao-pre-participacao",
+    "esporte-lesoes-esportivas",
+    "esporte-prescricao-de-exercicio",
+    "esporte-nutricao-e-dopagem",
+    "esporte-concussao-no-esporte"
+   ],
+   "artigos": [
+    "esporte-01"
+   ]
+  },
+  {
+   "id": "fisiatria",
+   "nome": "Medicina Física e Reabilitação",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Associação Brasileira de Medicina Física e Reabilitação (ABMFR)",
+   "diretrizes": [
+    "CIF (Classificação Internacional de Funcionalidade)",
+    "Diretrizes da ABMFR"
+   ],
+   "bibliografia": [
+    "DeLisa's Physical Medicine and Rehabilitation",
+    "Braddom's Physical Medicine and Rehabilitation"
+   ],
+   "modulos": [
+    "fisiatria-avaliacao-funcional",
+    "fisiatria-reabilitacao-neurologica",
+    "fisiatria-espasticidade",
+    "fisiatria-dor-musculoesqueletica",
+    "fisiatria-orteses-proteses-e-tecnologia-assistiva",
+    "fisiatria-eletrodiagnostico"
+   ],
+   "artigos": []
+  },
+  {
+   "id": "intensiva",
+   "nome": "Medicina Intensiva",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Associação de Medicina Intensiva Brasileira (AMIB)",
+   "diretrizes": [
+    "Surviving Sepsis Campaign",
+    "Diretrizes da AMIB",
+    "Resolução CFM 2.271/2020 (UTI)"
+   ],
+   "bibliografia": [
+    "Irwin and Rippe's Intensive Care Medicine",
+    "Marino, The ICU Book"
+   ],
+   "modulos": [
+    "intensiva-sepse-e-choque",
+    "intensiva-ventilacao-mecanica",
+    "intensiva-suporte-organico",
+    "intensiva-neurointensivismo",
+    "intensiva-sedacao-analgesia-e-delirium",
+    "intensiva-cuidados-de-fim-de-vida-na-uti"
+   ],
+   "artigos": [
+    "intensiva-01",
+    "intensiva-02",
+    "intensiva-03"
+   ]
+  },
+  {
+   "id": "legal",
+   "nome": "Medicina Legal e Perícia Médica",
+   "acesso": "acesso direto",
+   "anos_residencia": 2,
+   "sociedade": "Associação Brasileira de Medicina Legal e Perícias Médicas (ABMLPM)",
+   "diretrizes": [
+    "Código de Processo Penal (perícia, arts. 158 a 184)",
+    "Código de Processo Civil (prova pericial, arts. 464 a 480)",
+    "Resoluções do CFM sobre perícia médica"
+   ],
+   "bibliografia": [
+    "França, Medicina Legal",
+    "Croce, Manual de Medicina Legal",
+    "Saukko e Knight, Knight’s Forensic Pathology"
+   ],
+   "modulos": [
+    "legal-tanatologia-forense",
+    "legal-traumatologia-forense",
+    "legal-sexologia-forense",
+    "legal-psicopatologia-e-imputabilidade",
+    "legal-pericia-civel-trabalhista-e-previdenciaria",
+    "legal-identificacao-humana-e-genetica-forense"
+   ],
+   "artigos": []
+  },
+  {
+   "id": "nuclear",
+   "nome": "Medicina Nuclear",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Medicina Nuclear (SBMN)",
+   "diretrizes": [
+    "Normas da CNEN (radioproteção)",
+    "SNMMI Procedure Standards",
+    "EANM Guidelines"
+   ],
+   "bibliografia": [
+    "Mettler, Essentials of Nuclear Medicine and Molecular Imaging",
+    "Ziessman, Nuclear Medicine: The Requisites"
+   ],
+   "modulos": [
+    "nuclear-fisica-e-radioprotecao",
+    "nuclear-pet-ct-oncologico",
+    "nuclear-cintilografia-geral",
+    "nuclear-terapia-com-radionuclideos",
+    "nuclear-medicina-nuclear-em-neurologia"
+   ],
+   "artigos": [
+    "nuclear-01"
+   ]
+  },
+  {
+   "id": "preventiva",
+   "nome": "Medicina Preventiva e Social",
+   "acesso": "acesso direto",
+   "anos_residencia": 2,
+   "sociedade": "Associação Brasileira de Saúde Coletiva (Abrasco)",
+   "diretrizes": [
+    "Lei 8.080/1990 (SUS)",
+    "Política Nacional de Vigilância em Saúde",
+    "Recomendações da USPSTF (rastreamento)"
+   ],
+   "bibliografia": [
+    "Rouquayrol, Epidemiologia e Saúde",
+    "Rothman, Modern Epidemiology",
+    "Paim, O que é o SUS"
+   ],
+   "modulos": [
+    "preventiva-epidemiologia",
+    "preventiva-vigilancia-em-saude",
+    "preventiva-planejamento-e-gestao-em-saude",
+    "preventiva-avaliacao-de-tecnologias-em-saude",
+    "preventiva-saude-baseada-em-evidencias",
+    "preventiva-determinantes-sociais-e-politicas-publicas"
+   ],
+   "artigos": [
+    "preventiva-01",
+    "preventiva-02"
+   ]
+  },
+  {
+   "id": "nefro",
+   "nome": "Nefrologia",
+   "acesso": "pré-requisito: Clínica Médica",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Nefrologia (SBN)",
+   "diretrizes": [
+    "KDIGO Guidelines",
+    "Diretrizes da SBN",
+    "Resolução Anvisa RDC 11/2014 (diálise)"
+   ],
+   "bibliografia": [
+    "Brenner and Rector's The Kidney",
+    "Comprehensive Clinical Nephrology"
+   ],
+   "modulos": [
+    "nefro-doenca-renal-cronica",
+    "nefro-lesao-renal-aguda",
+    "nefro-disturbios-hidroeletroliticos-e-acido-base",
+    "nefro-glomerulopatias",
+    "nefro-dialise",
+    "nefro-transplante-renal"
+   ],
+   "artigos": [
+    "nefro-01",
+    "nefro-02"
+   ]
+  },
+  {
+   "id": "neurocirurgia",
+   "nome": "Neurocirurgia",
+   "acesso": "acesso direto",
+   "anos_residencia": 5,
+   "sociedade": "Sociedade Brasileira de Neurocirurgia (SBN)",
+   "diretrizes": [
+    "Brain Trauma Foundation Guidelines",
+    "Diretrizes da Sociedade Brasileira de Neurocirurgia"
+   ],
+   "bibliografia": [
+    "Youmans and Winn Neurological Surgery",
+    "Greenberg, Handbook of Neurosurgery"
+   ],
+   "modulos": [
+    "neurocirurgia-neurotrauma",
+    "neurocirurgia-neuro-oncologia",
+    "neurocirurgia-neurocirurgia-vascular",
+    "neurocirurgia-coluna",
+    "neurocirurgia-neurocirurgia-funcional",
+    "neurocirurgia-neurocirurgia-pediatrica"
+   ],
+   "artigos": [
+    "neurocirurgia-01",
+    "neurocirurgia-02"
+   ]
+  },
+  {
+   "id": "neuro",
+   "nome": "Neurologia",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Academia Brasileira de Neurologia (ABN)",
+   "diretrizes": [
+    "Diretrizes da ABN",
+    "AAN Guidelines",
+    "Diretrizes brasileiras de AVC"
+   ],
+   "bibliografia": [
+    "Adams and Victor's Principles of Neurology",
+    "Bradley's Neurology in Clinical Practice"
+   ],
+   "modulos": [
+    "neuro-doencas-cerebrovasculares",
+    "neuro-epilepsias",
+    "neuro-doencas-neurodegenerativas",
+    "neuro-doencas-desmielinizantes",
+    "neuro-cefaleias",
+    "neuro-doencas-neuromusculares"
+   ],
+   "artigos": [
+    "neuro-01",
+    "neuro-02"
+   ]
+  },
+  {
+   "id": "nutrologia",
+   "nome": "Nutrologia",
+   "acesso": "pré-requisito: Clínica Médica",
+   "anos_residencia": 2,
+   "sociedade": "Associação Brasileira de Nutrologia (ABRAN)",
+   "diretrizes": [
+    "Diretrizes BRASPEN (terapia nutricional)",
+    "ESPEN Guidelines",
+    "Diretrizes da ABRAN"
+   ],
+   "bibliografia": [
+    "Shils, Modern Nutrition in Health and Disease",
+    "Waitzberg, Nutrição Oral, Enteral e Parenteral"
+   ],
+   "modulos": [
+    "nutrologia-avaliacao-nutricional",
+    "nutrologia-terapia-nutricional-enteral-e-parenteral",
+    "nutrologia-obesidade-e-sindrome-metabolica",
+    "nutrologia-micronutrientes",
+    "nutrologia-nutricao-em-doencas-cronicas",
+    "nutrologia-nutricao-no-ciclo-da-vida"
+   ],
+   "artigos": []
+  },
+  {
+   "id": "oftalmo",
+   "nome": "Oftalmologia",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Conselho Brasileiro de Oftalmologia (CBO)",
+   "diretrizes": [
+    "Diretrizes do CBO",
+    "AAO Preferred Practice Patterns"
+   ],
+   "bibliografia": [
+    "Kanski's Clinical Ophthalmology",
+    "Basic and Clinical Science Course da AAO"
+   ],
+   "modulos": [
+    "oftalmo-refracao-e-lentes",
+    "oftalmo-catarata",
+    "oftalmo-glaucoma",
+    "oftalmo-retina",
+    "oftalmo-cornea-e-superficie-ocular",
+    "oftalmo-oftalmopediatria-e-estrabismo"
+   ],
+   "artigos": [
+    "oftalmo-01",
+    "oftalmo-02"
+   ]
+  },
+  {
+   "id": "onco",
+   "nome": "Oncologia Clínica",
+   "acesso": "pré-requisito: Clínica Médica",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Oncologia Clínica (SBOC)",
+   "diretrizes": [
+    "Diretrizes da SBOC",
+    "NCCN Guidelines",
+    "ESMO Clinical Practice Guidelines"
+   ],
+   "bibliografia": [
+    "DeVita, Cancer: Principles and Practice of Oncology",
+    "Abeloff, Clinical Oncology"
+   ],
+   "modulos": [
+    "onco-biologia-do-cancer",
+    "onco-tratamento-sistemico",
+    "onco-tumores-solidos-mais-frequentes",
+    "onco-emergencias-oncologicas",
+    "onco-medicina-de-precisao",
+    "onco-cuidados-de-suporte-e-paliativos"
+   ],
+   "artigos": [
+    "onco-01",
+    "onco-02",
+    "onco-03"
+   ]
+  },
+  {
+   "id": "orto",
+   "nome": "Ortopedia e Traumatologia",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Ortopedia e Traumatologia (SBOT)",
+   "diretrizes": [
+    "Diretrizes da SBOT",
+    "AAOS Clinical Practice Guidelines",
+    "Princípios AO de tratamento de fraturas"
+   ],
+   "bibliografia": [
+    "Rockwood and Green's Fractures in Adults",
+    "Campbell's Operative Orthopaedics"
+   ],
+   "modulos": [
+    "orto-traumatologia",
+    "orto-coluna",
+    "orto-ombro-e-cotovelo",
+    "orto-quadril-e-joelho",
+    "orto-ortopedia-pediatrica",
+    "orto-oncologia-ortopedica-e-infeccao"
+   ],
+   "artigos": [
+    "orto-01"
+   ]
+  },
+  {
+   "id": "otorrino",
+   "nome": "Otorrinolaringologia",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Associação Brasileira de Otorrinolaringologia e Cirurgia Cérvico-Facial (ABORL-CCF)",
+   "diretrizes": [
+    "Diretrizes da ABORL-CCF",
+    "AAO-HNS Clinical Practice Guidelines"
+   ],
+   "bibliografia": [
+    "Cummings, Otolaryngology: Head and Neck Surgery",
+    "Tratado de Otorrinolaringologia da ABORL-CCF"
+   ],
+   "modulos": [
+    "otorrino-otologia-e-audiologia",
+    "otorrino-rinologia",
+    "otorrino-laringologia-e-voz",
+    "otorrino-otoneurologia",
+    "otorrino-disturbios-do-sono",
+    "otorrino-otorrinolaringologia-pediatrica"
+   ],
+   "artigos": []
+  },
+  {
+   "id": "patologia",
+   "nome": "Patologia",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Patologia (SBP)",
+   "diretrizes": [
+    "Classificações da OMS de tumores (livros azuis)",
+    "Protocolos do College of American Pathologists (CAP)",
+    "Normas da SBP"
+   ],
+   "bibliografia": [
+    "Robbins & Cotran, Patologia: Bases Patológicas das Doenças",
+    "Rosai and Ackerman's Surgical Pathology"
+   ],
+   "modulos": [
+    "patologia-patologia-geral",
+    "patologia-patologia-cirurgica",
+    "patologia-citopatologia",
+    "patologia-imuno-histoquimica-e-patologia-molecular",
+    "patologia-necropsia-clinica",
+    "patologia-patologia-digital-e-ia"
+   ],
+   "artigos": [
+    "patologia-01"
+   ]
+  },
+  {
+   "id": "lab",
+   "nome": "Patologia Clínica/Medicina Laboratorial",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Patologia Clínica/Medicina Laboratorial (SBPC/ML)",
+   "diretrizes": [
+    "RDC Anvisa 786/2023 (laboratórios clínicos)",
+    "Recomendações da SBPC/ML",
+    "Normas CLSI"
+   ],
+   "bibliografia": [
+    "Henry, Diagnósticos Clínicos e Tratamento por Métodos Laboratoriais",
+    "Tietz, Textbook of Clinical Chemistry"
+   ],
+   "modulos": [
+    "lab-bioquimica-clinica",
+    "lab-hematologia-laboratorial",
+    "lab-microbiologia-clinica",
+    "lab-imunologia-e-sorologia",
+    "lab-gestao-da-qualidade-laboratorial",
+    "lab-medicina-laboratorial-baseada-em-evidencia"
+   ],
+   "artigos": []
+  },
+  {
+   "id": "pediatria",
+   "nome": "Pediatria",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Pediatria (SBP)",
+   "diretrizes": [
+    "Documentos científicos da SBP",
+    "Calendário Nacional de Vacinação (PNI)",
+    "Caderneta da Criança do Ministério da Saúde"
+   ],
+   "bibliografia": [
+    "Nelson, Tratado de Pediatria",
+    "Tratado de Pediatria da Sociedade Brasileira de Pediatria"
+   ],
+   "modulos": [
+    "pediatria-puericultura",
+    "pediatria-neonatologia",
+    "pediatria-emergencias-pediatricas",
+    "pediatria-doencas-infecciosas-da-infancia",
+    "pediatria-adolescencia",
+    "pediatria-doencas-cronicas-na-infancia"
+   ],
+   "artigos": [
+    "pediatria-01",
+    "pediatria-02"
+   ]
+  },
+  {
+   "id": "pneumo",
+   "nome": "Pneumologia",
+   "acesso": "pré-requisito: Clínica Médica",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Pneumologia e Tisiologia (SBPT)",
+   "diretrizes": [
+    "GOLD (DPOC)",
+    "GINA (asma)",
+    "Diretrizes da SBPT",
+    "Manual de Recomendações para o Controle da Tuberculose (MS)"
+   ],
+   "bibliografia": [
+    "Murray & Nadel's Textbook of Respiratory Medicine",
+    "Fishman's Pulmonary Diseases and Disorders"
+   ],
+   "modulos": [
+    "pneumo-funcao-pulmonar",
+    "pneumo-dpoc-e-asma",
+    "pneumo-doencas-intersticiais",
+    "pneumo-tuberculose-e-infeccoes-respiratorias",
+    "pneumo-circulacao-pulmonar",
+    "pneumo-cancer-de-pulmao-e-nodulo-pulmonar"
+   ],
+   "artigos": [
+    "pneumo-01"
+   ]
+  },
+  {
+   "id": "psiquiatria",
+   "nome": "Psiquiatria",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Associação Brasileira de Psiquiatria (ABP)",
+   "diretrizes": [
+    "DSM-5-TR e CID-11",
+    "Diretrizes da ABP",
+    "Lei 10.216/2001 (direitos da pessoa com transtorno mental)"
+   ],
+   "bibliografia": [
+    "Kaplan & Sadock, Compêndio de Psiquiatria",
+    "Stahl, Psicofarmacologia"
+   ],
+   "modulos": [
+    "psiquiatria-psicopatologia-e-diagnostico",
+    "psiquiatria-transtornos-do-humor",
+    "psiquiatria-transtornos-psicoticos",
+    "psiquiatria-transtornos-de-ansiedade-e-relacionados",
+    "psiquiatria-dependencia-quimica",
+    "psiquiatria-psicoterapias-e-psiquiatria-da-infancia"
+   ],
+   "artigos": [
+    "psiquiatria-01",
+    "psiquiatria-02",
+    "psiquiatria-03"
+   ]
+  },
+  {
+   "id": "radiologia",
+   "nome": "Radiologia e Diagnóstico por Imagem",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Colégio Brasileiro de Radiologia e Diagnóstico por Imagem (CBR)",
+   "diretrizes": [
+    "ACR Appropriateness Criteria",
+    "Sistemas de laudo estruturado (BI-RADS, TI-RADS, LI-RADS, PI-RADS)",
+    "Normas de radioproteção (Anvisa RDC 611/2022)"
+   ],
+   "bibliografia": [
+    "Brant and Helms' Fundamentals of Diagnostic Radiology",
+    "Webb, Fundamentals of Body CT"
+   ],
+   "modulos": [
+    "radiologia-fisica-das-imagens-e-radioprotecao",
+    "radiologia-neurorradiologia",
+    "radiologia-imagem-do-torax-e-do-abdome",
+    "radiologia-musculoesqueletico",
+    "radiologia-ultrassonografia",
+    "radiologia-radiologia-intervencionista-e-ia-em-imagem"
+   ],
+   "artigos": [
+    "radiologia-01"
+   ]
+  },
+  {
+   "id": "radioterapia",
+   "nome": "Radioterapia",
+   "acesso": "acesso direto",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Radioterapia (SBRT)",
+   "diretrizes": [
+    "Normas da CNEN",
+    "ASTRO Clinical Practice Guidelines",
+    "ESTRO Guidelines"
+   ],
+   "bibliografia": [
+    "Perez and Brady's Principles and Practice of Radiation Oncology",
+    "Khan, The Physics of Radiation Therapy"
+   ],
+   "modulos": [
+    "radioterapia-fisica-medica-e-radiobiologia",
+    "radioterapia-planejamento-e-tecnicas",
+    "radioterapia-radioterapia-nos-tumores-mais-frequentes",
+    "radioterapia-hipofracionamento",
+    "radioterapia-toxicidades-e-cuidados",
+    "radioterapia-garantia-da-qualidade-e-radioprotecao"
+   ],
+   "artigos": [
+    "radioterapia-01"
+   ]
+  },
+  {
+   "id": "reumato",
+   "nome": "Reumatologia",
+   "acesso": "pré-requisito: Clínica Médica",
+   "anos_residencia": 2,
+   "sociedade": "Sociedade Brasileira de Reumatologia (SBR)",
+   "diretrizes": [
+    "Recomendações da SBR",
+    "ACR/EULAR Classification Criteria",
+    "PCDT do Ministério da Saúde para artrite reumatoide"
+   ],
+   "bibliografia": [
+    "Kelley and Firestein's Textbook of Rheumatology",
+    "Hochberg, Rheumatology"
+   ],
+   "modulos": [
+    "reumato-artrite-reumatoide-e-espondiloartrites",
+    "reumato-lupus-e-colagenoses",
+    "reumato-vasculites",
+    "reumato-doencas-microcristalinas",
+    "reumato-osteoartrite-e-fibromialgia",
+    "reumato-imunobiologicos-e-seguranca"
+   ],
+   "artigos": [
+    "reumato-01"
+   ]
+  },
+  {
+   "id": "uro",
+   "nome": "Urologia",
+   "acesso": "pré-requisito: Cirurgia Geral (ou Cirurgia Básica)",
+   "anos_residencia": 3,
+   "sociedade": "Sociedade Brasileira de Urologia (SBU)",
+   "diretrizes": [
+    "Diretrizes da SBU",
+    "EAU Guidelines",
+    "AUA Guidelines"
+   ],
+   "bibliografia": [
+    "Campbell-Walsh-Wein Urology",
+    "Smith and Tanagho's General Urology"
+   ],
+   "modulos": [
+    "uro-uro-oncologia",
+    "uro-hiperplasia-prostatica-e-sintomas-urinarios",
+    "uro-litiase-urinaria",
+    "uro-urologia-feminina-e-funcional",
+    "uro-andrologia",
+    "uro-endourologia-e-cirurgia-robotica"
+   ],
+   "artigos": [
+    "uro-01",
+    "uro-02"
+   ]
+  }
+ ],
+ "modulos": [
+  {
+   "id": "acupuntura-bases-neurofisiologicas-da-acupuntura",
+   "nome": "Bases neurofisiológicas da acupuntura",
+   "especialidade": "acupuntura",
+   "topicos": [
+    "neuromodulação da dor",
+    "sistema opioide endógeno",
+    "controle inibitório difuso"
+   ]
+  },
+  {
+   "id": "acupuntura-anatomia-de-pontos-e-meridianos",
+   "nome": "Anatomia de pontos e meridianos",
+   "especialidade": "acupuntura",
+   "topicos": [
+    "localização topográfica",
+    "segurança anatômica",
+    "pneumotórax e outras complicações"
+   ]
+  },
+  {
+   "id": "acupuntura-acupuntura-na-dor-cronica",
+   "nome": "Acupuntura na dor crônica",
+   "especialidade": "acupuntura",
+   "topicos": [
+    "lombalgia",
+    "cervicalgia",
+    "osteoartrite de joelho",
+    "cefaleia tensional e enxaqueca"
+   ]
+  },
+  {
+   "id": "acupuntura-acupuntura-em-nausea-e-vomito",
+   "nome": "Acupuntura em náusea e vômito",
+   "especialidade": "acupuntura",
+   "topicos": [
+    "náusea pós-operatória",
+    "náusea da quimioterapia",
+    "ponto PC6"
+   ]
+  },
+  {
+   "id": "acupuntura-eletroacupuntura-e-tecnicas-associadas",
+   "nome": "Eletroacupuntura e técnicas associadas",
+   "especialidade": "acupuntura",
+   "topicos": [
+    "parâmetros de frequência",
+    "auriculoterapia",
+    "moxabustão e ventosas"
+   ]
+  },
+  {
+   "id": "acupuntura-pesquisa-em-acupuntura",
+   "nome": "Pesquisa em acupuntura",
+   "especialidade": "acupuntura",
+   "topicos": [
+    "desenho de ensaio com sham",
+    "cegamento",
+    "revisão sistemática e metanálise"
+   ]
+  },
+  {
+   "id": "alergia-imunologia-basica-e-clinica",
+   "nome": "Imunologia básica e clínica",
+   "especialidade": "alergia",
+   "topicos": [
+    "imunidade inata e adaptativa",
+    "hipersensibilidade de Gell e Coombs",
+    "citocinas"
+   ]
+  },
+  {
+   "id": "alergia-asma-e-rinite-alergica",
+   "nome": "Asma e rinite alérgica",
+   "especialidade": "alergia",
+   "topicos": [
+    "diagnóstico funcional",
+    "degraus do tratamento",
+    "imunobiológicos"
+   ]
+  },
+  {
+   "id": "alergia-anafilaxia-e-urticaria",
+   "nome": "Anafilaxia e urticária",
+   "especialidade": "alergia",
+   "topicos": [
+    "adrenalina intramuscular",
+    "urticária crônica espontânea",
+    "angioedema hereditário"
+   ]
+  },
+  {
+   "id": "alergia-alergia-alimentar-e-a-medicamentos",
+   "nome": "Alergia alimentar e a medicamentos",
+   "especialidade": "alergia",
+   "topicos": [
+    "teste de provocação oral",
+    "dessensibilização",
+    "reações graves a fármacos"
+   ]
+  },
+  {
+   "id": "alergia-erros-inatos-da-imunidade",
+   "nome": "Erros inatos da imunidade",
+   "especialidade": "alergia",
+   "topicos": [
+    "sinais de alerta",
+    "imunodeficiência primária",
+    "reposição de imunoglobulina"
+   ]
+  },
+  {
+   "id": "alergia-imunoterapia-alergeno-especifica",
+   "nome": "Imunoterapia alérgeno-específica",
+   "especialidade": "alergia",
+   "topicos": [
+    "indicações",
+    "esquemas subcutâneo e sublingual",
+    "segurança"
+   ]
+  },
+  {
+   "id": "anestesio-farmacologia-anestesica",
+   "nome": "Farmacologia anestésica",
+   "especialidade": "anestesio",
+   "topicos": [
+    "hipnóticos",
+    "opioides",
+    "bloqueadores neuromusculares e reversão"
+   ]
+  },
+  {
+   "id": "anestesio-via-aerea",
+   "nome": "Via aérea",
+   "especialidade": "anestesio",
+   "topicos": [
+    "avaliação preditiva",
+    "algoritmo da via aérea difícil",
+    "videolaringoscopia"
+   ]
+  },
+  {
+   "id": "anestesio-monitorizacao-e-seguranca",
+   "nome": "Monitorização e segurança",
+   "especialidade": "anestesio",
+   "topicos": [
+    "oximetria e capnografia",
+    "profundidade anestésica",
+    "checklist de cirurgia segura"
+   ]
+  },
+  {
+   "id": "anestesio-anestesia-regional",
+   "nome": "Anestesia regional",
+   "especialidade": "anestesio",
+   "topicos": [
+    "bloqueios neuroaxiais",
+    "bloqueios periféricos guiados por ultrassom",
+    "toxicidade de anestésico local"
+   ]
+  },
+  {
+   "id": "anestesio-anestesia-em-situacoes-especiais",
+   "nome": "Anestesia em situações especiais",
+   "especialidade": "anestesio",
+   "topicos": [
+    "obstetrícia",
+    "pediatria",
+    "cardíaca e neurocirurgia"
+   ]
+  },
+  {
+   "id": "anestesio-dor-aguda-e-recuperacao",
+   "nome": "Dor aguda e recuperação",
+   "especialidade": "anestesio",
+   "topicos": [
+    "analgesia multimodal",
+    "ERAS",
+    "náusea e vômito pós-operatórios"
+   ]
+  },
+  {
+   "id": "angio-doenca-arterial-periferica",
+   "nome": "Doença arterial periférica",
+   "especialidade": "angio",
+   "topicos": [
+    "índice tornozelo-braquial",
+    "claudicação",
+    "tratamento clínico"
+   ]
+  },
+  {
+   "id": "angio-trombose-venosa-e-embolia",
+   "nome": "Trombose venosa e embolia",
+   "especialidade": "angio",
+   "topicos": [
+    "escore de Wells",
+    "anticoagulação",
+    "profilaxia"
+   ]
+  },
+  {
+   "id": "angio-insuficiencia-venosa-cronica",
+   "nome": "Insuficiência venosa crônica",
+   "especialidade": "angio",
+   "topicos": [
+    "classificação CEAP",
+    "terapia compressiva",
+    "úlcera venosa"
+   ]
+  },
+  {
+   "id": "angio-linfedema-e-doencas-linfaticas",
+   "nome": "Linfedema e doenças linfáticas",
+   "especialidade": "angio",
+   "topicos": [
+    "diagnóstico",
+    "drenagem e compressão"
+   ]
+  },
+  {
+   "id": "angio-eco-doppler-vascular",
+   "nome": "Eco-Doppler vascular",
+   "especialidade": "angio",
+   "topicos": [
+    "protocolos arterial e venoso",
+    "critérios de estenose"
+   ]
+  },
+  {
+   "id": "angio-vasculites-e-acrossindromes",
+   "nome": "Vasculites e acrossíndromes",
+   "especialidade": "angio",
+   "topicos": [
+    "fenômeno de Raynaud",
+    "arterites"
+   ]
+  },
+  {
+   "id": "cardio-sindromes-coronarianas",
+   "nome": "Síndromes coronarianas",
+   "especialidade": "cardio",
+   "topicos": [
+    "angina estável",
+    "infarto com e sem supra de ST",
+    "reperfusão"
+   ]
+  },
+  {
+   "id": "cardio-insuficiencia-cardiaca",
+   "nome": "Insuficiência cardíaca",
+   "especialidade": "cardio",
+   "topicos": [
+    "fração de ejeção reduzida e preservada",
+    "terapia quádrupla",
+    "dispositivos"
+   ]
+  },
+  {
+   "id": "cardio-arritmias",
+   "nome": "Arritmias",
+   "especialidade": "cardio",
+   "topicos": [
+    "fibrilação atrial e anticoagulação",
+    "bradiarritmias",
+    "morte súbita e CDI"
+   ]
+  },
+  {
+   "id": "cardio-hipertensao-arterial-e-prevencao",
+   "nome": "Hipertensão arterial e prevenção",
+   "especialidade": "cardio",
+   "topicos": [
+    "metas pressóricas",
+    "dislipidemia",
+    "escores de risco"
+   ]
+  },
+  {
+   "id": "cardio-valvopatias-e-cardiomiopatias",
+   "nome": "Valvopatias e cardiomiopatias",
+   "especialidade": "cardio",
+   "topicos": [
+    "estenose aórtica e TAVI",
+    "doença reumática",
+    "cardiomiopatia hipertrófica"
+   ]
+  },
+  {
+   "id": "cardio-metodos-diagnosticos",
+   "nome": "Métodos diagnósticos",
+   "especialidade": "cardio",
+   "topicos": [
+    "eletrocardiograma",
+    "ecocardiograma",
+    "teste ergométrico",
+    "cateterismo"
+   ]
+  },
+  {
+   "id": "cardio-doenca-de-chagas",
+   "nome": "Doença de Chagas",
+   "especialidade": "cardio",
+   "topicos": [
+    "forma cardíaca",
+    "diagnóstico",
+    "tratamento etiológico"
+   ]
+  },
+  {
+   "id": "cir-cardio-circulacao-extracorporea",
+   "nome": "Circulação extracorpórea",
+   "especialidade": "cir-cardio",
+   "topicos": [
+    "perfusão",
+    "proteção miocárdica",
+    "complicações"
+   ]
+  },
+  {
+   "id": "cir-cardio-revascularizacao-do-miocardio",
+   "nome": "Revascularização do miocárdio",
+   "especialidade": "cir-cardio",
+   "topicos": [
+    "enxertos arteriais e venosos",
+    "cirurgia sem CEC"
+   ]
+  },
+  {
+   "id": "cir-cardio-cirurgia-valvar",
+   "nome": "Cirurgia valvar",
+   "especialidade": "cir-cardio",
+   "topicos": [
+    "plastia mitral",
+    "troca valvar aórtica",
+    "próteses"
+   ]
+  },
+  {
+   "id": "cir-cardio-cirurgia-da-aorta",
+   "nome": "Cirurgia da aorta",
+   "especialidade": "cir-cardio",
+   "topicos": [
+    "dissecção aguda",
+    "aneurismas torácicos"
+   ]
+  },
+  {
+   "id": "cir-cardio-cardiopatias-congenitas",
+   "nome": "Cardiopatias congênitas",
+   "especialidade": "cir-cardio",
+   "topicos": [
+    "shunts",
+    "correções paliativas e definitivas"
+   ]
+  },
+  {
+   "id": "cir-cardio-assistencia-circulatoria-e-transplante",
+   "nome": "Assistência circulatória e transplante",
+   "especialidade": "cir-cardio",
+   "topicos": [
+    "ECMO",
+    "dispositivos de assistência ventricular",
+    "transplante cardíaco"
+   ]
+  },
+  {
+   "id": "cir-mao-anatomia-funcional-da-mao",
+   "nome": "Anatomia funcional da mão",
+   "especialidade": "cir-mao",
+   "topicos": [
+    "tendões flexores e extensores",
+    "nervos periféricos",
+    "arcos vasculares"
+   ]
+  },
+  {
+   "id": "cir-mao-traumatismos-da-mao",
+   "nome": "Traumatismos da mão",
+   "especialidade": "cir-mao",
+   "topicos": [
+    "fraturas de metacarpos e falanges",
+    "lesões tendíneas",
+    "amputações e reimplantes"
+   ]
+  },
+  {
+   "id": "cir-mao-compressoes-nervosas",
+   "nome": "Compressões nervosas",
+   "especialidade": "cir-mao",
+   "topicos": [
+    "túnel do carpo",
+    "canal de Guyon",
+    "síndrome do pronador"
+   ]
+  },
+  {
+   "id": "cir-mao-doencas-degenerativas-e-inflamatorias",
+   "nome": "Doenças degenerativas e inflamatórias",
+   "especialidade": "cir-mao",
+   "topicos": [
+    "Dupuytren",
+    "artrose trapézio-metacárpica",
+    "artrite reumatoide"
+   ]
+  },
+  {
+   "id": "cir-mao-microcirurgia",
+   "nome": "Microcirurgia",
+   "especialidade": "cir-mao",
+   "topicos": [
+    "retalhos",
+    "reimplante",
+    "reconstrução de nervos"
+   ]
+  },
+  {
+   "id": "cir-mao-mao-congenita-e-reabilitacao",
+   "nome": "Mão congênita e reabilitação",
+   "especialidade": "cir-mao",
+   "topicos": [
+    "malformações",
+    "terapia da mão"
+   ]
+  },
+  {
+   "id": "cir-cabeca-tireoide-e-paratireoide",
+   "nome": "Tireoide e paratireoide",
+   "especialidade": "cir-cabeca",
+   "topicos": [
+    "nódulo tireoidiano e Bethesda",
+    "tireoidectomia",
+    "hiperparatireoidismo"
+   ]
+  },
+  {
+   "id": "cir-cabeca-cancer-de-boca-e-orofaringe",
+   "nome": "Câncer de boca e orofaringe",
+   "especialidade": "cir-cabeca",
+   "topicos": [
+    "estadiamento",
+    "HPV",
+    "ressecção e reconstrução"
+   ]
+  },
+  {
+   "id": "cir-cabeca-laringe-e-hipofaringe",
+   "nome": "Laringe e hipofaringe",
+   "especialidade": "cir-cabeca",
+   "topicos": [
+    "laringectomias",
+    "preservação de órgão"
+   ]
+  },
+  {
+   "id": "cir-cabeca-glandulas-salivares",
+   "nome": "Glândulas salivares",
+   "especialidade": "cir-cabeca",
+   "topicos": [
+    "tumores de parótida",
+    "preservação do nervo facial"
+   ]
+  },
+  {
+   "id": "cir-cabeca-esvaziamento-cervical",
+   "nome": "Esvaziamento cervical",
+   "especialidade": "cir-cabeca",
+   "topicos": [
+    "níveis linfonodais",
+    "indicações"
+   ]
+  },
+  {
+   "id": "cir-cabeca-reconstrucao-em-cabeca-e-pescoco",
+   "nome": "Reconstrução em cabeça e pescoço",
+   "especialidade": "cir-cabeca",
+   "topicos": [
+    "retalhos locais e microcirúrgicos"
+   ]
+  },
+  {
+   "id": "cir-digestivo-esofago-e-estomago",
+   "nome": "Esôfago e estômago",
+   "especialidade": "cir-digestivo",
+   "topicos": [
+    "doença do refluxo e fundoplicatura",
+    "acalasia",
+    "gastrectomia oncológica"
+   ]
+  },
+  {
+   "id": "cir-digestivo-figado-e-vias-biliares",
+   "nome": "Fígado e vias biliares",
+   "especialidade": "cir-digestivo",
+   "topicos": [
+    "colecistite e Tokyo",
+    "hepatectomias",
+    "transplante hepático"
+   ]
+  },
+  {
+   "id": "cir-digestivo-pancreas",
+   "nome": "Pâncreas",
+   "especialidade": "cir-digestivo",
+   "topicos": [
+    "pancreatite aguda",
+    "duodenopancreatectomia",
+    "tumores neuroendócrinos"
+   ]
+  },
+  {
+   "id": "cir-digestivo-cirurgia-bariatrica-e-metabolica",
+   "nome": "Cirurgia bariátrica e metabólica",
+   "especialidade": "cir-digestivo",
+   "topicos": [
+    "indicações",
+    "bypass e sleeve",
+    "complicações"
+   ]
+  },
+  {
+   "id": "cir-digestivo-intestino-delgado-e-colon",
+   "nome": "Intestino delgado e cólon",
+   "especialidade": "cir-digestivo",
+   "topicos": [
+    "obstrução",
+    "doença inflamatória",
+    "câncer colorretal"
+   ]
+  },
+  {
+   "id": "cir-digestivo-videolaparoscopia-e-robotica",
+   "nome": "Videolaparoscopia e robótica",
+   "especialidade": "cir-digestivo",
+   "topicos": [
+    "princípios",
+    "curva de aprendizado"
+   ]
+  },
+  {
+   "id": "cir-geral-bases-da-cirurgia",
+   "nome": "Bases da cirurgia",
+   "especialidade": "cir-geral",
+   "topicos": [
+    "resposta metabólica ao trauma",
+    "cicatrização",
+    "infecção do sítio cirúrgico"
+   ]
+  },
+  {
+   "id": "cir-geral-trauma",
+   "nome": "Trauma",
+   "especialidade": "cir-geral",
+   "topicos": [
+    "ATLS",
+    "controle de danos",
+    "trauma abdominal e torácico"
+   ]
+  },
+  {
+   "id": "cir-geral-abdome-agudo",
+   "nome": "Abdome agudo",
+   "especialidade": "cir-geral",
+   "topicos": [
+    "apendicite",
+    "colecistite",
+    "obstrução e perfuração"
+   ]
+  },
+  {
+   "id": "cir-geral-hernias-da-parede-abdominal",
+   "nome": "Hérnias da parede abdominal",
+   "especialidade": "cir-geral",
+   "topicos": [
+    "inguinais",
+    "incisionais",
+    "técnicas com tela"
+   ]
+  },
+  {
+   "id": "cir-geral-cirurgia-ambulatorial-e-pequenas-cirurgias",
+   "nome": "Cirurgia ambulatorial e pequenas cirurgias",
+   "especialidade": "cir-geral",
+   "topicos": [
+    "lesões de pele",
+    "abscessos"
+   ]
+  },
+  {
+   "id": "cir-geral-cuidados-perioperatorios",
+   "nome": "Cuidados perioperatórios",
+   "especialidade": "cir-geral",
+   "topicos": [
+    "risco cirúrgico",
+    "ERAS",
+    "nutrição"
+   ]
+  },
+  {
+   "id": "cir-onco-principios-da-cirurgia-oncologica",
+   "nome": "Princípios da cirurgia oncológica",
+   "especialidade": "cir-onco",
+   "topicos": [
+    "margens",
+    "linfadenectomia",
+    "linfonodo sentinela"
+   ]
+  },
+  {
+   "id": "cir-onco-tumores-do-aparelho-digestivo",
+   "nome": "Tumores do aparelho digestivo",
+   "especialidade": "cir-onco",
+   "topicos": [
+    "estômago",
+    "cólon e reto",
+    "fígado e pâncreas"
+   ]
+  },
+  {
+   "id": "cir-onco-sarcomas-e-melanoma",
+   "nome": "Sarcomas e melanoma",
+   "especialidade": "cir-onco",
+   "topicos": [
+    "ressecção",
+    "margens",
+    "terapia adjuvante"
+   ]
+  },
+  {
+   "id": "cir-onco-tumores-ginecologicos-e-de-mama",
+   "nome": "Tumores ginecológicos e de mama",
+   "especialidade": "cir-onco",
+   "topicos": [
+    "abordagem cirúrgica oncológica"
+   ]
+  },
+  {
+   "id": "cir-onco-cirurgia-citorredutora-e-hipec",
+   "nome": "Cirurgia citorredutora e HIPEC",
+   "especialidade": "cir-onco",
+   "topicos": [
+    "carcinomatose peritoneal"
+   ]
+  },
+  {
+   "id": "cir-onco-tratamento-multimodal",
+   "nome": "Tratamento multimodal",
+   "especialidade": "cir-onco",
+   "topicos": [
+    "neoadjuvância",
+    "decisão em junta multidisciplinar"
+   ]
+  },
+  {
+   "id": "cir-ped-malformacoes-congenitas",
+   "nome": "Malformações congênitas",
+   "especialidade": "cir-ped",
+   "topicos": [
+    "atresia de esôfago",
+    "hérnia diafragmática",
+    "defeitos de parede abdominal"
+   ]
+  },
+  {
+   "id": "cir-ped-abdome-agudo-na-crianca",
+   "nome": "Abdome agudo na criança",
+   "especialidade": "cir-ped",
+   "topicos": [
+    "apendicite",
+    "invaginação intestinal",
+    "estenose hipertrófica do piloro"
+   ]
+  },
+  {
+   "id": "cir-ped-urologia-pediatrica",
+   "nome": "Urologia pediátrica",
+   "especialidade": "cir-ped",
+   "topicos": [
+    "criptorquidia",
+    "hipospádia",
+    "refluxo vesicoureteral"
+   ]
+  },
+  {
+   "id": "cir-ped-oncologia-pediatrica-cirurgica",
+   "nome": "Oncologia pediátrica cirúrgica",
+   "especialidade": "cir-ped",
+   "topicos": [
+    "tumor de Wilms",
+    "neuroblastoma"
+   ]
+  },
+  {
+   "id": "cir-ped-trauma-pediatrico",
+   "nome": "Trauma pediátrico",
+   "especialidade": "cir-ped",
+   "topicos": [
+    "particularidades",
+    "tratamento não operatório"
+   ]
+  },
+  {
+   "id": "cir-ped-cirurgia-neonatal",
+   "nome": "Cirurgia neonatal",
+   "especialidade": "cir-ped",
+   "topicos": [
+    "enterocolite necrosante",
+    "doença de Hirschsprung"
+   ]
+  },
+  {
+   "id": "cir-plastica-principios-e-retalhos",
+   "nome": "Princípios e retalhos",
+   "especialidade": "cir-plastica",
+   "topicos": [
+    "enxertos",
+    "retalhos locais e livres",
+    "cicatrização"
+   ]
+  },
+  {
+   "id": "cir-plastica-queimaduras",
+   "nome": "Queimaduras",
+   "especialidade": "cir-plastica",
+   "topicos": [
+    "reanimação",
+    "enxertia",
+    "sequelas"
+   ]
+  },
+  {
+   "id": "cir-plastica-cirurgia-craniofacial",
+   "nome": "Cirurgia craniofacial",
+   "especialidade": "cir-plastica",
+   "topicos": [
+    "fissuras labiopalatinas",
+    "fraturas de face"
+   ]
+  },
+  {
+   "id": "cir-plastica-reconstrucao-de-mama",
+   "nome": "Reconstrução de mama",
+   "especialidade": "cir-plastica",
+   "topicos": [
+    "expansores",
+    "retalhos autólogos"
+   ]
+  },
+  {
+   "id": "cir-plastica-cirurgia-estetica",
+   "nome": "Cirurgia estética",
+   "especialidade": "cir-plastica",
+   "topicos": [
+    "mamoplastias",
+    "abdominoplastia",
+    "rejuvenescimento facial"
+   ]
+  },
+  {
+   "id": "cir-plastica-seguranca-do-paciente-na-cirurgia-plastica",
+   "nome": "Segurança do paciente na cirurgia plástica",
+   "especialidade": "cir-plastica",
+   "topicos": [
+    "tromboprofilaxia",
+    "lipoaspiração segura"
+   ]
+  },
+  {
+   "id": "cir-toracica-cancer-de-pulmao",
+   "nome": "Câncer de pulmão",
+   "especialidade": "cir-toracica",
+   "topicos": [
+    "estadiamento",
+    "lobectomia e segmentectomia",
+    "cirurgia videoassistida"
+   ]
+  },
+  {
+   "id": "cir-toracica-pleura",
+   "nome": "Pleura",
+   "especialidade": "cir-toracica",
+   "topicos": [
+    "derrame",
+    "empiema",
+    "pneumotórax"
+   ]
+  },
+  {
+   "id": "cir-toracica-mediastino",
+   "nome": "Mediastino",
+   "especialidade": "cir-toracica",
+   "topicos": [
+    "timoma",
+    "massas mediastinais"
+   ]
+  },
+  {
+   "id": "cir-toracica-via-aerea",
+   "nome": "Via aérea",
+   "especialidade": "cir-toracica",
+   "topicos": [
+    "estenose traqueal",
+    "broncoscopia"
+   ]
+  },
+  {
+   "id": "cir-toracica-trauma-toracico",
+   "nome": "Trauma torácico",
+   "especialidade": "cir-toracica",
+   "topicos": [
+    "drenagem",
+    "toracotomia de urgência"
+   ]
+  },
+  {
+   "id": "cir-toracica-transplante-pulmonar",
+   "nome": "Transplante pulmonar",
+   "especialidade": "cir-toracica",
+   "topicos": [
+    "indicações",
+    "seguimento"
+   ]
+  },
+  {
+   "id": "cir-vascular-aneurismas-de-aorta",
+   "nome": "Aneurismas de aorta",
+   "especialidade": "cir-vascular",
+   "topicos": [
+    "rastreamento",
+    "reparo aberto e endovascular"
+   ]
+  },
+  {
+   "id": "cir-vascular-doenca-carotidea",
+   "nome": "Doença carotídea",
+   "especialidade": "cir-vascular",
+   "topicos": [
+    "endarterectomia",
+    "angioplastia com stent"
+   ]
+  },
+  {
+   "id": "cir-vascular-isquemia-de-membros",
+   "nome": "Isquemia de membros",
+   "especialidade": "cir-vascular",
+   "topicos": [
+    "revascularização",
+    "amputações"
+   ]
+  },
+  {
+   "id": "cir-vascular-acessos-para-hemodialise",
+   "nome": "Acessos para hemodiálise",
+   "especialidade": "cir-vascular",
+   "topicos": [
+    "fístulas arteriovenosas"
+   ]
+  },
+  {
+   "id": "cir-vascular-cirurgia-endovascular",
+   "nome": "Cirurgia endovascular",
+   "especialidade": "cir-vascular",
+   "topicos": [
+    "técnicas",
+    "radioproteção"
+   ]
+  },
+  {
+   "id": "cir-vascular-trauma-vascular",
+   "nome": "Trauma vascular",
+   "especialidade": "cir-vascular",
+   "topicos": [
+    "controle de sangramento",
+    "reparo"
+   ]
+  },
+  {
+   "id": "clinica-raciocinio-clinico",
+   "nome": "Raciocínio clínico",
+   "especialidade": "clinica",
+   "topicos": [
+    "anamnese",
+    "diagnóstico diferencial",
+    "probabilidade pré-teste"
+   ]
+  },
+  {
+   "id": "clinica-doencas-cronicas-nao-transmissiveis",
+   "nome": "Doenças crônicas não transmissíveis",
+   "especialidade": "clinica",
+   "topicos": [
+    "hipertensão",
+    "diabetes",
+    "DPOC"
+   ]
+  },
+  {
+   "id": "clinica-doencas-infecciosas-na-enfermaria",
+   "nome": "Doenças infecciosas na enfermaria",
+   "especialidade": "clinica",
+   "topicos": [
+    "pneumonia",
+    "sepse",
+    "infecção urinária"
+   ]
+  },
+  {
+   "id": "clinica-medicina-hospitalar",
+   "nome": "Medicina hospitalar",
+   "especialidade": "clinica",
+   "topicos": [
+    "manejo de internados",
+    "transição do cuidado",
+    "alta segura"
+   ]
+  },
+  {
+   "id": "clinica-emergencias-clinicas",
+   "nome": "Emergências clínicas",
+   "especialidade": "clinica",
+   "topicos": [
+    "dor torácica",
+    "dispneia",
+    "rebaixamento de consciência"
+   ]
+  },
+  {
+   "id": "clinica-cuidados-paliativos-e-decisao-compartilhada",
+   "nome": "Cuidados paliativos e decisão compartilhada",
+   "especialidade": "clinica",
+   "topicos": [
+    "diretivas antecipadas",
+    "controle de sintomas"
+   ]
+  },
+  {
+   "id": "colo-doencas-anorretais-benignas",
+   "nome": "Doenças anorretais benignas",
+   "especialidade": "colo",
+   "topicos": [
+    "hemorroidas",
+    "fissura",
+    "fístula e abscesso"
+   ]
+  },
+  {
+   "id": "colo-cancer-colorretal",
+   "nome": "Câncer colorretal",
+   "especialidade": "colo",
+   "topicos": [
+    "rastreamento",
+    "colectomias",
+    "excisão total do mesorreto"
+   ]
+  },
+  {
+   "id": "colo-doenca-inflamatoria-intestinal",
+   "nome": "Doença inflamatória intestinal",
+   "especialidade": "colo",
+   "topicos": [
+    "tratamento cirúrgico",
+    "bolsa ileal"
+   ]
+  },
+  {
+   "id": "colo-doenca-diverticular",
+   "nome": "Doença diverticular",
+   "especialidade": "colo",
+   "topicos": [
+    "diverticulite",
+    "indicações cirúrgicas"
+   ]
+  },
+  {
+   "id": "colo-fisiologia-anorretal",
+   "nome": "Fisiologia anorretal",
+   "especialidade": "colo",
+   "topicos": [
+    "incontinência",
+    "constipação",
+    "manometria"
+   ]
+  },
+  {
+   "id": "colo-colonoscopia",
+   "nome": "Colonoscopia",
+   "especialidade": "colo",
+   "topicos": [
+    "técnica",
+    "polipectomia"
+   ]
+  },
+  {
+   "id": "dermato-dermatologia-clinica",
+   "nome": "Dermatologia clínica",
+   "especialidade": "dermato",
+   "topicos": [
+    "lesões elementares",
+    "eczemas",
+    "psoríase"
+   ]
+  },
+  {
+   "id": "dermato-infeccoes-cutaneas",
+   "nome": "Infecções cutâneas",
+   "especialidade": "dermato",
+   "topicos": [
+    "hanseníase",
+    "micoses",
+    "leishmaniose tegumentar"
+   ]
+  },
+  {
+   "id": "dermato-oncologia-cutanea",
+   "nome": "Oncologia cutânea",
+   "especialidade": "dermato",
+   "topicos": [
+    "melanoma",
+    "carcinomas basocelular e espinocelular",
+    "dermatoscopia"
+   ]
+  },
+  {
+   "id": "dermato-doencas-bolhosas-e-autoimunes",
+   "nome": "Doenças bolhosas e autoimunes",
+   "especialidade": "dermato",
+   "topicos": [
+    "pênfigo",
+    "lúpus cutâneo"
+   ]
+  },
+  {
+   "id": "dermato-cirurgia-dermatologica",
+   "nome": "Cirurgia dermatológica",
+   "especialidade": "dermato",
+   "topicos": [
+    "excisões",
+    "cirurgia micrográfica de Mohs",
+    "criocirurgia"
+   ]
+  },
+  {
+   "id": "dermato-cosmiatria-e-laser",
+   "nome": "Cosmiatria e laser",
+   "especialidade": "dermato",
+   "topicos": [
+    "indicações",
+    "segurança"
+   ]
+  },
+  {
+   "id": "endocrino-diabetes-mellitus",
+   "nome": "Diabetes mellitus",
+   "especialidade": "endocrino",
+   "topicos": [
+    "classificação",
+    "metas",
+    "insulinoterapia",
+    "agonistas de GLP-1 e iSGLT2"
+   ]
+  },
+  {
+   "id": "endocrino-obesidade",
+   "nome": "Obesidade",
+   "especialidade": "endocrino",
+   "topicos": [
+    "tratamento farmacológico",
+    "cirurgia metabólica"
+   ]
+  },
+  {
+   "id": "endocrino-tireoide",
+   "nome": "Tireoide",
+   "especialidade": "endocrino",
+   "topicos": [
+    "hipo e hipertireoidismo",
+    "nódulos",
+    "câncer de tireoide"
+   ]
+  },
+  {
+   "id": "endocrino-hipofise-e-adrenal",
+   "nome": "Hipófise e adrenal",
+   "especialidade": "endocrino",
+   "topicos": [
+    "adenomas",
+    "síndrome de Cushing",
+    "insuficiência adrenal"
+   ]
+  },
+  {
+   "id": "endocrino-metabolismo-osseo",
+   "nome": "Metabolismo ósseo",
+   "especialidade": "endocrino",
+   "topicos": [
+    "osteoporose",
+    "paratireoides",
+    "vitamina D"
+   ]
+  },
+  {
+   "id": "endocrino-gonadas-e-endocrinologia-reprodutiva",
+   "nome": "Gônadas e endocrinologia reprodutiva",
+   "especialidade": "endocrino",
+   "topicos": [
+    "hipogonadismo",
+    "síndrome dos ovários policísticos"
+   ]
+  },
+  {
+   "id": "endoscopia-endoscopia-digestiva-alta",
+   "nome": "Endoscopia digestiva alta",
+   "especialidade": "endoscopia",
+   "topicos": [
+    "técnica",
+    "hemorragia digestiva",
+    "varizes"
+   ]
+  },
+  {
+   "id": "endoscopia-colonoscopia",
+   "nome": "Colonoscopia",
+   "especialidade": "endoscopia",
+   "topicos": [
+    "preparo",
+    "detecção de adenomas",
+    "polipectomia"
+   ]
+  },
+  {
+   "id": "endoscopia-cpre-e-ecoendoscopia",
+   "nome": "CPRE e ecoendoscopia",
+   "especialidade": "endoscopia",
+   "topicos": [
+    "coledocolitíase",
+    "drenagens",
+    "estadiamento"
+   ]
+  },
+  {
+   "id": "endoscopia-endoscopia-terapeutica-avancada",
+   "nome": "Endoscopia terapêutica avançada",
+   "especialidade": "endoscopia",
+   "topicos": [
+    "mucosectomia",
+    "dissecção submucosa",
+    "próteses"
+   ]
+  },
+  {
+   "id": "endoscopia-sedacao-e-seguranca",
+   "nome": "Sedação e segurança",
+   "especialidade": "endoscopia",
+   "topicos": [
+    "monitorização",
+    "complicações"
+   ]
+  },
+  {
+   "id": "endoscopia-qualidade-em-endoscopia",
+   "nome": "Qualidade em endoscopia",
+   "especialidade": "endoscopia",
+   "topicos": [
+    "indicadores",
+    "taxa de detecção de adenoma"
+   ]
+  },
+  {
+   "id": "gastro-esofago-e-estomago",
+   "nome": "Esôfago e estômago",
+   "especialidade": "gastro",
+   "topicos": [
+    "doença do refluxo",
+    "Helicobacter pylori",
+    "dispepsia"
+   ]
+  },
+  {
+   "id": "gastro-intestino",
+   "nome": "Intestino",
+   "especialidade": "gastro",
+   "topicos": [
+    "doença inflamatória intestinal",
+    "síndrome do intestino irritável",
+    "doença celíaca"
+   ]
+  },
+  {
+   "id": "gastro-figado",
+   "nome": "Fígado",
+   "especialidade": "gastro",
+   "topicos": [
+    "hepatites virais",
+    "doença hepática gordurosa",
+    "cirrose e complicações"
+   ]
+  },
+  {
+   "id": "gastro-pancreas-e-vias-biliares",
+   "nome": "Pâncreas e vias biliares",
+   "especialidade": "gastro",
+   "topicos": [
+    "pancreatites",
+    "colestase"
+   ]
+  },
+  {
+   "id": "gastro-hemorragia-digestiva",
+   "nome": "Hemorragia digestiva",
+   "especialidade": "gastro",
+   "topicos": [
+    "estratificação de risco",
+    "conduta"
+   ]
+  },
+  {
+   "id": "gastro-nutricao-em-gastroenterologia",
+   "nome": "Nutrição em gastroenterologia",
+   "especialidade": "gastro",
+   "topicos": [
+    "má absorção",
+    "suporte nutricional"
+   ]
+  },
+  {
+   "id": "genetica-genetica-clinica-e-dismorfologia",
+   "nome": "Genética clínica e dismorfologia",
+   "especialidade": "genetica",
+   "topicos": [
+    "exame dismorfológico",
+    "síndromes cromossômicas"
+   ]
+  },
+  {
+   "id": "genetica-erros-inatos-do-metabolismo",
+   "nome": "Erros inatos do metabolismo",
+   "especialidade": "genetica",
+   "topicos": [
+    "triagem neonatal",
+    "tratamento dietético e enzimático"
+   ]
+  },
+  {
+   "id": "genetica-genomica-diagnostica",
+   "nome": "Genômica diagnóstica",
+   "especialidade": "genetica",
+   "topicos": [
+    "exoma e genoma",
+    "interpretação de variantes pelo ACMG"
+   ]
+  },
+  {
+   "id": "genetica-oncogenetica",
+   "nome": "Oncogenética",
+   "especialidade": "genetica",
+   "topicos": [
+    "síndromes de predisposição",
+    "BRCA",
+    "Lynch"
+   ]
+  },
+  {
+   "id": "genetica-aconselhamento-genetico",
+   "nome": "Aconselhamento genético",
+   "especialidade": "genetica",
+   "topicos": [
+    "risco de recorrência",
+    "ética e consentimento"
+   ]
+  },
+  {
+   "id": "genetica-farmacogenomica-e-terapias-genicas",
+   "nome": "Farmacogenômica e terapias gênicas",
+   "especialidade": "genetica",
+   "topicos": [
+    "testes farmacogenéticos",
+    "terapias avançadas"
+   ]
+  },
+  {
+   "id": "geriatria-avaliacao-geriatrica-ampla",
+   "nome": "Avaliação geriátrica ampla",
+   "especialidade": "geriatria",
+   "topicos": [
+    "funcionalidade",
+    "cognição",
+    "humor",
+    "nutrição"
+   ]
+  },
+  {
+   "id": "geriatria-sindromes-geriatricas",
+   "nome": "Síndromes geriátricas",
+   "especialidade": "geriatria",
+   "topicos": [
+    "quedas",
+    "incontinência",
+    "fragilidade",
+    "sarcopenia"
+   ]
+  },
+  {
+   "id": "geriatria-demencias-e-delirium",
+   "nome": "Demências e delirium",
+   "especialidade": "geriatria",
+   "topicos": [
+    "doença de Alzheimer",
+    "prevenção de delirium"
+   ]
+  },
+  {
+   "id": "geriatria-polifarmacia",
+   "nome": "Polifarmácia",
+   "especialidade": "geriatria",
+   "topicos": [
+    "critérios de Beers",
+    "desprescrição"
+   ]
+  },
+  {
+   "id": "geriatria-cuidados-paliativos-no-idoso",
+   "nome": "Cuidados paliativos no idoso",
+   "especialidade": "geriatria",
+   "topicos": [
+    "fim de vida",
+    "planejamento antecipado"
+   ]
+  },
+  {
+   "id": "geriatria-instituicoes-de-longa-permanencia-e-cuidado-domiciliar",
+   "nome": "Instituições de longa permanência e cuidado domiciliar",
+   "especialidade": "geriatria",
+   "topicos": [
+    "modelos de cuidado"
+   ]
+  },
+  {
+   "id": "go-pre-natal-e-assistencia-ao-parto",
+   "nome": "Pré-natal e assistência ao parto",
+   "especialidade": "go",
+   "topicos": [
+    "rotina de pré-natal",
+    "parto vaginal",
+    "cesariana"
+   ]
+  },
+  {
+   "id": "go-gestacao-de-alto-risco",
+   "nome": "Gestação de alto risco",
+   "especialidade": "go",
+   "topicos": [
+    "pré-eclâmpsia",
+    "diabetes gestacional",
+    "prematuridade"
+   ]
+  },
+  {
+   "id": "go-emergencias-obstetricas",
+   "nome": "Emergências obstétricas",
+   "especialidade": "go",
+   "topicos": [
+    "hemorragia pós-parto",
+    "eclâmpsia",
+    "distocia de ombro"
+   ]
+  },
+  {
+   "id": "go-ginecologia-geral",
+   "nome": "Ginecologia geral",
+   "especialidade": "go",
+   "topicos": [
+    "sangramento uterino anormal",
+    "endometriose",
+    "climatério"
+   ]
+  },
+  {
+   "id": "go-oncologia-ginecologica",
+   "nome": "Oncologia ginecológica",
+   "especialidade": "go",
+   "topicos": [
+    "rastreio do câncer de colo",
+    "câncer de endométrio e ovário"
+   ]
+  },
+  {
+   "id": "go-reproducao-humana-e-planejamento-familiar",
+   "nome": "Reprodução humana e planejamento familiar",
+   "especialidade": "go",
+   "topicos": [
+    "infertilidade",
+    "contracepção"
+   ]
+  },
+  {
+   "id": "hemato-anemias",
+   "nome": "Anemias",
+   "especialidade": "hemato",
+   "topicos": [
+    "ferropriva",
+    "megaloblástica",
+    "hemolíticas",
+    "doença falciforme"
+   ]
+  },
+  {
+   "id": "hemato-hemostasia-e-trombose",
+   "nome": "Hemostasia e trombose",
+   "especialidade": "hemato",
+   "topicos": [
+    "hemofilias",
+    "trombofilias",
+    "anticoagulação"
+   ]
+  },
+  {
+   "id": "hemato-leucemias",
+   "nome": "Leucemias",
+   "especialidade": "hemato",
+   "topicos": [
+    "agudas e crônicas",
+    "terapias-alvo"
+   ]
+  },
+  {
+   "id": "hemato-linfomas-e-mieloma",
+   "nome": "Linfomas e mieloma",
+   "especialidade": "hemato",
+   "topicos": [
+    "estadiamento",
+    "imunoquimioterapia"
+   ]
+  },
+  {
+   "id": "hemato-hemoterapia",
+   "nome": "Hemoterapia",
+   "especialidade": "hemato",
+   "topicos": [
+    "indicação de hemocomponentes",
+    "reações transfusionais"
+   ]
+  },
+  {
+   "id": "hemato-transplante-de-medula-e-terapia-celular",
+   "nome": "Transplante de medula e terapia celular",
+   "especialidade": "hemato",
+   "topicos": [
+    "autólogo e alogênico",
+    "CAR-T"
+   ]
+  },
+  {
+   "id": "homeopatia-fundamentos-historicos-da-homeopatia",
+   "nome": "Fundamentos históricos da homeopatia",
+   "especialidade": "homeopatia",
+   "topicos": [
+    "princípios de Hahnemann",
+    "matéria médica"
+   ]
+  },
+  {
+   "id": "homeopatia-semiologia-homeopatica",
+   "nome": "Semiologia homeopática",
+   "especialidade": "homeopatia",
+   "topicos": [
+    "repertorização",
+    "individualização"
+   ]
+  },
+  {
+   "id": "homeopatia-farmacotecnica-homeopatica",
+   "nome": "Farmacotécnica homeopática",
+   "especialidade": "homeopatia",
+   "topicos": [
+    "dinamizações",
+    "Farmacopeia Homeopática Brasileira"
+   ]
+  },
+  {
+   "id": "homeopatia-avaliacao-critica-da-evidencia",
+   "nome": "Avaliação crítica da evidência",
+   "especialidade": "homeopatia",
+   "topicos": [
+    "revisões sistemáticas",
+    "efeito placebo",
+    "desenho de ensaios"
+   ]
+  },
+  {
+   "id": "homeopatia-etica-e-limites-terapeuticos",
+   "nome": "Ética e limites terapêuticos",
+   "especialidade": "homeopatia",
+   "topicos": [
+    "não substituir tratamento de eficácia comprovada"
+   ]
+  },
+  {
+   "id": "infecto-antimicrobianos",
+   "nome": "Antimicrobianos",
+   "especialidade": "infecto",
+   "topicos": [
+    "farmacologia",
+    "gestão de antimicrobianos",
+    "resistência"
+   ]
+  },
+  {
+   "id": "infecto-hiv-e-infeccoes-sexualmente-transmissiveis",
+   "nome": "HIV e infecções sexualmente transmissíveis",
+   "especialidade": "infecto",
+   "topicos": [
+    "terapia antirretroviral",
+    "PrEP e PEP"
+   ]
+  },
+  {
+   "id": "infecto-tuberculose-e-micobacterioses",
+   "nome": "Tuberculose e micobacterioses",
+   "especialidade": "infecto",
+   "topicos": [
+    "diagnóstico",
+    "esquemas",
+    "tuberculose resistente"
+   ]
+  },
+  {
+   "id": "infecto-doencas-tropicais-e-arboviroses",
+   "nome": "Doenças tropicais e arboviroses",
+   "especialidade": "infecto",
+   "topicos": [
+    "dengue",
+    "malária",
+    "leishmaniose",
+    "febre amarela"
+   ]
+  },
+  {
+   "id": "infecto-infeccoes-relacionadas-a-assistencia",
+   "nome": "Infecções relacionadas à assistência",
+   "especialidade": "infecto",
+   "topicos": [
+    "controle de infecção hospitalar",
+    "precauções"
+   ]
+  },
+  {
+   "id": "infecto-sepse-e-infeccoes-graves",
+   "nome": "Sepse e infecções graves",
+   "especialidade": "infecto",
+   "topicos": [
+    "abordagem inicial",
+    "foco",
+    "descalonamento"
+   ]
+  },
+  {
+   "id": "mastologia-rastreamento-e-imagem",
+   "nome": "Rastreamento e imagem",
+   "especialidade": "mastologia",
+   "topicos": [
+    "mamografia",
+    "BI-RADS",
+    "ressonância"
+   ]
+  },
+  {
+   "id": "mastologia-doencas-benignas-da-mama",
+   "nome": "Doenças benignas da mama",
+   "especialidade": "mastologia",
+   "topicos": [
+    "nódulos",
+    "mastites",
+    "descarga papilar"
+   ]
+  },
+  {
+   "id": "mastologia-cancer-de-mama",
+   "nome": "Câncer de mama",
+   "especialidade": "mastologia",
+   "topicos": [
+    "subtipos moleculares",
+    "estadiamento",
+    "cirurgia conservadora"
+   ]
+  },
+  {
+   "id": "mastologia-linfonodo-sentinela-e-axila",
+   "nome": "Linfonodo sentinela e axila",
+   "especialidade": "mastologia",
+   "topicos": [
+    "biópsia",
+    "esvaziamento"
+   ]
+  },
+  {
+   "id": "mastologia-tratamento-sistemico",
+   "nome": "Tratamento sistêmico",
+   "especialidade": "mastologia",
+   "topicos": [
+    "hormonioterapia",
+    "quimioterapia",
+    "terapia anti-HER2"
+   ]
+  },
+  {
+   "id": "mastologia-oncoplastia-e-reconstrucao",
+   "nome": "Oncoplastia e reconstrução",
+   "especialidade": "mastologia",
+   "topicos": [
+    "técnicas",
+    "resultados"
+   ]
+  },
+  {
+   "id": "emergencia-ressuscitacao",
+   "nome": "Ressuscitação",
+   "especialidade": "emergencia",
+   "topicos": [
+    "parada cardiorrespiratória",
+    "via aérea na emergência",
+    "choque"
+   ]
+  },
+  {
+   "id": "emergencia-trauma",
+   "nome": "Trauma",
+   "especialidade": "emergencia",
+   "topicos": [
+    "atendimento inicial",
+    "imagem",
+    "controle de danos"
+   ]
+  },
+  {
+   "id": "emergencia-emergencias-cardiovasculares-e-neurologicas",
+   "nome": "Emergências cardiovasculares e neurológicas",
+   "especialidade": "emergencia",
+   "topicos": [
+    "síndrome coronariana",
+    "AVC agudo e trombólise"
+   ]
+  },
+  {
+   "id": "emergencia-toxicologia",
+   "nome": "Toxicologia",
+   "especialidade": "emergencia",
+   "topicos": [
+    "intoxicações comuns",
+    "antídotos"
+   ]
+  },
+  {
+   "id": "emergencia-ultrassom-a-beira-do-leito",
+   "nome": "Ultrassom à beira do leito",
+   "especialidade": "emergencia",
+   "topicos": [
+    "FAST",
+    "POCUS"
+   ]
+  },
+  {
+   "id": "emergencia-gestao-do-pronto-socorro",
+   "nome": "Gestão do pronto-socorro",
+   "especialidade": "emergencia",
+   "topicos": [
+    "classificação de risco",
+    "fluxo",
+    "desastres"
+   ]
+  },
+  {
+   "id": "mfc-principios-da-atencao-primaria",
+   "nome": "Princípios da atenção primária",
+   "especialidade": "mfc",
+   "topicos": [
+    "atributos de Starfield",
+    "longitudinalidade",
+    "coordenação"
+   ]
+  },
+  {
+   "id": "mfc-abordagem-centrada-na-pessoa",
+   "nome": "Abordagem centrada na pessoa",
+   "especialidade": "mfc",
+   "topicos": [
+    "método clínico centrado na pessoa",
+    "comunicação"
+   ]
+  },
+  {
+   "id": "mfc-problemas-comuns-na-atencao-primaria",
+   "nome": "Problemas comuns na atenção primária",
+   "especialidade": "mfc",
+   "topicos": [
+    "hipertensão",
+    "diabetes",
+    "saúde mental"
+   ]
+  },
+  {
+   "id": "mfc-saude-da-familia-e-da-comunidade",
+   "nome": "Saúde da família e da comunidade",
+   "especialidade": "mfc",
+   "topicos": [
+    "abordagem familiar",
+    "territorialização"
+   ]
+  },
+  {
+   "id": "mfc-prevencao-e-rastreamento",
+   "nome": "Prevenção e rastreamento",
+   "especialidade": "mfc",
+   "topicos": [
+    "prevenção quaternária",
+    "rastreio baseado em evidência"
+   ]
+  },
+  {
+   "id": "mfc-gestao-da-clinica",
+   "nome": "Gestão da clínica",
+   "especialidade": "mfc",
+   "topicos": [
+    "indicadores",
+    "equipe de saúde da família"
+   ]
+  },
+  {
+   "id": "trabalho-saude-do-trabalhador-e-legislacao",
+   "nome": "Saúde do trabalhador e legislação",
+   "especialidade": "trabalho",
+   "topicos": [
+    "NR-7 e PCMSO",
+    "CAT",
+    "nexo técnico epidemiológico"
+   ]
+  },
+  {
+   "id": "trabalho-toxicologia-ocupacional",
+   "nome": "Toxicologia ocupacional",
+   "especialidade": "trabalho",
+   "topicos": [
+    "metais",
+    "solventes",
+    "agrotóxicos"
+   ]
+  },
+  {
+   "id": "trabalho-doencas-ocupacionais",
+   "nome": "Doenças ocupacionais",
+   "especialidade": "trabalho",
+   "topicos": [
+    "LER/DORT",
+    "pneumoconioses",
+    "perda auditiva induzida por ruído"
+   ]
+  },
+  {
+   "id": "trabalho-ergonomia-e-saude-mental-no-trabalho",
+   "nome": "Ergonomia e saúde mental no trabalho",
+   "especialidade": "trabalho",
+   "topicos": [
+    "NR-17",
+    "burnout",
+    "assédio"
+   ]
+  },
+  {
+   "id": "trabalho-pericia-e-capacidade-laborativa",
+   "nome": "Perícia e capacidade laborativa",
+   "especialidade": "trabalho",
+   "topicos": [
+    "aptidão",
+    "afastamento",
+    "reabilitação"
+   ]
+  },
+  {
+   "id": "trabalho-vigilancia-em-saude-do-trabalhador",
+   "nome": "Vigilância em saúde do trabalhador",
+   "especialidade": "trabalho",
+   "topicos": [
+    "notificação",
+    "indicadores"
+   ]
+  },
+  {
+   "id": "trafego-exame-de-aptidao-fisica-e-mental",
+   "nome": "Exame de aptidão física e mental",
+   "especialidade": "trafego",
+   "topicos": [
+    "critérios do Contran",
+    "doenças que restringem a direção"
+   ]
+  },
+  {
+   "id": "trafego-epidemiologia-da-violencia-no-transito",
+   "nome": "Epidemiologia da violência no trânsito",
+   "especialidade": "trafego",
+   "topicos": [
+    "mortalidade",
+    "fatores de risco"
+   ]
+  },
+  {
+   "id": "trafego-alcool-drogas-e-direcao",
+   "nome": "Álcool, drogas e direção",
+   "especialidade": "trafego",
+   "topicos": [
+    "fisiologia",
+    "legislação"
+   ]
+  },
+  {
+   "id": "trafego-ergonomia-e-fatores-humanos-do-condutor",
+   "nome": "Ergonomia e fatores humanos do condutor",
+   "especialidade": "trafego",
+   "topicos": [
+    "sono",
+    "visão",
+    "envelhecimento"
+   ]
+  },
+  {
+   "id": "trafego-atendimento-e-prevencao-de-lesoes-no-transito",
+   "nome": "Atendimento e prevenção de lesões no trânsito",
+   "especialidade": "trafego",
+   "topicos": [
+    "segurança veicular",
+    "políticas públicas"
+   ]
+  },
+  {
+   "id": "esporte-fisiologia-do-exercicio",
+   "nome": "Fisiologia do exercício",
+   "especialidade": "esporte",
+   "topicos": [
+    "metabolismo energético",
+    "adaptações cardiovasculares"
+   ]
+  },
+  {
+   "id": "esporte-avaliacao-pre-participacao",
+   "nome": "Avaliação pré-participação",
+   "especialidade": "esporte",
+   "topicos": [
+    "triagem cardiológica",
+    "ergoespirometria"
+   ]
+  },
+  {
+   "id": "esporte-lesoes-esportivas",
+   "nome": "Lesões esportivas",
+   "especialidade": "esporte",
+   "topicos": [
+    "musculares",
+    "ligamentares",
+    "por sobrecarga"
+   ]
+  },
+  {
+   "id": "esporte-prescricao-de-exercicio",
+   "nome": "Prescrição de exercício",
+   "especialidade": "esporte",
+   "topicos": [
+    "doenças crônicas",
+    "populações especiais"
+   ]
+  },
+  {
+   "id": "esporte-nutricao-e-dopagem",
+   "nome": "Nutrição e dopagem",
+   "especialidade": "esporte",
+   "topicos": [
+    "suplementos",
+    "lista proibida da WADA"
+   ]
+  },
+  {
+   "id": "esporte-concussao-no-esporte",
+   "nome": "Concussão no esporte",
+   "especialidade": "esporte",
+   "topicos": [
+    "protocolo de retorno gradual"
+   ]
+  },
+  {
+   "id": "fisiatria-avaliacao-funcional",
+   "nome": "Avaliação funcional",
+   "especialidade": "fisiatria",
+   "topicos": [
+    "CIF",
+    "escalas de funcionalidade"
+   ]
+  },
+  {
+   "id": "fisiatria-reabilitacao-neurologica",
+   "nome": "Reabilitação neurológica",
+   "especialidade": "fisiatria",
+   "topicos": [
+    "AVC",
+    "lesão medular",
+    "traumatismo cranioencefálico"
+   ]
+  },
+  {
+   "id": "fisiatria-espasticidade",
+   "nome": "Espasticidade",
+   "especialidade": "fisiatria",
+   "topicos": [
+    "toxina botulínica",
+    "bloqueios"
+   ]
+  },
+  {
+   "id": "fisiatria-dor-musculoesqueletica",
+   "nome": "Dor musculoesquelética",
+   "especialidade": "fisiatria",
+   "topicos": [
+    "lombalgia",
+    "infiltrações"
+   ]
+  },
+  {
+   "id": "fisiatria-orteses-proteses-e-tecnologia-assistiva",
+   "nome": "Órteses, próteses e tecnologia assistiva",
+   "especialidade": "fisiatria",
+   "topicos": [
+    "prescrição",
+    "amputados"
+   ]
+  },
+  {
+   "id": "fisiatria-eletrodiagnostico",
+   "nome": "Eletrodiagnóstico",
+   "especialidade": "fisiatria",
+   "topicos": [
+    "eletroneuromiografia"
+   ]
+  },
+  {
+   "id": "intensiva-sepse-e-choque",
+   "nome": "Sepse e choque",
+   "especialidade": "intensiva",
+   "topicos": [
+    "ressuscitação volêmica",
+    "vasopressores",
+    "corticoide"
+   ]
+  },
+  {
+   "id": "intensiva-ventilacao-mecanica",
+   "nome": "Ventilação mecânica",
+   "especialidade": "intensiva",
+   "topicos": [
+    "ventilação protetora",
+    "SDRA",
+    "desmame"
+   ]
+  },
+  {
+   "id": "intensiva-suporte-organico",
+   "nome": "Suporte orgânico",
+   "especialidade": "intensiva",
+   "topicos": [
+    "terapia renal substitutiva",
+    "ECMO"
+   ]
+  },
+  {
+   "id": "intensiva-neurointensivismo",
+   "nome": "Neurointensivismo",
+   "especialidade": "intensiva",
+   "topicos": [
+    "hipertensão intracraniana",
+    "morte encefálica"
+   ]
+  },
+  {
+   "id": "intensiva-sedacao-analgesia-e-delirium",
+   "nome": "Sedação, analgesia e delirium",
+   "especialidade": "intensiva",
+   "topicos": [
+    "protocolos",
+    "ABCDEF bundle"
+   ]
+  },
+  {
+   "id": "intensiva-cuidados-de-fim-de-vida-na-uti",
+   "nome": "Cuidados de fim de vida na UTI",
+   "especialidade": "intensiva",
+   "topicos": [
+    "comunicação",
+    "limitação de suporte"
+   ]
+  },
+  {
+   "id": "legal-tanatologia-forense",
+   "nome": "Tanatologia forense",
+   "especialidade": "legal",
+   "topicos": [
+    "diagnóstico de morte",
+    "cronotanatognose",
+    "necropsia"
+   ]
+  },
+  {
+   "id": "legal-traumatologia-forense",
+   "nome": "Traumatologia forense",
+   "especialidade": "legal",
+   "topicos": [
+    "lesões por instrumentos",
+    "lesão corporal e sua gravidade"
+   ]
+  },
+  {
+   "id": "legal-sexologia-forense",
+   "nome": "Sexologia forense",
+   "especialidade": "legal",
+   "topicos": [
+    "violência sexual",
+    "atendimento e cadeia de custódia"
+   ]
+  },
+  {
+   "id": "legal-psicopatologia-e-imputabilidade",
+   "nome": "Psicopatologia e imputabilidade",
+   "especialidade": "legal",
+   "topicos": [
+    "perícia psiquiátrica"
+   ]
+  },
+  {
+   "id": "legal-pericia-civel-trabalhista-e-previdenciaria",
+   "nome": "Perícia cível, trabalhista e previdenciária",
+   "especialidade": "legal",
+   "topicos": [
+    "dano corporal",
+    "incapacidade",
+    "nexo causal"
+   ]
+  },
+  {
+   "id": "legal-identificacao-humana-e-genetica-forense",
+   "nome": "Identificação humana e genética forense",
+   "especialidade": "legal",
+   "topicos": [
+    "DNA",
+    "odontologia legal"
+   ]
+  },
+  {
+   "id": "nuclear-fisica-e-radioprotecao",
+   "nome": "Física e radioproteção",
+   "especialidade": "nuclear",
+   "topicos": [
+    "radiofármacos",
+    "dosimetria",
+    "normas da CNEN"
+   ]
+  },
+  {
+   "id": "nuclear-pet-ct-oncologico",
+   "nome": "PET-CT oncológico",
+   "especialidade": "nuclear",
+   "topicos": [
+    "FDG",
+    "PSMA",
+    "critérios de resposta"
+   ]
+  },
+  {
+   "id": "nuclear-cintilografia-geral",
+   "nome": "Cintilografia geral",
+   "especialidade": "nuclear",
+   "topicos": [
+    "perfusão miocárdica",
+    "óssea",
+    "renal",
+    "tireoide"
+   ]
+  },
+  {
+   "id": "nuclear-terapia-com-radionuclideos",
+   "nome": "Terapia com radionuclídeos",
+   "especialidade": "nuclear",
+   "topicos": [
+    "iodoterapia",
+    "lutécio-177",
+    "teranóstica"
+   ]
+  },
+  {
+   "id": "nuclear-medicina-nuclear-em-neurologia",
+   "nome": "Medicina nuclear em neurologia",
+   "especialidade": "nuclear",
+   "topicos": [
+    "demências",
+    "epilepsia"
+   ]
+  },
+  {
+   "id": "preventiva-epidemiologia",
+   "nome": "Epidemiologia",
+   "especialidade": "preventiva",
+   "topicos": [
+    "medidas de frequência e associação",
+    "desenhos de estudo",
+    "vieses"
+   ]
+  },
+  {
+   "id": "preventiva-vigilancia-em-saude",
+   "nome": "Vigilância em saúde",
+   "especialidade": "preventiva",
+   "topicos": [
+    "notificação compulsória",
+    "investigação de surtos"
+   ]
+  },
+  {
+   "id": "preventiva-planejamento-e-gestao-em-saude",
+   "nome": "Planejamento e gestão em saúde",
+   "especialidade": "preventiva",
+   "topicos": [
+    "financiamento do SUS",
+    "regionalização"
+   ]
+  },
+  {
+   "id": "preventiva-avaliacao-de-tecnologias-em-saude",
+   "nome": "Avaliação de tecnologias em saúde",
+   "especialidade": "preventiva",
+   "topicos": [
+    "custo-efetividade",
+    "Conitec"
+   ]
+  },
+  {
+   "id": "preventiva-saude-baseada-em-evidencias",
+   "nome": "Saúde baseada em evidências",
+   "especialidade": "preventiva",
+   "topicos": [
+    "leitura crítica",
+    "GRADE"
+   ]
+  },
+  {
+   "id": "preventiva-determinantes-sociais-e-politicas-publicas",
+   "nome": "Determinantes sociais e políticas públicas",
+   "especialidade": "preventiva",
+   "topicos": [
+    "equidade",
+    "promoção da saúde"
+   ]
+  },
+  {
+   "id": "nefro-doenca-renal-cronica",
+   "nome": "Doença renal crônica",
+   "especialidade": "nefro",
+   "topicos": [
+    "estadiamento KDIGO",
+    "nefroproteção",
+    "anemia e osso"
+   ]
+  },
+  {
+   "id": "nefro-lesao-renal-aguda",
+   "nome": "Lesão renal aguda",
+   "especialidade": "nefro",
+   "topicos": [
+    "diagnóstico",
+    "indicações de diálise"
+   ]
+  },
+  {
+   "id": "nefro-disturbios-hidroeletroliticos-e-acido-base",
+   "nome": "Distúrbios hidroeletrolíticos e ácido-base",
+   "especialidade": "nefro",
+   "topicos": [
+    "hiponatremia",
+    "hipercalemia",
+    "gasometria"
+   ]
+  },
+  {
+   "id": "nefro-glomerulopatias",
+   "nome": "Glomerulopatias",
+   "especialidade": "nefro",
+   "topicos": [
+    "síndrome nefrótica e nefrítica",
+    "biópsia renal"
+   ]
+  },
+  {
+   "id": "nefro-dialise",
+   "nome": "Diálise",
+   "especialidade": "nefro",
+   "topicos": [
+    "hemodiálise",
+    "diálise peritoneal",
+    "acesso vascular"
+   ]
+  },
+  {
+   "id": "nefro-transplante-renal",
+   "nome": "Transplante renal",
+   "especialidade": "nefro",
+   "topicos": [
+    "imunossupressão",
+    "rejeição"
+   ]
+  },
+  {
+   "id": "neurocirurgia-neurotrauma",
+   "nome": "Neurotrauma",
+   "especialidade": "neurocirurgia",
+   "topicos": [
+    "traumatismo cranioencefálico",
+    "hipertensão intracraniana",
+    "trauma raquimedular"
+   ]
+  },
+  {
+   "id": "neurocirurgia-neuro-oncologia",
+   "nome": "Neuro-oncologia",
+   "especialidade": "neurocirurgia",
+   "topicos": [
+    "gliomas",
+    "meningiomas",
+    "metástases"
+   ]
+  },
+  {
+   "id": "neurocirurgia-neurocirurgia-vascular",
+   "nome": "Neurocirurgia vascular",
+   "especialidade": "neurocirurgia",
+   "topicos": [
+    "aneurismas",
+    "malformações arteriovenosas",
+    "hemorragia subaracnóidea"
+   ]
+  },
+  {
+   "id": "neurocirurgia-coluna",
+   "nome": "Coluna",
+   "especialidade": "neurocirurgia",
+   "topicos": [
+    "hérnia discal",
+    "estenose",
+    "instrumentação"
+   ]
+  },
+  {
+   "id": "neurocirurgia-neurocirurgia-funcional",
+   "nome": "Neurocirurgia funcional",
+   "especialidade": "neurocirurgia",
+   "topicos": [
+    "estimulação cerebral profunda",
+    "epilepsia"
+   ]
+  },
+  {
+   "id": "neurocirurgia-neurocirurgia-pediatrica",
+   "nome": "Neurocirurgia pediátrica",
+   "especialidade": "neurocirurgia",
+   "topicos": [
+    "hidrocefalia",
+    "disrafismos"
+   ]
+  },
+  {
+   "id": "neuro-doencas-cerebrovasculares",
+   "nome": "Doenças cerebrovasculares",
+   "especialidade": "neuro",
+   "topicos": [
+    "AVC isquêmico e hemorrágico",
+    "prevenção secundária"
+   ]
+  },
+  {
+   "id": "neuro-epilepsias",
+   "nome": "Epilepsias",
+   "especialidade": "neuro",
+   "topicos": [
+    "classificação ILAE",
+    "fármacos anticrises",
+    "estado de mal"
+   ]
+  },
+  {
+   "id": "neuro-doencas-neurodegenerativas",
+   "nome": "Doenças neurodegenerativas",
+   "especialidade": "neuro",
+   "topicos": [
+    "Parkinson",
+    "demências",
+    "esclerose lateral amiotrófica"
+   ]
+  },
+  {
+   "id": "neuro-doencas-desmielinizantes",
+   "nome": "Doenças desmielinizantes",
+   "especialidade": "neuro",
+   "topicos": [
+    "esclerose múltipla",
+    "neuromielite óptica"
+   ]
+  },
+  {
+   "id": "neuro-cefaleias",
+   "nome": "Cefaleias",
+   "especialidade": "neuro",
+   "topicos": [
+    "enxaqueca",
+    "anticorpos anti-CGRP"
+   ]
+  },
+  {
+   "id": "neuro-doencas-neuromusculares",
+   "nome": "Doenças neuromusculares",
+   "especialidade": "neuro",
+   "topicos": [
+    "neuropatias",
+    "miastenia gravis"
+   ]
+  },
+  {
+   "id": "nutrologia-avaliacao-nutricional",
+   "nome": "Avaliação nutricional",
+   "especialidade": "nutrologia",
+   "topicos": [
+    "antropometria",
+    "composição corporal",
+    "triagem de risco"
+   ]
+  },
+  {
+   "id": "nutrologia-terapia-nutricional-enteral-e-parenteral",
+   "nome": "Terapia nutricional enteral e parenteral",
+   "especialidade": "nutrologia",
+   "topicos": [
+    "indicações",
+    "complicações"
+   ]
+  },
+  {
+   "id": "nutrologia-obesidade-e-sindrome-metabolica",
+   "nome": "Obesidade e síndrome metabólica",
+   "especialidade": "nutrologia",
+   "topicos": [
+    "abordagem clínica",
+    "farmacoterapia"
+   ]
+  },
+  {
+   "id": "nutrologia-micronutrientes",
+   "nome": "Micronutrientes",
+   "especialidade": "nutrologia",
+   "topicos": [
+    "deficiências",
+    "suplementação baseada em evidência"
+   ]
+  },
+  {
+   "id": "nutrologia-nutricao-em-doencas-cronicas",
+   "nome": "Nutrição em doenças crônicas",
+   "especialidade": "nutrologia",
+   "topicos": [
+    "renal",
+    "hepática",
+    "oncológica"
+   ]
+  },
+  {
+   "id": "nutrologia-nutricao-no-ciclo-da-vida",
+   "nome": "Nutrição no ciclo da vida",
+   "especialidade": "nutrologia",
+   "topicos": [
+    "gestação",
+    "infância",
+    "idoso"
+   ]
+  },
+  {
+   "id": "oftalmo-refracao-e-lentes",
+   "nome": "Refração e lentes",
+   "especialidade": "oftalmo",
+   "topicos": [
+    "erros refrativos",
+    "cirurgia refrativa"
+   ]
+  },
+  {
+   "id": "oftalmo-catarata",
+   "nome": "Catarata",
+   "especialidade": "oftalmo",
+   "topicos": [
+    "facoemulsificação",
+    "lentes intraoculares"
+   ]
+  },
+  {
+   "id": "oftalmo-glaucoma",
+   "nome": "Glaucoma",
+   "especialidade": "oftalmo",
+   "topicos": [
+    "diagnóstico",
+    "tratamento clínico e cirúrgico"
+   ]
+  },
+  {
+   "id": "oftalmo-retina",
+   "nome": "Retina",
+   "especialidade": "oftalmo",
+   "topicos": [
+    "retinopatia diabética",
+    "degeneração macular",
+    "injeções antiangiogênicas"
+   ]
+  },
+  {
+   "id": "oftalmo-cornea-e-superficie-ocular",
+   "nome": "Córnea e superfície ocular",
+   "especialidade": "oftalmo",
+   "topicos": [
+    "ceratocone",
+    "transplante de córnea"
+   ]
+  },
+  {
+   "id": "oftalmo-oftalmopediatria-e-estrabismo",
+   "nome": "Oftalmopediatria e estrabismo",
+   "especialidade": "oftalmo",
+   "topicos": [
+    "ambliopia",
+    "retinopatia da prematuridade"
+   ]
+  },
+  {
+   "id": "onco-biologia-do-cancer",
+   "nome": "Biologia do câncer",
+   "especialidade": "onco",
+   "topicos": [
+    "marcadores",
+    "oncogenes",
+    "heterogeneidade tumoral"
+   ]
+  },
+  {
+   "id": "onco-tratamento-sistemico",
+   "nome": "Tratamento sistêmico",
+   "especialidade": "onco",
+   "topicos": [
+    "quimioterapia",
+    "terapia-alvo",
+    "imunoterapia"
+   ]
+  },
+  {
+   "id": "onco-tumores-solidos-mais-frequentes",
+   "nome": "Tumores sólidos mais frequentes",
+   "especialidade": "onco",
+   "topicos": [
+    "mama",
+    "pulmão",
+    "colorretal",
+    "próstata"
+   ]
+  },
+  {
+   "id": "onco-emergencias-oncologicas",
+   "nome": "Emergências oncológicas",
+   "especialidade": "onco",
+   "topicos": [
+    "neutropenia febril",
+    "síndrome de lise",
+    "compressão medular"
+   ]
+  },
+  {
+   "id": "onco-medicina-de-precisao",
+   "nome": "Medicina de precisão",
+   "especialidade": "onco",
+   "topicos": [
+    "sequenciamento tumoral",
+    "biomarcadores preditivos"
+   ]
+  },
+  {
+   "id": "onco-cuidados-de-suporte-e-paliativos",
+   "nome": "Cuidados de suporte e paliativos",
+   "especialidade": "onco",
+   "topicos": [
+    "controle de sintomas",
+    "toxicidades"
+   ]
+  },
+  {
+   "id": "orto-traumatologia",
+   "nome": "Traumatologia",
+   "especialidade": "orto",
+   "topicos": [
+    "fraturas de membros",
+    "fixação interna",
+    "fraturas expostas"
+   ]
+  },
+  {
+   "id": "orto-coluna",
+   "nome": "Coluna",
+   "especialidade": "orto",
+   "topicos": [
+    "lombalgia",
+    "deformidades",
+    "fraturas vertebrais"
+   ]
+  },
+  {
+   "id": "orto-ombro-e-cotovelo",
+   "nome": "Ombro e cotovelo",
+   "especialidade": "orto",
+   "topicos": [
+    "manguito rotador",
+    "instabilidade"
+   ]
+  },
+  {
+   "id": "orto-quadril-e-joelho",
+   "nome": "Quadril e joelho",
+   "especialidade": "orto",
+   "topicos": [
+    "artroplastias",
+    "lesões ligamentares e meniscais"
+   ]
+  },
+  {
+   "id": "orto-ortopedia-pediatrica",
+   "nome": "Ortopedia pediátrica",
+   "especialidade": "orto",
+   "topicos": [
+    "displasia do quadril",
+    "pé torto congênito"
+   ]
+  },
+  {
+   "id": "orto-oncologia-ortopedica-e-infeccao",
+   "nome": "Oncologia ortopédica e infecção",
+   "especialidade": "orto",
+   "topicos": [
+    "tumores ósseos",
+    "osteomielite"
+   ]
+  },
+  {
+   "id": "otorrino-otologia-e-audiologia",
+   "nome": "Otologia e audiologia",
+   "especialidade": "otorrino",
+   "topicos": [
+    "otites",
+    "perda auditiva",
+    "implante coclear"
+   ]
+  },
+  {
+   "id": "otorrino-rinologia",
+   "nome": "Rinologia",
+   "especialidade": "otorrino",
+   "topicos": [
+    "rinossinusite",
+    "cirurgia endoscópica nasal"
+   ]
+  },
+  {
+   "id": "otorrino-laringologia-e-voz",
+   "nome": "Laringologia e voz",
+   "especialidade": "otorrino",
+   "topicos": [
+    "lesões de pregas vocais",
+    "disfagia"
+   ]
+  },
+  {
+   "id": "otorrino-otoneurologia",
+   "nome": "Otoneurologia",
+   "especialidade": "otorrino",
+   "topicos": [
+    "vertigem posicional",
+    "doença de Ménière"
+   ]
+  },
+  {
+   "id": "otorrino-disturbios-do-sono",
+   "nome": "Distúrbios do sono",
+   "especialidade": "otorrino",
+   "topicos": [
+    "apneia obstrutiva",
+    "polissonografia"
+   ]
+  },
+  {
+   "id": "otorrino-otorrinolaringologia-pediatrica",
+   "nome": "Otorrinolaringologia pediátrica",
+   "especialidade": "otorrino",
+   "topicos": [
+    "amigdalectomia",
+    "tubos de ventilação"
+   ]
+  },
+  {
+   "id": "patologia-patologia-geral",
+   "nome": "Patologia geral",
+   "especialidade": "patologia",
+   "topicos": [
+    "inflamação",
+    "neoplasia",
+    "lesão celular"
+   ]
+  },
+  {
+   "id": "patologia-patologia-cirurgica",
+   "nome": "Patologia cirúrgica",
+   "especialidade": "patologia",
+   "topicos": [
+    "macroscopia",
+    "margens",
+    "laudos sinópticos"
+   ]
+  },
+  {
+   "id": "patologia-citopatologia",
+   "nome": "Citopatologia",
+   "especialidade": "patologia",
+   "topicos": [
+    "citologia cervical e de punção"
+   ]
+  },
+  {
+   "id": "patologia-imuno-histoquimica-e-patologia-molecular",
+   "nome": "Imuno-histoquímica e patologia molecular",
+   "especialidade": "patologia",
+   "topicos": [
+    "painéis",
+    "biomarcadores"
+   ]
+  },
+  {
+   "id": "patologia-necropsia-clinica",
+   "nome": "Necropsia clínica",
+   "especialidade": "patologia",
+   "topicos": [
+    "técnica",
+    "correlação clínico-patológica"
+   ]
+  },
+  {
+   "id": "patologia-patologia-digital-e-ia",
+   "nome": "Patologia digital e IA",
+   "especialidade": "patologia",
+   "topicos": [
+    "lâminas digitais",
+    "algoritmos de apoio"
+   ]
+  },
+  {
+   "id": "lab-bioquimica-clinica",
+   "nome": "Bioquímica clínica",
+   "especialidade": "lab",
+   "topicos": [
+    "interpretação",
+    "interferências",
+    "valores de referência"
+   ]
+  },
+  {
+   "id": "lab-hematologia-laboratorial",
+   "nome": "Hematologia laboratorial",
+   "especialidade": "lab",
+   "topicos": [
+    "hemograma",
+    "coagulação",
+    "citometria de fluxo"
+   ]
+  },
+  {
+   "id": "lab-microbiologia-clinica",
+   "nome": "Microbiologia clínica",
+   "especialidade": "lab",
+   "topicos": [
+    "cultura",
+    "antibiograma",
+    "métodos moleculares"
+   ]
+  },
+  {
+   "id": "lab-imunologia-e-sorologia",
+   "nome": "Imunologia e sorologia",
+   "especialidade": "lab",
+   "topicos": [
+    "autoanticorpos",
+    "doenças infecciosas"
+   ]
+  },
+  {
+   "id": "lab-gestao-da-qualidade-laboratorial",
+   "nome": "Gestão da qualidade laboratorial",
+   "especialidade": "lab",
+   "topicos": [
+    "controle interno e externo",
+    "acreditação"
+   ]
+  },
+  {
+   "id": "lab-medicina-laboratorial-baseada-em-evidencia",
+   "nome": "Medicina laboratorial baseada em evidência",
+   "especialidade": "lab",
+   "topicos": [
+    "acurácia diagnóstica",
+    "uso racional de exames"
+   ]
+  },
+  {
+   "id": "pediatria-puericultura",
+   "nome": "Puericultura",
+   "especialidade": "pediatria",
+   "topicos": [
+    "crescimento e desenvolvimento",
+    "aleitamento materno",
+    "vacinação"
+   ]
+  },
+  {
+   "id": "pediatria-neonatologia",
+   "nome": "Neonatologia",
+   "especialidade": "pediatria",
+   "topicos": [
+    "reanimação neonatal",
+    "icterícia",
+    "prematuridade"
+   ]
+  },
+  {
+   "id": "pediatria-emergencias-pediatricas",
+   "nome": "Emergências pediátricas",
+   "especialidade": "pediatria",
+   "topicos": [
+    "bronquiolite",
+    "desidratação",
+    "convulsão febril"
+   ]
+  },
+  {
+   "id": "pediatria-doencas-infecciosas-da-infancia",
+   "nome": "Doenças infecciosas da infância",
+   "especialidade": "pediatria",
+   "topicos": [
+    "pneumonia",
+    "meningite",
+    "doenças exantemáticas"
+   ]
+  },
+  {
+   "id": "pediatria-adolescencia",
+   "nome": "Adolescência",
+   "especialidade": "pediatria",
+   "topicos": [
+    "saúde mental",
+    "sexualidade",
+    "uso de substâncias"
+   ]
+  },
+  {
+   "id": "pediatria-doencas-cronicas-na-infancia",
+   "nome": "Doenças crônicas na infância",
+   "especialidade": "pediatria",
+   "topicos": [
+    "asma",
+    "obesidade",
+    "diabetes tipo 1"
+   ]
+  },
+  {
+   "id": "pneumo-funcao-pulmonar",
+   "nome": "Função pulmonar",
+   "especialidade": "pneumo",
+   "topicos": [
+    "espirometria",
+    "difusão",
+    "gasometria"
+   ]
+  },
+  {
+   "id": "pneumo-dpoc-e-asma",
+   "nome": "DPOC e asma",
+   "especialidade": "pneumo",
+   "topicos": [
+    "classificação GOLD",
+    "tratamento escalonado",
+    "exacerbações"
+   ]
+  },
+  {
+   "id": "pneumo-doencas-intersticiais",
+   "nome": "Doenças intersticiais",
+   "especialidade": "pneumo",
+   "topicos": [
+    "fibrose pulmonar idiopática",
+    "antifibróticos"
+   ]
+  },
+  {
+   "id": "pneumo-tuberculose-e-infeccoes-respiratorias",
+   "nome": "Tuberculose e infecções respiratórias",
+   "especialidade": "pneumo",
+   "topicos": [
+    "pneumonia comunitária",
+    "tuberculose"
+   ]
+  },
+  {
+   "id": "pneumo-circulacao-pulmonar",
+   "nome": "Circulação pulmonar",
+   "especialidade": "pneumo",
+   "topicos": [
+    "tromboembolismo",
+    "hipertensão pulmonar"
+   ]
+  },
+  {
+   "id": "pneumo-cancer-de-pulmao-e-nodulo-pulmonar",
+   "nome": "Câncer de pulmão e nódulo pulmonar",
+   "especialidade": "pneumo",
+   "topicos": [
+    "abordagem do nódulo",
+    "rastreamento"
+   ]
+  },
+  {
+   "id": "psiquiatria-psicopatologia-e-diagnostico",
+   "nome": "Psicopatologia e diagnóstico",
+   "especialidade": "psiquiatria",
+   "topicos": [
+    "exame do estado mental",
+    "classificações"
+   ]
+  },
+  {
+   "id": "psiquiatria-transtornos-do-humor",
+   "nome": "Transtornos do humor",
+   "especialidade": "psiquiatria",
+   "topicos": [
+    "depressão",
+    "transtorno bipolar",
+    "risco de suicídio"
+   ]
+  },
+  {
+   "id": "psiquiatria-transtornos-psicoticos",
+   "nome": "Transtornos psicóticos",
+   "especialidade": "psiquiatria",
+   "topicos": [
+    "esquizofrenia",
+    "antipsicóticos"
+   ]
+  },
+  {
+   "id": "psiquiatria-transtornos-de-ansiedade-e-relacionados",
+   "nome": "Transtornos de ansiedade e relacionados",
+   "especialidade": "psiquiatria",
+   "topicos": [
+    "pânico",
+    "TOC",
+    "estresse pós-traumático"
+   ]
+  },
+  {
+   "id": "psiquiatria-dependencia-quimica",
+   "nome": "Dependência química",
+   "especialidade": "psiquiatria",
+   "topicos": [
+    "álcool",
+    "crack e outras substâncias",
+    "redução de danos"
+   ]
+  },
+  {
+   "id": "psiquiatria-psicoterapias-e-psiquiatria-da-infancia",
+   "nome": "Psicoterapias e psiquiatria da infância",
+   "especialidade": "psiquiatria",
+   "topicos": [
+    "terapia cognitivo-comportamental",
+    "TDAH",
+    "autismo"
+   ]
+  },
+  {
+   "id": "radiologia-fisica-das-imagens-e-radioprotecao",
+   "nome": "Física das imagens e radioproteção",
+   "especialidade": "radiologia",
+   "topicos": [
+    "raio X",
+    "tomografia",
+    "ressonância",
+    "dose"
+   ]
+  },
+  {
+   "id": "radiologia-neurorradiologia",
+   "nome": "Neurorradiologia",
+   "especialidade": "radiologia",
+   "topicos": [
+    "AVC",
+    "tumores",
+    "trauma"
+   ]
+  },
+  {
+   "id": "radiologia-imagem-do-torax-e-do-abdome",
+   "nome": "Imagem do tórax e do abdome",
+   "especialidade": "radiologia",
+   "topicos": [
+    "nódulos",
+    "abdome agudo",
+    "oncologia"
+   ]
+  },
+  {
+   "id": "radiologia-musculoesqueletico",
+   "nome": "Musculoesquelético",
+   "especialidade": "radiologia",
+   "topicos": [
+    "ressonância articular",
+    "tumores ósseos"
+   ]
+  },
+  {
+   "id": "radiologia-ultrassonografia",
+   "nome": "Ultrassonografia",
+   "especialidade": "radiologia",
+   "topicos": [
+    "abdominal",
+    "obstétrica",
+    "Doppler"
+   ]
+  },
+  {
+   "id": "radiologia-radiologia-intervencionista-e-ia-em-imagem",
+   "nome": "Radiologia intervencionista e IA em imagem",
+   "especialidade": "radiologia",
+   "topicos": [
+    "biópsias guiadas",
+    "algoritmos de detecção"
+   ]
+  },
+  {
+   "id": "radioterapia-fisica-medica-e-radiobiologia",
+   "nome": "Física médica e radiobiologia",
+   "especialidade": "radioterapia",
+   "topicos": [
+    "dose",
+    "fracionamento",
+    "modelo linear-quadrático"
+   ]
+  },
+  {
+   "id": "radioterapia-planejamento-e-tecnicas",
+   "nome": "Planejamento e técnicas",
+   "especialidade": "radioterapia",
+   "topicos": [
+    "IMRT",
+    "radiocirurgia",
+    "braquiterapia"
+   ]
+  },
+  {
+   "id": "radioterapia-radioterapia-nos-tumores-mais-frequentes",
+   "nome": "Radioterapia nos tumores mais frequentes",
+   "especialidade": "radioterapia",
+   "topicos": [
+    "mama",
+    "próstata",
+    "cabeça e pescoço"
+   ]
+  },
+  {
+   "id": "radioterapia-hipofracionamento",
+   "nome": "Hipofracionamento",
+   "especialidade": "radioterapia",
+   "topicos": [
+    "evidências",
+    "indicações"
+   ]
+  },
+  {
+   "id": "radioterapia-toxicidades-e-cuidados",
+   "nome": "Toxicidades e cuidados",
+   "especialidade": "radioterapia",
+   "topicos": [
+    "agudas e tardias"
+   ]
+  },
+  {
+   "id": "radioterapia-garantia-da-qualidade-e-radioprotecao",
+   "nome": "Garantia da qualidade e radioproteção",
+   "especialidade": "radioterapia",
+   "topicos": [
+    "controle de qualidade",
+    "CNEN"
+   ]
+  },
+  {
+   "id": "reumato-artrite-reumatoide-e-espondiloartrites",
+   "nome": "Artrite reumatoide e espondiloartrites",
+   "especialidade": "reumato",
+   "topicos": [
+    "critérios ACR/EULAR",
+    "tratamento até o alvo",
+    "biológicos"
+   ]
+  },
+  {
+   "id": "reumato-lupus-e-colagenoses",
+   "nome": "Lúpus e colagenoses",
+   "especialidade": "reumato",
+   "topicos": [
+    "lúpus eritematoso sistêmico",
+    "esclerose sistêmica",
+    "Sjögren"
+   ]
+  },
+  {
+   "id": "reumato-vasculites",
+   "nome": "Vasculites",
+   "especialidade": "reumato",
+   "topicos": [
+    "arterite de células gigantes",
+    "vasculites ANCA"
+   ]
+  },
+  {
+   "id": "reumato-doencas-microcristalinas",
+   "nome": "Doenças microcristalinas",
+   "especialidade": "reumato",
+   "topicos": [
+    "gota",
+    "metas de ácido úrico"
+   ]
+  },
+  {
+   "id": "reumato-osteoartrite-e-fibromialgia",
+   "nome": "Osteoartrite e fibromialgia",
+   "especialidade": "reumato",
+   "topicos": [
+    "abordagem multimodal"
+   ]
+  },
+  {
+   "id": "reumato-imunobiologicos-e-seguranca",
+   "nome": "Imunobiológicos e segurança",
+   "especialidade": "reumato",
+   "topicos": [
+    "rastreio de tuberculose",
+    "vacinação"
+   ]
+  },
+  {
+   "id": "uro-uro-oncologia",
+   "nome": "Uro-oncologia",
+   "especialidade": "uro",
+   "topicos": [
+    "câncer de próstata",
+    "bexiga",
+    "rim"
+   ]
+  },
+  {
+   "id": "uro-hiperplasia-prostatica-e-sintomas-urinarios",
+   "nome": "Hiperplasia prostática e sintomas urinários",
+   "especialidade": "uro",
+   "topicos": [
+    "tratamento clínico e cirúrgico"
+   ]
+  },
+  {
+   "id": "uro-litiase-urinaria",
+   "nome": "Litíase urinária",
+   "especialidade": "uro",
+   "topicos": [
+    "ureteroscopia",
+    "nefrolitotripsia percutânea"
+   ]
+  },
+  {
+   "id": "uro-urologia-feminina-e-funcional",
+   "nome": "Urologia feminina e funcional",
+   "especialidade": "uro",
+   "topicos": [
+    "incontinência",
+    "bexiga hiperativa"
+   ]
+  },
+  {
+   "id": "uro-andrologia",
+   "nome": "Andrologia",
+   "especialidade": "uro",
+   "topicos": [
+    "disfunção erétil",
+    "infertilidade masculina"
+   ]
+  },
+  {
+   "id": "uro-endourologia-e-cirurgia-robotica",
+   "nome": "Endourologia e cirurgia robótica",
+   "especialidade": "uro",
+   "topicos": [
+    "prostatectomia radical"
+   ]
+  }
+ ],
+ "graduacao": [
+  {
+   "id": "grad-anatomia-humana",
+   "nome": "Anatomia humana",
+   "topicos": [
+    "anatomia sistêmica e topográfica",
+    "anatomia por imagem",
+    "dissecção"
+   ]
+  },
+  {
+   "id": "grad-histologia-e-embriologia",
+   "nome": "Histologia e embriologia",
+   "topicos": [
+    "tecidos",
+    "desenvolvimento embrionário",
+    "malformações"
+   ]
+  },
+  {
+   "id": "grad-bioquimica-e-biologia-molecular",
+   "nome": "Bioquímica e biologia molecular",
+   "topicos": [
+    "metabolismo",
+    "genética molecular",
+    "sinalização celular"
+   ]
+  },
+  {
+   "id": "grad-fisiologia-humana",
+   "nome": "Fisiologia humana",
+   "topicos": [
+    "cardiovascular",
+    "respiratória",
+    "renal",
+    "endócrina",
+    "neurofisiologia"
+   ]
+  },
+  {
+   "id": "grad-farmacologia",
+   "nome": "Farmacologia",
+   "topicos": [
+    "farmacocinética",
+    "farmacodinâmica",
+    "classes terapêuticas"
+   ]
+  },
+  {
+   "id": "grad-microbiologia-e-imunologia",
+   "nome": "Microbiologia e imunologia",
+   "topicos": [
+    "bactérias",
+    "vírus",
+    "fungos",
+    "resposta imune"
+   ]
+  },
+  {
+   "id": "grad-parasitologia",
+   "nome": "Parasitologia",
+   "topicos": [
+    "protozoários",
+    "helmintos",
+    "doenças negligenciadas"
+   ]
+  },
+  {
+   "id": "grad-patologia-geral-e-especial",
+   "nome": "Patologia geral e especial",
+   "topicos": [
+    "lesão celular",
+    "inflamação",
+    "neoplasias"
+   ]
+  },
+  {
+   "id": "grad-semiologia-medica",
+   "nome": "Semiologia médica",
+   "topicos": [
+    "anamnese",
+    "exame físico",
+    "raciocínio clínico"
+   ]
+  },
+  {
+   "id": "grad-bioestatistica-e-epidemiologia",
+   "nome": "Bioestatística e epidemiologia",
+   "topicos": [
+    "desenhos de estudo",
+    "inferência",
+    "medidas de associação"
+   ]
+  },
+  {
+   "id": "grad-medicina-baseada-em-evidencias",
+   "nome": "Medicina baseada em evidências",
+   "topicos": [
+    "pergunta PICO",
+    "leitura crítica",
+    "níveis de evidência"
+   ]
+  },
+  {
+   "id": "grad-saude-coletiva-e-sus",
+   "nome": "Saúde coletiva e SUS",
+   "topicos": [
+    "Lei 8.080/1990",
+    "atenção primária",
+    "vigilância em saúde"
+   ]
+  },
+  {
+   "id": "grad-etica-medica-e-bioetica",
+   "nome": "Ética médica e bioética",
+   "topicos": [
+    "Código de Ética Médica (Resolução CFM 2.217/2018)",
+    "sigilo",
+    "consentimento"
+   ]
+  },
+  {
+   "id": "grad-comunicacao-clinica",
+   "nome": "Comunicação clínica",
+   "topicos": [
+    "relação médico-paciente",
+    "más notícias (protocolo SPIKES)"
+   ]
+  },
+  {
+   "id": "grad-psicologia-medica",
+   "nome": "Psicologia médica",
+   "topicos": [
+    "desenvolvimento humano",
+    "adoecimento e enfrentamento"
+   ]
+  },
+  {
+   "id": "grad-medicina-legal-na-graduacao",
+   "nome": "Medicina legal na graduação",
+   "topicos": [
+    "atestados",
+    "declaração de óbito",
+    "noções de perícia"
+   ]
+  },
+  {
+   "id": "grad-internato-em-clinica-medica",
+   "nome": "Internato em clínica médica",
+   "topicos": [
+    "enfermaria",
+    "ambulatório",
+    "urgência"
+   ]
+  },
+  {
+   "id": "grad-internato-em-cirurgia",
+   "nome": "Internato em cirurgia",
+   "topicos": [
+    "centro cirúrgico",
+    "pré e pós-operatório"
+   ]
+  },
+  {
+   "id": "grad-internato-em-pediatria",
+   "nome": "Internato em pediatria",
+   "topicos": [
+    "puericultura",
+    "alojamento conjunto",
+    "emergência pediátrica"
+   ]
+  },
+  {
+   "id": "grad-internato-em-ginecologia-e-obstetricia",
+   "nome": "Internato em ginecologia e obstetrícia",
+   "topicos": [
+    "pré-natal",
+    "sala de parto"
+   ]
+  },
+  {
+   "id": "grad-internato-em-saude-mental",
+   "nome": "Internato em saúde mental",
+   "topicos": [
+    "CAPS",
+    "emergência psiquiátrica"
+   ]
+  },
+  {
+   "id": "grad-internato-em-medicina-de-familia-e-urgencia",
+   "nome": "Internato em medicina de família e urgência",
+   "topicos": [
+    "unidade básica",
+    "SAMU e pronto-socorro"
+   ]
+  },
+  {
+   "id": "grad-simulacao-clinica-e-seguranca-do-paciente",
+   "nome": "Simulação clínica e segurança do paciente",
+   "topicos": [
+    "habilidades",
+    "erro médico",
+    "metas internacionais"
+   ]
+  },
+  {
+   "id": "grad-informatica-em-saude",
+   "nome": "Informática em saúde",
+   "topicos": [
+    "prontuário eletrônico",
+    "telessaúde",
+    "LGPD na saúde"
+   ]
+  }
+ ],
+ "skills_dados": [
+  {
+   "id": "dados-dados-do-sus-datasus",
+   "nome": "Dados do SUS (DATASUS)",
+   "faz": "lê e cruza SIH, SIA, SIM, SINASC e SINAN por município e por ano; explica limites de cada base",
+   "fontes": [
+    "DATASUS TabNet",
+    "OpenDataSUS"
+   ]
+  },
+  {
+   "id": "dados-rede-assistencial-cnes",
+   "nome": "Rede assistencial (CNES)",
+   "faz": "mapeia hospitais, leitos, equipamentos e profissionais por região; acha vazio assistencial",
+   "fontes": [
+    "Cadastro Nacional de Estabelecimentos de Saúde (CNES)"
+   ]
+  },
+  {
+   "id": "dados-saude-suplementar-ans",
+   "nome": "Saúde suplementar (ANS)",
+   "faz": "beneficiários por operadora e região; sinistralidade; reclamações; reajustes",
+   "fontes": [
+    "ANS dados abertos",
+    "D-TISS",
+    "IDSS"
+   ]
+  },
+  {
+   "id": "dados-preco-de-procedimentos",
+   "nome": "Preço de procedimentos",
+   "faz": "compara tabela SUS (SIGTAP), TUSS e CBHPM; monta referência de honorário médico",
+   "fontes": [
+    "SIGTAP",
+    "TUSS (ANS)",
+    "CBHPM (AMB)"
+   ]
+  },
+  {
+   "id": "dados-preco-de-medicamentos",
+   "nome": "Preço de medicamentos",
+   "faz": "preço fábrica e máximo ao consumidor; compras públicas",
+   "fontes": [
+    "CMED/Anvisa",
+    "Banco de Preços em Saúde (BPS)"
+   ]
+  },
+  {
+   "id": "dados-registro-sanitario",
+   "nome": "Registro sanitário",
+   "faz": "situação de registro de medicamento, dispositivo e alimento; alertas e recolhimentos",
+   "fontes": [
+    "Anvisa (consultas e dados abertos)"
+   ]
+  },
+  {
+   "id": "dados-ensaios-clinicos",
+   "nome": "Ensaios clínicos",
+   "faz": "quem pesquisa o quê, fase, patrocinador e centro no Brasil e no mundo",
+   "fontes": [
+    "ClinicalTrials.gov",
+    "ReBEC",
+    "ICTRP/OMS"
+   ]
+  },
+  {
+   "id": "dados-incorporacao-de-tecnologias",
+   "nome": "Incorporação de tecnologias",
+   "faz": "decisões e relatórios da Conitec; PCDT; rol da ANS",
+   "fontes": [
+    "Conitec",
+    "Rol de Procedimentos da ANS"
+   ]
+  },
+  {
+   "id": "dados-judicializacao-da-saude",
+   "nome": "Judicialização da saúde",
+   "faz": "ações por medicamento, plano de saúde e erro médico; tese do STF e do STJ; ponte com o braço jurídico",
+   "fontes": [
+    "CNJ Justiça em Números",
+    "DataJud",
+    "Temas 6, 500, 793 e 1234 do STF"
+   ]
+  },
+  {
+   "id": "dados-demografia-medica",
+   "nome": "Demografia médica",
+   "faz": "médicos por especialidade, região e idade; oferta de residência",
+   "fontes": [
+    "Demografia Médica no Brasil (FMUSP/AMB)",
+    "CFM",
+    "CNRM"
+   ]
+  },
+  {
+   "id": "dados-epidemiologia-e-carga-de-doenca",
+   "nome": "Epidemiologia e carga de doença",
+   "faz": "incidência, prevalência, DALYs e projeções",
+   "fontes": [
+    "GBD (IHME)",
+    "Vigitel",
+    "PNS (IBGE)"
+   ]
+  },
+  {
+   "id": "dados-mercado-de-saude-empresas",
+   "nome": "Mercado de saúde (empresas)",
+   "faz": "receita, margem e consolidação de hospitais, laboratórios e operadoras listadas",
+   "fontes": [
+    "demonstrações na CVM",
+    "relatórios da ANS"
+   ]
+  },
+  {
+   "id": "dados-inteligencia-competitiva-para-clinicas",
+   "nome": "Inteligência competitiva para clínicas",
+   "faz": "concorrência local, demanda por especialidade, ticket médio e captação",
+   "fontes": [
+    "CNES",
+    "ANS",
+    "IBGE (renda por município)"
+   ]
+  },
+  {
+   "id": "dados-vigilancia-de-surtos-e-noticias",
+   "nome": "Vigilância de surtos e notícias",
+   "faz": "sinais de surto e de risco sanitário em notícias e boletins",
+   "fontes": [
+    "GDELT",
+    "boletins epidemiológicos do Ministério da Saúde",
+    "ProMED"
+   ]
+  },
+  {
+   "id": "dados-literatura-cientifica",
+   "nome": "Literatura científica",
+   "faz": "busca estruturada, filtro por desenho de estudo e nível de evidência",
+   "fontes": [
+    "PubMed/MEDLINE",
+    "Cochrane Library",
+    "LILACS/BVS",
+    "OpenAlex"
+   ]
+  },
+  {
+   "id": "dados-teses-e-dissertacoes",
+   "nome": "Teses e dissertações",
+   "faz": "busca por programa, nota CAPES e orientador",
+   "fontes": [
+    "Catálogo de Teses e Dissertações da CAPES",
+    "BDTD/Ibict",
+    "Plataforma Sucupira"
+   ]
+  },
+  {
+   "id": "dados-indicadores-de-qualidade-hospitalar",
+   "nome": "Indicadores de qualidade hospitalar",
+   "faz": "mortalidade ajustada, reinternação, infecção, tempo de permanência",
+   "fontes": [
+    "Anvisa (IRAS)",
+    "ANS (QUALISS)",
+    "Proadi-SUS"
+   ]
+  },
+  {
+   "id": "dados-economia-da-saude",
+   "nome": "Economia da saúde",
+   "faz": "custo-efetividade, impacto orçamentário e precificação por valor",
+   "fontes": [
+    "Diretrizes Metodológicas do Ministério da Saúde",
+    "Conitec"
+   ]
+  },
+  {
+   "id": "dados-lgpd-e-dado-sensivel-de-saude",
+   "nome": "LGPD e dado sensível de saúde",
+   "faz": "base legal, anonimização, compartilhamento e incidente",
+   "fontes": [
+    "Lei 13.709/2018 (arts. 11 e 13)",
+    "ANPD"
+   ]
+  },
+  {
+   "id": "dados-ia-clinica-e-validacao-de-algoritmos",
+   "nome": "IA clínica e validação de algoritmos",
+   "faz": "acurácia, calibração, viés e regulação de software como dispositivo médico",
+   "fontes": [
+    "Anvisa RDC 657/2022 (software como dispositivo médico)",
+    "TRIPOD-AI",
+    "CONSORT-AI"
+   ]
+  }
+ ],
+ "artigos": [
+  {
+   "id": "acupuntura-01",
+   "especialidade": "acupuntura",
+   "ano": 2012,
+   "periodico": "Archives of Internal Medicine",
+   "estudo": "Acupuncture for chronic pain: individual patient data meta-analysis",
+   "primeiro_autor": "Vickers AJ",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "acupuntura-02",
+   "especialidade": "acupuntura",
+   "ano": 2007,
+   "periodico": "Archives of Internal Medicine",
+   "estudo": "GERAC: acupuntura na lombalgia crônica",
+   "primeiro_autor": "Haake M",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "alergia-01",
+   "especialidade": "alergia",
+   "ano": 2015,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "LEAP: amendoim precoce previne alergia",
+   "primeiro_autor": "Du Toit G",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "anestesio-01",
+   "especialidade": "anestesio",
+   "ano": 2009,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "Checklist de cirurgia segura da OMS",
+   "primeiro_autor": "Haynes AB",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "anestesio-02",
+   "especialidade": "anestesio",
+   "ano": 2004,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "IMPACT: prevenção de náusea e vômito pós-operatórios",
+   "primeiro_autor": "Apfel CC",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "angio-01",
+   "especialidade": "angio",
+   "ano": 2012,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "EINSTEIN-PE: rivaroxabana na embolia pulmonar",
+   "primeiro_autor": "Büller HR",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cardio-01",
+   "especialidade": "cardio",
+   "ano": 1994,
+   "periodico": "The Lancet",
+   "estudo": "4S: sinvastatina na prevenção secundária",
+   "primeiro_autor": "Scandinavian Simvastatin Survival Study Group",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cardio-02",
+   "especialidade": "cardio",
+   "ano": 1988,
+   "periodico": "The Lancet",
+   "estudo": "ISIS-2: estreptoquinase e aspirina no infarto",
+   "primeiro_autor": "ISIS-2 Collaborative Group",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cardio-03",
+   "especialidade": "cardio",
+   "ano": 2015,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "SPRINT: controle intensivo da pressão",
+   "primeiro_autor": "Wright JT",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cardio-04",
+   "especialidade": "cardio",
+   "ano": 2014,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "PARADIGM-HF: sacubitril-valsartana",
+   "primeiro_autor": "McMurray JJV",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cardio-05",
+   "especialidade": "cardio",
+   "ano": 2019,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "DAPA-HF: dapagliflozina na insuficiência cardíaca",
+   "primeiro_autor": "McMurray JJV",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cardio-06",
+   "especialidade": "cardio",
+   "ano": 2009,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "RE-LY: dabigatrana na fibrilação atrial",
+   "primeiro_autor": "Connolly SJ",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cardio-07",
+   "especialidade": "cardio",
+   "ano": 2015,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "BENEFIT: benznidazol na cardiopatia chagásica",
+   "primeiro_autor": "Morillo CA",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cardio-08",
+   "especialidade": "cardio",
+   "ano": 1999,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "RALES: espironolactona na insuficiência cardíaca",
+   "primeiro_autor": "Pitts B",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cir-cardio-01",
+   "especialidade": "cir-cardio",
+   "ano": 2009,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "SYNTAX: angioplastia versus cirurgia na doença multiarterial",
+   "primeiro_autor": "Serruys PW",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cir-cardio-02",
+   "especialidade": "cir-cardio",
+   "ano": 2016,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "STICHES: cirurgia na cardiomiopatia isquêmica",
+   "primeiro_autor": "Velazquez EJ",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cir-cabeca-01",
+   "especialidade": "cir-cabeca",
+   "ano": 1991,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "VA Laryngeal Cancer Study: preservação de laringe",
+   "primeiro_autor": "Department of Veterans Affairs Laryngeal Cancer Study Group",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cir-cabeca-02",
+   "especialidade": "cir-cabeca",
+   "ano": 2010,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "HPV e sobrevida no câncer de orofaringe",
+   "primeiro_autor": "Ang KK",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cir-digestivo-01",
+   "especialidade": "cir-digestivo",
+   "ano": 2006,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "MAGIC: quimioterapia perioperatória no câncer gástrico",
+   "primeiro_autor": "Cunningham D",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cir-digestivo-02",
+   "especialidade": "cir-digestivo",
+   "ano": 2012,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "Cirurgia bariátrica versus tratamento clínico no diabetes (STAMPEDE)",
+   "primeiro_autor": "Schauer PR",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cir-geral-01",
+   "especialidade": "cir-geral",
+   "ano": 2015,
+   "periodico": "JAMA",
+   "estudo": "APPAC: antibiótico versus apendicectomia",
+   "primeiro_autor": "Salminen P",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cir-geral-02",
+   "especialidade": "cir-geral",
+   "ano": 2020,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "CODA: antibiótico versus apendicectomia",
+   "primeiro_autor": "CODA Collaborative",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cir-onco-01",
+   "especialidade": "cir-onco",
+   "ano": 2006,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "MSLT-I: linfonodo sentinela no melanoma",
+   "primeiro_autor": "Morton DL",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cir-onco-02",
+   "especialidade": "cir-onco",
+   "ano": 2004,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "Quimiorradioterapia pré-operatória no câncer de reto",
+   "primeiro_autor": "Sauer R",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cir-toracica-01",
+   "especialidade": "cir-toracica",
+   "ano": 2011,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "NLST: rastreamento com tomografia de baixa dose",
+   "primeiro_autor": "National Lung Screening Trial Research Team",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cir-toracica-02",
+   "especialidade": "cir-toracica",
+   "ano": 2022,
+   "periodico": "The Lancet",
+   "estudo": "JCOG0802: segmentectomia versus lobectomia",
+   "primeiro_autor": "Saji H",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cir-vascular-01",
+   "especialidade": "cir-vascular",
+   "ano": 2004,
+   "periodico": "The Lancet",
+   "estudo": "EVAR trial 1: reparo endovascular do aneurisma",
+   "primeiro_autor": "EVAR trial participants",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "cir-vascular-02",
+   "especialidade": "cir-vascular",
+   "ano": 1991,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "NASCET: endarterectomia na estenose carotídea",
+   "primeiro_autor": "North American Symptomatic Carotid Endarterectomy Trial Collaborators",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "clinica-01",
+   "especialidade": "clinica",
+   "ano": 2001,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "Terapia precoce guiada por metas na sepse",
+   "primeiro_autor": "Rivers E",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "clinica-02",
+   "especialidade": "clinica",
+   "ano": 2014,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "ProCESS: protocolo na sepse",
+   "primeiro_autor": "ProCESS Investigators",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "colo-01",
+   "especialidade": "colo",
+   "ano": 1993,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "Minnesota: pesquisa de sangue oculto reduz mortalidade",
+   "primeiro_autor": "Mandel JS",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "colo-02",
+   "especialidade": "colo",
+   "ano": 1982,
+   "periodico": "British Journal of Surgery",
+   "estudo": "Excisão total do mesorreto",
+   "primeiro_autor": "Heald RJ",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "dermato-01",
+   "especialidade": "dermato",
+   "ano": 2017,
+   "periodico": "Nature",
+   "estudo": "Classificação de câncer de pele por rede neural em nível de dermatologista",
+   "primeiro_autor": "Esteva A",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "endocrino-01",
+   "especialidade": "endocrino",
+   "ano": 1993,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "DCCT: controle intensivo no diabetes tipo 1",
+   "primeiro_autor": "DCCT Research Group",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "endocrino-02",
+   "especialidade": "endocrino",
+   "ano": 1998,
+   "periodico": "The Lancet",
+   "estudo": "UKPDS 33: controle intensivo no diabetes tipo 2",
+   "primeiro_autor": "UK Prospective Diabetes Study Group",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "endocrino-03",
+   "especialidade": "endocrino",
+   "ano": 2002,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "DPP: estilo de vida e metformina previnem diabetes",
+   "primeiro_autor": "Knowler WC",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "endocrino-04",
+   "especialidade": "endocrino",
+   "ano": 2015,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "EMPA-REG OUTCOME: empagliflozina",
+   "primeiro_autor": "Zinman B",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "endocrino-05",
+   "especialidade": "endocrino",
+   "ano": 2021,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "STEP 1: semaglutida na obesidade",
+   "primeiro_autor": "Wilding JPH",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "endoscopia-01",
+   "especialidade": "endoscopia",
+   "ano": 2014,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "Taxa de detecção de adenoma e câncer de intervalo",
+   "primeiro_autor": "Corley DA",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "gastro-01",
+   "especialidade": "gastro",
+   "ano": 1984,
+   "periodico": "The Lancet",
+   "estudo": "Bactéria curva no estômago de pacientes com gastrite e úlcera",
+   "primeiro_autor": "Marshall BJ",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "gastro-02",
+   "especialidade": "gastro",
+   "ano": 2015,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "Sofosbuvir-velpatasvir na hepatite C",
+   "primeiro_autor": "Feld JJ",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "genetica-01",
+   "especialidade": "genetica",
+   "ano": 2015,
+   "periodico": "Genetics in Medicine",
+   "estudo": "Padrões ACMG/AMP para interpretação de variantes",
+   "primeiro_autor": "Richards S",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "genetica-02",
+   "especialidade": "genetica",
+   "ano": 2001,
+   "periodico": "Nature",
+   "estudo": "Sequência inicial do genoma humano",
+   "primeiro_autor": "International Human Genome Sequencing Consortium",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "geriatria-01",
+   "especialidade": "geriatria",
+   "ano": 2001,
+   "periodico": "Journal of Gerontology: Medical Sciences",
+   "estudo": "Fenótipo de fragilidade",
+   "primeiro_autor": "Fried LP",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "geriatria-02",
+   "especialidade": "geriatria",
+   "ano": 1999,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "HELP: prevenção de delirium",
+   "primeiro_autor": "Inouye SK",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "go-01",
+   "especialidade": "go",
+   "ano": 2017,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "ASPRE: aspirina previne pré-eclâmpsia",
+   "primeiro_autor": "Rolnik DL",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "go-02",
+   "especialidade": "go",
+   "ano": 2017,
+   "periodico": "The Lancet",
+   "estudo": "WOMAN: ácido tranexâmico na hemorragia pós-parto",
+   "primeiro_autor": "WOMAN Trial Collaborators",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "go-03",
+   "especialidade": "go",
+   "ano": 2000,
+   "periodico": "The Lancet",
+   "estudo": "Term Breech Trial",
+   "primeiro_autor": "Hannah ME",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "hemato-01",
+   "especialidade": "hemato",
+   "ano": 2001,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "Imatinibe na leucemia mieloide crônica",
+   "primeiro_autor": "Druker BJ",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "hemato-02",
+   "especialidade": "hemato",
+   "ano": 2017,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "ZUMA-1: CAR-T no linfoma",
+   "primeiro_autor": "Neelapu SS",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "homeopatia-01",
+   "especialidade": "homeopatia",
+   "ano": 2005,
+   "periodico": "The Lancet",
+   "estudo": "Efeitos clínicos da homeopatia comparados a placebo: metanálise",
+   "primeiro_autor": "Shang A",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "infecto-01",
+   "especialidade": "infecto",
+   "ano": 2011,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "HPTN 052: tratamento como prevenção do HIV",
+   "primeiro_autor": "Cohen MS",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "infecto-02",
+   "especialidade": "infecto",
+   "ano": 2016,
+   "periodico": "JAMA",
+   "estudo": "Sepsis-3: novas definições de sepse",
+   "primeiro_autor": "Singer M",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "infecto-03",
+   "especialidade": "infecto",
+   "ano": 2021,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "RECOVERY: dexametasona na COVID-19",
+   "primeiro_autor": "RECOVERY Collaborative Group",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "mastologia-01",
+   "especialidade": "mastologia",
+   "ano": 2002,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "NSABP B-06: 20 anos de cirurgia conservadora",
+   "primeiro_autor": "Fisher B",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "mastologia-02",
+   "especialidade": "mastologia",
+   "ano": 2011,
+   "periodico": "JAMA",
+   "estudo": "ACOSOG Z0011: dispensar esvaziamento axilar",
+   "primeiro_autor": "Giuliano AE",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "mastologia-03",
+   "especialidade": "mastologia",
+   "ano": 2005,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "Trastuzumabe adjuvante",
+   "primeiro_autor": "Romond EH",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "emergencia-01",
+   "especialidade": "emergencia",
+   "ano": 1995,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "NINDS: alteplase no AVC isquêmico",
+   "primeiro_autor": "NINDS rt-PA Stroke Study Group",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "emergencia-02",
+   "especialidade": "emergencia",
+   "ano": 2015,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "MR CLEAN: trombectomia no AVC",
+   "primeiro_autor": "Berkhemer OA",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "mfc-01",
+   "especialidade": "mfc",
+   "ano": 2005,
+   "periodico": "Milbank Quarterly",
+   "estudo": "Contribuição da atenção primária aos sistemas de saúde",
+   "primeiro_autor": "Starfield B",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "esporte-01",
+   "especialidade": "esporte",
+   "ano": 2018,
+   "periodico": "British Journal of Sports Medicine",
+   "estudo": "Consenso de Berlim sobre concussão no esporte",
+   "primeiro_autor": "McCrory P",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "intensiva-01",
+   "especialidade": "intensiva",
+   "ano": 2000,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "ARDSNet: baixo volume corrente na SDRA",
+   "primeiro_autor": "Acute Respiratory Distress Syndrome Network",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "intensiva-02",
+   "especialidade": "intensiva",
+   "ano": 2013,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "PROSEVA: posição prona na SDRA",
+   "primeiro_autor": "Guérin C",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "intensiva-03",
+   "especialidade": "intensiva",
+   "ano": 2009,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "NICE-SUGAR: controle glicêmico na UTI",
+   "primeiro_autor": "NICE-SUGAR Study Investigators",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "nuclear-01",
+   "especialidade": "nuclear",
+   "ano": 2021,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "VISION: lutécio-177-PSMA no câncer de próstata",
+   "primeiro_autor": "Sartor O",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "preventiva-01",
+   "especialidade": "preventiva",
+   "ano": 1954,
+   "periodico": "BMJ",
+   "estudo": "Mortalidade de médicos e tabagismo",
+   "primeiro_autor": "Doll R",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "preventiva-02",
+   "especialidade": "preventiva",
+   "ano": 2008,
+   "periodico": "BMJ",
+   "estudo": "GRADE: consenso sobre qualidade da evidência",
+   "primeiro_autor": "Guyatt GH",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "nefro-01",
+   "especialidade": "nefro",
+   "ano": 2020,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "DAPA-CKD: dapagliflozina na doença renal crônica",
+   "primeiro_autor": "Heerspink HJL",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "nefro-02",
+   "especialidade": "nefro",
+   "ano": 2019,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "CREDENCE: canagliflozina na nefropatia diabética",
+   "primeiro_autor": "Perkovic V",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "neurocirurgia-01",
+   "especialidade": "neurocirurgia",
+   "ano": 2002,
+   "periodico": "The Lancet",
+   "estudo": "ISAT: clipagem versus embolização de aneurismas",
+   "primeiro_autor": "Molyneux A",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "neurocirurgia-02",
+   "especialidade": "neurocirurgia",
+   "ano": 2016,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "RESCUEicp: craniectomia descompressiva",
+   "primeiro_autor": "Hutchinson PJ",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "neuro-01",
+   "especialidade": "neuro",
+   "ano": 2008,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "ECASS III: alteplase até 4,5 horas",
+   "primeiro_autor": "Hacke W",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "neuro-02",
+   "especialidade": "neuro",
+   "ano": 2018,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "DAWN: trombectomia de 6 a 24 horas",
+   "primeiro_autor": "Nogueira RG",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "oftalmo-01",
+   "especialidade": "oftalmo",
+   "ano": 2016,
+   "periodico": "JAMA",
+   "estudo": "Rede neural detecta retinopatia diabética em fotografias",
+   "primeiro_autor": "Gulshan V",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "oftalmo-02",
+   "especialidade": "oftalmo",
+   "ano": 2006,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "MARINA: ranibizumabe na degeneração macular",
+   "primeiro_autor": "Rosenfeld PJ",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "onco-01",
+   "especialidade": "onco",
+   "ano": 2018,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "KEYNOTE-189: pembrolizumabe no câncer de pulmão",
+   "primeiro_autor": "Gandhi L",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "onco-02",
+   "especialidade": "onco",
+   "ano": 2010,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "Ipilimumabe no melanoma metastático",
+   "primeiro_autor": "Hodi FS",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "onco-03",
+   "especialidade": "onco",
+   "ano": 2018,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "TAILORx: assinatura gênica e quimioterapia",
+   "primeiro_autor": "Sparano JA",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "orto-01",
+   "especialidade": "orto",
+   "ano": 2002,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "Artroscopia de joelho versus placebo na osteoartrite",
+   "primeiro_autor": "Moseley JB",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "patologia-01",
+   "especialidade": "patologia",
+   "ano": 2017,
+   "periodico": "JAMA",
+   "estudo": "CAMELYON16: algoritmos detectam metástase em linfonodo",
+   "primeiro_autor": "Ehteshami Bejnordi B",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "pediatria-01",
+   "especialidade": "pediatria",
+   "ano": 2012,
+   "periodico": "Pediatrics",
+   "estudo": "AAP: aleitamento materno e uso de leite humano",
+   "primeiro_autor": "American Academy of Pediatrics Section on Breastfeeding",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "pediatria-02",
+   "especialidade": "pediatria",
+   "ano": 2016,
+   "periodico": "The Lancet",
+   "estudo": "Aleitamento materno no século XXI",
+   "primeiro_autor": "Victora CG",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "pneumo-01",
+   "especialidade": "pneumo",
+   "ano": 2014,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "INPULSIS: nintedanibe na fibrose pulmonar",
+   "primeiro_autor": "Richeldi L",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "psiquiatria-01",
+   "especialidade": "psiquiatria",
+   "ano": 2006,
+   "periodico": "American Journal of Psychiatry",
+   "estudo": "STAR*D: tratamento sequencial da depressão",
+   "primeiro_autor": "Rush AJ",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "psiquiatria-02",
+   "especialidade": "psiquiatria",
+   "ano": 2018,
+   "periodico": "The Lancet",
+   "estudo": "Eficácia comparada de 21 antidepressivos: metanálise em rede",
+   "primeiro_autor": "Cipriani A",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "psiquiatria-03",
+   "especialidade": "psiquiatria",
+   "ano": 2005,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "CATIE: antipsicóticos na esquizofrenia",
+   "primeiro_autor": "Lieberman JA",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "radiologia-01",
+   "especialidade": "radiologia",
+   "ano": 2020,
+   "periodico": "Nature",
+   "estudo": "Avaliação internacional de IA no rastreamento de câncer de mama",
+   "primeiro_autor": "McKinney SM",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "radioterapia-01",
+   "especialidade": "radioterapia",
+   "ano": 2013,
+   "periodico": "The Lancet Oncology",
+   "estudo": "START: hipofracionamento no câncer de mama",
+   "primeiro_autor": "Haviland JS",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "reumato-01",
+   "especialidade": "reumato",
+   "ano": 2010,
+   "periodico": "Annals of the Rheumatic Diseases",
+   "estudo": "Critérios ACR/EULAR 2010 para artrite reumatoide",
+   "primeiro_autor": "Aletaha D",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "uro-01",
+   "especialidade": "uro",
+   "ano": 2016,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "ProtecT: vigilância, cirurgia ou radioterapia no câncer de próstata",
+   "primeiro_autor": "Hamdy FC",
+   "doi": null,
+   "conferido": false
+  },
+  {
+   "id": "uro-02",
+   "especialidade": "uro",
+   "ano": 2009,
+   "periodico": "New England Journal of Medicine",
+   "estudo": "ERSPC: rastreamento por PSA",
+   "primeiro_autor": "Schröder FH",
+   "doi": null,
+   "conferido": false
+  }
+ ],
+ "programas_doutorado": [
+  {
+   "universidade": "USP",
+   "programa": "Cardiologia (FMUSP / InCor)",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"USP\", programa \"Cardiologia (FMUSP / InCor)\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "USP",
+   "programa": "Ciências Médicas (FMUSP)",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"USP\", programa \"Ciências Médicas (FMUSP)\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "USP",
+   "programa": "Oncologia (FMUSP)",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"USP\", programa \"Oncologia (FMUSP)\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "USP",
+   "programa": "Fisiopatologia Experimental (FMUSP)",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"USP\", programa \"Fisiopatologia Experimental (FMUSP)\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "USP",
+   "programa": "Psiquiatria (FMUSP)",
+   "area_capes": "Medicina II",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"USP\", programa \"Psiquiatria (FMUSP)\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "USP",
+   "programa": "Patologia (FMUSP)",
+   "area_capes": "Medicina II",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"USP\", programa \"Patologia (FMUSP)\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "USP",
+   "programa": "Clínica Médica (FMRP-USP)",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"USP\", programa \"Clínica Médica (FMRP-USP)\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "USP",
+   "programa": "Neurologia (FMRP-USP)",
+   "area_capes": "Medicina II",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"USP\", programa \"Neurologia (FMRP-USP)\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "USP",
+   "programa": "Saúde Pública (FSP-USP)",
+   "area_capes": "Saúde Coletiva",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"USP\", programa \"Saúde Pública (FSP-USP)\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "Unifesp",
+   "programa": "Medicina (Cardiologia)",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"Unifesp\", programa \"Medicina (Cardiologia)\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "Unifesp",
+   "programa": "Psiquiatria e Psicologia Médica",
+   "area_capes": "Medicina II",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"Unifesp\", programa \"Psiquiatria e Psicologia Médica\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "Unifesp",
+   "programa": "Infectologia",
+   "area_capes": "Medicina II",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"Unifesp\", programa \"Infectologia\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "Unifesp",
+   "programa": "Oftalmologia e Ciências Visuais",
+   "area_capes": "Medicina III",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"Unifesp\", programa \"Oftalmologia e Ciências Visuais\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "Unicamp",
+   "programa": "Clínica Médica",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"Unicamp\", programa \"Clínica Médica\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "Unicamp",
+   "programa": "Ciências Médicas",
+   "area_capes": "Medicina II",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"Unicamp\", programa \"Ciências Médicas\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "UFRGS",
+   "programa": "Cardiologia e Ciências Cardiovasculares",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"UFRGS\", programa \"Cardiologia e Ciências Cardiovasculares\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "UFRGS",
+   "programa": "Endocrinologia",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"UFRGS\", programa \"Endocrinologia\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "UFRGS",
+   "programa": "Ciências Médicas: Endocrinologia, Metabologia e Nutrição",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"UFRGS\", programa \"Ciências Médicas: Endocrinologia, Metabologia e Nutrição\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "UFRGS",
+   "programa": "Psiquiatria e Ciências do Comportamento",
+   "area_capes": "Medicina II",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"UFRGS\", programa \"Psiquiatria e Ciências do Comportamento\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "UFRGS",
+   "programa": "Epidemiologia",
+   "area_capes": "Saúde Coletiva",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"UFRGS\", programa \"Epidemiologia\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "UFPel",
+   "programa": "Epidemiologia",
+   "area_capes": "Saúde Coletiva",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"UFPel\", programa \"Epidemiologia\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "UFMG",
+   "programa": "Ciências da Saúde: Infectologia e Medicina Tropical",
+   "area_capes": "Medicina II",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"UFMG\", programa \"Ciências da Saúde: Infectologia e Medicina Tropical\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "UFMG",
+   "programa": "Ciências Aplicadas à Saúde do Adulto",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"UFMG\", programa \"Ciências Aplicadas à Saúde do Adulto\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "UFRJ",
+   "programa": "Clínica Médica",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"UFRJ\", programa \"Clínica Médica\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "UFRJ",
+   "programa": "Medicina (Cardiologia)",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"UFRJ\", programa \"Medicina (Cardiologia)\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "Fiocruz",
+   "programa": "Medicina Tropical (IOC)",
+   "area_capes": "Medicina II",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"Fiocruz\", programa \"Medicina Tropical (IOC)\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "Fiocruz",
+   "programa": "Epidemiologia em Saúde Pública (ENSP)",
+   "area_capes": "Saúde Coletiva",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"Fiocruz\", programa \"Epidemiologia em Saúde Pública (ENSP)\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "UFBA",
+   "programa": "Saúde Coletiva (ISC)",
+   "area_capes": "Saúde Coletiva",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"UFBA\", programa \"Saúde Coletiva (ISC)\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "UFC",
+   "programa": "Ciências Médicas",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"UFC\", programa \"Ciências Médicas\", nível doutorado, ordenar por ano"
+  },
+  {
+   "universidade": "UnB",
+   "programa": "Ciências Médicas",
+   "area_capes": "Medicina I",
+   "nota_capes": "a conferir na Plataforma Sucupira",
+   "busca_teses": "Catálogo de Teses da CAPES: instituição \"UnB\", programa \"Ciências Médicas\", nível doutorado, ordenar por ano"
+  }
+ ],
+ "buscas_acervo": [
+  {
+   "especialidade": "acupuntura",
+   "vagas_restantes": 8,
+   "pubmed": "\"Acupuncture Therapy\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "alergia",
+   "vagas_restantes": 9,
+   "pubmed": "\"Allergy and Immunology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "anestesio",
+   "vagas_restantes": 8,
+   "pubmed": "\"Anesthesiology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "angio",
+   "vagas_restantes": 9,
+   "pubmed": "\"Vascular Diseases\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "cardio",
+   "vagas_restantes": 2,
+   "pubmed": "\"Cardiology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "cir-cardio",
+   "vagas_restantes": 8,
+   "pubmed": "\"Cardiac Surgical Procedures\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "cir-mao",
+   "vagas_restantes": 10,
+   "pubmed": "\"Hand\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "cir-cabeca",
+   "vagas_restantes": 8,
+   "pubmed": "\"Head and Neck Neoplasms\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "cir-digestivo",
+   "vagas_restantes": 8,
+   "pubmed": "\"Digestive System Surgical Procedures\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "cir-geral",
+   "vagas_restantes": 8,
+   "pubmed": "\"General Surgery\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "cir-onco",
+   "vagas_restantes": 8,
+   "pubmed": "\"Surgical Oncology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "cir-ped",
+   "vagas_restantes": 10,
+   "pubmed": "\"Pediatrics\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "cir-plastica",
+   "vagas_restantes": 10,
+   "pubmed": "\"Surgery, Plastic\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "cir-toracica",
+   "vagas_restantes": 8,
+   "pubmed": "\"Thoracic Surgical Procedures\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "cir-vascular",
+   "vagas_restantes": 8,
+   "pubmed": "\"Vascular Surgical Procedures\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "clinica",
+   "vagas_restantes": 8,
+   "pubmed": "\"Internal Medicine\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "colo",
+   "vagas_restantes": 8,
+   "pubmed": "\"Colorectal Surgery\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "dermato",
+   "vagas_restantes": 9,
+   "pubmed": "\"Dermatology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "endocrino",
+   "vagas_restantes": 5,
+   "pubmed": "\"Endocrinology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "endoscopia",
+   "vagas_restantes": 9,
+   "pubmed": "\"Endoscopy, Gastrointestinal\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "gastro",
+   "vagas_restantes": 8,
+   "pubmed": "\"Gastroenterology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "genetica",
+   "vagas_restantes": 8,
+   "pubmed": "\"Genetics, Medical\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "geriatria",
+   "vagas_restantes": 8,
+   "pubmed": "\"Geriatrics\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "go",
+   "vagas_restantes": 7,
+   "pubmed": "\"Obstetrics\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "hemato",
+   "vagas_restantes": 8,
+   "pubmed": "\"Hematology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "homeopatia",
+   "vagas_restantes": 9,
+   "pubmed": "\"Homeopathy\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "infecto",
+   "vagas_restantes": 7,
+   "pubmed": "\"Communicable Diseases\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "mastologia",
+   "vagas_restantes": 7,
+   "pubmed": "\"Breast Neoplasms\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "emergencia",
+   "vagas_restantes": 8,
+   "pubmed": "\"Emergency Medicine\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "mfc",
+   "vagas_restantes": 9,
+   "pubmed": "\"Family Practice\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "trabalho",
+   "vagas_restantes": 10,
+   "pubmed": "\"Occupational Medicine\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "trafego",
+   "vagas_restantes": 10,
+   "pubmed": "\"Accidents, Traffic\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "esporte",
+   "vagas_restantes": 9,
+   "pubmed": "\"Sports Medicine\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "fisiatria",
+   "vagas_restantes": 10,
+   "pubmed": "\"Physical and Rehabilitation Medicine\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "intensiva",
+   "vagas_restantes": 7,
+   "pubmed": "\"Critical Care\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "legal",
+   "vagas_restantes": 10,
+   "pubmed": "\"Forensic Medicine\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "nuclear",
+   "vagas_restantes": 9,
+   "pubmed": "\"Nuclear Medicine\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "preventiva",
+   "vagas_restantes": 8,
+   "pubmed": "\"Preventive Medicine\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "nefro",
+   "vagas_restantes": 8,
+   "pubmed": "\"Nephrology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "neurocirurgia",
+   "vagas_restantes": 8,
+   "pubmed": "\"Neurosurgery\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "neuro",
+   "vagas_restantes": 8,
+   "pubmed": "\"Neurology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "nutrologia",
+   "vagas_restantes": 10,
+   "pubmed": "\"Nutrition Therapy\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "oftalmo",
+   "vagas_restantes": 8,
+   "pubmed": "\"Ophthalmology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "onco",
+   "vagas_restantes": 7,
+   "pubmed": "\"Medical Oncology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "orto",
+   "vagas_restantes": 9,
+   "pubmed": "\"Orthopedics\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "otorrino",
+   "vagas_restantes": 10,
+   "pubmed": "\"Otolaryngology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "patologia",
+   "vagas_restantes": 9,
+   "pubmed": "\"Pathology, Surgical\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "lab",
+   "vagas_restantes": 10,
+   "pubmed": "\"Clinical Laboratory Techniques\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "pediatria",
+   "vagas_restantes": 8,
+   "pubmed": "\"Pediatrics\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "pneumo",
+   "vagas_restantes": 9,
+   "pubmed": "\"Pulmonary Medicine\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "psiquiatria",
+   "vagas_restantes": 7,
+   "pubmed": "\"Psychiatry\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "radiologia",
+   "vagas_restantes": 9,
+   "pubmed": "\"Radiology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "radioterapia",
+   "vagas_restantes": 9,
+   "pubmed": "\"Radiation Oncology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "reumato",
+   "vagas_restantes": 9,
+   "pubmed": "\"Rheumatology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  },
+  {
+   "especialidade": "uro",
+   "vagas_restantes": 8,
+   "pubmed": "\"Urology\"[MeSH] AND (randomized controlled trial[pt] OR meta-analysis[pt] OR practice guideline[pt])",
+   "ordem": "mais citados (OpenAlex cited_by_count), depois o mais recente"
+  }
+ ],
+ "medicao": {
+  "especialidades": {
+   "feito": 55,
+   "meta": 55
+  },
+  "modulos_de_residencia": {
+   "feito": 328,
+   "meta": null
+  },
+  "materias_da_graduacao": {
+   "feito": 24,
+   "meta": null
+  },
+  "escolas_mundo_qs": {
+   "feito": 100,
+   "meta": 100,
+   "conferido": true
+  },
+  "escolas_brasil": {
+   "feito": 50,
+   "meta": 50,
+   "conferido": false
+  },
+  "skills_dados_mercado": {
+   "feito": 20,
+   "meta": 20
+  },
+  "consultores_com_prompt": {
+   "feito": 427,
+   "meta": 427
+  },
+  "prompts_na_corrente": {
+   "feito": 427,
+   "meta": 427
+  },
+  "artigos_de_referencia": {
+   "feito": 91,
+   "meta": 500,
+   "conferidos_com_doi": 0
+  },
+  "programas_de_doutorado": {
+   "feito": 30,
+   "meta": null,
+   "nota_conferida": 0
+  },
+  "teses_catalogadas": {
+   "feito": 0,
+   "meta": 165
+  }
+ },
+ "sha256": "f4fca3a05bb50b01b881a37a53cd3bf3e0c58b8839fd9a97fb14b591d5321dcf"
+}

@@ -8,7 +8,7 @@ import { formatarData, hojeLocal } from '@/lib/datas'
 import { ETAPAS, ORIGENS, MOTIVOS_PERDA, resumoFunil, proximaEtapa, validarMudanca, telefoneWhatsapp, mensagemRetorno, casoDoLead, rotuloEtapa, type Lead, type Etapa } from '@/lib/escritorio/funil'
 import { tabelaAusente } from '@/lib/escritorio/tabelaAusente'
 import { Filter, Plus, MessageCircle, ArrowRight, Trash2 } from 'lucide-react'
-import { meuAlcance, filtrarPorHierarquia, rotuloCargo } from '@/lib/hierarquia'
+import { meuAlcance, filtrarPorHierarquia, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // Funil de vendas do escritório: do primeiro contato ao contrato fechado, que vira caso com honorário no financeiro.
 const AREAS = ['Imobiliário', 'Cível', 'Trabalhista', 'Família e sucessões', 'Tributário', 'Empresarial', 'Consumidor', 'Previdenciário', 'Penal', 'Compliance']
@@ -21,7 +21,9 @@ export default function FunilVendasPage() {
   const [todosLeads, setLeads] = useState<Lead[]>([])
   // Hierarquia: sócios e gestor veem o funil inteiro; os demais, os seus contatos (e os sem responsável, para alguém assumir).
   const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
-  const leads = useMemo(() => (alcance && !alcance.veTudo ? filtrarPorHierarquia(todosLeads, alcance) : todosLeads), [todosLeads, alcance])
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza.
+  const alc = alcance ?? ALCANCE_FECHADO
+  const leads = useMemo(() => (alc.veTudo ? todosLeads : filtrarPorHierarquia(todosLeads, alc)), [todosLeads, alc])
   const [pessoas, setPessoas] = useState<Pessoa[]>([])
   const [novo, setNovo] = useState(VAZIO)
   const [erro, setErro] = useState('')
@@ -38,7 +40,7 @@ export default function FunilVendasPage() {
   }
   useEffect(() => {
     carregar(); listarPessoas().then(setPessoas).catch(() => {})
-    meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true }))
+    meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO))
   }, [])
 
   const resumo = useMemo(() => resumoFunil(leads), [leads])
@@ -131,7 +133,7 @@ export default function FunilVendasPage() {
             <select aria-label="Área do caso" title="Define a área do direito do caso deste contato" value={novo.area} onChange={e => setNovo({ ...novo, area: e.target.value })} className="border px-2 py-2">{AREAS.map(a => <option key={a}>{a}</option>)}</select>
             <input aria-label="Assunto" placeholder="Assunto (ex.: despejo)" value={novo.assunto} onChange={e => setNovo({ ...novo, assunto: e.target.value })} className="border px-3 py-2 sm:col-span-3" data-testid="lead-assunto" />
             <input aria-label="Honorários estimados (R$)" placeholder="Honorários estimados (R$)" inputMode="decimal" value={novo.valor_estimado} onChange={e => setNovo({ ...novo, valor_estimado: e.target.value })} className="border px-3 py-2 sm:col-span-2" data-testid="lead-valor" />
-            <label className="sm:col-span-2 text-xs text-grafite">Próximo contato<input type="date" value={novo.proximo_contato} onChange={e => setNovo({ ...novo, proximo_contato: e.target.value })} className="border px-3 py-2 w-full text-sm" data-testid="lead-proximo" /></label>
+            <label className="sm:col-span-2 text-xs text-grafite">Próximo contato<input type="date" title="Quando você vai falar com esta pessoa de novo. A plataforma cobra você quando a data chegar." value={novo.proximo_contato} onChange={e => setNovo({ ...novo, proximo_contato: e.target.value })} className="border px-3 py-2 w-full text-sm" data-testid="lead-proximo" /></label>
             <select aria-label="Responsável" title="Define quem da equipe cuida deste contato" value={novo.responsavel_id} onChange={e => setNovo({ ...novo, responsavel_id: e.target.value })} className="border px-2 py-2 sm:col-span-2"><option value="">Responsável</option>{pessoas.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}</select>
             <input aria-label="Observações" placeholder="Observações" value={novo.observacoes} onChange={e => setNovo({ ...novo, observacoes: e.target.value })} className="border px-3 py-2 sm:col-span-4" />
             <button type="button" onClick={criar} data-testid="lead-criar" title="Grava este contato na primeira etapa do funil de vendas" className="min-h-[44px] bg-navy text-white px-5 uppercase tracking-wider sm:col-span-2">Incluir no funil</button>

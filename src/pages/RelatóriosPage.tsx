@@ -12,7 +12,7 @@ import type { Periodicidade } from '@/lib/dominio'
 import { porCliente, porSocio, csvClientesSocios, type HoraLancada, type CasoHonorario, type PessoaNome } from '@/lib/relatorioClientes'
 import { listarPessoas } from '@/lib/equipe'
 import { mensagemAmigavel } from '@/lib/erros'
-import { meuAlcance, podeVer, rotuloCargo } from '@/lib/hierarquia'
+import { meuAlcance, podeVer, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 type Periodo = 30 | 90 | 365
 
@@ -68,7 +68,7 @@ export default function RelatóriosPage() {
   // Hierarquia: sócios e gestor veem os números do escritório inteiro; os demais, só o que é deles.
   const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
   useEffect(() => {
-    meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true }))
+    meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO))
   }, [])
   useEffect(() => {
     if (!supabaseConfigurado) return
@@ -77,9 +77,10 @@ export default function RelatóriosPage() {
     q<CasoHonorario>(() => supabase.from('tarefas').select('cliente,responsavel_id,honorario_previsto,honorario_recebido').eq('nivel', 'projeto')).then(setCasosHon)
     listarPessoas().then(ps => setPessoas(ps.map(p => ({ id: p.id, nome: p.nome, email: p.email })))).catch(() => setPessoas([]))
   }, [])
-  const restrito = !!alcance && !alcance.veTudo
-  const horasVisiveis = restrito ? horasLanc.filter(h => !h.usuario_id || h.usuario_id === alcance!.id) : horasLanc
-  const casosVisiveis = restrito ? casosHon.filter(c => podeVer(alcance!, c.responsavel_id ?? null)) : casosHon
+  const alc = alcance ?? ALCANCE_FECHADO
+  const restrito = !alc.veTudo
+  const horasVisiveis = restrito ? horasLanc.filter(h => !h.usuario_id || h.usuario_id === alc.id) : horasLanc
+  const casosVisiveis = restrito ? casosHon.filter(c => podeVer(alc, c.responsavel_id ?? null)) : casosHon
   const clientes = porCliente(horasVisiveis, casosVisiveis)
   const socios = porSocio(horasVisiveis, casosVisiveis, pessoas)
 
@@ -212,7 +213,7 @@ export default function RelatóriosPage() {
 
         <section className="bg-white p-5 shadow-sm border-t-2 border-dourado" data-testid="relatorio-mensal" aria-labelledby="t-mensal">
           <h2 id="t-mensal" className="text-lg">Relatório mensal automático</h2>
-          <p className="text-sm text-grafite mt-1">No dia 1 de cada mês, às 8h, a plataforma gera o relatório do mês anterior em PDF (contratos, imóveis, casos, horas, honorários, intimações, assinaturas, compliance e IA) e envia por e-mail à sócia. {ultimo ? `Último enviado: ${ultimo.mes.slice(5, 7)}/${ultimo.mes.slice(0, 4)}${ultimo.enviado_em ? ` em ${new Date(ultimo.enviado_em).toLocaleDateString('pt-BR')} a ${ultimo.destinatarios} pessoa(s)` : ''}.` : 'O primeiro vai no próximo dia 1.'}</p>
+          <p className="text-sm text-grafite mt-1">No dia 1 de cada mês, às 8h, a plataforma gera o relatório do mês anterior em PDF (contratos, imóveis, casos, horas, honorários, intimações, assinaturas, compliance e IA) e envia por e-mail à sócia. {ultimo?.mes ? `Último enviado: ${ultimo.mes.slice(5, 7)}/${ultimo.mes.slice(0, 4)}${ultimo.enviado_em ? ` em ${new Date(ultimo.enviado_em).toLocaleDateString('pt-BR')} a ${ultimo.destinatarios} pessoa(s)` : ''}.` : 'O primeiro vai no próximo dia 1.'}</p>
           <div className="flex flex-wrap gap-2 mt-3">
             <button type="button" onClick={testarMensal} disabled={ocupado} data-testid="testar-mensal" title="Gera o relatório mensal em PDF agora e envia só para o seu e-mail, como teste" className="min-h-[44px] px-4 text-sm bg-navy text-white disabled:opacity-60">Enviar-me o relatório agora (teste)</button>
             <button type="button" onClick={baixarMensal} disabled={ocupado} data-testid="baixar-mensal" title="Gera o relatório mensal em PDF e baixa o arquivo neste computador, sem enviar e-mail" className="min-h-[44px] px-4 text-sm border border-navy text-navy disabled:opacity-60">Baixar o PDF deste mês</button>
@@ -240,7 +241,7 @@ export default function RelatóriosPage() {
               Compromissos por natureza
             </h2>
             {porTipoAlerta.length === 0 ? (
-              <Vazio titulo="Nenhum compromisso neste horizonte" texto="Escolha um horizonte maior ou cadastre prazos nos contratos." />
+              <Vazio titulo="Nenhum compromisso neste horizonte" texto="Nenhum vencimento cai dentro do período escolhido. Escolha um horizonte maior, ou cadastre as datas nos contratos." acao={{ rotulo: 'Ver os contratos', para: '/imoveis', dica: 'Abre a carteira de imóveis para conferir e cadastrar as datas dos contratos' }} />
             ) : (
               <div className="space-y-3">
                 {porTipoAlerta.map(([tipo, n]) => (
@@ -283,12 +284,12 @@ export default function RelatóriosPage() {
             <h2 id="t-clientes" className="text-lg mb-2">Por cliente e por sócio</h2>
             {restrito && (
               <p className="border-l-2 border-dourado bg-pergaminho/50 p-2 text-xs mb-3" data-testid="relatorios-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
-                Você está vendo <strong>as suas horas e os seus casos</strong> ({rotuloCargo[alcance!.cargo ?? 'nenhum']}). Sócios e o gestor veem o escritório inteiro.
+                Você está vendo <strong>as suas horas e os seus casos</strong> ({rotuloCargo[alc.cargo ?? 'nenhum']}). Sócios e o gestor veem o escritório inteiro.
               </p>
             )}
             <p className="text-sm text-grafite-claro mb-4">Horas lançadas (tela Horas) e honorários dos casos (tela Honorários), consolidados. Rentabilidade do cliente = recebido menos o custo das horas.</p>
             {clientes.length === 0 && socios.length === 0 ? (
-              <p className="text-sm text-grafite-claro">Nada lançado ainda. Lance horas em Horas e honorários em Honorários; esta tabela se monta sozinha.</p>
+              <p className="text-sm text-grafite-claro">Nada lançado ainda. Lance as horas em Horas trabalhadas e os valores em Honorários; esta tabela se monta sozinha.</p>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="overflow-x-auto">

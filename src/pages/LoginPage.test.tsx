@@ -110,15 +110,16 @@ describe('Tela de login', () => {
     expect((await screen.findByRole('alert')).textContent).toContain('Muitas contas criadas em pouco tempo')
   }, 15000)
 
-  it('sem banco (demonstração) entra com as credenciais de exemplo e recusa outras', async () => {
+  it('sem banco (modo demonstração) bloqueia a entrada — ninguém sem senha real passa', async () => {
+    // M em 13/11/2026: "Não deixe ninguém sem senha acessar nada."
     configurado = false
     Object.defineProperty(window, 'location', { value: { ...window.location, reload: vi.fn() }, writable: true })
     montar()
     expect(screen.queryByText('Criar conta')).toBeNull()
-    preencher('x@y.com', 'errada'); fireEvent.click(screen.getByText('Entrar'))
-    expect((await screen.findByRole('alert')).textContent).toBe('E-mail ou senha incorretos.')
     preencher('admin@exemplo.com', 'senha123'); fireEvent.click(screen.getByText('Entrar'))
-    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/inicio'))
+    expect((await screen.findByRole('alert')).textContent).toContain('não está configurada')
+    expect(screen.queryByTestId('onde')).toBeNull()
     expect(signInWithPassword).not.toHaveBeenCalled()
+    expect(entrarDemo).not.toHaveBeenCalled()
   })
 })

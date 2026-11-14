@@ -55,8 +55,8 @@ export default function BotaoExportar() {
             <div key={i} className="px-4 py-2 border-b border-navy/10 last:border-0">
               <p className="text-sm text-navy">{g.titulo} <span className="text-xs text-grafite-claro">· {g.linhas.length} linha(s)</span></p>
               <div className="flex gap-2 mt-1">
-                <button role="menuitem" type="button" onClick={() => exportar(i, 'csv')} data-testid="exportar-csv" className="min-h-[44px] px-3 border border-navy/20 text-sm hover:border-dourado">Excel (CSV)</button>
-                <button role="menuitem" type="button" onClick={() => exportar(i, 'pdf')} data-testid="exportar-pdf" className="min-h-[44px] px-3 border border-navy/20 text-sm hover:border-dourado">PDF</button>
+                <button title="Baixa esta tabela em planilha, para abrir no Excel" role="menuitem" type="button" onClick={() => exportar(i, 'csv')} data-testid="exportar-csv" className="min-h-[44px] px-3 border border-navy/20 text-sm hover:border-dourado">Excel (CSV)</button>
+                <button title="Baixa esta tabela em PDF, pronta para imprimir ou anexar" role="menuitem" type="button" onClick={() => exportar(i, 'pdf')} data-testid="exportar-pdf" className="min-h-[44px] px-3 border border-navy/20 text-sm hover:border-dourado">PDF</button>
               </div>
             </div>
           ))}

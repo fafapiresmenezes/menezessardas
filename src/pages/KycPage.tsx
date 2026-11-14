@@ -5,7 +5,8 @@ import Vazio from '@/components/Vazio'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { UserCheck, History, RefreshCw } from 'lucide-react'
-import { meuAlcance, filtrarPorUsuario } from '@/lib/hierarquia'
+import { meuAlcance, filtrarPorUsuario, ALCANCE_FECHADO } from '@/lib/hierarquia'
+import { irParaCampo } from '@/lib/foco'
 
 type Certidao = { emissor: string; cadastro: string; situacao: string; descricao: string }
 type Resultado = {
@@ -37,13 +38,15 @@ export default function KycPage() {
   const [todoHistorico, setTodoHistorico] = useState<Historico[]>([])
   const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
   // Privacidade (pedido do M, 12/11/2026): cada advogado só vê as próprias checagens; sócios e gestor veem todas.
-  const historico = alcance && !alcance.veTudo ? filtrarPorUsuario(todoHistorico, alcance) : todoHistorico
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza.
+  const alc = alcance ?? ALCANCE_FECHADO
+  const historico = alc.veTudo ? todoHistorico : filtrarPorUsuario(todoHistorico, alc)
   const [msgRecon, setMsgRecon] = useState('')
   const carregarHistorico = () => supabase.from('checagens_kyc').select('id,cnpj,nome,risco,alertas,consultado_em,automatica,risco_anterior,mudou,usuario_id').order('consultado_em', { ascending: false }).limit(50)
     .then(({ data }) => setTodoHistorico((data ?? []) as Historico[]))
   useEffect(() => {
     carregarHistorico()
-    meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true }))
+    meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO))
   }, [])
   const reconsultar = async () => {
     setMsgRecon('Reconsultando as contrapartes já checadas…')
@@ -143,7 +146,7 @@ export default function KycPage() {
           <p className="text-sm text-grafite-claro mt-1">Cada checagem fica guardada com data e resultado. O robô reconsulta cada contraparte 90 dias depois da última checagem e avisa em Alertas quando o status muda.</p>
           {msgRecon && <p role="status" className="text-sm mt-2" data-testid="kyc-msg-recon">{msgRecon}</p>}
           {historico.length > 0 && <input value={buscaHist} onChange={e => setBuscaHist(e.target.value)} placeholder="Procurar no histórico (nome ou CNPJ)" aria-label="Procurar no histórico" data-testid="kyc-busca" className="mt-3 border px-3 py-2 min-h-[44px] w-full max-w-md" />}
-          {historico.length === 0 ? <Vazio testid="kyc-historico-vazio" titulo="Nenhuma checagem guardada ainda" texto="Digite um CPF ou CNPJ acima e clique em Checar: o resultado fica guardado aqui com data." /> : (
+          {historico.length === 0 ? <Vazio testid="kyc-historico-vazio" titulo="Nenhuma checagem guardada ainda" texto="Escreva o CPF ou o CNPJ da contraparte e clique em Checar: o resultado fica guardado aqui, com data e risco." acao={{ rotulo: 'Fazer a primeira checagem', onClick: () => irParaCampo('[data-testid="kyc-busca"]'), dica: 'Leva o cursor ao campo onde se escreve o CPF ou o CNPJ a checar' }} /> : (
             <table className="w-full text-sm mt-3">
               <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite-claro"><th className="py-1">Data</th><th>Contraparte</th><th>Risco</th><th>Próxima reconsulta</th></tr></thead>
               <tbody className="divide-y divide-navy/10">

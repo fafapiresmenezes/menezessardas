@@ -8,6 +8,8 @@ import Marca from './Marca'
 import { ehSede } from '@/lib/equipe'
 import Busca from './Busca'
 import BoasVindas from './BoasVindas'
+import ParametrizarPlataforma from './ParametrizarPlataforma'
+import Ajudante from './Ajudante'
 import TourTela from './TourTela'
 import PerguntarTela from './PerguntarTela'
 import SinoNotificacoes from './SinoNotificacoes'
@@ -19,14 +21,14 @@ import ExigirDoisFatores from './ExigirDoisFatores'
 import AceiteContratoSaas from './AceiteContratoSaas'
 import AceiteTermos from './AceiteTermos'
 import { aplicarTema, temaAtual } from '@/lib/tema'
-import { NOME_PLATAFORMA } from '@/lib/plataforma'
+import { NOME_PLATAFORMA, NOME_INSTITUTO_COMPLETO } from '@/lib/plataforma'
 import { listarPessoas, perfilAtual, meuEscritorio, esquecerEscritorio, type MeuEscritorio } from '@/lib/equipe'
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
-import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal, AppWindow } from 'lucide-react'
-import { gruposMenu, gruposVisiveis, atalhosDoMenu, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao } from './menuTelas'
-import { meuAlcance } from '@/lib/hierarquia'
+import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal, Compass, LayoutGrid, AppWindow } from 'lucide-react'
+import { gruposMenu, gruposVisiveis, atalhosDoMenu, frenteDe, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao } from './menuTelas'
+import { meuAlcance, ALCANCE_FECHADO } from '@/lib/hierarquia'
 import { lerMeuJeito, carregarMeuJeito, esquecerMeuJeito, aplicarLetra, EVENTO_JEITO, type MeuJeito } from '@/lib/meuJeito'
 
 interface LayoutProps {
@@ -86,6 +88,8 @@ export default function Layout({ children, title }: LayoutProps) {
   const { pathname } = useLocation()
   const visao: Visao = { veTudo, admin, instituto: escritorio?.instituto === true, sede }
   const gruposDaPessoa = gruposVisiveis(visao)
+  // Cada frente do Instituto é uma plataforma à parte: dentro dela, o menu do direito some.
+  const frente = frenteDe(pathname)
   const meusAtalhos = atalhosDoMenu(jeito.atalhos, visao)
   // Com o menu recolhido só há o ícone, então a dica começa pelo nome da tela.
   const dicaDe = (item: { href: string; label: string }) =>
@@ -119,12 +123,21 @@ export default function Layout({ children, title }: LayoutProps) {
   // conferidos ao abrir e a cada 30 minutos enquanto a tela estiver aberta.
   useEffect(() => {
     if (!supabaseConfigurado) return
+    // Privacidade por advogado: o aviso no celular é do caso de quem está logado. Intimação de processo
+    // que ainda não é caso de ninguém avisa todo mundo, para ninguém perder prazo. Compromissos do
+    // calendário são da locação e do escritório inteiro, e por isso seguem sem filtro.
     const conferir = () => verificarAvisosCriticos(async () => {
-      const [i, c] = await Promise.all([
+      const [i, c, casos, alc] = await Promise.all([
         supabase.from('intimacoes').select('id,lida,prazo_final,tribunal,numero_processo,tipo').eq('lida', false).not('prazo_final', 'is', null).lte('prazo_final', emDias(2)).limit(50),
         supabase.from('compromissos').select('id,titulo,data_evento').eq('data_evento', emDias(0)).limit(20),
+        Promise.resolve(supabase.from('tarefas').select('numero_processo,responsavel_id').eq('nivel', 'projeto')).then(r => (r.data ?? []) as { numero_processo: string | null; responsavel_id: string | null }[], () => []),
+        meuAlcance().catch(() => ALCANCE_FECHADO),
       ])
-      return { intimacoes: i.data ?? [], compromissos: c.data ?? [] }
+      const so = (n: string | null | undefined) => String(n ?? '').replace(/\D/g, '')
+      const meus = new Set(casos.filter(t => t.responsavel_id === alc.id).map(t => so(t.numero_processo)))
+      const comDono = new Set(casos.filter(t => t.responsavel_id).map(t => so(t.numero_processo)))
+      const visivel = (n: string | null | undefined) => alc.veTudo || !comDono.has(so(n)) || meus.has(so(n))
+      return { intimacoes: (i.data ?? []).filter(x => visivel((x as { numero_processo: string | null }).numero_processo)), compromissos: c.data ?? [] }
     }).catch(() => undefined)
     conferir()
     const t = setInterval(conferir, 30 * 60 * 1000)
@@ -188,7 +201,45 @@ export default function Layout({ children, title }: LayoutProps) {
         </div>
 
         <nav className="flex-1 overflow-y-auto" aria-label="Menu principal">
-          {simples && (
+          {frente && (
+            <ul className="px-3 pt-3 space-y-1" data-testid="menu-frente" data-frente={frente.id}>
+              {menuAberto && (
+                <li className="px-4 pb-2 pt-1">
+                  <p className="text-[11px] uppercase tracking-[0.16em] text-dourado">Instituto THEYE</p>
+                  <p className="text-base text-white">{frente.nome}</p>
+                </li>
+              )}
+              {frente.itens.map(item => {
+                const ativo = estaAtivo(item.href, pathname)
+                return (
+                  <li key={item.href}>
+                    <button
+                      onClick={() => navigate(item.href)}
+                      aria-current={ativo ? 'page' : undefined}
+                      className={`w-full flex items-center gap-3 px-4 py-3 min-h-[48px] rounded transition border-l-2 ${ativo ? 'bg-white/10 border-dourado text-white' : 'border-transparent text-white/85 hover:bg-white/5 hover:text-white'}`}
+                      title={dicaDe(item)}
+                    >
+                      <item.icon size={20} className="flex-shrink-0" />
+                      {menuAberto && <span className="text-base">{item.label}</span>}
+                    </button>
+                  </li>
+                )
+              })}
+              <li className="pt-4">
+                <button
+                  type="button"
+                  onClick={() => navigate('/frentes-do-instituto')}
+                  className="w-full flex items-center gap-3 px-4 py-3 min-h-[48px] rounded text-white/85 hover:bg-white/5 hover:text-white"
+                  data-testid="menu-frente-voltar"
+                  title="Volta para a lista das frentes do Instituto, para abrir outra"
+                >
+                  <LayoutGrid size={20} className="flex-shrink-0" />
+                  {menuAberto && <span className="text-sm">Todas as frentes do Instituto</span>}
+                </button>
+              </li>
+            </ul>
+          )}
+          {!frente && simples && (
             <ul className="px-3 pt-3 space-y-1" data-testid="menu-simples">
               {meusAtalhos.map((item, i) => {
                 const ativo = estaAtivo(item.href, pathname)
@@ -225,14 +276,14 @@ export default function Layout({ children, title }: LayoutProps) {
               )}
             </ul>
           )}
-          {!simples && menuAberto && (
+          {!frente && !simples && menuAberto && (
             <div className="px-4 pt-3">
               <button type="button" onClick={() => mudarSimples(true)} className="text-sm text-dourado hover:underline underline-offset-2 min-h-[36px]" data-testid="menu-voltar-simples" title="Volta ao menu simples, só com as telas usadas todo dia">
                 ← Voltar ao menu simples
               </button>
             </div>
           )}
-          {!simples && menuAberto && (
+          {!frente && !simples && menuAberto && (
             <div className="px-4 pt-3 flex justify-end">
               {(() => {
                 const visiveis = gruposDaPessoa
@@ -251,7 +302,7 @@ export default function Layout({ children, title }: LayoutProps) {
               })()}
             </div>
           )}
-          {!simples && gruposDaPessoa.map(grupo => {
+          {!frente && !simples && gruposDaPessoa.map(grupo => {
             const itens = grupo.itens
             const aberto = !menuAberto || !!grupos[grupo.id]
             const grupoAtivo = itens.some(i => estaAtivo(i.href, pathname))
@@ -287,7 +338,14 @@ export default function Layout({ children, title }: LayoutProps) {
                             title={dicaDe(item)}
                           >
                             <item.icon size={19} className="flex-shrink-0" />
-                            {menuAberto && <span className="text-sm">{item.label}</span>}
+                            {menuAberto && (
+                              <span className="text-sm text-left">
+                                <span className="block">{item.label}</span>
+                                {item.nivel && item.nivel !== 'todos' && (
+                                  <span className="block text-[10px] text-white/50" data-nivel={item.nivel} title={EXPLICA_NIVEL[item.nivel]}>{ROTULO_NIVEL[item.nivel]}</span>
+                                )}
+                              </span>
+                            )}
                           </button>
                         </li>
                       )
@@ -311,7 +369,8 @@ export default function Layout({ children, title }: LayoutProps) {
           {menuAberto && (
             <p className="text-[11px] text-white/70 px-4 text-center">
               Desenvolvido pelo<br />
-              THEYE Institute
+              THEYE Institute<br />
+              <span className="italic">{NOME_INSTITUTO_COMPLETO}</span>
             </p>
           )}
         </div>
@@ -324,7 +383,8 @@ export default function Layout({ children, title }: LayoutProps) {
             {/* Em notebooks os rótulos dos botões somem (só ícones) para o título da tela caber inteiro. */}
             <div className="min-w-0">
               <h1 className="font-serif text-2xl md:text-3xl text-navy truncate min-w-0" title={title}>{title}</h1>
-              {escritorio && <p className="text-xs text-grafite-claro truncate" data-testid="escritorio-atual" title="Você está trabalhando dentro deste escritório. Só as pessoas dele enxergam estes dados.">Escritório: <strong className="text-grafite">{escritorio.nome}</strong></p>}
+              {frente && <p className="text-xs text-grafite-claro truncate" data-testid="frente-atual" title="Você está numa frente do Instituto THEYE, separada da plataforma de direito.">Instituto THEYE · <strong className="text-grafite">{frente.nome}</strong></p>}
+              {!frente && escritorio && <p className="text-xs text-grafite-claro truncate" data-testid="escritorio-atual" title="Você está trabalhando dentro deste escritório. Só as pessoas dele enxergam estes dados.">Escritório: <strong className="text-grafite">{escritorio.nome}</strong></p>}
             </div>
           </div>
           <div className="flex flex-wrap md:flex-nowrap items-center gap-2 md:flex-shrink-0">
@@ -343,7 +403,7 @@ export default function Layout({ children, title }: LayoutProps) {
             <span className="hidden 2xl:inline">Navegador</span>
           </button>
           <SinoNotificacoes />
-          {admin && (
+          {admin && !frente && (
             <button
               onClick={() => navigate('/equipe')}
               className="relative flex items-center gap-2 min-h-[44px] px-3 sm:px-4 bg-navy text-white rounded-sm text-sm hover:bg-navy-700 transition"
@@ -383,7 +443,22 @@ export default function Layout({ children, title }: LayoutProps) {
                     {tema === 'escuro' ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
                     {tema === 'escuro' ? 'Modo claro' : 'Modo escuro'}
                   </button>
-                  {admin && (
+                  {/* Pedido de M (14/11/2026 07h26): a tela de início só mostra direito, e dá a
+                      impressão de que o Instituto é só a parte jurídica. Este item leva a uma tela
+                      com todas as áreas, sem mudar o /inicio em si (a Dra. Fátima continua caindo
+                      direto no dela todo dia). */}
+                  <button
+                    onClick={() => { setMaisAberto(false); navigate('/areas') }}
+                    className="w-full flex items-center gap-3 min-h-[44px] px-3 text-sm text-navy hover:bg-navy/5 text-left"
+                    aria-label="Trocar de área do Instituto"
+                    title="Mostra todas as áreas do Instituto THEYE para você escolher para onde ir"
+                    data-testid="menu-trocar-area"
+                  >
+                    <Compass size={16} aria-hidden="true" />
+                    Trocar de área
+                  </button>
+                  {/* Passo A27: o laboratório é do Instituto, não do escritório cliente: só aparece para quem entra pelo Instituto. */}
+                  {admin && visao.instituto && (
                     <button
                       onClick={() => { setMaisAberto(false); navigate('/laboratorio-admin') }}
                       className="w-full flex items-center gap-3 min-h-[44px] px-3 text-sm text-navy hover:bg-navy/5 text-left"
@@ -420,6 +495,8 @@ export default function Layout({ children, title }: LayoutProps) {
       </div>
       <Busca aberta={buscaAberta} fechar={() => setBuscaAberta(false)} />
       <BoasVindas />
+      <ParametrizarPlataforma />
+      <Ajudante />
     </div>
   )
 }

@@ -68,7 +68,7 @@ export default function TesteTelas() {
           <h2 id="t-telas" className="text-lg">Testar todas as telas</h2>
           <p className="text-sm text-grafite-claro">Abre as {ROTAS_TELAS.length} telas da plataforma uma a uma numa janela auxiliar (permita pop-ups) e confere título, visual (CSS) e mensagens de erro. O mesmo roteiro roda no navegador de teste (E2E) a cada publicação.</p>
         </div>
-        <button onClick={rodar} disabled={rodando} data-testid="testar-telas" className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">
+        <button title="Abre cada tela da plataforma uma vez e diz quais não abriram" onClick={rodar} disabled={rodando} data-testid="testar-telas" className="inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">
           {rodando ? <Loader2 size={16} className="animate-spin" aria-hidden="true" /> : <MonitorCheck size={16} aria-hidden="true" />} {rodando ? `Testando ${res.length + 1} de ${ROTAS_TELAS.length}…` : 'Testar telas'}
         </button>
       </div>

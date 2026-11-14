@@ -14,9 +14,9 @@ const cors = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
-const APP = 'https://gmenezes-advogados.vercel.app/#'
+const APP = 'https://theye.club/#'
 const PASSOS = [
-  ['Abra o menu Agenda na plataforma e toque em "Conectar ao Outlook"', `Entre em <a href="${APP}/agenda">gmenezes-advogados.vercel.app</a>, menu Agenda, botão "Conectar ao Outlook" (canto direito). Se o Windows perguntar com qual programa abrir, escolha Outlook.`],
+  ['Abra o menu Agenda na plataforma e toque em "Conectar ao Outlook"', `Entre em <a href="${APP}/agenda">theye.club</a>, menu Agenda, botão "Conectar ao Outlook" (canto direito). Se o Windows perguntar com qual programa abrir, escolha Outlook.`],
   ['Responda "Sim" à pergunta do Outlook', 'O Outlook mostra "Adicionar este calendário da Internet ao Outlook e assinar atualizações?". Toque em Sim. O link é secreto e só funciona para o escritório.'],
   ['Veja o calendário "THEYE" em Outros Calendários', 'Os prazos, audiências, vencimentos e reajustes entram com cor própria. Os seus compromissos pessoais continuam iguais.'],
   ['Marque a caixa e, se quiser, "Sobrepor"', 'Com a caixa marcada os dois calendários aparecem juntos. No Outlook da web: Adicionar calendário → Assinar da Web → colar o link abaixo → Importar.'],

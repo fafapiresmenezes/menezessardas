@@ -8,16 +8,25 @@ let lista: object[] = []
 const update = vi.fn(async () => ({}))
 const invoke = vi.fn(async (_f: string, _o?: object): Promise<{ data: unknown; error: unknown }> => ({ data: { novas: 2, oabs: ['123456/RJ'], falhas: [] }, error: null }))
 const rpc = vi.fn(async (_f: string, _p?: object): Promise<{ data: unknown; error: { message: string } | null }> => ({ data: 77, error: null }))
+let casos: object[] = []
 vi.mock('@/lib/supabase', () => ({
   supabaseConfigurado: true,
   supabase: {
-    from: () => ({ select: () => ({ order: () => ({ limit: async () => ({ data: lista }) }) }), update: () => ({ eq: async () => { await update(); return {} } }) }),
+    from: (t: string) => t === 'tarefas'
+      ? { select: () => ({ eq: () => ({ not: () => Promise.resolve({ data: casos }) }) }) }
+      : ({ select: () => ({ order: () => ({ limit: async () => ({ data: lista }) }) }), update: () => ({ eq: async () => { await update(); return {} } }) }),
     functions: { invoke: (f: string, o?: object) => invoke(f, o) },
     rpc: (f: string, p?: object) => rpc(f, p),
   },
 }))
 vi.mock('@/lib/equipe', () => ({ perfilAtual: async () => 'admin' }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
+// Quem está olhando: a intimação segue o dono do caso daquele número de processo.
+let alcance: { id: string; cargo: string | null; admin: boolean; veTudo: boolean } | null = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+vi.mock('@/lib/hierarquia', async (original) => ({
+  ...(await original<typeof import('@/lib/hierarquia')>()),
+  meuAlcance: async () => { if (!alcance) throw new Error('não deu para saber quem está logado'); return alcance },
+}))
 const { default: IntimacoesPage } = await import('./IntimacoesPage')
 
 const base = { oab: '123456/RJ', tribunal: 'TJRJ', orgao: '3ª Vara Cível', tipo: 'Intimação', classe: 'Despejo', texto: 'Texto da publicação', link: 'https://exemplo/1', tarefa_id: null }
@@ -27,7 +36,42 @@ describe('Caixa de intimações', () => {
       { ...base, id: 1, numero_processo: '0001-11', data_disponibilizacao: iso(-1), lida: false, prazo_dias: 15, prazo_final: iso(1) },
       { ...base, id: 2, numero_processo: '0002-22', data_disponibilizacao: iso(-3), lida: false, prazo_dias: 5, prazo_final: iso(-2) },
       { ...base, id: 3, numero_processo: '0003-33', data_disponibilizacao: iso(-10), lida: true, prazo_dias: 15, prazo_final: iso(20) },
-    ] })
+    ]
+    casos = []; alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true } })
+
+  // Privacidade por advogado: a intimação do caso do colega não entra na caixa de quem não vê o caso.
+  const comDoisAdvogados = () => {
+    casos = [
+      { numero_processo: '0001-11', responsavel_id: 'u1' },
+      { numero_processo: '0002-22', responsavel_id: 'u2' },
+    ]
+    // 0009-99 não é caso de ninguém: aparece para todos, para ninguém perder prazo.
+    lista = [...lista, { ...base, id: 9, numero_processo: '0009-99', data_disponibilizacao: iso(-1), lida: false, prazo_dias: 15, prazo_final: iso(2) }]
+  }
+
+  it('júnior não vê a intimação do caso do colega; o sócio vê todas', async () => {
+    comDoisAdvogados(); alcance = { id: 'u1', cargo: 'junior', admin: false, veTudo: false }
+    render(<MemoryRouter><IntimacoesPage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('intimacoes-alcance').textContent).toContain('as intimações dos seus casos'))
+    await waitFor(() => expect(screen.queryByText(/Processo 0002-22/)).toBeNull())
+    expect(screen.getByText(/Processo 0001-11/)).toBeTruthy()
+    expect(screen.getByText(/Processo 0009-99/)).toBeTruthy() // sem caso identificado: aparece para todos
+
+    cleanup(); alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+    render(<MemoryRouter><IntimacoesPage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByText(/Processo 0002-22/)).toBeTruthy())
+    expect(screen.queryByTestId('intimacoes-alcance')).toBeNull()
+  })
+
+  // Cargo que não dá para descobrir vale o alcance MAIS ESTREITO, nunca o mais largo.
+  it('sem saber quem está logado, esconde a intimação de caso com dono em vez de mostrar todas', async () => {
+    comDoisAdvogados(); alcance = null
+    render(<MemoryRouter><IntimacoesPage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('intimacoes-alcance')).toBeTruthy())
+    await waitFor(() => expect(screen.queryByText(/Processo 0001-11/)).toBeNull())
+    expect(screen.queryByText(/Processo 0002-22/)).toBeNull()
+    expect(screen.getByText(/Processo 0009-99/)).toBeTruthy()
+  })
 
   it('resumo por urgência, vencidas primeiro, filtro lembrado e busca; marcar como lida tira da lista', async () => {
     render(<MemoryRouter><IntimacoesPage /></MemoryRouter>)

@@ -16,4 +16,14 @@ describe('Marca (white-label)', () => {
     render(<Marca tamanho="grande" marca={{ nome: 'Beta', cor: '#AA0000', logo_url: 'https://b/logo.png', sede: false }} />)
     expect((screen.getByAltText('Beta') as HTMLImageElement).src).toBe('https://b/logo.png')
   })
+
+  // Pedido de M (14/11/2026): a logo do olho tinha sumido. Este teste prende que ela está nos dois
+  // lockups próprios do Instituto (THEYE e Instituto THEYE), para nunca mais sumir sem alguém ver.
+  it('mostra a logo do olho no lockup da plataforma e no do Instituto', () => {
+    render(<Marca />)
+    expect(screen.getByTestId('marca-theye').querySelector('[data-testid="marca-olho"]')).toBeTruthy()
+    cleanup()
+    render(<Marca tipo="instituto" />)
+    expect(screen.getByTestId('marca-instituto').querySelector('[data-testid="marca-olho"]')).toBeTruthy()
+  })
 })

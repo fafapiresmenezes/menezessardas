@@ -34,7 +34,7 @@ export default function SecaoPix() {
         <label className="block"><span className="block text-xs uppercase tracking-wider text-grafite">Nome do recebedor (até 25)</span><input value={f.nome} maxLength={25} onChange={e => setF({ ...f, nome: e.target.value })} className="w-full border px-3 py-2 mt-1" /></label>
         <label className="block"><span className="block text-xs uppercase tracking-wider text-grafite">Cidade (até 15)</span><input value={f.cidade} maxLength={15} onChange={e => setF({ ...f, cidade: e.target.value })} className="w-full border px-3 py-2 mt-1" /></label>
       </div>
-      <button onClick={salvar} disabled={!f.chave.trim()} className="mt-3 min-h-[44px] px-5 bg-navy text-white text-sm uppercase tracking-wider disabled:bg-grafite-claro/40" data-testid="salvar-pix">Salvar</button>
+      <button title="Guarda a chave Pix que vai aparecer nas cobranças do escritório" onClick={salvar} disabled={!f.chave.trim()} className="mt-3 min-h-[44px] px-5 bg-navy text-white text-sm uppercase tracking-wider disabled:bg-grafite-claro/40" data-testid="salvar-pix">Salvar</button>
     </section>
   )
 }

@@ -56,15 +56,15 @@ export default function TourTela() {
           <div className="bg-navy text-white shadow-xl border-t-2 border-dourado p-4">
             <div className="flex items-start justify-between gap-3">
               <p className="text-[11px] uppercase tracking-wider text-dourado">Como usar · {tour.nome} · passo {i + 1} de {tour.passos.length}</p>
-              <button type="button" onClick={fechar} aria-label="Fechar tour" className="min-w-[32px] min-h-[32px] inline-flex items-center justify-center hover:text-dourado"><X size={16} aria-hidden="true" /></button>
+              <button type="button" onClick={fechar} aria-label="Fechar tour" title="Fecha este guia de uso da tela; dá para abrir de novo depois" className="min-w-[32px] min-h-[32px] inline-flex items-center justify-center hover:text-dourado"><X size={16} aria-hidden="true" /></button>
             </div>
             <h2 id="tour-titulo" className="font-serif text-lg mt-1" data-testid="tour-passo-titulo">{p.titulo}</h2>
             <p className="text-sm text-white/85 mt-1">{p.texto}</p>
             <div className="flex items-center justify-between mt-3">
-              <button type="button" onClick={() => setI(Math.max(0, i - 1))} disabled={i === 0} className="min-h-[40px] px-3 text-sm inline-flex items-center gap-1 disabled:opacity-30"><ChevronLeft size={14} aria-hidden="true" /> Anterior</button>
+              <button type="button" onClick={() => setI(Math.max(0, i - 1))} disabled={i === 0} title="Volta ao passo anterior do guia" className="min-h-[40px] px-3 text-sm inline-flex items-center gap-1 disabled:opacity-30"><ChevronLeft size={14} aria-hidden="true" /> Anterior</button>
               {i < tour.passos.length - 1
-                ? <button type="button" onClick={() => setI(i + 1)} data-testid="tour-proximo" className="min-h-[40px] px-4 bg-dourado text-navy text-sm font-medium inline-flex items-center gap-1">Próximo <ChevronRight size={14} aria-hidden="true" /></button>
-                : <button type="button" onClick={fechar} data-testid="tour-concluir" className="min-h-[40px] px-4 bg-dourado text-navy text-sm font-medium">Entendi</button>}
+                ? <button type="button" onClick={() => setI(i + 1)} data-testid="tour-proximo" title="Avança para o próximo passo do guia" className="min-h-[40px] px-4 bg-dourado text-navy text-sm font-medium inline-flex items-center gap-1">Próximo <ChevronRight size={14} aria-hidden="true" /></button>
+                : <button type="button" onClick={fechar} data-testid="tour-concluir" title="Encerra o guia; dá para abrir de novo depois pelo ícone de ajuda" className="min-h-[40px] px-4 bg-dourado text-navy text-sm font-medium">Entendi</button>}
             </div>
           </div>
         </div>

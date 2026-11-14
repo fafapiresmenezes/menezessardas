@@ -10,6 +10,8 @@ import { Radar, Trash2, RefreshCw, History } from 'lucide-react'
 import { variacoesNome, filtrarNovidades, processosNovos } from '@/lib/escritorio/carteira'
 import { formatarCnj } from '@/lib/escritorio/importarProcessos'
 import { hojeLocal, isoLocal } from '@/lib/datas'
+import { irParaCampo } from '@/lib/foco'
+import { meuAlcance, podeVer, ALCANCE_FECHADO, rotuloCargo, type Alcance } from '@/lib/hierarquia'
 
 // Passo 22: linha do tempo dos andamentos (DataJud) por processo, com filtro por período.
 type Mov = { data: string; nome: string }
@@ -18,11 +20,17 @@ type Linha = { numero: string; tribunal: string | null; encontrado: boolean; cla
 // Monitoramento de processos e de nomes (como o do Escavador), com fontes públicas do CNJ.
 // O robô verifica todo dia às 7h30 (Brasília); o botão verifica na hora.
 type Mon = { id: string; tipo: 'processo' | 'nome'; valor: string; rotulo: string | null; ultimo_estado: { classe?: string; orgao?: string; encontrado?: boolean } | null
-  novidades: { data: string; texto: string; vista_em: string }[]; verificado_em: string | null; novidade_em: string | null }
+  novidades: { data: string; texto: string; vista_em: string }[]; verificado_em: string | null; novidade_em: string | null; criado_por?: string | null }
 const dt = (d?: string | null) => (d ? new Date(d.length === 10 ? `${d}T12:00` : d).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: d.length === 10 ? undefined : 'short' }) : 'ainda não')
 
 export default function MonitoramentoPage() {
-  const [lista, setLista] = useState<Mon[]>([])
+  const [tudo, setTudo] = useState<Mon[]>([])
+  // Privacidade por advogado: o processo monitorado segue o dono do caso; o nome monitorado, quem o cadastrou.
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza o caso do colega.
+  const [alcance, setAlcance] = useState<Alcance | null>(null)
+  const alc = alcance ?? ALCANCE_FECHADO
+  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
+  const [donoPorProcesso, setDonoPorProcesso] = useState<Map<string, string | null>>(new Map())
   const [tipo, setTipo] = useState<'processo' | 'nome'>('processo')
   const [valor, setValor] = useState(() => { try { return localStorage.getItem('lsm-mon-valor') ?? '' } catch { return '' } }) // Passo 188
   const [rotulo, setRotulo] = useState('')
@@ -70,21 +78,31 @@ export default function MonitoramentoPage() {
   const [carteira, setCarteira] = useState<Set<string>>(new Set())
   const carregarCarteira = async () => {
     try {
-      const { data } = await supabase.from('tarefas').select('numero_processo').order('criado_em')
-      setCarteira(new Set(((data ?? []) as { numero_processo: string | null }[]).map(t => String(t.numero_processo ?? '').replace(/\D/g, '')).filter(n => n.length === 20)))
+      const { data } = await supabase.from('tarefas').select('numero_processo,responsavel_id').order('criado_em')
+      const casos = (data ?? []) as { numero_processo: string | null; responsavel_id: string | null }[]
+      setDonoPorProcesso(new Map(casos.map(t => [String(t.numero_processo ?? '').replace(/\D/g, ''), t.responsavel_id])))
+      setCarteira(new Set(casos.filter(t => podeVer(alc, t.responsavel_id)).map(t => String(t.numero_processo ?? '').replace(/\D/g, '')).filter(n => n.length === 20)))
     } catch { /* sem carteira: não marca processos novos */ }
   }
-  useEffect(() => { carregarCarteira() }, [])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { carregarCarteira() }, [alc.id, alc.veTudo])
   const criarCaso = async (numero: string, m: Mon) => {
     const { error } = await supabase.from('tarefas').insert({ titulo: `Processo novo · ${m.rotulo || m.valor}`.slice(0, 200), nivel: 'projeto', tipo: 'caso', numero_processo: formatarCnj(numero), cliente: m.rotulo || null, situacao: 'a_fazer', prioridade: 'alta', descricao: `Achado pelo monitoramento do nome ${m.valor} em ${new Date().toLocaleDateString('pt-BR')}.` }).select('id').single()
     if (error) return setMsg(mensagemAmigavel(error))
     setMsg(`Processo ${formatarCnj(numero)} incluído na carteira.`); carregarCarteira()
   }
   const carregar = async () => {
-    const { data } = await supabase.from('monitoramentos').select('id,tipo,valor,rotulo,ultimo_estado,novidades,verificado_em,novidade_em').order('novidade_em', { ascending: false, nullsFirst: false })
-    setLista((data ?? []) as Mon[])
+    const { data } = await supabase.from('monitoramentos').select('id,tipo,valor,rotulo,ultimo_estado,novidades,verificado_em,novidade_em,criado_por').order('novidade_em', { ascending: false, nullsFirst: false })
+    setTudo((data ?? []) as Mon[])
   }
   useEffect(() => { carregar() }, [])
+  // Processo monitorado: vale o dono do caso daquele número (processo que ainda não é caso de ninguém aparece
+  // para todos). Nome monitorado: vale quem o cadastrou (monitoramento sem autor aparece para todos).
+  const lista = alc.veTudo ? tudo : tudo.filter(m => {
+    if (m.tipo !== 'processo') return podeVer(alc, m.criado_por ?? null)
+    const dono = donoPorProcesso.get(String(m.valor ?? '').replace(/\D/g, ''))
+    return (!dono || dono === alc.id) && podeVer(alc, m.criado_por ?? null)
+  })
   const verificar = async (id?: string) => {
     setOcupado(true); setMsg('')
     const { data, error } = await supabase.functions.invoke('monitorar', { body: id ? { id } : {}, region: FunctionRegion.SaEast1 })
@@ -147,13 +165,18 @@ export default function MonitoramentoPage() {
             <button type="button" onClick={trazerCasos} disabled={ocupado} title="Coloca no monitoramento, de uma vez, todos os processos dos casos que ainda não estão monitorados" data-testid="mon-trazer-casos" className="min-h-[44px] border border-navy/20 text-navy text-sm px-3 disabled:opacity-50">Trazer processos dos casos</button>
             <button type="button" onClick={adicionar} disabled={ocupado} title="Adiciona o processo ou nome ao monitoramento diário e já faz a primeira verificação" data-testid="mon-adicionar" className="min-h-[44px] bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-50">Monitorar</button>
           </div>
-          {tipo === 'nome' && <label className="mt-2 text-sm inline-flex items-center gap-2"><input type="checkbox" checked={comVariacoes} onChange={e => setComVariacoes(e.target.checked)} data-testid="mon-variacoes" /> Monitorar também as variações de grafia{valor.trim().length >= 4 && variacoesNome(valor).length > 1 ? `: ${variacoesNome(valor).filter(x => x !== valor.trim().toUpperCase()).join(' · ')}` : ' (sem acento, sem "da/de/dos", abreviado)'}</label>}
+          {tipo === 'nome' && <label className="mt-2 text-sm inline-flex items-center gap-2"><input type="checkbox" title="O CNJ grava o nome de jeitos diferentes. Marcado, a plataforma procura também sem acento, sem da/de/dos e abreviado, para não perder andamento." checked={comVariacoes} onChange={e => setComVariacoes(e.target.checked)} data-testid="mon-variacoes" /> Monitorar também as variações de grafia{valor.trim().length >= 4 && variacoesNome(valor).length > 1 ? `: ${variacoesNome(valor).filter(x => x !== valor.trim().toUpperCase()).join(' · ')}` : ' (sem acento, sem "da/de/dos", abreviado)'}</label>}
           <div className="grid gap-2 md:grid-cols-2 mt-3 text-sm">
-            <label>Mostrar só novidades que contêm<input value={contem} onChange={e => { setContem(e.target.value); guardarFiltro('lsm-mon-contem', e.target.value) }} placeholder="ex.: TJRJ, citação" className="border px-3 py-2 w-full min-h-[44px]" data-testid="mon-contem" /></label>
-            <label>Esconder novidades que contêm<input value={naoContem} onChange={e => { setNaoContem(e.target.value); guardarFiltro('lsm-mon-nao-contem', e.target.value) }} placeholder="ex.: edital, leilão" className="border px-3 py-2 w-full min-h-[44px]" data-testid="mon-nao-contem" /></label>
+            <label>Mostrar só novidades que contêm<input title="Deixa passar só as novidades cujo texto tenha alguma destas palavras. Separe por vírgula. Vazio, mostra todas." value={contem} onChange={e => { setContem(e.target.value); guardarFiltro('lsm-mon-contem', e.target.value) }} placeholder="ex.: TJRJ, citação" className="border px-3 py-2 w-full min-h-[44px]" data-testid="mon-contem" /></label>
+            <label>Esconder novidades que contêm<input title="Tira da lista as novidades cujo texto tenha alguma destas palavras, para o ruído não encobrir o que importa. Separe por vírgula." value={naoContem} onChange={e => { setNaoContem(e.target.value); guardarFiltro('lsm-mon-nao-contem', e.target.value) }} placeholder="ex.: edital, leilão" className="border px-3 py-2 w-full min-h-[44px]" data-testid="mon-nao-contem" /></label>
           </div>
           <button type="button" onClick={() => verificar()} title="Verifica agora todos os itens monitorados nas fontes do CNJ, sem esperar a verificação diária" disabled={ocupado || !lista.length} className="mt-3 min-h-[44px] px-4 border text-sm inline-flex items-center gap-2 disabled:opacity-50"><RefreshCw className={`w-4 h-4 ${ocupado ? 'animate-spin' : ''}`} aria-hidden />Verificar tudo agora</button>
           {msg && <p role="status" className="mt-3 text-sm" data-testid="mon-msg">{msg}</p>}
+          {!alc.veTudo && (
+            <p className="mt-3 bg-white border-l-2 border-dourado p-3 text-sm" data-testid="monitoramento-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+              Você está vendo <strong>o monitoramento dos seus casos</strong> ({rotuloCargo[alc.cargo ?? 'nenhum']}). Processo que ainda não é caso de ninguém aparece para todos; sócios e o gestor veem o escritório inteiro.
+            </p>
+          )}
           {/* Passo 122: lista do que está monitorado em texto (tipo, valor, rótulo, classe e órgão), para conferência. */}
           {/* Passo 154: imprimir a lista de monitoramentos e a linha do tempo. */}
           {lista.length > 0 && <button type="button" title="Abre a janela de impressão do navegador para imprimir a lista de monitoramentos" data-testid="mon-imprimir" onClick={() => window.print()} className="mt-3 mr-3 underline text-navy text-sm print:hidden">imprimir</button>}
@@ -164,9 +187,9 @@ export default function MonitoramentoPage() {
         <section className="bg-white shadow-sm p-5" data-testid="linha-do-tempo">
           <h2 className="font-serif text-lg flex items-center gap-2"><History className="w-5 h-5" aria-hidden />Linha do tempo do processo (DataJud)</h2>
           <div className="flex flex-wrap items-end gap-3 mt-2 text-sm">
-            <label className="flex-1 min-w-[240px]">Número CNJ<input value={numeroLinha} onChange={e => setNumeroLinha(e.target.value)} placeholder="0000000-00.0000.0.00.0000" className="border px-3 py-2 w-full min-h-[44px]" data-testid="lt-numero" /></label>
-            <label>De<input type="date" value={de} onChange={e => setDe(e.target.value)} className="border px-3 py-2 block min-h-[44px]" data-testid="lt-de" /></label>
-            <label>Até<input type="date" value={ate} onChange={e => setAte(e.target.value)} className="border px-3 py-2 block min-h-[44px]" data-testid="lt-ate" /></label>
+            <label className="flex-1 min-w-[240px]">Número CNJ<input title="O número do processo no padrão do CNJ, com pontos e traço. É por ele que o DataJud encontra os andamentos." value={numeroLinha} onChange={e => setNumeroLinha(e.target.value)} placeholder="0000000-00.0000.0.00.0000" className="border px-3 py-2 w-full min-h-[44px]" data-testid="lt-numero" /></label>
+            <label>De<input type="date" title="Começo do período da linha do tempo. Vazio, mostra desde o primeiro andamento." value={de} onChange={e => setDe(e.target.value)} className="border px-3 py-2 block min-h-[44px]" data-testid="lt-de" /></label>
+            <label>Até<input type="date" title="Fim do período da linha do tempo. Vazio, mostra até o andamento mais recente." value={ate} onChange={e => setAte(e.target.value)} className="border px-3 py-2 block min-h-[44px]" data-testid="lt-ate" /></label>
             <button type="button" onClick={() => linhaDoTempo(numeroLinha)} title="Consulta no DataJud (CNJ) todos os andamentos deste processo e mostra a linha do tempo no período escolhido" className="min-h-[44px] px-4 bg-navy text-white text-sm" data-testid="lt-consultar">Ver linha do tempo</button>
           </div>
           {msgLinha && <p role="status" className="mt-2 text-sm" data-testid="lt-msg">{msgLinha}</p>}
@@ -181,7 +204,7 @@ export default function MonitoramentoPage() {
                 {movsFiltrados.slice(0, 200).map((m, i) => (
                   <li key={i} className="relative" data-testid="lt-mov"><span className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-dourado" aria-hidden /><span className="text-grafite-claro w-28 inline-block">{dt(m.data)}</span>{m.nome}</li>
                 ))}
-                {!movsFiltrados.length && <li><Vazio titulo="Nenhum andamento no período" texto="Amplie o período ou consulte a linha do tempo completa do processo." /></li>}
+                {!movsFiltrados.length && <li><Vazio titulo="Nenhum andamento no período" texto="Nada saiu no tribunal entre as datas escolhidas. Amplie o período para ver mais andamentos." acao={{ rotulo: 'Mudar o período', onClick: () => irParaCampo('[data-testid="lt-de"]'), dica: 'Leva o cursor à data inicial do período da linha do tempo' }} /></li>}
               </ol>
               <p className="text-xs text-grafite-claro mt-2">Fonte: API pública do DataJud (CNJ). Os andamentos seguem a Tabela Processual Unificada e podem chegar com atraso em relação ao sistema do tribunal.</p>
             </div>

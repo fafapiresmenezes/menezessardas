@@ -7,7 +7,7 @@ import Layout from '@/components/Layout'
 import { ArrowLeft, ArrowRight, RotateCw, ExternalLink, PanelRight, Plus, Star, X, History, AppWindow } from 'lucide-react'
 import {
   SITES, endereco, dominio, modoPara, lembrarModo, registrarVisita, historico as lerHistorico, limparHistorico,
-  favoritos as lerFavoritos, alternarFavorito, abrirJanelaAoLado, type ModoAbertura, type Visita,
+  favoritos as lerFavoritos, alternarFavorito, abrirJanelaAoLado, MOLDURA_LIBERADA, type ModoAbertura, type Visita,
 } from '@/lib/navegador'
 
 interface Aba { id: number; pilha: string[]; pos: number; modo: ModoAbertura; recarga: number; titulo: string }
@@ -101,9 +101,9 @@ export default function NavegadorPage() {
 
         {/* Barra de endereço */}
         <form onSubmit={ir} className="flex flex-wrap md:flex-nowrap items-center gap-2">
-          <button type="button" onClick={voltar} disabled={ativa.pos <= 0} aria-label="Voltar" title="Voltar" className={botao}><ArrowLeft size={16} /></button>
-          <button type="button" onClick={avancar} disabled={ativa.pos >= ativa.pilha.length - 1} aria-label="Avançar" title="Avançar" className={botao}><ArrowRight size={16} /></button>
-          <button type="button" onClick={recarregar} disabled={!atual} aria-label="Recarregar" title="Recarregar" className={botao}><RotateCw size={16} /></button>
+          <button type="button" onClick={voltar} disabled={ativa.pos <= 0} aria-label="Voltar" title="Voltar para a página anterior desta aba" className={botao}><ArrowLeft size={16} /></button>
+          <button type="button" onClick={avancar} disabled={ativa.pos >= ativa.pilha.length - 1} aria-label="Avançar" title="Avançar para a página seguinte desta aba" className={botao}><ArrowRight size={16} /></button>
+          <button type="button" onClick={recarregar} disabled={!atual} aria-label="Recarregar" title="Recarregar a página aberta" className={botao}><RotateCw size={16} /></button>
           <input
             ref={campo}
             value={digitado}
@@ -113,7 +113,7 @@ export default function NavegadorPage() {
             data-testid="navegador-endereco"
             className="flex-1 min-w-[200px] min-h-[40px] px-3 border border-navy/20 rounded-sm bg-white text-navy"
           />
-          <button type="submit" className="min-h-[40px] px-4 bg-navy text-white rounded-sm text-sm">Ir</button>
+          <button type="submit" title="Abrir o endereço ou pesquisar o termo digitado" className="min-h-[40px] px-4 bg-navy text-white rounded-sm text-sm">Ir</button>
           <button type="button" onClick={() => atual && setFavoritos(alternarFavorito(atual, ativa.titulo))} disabled={!atual} aria-pressed={ehFavorito} aria-label={ehFavorito ? 'Tirar dos favoritos' : 'Guardar nos favoritos'} title={ehFavorito ? 'Tirar dos favoritos' : 'Guardar nos favoritos'} className={botao}>
             <Star size={16} className={ehFavorito ? 'fill-dourado text-dourado' : ''} />
           </button>
@@ -126,7 +126,7 @@ export default function NavegadorPage() {
           <div className="flex flex-wrap items-center gap-2 text-sm" data-testid="navegador-buscar-em">
             <span className="text-grafite-claro">Pesquisar “{termoBusca}” em:</span>
             {BUSCAS.map(s => (
-              <button key={s.nome} type="button" onClick={() => abrir(s.busca!(termoBusca), `${s.nome}: ${termoBusca}`)} className="px-3 py-1 border border-navy/15 rounded-full text-navy hover:border-dourado">{s.nome}</button>
+              <button key={s.nome} type="button" onClick={() => abrir(s.busca!(termoBusca), `${s.nome}: ${termoBusca}`)} title={`Pesquisar este termo em ${s.nome}`} className="px-3 py-1 border border-navy/15 rounded-full text-navy hover:border-dourado">{s.nome}</button>
             ))}
           </div>
         )}
@@ -140,7 +140,7 @@ export default function NavegadorPage() {
           <div className="flex flex-col gap-2">
             <p className="text-xs text-grafite-claro">
               A página ficou em branco ou mostra “recusou a conexão”? Esse site não deixa ser mostrado dentro de outra página.{' '}
-              <button type="button" onClick={() => trocarModo('janela')} className="underline decoration-dourado text-navy">Abrir na janela ao lado</button> (fica lembrado para {dominio(atual)}).
+              <button type="button" onClick={() => trocarModo('janela')} title="Abrir este site na janela do lado direito da tela" className="underline decoration-dourado text-navy">Abrir na janela ao lado</button> (fica lembrado para {dominio(atual)}).
             </p>
             <iframe
               key={`${ativa.id}-${ativa.pos}-${ativa.recarga}`}
@@ -158,12 +158,12 @@ export default function NavegadorPage() {
             <AppWindow className="text-dourado" size={28} aria-hidden />
             <h2 className="font-serif text-xl text-navy">{dominio(atual)} abre na janela ao lado</h2>
             <p className="text-sm text-grafite-claro max-w-2xl">
-              Este site não permite ser mostrado dentro de outra página (regra de segurança do próprio site). Ele abre numa janela
-              do lado direito da tela, e a plataforma continua aqui. As próximas páginas que você abrir deste site vão para a mesma janela.
+              Por segurança, a plataforma não mostra sites de fora dentro dela. O site abre numa janela do lado direito da tela,
+              e a plataforma continua aqui. As próximas páginas que você abrir vão para a mesma janela.
             </p>
             <div className="flex flex-wrap gap-2">
-              <button type="button" onClick={() => { if (!abrirJanelaAoLado(atual)) setAviso('O navegador bloqueou a janela ao lado. Permita pop-ups para a plataforma e tente de novo.') }} className="min-h-[40px] px-4 bg-navy text-white rounded-sm text-sm inline-flex items-center gap-2"><PanelRight size={16} />Abrir na janela ao lado</button>
-              <button type="button" onClick={() => trocarModo('aqui')} className="min-h-[40px] px-4 border border-navy/20 rounded-sm text-sm text-navy">Tentar mostrar aqui dentro</button>
+              <button type="button" title="Abrir este site na janela do lado direito da tela" onClick={() => { if (!abrirJanelaAoLado(atual)) setAviso('O navegador bloqueou a janela ao lado. Permita pop-ups para a plataforma e tente de novo.') }} className="min-h-[40px] px-4 bg-navy text-white rounded-sm text-sm inline-flex items-center gap-2"><PanelRight size={16} />Abrir na janela ao lado</button>
+              {MOLDURA_LIBERADA && <button type="button" onClick={() => trocarModo('aqui')} title="Mostrar o site dentro desta tela" className="min-h-[40px] px-4 border border-navy/20 rounded-sm text-sm text-navy">Tentar mostrar aqui dentro</button>}
             </div>
             <p className="text-xs text-grafite-claro break-all">{atual}</p>
           </div>
@@ -178,13 +178,13 @@ function Inicio({ abrir, favoritos, historico, limpar }: { abrir: (url: string, 
     <div className="grid gap-6" data-testid="navegador-inicio">
       <p className="text-sm text-grafite-claro max-w-3xl">
         Abra tribunais, diários oficiais, jurisprudência e leis sem sair da plataforma. Digite um endereço ou um termo na barra
-        acima, ou escolha um atalho. Sites que não deixam ser mostrados aqui dentro abrem numa janela ao lado.
+        acima, ou escolha um atalho. Os sites abrem numa janela ao lado, e a plataforma continua aberta aqui.
       </p>
       {favoritos.length > 0 && (
         <section>
           <h2 className="text-[11px] uppercase tracking-[0.16em] text-dourado mb-2">Favoritos</h2>
           <div className="flex flex-wrap gap-2">
-            {favoritos.map(f => <button key={f.url} type="button" onClick={() => abrir(f.url, f.titulo)} className="px-3 py-2 bg-white border border-navy/15 text-sm text-navy hover:border-dourado inline-flex items-center gap-2"><Star size={14} className="fill-dourado text-dourado" />{f.titulo}</button>)}
+            {favoritos.map(f => <button key={f.url} type="button" onClick={() => abrir(f.url, f.titulo)} title={`Abrir o favorito ${f.titulo}`} className="px-3 py-2 bg-white border border-navy/15 text-sm text-navy hover:border-dourado inline-flex items-center gap-2"><Star size={14} className="fill-dourado text-dourado" />{f.titulo}</button>)}
           </div>
         </section>
       )}
@@ -205,16 +205,16 @@ function Inicio({ abrir, favoritos, historico, limpar }: { abrir: (url: string, 
           </section>
         ))}
       </div>
-      <p className="text-xs text-grafite-claro inline-flex items-center gap-3"><span className="inline-flex items-center gap-1"><AppWindow size={14} aria-hidden />abre aqui dentro</span><span className="inline-flex items-center gap-1"><PanelRight size={14} aria-hidden />abre na janela ao lado</span></p>
+      {MOLDURA_LIBERADA && <p className="text-xs text-grafite-claro inline-flex items-center gap-3"><span className="inline-flex items-center gap-1"><AppWindow size={14} aria-hidden />abre aqui dentro</span><span className="inline-flex items-center gap-1"><PanelRight size={14} aria-hidden />abre na janela ao lado</span></p>}
       {historico.length > 0 && (
         <section>
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-[11px] uppercase tracking-[0.16em] text-dourado inline-flex items-center gap-2"><History size={14} />Visitados recentemente</h2>
-            <button type="button" onClick={limpar} className="text-xs text-grafite-claro underline">Limpar</button>
+            <button type="button" onClick={limpar} title="Apagar a lista de sites visitados neste computador" className="text-xs text-grafite-claro underline">Limpar</button>
           </div>
           <ul className="divide-y divide-navy/10 bg-white border border-navy/15">
             {historico.slice(0, 10).map(v => (
-              <li key={v.url}><button type="button" onClick={() => abrir(v.url, v.titulo)} className="w-full text-left px-3 py-2 text-sm text-navy hover:bg-navy/5 truncate">{v.titulo} <span className="text-grafite-claro">· {dominio(v.url)}</span></button></li>
+              <li key={v.url}><button type="button" onClick={() => abrir(v.url, v.titulo)} title={`Abrir de novo ${v.titulo}`} className="w-full text-left px-3 py-2 text-sm text-navy hover:bg-navy/5 truncate">{v.titulo} <span className="text-grafite-claro">· {dominio(v.url)}</span></button></li>
             ))}
           </ul>
         </section>

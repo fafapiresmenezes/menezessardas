@@ -146,7 +146,7 @@ function PainelJurimetria() {
           <select value={tribunal} onChange={e => setTribunal(e.target.value)} title="Escolhe o tribunal cujas sentenças do DataJud serão consultadas" className={campo}>{TRIBUNAIS.map(t => <option key={t} value={t}>{t.toUpperCase()}</option>)}</select>
         </label>
         <label className="text-xs uppercase tracking-wider text-grafite-claro">Vara (opcional)
-          <input value={orgao} onChange={e => { setOrgao(e.target.value); try { localStorage.setItem('lsm-previsoes-orgao', e.target.value) } catch { /* sem memória local */ } }} className={campo} placeholder="Ex.: 10ª Vara Cível" />
+          <input title="Vara ou órgão julgador. Com ele a previsão usa só as decisões daquela vara, que costuma ter mão própria." value={orgao} onChange={e => { setOrgao(e.target.value); try { localStorage.setItem('lsm-previsoes-orgao', e.target.value) } catch { /* sem memória local */ } }} className={campo} placeholder="Ex.: 10ª Vara Cível" />
         </label>
       </div>
       <button onClick={consultar} disabled={ocupado} title="Consulta as estatísticas públicas do DataJud (CNJ) e calcula a chance de êxito para a ação, o tribunal e a vara escolhidos" className="mt-3 bg-navy text-white min-h-[44px] px-5 uppercase tracking-wider text-sm disabled:opacity-50">{ocupado ? 'Consultando o CNJ…' : 'Calcular'}</button>
@@ -158,7 +158,7 @@ function PainelJurimetria() {
           ) : (
             <>
               <p className="font-serif text-3xl text-navy">{res.chanceExito}% <span className="text-base text-grafite">de êxito do autor</span></p>
-              {ic && <p className="text-sm text-grafite">Margem (95%): entre {ic.min}% e {ic.max}% · amostra de {res.amostra.toLocaleString('pt-BR')} sentenças · confiança {res.confianca === 'alta' ? 'alta' : res.confianca === 'media' ? 'média' : 'baixa'}</p>}
+              {ic && <p className="text-sm text-grafite">Margem (95%): entre {ic.min}% e {ic.max}% · amostra de {(res.amostra ?? 0).toLocaleString('pt-BR')} sentenças · confiança {res.confianca === 'alta' ? 'alta' : res.confianca === 'media' ? 'média' : 'baixa'}</p>}
               {ic && (
                 <div className="relative h-3 bg-navy/10" aria-hidden="true">
                   <span className="absolute h-3 bg-dourado/50" style={{ left: `${ic.min}%`, width: `${ic.max - ic.min}%` }} />
@@ -173,7 +173,7 @@ function PainelJurimetria() {
               </ul>
             </>
           )}
-          <p className="text-xs text-grafite-claro">Fonte: {res.fonte} · {res.tribunal} · {res.acao}{res.orgao ? ` · ${res.orgao}` : ''} · {res.processos.toLocaleString('pt-BR')} processos. O DataJud registra o movimento da sentença, não o mérito de cada caso: o número mede tendência, não o seu processo.</p>
+          <p className="text-xs text-grafite-claro">Fonte: {res.fonte} · {res.tribunal} · {res.acao}{res.orgao ? ` · ${res.orgao}` : ''} · {(res.processos ?? 0).toLocaleString('pt-BR')} processos. O DataJud registra o movimento da sentença, não o mérito de cada caso: o número mede tendência, não o seu processo.</p>
         </div>
       )}
     </section>

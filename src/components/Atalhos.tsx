@@ -50,7 +50,7 @@ export default function Atalhos() {
       <div role="dialog" aria-modal="true" aria-labelledby="atalhos-titulo" data-testid="atalhos" className="w-full max-w-lg bg-white shadow-2xl border-t-2 border-dourado p-5" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h2 id="atalhos-titulo" className="font-serif text-2xl text-navy">Atalhos de teclado</h2>
-          <button ref={fechar} type="button" onClick={() => setAberto(false)} className="min-h-[44px] px-3 text-sm underline text-navy">Fechar</button>
+          <button title="Fecha esta lista de atalhos do teclado" ref={fechar} type="button" onClick={() => setAberto(false)} className="min-h-[44px] px-3 text-sm underline text-navy">Fechar</button>
         </div>
         <table className="w-full text-sm mt-3">
           <thead><tr className="text-left text-xs uppercase tracking-wider text-grafite-claro"><th className="py-1 pr-3">Teclas</th><th className="py-1">O que faz</th></tr></thead>

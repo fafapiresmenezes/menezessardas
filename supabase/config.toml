@@ -15,3 +15,8 @@ verify_jwt = false
 
 [functions.pecas-automaticas]
 verify_jwt = false
+
+# Passo C2: ingestão do GDELT na ontologia de eventos. Chamada pelo pg_cron com x-cron-secret;
+# sem o segredo responde 401, para ninguém disparar coleta anonimamente.
+[functions.gdelt-coleta]
+verify_jwt = false

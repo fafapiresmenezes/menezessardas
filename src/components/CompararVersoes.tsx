@@ -46,8 +46,8 @@ export default function CompararVersoes({ contrato, vinculados, obterTexto = tex
           <select aria-label="Versão para comparar" value={escolhido} onChange={e => { setEscolhido(e.target.value); setSegs(null) }} className="border px-2 py-2 min-h-[44px] text-sm" data-testid="comparar-versao">
             {vinculados.map(v => <option key={v.id} value={v.id}>{v.natureza === 'subcontrato' ? 'Subcontrato' : 'Aditivo'} · {v.parte} · {v.dataInicio.slice(0, 10).split('-').reverse().join('/')}</option>)}
           </select>
-          <button type="button" onClick={comparar} disabled={ocupado} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-50" data-testid="comparar-executar">{ocupado ? 'Comparando…' : 'Comparar'}</button>
-          {segs && <button type="button" onClick={baixar} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2" data-testid="comparar-pdf"><Download size={14} aria-hidden="true" /> Baixar PDF</button>}
+          <button title="Mostra, palavra por palavra, o que mudou entre as duas versões" type="button" onClick={comparar} disabled={ocupado} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-50" data-testid="comparar-executar">{ocupado ? 'Comparando…' : 'Comparar'}</button>
+          {segs && <button title="Baixa a comparação em PDF, com o que saiu e o que entrou marcado" type="button" onClick={baixar} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2" data-testid="comparar-pdf"><Download size={14} aria-hidden="true" /> Baixar PDF</button>}
         </div>
       </div>
       <p className="text-xs text-grafite-claro mb-3">Vermelho riscado saiu da versão anterior; verde entrou na nova. Compara os campos do cadastro e o texto dos PDFs anexados, palavra por palavra.</p>

@@ -1,5 +1,5 @@
 {
- "total": 500,
+ "total": 501,
  "meta": 500,
  "faltam": 0,
  "agentes": [
@@ -29342,6 +29342,16 @@
      "url": "https://teses.usp.br/teses/disponiveis/2/2131/tde-26022021-165005/pt-br.php"
     }
    ]
+  },
+  {
+   "id": "agente-501",
+   "nome": "Direito e computação quântica",
+   "area": "Direito, inovação e tecnologia",
+   "nicho": "Criptografia pós-quântica, LGPD e segredo de Estado",
+   "base_oficial": true,
+   "frequencia": "mensal",
+   "origem": "NIST FIPS 203 (ML-KEM), FIPS 204 (ML-DSA), FIPS 205 (SLH-DSA), 2024; roadmap ANPD de segurança da informação; Marco Civil da Internet (Lei 12.965/2014)",
+   "status": "catalogado; ementa completa ainda não importada"
   }
  ],
  "ementas_atualizadas_em": "2026-11-12"

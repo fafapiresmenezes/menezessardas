@@ -16,12 +16,19 @@ const invoke = vi.fn(async (_n: string, o: { body: Record<string, unknown> }): P
 const insert = vi.fn(async (_r: object): Promise<{ data: { id: string } | null; error: { code?: string } | null }> => ({ data: { id: 'm9' }, error: null }))
 const del = vi.fn(async () => ({}))
 const update = vi.fn(async (_r: object) => ({}))
+let casos: object[] = []
 vi.mock('@/lib/supabase', () => ({
   supabaseConfigurado: true,
   supabase: {
-    from: () => ({ select: () => ({ order: async () => ({ data: lista }) }), insert: (r: object) => ({ select: () => ({ single: () => insert(r) }) }), delete: () => ({ eq: async () => { await del(); return {} } }), update: (r: object) => ({ eq: async () => { await update(r); return {} } }) }),
+    from: (t: string) => ({ select: () => ({ order: async () => ({ data: t === 'tarefas' ? casos : lista }) }), insert: (r: object) => ({ select: () => ({ single: () => insert(r) }) }), delete: () => ({ eq: async () => { await del(); return {} } }), update: (r: object) => ({ eq: async () => { await update(r); return {} } }) }),
     functions: { invoke: (n: string, o: { body: Record<string, unknown> }) => invoke(n, o) },
   },
+}))
+// Quem está olhando: processo monitorado segue o dono do caso; nome monitorado, quem o cadastrou.
+let alcance: { id: string; cargo: string | null; admin: boolean; veTudo: boolean } | null = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+vi.mock('@/lib/hierarquia', async (original) => ({
+  ...(await original<typeof import('@/lib/hierarquia')>()),
+  meuAlcance: async () => { if (!alcance) throw new Error('não deu para saber quem está logado'); return alcance },
 }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 const { default: MonitoramentoPage } = await import('./MonitoramentoPage')
@@ -31,7 +38,41 @@ const NUM = '0801234-56.2026.8.19.0001'
 beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true) })
 
 describe('Monitoramento de processos e nomes (CNJ)', () => {
-  beforeEach(() => { cleanup(); lista = []; invoke.mockClear(); insert.mockClear(); del.mockClear(); localStorage.clear(); window.scrollTo = vi.fn() })
+  beforeEach(() => { cleanup(); lista = []; casos = []; invoke.mockClear(); insert.mockClear(); del.mockClear(); localStorage.clear(); window.scrollTo = vi.fn()
+    alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true } })
+
+  // Privacidade por advogado: o processo do colega não aparece no monitoramento de quem não cuida dele.
+  const comDoisAdvogados = () => {
+    casos = [
+      { numero_processo: '0801111-26.2026.8.19.0001', responsavel_id: 'u1' },
+      { numero_processo: '0802222-36.2026.8.19.0001', responsavel_id: 'u2' },
+    ]
+    lista = [
+      { id: 'm1', tipo: 'processo', valor: '08011112620268190001', rotulo: 'MEU CASO', ultimo_estado: null, novidades: [], verificado_em: null, novidade_em: null, criado_por: 'u1' },
+      { id: 'm2', tipo: 'processo', valor: '08022223620268190001', rotulo: 'CASO DO COLEGA', ultimo_estado: null, novidades: [], verificado_em: null, novidade_em: null, criado_por: 'u2' },
+      { id: 'm3', tipo: 'nome', valor: 'NOME DO COLEGA', rotulo: null, ultimo_estado: null, novidades: [], verificado_em: null, novidade_em: null, criado_por: 'u2' },
+    ]
+  }
+
+  it('júnior não vê o processo monitorado do colega; o sócio vê todos', async () => {
+    comDoisAdvogados(); alcance = { id: 'u1', cargo: 'junior', admin: false, veTudo: false }
+    render(<MonitoramentoPage />)
+    await waitFor(() => expect(screen.getByTestId('monitoramento-alcance').textContent).toContain('o monitoramento dos seus casos'))
+    await waitFor(() => expect(screen.getAllByTestId('mon-item').length).toBe(1))
+    expect(screen.getAllByTestId('mon-item')[0].textContent).toContain('MEU CASO')
+
+    cleanup(); alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+    render(<MonitoramentoPage />)
+    await waitFor(() => expect(screen.getAllByTestId('mon-item').length).toBe(3))
+    expect(screen.queryByTestId('monitoramento-alcance')).toBeNull()
+  })
+
+  it('sem saber quem está logado, esconde o monitoramento com dono em vez de mostrar tudo', async () => {
+    comDoisAdvogados(); alcance = null
+    render(<MonitoramentoPage />)
+    await waitFor(() => expect(screen.getByTestId('monitoramento-alcance')).toBeTruthy())
+    expect(screen.queryAllByTestId('mon-item').length).toBe(0)
+  })
 
   it('exige 20 dígitos para processo e 4 letras para nome; adiciona, verifica na hora e lista com novidades', async () => {
     render(<MonitoramentoPage />)

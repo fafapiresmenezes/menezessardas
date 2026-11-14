@@ -7,7 +7,7 @@ import { formatarData, hojeLocal } from '@/lib/datas'
 import { tabelaAusente } from '@/lib/escritorio/tabelaAusente'
 import { CATEGORIAS_DESPESA, CATEGORIAS_RECEITA, fluxoMensal, recebiveis, aging, contasAPagar, previsao90, resultadoPorArea, despesasPorCategoria, pontoEquilibrio, reembolsosPendentes, repetirMensal, mesesAte, somarMeses, type Lancamento, type PagamentoHonorario, type ParcelaHonorario, type CasoFin } from '@/lib/escritorio/financeiro'
 import { Wallet, Plus, Download, Check } from 'lucide-react'
-import { meuAlcance, rotuloCargo } from '@/lib/hierarquia'
+import { meuAlcance, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // Financeiro do escritório: honorários recebidos e a receber (já existentes) somados às outras receitas e às despesas,
 // com fluxo de caixa, contas a receber por atraso, contas a pagar, previsão de 90 dias e resultado por área.
@@ -39,10 +39,11 @@ export default function FinanceiroPage() {
     if (tabelaAusente(l.error)) setAusente(true); else if (l.error) setErro(mensagemAmigavel(l.error))
     setLanc((l.data ?? []) as Lancamento[]); setPg((p.data ?? []) as PagamentoHonorario[]); setParcelas((pc.data ?? []) as ParcelaHonorario[]); setCasos((c.data ?? []) as (CasoFin & { responsavel_id?: string | null })[])
   }
-  useEffect(() => { carregar(); meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true })) }, [])
+  useEffect(() => { carregar(); meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
   // Hierarquia: pleno e júnior veem só os números dos próprios casos; despesas gerais do escritório ficam com sócios e gestor.
-  const restrito = !!alcance && !alcance.veTudo
-  const casos = useMemo(() => (restrito ? casosTudo.filter(c => !c.responsavel_id || c.responsavel_id === alcance!.id) : casosTudo), [casosTudo, restrito, alcance])
+  const alc = alcance ?? ALCANCE_FECHADO
+  const restrito = !alc.veTudo
+  const casos = useMemo(() => (restrito ? casosTudo.filter(c => !c.responsavel_id || c.responsavel_id === alc.id) : casosTudo), [casosTudo, restrito, alc])
   const idsMeus = useMemo(() => new Set(casos.map(c => c.id)), [casos])
   const lanc = useMemo(() => (restrito ? lancTudo.filter(l => l.caso_id && idsMeus.has(l.caso_id)) : lancTudo), [lancTudo, restrito, idsMeus])
   const pg = useMemo(() => (restrito ? pgTudo.filter(x => idsMeus.has(x.caso_id)) : pgTudo), [pgTudo, restrito, idsMeus])
@@ -120,12 +121,12 @@ export default function FinanceiroPage() {
               <select aria-label="Categoria" title="Define a categoria do lançamento, usada no relatório de para onde vai o dinheiro" value={novo.categoria} onChange={e => setNovo({ ...novo, categoria: e.target.value })} className="border px-2 py-2 sm:col-span-2" data-testid="lanc-categoria">{categorias.map(c => <option key={c}>{c}</option>)}</select>
               <input aria-label="Descrição" placeholder="Descrição" value={novo.descricao} onChange={e => setNovo({ ...novo, descricao: e.target.value })} className="border px-3 py-2 sm:col-span-2" data-testid="lanc-descricao" />
               <input aria-label="Valor (R$)" placeholder="Valor (R$)" inputMode="decimal" value={novo.valor} onChange={e => setNovo({ ...novo, valor: e.target.value })} className="border px-3 py-2" data-testid="lanc-valor" />
-              <label className="text-xs text-grafite">Vencimento<input type="date" value={novo.vencimento} onChange={e => setNovo({ ...novo, vencimento: e.target.value })} className="border px-2 py-2 w-full text-sm" data-testid="lanc-vencimento" /></label>
+              <label className="text-xs text-grafite">Vencimento<input type="date" title="Quando este valor entra ou sai. É esta data que manda na previsão de caixa." value={novo.vencimento} onChange={e => setNovo({ ...novo, vencimento: e.target.value })} className="border px-2 py-2 w-full text-sm" data-testid="lanc-vencimento" /></label>
               <select aria-label="Caso" title="Liga o lançamento a um caso, para aparecer no resultado por área" value={novo.caso_id} onChange={e => setNovo({ ...novo, caso_id: e.target.value })} className="border px-2 py-2 sm:col-span-2"><option value="">Sem caso ligado</option>{casos.map(c => <option key={c.id} value={c.id}>{c.titulo}</option>)}</select>
               <input aria-label="Cliente" placeholder="Cliente (opcional)" value={novo.cliente} onChange={e => setNovo({ ...novo, cliente: e.target.value })} className="border px-3 py-2 sm:col-span-2" />
-              <label className="inline-flex items-center gap-2"><input type="checkbox" checked={novo.pago} onChange={e => setNovo({ ...novo, pago: e.target.checked })} data-testid="lanc-pago" /> Já {novo.tipo === 'despesa' ? 'pago' : 'recebido'}</label>
-              {novo.tipo === 'despesa' && <label className="inline-flex items-center gap-2 sm:col-span-2"><input type="checkbox" checked={novo.reembolsavel} onChange={e => setNovo({ ...novo, reembolsavel: e.target.checked })} data-testid="lanc-reembolsavel" /> Cliente reembolsa (custas, diligências)</label>}
-              <label className="text-xs text-grafite">Repetir por (meses)<input type="number" min={1} max={60} value={novo.repetir} onChange={e => setNovo({ ...novo, repetir: e.target.value })} className="border px-2 py-2 w-full text-sm" data-testid="lanc-repetir" /></label>
+              <label className="inline-flex items-center gap-2"><input type="checkbox" title="Marcado, o valor já entrou ou já saiu da conta. Desmarcado, é previsão e conta na projeção de caixa." checked={novo.pago} onChange={e => setNovo({ ...novo, pago: e.target.checked })} data-testid="lanc-pago" /> Já {novo.tipo === 'despesa' ? 'pago' : 'recebido'}</label>
+              {novo.tipo === 'despesa' && <label className="inline-flex items-center gap-2 sm:col-span-2"><input type="checkbox" title="Despesa que o cliente devolve (custas, diligência, cópia). Fica marcada para você cobrar depois." checked={novo.reembolsavel} onChange={e => setNovo({ ...novo, reembolsavel: e.target.checked })} data-testid="lanc-reembolsavel" /> Cliente reembolsa (custas, diligências)</label>}
+              <label className="text-xs text-grafite">Repetir por (meses)<input type="number" title="Cria uma cópia do lançamento em cada mês, a partir deste vencimento. Para aluguel, salário, assinatura." min={1} max={60} value={novo.repetir} onChange={e => setNovo({ ...novo, repetir: e.target.value })} className="border px-2 py-2 w-full text-sm" data-testid="lanc-repetir" /></label>
               <button type="button" onClick={salvar} data-testid="lanc-salvar" title="Grava o lançamento no financeiro; com repetição, cria uma cópia para cada mês" className="min-h-[44px] bg-navy text-white px-5 uppercase tracking-wider sm:col-span-2">Lançar</button>
             </div>
             {(erro || msg) && <p role={erro ? 'alert' : 'status'} className={`text-sm mt-3 ${erro ? 'text-critico' : ''}`} data-testid="financeiro-msg">{erro || msg}</p>}
@@ -161,7 +162,7 @@ export default function FinanceiroPage() {
 
         <section className="bg-white shadow-sm p-5" aria-labelledby="t-prev" data-testid="previsao-90">
           <div className="flex flex-wrap items-end justify-between gap-2"><h2 id="t-prev" className="font-serif text-lg">Previsão de caixa (90 dias)</h2>
-            <label className="text-xs text-grafite">Saldo em conta hoje (R$)<input value={saldoInicial} onChange={e => setSaldoInicial(e.target.value)} inputMode="decimal" className="border px-2 py-1 block text-sm" data-testid="saldo-inicial" /></label></div>
+            <label className="text-xs text-grafite">Saldo em conta hoje (R$)<input title="Quanto há na conta agora. A previsão parte deste valor e soma o que entra e sai nos 90 dias." value={saldoInicial} onChange={e => setSaldoInicial(e.target.value)} inputMode="decimal" className="border px-2 py-1 block text-sm" data-testid="saldo-inicial" /></label></div>
           <table className="w-full text-sm mt-2"><thead><tr className="text-left text-xs uppercase text-grafite-claro"><th>Período</th><th>Entra</th><th>Sai</th><th>Saldo previsto</th></tr></thead>
             <tbody>{prev.map(p => <tr key={p.janela}><td className="py-1">{p.janela}</td><td>{brl(p.entra)}</td><td>{brl(p.sai)}</td><td className={p.saldo < 0 ? 'text-critico font-medium' : 'font-medium'}>{brl(p.saldo)}</td></tr>)}</tbody></table>
           <p className="text-xs text-grafite-claro mt-2">Valores atrasados entram nos próximos 30 dias com 50% de chance de recebimento (estimativa conservadora).</p>

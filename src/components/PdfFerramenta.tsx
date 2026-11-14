@@ -58,10 +58,10 @@ export default function PdfFerramenta({ ferramenta }: { ferramenta: Ferramenta }
               <li key={`${a.nome}-${i}`} className="flex items-center gap-2 px-3 py-2 text-sm">
                 <span className="flex-1 break-all">{i + 1}. {a.nome} <span className="text-grafite-claro">({a.paginas} pág., {tamanhoLegivel(a.bytes.byteLength)})</span></span>
                 {juntar && <>
-                  <button type="button" aria-label={`Subir ${a.nome}`} onClick={() => mover(i, -1)} className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center"><ArrowUp size={16} /></button>
-                  <button type="button" aria-label={`Descer ${a.nome}`} onClick={() => mover(i, 1)} className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center"><ArrowDown size={16} /></button>
+                  <button type="button" aria-label={`Subir ${a.nome}`} title={`Sobe "${a.nome}" uma posição na ordem em que os PDFs serão juntados`} onClick={() => mover(i, -1)} className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center"><ArrowUp size={16} /></button>
+                  <button type="button" aria-label={`Descer ${a.nome}`} title={`Desce "${a.nome}" uma posição na ordem em que os PDFs serão juntados`} onClick={() => mover(i, 1)} className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center"><ArrowDown size={16} /></button>
                 </>}
-                <button type="button" aria-label={`Remover ${a.nome}`} onClick={() => setArqs(x => x.filter((_, k) => k !== i))} className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center"><X size={16} /></button>
+                <button type="button" aria-label={`Remover ${a.nome}`} title={`Tira "${a.nome}" desta lista; o arquivo original no computador não é apagado`} onClick={() => setArqs(x => x.filter((_, k) => k !== i))} className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center"><X size={16} /></button>
               </li>
             ))}
           </ol>
@@ -72,7 +72,7 @@ export default function PdfFerramenta({ ferramenta }: { ferramenta: Ferramenta }
             <div><label htmlFor="pdf-giro" className="block text-sm font-medium text-navy mb-1">Girar</label><select id="pdf-giro" className={entrada} value={giro} onChange={e => setGiro(e.target.value)}><option value="0">Não girar</option><option value="90">90° à direita</option><option value="180">180°</option><option value="270">90° à esquerda</option></select></div>
           </div>
         )}
-        <button type="button" onClick={() => void gerar()} disabled={ocupado} className="bg-navy text-white min-h-[44px] px-6 uppercase tracking-wider text-sm disabled:opacity-60">{ocupado ? 'Gerando…' : juntar ? 'Juntar' : 'Gerar PDF'}</button>
+        <button type="button" onClick={() => void gerar()} disabled={ocupado} title={juntar ? 'Junta todos os PDFs da lista em um único arquivo, na ordem mostrada' : 'Gera um novo PDF com as páginas e o giro escolhidos'} className="bg-navy text-white min-h-[44px] px-6 uppercase tracking-wider text-sm disabled:opacity-60">{ocupado ? 'Gerando…' : juntar ? 'Juntar' : 'Gerar PDF'}</button>
       </div>
       <div aria-live="polite">
         {erro && <p role="alert" data-testid="ferramenta-erro" className="mt-4 border-l-4 border-red-600 bg-red-50 p-3 text-sm text-red-800">{erro}</p>}

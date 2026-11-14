@@ -6,7 +6,9 @@ import { supabase } from '@/lib/supabase'
 import { Play, Square, Download, Printer, Trash2, Target, ClipboardCopy } from 'lucide-react'
 import { hojeLocal, isoLocal } from '@/lib/datas'
 import { lerNumero, lerHoras } from '@/lib/numero'
-import { meuAlcance, rotuloCargo } from '@/lib/hierarquia'
+import { meuAlcance, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
+import Vazio from '@/components/Vazio'
+import { irParaCampo } from '@/lib/foco'
 
 // Passo 21: meta mensal de horas por função (tabela metas_horas, só admin edita) e progresso da pessoa logada (RPC progresso_horas).
 const PAPEIS: Record<string, string> = { socia: 'Sócia', advogada: 'Advogada', estagiario: 'Estagiário ou paralegal', secretaria: 'Secretária', financeiro: 'Financeiro' }
@@ -26,9 +28,11 @@ export default function HorasPage() {
   const [todos, setTodos] = useState<Lanc[]>([])
   // Hierarquia: sócios e gestor veem as horas de todo o escritório; os demais, só as suas.
   const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
-  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance({ id: '', cargo: null, admin: false, veTudo: true })) }, [])
-  const restrito = !!alcance && !alcance.veTudo
-  const lista = restrito ? todos.filter(l => !l.usuario_id || l.usuario_id === alcance!.id) : todos
+  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
+  // Enquanto não se sabe quem olha (alcance null), vale o alcance mais estreito.
+  const alc = alcance ?? ALCANCE_FECHADO
+  const restrito = !alc.veTudo
+  const lista = restrito ? todos.filter(l => !l.usuario_id || l.usuario_id === alc.id) : todos
   const [erro, setErro] = useState('')
   const [form, setForm] = useState({ data: hojeLocal(), cliente: '', descricao: '', horas: '', valor_hora: '', faturavel: true })
   const [inicio, setInicio] = useState<number | null>(() => { try { const v = localStorage.getItem('lsm-cronometro'); return v ? Number(v) : null } catch { return null } })
@@ -108,11 +112,11 @@ export default function HorasPage() {
     try { await navigator.clipboard.writeText(texto); setCopiado(true); setTimeout(() => setCopiado(false), 2500) } catch { setErro('Não foi possível copiar; use a planilha ou o relatório.') }
   }
   return (
-    <Layout title="Horas e honorários">
+    <Layout title="Horas trabalhadas">
       <div className="space-y-5">
         <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="horas-aviso" title="As metas por função são definidas pela administração; a hierarquia, na tela Equipe.">
           {restrito
-            ? <>Você está vendo <strong>os seus lançamentos de horas</strong> ({rotuloCargo[alcance!.cargo ?? 'nenhum']}). Sócios e o gestor veem as horas de todo o escritório.</>
+            ? <>Você está vendo <strong>os seus lançamentos de horas</strong> ({rotuloCargo[alc.cargo ?? 'nenhum']}). Sócios e o gestor veem as horas de todo o escritório.</>
             : <>Os lançamentos de horas desta tela são do escritório. Lance as suas horas aqui; o relatório por cliente usa tudo o que foi lançado.</>}
         </p>
         <section className="bg-white shadow-sm p-5 print:hidden" data-testid="meta-horas">
@@ -149,13 +153,13 @@ export default function HorasPage() {
             <span className="text-sm text-grafite-claro">Ou digite as horas abaixo.</span>
           </div>
           <div className="grid gap-3 md:grid-cols-6 text-sm">
-            <label className="md:col-span-1">Data<input type="date" value={form.data} onChange={e => setForm({ ...form, data: e.target.value })} className={campo} /></label>
-            <label className="md:col-span-2">Cliente ou caso<input value={form.cliente} onChange={e => setForm({ ...form, cliente: e.target.value })} className={campo} data-testid="h-cliente" list="clientes" /></label>
+            <label className="md:col-span-1">Data<input type="date" title="O dia em que o trabalho foi feito, não o dia do lançamento." value={form.data} onChange={e => setForm({ ...form, data: e.target.value })} className={campo} /></label>
+            <label className="md:col-span-2">Cliente ou caso<input title="Para quem foi o trabalho. Escreva e a lista sugere os clientes que já apareceram nos seus lançamentos." value={form.cliente} onChange={e => setForm({ ...form, cliente: e.target.value })} className={campo} data-testid="h-cliente" list="clientes" /></label>
             <datalist id="clientes">{[...new Set(lista.map(l => l.cliente))].map(c => <option key={c} value={c} />)}</datalist>
-            <label>Horas<input value={form.horas} onChange={e => setForm({ ...form, horas: e.target.value })} placeholder="1,5" className={campo} data-testid="h-horas" /></label>
-            <label>Valor/hora (R$)<input value={form.valor_hora} onChange={e => setForm({ ...form, valor_hora: e.target.value })} placeholder="450" className={campo} data-testid="h-valor" /></label>
-            <label className="flex items-center gap-2 min-h-[44px] mt-5"><input type="checkbox" checked={form.faturavel} onChange={e => setForm({ ...form, faturavel: e.target.checked })} />Faturável</label>
-            <label className="md:col-span-5">O que foi feito<input value={form.descricao} onChange={e => setForm({ ...form, descricao: e.target.value })} className={campo} data-testid="h-desc" /></label>
+            <label>Horas<input title="Quanto tempo levou, em horas. Pode usar vírgula: 1,5 é uma hora e meia." value={form.horas} onChange={e => setForm({ ...form, horas: e.target.value })} placeholder="1,5" className={campo} data-testid="h-horas" /></label>
+            <label>Valor/hora (R$)<input title="Quanto vale a sua hora neste caso. Fica guardado e volta sozinho no botão Repetir último." value={form.valor_hora} onChange={e => setForm({ ...form, valor_hora: e.target.value })} placeholder="450" className={campo} data-testid="h-valor" /></label>
+            <label className="flex items-center gap-2 min-h-[44px] mt-5"><input type="checkbox" title="Marcado, estas horas entram na conta do que se pode cobrar do cliente. Desmarcado, ficam registradas mas não são cobradas." checked={form.faturavel} onChange={e => setForm({ ...form, faturavel: e.target.checked })} />Faturável</label>
+            <label className="md:col-span-5">O que foi feito<input title="A descrição que o cliente vai ler na cobrança. Escreva o que foi feito, não o que falta fazer." value={form.descricao} onChange={e => setForm({ ...form, descricao: e.target.value })} className={campo} data-testid="h-desc" /></label>
             <button type="button" onClick={salvar} title="Grava este lançamento de horas (data, cliente, descrição, horas e valor) no mês" data-testid="h-salvar" className="min-h-[44px] bg-navy text-white text-sm uppercase tracking-wider mt-5">Lançar</button>
             {/* Passo 120: repete o último lançamento (cliente, descrição, valor da hora) com a data de hoje; só falta ajustar as horas. */}
             {lista.length > 0 && <button type="button" data-testid="h-repetir" title="Preenche o formulário com o último lançamento (cliente, descrição e valor da hora) e a data de hoje; só falta ajustar as horas" onClick={() => { const u = lista[0]; setForm({ data: hojeLocal(), cliente: u.cliente, descricao: u.descricao, horas: '', valor_hora: String(u.valor_hora), faturavel: u.faturavel }) }} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm mt-5 ml-2">Repetir último</button>}
@@ -165,7 +169,7 @@ export default function HorasPage() {
 
         <section className="bg-white shadow-sm p-5">
           <div className="flex flex-wrap items-center gap-3 justify-between">
-            <label className="text-sm print:hidden">Mês <input type="month" value={mes} onChange={e => setMes(e.target.value)} className="border px-3 py-2 ml-2" /></label>
+            <label className="text-sm print:hidden">Mês <input type="month" title="Troca o mês mostrado na lista, no total e no resumo para cobrança." value={mes} onChange={e => setMes(e.target.value)} className="border px-3 py-2 ml-2" /></label>
             <div className="flex gap-2 print:hidden">
               <button type="button" onClick={copiarResumo} disabled={!lista.length} title="Copia um resumo em texto das horas do mês por cliente, pronto para colar no e-mail de cobrança" data-testid="copiar-resumo" className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2 disabled:opacity-50"><ClipboardCopy className="w-4 h-4" aria-hidden />{copiado ? 'Resumo copiado' : 'Copiar resumo do mês'}</button>
               <button type="button" onClick={() => window.print()} disabled={!lista.length} title="Abre a janela de impressão do navegador para imprimir os lançamentos do mês escolhido" data-testid="imprimir-horas" className="min-h-[44px] px-4 border text-sm print:hidden disabled:opacity-50">Imprimir mês</button>{/* Passo 187 */}
@@ -195,7 +199,7 @@ export default function HorasPage() {
                 <button type="button" onClick={() => apagar(l.id)} aria-label="Apagar lançamento" title="Apaga este lançamento de horas (pede confirmação)" className="print:hidden p-2"><Trash2 className="w-4 h-4" aria-hidden /></button>
               </li>
             ))}
-            {!lista.length && <li className="py-3 text-grafite-claro">Nenhum lançamento neste mês.</li>}
+            {!lista.length && <li><Vazio testid="horas-vazio" titulo="Nenhum lançamento neste mês" texto="Lance as horas assim que terminar o trabalho: cliente, tempo e uma frase do que foi feito." acao={{ rotulo: 'Lançar horas agora', onClick: () => irParaCampo('[data-testid="h-cliente"]'), dica: 'Leva o cursor ao campo do cliente, no formulário de lançamento de horas' }} /></li>}
           </ul>
         </section>
       </div>

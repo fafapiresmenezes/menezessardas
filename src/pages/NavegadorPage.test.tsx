@@ -17,29 +17,19 @@ describe('Tela do navegador interno', () => {
     expect(screen.getByText('Planalto – Lei do Inquilinato')).toBeTruthy()
   })
 
-  it('abre aqui dentro um site que permite, com voltar, e lembra no histórico', () => {
+  it('endereço digitado abre na janela ao lado, com voltar e histórico', () => {
+    const open = vi.spyOn(window, 'open').mockReturnValue({ opener: null, focus: () => undefined } as unknown as Window)
     montar()
     const campo = screen.getByTestId('navegador-endereco') as HTMLInputElement
     fireEvent.change(campo, { target: { value: 'pt.wikipedia.org/wiki/Direito' } })
     fireEvent.submit(campo.closest('form')!)
-    const quadro = screen.getByTestId('navegador-quadro') as HTMLIFrameElement
-    expect(quadro.src).toBe('https://pt.wikipedia.org/wiki/Direito')
-    fireEvent.change(campo, { target: { value: 'https://www.planalto.gov.br/ccivil_03/leis/l8245.htm' } })
+    expect(open).toHaveBeenLastCalledWith('https://pt.wikipedia.org/wiki/Direito', 'theye-navegador', expect.stringContaining('popup'))
+    fireEvent.change(campo, { target: { value: 'https://www.stj.jus.br/' } })
     fireEvent.submit(campo.closest('form')!)
-    expect((screen.getByTestId('navegador-quadro') as HTMLIFrameElement).src).toContain('l8245')
+    expect(screen.getByTestId('navegador-janela').textContent).toContain('stj.jus.br')
     fireEvent.click(screen.getByLabelText('Voltar'))
-    expect((screen.getByTestId('navegador-quadro') as HTMLIFrameElement).src).toBe('https://pt.wikipedia.org/wiki/Direito')
+    expect(screen.getByTestId('navegador-janela').textContent).toContain('wikipedia.org')
     expect(JSON.parse(localStorage.getItem('theye-navegador-historico')!)).toHaveLength(2)
-  })
-
-  it('site que bloqueia vai para a janela ao lado com um clique', () => {
-    const open = vi.spyOn(window, 'open').mockReturnValue({ opener: null, focus: () => undefined } as unknown as Window)
-    montar()
-    fireEvent.click(screen.getByText('STJ'))
-    expect(open).toHaveBeenCalledWith('https://www.stj.jus.br/', 'theye-navegador', expect.stringContaining('popup'))
-    expect(screen.getByTestId('navegador-janela')).toBeTruthy()
-    fireEvent.click(screen.getByText('Tentar mostrar aqui dentro'))
-    expect((screen.getByTestId('navegador-quadro') as HTMLIFrameElement).src).toBe('https://www.stj.jus.br/')
   })
 
   it('termo digitado mostra onde pesquisar', () => {

@@ -6,6 +6,9 @@ import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import { ExternalLink, Search } from 'lucide-react'
 import { mensagemAmigavel } from '@/lib/erros'
+import Vazio from '@/components/Vazio'
+import { irParaCampo } from '@/lib/foco'
+import { meuAlcance, filtrarPorHierarquia, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // Fontes que o advogado usa todo dia: digita uma vez (nome, CNPJ, número do processo ou tema)
 // e abre cada site já com a busca feita. As que têm ligação direta estão marcadas.
@@ -61,7 +64,14 @@ export default function FontesPage() {
   const carregarSalvas = async () => { const { data } = await supabase.from('buscas_salvas').select('id, termo, ultima_execucao, ultimo_total, novas_ultima, caso_id').order('criado_em'); setSalvas((data ?? []) as Salva[]) }
   // Passo 46: ligar a busca a um caso; comunicação nova vira tarefa do responsável (Meu dia e Alertas).
   const ligarCaso = async (id: string, caso_id: string) => { await supabase.from('buscas_salvas').update({ caso_id: caso_id || null }).eq('id', id); carregarSalvas() }
-  useEffect(() => { carregarSalvas(); supabase.from('tarefas').select('id, titulo').eq('nivel', 'projeto').neq('situacao', 'feito').order('criado_em', { ascending: false }).limit(100).then(({ data }) => setCasos((data ?? []) as { id: string; titulo: string }[])) }, [])
+  // Privacidade por advogado: a lista de casos para ligar à busca é a de quem olha (caso sem dono aparece para todos).
+  useEffect(() => {
+    carregarSalvas()
+    Promise.all([
+      Promise.resolve(supabase.from('tarefas').select('id, titulo, responsavel_id').eq('nivel', 'projeto').neq('situacao', 'feito').order('criado_em', { ascending: false }).limit(100)),
+      meuAlcance().catch(() => ALCANCE_FECHADO),
+    ]).then(([r, alc]) => setCasos(filtrarPorHierarquia((r.data ?? []) as { id: string; titulo: string; responsavel_id?: string | null }[], alc)))
+  }, [])
   const salvarBusca = async () => {
     setMsgSalva('')
     const { error } = await supabase.from('buscas_salvas').insert({ termo: termo.trim() })
@@ -129,7 +139,7 @@ export default function FontesPage() {
             </div>
           )}
         </section>
-        <p className="text-xs text-grafite-claro" data-testid="contador-fontes">{FONTES.length} fontes públicas e gratuitas{termo.trim() ? `, todas prontas para "${termo.trim()}"` : ''}; cada cartão abre a fonte já com o termo. Prefere não sair da plataforma? Use o <Link to={`/navegador${termo.trim() ? `?u=${encodeURIComponent(termo.trim())}` : ''}`} className="underline decoration-dourado text-navy" data-testid="fontes-navegador">navegador interno</Link>.</p>
+        <p className="text-xs text-grafite-claro" data-testid="contador-fontes">{FONTES.length} fontes públicas e gratuitas{termo.trim() ? `, todas prontas para "${termo.trim()}"` : ''}; cada cartão abre a fonte já com o termo. Prefere não sair da plataforma? Use o <Link to={`/navegador${termo.trim() ? `?u=${encodeURIComponent(termo.trim())}` : ''}`} title="Abrir as fontes no navegador interno da plataforma" className="underline decoration-dourado text-navy" data-testid="fontes-navegador">navegador interno</Link>.</p>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FONTES.map(f => (
             <a key={f.nome} data-testid="fonte" title={`Abre ${f.nome} em uma nova aba, já com a busca pelo termo digitado acima`} href={f.url(termo.trim())} target="_blank" rel="noopener noreferrer" className="bg-white shadow-sm p-5 border-l-4 border-navy hover:border-dourado block">
@@ -158,7 +168,7 @@ export default function FontesPage() {
                 </li>
               ))}
             </ul>
-          ) : <p className="text-sm text-grafite-claro mt-3">Nenhuma busca salva ainda. Digite um nome acima e clique em "Salvar e repetir todo dia".</p>}
+          ) : <Vazio testid="fontes-sem-busca" titulo="Nenhuma busca salva ainda" texto="Escreva um nome, um CNPJ ou um número de processo no campo do alto e salve: o servidor repete a busca todas as manhãs e avisa o que for novo." acao={{ rotulo: 'Escrever o que vigiar', onClick: () => irParaCampo('#termo'), dica: 'Leva o cursor ao campo do alto, onde se escreve o nome ou o número a vigiar' }} />}
         </section>
       </div>
     </Layout>

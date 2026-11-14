@@ -16,14 +16,18 @@ describe('Navegador interno: endereços, modos e memória', () => {
   })
 
   it('sites que bloqueiam começam na janela ao lado; Planalto e Wikipédia abrem aqui; a escolha fica lembrada', () => {
-    expect(modoPara('https://www.google.com/search?q=x')).toBe('janela')
-    expect(modoPara('https://www3.tjrj.jus.br/consultaprocessual/')).toBe('janela')
-    expect(modoPara('https://www.jusbrasil.com.br/busca?q=x')).toBe('janela')
-    expect(modoPara('https://www.planalto.gov.br/ccivil_03/leis/l8245.htm')).toBe('aqui')
-    expect(modoPara('https://pt.wikipedia.org/wiki/Direito')).toBe('aqui')
-    expect(modoPara('https://exemplo.com.br/')).toBe('aqui')
+    expect(modoPara('https://www.google.com/search?q=x', true)).toBe('janela')
+    expect(modoPara('https://www3.tjrj.jus.br/consultaprocessual/', true)).toBe('janela')
+    expect(modoPara('https://www.jusbrasil.com.br/busca?q=x', true)).toBe('janela')
+    expect(modoPara('https://www.planalto.gov.br/ccivil_03/leis/l8245.htm', true)).toBe('aqui')
+    expect(modoPara('https://pt.wikipedia.org/wiki/Direito', true)).toBe('aqui')
+    expect(modoPara('https://exemplo.com.br/', true)).toBe('aqui')
     lembrarModo('https://exemplo.com.br/a', 'janela')
-    expect(modoPara('https://exemplo.com.br/b')).toBe('janela')
+    expect(modoPara('https://exemplo.com.br/b', true)).toBe('janela')
+  })
+
+  it('com a moldura bloqueada no site (CSP), tudo abre na janela ao lado', () => {
+    expect(modoPara('https://pt.wikipedia.org/wiki/Direito')).toBe('janela')
   })
 
   it('guarda histórico sem repetir e alterna favoritos', () => {

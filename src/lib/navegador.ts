@@ -53,6 +53,13 @@ const BLOQUEIAM = [
 // Exceções conhecidas que deixam ser mostradas dentro (páginas estáticas antigas do Planalto, Wikipédia).
 const DEIXAM = ['planalto.gov.br', 'wikipedia.org', 'queridodiario.ok.org.br', 'lexml.gov.br']
 
+/**
+ * O site no ar bloqueia qualquer página de fora dentro dele (CSP frame-src 'none', blindagem pedida por M em
+ * 13/11/2026). Enquanto for assim, tudo abre na janela ao lado. Para mostrar sites aqui dentro, liberar
+ * frame-src https: em deploy/vercel.json e trocar isto para true.
+ */
+export const MOLDURA_LIBERADA = false
+
 const CHAVE_MODOS = 'theye-navegador-modos'
 const CHAVE_HISTORICO = 'theye-navegador-historico'
 const CHAVE_FAVORITOS = 'theye-navegador-favoritos'
@@ -86,7 +93,8 @@ function gravar(chave: string, valor: unknown) {
 }
 
 /** Modo inicial para o endereço: o que a pessoa escolheu antes para o site; senão, o que sabemos do site. */
-export function modoPara(url: string): ModoAbertura {
+export function modoPara(url: string, moldura = MOLDURA_LIBERADA): ModoAbertura {
+  if (!moldura) return 'janela'
   const host = dominio(url)
   const escolhido = ler<Record<string, ModoAbertura>>(CHAVE_MODOS, {})[host]
   if (escolhido) return escolhido

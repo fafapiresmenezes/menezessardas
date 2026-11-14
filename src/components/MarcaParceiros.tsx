@@ -40,7 +40,7 @@ export default function MarcaParceiros({ escritorios }: { escritorios: { id: str
             <span className="flex items-center gap-1"><input aria-label={`Cor de ${e.nome}`} type="color" value={/^#[0-9A-Fa-f]{6}$/.test(m.cor) ? m.cor : '#0B0B0C'} onChange={ev => mudar(e.id, 'cor', ev.target.value)} className="h-9 w-12 border" data-testid="marca-cor" /><span className="text-xs">{m.cor}</span></span>
             <input aria-label={`Logo de ${e.nome}`} placeholder="https://…/logo.png" value={m.logo_url} onChange={ev => mudar(e.id, 'logo_url', ev.target.value)} className="border px-2 py-1" data-testid="marca-logo" />
             <input aria-label={`Domínio próprio de ${e.nome}`} placeholder="app.escritorio.com.br" value={m.dominio} onChange={ev => mudar(e.id, 'dominio', ev.target.value)} className="border px-2 py-1" data-testid="marca-dominio" />
-            <button onClick={() => salvar(e.id)} className="min-h-[40px] border border-navy px-3 text-xs uppercase tracking-wider" data-testid="marca-salvar">Salvar</button>
+            <button title="Guarda o nome, a cor e o logo deste escritório" onClick={() => salvar(e.id)} className="min-h-[40px] border border-navy px-3 text-xs uppercase tracking-wider" data-testid="marca-salvar">Salvar</button>
           </li>) })}
       </ul>
       {msg && <p role="status" className="text-sm mt-2" data-testid="marca-msg">{msg}</p>}
