@@ -50,14 +50,14 @@ export default function FrentesDoInstitutoPage() {
                 to={v.rota}
                 className="group block bg-neutral-950 border border-neutral-700 hover:border-neutral-400 rounded-sm p-6 no-underline transition"
                 data-testid={`frente-${v.id}`}
-                title={`Abre ${t(`vertentes.${v.id}.nome` as Chave)} — ${ROTULO_ESTADO[v.estado]}`}
+                title={`Abre ${t(`vertente.${v.id}.nome` as Chave)} — ${ROTULO_ESTADO[v.estado]}`}
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-400">{ROTULO_ESTADO[v.estado]}</span>
                   <span aria-hidden="true" className="text-neutral-500 group-hover:text-neutral-200">→</span>
                 </div>
-                <h2 className="text-lg font-serif text-white mt-1 mb-2">{t(`vertentes.${v.id}.nome` as Chave)}</h2>
-                <p className="text-sm text-neutral-300 leading-relaxed">{t(`vertentes.${v.id}.resumo` as Chave)}</p>
+                <h2 className="text-lg font-serif text-white mt-1 mb-2">{t(`vertente.${v.id}.nome` as Chave)}</h2>
+                <p className="text-sm text-neutral-300 leading-relaxed">{t(`vertente.${v.id}.resumo` as Chave)}</p>
               </Link>
             </li>
           ))}

@@ -258,7 +258,10 @@ function App() {
         <Route path="/stokasticos/ciencia" element={<StokasticosPage />} />
         <Route path="/stokasticos/magia" element={<StokasticosPage />} />
         <Route path="/portais" element={<PortaisInstitutoPage />} />
-        <Route path="/frentes-do-instituto" element={<FrentesDoInstitutoPage />} />
+        <Route
+          path="/frentes-do-instituto"
+          element={isAuthenticated ? <FrentesDoInstitutoPage /> : <Navigate to="/login" />}
+        />
         <Route path="/lastro" element={<LastroPage />} />
         <Route path="/preditiva" element={<PortalInstitutoPage />} />
         <Route path="/geomapeamento" element={<PortalInstitutoPage />} />
@@ -267,7 +270,10 @@ function App() {
         <Route path="/civico" element={<PortalInstitutoPage />} />
         <Route path="/ciberseguranca" element={<PortalInstitutoPage />} />
         <Route path="/quantum" element={<PortalInstitutoPage />} />
-        <Route path="/cotas-quanticas" element={<CotasQuanticasPage />} />
+        <Route
+          path="/cotas-quanticas"
+          element={isAuthenticated ? <CotasQuanticasPage /> : <Navigate to="/login" />}
+        />
         <Route path="/ia" element={<PortalInstitutoPage />} />
         <Route
           path="/login"
