@@ -156,8 +156,8 @@ export default function LastroPage() {
 
             <h2 className="text-lg font-serif text-white mt-10 mb-3">O que ainda falta</h2>
             <p className="text-sm text-white/70">
-              Falta gravar esse último código numa blockchain pública, para a data ficar provada por
-              fora da nossa casa. O programa para isso já existe aqui; o que falta é a autorização do
+              Falta gravar esse último código numa blockchain pública, para a data ficar provada
+              fora do Instituto. O programa para isso já existe aqui; o que falta é a autorização do
               dono, porque mandar qualquer coisa para fora do projeto depende do sim dele. Enquanto
               não houver, esta página não finge que há.
             </p>
