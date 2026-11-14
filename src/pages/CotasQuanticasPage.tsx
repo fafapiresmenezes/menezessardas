@@ -21,8 +21,8 @@ export default function CotasQuanticasPage() {
     <div className="min-h-screen bg-black text-white px-4 py-10">
       <div className="max-w-3xl mx-auto">
         <div className="flex justify-center mb-10"><Marca /></div>
-        <p className="text-xs uppercase tracking-[0.2em] text-white/40">THEYE Institute</p>
-        <h1 className="text-3xl font-serif mt-2 mb-4">Cotas e recargas</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-white/40">Instituto THEYE</p>
+        <h1 className="text-3xl font-serif text-white mt-2 mb-4">Cotas e recargas</h1>
 
         <p className="text-base text-white/80">
           Tudo o que a plataforma consome de fora funciona por recarga: você põe crédito, usa, e vê
@@ -33,7 +33,7 @@ export default function CotasQuanticasPage() {
           separadas no extrato: nada vem embutido.
         </p>
 
-        <h2 className="text-xl font-serif mt-10 mb-3">Todas as recargas, uma a uma</h2>
+        <h2 className="text-xl font-serif text-white mt-10 mb-3">Todas as recargas, uma a uma</h2>
         <div className="space-y-4">
           {RECARGAS.map(r => (
             <div key={r.id} className="border border-white/15 p-4">
@@ -58,7 +58,7 @@ export default function CotasQuanticasPage() {
           ))}
         </div>
 
-        <h2 className="text-xl font-serif mt-12 mb-3">Computação quântica da IBM</h2>
+        <h2 className="text-xl font-serif text-white mt-12 mb-3">Computação quântica da IBM</h2>
         <p className="text-base text-white/80">
           Esta é a única recarga em que o preço do fornecedor é público, então ela tem tabela. Você
           compra minutos, roda o seu problema na máquina de verdade e recebe o resultado junto com o
@@ -66,7 +66,7 @@ export default function CotasQuanticasPage() {
           você não precisa de conta na IBM nem saber programar o circuito.
         </p>
 
-        <h2 className="text-xl font-serif mt-10 mb-3">Quanto custa</h2>
+        <h2 className="text-xl font-serif text-white mt-10 mb-3">Quanto custa</h2>
         <p className="text-sm text-white/60 mb-4">
           Preços da IBM lidos em {CONSULTADO_EM} em{' '}
           <a className="underline" href={FONTE_PRECO} target="_blank" rel="noreferrer" title="Abre a página de preços da IBM, em inglês, numa aba nova. É de lá que saem os valores desta tabela.">ibm.com/quantum/pricing</a>.
@@ -112,7 +112,7 @@ export default function CotasQuanticasPage() {
           não existe conta surpresa.
         </p>
 
-        <h2 className="text-xl font-serif mt-10 mb-3">Para que serve uma cota quântica</h2>
+        <h2 className="text-xl font-serif text-white mt-10 mb-3">Para que serve uma cota quântica</h2>
         <div className="space-y-4">
           {USOS.map(u => (
             <div key={u.titulo} className="border border-white/15 p-4">
@@ -126,7 +126,7 @@ export default function CotasQuanticasPage() {
           ))}
         </div>
 
-        <h2 className="text-xl font-serif mt-10 mb-3">O que a máquina quântica de hoje não faz</h2>
+        <h2 className="text-xl font-serif text-white mt-10 mb-3">O que a máquina quântica de hoje não faz</h2>
         <p className="text-sm text-white/60 mb-3">
           Esta lista está aqui de propósito. Quem vende cota prometendo o que a máquina não entrega
           perde o cliente na primeira fatura.

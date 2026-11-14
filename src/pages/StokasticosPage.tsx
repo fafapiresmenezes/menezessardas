@@ -35,7 +35,7 @@ export default function StokasticosPage() {
         <div className="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <Link to="/stokasticos" title="Volta à entrada" className="block no-underline text-white hover:text-white">
             <p className="text-[11px] tracking-[0.3em] text-white/50 uppercase">Stokasticos</p>
-            <h1 className="text-xl mt-1">Escola de magia do caos</h1>
+            <h1 className="text-xl text-white mt-1">Escola de magia do caos</h1>
             <p className="text-xs text-white/50 mt-1">homenagem a Peter J. Carroll</p>
           </Link>
           {dentro && (
@@ -211,7 +211,7 @@ function Cartao({ numero, titulo, descricao, destino }: { numero: string; titulo
 function Biblioteca({ acervo }: { acervo: Acervo | null }) {
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl">Biblioteca</h2>
+      <h2 className="text-2xl text-white">Biblioteca</h2>
       <p className="text-white/70 max-w-3xl">
         Catálogo aberto. Cada entrada traz autor, obra, assunto e link para o original. Não hospedamos o
         texto das obras; para ler, siga o link ou procure a edição em livraria ou biblioteca.
@@ -259,7 +259,7 @@ function Prateleira({ prateleira }: { prateleira: PrateleiraCatalogo }) {
   return (
     <section className="border-t border-white/15 pt-6">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <h3 className="text-sm uppercase tracking-[0.2em]">{prateleira.titulo}</h3>
+        <h3 className="text-sm uppercase tracking-[0.2em] text-white">{prateleira.titulo}</h3>
         <span className="text-[11px] uppercase tracking-widest text-white/40">
           {prateleira.itens.length} {prateleira.itens.length === 1 ? 'entrada' : 'entradas'}
         </span>
@@ -304,7 +304,7 @@ function ItemPrateleira({ item }: { item: ItemCatalogo }) {
 function Blog() {
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl">Blog</h2>
+      <h2 className="text-2xl text-white">Blog</h2>
       <p className="text-white/70 max-w-3xl">
         Textos mensais do M. O primeiro post está em preparação e aparece aqui assim que ele publicar.
       </p>
@@ -316,7 +316,7 @@ function Blog() {
 function EscolaCiencia() {
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl">Escola de ciência</h2>
+      <h2 className="text-2xl text-white">Escola de ciência</h2>
       <p className="text-white/70 max-w-3xl">
         Trilhas de estudo abertas, com cursos públicos (MIT OCW, Stanford Online, Coursera aberto) e livros
         clássicos indicados — em preparação.
@@ -334,7 +334,7 @@ function EscolaCiencia() {
 function EscolaMagia() {
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl">Escola de magia</h2>
+      <h2 className="text-2xl text-white">Escola de magia</h2>
       <p className="text-white/70 max-w-3xl">
         Trilhas de estudo em magia do caos, com leitura recomendada — em preparação. A trilha inteira é
         pedagógica e aberta; nada é vendido aqui.
