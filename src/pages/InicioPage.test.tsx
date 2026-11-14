@@ -143,7 +143,7 @@ describe('Tela de entrada por área', () => {
     cleanup()
     escritorio = { nome: 'INSTITUTO THEYE', sede: true, pessoa: 'M', email: 'm@exemplo.com', instituto: true, advocacia: 'SARDAS E MENEZES' }
     montar()
-    expect((await screen.findByTestId('inicio-administra')).textContent).toBe('Você administra o Instituto DI, que cuida da plataforma inteira, e também o escritório SARDAS E MENEZES. Ver todas as frentes →')
+    expect((await screen.findByTestId('inicio-administra')).textContent).toBe('Você administra o Instituto THEYE, que cuida da plataforma inteira, e também o escritório SARDAS E MENEZES. Ver todas as frentes →')
     cleanup()
     alcance = { id: 'u1', cargo: 'pleno', admin: false, veTudo: false }
     montar()

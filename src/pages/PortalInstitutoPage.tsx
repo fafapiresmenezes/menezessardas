@@ -84,7 +84,7 @@ export default function PortalInstitutoPage() {
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-center mb-10"><Marca /></div>
 
-        <p className="text-xs uppercase tracking-[0.2em] text-neutral-300">Instituto DI</p>
+        <p className="text-xs uppercase tracking-[0.2em] text-neutral-300">Instituto THEYE</p>
         <h1 className="text-3xl font-serif text-white mt-2 mb-3">{nome}</h1>
         <p className="text-base text-white/80">{resumo}</p>
 

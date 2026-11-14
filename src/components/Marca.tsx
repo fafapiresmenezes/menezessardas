@@ -10,8 +10,8 @@ interface MarcaProps {
   /** Subtítulo já traduzido. Sem ele, fica o português padrão da plataforma. */
   subtitulo?: string
   /**
-   * Variante do lockup. `'instituto'` (M, 13/11/2026 23h11) mostra "INSTITUTO DI" em vez de
-   * "THEYE / PLATAFORMA", porque a casa inteira se chama Instituto DI; "Theye.club" segue sendo
+   * Variante do lockup. `'instituto'` (M, 13/11/2026 23h11) mostra "INSTITUTO THEYE" em vez de
+   * "THEYE / PLATAFORMA", porque a casa inteira se chama Instituto THEYE; "Theye.club" segue sendo
    * só o nome da plataforma de software.
    */
   tipo?: 'plataforma' | 'instituto'
@@ -36,12 +36,12 @@ export default function Marca({ tamanho = 'pequena', comSubtitulo = true, classN
   if (tipo === 'instituto') {
     return (
       <div className={`flex flex-col items-center ${className}`} data-testid="marca-instituto">
-        <span className="sr-only">Instituto DI</span>
+        <span className="sr-only">Instituto THEYE</span>
         <div className={`font-serif tracking-[0.22em] text-[#fff] ${grande ? 'text-4xl' : 'text-xl'}`} aria-hidden="true">
           INSTITUTO
         </div>
-        <div className={`font-serif tracking-[0.18em] text-[#fff] ${grande ? 'text-5xl mt-1' : 'text-2xl mt-0.5'}`} aria-hidden="true">
-          DI
+        <div className={`font-serif tracking-[0.18em] text-[#fff] ${grande ? 'text-4xl mt-1' : 'text-xl mt-0.5'}`} aria-hidden="true">
+          THEYE
         </div>
         {comSubtitulo && (
           <>

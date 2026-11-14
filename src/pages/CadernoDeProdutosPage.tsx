@@ -3,7 +3,7 @@ import Layout from '@/components/Layout'
 import { EIXOS, PRODUTOS, porEixo, CADERNO_EM, type Eixo } from '@/data/produtos'
 
 /**
- * Caderno de produtos do Instituto DI.
+ * Caderno de produtos do Instituto THEYE.
  *
  * Pedido de M em 13/11/2026 23h12: refazer "pensado para o consumidor, para passar credibilidade,
  * demonstrar que entende do assunto". A tela anterior era uma lista cinza com filtros em cima; esta
@@ -41,12 +41,12 @@ export default function CadernoDeProdutosPage() {
       <div className="max-w-5xl space-y-10">
         {/* Abertura: o que este caderno é e o que ele não é */}
         <header className="border-y-2 border-navy py-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-grafite">Instituto DI · Caderno {CADERNO_EM}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-grafite">Instituto THEYE · Caderno {CADERNO_EM}</p>
           <h1 className="font-serif text-4xl text-navy mt-3 leading-tight">
             {PRODUTOS.length} produtos em {EIXOS.length} eixos.
           </h1>
           <p className="text-base text-grafite mt-4 max-w-3xl leading-relaxed">
-            Serviços técnicos do Instituto DI em direito e em políticas públicas, cada um com
+            Serviços técnicos do Instituto THEYE em direito e em políticas públicas, cada um com
             escopo descrito, entregas listadas, chancela sugerida, prazo e preço médio de referência.
             O preço médio orienta a conversa; a proposta fechada vem escrita, caso a caso, depois de
             acertarmos a chancela e o prazo.
@@ -151,7 +151,7 @@ export default function CadernoDeProdutosPage() {
         ))}
 
         <footer className="border-t-2 border-navy pt-6 text-sm text-grafite" data-testid="rodape-caderno">
-          <p className="font-serif text-navy text-lg">Instituto DI · CNPJ 70.134.451/0001-05</p>
+          <p className="font-serif text-navy text-lg">Instituto THEYE · CNPJ 70.134.451/0001-05</p>
           <p className="mt-2 max-w-3xl leading-relaxed">
             Este caderno é referência de conversa, não proposta. Serviços técnicos do Instituto só
             começam com escopo, chancela e prazo escritos. Os profissionais listados em "quem

@@ -14,7 +14,7 @@ export default function PortaisInstitutoPage() {
     <div className="min-h-screen bg-black text-white px-4 py-10">
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-center mb-10"><Marca /></div>
-        <p className="text-xs uppercase tracking-[0.2em] text-neutral-300">Instituto DI</p>
+        <p className="text-xs uppercase tracking-[0.2em] text-neutral-300">Instituto THEYE</p>
         <h1 className="text-3xl font-serif text-white mt-2 mb-3">Portas em desenvolvimento</h1>
         <p className="text-base text-white/80">
           Cada porta abaixo diz o que vai fazer e em que pé está. Nenhuma promete data. A plataforma

@@ -68,7 +68,7 @@ export default function FrentesDoInstitutoPage() {
         </div>
 
         <p className="text-xs text-neutral-500 mt-10">
-          Instituto DI · CNPJ 70.134.451/0001-05. A lista é a mesma da porta de fora: aqui, cada
+          Instituto THEYE · CNPJ 70.134.451/0001-05. A lista é a mesma da porta de fora: aqui, cada
           quadradinho leva direto para a frente, porque você já entrou.
         </p>
       </div>

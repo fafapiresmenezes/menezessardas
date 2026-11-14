@@ -11,7 +11,7 @@ const app = readFileSync('src/App.tsx', 'utf8')
 
 /** Telas de vitrine/porta não usam a moldura (Layout): elas são a própria entrada, com a marca
  * no alto. /inicio é a entrada depois do login; /frentes-do-instituto (V5) é a vitrine das 12
- * frentes para quem administra o Instituto DI; as oito frentes abaixo usam a página genérica do
+ * frentes para quem administra o Instituto THEYE; as oito frentes abaixo usam a página genérica do
  * portal do Instituto (PortalInstitutoPage), que já traz seu próprio cabeçalho. */
 const SEM_MOLDURA = [
   '/inicio',

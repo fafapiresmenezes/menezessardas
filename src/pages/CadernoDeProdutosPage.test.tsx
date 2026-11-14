@@ -56,9 +56,9 @@ describe('caderno de produtos refeito (M, 13/11/2026 23h12)', () => {
     expect(document.body.textContent).toMatch(/refer[êe]ncia de conversa.*n[aã]o proposta/i)
   })
 
-  it('tem o nome e o CNPJ do Instituto DI no rodapé', () => {
+  it('tem o nome e o CNPJ do Instituto THEYE no rodapé', () => {
     render(<CadernoDeProdutosPage />)
-    expect(screen.getByTestId('rodape-caderno').textContent).toContain('Instituto DI')
+    expect(screen.getByTestId('rodape-caderno').textContent).toContain('Instituto THEYE')
     expect(screen.getByTestId('rodape-caderno').textContent).toContain('70.134.451/0001-05')
   })
 })

@@ -1,6 +1,6 @@
 // O mapa de todas as telas da plataforma (pedido de M, 12/11/2026: "organizar, separar de maneira hierárquica").
 // Passo A27: o menu tem os MESMOS quatro blocos da tela de entrada — 1. Todo dia, 2. Processos, 3. Escrever peças,
-// 4. Escritório — mais "Minha conta" e, só para o Instituto DI, o bloco do Instituto. Nada de um bloco por assunto
+// 4. Escritório — mais "Minha conta" e, só para o Instituto THEYE, o bloco do Instituto. Nada de um bloco por assunto
 // solto: menu e entrada contam a mesma história.
 // Este arquivo é a ÚNICA fonte do nome de cada tela: o menu, a tela de entrada, a busca global e a lista de telas
 // (src/data/rotas.ts) leem daqui, por `nomeDaTela`. Assim uma tela não volta a ter três nomes diferentes.
@@ -19,7 +19,7 @@ export const EXPLICA_NIVEL: Record<Nivel, string> = {
   todos: 'Todas as pessoas do escritório veem este grupo.',
   gestao: 'Só sócios, o gestor e a administração veem isto: são os números e o dinheiro do escritório inteiro.',
   admin: 'Só quem administra o escritório vê isto: liberar pessoas, definir cargos e acompanhar o consumo.',
-  instituto: 'Só a administração do Instituto DI vê isto: é o que cuida da plataforma inteira.',
+  instituto: 'Só a administração do Instituto THEYE vê isto: é o que cuida da plataforma inteira.',
 }
 
 export const SO_SEDE = ['/imoveis', '/fornecedores', '/alertas', '/instituto']
@@ -78,8 +78,8 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: Wallet, label: 'Consumo', href: '/consumo', nivel: 'admin' },
   ] },
   // Passo A27: as telas do Instituto saem do menu do escritório. O escritório cliente não vê a administração
-  // da plataforma nem a pesquisa do Instituto; só quem entra pelo Instituto DI vê este bloco.
-  { id: 'instituto', titulo: 'Instituto DI', bloco: 'Instituto', nivel: 'instituto', dica: 'Todas as frentes', itens: [
+  // da plataforma nem a pesquisa do Instituto; só quem entra pelo Instituto THEYE vê este bloco.
+  { id: 'instituto', titulo: 'Instituto THEYE', bloco: 'Instituto', nivel: 'instituto', dica: 'Todas as frentes', itens: [
     { icon: LayoutGrid, label: 'Frentes do Instituto', href: '/frentes-do-instituto' },
     { icon: FlaskConical, label: 'Administração do Instituto', href: '/instituto' },
     { icon: BookOpen, label: 'Caderno de produtos', href: '/caderno-de-produtos' },
@@ -237,7 +237,7 @@ export const DICAS: Record<string, string> = {
   '/indicadores': 'Indicadores e metas (OKRs) do escritório',
   '/relatorios': 'Relatórios prontos para imprimir ou exportar',
   '/trilha': 'Registro do que foi feito, com carimbo que prova a data',
-  '/instituto': 'Pesquisa e estudos do Instituto DI',
+  '/instituto': 'Pesquisa e estudos do Instituto THEYE',
   '/frentes-do-instituto': 'Lista das doze frentes do Instituto: cada uma abre direto, você já entrou',
   '/preditiva': 'Plataforma preditiva: previsões de mercado com incerteza declarada',
   '/educacao': 'Educação e capacitação do Instituto: trilhas, cursos e materiais',
