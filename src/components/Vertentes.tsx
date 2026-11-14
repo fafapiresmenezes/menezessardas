@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { VERTENTES } from '@/data/vertentes'
-import { entradaPara } from '@/lib/destino'
+import { entradaPara, lembrarUltimaFrente } from '@/lib/destino'
 import { useTexto, type Chave } from '@/lib/i18n'
 
 /**
@@ -29,6 +29,7 @@ export default function Vertentes() {
             <li key={v.id}>
               <Link
                 to={entradaPara(v.rota)}
+                onClick={() => lembrarUltimaFrente(v.rota)}
                 title={`${t('vertentes.entrarEm')} ${nome}`}
                 data-testid={`vertente-${v.id}`}
                 className="group flex h-full flex-col border border-neutral-600 bg-neutral-950 p-5 no-underline transition hover:border-[#fff] hover:bg-neutral-900 focus-visible:border-[#fff]"
