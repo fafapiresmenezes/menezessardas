@@ -10,7 +10,8 @@ import { decidir, faixaDecisao, encolher, ajustarTaxaBase, zonaDeAcordo, FATORES
 import { REFERENCIAS, ROTULO_TEMA, type TemaRef } from '@/lib/leituraCaso/referencias'
 import { confrontar, soUmMenciona } from '@/lib/leituraCaso/contradicoes'
 import { ROTEIRO, novaLeitura, lerLeituras, gravarLeituras, type LeituraCaso, type Desfecho } from '@/lib/leituraCaso/roteiro'
-import { placar, nivelBrier } from '@/lib/leituraCaso/placar'
+import { placar, nivelBrier, paresDoPlacar } from '@/lib/leituraCaso/placar'
+import { comparacaoComBase } from '@/lib/reguaDeErro'
 import { faixaComPrecedentes, ROTULO_DESFECHO } from '@/lib/leituraCaso/precedentes'
 import { Compass, Scale, MessagesSquare, ClipboardCheck, Plus, Trash2, Copy, ShieldCheck, Info, BookMarked } from 'lucide-react'
 
@@ -77,6 +78,7 @@ export default function LeituraCasoPage() {
   const isolados = useMemo(() => soUmMenciona(caso.depoimentos), [caso.depoimentos])
   const tipo = tipoAcao(caso.acao)
   const pl = useMemo(() => placar(casos), [casos])
+  const comparacaoBase = useMemo(() => comparacaoComBase(paresDoPlacar(casos)), [casos])
 
   const faixa = juri && juri.amostra ? intervaloWilson(juri.resultados.procedencia + juri.resultados.parcial / 2, juri.amostra) : null
   // Taxa base: a da vara, puxada para a do tribunal quando a vara tem poucas sentenças (Efron e Morris).
@@ -321,6 +323,9 @@ export default function LeituraCasoPage() {
                 <div><p className={rotulo}>Acerto do lado</p><p className="font-serif text-2xl text-navy">{pl.acertoPct === null ? '—' : `${pl.acertoPct}%`}</p></div>
               </div>
               {pl.contam > 0 && pl.contam < 100 && <p className="text-xs text-grafite-claro mt-2">Com {pl.contam} caso(s) o placar ainda oscila muito; a leitura firme começa perto de 100 desfechos (mesma regra da calibração da carteira).</p>}
+              <p className="text-xs text-grafite-claro mt-2" data-testid="regua-de-erro" title="A previsão só vale publicada se ganhar do palpite de repetir sempre a taxa histórica, com amostra suficiente">
+                Régua de erro: {comparacaoBase.motivo}{comparacaoBase.brierModelo !== null && comparacaoBase.brierBase !== null ? ` (Brier do escritório ${comparacaoBase.brierModelo.toFixed(3)} vs. palpite simples ${comparacaoBase.brierBase.toFixed(3)})` : ''}.
+              </p>
             </section>
 
             <PerfilJulgador />
