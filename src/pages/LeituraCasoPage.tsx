@@ -11,6 +11,7 @@ import { REFERENCIAS, ROTULO_TEMA, type TemaRef } from '@/lib/leituraCaso/refere
 import { confrontar, soUmMenciona } from '@/lib/leituraCaso/contradicoes'
 import { ROTEIRO, novaLeitura, lerLeituras, gravarLeituras, type LeituraCaso, type Desfecho } from '@/lib/leituraCaso/roteiro'
 import { placar, nivelBrier } from '@/lib/leituraCaso/placar'
+import { faixaComPrecedentes, ROTULO_DESFECHO } from '@/lib/leituraCaso/precedentes'
 import { Compass, Scale, MessagesSquare, ClipboardCheck, Plus, Trash2, Copy, ShieldCheck, Info, BookMarked } from 'lucide-react'
 
 // Leitura do caso: contexto, predição com dados públicos, confronto de depoimentos e roteiro de audiência.
@@ -88,6 +89,7 @@ export default function LeituraCasoPage() {
   const decisao = chance !== null && caso.valorPedido > 0 ? decidir(premissas) : null
   const sensib = decisao && caso.chanceManual === null && !ajustada && !enc ? faixaDecisao(premissas, faixa) : null
   const zona = decisao && caso.chanceOutroLado !== null ? zonaDeAcordo(premissas, { chanceAutor: caso.chanceOutroLado, custos: caso.custosOutro }) : null
+  const precedentes = useMemo(() => faixaComPrecedentes(caso, casos), [caso, casos])
 
   const consultar = async () => {
     setOcupado(true); setErro('')
@@ -269,6 +271,11 @@ export default function LeituraCasoPage() {
                     {caso.proposta > 0 && <> A proposta de {moeda(caso.proposta)} {decisao.recomendacao === 'aceitar' ? 'compensa' : decisao.recomendacao === 'recusar' ? 'não compensa' : 'fica praticamente empatada'} pelas premissas.</>}
                   </p>
                   {sensib && <p className="text-sm text-grafite" data-testid="sensibilidade">Na margem de erro do CNJ, o acordo equivalente vai de {moeda(Math.min(sensib.pior.acordoEquivalente, sensib.melhor.acordoEquivalente))} a {moeda(Math.max(sensib.pior.acordoEquivalente, sensib.melhor.acordoEquivalente))}.</p>}
+                  {precedentes && (
+                    <p className="text-sm text-grafite" data-testid="precedentes" title="Casos do próprio escritório com a mesma ação e tribunal, já com sentença">
+                      Entre {precedentes.n} precedentes próprios da mesma ação e tribunal: {Object.entries(precedentes.distribuicao).filter(([, pct]) => pct > 0).map(([d, pct]) => `${pct}% ${ROTULO_DESFECHO[d as keyof typeof ROTULO_DESFECHO]}`).join(', ')}.
+                    </p>
+                  )}
                   <details className="text-sm"><summary className="cursor-pointer text-navy">Ver a conta passo a passo</summary><ul className="list-disc pl-5 mt-2 space-y-1">{decisao.passos.map(p => <li key={p}>{p}</li>)}</ul></details>
                   <div className="border-t border-navy/10 pt-3">
                     <p className="font-medium text-sm mb-2">Zona de acordo (Cooter e Rubinfeld): como a outra parte deve enxergar o caso</p>
