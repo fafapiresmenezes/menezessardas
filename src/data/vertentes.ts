@@ -26,7 +26,7 @@ export const VERTENTES = [
   { id: 'geolocalizacao', estado: 'em-desenvolvimento', rota: '/geolocalizacao' },
   { id: 'engenharia', estado: 'em-desenvolvimento', rota: '/engenharia' },
   { id: 'saude', estado: 'em-desenvolvimento', rota: '/saude' },
-  { id: 'educacao', estado: 'no-ar', rota: '/educacao' },
+  { id: 'educacao', estado: 'em-estudo', rota: '/educacao' },
   { id: 'ciberseguranca', estado: 'em-teste', rota: '/ciberseguranca' },
   { id: 'geomapeamento', estado: 'em-estudo', rota: '/geomapeamento' },
   { id: 'governo', estado: 'em-estudo', rota: '/governo' },
