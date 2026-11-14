@@ -260,3 +260,46 @@ export const DICAS: Record<string, string> = {
   '/settings': 'Configurações da conta e da plataforma',
   '/meu-jeito': 'Escolher o que aparece no seu menu, onde a plataforma abre e o tamanho da letra',
 }
+
+/**
+ * Pedido de M em 14/11/2026 08h33: "A aba de engenharia tá com a plataforma de direito dentro."
+ * Cada frente do Instituto é uma plataforma à parte. Quem está numa tela de uma frente vê no menu só as
+ * telas dessa frente e o caminho de volta para as outras frentes: nada de "Processos", "Escrever peças"
+ * ou o nome do escritório de advocacia. O direito continua com o menu dele, sem nenhuma mudança.
+ */
+export interface Frente { id: string; nome: string; itens: Tela[] }
+export const FRENTES: Frente[] = [
+  { id: 'engenharia', nome: 'Engenharia', itens: [{ icon: Wrench, label: 'Engenharia', href: '/engenharia' }] },
+  { id: 'saude', nome: 'Saúde', itens: [{ icon: HeartPulse, label: 'Saúde', href: '/saude' }] },
+  { id: 'geolocalizacao', nome: 'Geolocalização', itens: [{ icon: MapPin, label: 'Geolocalização', href: '/geolocalizacao' }] },
+  { id: 'predicao', nome: 'Predição', itens: [
+    { icon: TrendingUp, label: 'Predição (mercado)', href: '/preditiva' },
+    { icon: Ruler, label: 'Régua de acerto dos modelos', href: '/regua' },
+  ] },
+  { id: 'educacao', nome: 'Educação e capacitação', itens: [
+    { icon: GraduationCap, label: 'Educação e capacitação', href: '/educacao' },
+    { icon: GraduationCap, label: 'Trilhas de estudo', href: '/trilhas' },
+  ] },
+  { id: 'ciberseguranca', nome: 'Cibersegurança', itens: [
+    { icon: ShieldCheck, label: 'Cibersegurança', href: '/ciberseguranca' },
+    { icon: ShieldCheck, label: 'Superfície de ataque', href: '/superficie-de-ataque' },
+  ] },
+  { id: 'geomapeamento', nome: 'Geomapeamento', itens: [
+    { icon: Compass, label: 'Geomapeamento', href: '/geomapeamento' },
+    { icon: Droplets, label: 'Água dos reservatórios (ANA)', href: '/agua' },
+  ] },
+  { id: 'governo', nome: 'Governo', itens: [
+    { icon: Building2, label: 'Governo', href: '/governo' },
+    { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
+  ] },
+  { id: 'civico', nome: 'Cívico', itens: [{ icon: Vote, label: 'Cívico', href: '/civico' }] },
+  { id: 'quantum', nome: 'Computação quântica', itens: [{ icon: FlaskConical, label: 'Computação quântica', href: '/quantum' }] },
+  { id: 'ia', nome: 'IA e superinteligência', itens: [
+    { icon: FlaskConical, label: 'IA e superinteligência', href: '/ia' },
+    { icon: FlaskConical, label: 'Agenda de pesquisa em IA', href: '/pesquisa-ia' },
+  ] },
+]
+/** A frente da tela aberta, ou nada quando a tela é do direito (ou da administração). */
+export function frenteDe(pathname: string): Frente | undefined {
+  return FRENTES.find(f => f.itens.some(i => pathname === i.href || pathname.startsWith(`${i.href}/`)))
+}

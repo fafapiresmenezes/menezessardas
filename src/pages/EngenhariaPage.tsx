@@ -12,7 +12,6 @@ const ABAS: { id: Aba; nome: string; dica: string }[] = [
   { id: 'calculo', nome: 'Cálculo estrutural', dica: 'Dimensiona uma viga de concreto armado e mostra toda a conta, item por item da norma' },
   { id: 'medicao', nome: 'Medição de obra', dica: 'Mede quanto da obra está pronto e quanto se paga no período, com a lista de serviços que o cliente monta do jeito dele' },
   { id: 'catalogo', nome: 'Matérias e consultores', dica: 'Todas as matérias de engenharia e do Instituto, com ementa, normas e escolas de origem' },
-  { id: 'equivalencias', nome: 'Como a plataforma muda', dica: 'O que cada tela da plataforma jurídica vira na plataforma de engenharia' },
   { id: 'estudos', nome: 'Estudos para órgãos públicos', dica: 'Estudos do Instituto em IA, cibersegurança, nuvem e superinteligência aplicadas à engenharia' },
 ]
 
@@ -130,7 +129,7 @@ export default function EngenhariaPage() {
     <Layout title="Engenharia">
       <section className="bg-white p-6 shadow-sm mb-6">
         <h2 className="text-lg text-navy mb-1">THEYE Engenharia <span className="text-xs border border-navy/30 px-2 py-0.5 align-middle">demonstração</span></h2>
-        <p className="text-sm text-grafite-claro max-w-3xl">A mesma plataforma do direito, falando engenharia: projetos e obras no lugar de processos, cronograma no lugar de prazo, memorial e laudo no lugar de peça. Cálculos com a conta inteira à vista e consultores por matéria. {AVISO_ENGENHARIA}</p>
+        <p className="text-sm text-grafite-claro max-w-3xl">Plataforma de engenharia do Instituto THEYE: projetos e obras, cronograma, memoriais e laudos. Cálculos com a conta inteira à vista e consultores por matéria. {AVISO_ENGENHARIA}</p>
         <div className="mt-4 flex flex-wrap gap-2" role="tablist">
           {ABAS.map(a => (
             <button key={a.id} type="button" role="tab" aria-selected={aba === a.id} title={a.dica}
