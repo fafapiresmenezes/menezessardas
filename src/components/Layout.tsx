@@ -21,7 +21,7 @@ import ExigirDoisFatores from './ExigirDoisFatores'
 import AceiteContratoSaas from './AceiteContratoSaas'
 import AceiteTermos from './AceiteTermos'
 import { aplicarTema, temaAtual } from '@/lib/tema'
-import { NOME_PLATAFORMA } from '@/lib/plataforma'
+import { NOME_PLATAFORMA, NOME_INSTITUTO_COMPLETO } from '@/lib/plataforma'
 import { listarPessoas, perfilAtual, meuEscritorio, esquecerEscritorio, type MeuEscritorio } from '@/lib/equipe'
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
@@ -369,7 +369,8 @@ export default function Layout({ children, title }: LayoutProps) {
           {menuAberto && (
             <p className="text-[11px] text-white/70 px-4 text-center">
               Desenvolvido pelo<br />
-              THEYE Institute
+              THEYE Institute<br />
+              <span className="italic">{NOME_INSTITUTO_COMPLETO}</span>
             </p>
           )}
         </div>
