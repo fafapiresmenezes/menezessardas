@@ -1,5 +1,6 @@
 import type { MarcaEscritorio } from '@/lib/marca'
 import { NOME_PLATAFORMA, SUBTITULO_PLATAFORMA } from '@/lib/plataforma'
+import MarcaOlho from '@/components/MarcaOlho'
 
 interface MarcaProps {
   tamanho?: 'pequena' | 'grande'
@@ -37,6 +38,7 @@ export default function Marca({ tamanho = 'pequena', comSubtitulo = true, classN
     return (
       <div className={`flex flex-col items-center ${className}`} data-testid="marca-instituto">
         <span className="sr-only">Instituto THEYE</span>
+        <MarcaOlho tamanho={grande ? 56 : 28} className="text-[#fff] mb-3" />
         <div className={`font-serif tracking-[0.22em] text-[#fff] ${grande ? 'text-4xl' : 'text-xl'}`} aria-hidden="true">
           INSTITUTO
         </div>
@@ -57,6 +59,7 @@ export default function Marca({ tamanho = 'pequena', comSubtitulo = true, classN
   return (
     <div className={`flex flex-col items-center ${className}`} data-testid="marca-theye">
       <span className="sr-only">{NOME_PLATAFORMA}</span>
+      <MarcaOlho tamanho={grande ? 56 : 28} className="text-[#fff] mb-3" />
       <div
         className={`font-serif tracking-[0.22em] text-[#fff] ${grande ? 'text-4xl' : 'text-xl'}`}
         aria-hidden="true"
