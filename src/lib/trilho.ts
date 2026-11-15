@@ -145,6 +145,9 @@ export interface Avanco {
 
 const CODIGO_DE_PASSO = /^([A-Z])(\d+)\b/
 
+// Elo que escreve "nenhuma.", "nada" ou "-" no campo pendente está dizendo que NÃO há pendência (elo A32, 14/11/2026).
+const SEM_PENDENCIA = /^\s*(nenhuma?|nada|n\/a|-+|—)?\s*\.?\s*$/i
+
 export function avanco(elos: Elo[]): Avanco {
   const porCodigo = new Map<string, PassoRegistrado>()
   elos.forEach((elo, i) => {
@@ -153,7 +156,7 @@ export function avanco(elos: Elo[]): Avanco {
     if (!achado) return
     const codigo = achado[1] + achado[2]
     const titulo = typeof elo.titulo === 'string' ? elo.titulo : undefined
-    const pendente = typeof elo.pendente === 'string' && elo.pendente.trim() ? elo.pendente : undefined
+    const pendente = typeof elo.pendente === 'string' && !SEM_PENDENCIA.test(elo.pendente) ? elo.pendente : undefined
     porCodigo.set(codigo, {
       codigo,
       passo,
