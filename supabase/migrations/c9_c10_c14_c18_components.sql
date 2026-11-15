@@ -55,3 +55,40 @@ CREATE TABLE IF NOT EXISTS backtest_results (
 CREATE INDEX idx_boletim_issue ON boletim_archive(issue_number DESC);
 CREATE INDEX idx_pilot_market ON pilot_programs(market);
 CREATE INDEX idx_backtest_market ON backtest_results(market_code);
+
+-- C19: Prediction Errors
+CREATE TABLE IF NOT EXISTS prediction_errors (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  signal_id VARCHAR(100) NOT NULL,
+  predicted_score DECIMAL(5, 2) NOT NULL,
+  actual_outcome BOOLEAN NOT NULL,
+  error_margin DECIMAL(5, 2) NOT NULL,
+  market VARCHAR(50) NOT NULL,
+  municipality VARCHAR(10),
+  recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_prediction_market ON prediction_errors(market);
+
+-- T3: Trilho Versions
+CREATE TABLE IF NOT EXISTS trilho_versions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  version VARCHAR(50) NOT NULL,
+  snapshot_data JSONB NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_trilho_version ON trilho_versions(version);
+
+-- T1/T2: Trilho Elos (core)
+CREATE TABLE IF NOT EXISTS trilho_elos (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  elo_number INTEGER UNIQUE NOT NULL,
+  content_hash VARCHAR(64) NOT NULL,
+  parent_hash VARCHAR(64),
+  phase VARCHAR(2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_trilho_elo ON trilho_elos(elo_number);
+CREATE INDEX idx_trilho_phase ON trilho_elos(phase);
