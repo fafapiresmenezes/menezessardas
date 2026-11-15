@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
+import { FONTES_GEO } from '@/lib/geo/fontes'
 
 /**
  * Pedido de M em 13/11/2026 21:38 UTC: "Proteja o site e todas as páginas e a plataforma com a
@@ -68,7 +69,8 @@ describe('cabeçalhos de segurança do site', () => {
     expect(valor('X-Content-Type-Options')).toBe('nosniff')
     expect(valor('Referrer-Policy')).toBe('strict-origin-when-cross-origin')
     const pp = valor('Permissions-Policy')
-    expect(pp).toContain('camera=()')
+    // câmera: só o próprio domínio, por escolha de M em 15/11/2026 (cartão na conversa da geolocalização)
+    expect(pp).toContain('camera=(self)')
     expect(pp).toContain('microphone=()')
     expect(pp).toContain('payment=()')
     // a tela de geolocalização precisa do próprio domínio, e só dele
@@ -91,6 +93,16 @@ describe('cabeçalhos de segurança do site', () => {
     const csp = valor('Content-Security-Policy')
     expect(csp.match(/style-src[^;]*/)![0]).toContain('https://fonts.googleapis.com')
     expect(csp.match(/font-src[^;]*/)![0]).toContain('https://fonts.gstatic.com')
+  })
+
+  it('a geolocalização fala só com as fontes abertas que usa, nome por nome, nunca com "https:" inteiro', () => {
+    // 15/11/2026: a blindagem de 13/11 fechou o connect-src e, sem querer, desligou o mapa, os satélites,
+    // o IBGE e o GDELT da tela /geolocalizacao (o MapLibre baixa até os ladrilhos do mapa por fetch).
+    const conecta = valor('Content-Security-Policy').match(/connect-src[^;]*/)![0]
+    for (const fonte of FONTES_GEO) expect(conecta, fonte).toContain(fonte)
+    expect(conecta).not.toMatch(/\shttps:(\s|$)/)
+    expect(conecta).not.toContain('*')
+    expect(valor('Permissions-Policy')).toContain('screen-wake-lock=(self)')
   })
 
   it('a página inicial nunca fica guardada em cache do navegador', () => {

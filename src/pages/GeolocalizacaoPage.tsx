@@ -4,9 +4,10 @@ import { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react'
 import Layout from '@/components/Layout'
 import { Cofre, TERMO, VERSAO_TERMO, cofreExiste, conferirCorrente, type Cena as CenaCamera, type DadosGeo } from '@/lib/geo/cofre'
 import { agruparLugares, detectarParadas, distancia, fmtMin, linhaDoTempo, preverProximo, resumoPeriodo, type Lugar, type Ponto } from '@/lib/geo/calculo'
-import { CAMADAS_PENDENTES, SATELITES, buscarCenas, camadasSatelite, municipioDe, noticiasGdelt, tileNdvi, tilesDaCena, type Cena, type Municipio, type Noticia } from '@/lib/geo/fontes'
+import { CAMADAS_PENDENTES, SATELITES, buscarCenas, camadasSatelite, municipioDe, ndviMedio, leituraNdvi, noticiasGdelt, tileNdvi, trilhaNoMunicipio, tilesDaCena, type Cena, type Municipio, type Noticia } from '@/lib/geo/fontes'
 import { baixar, csvPontos, geojson, montarGrafo } from '@/lib/geo/grafo'
 import { lerQuadro } from '@/lib/geo/camera'
+import { pdfFicha } from '@/lib/geo/fichaPdf'
 import { Camera, Download, Lock, MapPin, Pause, Play, Satellite, ShieldCheck, Trash2, Network } from 'lucide-react'
 
 const MapaGeo = lazy(() => import('@/components/geo/MapaGeo'))
@@ -42,6 +43,7 @@ export default function GeolocalizacaoPage() {
   const [cenaTiles, setCenaTiles] = useState<string[] | null>(null)
   const [municipio, setMunicipio] = useState<Municipio | null>(null)
   const [noticias, setNoticias] = useState<Noticia[]>([])
+  const [ndvi, setNdvi] = useState<{ media: number; minimo: number; maximo: number; cena: string; data: string } | null>(null)
   const [dia, setDia] = useState(hojeISO())
   const [ocupado, setOcupado] = useState('')
   const [camLigada, setCamLigada] = useState(false)
@@ -171,10 +173,34 @@ export default function GeolocalizacaoPage() {
     setErro(''); setOcupado('Consultando IBGE e GDELT…')
     try {
       const m = await municipioDe(pos.lat, pos.lon)
-      setMunicipio(m)
+      setMunicipio(m); setNdvi(null)
       await cofre?.anotarAcesso('consulta-externa', `Município ${m.nome}/${m.uf} (posição arredondada a ~1 km enviada ao OpenStreetMap)`)
       try { setNoticias(await noticiasGdelt(m.nome, m.uf)) } catch (e) { setNoticias([]); falhar(e) }
     } catch (e) { falhar(e) } finally { setOcupado('') }
+  }
+
+  const trilha = useMemo(() => (municipio?.malha && dados ? trilhaNoMunicipio(dados.pontos, municipio.malha) : null), [municipio, dados])
+  const calcularNdvi = async () => {
+    if (!municipio?.malha || !pos) return
+    setErro(''); setOcupado('Calculando o índice de vegetação do município pelo satélite…')
+    try {
+      const lista = cenas.filter(c => c.colecao === 'sentinel-2-l2a').length ? cenas : await buscarCenas(pos.lat, pos.lon, 'sentinel-2-l2a', 90)
+      const limpa = lista.filter(c => c.colecao === 'sentinel-2-l2a' && (c.nuvem ?? 100) <= 20)[0]
+      if (!limpa) throw new Error('Nenhuma cena do Sentinel-2 com até 20% de nuvem nos últimos 90 dias. Tente de novo mais tarde.')
+      const r = await ndviMedio(limpa, municipio.malha)
+      if (!r) throw new Error('O serviço não devolveu o índice para esta cena.')
+      setNdvi({ ...r, cena: limpa.id, data: limpa.data })
+      await cofre?.anotarAcesso('consulta-externa', `NDVI de ${municipio.nome}/${municipio.uf} (só o limite público do município foi enviado)`)
+    } catch (e) { falhar(e) } finally { setOcupado('') }
+  }
+  const baixarFicha = async () => {
+    if (!municipio || !cofre) return
+    const { bytes, hash } = await pdfFicha({ municipio, trilha, ndvi, noticias, geradoEm: new Date().toISOString() })
+    const url = URL.createObjectURL(new Blob([bytes as BlobPart], { type: 'application/pdf' }))
+    const a = document.createElement('a'); a.href = url; a.download = `ficha-${municipio.codigo}-${hojeISO()}.pdf`; a.click()
+    setTimeout(() => URL.revokeObjectURL(url), 2000)
+    await cofre.anotarAcesso('exportacao', `Ficha em PDF de ${municipio.nome}/${municipio.uf}, sha256 ${hash}`); atualizar(cofre)
+    setMsg(`Ficha baixada. Código de conferência (sha256): ${hash.slice(0, 16)}…, guardado no registro de acesso.`)
   }
 
   // ---------- Grafo e dados ----------
@@ -362,6 +388,10 @@ export default function GeolocalizacaoPage() {
               {municipio && <div className="text-sm space-y-1">
                 <p><b>{municipio.nome}/{municipio.uf}</b> · código IBGE {municipio.codigo} · população (Censo 2022): {municipio.populacao2022?.toLocaleString('pt-BR') ?? 'não veio'}</p>
                 <p className="text-xs text-grafite-claro">Fontes: {municipio.fontes.join('; ')}</p>
+                {trilha && <p title="Quantos dos seus pontos gravados caem dentro do limite oficial do município (IBGE). A conta é feita no seu aparelho.">Sua trilha aqui: <b>{trilha.pontos}</b> de {trilha.total} pontos, em {trilha.dias} dia(s)</p>}
+                {ndvi ? <p title="NDVI: de −1 a 1. Acima de 0,6 é mata densa; de 0,2 a 0,6 é vegetação rala ou plantação; abaixo de 0,2 é cidade, solo ou água.">Vegetação (NDVI médio): <b>{ndvi.media.toLocaleString('pt-BR')}</b>, {leituraNdvi(ndvi.media)} · cena de {ndvi.data}</p>
+                  : <button className={botao} onClick={calcularNdvi} disabled={!municipio.malha} title="Média do índice de vegetação dentro do limite do município, pela cena mais limpa do Sentinel-2 dos últimos 90 dias">Índice de vegetação do município</button>}
+                <button className={botaoCheio + ' ml-2'} onClick={baixarFicha} title="Baixa a ficha em PDF com o código de conferência (sha256) impresso no rodapé">Baixar ficha em PDF</button>
                 <h3 className="font-semibold text-navy pt-2">Notícias dos últimos 7 dias (GDELT)</h3>
                 {noticias.length === 0 ? <p className="text-grafite">Nenhuma notícia encontrada.</p> : <ul className="text-xs space-y-1">{noticias.slice(0, 20).map(n => <li key={n.url}><a className="underline" href={n.url} target="_blank" rel="noreferrer noopener" title="Abre a notícia no site de origem, numa aba nova">{n.titulo}</a> · {n.fonte} · {n.data}</li>)}</ul>}
               </div>}

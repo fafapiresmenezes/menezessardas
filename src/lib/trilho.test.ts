@@ -90,6 +90,11 @@ describe('painel de avanço, feito só do que a corrente registra', () => {
     expect(Object.keys(avanco(elos))).toEqual(['voltas', 'passos', 'comPendencia', 'ultimaVolta'])
   })
 
+  it('"nenhuma." no campo pendente quer dizer sem pendência', () => {
+    const a = avanco([{ passo: 'A32 · x', pendente: 'nenhuma.', hash: 'h1' }, { passo: 'A33 · y', pendente: ' - ', hash: 'h2' }, { passo: 'A34 · z', pendente: 'falta a Dra. Fátima assinar', hash: 'h3' }] as never)
+    expect(a.comPendencia.map(p => p.codigo)).toEqual(['A34'])
+  })
+
   it('a corrente de verdade publicada tem passos e pendências legíveis', () => {
     const a = avanco(lerElos(readFileSync('public/trilho-v4.jsonl', 'utf8')))
     expect(a.voltas).toBeGreaterThan(40)
