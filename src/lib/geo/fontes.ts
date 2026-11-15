@@ -149,3 +149,70 @@ export const CAMADAS_PENDENTES = [
   { nome: 'DNIT (rodovias federais)', caminho: 'Shapefile SNV em https://www.gov.br/dnit' },
   { nome: 'IBGE setores censitários 2022', caminho: 'https://www.ibge.gov.br/geociencias (malha de setores); precisa de servidor de tiles' },
 ]
+
+/**
+ * Únicos endereços de fora com que a tela conversa (o connect-src do deploy/vercel.json lista
+ * exatamente estes, um por um; o teste de cabeçalhos confere). Mudou uma fonte, muda aqui e lá.
+ */
+export const FONTES_GEO = [
+  'https://tile.openstreetmap.org',          // mapa de fundo
+  'https://demotiles.maplibre.org',          // letras dos nomes no mapa
+  'https://tiles.maps.eox.at',               // Sentinel-2 sem nuvens
+  'https://gibs.earthdata.nasa.gov',         // MODIS, luz noturna, focos de calor
+  'https://planetarycomputer.microsoft.com', // catálogo STAC e índice de vegetação
+  'https://nominatim.openstreetmap.org',     // em que município você está (posição arredondada)
+  'https://servicodados.ibge.gov.br',        // código, limite e população do município
+  'https://api.gdeltproject.org',            // notícias do município
+] as const
+
+// ---------- G6.4: cruzar a trilha do titular com o limite do município ----------
+
+type Anel = number[][]
+/** Ponto dentro de polígono (raio cruzando as bordas). Aceita Polygon e MultiPolygon do GeoJSON do IBGE. */
+export function dentro(lon: number, lat: number, geo: unknown): boolean {
+  const poligonos: Anel[][] = []
+  const juntar = (g: { type?: string; coordinates?: unknown; geometry?: unknown; features?: unknown[] } | null | undefined): void => {
+    if (!g) return
+    if (g.type === 'FeatureCollection') (g.features ?? []).forEach(f => juntar(f as never))
+    else if (g.type === 'Feature') juntar(g.geometry as never)
+    else if (g.type === 'Polygon') poligonos.push(g.coordinates as Anel[])
+    else if (g.type === 'MultiPolygon') (g.coordinates as Anel[][]).forEach(p => poligonos.push(p))
+  }
+  juntar(geo as never)
+  const noAnel = (anel: Anel) => {
+    let d = false
+    for (let i = 0, j = anel.length - 1; i < anel.length; j = i++) {
+      const [xi, yi] = anel[i], [xj, yj] = anel[j]
+      if ((yi > lat) !== (yj > lat) && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) d = !d
+    }
+    return d
+  }
+  // primeiro anel é a borda; os seguintes são buracos
+  return poligonos.some(p => p.length > 0 && noAnel(p[0]) && !p.slice(1).some(noAnel))
+}
+
+/** Quantos pontos e quantos dias da trilha caíram dentro do município. */
+export function trilhaNoMunicipio(pontos: { t: number; lat: number; lon: number }[], malha: unknown): { pontos: number; total: number; dias: number } {
+  const den = pontos.filter(p => dentro(p.lon, p.lat, malha))
+  return { pontos: den.length, total: pontos.length, dias: new Set(den.map(p => new Date(p.t).toDateString())).size }
+}
+
+// ---------- G5.3: índice de vegetação médio dentro do município ----------
+
+/**
+ * NDVI médio de uma cena Sentinel-2 dentro do limite do município (estatística feita no servidor aberto
+ * do Planetary Computer: só o limite público do município vai na consulta, nunca a trilha).
+ * Escala: −1 a 1. Acima de 0,6 é mata densa; entre 0,2 e 0,6 é vegetação rala ou plantação; abaixo de 0,2 é cidade, solo ou água.
+ */
+export async function ndviMedio(cena: Cena, malha: unknown): Promise<{ media: number; minimo: number; maximo: number } | null> {
+  const q = new URLSearchParams({ collection: cena.colecao, item: cena.id, expression: '(B08-B04)/(B08+B04)', asset_as_band: 'true', max_size: '512' })
+  const corpo = (malha as { type?: string })?.type === 'FeatureCollection' ? malha : { type: 'FeatureCollection', features: [{ type: 'Feature', properties: {}, geometry: (malha as { geometry?: unknown })?.geometry ?? malha }] }
+  const r = await fetch(`https://planetarycomputer.microsoft.com/api/data/v1/item/statistics?${q}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) })
+  if (!r.ok) throw new Error(`Índice de vegetação: o serviço respondeu ${r.status}`)
+  const j = await r.json() as { features?: { properties?: { statistics?: Record<string, { mean: number; min: number; max: number }> } }[] }
+  const est = j.features?.[0]?.properties?.statistics
+  const b = est ? Object.values(est)[0] : undefined
+  return b ? { media: +b.mean.toFixed(3), minimo: +b.min.toFixed(3), maximo: +b.max.toFixed(3) } : null
+}
+
+export const leituraNdvi = (v: number) => (v >= 0.6 ? 'mata densa' : v >= 0.2 ? 'vegetação rala ou plantação' : 'cidade, solo exposto ou água')

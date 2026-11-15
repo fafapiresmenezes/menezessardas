@@ -122,3 +122,38 @@ describe('exportação e grafo', () => {
     expect(grafo.arestas.every(a => a.fonte)).toBe(true)
   })
 })
+
+describe('G5/G6: município, trilha e ficha lastreada', () => {
+  // quadrado de 0,1° em volta de Niterói, com um buraco no meio
+  const malha = { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[
+    [[-43.16, -22.95], [-43.06, -22.95], [-43.06, -22.85], [-43.16, -22.85], [-43.16, -22.95]],
+    [[-43.12, -22.91], [-43.10, -22.91], [-43.10, -22.89], [-43.12, -22.89], [-43.12, -22.91]],
+  ]] } }
+
+  it('sabe se o ponto está dentro do limite, respeitando buraco', async () => {
+    const { dentro, trilhaNoMunicipio } = await import('@/lib/geo/fontes')
+    expect(dentro(-43.08, -22.93, malha)).toBe(true)
+    expect(dentro(-43.11, -22.90, malha)).toBe(false) // no buraco
+    expect(dentro(ESCRITORIO.lon, ESCRITORIO.lat, malha)).toBe(false) // Rio, fora
+    const pts = [{ t: T0, lat: -22.93, lon: -43.08 }, { t: T0 + 86400000, lat: -22.93, lon: -43.08 }, { t: T0, ...ESCRITORIO }]
+    expect(trilhaNoMunicipio(pts, malha)).toEqual({ pontos: 2, total: 3, dias: 2 })
+  })
+
+  it('a ficha em PDF sai com o hash do conteúdo, e o mesmo conteúdo dá o mesmo hash', async () => {
+    const { pdfFicha, textoFicha } = await import('@/lib/geo/fichaPdf')
+    const d = { municipio: { codigo: 3303302, nome: 'Niterói', uf: 'RJ', populacao2022: 481749, malha: null, fontes: ['IBGE'] }, trilha: { pontos: 2, total: 3, dias: 2 }, ndvi: { media: 0.31, minimo: -0.2, maximo: 0.88, cena: 'S2A_X', data: '2026-11-01' }, noticias: [{ titulo: 'Obra na ponte 🚧', url: 'https://x', fonte: 'x.com', data: '2026-11-10', idioma: 'Portuguese' }], geradoEm: '2026-11-15T06:00:00Z' }
+    const a = await pdfFicha(d), b = await pdfFicha(d)
+    expect(a.hash).toMatch(/^[0-9a-f]{64}$/)
+    expect(a.hash).toBe(b.hash)
+    expect(new TextDecoder().decode(a.bytes.slice(0, 5))).toBe('%PDF-')
+    expect(textoFicha(d).join('\n')).toContain('vegetação rala ou plantação')
+  })
+
+  it('a lista de fontes da tela é a mesma que o cabeçalho de segurança libera', async () => {
+    const { FONTES_GEO } = await import('@/lib/geo/fontes')
+    const { readFileSync } = await import('node:fs')
+    const csp = readFileSync('deploy/vercel.json', 'utf-8')
+    for (const f of FONTES_GEO) expect(csp).toContain(f)
+    expect(FONTES_GEO.every(f => f.startsWith('https://'))).toBe(true)
+  })
+})
