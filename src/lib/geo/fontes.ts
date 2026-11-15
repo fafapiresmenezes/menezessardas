@@ -163,6 +163,7 @@ export const FONTES_GEO = [
   'https://nominatim.openstreetmap.org',     // em que município você está (posição arredondada)
   'https://servicodados.ibge.gov.br',        // código, limite e população do município
   'https://api.gdeltproject.org',            // notícias do município
+  'https://storage.googleapis.com',          // pesos do modelo aberto da câmera (COCO-SSD, só baixa, nada sobe)
 ] as const
 
 // ---------- G6.4: cruzar a trilha do titular com o limite do município ----------

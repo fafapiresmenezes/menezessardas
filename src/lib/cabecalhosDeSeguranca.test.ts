@@ -69,7 +69,8 @@ describe('cabeçalhos de segurança do site', () => {
     expect(valor('X-Content-Type-Options')).toBe('nosniff')
     expect(valor('Referrer-Policy')).toBe('strict-origin-when-cross-origin')
     const pp = valor('Permissions-Policy')
-    expect(pp).toContain('camera=()')
+    // câmera: só o próprio domínio, por escolha de M em 15/11/2026 (cartão na conversa da geolocalização)
+    expect(pp).toContain('camera=(self)')
     expect(pp).toContain('microphone=()')
     expect(pp).toContain('payment=()')
     // a tela de geolocalização precisa do próprio domínio, e só dele
