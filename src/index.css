@@ -10,16 +10,26 @@
   }
 
   h1 {
-    @apply font-serif text-navy text-4xl font-bold tracking-tight;
+    @apply font-serif text-navy text-4xl font-extrabold tracking-tight;
+    color: #0B0B0C;
   }
 
   h2 {
-    @apply font-serif text-navy text-3xl font-semibold tracking-wide;
+    @apply font-serif text-navy text-3xl font-bold tracking-wide;
     letter-spacing: -0.5px;
+    color: #0B0B0C;
   }
 
   h3 {
-    @apply font-serif text-navy text-xl font-semibold;
+    @apply font-serif text-navy text-xl font-bold;
+    color: #0B0B0C;
+  }
+
+  /* Passo 4: Melhorar contraste dos títulos no tema claro */
+  @media (prefers-color-scheme: light) {
+    h1, h2, h3 {
+      color: #000000;
+    }
   }
 
   /* Foco visível em todo elemento interativo (WCAG 2.2 AA) */
