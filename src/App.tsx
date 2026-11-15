@@ -5,7 +5,8 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { useIdiomaEscolhido } from '@/lib/i18n'
 import LoginPage from '@/pages/LoginPage'
 import BoasVindasPage from '@/pages/BoasVindasPage'
-const StokasticosPage = lazy(() => import('@/pages/StokasticosPage'))
+// Passo 3: Fechar /stokasticos conforme planejamento
+// const StokasticosPage = lazy(() => import('@/pages/StokasticosPage'))
 // Passo B7: as portas do Instituto que ainda estão em desenvolvimento, uma página por endereço.
 // Os oito endereços estão escritos à mão aqui, e não lidos de src/data/portais-instituto.ts, de
 // propósito: importar a lista no App.tsx puxaria o texto das oito páginas para o primeiro acesso.
@@ -263,11 +264,12 @@ function App() {
           path="/boas-vindas"
           element={isAuthenticated ? <Navigate to="/inicio" /> : <BoasVindasPage />}
         />
-        <Route path="/stokasticos" element={<StokasticosPage />} />
+        {/* Passo 3: Fechar atalho /stokasticos da porta (escola de magia do caos) conforme planejamento */}
+        {/* <Route path="/stokasticos" element={<StokasticosPage />} />
         <Route path="/stokasticos/biblioteca" element={<StokasticosPage />} />
         <Route path="/stokasticos/blog" element={<StokasticosPage />} />
         <Route path="/stokasticos/ciencia" element={<StokasticosPage />} />
-        <Route path="/stokasticos/magia" element={<StokasticosPage />} />
+        <Route path="/stokasticos/magia" element={<StokasticosPage />} /> */}
         <Route path="/portais" element={<PortaisInstitutoPage />} />
         <Route path="/bancadas-colaborativas" element={<BancadasColaborativasPage />} />
         {/* Passo 2: Fechar /frentes-do-instituto (abre undefined) conforme planejamento */}
