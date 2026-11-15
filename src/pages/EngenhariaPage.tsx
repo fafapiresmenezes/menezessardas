@@ -203,10 +203,10 @@ function CalculoLaje() {
 }
 
 type SubAbaCalculo = 'viga' | 'pilar' | 'laje'
-const SUBABAS_CALCULO: { id: SubAbaCalculo; nome: string }[] = [
-  { id: 'viga', nome: 'Viga' },
-  { id: 'pilar', nome: 'Pilar' },
-  { id: 'laje', nome: 'Laje' },
+const SUBABAS_CALCULO: { id: SubAbaCalculo; nome: string; dica: string }[] = [
+  { id: 'viga', nome: 'Viga', dica: 'Dimensiona uma viga de concreto armado biapoiada' },
+  { id: 'pilar', nome: 'Pilar', dica: 'Dimensiona um pilar curto em compressão centrada' },
+  { id: 'laje', nome: 'Laje', dica: 'Dimensiona uma laje maciça armada em uma direção' },
 ]
 
 function Calculo() {
@@ -215,7 +215,7 @@ function Calculo() {
     <div>
       <div className="flex gap-2 mb-4" role="tablist" aria-label="Tipo de elemento">
         {SUBABAS_CALCULO.map(s => (
-          <button key={s.id} type="button" role="tab" aria-selected={subaba === s.id}
+          <button key={s.id} type="button" role="tab" aria-selected={subaba === s.id} title={s.dica}
             className={`text-sm px-3 py-1 border ${subaba === s.id ? 'bg-navy text-white border-navy' : 'border-navy/30 text-navy'}`}
             onClick={() => setSubaba(s.id)} data-testid={`subaba-${s.id}`}>{s.nome}</button>
         ))}
