@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { combinacaoUltimaNormal, vigaBiapoiada, flexaoSimples, cortanteModeloI, taxaMinima, vigaConcreto, memoriaDeCalculo, pilarCompressaoCentrada } from './calculo'
+import { combinacaoUltimaNormal, vigaBiapoiada, flexaoSimples, cortanteModeloI, taxaMinima, vigaConcreto, memoriaDeCalculo, pilarCompressaoCentrada, lajeUmaDirecao } from './calculo'
 import catalogo from './catalogo.json'
 import { ESTUDOS_ENGENHARIA, EQUIVALENCIAS } from './plataforma'
 
@@ -165,5 +165,37 @@ describe('E4 (continuação) · pilar, compressão centrada', () => {
     const texto = memoriaDeCalculo('Pilar P1', { seção: '30×30 cm' }, res.passos, res.avisos)
     expect(texto).toContain('NBR 6118')
     expect(texto).toContain('ART')
+  })
+})
+
+// Laje é a mesma flexão simples de uma viga de 100 cm de largura (faixa de 1 m) — a conferência é
+// comparar o resultado da laje contra flexaoSimples chamada direto com bw=100, não um valor manual.
+describe('E4 (continuação) · laje maciça armada em uma direção', () => {
+  const LAJES: [number, number, number, number, number, number, number][] = [
+    // vão (m), g (kN/m²), q (kN/m²), h (cm), cobrimentoÚtil (cm), fck, fyk
+    [4, 3, 2, 12, 2, 25, 500],
+    [3.5, 4, 1.5, 10, 2, 20, 500],
+    [5, 5, 3, 15, 2.5, 30, 500],
+    [2.5, 2.5, 1.5, 9, 2, 25, 600],
+    [6, 6, 2, 18, 3, 35, 500],
+  ]
+  it.each(LAJES)('vão=%s g=%s q=%s h=%s c=%s C%s fyk=%s: bate com flexaoSimples de bw=100', (vao, g, q, h, cobrimentoUtil, fck, fyk) => {
+    const res = lajeUmaDirecao({ vao, g, q, h, cobrimentoUtil, fck, fyk })
+    const d = h - cobrimentoUtil
+    const direto = flexaoSimples({ bw: 100, h, d, fck, fyk, md: res.esforcos.valores.mMax })
+    expect(res.flexao.valores.as).toBeCloseTo(direto.valores.as, 2)
+    expect(res.flexao.valores.asAdotar).toBeCloseTo(direto.valores.asAdotar, 2)
+  })
+
+  it('sempre avisa que vale só para laje biapoiada numa direção, sem continuidade', () => {
+    const res = lajeUmaDirecao({ vao: 4, g: 3, q: 2, h: 12, cobrimentoUtil: 2, fck: 25, fyk: 500 })
+    expect(res.avisos.some(a => a.includes('numa direção'))).toBe(true)
+  })
+
+  it('a memória de cálculo da laje traz a faixa de 1 m e a NBR 6118', () => {
+    const res = lajeUmaDirecao({ vao: 4, g: 3, q: 2, h: 12, cobrimentoUtil: 2, fck: 25, fyk: 500 })
+    const texto = memoriaDeCalculo('Laje L1', { vão: '4,00 m' }, res.passos, res.avisos)
+    expect(texto).toContain('faixa de 1 m')
+    expect(texto).toContain('NBR 6118')
   })
 })

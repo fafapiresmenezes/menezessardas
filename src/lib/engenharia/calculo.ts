@@ -245,6 +245,42 @@ export function pilarCompressaoCentrada(dados: DadosPilar): Resultado<{ ac: numb
   return { valores: { ac: r(ac), as: r(Math.max(as, 0)), asMin: r(asMin), asMax: r(asMax), asAdotar: r(asAdotar), taxaAdotada: r(taxaAdotada, 2) }, passos, avisos }
 }
 
+// ---------------------------------------------------------------- laje maciça armada em uma direção
+// Passo E4 (continuação, 15/11/2026): laje maciça, armada numa só direção (a NBR 6118 trata a faixa
+// de 1 m de largura como uma viga de bw = 100 cm — por isso reaproveita flexaoSimples e
+// vigaBiapoiada em vez de uma fórmula nova). Vale para laje biapoiada, vão menor, sem continuidade.
+// Laje armada nas duas direções, lajes contínuas, lajes em balanço e punção ficam fora desta versão.
+export interface DadosLaje {
+  vao: number // m (vão menor, direção da armadura principal)
+  g: number // kN/m² (permanente característica, incluindo peso próprio e revestimento)
+  q: number // kN/m² (variável característica, uso)
+  h: number // cm (espessura da laje)
+  cobrimentoUtil: number // cm (h − d)
+  fck: number // MPa
+  fyk: number // MPa
+}
+
+export function lajeUmaDirecao(dados: DadosLaje) {
+  const avisos = ['Vale só para laje maciça armada numa direção, biapoiada, sem continuidade. Laje armada nas duas direções, laje contínua, laje em balanço e punção não entram nesta versão.']
+  const comb = combinacaoUltimaNormal(dados.g, dados.q > 0 ? [{ nome: 'sobrecarga de uso', valor: dados.q, psi0: 0.5 }] : [])
+  const esf = vigaBiapoiada(comb.valores.fd, dados.vao)
+  const d = dados.h - dados.cobrimentoUtil
+  const bw = 100 // cm (faixa de 1 m)
+  const flex = flexaoSimples({ bw, h: dados.h, d, fck: dados.fck, fyk: dados.fyk, md: esf.valores.mMax })
+  return {
+    combinacao: comb,
+    esforcos: esf,
+    flexao: flex,
+    passos: [
+      ...comb.passos,
+      ...esf.passos,
+      { titulo: 'Faixa de cálculo (NBR 6118, item 14.7.3)', formula: 'bw = 100 cm (faixa de 1 m de largura)', conta: '-', resultado: 100, unidade: 'cm', referencia: 'NBR 6118, item 14.7.3' },
+      ...flex.passos,
+    ],
+    avisos: [...avisos, ...flex.avisos],
+  }
+}
+
 export function memoriaDeCalculo(titulo: string, entrada: Record<string, string | number>, passos: Passo[], avisos: string[]): string {
   const linhas = [
     `MEMÓRIA DE CÁLCULO — ${titulo}`,
