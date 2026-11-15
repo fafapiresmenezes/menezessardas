@@ -4,6 +4,52 @@
 import type { Par } from './calibragem'
 import { brier } from './calibragem'
 
+// ---------------------------------------------------------------- tarefa 1 (continuação, 15/11/2026):
+// travar o registro da previsão antes de o resultado existir, para ninguém ajeitar o palpite depois
+// de já saber o desfecho. Mesma receita do trilho (predicao/trilho-v4-andamento.jsonl): um hash
+// amarra os dados selados no momento do registro, e qualquer alteração neles quebra o hash.
+async function sha256Hex(texto: string): Promise<string> {
+  const dados = new TextEncoder().encode(texto)
+  const buffer = await crypto.subtle.digest('SHA-256', dados)
+  return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('')
+}
+
+export interface PrevisaoSelada {
+  caso: string
+  p: number // chance prevista (0-100), no momento do registro
+  criadoEm: string // ISO 8601
+  hashSelo: string // trava os três campos acima
+}
+
+export interface PrevisaoConferida extends PrevisaoSelada {
+  y: 0 | 1 // desfecho real (0 = não aconteceu, 1 = aconteceu)
+  conferidoEm: string
+  hashConferencia: string // trava o desfecho em cima do selo original
+}
+
+/** Sela a previsão (caso, chance, data) ANTES de o desfecho existir. */
+export async function registrarPrevisao(caso: string, p: number, quando: Date): Promise<PrevisaoSelada> {
+  const criadoEm = quando.toISOString()
+  const hashSelo = await sha256Hex(`${caso}|${p}|${criadoEm}`)
+  return { caso, p, criadoEm, hashSelo }
+}
+
+/** Confere se o selo da previsão não foi mexido depois do registro. */
+export async function seloIntacto(previsao: PrevisaoSelada): Promise<boolean> {
+  const esperado = await sha256Hex(`${previsao.caso}|${previsao.p}|${previsao.criadoEm}`)
+  return esperado === previsao.hashSelo
+}
+
+/** Registra o desfecho real em cima de uma previsão já selada. Falha se o selo foi mexido. */
+export async function conferirPrevisao(previsao: PrevisaoSelada, y: 0 | 1, quando: Date): Promise<PrevisaoConferida> {
+  if (!(await seloIntacto(previsao))) {
+    throw new Error('O selo da previsão não bate com os dados — foi mexido depois do registro. Conferência recusada.')
+  }
+  const conferidoEm = quando.toISOString()
+  const hashConferencia = await sha256Hex(`${previsao.hashSelo}|${y}|${conferidoEm}`)
+  return { ...previsao, y, conferidoEm, hashConferencia }
+}
+
 /** Palpite simples: a mesma taxa histórica (média observada) para todo caso, sem distinção. */
 export function palpiteSimples(pares: Par[]): Par[] {
   if (!pares.length) return []

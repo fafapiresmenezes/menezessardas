@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import type { Par } from './calibragem'
-import { palpiteSimples, comparacaoComBase, direitoDeCalar, MINIMO_PARA_COMPARAR, PISO_DE_CONFIANCA } from './reguaDeErro'
+import { palpiteSimples, comparacaoComBase, direitoDeCalar, MINIMO_PARA_COMPARAR, PISO_DE_CONFIANCA, registrarPrevisao, seloIntacto, conferirPrevisao } from './reguaDeErro'
 
 describe('reguaDeErro', () => {
   it('o palpite simples usa a mesma taxa histórica para todo caso', () => {
@@ -48,5 +48,46 @@ describe('reguaDeErro', () => {
 
   it('devolve null quando não há chance calculada', () => {
     expect(direitoDeCalar(null)).toBeNull()
+  })
+})
+
+describe('C19 (continuação) · tarefa 1: travar o registro da previsão antes do resultado existir', () => {
+  it('sela a previsão com hash a partir dos dados do registro', async () => {
+    const quando = new Date('2026-11-15T05:00:00Z')
+    const previsao = await registrarPrevisao('processo-123', 72, quando)
+    expect(previsao.caso).toBe('processo-123')
+    expect(previsao.p).toBe(72)
+    expect(previsao.criadoEm).toBe(quando.toISOString())
+    expect(previsao.hashSelo).toMatch(/^[0-9a-f]{64}$/)
+    expect(await seloIntacto(previsao)).toBe(true)
+  })
+
+  it('detecta quando a chance foi mexida depois do registro', async () => {
+    const previsao = await registrarPrevisao('processo-123', 72, new Date('2026-11-15T05:00:00Z'))
+    const adulterada = { ...previsao, p: 95 }
+    expect(await seloIntacto(adulterada)).toBe(false)
+  })
+
+  it('detecta quando a data foi mexida depois do registro', async () => {
+    const previsao = await registrarPrevisao('processo-123', 72, new Date('2026-11-15T05:00:00Z'))
+    const adulterada = { ...previsao, criadoEm: new Date('2026-11-16T05:00:00Z').toISOString() }
+    expect(await seloIntacto(adulterada)).toBe(false)
+  })
+
+  it('confere o desfecho em cima de uma previsão selada intacta', async () => {
+    const previsao = await registrarPrevisao('processo-123', 72, new Date('2026-11-15T05:00:00Z'))
+    const conferida = await conferirPrevisao(previsao, 1, new Date('2026-12-01T00:00:00Z'))
+    expect(conferida.y).toBe(1)
+    expect(conferida.hashConferencia).toMatch(/^[0-9a-f]{64}$/)
+    // a conferência amarra em cima do selo original: previsões com mesmo y mas selo diferente dão hash diferente
+    const outraPrevisao = await registrarPrevisao('processo-456', 72, new Date('2026-11-15T05:00:00Z'))
+    const outraConferida = await conferirPrevisao(outraPrevisao, 1, new Date('2026-12-01T00:00:00Z'))
+    expect(outraConferida.hashConferencia).not.toBe(conferida.hashConferencia)
+  })
+
+  it('recusa conferir uma previsão cujo selo foi mexido', async () => {
+    const previsao = await registrarPrevisao('processo-123', 72, new Date('2026-11-15T05:00:00Z'))
+    const adulterada = { ...previsao, p: 95 }
+    await expect(conferirPrevisao(adulterada, 1, new Date('2026-12-01T00:00:00Z'))).rejects.toThrow(/selo/)
   })
 })
