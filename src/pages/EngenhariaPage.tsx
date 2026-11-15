@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
 import catalogo from '@/lib/engenharia/catalogo.json'
 import { EQUIVALENCIAS, ESTUDOS_ENGENHARIA } from '@/lib/engenharia/plataforma'
-import { vigaConcreto, memoriaDeCalculo, AVISO_ENGENHARIA, type DadosViga } from '@/lib/engenharia/calculo'
+import { vigaConcreto, memoriaDeCalculo, AVISO_ENGENHARIA, pilarCompressaoCentrada, lajeUmaDirecao, type DadosViga, type DadosPilar, type DadosLaje } from '@/lib/engenharia/calculo'
 import MedicaoDeObra from '@/components/MedicaoDeObra'
 
 type Aba = 'calculo' | 'medicao' | 'catalogo' | 'equivalencias' | 'estudos'
@@ -26,6 +26,24 @@ const CAMPOS: { chave: keyof DadosViga; rotulo: string; unidade: string; dica: s
   { chave: 'fyk', rotulo: 'fyk', unidade: 'MPa', dica: 'Resistência do aço (CA-50 = 500 MPa)' },
 ]
 
+const CAMPOS_PILAR: { chave: keyof DadosPilar; rotulo: string; unidade: string; dica: string }[] = [
+  { chave: 'bw', rotulo: 'Menor lado', unidade: 'cm', dica: 'Menor dimensão da seção do pilar' },
+  { chave: 'h', rotulo: 'Maior lado', unidade: 'cm', dica: 'Maior dimensão da seção do pilar' },
+  { chave: 'fck', rotulo: 'fck', unidade: 'MPa', dica: 'Resistência característica do concreto. Esta versão vale até C50' },
+  { chave: 'fyk', rotulo: 'fyk', unidade: 'MPa', dica: 'Resistência do aço (CA-50 = 500 MPa)' },
+  { chave: 'nd', rotulo: 'Força normal (Nd)', unidade: 'kN', dica: 'Carga vertical de cálculo, já majorada, sem momento' },
+]
+
+const CAMPOS_LAJE: { chave: keyof DadosLaje; rotulo: string; unidade: string; dica: string }[] = [
+  { chave: 'vao', rotulo: 'Vão menor', unidade: 'm', dica: 'Direção da armadura principal, laje biapoiada' },
+  { chave: 'g', rotulo: 'Carga permanente (g)', unidade: 'kN/m²', dica: 'Peso próprio, revestimento, contrapiso: o que fica sempre' },
+  { chave: 'q', rotulo: 'Carga variável (q)', unidade: 'kN/m²', dica: 'Uso da edificação (NBR 6120)' },
+  { chave: 'h', rotulo: 'Espessura (h)', unidade: 'cm', dica: 'Espessura total da laje' },
+  { chave: 'cobrimentoUtil', rotulo: 'h − d', unidade: 'cm', dica: 'Distância da face tracionada ao centro da armadura' },
+  { chave: 'fck', rotulo: 'fck', unidade: 'MPa', dica: 'Resistência característica do concreto. Esta versão vale até C50' },
+  { chave: 'fyk', rotulo: 'fyk', unidade: 'MPa', dica: 'Resistência do aço (CA-50 = 500 MPa)' },
+]
+
 function baixar(nome: string, texto: string) {
   const url = URL.createObjectURL(new Blob([texto], { type: 'text/plain;charset=utf-8' }))
   const a = document.createElement('a')
@@ -33,7 +51,7 @@ function baixar(nome: string, texto: string) {
   URL.revokeObjectURL(url)
 }
 
-function Calculo() {
+function CalculoViga() {
   const [dados, setDados] = useState<DadosViga>({ vao: 6, g: 15, q: 5, bw: 20, h: 50, cobrimentoUtil: 5, fck: 25, fyk: 500 })
   const res = useMemo(() => vigaConcreto(dados), [dados])
   const entrada = Object.fromEntries(CAMPOS.map(c => [c.rotulo, `${dados[c.chave]} ${c.unidade}`]))
@@ -80,6 +98,131 @@ function Calculo() {
         <button type="button" className="mt-4 bg-navy text-white px-4 py-2 text-sm" title="Baixa a memória de cálculo completa em texto, com campo para o responsável técnico e a ART"
           onClick={() => baixar('memoria-de-calculo-viga.txt', memoria)}>Baixar memória de cálculo</button>
       </div>
+    </div>
+  )
+}
+
+function CalculoPilar() {
+  const [dados, setDados] = useState<DadosPilar>({ bw: 25, h: 25, fck: 25, fyk: 500, nd: 1200 })
+  const res = useMemo(() => pilarCompressaoCentrada(dados), [dados])
+  const entrada = Object.fromEntries(CAMPOS_PILAR.map(c => [c.rotulo, `${dados[c.chave]} ${c.unidade}`]))
+  const memoria = memoriaDeCalculo('Pilar, compressão centrada', entrada, res.passos, res.avisos)
+  return (
+    <div className="grid lg:grid-cols-[320px_1fr] gap-6">
+      <form className="bg-white p-5 shadow-sm space-y-3" aria-label="Dados do pilar" onSubmit={e => e.preventDefault()}>
+        <h3 className="text-navy font-medium">Pilar curto, carga centrada</h3>
+        {CAMPOS_PILAR.map(c => (
+          <label key={c.chave} className="flex items-center justify-between gap-3 text-sm" title={c.dica}>
+            <span>{c.rotulo} <span className="text-grafite-claro">({c.unidade})</span></span>
+            <input type="number" step="any" className="w-24 border border-navy/20 px-2 py-1 text-right" value={dados[c.chave]}
+              onChange={e => setDados({ ...dados, [c.chave]: Number(e.target.value) || 0 })} data-testid={`campo-pilar-${c.chave}`} />
+          </label>
+        ))}
+        <p className="text-xs text-grafite-claro pt-2">{AVISO_ENGENHARIA}</p>
+      </form>
+      <div className="bg-white p-5 shadow-sm">
+        <div className="grid sm:grid-cols-3 gap-3 mb-4" data-testid="resumo-pilar">
+          {[
+            ['Área da seção', `${res.valores.ac.toLocaleString('pt-BR')} cm²`],
+            ['Armadura adotada', `${res.valores.asAdotar.toLocaleString('pt-BR')} cm²`],
+            ['Taxa adotada', `${res.valores.taxaAdotada.toLocaleString('pt-BR')} %`],
+          ].map(([k, v]) => (
+            <div key={k} className="border border-navy/10 p-3"><div className="text-xs text-grafite-claro">{k}</div><div className="text-lg text-navy">{v}</div></div>
+          ))}
+        </div>
+        {res.avisos.length > 0 && (
+          <ul className="mb-4 border-l-4 border-red-600 bg-red-50 p-3 text-sm space-y-1" role="alert">
+            {res.avisos.map(a => <li key={a}>{a}</li>)}
+          </ul>
+        )}
+        <ol className="space-y-3 text-sm" data-testid="memoria-passos-pilar">
+          {res.passos.map((p, i) => (
+            <li key={i} className="border-b border-navy/10 pb-2">
+              <div className="font-medium text-navy">{i + 1}. {p.titulo}</div>
+              <div className="font-mono text-xs">{p.formula}</div>
+              <div className="font-mono text-xs">{p.conta} = <strong>{p.resultado.toLocaleString('pt-BR')} {p.unidade}</strong></div>
+              {p.referencia && <div className="text-xs text-grafite-claro">{p.referencia}</div>}
+            </li>
+          ))}
+        </ol>
+        <button type="button" className="mt-4 bg-navy text-white px-4 py-2 text-sm" title="Baixa a memória de cálculo completa em texto, com campo para o responsável técnico e a ART"
+          onClick={() => baixar('memoria-de-calculo-pilar.txt', memoria)}>Baixar memória de cálculo</button>
+      </div>
+    </div>
+  )
+}
+
+function CalculoLaje() {
+  const [dados, setDados] = useState<DadosLaje>({ vao: 4, g: 3, q: 2, h: 12, cobrimentoUtil: 2, fck: 25, fyk: 500 })
+  const res = useMemo(() => lajeUmaDirecao(dados), [dados])
+  const entrada = Object.fromEntries(CAMPOS_LAJE.map(c => [c.rotulo, `${dados[c.chave]} ${c.unidade}`]))
+  const memoria = memoriaDeCalculo('Laje maciça armada em uma direção', entrada, res.passos, res.avisos)
+  return (
+    <div className="grid lg:grid-cols-[320px_1fr] gap-6">
+      <form className="bg-white p-5 shadow-sm space-y-3" aria-label="Dados da laje" onSubmit={e => e.preventDefault()}>
+        <h3 className="text-navy font-medium">Laje biapoiada, uma direção</h3>
+        {CAMPOS_LAJE.map(c => (
+          <label key={c.chave} className="flex items-center justify-between gap-3 text-sm" title={c.dica}>
+            <span>{c.rotulo} <span className="text-grafite-claro">({c.unidade})</span></span>
+            <input type="number" step="any" className="w-24 border border-navy/20 px-2 py-1 text-right" value={dados[c.chave]}
+              onChange={e => setDados({ ...dados, [c.chave]: Number(e.target.value) || 0 })} data-testid={`campo-laje-${c.chave}`} />
+          </label>
+        ))}
+        <p className="text-xs text-grafite-claro pt-2">{AVISO_ENGENHARIA}</p>
+      </form>
+      <div className="bg-white p-5 shadow-sm">
+        <div className="grid sm:grid-cols-3 gap-3 mb-4" data-testid="resumo-laje">
+          {[
+            ['Momento de cálculo (faixa de 1 m)', `${res.esforcos.valores.mMax.toLocaleString('pt-BR')} kN·m`],
+            ['Armadura por metro', `${res.flexao.valores.asAdotar.toLocaleString('pt-BR')} cm²/m`],
+            ['x/d', `${res.flexao.valores.xd.toLocaleString('pt-BR')}`],
+          ].map(([k, v]) => (
+            <div key={k} className="border border-navy/10 p-3"><div className="text-xs text-grafite-claro">{k}</div><div className="text-lg text-navy">{v}</div></div>
+          ))}
+        </div>
+        {res.avisos.length > 0 && (
+          <ul className="mb-4 border-l-4 border-red-600 bg-red-50 p-3 text-sm space-y-1" role="alert">
+            {res.avisos.map(a => <li key={a}>{a}</li>)}
+          </ul>
+        )}
+        <ol className="space-y-3 text-sm" data-testid="memoria-passos-laje">
+          {res.passos.map((p, i) => (
+            <li key={i} className="border-b border-navy/10 pb-2">
+              <div className="font-medium text-navy">{i + 1}. {p.titulo}</div>
+              <div className="font-mono text-xs">{p.formula}</div>
+              <div className="font-mono text-xs">{p.conta} = <strong>{p.resultado.toLocaleString('pt-BR')} {p.unidade}</strong></div>
+              {p.referencia && <div className="text-xs text-grafite-claro">{p.referencia}</div>}
+            </li>
+          ))}
+        </ol>
+        <button type="button" className="mt-4 bg-navy text-white px-4 py-2 text-sm" title="Baixa a memória de cálculo completa em texto, com campo para o responsável técnico e a ART"
+          onClick={() => baixar('memoria-de-calculo-laje.txt', memoria)}>Baixar memória de cálculo</button>
+      </div>
+    </div>
+  )
+}
+
+type SubAbaCalculo = 'viga' | 'pilar' | 'laje'
+const SUBABAS_CALCULO: { id: SubAbaCalculo; nome: string }[] = [
+  { id: 'viga', nome: 'Viga' },
+  { id: 'pilar', nome: 'Pilar' },
+  { id: 'laje', nome: 'Laje' },
+]
+
+function Calculo() {
+  const [subaba, setSubaba] = useState<SubAbaCalculo>('viga')
+  return (
+    <div>
+      <div className="flex gap-2 mb-4" role="tablist" aria-label="Tipo de elemento">
+        {SUBABAS_CALCULO.map(s => (
+          <button key={s.id} type="button" role="tab" aria-selected={subaba === s.id}
+            className={`text-sm px-3 py-1 border ${subaba === s.id ? 'bg-navy text-white border-navy' : 'border-navy/30 text-navy'}`}
+            onClick={() => setSubaba(s.id)} data-testid={`subaba-${s.id}`}>{s.nome}</button>
+        ))}
+      </div>
+      {subaba === 'viga' && <CalculoViga />}
+      {subaba === 'pilar' && <CalculoPilar />}
+      {subaba === 'laje' && <CalculoLaje />}
     </div>
   )
 }
