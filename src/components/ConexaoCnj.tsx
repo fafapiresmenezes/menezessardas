@@ -33,7 +33,7 @@ export default function ConexaoCnj({ aoTestar }: { aoTestar?: (ok: boolean) => v
     <div className={`border-l-4 p-3 text-sm flex flex-wrap items-center gap-3 ${COR[s.situacao]}`} data-testid="conexao-cnj" data-situacao={s.situacao}>
       <span className="font-medium">{ROTULO[s.situacao]}</span>
       <span className="flex-1 min-w-[14rem]">{s.texto}</span>
-      <button type="button" onClick={testar} disabled={testando} data-testid="testar-conexao-cnj" className="min-h-[44px] px-4 border border-navy/30 text-navy text-sm disabled:opacity-50">{testando ? 'Testando…' : 'Testar conexão agora'}</button>
+      <button type="button" onClick={testar} disabled={testando} data-testid="testar-conexao-cnj" title="Pergunta agora ao site do CNJ (DataJud) se a ligação está funcionando. Se responder, o robô consegue baixar os processos." className="min-h-[44px] px-4 border border-navy/30 text-navy text-sm disabled:opacity-50">{testando ? 'Testando…' : 'Testar conexão agora'}</button>
       {teste && <p role={teste.ok ? 'status' : 'alert'} className={`basis-full text-xs ${teste.ok ? 'text-green-800' : 'text-critico'}`} data-testid="resultado-teste-cnj">{teste.texto}</p>}
     </div>
   )

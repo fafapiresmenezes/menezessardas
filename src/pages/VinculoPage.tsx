@@ -28,7 +28,7 @@ export default function VinculoPage() {
     return (
       <Layout title="Vínculo não encontrado">
         <div className="bg-white p-10 text-center shadow-sm">
-          <Link to="/imoveis" className="inline-flex items-center gap-2 text-navy underline underline-offset-4">
+          <Link to="/imoveis" title="Volta para a lista de imóveis administrados" className="inline-flex items-center gap-2 text-navy underline underline-offset-4">
             <ArrowLeft size={16} aria-hidden="true" /> Voltar para imóveis
           </Link>
         </div>
@@ -46,6 +46,7 @@ export default function VinculoPage() {
       <div className="space-y-6">
         <Link
           to={`/contrato/${contrato.imovelId}`}
+          title="Volta para a tela do contrato principal ao qual este aditivo ou subcontrato está ligado"
           className="inline-flex items-center gap-2 text-navy underline underline-offset-4"
         >
           <ArrowLeft size={16} aria-hidden="true" /> Voltar ao contrato principal
@@ -57,8 +58,8 @@ export default function VinculoPage() {
               <p className="text-xs uppercase tracking-wider text-dourado-escuro">{titulo}</p>
               <h2 className="text-2xl mt-1">{contrato.parte}</h2>
               <p className="text-sm text-grafite-claro mt-1">{rotulosTipoContrato[contrato.tipo]}</p>
-              <button type="button" data-testid="copiar-link-vinculo" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-2 min-h-[44px] px-3 border border-navy/20 text-navy text-xs print:hidden">Copiar link</button>{/* Passo 285 */}
-              <button type="button" data-testid="baixar-vinculo" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Vínculo — ${contrato.parte}\nTipo: ${rotulosTipoContrato[contrato.tipo]}\nInício: ${contrato.dataInicio}\nVencimento: ${contrato.dataVencimento ?? 'indeterminado'}\nValor: ${contrato.valor}\nContrato-mãe: ${pai?.parte ?? ''}`], { type: 'text/plain;charset=utf-8' })); a.download = 'vinculo.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">baixar ficha</button>{/* Passo 322 */}
+              <button type="button" data-testid="copiar-link-vinculo" title="Copia o endereço desta página para a área de transferência" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-2 min-h-[44px] px-3 border border-navy/20 text-navy text-xs print:hidden">Copiar link</button>{/* Passo 285 */}
+              <button type="button" data-testid="baixar-vinculo" title="Baixa um arquivo de texto (vinculo.txt) com os dados deste aditivo ou subcontrato" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Vínculo — ${contrato.parte}\nTipo: ${rotulosTipoContrato[contrato.tipo]}\nInício: ${contrato.dataInicio}\nVencimento: ${contrato.dataVencimento ?? 'indeterminado'}\nValor: ${contrato.valor}\nContrato-mãe: ${pai?.parte ?? ''}`], { type: 'text/plain;charset=utf-8' })); a.download = 'vinculo.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">baixar ficha</button>{/* Passo 322 */}
             </div>
             <SeloSituacao
               situacao={situacaoPorPrazo(dias)}
@@ -95,7 +96,7 @@ export default function VinculoPage() {
           {pai && (
             <div className="mt-6 pt-5 border-t border-navy/10">
               <p className="text-xs uppercase tracking-wider text-grafite-claro">Contrato-mãe</p>
-              <Link to={`/contrato/${pai.imovelId}`} className="text-navy underline underline-offset-4">
+              <Link to={`/contrato/${pai.imovelId}`} title="Abre a tela do contrato-mãe deste vínculo" className="text-navy underline underline-offset-4">
                 {rotulosTipoContrato[pai.tipo]} — {pai.parte}
               </Link>
             </div>

@@ -33,7 +33,7 @@ describe('Portal do cliente (página pública por link secreto)', () => {
     montar()
     expect(screen.getByText('Carregando…')).toBeTruthy()
     expect((await screen.findByRole('alert')).textContent).toContain('links do Portal valem 90 dias')
-    cleanup(); caso = casoBase; marca = { nome: 'GMenezes', cor: '#14213D', logo_url: null, sede: true }
+    cleanup(); caso = casoBase; marca = { nome: 'GMenezes', cor: '#0B0B0C', logo_url: null, sede: true }
     montar()
     const art = await screen.findByTestId('portal-caso')
     expect(art.textContent).toContain('Despejo Rua A')

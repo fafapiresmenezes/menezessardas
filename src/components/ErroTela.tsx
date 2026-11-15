@@ -15,7 +15,7 @@ export default class ErroTela extends Component<{ children: ReactNode; chave?: s
         <p className="text-sm text-grafite mt-2">{rede ? 'Parece que a internet caiu ou ficou lenta no meio do carregamento.' : 'Algo inesperado aconteceu nesta tela. Nenhum dado foi perdido.'} Toque em “Tentar de novo”. Se continuar, volte ao Painel e avise o administrador.</p>
         <p className="text-xs text-grafite-claro mt-2">Detalhe técnico: {this.state.erro.message.slice(0, 160)}</p>
         <div className="flex flex-wrap gap-2 mt-4">
-          <button type="button" onClick={() => (rede ? window.location.reload() : this.setState({ erro: null }))} className="min-h-[44px] px-5 bg-navy text-white text-sm uppercase tracking-wider">Tentar de novo</button>
+          <button title="Tenta abrir esta tela de novo" type="button" onClick={() => (rede ? window.location.reload() : this.setState({ erro: null }))} className="min-h-[44px] px-5 bg-navy text-white text-sm uppercase tracking-wider">Tentar de novo</button>
           <a href="#/dashboard" onClick={() => this.setState({ erro: null })} className="min-h-[44px] px-5 inline-flex items-center border border-navy text-navy text-sm">Ir ao Painel</a>
         </div>
       </div>

@@ -114,7 +114,7 @@ export default function PerfilJulgador() {
           <input id="pj-tema" value={tema} onChange={e => setTema(e.target.value)} className={campo} placeholder="Ex.: despejo por falta de pagamento" />
         </div>
       </div>
-      <button onClick={gerar} disabled={ocupado} className="mt-3 inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 rounded-sm uppercase tracking-wider text-sm disabled:opacity-50">
+      <button title="Monta o perfil só com decisões já publicadas; nada de rede social" onClick={gerar} disabled={ocupado} className="mt-3 inline-flex items-center gap-2 bg-navy text-white min-h-[44px] px-5 rounded-sm uppercase tracking-wider text-sm disabled:opacity-50">
         {ocupado ? 'Consultando o CNJ e a imprensa…' : 'Montar perfil'}
       </button>
       {erro && <p role="alert" className="text-sm text-critico mt-3">{erro}</p>}

@@ -5,7 +5,7 @@ import { mensagemAmigavel } from '@/lib/erros'
 
 // Passo 39 (Onda D): marca de cada escritório parceiro (nome de exibição, cor e logo) usada no Portal do cliente e nos e-mails.
 type Marca = { nome_exibicao: string; cor: string; logo_url: string; dominio: string }
-const PADRAO: Marca = { nome_exibicao: '', cor: '#14213D', logo_url: '', dominio: '' }
+const PADRAO: Marca = { nome_exibicao: '', cor: '#0B0B0C', logo_url: '', dominio: '' }
 
 export default function MarcaParceiros({ escritorios }: { escritorios: { id: string; nome: string }[] }) {
   const [marcas, setMarcas] = useState<Record<string, Marca>>({})
@@ -14,7 +14,7 @@ export default function MarcaParceiros({ escritorios }: { escritorios: { id: str
     if (escritorios.length === 0) return
     supabase.from('escritorios').select('id,nome_exibicao,cor,logo_url,dominio').in('id', escritorios.map(e => e.id)).then(({ data }) => {
       const m: Record<string, Marca> = {}
-      for (const r of (data ?? []) as { id: string; nome_exibicao: string | null; cor: string | null; logo_url: string | null; dominio?: string | null }[]) m[r.id] = { nome_exibicao: r.nome_exibicao ?? '', cor: r.cor ?? '#14213D', logo_url: r.logo_url ?? '', dominio: r.dominio ?? '' }
+      for (const r of (data ?? []) as { id: string; nome_exibicao: string | null; cor: string | null; logo_url: string | null; dominio?: string | null }[]) m[r.id] = { nome_exibicao: r.nome_exibicao ?? '', cor: r.cor ?? '#0B0B0C', logo_url: r.logo_url ?? '', dominio: r.dominio ?? '' }
       setMarcas(m)
     })
   }, [escritorios.map(e => e.id).join(',')])
@@ -37,10 +37,10 @@ export default function MarcaParceiros({ escritorios }: { escritorios: { id: str
           <li key={e.id} className="grid sm:grid-cols-6 gap-2 items-center text-sm" data-testid="marca-item">
             <span className="truncate">{e.nome}</span>
             <input aria-label={`Nome de exibição de ${e.nome}`} placeholder="Nome de exibição" value={m.nome_exibicao} onChange={ev => mudar(e.id, 'nome_exibicao', ev.target.value)} className="border px-2 py-1" data-testid="marca-nome" />
-            <span className="flex items-center gap-1"><input aria-label={`Cor de ${e.nome}`} type="color" value={/^#[0-9A-Fa-f]{6}$/.test(m.cor) ? m.cor : '#14213D'} onChange={ev => mudar(e.id, 'cor', ev.target.value)} className="h-9 w-12 border" data-testid="marca-cor" /><span className="text-xs">{m.cor}</span></span>
+            <span className="flex items-center gap-1"><input aria-label={`Cor de ${e.nome}`} type="color" value={/^#[0-9A-Fa-f]{6}$/.test(m.cor) ? m.cor : '#0B0B0C'} onChange={ev => mudar(e.id, 'cor', ev.target.value)} className="h-9 w-12 border" data-testid="marca-cor" /><span className="text-xs">{m.cor}</span></span>
             <input aria-label={`Logo de ${e.nome}`} placeholder="https://…/logo.png" value={m.logo_url} onChange={ev => mudar(e.id, 'logo_url', ev.target.value)} className="border px-2 py-1" data-testid="marca-logo" />
             <input aria-label={`Domínio próprio de ${e.nome}`} placeholder="app.escritorio.com.br" value={m.dominio} onChange={ev => mudar(e.id, 'dominio', ev.target.value)} className="border px-2 py-1" data-testid="marca-dominio" />
-            <button onClick={() => salvar(e.id)} className="min-h-[40px] border border-navy px-3 text-xs uppercase tracking-wider" data-testid="marca-salvar">Salvar</button>
+            <button title="Guarda o nome, a cor e o logo deste escritório" onClick={() => salvar(e.id)} className="min-h-[40px] border border-navy px-3 text-xs uppercase tracking-wider" data-testid="marca-salvar">Salvar</button>
           </li>) })}
       </ul>
       {msg && <p role="status" className="text-sm mt-2" data-testid="marca-msg">{msg}</p>}

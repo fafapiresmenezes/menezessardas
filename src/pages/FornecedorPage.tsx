@@ -63,7 +63,7 @@ export default function FornecedorPage() {
   if (f === null) {
     return (
       <Layout title="Fornecedor não encontrado">
-        <Link to="/fornecedores" className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4">
+        <Link to="/fornecedores" title="Volta para a lista de fornecedores" className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4">
           <ArrowLeft size={16} aria-hidden="true" /> Voltar aos fornecedores
         </Link>
       </Layout>
@@ -150,7 +150,7 @@ export default function FornecedorPage() {
   return (
     <Layout title={f.nome}>
       <div className="space-y-6">
-        <Link to="/fornecedores" className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4">
+        <Link to="/fornecedores" title="Volta para a lista de fornecedores" className="inline-flex items-center gap-2 min-h-[44px] text-navy underline underline-offset-4">
           <ArrowLeft size={16} aria-hidden="true" /> Voltar aos fornecedores
         </Link>
 
@@ -161,7 +161,7 @@ export default function FornecedorPage() {
           <p className="text-xs uppercase tracking-wider text-dourado-escuro">{rotuloCategoria[f.categoria]}</p>
           <h2 className="text-2xl mt-1">{f.nome}</h2>
           <p className="font-mono text-sm text-grafite-claro mt-1">CNPJ {formatarCnpj(f.cnpj)}</p>
-          <button type="button" data-testid="copiar-link-fornecedor" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-2 min-h-[44px] px-3 border border-navy/20 text-navy text-xs print:hidden">Copiar link</button>{/* Passo 286 */}
+          <button type="button" data-testid="copiar-link-fornecedor" title="Copia o endereço desta página do fornecedor para compartilhar" onClick={() => navigator.clipboard?.writeText(window.location.href).catch(() => undefined)} className="mt-2 min-h-[44px] px-3 border border-navy/20 text-navy text-xs print:hidden">Copiar link</button>{/* Passo 286 */}
         </section>
 
         {/* KYC */}
@@ -190,6 +190,7 @@ export default function FornecedorPage() {
               <button
                 onClick={consultar}
                 disabled={consultando}
+                title="Consulta o CNPJ na Receita Federal e grava a razão social e a situação cadastral com a data"
                 className="mt-3 inline-flex items-center gap-2 min-h-[44px] px-4 border border-navy text-navy hover:bg-pergaminho text-sm disabled:opacity-50"
               >
                 <Search size={16} aria-hidden="true" /> {consultando ? 'Consultando…' : 'Consultar CNPJ agora'}
@@ -213,6 +214,7 @@ export default function FornecedorPage() {
                 />
                 <a
                   href={`https://portaldatransparencia.gov.br/sancoes/consulta?cadastro=${lista === 'ceis' ? 1 : 2}&cpfCnpj=${f.cnpj}`}
+                  title={`Abre o Portal da Transparência em uma nova aba, já com a consulta do CNPJ no cadastro ${lista.toUpperCase()}`}
                   target="_blank"
                   rel="noreferrer"
                   className="mt-2 inline-flex items-center gap-1 text-sm text-navy underline underline-offset-4 min-h-[44px]"
@@ -247,6 +249,7 @@ export default function FornecedorPage() {
                       <SeloSituacao situacao={situacaoPorPrazo(dias)} texto={textoPrazo(dias)} />
                       <button
                         onClick={() => removerCertidao(c.id)}
+                        title="Remove esta certidão do cadastro do fornecedor"
                         aria-label={`Remover ${c.nome}`}
                         className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center hover:bg-pergaminho"
                       >
@@ -260,14 +263,14 @@ export default function FornecedorPage() {
           )}
           <div className="mt-5 grid sm:grid-cols-[1fr_auto_auto] gap-3 items-end">
             <Campo id="cert-nome" rotulo="Certidão">
-              <select id="cert-nome" className={classeCampo} value={certNome} onChange={e => setCertNome(e.target.value)}>
+              <select id="cert-nome" title="Escolhe o tipo de certidão a registrar para este fornecedor" className={classeCampo} value={certNome} onChange={e => setCertNome(e.target.value)}>
                 {CERTIDOES_PADRAO.map(n => <option key={n}>{n}</option>)}
               </select>
             </Campo>
             <Campo id="cert-val" rotulo="Validade">
               <input id="cert-val" type="date" className={classeCampo} value={certValidade} onChange={e => setCertValidade(e.target.value)} />
             </Campo>
-            <button onClick={addCertidao} className="min-h-[44px] inline-flex items-center gap-2 bg-navy hover:bg-navy-700 text-white px-5 rounded-sm text-sm uppercase tracking-wider">
+            <button onClick={addCertidao} title="Registra a certidão com a validade informada; o vencimento passa a gerar alerta" className="min-h-[44px] inline-flex items-center gap-2 bg-navy hover:bg-navy-700 text-white px-5 rounded-sm text-sm uppercase tracking-wider">
               <Plus size={16} aria-hidden="true" /> Registrar
             </button>
           </div>
@@ -290,14 +293,14 @@ export default function FornecedorPage() {
                 <span className={`px-2 py-0.5 text-xs ${o.tipo === 'elogio' ? 'bg-regularFundo text-regular' : o.resolvidaEm ? 'bg-pergaminho text-grafite' : 'bg-atencaoFundo text-atencao'}`}>{rotuloOcorrencia[o.tipo]}{o.resolvidaEm && ` · resolvida em ${formatarData(o.resolvidaEm)}`}</span>
                 <span className="flex-1 min-w-[12rem]">{o.descricao}</span>
                 {o.tipo !== 'elogio' && !o.resolvidaEm && (
-                  <button type="button" className="underline text-navy text-xs" onClick={() => salvar({ ...f, ocorrencias: (f.ocorrencias ?? []).map(x => x.id === o.id ? { ...x, resolvidaEm: hojeLocal() } : x) }, `Ocorrência resolvida: ${f.nome} — ${o.descricao.slice(0, 60)}`, 'Ocorrência marcada como resolvida.')}>marcar como resolvida</button>
+                  <button type="button" title="Marca esta ocorrência como resolvida hoje; ela deixa de descontar pontos do SLA" className="underline text-navy text-xs" onClick={() => salvar({ ...f, ocorrencias: (f.ocorrencias ?? []).map(x => x.id === o.id ? { ...x, resolvidaEm: hojeLocal() } : x) }, `Ocorrência resolvida: ${f.nome} — ${o.descricao.slice(0, 60)}`, 'Ocorrência marcada como resolvida.')}>marcar como resolvida</button>
                 )}
               </li>
             ))}
           </ul>
           <div className="grid gap-4 md:grid-cols-[160px_150px_1fr_auto] items-end mt-4">
             <Campo id="oc-tipo" rotulo="Tipo">
-              <select id="oc-tipo" className={classeCampo} value={ocTipo} onChange={e => setOcTipo(e.target.value as TipoOcorrencia)}>
+              <select id="oc-tipo" title="Escolhe o tipo da ocorrência a registrar (atraso, falha, elogio etc.)" className={classeCampo} value={ocTipo} onChange={e => setOcTipo(e.target.value as TipoOcorrencia)}>
                 {(Object.keys(rotuloOcorrencia) as TipoOcorrencia[]).map(t => <option key={t} value={t}>{rotuloOcorrencia[t]}</option>)}
               </select>
             </Campo>
@@ -307,7 +310,7 @@ export default function FornecedorPage() {
             <Campo id="oc-desc" rotulo="O que aconteceu">
               <input id="oc-desc" className={classeCampo} value={ocDescricao} onChange={e => setOcDescricao(e.target.value)} placeholder="ex.: vistoria entregue 3 dias depois do combinado" />
             </Campo>
-            <button data-testid="registrar-ocorrencia" disabled={ocDescricao.trim().length < 5} onClick={() => {
+            <button data-testid="registrar-ocorrencia" title="Grava a ocorrência no histórico do fornecedor; ocorrências negativas sem solução reduzem o SLA" disabled={ocDescricao.trim().length < 5} onClick={() => {
               const o: Ocorrencia = { id: crypto.randomUUID(), data: ocData, tipo: ocTipo, descricao: ocDescricao.trim() }
               salvar({ ...f, ocorrencias: [...(f.ocorrencias ?? []), o] }, `Ocorrência registrada: ${f.nome} — ${rotuloOcorrencia[ocTipo]}`, 'Ocorrência registrada.')
               setOcDescricao('')
@@ -371,7 +374,7 @@ export default function FornecedorPage() {
                         onChange={e => setMedicoes(m => ({ ...m, [s.id]: e.target.value }))}
                       />
                     </Campo>
-                    <button onClick={() => registrarMedicao(s)} className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho text-sm">
+                    <button onClick={() => registrarMedicao(s)} title="Grava o resultado deste mês para a meta e indica se ela foi cumprida" className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho text-sm">
                       Registrar medição do mês
                     </button>
                   </div>
@@ -402,7 +405,7 @@ export default function FornecedorPage() {
                 { valor: 'maximo', rotulo: 'Máximo', descricao: 'O resultado deve ser igual ou menor que a meta (ex.: 10 minutos de resposta).' },
               ]}
             />
-            <button onClick={addSla} className="min-h-[44px] inline-flex items-center gap-2 bg-navy hover:bg-navy-700 text-white px-5 rounded-sm text-sm uppercase tracking-wider">
+            <button onClick={addSla} title="Cria a nova meta de serviço (SLA) para medir este fornecedor mês a mês" className="min-h-[44px] inline-flex items-center gap-2 bg-navy hover:bg-navy-700 text-white px-5 rounded-sm text-sm uppercase tracking-wider">
               <Plus size={16} aria-hidden="true" /> Criar meta
             </button>
           </div>

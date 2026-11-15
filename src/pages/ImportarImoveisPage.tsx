@@ -52,8 +52,8 @@ export default function ImportarImoveisPage() {
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6">
           <p className="text-sm">Baixe o modelo, preencha uma linha por imóvel (Excel ou Google Planilhas, salvar como CSV) e envie aqui. Cada linha é conferida antes de gravar: tipo, uso e UF precisam ser os da plataforma, e endereço, cidade e proprietário são obrigatórios.</p>
           <div className="flex flex-wrap gap-3 mt-4">
-            <button type="button" onClick={baixarModelo} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2" data-testid="baixar-modelo"><Download size={16} aria-hidden /> Baixar modelo CSV</button>
-            <label className="min-h-[44px] px-4 bg-navy text-white text-sm inline-flex items-center gap-2 cursor-pointer"><Upload size={16} aria-hidden /> Enviar planilha<input type="file" accept=".csv,text/csv" className="sr-only" onChange={e => lerArquivo(e.target.files?.[0])} data-testid="arquivo-csv" /></label>
+            <button type="button" onClick={baixarModelo} title="Baixa o arquivo modelo-imoveis.csv com as colunas esperadas para preencher no Excel ou Google Planilhas" className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2" data-testid="baixar-modelo"><Download size={16} aria-hidden /> Baixar modelo CSV</button>
+            <label title="Escolhe o arquivo CSV preenchido no seu computador; as linhas são conferidas antes de gravar" className="min-h-[44px] px-4 bg-navy text-white text-sm inline-flex items-center gap-2 cursor-pointer"><Upload size={16} aria-hidden /> Enviar planilha<input type="file" accept=".csv,text/csv" className="sr-only" onChange={e => lerArquivo(e.target.files?.[0])} data-testid="arquivo-csv" /></label>
             {nomeArquivo && <span className="text-sm self-center">{nomeArquivo}</span>}
           </div>
           <details className="mt-3 text-sm"><summary className="cursor-pointer">Ou cole o conteúdo do CSV</summary>
@@ -65,8 +65,8 @@ export default function ImportarImoveisPage() {
             <p className="text-sm" data-testid="resumo-csv"><strong>{resultado.linhas.length}</strong> linha(s): <strong className="text-regular">{resultado.validas.length} prontas</strong>{resultado.erros > 0 && <>, <strong className="text-critico">{resultado.erros} com erro</strong></>}.</p>
             <Tabela linhas={resultado.linhas} />
             <div className="flex flex-wrap gap-3 mt-4">
-              <button type="button" onClick={() => importar(false)} disabled={importando || !!resultado.erros || !resultado.validas.length} className="min-h-[44px] px-4 bg-navy text-white text-sm disabled:opacity-50" data-testid="importar-tudo">{importando ? 'Importando…' : `Importar ${resultado.validas.length} imóveis`}</button>
-              {resultado.erros > 0 && resultado.validas.length > 0 && <button type="button" onClick={() => importar(true)} disabled={importando} className="min-h-[44px] px-4 border text-sm" data-testid="importar-validas">Importar só as {resultado.validas.length} válidas</button>}
+              <button type="button" onClick={() => importar(false)} disabled={importando || !!resultado.erros || !resultado.validas.length} className="min-h-[44px] px-4 bg-navy text-white text-sm disabled:opacity-50" title="Grava todos os imóveis da planilha na carteira (só habilita quando nenhuma linha tem erro)" data-testid="importar-tudo">{importando ? 'Importando…' : `Importar ${resultado.validas.length} imóveis`}</button>
+              {resultado.erros > 0 && resultado.validas.length > 0 && <button type="button" onClick={() => importar(true)} disabled={importando} className="min-h-[44px] px-4 border text-sm" title="Grava apenas as linhas sem erro e deixa de fora as linhas em vermelho" data-testid="importar-validas">Importar só as {resultado.validas.length} válidas</button>}
             </div>
             {resultado.erros > 0 && <p className="text-xs text-atencao mt-2 flex items-center gap-1"><AlertTriangle size={14} aria-hidden /> Corrija as linhas em vermelho na planilha e envie de novo, ou importe só as válidas.</p>}
           </section>
@@ -75,7 +75,7 @@ export default function ImportarImoveisPage() {
           <section className="bg-white shadow-sm border-l-4 border-regular p-6" role="status" data-testid="relatorio-importacao">
             <p className="text-sm flex items-center gap-2"><CheckCircle2 size={16} className="text-regular" aria-hidden /> <strong data-testid="gravadas">{relatorio.gravadas}</strong> imóvel(is) gravado(s){relatorio.falhas.length > 0 && <>, <strong className="text-critico">{relatorio.falhas.length}</strong> falha(s) ao gravar</>}.</p>
             {relatorio.falhas.length > 0 && <ul className="text-xs text-critico mt-2 list-disc pl-5">{relatorio.falhas.map(f => <li key={f.numero}>Linha {f.numero}: {f.erro}</li>)}</ul>}
-            <Link to="/imoveis" className="underline text-navy text-sm mt-2 inline-block">Ver a carteira de imóveis</Link>
+            <Link to="/imoveis" title="Abre a lista de imóveis para conferir os que foram importados" className="underline text-navy text-sm mt-2 inline-block">Ver a carteira de imóveis</Link>
           </section>
         )}
       </div>

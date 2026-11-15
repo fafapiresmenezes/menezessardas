@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { calcularPrazo, feriadosDoRio } from '@/lib/prazos'
-import { CalendarClock, Inbox, ListChecks, FileWarning, Briefcase, Mail } from 'lucide-react'
+import { CalendarClock, Inbox, ListChecks, FileWarning, Mail } from 'lucide-react'
 import { extrairAcoes } from '@/lib/acoesConsultor'
-import { render } from '@/pages/AssistentePage'
+import ConsultorSemana from '@/components/ConsultorSemana'
 import { hojeLocal, isoLocal } from '@/lib/datas'
-import { mensagemAmigavel } from '@/lib/erros'
+import { agruparPorArea } from '@/lib/areaDoDireito'
+import { meuAlcance, filtrarPorHierarquia, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // "Meu dia": o que cada nível do escritório precisa ver ao abrir a plataforma, num só lugar.
 // O papel escolhido define a ordem e os atalhos; os dados são os mesmos para todos (respeitando o sigilo).
@@ -39,11 +40,15 @@ const DINHEIRO = new Set(['valor_60_dias', 'honorarios_em_aberto'])
 const brl = (v: number) => 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 type Resumo = { semana: string; socia: Record<string, string | number>; advogada: Record<string, string | number>; secretaria: Record<string, string | number> }
 const hoje = () => hojeLocal()
+const so = (n: string | null | undefined) => String(n ?? '').replace(/\D/g, '') // número do processo só com dígitos
 const fmt = (d: string) => new Date(`${d}T12:00`).toLocaleDateString('pt-BR')
+
+// Tarefas separadas por tipo de direito: o agrupamento vive em @/lib/areaDoDireito e é o mesmo
+// usado na carteira de processos, para "Trabalhista" (planilha) e "trabalhista" (chave) caírem no mesmo bloco.
 
 export default function MeuDiaPage() {
   const [papel, setPapel] = useState(() => { try { return localStorage.getItem('lsm-papel') || 'advogada' } catch { return 'advogada' } })
-  const [tarefas, setTarefas] = useState<{ id: string; titulo: string; prazo: string | null; prioridade: string }[]>([])
+  const [tarefas, setTarefas] = useState<{ id: string; titulo: string; prazo: string | null; prioridade: string; area: string | null }[]>([])
   const [intimacoes, setIntimacoes] = useState(0)
   const [vencendo, setVencendo] = useState<{ id: string; imovel_id: string; locatario_fornecedor: string; data_vencimento: string }[]>([])
   // Passo D15: movimentações novas nos processos monitorados (últimos 7 dias).
@@ -55,19 +60,12 @@ export default function MeuDiaPage() {
   // Passo 20: ações do Consultor da semana marcáveis como feitas (tabela acoes_consultor).
   const [acoes, setAcoes] = useState<{ id: string; indice: number; texto: string; feito_em: string | null }[]>([])
   const [resumo, setResumo] = useState<{ conteudo: Resumo; criado_em: string; enviado_em: string | null; destinatarios: number } | null>(null)
-  const [msgResumo, setMsgResumo] = useState('')
   const [diaCopiado, setDiaCopiado] = useState(false) // Passo 209
   useEffect(() => {
     if (!supabaseConfigurado) return
     supabase.from('resumos_semanais').select('conteudo,criado_em,enviado_em,destinatarios').order('semana', { ascending: false }).limit(1).maybeSingle().then(r => setResumo(r.data ?? null))
   }, [])
-  const testarResumo = async () => {
-    setMsgResumo('Enviando o resumo de teste para o seu e-mail…')
-    const { data, error } = await supabase.functions.invoke('resumo-semanal', { body: { teste: true } })
-    if (error) return setMsgResumo(`Não foi possível enviar: ${mensagemAmigavel(error)}`)
-    if (data?.enviado) { setMsgResumo('Resumo de teste enviado para o seu e-mail. Toda segunda-feira às 8h ele vai para toda a equipe.'); if (data.resumo) setResumo(r => r ?? { conteudo: data.resumo, criado_em: new Date().toISOString(), enviado_em: null, destinatarios: 0 }) }
-    else setMsgResumo(`Não enviado: ${data?.motivo ?? data?.detalhe ?? data?.erro ?? 'erro desconhecido'}.`)
-  }
+  // O botão de "resumo de teste" saiu da tela a pedido do M (12/11/2026): cliente não testa; o resumo chega sozinho toda segunda às 8h.
   useEffect(() => {
     if (!supabaseConfigurado) { setDiagnostico(null); return }
     supabase.from('diagnosticos_semanais').select('id,resposta,criado_em').eq('nivel', NIVEL_DO_PAPEL[papel] ?? 'nivel_pleno').order('criado_em', { ascending: false }).limit(1).maybeSingle().then(async r => {
@@ -86,7 +84,6 @@ export default function MeuDiaPage() {
     const { error } = await supabase.from('acoes_consultor').update({ feito_em, usuario_id: feito_em ? u.user?.id ?? null : null }).eq('id', a.id)
     if (!error) setAcoes(acoes.map(x => x.id === a.id ? { ...x, feito_em } : x))
   }
-  const feitas = acoes.filter(a => a.feito_em).length
   // Passo 21: aviso quando as horas do mês estão abaixo de 80% do ritmo da meta da função.
   const [horas, setHoras] = useState<{ meta: number; horas: number; esperado_hoje: number; pct_ritmo: number | null; abaixo: boolean } | null>(null)
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 278
@@ -101,13 +98,22 @@ export default function MeuDiaPage() {
       const em7 = isoLocal(new Date(Date.now() + 7 * 86400000))
       const em60 = isoLocal(new Date(Date.now() + 60 * 86400000))
       const ha7 = new Date(Date.now() - 7 * 86400000).toISOString()
-      const [t, i, c, mv] = await Promise.all([
-        supabase.from('tarefas').select('id,titulo,prazo,prioridade').eq('responsavel_id', u.user?.id ?? '').neq('situacao', 'feito').lte('prazo', em7).order('prazo').limit(20),
-        supabase.from('intimacoes').select('id', { count: 'exact', head: true }).eq('lida', false),
+      const [t, alc, casos, i, c, mv] = await Promise.all([
+        supabase.from('tarefas').select('id,titulo,prazo,prioridade,area').eq('responsavel_id', u.user?.id ?? '').neq('situacao', 'feito').lte('prazo', em7).order('prazo').limit(40),
+        meuAlcance().catch(() => ALCANCE_FECHADO),
+        supabase.from('tarefas').select('numero_processo,responsavel_id').eq('nivel', 'projeto'),
+        supabase.from('intimacoes').select('id,numero_processo').eq('lida', false),
         supabase.from('contratos').select('id,imovel_id,locatario_fornecedor,data_vencimento').is('encerrado_em', null).gte('data_vencimento', hoje()).lte('data_vencimento', em60).order('data_vencimento').limit(10),
         supabase.from('monitoramentos').select('id,valor,rotulo,novidade_em,novidades').gte('novidade_em', ha7).order('novidade_em', { ascending: false }).limit(5),
       ])
-      setTarefas(t.data ?? []); setIntimacoes(i.count ?? 0); setVencendo(c.data ?? []); setMovimentacoes((mv?.data ?? []).filter(m => (m.novidades ?? []).length > 0))
+      // Privacidade por advogado: intimações e movimentações do dia só aparecem se o caso é visível para quem olha.
+      // Processo que ainda não é caso do escritório não tem dono e continua aparecendo para todos — alguém precisa assumi-lo.
+      const meusCasos = new Set(filtrarPorHierarquia((casos.data ?? []) as { numero_processo: string | null; responsavel_id: string | null }[], alc).map(x => so(x.numero_processo)))
+      const comDono = new Set(((casos.data ?? []) as { numero_processo: string | null; responsavel_id: string | null }[]).filter(x => x.responsavel_id).map(x => so(x.numero_processo)))
+      const meu = (numero: string | null | undefined) => { const n = so(numero); return alc.veTudo || !comDono.has(n) || meusCasos.has(n) }
+      setTarefas(t.data ?? [])
+      setIntimacoes(((i.data ?? []) as { numero_processo: string | null }[]).filter(x => meu(x.numero_processo)).length)
+      setVencendo(c.data ?? []); setMovimentacoes((mv?.data ?? []).filter(m => (m.novidades ?? []).length > 0 && meu(m.valor)))
     })()
   }, [])
   const p = PAPEIS[papel]
@@ -131,55 +137,68 @@ export default function MeuDiaPage() {
           <p className="font-medium mb-2">Qual é a sua função?</p>
           <div role="radiogroup" className="flex flex-wrap gap-2">
             {Object.entries(PAPEIS).map(([k, v]) => (
-              <button key={k} type="button" role="radio" aria-checked={papel === k} data-testid={`papel-${k}`} onClick={() => setPapel(k)}
+              <button key={k} type="button" role="radio" aria-checked={papel === k} data-testid={`papel-${k}`} onClick={() => setPapel(k)} title={`Mostra o dia na visão de ${v.nome}: ${v.foco}`}
                 className={`min-h-[44px] px-4 text-sm border ${papel === k ? 'bg-navy text-white' : ''}`}>{v.nome}</button>
             ))}
           </div>
           <p className="text-sm text-grafite-claro mt-2">{p.foco}</p>
           <div className="flex flex-wrap gap-2 mt-3">
-            {p.atalhos.map(a => <Link key={a.href + a.rotulo} to={a.href} className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy text-navy">{a.rotulo}</Link>)}
-            <button type="button" onClick={() => { copiarDia(); setDiaCopiado(true) }} data-testid="copiar-dia" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy">{diaCopiado ? 'Dia copiado' : 'Copiar meu dia'}</button>
+            {p.atalhos.map(a => <Link key={a.href + a.rotulo} to={a.href} title={`Abre ${a.rotulo}, um atalho da visão de ${p.nome}`} className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy text-navy">{a.rotulo}</Link>)}
+            <button type="button" onClick={() => { copiarDia(); setDiaCopiado(true) }} data-testid="copiar-dia" title="Copia o seu dia em texto (tarefas, intimações e contratos vencendo) para colar na agenda ou enviar" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy">{diaCopiado ? 'Dia copiado' : 'Copiar meu dia'}</button>
             {/* Passo 140: imprimir o dia em uma página. */}
-            <button type="button" onClick={() => window.print()} data-testid="imprimir-dia" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy print:hidden">Imprimir</button>
-            <button type="button" data-testid="copiar-link-meu-dia" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 240 */}
-            {tarefas.length + vencendo.length > 0 && <button type="button" data-testid="baixar-meu-dia" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['tipo;título;prazo;prioridade', ...tarefas.map(t => `tarefa;${t.titulo.replace(/;/g, ',')};${t.prazo ?? ''};${t.prioridade}`), ...vencendo.map(v => `vencimento;${v.locatario_fornecedor};${v.data_vencimento};`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'meu-dia.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 309 */}
+            <button type="button" onClick={() => window.print()} data-testid="imprimir-dia" title="Abre a janela de impressão do navegador para imprimir o seu dia em uma página" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy print:hidden">Imprimir</button>
+            <button type="button" data-testid="copiar-link-meu-dia" title="Copia o endereço desta tela para a área de transferência" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 240 */}
+            {tarefas.length + vencendo.length > 0 && <button type="button" data-testid="baixar-meu-dia" aria-live="polite" title="Baixa a planilha (meu-dia.csv) com as suas tarefas e os contratos vencendo" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['tipo;título;prazo;prioridade', ...tarefas.map(t => `tarefa;${t.titulo.replace(/;/g, ',')};${t.prazo ?? ''};${t.prioridade}`), ...vencendo.map(v => `vencimento;${v.locatario_fornecedor};${v.data_vencimento};`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'meu-dia.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 309 */}
           </div>
         </section>
 
         {horas && horas.meta > 0 && (
           <section className={`${cartao} ${horas.abaixo ? 'border-l-4 border-critico' : ''}`} data-testid="alerta-horas" role={horas.abaixo ? 'alert' : undefined}>
-            <p className="text-sm"><strong>Horas do mês:</strong> {horas.horas}h lançadas, esperado até hoje {horas.esperado_hoje}h (meta {horas.meta}h). {horas.abaixo ? <span className="text-critico font-medium" data-testid="horas-abaixo">Abaixo de 80% do ritmo. </span> : <span data-testid="horas-ok">No ritmo. </span>}<Link to="/horas" className="underline">Lançar horas</Link></p>
+            <p className="text-sm"><strong>Horas do mês:</strong> {horas.horas}h lançadas, esperado até hoje {horas.esperado_hoje}h (meta {horas.meta}h). {horas.abaixo ? <span className="text-critico font-medium" data-testid="horas-abaixo">Abaixo de 80% do ritmo. </span> : <span data-testid="horas-ok">No ritmo. </span>}<Link to="/horas" title="Abre Horas trabalhadas para lançar as horas de hoje e fechar o ritmo do mês" className="underline">Lançar horas</Link></p>
           </section>
         )}
         <div className="grid gap-4 md:grid-cols-3">
           <section className={cartao}>
             <h2 className="font-serif text-lg flex items-center gap-2"><ListChecks className="w-5 h-5" aria-hidden />Minhas tarefas (7 dias)</h2>
-            {tarefas.length ? <ul className="text-sm mt-2 space-y-1">{tarefas.map(t => <li key={t.id}>{t.prazo && <span className={t.prazo < hoje() ? 'text-critico font-medium' : ''}>{fmt(t.prazo)} · </span>}{t.titulo}</li>)}</ul>
-              : <p className="text-sm text-grafite-claro mt-2">Nada vencendo para você.</p>}
+            {tarefas.length ? (
+              // Pedido do M (12/11/2026): nada de "porrada de coisa" misturada — cada área do direito em seu bloco.
+              <div className="mt-2 space-y-3" data-testid="tarefas-por-area">
+                {agruparPorArea(tarefas).map(g => (
+                  <div key={g.area} data-testid={`area-${g.area}`}>
+                    <p className="text-[11px] uppercase tracking-wider text-dourado border-b border-navy/10 pb-0.5">{g.nome} ({g.itens.length})</p>
+                    <ul className="text-sm mt-1 space-y-1">{g.itens.map(t => <li key={t.id}>{t.prazo && <span className={t.prazo < hoje() ? 'text-critico font-medium' : ''}>{fmt(t.prazo)} · </span>}{t.titulo}</li>)}</ul>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              // Passo A27: tela vazia diz o que fazer primeiro. Vazia aqui quase sempre quer dizer
+              // "os processos ainda não entraram", não "não há nada a fazer".
+              <p className="text-sm text-grafite-claro mt-2">Nada vencendo para você. Se os seus processos ainda não estão aqui, comece por <Link to="/processos-antigos" title="Abre Inserir processos antigos: pela planilha ou pelo nome do advogado, a plataforma cadastra, busca no CNJ e traz os prazos" className="underline text-navy">Inserir processos antigos</Link>: a plataforma busca os prazos no CNJ.</p>
+            )}
           </section>
           <section className={cartao}>
             <h2 className="font-serif text-lg flex items-center gap-2"><Inbox className="w-5 h-5" aria-hidden />Intimações</h2>
             <p className="text-3xl font-serif mt-2" data-testid="intimacoes-nao-lidas">{intimacoes}</p>
-            <p className="text-sm text-grafite-claro">não lidas · <Link to="/intimacoes" className="underline">abrir</Link></p>
+            <p className="text-sm text-grafite-claro">não lidas · <Link to="/intimacoes" title="Abre Intimações, com o texto de cada uma e o prazo que ela faz correr" className="underline">abrir</Link></p>
           </section>
           <section className={cartao} data-testid="movimentacoes">
             <h2 className="font-serif text-lg flex items-center gap-2"><Inbox className="w-5 h-5" aria-hidden />Movimentações nos processos (7 dias)</h2>
-            {movimentacoes.length ? <ul className="text-sm mt-2 space-y-1">{movimentacoes.map(m => <li key={m.id} data-testid="movimentacao"><Link to="/monitoramento" className="underline">{m.rotulo || m.valor}</Link>: {m.novidades[0].texto}{m.novidades.length > 1 && ` (+${m.novidades.length - 1})`}</li>)}</ul>
-              : <p className="text-sm text-grafite-claro mt-2">Nenhuma novidade. Casos com número CNJ são verificados todo dia no DataJud.</p>}
+            {movimentacoes.length ? <ul className="text-sm mt-2 space-y-1">{movimentacoes.map(m => <li key={m.id} data-testid="movimentacao"><Link to="/monitoramento" title="Abre o histórico deste processo no CNJ (DataJud), com todos os andamentos" className="underline">{m.rotulo || m.valor}</Link>: {m.novidades[0].texto}{m.novidades.length > 1 && ` (+${m.novidades.length - 1})`}</li>)}</ul>
+              : <p className="text-sm text-grafite-claro mt-2">Nenhuma novidade. Casos com número CNJ são verificados no CNJ a cada 4 horas.</p>}
           </section>
           <section className={cartao}>
             <h2 className="font-serif text-lg flex items-center gap-2"><FileWarning className="w-5 h-5" aria-hidden />Contratos vencendo (60 dias)</h2>
-            {vencendo.length ? <ul className="text-sm mt-2 space-y-1">{vencendo.map(c => <li key={c.id}><Link to={`/contrato/${c.imovel_id}`} className="underline">{fmt(c.data_vencimento)} · {c.locatario_fornecedor}</Link></li>)}</ul>
-              : <p className="text-sm text-grafite-claro mt-2">Nenhum nos próximos 60 dias.</p>}
+            {vencendo.length ? <ul className="text-sm mt-2 space-y-1">{vencendo.map(c => <li key={c.id}><Link to={`/contrato/${c.imovel_id}`} title={`Abre o contrato de ${c.locatario_fornecedor}, que vence em ${fmt(c.data_vencimento)}`} className="underline">{fmt(c.data_vencimento)} · {c.locatario_fornecedor}</Link></li>)}</ul>
+              : <p className="text-sm text-grafite-claro mt-2">Nenhum nos próximos 60 dias. Os contratos de locação ficam em <Link to="/imoveis" title="Abre Imóveis, onde cada imóvel guarda o seu contrato, o reajuste e o vencimento" className="underline text-navy">Imóveis</Link>.</p>}
           </section>
         </div>
 
         <section className={cartao} data-testid="resumo-semanal">
           <h2 className="font-serif text-lg flex items-center gap-2"><Mail className="w-5 h-5" aria-hidden />Resumo semanal de alertas</h2>
           <p className="text-xs text-grafite-claro mt-1">Toda segunda-feira às 8h a plataforma consolida os alertas por função e envia por e-mail a toda a equipe. Aqui está a parte da sua função.</p>
-          {resumo ? (
+          {resumo?.conteudo ? (
             <>
-              <p className="text-xs text-grafite-claro mt-2">Semana de {resumo.conteudo.semana}{resumo.enviado_em ? ` · enviado a ${resumo.destinatarios} pessoa(s) em ${new Date(resumo.enviado_em).toLocaleDateString('pt-BR')}` : ''}</p>
+              <p className="text-xs text-grafite-claro mt-2">Semana de {resumo.conteudo.semana ?? '—'}{resumo.enviado_em ? ` · enviado a ${resumo.destinatarios} pessoa(s) em ${new Date(resumo.enviado_em).toLocaleDateString('pt-BR')}` : ''}</p>
               <dl className="grid gap-x-6 gap-y-1 sm:grid-cols-2 text-sm mt-2">
                 {Object.entries(resumo.conteudo[SECAO_DO_PAPEL[papel] ?? 'advogada'] ?? {}).map(([k, v]) => (
                   <div key={k} className="flex justify-between gap-3 border-b border-navy/10 py-1" data-testid={`resumo-${k}`}><dt>{ROTULOS_RESUMO[k] ?? k}</dt><dd className="font-medium text-right">{DINHEIRO.has(k) ? brl(Number(v)) : (v === '' ? '—' : String(v))}</dd></div>
@@ -187,42 +206,14 @@ export default function MeuDiaPage() {
               </dl>
             </>
           ) : <p className="text-sm text-grafite-claro mt-2">O primeiro resumo chega na segunda-feira às 8h.</p>}
-          <button type="button" onClick={testarResumo} data-testid="testar-resumo" className="min-h-[44px] px-4 mt-3 text-sm border border-navy text-navy">Enviar-me o resumo agora (teste)</button>
-          {msgResumo && <p className="text-sm mt-2" role="status" data-testid="msg-resumo">{msgResumo}</p>}
         </section>
-        <section className={cartao} data-testid="consultor-semana">
-          <h2 className="font-serif text-lg flex items-center gap-2"><Briefcase className="w-5 h-5" aria-hidden />Consultor da semana</h2>
-          {diagnostico ? (
-            <>
-              <p className="text-xs text-grafite-claro mt-1">Gerado em {new Date(diagnostico.criado_em).toLocaleDateString('pt-BR')} pelo consultor do seu nível. <Link to="/consultores" className="underline">Pedir um diagnóstico agora</Link></p>
-              <div className="prose prose-sm max-w-none mt-3">{render(diagnostico.resposta)}</div>
-              {!!acoes.length && (
-                <div className="mt-4 border-t border-navy/10 pt-3" data-testid="acoes-consultor">
-                  <p className="text-sm font-semibold flex items-center justify-between">Ações da semana <span data-testid="aderencia-semana">{feitas} de {acoes.length} feitas ({Math.round(100 * feitas / acoes.length)}%)</span></p>
-                  <ul className="mt-2 space-y-1">
-                    {acoes.map(a => (
-                      <li key={a.id}>
-                        <label className="flex items-start gap-2 text-sm min-h-[44px] cursor-pointer">
-                          <input type="checkbox" checked={!!a.feito_em} onChange={() => marcarAcao(a)} className="mt-1 w-5 h-5 shrink-0" data-testid={`acao-${a.indice}`} />
-                          <span className={a.feito_em ? 'line-through text-grafite-claro' : ''}>{a.indice}. {a.texto}{a.feito_em && <span className="text-xs ml-2">feita em {new Date(a.feito_em).toLocaleDateString('pt-BR')}</span>}</span>
-                        </label>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="text-xs text-grafite-claro mt-1">A aderência por nível aparece em <Link to="/indicadores" className="underline">Indicadores</Link>.</p>
-                </div>
-              )}
-            </>
-          ) : (
-            <p className="text-sm text-grafite-claro mt-2">O primeiro diagnóstico chega na segunda-feira. Enquanto isso, <Link to="/consultores" className="underline">peça um agora em Consultores</Link>.</p>
-          )}
-        </section>
+        <ConsultorSemana diagnostico={diagnostico} acoes={acoes} onMarcar={marcarAcao} />
         <section className={cartao}>
           <h2 className="font-serif text-lg flex items-center gap-2"><CalendarClock className="w-5 h-5" aria-hidden />Calculadora de prazo processual</h2>
           <div className="flex flex-wrap gap-3 items-end mt-3 text-sm">
-            <label>Data da intimação ou publicação<input type="date" value={calc.inicio} onChange={e => setCalc({ ...calc, inicio: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="prazo-inicio" /></label>
-            <label>Dias úteis<input type="number" min={1} max={365} value={calc.dias} onChange={e => setCalc({ ...calc, dias: Number(e.target.value) })} className="block border px-3 py-2 min-h-[44px] mt-1 w-24" data-testid="prazo-dias" /></label>
-            <label className="flex items-center gap-2 min-h-[44px]"><input type="checkbox" className="w-5 h-5 shrink-0" checked={calc.dobro} onChange={e => setCalc({ ...calc, dobro: e.target.checked })} />Em dobro (Fazenda, MP, Defensoria, litisconsortes)</label>
+            <label>Data da intimação ou publicação<input type="date" title="O dia em que a intimação saiu. A contagem começa no dia útil seguinte, não neste." value={calc.inicio} onChange={e => setCalc({ ...calc, inicio: e.target.value })} className="block border px-3 py-2 mt-1" data-testid="prazo-inicio" /></label>
+            <label>Dias úteis<input type="number" title="Quantos dias úteis o prazo tem. Sábado, domingo e feriado não contam (art. 219 do CPC)." min={1} max={365} value={calc.dias} onChange={e => setCalc({ ...calc, dias: Number(e.target.value) })} className="block border px-3 py-2 min-h-[44px] mt-1 w-24" data-testid="prazo-dias" /></label>
+            <label className="flex items-center gap-2 min-h-[44px]"><input type="checkbox" title="Dobra o prazo. Vale para Fazenda Pública, Ministério Público, Defensoria e litisconsortes com advogados diferentes." className="w-5 h-5 shrink-0" checked={calc.dobro} onChange={e => setCalc({ ...calc, dobro: e.target.checked })} />Em dobro (Fazenda, MP, Defensoria, litisconsortes)</label>
           </div>
           {prazo && (
             <div className="mt-3" aria-live="polite">

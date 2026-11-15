@@ -9,7 +9,7 @@ const cors = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
-const APP = 'https://gmenezes-advogados.vercel.app/#'
+const APP = 'https://theye.club/#'
 const brl = (v: number) => 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
 Deno.serve(async (req) => {
@@ -59,12 +59,12 @@ Deno.serve(async (req) => {
       ${corpo?.teste ? '<p style="color:#888">Este é um e-mail de teste pedido por você em Consumo.</p>' : ''}
       <p><a href="${APP}/consumo">Abrir Consumo</a> · <a href="${APP}/alertas">Abrir Alertas</a></p>
     </div>
-    <p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · aviso automático</p></div>`
+    <p style="font-size:11px;color:#888;padding:10px">Instituto THEYE · aviso automático</p></div>`
   let falha: string | undefined
   for (const email of para) {
     const r = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify({ sender: { name: 'Avisos GMenezes', email: conf.email_remetente }, to: [{ email }], subject: titulo, htmlContent: html }),
+      body: JSON.stringify({ sender: { name: 'Avisos THEYE', email: conf.email_remetente }, to: [{ email }], subject: titulo, htmlContent: html }),
     })
     if (!r.ok) falha = `${r.status} ${await r.text()}`
   }

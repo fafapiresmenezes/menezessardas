@@ -29,7 +29,7 @@ const SITE_INFO = `SOBRE O INSTITUTO (fatos do site):
 - Transparência: cartão do modelo em /modelo.html, relatório de privacidade em /privacidade.html; quem vê resposta errada pode relatar pelo botão "Relatar resposta errada", e uma amostra semanal é revisada por pessoas. 77 nós de norma da Lei 8.245/91, 13 teses típicas, 6 precedentes (STJ Súmulas 214, 268, 335, 549; STF Temas 295 e 1127). 90,1% dos processos ligam a pelo menos um artigo.
 - Laboratório: cadastro com e-mail e CPF (guardado só como código irreversível), 1 consulta grátis. Membro: R$ 79/mês com 20 consultas; consulta avulsa R$ 3,94.
 - Serviços: relatório preditivo de caso, radar agregado de órgão julgador, due diligence processual, monitoramento de publicações, jurimetria setorial, parecer de direito comparado, curso e certificação, dados abertos para pesquisa, painel de carteira, assessoria em sandboxes regulatórios.
-- Escritório parceiro: GMenezes Advogados Associados usa a previsão do Instituto na tela Previsões.
+- Escritório parceiro: Instituto THEYE usa a previsão do Instituto na tela Previsões.
 - Prova de registro: documentos e protocolos têm sha256 ancorado no Bitcoin por OpenTimestamps.`
 
 // Passo D12: o roteiro é partido em três blocos. Os dois primeiros são iguais para os 50 agentes

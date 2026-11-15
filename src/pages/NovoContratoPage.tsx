@@ -113,16 +113,16 @@ export default function NovoContratoPage() {
         <h2 className="font-serif text-xl text-navy">Para qual imóvel é este contrato?</h2>
         <p className="text-sm text-grafite-claro mt-1 mb-4">Todo contrato fica ligado a um imóvel da carteira. Escolha abaixo ou cadastre o imóvel primeiro.</p>
         {imoveis === null ? <SkeletonForm /> : imoveis.length === 0 ? (
-          <button type="button" onClick={() => navigate('/imoveis/novo')} className="min-h-[44px] px-4 bg-navy text-white text-sm">Cadastrar o primeiro imóvel</button>
+          <button type="button" onClick={() => navigate('/imoveis/novo')} title="Abre o cadastro de imóvel, necessário antes de criar o contrato" className="min-h-[44px] px-4 bg-navy text-white text-sm">Cadastrar o primeiro imóvel</button>
         ) : (
           <div className="flex flex-wrap gap-2 items-end">
             <label className="text-sm flex-1 min-w-[240px]">Imóvel
-              <select data-testid="imovel-escolha" className={classeCampo} value={escolhido} onChange={e => setEscolhido(e.target.value)}>
+              <select data-testid="imovel-escolha" title="Escolhe a qual imóvel da carteira este contrato ficará ligado" className={classeCampo} value={escolhido} onChange={e => setEscolhido(e.target.value)}>
                 {imoveis.map(i => <option key={i.id} value={i.id}>{i.endereco} · {i.proprietario}</option>)}
               </select>
             </label>
-            <button type="button" data-testid="imovel-continuar" onClick={() => navigate(`/contrato/novo?imovelId=${escolhido}`)} className="min-h-[44px] px-4 bg-navy text-white text-sm">Continuar</button>
-            <button type="button" onClick={() => navigate('/imoveis/novo')} className="min-h-[44px] px-4 border border-navy text-navy text-sm">Novo imóvel</button>
+            <button type="button" title="Segue para o cadastro do contrato do imóvel escolhido" data-testid="imovel-continuar" onClick={() => navigate(`/contrato/novo?imovelId=${escolhido}`)} className="min-h-[44px] px-4 bg-navy text-white text-sm">Continuar</button>
+            <button type="button" onClick={() => navigate('/imoveis/novo')} title="Abre o formulário para cadastrar um imóvel novo antes do contrato" className="min-h-[44px] px-4 border border-navy text-navy text-sm">Novo imóvel</button>
           </div>
         )}
       </div>
@@ -177,7 +177,7 @@ export default function NovoContratoPage() {
                 />
               </Campo>
               <Campo id="periodicidade" rotulo="Periodicidade de pagamento">
-                <select id="periodicidade" value={periodicidade} onChange={e => setPeriodicidade(e.target.value)} className={classeCampo}>
+                <select id="periodicidade" value={periodicidade} onChange={e => setPeriodicidade(e.target.value)} title="Escolhe de quanto em quanto tempo o valor do contrato é pago (mensal, anual etc.)" className={classeCampo}>
                   {PERIODICIDADES.map(p => (
                     <option key={p.valor} value={p.valor}>
                       {p.rotulo}
@@ -186,7 +186,7 @@ export default function NovoContratoPage() {
                 </select>
               </Campo>
               <Campo id="indice" rotulo="Índice de reajuste">
-                <select id="indice" value={indice} onChange={e => setIndice(e.target.value)} className={classeCampo}>
+                <select id="indice" value={indice} onChange={e => setIndice(e.target.value)} title="Escolhe o índice usado no reajuste do valor do contrato (IPCA, IGP-M etc.)" className={classeCampo}>
                   {INDICES_REAJUSTE.map(i => (
                     <option key={i.valor} value={i.valor}>
                       {i.rotulo}

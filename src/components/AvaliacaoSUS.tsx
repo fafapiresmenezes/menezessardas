@@ -61,7 +61,7 @@ export default function AvaliacaoSUS() {
           </li>
         ))}
       </ol>
-      <button data-testid="enviar-sus" onClick={enviar} className="mt-4 bg-navy text-white px-5 py-2.5 rounded-sm uppercase tracking-wider text-sm">Enviar avaliação</button>
+      <button title="Envia as suas notas sem o seu nome, para melhorar a plataforma" data-testid="enviar-sus" onClick={enviar} className="mt-4 bg-navy text-white px-5 py-2.5 rounded-sm uppercase tracking-wider text-sm">Enviar avaliação</button>
       {msg && <p role="status" className="text-sm mt-3">{msg}</p>}
     </section>
   )

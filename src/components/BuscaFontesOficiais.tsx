@@ -113,8 +113,8 @@ export default function BuscaFontesOficiais({ d }: { d: Detectado }) {
             </div>
           )}
           <div className="flex flex-wrap gap-2 mt-3">
-            <button type="button" onClick={buscar} disabled={ocupado || !d.valido} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50" data-testid="buscar-oficiais">{ocupado ? 'Buscando…' : 'Buscar nas fontes oficiais'}</button>
-            {ocupado && d.tipo !== 'cnj' && <button type="button" onClick={() => { parar.current = true }} className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2"><Square className="w-4 h-4" aria-hidden />Parar</button>}
+            <button title="Procura o processo nos sites oficiais dos tribunais; pode levar alguns minutos" type="button" onClick={buscar} disabled={ocupado || !d.valido} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50" data-testid="buscar-oficiais">{ocupado ? 'Buscando…' : 'Buscar nas fontes oficiais'}</button>
+            {ocupado && d.tipo !== 'cnj' && <button title="Para a busca onde está; o que já foi encontrado continua na tela" type="button" onClick={() => { parar.current = true }} className="min-h-[44px] px-4 border text-sm inline-flex items-center gap-2"><Square className="w-4 h-4" aria-hidden />Parar</button>}
           </div>
         </>
       )}
@@ -160,7 +160,7 @@ export default function BuscaFontesOficiais({ d }: { d: Detectado }) {
             <h3 className="font-medium">{d.tipo === 'cnj' ? `${processos[0]?.total ?? 0} publicação(ões) no Diário de Justiça Eletrônico Nacional` : `${processos.length} processo(s) encontrado(s) nas publicações`}</h3>
             {d.tipo !== 'cnj' && processos.length > 0 && (
               <span className="flex flex-wrap gap-2">
-                <button type="button" onClick={copiar} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2" data-testid="copiar-numeros"><Copy className="w-4 h-4" aria-hidden />{copiado ? 'Números copiados' : 'Copiar números'}</button>
+                <button title="Copia os números encontrados, para colar em outro lugar" type="button" onClick={copiar} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2" data-testid="copiar-numeros"><Copy className="w-4 h-4" aria-hidden />{copiado ? 'Números copiados' : 'Copiar números'}</button>
                 <Link to="/processos/importar" className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center">Importar para a carteira</Link>
               </span>
             )}

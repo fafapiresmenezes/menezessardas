@@ -60,7 +60,7 @@ export default function EnquetesPage() {
           <div className="max-w-2xl space-y-1">
             <p className="text-sm text-grafite-claro">Votação da equipe sobre temas importantes para o desenvolvimento do direito. Um voto por pessoa; o resultado mostra sempre o número de votos e a margem de erro, e só declara um lado vencedor quando os intervalos não se cruzam. Enquetes marcadas como públicas aparecem no site do THEYE Institute apenas como agregado, e só a partir de 10 votos.</p>
           </div>
-          {admin && <button type="button" onClick={() => setCriando(c => !c)} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider inline-flex items-center gap-2" data-testid="nova-enquete"><Plus className="w-4 h-4" aria-hidden />Nova enquete</button>}
+          {admin && <button type="button" onClick={() => setCriando(c => !c)} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider inline-flex items-center gap-2" data-testid="nova-enquete" title="Abre ou fecha o formulário para criar uma nova enquete para a equipe"><Plus className="w-4 h-4" aria-hidden />Nova enquete</button>}
         </section>
         {msg.ok && <p role="status" className="text-sm text-sucesso bg-sucesso/10 px-4 py-2">{msg.ok}</p>}
         {msg.erro && <p role="alert" className="text-sm text-perigo bg-perigo/10 px-4 py-2">{msg.erro}</p>}
@@ -68,17 +68,17 @@ export default function EnquetesPage() {
         {admin && criando && (
           <section className="bg-white shadow-sm p-6 space-y-3" data-testid="form-enquete">
             <h2 className="font-serif text-xl">Nova enquete</h2>
-            <label className="block text-sm"><span className="font-medium">Tema</span><input value={nova.tema} onChange={e => setNova({ ...nova, tema: e.target.value })} className="border w-full px-3 py-2 mt-1 min-h-[44px]" placeholder="ex.: IA no Judiciário" /></label>
-            <label className="block text-sm"><span className="font-medium">Pergunta</span><textarea value={nova.pergunta} onChange={e => setNova({ ...nova, pergunta: e.target.value })} rows={2} className="border w-full px-3 py-2 mt-1" /></label>
+            <label className="block text-sm"><span className="font-medium">Tema</span><input title="Em uma ou duas palavras, sobre o que é a enquete. Serve para achar depois." value={nova.tema} onChange={e => setNova({ ...nova, tema: e.target.value })} className="border w-full px-3 py-2 mt-1 min-h-[44px]" placeholder="ex.: IA no Judiciário" /></label>
+            <label className="block text-sm"><span className="font-medium">Pergunta</span><textarea title="A pergunta como as pessoas vão ler. Pergunta clara, resposta útil." value={nova.pergunta} onChange={e => setNova({ ...nova, pergunta: e.target.value })} rows={2} className="border w-full px-3 py-2 mt-1" /></label>
             <fieldset className="space-y-2"><legend className="text-sm font-medium">Opções (2 a 6)</legend>
               {nova.opcoes.map((o, i) => <input key={i} aria-label={`Opção ${i + 1}`} value={o} onChange={e => setNova({ ...nova, opcoes: nova.opcoes.map((x, j) => j === i ? e.target.value : x) })} className="border w-full px-3 py-2 min-h-[44px]" />)}
-              {nova.opcoes.length < 6 && <button type="button" onClick={() => setNova({ ...nova, opcoes: [...nova.opcoes, ''] })} className="text-sm underline min-h-[44px]">Mais uma opção</button>}
+              {nova.opcoes.length < 6 && <button type="button" onClick={() => setNova({ ...nova, opcoes: [...nova.opcoes, ''] })} title="Acrescenta mais um campo de opção de resposta à enquete (máximo 6)" className="text-sm underline min-h-[44px]">Mais uma opção</button>}
             </fieldset>
             <div className="flex flex-wrap gap-4 items-center text-sm">
-              <label className="flex items-center gap-2"><input type="checkbox" checked={nova.publica} onChange={e => setNova({ ...nova, publica: e.target.checked })} className="w-5 h-5" />Pública no site do Instituto (só agregado, a partir de 10 votos)</label>
+              <label className="flex items-center gap-2"><input type="checkbox" title="Marcado, o total desta enquete sai do escritório e aparece no site do THEYE Institute, sem nome de ninguém e só a partir de 10 votos. Desmarcado, o total fica dentro do escritório. Em qualquer um dos casos, quem já votou vê o total: isto não esconde a enquete da equipe." checked={nova.publica} onChange={e => setNova({ ...nova, publica: e.target.checked })} className="w-5 h-5" />Pública no site do Instituto (só agregado, a partir de 10 votos)</label>
               <label className="flex items-center gap-2">Aberta por <input type="number" min={1} max={90} value={nova.dias} onChange={e => setNova({ ...nova, dias: Number(e.target.value) || 14 })} className="border w-20 px-2 py-1 min-h-[44px]" aria-label="Dias aberta" /> dias</label>
             </div>
-            <button type="button" onClick={criar} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider">Criar enquete</button>
+            <button type="button" onClick={criar} title="Publica a enquete para a equipe votar pelo prazo definido" className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider">Criar enquete</button>
           </section>
         )}
 
@@ -99,7 +99,7 @@ export default function EnquetesPage() {
                   <h2 className="font-serif text-lg">{e.pergunta}</h2>
                   {!mostrarResultado ? (
                     <div className="flex flex-wrap gap-2" role="group" aria-label="Opções de voto">
-                      {e.opcoes.map((o, i) => <button key={i} type="button" onClick={() => votar(e, i)} className="min-h-[44px] px-4 border border-navy/30 text-sm hover:bg-navy/5">{o}</button>)}
+                      {e.opcoes.map((o, i) => <button key={i} type="button" onClick={() => votar(e, i)} title={`Registra seu voto na opção "${o}"; o voto é único e ninguém vê em quem você votou`} className="min-h-[44px] px-4 border border-navy/30 text-sm hover:bg-navy/5">{o}</button>)}
                     </div>
                   ) : (
                     <div className="space-y-2" data-testid={`resultado-${e.id}`}>

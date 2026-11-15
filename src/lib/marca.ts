@@ -3,11 +3,13 @@
 import { supabase, supabaseConfigurado } from './supabase'
 
 export type MarcaEscritorio = { nome: string; cor: string; logo_url: string | null; sede: boolean }
-export const COR_PADRAO = '#14213D'
+export const COR_PADRAO = '#0B0B0C'
 const CHAVE = 'gm-marca-v1'
 const DOMINIOS_DA_PLATAFORMA = ['localhost', '127.0.0.1', 'vercel.app', 'github.io']
 
-export function corValida(cor: string | null | undefined): string { return cor && /^#[0-9A-Fa-f]{6}$/.test(cor) ? cor : COR_PADRAO }
+// O azul antigo (#14213D) era o padrão da plataforma: quem nunca escolheu cor passa a ver o preto do theye.club.
+const COR_ANTIGA = '#14213d'
+export function corValida(cor: string | null | undefined): string { return cor && /^#[0-9A-Fa-f]{6}$/.test(cor) && cor.toLowerCase() !== COR_ANTIGA ? cor : COR_PADRAO }
 export function logoValida(url: string | null | undefined): string | null { return url && /^https:\/\/\S+$/.test(url) ? url : null }
 /** Domínio próprio = qualquer host que não seja da plataforma (vercel.app, github.io, localhost). */
 export function ehDominioProprio(host: string): boolean {

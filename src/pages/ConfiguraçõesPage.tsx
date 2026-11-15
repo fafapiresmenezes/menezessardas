@@ -6,8 +6,11 @@ import AvaliacaoSUS from '../components/AvaliacaoSUS'
 import Layout from '@/components/Layout'
 import { Save, User, Bell, Sparkles, Eye, EyeOff, KeyRound, Mail } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
+import { minhaPreferencia, definirMinhaPreferencia } from '@/lib/preferencias'
+import { ROTAS_TELAS } from '@/data/rotas'
 import { estadoChaveIA, removerChaveIA, salvarChaveIA, testarChaveIA, type EstadoChaveIA } from '@/lib/ia'
 import { perfilAtual, rotuloFuncao, type Funcao } from '@/lib/equipe'
+import { lerConfig, gravarConfig } from '@/lib/config'
 import SecaoPix from '@/components/SecaoPix'
 import AvisosCelular from '@/components/AvisosCelular'
 
@@ -88,6 +91,15 @@ export default function ConfiguraçõesPage() {
   const rotulo = 'block text-xs uppercase tracking-wider text-grafite mb-2'
 
   const [aba, setAba] = useState<string>(() => { try { return localStorage.getItem('lsm-config-aba') || 'perfil' } catch { return 'perfil' } })
+  // Passos 10 e 11 do plano: tela inicial por usuário (vale em qualquer aparelho).
+  const [telaInicial, setTelaInicial] = useState('')
+  const [msgTela, setMsgTela] = useState('')
+  useEffect(() => { minhaPreferencia().then(p => setTelaInicial(p.telaInicial ?? '')).catch(() => undefined) }, [])
+  const salvarTelaInicial = async () => {
+    setMsgTela('')
+    try { await definirMinhaPreferencia({ telaInicial: telaInicial || undefined }); setMsgTela(telaInicial ? 'Tela inicial salva.' : 'Voltou ao padrão do cargo.') }
+    catch (e) { setMsgTela(e instanceof Error ? e.message : 'Não foi possível salvar.') }
+  }
   const mostra = (id: string) => (aba === id || aba === 'tudo' ? '' : 'hidden')
 
   return (
@@ -98,17 +110,17 @@ export default function ConfiguraçõesPage() {
       {/* Passo D05 (Diamante): abas para a tela não ficar com 57 botões de uma vez; "Tudo" mostra como antes. */}
       <nav aria-label="Seções das configurações" className="max-w-2xl mb-6 flex flex-wrap gap-2 print:hidden">
         {ABAS.map(a => (
-          <button key={a.id} type="button" data-testid={`aba-${a.id}`} aria-pressed={aba === a.id} onClick={() => { setAba(a.id); try { localStorage.setItem('lsm-config-aba', a.id) } catch { /* sem memória local */ } }}
+          <button key={a.id} type="button" data-testid={`aba-${a.id}`} title={a.id === 'tudo' ? 'Mostra todas as seções das configurações em uma página só' : `Mostra apenas a seção "${a.rotulo}" das configurações`} aria-pressed={aba === a.id} onClick={() => { setAba(a.id); try { localStorage.setItem('lsm-config-aba', a.id) } catch { /* sem memória local */ } }}
             className={`min-h-[44px] px-4 text-sm border ${aba === a.id ? 'bg-navy text-white border-navy' : 'border-navy/20 text-navy bg-white'}`}>{a.rotulo}</button>
         ))}
       </nav>
       <form onSubmit={salvar} className={`max-w-2xl space-y-6 ${mostra('perfil')}`} noValidate>
         {/* Passo 168: imprimir o resumo das preferências (sem segredos). */}
-        <button type="button" onClick={() => window.print()} data-testid="imprimir-preferencias" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm mr-2 print:hidden">Imprimir</button>
-        <button type="button" onClick={copiarResumoPrefs} data-testid="copiar-preferencias" className="min-h-[44px] px-4 border border-navy text-navy text-sm">{resumoCopiado ? 'Resumo copiado' : 'Copiar resumo das preferências'}</button>
-        <button type="button" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(prefs, null, 2)], { type: 'application/json' })); a.download = 'preferencias-theye.json'; a.click(); URL.revokeObjectURL(a.href) }} data-testid="baixar-preferencias" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">Baixar preferências (JSON)</button>{/* Passo 213 */}
-        <button type="button" data-testid="copiar-link-configuracoes" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 233 */}
-        <button type="button" data-testid="baixar-preferencias" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Preferências — THEYE Institute\nNome: ${prefs.nomeCompleto}\nE-mail: ${prefs.email}\nNotificações: ${prefs.notificacoes ? 'sim' : 'não'}\nAlertas por e-mail: ${prefs.alertasEmail ? 'sim' : 'não'}\nDias de antecedência: ${prefs.diasAntecedencia}`], { type: 'text/plain;charset=utf-8' })); a.download = 'preferencias.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden min-h-[44px] inline-flex items-center">baixar preferências</button>{/* Passo 316 */}
+        <button type="button" onClick={() => window.print()} data-testid="imprimir-preferencias" title="Abre a tela de impressão do navegador com o resumo das preferências (sem senhas nem chaves)" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm mr-2 print:hidden">Imprimir</button>
+        <button type="button" onClick={copiarResumoPrefs} data-testid="copiar-preferencias" title="Copia o resumo das suas preferências em texto (sem senhas nem chaves) para conferir com a administradora" className="min-h-[44px] px-4 border border-navy text-navy text-sm">{resumoCopiado ? 'Resumo copiado' : 'Copiar resumo das preferências'}</button>
+        <button type="button" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(prefs, null, 2)], { type: 'application/json' })); a.download = 'preferencias-theye.json'; a.click(); URL.revokeObjectURL(a.href) }} data-testid="baixar-preferencias" title="Baixa suas preferências em um arquivo de texto (JSON), como cópia de segurança" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">Baixar preferências (JSON)</button>{/* Passo 213 */}
+        <button type="button" data-testid="copiar-link-configuracoes" title="Copia o endereço desta página de configurações para compartilhar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 233 */}
+        <button type="button" data-testid="baixar-preferencias" title="Baixa o resumo das preferências em arquivo de texto simples" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Preferências — THEYE Institute\nNome: ${prefs.nomeCompleto}\nE-mail: ${prefs.email}\nNotificações: ${prefs.notificacoes ? 'sim' : 'não'}\nAlertas por e-mail: ${prefs.alertasEmail ? 'sim' : 'não'}\nDias de antecedência: ${prefs.diasAntecedencia}`], { type: 'text/plain;charset=utf-8' })); a.download = 'preferencias.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden min-h-[44px] inline-flex items-center">baixar preferências</button>{/* Passo 316 */}
         {aviso && (
           <p role="status" className="p-3 bg-regularFundo border-l-2 border-regular text-regular text-sm">
             ✓ {aviso}
@@ -173,6 +185,7 @@ export default function ConfiguraçõesPage() {
               <input
                 type="checkbox"
                 checked={prefs.notificacoes}
+                title="Desmarcado, a plataforma para de mostrar o aviso no alto da tela. Os prazos continuam valendo do mesmo jeito."
                 onChange={e => setPrefs({ ...prefs, notificacoes: e.target.checked })}
                 className="h-5 w-5 shrink-0 accent-navy cursor-pointer"
               />
@@ -182,6 +195,7 @@ export default function ConfiguraçõesPage() {
               <input
                 type="checkbox"
                 checked={prefs.alertasEmail}
+                title="Marcado, os alertas também chegam no seu e-mail, para você ver sem abrir a plataforma."
                 onChange={e => setPrefs({ ...prefs, alertasEmail: e.target.checked })}
                 className="h-5 w-5 shrink-0 accent-navy cursor-pointer"
               />
@@ -211,6 +225,7 @@ export default function ConfiguraçõesPage() {
 
         <button
           type="submit"
+          title="Grava suas preferências de perfil e avisos; os e-mails de alerta passam a respeitá-las"
           className="w-full bg-navy hover:bg-navy-700 text-white py-3 rounded-sm uppercase tracking-wider text-sm flex items-center justify-center gap-2"
         >
           <Save size={18} aria-hidden="true" />
@@ -218,6 +233,18 @@ export default function ConfiguraçõesPage() {
         </button>
       </form>
       <div className={`max-w-2xl ${mostra('perfil')}`}><AvisosCelular /></div>{/* Passo D19 */}
+      <section aria-labelledby="t-tela-inicial" className={`max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado ${mostra('perfil')}`} data-testid="tela-inicial">
+        <h2 id="t-tela-inicial" className="font-serif text-lg text-navy mb-2">Sua tela inicial</h2>
+        <p className="text-sm text-grafite-claro mb-3">Quando você entra na plataforma, esta é a primeira tela que abre. Sem escolha, vale o padrão do seu cargo: sócios e gestor abrem com os números; os demais, com o Meu dia.</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <select aria-label="Tela inicial" data-testid="tela-inicial-select" title="Escolhe a primeira tela que abre quando você entra na plataforma" value={telaInicial} onChange={e => setTelaInicial(e.target.value)} className="border px-3 py-2 min-h-[44px] text-sm">
+            <option value="">Padrão do meu cargo</option>
+            {ROTAS_TELAS.map(r => <option key={r.rota} value={r.rota}>{r.nome}</option>)}
+          </select>
+          <button type="button" data-testid="tela-inicial-salvar" title="Grava a tela inicial escolhida; vale no celular e no computador" onClick={salvarTelaInicial} className="min-h-[44px] px-4 bg-navy text-white text-sm">Salvar</button>
+          {msgTela && <span role="status" className="text-sm" data-testid="tela-inicial-msg">{msgTela}</span>}
+        </div>
+      </section>
 
       <div className={mostra('seguranca')}>
         <SecaoSenha />
@@ -233,11 +260,92 @@ export default function ConfiguraçõesPage() {
         <SecaoTransparencia />
         <SecaoIcs />
         <SecaoPix />
+        <SecaoStokasticos />
       </div>
       <div className={mostra('avaliacao')}>
         <AvaliacaoSUS />
       </div>
     </Layout>
+  )
+}
+
+/**
+ * Senha única de entrada do Stokasticos (a escola oculta). Só a administração vê esta seção.
+ * A senha atual nunca aparece na tela: a seção diz apenas se existe uma.
+ */
+function SecaoStokasticos() {
+  const [admin, setAdmin] = useState(false)
+  const [definida, setDefinida] = useState<boolean | null>(null)
+  const [senha, setSenha] = useState('')
+  const [ocupado, setOcupado] = useState(false)
+  const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+
+  // Guardamos só se existe senha, nunca o texto dela.
+  const carregar = async () => {
+    try { setDefinida(Boolean((await lerConfig(['stokasticos_senha'])).stokasticos_senha?.trim())) }
+    catch { setDefinida(null) }
+  }
+
+  useEffect(() => {
+    if (!supabaseConfigurado) return
+    perfilAtual().then(p => { setAdmin(p === 'admin'); if (p === 'admin') carregar() }).catch(() => undefined)
+  }, [])
+
+  if (!supabaseConfigurado || !admin) return null
+
+  const salvar = async () => {
+    setOcupado(true)
+    setMsg(null)
+    try {
+      await gravarConfig({ stokasticos_senha: senha.trim() })
+      setSenha('')
+      setMsg({ tipo: 'ok', texto: 'Senha salva. Passe-a a quem você quer deixar entrar.' })
+      await carregar()
+    } catch (e) {
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
+    } finally {
+      setOcupado(false)
+    }
+  }
+
+  return (
+    <section aria-labelledby="stokasticos" className="max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado" data-testid="secao-stokasticos">
+      <h2 id="stokasticos" className="text-lg mb-1 flex items-center gap-2">
+        <KeyRound size={18} className="text-dourado" aria-hidden="true" />
+        Stokasticos
+      </h2>
+      <p className="text-sm text-grafite-claro mb-3">
+        Senha única de entrada da escola oculta. Enquanto ela estiver em branco, ninguém entra. Os pedidos de
+        acesso chegam por e-mail no endereço guardado em <code>stokasticos_email_admin</code>.
+      </p>
+      <p className="text-sm mb-3" aria-live="polite">
+        {definida === null ? 'Consultando…' : definida ? 'Senha definida. Para trocá-la, escreva outra abaixo e salve.' : 'Nenhuma senha definida: a entrada está fechada para todos.'}
+      </p>
+      {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={`p-3 text-sm border-l-2 mb-3 ${msg.tipo === 'ok' ? 'bg-regularFundo border-regular text-regular' : 'bg-criticoFundo border-critico text-critico'}`}>{msg.texto}</p>}
+      <label htmlFor="stokasticos-senha" className="block text-xs uppercase tracking-wider text-grafite mb-2">
+        {definida ? 'Nova senha do Stokasticos' : 'Senha do Stokasticos'}
+      </label>
+      <input
+        id="stokasticos-senha"
+        type="password"
+        autoComplete="off"
+        value={senha}
+        onChange={e => setSenha(e.target.value)}
+        title="Senha única que abre o Stokasticos; ela é guardada no servidor e nunca volta para esta tela"
+        className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white"
+        data-testid="stokasticos-senha"
+      />
+      <button
+        type="button"
+        onClick={salvar}
+        disabled={!senha.trim() || ocupado}
+        title="Grava a senha de entrada do Stokasticos no servidor"
+        className="mt-3 min-h-[44px] px-5 bg-navy text-white text-sm uppercase tracking-wider disabled:bg-grafite-claro/40"
+        data-testid="stokasticos-salvar"
+      >
+        {ocupado ? 'Salvando…' : 'Salvar senha'}
+      </button>
+    </section>
   )
 }
 
@@ -322,6 +430,7 @@ function SecaoSenha() {
           <div className="flex flex-wrap gap-3">
             <button
               type="submit"
+              title="Troca a senha do seu acesso pela nova senha informada"
               disabled={ocupado || !nova || !confirma}
               className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider"
             >
@@ -331,6 +440,7 @@ function SecaoSenha() {
               type="button"
               onClick={() => setMostrar(!mostrar)}
               aria-pressed={mostrar}
+              title={mostrar ? 'Esconde o texto das senhas digitadas' : 'Mostra o texto das senhas digitadas para conferir'}
               className="min-h-[44px] px-4 border border-navy/30 text-navy hover:bg-pergaminho text-sm"
             >
               {mostrar ? 'Ocultar senhas' : 'Mostrar senhas'}
@@ -436,7 +546,7 @@ function SecaoChaveIA() {
           </p>
           <p className="text-xs text-grafite-claro">
             A chave é criada no site da Anthropic (
-            <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 text-navy">
+            <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer" title="Abre em uma nova aba o site da Anthropic onde a chave da IA é criada" className="underline underline-offset-2 text-navy">
               console.anthropic.com
             </a>
             {' '}→ API Keys → Create Key). Ela fica guardada só no servidor, nunca aparece de novo e nunca vai para o navegador.
@@ -471,6 +581,7 @@ function SecaoChaveIA() {
                 onClick={() => setMostrar(!mostrar)}
                 aria-pressed={mostrar}
                 aria-label={mostrar ? 'Ocultar chave' : 'Mostrar chave'}
+                title={mostrar ? 'Esconde o texto da chave digitada' : 'Mostra o texto da chave digitada para conferir'}
                 className="min-h-[44px] px-3 border border-navy/30 text-navy hover:bg-pergaminho"
               >
                 {mostrar ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
@@ -482,6 +593,7 @@ function SecaoChaveIA() {
             <button
               type="button"
               onClick={salvar}
+              title="Guarda a chave da IA só no servidor; ela nunca volta ao navegador"
               disabled={!chave.trim() || ocupado !== ''}
               className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider"
             >
@@ -490,6 +602,7 @@ function SecaoChaveIA() {
             <button
               type="button"
               onClick={testar}
+              title="Faz uma chamada de teste à IA para confirmar que a chave salva funciona"
               disabled={!estado?.definida || ocupado !== ''}
               className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm"
             >
@@ -499,6 +612,7 @@ function SecaoChaveIA() {
               <button
                 type="button"
                 onClick={remover}
+                title="Remove a chave da IA do servidor; a análise de contratos fica indisponível até informar outra"
                 disabled={ocupado !== ''}
                 className="min-h-[44px] px-5 border border-critico text-critico hover:bg-criticoFundo disabled:opacity-50 text-sm"
               >
@@ -556,28 +670,28 @@ function SecaoEmail() {
         <Mail size={18} className="text-dourado" aria-hidden="true" /> Avisos de prazo
       </h2>
       <div className="space-y-3 text-sm">
-        <p>No calendário: na <a href="#/agenda" className="underline text-navy">Agenda</a>, cada pessoa clica uma vez em <strong>Conectar ao Outlook</strong> ou <strong>Conectar ao Google Agenda</strong>. Os avisos entram nos dias marcados em cada contrato.</p>
+        <p>No calendário: na <a href="#/agenda" title="Abre a página da Agenda, onde se conecta o Outlook ou o Google Agenda" className="underline text-navy">Agenda</a>, cada pessoa clica uma vez em <strong>Conectar ao Outlook</strong> ou <strong>Conectar ao Google Agenda</strong>. Os avisos entram nos dias marcados em cada contrato.</p>
         {estado && (
           <>
             <p aria-live="polite"><strong>Por e-mail:</strong> {ativo ? 'ativo. Toda manhã, às 8h, cada pessoa da equipe recebe os avisos do dia no próprio e-mail.' : 'falta ligar o serviço de envio (uma vez só, gratuito).'}</p>
             <ol className="text-xs text-grafite-claro list-decimal pl-5 space-y-1">
-              <li>Crie a conta grátis em <a href="https://www.brevo.com/" target="_blank" rel="noopener noreferrer" className="underline text-navy">brevo.com</a> com o e-mail do escritório que vai enviar os avisos.</li>
+              <li>Crie a conta grátis em <a href="https://www.brevo.com/" target="_blank" rel="noopener noreferrer" title="Abre em uma nova aba o site do Brevo, onde se cria a conta gratuita de envio de e-mails" className="underline text-navy">brevo.com</a> com o e-mail do escritório que vai enviar os avisos.</li>
               <li>Confirme o e-mail que o Brevo mandar para essa caixa.</li>
-              <li>No Brevo, abra o menu do seu nome → <strong>SMTP &amp; API</strong> → <strong>API Keys</strong>, clique em <strong>Generate a new API key</strong> e copie (começa com xkeysib-).</li>
+              <li>No Brevo, abra o menu do seu nome → <strong lang="en">SMTP &amp; API</strong> → <strong lang="en">API Keys</strong>, clique em <strong lang="en">Generate a new API key</strong> e copie a chave (começa com xkeysib-). O site do Brevo está em inglês; esses três nomes aparecem lá exatamente assim.</li>
               <li>Cole abaixo, junto com o e-mail do passo 1, e clique em Salvar.</li>
             </ol>
             {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={`p-3 text-sm border-l-2 ${msg.tipo === 'ok' ? 'bg-regularFundo border-regular text-regular' : 'bg-criticoFundo border-critico text-critico'}`}>{msg.texto}</p>}
             <label htmlFor="remetente" className="block text-xs uppercase tracking-wider text-grafite">E-mail que envia os avisos {estado.remetente && <span className="normal-case">(atual: {estado.remetente})</span>}</label>
-            <input id="remetente" type="email" value={remetente} onChange={e => setRemetente(e.target.value)} placeholder="avisos@lsm.law"
+            <input id="remetente" type="email" value={remetente} onChange={e => setRemetente(e.target.value)} placeholder="avisos@theye.club"
               className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white text-sm" />
             <label htmlFor="chave-email" className="block text-xs uppercase tracking-wider text-grafite">Chave do Brevo {estado.chave && <span className="normal-case">(já salva)</span>}</label>
             <input id="chave-email" type="password" value={chave} onChange={e => setChave(e.target.value)} placeholder="xkeysib-…" autoComplete="off" spellCheck={false}
               className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white font-mono text-sm" />
             <div className="flex flex-wrap gap-3">
-              <button type="button" onClick={salvar} disabled={(!chave.trim() && !remetente.trim()) || ocupado !== ''} className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider">
+              <button type="button" onClick={salvar} title="Grava no servidor o e-mail remetente e a chave do Brevo para o envio dos avisos" disabled={(!chave.trim() && !remetente.trim()) || ocupado !== ''} className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider">
                 {ocupado === 'salvando' ? 'Salvando…' : 'Salvar'}
               </button>
-              <button type="button" onClick={testar} disabled={!ativo || ocupado !== ''} className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm">
+              <button type="button" onClick={testar} title="Envia agora um e-mail de teste para conferir se os avisos por e-mail funcionam" disabled={!ativo || ocupado !== ''} className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm">
                 {ocupado === 'testando' ? 'Enviando…' : 'Enviar e-mail de teste'}
               </button>
             </div>
@@ -623,8 +737,8 @@ function SecaoEscavador() {
       <div className="space-y-3 text-sm">
         <p><strong>Situação:</strong> {definida ? 'token salvo.' : 'ainda não ligado.'}</p>
         <ol className="text-xs text-grafite-claro list-decimal pl-5 space-y-1">
-          <li>Entre em <a href="https://api.escavador.com/" target="_blank" rel="noopener noreferrer" className="underline text-navy">api.escavador.com</a>, crie a conta e compre um pacote de créditos.</li>
-          <li>Abra <strong>Tokens de acesso</strong> → <strong>Gerar token</strong> e copie.</li>
+          <li>Entre em <a href="https://api.escavador.com/" target="_blank" rel="noopener noreferrer" title="Abre em uma nova aba o site do Escavador, onde se cria a conta e a senha de acesso do programa (token)" className="underline text-navy">api.escavador.com</a>, crie a conta e compre um pacote de créditos.</li>
+          <li>Abra <strong>Tokens de acesso</strong> → <strong data-citacao="escavador">Gerar token</strong> e copie.</li>
           <li>Cole abaixo e clique em Salvar. Cada consulta aparece no painel Consumo.</li>
         </ol>
         {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={`p-3 text-sm border-l-2 ${msg.tipo === 'ok' ? 'bg-regularFundo border-regular text-regular' : 'bg-criticoFundo border-critico text-critico'}`}>{msg.texto}</p>}
@@ -632,8 +746,8 @@ function SecaoEscavador() {
         <input id="chave-escavador" type="password" value={chave} onChange={e => setChave(e.target.value)} autoComplete="off" spellCheck={false}
           className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white font-mono text-sm" />
         <div className="flex flex-wrap gap-3">
-          <button type="button" onClick={salvar} disabled={!chave.trim() || ocupado !== ''} className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider">{ocupado === 'salvando' ? 'Salvando…' : 'Salvar'}</button>
-          <button type="button" onClick={testar} disabled={!definida || ocupado !== ''} className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm">{ocupado === 'testando' ? 'Testando…' : 'Testar ligação'}</button>
+          <button type="button" onClick={salvar} title="Grava a senha de acesso do Escavador (token) no servidor e já testa a ligação" disabled={!chave.trim() || ocupado !== ''} className="min-h-[44px] bg-navy hover:bg-navy-700 disabled:bg-grafite-claro/40 text-white px-5 rounded-sm text-sm uppercase tracking-wider">{ocupado === 'salvando' ? 'Salvando…' : 'Salvar'}</button>
+          <button type="button" onClick={testar} title="Testa a ligação com o Escavador usando a senha de acesso já salva (token)" disabled={!definida || ocupado !== ''} className="min-h-[44px] px-5 border border-navy text-navy hover:bg-pergaminho disabled:opacity-50 text-sm">{ocupado === 'testando' ? 'Testando…' : 'Testar ligação'}</button>
         </div>
       </div>
     </section>
@@ -667,12 +781,12 @@ function SecaoTransparencia() {
       <div className="space-y-3 text-sm">
         <p><strong>Situação:</strong> {definida ? 'chave salva; a Checagem de contraparte consulta PEP.' : 'sem chave: a Checagem de contraparte não consulta pessoas expostas politicamente.'}</p>
         <ol className="text-xs text-grafite-claro list-decimal pl-5 space-y-1">
-          <li>Entre em <a href="https://portaldatransparencia.gov.br/api-de-dados/cadastrar-email" target="_blank" rel="noopener noreferrer" className="underline text-navy">portaldatransparencia.gov.br/api-de-dados</a> e cadastre o e-mail (gratuito).</li>
+          <li>Entre em <a href="https://portaldatransparencia.gov.br/api-de-dados/cadastrar-email" target="_blank" rel="noopener noreferrer" title="Abre em uma nova aba a página do Portal da Transparência para cadastrar o e-mail e receber a chave gratuita" className="underline text-navy">portaldatransparencia.gov.br/api-de-dados</a> e cadastre o e-mail (gratuito).</li>
           <li>A chave chega por e-mail. Cole abaixo e clique em Salvar.</li>
         </ol>
         <div className="flex flex-wrap gap-2">
           <input type="password" value={chave} onChange={e => setChave(e.target.value)} aria-label="Chave do Portal da Transparência" placeholder={definida ? 'Trocar a chave' : 'Cole a chave aqui'} className="flex-1 min-h-[44px] border border-navy/20 px-3" />
-          <button type="button" onClick={salvar} disabled={ocupado || chave.trim().length < 20} className="min-h-[44px] px-4 bg-navy text-white disabled:opacity-50">{ocupado ? 'Salvando…' : 'Salvar'}</button>
+          <button type="button" onClick={salvar} title="Grava a chave do Portal da Transparência; a Checagem de contraparte passa a consultar PEP" disabled={ocupado || chave.trim().length < 20} className="min-h-[44px] px-4 bg-navy text-white disabled:opacity-50">{ocupado ? 'Salvando…' : 'Salvar'}</button>
         </div>
         {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={msg.tipo === 'erro' ? 'text-critico' : 'text-regular'}>{msg.texto}</p>}
       </div>
@@ -693,7 +807,7 @@ function SecaoIcs() {
     <section aria-labelledby="ics" className="max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado" data-testid="secao-ics">
       <h2 id="ics" className="text-lg mb-3">Convite .ics por e-mail</h2>
       <label className="flex items-center gap-3 text-sm">
-        <input type="checkbox" checked={ligado} onChange={e => mudar(e.target.checked)} className="h-5 w-5" data-testid="ics-por-email" />
+        <input type="checkbox" title="Marcado, cada prazo ou compromisso seu chega por e-mail como convite de calendário, e o Outlook ou o Google Agenda já marca sozinho." checked={ligado} onChange={e => mudar(e.target.checked)} className="h-5 w-5" data-testid="ics-por-email" />
         Receber por e-mail um convite de calendário (.ics) a cada prazo ou compromisso novo ou alterado em que eu seja responsável. O Outlook e o Google Agenda atualizam o evento pelo mesmo código (sem duplicar).
       </label>
       {msg && <p role="status" className="text-sm mt-2" data-testid="ics-msg">{msg}</p>}

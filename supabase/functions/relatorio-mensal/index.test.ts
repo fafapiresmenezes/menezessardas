@@ -41,7 +41,7 @@ describe('relatorio-mensal', () => {
     expect(b).toMatchObject({ mes: mesAnterior(), enviado: true, destinatarios: 1, teste: false, resumo: RELATORIO })
     expect(b.sha256).toMatch(/^[0-9a-f]{64}$/)
     expect(estado.rpcs[0]).toEqual({ nome: 'relatorio_mensal', args: { p_mes: mesAnterior() } })
-    expect(desenhado.titulo).toBe('Relatório mensal outubro de 2026 - GMenezes Advogados Associados')
+    expect(desenhado.titulo).toBe('Relatório mensal outubro de 2026 - Instituto THEYE')
     for (const t of ['Contratos', 'Contratos vigentes', '12', 'R$ 45.000,00', 'Horas e honorários', '31,5', 'Intimações', 'Ainda não lidas', 'Compliance', 'Inteligência artificial']) expect(desenhado.textos).toContain(t)
     expect(desenhado.textos).toContain('-') // valor nulo vira traço (WinAnsi)
     expect(estado.upserts[0]).toMatchObject({ tabela: 'relatorios_mensais', linha: { mes: mesAnterior(), conteudo: RELATORIO, sha256: b.sha256 } })

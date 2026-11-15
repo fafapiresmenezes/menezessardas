@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { PenLine, Trash2, Upload } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '../lib/supabase'
-import { extrairTextoPdf } from '../lib/pdf'
 import { ESCOLAS, REFERENCIAS, FORMATACAO } from '../lib/estiloPecas'
 import { lerDocx } from '../lib/docx'
 import { formatacaoFinal, type Formatacao } from '../lib/formatarPeca'
@@ -42,7 +41,13 @@ export default function EstiloEscrita() {
           await salvarFormatacao(d.formatacao, f.name)
           setFormatacao(d.formatacao)
         }
-      } else t = f.type === 'application/pdf' || nome.endsWith('.pdf') ? await extrairTextoPdf(f) : await f.text()
+      } else if (f.type === 'application/pdf' || nome.endsWith('.pdf')) {
+        // Importado só na hora: o leitor de PDF tem 294 kB e era baixado no primeiro acesso de
+        // todo mundo, inclusive de quem só ia abrir a tela de entrada. Agora ele chega quando
+        // alguém de fato envia um PDF. Todas as outras telas que leem PDF já faziam assim.
+        const { extrairTextoPdf } = await import('@/lib/pdf')
+        t = await extrairTextoPdf(f)
+      } else t = await f.text()
       setTexto(t.trim().slice(0, 60000))
       if (!titulo) setTitulo(f.name.replace(/\.[^.]+$/, '').slice(0, 120))
     } catch { setMsg('Não consegui ler o arquivo. Cole o texto no campo ou envie em Word, PDF ou TXT.') }
@@ -77,7 +82,7 @@ export default function EstiloEscrita() {
         {pecas.map(p => (
           <li key={p.id} className="py-2 flex items-center justify-between gap-3 text-sm">
             <span><strong>{p.titulo}</strong> <span className="text-grafite-claro">· {p.texto.length.toLocaleString('pt-BR')} caracteres · {new Date(p.criado_em).toLocaleDateString('pt-BR')}</span></span>
-            <button type="button" onClick={() => apagar(p.id)} className="min-h-[44px] px-3 text-grafite-claro hover:text-critico flex items-center gap-1" aria-label={`Apagar ${p.titulo}`}><Trash2 size={16} aria-hidden="true" /> Apagar</button>
+            <button type="button" onClick={() => apagar(p.id)} className="min-h-[44px] px-3 text-grafite-claro hover:text-critico flex items-center gap-1" aria-label={`Apagar ${p.titulo}`} title={`Tira "${p.titulo}" das peças que o robô usa para aprender o seu jeito`}><Trash2 size={16} aria-hidden="true" /> Apagar</button>
           </li>
         ))}
       </ul>
@@ -96,7 +101,7 @@ export default function EstiloEscrita() {
             <textarea id="estilo-texto" value={texto} onChange={e => setTexto(e.target.value.slice(0, 60000))} rows={6} className="w-full border border-navy/15 p-2 text-sm" placeholder="Cole aqui o texto integral da peça (mínimo 200 caracteres)." />
             <p className="text-xs text-grafite-claro mt-1">{texto.length.toLocaleString('pt-BR')} / 60.000 caracteres · {pecas.length} de {LIMITE} peças</p>
           </div>
-          <button type="submit" disabled={ocupado} data-testid="salvar-estilo" className="min-h-[44px] px-4 bg-navy text-white text-sm flex items-center gap-2 disabled:opacity-50"><Upload size={16} aria-hidden="true" /> Guardar peça</button>
+          <button type="submit" disabled={ocupado} data-testid="salvar-estilo" title="Envia a peça escolhida para o robô aprender o seu jeito de escrever. Pode mandar de 3 a 10." className="min-h-[44px] px-4 bg-navy text-white text-sm flex items-center gap-2 disabled:opacity-50"><Upload size={16} aria-hidden="true" /> Guardar peça</button>
         </form>
       ) : <p className="text-sm text-grafite-claro">Limite de {LIMITE} peças atingido. Apague uma para enviar outra.</p>}
       {msg && <p role="status" className="text-sm mt-3">{msg}</p>}
@@ -112,7 +117,7 @@ export default function EstiloEscrita() {
           )
         })()}
         {formatacao && (
-          <button type="button" onClick={() => apagarFormatacao().then(() => setFormatacao(null))} data-testid="voltar-padrao" className="mt-2 min-h-[44px] px-3 border border-navy/20 text-sm">Voltar ao padrão de grandes escritórios</button>
+          <button type="button" onClick={() => apagarFormatacao().then(() => setFormatacao(null))} data-testid="voltar-padrao" title="Volta a formatação das peças ao padrão dos grandes escritórios (margens, espaçamento, fonte)" className="mt-2 min-h-[44px] px-3 border border-navy/20 text-sm">Voltar ao padrão de grandes escritórios</button>
         )}
       </div>
       <details className="mt-6 border-t border-navy/10 pt-4" data-testid="padrao-escrita">

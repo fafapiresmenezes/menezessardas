@@ -18,12 +18,59 @@ vi.mock('@/lib/supabase', () => ({
 }))
 vi.mock('@/hooks/useAlertas', () => ({ useAlertas: () => ({ alertas, loading, getCriticos: () => alertas.filter(a => a.diasRestantes >= 0 && a.diasRestantes <= 30).length }) }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
+// Quem está olhando: a privacidade por advogado vale para as checagens de KYC e para as intimações das buscas salvas.
+let alcance: { id: string; cargo: string | null; admin: boolean; veTudo: boolean } | null = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+vi.mock('@/lib/hierarquia', async (original) => ({
+  ...(await original<typeof import('@/lib/hierarquia')>()),
+  meuAlcance: async () => { if (!alcance) throw new Error('não deu para saber quem está logado'); return alcance },
+}))
 const { default: AlertasPage } = await import('./AlertasPage')
 const Onde = () => <p data-testid="onde">{useLocation().pathname}</p>
 const montar = () => render(<MemoryRouter><Routes><Route path="*" element={<><AlertasPage /><Onde /></>} /></Routes></MemoryRouter>)
 
 describe('Alertas', () => {
-  beforeEach(() => { cleanup(); localStorage.clear(); loading = false; update.mockClear(); for (const k of Object.keys(tabelas)) delete tabelas[k]; tabelas.preferencias_usuario = { alertas_email: true, dias_antecedencia: 15 } })
+  beforeEach(() => { cleanup(); localStorage.clear(); loading = false; update.mockClear(); for (const k of Object.keys(tabelas)) delete tabelas[k]; tabelas.preferencias_usuario = { alertas_email: true, dias_antecedencia: 15 }
+    alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true } })
+
+  // Privacidade por advogado: a checagem e a intimação do colega não são alerta de quem não vê o caso dele.
+  const comDoisAdvogados = () => {
+    tabelas.tarefas = [
+      { numero_processo: '0801111-26.2026.8.19.0001', responsavel_id: 'u1' },
+      { numero_processo: '0802222-36.2026.8.19.0001', responsavel_id: 'u2' },
+    ]
+    tabelas.checagens_kyc = [
+      { id: 1, cnpj: '1', nome: 'EMPRESA DELE', risco: 'alto', risco_anterior: 'baixo', consultado_em: '2026-11-01T12:00:00Z', usuario_id: 'u1' },
+      { id: 2, cnpj: '2', nome: 'EMPRESA DO COLEGA', risco: 'alto', risco_anterior: 'baixo', consultado_em: '2026-11-01T12:00:00Z', usuario_id: 'u2' },
+    ]
+    tabelas.intimacoes = [
+      { id: 1, oab: 'busca:MEU CLIENTE', data_disponibilizacao: '2026-10-30', tribunal: 'TJRJ', tipo: 'Intimação', numero_processo: '0801111-26.2026.8.19.0001', link: null },
+      { id: 2, oab: 'busca:CLIENTE DO COLEGA', data_disponibilizacao: '2026-10-30', tribunal: 'TJRJ', tipo: 'Intimação', numero_processo: '0802222-36.2026.8.19.0001', link: null },
+    ]
+  }
+
+  it('júnior não vê o alerta do colega; o sócio vê os dois', async () => {
+    comDoisAdvogados(); alcance = { id: 'u1', cargo: 'junior', admin: false, veTudo: false }
+    montar()
+    await waitFor(() => expect(screen.getByTestId('alertas-alcance').textContent).toContain('os alertas dos seus casos'))
+    await waitFor(() => expect(screen.getByTestId('kyc-mudancas').textContent).toContain('EMPRESA DELE'))
+    expect(screen.getByTestId('kyc-mudancas').textContent).not.toContain('EMPRESA DO COLEGA')
+    expect(screen.getByTestId('novidades-buscas').textContent).toContain('MEU CLIENTE')
+    expect(screen.getByTestId('novidades-buscas').textContent).not.toContain('CLIENTE DO COLEGA')
+
+    cleanup(); alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+    montar()
+    await waitFor(() => expect(screen.getByTestId('kyc-mudancas').textContent).toContain('EMPRESA DO COLEGA'))
+    expect(screen.getByTestId('novidades-buscas').textContent).toContain('CLIENTE DO COLEGA')
+    expect(screen.queryByTestId('alertas-alcance')).toBeNull()
+  })
+
+  it('sem saber quem está logado, esconde o que tem dono em vez de mostrar tudo', async () => {
+    comDoisAdvogados(); alcance = null
+    montar()
+    await waitFor(() => expect(screen.getByTestId('alertas-alcance')).toBeTruthy())
+    expect(screen.queryByTestId('kyc-mudancas')).toBeNull()
+    expect(screen.queryByTestId('novidades-buscas')).toBeNull()
+  })
 
   it('indicadores viram filtros lembrados; lista ordenada com selo; clicar abre o contrato; preferência de e-mail', async () => {
     montar()

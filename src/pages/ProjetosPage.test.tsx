@@ -27,7 +27,8 @@ const from = (t: string) => ({
   insert: (l: Linha) => insert(l),
   update: (v: Linha) => ({ eq: (_c: string, id: string) => update(v, id) }),
 })
-vi.mock('@/lib/supabase', () => ({ supabaseConfigurado: true, supabase: { from } }))
+// Privacidade por advogado: a tela precisa saber quem está logado para mostrar os casos dessa pessoa.
+vi.mock('@/lib/supabase', () => ({ supabaseConfigurado: true, supabase: { from, auth: { getUser: async () => ({ data: { user: { id: 'u1' } } }) } } }))
 vi.mock('@/lib/equipe', () => ({ listarPessoas: async () => [{ id: 'u1', nome: 'Letícia', email: 'l@x', funcao: 'advogada' }, { id: 'u2', nome: 'Fátima', email: 'f@x', funcao: 'admin' }] }))
 vi.mock('@/lib/repositorio', () => ({ repositorio: { listarImoveis: async () => [{ id: 'i1', endereco: 'Rua das Flores 123' }] } }))
 vi.mock('@/lib/caminhoCritico', () => ({ caminhoCritico: (etapas: { id: string }[]) => (etapas.length ? { caminho: ['t1', 't2'], fimPrevisto: '2026-12-20', atraso: 0, fins: { t2: '2026-12-20' } } : { caminho: [], fimPrevisto: null, atraso: 0, fins: {} }) }))

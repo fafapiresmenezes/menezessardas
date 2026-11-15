@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import SeloSituacao from '@/components/SeloSituacao'
 import { useAlertas, salvarCompromisso, importarCompromissosIcs } from '@/hooks/useAlertas'
+import { meuAlcance, ALCANCE_FECHADO, rotuloCargo, type Alcance } from '@/lib/hierarquia'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { baixarICS, lerIcs } from '@/lib/ics'
 import { gerarPdfTexto, quebrar } from '@/lib/pdfSimples'
@@ -29,7 +30,13 @@ const corPonto: Record<string, string> = {
 }
 
 export default function AgendaPage() {
+  // Privacidade por advogado: prazos de casos e parcelas de honorários já vêm filtrados do useAlertas;
+  // aqui só se diz à pessoa o que ela está vendo. Vencimentos de contrato, reajustes e compromissos do
+  // calendário são da carteira de locação e valem para o escritório inteiro.
   const { alertas, loading, recarregar } = useAlertas()
+  const [alcance, setAlcance] = useState<Alcance | null>(null)
+  const alc = alcance ?? ALCANCE_FECHADO
+  useEffect(() => { meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
   const navigate = useNavigate()
   const hoje = new Date()
   const [ano, setAno] = useState(hoje.getFullYear())
@@ -40,6 +47,9 @@ export default function AgendaPage() {
   const semanaEmPdf = async () => {
     setMsgSemana('')
     const inicio = isoLocal(new Date(Date.now() + 86400000))
+    // A semana em PDF é montada no banco (função semana_agenda), não no navegador: o filtro por advogado
+    // dela tem de ser feito lá dentro. Enquanto a migração 124 não for aplicada, este PDF traz a semana do
+    // escritório inteiro — ver a nota em database/migrations/124_privacidade_por_advogado.sql.
     const { data, error } = await supabase.rpc('semana_agenda', { p_inicio: inicio, p_dias: 7 })
     if (error) { setMsgSemana(mensagemAmigavel(error)); return }
     const sem = data as { inicio: string; fim: string; total: number; dias: { dia: string; itens: { tipo: string; titulo: string; detalhe: string; responsavel: string }[] }[] }
@@ -69,12 +79,7 @@ export default function AgendaPage() {
       setMsgSemana(`Importação concluída: ${r.criados} compromisso(s) criado(s), ${r.repetidos} já existia(m) e foram pulados.`)
     } catch (e) { setMsgSemana('Não foi possível importar: ' + (e instanceof Error ? mensagemAmigavel(e) : String(e))) }
   }
-  const enviarSemanaTeste = async () => {
-    setMsgSemana('Enviando…')
-    const { data, error } = await supabase.functions.invoke('semana-pdf', { body: { teste: true } })
-    const r = (data ?? {}) as { enviado?: boolean; total?: number; motivo?: string; detalhe?: string }
-    setMsgSemana(error ? mensagemAmigavel(error) : r.enviado ? `E-mail de teste enviado para você com ${r.total} item(ns).` : `Não enviado: ${r.motivo ?? r.detalhe ?? 'erro'}`)
-  }
+  // O botão "testar e-mail" saiu da tela a pedido do M (12/11/2026): cliente não testa; o envio de sexta é automático.
   // Passo 19: roteiro do Outlook por e-mail e resultado do teste (configuracoes.teste_outlook, só admin lê e grava).
   const [testeOutlook, setTesteOutlook] = useState<{ enviado_em?: string; para?: string[]; resultado?: string; em?: string } | null>(null)
   const [msgRoteiro, setMsgRoteiro] = useState('')
@@ -226,79 +231,91 @@ export default function AgendaPage() {
   return (
     <Layout title="Agenda">
       <div className="space-y-6">
+        {!alc.veTudo && (
+          <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="agenda-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
+            Você está vendo <strong>os prazos dos seus casos</strong> ({rotuloCargo[alc.cargo ?? 'nenhum']}) e os compromissos do escritório. Prazo sem responsável aparece para todos, para ninguém perder data; sócios e o gestor veem o conjunto.
+          </p>
+        )}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <button onClick={() => mudarMes(-1)} className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-sm hover:bg-white" aria-label="Mês anterior">
+            <button onClick={() => mudarMes(-1)} className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-sm hover:bg-white" aria-label="Mês anterior" title="Mostra o mês anterior na agenda">
               <ChevronLeft size={20} aria-hidden="true" />
             </button>
             <h2 className="font-serif text-2xl text-navy capitalize min-w-[11rem] text-center">
               {MESES[mes]} de {ano}
             </h2>
-            <button onClick={() => mudarMes(1)} className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-sm hover:bg-white" aria-label="Próximo mês">
+            <button onClick={() => mudarMes(1)} className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-sm hover:bg-white" aria-label="Próximo mês" title="Mostra o próximo mês na agenda">
               <ChevronRight size={20} aria-hidden="true" />
             </button>
-            {(ano !== hoje.getFullYear() || mes !== hoje.getMonth()) && <button type="button" onClick={irParaHoje} data-testid="agenda-hoje" className="min-h-[44px] px-3 text-sm border border-navy text-navy rounded-sm hover:bg-white">Hoje</button>}
+            {(ano !== hoje.getFullYear() || mes !== hoje.getMonth()) && <button type="button" onClick={irParaHoje} data-testid="agenda-hoje" title="Volta o calendário para o mês atual" className="min-h-[44px] px-3 text-sm border border-navy text-navy rounded-sm hover:bg-white">Hoje</button>}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <a
-              href={mailto}
-              className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-white"
-            >
-              <Mail size={16} aria-hidden="true" /> Enviar por e-mail
-            </a>
-            <button onClick={semanaEmPdf} data-testid="semana-pdf" className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho">
+            <button onClick={semanaEmPdf} data-testid="semana-pdf" title="Baixa um PDF com os prazos e compromissos dos próximos 7 dias, por dia e por responsável." className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho">
               <Download size={16} aria-hidden="true" /> Semana em PDF
             </button>
-            <button onClick={enviarSemanaTeste} data-testid="semana-email-teste" className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-white">
-              <Mail size={16} aria-hidden="true" /> Testar e-mail de sexta
-            </button>
-            <label className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-white cursor-pointer" data-testid="importar-ics">
-              <Plus size={16} aria-hidden="true" /> Importar .ics
-              <input type="file" accept=".ics,text/calendar" className="sr-only" data-testid="importar-ics-input" onChange={e => { importarIcs(e.target.files?.[0]); e.target.value = '' }} />
-            </label>
-            <button
-              onClick={() => baixarICS(alertas)}
-              className="inline-flex items-center gap-2 border border-navy text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho"
-            >
-              <Download size={16} aria-hidden="true" /> Exportar iCal
-            </button>
-            <button
-              onClick={() => sincronizarGoogleCalendar('outlook')}
-              disabled={sincronizando}
-              className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-navy-700 disabled:opacity-50"
-            >
-              <ExternalLink size={16} aria-hidden="true" /> Conectar ao Outlook
-            </button>
-            <button
-              onClick={() => sincronizarGoogleCalendar('google')}
-              disabled={sincronizando}
-              className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-navy-700 disabled:opacity-50"
-            >
-              <ExternalLink size={16} aria-hidden="true" /> {sincronizando ? 'Abrindo…' : 'Conectar ao Google Agenda'}
-            </button>
+            <details className="relative" data-testid="agenda-mais-opcoes">
+              <summary title="Mostra as outras ações da agenda: enviar por e-mail, importar e exportar compromissos e conectar ao Outlook ou ao Google Agenda." className="inline-flex items-center gap-2 border border-navy/20 text-navy px-4 py-2 min-h-[44px] rounded-sm text-sm hover:bg-white cursor-pointer select-none list-none">
+                Mais opções
+              </summary>
+              <div className="sm:absolute sm:right-0 z-10 mt-1 flex flex-col gap-1 bg-white border border-navy/10 shadow-md rounded-sm p-2 min-w-[240px]">
+                <a
+                  href={mailto}
+                  title="Abre o seu programa de e-mail com a lista dos próximos compromissos já escrita, pronta para enviar."
+                  className="inline-flex items-center gap-2 text-navy px-3 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho"
+                >
+                  <Mail size={16} aria-hidden="true" /> Enviar por e-mail
+                </a>
+                <label title="Traz para cá os compromissos de um arquivo .ics exportado do Outlook ou do Google Agenda, sem duplicar." className="inline-flex items-center gap-2 text-navy px-3 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho cursor-pointer" data-testid="importar-ics">
+                  <Plus size={16} aria-hidden="true" /> Importar .ics
+                  <input type="file" accept=".ics,text/calendar" className="sr-only" data-testid="importar-ics-input" onChange={e => { importarIcs(e.target.files?.[0]); e.target.value = '' }} />
+                </label>
+                <button
+                  onClick={() => baixarICS(alertas)}
+                  title="Baixa um arquivo .ics com todos os compromissos, para abrir em qualquer calendário."
+                  className="inline-flex items-center gap-2 text-navy px-3 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho"
+                >
+                  <Download size={16} aria-hidden="true" /> Exportar iCal
+                </button>
+                <button
+                  onClick={() => sincronizarGoogleCalendar('outlook')}
+                  disabled={sincronizando}
+                  title="Assina esta agenda no Outlook: os prazos passam a aparecer lá sozinhos, sem exportar de novo."
+                  className="inline-flex items-center gap-2 text-navy px-3 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho disabled:opacity-50"
+                >
+                  <ExternalLink size={16} aria-hidden="true" /> Conectar ao Outlook
+                </button>
+                <button
+                  onClick={() => sincronizarGoogleCalendar('google')}
+                  disabled={sincronizando}
+                  title="Assina esta agenda no Google Agenda: os prazos passam a aparecer lá sozinhos, sem exportar de novo."
+                  className="inline-flex items-center gap-2 text-navy px-3 py-2 min-h-[44px] rounded-sm text-sm hover:bg-pergaminho disabled:opacity-50"
+                >
+                  <ExternalLink size={16} aria-hidden="true" /> {sincronizando ? 'Abrindo…' : 'Conectar ao Google Agenda'}
+                </button>
+              </div>
+            </details>
           </div>
           {msgSemana && <p role="status" className="text-sm mt-2" data-testid="semana-msg">{msgSemana}</p>}
           <p className="w-full text-sm p-3 bg-white shadow-sm border-l-4 border-dourado" data-testid="resumo-semana">
             {semana.length === 0 ? 'Próximos 7 dias: nenhum compromisso.' : <>Próximos 7 dias: <strong>{semana.length}</strong> compromisso{semana.length > 1 ? 's' : ''}; o primeiro é <strong>{semana[0].titulo}</strong> {semana[0].diasRestantes === 0 ? 'hoje' : semana[0].diasRestantes === 1 ? 'amanhã' : `em ${semana[0].diasRestantes} dias`} ({formatarData(semana[0].dataEvento)}).</>}
-            {' '}<button type="button" onClick={copiarSemana} data-testid="copiar-semana" className="underline text-navy min-h-[44px] inline-flex items-center">{semanaCopiada ? 'semana copiada' : 'copiar os 7 dias'}</button>
+            {' '}<button type="button" onClick={copiarSemana} data-testid="copiar-semana" title="Copia os compromissos dos próximos 7 dias em texto, para colar em e-mail ou mensagem" className="underline text-navy min-h-[44px] inline-flex items-center">{semanaCopiada ? 'semana copiada' : 'copiar os 7 dias'}</button>
             {/* Passo 156: imprimir a agenda do mês. */}
-            {' '}<button type="button" onClick={() => window.print()} data-testid="imprimir-agenda" className="underline text-navy print:hidden min-h-[44px] inline-flex items-center">imprimir</button>
-            {' '}<button type="button" data-testid="copiar-link-agenda" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 236 */}
-            {alertas.length > 0 && <button type="button" data-testid="baixar-agenda" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['data;imóvel;tipo;título;dias restantes', ...alertas.map(a => `${a.dataEvento};${a.imovel};${a.tipo};${a.titulo.replace(/;/g, ',')};${a.diasRestantes}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'agenda.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 308 */}
-            {' '}<button type="button" onClick={() => { setAno(hoje.getFullYear()); setMes(hoje.getMonth()) }} data-testid="agenda-hoje" className="underline text-navy print:hidden">hoje</button>{/* Passo 190 */}
+            {' '}<button type="button" onClick={() => window.print()} data-testid="imprimir-agenda" title="Abre a janela de impressão do navegador com a agenda do mês" className="underline text-navy print:hidden min-h-[44px] inline-flex items-center">imprimir</button>
+            {' '}<button type="button" data-testid="copiar-link-agenda" title="Copia o endereço desta página da agenda para compartilhar com a equipe" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="underline text-navy print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 236 */}
+            {alertas.length > 0 && <button type="button" data-testid="baixar-agenda" title="Baixa os compromissos do mês em planilha CSV" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['data;imóvel;tipo;título;dias restantes', ...alertas.map(a => `${a.dataEvento};${a.imovel};${a.tipo};${a.titulo.replace(/;/g, ',')};${a.diasRestantes}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'agenda.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 308 */}
+            {' '}<button type="button" onClick={() => { setAno(hoje.getFullYear()); setMes(hoje.getMonth()) }} data-testid="agenda-hoje" title="Volta o calendário para o mês atual" className="underline text-navy print:hidden">hoje</button>{/* Passo 190 */}
           </p>
           {supabaseConfigurado && (
             <div className="mt-3 text-sm flex flex-wrap items-center gap-3" data-testid="roteiro-outlook">
               <span className="text-grafite-claro">Roteiro do Outlook (5 passos com imagens):</span>
-              <button type="button" onClick={() => enviarRoteiro('fatima')} disabled={enviandoRoteiro} className="underline text-navy disabled:opacity-50 min-h-[44px]" data-testid="enviar-roteiro-fatima">Enviar para a Fátima</button>
-              <button type="button" onClick={() => enviarRoteiro('eu')} disabled={enviandoRoteiro} className="underline text-navy disabled:opacity-50 min-h-[44px]" data-testid="enviar-roteiro-eu">Enviar para mim (teste)</button>
+              <button type="button" onClick={() => enviarRoteiro('fatima')} disabled={enviandoRoteiro} title="Envia por e-mail o passo a passo, com imagens, para conectar o Outlook à agenda." className="underline text-navy disabled:opacity-50 min-h-[44px]" data-testid="enviar-roteiro-fatima">Enviar para a Fátima</button>
               {msgRoteiro && <span aria-live="polite" data-testid="msg-roteiro">{msgRoteiro}</span>}
               {testeOutlook && (
                 <span className="flex items-center gap-2" data-testid="teste-outlook">
                   Teste da Fátima: <strong data-testid="resultado-outlook">{testeOutlook.resultado === 'funcionou' ? 'funcionou' : testeOutlook.resultado === 'nao_funcionou' ? 'não funcionou' : 'pendente'}</strong>
                   {testeOutlook.enviado_em && <span className="text-grafite-claro">(roteiro enviado em {new Date(testeOutlook.enviado_em).toLocaleDateString('pt-BR')})</span>}
-                  <button type="button" onClick={() => marcarTesteOutlook('funcionou')} className="border border-regular text-regular px-2 py-1 rounded-sm" data-testid="outlook-funcionou">Funcionou</button>
-                  <button type="button" onClick={() => marcarTesteOutlook('nao_funcionou')} className="border border-critico text-critico px-2 py-1 rounded-sm" data-testid="outlook-nao-funcionou">Não funcionou</button>
+                  <button type="button" onClick={() => marcarTesteOutlook('funcionou')} title="Registra que o teste da conexão do Outlook com a agenda funcionou" className="border border-regular text-regular px-2 py-1 rounded-sm" data-testid="outlook-funcionou">Funcionou</button>
+                  <button type="button" onClick={() => marcarTesteOutlook('nao_funcionou')} title="Registra que o teste da conexão do Outlook com a agenda não funcionou" className="border border-critico text-critico px-2 py-1 rounded-sm" data-testid="outlook-nao-funcionou">Não funcionou</button>
                 </span>
               )}
             </div>
@@ -364,13 +381,14 @@ export default function AgendaPage() {
             Compromissos de {MESES[mes]}
           </h3>
           {doMes.length === 0 ? (
-            <Vazio titulo="Nenhum compromisso neste mês" texto="Toque em um dia para criar o primeiro, ou importe um .ics do Outlook." />
+            <Vazio titulo="Nenhum compromisso neste mês" texto="Toque em um dia do calendário para criar o primeiro, ou traga a sua agenda do Outlook ou do Google Agenda." acao={{ rotulo: 'Trazer do Outlook (.ics)', onClick: () => { const d = document.querySelector('[data-testid="agenda-mais-opcoes"]') as HTMLDetailsElement | null; if (d) d.open = true; (document.querySelector('[data-testid="importar-ics-input"]') as HTMLInputElement | null)?.click() }, dica: 'Abre o seu computador para escolher o arquivo .ics exportado do Outlook ou do Google Agenda' }} />
           ) : (
             <ul className="divide-y divide-navy/10 mt-3">
               {doMes.map(a => (
                 <li key={a.id}>
                   <button
                     onClick={() => a.imovelId && navigate(`/contrato/${a.imovelId}`)}
+                    title="Abre o contrato do imóvel deste compromisso"
                     className="w-full text-left px-5 py-3 hover:bg-pergaminho flex items-center justify-between gap-4"
                   >
                     <div className="min-w-0">
@@ -396,6 +414,8 @@ export default function AgendaPage() {
                 <h3 className="font-serif text-xl text-navy">Novo Compromisso</h3>
                 <button
                   onClick={() => setShowModal(false)}
+                  title="Fecha a janela sem salvar"
+                  aria-label="Fechar"
                   className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] text-grafite hover:text-navy"
                 >
                   <X size={20} aria-hidden="true" />
@@ -458,7 +478,7 @@ export default function AgendaPage() {
                     inputMode="email"
                     value={novoAlerta.email}
                     onChange={e => setNovoAlerta({ ...novoAlerta, email: e.target.value })}
-                    placeholder="fatima.menezes@lsm.law"
+                    placeholder="nome@exemplo.com"
                     className="w-full min-h-[44px] px-3 border border-navy/20 rounded-sm text-sm"
                   />
                   <p className="text-xs text-grafite-claro mt-1">Para mais de um, separe por vírgula.</p>
@@ -468,12 +488,14 @@ export default function AgendaPage() {
               <div className="flex gap-2 mt-6">
                 <button
                   onClick={criarAlerta}
+                  title="Grava o novo compromisso na agenda"
                   className="flex-1 min-h-[44px] bg-navy text-white font-medium rounded-sm hover:bg-navy-700"
                 >
                   Salvar Compromisso
                 </button>
                 <button
                   onClick={() => setShowModal(false)}
+                  title="Fecha a janela sem salvar o compromisso"
                   className="flex-1 min-h-[44px] border border-navy/20 text-navy font-medium rounded-sm hover:bg-pergaminho"
                 >
                   Cancelar

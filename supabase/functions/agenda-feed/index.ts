@@ -15,7 +15,7 @@ function evento(uid: string, data: string, titulo: string, local: string, avisos
     `DTEND;VALUE=DATE:${prox(data)}`,
     `SUMMARY:${esc(titulo)}`,
     `LOCATION:${esc(local)}`,
-    'DESCRIPTION:Gestão de Contratos · https://gmenezes-advogados.vercel.app/agenda',
+    'DESCRIPTION:Gestão de Contratos · https://theye.club/agenda',
     ...[...new Set(avisos)].flatMap(n => ['BEGIN:VALARM', 'ACTION:DISPLAY', `TRIGGER:-P${n}D`, `DESCRIPTION:${esc(titulo)}`, 'END:VALARM']),
     'END:VEVENT',
     // Agendas assinadas costumam ignorar alarmes do arquivo; cada aviso vira também um evento no próprio dia.
@@ -44,8 +44,8 @@ Deno.serve(async (req) => {
     ...(comp ?? []).map(k => evento(`k-${k.id}`, k.data_evento, k.titulo, k.imovel, k.avisos_dias?.length ? k.avisos_dias : [k.dias_antes], stamp)),
   ]
   const ics = [
-    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//GMenezes//Contratos//PT', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
-    'X-WR-CALNAME:Prazos contratuais — GMenezes', 'X-WR-TIMEZONE:America/Sao_Paulo', 'REFRESH-INTERVAL;VALUE=DURATION:PT6H',
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//THEYE//Contratos//PT', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+    'X-WR-CALNAME:Prazos contratuais — THEYE', 'X-WR-TIMEZONE:America/Sao_Paulo', 'REFRESH-INTERVAL;VALUE=DURATION:PT6H',
     ...eventos, 'END:VCALENDAR',
   ].join('\r\n')
   return new Response(ics, { headers: { 'Content-Type': 'text/calendar; charset=utf-8', 'Cache-Control': 'no-cache' } })

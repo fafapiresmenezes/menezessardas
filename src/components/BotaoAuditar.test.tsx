@@ -19,7 +19,7 @@ describe('Auditoria de integridade com selo no Bitcoin', () => {
     const status = await screen.findByRole('status')
     expect(status.textContent).toContain('Íntegro. Selado no Bitcoin (lote 7')
     expect(screen.getByText('manifesto')).toBeTruthy()
-    expect(screen.getByText('prova .ots')).toBeTruthy()
+    expect(screen.getByText('prova de data (.ots)')).toBeTruthy()
     fireEvent.click(screen.getByTestId('verificar-ots'))
     await waitFor(() => expect(invoke).toHaveBeenLastCalledWith('selar-documentos', { body: { verificar: 7 } }))
     expect((await screen.findByTestId('resultado-ots')).textContent).toContain('Confirmado no Bitcoin: bloco 920000')

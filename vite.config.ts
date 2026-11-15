@@ -10,7 +10,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          pdfjs: ['pdfjs-dist'],
+          // O pdfjs-dist NÃO fica aqui de propósito. Um pedaço nomeado nesta lista entra no grafo
+          // do primeiro acesso, e por isso o leitor de PDF (294 kB) era baixado por todo mundo que
+          // abria o site, inclusive por quem só ia ver a tela de entrada. Fora da lista, o Rollup o
+          // separa sozinho como pedaço que chega na hora em que alguém envia um PDF.
           vendor: ['react', 'react-dom', 'react-router-dom'],
         },
       },

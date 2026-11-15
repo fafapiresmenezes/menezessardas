@@ -61,9 +61,10 @@ export function prazoEscrito(texto: string): { dias: number; corridos: boolean }
 /** Data e hora de audiência citada no texto, se houver. */
 export function audienciaNoTexto(texto: string): { data: string; hora: string | null } | null {
   const t = semAcento(texto)
-  const i = t.search(/audiencia|sessao de julgamento|pauta de julgamento/)
+  // Pauta de tribunal vem como "EDITAL-PAUTA ... SESSÃO ... 04/11/2026, A PARTIR DE 13:30": a data fica longe do título.
+  const i = t.search(/audiencia|sessao de julgamento|pauta de julgamento|edital[- ]?pauta|sessao (presencial|virtual|ordinaria|extraordinaria|do dia)/)
   if (i < 0) return null
-  const janela = t.slice(Math.max(0, i - 120), i + 260)
+  const janela = t.slice(Math.max(0, i - 120), i + 600)
   const m = janela.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/) ?? janela.match(/(\d{1,2}) de (janeiro|fevereiro|marco|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro) de (\d{4})/)
   if (!m) return null
   const meses = ['janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro']
@@ -102,11 +103,32 @@ const REGRAS: Regra[] = [
   { re: /impugna\w* (ao )?cumprimento|art\.? 525/, id: () => 'cpc-impugnacao', texto: 'Contestar o cumprimento de sentença (impugnação)', confianca: 'media', legal: true },
   { re: /especifi\w* (as )?provas|provas que pretende/, id: () => 'cpc-generico', texto: 'Dizer quais provas quer produzir', confianca: 'media' },
   { re: /para contestar|apresentar contestacao|prazo de contestacao|ofere\w* contestacao|cite-se|fica citad/, id: () => 'cpc-contestacao', texto: 'Defender o cliente (contestação). Confira de quando conta: audiência, juntada do mandado ou do aviso de recebimento', confianca: 'media', legal: true },
+  { re: /cumpra-se o (v\.?|venerando|r\.?|respeitavel)?\s*acordao|retorno dos autos|baixa dos autos/, id: () => 'cpc-generico', texto: 'O processo voltou do tribunal. Dizer ao juiz o que o cliente requer (manifestação)', confianca: 'media' },
+  { re: /embargos[^.]{0,60}(rejeitad|inadmitid|nao acolh)|rejeito os embargos|inadmito os embargos|deixo de acolh\w+ os embargos/, id: c => recursoDaSentenca(c), texto: 'Embargos de declaração rejeitados: o prazo do recurso principal volta a correr por inteiro. Se o cliente era o embargante, recorrer; se era o embargado, nada a fazer', confianca: 'media', legal: true },
   { re: /julgo (im)?procedente|julgo parcialmente|julgo extint|homologo|resolvo o merito|sentenca/, id: c => edDo(c), texto: 'Saiu a sentença. Ler com o cliente; se houver ponto omisso ou contraditório, embargos de declaração', confianca: 'media', outra: outraRecurso, legal: true },
   { re: /acordao|acordam|negaram provimento|deram provimento|por unanimidade|por maioria/, id: c => edDo(c), texto: 'Saiu o acórdão (decisão do tribunal). Ler; se houver omissão, embargos de declaração', confianca: 'media', outra: c => (c === 'CLT' ? 'Se for recorrer: recurso de revista em 8 dias úteis (CLT, art. 896).' : c === 'JEC' ? undefined : 'Se for recorrer: recurso especial ou extraordinário em 15 dias úteis (CPC, art. 1.003, § 5º).'), legal: true },
   { re: /defiro|indefiro|decisao interlocutoria|tutela (de urgencia|antecipada)|liminar/, id: c => edDo(c), texto: 'Saiu uma decisão no meio do processo. Ler; se prejudicar o cliente, avaliar recurso', confianca: 'baixa', outra: c => (c === 'CPC' ? 'Se couber agravo de instrumento: 15 dias úteis (CPC, arts. 1.015 e 1.003, § 5º).' : undefined), legal: true },
   { re: /manifest|diga(m)? |digam|ciencia|fale(m)? sobre|cumpra|junte|providencie|recolh\w* (as )?custas|comprove/, id: () => 'cpc-generico', texto: 'Responder ao que o juiz pediu (manifestação)', confianca: 'media' },
 ]
+
+
+// Publicações em que NÃO há prazo para o nosso cliente: o ato é de cartório, ou a ordem é para outra parte (MP, recorrente, contador).
+// Antes, o robô tratava todas como "manifestação em 5 dias" e mandava o advogado atrás de um prazo que não existe.
+// Só vale quando a publicação é curta e não traz prazo escrito: se houver prazo, a regra normal decide.
+const SEM_PRAZO: { re: RegExp; texto: string; outra?: string }[] = [
+  { re: /migrad\w+ (do sistema \w+ )?para o sistema eproc|foram migrados.{0,40}eproc|processo.{0,40}migrado.{0,40}eproc/, texto: 'Processo migrado para o eproc: não há prazo. Cada advogado deve fazer o primeiro acesso com certificado digital e conferir os dados', outra: 'Depois do primeiro acesso, os prazos passam a correr pelo eproc.' },
+  { re: /(de-se|remetam-se (os autos )?|vista )(ao|a) (mp|ministerio publico|parquet)|ao ministerio publico para parecer|para parecer de merito/, texto: 'Vista ao Ministério Público: o prazo é do MP, não do cliente. Acompanhar o parecer', outra: 'Quando o parecer sair, responder só se for contrário ao cliente.' },
+  { re: /(ao|a|ao\(s\)|a\(s\)) (parte\(s\) )?recorrente\(?s?\)? (para|sobre)|intime-?se,? derradeiramente,? a subscritora|ao recorrente,? para regulariza|vista a\(s\) parte\(s\) recorrente/, texto: 'Ordem dirigida à parte que recorreu: o prazo é dela, não do cliente. Acompanhar se ela cumpre; se não cumprir, o recurso pode não ser conhecido' },
+  { re: /remetam-se os autos ao contador|ao contador judicial para|ao administrador judicial\.?$|a inventariante\.?$/, texto: 'Os autos vão para o contador ou para outro auxiliar: ainda não há prazo para o cliente. O prazo nasce quando houver nova vista' },
+  { re: /nada a prover.{0,80}(sentenca|acordao).{0,60}(transitad|cumpra-se)|ja ha sentenca nos autos|sentenca.{0,40}transitada em julgado.{0,30}cumpra-se/, texto: 'O juiz negou o pedido porque já há sentença transitada em julgado. Não é uma sentença nova: o caminho é o cumprimento da sentença (se o cliente ganhou)', outra: 'Se o pedido negado era do cliente e prejudica: embargos de declaração em 5 dias úteis, só se houver vício.' },
+  { re: /distribua-se o processo|distribuido ao|redistribuid/, texto: 'O processo foi distribuído a um relator: não há prazo. Anotar o relator e acompanhar' },
+  { re: /^\s*(\w+ )?(oficie-se|expeca-se (oficio|mandado|alvara|certidao)|anote-se|junte-se|certifique-se)[^.]{0,200}\.?\s*$/, texto: 'Ato de cartório (ofício, anotação ou mandado): não há prazo para o cliente. Conferir se o cliente precisa acompanhar o cumprimento' },
+]
+
+function lerSemPrazo(texto: string, t: string) {
+  if (t.length > 1200 || prazoEscrito(texto)) return null
+  return SEM_PRAZO.find(r => r.re.test(t)) ?? null
+}
 
 function atoAdHoc(id: string, codigo: Codigo, dias?: number, corridos?: boolean): AtoPrazo {
   if (id === 'ad-agravo') return { id, codigo: 'CPC', ato: 'Contraminuta de agravo', quantidade: 15, unidade: 'dias_uteis', base: 'CPC, arts. 1.019, II, e 1.021, § 2º', dobro: true }
@@ -135,6 +157,11 @@ export function lerIntimacao(p: Publicacao, hoje: string): PrazoLido {
   const aud = /pauta|audiencia|sessao de julgamento/.test(t) ? audienciaNoTexto(texto) : null
   if (aud && aud.data >= p.data) {
     return { ...base, oQueFazer: `Comparecer à audiência ou sessão${aud.hora ? ` às ${aud.hora}` : ''}. Avisar o cliente e as testemunhas`, ato: null, vence: aud.data, diaSemana: diaDaSemana(aud.data), urgencia: urgenciaPara(aud.data, hoje), confianca: 'media', trecho: trechoEm(texto, /audiencia|sessao de julgamento|pauta/), avisos: ['Data lida do texto da publicação: confira no processo.'] }
+  }
+
+  const semPrazo = lerSemPrazo(texto, t)
+  if (semPrazo) {
+    return { ...base, oQueFazer: semPrazo.texto, ato: null, vence: null, diaSemana: null, urgencia: 'ler', confianca: 'alta', trecho: trechoEm(texto, semPrazo.re), outra: semPrazo.outra, avisos: ['Não há prazo para o cliente nesta publicação. Se o prazo anotado antes for diferente, vale esta leitura.'] }
   }
 
   const escrito = prazoEscrito(texto)

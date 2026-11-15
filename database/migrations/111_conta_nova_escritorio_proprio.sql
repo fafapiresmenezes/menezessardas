@@ -1,5 +1,5 @@
 -- 111 — Conta nova nasce num escritório próprio e vazio (decisão do M em 10/11/2026; em 11/11/2026 o M
--- retirou o veto ao escritório Sardas e Menezes: ele entra como qualquer outro escritório cliente).
+-- retirou o veto ao escritório da Letícia: ele entra como qualquer outro escritório cliente).
 -- M definiu que a plataforma é para outros escritórios e para o Instituto (estudo e pesquisa):
 -- ninguém de fora entra nos dados da sede.
 -- A migração 109 colocava a conta nova como leitor DA SEDE, com acesso de leitura a tudo; agora:

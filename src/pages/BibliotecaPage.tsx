@@ -3,10 +3,13 @@ import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import Vazio from '@/components/Vazio'
 import { supabase } from '@/lib/supabase'
-import { ROTULO_TIPO, filtrar, guardarNaBiblioteca, type ItemBiblioteca, type TipoBiblioteca } from '@/lib/biblioteca'
-import { Library, Trash2 } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { REPOSITORIOS_ABERTOS, ROTULO_TIPO, filtrar, guardarNaBiblioteca, type ItemBiblioteca, type TipoBiblioteca } from '@/lib/biblioteca'
+import { filtrarPorCriador, meuAlcance, ALCANCE_FECHADO, type Cargo } from '@/lib/hierarquia'
+import { BookOpen, Library, Trash2 } from 'lucide-react'
 
 // Bloco B04: tudo o que já foi pesquisado (Assistente, Fontes, Parte adversa e notas), com busca e etiquetas.
+// Privacidade (pedido do M, 12/11/2026): cada pessoa só vê o que ela mesma guardou; sócio(a) e gestor(a) veem tudo.
 export default function BibliotecaPage() {
   const [itens, setItens] = useState<ItemBiblioteca[]>([])
   const [busca, setBusca] = useState('')
@@ -14,10 +17,13 @@ export default function BibliotecaPage() {
   const [aberto, setAberto] = useState<number | null>(null)
   const [nota, setNota] = useState({ titulo: '', conteudo: '', etiquetas: '' })
   const [msg, setMsg] = useState('')
-  const carregar = () => supabase.from('biblioteca_pesquisas').select('id,tipo,titulo,conteudo,etiquetas,caso,criado_em').order('criado_em', { ascending: false }).limit(500)
+  const [alcance, setAlcance] = useState<{ id: string; cargo: Cargo | null; admin: boolean; veTudo: boolean } | null>(null)
+  const carregar = () => supabase.from('biblioteca_pesquisas').select('id,tipo,titulo,conteudo,etiquetas,caso,criado_em,criado_por').order('criado_em', { ascending: false }).limit(500)
     .then(({ data }) => setItens((data ?? []) as ItemBiblioteca[]))
-  useEffect(() => { carregar() }, [])
-  const visiveis = filtrar(itens, busca, tipo)
+  useEffect(() => { carregar(); meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
+  // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza.
+  const meus = filtrarPorCriador(itens, alcance ?? ALCANCE_FECHADO)
+  const visiveis = filtrar(meus, busca, tipo)
   const salvarNota = async () => {
     const ok = await guardarNaBiblioteca({ tipo: 'nota', titulo: nota.titulo, conteudo: nota.conteudo, etiquetas: nota.etiquetas.split(',') })
     setMsg(ok ? 'Nota guardada.' : 'Não foi possível guardar agora. Tente de novo.')
@@ -30,8 +36,24 @@ export default function BibliotecaPage() {
     carregar()
   }
   return (
-    <Layout title="Já pesquisado">
+    <Layout title="Repositório e biblioteca">
       <div className="space-y-6">
+        <section className="bg-white shadow-sm border-t-2 border-dourado p-6" data-testid="repositorio-aberto">
+          <h2 className="font-serif text-xl mb-1 flex items-center gap-2"><BookOpen className="w-5 h-5 text-dourado" aria-hidden />Repositório aberto para pesquisa</h2>
+          <p className="text-sm text-grafite-claro mb-3">Fontes oficiais e gratuitas de legislação, jurisprudência e teses, para qualquer pessoa do escritório pesquisar. Os <Link to="/consultores" className="underline" title="500 especialidades catalogadas a partir das ementas das melhores faculdades.">500 consultores por especialidade</Link> foram montados a partir destas fontes.</p>
+          <div className="grid gap-4 md:grid-cols-3">
+            {REPOSITORIOS_ABERTOS.map(g => (
+              <div key={g.grupo}>
+                <h3 className="text-xs uppercase tracking-wider text-dourado-escuro mb-1">{g.grupo}</h3>
+                <ul className="text-sm space-y-1">
+                  {g.itens.map(i => (
+                    <li key={i.url}><a href={i.url} target="_blank" rel="noreferrer" className="underline text-navy" title={i.desc}>{i.nome}</a></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6 space-y-3">
           <p className="text-sm text-grafite-claro">Tudo o que a equipe já buscou fica aqui: respostas do Assistente, buscas em Fontes do advogado, fichas de parte adversa e notas. CPF é escondido automaticamente.</p>
           <div className="flex flex-wrap gap-2">
@@ -44,12 +66,12 @@ export default function BibliotecaPage() {
         </section>
         <section className="bg-white shadow-sm p-6" data-testid="biblioteca-lista">
           <h2 className="font-serif text-xl mb-2 flex items-center gap-2"><Library className="w-5 h-5 text-dourado" aria-hidden />{visiveis.length} item(ns)</h2>
-          {itens.length === 0 ? <Vazio testid="biblioteca-vazia" titulo="Nada guardado ainda" texto="Use o botão Guardar na biblioteca no Assistente, ou monte uma ficha de parte adversa: tudo aparece aqui." /> : (
+          {itens.length === 0 ? <Vazio testid="biblioteca-vazia" titulo="Nada guardado ainda" texto="Pergunte ou peça uma peça no Assistente jurídico e clique em Guardar na biblioteca: tudo o que você guardar aparece aqui." acao={{ rotulo: 'Abrir o Assistente jurídico', para: '/assistente', dica: 'Abre o Assistente jurídico para pesquisar ou redigir e guardar o resultado aqui' }} /> : (
             <ul className="divide-y divide-navy/10 text-sm">
               {visiveis.map(i => (
                 <li key={i.id} className="py-2" data-testid="biblioteca-item">
                   <div className="flex flex-wrap items-start gap-2">
-                    <button type="button" onClick={() => setAberto(aberto === i.id ? null : i.id)} aria-expanded={aberto === i.id} className="flex-1 min-w-[200px] text-left min-h-[44px]">
+                    <button type="button" onClick={() => setAberto(aberto === i.id ? null : i.id)} aria-expanded={aberto === i.id} title="Abre ou fecha o conteúdo completo deste item da biblioteca" className="flex-1 min-w-[200px] text-left min-h-[44px]">
                       <span className="text-xs uppercase tracking-wider text-dourado-escuro">{ROTULO_TIPO[i.tipo]}</span> <strong>{i.titulo}</strong>
                       <span className="block text-grafite-claro">{new Date(i.criado_em).toLocaleDateString('pt-BR')}{i.caso && ` · ${i.caso}`}{i.etiquetas.length > 0 && ` · ${i.etiquetas.map(e => `#${e}`).join(' ')}`}</span>
                     </button>
@@ -66,7 +88,7 @@ export default function BibliotecaPage() {
           <input value={nota.titulo} onChange={e => setNota({ ...nota, titulo: e.target.value })} aria-label="Título da nota" placeholder="Título" className="block w-full border px-3 py-2 min-h-[44px]" />
           <textarea value={nota.conteudo} onChange={e => setNota({ ...nota, conteudo: e.target.value })} aria-label="Conteúdo da nota" rows={4} className="block w-full border px-3 py-2" />
           <input value={nota.etiquetas} onChange={e => setNota({ ...nota, etiquetas: e.target.value })} aria-label="Etiquetas" placeholder="Etiquetas separadas por vírgula" className="block w-full border px-3 py-2 min-h-[44px]" />
-          <button type="button" onClick={salvarNota} disabled={nota.titulo.trim().length < 2 || !nota.conteudo.trim()} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">Guardar nota</button>
+          <button type="button" onClick={salvarNota} title="Guarda esta nota na biblioteca do escritório" disabled={nota.titulo.trim().length < 2 || !nota.conteudo.trim()} className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">Guardar nota</button>
           {msg && <p role="status" className="text-sm">{msg}</p>}
         </section>
       </div>

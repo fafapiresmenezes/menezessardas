@@ -73,7 +73,7 @@ export default function PainelFerramenta({ ferramenta }: { ferramenta: Ferrament
           )
         })}
         <div className="md:col-span-2">
-          <button type="submit" className="bg-navy text-white min-h-[44px] px-6 uppercase tracking-wider text-sm">{ferramenta.categoria === 'Modelos prontos' ? 'Gerar' : 'Calcular'}</button>
+          <button title="Faz a conta com o que você preencheu e mostra o resultado abaixo" type="submit" className="bg-navy text-white min-h-[44px] px-6 uppercase tracking-wider text-sm">{ferramenta.categoria === 'Modelos prontos' ? 'Gerar' : 'Calcular'}</button>
         </div>
       </form>
 
@@ -94,10 +94,10 @@ export default function PainelFerramenta({ ferramenta }: { ferramenta: Ferrament
             )}
             {saida.resultado.texto && <pre className="mt-3 whitespace-pre-wrap bg-gray-50 border border-navy/10 p-3 text-sm font-sans" data-testid="ferramenta-texto">{saida.resultado.texto}</pre>}
             <div className="mt-3 flex flex-wrap gap-2">
-              <button type="button" onClick={copiar} className="inline-flex items-center gap-2 border border-navy/30 text-navy min-h-[44px] px-4 text-sm">{copiado ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />} {copiado ? 'Copiado' : 'Copiar'}</button>
+              <button title="Copia o resultado, para colar na peça" type="button" onClick={copiar} className="inline-flex items-center gap-2 border border-navy/30 text-navy min-h-[44px] px-4 text-sm">{copiado ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />} {copiado ? 'Copiado' : 'Copiar'}</button>
               {saida.resultado.arquivo
-                ? <button type="button" onClick={baixarArquivo} className="inline-flex items-center gap-2 bg-dourado text-navy min-h-[44px] px-4 text-sm"><Download size={16} aria-hidden="true" /> Baixar arquivo</button>
-                : <button type="button" onClick={baixar} className="inline-flex items-center gap-2 border border-navy/30 text-navy min-h-[44px] px-4 text-sm"><Download size={16} aria-hidden="true" /> Baixar .txt</button>}
+                ? <button title="Baixa o resultado em arquivo, pronto para juntar ao processo" type="button" onClick={baixarArquivo} className="inline-flex items-center gap-2 bg-dourado text-navy min-h-[44px] px-4 text-sm"><Download size={16} aria-hidden="true" /> Baixar arquivo</button>
+                : <button title="Baixa o resultado em texto simples" type="button" onClick={baixar} className="inline-flex items-center gap-2 border border-navy/30 text-navy min-h-[44px] px-4 text-sm"><Download size={16} aria-hidden="true" /> Baixar .txt</button>}
             </div>
           </div>
         )}

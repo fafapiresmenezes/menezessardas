@@ -34,11 +34,15 @@ const hoje = new Date(); const iso = (d: number) => new Date(hoje.getTime() + d 
 const semana = { semana: '2026-11-02', socia: { contratos_vencidos: 2, valor_60_dias: 1234.5 }, advogada: { intimacoes_nao_lidas: 3, prazos_vencidos: 0 }, secretaria: { compromissos_semana: 4 } }
 describe('Meu dia', () => {
   beforeEach(() => { cleanup(); localStorage.clear(); upsert.mockClear(); update.mockClear(); invoke.mockClear(); rpc.mockClear(); for (const k of Object.keys(resultados)) delete resultados[k]
-    resultados.tarefas = { data: [{ id: 't1', titulo: 'Protocolar defesa', prazo: iso(-1), prioridade: 'alta' }, { id: 't2', titulo: 'Ligar para cliente', prazo: iso(2), prioridade: 'media' }] }
-    resultados.intimacoes = { count: 5 }
+    // A mesma lista serve às duas consultas de tarefas da tela: as minhas (título e prazo) e os casos (número e dono).
+    resultados.tarefas = { data: [
+      { id: 't1', titulo: 'Protocolar defesa', prazo: iso(-1), prioridade: 'alta', area: 'trabalhista', numero_processo: '08012345620268190001', responsavel_id: 'u1', nivel: 'projeto' },
+      { id: 't2', titulo: 'Ligar para cliente', prazo: iso(2), prioridade: 'media', area: 'Trabalhista', numero_processo: '08099999920268190002', responsavel_id: 'u1', nivel: 'projeto' },
+    ] }
+    resultados.intimacoes = { data: [1, 2, 3, 4, 5].map(n => ({ id: `i${n}`, numero_processo: null })) }
     resultados.contratos = { data: [{ id: 'c1', imovel_id: 'i1', locatario_fornecedor: 'Loja Centro', data_vencimento: iso(30) }] }
     resultados.resumos_semanais = { data: { conteudo: semana, criado_em: '2026-11-02T08:00:00Z', enviado_em: '2026-11-02T08:01:00Z', destinatarios: 6 } }
-    resultados.diagnosticos_semanais = { data: { id: 'd1', resposta: '## Diagnóstico\n\n### Ações\n1. Revisar os contratos vencidos\n2. Cobrar honorários atrasados', criado_em: '2026-11-02T06:00:00Z' } }
+    resultados.diagnosticos_semanais = { data: { id: 'd1', resposta: '## Resposta direta\nComece pelos contratos.\n\n### Ações da semana\n1. Revisar os contratos vencidos\n2. Cobrar honorários atrasados', criado_em: '2026-11-02T06:00:00Z' } }
     resultados.acoes_consultor = { data: [{ id: 'a1', indice: 1, texto: 'Revisar os contratos vencidos', feito_em: null }, { id: 'a2', indice: 2, texto: 'Cobrar honorários atrasados', feito_em: '2026-11-02T09:00:00Z' }] }
     resultados.horas = { data: { meta: 120, horas: 20, esperado_hoje: 60, pct_ritmo: 33, abaixo: true } }
     resultados.monitoramentos = { data: [{ id: 'm1', valor: '08012345620268190001', rotulo: 'Despejo Rua A', novidade_em: '2026-11-06T10:00:00Z', novidades: [{ data: '2026-11-05', texto: 'Sentença publicada' }, { data: '2026-11-04', texto: 'Juntada' }] }, { id: 'm2', valor: '1', rotulo: null, novidade_em: null, novidades: [] }] }
@@ -64,7 +68,7 @@ describe('Meu dia', () => {
 
   it('consultor da semana: diagnóstico do nível, ações garantidas no banco e marcáveis com aderência; resumo de teste por e-mail', async () => {
     render(<MemoryRouter><MeuDiaPage /></MemoryRouter>)
-    await waitFor(() => expect(screen.getByTestId('diagnostico-md').textContent).toContain('Revisar os contratos vencidos'))
+    await waitFor(() => expect(screen.getByTestId('diagnostico-md').textContent).toContain('Comece pelos contratos'))
     await waitFor(() => expect(screen.getByTestId('aderencia-semana').textContent).toBe('1 de 2 feitas (50%)'))
     expect(upsert).toHaveBeenCalledWith([{ diagnostico_id: 'd1', indice: 1, texto: 'Revisar os contratos vencidos' }, { diagnostico_id: 'd1', indice: 2, texto: 'Cobrar honorários atrasados' }], { onConflict: 'diagnostico_id,indice', ignoreDuplicates: true })
     fireEvent.click(screen.getByTestId('acao-1'))
@@ -72,12 +76,8 @@ describe('Meu dia', () => {
     expect(update).toHaveBeenCalledWith(expect.objectContaining({ usuario_id: 'u1' }))
     fireEvent.click(screen.getByTestId('acao-2'))
     await waitFor(() => expect(screen.getByTestId('aderencia-semana').textContent).toBe('1 de 2 feitas (50%)'))
-    fireEvent.click(screen.getByTestId('testar-resumo'))
-    await waitFor(() => expect(screen.getByTestId('msg-resumo').textContent).toContain('Resumo de teste enviado para o seu e-mail'))
-    expect(invoke).toHaveBeenCalledWith('resumo-semanal', { body: { teste: true } })
-    invoke.mockResolvedValueOnce({ data: { enviado: false, motivo: 'sem e-mail' }, error: null })
-    fireEvent.click(screen.getByTestId('testar-resumo'))
-    await waitFor(() => expect(screen.getByTestId('msg-resumo').textContent).toBe('Não enviado: sem e-mail.'))
+    // O botão de resumo de teste saiu da tela (pedido do M, 12/11/2026): cliente não testa.
+    expect(screen.queryByTestId('testar-resumo')).toBeNull()
   })
 
   it('calculadora de prazo em dias úteis (em dobro lembrado) com feriados do Rio; copiar meu dia e baixar CSV', async () => {
@@ -111,5 +111,40 @@ describe('Meu dia', () => {
     const bloco = await screen.findByTestId('movimentacoes')
     await waitFor(() => expect(within(bloco).getAllByTestId('movimentacao')).toHaveLength(1))
     expect(within(bloco).getByTestId('movimentacao').textContent).toBe('Despejo Rua A: Sentença publicada (+1)')
+  })
+
+  it('privacidade por advogado: movimentação e intimação do processo do colega não aparecem no meu dia', async () => {
+    // O segundo processo passa a ser do colega (u2); quem está logada é a u1, sem cargo definido.
+    resultados.tarefas.data = [
+      { id: 't1', titulo: 'Protocolar defesa', prazo: iso(-1), prioridade: 'alta', area: 'trabalhista', numero_processo: '08012345620268190001', responsavel_id: 'u1', nivel: 'projeto' },
+      { id: 't2', titulo: 'Caso do colega', prazo: iso(2), prioridade: 'media', area: 'civel', numero_processo: '08099999920268190002', responsavel_id: 'u2', nivel: 'projeto' },
+    ]
+    resultados.monitoramentos = { data: [
+      { id: 'm1', valor: '08012345620268190001', rotulo: 'Meu despejo', novidade_em: '2026-11-06T10:00:00Z', novidades: [{ data: '2026-11-05', texto: 'Sentença publicada' }] },
+      { id: 'm2', valor: '08099999920268190002', rotulo: 'Processo do colega', novidade_em: '2026-11-06T11:00:00Z', novidades: [{ data: '2026-11-05', texto: 'Sentença do colega' }] },
+    ] }
+    resultados.intimacoes = { data: [{ id: 'i1', numero_processo: '0801234-56.2026.8.19.0001' }, { id: 'i2', numero_processo: '0809999-99.2026.8.19.0002' }] }
+    render(<MemoryRouter><MeuDiaPage /></MemoryRouter>)
+    const bloco = await screen.findByTestId('movimentacoes')
+    await waitFor(() => expect(within(bloco).getAllByTestId('movimentacao')).toHaveLength(1))
+    expect(within(bloco).getByTestId('movimentacao').textContent).toContain('Meu despejo')
+    expect(screen.queryByText(/Sentença do colega/)).toBeNull()
+    await waitFor(() => expect(screen.getByTestId('intimacoes-nao-lidas').textContent).toBe('1'))
+  })
+
+  it('tarefas do dia separadas por tipo de direito, a mais urgente primeiro', async () => {
+    resultados.tarefas.data = [
+      { id: 't1', titulo: 'Verbas rescisórias', prazo: iso(1), prioridade: 'alta', area: 'trabalhista', responsavel_id: 'u1' },
+      { id: 't2', titulo: 'Rescisão da planilha', prazo: iso(3), prioridade: 'media', area: 'Trabalhista', responsavel_id: 'u1' },
+      { id: 't3', titulo: 'Contestação', prazo: iso(-1), prioridade: 'alta', area: 'civel', responsavel_id: 'u1' },
+      { id: 't4', titulo: 'Sem área marcada', prazo: iso(5), prioridade: 'media', area: null, responsavel_id: 'u1' },
+    ]
+    render(<MemoryRouter><MeuDiaPage /></MemoryRouter>)
+    const bloco = await screen.findByTestId('tarefas-por-area')
+    const titulos = [...bloco.querySelectorAll('[data-testid^="area-"]')].map(e => e.querySelector('p')?.textContent)
+    expect(titulos).toEqual(['Cível e contratos (1)', 'Trabalhista (2)', 'Geral (sem área marcada) (1)'])
+    // "trabalhista" e "Trabalhista" caem no mesmo bloco, em ordem de prazo.
+    const trab = within(screen.getByTestId('area-trabalhista')).getAllByRole('listitem').map(li => li.textContent)
+    expect(trab[0]).toContain('Verbas rescisórias'); expect(trab[1]).toContain('Rescisão da planilha')
   })
 })

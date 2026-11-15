@@ -17,10 +17,42 @@ vi.mock('@/lib/relatorioCompliance', () => ({ gerarRelatorioSelado: (d: object) 
 const baixar = vi.fn((_n: string, _c: unknown, _t?: string) => undefined)
 vi.mock('@/lib/ancoragem', () => ({ baixarArquivo: (n: string, c: unknown, t?: string) => baixar(n, c, t) }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
+// Quem está olhando: o diagnóstico segue o dono do caso (plano de ação) que ele abriu.
+let alcance: { id: string; cargo: string | null; admin: boolean; veTudo: boolean } | null = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+vi.mock('@/lib/hierarquia', async (original) => ({
+  ...(await original<typeof import('@/lib/hierarquia')>()),
+  meuAlcance: async () => { if (!alcance) throw new Error('não deu para saber quem está logado'); return alcance },
+}))
 const { default: CompliancePage } = await import('./CompliancePage')
 
-describe('Compliance: diagnóstico de integridade', () => {
-  beforeEach(() => { cleanup(); localStorage.clear(); historico = []; inserts.length = 0; insertTarefa.mockClear(); insertDiag.mockClear() })
+describe('Compliance e LGPD', () => {
+  beforeEach(() => { cleanup(); localStorage.clear(); historico = []; inserts.length = 0; insertTarefa.mockClear(); insertDiag.mockClear()
+    alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true } })
+
+  // Privacidade por advogado: o diagnóstico da empresa do colega não é assunto de quem não cuida dela.
+  const doisDiagnosticos = () => { historico = [
+    { id: 'd1', empresa: 'EMPRESA DELE', nota: 60, lacunas: 2, caso_id: 'c1', criado_em: '2026-10-01T10:00:00Z', tarefas: { responsavel_id: 'u1' } },
+    { id: 'd2', empresa: 'EMPRESA DO COLEGA', nota: 40, lacunas: 5, caso_id: 'c2', criado_em: '2026-10-02T10:00:00Z', tarefas: { responsavel_id: 'u2' } },
+  ] }
+
+  it('júnior não vê o diagnóstico do colega; o sócio vê os dois', async () => {
+    doisDiagnosticos(); alcance = { id: 'u1', cargo: 'junior', admin: false, veTudo: false }
+    render(<CompliancePage />)
+    await waitFor(() => expect(screen.getByTestId('evolucao-trimestral').textContent).toContain('EMPRESA DELE'))
+    expect(screen.getByTestId('compliance-alcance').textContent).toContain('os diagnósticos dos seus casos')
+    expect(screen.getByTestId('evolucao-trimestral').textContent).not.toContain('EMPRESA DO COLEGA')
+
+    cleanup(); alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+    render(<CompliancePage />)
+    await waitFor(() => expect(screen.getByTestId('evolucao-trimestral').textContent).toContain('EMPRESA DO COLEGA'))
+    expect(screen.queryByTestId('compliance-alcance')).toBeNull()
+  })
+
+  it('sem saber quem está logado, esconde os diagnósticos com dono em vez de mostrar todos', async () => {
+    doisDiagnosticos(); alcance = null
+    render(<CompliancePage />)
+    await waitFor(() => expect(screen.queryByTestId('evolucao-trimestral')).toBeNull())
+  })
 
   it('18 perguntas em 6 pilares; nota por pilar e geral, nível e plano de ação ordenado por prioridade; empresa lembrada; código de integridade', async () => {
     render(<CompliancePage />)

@@ -14,7 +14,9 @@ describe('vocabulário do assistente', () => {
     expect(new Set(ESPECIALIDADES.map(e => e.valor)).size).toBe(ESPECIALIDADES.length)
     for (const e of ESPECIALIDADES) { expect(e.rotulo).toBeTruthy(); expect(e.descricao.length).toBeGreaterThan(10) }
     expect(MODOS.map(m => m.valor)).toEqual(['responder', 'redigir', 'caminhos'])
-    expect(AREAS_DIREITO).toHaveLength(10)
+    expect(AREAS_DIREITO).toHaveLength(46)
+    expect(new Set(AREAS_DIREITO.map(a => a.chave)).size).toBe(AREAS_DIREITO.length)
+    expect(AREAS_DIREITO.map(a => a.chave)).toContain('justica')
     expect(AREAS_DIREITO.map(a => a.chave)).toContain('imobiliario')
   })
 })

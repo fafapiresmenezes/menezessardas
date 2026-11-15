@@ -27,7 +27,7 @@ describe('Busca global (Ctrl+K)', () => {
     expect(container.querySelector('[role=dialog]')).toBeNull()
     cleanup(); montar()
     expect(screen.getByRole('dialog', { name: 'Busca global' })).toBeTruthy()
-    expect(screen.getAllByRole('option').length).toBe(8)
+    expect(screen.getAllByRole('option').length).toBe(4) // 2 telas internas + as 2 telas da lista simulada
     fireEvent.change(screen.getByLabelText('Buscar na plataforma'), { target: { value: 'acacias' } })
     await waitFor(() => expect(screen.getAllByText('Rua das Acácias, 10').length).toBe(2))
     expect(screen.getByRole('option', { name: /Maria Locatária/ })).toBeTruthy()

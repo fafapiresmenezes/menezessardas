@@ -10,9 +10,9 @@ const diaSeguinte = (iso: string) => { const d = new Date(iso + 'T00:00:00Z'); d
 
 export function montarIcs(p: { uid: string; sequencia: number; titulo: string; descricao: string; data: string; organizador: string; convidado: string; cancelado?: boolean }): string {
   const agora = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
-  return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//GMenezes Advogados Associados//Agenda//PT-BR', 'CALSCALE:GREGORIAN', `METHOD:${p.cancelado ? 'CANCEL' : 'REQUEST'}`,
+  return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Instituto THEYE//Agenda//PT-BR', 'CALSCALE:GREGORIAN', `METHOD:${p.cancelado ? 'CANCEL' : 'REQUEST'}`,
     'BEGIN:VEVENT', `UID:${p.uid}`, `SEQUENCE:${p.sequencia}`, `DTSTAMP:${agora}`, `DTSTART;VALUE=DATE:${soData(p.data)}`, `DTEND;VALUE=DATE:${diaSeguinte(p.data)}`,
-    `SUMMARY:${esc(p.titulo)}`, `DESCRIPTION:${esc(p.descricao)}`, `ORGANIZER;CN=Plataforma GMenezes:mailto:${p.organizador}`,
+    `SUMMARY:${esc(p.titulo)}`, `DESCRIPTION:${esc(p.descricao)}`, `ORGANIZER;CN=Plataforma THEYE:mailto:${p.organizador}`,
     `ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=FALSE:mailto:${p.convidado}`, `STATUS:${p.cancelado ? 'CANCELLED' : 'CONFIRMED'}`,
     'BEGIN:VALARM', 'TRIGGER:-P1D', 'ACTION:DISPLAY', `DESCRIPTION:${esc(p.titulo)}`, 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n')
 }
@@ -62,9 +62,9 @@ Deno.serve(async (req) => {
 <div style="padding:16px;line-height:1.5"><p><b>${titulo.replace(/[<>&]/g, '')}</b><br>${descricao.replace(/[<>&]/g, '')}<br>Data: ${data.slice(0, 10).split('-').reverse().join('/')}</p>
 <p>O convite .ics anexo abre no Outlook, Google Agenda ou Apple Calendário. Se o prazo mudar, você recebe o mesmo convite atualizado (sem duplicar).</p>
 <p style="font-size:12px;color:#555">Para parar de receber, desligue "Convite .ics por e-mail" em Configurações da plataforma.</p></div>
-<p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · plataforma desenvolvida pelo THEYE Institute</p></div>`
+<p style="font-size:11px;color:#888;padding:10px">Instituto THEYE · plataforma desenvolvida pelo THEYE Institute</p></div>`
     const resp = await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify({ sender: { name: 'Agenda GMenezes', email: conf.email_remetente }, to: [{ email: dest }], subject: `${sequencia ? 'Atualização' : 'Convite'}: ${titulo} · ${data.slice(0, 10).split('-').reverse().join('/')}`, htmlContent: html,
+      body: JSON.stringify({ sender: { name: 'Agenda THEYE', email: conf.email_remetente }, to: [{ email: dest }], subject: `${sequencia ? 'Atualização' : 'Convite'}: ${titulo} · ${data.slice(0, 10).split('-').reverse().join('/')}`, htmlContent: html,
         attachment: [{ name: 'compromisso.ics', content: btoa(unescape(encodeURIComponent(ics))) }] }) })
     const detalhe = resp.ok ? undefined : `${resp.status} ${(await resp.text()).slice(0, 200)}`
     resultados.push({ destinatario: dest, ok: resp.ok, detalhe })

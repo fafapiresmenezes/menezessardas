@@ -8,22 +8,22 @@ export default {
     extend: {
       colors: {
         navy: {
-          DEFAULT: '#14213D',
-          900: '#0B1526',
-          800: '#14213D',
-          700: '#1F3157',
-          600: '#2C4474',
+          DEFAULT: '#0B0B0C',
+          900: '#000000',
+          800: '#0B0B0C',
+          700: '#2A2D31',
+          600: '#3A3A3D',
         },
         dourado: {
-          DEFAULT: '#B08D57',
-          claro: '#C9A878',
-          escuro: '#8A6D40',
+          DEFAULT: '#75757A',
+          claro: '#B9B9BD',
+          escuro: '#4A4A4E',
         },
         grafite: {
-          DEFAULT: '#3A3F47',
-          claro: '#5A6372',
+          DEFAULT: '#2A2D31',
+          claro: '#5F6166',
         },
-        pergaminho: '#FAF8F5',
+        pergaminho: '#F5F5F6',
         // Tons de estado com contraste suficiente sobre fundo claro (WCAG AA)
         atencao: '#8A5A00',
         atencaoFundo: '#FDF6E3',

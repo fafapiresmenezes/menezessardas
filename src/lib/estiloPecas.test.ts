@@ -1,6 +1,6 @@
 // Rotação de estilo das peças (06/11/2026): perfis reprodutíveis, diferentes entre si e dentro dos limites.
 import { describe, it, expect } from 'vitest'
-import { sortearPerfil, instrucoesDoPerfil, instrucoesDeRedacao, amostrasDoAutor, medirTexto, aderencia, distancia, gerador, hash32, ESCOLAS, REFERENCIAS, LIMITES, DISTANCIA_MINIMA, type Perfil } from './estiloPecas'
+import { NARRATIVA, instrucoesDeNarrativa, tomDoJulgador, instrucoesDoJulgador, BANCA, escolherRedator, instrucoesDoRedator, chaveArea, sortearPerfil, instrucoesDoPerfil, instrucoesDeRedacao, amostrasDoAutor, medirTexto, aderencia, distancia, gerador, hash32, ESCOLAS, REFERENCIAS, LIMITES, DISTANCIA_MINIMA, type Perfil } from './estiloPecas'
 import { pecaEmHtml, ehTitulo } from './formatarPeca'
 
 describe('estiloPecas', () => {
@@ -109,3 +109,91 @@ describe('rotação em todos os agentes', () => {
     expect(a.join('').replace(/### [AB]\n/g, '')).toHaveLength(15000)
   })
 })
+
+describe('banca de redatores', () => {
+  it('tem catorze redatores, sem repetir, cada um ligado a uma escola e a uma referência conhecidas', () => {
+    expect(BANCA).toHaveLength(14)
+    expect(new Set(BANCA.map(b => b.id)).size).toBe(14)
+    const escolas = new Set(ESCOLAS.map(e => e.id))
+    for (const b of BANCA) {
+      expect(escolas.has(b.escola)).toBe(true)
+      expect(REFERENCIAS.some(r => r.nome === b.referencia && r.escola === b.escola)).toBe(true)
+      expect(b.metodo.length).toBeGreaterThan(60)
+    }
+  })
+
+  it('entende a área como está gravada no processo', () => {
+    expect(chaveArea('Cível')).toBe('civel')
+    expect(chaveArea('Família e sucessões')).toBe('familia')
+    expect(chaveArea('Imobiliário')).toBe('imobiliario')
+    expect(chaveArea('Tributário')).toBe('tributario')
+    expect(chaveArea(null)).toBe('')
+  })
+
+  it('escolhe pela área e pelo tipo da peça', () => {
+    expect(escolherRedator({ area: 'Tributário', titulo: 'EXECUÇÃO FISCAL' }).id).toBe('barros-carvalho')
+    expect(escolherRedator({ area: 'Imobiliário', titulo: 'AÇÃO DE DESPEJO' }).id).toBe('capanema')
+    expect(escolherRedator({ area: 'Família e sucessões', titulo: 'INVENTÁRIO E PARTILHA' }).id).toBe('pontes-de-miranda')
+    expect(escolherRedator({ area: 'Consumidor', titulo: 'Responder à contestação (réplica)' }).id).toBe('nancy-andrighi')
+    expect(escolherRedator({ area: 'Cível', titulo: 'Responder ao recurso da outra parte (contrarrazões)' }).id).toBe('barbosa-moreira')
+  })
+
+  it('cada setor tem o seu redator titular, que é a primeira escolha', () => {
+    const titulares: Record<string, string> = { 'Cível': 'tepedino', 'Constitucional': 'barroso', 'Trabalhista': 'godinho-delgado', 'Penal': 'evandro-lins', 'Tributário': 'barros-carvalho', 'Consumidor': 'lima-marques', 'Empresarial': 'ulhoa-coelho', 'Imobiliário': 'capanema', 'Família e sucessões': 'pontes-de-miranda' }
+    for (const [area, id] of Object.entries(titulares)) {
+      for (const semente of [1, 7, 42, 2026]) expect(escolherRedator({ area, titulo: 'Manifestação', semente }).id).toBe(id)
+      // o rodízio só vale onde há outro redator do mesmo setor à altura
+      if (['Cível', 'Constitucional', 'Trabalhista', 'Consumidor'].includes(area)) expect(escolherRedator({ area, titulo: 'Manifestação', anteriores: [id] }).id).not.toBe(id)
+    }
+  })
+
+  it('faz rodízio: quem escreveu a última peça da mesma área cede a vez quando há outro à altura', () => {
+    const primeiro = escolherRedator({ area: 'Cível', titulo: 'Manifestação' })
+    const segundo = escolherRedator({ area: 'Cível', titulo: 'Manifestação', anteriores: [primeiro.id] })
+    expect(segundo.id).not.toBe(primeiro.id)
+  })
+
+  it('as instruções nomeiam a tradição e proíbem atribuir o texto ao jurista', () => {
+    const t = instrucoesDoRedator(BANCA[0]!)
+    expect(t).toContain('Rui Barbosa')
+    expect(t).toMatch(/não lhe atribua frases/)
+    expect(t).toMatch(/Mantenha as forças dessa tradição: força do argumento/)
+    expect(t).toMatch(/proibido reproduzir as fraquezas dela: prolixidade/)
+    expect(BANCA.every(b => b.forcas.length > 20 && b.evitar.length > 20)).toBe(true)
+  })
+
+  it('o perfil sorteado puxa para a escola do redator', () => {
+    let dominante = 0
+    for (let i = 1; i <= 40; i++) if (sortearPerfil({ semente: i, escolas: ['imobiliaria'] }).mistura.some(m => m.id === 'imobiliaria')) dominante++
+    expect(dominante).toBeGreaterThan(28)
+  })
+})
+
+describe('narrativa e tom do julgador', () => {
+  it('tem dez técnicas de narrativa e proíbe criar fato', () => {
+    expect(NARRATIVA).toHaveLength(10)
+    expect(instrucoesDeNarrativa()).toMatch(/10\. Fecho pela consequência/)
+    expect(instrucoesDeNarrativa()).toMatch(/nunca cria fato/)
+  })
+  it('com pouco texto do julgador não conclui nada e fica sóbrio, sem humor', () => {
+    const tom = tomDoJulgador(['Digam as partes em 5 dias.'])
+    expect(tom.suficiente).toBe(false)
+    expect(instrucoesDoJulgador(tom, '2ª Vara Cível')).toMatch(/tom sóbrio, direto e respeitoso, sem humor/)
+  })
+  it('julgador técnico e conciso pede peça direta e ancorada em norma; tom sério não admite leveza', () => {
+    const tom = tomDoJulgador(['Indefiro o pedido. Aplica-se o art. 373 do CPC e a Súmula 7 do STJ. O precedente do Tema 1076 resolve a questão. Sob pena de preclusão, junte o autor o documento. '.repeat(8)])
+    expect(tom.suficiente).toBe(true)
+    expect(tom.extensao).toBe('conciso')
+    expect(tom.tracos).toEqual(expect.arrayContaining(['tecnico', 'rigoroso']))
+    const t = instrucoesDoJulgador(tom, null)
+    expect(t).toMatch(/vá direto ao ponto/)
+    expect(t).toMatch(/tom sério: nenhuma leveza/)
+    expect(t).toMatch(/nunca piada/)
+  })
+  it('julgador de escrita leve admite uma única imagem, sem ironia contra pessoa', () => {
+    const tom = tomDoJulgador(['Ora, convenhamos, a tese do réu é curiosa! Diga-se de passagem, como diria o poeta, o tempo não para, e o prazo também não. A dignidade da família pede sensibilidade neste drama. '.repeat(8)])
+    expect(tom.tracos).toEqual(expect.arrayContaining(['leve', 'humanista']))
+    expect(instrucoesDoJulgador(tom, null)).toMatch(/no máximo uma vez/)
+  })
+})
+

@@ -79,7 +79,7 @@ export default function FaturasParceiros({ nomes }: { nomes: Record<string, stri
     <div className="border border-navy/10 p-4 mt-4" data-testid="faturas-parceiros">
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <h3 className="font-semibold flex items-center gap-2"><Receipt size={16} className="text-dourado" aria-hidden="true" /> Faturas mensais (Value Pas)</h3>
-        <button data-testid="gerar-faturas" onClick={gerar} disabled={ocupado} className="min-h-[44px] border border-navy px-3 text-sm uppercase tracking-wider">Gerar agora</button>
+        <button data-testid="gerar-faturas" onClick={gerar} disabled={ocupado} title="Gera agora as faturas do mês vigente para cada escritório parceiro com pessoas ativas" className="min-h-[44px] border border-navy px-3 text-sm uppercase tracking-wider">Gerar agora</button>
       </div>
       <p className="text-xs text-grafite-claro mt-1 mb-3">Geradas automaticamente no dia 1 de cada mês (vencimento dia 10) para cada escritório parceiro com pessoas ativas; 30% de desconto no primeiro ano. PDF e PIX usam a chave de Configurações.</p>
       {faturas.length === 0 ? <p className="text-sm text-grafite-claro" data-testid="sem-faturas">Nenhuma fatura ainda.</p> : (
@@ -92,10 +92,10 @@ export default function FaturasParceiros({ nomes }: { nomes: Record<string, stri
                 <span>{f.operadores} op · {f.leitores} leit</span>
                 <span className="font-semibold" data-testid="fatura-valor">{brl(f.valor)}</span>
                 <span className={f.pago_em ? 'text-green-700' : 'text-amber-700'}>{f.pago_em ? 'Paga' : `Vence ${dataBr(f.vencimento)}`}</span>
-                <button onClick={() => baixar(f)} className="underline inline-flex items-center gap-1" data-testid="fatura-pdf"><FileText size={13} aria-hidden="true" /> PDF</button>
-                <button onClick={() => mostrarQr(f)} className="underline" data-testid="fatura-qr">QR PIX</button>
-                <button onClick={() => copiar(f)} className="underline" data-testid="fatura-copiar">Copiar PIX</button>
-                {!f.pago_em && <button onClick={() => marcarPaga(f)} className="underline" data-testid="fatura-paga">Marcar paga</button>}
+                <button onClick={() => baixar(f)} className="underline inline-flex items-center gap-1" data-testid="fatura-pdf" title="Baixa o PDF desta fatura para enviar ao escritório parceiro"><FileText size={13} aria-hidden="true" /> PDF</button>
+                <button onClick={() => mostrarQr(f)} className="underline" data-testid="fatura-qr" title="Mostra o QR Code PIX para o escritório pagar esta fatura pelo celular">QR PIX</button>
+                <button onClick={() => copiar(f)} className="underline" data-testid="fatura-copiar" title="Copia o código PIX desta fatura para colar no app bancário (PIX copia e cola)">Copiar PIX</button>
+                {!f.pago_em && <button onClick={() => marcarPaga(f)} className="underline" data-testid="fatura-paga" title="Registra esta fatura como paga com a data de hoje; aparece como Paga para todos">Marcar paga</button>}
               </div>
               {qr[f.id] && qr[f.id] !== 'carregando' && <img src={qr[f.id]} alt={`QR PIX da fatura de ${mesAno(f.competencia)}`} className="mt-2 border" width={180} height={180} data-testid="fatura-qr-img" />}
             </li>

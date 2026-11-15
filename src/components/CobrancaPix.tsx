@@ -47,8 +47,8 @@ export default function CobrancaPix({ valor, caso, cliente, fechar, referencia, 
           <label htmlFor="pix-codigo" className="block text-xs uppercase tracking-wider text-grafite mt-4">PIX copia e cola</label>
           <textarea id="pix-codigo" readOnly value={codigo} rows={4} className="w-full text-xs font-mono border p-2 mt-1" data-testid="pix-codigo" />
           <div className="flex flex-wrap gap-3 mt-3">
-            <button onClick={copiar} className="min-h-[44px] px-4 bg-navy text-white text-sm inline-flex items-center gap-2"><Copy size={14} aria-hidden="true" /> {copiado ? 'Copiado' : 'Copiar código'}</button>
-            <button onClick={imprimir} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2"><Printer size={14} aria-hidden="true" /> Imprimir ou salvar PDF</button>
+            <button title="Copia o código Pix, para o cliente colar no aplicativo do banco" onClick={copiar} className="min-h-[44px] px-4 bg-navy text-white text-sm inline-flex items-center gap-2"><Copy size={14} aria-hidden="true" /> {copiado ? 'Copiado' : 'Copiar código'}</button>
+            <button title="Abre a cobrança para imprimir ou salvar em PDF" onClick={imprimir} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2"><Printer size={14} aria-hidden="true" /> Imprimir ou salvar PDF</button>
           </div>
         </>}
       </div>

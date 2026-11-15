@@ -86,7 +86,7 @@ describe('instituto-acesso', () => {
     expect(args.p_token_hash).toMatch(/^[0-9a-f]{64}$/)
     expect(JSON.stringify(args)).not.toContain('52998224725')
     expect(rpc('instituto_registrar_tentativa')[0]).toEqual({ p_rede: args.p_rede, p_sal: 'sal-fixo' })
-    expect(envios[0]).toMatchObject({ to: 'joao@gmail.com', subject: 'Confirme seu cadastro no THEYE Institute' })
+    expect(envios[0]).toMatchObject({ to: 'joao@gmail.com', subject: 'Confirme seu cadastro na Plataforma THEYE' })
     expect(envios[0]!.html).toContain('https://theye.club/laboratorio.html#t=')
     expect(estado.inseridos[0]).toMatchObject({ tabela: 'consumo_api', linha: { funcao: 'Instituto: link de acesso' } })
   })

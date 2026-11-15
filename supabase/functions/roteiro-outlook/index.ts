@@ -14,11 +14,11 @@ const cors = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
-const APP = 'https://gmenezes-advogados.vercel.app/#'
+const APP = 'https://theye.club/#'
 const PASSOS = [
-  ['Abra o menu Agenda na plataforma e toque em "Conectar ao Outlook"', `Entre em <a href="${APP}/agenda">gmenezes-advogados.vercel.app</a>, menu Agenda, botão "Conectar ao Outlook" (canto direito). Se o Windows perguntar com qual programa abrir, escolha Outlook.`],
+  ['Abra o menu Agenda na plataforma e toque em "Conectar ao Outlook"', `Entre em <a href="${APP}/agenda">theye.club</a>, menu Agenda, botão "Conectar ao Outlook" (canto direito). Se o Windows perguntar com qual programa abrir, escolha Outlook.`],
   ['Responda "Sim" à pergunta do Outlook', 'O Outlook mostra "Adicionar este calendário da Internet ao Outlook e assinar atualizações?". Toque em Sim. O link é secreto e só funciona para o escritório.'],
-  ['Veja o calendário "GMenezes Advogados" em Outros Calendários', 'Os prazos, audiências, vencimentos e reajustes entram com cor própria. Os seus compromissos pessoais continuam iguais.'],
+  ['Veja o calendário "THEYE" em Outros Calendários', 'Os prazos, audiências, vencimentos e reajustes entram com cor própria. Os seus compromissos pessoais continuam iguais.'],
   ['Marque a caixa e, se quiser, "Sobrepor"', 'Com a caixa marcada os dois calendários aparecem juntos. No Outlook da web: Adicionar calendário → Assinar da Web → colar o link abaixo → Importar.'],
   ['Confira e responda a este e-mail', 'Confira se um prazo aparece no mês atual e se o Outlook atualiza sozinho (até 1 hora). Responda "Funcionou" ou "Não funcionou", se puder com uma foto da tela. Na plataforma, em Agenda, também dá para marcar o resultado.'],
 ]
@@ -57,11 +57,11 @@ Deno.serve(async (req) => {
       <h3 style="color:#14213D;margin-top:24px">Link do calendário (se o botão não abrir o Outlook)</h3>
       <p style="word-break:break-all;font-family:monospace;font-size:12px;background:#f4f4f4;padding:10px">${webcal}</p>
       <p style="font-size:12px;color:#666">No Outlook da web ou no Google Agenda, use esta versão: <span style="word-break:break-all">${https}</span>. O link é secreto: não encaminhe fora do escritório.</p></div>
-      <p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · Desenvolvido pelo THEYE Institute</p></div>`
+      <p style="font-size:11px;color:#888;padding:10px">Instituto THEYE · Desenvolvido pelo THEYE Institute</p></div>`
     const r = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
       body: JSON.stringify({
-        sender: { name: 'Plataforma GMenezes', email: conf.email_remetente }, to: para,
+        sender: { name: 'Plataforma THEYE', email: conf.email_remetente }, to: para,
         replyTo: { email: perfil.email },
         subject: 'Roteiro em 5 passos: conectar a Agenda ao Outlook',
         htmlContent: html, inlineImageActivation: true,

@@ -4,7 +4,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 const cors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-cron-secret', 'Access-Control-Allow-Methods': 'POST, OPTIONS' }
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
-const APP = 'https://gmenezes-advogados.vercel.app/#'
+const APP = 'https://theye.club/#'
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
@@ -39,12 +39,12 @@ Deno.serve(async (req) => {
     <div style="padding:16px;line-height:1.5"><p>O trimestre termina em <strong>${fim.toLocaleDateString('pt-BR')}</strong> (${dias} dias). É hora de revisar os objetivos e resultados-chave e registrar a ata.</p>
     <ol><li>Abra <a href="${APP}/indicadores">Indicadores → Ciclo trimestral de OKR</a>.</li><li>Confira cada resultado-chave contra a meta.</li><li>Escreva a ata (o que foi atingido, o que ficou, metas do próximo trimestre) e toque em "Gravar ata com selo".</li></ol>
     <p>A ata recebe SHA-256 e selo OpenTimestamps (Bitcoin), e fica no histórico da tela.</p></div>
-    <p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · aviso automático${teste ? ' (teste)' : ''}</p></div>`
+    <p style="font-size:11px;color:#888;padding:10px">Instituto THEYE · aviso automático${teste ? ' (teste)' : ''}</p></div>`
   let enviados = 0
   if (conf.brevo_api_key && conf.email_remetente) {
     for (const a of para) {
       const r = await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
-        body: JSON.stringify({ sender: { name: 'Avisos GMenezes', email: conf.email_remetente }, to: [{ email: a.email }], subject: `${teste ? '[teste] ' : ''}Revisar OKRs do trimestre ${tri} até ${fim.toLocaleDateString('pt-BR')}`, htmlContent: html }) })
+        body: JSON.stringify({ sender: { name: 'Avisos THEYE', email: conf.email_remetente }, to: [{ email: a.email }], subject: `${teste ? '[teste] ' : ''}Revisar OKRs do trimestre ${tri} até ${fim.toLocaleDateString('pt-BR')}`, htmlContent: html }) })
       if (r.ok) enviados++
     }
   }

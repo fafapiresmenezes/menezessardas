@@ -8,6 +8,7 @@ import { listarPessoas, type Pessoa } from '@/lib/equipe'
 import { importavel, paraCaso, ROTULO_SITUACAO, type LinhaImportacao } from '@/lib/escritorio/importarProcessos'
 import { TIPOS, montarTabela, tabelaDoTexto, textoEmLinhas, pareceTabela, prepararProcessos, prepararClientes, prepararPrazos, prepararFinanceiro, lerHistorico, gravarHistorico, type Tabela, type Tipo, type Pronto, type Lote } from '@/lib/escritorio/migracao'
 import { lerArquivo } from '@/lib/escritorio/migracaoArquivos'
+import AbasProcessosAntigos from '@/components/AbasProcessosAntigos'
 
 // Trazer do sistema antigo: uma aba só para a migração inteira. Solta todos os arquivos de uma vez,
 // a plataforma separa o que é processo, cliente, prazo e financeiro, mostra organizado e só grava depois do "Trazer".
@@ -168,23 +169,24 @@ export default function MigracaoPage() {
   return (
     <Layout title="Trazer do sistema antigo">
       <div className="space-y-5 max-w-4xl">
+        <AbasProcessosAntigos aqui="/migracao" />
         <p className="text-base">Aqui você traz <strong>tudo</strong> o que o escritório tinha no sistema antigo: processos, clientes, prazos e financeiro. Solte os arquivos, confira o que a plataforma encontrou e clique em <strong>Trazer</strong>. Nada é gravado antes disso, nada é cadastrado duas vezes, e dá para desfazer.</p>
 
         <Passo n={1} titulo="Solte aqui os arquivos do sistema antigo" feito={tabelas.length > 0 || !!resultado}>
           <label
             onDragOver={e => { e.preventDefault(); setArrastando(true) }} onDragLeave={() => setArrastando(false)}
             onDrop={e => { e.preventDefault(); setArrastando(false); receber(e.dataTransfer.files) }}
-            className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed p-8 text-center cursor-pointer ${arrastando ? 'border-dourado bg-dourado/10' : 'border-navy/30 hover:bg-navy/5'}`} data-testid="soltar-arquivos">
+            title="Escolhe no computador os arquivos do sistema antigo (Excel, CSV, Word, PDF e outros); também dá para arrastar e soltar aqui" className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed p-8 text-center cursor-pointer ${arrastando ? 'border-dourado bg-dourado/10' : 'border-navy/30 hover:bg-navy/5'}`} data-testid="soltar-arquivos">
             <Upload className="w-8 h-8 text-navy" aria-hidden />
             <span className="text-lg">{lendo ? 'Lendo os arquivos…' : 'Arraste os arquivos para cá ou clique para escolher'}</span>
             <span className="text-sm text-grafite-claro">Pode ser vários de uma vez. Excel (todas as abas), CSV, LibreOffice, Word, PDF, texto, JSON e calendário (.ics).</span>
-            <input type="file" multiple className="sr-only" data-testid="arquivos-migracao" onChange={e => { receber(e.target.files); e.target.value = '' }}
+            <input type="file" title="Escolhe os arquivos do sistema antigo, vários de uma vez. Nada é gravado antes de você conferir." multiple className="sr-only" data-testid="arquivos-migracao" onChange={e => { receber(e.target.files); e.target.value = '' }}
               accept=".xlsx,.xlsm,.xls,.ods,.csv,.tsv,.txt,.tab,.json,.ics,.docx,.pdf,.html,.htm,.xml,.eml" />
           </label>
           <details className="mt-3">
             <summary className="cursor-pointer text-sm text-navy underline">Ou cole o conteúdo (células do Excel, lista, e-mail)</summary>
             <textarea value={colado} onChange={e => setColado(e.target.value)} rows={5} aria-label="Conteúdo colado" className="w-full border px-3 py-2 mt-2 font-mono text-xs" data-testid="migracao-colar" />
-            <button type="button" onClick={usarColado} className="mt-2 min-h-[44px] px-4 border border-navy text-navy text-sm">Usar o que colei</button>
+            <button type="button" onClick={usarColado} title="Analisa o conteúdo colado e o adiciona à lista do que será trazido" className="mt-2 min-h-[44px] px-4 border border-navy text-navy text-sm">Usar o que colei</button>
           </details>
           {avisos.length > 0 && <ul className="mt-3 space-y-1" role="alert">{avisos.map(a => <li key={a} className="text-sm text-critico flex gap-2"><AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden />{a}</li>)}</ul>}
         </Passo>
@@ -209,17 +211,17 @@ export default function MigracaoPage() {
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                       <span className="font-medium">{t.arquivo}</span><span className="text-sm text-grafite-claro">› {t.aba} · {t.linhas.length} linha(s)</span>
                       <label className="ml-auto text-sm inline-flex items-center gap-2">É
-                        <select value={t.tipo} onChange={e => mudarTipo(t.id, e.target.value as Tipo)} className="border px-2 py-1 min-h-[40px]" aria-label={`O que é ${t.arquivo} › ${t.aba}`}>
+                        <select value={t.tipo} onChange={e => mudarTipo(t.id, e.target.value as Tipo)} title="Corrige o que esta tabela contém (processos, clientes, prazos, financeiro ou ignorar), se a plataforma reconheceu errado" className="border px-2 py-1 min-h-[40px]" aria-label={`O que é ${t.arquivo} › ${t.aba}`}>
                           {TIPOS.map(x => <option key={x.valor} value={x.valor}>{x.rotulo}</option>)}
                         </select></label>
-                      <button type="button" onClick={() => tirar(t.id)} className="text-sm underline text-grafite-claro min-h-[40px]">Tirar</button>
+                      <button type="button" onClick={() => tirar(t.id)} title="Remove esta tabela da migração; nada dela será trazido" className="text-sm underline text-grafite-claro min-h-[40px]">Tirar</button>
                     </div>
                     <p className="text-sm mt-1">
                       {t.tipo === 'ignorar' ? <span className="text-grafite-claro">Fica de fora ({t.porque}).</span>
                         : <><strong className="text-regular">{ok(p)} entram</strong>{fora(p) ? <>, <span className="text-grafite-claro">{fora(p)} ficam de fora</span></> : null} · {destino(t.tipo).destino} <span className="text-grafite-claro">(reconheci porque {t.porque})</span></>}
                     </p>
                     {linhas && linhas.length > 0 && (
-                      <button type="button" onClick={() => setAberta(aberta === t.id ? null : t.id)} className="text-sm underline text-navy mt-1">{aberta === t.id ? 'Esconder as linhas' : 'Ver linha por linha'}</button>
+                      <button type="button" onClick={() => setAberta(aberta === t.id ? null : t.id)} title={aberta === t.id ? 'Esconde a conferência linha por linha desta tabela' : 'Mostra linha por linha o que entra e o que fica de fora, com o motivo'} className="text-sm underline text-navy mt-1">{aberta === t.id ? 'Esconder as linhas' : 'Ver linha por linha'}</button>
                     )}
                     {aberta === t.id && (
                       <div className="mt-2 max-h-80 overflow-auto border border-navy/10">
@@ -244,23 +246,23 @@ export default function MigracaoPage() {
         <Passo n={3} titulo="Trazer para a plataforma" feito={!!resultado}>
           <div className="flex flex-wrap items-center gap-4 text-sm mb-3">
             <label className="inline-flex items-center gap-2">Responsável pelos processos
-              <select value={responsavel} onChange={e => setResponsavel(e.target.value)} className="border px-2 py-1 min-h-[40px]"><option value="">Ninguém por enquanto</option>{pessoas.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}</select></label>
-            <label className="inline-flex items-center gap-2"><input type="checkbox" checked={monitorar} onChange={e => setMonitorar(e.target.checked)} /> Acompanhar os processos no CNJ todo dia (prazos e peças automáticas)</label>
+              <select value={responsavel} onChange={e => setResponsavel(e.target.value)} title="Escolhe quem fica responsável pelos processos trazidos do sistema antigo" className="border px-2 py-1 min-h-[40px]"><option value="">Ninguém por enquanto</option>{pessoas.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}</select></label>
+            <label className="inline-flex items-center gap-2"><input type="checkbox" title="Marcado, cada processo trazido entra no acompanhamento do CNJ e o robô avisa quando andar." checked={monitorar} onChange={e => setMonitorar(e.target.checked)} /> Acompanhar os processos no CNJ todo dia (prazos e peças automáticas)</label>
           </div>
-          <button type="button" onClick={trazer} disabled={!totalTrazer || !!trazendo} data-testid="trazer-tudo" className="min-h-[52px] px-6 bg-dourado text-white text-base inline-flex items-center gap-2 disabled:opacity-50">
+          <button type="button" onClick={trazer} disabled={!totalTrazer || !!trazendo} title="Grava na plataforma tudo o que foi conferido (processos, clientes, prazos e financeiro); dá para desfazer depois" data-testid="trazer-tudo" className="min-h-[52px] px-6 bg-dourado text-white text-base inline-flex items-center gap-2 disabled:opacity-50">
             <FolderInput className="w-5 h-5" aria-hidden />{trazendo || (totalTrazer ? `Trazer ${totalTrazer} registro(s)` : 'Nada para trazer ainda')}
           </button>
-          {tabelas.length > 0 && !trazendo && <button type="button" onClick={recomecar} className="ml-3 text-sm underline">Começar de novo</button>}
+          {tabelas.length > 0 && !trazendo && <button type="button" onClick={recomecar} title="Descarta os arquivos lidos e limpa a conferência, sem apagar nada já gravado" className="ml-3 text-sm underline">Começar de novo</button>}
           {resultado && (
             <div role="status" className="mt-4 p-4 border-l-4 border-regular bg-navy/5" data-testid="migracao-resultado">
               <p className="flex items-center gap-2"><CheckCircle2 className="w-5 h-5 text-regular" aria-hidden /><span>Pronto. Entraram <strong>{resultado.lote.contagem.processos}</strong> processo(s), <strong>{resultado.lote.contagem.clientes}</strong> cliente(s), <strong>{resultado.lote.contagem.prazos}</strong> prazo(s) e <strong>{resultado.lote.contagem.financeiro}</strong> lançamento(s).</span></p>
               {resultado.falhas.length > 0 && <ul className="text-sm text-critico mt-2 list-disc pl-5">{resultado.falhas.map(f => <li key={f}>{f}</li>)}</ul>}
               <p className="text-sm mt-2 flex flex-wrap gap-x-4">
-                <Link to="/processos-antigos" className="underline text-navy">Ver o que fazer em cada processo</Link>
-                <Link to="/processos" className="underline text-navy">Carteira de processos</Link>
-                <Link to="/funil" className="underline text-navy">Clientes</Link>
-                <Link to="/agenda" className="underline text-navy">Agenda</Link>
-                <Link to="/financeiro" className="underline text-navy">Financeiro</Link>
+                <Link to="/processos-antigos" title="Abre a tela com os próximos passos sugeridos para cada processo trazido" className="underline text-navy">Ver o que fazer em cada processo</Link>
+                <Link to="/processos" title="Abre a carteira de processos com os que acabaram de entrar" className="underline text-navy">Carteira de processos</Link>
+                <Link to="/funil" title="Abre o funil de clientes com os clientes trazidos" className="underline text-navy">Clientes</Link>
+                <Link to="/agenda" title="Abre a Agenda com os prazos trazidos" className="underline text-navy">Agenda</Link>
+                <Link to="/financeiro" title="Abre o Financeiro com os lançamentos trazidos" className="underline text-navy">Financeiro</Link>
               </p>
             </div>
           )}
@@ -276,7 +278,7 @@ export default function MigracaoPage() {
                   <span className="text-grafite-claro">{l.arquivos.join(', ')}</span>
                   <span>{l.contagem.processos} proc. · {l.contagem.clientes} clientes · {l.contagem.prazos} prazos · {l.contagem.financeiro} lanç.</span>
                   {l.desfeito ? <span className="ml-auto text-grafite-claro">Desfeita</span>
-                    : <button type="button" onClick={() => desfazer(l)} disabled={!!trazendo} className="ml-auto min-h-[40px] px-3 border border-navy text-navy inline-flex items-center gap-1"><Undo2 className="w-4 h-4" aria-hidden />Desfazer</button>}
+                    : <button type="button" onClick={() => desfazer(l)} title="Apaga da plataforma tudo o que esta migração trouxe (pede confirmação)" disabled={!!trazendo} className="ml-auto min-h-[40px] px-3 border border-navy text-navy inline-flex items-center gap-1"><Undo2 className="w-4 h-4" aria-hidden />Desfazer</button>}
                 </li>
               ))}
             </ul>

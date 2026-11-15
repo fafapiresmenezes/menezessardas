@@ -68,12 +68,17 @@ Deno.serve(async (req) => {
   const trabalhar = async () => {
     while (fila.length) {
       const q = fila.shift()!
-      const r = await comunica(q.filtro, inicio, fim, q.paginas)
+      let r = await comunica(q.filtro, inicio, fim, q.paginas)
+      // O CNJ limita o ritmo (HTTP 429): espera e tenta de novo antes de desistir desta consulta.
+      for (let espera = 4000; !r.ok && /429/.test(String(r.erro)) && espera <= 16000; espera *= 2) {
+        await new Promise(ok => setTimeout(ok, espera))
+        r = await comunica(q.filtro, inicio, fim, q.paginas)
+      }
       if (!r.ok) erros.push(`${q.rotulo}: ${r.erro}`)
       for (const p of r.itens) if (!pubs.has(p.id)) pubs.set(p.id, p)
     }
   }
-  await Promise.all(Array.from({ length: Math.min(4, consultas.length) }, trabalhar))
+  await Promise.all(Array.from({ length: Math.min(2, consultas.length) }, trabalhar))
 
   // Só o que ainda não foi lido.
   const todas = [...pubs.values()] as any[]

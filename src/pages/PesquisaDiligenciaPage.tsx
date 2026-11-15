@@ -65,8 +65,8 @@ export default function PesquisaDiligenciaPage() {
                   <p className="text-sm text-grafite-claro">{a.texto}</p>
                   <p className="text-xs text-grafite-claro mt-1">Fonte: {a.fonte}</p>
                   {a.externo
-                    ? <a href={a.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 min-h-[44px] mt-1 text-navy underline" data-testid={`acao-${a.id}`}>Abrir <ExternalLink className="w-4 h-4" aria-hidden /><span className="sr-only"> em nova aba</span></a>
-                    : <Link to={a.href} className="inline-flex items-center min-h-[44px] mt-1 text-navy underline" data-testid={`acao-${a.id}`}>Abrir na plataforma</Link>}
+                    ? <a href={a.href} target="_blank" rel="noopener noreferrer" title={`Abre ${a.fonte} em outra aba. É site de fora da plataforma.`} className="inline-flex items-center gap-1 min-h-[44px] mt-1 text-navy underline" data-testid={`acao-${a.id}`}>Abrir <ExternalLink className="w-4 h-4" aria-hidden /><span className="sr-only"> em nova aba</span></a>
+                    : <Link to={a.href} title="Abre a tela da plataforma que faz esta parte da diligência" className="inline-flex items-center min-h-[44px] mt-1 text-navy underline" data-testid={`acao-${a.id}`}>Abrir na plataforma</Link>}
                 </li>
               ))}
             </ul>
@@ -80,7 +80,7 @@ export default function PesquisaDiligenciaPage() {
           <p className="text-sm text-grafite-claro mt-1">Escolha o assunto. Marque o que já foi conferido; a lista fica guardada neste aparelho para o mesmo {d.formatado ? 'termo pesquisado' : 'assunto'}.</p>
           <div role="tablist" aria-label="Assunto da diligência" className="flex flex-wrap gap-2 mt-3">
             {DILIGENCIAS.map(x => (
-              <button key={x.id} role="tab" aria-selected={assunto === x.id} onClick={() => setAssunto(x.id)} data-testid={`assunto-${x.id}`}
+              <button key={x.id} role="tab" aria-selected={assunto === x.id} onClick={() => setAssunto(x.id)} data-testid={`assunto-${x.id}`} title={`Mostra o roteiro de diligência sobre ${x.titulo}`}
                 className={`min-h-[44px] px-4 text-sm border ${assunto === x.id ? 'bg-navy text-white border-navy' : 'border-navy/20 text-navy'}`}>{x.titulo}</button>
             ))}
           </div>
@@ -96,13 +96,13 @@ export default function PesquisaDiligenciaPage() {
                   <span className="block text-grafite-claro">O que prova: {i.prova}</span>
                 </label>
                 <span className="flex flex-col items-end text-sm">
-                  {i.link && <a href={i.link} target="_blank" rel="noopener noreferrer" className="min-h-[44px] inline-flex items-center gap-1 text-navy underline">Site <ExternalLink className="w-4 h-4" aria-hidden /><span className="sr-only"> (abre em nova aba)</span></a>}
-                  {i.interno && <Link to={i.interno} className="min-h-[44px] inline-flex items-center text-navy underline">Na plataforma</Link>}
+                  {i.link && <a href={i.link} target="_blank" rel="noopener noreferrer" title={`Abre ${i.fonte} em outra aba, onde este documento é emitido. É site de fora da plataforma.`} className="min-h-[44px] inline-flex items-center gap-1 text-navy underline">Site <ExternalLink className="w-4 h-4" aria-hidden /><span className="sr-only"> (abre em nova aba)</span></a>}
+                  {i.interno && <Link to={i.interno} title="Abre a tela da plataforma que levanta este item sozinha" className="min-h-[44px] inline-flex items-center text-navy underline">Na plataforma</Link>}
                 </span>
               </li>
             ))}
           </ul>
-          <button type="button" onClick={copiar} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2 mt-3" data-testid="copiar-diligencia"><Copy className="w-4 h-4" aria-hidden />{copiado ? 'Lista copiada' : 'Copiar lista para o parecer'}</button>
+          <button type="button" onClick={copiar} className="min-h-[44px] px-4 border border-navy text-navy text-sm inline-flex items-center gap-2 mt-3" title="Copia a lista pronta para colar no parecer ou no e-mail ao cliente." data-testid="copiar-diligencia"><Copy className="w-4 h-4" aria-hidden />{copiado ? 'Lista copiada' : 'Copiar lista para o parecer'}</button>
           <p className="text-xs text-grafite-claro mt-3">As validades são as usuais; vale a que estiver impressa na certidão. Certidões são emitidas no site do órgão (algumas exigem confirmação humana) e devem ser anexadas ao caso.</p>
         </section>
 

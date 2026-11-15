@@ -56,7 +56,7 @@ export default function EscritoriosParceiros({ pessoas, aoMudar }: { pessoas: Pe
       <p className="text-sm text-grafite-claro mb-4">Outro escritório ou empresa gere os próprios casos, horas, honorários e portal do cliente aqui, sem ver nada da sede. Preço (Value Pas): {resumoPreco()}, qualquer que seja a função.</p>
       <div className="flex gap-2 mb-4">
         <input aria-label="Nome do novo escritório" placeholder="Nome do escritório ou empresa" value={nome} onChange={e => setNome(e.target.value)} className="border px-3 py-2 flex-1" />
-        <button data-testid="criar-escritorio" onClick={criar} disabled={ocupado || nome.trim().length < 3} className="min-h-[44px] bg-navy text-white px-4 text-sm uppercase tracking-wider inline-flex items-center gap-1"><Plus size={14} aria-hidden="true" /> Criar</button>
+        <button title="Cria o escritório com este nome; ele entra separado, sem ver os seus casos" data-testid="criar-escritorio" onClick={criar} disabled={ocupado || nome.trim().length < 3} className="min-h-[44px] bg-navy text-white px-4 text-sm uppercase tracking-wider inline-flex items-center gap-1"><Plus size={14} aria-hidden="true" /> Criar</button>
       </div>
       <div className="border border-navy/10 p-4 mb-4" data-testid="convite-parceiro-form">
         <h3 className="text-sm uppercase tracking-wider text-grafite mb-2">Convidar escritório parceiro por e-mail</h3>
@@ -66,7 +66,7 @@ export default function EscritoriosParceiros({ pessoas, aoMudar }: { pessoas: Pe
           <select aria-label="Função do convidado" value={conv.funcao} onChange={e => setConv({ ...conv, funcao: e.target.value })} className="border px-3 py-2" data-testid="convite-funcao"><option value="operador">Operador</option><option value="leitor">Leitor</option></select>
         </div>
         <div className="flex items-center gap-3 mt-2">
-          <button data-testid="convidar-parceiro" onClick={convidar} disabled={ocupado || conv.nome_escritorio.trim().length < 3 || !conv.email.includes('@')} className="min-h-[44px] bg-navy text-white px-4 text-sm uppercase tracking-wider disabled:bg-grafite-claro/40">Enviar convite</button>
+          <button title="Manda o convite por e-mail; quem aceitar entra no escritório dele, não no seu" data-testid="convidar-parceiro" onClick={convidar} disabled={ocupado || conv.nome_escritorio.trim().length < 3 || !conv.email.includes('@')} className="min-h-[44px] bg-navy text-white px-4 text-sm uppercase tracking-wider disabled:bg-grafite-claro/40">Enviar convite</button>
           <span className="text-xs text-grafite-claro">O convidado escolhe nome e senha pelo link (vale 14 dias) e entra direto no escritório dele.</span>
         </div>
         {linkConvite && <p className="text-xs mt-2 break-all" data-testid="link-convite">Link: <a href={linkConvite} className="underline text-navy">{linkConvite}</a></p>}

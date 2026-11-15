@@ -3,7 +3,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 const cors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-cron-secret', 'Access-Control-Allow-Methods': 'POST, OPTIONS' }
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
-const APP = 'https://gmenezes-advogados.vercel.app/#'
+const APP = 'https://theye.club/#'
 type Item = { tipo: string; titulo: string; detalhe: string; responsavel: string; situacao: string }
 type Semana = { inicio: string; fim: string; total: number; dias: { dia: string; itens: Item[] }[] }
 const dataBr = (d: string) => d.split('-').reverse().join('/')
@@ -76,7 +76,7 @@ function gerarPdfTexto(titulo: string, linhas: Linha[]): Uint8Array {
   }
   const pags = add(`<< /Type /Pages /Kids [${ids.map(i => `${i} 0 R`).join(' ')}] /Count ${ids.length} >>`)
   const catalogo = add(`<< /Type /Catalog /Pages ${pags} 0 R >>`)
-  const info = add(`<< /Title (${winAnsi(titulo)}) /Producer (Plataforma GMenezes) >>`)
+  const info = add(`<< /Title (${winAnsi(titulo)}) /Producer (Plataforma THEYE) >>`)
 
   let saida = '%PDF-1.4\n%\xe2\xe3\xcf\xd3\n'
   const offsets: number[] = []
@@ -95,7 +95,7 @@ export function linhasSemana(s: Semana, escritorio: string): Linha[] {
     for (const i of d.itens) for (const q of quebrar(`- [${i.tipo === 'prazo' ? 'Prazo' : 'Compromisso'}] ${i.titulo}${i.detalhe ? ' · ' + i.detalhe : ''}${i.responsavel ? ' · resp.: ' + i.responsavel : ''}`, 9.5)) L.push({ texto: q, tamanho: 9.5 })
     L.push({ texto: ' ' })
   }
-  L.push({ texto: 'Gerado automaticamente pela plataforma GMenezes (THEYE Institute). Confira os autos antes de agir.', tamanho: 8 })
+  L.push({ texto: 'Gerado automaticamente pela plataforma THEYE (THEYE Institute). Confira os autos antes de agir.', tamanho: 8 })
   return L
 }
 
@@ -119,13 +119,38 @@ Deno.serve(async (req) => {
   const escritorioId = pessoa?.escritorio ?? '00000000-0000-0000-0000-000000000001'
   // Próximos 7 dias a partir de amanhã (sexta 17h → sábado a sexta seguinte).
   const amanha = new Date(Date.now() + 86400000).toISOString().slice(0, 10)
+  // Quem pede a semana muda o que a semana pode mostrar.
+  //
+  // O robô de sexta (cronOk, sem pessoa) monta o PDF da secretaria: ele precisa da casa inteira, e
+  // pede pela `semana_agenda_completa`, apresentando o segredo que vive só no banco. Uma pessoa que
+  // aperta "Semana em PDF" na tela Agenda pede pela `semana_agenda` de sempre, que a partir da
+  // migração 126 devolve só os prazos dela — é esse o furo que a 126 fecha.
+  //
+  // O `catch` existe porque esta função pode estar no ar antes da migração 126: enquanto a
+  // `semana_agenda_completa` não existir, o banco responde que não encontrou a função e aqui se
+  // volta para a `semana_agenda`, que hoje já devolve a casa inteira para a service_role. Assim as
+  // duas coisas não precisam acontecer no mesmo minuto, e nenhuma ordem de aplicação deixa o e-mail
+  // de sexta sair vazio.
+  const semanaDaCasa = async () => {
+    if (!cronOk || !conf.cron_segredo) return db.rpc('semana_agenda', { p_inicio: amanha, p_dias: 7, p_escritorio: escritorioId })
+    const r = await db.rpc('semana_agenda_completa', { p_segredo: conf.cron_segredo, p_inicio: amanha, p_dias: 7, p_escritorio: escritorioId })
+    // Sem a função no banco, a resposta vem com erro ou simplesmente sem semana nenhuma. Nos dois
+    // casos se volta para a `semana_agenda`, que é o que existe hoje.
+    if (r.error || r.data == null) return db.rpc('semana_agenda', { p_inicio: amanha, p_dias: 7, p_escritorio: escritorioId })
+    return r
+  }
   const [{ data: semana, error }, { data: marca }] = await Promise.all([
-    db.rpc('semana_agenda', { p_inicio: amanha, p_dias: 7, p_escritorio: escritorioId }),
+    semanaDaCasa(),
     db.rpc('marca_escritorio', { p_id: escritorioId }),
   ])
   if (error) return json({ erro: error.message }, 500)
+  // A `semana_agenda_completa` recusa segredo errado devolvendo { erro }. Melhor dizer isso do que
+  // gerar um PDF de uma semana que não veio.
+  if (semana && typeof semana === 'object' && 'erro' in (semana as Record<string, unknown>)) {
+    return json({ erro: `A semana não foi montada: ${(semana as { erro: string }).erro}` }, 500)
+  }
   const s = semana as Semana
-  const nomeEsc = ((marca ?? {}) as { nome?: string }).nome ?? 'GMenezes Advogados Associados'
+  const nomeEsc = ((marca ?? {}) as { nome?: string }).nome ?? 'Instituto THEYE'
   const pdf = gerarPdfTexto(`Semana ${s.inicio}`, linhasSemana(s, nomeEsc))
   let b64 = ''; { let bin = ''; for (let i = 0; i < pdf.length; i++) bin += String.fromCharCode(pdf[i]); b64 = btoa(bin) }
 
@@ -143,7 +168,7 @@ ${teste ? '<p style="color:#888">Envio de teste pedido por você na Agenda.</p>'
   let falha: string | undefined
   for (const email of para) {
     const resp = await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify({ sender: { name: 'Agenda GMenezes', email: conf.email_remetente }, to: [{ email }], subject: `Semana de ${dataBr(s.inicio)} a ${dataBr(s.fim)} · ${s.total} item(ns)`, htmlContent: html, attachment: [{ name: `semana-${s.inicio}.pdf`, content: b64 }] }) })
+      body: JSON.stringify({ sender: { name: 'Agenda THEYE', email: conf.email_remetente }, to: [{ email }], subject: `Semana de ${dataBr(s.inicio)} a ${dataBr(s.fim)} · ${s.total} item(ns)`, htmlContent: html, attachment: [{ name: `semana-${s.inicio}.pdf`, content: b64 }] }) })
     if (!resp.ok) falha = `${resp.status} ${(await resp.text()).slice(0, 200)}`
   }
   if (!falha && para.length) await db.from('consumo_api').insert({ funcao: 'semana em PDF por e-mail', modelo: 'brevo-email', quantidade: para.length })

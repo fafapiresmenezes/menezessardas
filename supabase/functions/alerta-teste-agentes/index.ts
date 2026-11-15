@@ -14,7 +14,7 @@ const VERIFICACOES: { nome: string; fn: string; corpo?: unknown; query?: string;
   { nome: 'Consulta de CNPJ', fn: 'consultar-cnpj', query: '?cnpj=00000000000191', espera: j => j.empresa?.status === 'ativa' },
 ]
 
-const SITE = 'https://gmenezes-advogados.vercel.app/'
+const SITE = 'https://theye.club/'
 
 async function avisarFalhas(falhas: { verificacao: string; status_http: number; detalhe: string | null }[]): Promise<number> {
   const [{ data: cfg }, { data: admins }] = await Promise.all([
@@ -30,13 +30,13 @@ async function avisarFalhas(falhas: { verificacao: string; status_http: number; 
     <div style="background:#8b1a1a;color:#fff;padding:18px"><h2 style="margin:0">Teste automático: ${falhas.length} falha(s) em ${quando}</h2></div>
     <div style="padding:16px;line-height:1.5"><p>O teste automático da plataforma encontrou problema em:</p><ul>${lista}</ul>
     <p>Na maioria das vezes é instabilidade de uma fonte externa (Banco Central, CNJ, Planalto) e se resolve sozinho no próximo teste. Se a falha repetir dois dias seguidos, avise o THEYE Institute.</p>
-    <p><a href="https://gmenezes-advogados.vercel.app/#/equipe">Abrir Área do administrador (histórico de 30 dias)</a></p></div>
-    <p style="font-size:11px;color:#888;padding:10px">GMenezes Advogados Associados · aviso automático</p></div>`
+    <p><a href="https://theye.club/#/equipe">Abrir Área do administrador (histórico de 30 dias)</a></p></div>
+    <p style="font-size:11px;color:#888;padding:10px">Instituto THEYE · aviso automático</p></div>`
   let enviados = 0
   for (const email of para) {
     const r = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST', headers: { 'api-key': conf.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify({ sender: { name: 'Avisos GMenezes', email: conf.email_remetente }, to: [{ email }], subject: `Teste automático com falha: ${falhas.map(f => f.verificacao).join(', ').slice(0, 120)}`, htmlContent: html }),
+      body: JSON.stringify({ sender: { name: 'Avisos THEYE', email: conf.email_remetente }, to: [{ email }], subject: `Teste automático com falha: ${falhas.map(f => f.verificacao).join(', ').slice(0, 120)}`, htmlContent: html }),
     })
     if (r.ok) enviados++
   }

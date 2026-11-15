@@ -5,11 +5,12 @@ const pessoasNaLista = () => within(document.querySelector('section[aria-labelle
 
 let perfil: string | null = 'admin'
 let pessoas: object[] = []
+let pedidos: object[] = []
 const definirFuncao = vi.fn(async (_p: object, _f: string | null) => undefined)
 const definirSenhaProvisoria = vi.fn(async (_p: object) => 'Abc12345')
 vi.mock('@/lib/equipe', async () => {
   const real = await vi.importActual<typeof import('@/lib/equipe')>('@/lib/equipe')
-  return { ...real, perfilAtual: async () => perfil, listarPessoas: async () => pessoas, ehSede: async () => false, definirFuncao: (p: object, f: string | null) => definirFuncao(p, f), definirSenhaProvisoria: (p: object) => definirSenhaProvisoria(p) }
+  return { ...real, perfilAtual: async () => perfil, listarPessoas: async () => pessoas, pedidosPendentes: async () => pedidos, ehSede: async () => false, definirFuncao: (p: object, f: string | null) => definirFuncao(p, f), definirSenhaProvisoria: (p: object) => definirSenhaProvisoria(p) }
 })
 vi.mock('@/lib/supabase', () => ({ supabaseConfigurado: true, supabase: { rpc: async () => ({ data: [{ usuario_id: 'p1', versao: '1.0', hash: 'abcdef1234567890', aceito_em: '2026-10-20T12:00:00Z' }] }) } }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
@@ -19,7 +20,7 @@ vi.mock('@/components/EscritoriosParceiros', () => ({ default: () => null }))
 const { default: EquipePage } = await import('./EquipePage')
 
 describe('Área do administrador (equipe)', () => {
-  beforeEach(() => { cleanup(); localStorage.clear(); definirFuncao.mockClear(); definirSenhaProvisoria.mockClear(); perfil = 'admin'
+  beforeEach(() => { cleanup(); localStorage.clear(); definirFuncao.mockClear(); definirSenhaProvisoria.mockClear(); perfil = 'admin'; pedidos = []
     pessoas = [
       { id: 'p1', nome: 'Fátima', email: 'fatima@exemplo.com', funcao: 'admin', confirmado: true, ultimoAcesso: '2026-11-01T10:00:00Z' },
       { id: 'p2', nome: 'Hélio', email: 'helio@exemplo.com', funcao: 'leitor', confirmado: true, ultimoAcesso: null },
@@ -80,5 +81,29 @@ describe('Área do administrador (equipe)', () => {
     expect(click).toHaveBeenCalled()
     expect(screen.getByTestId('baixar-equipe').textContent).toBe('baixado')
     click.mockRestore()
+  })
+
+  it('pedido de entrada aparece no topo; liberar coloca a pessoa para trabalhar e recusar pede confirmação', async () => {
+    pedidos = [{ id: 'p9', nome: 'Caio Novo', email: 'caio@exemplo.com', nomeDigitado: 'SARDAS E MENEZES', criadoEm: '2026-11-12T12:00:00Z', escritorioNome: 'Instituto THEYE' }]
+    render(<EquipePage />)
+    const bloco = await screen.findByTestId('pedidos-entrada')
+    expect(bloco.textContent).toContain('1 pessoa pediu para entrar no escritório')
+    expect(screen.getByTestId('pedido-p9').textContent).toContain('SARDAS E MENEZES')
+    pedidos = []
+    fireEvent.click(screen.getByTestId('liberar-p9'))
+    await waitFor(() => expect(definirFuncao).toHaveBeenCalledWith(expect.objectContaining({ id: 'p9', email: 'caio@exemplo.com' }), 'operador'))
+    await waitFor(() => expect(screen.queryByTestId('pedidos-entrada')).toBeNull())
+    expect(screen.getByRole('status').textContent).toContain('Caio Novo entrou no escritório')
+
+    cleanup(); definirFuncao.mockClear()
+    pedidos = [{ id: 'p9', nome: 'Caio Novo', email: 'caio@exemplo.com', nomeDigitado: 'SARDAS E MENEZES', criadoEm: '2026-11-12T12:00:00Z', escritorioNome: '' }]
+    const confirmar = vi.spyOn(window, 'confirm').mockReturnValue(false)
+    render(<EquipePage />)
+    fireEvent.click(await screen.findByTestId('recusar-p9'))
+    expect(definirFuncao).not.toHaveBeenCalled()
+    confirmar.mockReturnValue(true)
+    fireEvent.click(screen.getByTestId('recusar-p9'))
+    await waitFor(() => expect(definirFuncao).toHaveBeenCalledWith(expect.objectContaining({ id: 'p9' }), null))
+    confirmar.mockRestore()
   })
 })
