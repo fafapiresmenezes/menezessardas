@@ -93,6 +93,7 @@ const EngenhariaPage = lazy(() => import('@/pages/EngenhariaPage'))
 const SaudePage = lazy(() => import('@/pages/SaudePage'))
 const ParametrosEscritaPage = lazy(() => import('@/pages/ParametrosEscritaPage'))
 const NavegadorPage = lazy(() => import('@/pages/NavegadorPage'))
+const BancadasColaborativasPage = lazy(() => import('@/pages/BancadasColaborativasPage'))
 
 // Com dois fatores ativos, a sessão só libera o sistema depois do código (nível aal2).
 async function segundoFatorOk() {
@@ -266,6 +267,7 @@ function App() {
         <Route path="/stokasticos/ciencia" element={<StokasticosPage />} />
         <Route path="/stokasticos/magia" element={<StokasticosPage />} />
         <Route path="/portais" element={<PortaisInstitutoPage />} />
+        <Route path="/bancadas-colaborativas" element={<BancadasColaborativasPage />} />
         <Route
           path="/frentes-do-instituto"
           element={isAuthenticated ? <FrentesDoInstitutoPage /> : <Navigate to="/login" />}

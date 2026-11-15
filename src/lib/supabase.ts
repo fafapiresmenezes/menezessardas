@@ -64,6 +64,21 @@ export type Database = {
           data_leitura: string | null
         }
       }
+      bancadas_inscritos: {
+        Row: {
+          id: number
+          nome_completo: string
+          titulo_academico: string | null
+          instituicao: string | null
+          pais: string | null
+          areas_interesse: string[]
+          cv_linkedin: string | null
+          email: string
+          concorda_termos: boolean
+          data_inscricao: string
+          created_at: string
+        }
+      }
     }
   }
 }
