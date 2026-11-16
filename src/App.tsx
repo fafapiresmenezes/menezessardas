@@ -288,6 +288,14 @@ function App() {
         <Route path="/civico" element={<PortalInstitutoPage />} />
         <Route path="/ciberseguranca" element={<PortalInstitutoPage />} />
         <Route path="/quantum" element={<PortalInstitutoPage />} />
+        <Route path="/carbono" element={<PortalInstitutoPage />} />
+        <Route path="/petroleo" element={<PortalInstitutoPage />} />
+        <Route path="/psicologia" element={<PortalInstitutoPage />} />
+        <Route path="/psiquiatria" element={<PortalInstitutoPage />} />
+        <Route path="/biosseguranca" element={<PortalInstitutoPage />} />
+        <Route path="/transumanismo" element={<PortalInstitutoPage />} />
+        <Route path="/marketing" element={<PortalInstitutoPage />} />
+        <Route path="/publicidade" element={<PortalInstitutoPage />} />
         {/* Passo 1: Fechar /cotas-quanticas conforme planejamento */}
         {/* <Route
           path="/cotas-quanticas"

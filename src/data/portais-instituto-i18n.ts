@@ -60,6 +60,14 @@ export type RotaPortal =
   | '/ciberseguranca'
   | '/quantum'
   | '/ia'
+  | '/carbono'
+  | '/petroleo'
+  | '/psicologia'
+  | '/psiquiatria'
+  | '/biosseguranca'
+  | '/transumanismo'
+  | '/marketing'
+  | '/publicidade'
 
 export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> = {
   '/preditiva': {
@@ -396,6 +404,342 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Lo que la plataforma se niega a hacer, por escrito: nada de análisis de rostro, emoción, mentira o perfil psicológico, y nada de rastrear redes sociales de la parte, el abogado o el juez',
       ],
       comoEsta: 'En uso real dentro de la plataforma de derecho, con estas reglas vigentes hoy, no como intención.',
+    },
+  },
+  '/carbono': {
+    pt: {
+      nome: "Carbono",
+      resumo: "Entender o mercado de carbono regulado e voluntário, com a regra e a fonte de cada número à vista.",
+      escopo: [
+        "Acompanhar a regulação do mercado de carbono e o que ela exige de quem emite",
+        "Ler projetos e créditos com método e fonte declarados",
+        "Dizer às claras o que ainda não dá para afirmar",
+      ],
+      comoEsta: "Pesquisa em leitura. Nada foi vendido nem prometido.",
+    },
+    en: {
+      nome: "Carbon",
+      resumo: "Understand the regulated and voluntary carbon markets, with the rule and source of every number in view.",
+      escopo: [
+        "Track carbon-market regulation and what it requires from emitters",
+        "Read projects and credits with the method and source declared",
+        "State plainly what cannot be claimed yet",
+      ],
+      comoEsta: "Reading research. Nothing has been sold or promised.",
+    },
+    zh: {
+      nome: "碳",
+      resumo: "了解受监管与自愿碳市场，每个数字的规则与来源一目了然。",
+      escopo: [
+        "跟踪碳市场监管及其对排放方的要求",
+        "阅读项目与碳信用，并声明方法与来源",
+        "明确说明目前还不能断言的内容",
+      ],
+      comoEsta: "研究阅读阶段。尚未出售或承诺任何东西。",
+    },
+    es: {
+      nome: "Carbono",
+      resumo: "Entender el mercado de carbono regulado y voluntario, con la regla y la fuente de cada número a la vista.",
+      escopo: [
+        "Seguir la regulación del mercado de carbono y lo que exige a quien emite",
+        "Leer proyectos y créditos con el método y la fuente declarados",
+        "Decir con claridad lo que todavía no se puede afirmar",
+      ],
+      comoEsta: "Investigación en lectura. Nada se vendió ni se prometió.",
+    },
+  },
+  '/petroleo': {
+    pt: {
+      nome: "Petróleo e gás",
+      resumo: "Regulação do petróleo e gás, contratos e royalties, com a norma e a fonte de cada afirmação.",
+      escopo: [
+        "Acompanhar a regulação da ANP e dos contratos de exploração",
+        "Entender royalties e participações com a conta à vista",
+        "Separar o que é norma do que é opinião",
+      ],
+      comoEsta: "Pesquisa em leitura, sem prazo prometido. Ainda não existe tela para usar.",
+    },
+    en: {
+      nome: "Oil and gas",
+      resumo: "Oil and gas regulation, contracts and royalties, with the rule and source behind every claim.",
+      escopo: [
+        "Track ANP regulation and exploration contracts",
+        "Understand royalties and participations with the calculation in view",
+        "Separate what is rule from what is opinion",
+      ],
+      comoEsta: "Reading research, no deadline promised. There is no screen to use yet.",
+    },
+    zh: {
+      nome: "石油与天然气",
+      resumo: "石油天然气监管、合同与特许权使用费，每项论断都有规范与来源。",
+      escopo: [
+        "跟踪国家石油局（ANP）监管与勘探合同",
+        "看得见计算过程地理解特许权使用费与分成",
+        "区分规范与观点",
+      ],
+      comoEsta: "研究阅读阶段，不承诺期限。目前还没有可使用的界面。",
+    },
+    es: {
+      nome: "Petróleo y gas",
+      resumo: "Regulación de petróleo y gas, contratos y regalías, con la norma y la fuente de cada afirmación.",
+      escopo: [
+        "Seguir la regulación de la ANP y los contratos de exploración",
+        "Entender regalías y participaciones con el cálculo a la vista",
+        "Separar lo que es norma de lo que es opinión",
+      ],
+      comoEsta: "Investigación en lectura, sin plazo prometido. Todavía no hay pantalla para usar.",
+    },
+  },
+  '/psicologia': {
+    pt: {
+      nome: "Psicologia",
+      resumo: "Apoio a psicólogos com literatura citada e ética profissional, sem diagnosticar ninguém.",
+      escopo: [
+        "Literatura da área resumida, com o artigo citado",
+        "Normas do conselho profissional e da proteção de dados",
+        "O que a plataforma não faz: não avalia pessoas nem monta perfil psicológico",
+      ],
+      comoEsta: "Pesquisa em leitura. Existe só o desenho e a lista de limites; nenhuma tela para usar.",
+    },
+    en: {
+      nome: "Psychology",
+      resumo: "Support for psychologists with cited literature and professional ethics, without diagnosing anyone.",
+      escopo: [
+        "Literature of the field summarised, with the paper cited",
+        "Professional-council and data-protection rules",
+        "What the platform does not do: it does not assess people or build psychological profiles",
+      ],
+      comoEsta: "Reading research. Only the design and the list of limits exist; no screen to use.",
+    },
+    zh: {
+      nome: "心理学",
+      resumo: "为心理学从业者提供带引文的文献与职业伦理支持，不对任何人做诊断。",
+      escopo: [
+        "领域文献摘要，并注明论文出处",
+        "职业委员会与数据保护规范",
+        "平台不做的事：不评估个人，也不建立心理画像",
+      ],
+      comoEsta: "研究阅读阶段。目前只有设计与限制清单，没有可使用的界面。",
+    },
+    es: {
+      nome: "Psicología",
+      resumo: "Apoyo a psicólogos con literatura citada y ética profesional, sin diagnosticar a nadie.",
+      escopo: [
+        "Literatura del área resumida, con el artículo citado",
+        "Normas del consejo profesional y de protección de datos",
+        "Lo que la plataforma no hace: no evalúa personas ni arma perfiles psicológicos",
+      ],
+      comoEsta: "Investigación en lectura. Sólo existen el diseño y la lista de límites; ninguna pantalla para usar.",
+    },
+  },
+  '/psiquiatria': {
+    pt: {
+      nome: "Psiquiatria",
+      resumo: "Apoio a médicos psiquiatras com literatura citada, sem diagnosticar nem prescrever.",
+      escopo: [
+        "Literatura da área resumida, com o artigo citado",
+        "Normas do conselho de medicina e da proteção de dados de saúde",
+        "O que a plataforma não faz: não diagnostica, não prescreve e não substitui o médico",
+      ],
+      comoEsta: "Pesquisa em leitura. Existe só o desenho e a lista de limites; nenhuma tela para usar.",
+    },
+    en: {
+      nome: "Psychiatry",
+      resumo: "Support for psychiatrists with cited literature, without diagnosing or prescribing.",
+      escopo: [
+        "Literature of the field summarised, with the paper cited",
+        "Medical-council and health-data-protection rules",
+        "What the platform does not do: it does not diagnose, prescribe or replace the physician",
+      ],
+      comoEsta: "Reading research. Only the design and the list of limits exist; no screen to use.",
+    },
+    zh: {
+      nome: "精神医学",
+      resumo: "为精神科医生提供带引文的文献支持，不做诊断，也不开处方。",
+      escopo: [
+        "领域文献摘要，并注明论文出处",
+        "医学委员会与健康数据保护规范",
+        "平台不做的事：不诊断、不开处方、不取代医生",
+      ],
+      comoEsta: "研究阅读阶段。目前只有设计与限制清单，没有可使用的界面。",
+    },
+    es: {
+      nome: "Psiquiatría",
+      resumo: "Apoyo a médicos psiquiatras con literatura citada, sin diagnosticar ni recetar.",
+      escopo: [
+        "Literatura del área resumida, con el artículo citado",
+        "Normas del consejo de medicina y de protección de datos de salud",
+        "Lo que la plataforma no hace: no diagnostica, no receta y no reemplaza al médico",
+      ],
+      comoEsta: "Investigación en lectura. Sólo existen el diseño y la lista de límites; ninguna pantalla para usar.",
+    },
+  },
+  '/biosseguranca': {
+    pt: {
+      nome: "Biossegurança",
+      resumo: "Normas de biossegurança e de pesquisa com organismos, só no lado da conformidade e da proteção.",
+      escopo: [
+        "Normas de biossegurança e quem fiscaliza cada uma",
+        "Checklist de conformidade para laboratório e pesquisa",
+        "O que a plataforma não faz: não traz protocolo que possa servir para causar dano",
+      ],
+      comoEsta: "Pesquisa em leitura. Existe só o desenho; nenhuma tela para usar.",
+    },
+    en: {
+      nome: "Biosafety",
+      resumo: "Biosafety and organism-research rules, strictly on the compliance and protection side.",
+      escopo: [
+        "Biosafety rules and who enforces each one",
+        "Compliance checklist for laboratories and research",
+        "What the platform does not do: it carries no protocol that could be used to cause harm",
+      ],
+      comoEsta: "Reading research. Only the design exists; no screen to use.",
+    },
+    zh: {
+      nome: "生物安全",
+      resumo: "生物安全与生物研究规范，仅限合规与防护一侧。",
+      escopo: [
+        "生物安全规范及各自的监管者",
+        "实验室与研究的合规检查清单",
+        "平台不做的事：不提供任何可能被用来造成伤害的操作规程",
+      ],
+      comoEsta: "研究阅读阶段。目前只有设计，没有可使用的界面。",
+    },
+    es: {
+      nome: "Bioseguridad",
+      resumo: "Normas de bioseguridad y de investigación con organismos, sólo del lado del cumplimiento y la protección.",
+      escopo: [
+        "Normas de bioseguridad y quién fiscaliza cada una",
+        "Lista de cumplimiento para laboratorios e investigación",
+        "Lo que la plataforma no hace: no trae protocolos que sirvan para causar daño",
+      ],
+      comoEsta: "Investigación en lectura. Sólo existe el diseño; ninguna pantalla para usar.",
+    },
+  },
+  '/transumanismo': {
+    pt: {
+      nome: "Transumanismo",
+      resumo: "Ética, direito e regulação do que une corpo e tecnologia, em pesquisa aberta e sem promessa.",
+      escopo: [
+        "O que já é consenso e o que ainda é especulação",
+        "Marco legal e ético de neurotecnologia, edição genética e implantes",
+        "Publicar o que se aprende, inclusive quando a conclusão é \"ainda não se sabe\"",
+      ],
+      comoEsta: "Pesquisa em leitura. Sem produto, sem venda e sem prazo.",
+    },
+    en: {
+      nome: "Transhumanism",
+      resumo: "Ethics, law and regulation of what joins body and technology, as open research with no promises.",
+      escopo: [
+        "What is already consensus and what is still speculation",
+        "Legal and ethical framework for neurotechnology, gene editing and implants",
+        "Publish what is learned, even when the conclusion is \"not known yet\"",
+      ],
+      comoEsta: "Reading research. No product, no sales and no deadline.",
+    },
+    zh: {
+      nome: "超人类主义",
+      resumo: "研究身体与技术结合的伦理、法律与监管，公开研究，不作承诺。",
+      escopo: [
+        "哪些已成共识，哪些仍属推测",
+        "神经技术、基因编辑与植入物的法律与伦理框架",
+        "公开所学，哪怕结论是“目前还不知道”",
+      ],
+      comoEsta: "研究阅读阶段。没有产品、不销售、不承诺期限。",
+    },
+    es: {
+      nome: "Transhumanismo",
+      resumo: "Ética, derecho y regulación de lo que une cuerpo y tecnología, como investigación abierta y sin promesas.",
+      escopo: [
+        "Lo que ya es consenso y lo que todavía es especulación",
+        "Marco legal y ético de neurotecnología, edición genética e implantes",
+        "Publicar lo que se aprende, incluso cuando la conclusión es \"todavía no se sabe\"",
+      ],
+      comoEsta: "Investigación en lectura. Sin producto, sin venta y sin plazo.",
+    },
+  },
+  '/marketing': {
+    pt: {
+      nome: "Marketing",
+      resumo: "Marketing com prova: o que se afirma tem fonte, e a lei de dados e de consumo fica à vista.",
+      escopo: [
+        "Posicionamento e mensagem escritos a partir do que dá para provar",
+        "Regras de dados pessoais e de defesa do consumidor aplicadas à campanha",
+        "Medir o resultado de cada ação sem rastrear pessoas",
+      ],
+      comoEsta: "Pesquisa e desenho. O planejamento de marca e vendas do Instituto já existe; a tela ainda não.",
+    },
+    en: {
+      nome: "Marketing",
+      resumo: "Marketing with proof: every claim has a source, and data and consumer law stay in view.",
+      escopo: [
+        "Positioning and messaging written from what can be proven",
+        "Personal-data and consumer-protection rules applied to the campaign",
+        "Measure the result of each action without tracking people",
+      ],
+      comoEsta: "Research and design. The Institute's brand and sales plan exists; the screen does not yet.",
+    },
+    zh: {
+      nome: "市场营销",
+      resumo: "有依据的营销：每项主张都有来源，数据与消费者法规始终可见。",
+      escopo: [
+        "基于可证明内容撰写的定位与信息",
+        "把个人数据与消费者保护规范应用于营销活动",
+        "衡量每项行动的结果，而不追踪个人",
+      ],
+      comoEsta: "研究与设计阶段。研究所的品牌与销售规划已存在，界面尚未有。",
+    },
+    es: {
+      nome: "Marketing",
+      resumo: "Marketing con prueba: lo que se afirma tiene fuente, y la ley de datos y de consumo queda a la vista.",
+      escopo: [
+        "Posicionamiento y mensaje escritos con lo que se puede probar",
+        "Reglas de datos personales y de defensa del consumidor aplicadas a la campaña",
+        "Medir el resultado de cada acción sin rastrear personas",
+      ],
+      comoEsta: "Investigación y diseño. El plan de marca y ventas del Instituto existe; la pantalla todavía no.",
+    },
+  },
+  '/publicidade': {
+    pt: {
+      nome: "Publicidade",
+      resumo: "Publicidade dentro da regra: o que o código de autorregulação e a lei de consumo permitem e proíbem.",
+      escopo: [
+        "Regras de publicidade e de autorregulação por tipo de anúncio",
+        "Revisão de peça antes de ir ao ar, com o motivo de cada ajuste",
+        "O que a plataforma não faz: não cria anúncio que engane ou que explore vulnerabilidade",
+      ],
+      comoEsta: "Pesquisa e desenho. Nenhuma tela para usar ainda.",
+    },
+    en: {
+      nome: "Advertising",
+      resumo: "Advertising within the rules: what the self-regulation code and consumer law allow and forbid.",
+      escopo: [
+        "Advertising and self-regulation rules by type of ad",
+        "Review of a piece before it runs, with the reason for each change",
+        "What the platform does not do: it does not create ads that deceive or exploit vulnerability",
+      ],
+      comoEsta: "Research and design. No screen to use yet.",
+    },
+    zh: {
+      nome: "广告",
+      resumo: "合规的广告：自律规范与消费者法律允许什么、禁止什么。",
+      escopo: [
+        "按广告类型整理的广告与自律规则",
+        "投放前审查广告作品，并说明每处修改的理由",
+        "平台不做的事：不制作欺骗性或利用弱势的广告",
+      ],
+      comoEsta: "研究与设计阶段。目前还没有可使用的界面。",
+    },
+    es: {
+      nome: "Publicidad",
+      resumo: "Publicidad dentro de la regla: lo que el código de autorregulación y la ley de consumo permiten y prohíben.",
+      escopo: [
+        "Reglas de publicidad y autorregulación por tipo de anuncio",
+        "Revisión de la pieza antes de salir al aire, con el motivo de cada ajuste",
+        "Lo que la plataforma no hace: no crea anuncios que engañen o exploten la vulnerabilidad",
+      ],
+      comoEsta: "Investigación y diseño. Todavía no hay pantalla para usar.",
     },
   },
 }
