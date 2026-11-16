@@ -231,6 +231,7 @@ export interface Banco {
   inserirVinculos(l: { evento_id: string; entidade_id: string; papel: string }[]): Promise<number>
   serie(codigo: string, subtipo: string, de: string, ate: string): Promise<{ ocorrido_em: string; observado_em: string; valor: number; unidade: string }[]>
   reservatorios(): Promise<{ chave_natural: string; nome: string; atributos: Record<string, unknown> }[]>
+  painel(): Promise<{ chave_natural: string; nome: string; atributos: Record<string, unknown>; valor: number | null; unidade: string | null; ocorrido_em: string | null }[]>
   fechar(): Promise<void>
 }
 
@@ -299,6 +300,15 @@ export async function bancoPostgres(): Promise<Banco> {
     reservatorios: () => linhas(
       `select chave_natural, nome, atributos from instituto.entidades
         where fonte = $1 and tipo = 'corpo_dagua' order by nome`, [FONTE]),
+    painel: () => linhas(
+      `select distinct on (e.chave_natural)
+         e.chave_natural, e.nome, e.atributos,
+         ev.valor::float as valor, ev.unidade, ev.ocorrido_em::text
+       from instituto.entidades e
+       join instituto.evento_entidades ee on ee.entidade_id = e.id
+       join instituto.eventos ev on ev.id = ee.evento_id
+       where e.fonte = $1 and e.tipo = 'corpo_dagua' and ev.subtipo = 'volume_util'
+       order by e.chave_natural, ev.ocorrido_em desc`, [FONTE]),
     fechar: () => c.end(),
   }
 }
@@ -488,6 +498,13 @@ export async function atender(req: Request, abrirBanco: () => Promise<Banco> = b
   try { corpo = await req.json() } catch { corpo = {} }
   const modo = String(corpo.modo ?? 'serie')
 
+  if (modo === 'painel') {
+    const db = await abrirBanco()
+    try {
+      return json({ painel: await db.painel(), fonte: FONTE_ANA })
+    } finally { await db.fechar() }
+  }
+
   if (modo === 'serie') {
     const codigo = String(corpo.codigo ?? '')
     const subtipo = String(corpo.subtipo ?? 'volume_util')
@@ -539,7 +556,7 @@ export async function atender(req: Request, abrirBanco: () => Promise<Banco> = b
     } finally { await db.fechar() }
   }
 
-  return json({ erro: `Modo desconhecido: ${modo}. Use conferir, coletar ou serie.` }, 400)
+  return json({ erro: `Modo desconhecido: ${modo}. Use conferir, coletar, serie ou painel.` }, 400)
 }
 
 if (!Deno.env.get('VITEST')) Deno.serve(atender)

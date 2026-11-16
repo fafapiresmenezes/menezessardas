@@ -19,6 +19,8 @@ export type Subtipo = typeof GRANDEZAS[number]['subtipo']
 export interface Ponto { dia: string; valor: number; unidade: string; observado_em: string; revisoes: number; atraso_horas: number }
 export interface Reservatorio { chave_natural: string; nome: string; atributos: { sistema?: string | null; uf?: string | null; latitude?: number | null; longitude?: number | null } }
 export interface Resposta { codigo: string; subtipo: string; de: string; ate: string; pontos: number; serie: Ponto[]; unidade: string | null; grandeza: string | null }
+export interface PainelPonto { chave_natural: string; nome: string; atributos: { sistema?: string | null; uf?: string | null }; valor: number | null; unidade: string | null; ocorrido_em: string | null }
+export type Risco = 'critico' | 'atencao' | 'normal' | 'sem_dado'
 
 /** O que a tela mostra quando não tem o que mostrar. Cada caso tem a sua frase e o seu motivo. */
 export type Estado =
@@ -29,6 +31,19 @@ export type Estado =
 
 export const SEM_COLETA =
   'A ANA tem o dado, mas ele ainda não foi trazido para cá. A coleta roda no servidor (função ana-agua) e precisa ser disparada uma vez; até lá esta tela fica vazia de propósito, em vez de mostrar número inventado.'
+
+export function riscoHidrico(volume: number | null): Risco {
+  if (volume === null) return 'sem_dado'
+  if (volume < 30) return 'critico'
+  if (volume < 50) return 'atencao'
+  return 'normal'
+}
+
+export const lerPainel = async (): Promise<PainelPonto[]> => {
+  const { data, error } = await supabase.functions.invoke('ana-agua', { body: { modo: 'painel' } })
+  if (error) throw new Error('Não consegui falar com o servidor da água agora.')
+  return (data?.painel ?? []) as PainelPonto[]
+}
 
 export const lerReservatorios = async (): Promise<Reservatorio[]> => {
   const { data, error } = await supabase.functions.invoke('ana-agua', { body: { modo: 'serie' } })
