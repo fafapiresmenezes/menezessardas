@@ -61,10 +61,17 @@ export default function HierarquiaPage() {
 
   const alterarCargo = async (pessoa: Pessoa, valor: string) => {
     setOcupado(pessoa.id); setMsg(null)
+    const timeout = setTimeout(() => {
+      setOcupado('')
+      setMsg({ tipo: 'erro', texto: `Demorando demais. Verifique a conexão e tente novamente.` })
+    }, 8000)
     try {
-      setCargos(await definirCargo(pessoa.id, valor === 'nenhum' ? null : (valor as Cargo)))
+      const novosCargos = await definirCargo(pessoa.id, valor === 'nenhum' ? null : (valor as Cargo))
+      clearTimeout(timeout)
+      setCargos(novosCargos)
       setMsg({ tipo: 'ok', texto: `${pessoa.nome}: ${rotuloCargo[valor as Cargo | 'nenhum'] ?? valor}. Salvo.` })
     } catch (e) {
+      clearTimeout(timeout)
       setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
     } finally { setOcupado('') }
   }
