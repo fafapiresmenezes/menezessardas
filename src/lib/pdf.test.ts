@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi } from 'vitest'
 
 // Leitor de PDF simulado: páginas e textos vêm do teste, sem worker nem rede.

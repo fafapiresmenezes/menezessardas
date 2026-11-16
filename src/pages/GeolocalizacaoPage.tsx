@@ -433,17 +433,17 @@ export default function GeolocalizacaoPage() {
         {aba === 'ia' && (
           <div className={cartao + ' space-y-4'}>
             <h2 className="font-semibold text-navy"><Bot className="inline w-4 h-4 mr-1" />IA local — Ollama</h2>
-            <p className="text-sm text-grafite">O Ollama roda um modelo de linguagem <b>no seu computador</b>. Nada dos seus dados sai do aparelho. Para funcionar, você precisa ter o <a href="https://ollama.com" target="_blank" rel="noreferrer noopener" className="underline">Ollama</a> instalado e rodando com CORS aberto:</p>
+            <p className="text-sm text-grafite">O Ollama roda um modelo de linguagem <b>no seu computador</b>. Nada dos seus dados sai do aparelho. Para funcionar, você precisa ter o <a href="https://ollama.com" target="_blank" rel="noreferrer noopener" title="Abrir o site do Ollama para baixar e instalar" className="underline">Ollama</a> instalado e rodando com permissão de acesso entre origens (CORS) aberta:</p>
             <pre className="text-xs bg-pergaminho px-3 py-2 overflow-x-auto">OLLAMA_ORIGINS=https://theye.club ollama serve</pre>
             <div className="grid sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-grafite block mb-1">URL do Ollama</label>
-                <input className={campo} value={ollamaConfig.url} onChange={e => setOllamaConfig(c => ({ ...c, url: e.target.value }))} placeholder="http://localhost:11434" />
+                <label className="text-xs text-grafite block mb-1">Endereço do Ollama</label>
+                <input className={campo} value={ollamaConfig.url} onChange={e => setOllamaConfig(c => ({ ...c, url: e.target.value }))} placeholder="http://localhost:11434" title="Endereço onde o Ollama está rodando no seu computador (padrão: http://localhost:11434)" />
               </div>
               <div>
                 <label className="text-xs text-grafite block mb-1">Modelo</label>
                 <div className="flex gap-1">
-                  <input className={campo} value={ollamaConfig.modelo} onChange={e => setOllamaConfig(c => ({ ...c, modelo: e.target.value }))} placeholder="qwen2.5:3b" list="ollama-modelos" />
+                  <input className={campo} value={ollamaConfig.modelo} onChange={e => setOllamaConfig(c => ({ ...c, modelo: e.target.value }))} placeholder="qwen2.5:3b" title="Nome do modelo instalado no Ollama que deve fazer a análise (ex: qwen2.5:3b)" list="ollama-modelos" />
                   <datalist id="ollama-modelos">{ollamaModelos.map(m => <option key={m} value={m} />)}</datalist>
                   <button className={botao} title="Listar modelos instalados no Ollama" onClick={async () => {
                     setOllamaErro('')

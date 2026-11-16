@@ -1,3 +1,4 @@
+// @vitest-environment node
 // Bloco E (06/11/2026): Word enviado em "Meu estilo de escrita" vira texto + formatação.
 import { describe, it, expect } from 'vitest'
 import { deflateRawSync } from 'node:zlib'
