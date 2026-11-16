@@ -6,6 +6,8 @@
  * e as frases honestas de cada estado — nada de número inventado quando a série está vazia.
  */
 import { supabase } from '../supabase'
+import { sazonalMaisTendencia } from './baseline'
+export type { Previsao } from './baseline'
 
 export const GRANDEZAS = [
   { subtipo: 'volume_util', nome: 'Volume útil', unidade: '%', oque: 'Quanto do volume que se pode usar ainda está lá, em por cento.' },
@@ -97,6 +99,17 @@ export function variacao(serie: Ponto[]): { delta: number; unidade: string; sent
   if (serie.length < 2) return null
   const delta = Math.round((serie[serie.length - 1].valor - serie[0].valor) * 100) / 100
   return { delta, unidade: serie[0].unidade, sentido: delta > 0 ? 'subiu' : delta < 0 ? 'desceu' : 'igual' }
+}
+
+/**
+ * Nowcasting 30 dias para volume útil.
+ * Converte a série da ANA para o formato do baseline e aplica tendência + ciclo semanal.
+ * Retorna null se a série for curta demais (mínimo 14 pontos).
+ */
+export function nowcasting30(serie: Ponto[]): import('./baseline').Previsao[] | null {
+  if (serie.length < 14) return null
+  const pts = serie.map(p => ({ quando: p.dia, valor: p.valor }))
+  return sazonalMaisTendencia(7).prever(pts, 30)
 }
 
 export const dataBr = (iso: string): string => {

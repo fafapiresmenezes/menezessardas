@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
 import {
   GRANDEZAS, SEM_COLETA, atrasoMedio, caminho, coordenadas, dataBr, diasSemDado,
-  lerPainel, lerReservatorios, lerSerie, numeroBr, revisadas, riscoHidrico, variacao,
+  lerPainel, lerReservatorios, lerSerie, nowcasting30, numeroBr, revisadas, riscoHidrico, variacao,
 } from '@/lib/predicao/agua'
-import type { PainelPonto, Ponto, Reservatorio, Risco, Subtipo } from '@/lib/predicao/agua'
+import type { PainelPonto, Ponto, Previsao, Reservatorio, Risco, Subtipo } from '@/lib/predicao/agua'
 
 const hoje = () => new Date().toISOString().slice(0, 10)
 const diasAtras = (n: number) => new Date(Date.now() - n * 86400000).toISOString().slice(0, 10)
@@ -54,6 +54,10 @@ export default function AguaPage() {
   const falta = serie ? diasSemDado(serie, de, ate) : 0
   const v = serie ? variacao(serie) : null
   const escolhido = reservatorios?.find(r => r.chave_natural === codigo)
+  const previsao = useMemo<Previsao[] | null>(
+    () => subtipo === 'volume_util' && serie && serie.length >= 14 ? nowcasting30(serie) : null,
+    [serie, subtipo],
+  )
 
   const corRisco: Record<Risco, string> = {
     critico: 'bg-critico text-white',
@@ -268,6 +272,51 @@ export default function AguaPage() {
               {serie.length > 30 && <p className="text-xs text-grafite">A tabela mostra os 30 dias mais recentes; a linha mostra o período inteiro.</p>}
             </>
           )}
+
+          {previsao && previsao.length > 0 && (() => {
+            const p0 = previsao[0].valor
+            const p29 = previsao[previsao.length - 1].valor
+            const delta = p29 - (serie?.[serie.length - 1]?.valor ?? p0)
+            const sentido = delta > 0.5 ? '↑ tendência de alta' : delta < -0.5 ? '↓ tendência de queda' : '→ estável'
+            const corSentido = delta > 0.5 ? 'text-green-600' : delta < -0.5 ? 'text-critico' : 'text-grafite'
+            return (
+              <div className="mt-6 pt-4 border-t border-grafite-claro space-y-3">
+                <div>
+                  <h3 className="font-serif text-lg">Tendência 30 dias — modelo baseline</h3>
+                  <p className="text-sm text-grafite">
+                    Reta + ciclo semanal, calculada no navegador, sem enviar dados para fora.
+                    Intervalo de {Math.round(0.8 * 100)}% de confiança.
+                  </p>
+                </div>
+                <p className={`text-base font-medium ${corSentido}`}>{sentido}</p>
+                <table className="w-full text-sm">
+                  <caption className="text-left text-grafite pb-2">Próximos 7 dias (previsão)</caption>
+                  <thead>
+                    <tr className="text-left border-b border-grafite-claro">
+                      <th className="py-1">Dia</th>
+                      <th className="py-1">Previsto %</th>
+                      <th className="py-1">Baixo %</th>
+                      <th className="py-1">Alto %</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {previsao.slice(0, 7).map(p => (
+                      <tr key={p.quando} className="border-b border-pergaminho">
+                        <td className="py-1">{dataBr(p.quando)}</td>
+                        <td className="py-1">{numeroBr(Math.max(0, Math.min(100, p.valor)))}</td>
+                        <td className="py-1 text-grafite">{numeroBr(Math.max(0, p.baixo))}</td>
+                        <td className="py-1 text-grafite">{numeroBr(Math.min(100, p.alto))}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <p className="text-xs text-grafite">
+                  Isto é uma tendência estatística, não uma previsão do tempo do reservatório.
+                  Chuva, operação e demanda mudam o volume real. Use como orientação, nunca como verdade.
+                </p>
+              </div>
+            )
+          })()}
         </section>}
       </div>
     </Layout>
