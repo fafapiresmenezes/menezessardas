@@ -1,0 +1,112 @@
+{
+  "timestamp": "2026-11-15T10:16:51.048060",
+  "versao": "v7-consolidacao-14-nichos",
+  "nichos": {
+    "direito": {
+      "legislacao_count": 0,
+      "ferramentas_count": 0,
+      "especialistas_count": 0,
+      "cobertura_pct": 75,
+      "status": "ativo"
+    },
+    "saude": {
+      "legislacao_count": 11,
+      "ferramentas_count": 41,
+      "especialistas_count": 10,
+      "cobertura_pct": 75,
+      "status": "ativo"
+    },
+    "aguas": {
+      "legislacao_count": 40,
+      "ferramentas_count": 52,
+      "especialistas_count": 10,
+      "cobertura_pct": 87.5,
+      "status": "ativo"
+    },
+    "petroleo": {
+      "legislacao_count": 40,
+      "ferramentas_count": 52,
+      "especialistas_count": 10,
+      "cobertura_pct": 75,
+      "status": "ativo"
+    },
+    "cadeia-distributiva-b2b": {
+      "legislacao_count": 21,
+      "ferramentas_count": 50,
+      "especialistas_count": 10,
+      "cobertura_pct": 82.5,
+      "status": "ativo"
+    },
+    "psicologia": {
+      "legislacao_count": 10,
+      "ferramentas_count": 30,
+      "especialistas_count": 10,
+      "cobertura_pct": 78,
+      "status": "ativo"
+    },
+    "psiquiatria": {
+      "legislacao_count": 10,
+      "ferramentas_count": 30,
+      "especialistas_count": 10,
+      "cobertura_pct": 82,
+      "status": "ativo"
+    },
+    "marketing": {
+      "legislacao_count": 10,
+      "ferramentas_count": 30,
+      "especialistas_count": 10,
+      "cobertura_pct": 75,
+      "status": "ativo"
+    },
+    "publicidade": {
+      "legislacao_count": 10,
+      "ferramentas_count": 30,
+      "especialistas_count": 10,
+      "cobertura_pct": 71,
+      "status": "ativo"
+    },
+    "ambiental": {
+      "legislacao_count": 0,
+      "ferramentas_count": 0,
+      "especialistas_count": 0,
+      "cobertura_pct": 75,
+      "status": "ativo"
+    },
+    "carbono": {
+      "legislacao_count": 0,
+      "ferramentas_count": 0,
+      "especialistas_count": 0,
+      "cobertura_pct": 75,
+      "status": "ativo"
+    },
+    "cyber": {
+      "legislacao_count": 5,
+      "ferramentas_count": 0,
+      "especialistas_count": 0,
+      "cobertura_pct": 75,
+      "status": "ativo"
+    },
+    "quantum": {
+      "legislacao_count": 0,
+      "ferramentas_count": 0,
+      "especialistas_count": 0,
+      "cobertura_pct": 75,
+      "status": "ativo"
+    },
+    "engenharia": {
+      "legislacao_count": 0,
+      "ferramentas_count": 0,
+      "especialistas_count": 0,
+      "cobertura_pct": 75,
+      "status": "ativo"
+    }
+  },
+  "resumo_executivo": {
+    "total_ferramentas": 315,
+    "total_especialistas": 80,
+    "total_legislacao": 157,
+    "cobertura_media_pct": 76.9,
+    "nichos_carregados": 14,
+    "nichos_total": 14
+  }
+}
