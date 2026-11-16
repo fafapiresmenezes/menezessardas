@@ -1,3 +1,4 @@
+// @vitest-environment node
 // Passo C2: ingestão do GDELT na ontologia do C1. Nenhum teste aqui toca a rede do GDELT —
 // o fetch é substituído e os arquivos .zip são montados em memória.
 import { describe, it, expect, beforeEach } from 'vitest'
