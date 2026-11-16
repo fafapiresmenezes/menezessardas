@@ -7,7 +7,7 @@
  * - Recebem aviso: "Isso gasta dinheiro do Mateus"
  */
 
-import { verificarUsuarioBloqueado, type UsuarioBloqueado } from './acesso'
+import { verificarUsuarioBloqueado } from './acesso'
 
 export type FuncaoPaga =
   | 'jusbrasil' // buscar processos/jurisprudência
@@ -41,7 +41,7 @@ export const ROTULO_ANTONIO = 'Antonio Costa (recebe mensagens — gratuito)'
  * Verifica se o usuário está bloqueado de uma função paga.
  * Retorna true se está bloqueado, false caso contrário.
  */
-export async function estaBloqueoEmFuncaoPaga(funcao: FuncaoPaga): Promise<boolean> {
+export async function estaBloqueoEmFuncaoPaga(_funcao: FuncaoPaga): Promise<boolean> {
   const bloqueado = await verificarUsuarioBloqueado()
   return bloqueado !== null
 }
@@ -50,7 +50,7 @@ export async function estaBloqueoEmFuncaoPaga(funcao: FuncaoPaga): Promise<boole
  * Bloqueia a execução de uma função paga se o usuário é bloqueado.
  * Lança erro com mensagem amigável se tentar executar.
  */
-export async function validarAcessoAFuncaoPaga(funcao: FuncaoPaga): Promise<void> {
+export async function validarAcessoAFuncaoPaga(_funcao: FuncaoPaga): Promise<void> {
   const bloqueado = await verificarUsuarioBloqueado()
 
   if (bloqueado) {
@@ -65,7 +65,7 @@ export async function validarAcessoAFuncaoPaga(funcao: FuncaoPaga): Promise<void
  * Retorna um aviso para mostrar ao usuário antes de usar uma função paga.
  * Retorna null se o usuário pode usar normalmente.
  */
-export async function obterAvisoPaga(funcao: FuncaoPaga): Promise<string | null> {
+export async function obterAvisoPaga(_funcao: FuncaoPaga): Promise<string | null> {
   const bloqueado = await verificarUsuarioBloqueado()
 
   if (bloqueado) {
