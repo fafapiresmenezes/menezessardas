@@ -5,6 +5,7 @@ import { agruparLugares, detectarParadas, distancia, preverProximo, quilometros,
 import { classificarAmbiente } from '@/lib/geo/camera'
 import { Cofre, conferirCorrente, cofreExiste } from '@/lib/geo/cofre'
 import { csvPontos, geojson, montarGrafo } from '@/lib/geo/grafo'
+import { carregarConfigOllama, promptNoticias, promptSemana, salvarConfigOllama } from '@/lib/geo/ollama'
 
 if (!globalThis.crypto?.subtle) Object.defineProperty(globalThis, 'crypto', { value: webcrypto })
 
@@ -147,6 +148,27 @@ describe('G5/G6: município, trilha e ficha lastreada', () => {
     expect(a.hash).toBe(b.hash)
     expect(new TextDecoder().decode(a.bytes.slice(0, 5))).toBe('%PDF-')
     expect(textoFicha(d).join('\n')).toContain('vegetação rala ou plantação')
+  })
+
+  it('Ollama: configuração padrão usa localhost, salva e carrega do localStorage', () => {
+    localStorage.clear()
+    const padrao = carregarConfigOllama()
+    expect(padrao.url).toBe('http://localhost:11434')
+    expect(padrao.modelo).toBeTruthy()
+    salvarConfigOllama({ url: 'http://localhost:11434', modelo: 'llama3.2:3b' })
+    const lido = carregarConfigOllama()
+    expect(lido.modelo).toBe('llama3.2:3b')
+  })
+
+  it('Ollama: prompts não vazam lat/lon, contêm os dados pedidos', () => {
+    const p1 = promptSemana({ lugares: [{ nome: 'casa', minutos: 480 }, { nome: 'escritório', minutos: 240 }], km: 12.5, dias: 5 })
+    expect(p1).toContain('casa')
+    expect(p1).toContain('480')
+    expect(p1).toContain('12.5')
+    expect(p1).not.toMatch(/-22\.\d+/)
+    const p2 = promptNoticias('Niterói', [{ titulo: 'Obras na ponte', data: '2026-11-14', fonte: 'o globo' }])
+    expect(p2).toContain('Niterói')
+    expect(p2).toContain('Obras na ponte')
   })
 
   it('a lista de fontes da tela é a mesma que o cabeçalho de segurança libera', async () => {

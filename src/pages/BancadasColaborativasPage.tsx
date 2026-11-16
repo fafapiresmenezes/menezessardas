@@ -103,6 +103,7 @@ export default function BancadasColaborativasPage() {
         <div className="flex gap-4 mb-8 border-b border-slate-300">
           <button
             onClick={() => setActiveTab('bancadas')}
+            title="Ver as bancadas colaborativas em formação"
             className={`px-6 py-3 font-semibold transition-colors ${
               activeTab === 'bancadas'
                 ? 'text-dourado border-b-2 border-dourado'
@@ -113,6 +114,7 @@ export default function BancadasColaborativasPage() {
           </button>
           <button
             onClick={() => setActiveTab('inscricao')}
+            title="Abrir o formulário para se inscrever em uma bancada"
             className={`px-6 py-3 font-semibold transition-colors ${
               activeTab === 'inscricao'
                 ? 'text-dourado border-b-2 border-dourado'
@@ -141,7 +143,7 @@ export default function BancadasColaborativasPage() {
                     <p className="text-grafite mb-4">{desc.descricao}</p>
                     <div className="flex items-center gap-2 text-dourado font-semibold">
                       <Mail size={18} />
-                      <a href="mailto:bancadas@theye.club" className="hover:underline">
+                      <a href="mailto:bancadas@theye.club" title="Enviar e-mail para a equipe de bancadas" className="hover:underline">
                         bancadas@theye.club
                       </a>
                     </div>
@@ -186,6 +188,7 @@ export default function BancadasColaborativasPage() {
                     name="nome_completo"
                     value={formData.nome_completo}
                     onChange={handleInputChange}
+                    title="Digite seu nome completo"
                     className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dourado"
                     required
                   />
@@ -202,6 +205,7 @@ export default function BancadasColaborativasPage() {
                     value={formData.titulo_academico}
                     onChange={handleInputChange}
                     placeholder="ex: PhD em Engenharia, Doutor em Direito"
+                    title="Informe seu título acadêmico ou profissional mais recente"
                     className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dourado"
                   />
                 </div>
@@ -217,6 +221,7 @@ export default function BancadasColaborativasPage() {
                       name="instituicao"
                       value={formData.instituicao}
                       onChange={handleInputChange}
+                      title="Nome da universidade, empresa ou organização à qual você está vinculado"
                       className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dourado"
                     />
                   </div>
@@ -229,6 +234,7 @@ export default function BancadasColaborativasPage() {
                       name="pais"
                       value={formData.pais}
                       onChange={handleInputChange}
+                      title="País onde você mora ou trabalha"
                       className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dourado"
                     />
                   </div>
@@ -246,6 +252,7 @@ export default function BancadasColaborativasPage() {
                           type="checkbox"
                           checked={formData.areas_interesse.includes(area)}
                           onChange={() => handleAreaChange(area)}
+                          title={`Marcar área de interesse: ${DESCRICOES_BANCADAS[area].titulo}`}
                           className="w-4 h-4 accent-dourado"
                         />
                         <span className="text-grafite capitalize">
@@ -267,6 +274,7 @@ export default function BancadasColaborativasPage() {
                     value={formData.cv_linkedin}
                     onChange={handleInputChange}
                     placeholder="https://linkedin.com/in/seu-perfil"
+                    title="Cole aqui o link do seu currículo Lattes ou perfil LinkedIn"
                     className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dourado"
                   />
                 </div>
@@ -281,6 +289,7 @@ export default function BancadasColaborativasPage() {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
+                    title="Endereço de e-mail para a equipe de bancadas entrar em contato com você"
                     className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dourado"
                     required
                   />
@@ -305,6 +314,7 @@ export default function BancadasColaborativasPage() {
                 <button
                   type="submit"
                   disabled={enviando}
+                  title="Enviar sua inscrição para participar da bancada colaborativa"
                   className="w-full bg-gradient-to-r from-dourado to-amber-600 text-white font-semibold py-3 rounded-lg hover:from-amber-700 hover:to-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
                   {enviando ? 'Enviando...' : 'Inscrever-se'}
@@ -312,7 +322,7 @@ export default function BancadasColaborativasPage() {
               </form>
 
               <p className="text-center text-sm text-grafite mt-6">
-                Dúvidas? Contate-nos em <a href="mailto:bancadas@theye.club" className="text-dourado font-semibold hover:underline">bancadas@theye.club</a>
+                Dúvidas? Contate-nos em <a href="mailto:bancadas@theye.club" title="Enviar e-mail de dúvidas para a equipe de bancadas" className="text-dourado font-semibold hover:underline">bancadas@theye.club</a>
               </p>
             </div>
           </div>

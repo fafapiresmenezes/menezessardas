@@ -1,3 +1,4 @@
+// @vitest-environment node
 // Passo 557: Edge Function selar-documentos — hash dos arquivos, manifesto do dia ancorado no OpenTimestamps, auditoria de um registro e verificação do selo no Bitcoin.
 import { describe, it, expect, beforeEach } from 'vitest'
 import { fingirDeno, fingirFetch } from '../_testes/deno'

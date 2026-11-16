@@ -1,3 +1,4 @@
+// @vitest-environment node
 // O robô do servidor usa as mesmas regras de prazo das telas: o arquivo gerado tem de estar em dia com src/lib.
 import { it, expect } from 'vitest'
 import fs from 'node:fs'

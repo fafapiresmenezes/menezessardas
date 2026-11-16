@@ -8,7 +8,8 @@ import { CAMADAS_PENDENTES, SATELITES, buscarCenas, camadasSatelite, municipioDe
 import { baixar, csvPontos, geojson, montarGrafo } from '@/lib/geo/grafo'
 import { lerQuadro } from '@/lib/geo/camera'
 import { pdfFicha } from '@/lib/geo/fichaPdf'
-import { Camera, Download, Lock, MapPin, Pause, Play, Satellite, ShieldCheck, Trash2, Network } from 'lucide-react'
+import { Camera, Download, Lock, MapPin, Pause, Play, Satellite, ShieldCheck, Trash2, Network, Bot } from 'lucide-react'
+import { carregarConfigOllama, gerarTexto, listarModelos, promptNoticias, promptSemana, salvarConfigOllama, type OllamaConfig } from '@/lib/geo/ollama'
 
 const MapaGeo = lazy(() => import('@/components/geo/MapaGeo'))
 
@@ -16,13 +17,14 @@ const cartao = 'bg-white shadow-sm p-5 border-t-2 border-dourado'
 const botao = 'min-h-[44px] px-4 text-sm border border-navy text-navy bg-white disabled:opacity-40'
 const botaoCheio = 'min-h-[44px] px-4 text-sm bg-navy text-white disabled:opacity-40'
 const campo = 'min-h-[44px] w-full border border-navy/20 px-3 text-sm bg-white'
-type Aba = 'onde' | 'mapa' | 'camera' | 'satelite' | 'grafo' | 'dados'
+type Aba = 'onde' | 'mapa' | 'camera' | 'satelite' | 'grafo' | 'ia' | 'dados'
 const ABAS: { id: Aba; nome: string; dica: string }[] = [
   { id: 'onde', nome: 'Onde estou', dica: 'Ligar e pausar a gravação da posição, e ver tudo o que foi gravado' },
   { id: 'mapa', nome: 'Meu mapa', dica: 'Trajetos, paradas, lugares, linha do tempo do dia e resumo da semana' },
   { id: 'camera', nome: 'Câmera', dica: 'A câmera ajuda a dizer onde você está. Não lê rosto, emoção nem perfil' },
   { id: 'satelite', nome: 'Satélites e município', dica: 'Imagens de satélite abertas, ficha do município (IBGE) e notícias (GDELT)' },
   { id: 'grafo', nome: 'Grafo e previsão', dica: 'Como lugares, município, notícias e cenas se ligam, e para onde você deve ir em seguida' },
+  { id: 'ia', nome: 'IA local', dica: 'Análise offline dos seus dados pelo Ollama — o modelo roda no seu computador, nada sai pelo ar' },
   { id: 'dados', nome: 'Exportar e apagar', dica: 'Baixar tudo em arquivo aberto, apagar por dia, por lugar ou tudo, e ver quem acessou' },
 ]
 const hojeISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` }
@@ -49,6 +51,11 @@ export default function GeolocalizacaoPage() {
   const [camLigada, setCamLigada] = useState(false)
   const [ultimaCena, setUltimaCena] = useState<CenaCamera | null>(null)
   const [corrente, setCorrente] = useState<string>('')
+  const [ollamaConfig, setOllamaConfig] = useState<OllamaConfig>(() => carregarConfigOllama())
+  const [ollamaModelos, setOllamaModelos] = useState<string[]>([])
+  const [ollamaErro, setOllamaErro] = useState('')
+  const [iaSaida, setIaSaida] = useState('')
+  const [iaGerando, setIaGerando] = useState(false)
   const vigia = useRef<number | null>(null)
   const ultimoGravado = useRef(0)
   const travaTela = useRef<{ release: () => Promise<void> } | null>(null)
@@ -420,6 +427,63 @@ export default function GeolocalizacaoPage() {
                 <ul className="text-sm space-y-1">{calc.previsao.map(p => { const l = calc.lugares.find(x => x.id === p.lugarId); return <li key={p.lugarId}>{l?.nome || 'Lugar sem nome'}: {Math.round(p.chance * 100)}% <span className="text-xs text-grafite-claro">(visto {p.vezes} vez(es))</span></li> })}</ul>}
               <p className="text-xs text-grafite-claro mt-2">Como é feita: conta quantas vezes, saindo do lugar atual, você foi para cada outro (cadeia de Markov com suavização). Poucos dados = chance pouco confiável; o número de vezes vistas está ao lado para isso ficar claro.</p>
             </div>
+          </div>
+        )}
+
+        {aba === 'ia' && (
+          <div className={cartao + ' space-y-4'}>
+            <h2 className="font-semibold text-navy"><Bot className="inline w-4 h-4 mr-1" />IA local — Ollama</h2>
+            <p className="text-sm text-grafite">O Ollama roda um modelo de linguagem <b>no seu computador</b>. Nada dos seus dados sai do aparelho. Para funcionar, você precisa ter o <a href="https://ollama.com" target="_blank" rel="noreferrer noopener" title="Abrir o site do Ollama para baixar e instalar" className="underline">Ollama</a> instalado e rodando com permissão de acesso entre origens (CORS) aberta:</p>
+            <pre className="text-xs bg-pergaminho px-3 py-2 overflow-x-auto">OLLAMA_ORIGINS=https://theye.club ollama serve</pre>
+            <div className="grid sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs text-grafite block mb-1">Endereço do Ollama</label>
+                <input className={campo} value={ollamaConfig.url} onChange={e => setOllamaConfig(c => ({ ...c, url: e.target.value }))} placeholder="http://localhost:11434" title="Endereço onde o Ollama está rodando no seu computador (padrão: http://localhost:11434)" />
+              </div>
+              <div>
+                <label className="text-xs text-grafite block mb-1">Modelo</label>
+                <div className="flex gap-1">
+                  <input className={campo} value={ollamaConfig.modelo} onChange={e => setOllamaConfig(c => ({ ...c, modelo: e.target.value }))} placeholder="qwen2.5:3b" title="Nome do modelo instalado no Ollama que deve fazer a análise (ex: qwen2.5:3b)" list="ollama-modelos" />
+                  <datalist id="ollama-modelos">{ollamaModelos.map(m => <option key={m} value={m} />)}</datalist>
+                  <button className={botao} title="Listar modelos instalados no Ollama" onClick={async () => {
+                    setOllamaErro('')
+                    try { setOllamaModelos(await listarModelos(ollamaConfig.url)) }
+                    catch (e) { setOllamaErro(e instanceof Error ? e.message : String(e)) }
+                  }}>⟳</button>
+                </div>
+              </div>
+            </div>
+            <button className={botaoCheio} onClick={() => { salvarConfigOllama(ollamaConfig); setOllamaErro(''); setOllamaModelos([]) }}
+              title="Salvar configuração do Ollama neste aparelho">Salvar configuração</button>
+            {ollamaErro && <p className="text-sm text-critico">{ollamaErro}</p>}
+            <div className="flex flex-wrap gap-2 pt-2">
+              <button className={botao} disabled={iaGerando || !calc} title="Analisar os seus últimos 7 dias de movimento com o modelo local"
+                onClick={async () => {
+                  if (!calc) return
+                  setIaSaida(''); setOllamaErro(''); setIaGerando(true)
+                  try {
+                    const prompt = promptSemana({ lugares: calc.semana.porLugar.map(x => ({ nome: x.lugar.nome, minutos: x.minutos })), km: calc.semana.km, dias: calc.semana.dias })
+                    for await (const t of gerarTexto(ollamaConfig.url, ollamaConfig.modelo, prompt)) setIaSaida(s => s + t)
+                  } catch (e) { setOllamaErro(e instanceof Error ? e.message : String(e)) } finally { setIaGerando(false) }
+                }}>Analisar minha semana</button>
+              <button className={botao} disabled={iaGerando || !municipio || noticias.length === 0} title="Resumir as notícias do município com o modelo local"
+                onClick={async () => {
+                  if (!municipio) return
+                  setIaSaida(''); setOllamaErro(''); setIaGerando(true)
+                  try {
+                    const prompt = promptNoticias(municipio.nome, noticias)
+                    for await (const t of gerarTexto(ollamaConfig.url, ollamaConfig.modelo, prompt)) setIaSaida(s => s + t)
+                  } catch (e) { setOllamaErro(e instanceof Error ? e.message : String(e)) } finally { setIaGerando(false) }
+                }}>Resumir notícias do município</button>
+              {iaGerando && <button className="min-h-[44px] px-4 text-sm bg-critico text-white" onClick={() => setIaGerando(false)} title="Interromper a geração">Parar</button>}
+            </div>
+            {iaSaida && (
+              <div className="bg-pergaminho border border-navy/10 p-4 text-sm whitespace-pre-wrap">
+                {iaSaida}
+                {iaGerando && <span className="animate-pulse">▌</span>}
+              </div>
+            )}
+            <p className="text-xs text-grafite-claro">Modelos sugeridos: <b>qwen2.5:3b</b> (rápido, bom em português), <b>llama3.2:3b</b>, <b>gemma2:2b</b>. Instale com <code>ollama pull qwen2.5:3b</code>. Os seus dados de localização não são enviados ao servidor do Ollama — apenas o texto do prompt formatado por esta tela.</p>
           </div>
         )}
 
