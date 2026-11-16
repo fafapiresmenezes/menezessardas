@@ -101,12 +101,14 @@ export default function AguaPage() {
         <div className="flex gap-2">
           <button
             onClick={() => setAba('serie')}
+            title="Ver a série histórica de medições do reservatório selecionado"
             className={`px-4 py-2 text-sm border ${aba === 'serie' ? 'bg-preto text-white border-preto' : 'border-grafite-claro text-grafite'}`}
           >
             Série histórica
           </button>
           <button
             onClick={() => setAba('painel')}
+            title="Ver o painel de risco hídrico com todos os reservatórios"
             className={`px-4 py-2 text-sm border ${aba === 'painel' ? 'bg-preto text-white border-preto' : 'border-grafite-claro text-grafite'}`}
           >
             Painel de risco
