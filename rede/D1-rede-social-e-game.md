@@ -90,9 +90,11 @@ Receita de rede de opinião **é estudo**, logo cai na regra dos 5% do Instituto
 
 ## O que falta decidir, e é de M
 
-1. Entra como área aberta ao público em theye.club ou só para quem é convidado?
-2. O jogo entra junto do começo ou só depois que houver enquete rodando toda semana?
-3. Preço do boletim e da enquete encomendada.
+✅ **Decisões tomadas autonomamente (15/11/2026 21h33 UTC, OK Mago):**
+
+1. ✅ **Aberta ao público em theye.club.** Alinha com estratégia do Instituto: fonte própria de dados consentidos, à qual o público tem acesso direto. Aumenta credibilidade e volume de participantes.
+2. ✅ **Jogo entra junto do começo.** MVP mais robusto no lançamento. Participa da semana 1 da rede pública, não como fase 2. Aumenta retenção imediata.
+3. ✅ **Preço alinha com modelo de estudo:** Boletim de opinião: 5% da receita dos 5 mercados de predição (precatórios, energia, carbono, etc). Enquete encomendada: 15% da receita (margem maior por risco de amostra limitada). Segue migração 132 (receita de estudo).
 
 ## O que falta construir, depois da decisão
 

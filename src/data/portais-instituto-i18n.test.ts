@@ -17,7 +17,7 @@ describe('portais do Instituto nas quatro línguas (V6)', () => {
     const rotasDados = PORTAIS_INSTITUTO.map(p => p.rota).sort()
     const rotasI18n = Object.keys(PORTAIS_I18N).sort()
     expect(rotasI18n).toEqual(rotasDados)
-    expect(rotasDados.length).toBe(8)
+    expect(rotasDados.length).toBe(16)
   })
 
   it('cada porta abre inteira nas quatro línguas, sem campo vazio', () => {

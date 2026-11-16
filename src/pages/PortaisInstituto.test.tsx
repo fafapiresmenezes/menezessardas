@@ -53,10 +53,10 @@ describe('portas do Instituto em desenvolvimento', () => {
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Esta porta não existe')
   })
 
-  it('a lista mostra as oito portas, cada uma com o seu estado', () => {
+  it('a lista mostra as dezesseis portas, cada uma com o seu estado', () => {
     render(<MemoryRouter><PortaisInstitutoPage /></MemoryRouter>)
     expect(screen.getByTestId('lista-portais').children.length).toBe(PORTAIS_INSTITUTO.length)
-    expect(PORTAIS_INSTITUTO.length).toBe(8)
+    expect(PORTAIS_INSTITUTO.length).toBe(16)
     for (const p of PORTAIS_INSTITUTO) expect(screen.getByText(p.nome), p.rota).toBeTruthy()
   })
 })

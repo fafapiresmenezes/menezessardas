@@ -5,17 +5,20 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { useIdiomaEscolhido } from '@/lib/i18n'
 import LoginPage from '@/pages/LoginPage'
 import BoasVindasPage from '@/pages/BoasVindasPage'
-const StokasticosPage = lazy(() => import('@/pages/StokasticosPage'))
+// Passo 3: Fechar /stokasticos conforme planejamento
+// const StokasticosPage = lazy(() => import('@/pages/StokasticosPage'))
 // Passo B7: as portas do Instituto que ainda estão em desenvolvimento, uma página por endereço.
 // Os oito endereços estão escritos à mão aqui, e não lidos de src/data/portais-instituto.ts, de
 // propósito: importar a lista no App.tsx puxaria o texto das oito páginas para o primeiro acesso.
 const PortalInstitutoPage = lazy(() => import('@/pages/PortalInstitutoPage'))
 const PortaisInstitutoPage = lazy(() => import('@/pages/PortaisInstitutoPage'))
-const FrentesDoInstitutoPage = lazy(() => import('@/pages/FrentesDoInstitutoPage'))
+// Passo 2: Fechar /frentes-do-instituto conforme planejamento
+// const FrentesDoInstitutoPage = lazy(() => import('@/pages/FrentesDoInstitutoPage'))
 // Passo T2: conferir a corrente do trilho no navegador de quem duvida.
 const LastroPage = lazy(() => import('@/pages/LastroPage'))
 const AreasPage = lazy(() => import('@/pages/AreasPage'))
-const CotasQuanticasPage = lazy(() => import('@/pages/CotasQuanticasPage'))
+// Passo 1: Fechar /cotas-quanticas conforme planejamento
+// const CotasQuanticasPage = lazy(() => import('@/pages/CotasQuanticasPage'))
 const AdmissaoPage = lazy(() => import('@/pages/AdmissaoPage'))
 const ExemplosPage = lazy(() => import('@/pages/ExemplosPage'))
 const RoyaltiesPage = lazy(() => import('@/pages/RoyaltiesPage'))
@@ -93,6 +96,7 @@ const EngenhariaPage = lazy(() => import('@/pages/EngenhariaPage'))
 const SaudePage = lazy(() => import('@/pages/SaudePage'))
 const ParametrosEscritaPage = lazy(() => import('@/pages/ParametrosEscritaPage'))
 const NavegadorPage = lazy(() => import('@/pages/NavegadorPage'))
+const BancadasColaborativasPage = lazy(() => import('@/pages/BancadasColaborativasPage'))
 
 // Com dois fatores ativos, a sessão só libera o sistema depois do código (nível aal2).
 async function segundoFatorOk() {
@@ -260,16 +264,19 @@ function App() {
           path="/boas-vindas"
           element={isAuthenticated ? <Navigate to="/inicio" /> : <BoasVindasPage />}
         />
-        <Route path="/stokasticos" element={<StokasticosPage />} />
+        {/* Passo 3: Fechar atalho /stokasticos da porta (escola de magia do caos) conforme planejamento */}
+        {/* <Route path="/stokasticos" element={<StokasticosPage />} />
         <Route path="/stokasticos/biblioteca" element={<StokasticosPage />} />
         <Route path="/stokasticos/blog" element={<StokasticosPage />} />
         <Route path="/stokasticos/ciencia" element={<StokasticosPage />} />
-        <Route path="/stokasticos/magia" element={<StokasticosPage />} />
+        <Route path="/stokasticos/magia" element={<StokasticosPage />} /> */}
         <Route path="/portais" element={<PortaisInstitutoPage />} />
-        <Route
+        <Route path="/bancadas-colaborativas" element={<BancadasColaborativasPage />} />
+        {/* Passo 2: Fechar /frentes-do-instituto (abre undefined) conforme planejamento */}
+        {/* <Route
           path="/frentes-do-instituto"
           element={isAuthenticated ? <FrentesDoInstitutoPage /> : <Navigate to="/login" />}
-        />
+        /> */}
         <Route path="/lastro" element={<LastroPage />} />
         <Route path="/exemplos" element={<ExemplosPage />} />
         <Route path="/admissao" element={<AdmissaoPage />} />
@@ -281,10 +288,19 @@ function App() {
         <Route path="/civico" element={<PortalInstitutoPage />} />
         <Route path="/ciberseguranca" element={<PortalInstitutoPage />} />
         <Route path="/quantum" element={<PortalInstitutoPage />} />
-        <Route
+        <Route path="/carbono" element={<PortalInstitutoPage />} />
+        <Route path="/petroleo" element={<PortalInstitutoPage />} />
+        <Route path="/psicologia" element={<PortalInstitutoPage />} />
+        <Route path="/psiquiatria" element={<PortalInstitutoPage />} />
+        <Route path="/biosseguranca" element={<PortalInstitutoPage />} />
+        <Route path="/transumanismo" element={<PortalInstitutoPage />} />
+        <Route path="/marketing" element={<PortalInstitutoPage />} />
+        <Route path="/publicidade" element={<PortalInstitutoPage />} />
+        {/* Passo 1: Fechar /cotas-quanticas conforme planejamento */}
+        {/* <Route
           path="/cotas-quanticas"
           element={isAuthenticated ? <CotasQuanticasPage /> : <Navigate to="/login" />}
-        />
+        /> */}
         <Route path="/ia" element={<PortalInstitutoPage />} />
         <Route
           path="/login"

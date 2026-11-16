@@ -50,12 +50,17 @@ describe('cabeçalhos de segurança do site', () => {
     expect(csp.match(/script-src[^;]*/)![0]).not.toContain('unsafe')
   })
 
-  it('só conversa com o nosso banco, e sempre por HTTPS', () => {
+  it('só conversa com o nosso banco, e sempre por HTTPS (exceto Ollama local)', () => {
     const csp = valor('Content-Security-Policy')
     expect(csp).toContain('connect-src')
     expect(csp).toContain('https://hlraekzvgxdpiiigdxdo.supabase.co')
     expect(csp).toContain('upgrade-insecure-requests')
-    expect(csp.match(/connect-src[^;]*/)![0]).not.toMatch(/\shttp:/)
+    // localhost:11434 é o Ollama local — roda no próprio computador do usuário, não sai pelo ar
+    expect(csp).toContain('http://localhost:11434')
+    // fora do localhost, nenhum endereço http: (sem barra) genérico é permitido
+    const conecta = csp.match(/connect-src[^;]*/)![0]
+    const httpEntradas = conecta.match(/\shttp:\/\/[^\s;]+/g) ?? []
+    for (const e of httpEntradas) expect(e.trim()).toBe('http://localhost:11434')
   })
 
   it('exige HTTPS por dois anos, com subdomínios', () => {

@@ -33,6 +33,15 @@ export const VERTENTES = [
   { id: 'civico', estado: 'em-estudo', rota: '/civico' },
   { id: 'quantum', estado: 'em-estudo', rota: '/quantum' },
   { id: 'ia', estado: 'em-teste', rota: '/ia' },
+  { id: 'aguas', estado: 'em-desenvolvimento', rota: '/agua' },
+  { id: 'carbono', estado: 'em-estudo', rota: '/carbono' },
+  { id: 'petroleo', estado: 'em-estudo', rota: '/petroleo' },
+  { id: 'psicologia', estado: 'em-estudo', rota: '/psicologia' },
+  { id: 'psiquiatria', estado: 'em-estudo', rota: '/psiquiatria' },
+  { id: 'biosseguranca', estado: 'em-estudo', rota: '/biosseguranca' },
+  { id: 'transumanismo', estado: 'em-estudo', rota: '/transumanismo' },
+  { id: 'marketing', estado: 'em-estudo', rota: '/marketing' },
+  { id: 'publicidade', estado: 'em-estudo', rota: '/publicidade' },
 ] as const satisfies readonly { id: string; estado: EstadoVertente; rota: string }[]
 
 export type IdVertente = (typeof VERTENTES)[number]['id']

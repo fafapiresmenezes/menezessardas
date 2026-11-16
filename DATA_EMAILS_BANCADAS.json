@@ -1,0 +1,81 @@
+{
+  "info_sobre_arquivo": "Adicione aqui os emails das 14 empresas já contactadas para reenvio do template de bancadas",
+  "ultima_atualizacao": "2026-11-15",
+  "instrucoes": "1. Preencha a array 'empresas_existentes' com os 14 emails\n2. Execute: python scripts/enviar-emails-bancadas.py --tipo reenvio --debug\n3. Depois: python scripts/enviar-emails-bancadas.py --tipo reenvio",
+
+  "empresas_existentes": [
+    "email1@empresa1.com",
+    "email2@empresa2.com",
+    "email3@empresa3.com",
+    "email4@empresa4.com",
+    "email5@empresa5.com",
+    "email6@empresa6.com",
+    "email7@empresa7.com",
+    "email8@empresa8.com",
+    "email9@empresa9.com",
+    "email10@empresa10.com",
+    "email11@empresa11.com",
+    "email12@empresa12.com",
+    "email13@empresa13.com",
+    "email14@empresa14.com"
+  ],
+
+  "empresas_ia_novos_contatos": [
+    {
+      "nome": "Anthropic",
+      "email": "contact@anthropic.com",
+      "foco": "Claude, pesquisa em LLMs"
+    },
+    {
+      "nome": "OpenAI",
+      "email": "research@openai.com",
+      "foco": "ChatGPT, pesquisa em IA"
+    },
+    {
+      "nome": "Google DeepMind",
+      "email": "research@deepmind.google.com",
+      "foco": "Gemini, pesquisa em IA avançada"
+    },
+    {
+      "nome": "Meta AI Research",
+      "email": "ai-research@meta.com",
+      "foco": "LLaMA, pesquisa em IA aberta"
+    },
+    {
+      "nome": "Hugging Face",
+      "email": "research@huggingface.co",
+      "foco": "Open source, models"
+    },
+    {
+      "nome": "Microsoft Research",
+      "email": "msr@microsoft.com",
+      "foco": "Copilot, pesquisa em IA"
+    }
+  ],
+
+  "template_bancadas": "Ver em src/lib/bancadas.ts - emailBancadasTemplate",
+  "template_ia": "Ver em src/lib/bancadas.ts - emailEmpresasIATemplate",
+
+  "areas_pesquisa_bancadas": [
+    "Predição Jurídica",
+    "Engenharia",
+    "Saúde",
+    "Ambiental",
+    "Cibersegurança",
+    "Quantum Computing",
+    "Serviços Sociais"
+  ],
+
+  "status_bancadas": {
+    "preparacao": "Preparação",
+    "aceitando": "Aceitando Inscrições",
+    "operacao": "Em Operação"
+  },
+
+  "contatos_principais": {
+    "email_geral": "contato@theye.club",
+    "email_bancadas": "bancadas@theye.club",
+    "site": "theye.club",
+    "cnpj": "34.028.316/0001-14"
+  }
+}

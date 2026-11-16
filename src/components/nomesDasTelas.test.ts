@@ -23,6 +23,14 @@ const SEM_MOLDURA = [
   '/governo',
   '/civico',
   '/quantum',
+  '/carbono',
+  '/petroleo',
+  '/psicologia',
+  '/psiquiatria',
+  '/biosseguranca',
+  '/transumanismo',
+  '/marketing',
+  '/publicidade',
   '/ia',
 ]
 

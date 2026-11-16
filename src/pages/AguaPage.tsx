@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
 import {
   GRANDEZAS, SEM_COLETA, atrasoMedio, caminho, coordenadas, dataBr, diasSemDado,
-  lerReservatorios, lerSerie, numeroBr, revisadas, variacao,
+  lerPainel, lerReservatorios, lerSerie, nowcasting30, numeroBr, revisadas, riscoHidrico, variacao,
 } from '@/lib/predicao/agua'
-import type { Ponto, Reservatorio, Subtipo } from '@/lib/predicao/agua'
+import type { PainelPonto, Ponto, Previsao, Reservatorio, Risco, Subtipo } from '@/lib/predicao/agua'
 
 const hoje = () => new Date().toISOString().slice(0, 10)
 const diasAtras = (n: number) => new Date(Date.now() - n * 86400000).toISOString().slice(0, 10)
@@ -22,12 +22,24 @@ export default function AguaPage() {
   const [serie, setSerie] = useState<Ponto[] | null>(null)
   const [erro, setErro] = useState<string | null>(null)
   const [carregando, setCarregando] = useState(true)
+  const [aba, setAba] = useState<'serie' | 'painel'>('serie')
+  const [painel, setPainel] = useState<PainelPonto[] | null>(null)
+  const [painelErro, setPainelErro] = useState<string | null>(null)
+  const [painelCarregando, setPainelCarregando] = useState(false)
 
   useEffect(() => {
     lerReservatorios()
       .then(l => { setReservatorios(l); setCodigo(l[0]?.chave_natural ?? ''); setCarregando(false) })
       .catch(e => { setErro((e as Error).message); setCarregando(false) })
   }, [])
+
+  useEffect(() => {
+    if (aba !== 'painel' || painel !== null) return
+    setPainelCarregando(true)
+    lerPainel()
+      .then(l => { setPainel(l); setPainelErro(null); setPainelCarregando(false) })
+      .catch(e => { setPainelErro((e as Error).message); setPainelCarregando(false) })
+  }, [aba, painel])
 
   useEffect(() => {
     if (!codigo) { setSerie(null); return }
@@ -42,6 +54,23 @@ export default function AguaPage() {
   const falta = serie ? diasSemDado(serie, de, ate) : 0
   const v = serie ? variacao(serie) : null
   const escolhido = reservatorios?.find(r => r.chave_natural === codigo)
+  const previsao = useMemo<Previsao[] | null>(
+    () => subtipo === 'volume_util' && serie && serie.length >= 14 ? nowcasting30(serie) : null,
+    [serie, subtipo],
+  )
+
+  const corRisco: Record<Risco, string> = {
+    critico: 'bg-critico text-white',
+    atencao: 'bg-atencao text-white',
+    normal: 'bg-green-600 text-white',
+    sem_dado: 'bg-grafite-claro text-grafite',
+  }
+  const labelRisco: Record<Risco, string> = {
+    critico: 'Crítico',
+    atencao: 'Atenção',
+    normal: 'Normal',
+    sem_dado: 'Sem dado',
+  }
 
   return (
     <Layout title="Água dos reservatórios (ANA)">
@@ -69,7 +98,58 @@ export default function AguaPage() {
           </p>
         </section>
 
-        <section className="bg-white shadow-sm p-6 grid gap-4 md:grid-cols-4">
+        <div className="flex gap-2">
+          <button
+            onClick={() => setAba('serie')}
+            title="Ver a série histórica de medições do reservatório selecionado"
+            className={`px-4 py-2 text-sm border ${aba === 'serie' ? 'bg-preto text-white border-preto' : 'border-grafite-claro text-grafite'}`}
+          >
+            Série histórica
+          </button>
+          <button
+            onClick={() => setAba('painel')}
+            title="Ver o painel de risco hídrico com todos os reservatórios"
+            className={`px-4 py-2 text-sm border ${aba === 'painel' ? 'bg-preto text-white border-preto' : 'border-grafite-claro text-grafite'}`}
+          >
+            Painel de risco
+          </button>
+        </div>
+
+        {aba === 'painel' && (
+          <section className="bg-white shadow-sm p-6 space-y-4">
+            <div>
+              <h2 className="font-serif text-xl">Risco hídrico — todos os reservatórios</h2>
+              <p className="text-sm text-grafite">Volume útil mais recente. Crítico: abaixo de 30%. Atenção: 30 a 50%. Normal: acima de 50%.</p>
+            </div>
+            {painelErro && <p className="text-sm text-critico">{painelErro}</p>}
+            {painelCarregando && <p className="text-sm text-grafite">Carregando painel…</p>}
+            {painel && !painel.length && (
+              <p className="text-sm text-atencao bg-atencaoFundo p-3">Nenhum reservatório com medição de volume útil coletada ainda.</p>
+            )}
+            {painel && painel.length > 0 && (
+              <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {painel.map(r => {
+                  const risco = riscoHidrico(r.valor)
+                  return (
+                    <div key={r.chave_natural} className="border border-grafite-claro p-3 space-y-1">
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="text-sm font-medium leading-tight">{r.nome}</span>
+                        <span className={`text-xs px-1.5 py-0.5 shrink-0 ${corRisco[risco]}`}>{labelRisco[risco]}</span>
+                      </div>
+                      <p className="text-xs text-grafite">{(r.atributos as { uf?: string | null })?.uf ?? '—'}</p>
+                      <p className="text-lg">
+                        {r.valor !== null ? `${numeroBr(r.valor)} %` : '—'}
+                      </p>
+                      {r.ocorrido_em && <p className="text-xs text-grafite">{dataBr(r.ocorrido_em)}</p>}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </section>
+        )}
+
+        <section className={`bg-white shadow-sm p-6 grid gap-4 md:grid-cols-4 ${aba === 'painel' ? 'hidden' : ''}`}>
           <label className="block text-sm">
             <span className="block mb-1 text-grafite">Reservatório</span>
             <select
@@ -122,7 +202,7 @@ export default function AguaPage() {
           </label>
         </section>
 
-        <section className="bg-white shadow-sm p-6 space-y-4">
+        {aba === 'serie' && <section className="bg-white shadow-sm p-6 space-y-4">
           <div>
             <h2 className="font-serif text-xl">
               {escolhido?.nome ?? 'Reservatório'} · {grandeza.nome}
@@ -194,7 +274,52 @@ export default function AguaPage() {
               {serie.length > 30 && <p className="text-xs text-grafite">A tabela mostra os 30 dias mais recentes; a linha mostra o período inteiro.</p>}
             </>
           )}
-        </section>
+
+          {previsao && previsao.length > 0 && (() => {
+            const p0 = previsao[0].valor
+            const p29 = previsao[previsao.length - 1].valor
+            const delta = p29 - (serie?.[serie.length - 1]?.valor ?? p0)
+            const sentido = delta > 0.5 ? '↑ tendência de alta' : delta < -0.5 ? '↓ tendência de queda' : '→ estável'
+            const corSentido = delta > 0.5 ? 'text-green-600' : delta < -0.5 ? 'text-critico' : 'text-grafite'
+            return (
+              <div className="mt-6 pt-4 border-t border-grafite-claro space-y-3">
+                <div>
+                  <h3 className="font-serif text-lg">Tendência 30 dias — modelo baseline</h3>
+                  <p className="text-sm text-grafite">
+                    Reta + ciclo semanal, calculada no navegador, sem enviar dados para fora.
+                    Intervalo de {Math.round(0.8 * 100)}% de confiança.
+                  </p>
+                </div>
+                <p className={`text-base font-medium ${corSentido}`}>{sentido}</p>
+                <table className="w-full text-sm">
+                  <caption className="text-left text-grafite pb-2">Próximos 7 dias (previsão)</caption>
+                  <thead>
+                    <tr className="text-left border-b border-grafite-claro">
+                      <th className="py-1">Dia</th>
+                      <th className="py-1">Previsto %</th>
+                      <th className="py-1">Baixo %</th>
+                      <th className="py-1">Alto %</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {previsao.slice(0, 7).map(p => (
+                      <tr key={p.quando} className="border-b border-pergaminho">
+                        <td className="py-1">{dataBr(p.quando)}</td>
+                        <td className="py-1">{numeroBr(Math.max(0, Math.min(100, p.valor)))}</td>
+                        <td className="py-1 text-grafite">{numeroBr(Math.max(0, p.baixo))}</td>
+                        <td className="py-1 text-grafite">{numeroBr(Math.min(100, p.alto))}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <p className="text-xs text-grafite">
+                  Isto é uma tendência estatística, não uma previsão do tempo do reservatório.
+                  Chuva, operação e demanda mudam o volume real. Use como orientação, nunca como verdade.
+                </p>
+              </div>
+            )
+          })()}
+        </section>}
       </div>
     </Layout>
   )

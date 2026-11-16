@@ -12,5 +12,5 @@ export default defineConfig({
       'https://esm.sh/pdf-lib@1.17.1': fileURLToPath(new URL('./supabase/functions/_testes/pdf-lib.ts', import.meta.url)),
     },
   },
-  test: { environment: 'node', exclude: ['e2e/**', 'node_modules/**', 'dist/**'] }, // e2e é do Playwright (npm run e2e)
+  test: { environment: 'jsdom', exclude: ['e2e/**', 'node_modules/**', 'dist/**'] }, // e2e é do Playwright (npm run e2e)
 })
