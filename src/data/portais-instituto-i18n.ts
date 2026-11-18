@@ -122,7 +122,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Cruzamento com a ficha do imóvel que o escritório já tem na plataforma',
         'Exportar o mapa e a lista de camadas usadas, com a data de cada fonte',
       ],
-      comoEsta: 'Levantamento das fontes públicas em andamento. Ainda não há mapa para usar.',
+      comoEsta: 'O MVP no próprio titular está no ar em /geo: posição, mapa, câmera como sensor de lugar, satélites e ficha do município, tudo cifrado só no aparelho.',
     },
     en: {
       nome: 'Geomapping',
@@ -132,7 +132,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Cross-reference with the property record the firm already has in the platform',
         'Export the map and the list of layers used, with the date of each source',
       ],
-      comoEsta: 'Survey of public sources in progress. There is no map to use yet.',
+      comoEsta: 'The MVP on the data subject themself is live at /geo: position, map, camera as a place sensor, satellites and the municipality record, all encrypted on the device only.',
     },
     zh: {
       nome: '地理图谱',
@@ -142,7 +142,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         '与事务所平台中已有的地产档案交叉比对',
         '可导出地图及所用图层清单,附每个来源的日期',
       ],
-      comoEsta: '公共数据源梳理进行中,尚无可用地图。',
+      comoEsta: '以数据主体本人为对象的 MVP 已在 /geo 上线:位置、地图、作为地点传感器的相机、卫星与市级档案,全部只在设备上加密保存。',
     },
     es: {
       nome: 'Geomapeo',
@@ -152,7 +152,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Cruce con la ficha del inmueble que el despacho ya tiene en la plataforma',
         'Exportar el mapa y la lista de capas usadas, con la fecha de cada fuente',
       ],
-      comoEsta: 'Relevamiento de las fuentes públicas en curso. Aún no hay mapa para usar.',
+      comoEsta: 'El MVP en el propio titular está en el aire en /geo: posición, mapa, cámara como sensor de lugar, satélites y ficha del municipio, todo cifrado solo en el aparato.',
     },
   },
   '/governo': {

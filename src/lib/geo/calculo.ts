@@ -25,7 +25,7 @@ export interface Lugar {
   id: string
   lat: number
   lon: number
-  nome: string         // dado pelo titular (casa, escritório, fórum); vazio = sem nome
+  nome: string         // dado pelo titular (casa, trabalho, academia); vazio = sem nome
   visitas: number
   minutos: number
 }
