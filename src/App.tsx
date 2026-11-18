@@ -11,6 +11,7 @@ import BoasVindasPage from '@/pages/BoasVindasPage'
 // Os oito endereços estão escritos à mão aqui, e não lidos de src/data/portais-instituto.ts, de
 // propósito: importar a lista no App.tsx puxaria o texto das oito páginas para o primeiro acesso.
 const PortalInstitutoPage = lazy(() => import('@/pages/PortalInstitutoPage'))
+const AgentesInstitutoPage = lazy(() => import('@/pages/AgentesInstitutoPage'))
 const PortaisInstitutoPage = lazy(() => import('@/pages/PortaisInstitutoPage'))
 // Passo 2: Fechar /frentes-do-instituto conforme planejamento
 const FrentesDoInstitutoPage = lazy(() => import('@/pages/FrentesDoInstitutoPage'))
@@ -312,6 +313,7 @@ function App() {
         <Route path="/marketing" element={<PortalInstitutoPage />} />
         <Route path="/publicidade" element={<PortalInstitutoPage />} />
         <Route path="/fundos-internacionais" element={<PortalInstitutoPage />} />
+        <Route path="/agentes-instituto" element={isAuthenticated ? <AgentesInstitutoPage /> : <Navigate to="/login" />} />
         {/* Passo 1: Fechar /cotas-quanticas conforme planejamento */}
         {/* <Route
           path="/cotas-quanticas"
