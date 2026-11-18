@@ -130,6 +130,7 @@ export const gruposMenu: GrupoMenu[] = [
 export const gruposProjectos: GrupoMenu[] = [
   { id: 'visao', titulo: '1. Visão', bloco: 'Visão', nivel: 'todos', dica: 'O estado de tudo num ecrã', itens: [
     { icon: Gauge, label: 'Visão do presidente', href: '/visao-presidente' },
+    { icon: FolderKanban, label: 'Carteira de projectos', href: '/carteira-projectos' },
   ] },
   { id: 'obra', titulo: '2. Obra', bloco: 'Obra', nivel: 'todos', dica: 'Medição e assinaturas por nível', itens: [
     { icon: Ruler, label: 'Medição de obra por nível', href: '/demonstracao-obra' },
@@ -226,6 +227,7 @@ export function atalhosDoMenu(escolhidos: string[] | undefined, v: Visao): Atalh
 // Autoexplicativo: ao passar o mouse em qualquer item do menu, uma frase diz para que a tela serve.
 export const DICAS: Record<string, string> = {
   '/visao-presidente': 'Todos os projectos num ecrã, com a cor de cada um, o contratado, o medido e os avisos a tratar',
+  '/carteira-projectos': 'Lista dos projectos por país e sector, com cor e avanço, e filtros para encontrar depressa',
   '/demonstracao-obra': 'Boletim de medição, assinaturas por nível e o que cada cargo vê, com dados de demonstração',
   '/inicio': 'A tela de entrada: o que fazer agora e todas as matérias do direito',
   '/meu-dia': 'O que vence hoje e nos próximos dias, separado por área do direito',
@@ -354,6 +356,7 @@ export const FRENTES: Frente[] = [
   { id: 'fundos', nome: "Plataforma, Governança, Fundos Internacionais", itens: [
     { icon: Building2, label: "Plataforma, Governança, Fundos Internacionais", href: '/fundos-internacionais' },
     { icon: Gauge, label: 'Visão do presidente', href: '/visao-presidente' },
+    { icon: FolderKanban, label: 'Carteira de projectos', href: '/carteira-projectos' },
     { icon: Ruler, label: 'Medição de obra por nível', href: '/demonstracao-obra' },
   ] },
   { id: 'ia', nome: 'IA e superinteligência', itens: [
