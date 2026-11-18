@@ -8,12 +8,13 @@
  */
 import { useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
-import { Eye, EyeOff, Gauge, PenLine, ShieldCheck, RotateCcw } from 'lucide-react'
+import { Eye, EyeOff, Gauge, Globe, PenLine, ShieldCheck, RotateCcw } from 'lucide-react'
 import {
   ESTACOES, descricaoNivel, filtrarItens, motivoParaNaoAssinar, podeVerItem, proximaEstacao, rotuloEstacao, rotuloNivel,
   type Passagem,
 } from '@/lib/hierarquiaCorporativa'
 import { calcularBoletim, desvioDeCronograma, semaforo, type Semaforo } from '@/lib/medicaoObra'
+import { JURISDICOES, rotuloTema } from '@/data/jurisdicoes'
 import { ALCADAS_DEMO, ITENS_DEMO, PESSOAS_DEMO, PROJETOS_DEMO, rotuloSetorDemo } from '@/data/demoObraAngola'
 
 const kz = (v: number) => `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 0 }).format(v)} Kz`
@@ -28,6 +29,8 @@ export default function DemoObraPage() {
   const [quemId, setQuemId] = useState('ceo')
   const [projetoId, setProjetoId] = useState('estrada')
   const [passagens, setPassagens] = useState(INICIAIS)
+  const [paisId, setPaisId] = useState('AO')
+  const pais = JURISDICOES.find(j => j.id === paisId)!
   const [aviso, setAviso] = useState<{ tipo: 'ok' | 'recusa'; texto: string } | null>(null)
 
   const quem = PESSOAS_DEMO.find(p => p.id === quemId)!
@@ -206,6 +209,33 @@ export default function DemoObraPage() {
               Outros {ITENS_DEMO.length - visiveis.length} documentos existem e não aparecem para este nível, nem na busca.
             </p>
           )}
+        </section>
+
+        <section className="bg-white p-6 shadow-sm" aria-labelledby="leis">
+          <h2 id="leis" className="text-lg font-serif font-semibold flex items-center gap-2">
+            <Globe size={18} className="text-dourado" aria-hidden="true" /> Leis e normas por país
+          </h2>
+          <p className="text-sm text-grafite mt-1">Cada país entra como uma ficha de dados. Acrescentar um país novo não exige programar.</p>
+          <div className="mt-4 flex flex-wrap gap-2" role="tablist" aria-label="País">
+            {JURISDICOES.map(j => (
+              <button key={j.id} type="button" role="tab" aria-selected={j.id === paisId} data-testid={`pais-${j.id}`}
+                onClick={() => setPaisId(j.id)} title={`Ver as leis e normas de ${j.nome}`}
+                className={`px-3 py-2 text-sm border ${j.id === paisId ? 'border-dourado bg-dourado/10 font-medium' : 'border-navy/15 hover:border-navy/40'}`}>
+                {j.nome}
+              </button>
+            ))}
+          </div>
+          <p className="text-sm text-grafite mt-4">Moeda: {pais.moeda} · Língua de trabalho: {pais.lingua}</p>
+          <ul className="mt-2 divide-y divide-navy/10 text-sm" data-testid="normas">
+            {pais.normas.map(n => (
+              <li key={n.referencia + n.nome} className="py-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span className="text-xs uppercase tracking-wide bg-navy/5 px-2 py-0.5">{rotuloTema[n.tema]}</span>
+                <span className="font-medium">{n.nome}</span>
+                <span className="text-grafite">{n.referencia}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="text-xs text-grafite-claro mt-3">Índice de partida. A versão em vigor de cada diploma é conferida pela equipa jurídica do país antes de qualquer uso.</p>
         </section>
       </div>
     </Layout>

@@ -40,4 +40,13 @@ describe('Medição de obra por nível (demonstração)', () => {
     expect(screen.getByTestId('resultado-assinatura').textContent).toContain('Liberação de pagamento registada')
     expect(screen.getByTestId('assinar').textContent).toBe('Boletim concluído')
   })
+
+  it('as leis vêm por país, como dados: Angola abre primeiro e a Namíbia troca a lista', () => {
+    render(<DemoObraPage />)
+    expect(screen.getByTestId('normas').textContent).toContain('Lei n.º 41/20')
+    fireEvent.click(screen.getByTestId('pais-NA'))
+    expect(screen.getByTestId('normas').textContent).toContain('Public Procurement Act')
+    fireEvent.click(screen.getByTestId('pais-GLOBAL'))
+    expect(screen.getByTestId('normas').textContent).toContain('FIDIC')
+  })
 })
