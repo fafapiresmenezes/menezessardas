@@ -347,7 +347,10 @@ export const FRENTES: Frente[] = [
   { id: 'transumanismo', nome: "Transumanismo", itens: [{ icon: FlaskConical, label: "Transumanismo", href: '/transumanismo' }] },
   { id: 'marketing', nome: "Marketing", itens: [{ icon: FlaskConical, label: "Marketing", href: '/marketing' }] },
   { id: 'publicidade', nome: "Publicidade", itens: [{ icon: FlaskConical, label: "Publicidade", href: '/publicidade' }] },
-  { id: 'fundos', nome: "Plataforma, Governança, Fundos Internacionais", itens: [{ icon: Building2, label: "Plataforma, Governança, Fundos Internacionais", href: '/fundos-internacionais' }] },
+  { id: 'fundos', nome: "Plataforma, Governança, Fundos Internacionais", itens: [
+    { icon: Building2, label: "Plataforma, Governança, Fundos Internacionais", href: '/fundos-internacionais' },
+    { icon: Ruler, label: 'Medição de obra por nível', href: '/demonstracao-obra' },
+  ] },
   { id: 'ia', nome: 'IA e superinteligência', itens: [
     { icon: FlaskConical, label: 'IA e superinteligência', href: '/ia' },
     { icon: FlaskConical, label: 'Agenda de pesquisa em IA', href: '/pesquisa-ia' },
