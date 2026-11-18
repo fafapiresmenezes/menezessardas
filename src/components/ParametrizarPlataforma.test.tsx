@@ -79,3 +79,20 @@ describe('tela grande de parametrizacao no primeiro acesso', () => {
     await screen.findByTestId('parametrizar-plataforma')
   })
 })
+
+describe('a tela grande nao cobre as telas que ela manda abrir', () => {
+  // M, 15/11/2026: "a parte de hierarquia nao esta funcionando, os botoes nao funcionam". Era esta
+  // tela por cima da Hierarquia: o clique no passo 1 levava para /hierarquia e ela continuava ali.
+  it('em /hierarquia a tela some e os botoes de la ficam livres', async () => {
+    perfil.mockResolvedValue('admin'); estado.mockResolvedValue({ feita: false, comCargo: 0 })
+    render(<MemoryRouter initialEntries={['/hierarquia']}><ParametrizarPlataforma /></MemoryRouter>)
+    await waitFor(() => expect(estado).toHaveBeenCalled())
+    await new Promise(r => setTimeout(r, 20))
+    expect(screen.queryByTestId('parametrizar-plataforma')).toBeNull()
+  })
+  it('no Inicio ela continua aparecendo ate a administracao dizer que terminou', async () => {
+    perfil.mockResolvedValue('admin'); estado.mockResolvedValue({ feita: false, comCargo: 0 })
+    render(<MemoryRouter initialEntries={['/inicio']}><ParametrizarPlataforma /></MemoryRouter>)
+    expect(await screen.findByTestId('parametrizar-plataforma')).toBeTruthy()
+  })
+})

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Network, Users, PenLine, Check } from 'lucide-react'
 import { perfilAtual } from '@/lib/equipe'
 import { estadoParametrizacao, marcarParametrizada } from '@/lib/parametrizacao'
@@ -20,6 +20,7 @@ export default function ParametrizarPlataforma() {
   const [aberto, setAberto] = useState(false)
   const [gravando, setGravando] = useState(false)
   const navigate = useNavigate()
+  const { pathname } = useLocation()
 
   useEffect(() => {
     let vivo = true
@@ -43,7 +44,10 @@ export default function ParametrizarPlataforma() {
     setAberto(false)
   }
 
-  if (!aberto) return null
+  // Nas três telas que ela manda abrir, a tela grande some: antes ela ficava por cima da Hierarquia e
+  // nenhum botão de lá respondia (M, 15/11/2026: "NENHUM BOTAO FUNCIONA"). Voltando ao Início, ela reaparece
+  // até a administração clicar em "Já parametrizei".
+  if (!aberto || PASSOS.some(p => pathname === p.rota || pathname.startsWith(`${p.rota}/`))) return null
 
   return (
     <div role="dialog" aria-modal="true" aria-labelledby="parametrizar-titulo" data-testid="parametrizar-plataforma"

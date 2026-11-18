@@ -216,8 +216,10 @@ export async function meuEscritorio(): Promise<MeuEscritorio | null> {
     const { data: e } = await supabase.from('escritorios').select('nome, nome_exibicao').eq('id', p.escritorio_id).maybeSingle()
     const nome = String(e?.nome_exibicao || e?.nome || '').trim()
     if (!nome) return null
+    // Sem a resposta do banco ninguém é tratado como Instituto: ser administração da casa principal (a Fátima,
+    // do Sardas e Menezes) não é administrar o Instituto. Só a lista instituto_admins (migração 118) decide isso.
     const sede = p.escritorio_id === SEDE_ID
-    return lembrar({ nome, sede, pessoa: String(p.nome_completo || p.email || ''), email: String(p.email || ''), instituto: sede && p.funcao === 'admin' })
+    return lembrar({ nome, sede, pessoa: String(p.nome_completo || p.email || ''), email: String(p.email || ''), instituto: false })
   } catch { return null }
 }
 
