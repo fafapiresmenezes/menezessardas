@@ -230,4 +230,16 @@ export const PORTAIS_INSTITUTO: PortalInstituto[] = [
     estado: 'estudo',
     comoEsta: "Pesquisa e desenho. Nenhuma tela para usar ainda.",
   },
+  {
+    rota: '/fundos-internacionais',
+    nome: "Plataforma, Governança, Fundos Internacionais",
+    resumo: "Governar projetos financiados por fundos internacionais: quem decide, o que foi medido e o que se presta de contas a cada financiador.",
+    escopo: [
+      "Governança do projeto: alçadas, conselho e quem aprova cada etapa, com a trilha de cada decisão",
+      "Prestação de contas ao financiador: medição, custo e prazo no formato que bancos de desenvolvimento e fundos pedem",
+      "Padrões socioambientais e de integridade exigidos por fundos internacionais, com a fonte de cada exigência",
+    ],
+    estado: 'prototipo',
+    comoEsta: "Protótipo. Trilha de auditoria, hierarquia e medições já funcionam dentro da plataforma; o espaço próprio desta frente está sendo montado.",
+  },
 ]
