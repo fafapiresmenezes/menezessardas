@@ -390,10 +390,10 @@ function App() {
           path="/previsoes"
           element={isAuthenticated ? <PrevisoesPage /> : <Navigate to="/login" />}
         />
-        <Route
-          path="/geolocalizacao"
-          element={isAuthenticated ? <SoInstituto><GeolocalizacaoPage /></SoInstituto> : <Navigate to="/login" />}
-        />
+        {/* Casa própria do geomapeamento (fase G): sem login jurídico; a porta é a senha do cofre
+            e os dados ficam só no aparelho. A rota antiga redireciona para cá. */}
+        <Route path="/geo" element={<GeolocalizacaoPage />} />
+        <Route path="/geolocalizacao" element={<Navigate to="/geo" replace />} />
         <Route
           path="/instituto"
           element={isAuthenticated ? <SoInstituto><InstitutoPage /></SoInstituto> : <Navigate to="/login" />}

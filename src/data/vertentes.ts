@@ -29,7 +29,7 @@ export const VERTENTES = [
   { id: 'saude', estado: 'em-desenvolvimento', rota: '/saude' },
   { id: 'educacao', estado: 'em-estudo', rota: '/educacao' },
   { id: 'ciberseguranca', estado: 'em-teste', rota: '/ciberseguranca' },
-  { id: 'geomapeamento', estado: 'em-estudo', rota: '/geomapeamento' },
+  { id: 'geomapeamento', estado: 'em-desenvolvimento', rota: '/geomapeamento' },
   { id: 'governo', estado: 'em-estudo', rota: '/governo' },
   { id: 'civico', estado: 'em-estudo', rota: '/civico' },
   { id: 'quantum', estado: 'em-estudo', rota: '/quantum' },

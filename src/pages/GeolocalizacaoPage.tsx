@@ -1,7 +1,7 @@
 // Fase G do plano mestre THEYE v4 (G1 a G7): MVP de geolocalização e geomapeamento feito no próprio titular (M).
 // Tudo fica cifrado neste aparelho. A câmera é sensor de lugar, nunca de rosto, emoção ou perfil.
 import { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react'
-import Layout from '@/components/Layout'
+import CasaGeo from '@/components/geo/CasaGeo'
 import { Cofre, TERMO, VERSAO_TERMO, cofreExiste, conferirCorrente, type Cena as CenaCamera, type DadosGeo } from '@/lib/geo/cofre'
 import { agruparLugares, detectarParadas, distancia, fmtMin, linhaDoTempo, preverProximo, resumoPeriodo, type Lugar, type Ponto } from '@/lib/geo/calculo'
 import { CAMADAS_PENDENTES, SATELITES, buscarCenas, camadasSatelite, municipioDe, ndviMedio, leituraNdvi, noticiasGdelt, tileNdvi, trilhaNoMunicipio, tilesDaCena, type Cena, type Municipio, type Noticia } from '@/lib/geo/fontes'
@@ -248,7 +248,7 @@ export default function GeolocalizacaoPage() {
   // ---------- Telas ----------
   if (!cofre || !dados) {
     return (
-      <Layout title="Geolocalização">
+      <CasaGeo>
         <div className="max-w-xl mx-auto space-y-4">
           <h1 className="text-2xl font-semibold text-navy">Geolocalização: MVP em você mesmo</h1>
           {msg && <p className="text-sm text-regular">{msg}</p>}
@@ -261,13 +261,13 @@ export default function GeolocalizacaoPage() {
             {erro && <p className="text-sm text-critico mt-2">{erro}</p>}
           </div>
         </div>
-      </Layout>
+      </CasaGeo>
     )
   }
 
   if (!dados.consentimento) {
     return (
-      <Layout title="Geolocalização">
+      <CasaGeo>
         <div className="max-w-2xl mx-auto space-y-4">
           <h1 className="text-2xl font-semibold text-navy">Antes de gravar: o termo</h1>
           <div className={cartao}>
@@ -278,12 +278,12 @@ export default function GeolocalizacaoPage() {
             <button className={botaoCheio + ' mt-3'} disabled={!titular.trim()} onClick={consentir} title="Registra o seu consentimento com data e com um código que prova que o registro não foi alterado (hash)"><ShieldCheck className="inline w-4 h-4 mr-1" />Li e aceito</button>
           </div>
         </div>
-      </Layout>
+      </CasaGeo>
     )
   }
 
   return (
-    <Layout title="Geolocalização">
+    <CasaGeo>
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h1 className="text-2xl font-semibold text-navy">Geolocalização e geomapeamento</h1>
@@ -351,7 +351,7 @@ export default function GeolocalizacaoPage() {
             </div>
             <div className={cartao + ' md:col-span-2'}>
               <h2 className="font-semibold text-navy">Lugares frequentes</h2>
-              <p className="text-xs text-grafite-claro mb-2">Paradas de 5 minutos ou mais num raio de 100 m viram um lugar. Dê um nome (casa, escritório, fórum).</p>
+              <p className="text-xs text-grafite-claro mb-2">Paradas de 5 minutos ou mais num raio de 100 m viram um lugar. Dê um nome (casa, trabalho, academia).</p>
               {calc.lugares.length === 0 ? <p className="text-sm text-grafite">Ainda não há paradas. Grave por algumas horas.</p> :
                 <ul className="space-y-2">{calc.lugares.map(l => <LinhaLugar key={l.id} l={l} onNome={n => nomear(l, n)} />)}</ul>}
             </div>
@@ -516,7 +516,7 @@ export default function GeolocalizacaoPage() {
           </div>
         )}
       </div>
-    </Layout>
+    </CasaGeo>
   )
 }
 
