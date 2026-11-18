@@ -102,6 +102,7 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: FlaskConical, label: "Transumanismo", href: '/transumanismo' },
     { icon: FlaskConical, label: "Marketing", href: '/marketing' },
     { icon: FlaskConical, label: "Publicidade", href: '/publicidade' },
+    { icon: Building2, label: "Plataforma, Governança, Fundos Internacionais", href: '/fundos-internacionais' },
     { icon: FlaskConical, label: 'IA e superinteligência', href: '/ia' },
     { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
     { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
@@ -288,6 +289,7 @@ export const DICAS: Record<string, string> = {
   '/biosseguranca': "Biossegurança: Normas de biossegurança e de pesquisa com organismos, só no lado da conformidade e da proteção.",
   '/transumanismo': "Transumanismo: Ética, direito e regulação do que une corpo e tecnologia, em pesquisa aberta e sem promessa.",
   '/marketing': "Marketing: Marketing com prova: o que se afirma tem fonte, e a lei de dados e de consumo fica à vista.",
+  '/fundos-internacionais': "Plataforma, Governança, Fundos Internacionais: Governar projetos financiados por fundos internacionais: quem decide, o que foi medido e o que se presta de contas a cada financiador.",
   '/publicidade': "Publicidade: Publicidade dentro da regra: o que o código de autorregulação e a lei de consumo permitem e proíbem.",
   '/ia': 'IA e superinteligência: modelos, agentes e consultores',
   '/consultores': 'Consultores de IA por nível e por especialidade',
@@ -345,6 +347,7 @@ export const FRENTES: Frente[] = [
   { id: 'transumanismo', nome: "Transumanismo", itens: [{ icon: FlaskConical, label: "Transumanismo", href: '/transumanismo' }] },
   { id: 'marketing', nome: "Marketing", itens: [{ icon: FlaskConical, label: "Marketing", href: '/marketing' }] },
   { id: 'publicidade', nome: "Publicidade", itens: [{ icon: FlaskConical, label: "Publicidade", href: '/publicidade' }] },
+  { id: 'fundos', nome: "Plataforma, Governança, Fundos Internacionais", itens: [{ icon: Building2, label: "Plataforma, Governança, Fundos Internacionais", href: '/fundos-internacionais' }] },
   { id: 'ia', nome: 'IA e superinteligência', itens: [
     { icon: FlaskConical, label: 'IA e superinteligência', href: '/ia' },
     { icon: FlaskConical, label: 'Agenda de pesquisa em IA', href: '/pesquisa-ia' },
