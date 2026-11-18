@@ -13,6 +13,7 @@ import { ClipboardCheck, Camera, FileDown, Coins, Plus, Receipt } from 'lucide-r
 import { lerNumero } from '@/lib/numero'
 import { abrirEmNovaAba } from '@/lib/abrirAba'
 import Vazio from '@/components/Vazio'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 
 const cartao = 'bg-white shadow-sm p-5 border-t-2 border-dourado'
 const botao = 'min-h-[44px] px-4 text-sm border border-navy text-navy bg-white'
@@ -21,6 +22,7 @@ const campo = 'min-h-[44px] w-full border border-navy/20 px-3 text-sm bg-white'
 const mesAtual = () => new Date().toISOString().slice(0, 7)
 
 export default function AdministracaoPage() {
+  const escritorio = useNomeEscritorio()
   const [contratos, setContratos] = useState<Contrato[]>([])
   const [imoveis, setImoveis] = useState<Imovel[]>([])
   const [contratoId, setContratoId] = useState('')
@@ -96,7 +98,7 @@ export default function AdministracaoPage() {
     if (error) { setErro(mensagemAmigavel(error)); return }
     setMsg(`Repasse de ${brl(prestacao.saldoRepasse)} registrado.`); await carregar(contrato.id)
   }
-  const cab = { imovel: imovel ? `${imovel.endereco}, ${imovel.cidade}/${imovel.uf}` : '—', proprietario: imovel?.proprietario ?? '—', inquilino: contrato?.parte ?? '—' }
+  const cab = { escritorio, imovel: imovel ? `${imovel.endereco}, ${imovel.cidade}/${imovel.uf}` : '—', proprietario: imovel?.proprietario ?? '—', inquilino: contrato?.parte ?? '—' }
   const baixarPrestacao = () => baixarArquivo(`prestacao-de-contas-${competencia.slice(0, 7)}.pdf`, pdfPrestacao(prestacao, cab, taxaPct), 'application/pdf')
 
   // Vistoria

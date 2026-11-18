@@ -87,6 +87,10 @@ export default function Layout({ children, title }: LayoutProps) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const visao: Visao = { veTudo, admin, instituto: escritorio?.instituto === true, sede }
+  // 18/11/2026 (M): o escritório cliente vê a própria marca no menu, nunca a do Instituto. Sem logo cadastrado,
+  // entra o nome do escritório; a marca THEYE fica só para quem administra o Instituto.
+  const marcaVisivel: MarcaEscritorio | null = marca ?? (!visao.instituto && escritorio
+    ? { nome: escritorio.advocacia || escritorio.nome, cor: '', logo_url: null, sede: true } : null)
   const gruposDaPessoa = gruposVisiveis(visao)
   // Cada frente do Instituto é uma plataforma à parte: dentro dela, o menu do direito some.
   const frente = frenteDe(pathname)
@@ -183,10 +187,10 @@ export default function Layout({ children, title }: LayoutProps) {
       >
         <div className="p-4 border-b border-white/10 flex items-center justify-between gap-2">
           {menuAberto ? (
-            <Marca className="flex-1 min-w-0" marca={marca} />
+            <Marca className="flex-1 min-w-0" marca={marcaVisivel} />
           ) : (
             <span className="font-serif text-dourado tracking-widest text-lg mx-auto" aria-hidden="true">
-              {marca ? marca.nome.slice(0, 2).toUpperCase() : 'TH'}
+              {marcaVisivel ? marcaVisivel.nome.slice(0, 2).toUpperCase() : 'TH'}
             </span>
           )}
           <button
@@ -366,7 +370,7 @@ export default function Layout({ children, title }: LayoutProps) {
             <LogOut size={19} className="flex-shrink-0" />
             {menuAberto && <span className="text-sm">Sair</span>}
           </button>
-          {menuAberto && (
+          {menuAberto && visao.instituto && (
             <p className="text-[11px] text-white/70 px-4 text-center">
               Desenvolvido pelo<br />
               THEYE Institute<br />
@@ -447,6 +451,7 @@ export default function Layout({ children, title }: LayoutProps) {
                       impressão de que o Instituto é só a parte jurídica. Este item leva a uma tela
                       com todas as áreas, sem mudar o /inicio em si (a Dra. Fátima continua caindo
                       direto no dela todo dia). */}
+                  {visao.instituto && (
                   <button
                     onClick={() => { setMaisAberto(false); navigate('/areas') }}
                     className="w-full flex items-center gap-3 min-h-[44px] px-3 text-sm text-navy hover:bg-navy/5 text-left"
@@ -457,6 +462,7 @@ export default function Layout({ children, title }: LayoutProps) {
                     <Compass size={16} aria-hidden="true" />
                     Trocar de área
                   </button>
+                  )}
                   {/* Passo A27: o laboratório é do Instituto, não do escritório cliente: só aparece para quem entra pelo Instituto. */}
                   {admin && visao.instituto && (
                     <button

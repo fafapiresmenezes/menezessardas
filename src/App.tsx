@@ -199,7 +199,7 @@ function App() {
         />
         <Route
           path="/medicoes"
-          element={isAuthenticated ? <MedicoesContratosPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><MedicoesContratosPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/superficie-de-ataque"
@@ -449,11 +449,11 @@ function App() {
         />
         <Route
           path="/laboratorio-admin"
-          element={isAuthenticated ? <LaboratorioAdminPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><LaboratorioAdminPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/areas"
-          element={isAuthenticated ? <AreasPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><AreasPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/enquetes"
@@ -512,7 +512,7 @@ function App() {
           element={isAuthenticated ? <ConfiguraçõesPage /> : <Navigate to="/login" />}
         />
         <Route path="/" element={<ParaOnde autenticado={isAuthenticated} logado="/inicio" />} />
-        <Route path="*" element={<ParaOnde autenticado={isAuthenticated} logado="/dashboard" substituir />} />
+        <Route path="*" element={<ParaOnde autenticado={isAuthenticated} logado="/inicio" substituir />} />
       </Routes>
       </Suspense>
       </ProtecaoRotas>

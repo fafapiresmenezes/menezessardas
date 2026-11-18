@@ -6,9 +6,8 @@ import { estadoParametrizacao, marcarParametrizada } from '@/lib/parametrizacao'
 
 // Tela grande do primeiro acesso de quem administra o escritório (pedido de M, 13/11/2026).
 // Só aparece para a administração, só enquanto o escritório não foi parametrizado, e some para
-// sempre quando a administração diz que terminou. "Depois" fecha só nesta visita: a tela volta no
-// próximo acesso enquanto a hierarquia não estiver definida, porque sem ela a privacidade por
-// advogado fica desligada e todo mundo do escritório vê tudo.
+// sempre quando a administração diz que terminou. "Agora não" fecha só nesta visita: a tela volta no
+// próximo acesso até alguém clicar em "Já parametrizei". Sem cargo, cada pessoa vê só o que é seu.
 
 const PASSOS = [
   { icone: Network, rota: '/hierarquia', titulo: 'Defina a hierarquia', texto: 'Diga quem é sócio, quem é gestor e quem é pleno ou júnior. É isto que faz cada advogado ver só os seus processos, e sócios e gestor verem os do escritório inteiro.' },
@@ -85,13 +84,13 @@ export default function ParametrizarPlataforma() {
               <Check size={16} aria-hidden="true" />{gravando ? 'Guardando…' : 'Já parametrizei'}
             </button>
             <button type="button" onClick={depois} data-testid="parametrizar-depois"
-              title="Fecha só por agora; a tela volta no próximo acesso enquanto a hierarquia não estiver definida"
+              title="Fecha só por agora; a tela volta no próximo acesso até alguém clicar em ‘Já parametrizei’"
               className="min-h-[44px] px-6 border border-white/40 text-sm uppercase tracking-wider">
               Agora não
             </button>
           </div>
           <p className="text-white/50 text-xs mt-4">
-            Enquanto a hierarquia não estiver definida, todas as pessoas liberadas do escritório veem todos os processos.
+            Enquanto a hierarquia não estiver definida, cada pessoa vê só os próprios processos e os que ainda não têm responsável. Sócios e gestor só passam a ver o conjunto depois de receberem o cargo.
           </p>
         </div>
       </div>

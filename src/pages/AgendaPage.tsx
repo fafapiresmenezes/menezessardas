@@ -14,6 +14,7 @@ import { baixarICS, lerIcs } from '@/lib/ics'
 import { gerarPdfTexto, quebrar } from '@/lib/pdfSimples'
 import { formatarData, situacaoPorPrazo, textoPrazo, isoLocal } from '@/lib/datas'
 import { CalendarDays, ChevronLeft, ChevronRight, Download, Mail, ExternalLink, Plus, X } from 'lucide-react'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 
 const MESES = [
   'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
@@ -30,6 +31,7 @@ const corPonto: Record<string, string> = {
 }
 
 export default function AgendaPage() {
+  const escritorio = useNomeEscritorio()
   // Privacidade por advogado: prazos de casos e parcelas de honorários já vêm filtrados do useAlertas;
   // aqui só se diz à pessoa o que ela está vendo. Vencimentos de contrato, reajustes e compromissos do
   // calendário são da carteira de locação e valem para o escritório inteiro.
@@ -222,7 +224,7 @@ export default function AgendaPage() {
   // Passo 124: os próximos 7 dias em texto, para colar no Outlook ou no WhatsApp.
   // Passo 124: estados movidos para antes do retorno de 'Carregando' (hooks sempre na mesma ordem; corrige a tela branca da Agenda)
   const copiarSemana = async () => {
-    const t = ['Próximos 7 dias — THEYE Institute', ...(semana.length ? semana.map(a => `• ${formatarData(a.dataEvento)} — ${a.titulo} (${a.imovel})`) : ['Nenhum compromisso.'])].join('\n')
+    const t = [`Próximos 7 dias — ${escritorio}`, ...(semana.length ? semana.map(a => `• ${formatarData(a.dataEvento)} — ${a.titulo} (${a.imovel})`) : ['Nenhum compromisso.'])].join('\n')
     try { await navigator.clipboard.writeText(t); setSemanaCopiada(true); setTimeout(() => setSemanaCopiada(false), 2500) } catch { /* sem área de transferência */ }
   }
   const irParaHoje = () => { setAno(hoje.getFullYear()); setMes(hoje.getMonth()) }

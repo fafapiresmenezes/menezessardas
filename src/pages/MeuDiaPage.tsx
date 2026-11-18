@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { nomeDaTela, gruposVisiveis, type Visao } from '@/components/menuTelas'
+import { minhaVisao } from '@/lib/visao'
 import { useBaixado } from '@/hooks/useBaixado'
 import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
@@ -15,17 +17,18 @@ import { meuAlcance, filtrarPorHierarquia, ALCANCE_FECHADO } from '@/lib/hierarq
 // O papel escolhido define a ordem e os atalhos; os dados são os mesmos para todos (respeitando o sigilo).
 // Consultor da semana: cada papel lê o diagnóstico gerado toda segunda-feira pelo consultor do seu nível.
 const NIVEL_DO_PAPEL: Record<string, string> = { socia: 'nivel_socio_gestor', advogada: 'nivel_pleno', estagiario: 'nivel_estagiario', secretaria: 'nivel_secretaria', financeiro: 'nivel_financeiro' }
-const PAPEIS: Record<string, { nome: string; foco: string; atalhos: { rotulo: string; href: string }[] }> = {
+// Os atalhos levam o NOME do menu (nomeDaTela) e só aparecem para quem pode ver a tela (gruposVisiveis).
+const PAPEIS: Record<string, { nome: string; foco: string; atalhos: { href: string }[] }> = {
   socia: { nome: 'Sócia', foco: 'Visão da carteira, riscos e decisões que só você toma.', atalhos: [
-    { rotulo: 'Indicadores e OKRs', href: '/indicadores' }, { rotulo: 'Previsões e riscos', href: '/previsoes' }, { rotulo: 'Consumo e custos', href: '/consumo' }, { rotulo: 'Mercado jurídico', href: '/mercado' }] },
+    { href: '/indicadores' }, { href: '/previsoes' }, { href: '/consumo' }, { href: '/relatorios' }] },
   advogada: { nome: 'Advogada', foco: 'Prazos, intimações e peças do dia.', atalhos: [
-    { rotulo: 'Assistente jurídico (redigir peça)', href: '/assistente' }, { rotulo: 'Lançar horas', href: '/horas' }, { rotulo: 'Modelos de peças', href: '/modelos' }, { rotulo: 'Intimações', href: '/intimacoes' }, { rotulo: 'Fontes do advogado', href: '/fontes' }, { rotulo: 'Checar contraparte', href: '/kyc' }] },
+    { href: '/assistente' }, { href: '/horas' }, { href: '/modelos' }, { href: '/intimacoes' }, { href: '/fontes' }, { href: '/kyc' }] },
   estagiario: { nome: 'Estagiário ou paralegal', foco: 'Tarefas atribuídas a você e pesquisas.', atalhos: [
-    { rotulo: 'Projetos e tarefas', href: '/projetos' }, { rotulo: 'Legislação', href: '/legislacao' }, { rotulo: 'Fontes do advogado', href: '/fontes' }, { rotulo: 'Imóveis e documentos', href: '/imoveis' }] },
+    { href: '/projetos' }, { href: '/legislacao' }, { href: '/fontes' }, { href: '/imoveis' }] },
   secretaria: { nome: 'Secretária', foco: 'Agenda, vencimentos e documentos a cobrar.', atalhos: [
-    { rotulo: 'Agenda', href: '/agenda' }, { rotulo: 'Alertas', href: '/alertas' }, { rotulo: 'Fornecedores', href: '/fornecedores' }, { rotulo: 'Novo imóvel', href: '/imoveis/novo' }] },
+    { href: '/agenda' }, { href: '/alertas' }, { href: '/fornecedores' }, { href: '/imoveis' }] },
   financeiro: { nome: 'Financeiro', foco: 'Reajustes, recebíveis e custos.', atalhos: [
-    { rotulo: 'Horas e honorários', href: '/horas' }, { rotulo: 'Relatórios', href: '/relatorios' }, { rotulo: 'Consumo e custos', href: '/consumo' }, { rotulo: 'Indicadores', href: '/indicadores' }, { rotulo: 'Alertas de reajuste', href: '/alertas' }] },
+    { href: '/honorarios' }, { href: '/relatorios' }, { href: '/consumo' }, { href: '/indicadores' }, { href: '/alertas' }] },
 }
 // Resumo semanal (Passo 14): gerado toda segunda 8h pelo Edge resumo-semanal e enviado por e-mail; aqui cada função vê a sua parte.
 const SECAO_DO_PAPEL: Record<string, 'socia' | 'advogada' | 'secretaria'> = { socia: 'socia', advogada: 'advogada', estagiario: 'advogada', secretaria: 'secretaria', financeiro: 'socia' }
@@ -48,6 +51,9 @@ const fmt = (d: string) => new Date(`${d}T12:00`).toLocaleDateString('pt-BR')
 
 export default function MeuDiaPage() {
   const [papel, setPapel] = useState(() => { try { return localStorage.getItem('lsm-papel') || 'advogada' } catch { return 'advogada' } })
+  const [visao, setVisao] = useState<Visao>({ veTudo: false, admin: false, instituto: false, sede: true })
+  useEffect(() => { minhaVisao().then(setVisao).catch(() => undefined) }, [])
+  const telasPermitidas = new Set(gruposVisiveis(visao).flatMap(g => g.itens.map(i => i.href)))
   const [tarefas, setTarefas] = useState<{ id: string; titulo: string; prazo: string | null; prioridade: string; area: string | null }[]>([])
   const [intimacoes, setIntimacoes] = useState(0)
   const [vencendo, setVencendo] = useState<{ id: string; imovel_id: string; locatario_fornecedor: string; data_vencimento: string }[]>([])
@@ -117,6 +123,9 @@ export default function MeuDiaPage() {
     })()
   }, [])
   const p = PAPEIS[papel]
+  const atalhosDoPapel = p.atalhos
+    .filter(a => telasPermitidas.has(a.href))
+    .map(a => ({ href: a.href, rotulo: nomeDaTela(a.href) ?? a.href }))
   const cartao = 'bg-white shadow-sm p-5'
   // Passo 109: o dia em texto (tarefas, intimações, contratos vencendo), para colar na agenda ou mandar à sócia.
   const copiarDia = () => {
@@ -143,7 +152,7 @@ export default function MeuDiaPage() {
           </div>
           <p className="text-sm text-grafite-claro mt-2">{p.foco}</p>
           <div className="flex flex-wrap gap-2 mt-3">
-            {p.atalhos.map(a => <Link key={a.href + a.rotulo} to={a.href} title={`Abre ${a.rotulo}, um atalho da visão de ${p.nome}`} className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy text-navy">{a.rotulo}</Link>)}
+            {atalhosDoPapel.map(a => <Link key={a.href} to={a.href} title={`Abre ${a.rotulo}, um atalho da visão de ${p.nome}`} className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy text-navy">{a.rotulo}</Link>)}
             <button type="button" onClick={() => { copiarDia(); setDiaCopiado(true) }} data-testid="copiar-dia" title="Copia o seu dia em texto (tarefas, intimações e contratos vencendo) para colar na agenda ou enviar" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy">{diaCopiado ? 'Dia copiado' : 'Copiar meu dia'}</button>
             {/* Passo 140: imprimir o dia em uma página. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-dia" title="Abre a janela de impressão do navegador para imprimir o seu dia em uma página" className="min-h-[44px] inline-flex items-center px-4 text-sm border border-navy/20 text-navy print:hidden">Imprimir</button>

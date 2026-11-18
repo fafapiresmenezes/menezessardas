@@ -34,8 +34,7 @@ describe('mapa das telas em hierarquia', () => {
     }
     // Escritório de fora da casa principal não tem imóveis, fornecedores, alertas nem a tela do Instituto.
     const fora = gruposVisiveis({ veTudo: true, admin: true, instituto: false, sede: false }).flatMap(g => g.itens.map(i => i.href))
-    for (const h of ['/imoveis', '/fornecedores', '/alertas', '/instituto']) expect(fora).not.toContain(h)
-    expect(fora).toContain('/administracao')
+    for (const h of ['/imoveis', '/administracao', '/fornecedores', '/alertas', '/instituto', '/medicoes']) expect(fora).not.toContain(h)
   })
 
   it('o menu simples respeita a escolha e a ordem da pessoa, sem repetir e sem mostrar o que ela não pode ver', () => {

@@ -94,7 +94,7 @@ export default function HierarquiaPage() {
             <section className="bg-dourado/10 p-6 shadow-sm border-l-4 border-dourado" aria-labelledby="o-que-e">
               <h2 id="o-que-e" className="text-lg font-serif font-semibold flex items-center gap-2">
                 <Crown size={18} className="text-dourado" aria-hidden="true" />
-                Fátima: defina aqui o cargo de cada pessoa
+                Defina aqui o cargo de cada pessoa
               </h2>
               <p className="text-sm text-grafite mt-2">
                 O cargo decide o que cada pessoa <strong>enxerga</strong> na plataforma. A função (administração, operação, leitura),

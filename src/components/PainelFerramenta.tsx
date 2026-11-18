@@ -2,10 +2,12 @@
 import { useState } from 'react'
 import { Copy, Check, Download } from 'lucide-react'
 import { rodar, valoresPadrao, type Ferramenta, type Valores } from '@/lib/ferramentas/catalogo'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 
 const entrada = 'w-full border border-navy/20 px-3 py-2 min-h-[44px] bg-white text-grafite focus:outline-none focus:ring-2 focus:ring-dourado'
 
 export default function PainelFerramenta({ ferramenta }: { ferramenta: Ferramenta }) {
+  const escritorio = useNomeEscritorio()
   const [valores, setValores] = useState<Valores>(() => valoresPadrao(ferramenta))
   const [saida, setSaida] = useState<ReturnType<typeof rodar> | null>(null)
   const [copiado, setCopiado] = useState(false)
@@ -16,7 +18,7 @@ export default function PainelFerramenta({ ferramenta }: { ferramenta: Ferrament
     try { await navigator.clipboard.writeText(textoSaida); setCopiado(true) } catch { setCopiado(false) }
   }
   const baixar = () => {
-    const url = URL.createObjectURL(new Blob([`${ferramenta.nome}\n\n${textoSaida}\n\nTHEYE Institute — Suporte Jurídico\n`], { type: 'text/plain;charset=utf-8' }))
+    const url = URL.createObjectURL(new Blob([`${ferramenta.nome}\n\n${textoSaida}\n\n${escritorio}\n`], { type: 'text/plain;charset=utf-8' }))
     const a = document.createElement('a'); a.href = url; a.download = `${ferramenta.id}.txt`; a.click(); URL.revokeObjectURL(url)
   }
 

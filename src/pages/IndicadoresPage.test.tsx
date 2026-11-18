@@ -101,7 +101,7 @@ describe('Indicadores', () => {
     fireEvent.click(screen.getByTestId('copiar-revisoes'))
     await waitFor(() => expect(write).toHaveBeenCalled())
     const linhas = write.mock.calls[0][0].split('\n')
-    expect(linhas[0]).toBe('Revisões de OKR — THEYE Institute'); expect(linhas[1]).toContain(`2026-T3 ·`); expect(linhas[1]).toContain(`SHA-256 ${'c'.repeat(64)} · OTS`); expect(linhas[2].endsWith('d'.repeat(64))).toBe(true)
+    expect(linhas[0]).toMatch(/^Revisões de OKR — \S/); expect(linhas[0]).not.toContain('THEYE Institute'); expect(linhas[1]).toContain(`2026-T3 ·`); expect(linhas[1]).toContain(`SHA-256 ${'c'.repeat(64)} · OTS`); expect(linhas[2].endsWith('d'.repeat(64))).toBe(true)
     fireEvent.click(screen.getByTestId('okr-gravar'))
     expect(screen.getByTestId('okr-msg').textContent).toBe('Escreva a ata da revisão (pelo menos 20 caracteres).')
     expect(insert).not.toHaveBeenCalled()

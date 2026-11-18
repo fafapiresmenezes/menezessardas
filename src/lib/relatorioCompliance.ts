@@ -10,6 +10,8 @@ export interface DadosRelatorio {
   pilares: { nome: string; nota: number | null }[]
   lacunas: { pilar: string; acao: string; base: string; v: number }[]
   codigo: string
+  /** Nome do escritório que emite o relatório (cabeçalho); sem ele, 'Escritório'. */
+  escritorio?: string
 }
 export interface RelatorioSelado { pdf: Uint8Array; sha256: string; ots: Uint8Array | null; calendario: string | null; nomeBase: string }
 
@@ -19,7 +21,7 @@ const cinza: [number, number, number] = [0.4, 0.4, 0.4]
 export function linhasDoRelatorio(d: DadosRelatorio, hoje = new Date()): Parameters<typeof gerarPdfTexto>[1] {
   const dia = (n: number) => { const x = new Date(hoje); x.setDate(x.getDate() + n); return x.toLocaleDateString('pt-BR') }
   const L: Parameters<typeof gerarPdfTexto>[1] = [
-    { texto: 'THEYE Institute', tamanho: 16, negrito: true, cor: [0.08, 0.13, 0.24] },
+    { texto: d.escritorio || 'Escritório', tamanho: 16, negrito: true, cor: [0.08, 0.13, 0.24] },
     { texto: `Diagnóstico de integridade (compliance) · ${d.empresa || 'Cliente'}`, tamanho: 12, negrito: true },
     { texto: `Emitido em ${hoje.toLocaleDateString('pt-BR')} · Base: Decreto 11.129/2022, art. 57 (Lei 12.846/2013) e LGPD`, tamanho: 8, cor: cinza },
     { texto: ' ', tamanho: 6 },

@@ -25,6 +25,7 @@ import { Printer, ShieldCheck, ShieldAlert, Link2, Anchor, Download, FileDown } 
 import { exportarTrilhaPeriodo } from '@/lib/exportarTrilha'
 import { hojeLocal, isoLocal } from '@/lib/datas'
 import Vazio from '@/components/Vazio'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 
 const rotuloTipo: Record<TipoEvento, string> = {
   imovel_criado: 'Imóvel cadastrado',
@@ -64,6 +65,7 @@ const dataHora = (iso: string) =>
   new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
 
 export default function TrilhaPage() {
+  const escritorio = useNomeEscritorio()
   const [eventos, setEventos] = useState<EventoTrilha[]>([])
   const [verificacao, setVerificacao] = useState<ResultadoVerificacao | null>(null)
   const [carregando, setCarregando] = useState(true)
@@ -81,7 +83,7 @@ export default function TrilhaPage() {
   const exportarPeriodo = async () => {
     setExportando(true); setMsg(null); setExportacao(null)
     try {
-      const r = await exportarTrilhaPeriodo(periodo.de, periodo.ate)
+      const r = await exportarTrilhaPeriodo(periodo.de, periodo.ate, escritorio)
       baixarArquivo(`${r.nomeBase}.pdf`, r.pdf, 'application/pdf')
       if (r.ots) setTimeout(() => baixarArquivo(`${r.nomeBase}.pdf.ots`, r.ots!), 400)
       setExportacao({ sha256: r.sha256, total: r.total, calendario: r.calendario })
@@ -229,7 +231,7 @@ export default function TrilhaPage() {
               <p className={`text-sm mt-3 ${atrasado ? 'text-atencao' : 'text-regular'}`} data-testid="estado-selo">
                 {ancoragens.length} selo(s) ancorado(s). Último há {horas < 1 ? 'menos de 1 hora' : `${horas} hora(s)`} ({dataHora(ult.em)}){atrasado ? '. O selo diário deveria ter rodado; use "Ancorar selo agora".' : '. O selo diário está em dia.'}
                 {/* Passo 113: o último selo em texto (data e código), para colar no e-mail do auditor. */}
-                <button type="button" data-testid="copiar-selo" title="Copia o último selo (data e código SHA-256) em texto, para colar no e-mail do auditor" onClick={() => navigator.clipboard?.writeText(`Selo blockchain da trilha · THEYE Institute\nAncorado em: ${dataHora(ult.em)}\nSelo (SHA-256): ${ult.selo}\nTotal de selos ancorados: ${ancoragens.length}\nConferência pública: opentimestamps.org`).catch(() => undefined)} className="ml-3 underline text-navy">copiar último selo</button>
+                <button type="button" data-testid="copiar-selo" title="Copia o último selo (data e código SHA-256) em texto, para colar no e-mail do auditor" onClick={() => navigator.clipboard?.writeText(`Selo blockchain da trilha · ${escritorio}\nAncorado em: ${dataHora(ult.em)}\nSelo (SHA-256): ${ult.selo}\nTotal de selos ancorados: ${ancoragens.length}\nConferência pública: opentimestamps.org`).catch(() => undefined)} className="ml-3 underline text-navy">copiar último selo</button>
               </p>
             )
           })()}

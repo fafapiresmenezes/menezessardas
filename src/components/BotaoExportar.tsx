@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Download } from 'lucide-react'
 import { lerTabela, paraCsv, paraPdf, nomeArquivo, type Grade } from '@/lib/exportarTabela'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 
 // Passo 61: em qualquer tela com tabela, "Exportar" baixa a tabela em CSV (Excel) ou PDF.
 function baixar(dados: BlobPart, tipo: string, nome: string) {
@@ -15,6 +16,7 @@ export default function BotaoExportar() {
   const [tabelas, setTabelas] = useState<Grade[]>([])
   const [aberto, setAberto] = useState(false)
   const caixa = useRef<HTMLDivElement>(null)
+  const escritorio = useNomeEscritorio()
 
   const tela = () => (document.querySelector('header h1')?.textContent ?? 'Tela').trim()
   const ler = () => [...document.querySelectorAll<HTMLTableElement>('main table')].map((t, i) => lerTabela(t, `Tabela ${i + 1}`)).filter(g => g.linhas.length > 0)
@@ -39,7 +41,7 @@ export default function BotaoExportar() {
   const exportar = (i: number, formato: 'csv' | 'pdf') => {
     const g = ler()[i] ?? tabelas[i]; const nome = tela()
     if (formato === 'csv') baixar(paraCsv(g), 'text/csv;charset=utf-8', nomeArquivo(nome, g.titulo, 'csv'))
-    else baixar(paraPdf(g, nome), 'application/pdf', nomeArquivo(nome, g.titulo, 'pdf'))
+    else baixar(paraPdf(g, nome, escritorio), 'application/pdf', nomeArquivo(nome, g.titulo, 'pdf'))
     setAberto(false)
   }
   return (

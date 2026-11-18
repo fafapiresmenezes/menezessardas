@@ -6,6 +6,7 @@ import { Printer, MessageSquare, UserCheck } from 'lucide-react'
 import { gerarRelatorioSelado } from '@/lib/relatorioCompliance'
 import { baixarArquivo } from '@/lib/ancoragem'
 import { mensagemAmigavel } from '@/lib/erros'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 import { hojeLocal, isoLocal } from '@/lib/datas'
 import { meuAlcance, podeVer, ALCANCE_FECHADO, rotuloCargo, type Alcance } from '@/lib/hierarquia'
 
@@ -48,6 +49,7 @@ const PILARES: { nome: string; perguntas: Pergunta[] }[] = [
 const OPCOES = [{ v: 0, r: 'Não' }, { v: 1, r: 'Em parte' }, { v: 2, r: 'Sim' }]
 
 export default function CompliancePage() {
+  const escritorio = useNomeEscritorio()
   const [empresa, setEmpresa] = useState(() => { try { return localStorage.getItem('lsm-compliance-empresa') ?? '' } catch { return '' } }) // Passo 195
   const [resp, setResp] = useState<Record<string, number>>({})
   const total = PILARES.reduce((s, p) => s + p.perguntas.length, 0)
@@ -109,7 +111,7 @@ export default function CompliancePage() {
     if (geral === null) return
     setSelando(true); setMsgSelo('Gerando o PDF e pedindo o selo…')
     try {
-      const r = await gerarRelatorioSelado({ empresa: empresa.trim(), geral, nivel, pilares: PILARES.map((p, pi) => ({ nome: p.nome, nota: nota(p.perguntas, pi) })), lacunas: lacunas.map(l => ({ pilar: l.pilar, acao: l.acao, base: l.base, v: l.v ?? 0 })), codigo })
+      const r = await gerarRelatorioSelado({ empresa: empresa.trim(), geral, nivel, pilares: PILARES.map((p, pi) => ({ nome: p.nome, nota: nota(p.perguntas, pi) })), lacunas: lacunas.map(l => ({ pilar: l.pilar, acao: l.acao, base: l.base, v: l.v ?? 0 })), codigo, escritorio })
       baixarArquivo(`${r.nomeBase}.pdf`, r.pdf as BlobPart, 'application/pdf')
       if (r.ots) baixarArquivo(`${r.nomeBase}.pdf.ots`, r.ots as BlobPart)
       setMsgSelo(`PDF baixado (SHA-256 ${r.sha256.slice(0, 12)}…)${r.ots ? ` com o selo .ots via ${r.calendario?.replace('https://', '')}` : '; o selo não veio agora (calendário fora do ar), o SHA-256 ficou na Trilha'}.`)
@@ -126,7 +128,7 @@ export default function CompliancePage() {
     <Layout title="Compliance e LGPD">
       <div className="space-y-6">
         <header className="hidden print:block border-b-2 border-dourado pb-3" data-testid="cabecalho-relatorio">
-          <p className="font-serif text-2xl text-navy">THEYE Institute</p>
+          <p className="font-serif text-2xl text-navy">{escritorio}</p>
           <p className="text-sm">Relatório de diagnóstico de integridade{empresa.trim() && ` · ${empresa.trim()}`} · {new Date().toLocaleDateString('pt-BR')}</p>
         </header>
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6 print:shadow-none">

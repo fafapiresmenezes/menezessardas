@@ -19,7 +19,7 @@ export const ETAPAS: { valor: Etapa; rotulo: string; chance: number; dica: strin
 export const ABERTAS: Etapa[] = ['novo', 'qualificacao', 'reuniao', 'proposta', 'negociacao']
 export const ORIGENS: [string, string][] = [
   ['indicacao', 'Indicação de cliente'], ['parceiro', 'Parceiro / correspondente'], ['site', 'Site'], ['instagram', 'Instagram'],
-  ['google', 'Google'], ['whatsapp', 'WhatsApp'], ['evento', 'Palestra / evento'], ['instituto', 'THEYE Institute'], ['cliente_atual', 'Cliente atual (novo caso)'], ['outro', 'Outro'],
+  ['google', 'Google'], ['whatsapp', 'WhatsApp'], ['evento', 'Palestra / evento'], ['instituto', 'Instituto THEYE'], ['cliente_atual', 'Cliente atual (novo caso)'], ['outro', 'Outro'],
 ]
 export const MOTIVOS_PERDA = ['Preço / honorários', 'Escolheu outro advogado', 'Desistiu de entrar com a ação', 'Sem retorno', 'Fora da área do escritório', 'Caso sem viabilidade', 'Outro']
 
@@ -68,11 +68,13 @@ export function telefoneWhatsapp(tel: string | null): string | null {
   return d.length <= 11 ? `55${d}` : d
 }
 
-export function mensagemRetorno(l: Pick<Lead, 'nome' | 'etapa' | 'assunto'>, escritorio = 'THEYE Institute'): string {
+/** `escritorio` é o nome do escritório de quem manda a mensagem; vazio vira "do escritório". */
+export function mensagemRetorno(l: Pick<Lead, 'nome' | 'etapa' | 'assunto'>, escritorio = ''): string {
+  const quem = escritorio.trim() ? `da ${escritorio.trim()}` : 'do escritório'
   const primeiro = l.nome.trim().split(/\s+/)[0]
   const sobre = l.assunto ? ` sobre ${l.assunto.trim().replace(/[.]$/, '')}` : ''
   switch (l.etapa) {
-    case 'novo': case 'qualificacao': return `Olá, ${primeiro}! Aqui é da ${escritorio}. Recebemos seu contato${sobre}. Podemos conversar hoje para entender melhor e dizer como podemos ajudar?`
+    case 'novo': case 'qualificacao': return `Olá, ${primeiro}! Aqui é ${quem}. Recebemos seu contato${sobre}. Podemos conversar hoje para entender melhor e dizer como podemos ajudar?`
     case 'reuniao': return `Olá, ${primeiro}! Confirmando nossa reunião${sobre}. Se puder, envie antes os documentos que tiver (contrato, notificações, comprovantes). Até lá!`
     case 'proposta': return `Olá, ${primeiro}! Conseguiu ver a proposta de honorários${sobre}? Fico à disposição para tirar dúvidas ou ajustar a forma de pagamento.`
     case 'negociacao': return `Olá, ${primeiro}! Para seguirmos${sobre}, posso preparar o contrato de honorários com as condições que combinamos?`

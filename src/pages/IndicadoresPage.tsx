@@ -25,6 +25,7 @@ import { selarDigest } from '@/lib/exportarTrilha'
 import { baixarArquivo } from '@/lib/ancoragem'
 import { lerNumero } from '@/lib/numero'
 import Vazio from '@/components/Vazio'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 
 // Passo 23: ciclo trimestral de OKR (lembrete 15 dias antes do fim do trimestre, revisão e ata com selo).
 const trimestreDe = (d: Date) => `${d.getFullYear()}-T${Math.floor(d.getMonth() / 3) + 1}`
@@ -115,6 +116,7 @@ interface ResumoDiario {
 }
 
 export default function IndicadoresPage() {
+  const escritorio = useNomeEscritorio()
   const { imoveis, loading: li } = useImoveis()
   const { alertas, loading: la } = useAlertas()
   const [contratos, setContratos] = useState<Contrato[] | null>(null)
@@ -281,7 +283,7 @@ export default function IndicadoresPage() {
               {msgAta && <span className="text-sm" aria-live="polite" data-testid="okr-msg">{msgAta}</span>}
             </div>
             {/* Passo 143: revisões de OKR copiáveis (trimestre, data, hash) para a ata da reunião. */}
-            {!!revisoes.length && <button type="button" onClick={() => navigator.clipboard?.writeText(['Revisões de OKR — THEYE Institute', ...revisoes.map(r => `${r.trimestre} · ${new Date(r.criado_em).toLocaleString('pt-BR')} · SHA-256 ${r.sha256}${r.ots_b64 ? ' · OTS' : ''}`)].join('\n')).catch(() => undefined)} title="Copia a lista de revisões de metas em texto para a ata da reunião: trimestre, data e código de conferência" data-testid="copiar-revisoes" className="mt-3 underline text-navy text-sm">copiar revisões</button>}
+            {!!revisoes.length && <button type="button" onClick={() => navigator.clipboard?.writeText([`Revisões de OKR — ${escritorio}`, ...revisoes.map(r => `${r.trimestre} · ${new Date(r.criado_em).toLocaleString('pt-BR')} · SHA-256 ${r.sha256}${r.ots_b64 ? ' · OTS' : ''}`)].join('\n')).catch(() => undefined)} title="Copia a lista de revisões de metas em texto para a ata da reunião: trimestre, data e código de conferência" data-testid="copiar-revisoes" className="mt-3 underline text-navy text-sm">copiar revisões</button>}
             {!!revisoes.length && (
               <ul className="mt-4 divide-y text-sm" data-testid="okr-revisoes">
                 {revisoes.map(r => (
@@ -425,7 +427,7 @@ export default function IndicadoresPage() {
                     const atingido = teto ? kr.atual <= kr.meta : kr.atual >= kr.meta
                     const pct = teto
                       ? atingido ? 100 : Math.max(5, Math.round((kr.meta / Math.max(kr.atual, 1)) * 100))
-                      : Math.min(100, Math.round((kr.atual / kr.meta) * 100))
+                      : kr.meta > 0 ? Math.min(100, Math.round((kr.atual / kr.meta) * 100)) : 0
                     return (
                       <div key={j}>
                         <div className="flex items-center justify-between text-sm mb-1">

@@ -39,7 +39,7 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
   it('começa no menu simples, só com o essencial, e abre o menu completo num clique (e volta)', () => {
     montar('/meu-dia')
     const simples = screen.getByTestId('menu-simples')
-    expect([...simples.querySelectorAll('li button')].map(b => b.textContent)).toEqual(['Início', 'Meu dia', 'Agenda', 'Intimações', 'Carteira de processos', 'Inserir processos antigos', 'Meu jeito de escrever', 'Parâmetros de escrita', 'Ajustar o meu menu', 'Ver todas as telas'])
+    expect([...simples.querySelectorAll('li button')].map(b => b.textContent)).toEqual(['Início', 'Meu dia', 'Agenda', 'Intimações', 'Carteira de processos', 'Assistente jurídico', 'Meu jeito de escrever', 'Parâmetros de escrita', 'Ajustar o meu menu', 'Ver todas as telas'])
     expect([...simples.querySelectorAll('[data-bloco]')].map(b => b.getAttribute('data-bloco'))).toEqual(['Todo dia', 'Processos', 'Escrever peças'])
     expect(simples.querySelector('[aria-current=page]')!.textContent).toBe('Meu dia')
     expect(screen.queryByText('4. Escritório')).toBeNull()
@@ -60,7 +60,8 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
     expect(screen.getByText('conteúdo')).toBeTruthy()
     const nav = screen.getByRole('navigation', { name: 'Menu principal' })
     expect(nav.querySelector('[aria-current=page]')!.textContent).toBe('Agenda')
-    expect(screen.getByText(/Desenvolvido pelo/).textContent).toContain('THEYE Institute')
+    // O rodapé do Instituto não aparece para o escritório cliente (18/11/2026).
+    expect(screen.queryByText(/Desenvolvido pelo/)).toBeNull()
     fireEvent.click(screen.getByText('2. Processos'))
     fireEvent.click(screen.getByText('Imóveis'))
     expect(screen.getByTestId('onde').textContent).toBe('/imoveis')
@@ -115,7 +116,7 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
     // o grupo aberto fica lembrado: não precisa clicar de novo
     expect(await screen.findByText('Financeiro')).toBeTruthy()
     expect(titulos()).toEqual(blocos)
-    expect(document.querySelector('[data-nivel=gestao]')!.textContent).toBe('sócios e gestor')
+    expect(document.querySelector('[data-nivel=gestao]')!.textContent).toBe('sócios, gestor e administração')
     expect(screen.queryByText('Consumo')).toBeNull()
     cleanup(); perfil = 'admin'; alcance = { id: 'u1', cargo: null, admin: true, veTudo: true }
     montar('/meu-dia')
@@ -161,9 +162,8 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
     fireEvent.click(screen.getByLabelText('Abrir busca global (Ctrl+K)'))
     expect(screen.getByRole('dialog')).toBeTruthy()
     fireEvent.click(screen.getByLabelText('Mais opções'))
-    fireEvent.click(screen.getByTestId('menu-trocar-area'))
-    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/areas'))
-    fireEvent.click(screen.getByLabelText('Mais opções'))
+    // "Trocar de área" é do Instituto: o escritório cliente não vê (18/11/2026).
+    expect(screen.queryByTestId('menu-trocar-area')).toBeNull()
     fireEvent.click(screen.getByLabelText('Usar modo escuro'))
     expect(aplicarTema).toHaveBeenCalledWith('escuro')
     fireEvent.click(screen.getByLabelText('Mais opções'))

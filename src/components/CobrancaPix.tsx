@@ -5,12 +5,14 @@ import { codigoPix } from '@/lib/pix'
 import { Copy, Printer, X } from 'lucide-react'
 import { escaparHtml } from '@/lib/abrirAba'
 import { mensagemAmigavel } from '@/lib/erros'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 
 // Cobrança por PIX de um honorário: QR + código copia e cola, usando a chave PIX do escritório (Configurações).
 // Passo D13: referência e descrição opcionais (PIX por parcela, com o valor da parcela).
 type DadosPix = { pix_chave: string | null; pix_nome: string | null; pix_cidade: string | null }
 // Passo D18: `dados` pronto (Portal do cliente, sem login) dispensa a RPC dados_pix.
 export default function CobrancaPix({ valor, caso, cliente, fechar, referencia, descricao, dados }: { valor: number; caso: string; cliente: string | null; fechar: () => void; referencia?: string; descricao?: string; dados?: DadosPix }) {
+  const escritorio = useNomeEscritorio()
   const [codigo, setCodigo] = useState('')
   const [qr, setQr] = useState('')
   const [erro, setErro] = useState('')
@@ -22,15 +24,15 @@ export default function CobrancaPix({ valor, caso, cliente, fechar, referencia, 
       const d = (Array.isArray(data) ? data[0] : data) as DadosPix | undefined
       if (error) return setErro(mensagemAmigavel(error))
       if (!d?.pix_chave) return setErro('Cadastre a chave PIX do escritório em Configurações → Cobrança por PIX.')
-      const c = codigoPix({ chave: d.pix_chave, nome: d.pix_nome ?? 'THEYE Institute', cidade: d.pix_cidade ?? 'Rio de Janeiro', valor, referencia: referencia ?? caso.slice(0, 20), descricao: descricao ?? `Honorarios ${caso}` })
+      const c = codigoPix({ chave: d.pix_chave, nome: d.pix_nome ?? escritorio, cidade: d.pix_cidade ?? 'Rio de Janeiro', valor, referencia: referencia ?? caso.slice(0, 20), descricao: descricao ?? `Honorarios ${caso}` })
       setCodigo(c)
       setQr(await QRCode.toDataURL(c, { margin: 1, width: 220 }))
     })()
-  }, [valor, caso, referencia, descricao, dados])
+  }, [valor, caso, referencia, descricao, dados, escritorio])
   const copiar = async () => { try { await navigator.clipboard.writeText(codigo); setCopiado(true) } catch { setErro('Não foi possível copiar; selecione o código e copie.') } }
   const imprimir = () => {
     const w = window.open('', '_blank'); if (!w) return
-    w.document.write(`<html><head><title>Cobrança PIX</title><style>body{font-family:Georgia,serif;max-width:600px;margin:40px auto;line-height:1.6;text-align:center}code{display:block;word-break:break-all;font-size:11px;text-align:left;border:1px solid #ccc;padding:8px}</style></head><body><p>THEYE Institute</p><h2>Honorários · ${escaparHtml(caso)}</h2><p>${escaparHtml(cliente)}</p><p><strong>${valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></p><img src="${qr}" alt="QR PIX"/><p>PIX copia e cola:</p><code>${escaparHtml(codigo)}</code></body></html>`)
+    w.document.write(`<html><head><title>Cobrança PIX</title><style>body{font-family:Georgia,serif;max-width:600px;margin:40px auto;line-height:1.6;text-align:center}code{display:block;word-break:break-all;font-size:11px;text-align:left;border:1px solid #ccc;padding:8px}</style></head><body><p>${escaparHtml(escritorio)}</p><h2>Honorários · ${escaparHtml(caso)}</h2><p>${escaparHtml(cliente)}</p><p><strong>${valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></p><img src="${qr}" alt="QR PIX"/><p>PIX copia e cola:</p><code>${escaparHtml(codigo)}</code></body></html>`)
     w.document.close(); w.print()
   }
   return (

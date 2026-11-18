@@ -27,7 +27,7 @@ export const rotuloFuncao: Record<Funcao | 'nenhuma', string> = {
 
 export const descricaoFuncao: Record<Funcao | 'nenhuma', string> = {
   admin: 'Faz tudo, inclusive equipe e chave da IA.',
-  operador: 'Cadastra e edita imóveis, contratos, documentos e fornecedores.',
+  operador: 'Cadastra e edita processos, prazos, documentos e contratos; não mexe na equipe.',
   leitor: 'Só consulta; não altera nada.',
   nenhuma: 'Não entra na plataforma até receber uma função.',
 }
@@ -117,7 +117,7 @@ export async function ehSede(): Promise<boolean> {
   if (!supabaseConfigurado) return true
   try { const k = sessionStorage.getItem('gm-sede'); if (k) return k === '1' } catch { /* sem sessionStorage */ }
   const { data } = await supabase.rpc('eh_sede')
-  const v = data !== false
+  const v = data === true
   try { sessionStorage.setItem('gm-sede', v ? '1' : '0') } catch { /* ignora */ }
   return v
 }
@@ -221,6 +221,13 @@ export async function meuEscritorio(): Promise<MeuEscritorio | null> {
     const sede = p.escritorio_id === SEDE_ID
     return lembrar({ nome, sede, pessoa: String(p.nome_completo || p.email || ''), email: String(p.email || ''), instituto: false })
   } catch { return null }
+}
+
+/** Nome do escritório para documentos, cartas e exportações: o escritório de advocacia (nunca o Instituto, dono da plataforma).
+ * Na sede devolve o nome da advocacia; num escritório cliente, o nome dele. Vazio quando ninguém está identificado. */
+export async function nomeDoEscritorio(): Promise<string> {
+  const m = await meuEscritorio()
+  return m ? (m.advocacia || m.nome || '').trim() : ''
 }
 
 /** Quem administra o Instituto (a plataforma inteira). Quem administra só o escritório de advocacia não entra aqui. */

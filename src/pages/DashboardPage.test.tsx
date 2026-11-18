@@ -6,13 +6,13 @@ import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom'
 let loading = false
 let imoveis: object[] = []
 let alertas: object[] = []
-let sede = false
+let instituto = false
 const rpc = vi.fn(async (_f: string) => ({ data: [
   { id: 's', nome: 'GMenezes (sede)', pessoas: 5, imoveis: 12, contratos_ativos: 8, casos_abertos: 4, horas_mes: 120.5 },
   { id: 'p', nome: 'Escritório Alfa', pessoas: 2, imoveis: 3, contratos_ativos: 2, casos_abertos: 1, horas_mes: 30 },
 ] }))
 vi.mock('@/lib/supabase', () => ({ supabaseConfigurado: true, supabase: { rpc: (f: string) => rpc(f) } }))
-vi.mock('@/lib/equipe', () => ({ ehSede: async () => sede }))
+vi.mock('@/lib/equipe', () => ({ ehSede: async () => true, ehInstituto: async () => instituto }))
 vi.mock('@/hooks/useImoveis', () => ({ useImoveis: () => ({ imoveis, loading }) }))
 vi.mock('@/hooks/useAlertas', () => ({ useAlertas: () => ({ alertas, loading }) }))
 vi.mock('@/components/MetasDoMes', () => ({ default: () => <div data-testid="metas-stub" /> }))
@@ -22,7 +22,7 @@ const Onde = () => <p data-testid="onde">{useLocation().pathname}{useLocation().
 const montar = () => render(<MemoryRouter><Routes><Route path="*" element={<><DashboardPage /><Onde /></>} /></Routes></MemoryRouter>)
 
 describe('Painel', () => {
-  beforeEach(() => { cleanup(); loading = false; sede = false; rpc.mockClear()
+  beforeEach(() => { cleanup(); loading = false; instituto = false; rpc.mockClear()
     imoveis = [
       { id: 'i1', endereco: 'Rua das Flores 123', tipo: 'apartamento', documentos: [] },
       { id: 'i2', endereco: 'Av. Atlântica 500', tipo: 'loja', documentos: [] },
@@ -51,15 +51,15 @@ describe('Painel', () => {
     expect(screen.getByTestId('metas-stub')).toBeTruthy()
   })
 
-  it('sede vê a tabela por escritório com consolidado; parceiro não vê', async () => {
-    sede = true
+  it('Instituto vê a tabela por escritório com consolidado; o escritório cliente (mesmo na sede) não vê', async () => {
+    instituto = true
     montar()
     await waitFor(() => expect(screen.getByTestId('painel-escritorios')).toBeTruthy())
     expect(rpc).toHaveBeenCalledWith('painel_escritorios')
     expect(screen.getAllByTestId('linha-escritorio').length).toBe(2)
     const rodape = screen.getByText('Consolidado').closest('tr')!
     expect(Array.from(rodape.cells).map(c => c.textContent)).toEqual(['Consolidado', '7', '15', '10', '5', '150,5'])
-    cleanup(); sede = false; rpc.mockClear()
+    cleanup(); instituto = false; rpc.mockClear()
     montar()
     await waitFor(() => expect(screen.getByTestId('leitura-painel')).toBeTruthy())
     expect(rpc).not.toHaveBeenCalled()

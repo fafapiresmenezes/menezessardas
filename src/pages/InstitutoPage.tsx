@@ -244,7 +244,7 @@ function AdministracaoInstituto() {
     { to: '/consumo', titulo: 'Custo de API por usuário', texto: 'Quanto cada pessoa gastou com a inteligência artificial no mês, em dólar e em reais.' },
     { to: '/funil', titulo: 'Funil de vendas do Instituto', texto: 'Os contatos e propostas da sede. Não se misturam com os dos escritórios parceiros.' },
     { to: '/equipe', titulo: 'Pessoas com acesso', texto: 'Quem entra na área do Instituto e qual é o papel de cada um.' },
-    { to: '/equipe#parceiros', titulo: 'Escritórios parceiros', texto: 'Os escritórios que usam a plataforma, com a cobrança de cada um.' },
+    { to: '/equipe', titulo: 'Escritórios parceiros', texto: 'Os escritórios que usam a plataforma, com a cobrança de cada um.' },
   ]
   return (
     <section className="bg-navy text-white p-6 shadow-sm" aria-labelledby="adm-instituto" data-testid="administracao-instituto">

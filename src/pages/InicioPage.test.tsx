@@ -88,7 +88,7 @@ describe('Tela de entrada por área', () => {
     montar()
     expect((await screen.findByTestId('inicio-escritorio-nome')).textContent).toBe('SILVA E SOUZA ADVOGADOS')
     expect(screen.getByTestId('inicio-escritorio').textContent).toContain('Ana Silva · ana@silva.adv.br')
-    expect((await screen.findByTestId('inicio-hierarquia')).textContent).toContain('você vê os seus')
+    expect((await screen.findByTestId('inicio-hierarquia')).textContent).toContain('vê os seus processos')
     fireEvent.click(screen.getByTestId('trocar-de-conta'))
     await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/login'))
     expect(signOut).toHaveBeenCalled()
