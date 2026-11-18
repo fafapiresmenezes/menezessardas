@@ -53,3 +53,15 @@ describe('moldura da casa de projectos', () => {
     expect(getByTestId('marca-produto').textContent).toBe('Theye.club')
   })
 })
+
+describe('moldura dentro de uma frente do Instituto', () => {
+  it('a frente de fundos internacionais tem a medição de obra e não mostra "Suporte Jurídico" na moldura', async () => {
+    const { frenteDe } = await import('./menuTelas')
+    const f = frenteDe('/demonstracao-obra')
+    expect(f?.id).toBe('fundos')
+    const { container } = render(<Marca subtitulo={f!.nome} />)
+    expect(container.textContent).toContain('Plataforma, Governança, Fundos Internacionais')
+    expect(container.textContent).not.toMatch(/jur[ií]dic/i)
+    expect(readFileSync('src/components/Layout.tsx', 'utf8')).toContain('subtitulo={frente ? frente.nome : undefined}')
+  })
+})

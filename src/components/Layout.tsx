@@ -187,7 +187,7 @@ export default function Layout({ children, title }: LayoutProps) {
       >
         <div className="p-4 border-b border-white/10 flex items-center justify-between gap-2">
           {menuAberto ? (
-            <Marca className="flex-1 min-w-0" marca={marca} />
+            <Marca className="flex-1 min-w-0" marca={marca} subtitulo={frente ? frente.nome : undefined} />
           ) : (
             <span className="font-serif text-dourado tracking-widest text-lg mx-auto" aria-hidden="true">
               {marca ? marca.nome.slice(0, 2).toUpperCase() : 'TH'}
