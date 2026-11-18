@@ -66,7 +66,7 @@ export default function DemoObraPage() {
             {PESSOAS_DEMO.map(p => (
               <button
                 key={p.id} type="button" role="radio" aria-checked={p.id === quemId} data-testid={`pessoa-${p.id}`}
-                onClick={() => trocarPessoa(p.id)}
+                onClick={() => trocarPessoa(p.id)} title={`Ver o ecrã como ${p.nome}`}
                 className={`text-left p-3 border text-sm ${p.id === quemId ? 'border-dourado bg-dourado/10' : 'border-navy/15 hover:border-navy/40'}`}
               >
                 <span className="block text-xs uppercase tracking-wide text-grafite-claro">{p.nivel} · {rotuloNivel[p.nivel!]}</span>
@@ -95,7 +95,7 @@ export default function DemoObraPage() {
                 const cor = semaforo(desvio, p.diasParado)
                 return (
                   <button
-                    key={p.id} type="button" onClick={() => { setProjetoId(p.id); setAviso(null) }} data-testid={`projeto-${p.id}`}
+                    key={p.id} type="button" onClick={() => { setProjetoId(p.id); setAviso(null) }} data-testid={`projeto-${p.id}`} title={`Abrir o boletim de ${p.nome}`}
                     className={`text-left p-4 border ${projeto?.id === p.id ? 'border-dourado' : 'border-navy/15 hover:border-navy/40'}`}
                   >
                     <span className="flex items-center gap-2 text-xs uppercase tracking-wide text-grafite-claro">
@@ -169,12 +169,12 @@ export default function DemoObraPage() {
               })}
             </ol>
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <button type="button" onClick={assinar} disabled={!proxima} data-testid="assinar"
+              <button type="button" onClick={assinar} disabled={!proxima} data-testid="assinar" title="Dar a próxima assinatura do boletim com a pessoa escolhida"
                 className="inline-flex items-center gap-2 bg-navy text-white text-sm px-4 py-2 disabled:opacity-50">
                 <PenLine size={16} aria-hidden="true" />
                 {proxima ? `Assinar ${rotuloEstacao[proxima]} como ${quem.nome}` : 'Boletim concluído'}
               </button>
-              <button type="button" onClick={() => { setPassagens(INICIAIS); setAviso(null) }}
+              <button type="button" onClick={() => { setPassagens(INICIAIS); setAviso(null) }} title="Apagar as assinaturas dadas nesta demonstração e voltar ao início"
                 className="inline-flex items-center gap-2 text-sm text-grafite underline">
                 <RotateCcw size={14} aria-hidden="true" /> Repor a demonstração
               </button>
