@@ -59,8 +59,8 @@ export const PORTAIS_INSTITUTO: PortalInstituto[] = [
       'Cruzamento com a ficha do imóvel que o escritório já tem na plataforma',
       'Exportar o mapa e a lista de camadas usadas, com a data de cada fonte',
     ],
-    estado: 'estudo',
-    comoEsta: 'Levantamento das fontes públicas em andamento. Ainda não há mapa para usar.',
+    estado: 'prototipo',
+    comoEsta: 'O MVP no próprio titular está no ar em /geo: posição, mapa, câmera como sensor de lugar, satélites e ficha do município, tudo cifrado só no aparelho.',
   },
   {
     rota: '/governo',

@@ -54,6 +54,24 @@ const REFERENCIA_PT: Record<string, string> = {
   zh: '基准版本:葡萄牙语。译文尚未经过人工审校。',
   es: 'Versión de referencia: portugués. Las traducciones aún no las revisó una persona.',
 }
+const MVP_GEO_TITULO: Record<string, string> = {
+  pt: 'O MVP já está no ar',
+  en: 'The MVP is already live',
+  zh: 'MVP 已经上线',
+  es: 'El MVP ya está en el aire',
+}
+const MVP_GEO_TEXTO: Record<string, string> = {
+  pt: 'Geolocalização no próprio titular: posição, mapa, câmera como sensor de lugar, satélites e município. Tudo cifrado, só no seu aparelho; a porta é a senha do cofre que você cria.',
+  en: 'Geolocation on the data subject themself: position, map, camera as a place sensor, satellites and municipality. All encrypted, only on your device; the door is the vault password you create.',
+  zh: '在数据主体本人身上做地理定位:位置、地图、作为地点传感器的相机、卫星与市级数据。全部加密,只存于您的设备;入口是您自己创建的保险柜密码。',
+  es: 'Geolocalización en el propio titular: posición, mapa, cámara como sensor de lugar, satélites y municipio. Todo cifrado, solo en su aparato; la puerta es la contraseña del cofre que usted crea.',
+}
+const MVP_GEO_BOTAO: Record<string, string> = {
+  pt: 'Abrir o MVP de geomapeamento',
+  en: 'Open the geomapping MVP',
+  zh: '打开地理图谱 MVP',
+  es: 'Abrir el MVP de geomapeo',
+}
 const VEJA_PORTAS: Record<string, (link: JSX.Element) => JSX.Element> = {
   pt: link => <>Veja as portas do Instituto em {link}.</>,
   en: link => <>See the Institute's doors at {link}.</>,
@@ -116,6 +134,14 @@ export default function PortalInstitutoPage() {
             </li>
           ))}
         </ul>
+
+        {portal.rota === '/geomapeamento' && (
+          <div className="mt-8 border border-dourado/60 p-4" data-testid="mvp-geo">
+            <h2 className="text-lg font-serif text-white mb-2">{MVP_GEO_TITULO[idioma]}</h2>
+            <p className="text-sm text-white/80 mb-3">{MVP_GEO_TEXTO[idioma]}</p>
+            <Link to="/geo" title={MVP_GEO_TEXTO[idioma]} className="inline-block min-h-[44px] leading-[44px] px-5 bg-white text-black text-sm">{MVP_GEO_BOTAO[idioma]}</Link>
+          </div>
+        )}
 
         {/* Sem prazo, de propósito: é regra do plano, e fica dito na própria página. */}
         <p className="text-xs text-neutral-300 mt-6">
