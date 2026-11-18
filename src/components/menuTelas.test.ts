@@ -45,3 +45,17 @@ describe('mapa das telas em hierarquia', () => {
     expect(atalhosDoMenu(['/equipe', '/assistente'], { ...ninguem, admin: true }).map(a => a.href)).toEqual(['/equipe', '/assistente'])
   })
 })
+
+describe('telas do Instituto fora da visão do escritório cliente (18/11/2026)', () => {
+  it('quem não administra o Instituto não vê Royalties, Caderno de produtos, Mercado, Frentes nem Medições', async () => {
+    const { rotasVisiveis } = await import('@/data/rotas')
+    const cliente: Visao = { veTudo: true, admin: true, instituto: false, sede: true }
+    const rotas = rotasVisiveis(cliente).map(r => r.rota)
+    for (const r of ['/royalties', '/caderno-de-produtos', '/mercado', '/frentes-do-instituto', '/medicoes', '/instituto', '/mapa-de-receita', '/escolha-do-mercado']) {
+      expect(rotas, r).not.toContain(r)
+    }
+    expect(rotas).toContain('/hierarquia')
+    const instituto = rotasVisiveis({ ...cliente, instituto: true }).map(r => r.rota)
+    expect(instituto).toContain('/royalties')
+  })
+})

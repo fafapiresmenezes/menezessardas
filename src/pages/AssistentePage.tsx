@@ -106,6 +106,8 @@ export default function AssistentePage() {
   // O agente "Pesquisador do Instituto" é só de quem administra o Instituto THEYE; o escritório cliente não o vê.
   const [instituto, setInstituto] = useState(false)
   useEffect(() => { ehInstituto().then(setInstituto).catch(() => setInstituto(false)) }, [])
+  // Se a especialidade de pesquisa veio pela URL e a pessoa não é do Instituto, volta para a padrão.
+  useEffect(() => { if (!instituto && especialidade === 'pesquisa') setEspecialidade('imobiliario') }, [instituto, especialidade])
   const [pergunta, setPergunta] = useState(() => { try { return localStorage.getItem('lsm-assistente-pergunta') ?? '' } catch { return '' } }) // Passo 203
   const [modo, setModo] = useState<Modo>('responder')
   const [contexto, setContexto] = useState('')

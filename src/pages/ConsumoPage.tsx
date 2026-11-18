@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 import { useBaixado } from '@/hooks/useBaixado'
 import Layout from '@/components/Layout'
 import { projetarMes, sugerirTeto } from '@/lib/projecaoConsumo'
@@ -58,6 +59,7 @@ export default function ConsumoPage() {
   // Passo 127: tabelas "por função" e "por usuário" copiáveis para a reunião de custos.
   const [tabelaCopiada, setTabelaCopiada] = useState<'funcao' | 'usuario' | null>(null)
   const [carregando, setCarregando] = useState(true)
+  const nomeEscritorio = useNomeEscritorio()
   const [testandoAviso, setTestandoAviso] = useState(false)
   const [baixado, marcarBaixado] = useBaixado() // Passo 388
   // Passo 06: avisos automáticos de 80% e 100% do teto (de hora em hora) e teste pelo administrador.
@@ -143,7 +145,7 @@ export default function ConsumoPage() {
             </label>
           </div>
           <p className="text-4xl font-serif text-navy mt-4" data-testid="total-mes">{carregando ? '…' : brl(totalBrl)}</p>
-          {!carregando && <button type="button" onClick={async () => { const t = [`Consumo de IA e e-mails — ${nomeMes(mes)}`, `Total: ${brl(totalBrl)} em ${doMes.reduce((s, l) => s + Number(l.usos), 0)} uso(s)`, ...(mes === mesAtual() ? [`Projeção para o fim do mês: ${brl(projetarMes(totalBrl, new Date()).projecao)}`] : []), cot ? `Cotação: US$ 1 = ${brl(taxa)} (${cot.data})` : '', 'THEYE Institute'].filter(Boolean).join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoResumo(true); setTimeout(() => setCopiadoResumo(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-consumo" title="Copia o resumo do mês (total, usos, projeção e cotação) em texto para enviar à sócia" className="mt-2 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo do mês'}</button>}
+          {!carregando && <button type="button" onClick={async () => { const t = [`Consumo de IA e e-mails — ${nomeMes(mes)}`, `Total: ${brl(totalBrl)} em ${doMes.reduce((s, l) => s + Number(l.usos), 0)} uso(s)`, ...(mes === mesAtual() ? [`Projeção para o fim do mês: ${brl(projetarMes(totalBrl, new Date()).projecao)}`] : []), cot ? `Cotação: US$ 1 = ${brl(taxa)} (${cot.data})` : '', nomeEscritorio].filter(Boolean).join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoResumo(true); setTimeout(() => setCopiadoResumo(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-consumo" title="Copia o resumo do mês (total, usos, projeção e cotação) em texto para enviar à sócia" className="mt-2 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo do mês'}</button>}
           {!carregando && <button type="button" onClick={() => window.print()} data-testid="imprimir-consumo" title="Abre a tela de impressão do navegador com o extrato de consumo do mês" className="ml-2 underline text-navy text-sm print:hidden">imprimir</button>}{/* Passo 199 */}
           {!carregando && <button type="button" data-testid="copiar-link-consumo" title="Copia o endereço desta página de consumo para compartilhar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 225 */}
           {!carregando && doMes.length > 0 && <button type="button" data-testid="baixar-consumo" title="Baixa o detalhamento do consumo do mês em arquivo CSV para abrir em planilha" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['mês;função;modelo;usuário;usos;tokens de entrada', ...doMes.map(l => `${l.mes};${l.funcao};${l.modelo ?? ''};${l.usuario};${l.usos};${l.tokens_entrada}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'consumo-ia.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 295 */}

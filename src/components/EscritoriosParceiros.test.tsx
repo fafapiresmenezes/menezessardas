@@ -12,6 +12,7 @@ vi.mock('@/lib/equipe', () => ({
   SEDE_ID: '00000000-0000-0000-0000-000000000001',
   listarEscritorios: async () => escritorios,
   escritorioDasPessoas: async () => ({ p1: SEDE }),
+  listarPessoasTodasCasas: async () => [],
   criarEscritorio: (n: string) => criarEscritorio(n),
   moverParaEscritorio: (p: string, e: string) => moverParaEscritorio(p, e),
 }))

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 import Vazio from '@/components/Vazio'
 import { mensagemAmigavel } from '@/lib/erros'
 import EscolhaAvisos from '@/components/EscolhaAvisos'
@@ -32,6 +33,7 @@ const rotuloGravidade: Record<string, string> = { alta: 'Alta', media: 'Média',
 export default function ContratoPage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const nomeEscritorio = useNomeEscritorio()
   const [imovel, setImovel] = useState<Imovel | null | undefined>(undefined)
   const [contrato, setContrato] = useState<Contrato | null>(null)
   const [documentos, setDocumentos] = useState<Documento[]>([])
@@ -273,7 +275,7 @@ export default function ContratoPage() {
     v === 0 ? 'Sem contraprestação' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
   // Passo 141: resumo do contrato em uma linha por campo, para o e-mail ou o parecer.
   const copiarResumoContrato = () => {
-    const t = [`${rotulosTipoContrato[contrato.tipo]} — ${contrato.parte}`, `Imóvel: ${imovel.endereco}`, `Início: ${formatarData(contrato.dataInicio)}${contrato.dataVencimento ? ` · Vencimento: ${formatarData(contrato.dataVencimento)}` : ''}`, `Valor: ${moeda(contrato.valor)}`, `Situação: ${encerrado ? `encerrado em ${formatarData(contrato.encerradoEm)}` : rotulosStatusContrato[statusContrato]}`, 'THEYE Institute'].join('\n')
+    const t = [`${rotulosTipoContrato[contrato.tipo]} — ${contrato.parte}`, `Imóvel: ${imovel.endereco}`, `Início: ${formatarData(contrato.dataInicio)}${contrato.dataVencimento ? ` · Vencimento: ${formatarData(contrato.dataVencimento)}` : ''}`, `Valor: ${moeda(contrato.valor)}`, `Situação: ${encerrado ? `encerrado em ${formatarData(contrato.encerradoEm)}` : rotulosStatusContrato[statusContrato]}`, nomeEscritorio].join('\n')
     navigator.clipboard?.writeText(t).catch(() => undefined)
   }
 

@@ -82,7 +82,7 @@ export default function InicioPage() {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 276
   const copiarMapa = async () => {
-    const t = ['Áreas da plataforma — Instituto THEYE', ...AREAS.map((a, i) => `${i + 1}. ${a.titulo}: ${a.texto}`)].join('\n')
+    const t = [`Áreas da plataforma — ${escritorio?.nome ?? 'Escritório'}`, ...AREAS.map((a, i) => `${i + 1}. ${a.titulo}: ${a.texto}`)].join('\n')
     try { await navigator.clipboard.writeText(t); setMapaCopiado(true); setTimeout(() => setMapaCopiado(false), 2500) } catch { /* sem área de transferência */ }
   }
   useEffect(() => {

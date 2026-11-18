@@ -405,7 +405,7 @@ function App() {
         />
         <Route
           path="/mercado"
-          element={isAuthenticated ? <MercadoPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><MercadoPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/monitoramento"

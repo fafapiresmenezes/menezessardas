@@ -17,7 +17,8 @@ export default function Ajudante() {
   const [avaliada, setAvaliada] = useState(false)
   const [aprendido, setAprendido] = useState<Aprendido[]>([])
   const navigate = useNavigate()
-  const [visao, setVisao] = useState<Visao | undefined>(undefined)
+  // Começa com a visão mais fechada; só abre o que o banco confirmar.
+  const [visao, setVisao] = useState<Visao>({ veTudo: false, admin: false, instituto: false, sede: false })
   useEffect(() => { minhaVisao().then(setVisao).catch(() => undefined) }, [])
   const exemplos = useMemo(() => exemplosDePergunta().slice(0, 3), [])
 
