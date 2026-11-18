@@ -8,8 +8,9 @@ import Layout from '@/components/Layout'
 import { AlertTriangle, TrendingUp, Wallet } from 'lucide-react'
 import { calcularBoletim, desvioDeCronograma, semaforo, type Semaforo } from '@/lib/medicaoObra'
 import { PROJETOS_DEMO } from '@/data/demoObraAngola'
+import { PAGAMENTOS_DEMO, RAZAO_RETIDO } from '@/data/pagamentosDemo'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
-import { veProjecto } from '@/lib/visaoFundos'
+import { recorte, veProjecto } from '@/lib/visaoFundos'
 
 const kz = (v: number) => `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 0 }).format(v)} Kz`
 const pct = (v: number) => `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 1 }).format(Math.round(v * 1000) / 10)} %`
@@ -36,6 +37,8 @@ export default function VisaoPresidentePage() {
   const avisos = linhas
     .filter(l => l.cor !== 'verde')
     .sort((a, b) => (a.cor === 'vermelho' ? -1 : 1) - (b.cor === 'vermelho' ? -1 : 1) || b.p.diasParado - a.p.diasParado)
+  // Dinheiro parado também é aviso: pagamentos retidos no recorte de quem vê (apanhado na conferência pela ótica da presidência).
+  const retidos = recorte(quem, PAGAMENTOS_DEMO).filter(p => p.estado === 'retido')
 
   return (
     <Layout title="Visão do presidente">
@@ -80,7 +83,7 @@ export default function VisaoPresidentePage() {
 
         <section aria-labelledby="avisos">
           <h2 id="avisos" className="text-sm uppercase tracking-wider text-grafite-claro mb-2 flex items-center gap-2"><AlertTriangle size={14} aria-hidden="true" /> Avisos a tratar</h2>
-          {avisos.length === 0 ? (
+          {avisos.length === 0 && retidos.length === 0 ? (
             <p className="text-sm text-grafite-claro">Nenhum projecto em alerta.</p>
           ) : (
             <ul className="space-y-1" data-testid="lista-avisos">
@@ -88,6 +91,12 @@ export default function VisaoPresidentePage() {
                 <li key={l.p.id} className="text-sm text-navy flex items-center gap-2">
                   <span className={`inline-block w-2 h-2 rounded-full ${COR[l.cor]}`} aria-hidden="true" />
                   <strong>{l.p.nome}:</strong> {l.motivo}.
+                </li>
+              ))}
+              {retidos.map(p => (
+                <li key={p.id} className="text-sm text-navy flex items-center gap-2" data-testid="aviso-retido">
+                  <span className="inline-block w-2 h-2 rounded-full bg-red-600" aria-hidden="true" />
+                  <strong>{p.projeto}:</strong> pagamento retido ({new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 0 }).format(p.valor)} {p.moeda}). {RAZAO_RETIDO[p.id] ?? ''}
                 </li>
               ))}
             </ul>

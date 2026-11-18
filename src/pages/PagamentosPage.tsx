@@ -19,7 +19,8 @@ const COR: Record<EstadoPag, string> = {
 
 export default function PagamentosPage() {
   const quem = usePessoaFundos()
-  const vis = recorte(quem, PAGAMENTOS_DEMO)
+  // O que vence primeiro aparece primeiro (apanhado na conferência pela ótica financeira).
+  const vis = recorte(quem, PAGAMENTOS_DEMO).sort((a, b) => a.vencimento.localeCompare(b.vencimento))
   const total = (e: EstadoPag, m: 'Kz' | 'US$') =>
     vis.filter(p => p.estado === e && p.moeda === m).reduce((s, p) => s + p.valor, 0)
   return (

@@ -7,7 +7,7 @@ import { MemoryRouter } from 'react-router-dom'
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 
 import EstudosGovernoPage from './EstudosGovernoPage'
-import { TIPOS_ESTUDO, ESTUDOS_DEMO } from '@/data/estudosGovernoDemo'
+import { TIPOS_ESTUDO, ESTUDOS_DEMO, FONTES_VIVAS } from '@/data/estudosGovernoDemo'
 import { escolherPessoa } from '@/lib/visaoFundos'
 
 const montar = () => render(<MemoryRouter><EstudosGovernoPage /></MemoryRouter>)
@@ -39,6 +39,15 @@ describe('estudos para o governo (fase S)', () => {
       expect(e.fontes.length).toBeGreaterThan(0)
       expect(e.seccoes.some(s => s.titulo === 'Limites')).toBe(true)
     }
+  })
+
+  it('as fontes vivas (satélites e GDELT) aparecem com licença e sem prometer previsão', () => {
+    montar()
+    expect(screen.getByTestId('fontes-vivas').children.length).toBe(FONTES_VIVAS.length)
+    const t = document.body.textContent ?? ''
+    for (const f of FONTES_VIVAS) { expect(t).toContain(f.nome); expect(t).toContain(f.licenca) }
+    expect(t).toContain('nunca para prever')
+    for (const f of FONTES_VIVAS) expect(f.licenca.length).toBeGreaterThan(0)
   })
 
   it('recorte por nível: a directora financeira não tem estudos no seu recorte; o furo pelo endereço fecha ao gestor', () => {
