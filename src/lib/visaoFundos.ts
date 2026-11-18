@@ -42,6 +42,9 @@ export const ECRAS_POR_NIVEL: Record<string, Nivel[]> = {
   '/riscos-litigios': ['N1', 'N2', 'N3', 'N4'],
   '/documentos-fundos': ['N1', 'N2', 'N3', 'N4'],
   '/estudos-governo': ['N1', 'N2', 'N3'],
+  '/biblioteca-teses': ['N1', 'N2', 'N3', 'N4'],
+  '/criador-projectos': ['N1', 'N2', 'N3'],
+  '/robos-governo': ['N1', 'N2', 'N3'],
   '/assistente-fundos': ['N1', 'N2', 'N3', 'N4', 'N5'],
   '/demonstracao-obra': ['N1', 'N2', 'N3', 'N4', 'N5'],
 }

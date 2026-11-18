@@ -159,6 +159,15 @@ export const gruposProjectos: GrupoMenu[] = [
   { id: 'estudos-gov', titulo: '10. Estudos para o governo', bloco: 'Estudos', nivel: 'todos', dica: 'Estudos num molde fixo, com fontes', itens: [
     { icon: Landmark, label: 'Estudos para o governo', href: '/estudos-governo' },
   ] },
+  { id: 'biblioteca-f', titulo: '11. Biblioteca e especialistas', bloco: 'Biblioteca', nivel: 'todos', dica: 'Teses, cursos abertos e o catálogo de especialistas', itens: [
+    { icon: BookOpen, label: 'Biblioteca e especialistas', href: '/biblioteca-teses' },
+  ] },
+  { id: 'criador-gov', titulo: '12. Criador de projectos', bloco: 'Criador', nivel: 'gestao', dica: 'Dossiês de projecto para o governo, em rascunho', itens: [
+    { icon: FolderKanban, label: 'Criador de projectos para o governo', href: '/criador-projectos' },
+  ] },
+  { id: 'robos-gov', titulo: '13. Robôs de projectos', bloco: 'Robôs', nivel: 'gestao', dica: 'A esteira dos robôs e das propostas', itens: [
+    { icon: Network, label: 'Robôs de projectos para o governo', href: '/robos-governo' },
+  ] },
   { id: 'risco', titulo: '2. Risco e auditoria', bloco: 'Risco e auditoria', nivel: 'gestao', dica: 'Quem fez o quê, e quando', itens: [
     { icon: ClipboardList, label: 'Trilha de auditoria', href: '/trilha' },
   ] },
@@ -260,6 +269,9 @@ export const DICAS: Record<string, string> = {
   '/documentos-fundos': 'Os documentos do projecto e o registo de quem fez o quê e quando',
   '/assistente-fundos': 'Perguntas do dia a dia respondidas em linguagem simples a partir dos dados da plataforma',
   '/estudos-governo': 'Estudos para apresentar ao governo, num molde fixo com pergunta, método, limites e fontes',
+  '/biblioteca-teses': 'A biblioteca interna: repositórios de teses, cursos abertos e o catálogo de especialistas, tudo com licença',
+  '/criador-projectos': 'Monta o dossiê-rascunho de um projecto para o governo: estudos, equipa e fontes, com aprovação humana',
+  '/robos-governo': 'Os robôs que preparam e apresentam propostas, e a esteira por estado, sempre com uma pessoa a decidir',
   '/demonstracao-obra': 'Boletim de medição, assinaturas por nível e o que cada cargo vê, com dados de demonstração',
   '/inicio': 'A tela de entrada: o que fazer agora e todas as matérias do direito',
   '/meu-dia': 'O que vence hoje e nos próximos dias, separado por área do direito',
@@ -397,6 +409,9 @@ export const FRENTES: Frente[] = [
     { icon: Library, label: 'Documentos e auditoria', href: '/documentos-fundos' },
     { icon: MessageSquare, label: 'Assistente', href: '/assistente-fundos' },
     { icon: Landmark, label: 'Estudos para o governo', href: '/estudos-governo' },
+    { icon: BookOpen, label: 'Biblioteca e especialistas', href: '/biblioteca-teses' },
+    { icon: FolderKanban, label: 'Criador de projectos para o governo', href: '/criador-projectos' },
+    { icon: Network, label: 'Robôs de projectos para o governo', href: '/robos-governo' },
     { icon: Ruler, label: 'Medição de obra por nível', href: '/demonstracao-obra' },
   ] },
   { id: 'ia', nome: 'IA e superinteligência', itens: [

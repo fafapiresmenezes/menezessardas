@@ -21,7 +21,7 @@ afterEach(cleanup)
 
 describe('separação por nível (fase R)', () => {
   it('a matriz cobre todos os ecrãs da casa e nenhum nível vê a Visão do presidente abaixo de N2', () => {
-    expect(Object.keys(ECRAS_POR_NIVEL).length).toBe(11)
+    expect(Object.keys(ECRAS_POR_NIVEL).length).toBe(14)
     for (const p of PESSOAS_DEMO) {
       const ve = veEcra(p, '/visao-presidente')
       expect(ve, `${p.id} (${p.nivel})`).toBe(p.nivel === 'N1' || p.nivel === 'N2')
