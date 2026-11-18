@@ -28,8 +28,8 @@ describe('menu da casa de projectos', () => {
 
   it('quem é da casa de projectos vê só o menu do produto, e cada nível vê só o que é seu', () => {
     const telas = (v: Visao) => gruposVisiveis(v, 'projectos').flatMap(g => g.itens.map(i => i.href))
-    expect(telas(operacao)).toEqual(['/demonstracao-obra', '/settings'])
-    expect(telas(direccao)).toEqual(['/demonstracao-obra', '/trilha', '/hierarquia', '/settings'])
+    expect(telas(operacao)).toEqual(['/visao-presidente', '/demonstracao-obra', '/settings'])
+    expect(telas(direccao)).toEqual(['/visao-presidente', '/demonstracao-obra', '/trilha', '/hierarquia', '/settings'])
     for (const h of ['/processos', '/intimacoes', '/modelos', '/honorarios', '/imoveis', '/instituto']) expect(telas(direccao)).not.toContain(h)
   })
 
