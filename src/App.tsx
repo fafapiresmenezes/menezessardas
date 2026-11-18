@@ -57,6 +57,20 @@ const MeuEstiloPage = lazy(() => import('@/pages/MeuEstiloPage'))
 const MeuJeitoPage = lazy(() => import('@/pages/MeuJeitoPage'))
 const EquipePage = lazy(() => import('@/pages/EquipePage'))
 const HierarquiaPage = lazy(() => import('@/pages/HierarquiaPage'))
+const DemoObraPage = lazy(() => import('@/pages/DemoObraPage'))
+const VisaoPresidentePage = lazy(() => import('@/pages/VisaoPresidentePage'))
+const CarteiraProjectosPage = lazy(() => import('@/pages/CarteiraProjectosPage'))
+const ContratosPage = lazy(() => import('@/pages/ContratosPage'))
+const PagamentosPage = lazy(() => import('@/pages/PagamentosPage'))
+const FornecedoresFundosPage = lazy(() => import('@/pages/FornecedoresFundosPage'))
+const GarantiasLicencasPage = lazy(() => import('@/pages/GarantiasLicencasPage'))
+const RiscosLitigiosPage = lazy(() => import('@/pages/RiscosLitigiosPage'))
+const DocumentosFundosPage = lazy(() => import('@/pages/DocumentosFundosPage'))
+const AssistenteFundosPage = lazy(() => import('@/pages/AssistenteFundosPage'))
+const EstudosGovernoPage = lazy(() => import('@/pages/EstudosGovernoPage'))
+const BibliotecaTesesPage = lazy(() => import('@/pages/BibliotecaTesesPage'))
+const CriadorProjectosGovernoPage = lazy(() => import('@/pages/CriadorProjectosGovernoPage'))
+const RobosProjectosGovernoPage = lazy(() => import('@/pages/RobosProjectosGovernoPage'))
 import InicioPage from '@/pages/InicioPage'
 import ErroTela from '@/components/ErroTela'
 import SoInstituto from '@/components/SoInstituto'
@@ -297,6 +311,7 @@ function App() {
         <Route path="/transumanismo" element={<PortalInstitutoPage />} />
         <Route path="/marketing" element={<PortalInstitutoPage />} />
         <Route path="/publicidade" element={<PortalInstitutoPage />} />
+        <Route path="/fundos-internacionais" element={<PortalInstitutoPage />} />
         {/* Passo 1: Fechar /cotas-quanticas conforme planejamento */}
         {/* <Route
           path="/cotas-quanticas"
@@ -490,6 +505,62 @@ function App() {
         <Route
           path="/hierarquia"
           element={isAuthenticated ? <HierarquiaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/demonstracao-obra"
+          element={isAuthenticated ? <DemoObraPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/visao-presidente"
+          element={isAuthenticated ? <VisaoPresidentePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/carteira-projectos"
+          element={isAuthenticated ? <CarteiraProjectosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/contratos-obrigacoes"
+          element={isAuthenticated ? <ContratosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/pagamentos-fundos"
+          element={isAuthenticated ? <PagamentosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/fornecedores-fundos"
+          element={isAuthenticated ? <FornecedoresFundosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/garantias-licencas"
+          element={isAuthenticated ? <GarantiasLicencasPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/riscos-litigios"
+          element={isAuthenticated ? <RiscosLitigiosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/documentos-fundos"
+          element={isAuthenticated ? <DocumentosFundosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/assistente-fundos"
+          element={isAuthenticated ? <AssistenteFundosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/estudos-governo"
+          element={isAuthenticated ? <EstudosGovernoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/biblioteca-teses"
+          element={isAuthenticated ? <BibliotecaTesesPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/criador-projectos"
+          element={isAuthenticated ? <CriadorProjectosGovernoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/robos-governo"
+          element={isAuthenticated ? <RobosProjectosGovernoPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/equipe"

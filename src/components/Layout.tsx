@@ -28,6 +28,8 @@ import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
 import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal, Compass, LayoutGrid, AppWindow } from 'lucide-react'
 import { gruposMenu, gruposVisiveis, atalhosDoMenu, frenteDe, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao } from './menuTelas'
+import { usePessoaFundos } from '@/components/VerComoFundos'
+import { veEcra } from '@/lib/visaoFundos'
 import { meuAlcance, ALCANCE_FECHADO } from '@/lib/hierarquia'
 import { lerMeuJeito, carregarMeuJeito, esquecerMeuJeito, aplicarLetra, EVENTO_JEITO, type MeuJeito } from '@/lib/meuJeito'
 
@@ -91,7 +93,13 @@ export default function Layout({ children, title }: LayoutProps) {
   // entra o nome do escritório; a marca THEYE fica só para quem administra o Instituto.
   const marcaVisivel: MarcaEscritorio | null = marca ?? (!visao.instituto && escritorio
     ? { nome: escritorio.advocacia || escritorio.nome, cor: '', logo_url: null, sede: true } : null)
-  const gruposDaPessoa = gruposVisiveis(visao)
+  // Casa de perfil "projectos" (fundos internacionais): produto próprio, com menu próprio e sem nada de advocacia.
+  const projectos = marca?.perfil === 'projectos'
+  // Separação por nível (plano v5, fase R): na casa de fundos, o menu obedece ao nível de quem vê.
+  const pessoaFundos = usePessoaFundos()
+  const gruposDaPessoa = gruposVisiveis(visao, projectos ? 'projectos' : 'direito')
+    .map(g => projectos ? { ...g, itens: g.itens.filter(i => veEcra(pessoaFundos, i.href)) } : g)
+    .filter(g => g.itens.length > 0)
   // Cada frente do Instituto é uma plataforma à parte: dentro dela, o menu do direito some.
   const frente = frenteDe(pathname)
   const meusAtalhos = atalhosDoMenu(jeito.atalhos, visao)
@@ -115,9 +123,11 @@ export default function Layout({ children, title }: LayoutProps) {
   }
   const alternarGrupo = (id: string) => mudarGrupos({ ...grupos, [id]: !grupos[id] })
   const [maisAberto, setMaisAberto] = useState(false)
-  const [simples, setSimples] = useState<boolean>(() => {
+  const [simplesEscolhido, setSimples] = useState<boolean>(() => {
     try { return localStorage.getItem(CHAVE_SIMPLES) !== 'nao' } catch { return true }
   })
+  // O menu simples é feito de atalhos da plataforma jurídica: na casa de projectos vale sempre o menu do produto.
+  const simples = simplesEscolhido && !projectos
   const mudarSimples = (v: boolean) => {
     setSimples(v)
     try { localStorage.setItem(CHAVE_SIMPLES, v ? 'sim' : 'nao') } catch { /* sem armazenamento */ }
@@ -187,7 +197,7 @@ export default function Layout({ children, title }: LayoutProps) {
       >
         <div className="p-4 border-b border-white/10 flex items-center justify-between gap-2">
           {menuAberto ? (
-            <Marca className="flex-1 min-w-0" marca={marcaVisivel} />
+            <Marca className="flex-1 min-w-0" marca={projectos ? marca : marcaVisivel} subtitulo={frente ? frente.nome : undefined} />
           ) : (
             <span className="font-serif text-dourado tracking-widest text-lg mx-auto" aria-hidden="true">
               {marcaVisivel ? marcaVisivel.nome.slice(0, 2).toUpperCase() : 'TH'}
@@ -280,7 +290,7 @@ export default function Layout({ children, title }: LayoutProps) {
               )}
             </ul>
           )}
-          {!frente && !simples && menuAberto && (
+          {!frente && !simples && !projectos && menuAberto && (
             <div className="px-4 pt-3">
               <button type="button" onClick={() => mudarSimples(true)} className="text-sm text-dourado hover:underline underline-offset-2 min-h-[36px]" data-testid="menu-voltar-simples" title="Volta ao menu simples, só com as telas usadas todo dia">
                 ← Voltar ao menu simples
@@ -308,7 +318,7 @@ export default function Layout({ children, title }: LayoutProps) {
           )}
           {!frente && !simples && gruposDaPessoa.map(grupo => {
             const itens = grupo.itens
-            const aberto = !menuAberto || !!grupos[grupo.id]
+            const aberto = !menuAberto || projectos || !!grupos[grupo.id]
             const grupoAtivo = itens.some(i => estaAtivo(i.href, pathname))
             return (
               <div key={grupo.id} className={menuAberto ? 'px-3 py-1' : 'px-3 py-1 border-t border-white/10 first:border-t-0'} data-grupo={grupo.id}>
@@ -388,14 +398,14 @@ export default function Layout({ children, title }: LayoutProps) {
             <div className="min-w-0">
               <h1 className="font-serif text-2xl md:text-3xl text-navy truncate min-w-0" title={title}>{title}</h1>
               {frente && <p className="text-xs text-grafite-claro truncate" data-testid="frente-atual" title="Você está numa frente do Instituto THEYE, separada da plataforma de direito.">Instituto THEYE · <strong className="text-grafite">{frente.nome}</strong></p>}
-              {!frente && escritorio && <p className="text-xs text-grafite-claro truncate" data-testid="escritorio-atual" title="Você está trabalhando dentro deste escritório. Só as pessoas dele enxergam estes dados.">Escritório: <strong className="text-grafite">{escritorio.nome}</strong></p>}
+              {!frente && escritorio && <p className="text-xs text-grafite-claro truncate" data-testid="escritorio-atual" title="Você está trabalhando dentro deste escritório. Só as pessoas dele enxergam estes dados.">{projectos ? 'Empresa' : 'Escritório'}: <strong className="text-grafite">{escritorio.nome}</strong></p>}
             </div>
           </div>
           <div className="flex flex-wrap md:flex-nowrap items-center gap-2 md:flex-shrink-0">
           <TourTela />
           <PerguntarTela />
           {!simples && <BotaoExportar />}
-          <button
+          {!projectos && <button
             type="button"
             onClick={() => navigate('/navegador')}
             className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center gap-2 px-3 border border-navy/15 rounded-sm text-navy hover:border-dourado transition text-sm"
@@ -405,7 +415,7 @@ export default function Layout({ children, title }: LayoutProps) {
           >
             <AppWindow size={18} aria-hidden="true" />
             <span className="hidden 2xl:inline">Navegador</span>
-          </button>
+          </button>}
           <SinoNotificacoes />
           {admin && !frente && (
             <button

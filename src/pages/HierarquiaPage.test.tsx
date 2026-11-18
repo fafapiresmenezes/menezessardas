@@ -12,6 +12,7 @@ const definirCargo = vi.fn(async (id: string, cargo: string | null) => {
   return { ...cargos }
 })
 
+let leituraQuebrada = false
 vi.mock('@/lib/equipe', async () => {
   const real = await vi.importActual<typeof import('@/lib/equipe')>('@/lib/equipe')
   return { ...real, perfilAtual: async () => perfil, listarPessoas: async () => pessoas }
@@ -21,6 +22,7 @@ vi.mock('@/lib/hierarquia', async () => {
   return {
     ...real,
     lerCargos: async () => ({ ...cargos }),
+    lerCargosEstrito: async () => { if (leituraQuebrada) throw new Error('sem conexão'); return { ...cargos } },
     definirCargo: (id: string, cargo: string | null) => definirCargo(id, cargo),
     meuAlcance: async () => ({ id: 'p1', cargo: null, admin: true, veTudo: true }),
   }
@@ -34,7 +36,7 @@ const { default: HierarquiaPage } = await import('./HierarquiaPage')
 
 describe('Hierarquia', () => {
   beforeEach(() => {
-    cleanup(); definirCargo.mockClear(); perfil = 'admin'; cargos = { p2: 'pleno' }
+    cleanup(); definirCargo.mockClear(); leituraQuebrada = false; perfil = 'admin'; cargos = { p2: 'pleno' }
     tarefas = [{ responsavel_id: 'p2' }, { responsavel_id: null }, { responsavel_id: null }, { responsavel_id: null }]
     pessoas = [
       { id: 'p1', nome: 'Administradora', email: 'a@exemplo.com', funcao: 'admin', confirmado: true, ultimoAcesso: null },
@@ -94,5 +96,11 @@ describe('Hierarquia', () => {
     expect(bloco.textContent).toContain('não têm advogado responsável')
     expect(bloco.textContent).toContain('decisão do escritório')
     expect(bloco.querySelector('button')).toBeNull()
+  })
+  it('se os cargos gravados não puderem ser lidos, a tela avisa e trava os seletores em vez de mostrar todos sem cargo', async () => {
+    leituraQuebrada = true
+    render(<HierarquiaPage />)
+    expect((await screen.findByRole('alert')).textContent).toMatch(/Não foi possível carregar os cargos/)
+    expect((screen.getByTestId('cargo-p2') as HTMLSelectElement).disabled).toBe(true)
   })
 })

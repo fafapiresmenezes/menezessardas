@@ -18,7 +18,7 @@ import {
   CARGOS,
   definirCargo,
   descricaoCargo,
-  lerCargos,
+  lerCargosEstrito,
   meuAlcance,
   rotuloCargo,
   ALCANCE_FECHADO,
@@ -36,6 +36,8 @@ export default function HierarquiaPage() {
   // Quantos processos ainda não têm advogado responsável: enquanto não tiverem, aparecem para todo mundo.
   const [processos, setProcessos] = useState<{ total: number; semDono: number } | null>(null)
   const [ocupado, setOcupado] = useState('')
+  const [leituraFalhou, setLeituraFalhou] = useState(false)
+  const [salvoAgora, setSalvoAgora] = useState('')
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
 
   useEffect(() => {
@@ -45,7 +47,12 @@ export default function HierarquiaPage() {
         setPerfil(p)
         if (p !== 'admin') return
         setPessoas(await listarPessoas())
-        lerCargos().then(setCargos).catch(() => undefined)
+        // Leitura estrita: se os cargos não puderem ser lidos, a tela avisa em vez de mostrar todo mundo
+        // como "Sem cargo definido" (o que parecia que nada tinha sido salvo).
+        lerCargosEstrito().then(setCargos).catch(e => {
+          setLeituraFalhou(true)
+          setMsg({ tipo: 'erro', texto: `Não foi possível carregar os cargos já gravados (${mensagemAmigavel(e)}). Recarregue a página antes de alterar.` })
+        })
         meuAlcance().then(a => setEu(a.id)).catch(() => undefined)
         if (supabaseConfigurado) {
           const { data } = await supabase.from('tarefas').select('responsavel_id').eq('nivel', 'projeto')
@@ -60,15 +67,17 @@ export default function HierarquiaPage() {
   }, [])
 
   const alterarCargo = async (pessoa: Pessoa, valor: string) => {
-    setOcupado(pessoa.id); setMsg(null)
+    setOcupado(pessoa.id); setMsg(null); setSalvoAgora('')
+    // Só avisa da demora; não libera a tela antes da resposta, para duas gravações não se atropelarem.
     const timeout = setTimeout(() => {
-      setOcupado('')
-      setMsg({ tipo: 'erro', texto: `Demorando demais. Verifique a conexão e tente novamente.` })
+      setMsg({ tipo: 'erro', texto: `Está demorando mais que o normal. Aguarde: assim que o banco responder, esta mensagem muda.` })
     }, 8000)
     try {
       const novosCargos = await definirCargo(pessoa.id, valor === 'nenhum' ? null : (valor as Cargo))
       clearTimeout(timeout)
       setCargos(novosCargos)
+      setLeituraFalhou(false)
+      setSalvoAgora(pessoa.id)
       setMsg({ tipo: 'ok', texto: `${pessoa.nome}: ${rotuloCargo[valor as Cargo | 'nenhum'] ?? valor}. Salvo.` })
     } catch (e) {
       clearTimeout(timeout)
@@ -155,7 +164,7 @@ export default function HierarquiaPage() {
                         id={`cargo-${p.id}`}
                         data-testid={`cargo-${p.id}`}
                         value={cargos[p.id] ?? 'nenhum'}
-                        disabled={ocupado !== ''}
+                        disabled={ocupado !== '' || leituraFalhou}
                         onChange={e => alterarCargo(p, e.target.value)}
                         title={descricaoCargo[cargos[p.id] ?? 'nenhum']}
                         className="w-full min-h-[44px] px-3 py-2 border border-grafite-claro/40 rounded-sm bg-white focus:border-dourado text-sm"
@@ -164,7 +173,7 @@ export default function HierarquiaPage() {
                           <option key={c} value={c}>{rotuloCargo[c]}</option>
                         ))}
                       </select>
-                      <p className="text-xs text-grafite-claro mt-1">{ocupado === p.id ? 'Salvando…' : 'Salvo na hora; pode trocar quando quiser.'}</p>
+                      <p className="text-xs text-grafite-claro mt-1">{ocupado === p.id ? 'Salvando…' : salvoAgora === p.id ? 'Salvo agora.' : 'Salvo na hora; pode trocar quando quiser.'}</p>
                     </div>
                   </li>
                 ))}

@@ -162,6 +162,24 @@ export default function InicioPage() {
           )}
         </section>
       )}
+      {/* Quadradinho do Instituto (pedido de M, 18/11/2026): quem administra o Instituto entra logado e
+          precisa de ver a casa dos fundos internacionais a um clique daqui — a porta de visitantes não chega. */}
+      {escritorio?.instituto && alcance?.admin && (
+        <button
+          type="button"
+          data-testid="quadradinho-fundos"
+          onClick={() => navigate('/fundos-internacionais')}
+          title="Plataforma, Governança, Fundos Internacionais — abre a demonstração a funcionar, com dados de exemplo citados"
+          className="w-full max-w-6xl mb-8 bg-dourado text-navy text-left p-5 shadow-lg border-t-4 border-white hover:-translate-y-0.5 transition focus:outline-none focus:ring-4 focus:ring-white/60 flex items-start gap-3"
+        >
+          <Landmark className="w-8 h-8 mt-0.5 shrink-0" aria-hidden />
+          <span className="min-w-0">
+            <span className="block text-[11px] uppercase tracking-wider">Instituto THEYE</span>
+            <span className="block font-serif text-2xl leading-tight">Plataforma, Governança, Fundos Internacionais</span>
+            <span className="block text-sm mt-1">Clique para ver a plataforma a funcionar: carteira, contratos, pagamentos, medição de obra, estudos para o governo, biblioteca e robôs — com exemplos citados de repositórios internacionais.</span>
+          </span>
+        </button>
+      )}
       {/* Atalhos divididos por assunto: quem entra acha o que precisa sem abrir o menu. */}
       <div className="w-full max-w-6xl mb-8" aria-label="Por onde começar">
         <p className="text-white text-lg mb-3 text-center">O que você precisa agora?</p>

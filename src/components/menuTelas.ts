@@ -6,7 +6,7 @@
 // (src/data/rotas.ts) leem daqui, por `nomeDaTela`. Assim uma tela não volta a ter três nomes diferentes.
 // Cada tela (ou bloco) tem um NÍVEL: quem não é daquele nível nem vê o item no menu. O banco continua sendo quem
 // protege os dados; aqui é só arrumação, para ninguém ver botão que não é para si.
-import { Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, AppWindow, Network, MapPin, HeartPulse, type LucideIcon, Droplets, Ruler, Target, Coins} from 'lucide-react'
+import { Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, AppWindow, Network, MapPin, HeartPulse, type LucideIcon, Droplets, Ruler, Target, Coins, Landmark} from 'lucide-react'
 
 export type Nivel = 'todos' | 'gestao' | 'admin' | 'instituto'
 export interface Tela { icon: LucideIcon; label: string; href: string; nivel?: Nivel }
@@ -101,6 +101,7 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: FlaskConical, label: "Transumanismo", href: '/transumanismo' },
     { icon: FlaskConical, label: "Marketing", href: '/marketing' },
     { icon: FlaskConical, label: "Publicidade", href: '/publicidade' },
+    { icon: Building2, label: "Plataforma, Governança, Fundos Internacionais", href: '/fundos-internacionais' },
     { icon: FlaskConical, label: 'IA e superinteligência', href: '/ia' },
     { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
     { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
@@ -121,7 +122,62 @@ export const gruposMenu: GrupoMenu[] = [
   ] },
 ]
 
-const NOMES: Record<string, string> = Object.fromEntries(gruposMenu.flatMap(g => g.itens.map(i => [i.href, i.label])))
+/**
+ * Menu da casa de perfil "projectos" (fundos internacionais, 18/11/2026). É um produto próprio: nenhuma tela de advocacia entra aqui.
+ * Só aparecem telas que já existem; os ecrãs da fase C do trilho entram neste menu à medida que ficam prontos.
+ * Os nomes são os mesmos do título de cada tela, como em todo o menu.
+ */
+export const gruposProjectos: GrupoMenu[] = [
+  { id: 'visao', titulo: '1. Visão', bloco: 'Visão', nivel: 'todos', dica: 'O estado de tudo num ecrã', itens: [
+    { icon: Gauge, label: 'Visão do presidente', href: '/visao-presidente' },
+    { icon: FolderKanban, label: 'Carteira de projectos', href: '/carteira-projectos' },
+  ] },
+  { id: 'obra', titulo: '2. Obra', bloco: 'Obra', nivel: 'todos', dica: 'Medição e assinaturas por nível', itens: [
+    { icon: Ruler, label: 'Medição de obra por nível', href: '/demonstracao-obra' },
+  ] },
+  { id: 'contratos', titulo: '3. Contratos', bloco: 'Contratos', nivel: 'todos', dica: 'Contratos, obrigações e prazos', itens: [
+    { icon: FileText, label: 'Contratos e obrigações', href: '/contratos-obrigacoes' },
+  ] },
+  { id: 'pagamentos', titulo: '4. Pagamentos', bloco: 'Pagamentos', nivel: 'todos', dica: 'Fila de pagamentos por estado', itens: [
+    { icon: Wallet, label: 'Pagamentos', href: '/pagamentos-fundos' },
+  ] },
+  { id: 'fornecedores', titulo: '5. Fornecedores', bloco: 'Fornecedores', nivel: 'todos', dica: 'Fornecedores por estado e nota', itens: [
+    { icon: Store, label: 'Fornecedores', href: '/fornecedores-fundos' },
+  ] },
+  { id: 'garantias', titulo: '6. Garantias e licenças', bloco: 'Garantias', nivel: 'todos', dica: 'Garantias e licenças por validade', itens: [
+    { icon: KeySquare, label: 'Garantias e licenças', href: '/garantias-licencas' },
+  ] },
+  { id: 'riscos', titulo: '7. Riscos', bloco: 'Riscos', nivel: 'todos', dica: 'Riscos e litígios por nível', itens: [
+    { icon: Radar, label: 'Riscos e litígios', href: '/riscos-litigios' },
+  ] },
+  { id: 'documentos', titulo: '8. Documentos', bloco: 'Documentos', nivel: 'todos', dica: 'Documentos e registo de auditoria', itens: [
+    { icon: Library, label: 'Documentos e auditoria', href: '/documentos-fundos' },
+  ] },
+  { id: 'assistente-f', titulo: '9. Assistente', bloco: 'Assistente', nivel: 'todos', dica: 'Perguntas em linguagem simples', itens: [
+    { icon: MessageSquare, label: 'Assistente', href: '/assistente-fundos' },
+  ] },
+  { id: 'estudos-gov', titulo: '10. Estudos para o governo', bloco: 'Estudos', nivel: 'todos', dica: 'Estudos num molde fixo, com fontes', itens: [
+    { icon: Landmark, label: 'Estudos para o governo', href: '/estudos-governo' },
+  ] },
+  { id: 'biblioteca-f', titulo: '11. Biblioteca e especialistas', bloco: 'Biblioteca', nivel: 'todos', dica: 'Teses, cursos abertos e o catálogo de especialistas', itens: [
+    { icon: BookOpen, label: 'Biblioteca e especialistas', href: '/biblioteca-teses' },
+  ] },
+  { id: 'criador-gov', titulo: '12. Criador de projectos', bloco: 'Criador', nivel: 'gestao', dica: 'Dossiês de projecto para o governo, em rascunho', itens: [
+    { icon: FolderKanban, label: 'Criador de projectos para o governo', href: '/criador-projectos' },
+  ] },
+  { id: 'robos-gov', titulo: '13. Robôs de projectos', bloco: 'Robôs', nivel: 'gestao', dica: 'A esteira dos robôs e das propostas', itens: [
+    { icon: Network, label: 'Robôs de projectos para o governo', href: '/robos-governo' },
+  ] },
+  { id: 'risco', titulo: '2. Risco e auditoria', bloco: 'Risco e auditoria', nivel: 'gestao', dica: 'Quem fez o quê, e quando', itens: [
+    { icon: ClipboardList, label: 'Trilha de auditoria', href: '/trilha' },
+  ] },
+  { id: 'casa', titulo: '3. Casa', bloco: 'Casa', nivel: 'todos', dica: 'Pessoas, níveis e conta', itens: [
+    { icon: Users, label: 'Hierarquia', href: '/hierarquia', nivel: 'gestao' },
+    { icon: Settings, label: 'Configurações', href: '/settings' },
+  ] },
+]
+
+const NOMES: Record<string, string> = Object.fromEntries([...gruposProjectos, ...gruposMenu].flatMap(g => g.itens.map(i => [i.href, i.label])))
 /** O nome da tela, um só, para o menu, a entrada, a busca e a lista de telas. */
 export const nomeDaTela = (href: string): string | undefined => NOMES[href]
 
@@ -175,7 +231,13 @@ export function podeVerNivel(nivel: Nivel, v: Visao): boolean {
 }
 
 /** Os grupos que a pessoa enxerga, já sem as telas que não são para ela. */
-export function gruposVisiveis(v: Visao): GrupoMenu[] {
+export function gruposVisiveis(v: Visao, perfil: 'direito' | 'projectos' = 'direito'): GrupoMenu[] {
+  if (perfil === 'projectos') {
+    return gruposProjectos
+      .filter(g => podeVerNivel(g.nivel, v))
+      .map(g => ({ ...g, itens: g.itens.filter(i => podeVerNivel(i.nivel ?? 'todos', v)) }))
+      .filter(g => g.itens.length > 0)
+  }
   return gruposMenu
     .filter(g => podeVerNivel(g.nivel, v))
     .map(g => ({ ...g, itens: g.itens.filter(i => (v.sede || !SO_SEDE.includes(i.href)) && podeVerNivel(i.nivel ?? 'todos', v)) }))
@@ -197,6 +259,20 @@ export function atalhosDoMenu(escolhidos: string[] | undefined, v: Visao): Atalh
 
 // Autoexplicativo: ao passar o mouse em qualquer item do menu, uma frase diz para que a tela serve.
 export const DICAS: Record<string, string> = {
+  '/visao-presidente': 'Todos os projectos num ecrã, com a cor de cada um, o contratado, o medido e os avisos a tratar',
+  '/carteira-projectos': 'Lista dos projectos por país e sector, com cor e avanço, e filtros para encontrar depressa',
+  '/contratos-obrigacoes': 'Cada contrato com partes, valor, lei e foro, e as obrigações como prazos com dono',
+  '/pagamentos-fundos': 'Fila de pagamentos por estado, ligados à medição e ao projecto, com o motivo de retenção quando há',
+  '/fornecedores-fundos': 'Fornecedores por estado, com o tipo, o país, os projectos e uma nota de desempenho',
+  '/garantias-licencas': 'Garantias e licenças por validade, com alerta de proximidade',
+  '/riscos-litigios': 'Riscos e litígios por nível, cada um com a medida proposta',
+  '/documentos-fundos': 'Os documentos do projecto e o registo de quem fez o quê e quando',
+  '/assistente-fundos': 'Perguntas do dia a dia respondidas em linguagem simples a partir dos dados da plataforma',
+  '/estudos-governo': 'Estudos para apresentar ao governo, num molde fixo com pergunta, método, limites e fontes',
+  '/biblioteca-teses': 'A biblioteca interna: repositórios de teses, cursos abertos e o catálogo de especialistas, tudo com licença',
+  '/criador-projectos': 'Monta o dossiê-rascunho de um projecto para o governo: estudos, equipa e fontes, com aprovação humana',
+  '/robos-governo': 'Os robôs que preparam e apresentam propostas, e a esteira por estado, sempre com uma pessoa a decidir',
+  '/demonstracao-obra': 'Boletim de medição, assinaturas por nível e o que cada cargo vê, com dados de demonstração',
   '/inicio': 'A tela de entrada: o que fazer agora e todas as matérias do direito',
   '/meu-dia': 'O que vence hoje e nos próximos dias, separado por área do direito',
   '/processos-antigos': 'Trazer processos de antes da plataforma: planilha ou busca no tribunal',
@@ -263,6 +339,7 @@ export const DICAS: Record<string, string> = {
   '/biosseguranca': "Biossegurança: Normas de biossegurança e de pesquisa com organismos, só no lado da conformidade e da proteção.",
   '/transumanismo': "Transumanismo: Ética, direito e regulação do que une corpo e tecnologia, em pesquisa aberta e sem promessa.",
   '/marketing': "Marketing: Marketing com prova: o que se afirma tem fonte, e a lei de dados e de consumo fica à vista.",
+  '/fundos-internacionais': "Plataforma, Governança, Fundos Internacionais: Governar projetos financiados por fundos internacionais: quem decide, o que foi medido e o que se presta de contas a cada financiador.",
   '/publicidade': "Publicidade: Publicidade dentro da regra: o que o código de autorregulação e a lei de consumo permitem e proíbem.",
   '/ia': 'IA e superinteligência: modelos, agentes e consultores',
   '/consultores': 'Um consultor de IA por área do direito diz o que fazer primeiro',
@@ -319,6 +396,23 @@ export const FRENTES: Frente[] = [
   { id: 'transumanismo', nome: "Transumanismo", itens: [{ icon: FlaskConical, label: "Transumanismo", href: '/transumanismo' }] },
   { id: 'marketing', nome: "Marketing", itens: [{ icon: FlaskConical, label: "Marketing", href: '/marketing' }] },
   { id: 'publicidade', nome: "Publicidade", itens: [{ icon: FlaskConical, label: "Publicidade", href: '/publicidade' }] },
+  { id: 'fundos', nome: "Plataforma, Governança, Fundos Internacionais", itens: [
+    { icon: Building2, label: "Plataforma, Governança, Fundos Internacionais", href: '/fundos-internacionais' },
+    { icon: Gauge, label: 'Visão do presidente', href: '/visao-presidente' },
+    { icon: FolderKanban, label: 'Carteira de projectos', href: '/carteira-projectos' },
+    { icon: FileText, label: 'Contratos e obrigações', href: '/contratos-obrigacoes' },
+    { icon: Wallet, label: 'Pagamentos', href: '/pagamentos-fundos' },
+    { icon: Store, label: 'Fornecedores', href: '/fornecedores-fundos' },
+    { icon: KeySquare, label: 'Garantias e licenças', href: '/garantias-licencas' },
+    { icon: Radar, label: 'Riscos e litígios', href: '/riscos-litigios' },
+    { icon: Library, label: 'Documentos e auditoria', href: '/documentos-fundos' },
+    { icon: MessageSquare, label: 'Assistente', href: '/assistente-fundos' },
+    { icon: Landmark, label: 'Estudos para o governo', href: '/estudos-governo' },
+    { icon: BookOpen, label: 'Biblioteca e especialistas', href: '/biblioteca-teses' },
+    { icon: FolderKanban, label: 'Criador de projectos para o governo', href: '/criador-projectos' },
+    { icon: Network, label: 'Robôs de projectos para o governo', href: '/robos-governo' },
+    { icon: Ruler, label: 'Medição de obra por nível', href: '/demonstracao-obra' },
+  ] },
   { id: 'ia', nome: 'IA e superinteligência', itens: [
     { icon: FlaskConical, label: 'IA e superinteligência', href: '/ia' },
     { icon: FlaskConical, label: 'Agenda de pesquisa em IA', href: '/pesquisa-ia' },
