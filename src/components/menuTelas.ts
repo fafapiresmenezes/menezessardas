@@ -150,6 +150,12 @@ export const gruposProjectos: GrupoMenu[] = [
   { id: 'riscos', titulo: '7. Riscos', bloco: 'Riscos', nivel: 'todos', dica: 'Riscos e litígios por nível', itens: [
     { icon: Radar, label: 'Riscos e litígios', href: '/riscos-litigios' },
   ] },
+  { id: 'documentos', titulo: '8. Documentos', bloco: 'Documentos', nivel: 'todos', dica: 'Documentos e registo de auditoria', itens: [
+    { icon: Library, label: 'Documentos e auditoria', href: '/documentos-fundos' },
+  ] },
+  { id: 'assistente-f', titulo: '9. Assistente', bloco: 'Assistente', nivel: 'todos', dica: 'Perguntas em linguagem simples', itens: [
+    { icon: MessageSquare, label: 'Assistente', href: '/assistente-fundos' },
+  ] },
   { id: 'risco', titulo: '2. Risco e auditoria', bloco: 'Risco e auditoria', nivel: 'gestao', dica: 'Quem fez o quê, e quando', itens: [
     { icon: ClipboardList, label: 'Trilha de auditoria', href: '/trilha' },
   ] },
@@ -248,6 +254,8 @@ export const DICAS: Record<string, string> = {
   '/fornecedores-fundos': 'Fornecedores por estado, com o tipo, o país, os projectos e uma nota de desempenho',
   '/garantias-licencas': 'Garantias e licenças por validade, com alerta de proximidade',
   '/riscos-litigios': 'Riscos e litígios por nível, cada um com a medida proposta',
+  '/documentos-fundos': 'Os documentos do projecto e o registo de quem fez o quê e quando',
+  '/assistente-fundos': 'Perguntas do dia a dia respondidas em linguagem simples a partir dos dados da plataforma',
   '/demonstracao-obra': 'Boletim de medição, assinaturas por nível e o que cada cargo vê, com dados de demonstração',
   '/inicio': 'A tela de entrada: o que fazer agora e todas as matérias do direito',
   '/meu-dia': 'O que vence hoje e nos próximos dias, separado por área do direito',
@@ -382,6 +390,8 @@ export const FRENTES: Frente[] = [
     { icon: Store, label: 'Fornecedores', href: '/fornecedores-fundos' },
     { icon: KeySquare, label: 'Garantias e licenças', href: '/garantias-licencas' },
     { icon: Radar, label: 'Riscos e litígios', href: '/riscos-litigios' },
+    { icon: Library, label: 'Documentos e auditoria', href: '/documentos-fundos' },
+    { icon: MessageSquare, label: 'Assistente', href: '/assistente-fundos' },
     { icon: Ruler, label: 'Medição de obra por nível', href: '/demonstracao-obra' },
   ] },
   { id: 'ia', nome: 'IA e superinteligência', itens: [
