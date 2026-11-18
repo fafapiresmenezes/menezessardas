@@ -9,6 +9,7 @@ import { calcularBoletim, desvioDeCronograma, semaforo, type Semaforo } from '@/
 import { PROJETOS_DEMO } from '@/data/demoObraAngola'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
 import { veProjecto } from '@/lib/visaoFundos'
+import { EXEMPLOS_INTERNACIONAIS, REPOSITORIOS_FUNDOS } from '@/data/exemplosInternacionais'
 
 const kz = (v: number) => `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 0 }).format(v)} Kz`
 const pct = (v: number) => `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 1 }).format(Math.round(v * 1000) / 10)} %`
@@ -64,6 +65,27 @@ export default function CarteiraProjectosPage() {
           ))}
           {vis.length === 0 && <li className="text-sm text-grafite-claro" data-testid="vazio">Nenhum projecto com estes filtros.</li>}
         </ul>
+        {/* Exemplos reais do sector (pedido de M, 18/11/2026): factos publicados em repositórios internacionais,
+            cada um com a fonte. Mostram o tamanho do mercado em que a casa trabalha — nada aqui é previsão. */}
+        <section aria-label="Exemplos reais do sector" className="border-t border-navy/15 pt-4">
+          <h2 className="font-serif text-lg text-navy">Exemplos reais do sector (fontes públicas)</h2>
+          <p className="text-xs text-grafite-claro mb-2">Projectos financiados por fundos internacionais em Angola e na Namíbia, como os repositórios públicos os publicam. Cada linha tem a fonte — são factos citados, não dados desta casa.</p>
+          <ul className="space-y-2" data-testid="exemplos-internacionais">
+            {EXEMPLOS_INTERNACIONAIS.map(e => (
+              <li key={e.id} className="border border-navy/15 rounded-sm p-3">
+                <p className="font-medium text-navy">{e.nome} <span className="text-xs text-grafite-claro">({PAIS[e.pais]})</span></p>
+                <p className="text-xs text-grafite-claro">{e.financiador} · {e.valorPublicado}</p>
+                <p className="text-sm text-grafite mt-1">{e.resumo}</p>
+                <a href={e.fonte.url} target="_blank" rel="noreferrer" className="text-xs underline text-navy" title={`Abre a fonte: ${e.fonte.nome}`}>Fonte: {e.fonte.nome}</a>
+              </li>
+            ))}
+          </ul>
+          <p className="text-xs text-grafite-claro mt-3">Onde procurar mais:{' '}
+            {REPOSITORIOS_FUNDOS.map((r, i) => (
+              <span key={r.url}>{i > 0 && ' · '}<a href={r.url} target="_blank" rel="noreferrer" className="underline" title={r.oQueDa}>{r.nome}</a></span>
+            ))}
+          </p>
+        </section>
       </div>
       </SoParaNiveis>
     </Layout>
