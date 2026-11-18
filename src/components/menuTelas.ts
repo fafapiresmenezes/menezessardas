@@ -6,7 +6,7 @@
 // (src/data/rotas.ts) leem daqui, por `nomeDaTela`. Assim uma tela não volta a ter três nomes diferentes.
 // Cada tela (ou bloco) tem um NÍVEL: quem não é daquele nível nem vê o item no menu. O banco continua sendo quem
 // protege os dados; aqui é só arrumação, para ninguém ver botão que não é para si.
-import { Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, AppWindow, Network, MapPin, HeartPulse, type LucideIcon, Droplets, Ruler, Target, Coins} from 'lucide-react'
+import { Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, AppWindow, Network, MapPin, HeartPulse, type LucideIcon, Droplets, Ruler, Target, Coins, Landmark} from 'lucide-react'
 
 export type Nivel = 'todos' | 'gestao' | 'admin' | 'instituto'
 export interface Tela { icon: LucideIcon; label: string; href: string; nivel?: Nivel }
@@ -156,6 +156,9 @@ export const gruposProjectos: GrupoMenu[] = [
   { id: 'assistente-f', titulo: '9. Assistente', bloco: 'Assistente', nivel: 'todos', dica: 'Perguntas em linguagem simples', itens: [
     { icon: MessageSquare, label: 'Assistente', href: '/assistente-fundos' },
   ] },
+  { id: 'estudos-gov', titulo: '10. Estudos para o governo', bloco: 'Estudos', nivel: 'todos', dica: 'Estudos num molde fixo, com fontes', itens: [
+    { icon: Landmark, label: 'Estudos para o governo', href: '/estudos-governo' },
+  ] },
   { id: 'risco', titulo: '2. Risco e auditoria', bloco: 'Risco e auditoria', nivel: 'gestao', dica: 'Quem fez o quê, e quando', itens: [
     { icon: ClipboardList, label: 'Trilha de auditoria', href: '/trilha' },
   ] },
@@ -256,6 +259,7 @@ export const DICAS: Record<string, string> = {
   '/riscos-litigios': 'Riscos e litígios por nível, cada um com a medida proposta',
   '/documentos-fundos': 'Os documentos do projecto e o registo de quem fez o quê e quando',
   '/assistente-fundos': 'Perguntas do dia a dia respondidas em linguagem simples a partir dos dados da plataforma',
+  '/estudos-governo': 'Estudos para apresentar ao governo, num molde fixo com pergunta, método, limites e fontes',
   '/demonstracao-obra': 'Boletim de medição, assinaturas por nível e o que cada cargo vê, com dados de demonstração',
   '/inicio': 'A tela de entrada: o que fazer agora e todas as matérias do direito',
   '/meu-dia': 'O que vence hoje e nos próximos dias, separado por área do direito',
@@ -392,6 +396,7 @@ export const FRENTES: Frente[] = [
     { icon: Radar, label: 'Riscos e litígios', href: '/riscos-litigios' },
     { icon: Library, label: 'Documentos e auditoria', href: '/documentos-fundos' },
     { icon: MessageSquare, label: 'Assistente', href: '/assistente-fundos' },
+    { icon: Landmark, label: 'Estudos para o governo', href: '/estudos-governo' },
     { icon: Ruler, label: 'Medição de obra por nível', href: '/demonstracao-obra' },
   ] },
   { id: 'ia', nome: 'IA e superinteligência', itens: [
