@@ -97,7 +97,7 @@ export default function ConsultoresPage() {
 
   const grupos = [...new Set(NIVEIS.map(n => n.nivel))]
   return (
-    <Layout title="Consultores do escritório">
+    <Layout title="Consultores de IA">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <p className="text-xs uppercase tracking-[0.2em] text-dourado-escuro">Consultores do escritório</p>
         <h2 className="font-serif text-3xl text-navy mt-1">Um consultor especialista para cada função</h2>

@@ -3,7 +3,7 @@
 // Passo A27: o NOME de cada tela não é escrito aqui. Ele vem do mapa das telas (src/components/menuTelas.ts),
 // o mesmo que alimenta o menu e a tela de entrada. As telas que não estão no menu (formulários e telas internas)
 // trazem o nome do título que aparece na própria tela.
-import { gruposMenu, nomeDaTela } from '@/components/menuTelas'
+import { gruposMenu, gruposVisiveis, nomeDaTela, type Visao } from '@/components/menuTelas'
 
 /** Telas que não ficam no menu: são abertas de dentro de outra tela. O nome é o título da própria tela. */
 const TELAS_INTERNAS: Record<string, string> = {
@@ -20,3 +20,19 @@ const ROTAS = [
 ]
 
 export const ROTAS_TELAS: { rota: string; nome: string }[] = ROTAS.map(rota => ({ rota, nome: nomeDaTela(rota) ?? TELAS_INTERNAS[rota] ?? rota }))
+
+/** Telas internas que só fazem sentido para quem vê a tela "mãe" delas. */
+const MAE_DA_INTERNA: Record<string, string> = {
+  '/imoveis/novo': '/imoveis', '/imoveis/importar': '/imoveis', '/contrato/novo': '/imoveis',
+  '/processos/importar': '/processos', '/laboratorio-admin': '/instituto',
+}
+
+/**
+ * As telas que ESTA pessoa pode ver (pedido de M, 18/11/2026: o escritório cliente não vê nada do Instituto).
+ * A busca global e a escolha da tela inicial leem daqui, e não de ROTAS_TELAS: a lista completa mostrava
+ * Royalties, Caderno de produtos e as frentes do Instituto para qualquer advogado do escritório.
+ */
+export function rotasVisiveis(v: Visao): { rota: string; nome: string }[] {
+  const abertas = new Set(gruposVisiveis(v).flatMap(g => g.itens.map(i => i.href)))
+  return ROTAS_TELAS.filter(r => abertas.has(r.rota) || (MAE_DA_INTERNA[r.rota] !== undefined && abertas.has(MAE_DA_INTERNA[r.rota])))
+}

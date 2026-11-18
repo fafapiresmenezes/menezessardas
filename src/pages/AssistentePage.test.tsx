@@ -14,6 +14,8 @@ const apagar = vi.fn(async (_id: string) => undefined)
 const guardar = vi.fn(async (_e: string) => undefined)
 let preferida = 'imobiliario'
 vi.mock('@/lib/assistente', async (orig) => ({ ...(await orig() as object), perguntar: (...a: unknown[]) => perguntar(...(a as [string, string, Consulta[]])), historicoConsultas: async () => historico, apagarConsulta: (id: string) => apagar(id), especialidadePreferida: async () => preferida, guardarEspecialidade: (e: string) => guardar(e) }))
+let instituto = false
+vi.mock('@/lib/equipe', () => ({ ehInstituto: async () => instituto }))
 vi.mock('@/components/PerfilJulgador', () => ({ default: () => <div data-testid="perfil-stub" /> }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 const { default: AssistentePage, render: renderMd } = await import('./AssistentePage')
@@ -63,6 +65,16 @@ describe('Assistente jurídico', () => {
     fireEvent.click(botao())
     await waitFor(() => expect(screen.getByRole('alert').textContent).toMatch(/teto mensal de IA/))
     expect(renderMd('1) um\n2) dois\n\n# Título')).toBe('<ul class="list-disc pl-5 space-y-1"><li>um</li><li>dois</li></ul><p class="font-semibold text-navy mt-3">Título</p>')
+  })
+
+  it('o agente "Pesquisador do Instituto" só aparece para quem administra o Instituto', async () => {
+    montar()
+    await waitFor(() => expect(screen.getByRole('radio', { name: /^Imobiliário/ })).toBeTruthy())
+    expect(screen.queryByRole('radio', { name: /Pesquisador do Instituto/ })).toBeNull()
+    cleanup(); instituto = true
+    montar()
+    await waitFor(() => expect(screen.getByRole('radio', { name: /Pesquisador do Instituto/ })).toBeTruthy())
+    instituto = false
   })
 
   it('parâmetros da URL escolhem agente, modo Redigir com pedido e estilo, e Caminhos com fatos da tela; matriz de caminhos com notas, recomendado e próximos passos', async () => {

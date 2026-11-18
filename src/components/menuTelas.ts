@@ -14,7 +14,7 @@ export interface GrupoMenu { id: string; titulo: string; bloco: string; nivel: N
 /** O que a pessoa pode ver: vem do cargo (sócio e gestor veem o conjunto), da função de administrador e do Instituto. */
 export interface Visao { veTudo: boolean; admin: boolean; instituto: boolean; sede: boolean }
 
-export const ROTULO_NIVEL: Record<Nivel, string> = { todos: '', gestao: 'sócios e gestor', admin: 'administrador', instituto: 'só o Instituto' }
+export const ROTULO_NIVEL: Record<Nivel, string> = { todos: '', gestao: 'sócios, gestor e administração', admin: 'administrador', instituto: 'só o Instituto' }
 export const EXPLICA_NIVEL: Record<Nivel, string> = {
   todos: 'Todas as pessoas do escritório veem este grupo.',
   gestao: 'Só sócios, o gestor e a administração veem isto: são os números e o dinheiro do escritório inteiro.',
@@ -22,19 +22,17 @@ export const EXPLICA_NIVEL: Record<Nivel, string> = {
   instituto: 'Só a administração do Instituto THEYE vê isto: é o que cuida da plataforma inteira.',
 }
 
-export const SO_SEDE = ['/imoveis', '/fornecedores', '/alertas', '/instituto']
+export const SO_SEDE = ['/imoveis', '/administracao', '/fornecedores', '/alertas']
 export const gruposMenu: GrupoMenu[] = [
   { id: 'hoje', titulo: '1. Todo dia', bloco: 'Todo dia', nivel: 'todos', dica: 'Comece por aqui', itens: [
     { icon: Home, label: 'Início', href: '/inicio' },
     { icon: Sunrise, label: 'Meu dia', href: '/meu-dia' },
     { icon: CalendarDays, label: 'Agenda', href: '/agenda' },
     { icon: Inbox, label: 'Intimações', href: '/intimacoes' },
-    { icon: Bell, label: 'Alertas', href: '/alertas' },
     { icon: CalendarClock, label: 'Prazos por código', href: '/prazos' },
     { icon: Timer, label: 'Horas trabalhadas', href: '/horas' },
     { icon: Wrench, label: 'Ferramentas do dia a dia', href: '/ferramentas' },
     { icon: Cloud, label: 'Nuvem do escritório', href: '/nuvem' },
-    { icon: LayoutGrid, label: 'Painel', href: '/dashboard' },
   ] },
   // Passo A27: o imobiliário é uma área do direito como as outras — imóveis, locação e fornecedores entram aqui,
   // junto com os processos, em vez de formarem um mundo à parte no menu.
@@ -52,8 +50,10 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: Building2, label: 'Imóveis', href: '/imoveis' },
     { icon: KeySquare, label: 'Administração de locação', href: '/administracao' },
     { icon: Truck, label: 'Fornecedores', href: '/fornecedores' },
+    { icon: Bell, label: 'Alertas de contratos', href: '/alertas' },
+    { icon: LayoutGrid, label: 'Painel de imóveis', href: '/dashboard' },
   ] },
-  { id: 'pecas', titulo: '3. Escrever peças', bloco: 'Escrever peças', nivel: 'todos', dica: 'O robô escreve do seu jeito', itens: [
+  { id: 'pecas', titulo: '3. Escrever peças', bloco: 'Escrever peças', nivel: 'todos', dica: 'Pesquisar e redigir', itens: [
     { icon: MessageSquare, label: 'Assistente jurídico', href: '/assistente' },
     { icon: FileText, label: 'Modelos de peças', href: '/modelos' },
     { icon: Scale, label: 'Legislação', href: '/legislacao' },
@@ -64,13 +64,12 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: BookOpen, label: 'Parâmetros de escrita', href: '/parametros-escrita' },
   ] },
   { id: 'escritorio', titulo: '4. Escritório', bloco: 'Escritório', nivel: 'todos', dica: 'Orientação, números e equipe', itens: [
-    { icon: Briefcase, label: 'Consultores do escritório', href: '/consultores' },
+    { icon: Briefcase, label: 'Consultores de IA', href: '/consultores' },
     { icon: ShieldCheck, label: 'Compliance e LGPD', href: '/compliance' },
     { icon: ShieldCheck, label: 'Trilha de auditoria', href: '/trilha' },
     { icon: Gauge, label: 'Indicadores', href: '/indicadores', nivel: 'gestao' },
     { icon: Filter, label: 'Funil de vendas', href: '/funil', nivel: 'gestao' },
     { icon: PiggyBank, label: 'Financeiro', href: '/financeiro', nivel: 'gestao' },
-    { icon: ClipboardList, label: 'Medições', href: '/medicoes', nivel: 'gestao' },
     { icon: Banknote, label: 'Honorários', href: '/honorarios', nivel: 'gestao' },
     { icon: FileBarChart, label: 'Relatórios', href: '/relatorios', nivel: 'gestao' },
     { icon: TrendingUp, label: 'Previsões', href: '/previsoes', nivel: 'gestao' },
@@ -115,6 +114,7 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: Target, label: 'Escolha do mercado', href: '/escolha-do-mercado' },
     { icon: Coins, label: 'Mapa de receita', href: '/mapa-de-receita' },
     { icon: Banknote, label: 'Royalties', href: '/royalties' },
+    { icon: ClipboardList, label: 'Medições de contratos', href: '/medicoes' },
   ] },
   { id: 'conta', titulo: 'Minha conta', bloco: 'Minha conta', nivel: 'todos', dica: 'Do seu jeito', itens: [
     { icon: SlidersHorizontal, label: 'Meu jeito de trabalhar', href: '/meu-jeito' },
@@ -185,7 +185,7 @@ export const nomeDaTela = (href: string): string | undefined => NOMES[href]
 export interface AtalhoInicio { id: string; destino: string; texto: string; icone: LucideIcon; so?: 'admin' | 'veTudo' }
 const ATALHOS_INICIO: Record<string, AtalhoInicio[]> = {
   hoje: [
-    { id: 'ir-meu-dia', destino: '/meu-dia', texto: 'Prazos, tarefas e intimações de hoje e da semana.', icone: CalendarClock },
+    { id: 'ir-meu-dia', destino: '/meu-dia', texto: 'Prazos, tarefas e intimações de hoje e da semana.', icone: Sunrise },
     { id: 'ir-agenda', destino: '/agenda', texto: 'Audiências, prazos e compromissos no calendário.', icone: CalendarDays },
     { id: 'ir-intimacoes', destino: '/intimacoes', texto: 'O que chegou dos tribunais e ainda não foi lido.', icone: Inbox },
   ],
@@ -195,14 +195,14 @@ const ATALHOS_INICIO: Record<string, AtalhoInicio[]> = {
     { id: 'ir-pesquisa', destino: '/pesquisa', texto: 'Processo, pessoa ou empresa numa caixa só.', icone: SearchCheck },
   ],
   pecas: [
-    { id: 'ir-assistente', destino: '/assistente', texto: 'Pede uma peça ou tira uma dúvida: o robô redige e responde citando a lei.', icone: MessageSquare },
+    { id: 'ir-assistente', destino: '/assistente', texto: 'Peça uma minuta ou tire uma dúvida: o assistente redige e responde citando a lei.', icone: MessageSquare },
     { id: 'ir-meu-estilo', destino: '/meu-estilo', texto: 'Ensine o seu estilo com peças que você já escreveu.', icone: PenLine },
     { id: 'ir-parametros', destino: '/parametros-escrita', texto: 'Tamanho, linguagem e estrutura das peças.', icone: BookOpen },
   ],
   escritorio: [
     { id: 'ir-consultores', destino: '/consultores', texto: 'Um consultor por área do direito diz o que fazer primeiro.', icone: Briefcase },
     { id: 'ir-indicadores', destino: '/indicadores', texto: 'Metas, prazos cumpridos e resultado do conjunto.', icone: Gauge, so: 'veTudo' },
-    { id: 'ir-equipe', destino: '/equipe', texto: 'Liberar quem pediu para entrar e definir o cargo de cada pessoa.', icone: Users, so: 'admin' },
+    { id: 'ir-equipe', destino: '/equipe', texto: 'Liberar quem pediu para entrar e definir a função de cada pessoa.', icone: Users, so: 'admin' },
   ],
 }
 
@@ -220,7 +220,7 @@ export const BLOCOS_INICIO = gruposMenu
   }))
 
 /** Menu simples de quem ainda não escolheu o seu: só o que se usa todo dia. */
-export const ATALHOS_PADRAO = ['/inicio', '/meu-dia', '/agenda', '/intimacoes', '/processos', '/processos-antigos', '/meu-estilo', '/parametros-escrita']
+export const ATALHOS_PADRAO = ['/inicio', '/meu-dia', '/agenda', '/intimacoes', '/processos', '/assistente', '/meu-estilo', '/parametros-escrita']
 export const MAX_ATALHOS = 14
 
 export function podeVerNivel(nivel: Nivel, v: Visao): boolean {
@@ -276,8 +276,8 @@ export const DICAS: Record<string, string> = {
   '/inicio': 'A tela de entrada: o que fazer agora e todas as matérias do direito',
   '/meu-dia': 'O que vence hoje e nos próximos dias, separado por área do direito',
   '/processos-antigos': 'Trazer processos de antes da plataforma: planilha ou busca no tribunal',
-  '/migracao': 'Importar tudo do sistema antigo do escritório, com como desfazer',
-  '/dashboard': 'Números gerais do escritório em um só painel',
+  '/migracao': 'Importar tudo do sistema antigo do escritório, com opção de desfazer',
+  '/dashboard': 'Imóveis e contratos com vencimento próximo, num só painel',
   '/intimacoes': 'Publicações e intimações recebidas, com o que fazer em cada uma',
   '/agenda': 'Audiências, reuniões e compromissos, com avisos por e-mail',
   '/prazos': 'Prazo certo por código: CPC, CLT, CPP, Juizados e outros',
@@ -285,13 +285,13 @@ export const DICAS: Record<string, string> = {
   '/processos': 'Carteira de processos com andamentos e prazos de cada um',
   '/pesquisa': 'Pesquisa e due diligence sobre pessoas e empresas em fontes públicas',
   '/leitura-do-caso': 'Contexto do caso, chance de êxito e roteiro de perguntas',
-  '/monitoramento': 'Vigiar processos no tribunal e avisar quando algo sair',
+  '/monitoramento': 'Acompanhar processos no tribunal e avisar quando houver andamento',
   '/parte-adversa': 'O que se sabe da parte contrária em fontes públicas',
   '/kyc': 'Checar quem é a contraparte antes de contratar ou processar',
   '/perfil-cliente': 'Ficha de cada cliente: casos, contatos e preferências',
   '/funil': 'Clientes em potencial, da primeira conversa ao contrato',
   '/financeiro': 'Entradas, saídas e saldo do escritório',
-  '/medicoes': 'Medição de cada contrato, público e privado, e o aviso quando o pagamento atrasa',
+  '/medicoes': 'Medição dos contratos de serviço do Instituto com cada plataforma, e o aviso quando o pagamento atrasa',
   '/royalties': 'Os 5% do Instituto em cada venda de serviço, e em que conta eles caem',
   '/engenharia': 'A plataforma de engenharia: matérias, consultores e cálculo de estrutura com memória de cálculo',
   '/superficie-de-ataque': 'Mapa do que um invasor alcançaria e o que fazer em cada ponto, por enquanto com dados de exemplo',
@@ -309,22 +309,22 @@ export const DICAS: Record<string, string> = {
   '/imoveis': 'Imóveis administrados, contratos e documentos',
   '/administracao': 'Administração de locações: cobranças, repasses e reajustes',
   '/fornecedores': 'Fornecedores do escritório e dos imóveis',
-  '/alertas': 'Avisos de vencimento e reajuste de contratos',
+  '/alertas': 'Avisos de vencimento e reajuste dos contratos de locação',
   '/legislacao': 'Ler a lei direto do Planalto, artigo por artigo',
   '/assistente': 'Perguntar, redigir peça ou comparar caminhos com a IA',
   '/modelos': 'Modelos prontos de peças e documentos do escritório',
   '/navegador': 'Abrir tribunais, diários e pesquisa sem sair da plataforma',
   '/fontes': 'Tribunais, diários e fontes oficiais em um só lugar',
   '/biblioteca': 'Tudo o que já foi pesquisado e os repositórios abertos de teses, legislação e jurisprudência',
-  '/parametros-escrita': 'Como o robô escreve: redatores, tom e formatação das peças',
+  '/parametros-escrita': 'Tom, tamanho e estrutura das peças que o assistente escreve',
   '/meu-estilo': 'Ensinar à plataforma o seu jeito de escrever',
   '/ferramentas': 'Calculadoras, validadores e listas de verificação do dia a dia',
   '/compliance': 'LGPD, integridade e conformidade do escritório',
-  '/indicadores': 'Indicadores e metas (OKRs) do escritório',
+  '/indicadores': 'Indicadores e metas do escritório',
   '/relatorios': 'Relatórios prontos para imprimir ou exportar',
   '/trilha': 'Registro do que foi feito, com carimbo que prova a data',
   '/instituto': 'Pesquisa e estudos do Instituto THEYE',
-  '/frentes-do-instituto': 'Lista das doze frentes do Instituto: cada uma abre direto, você já entrou',
+  '/frentes-do-instituto': 'Lista das frentes do Instituto: cada uma abre direto no seu segmento',
   '/preditiva': 'Plataforma preditiva: previsões de mercado com incerteza declarada',
   '/educacao': 'Educação e capacitação do Instituto: trilhas, cursos e materiais',
   '/ciberseguranca': 'Cibersegurança: rastros, superfície de ataque e resposta a incidentes',
@@ -342,15 +342,14 @@ export const DICAS: Record<string, string> = {
   '/fundos-internacionais': "Plataforma, Governança, Fundos Internacionais: Governar projetos financiados por fundos internacionais: quem decide, o que foi medido e o que se presta de contas a cada financiador.",
   '/publicidade': "Publicidade: Publicidade dentro da regra: o que o código de autorregulação e a lei de consumo permitem e proíbem.",
   '/ia': 'IA e superinteligência: modelos, agentes e consultores',
-  '/consultores': 'Consultores de IA por nível e por especialidade',
+  '/consultores': 'Um consultor de IA por área do direito diz o que fazer primeiro',
   '/estudos': 'Estudos para entidades, órgãos e associações',
   '/enquetes': 'Enquetes sobre temas do direito',
-  '/mercado': 'O mercado jurídico em números, pela pesquisa do Instituto',
   '/previsoes': 'Previsões e riscos da carteira',
   '/solucoes': 'A plataforma oferecida a outros escritórios (vertente comercial)',
   '/nuvem': 'Arquivos do escritório guardados na nuvem',
   '/consumo': 'Quanto cada pessoa consome de IA e quanto custa',
-  '/equipe': 'Pessoas do escritório, funções e permissões',
+  '/equipe': 'Pessoas do escritório: liberar acesso e definir a função',
   '/hierarquia': 'Quem é sócio, gestor, pleno e júnior — o cargo decide o que cada pessoa vê',
   '/settings': 'Configurações da conta e da plataforma',
   '/meu-jeito': 'Escolher o que aparece no seu menu, onde a plataforma abre e o tamanho da letra',

@@ -34,8 +34,7 @@ describe('mapa das telas em hierarquia', () => {
     }
     // Escritório de fora da casa principal não tem imóveis, fornecedores, alertas nem a tela do Instituto.
     const fora = gruposVisiveis({ veTudo: true, admin: true, instituto: false, sede: false }).flatMap(g => g.itens.map(i => i.href))
-    for (const h of ['/imoveis', '/fornecedores', '/alertas', '/instituto']) expect(fora).not.toContain(h)
-    expect(fora).toContain('/administracao')
+    for (const h of ['/imoveis', '/administracao', '/fornecedores', '/alertas', '/instituto', '/medicoes']) expect(fora).not.toContain(h)
   })
 
   it('o menu simples respeita a escolha e a ordem da pessoa, sem repetir e sem mostrar o que ela não pode ver', () => {
@@ -44,5 +43,19 @@ describe('mapa das telas em hierarquia', () => {
     const meus = atalhosDoMenu(['/equipe', '/assistente', '/assistente', '/meu-dia', '/x'], ninguem)
     expect(meus.map(a => `${a.bloco}:${a.label}`)).toEqual(['Escrever peças:Assistente jurídico', 'Todo dia:Meu dia'])
     expect(atalhosDoMenu(['/equipe', '/assistente'], { ...ninguem, admin: true }).map(a => a.href)).toEqual(['/equipe', '/assistente'])
+  })
+})
+
+describe('telas do Instituto fora da visão do escritório cliente (18/11/2026)', () => {
+  it('quem não administra o Instituto não vê Royalties, Caderno de produtos, Mercado, Frentes nem Medições', async () => {
+    const { rotasVisiveis } = await import('@/data/rotas')
+    const cliente: Visao = { veTudo: true, admin: true, instituto: false, sede: true }
+    const rotas = rotasVisiveis(cliente).map(r => r.rota)
+    for (const r of ['/royalties', '/caderno-de-produtos', '/mercado', '/frentes-do-instituto', '/medicoes', '/instituto', '/mapa-de-receita', '/escolha-do-mercado']) {
+      expect(rotas, r).not.toContain(r)
+    }
+    expect(rotas).toContain('/hierarquia')
+    const instituto = rotasVisiveis({ ...cliente, instituto: true }).map(r => r.rota)
+    expect(instituto).toContain('/royalties')
   })
 })

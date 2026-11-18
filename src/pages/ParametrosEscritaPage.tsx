@@ -270,7 +270,7 @@ const SECOES: SecaoParametros[] = [
       {
         chave: 'ref_formato_jurisprudencia',
         label: 'Formato de citação de julgados',
-        dica: 'Template para citar decisões judiciais. Os campos entre chaves {Tribunal}, {Data} etc. são preenchidos pelo robô.',
+        dica: 'Modelo para citar decisões judiciais. Os campos entre chaves {Tribunal}, {Data} etc. são preenchidos pelo robô.',
         descricao: 'Padrão para identificar decisões judiciais. Campos entre chaves são preenchidos automaticamente.',
         valor: '{Tribunal}, {Órgão Julgador}, {Tipo de Recurso} nº {Número}, Rel. Min./Des. {Nome}, j. {Data}, {DJe/DJ} {Data de Publicação}.',
         tipo: 'multiline',
@@ -278,7 +278,7 @@ const SECOES: SecaoParametros[] = [
       {
         chave: 'ref_formato_doutrina',
         label: 'Formato de citação de doutrina',
-        dica: 'Template ABNT adaptado. O robô preenche SOBRENOME, Nome, Título, edição, cidade, editora, ano e página.',
+        dica: 'Modelo ABNT adaptado. O robô preenche SOBRENOME, Nome, Título, edição, cidade, editora, ano e página.',
         descricao: 'Padrão ABNT adaptado à petição jurídica.',
         valor: 'SOBRENOME, Nome. Título da obra. {ed}. ed. {Cidade}: {Editora}, {Ano}, p. {Página}.',
         tipo: 'multiline',
@@ -302,7 +302,7 @@ const SECOES: SecaoParametros[] = [
     parametros: [
       {
         chave: 'qualidade_checklist',
-        label: 'Checklist de revisão final',
+        label: 'Lista de revisão final',
         dica: 'Lista de verificação que aparece antes de assinar. Um item por linha, começando com ☐. O advogado confirma cada um manualmente.',
         descricao: 'Itens obrigatórios antes de assinar e protocolar qualquer peça. Um item por linha.',
         valor: '☐ Número do processo e vara conferidos\n☐ Nome das partes conferido\n☐ Prazo verificado (tempestividade)\n☐ Pedidos listados e numerados\n☐ Valor da causa declarado\n☐ Documentos listados nos anexos\n☐ Citações verificadas nas fontes originais\n☐ Ortografia e gramática revisadas\n☐ Formatação ABNT e margens NBR 14724\n☐ Assinatura digital aplicada',

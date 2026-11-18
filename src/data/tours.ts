@@ -9,10 +9,6 @@ export const TOURS: Record<string, { nome: string; passos: PassoTour[] }> = {
     { titulo: 'Busque antes de cadastrar', texto: 'Digite rua, matrícula ou cliente na busca; se o imóvel já existe, abra em vez de duplicar.', seletor: 'input[type=search], input[placeholder*="Buscar"]' },
     { titulo: 'Novo imóvel ou importar', texto: 'Um imóvel: botão "Novo imóvel". Muitos de uma vez: "Importar CSV" aceita a planilha da imobiliária.', seletor: 'a[href="/imoveis/novo"], a[href="/imoveis/importar"]' },
     { titulo: 'Sigilo', texto: 'Dentro do imóvel, o cadeado restringe quem vê documentos e contratos daquele imóvel.' } ] },
-  '/contratos': { nome: 'Contratos', passos: [
-    { titulo: 'A IA lê o PDF', texto: 'Em "Novo contrato", envie o PDF: partes, datas, valor e índice são preenchidos para você conferir.', seletor: 'a[href="/contratos/novo"]' },
-    { titulo: 'Cores dos prazos', texto: 'Vermelho vence em 30 dias, amarelo em 90. Reajuste pelo IGP-M e renovatória aparecem dentro do contrato.' },
-    { titulo: 'Ligue ao imóvel e ao caso', texto: 'Cada contrato aponta para um imóvel e pode virar um caso em "Casos e projetos" com um clique.' } ] },
   '/projetos': { nome: 'Casos e projetos', passos: [
     { titulo: 'Comece por um modelo', texto: 'Escolha um dos 6 modelos (ação, contrato, due diligence…) e as etapas são criadas sozinhas.', seletor: 'button:has-text("Novo caso"), [data-testid=novo-caso]' },
     { titulo: 'Arraste as etapas', texto: 'A fazer, em revisão, feito: arraste o cartão. Prazos vencidos ficam em vermelho e vão para Alertas.' },

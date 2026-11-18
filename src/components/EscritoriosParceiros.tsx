@@ -3,14 +3,17 @@ import { Building, Plus } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import FaturasParceiros from '@/components/FaturasParceiros'
 import MarcaParceiros from '@/components/MarcaParceiros'
-import { criarEscritorio, escritorioDasPessoas, listarEscritorios, moverParaEscritorio, SEDE_ID, type Escritorio, type Pessoa } from '@/lib/equipe'
+import { criarEscritorio, escritorioDasPessoas, listarEscritorios, listarPessoasTodasCasas, moverParaEscritorio, SEDE_ID, type Escritorio, type Pessoa } from '@/lib/equipe'
 import { mensagemAmigavel } from '@/lib/erros'
 import { resumoPreco } from '@/lib/precos'
 
 const brl = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
 // Só a sede vê: cria escritórios parceiros, coloca pessoas neles e acompanha a cobrança mensal por usuário (Value Pas).
-export default function EscritoriosParceiros({ pessoas, aoMudar }: { pessoas: Pessoa[]; aoMudar: () => void }) {
+export default function EscritoriosParceiros({ pessoas: daCasa, aoMudar }: { pessoas: Pessoa[]; aoMudar: () => void }) {
+  // A lista da tela é só da casa (migração 141); este painel precisa de todas as casas. Se a função nova
+  // ainda não existir no banco, fica com a lista da casa.
+  const [pessoas, setPessoas] = useState<Pessoa[]>(daCasa)
   const [lista, setLista] = useState<Escritorio[]>([])
   const [onde, setOnde] = useState<Record<string, string>>({})
   const [nome, setNome] = useState('')
@@ -34,9 +37,9 @@ export default function EscritoriosParceiros({ pessoas, aoMudar }: { pessoas: Pe
   }
 
   const carregar = async () => {
-    try { setLista(await listarEscritorios()); setOnde(await escritorioDasPessoas()) } catch (e) { setMsg(mensagemAmigavel(e)) }
+    try { setLista(await listarEscritorios()); setOnde(await escritorioDasPessoas()); setPessoas(await listarPessoasTodasCasas().then(l => l.length ? l : daCasa).catch(() => daCasa)) } catch (e) { setMsg(mensagemAmigavel(e)) }
   }
-  useEffect(() => { carregar(); carregarConvites(); supabase.rpc('aceites_contrato_saas').then(({ data }) => setAceitesSaas((data ?? []) as typeof aceitesSaas)) }, [pessoas.length])
+  useEffect(() => { carregar(); carregarConvites(); supabase.rpc('aceites_contrato_saas').then(({ data }) => setAceitesSaas((data ?? []) as typeof aceitesSaas)) }, [daCasa.length])
 
   const criar = async () => {
     setMsg(''); setOcupado(true)

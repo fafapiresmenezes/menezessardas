@@ -4,14 +4,15 @@ import { supabase } from '@/lib/supabase'
 import { formatarData } from '@/lib/datas'
 import { PenLine, Trash2 } from 'lucide-react'
 import { mensagemAmigavel } from '@/lib/erros'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 
 // Assinatura eletrônica simples (Lei 14.063/2020, art. 4º, I): o escritório escreve o documento (contrato de honorários,
 // procuração, termo), o cliente assina pelo link do portal com nome e CPF/CNPJ; fica o hash e a hora.
 type Assinatura = { id: string; titulo: string; hash_texto: string; assinante_nome: string | null; assinante_documento: string | null; assinado_em: string | null; hash_assinatura: string | null; criado_em: string; selo_id: number | null; selos_blockchain?: { situacao: string; altura_bitcoin: number | null; data_bloco: string | null; criado_em: string } | null }
-const MODELO = (cliente: string | null) => `CONTRATO DE HONORÁRIOS ADVOCATÍCIOS
+const MODELO = (cliente: string | null, escritorio: string) => `CONTRATO DE HONORÁRIOS ADVOCATÍCIOS
 
 Contratante: ${cliente ?? '[nome do cliente]'}.
-Contratada: THEYE Institute, Lagoa, Rio de Janeiro.
+Contratada: ${escritorio}, [endereço].
 
 1. Objeto: [descrever o serviço].
 2. Honorários: R$ [valor], pagos [forma e prazo].
@@ -24,7 +25,11 @@ export default function AssinaturasCaso({ tarefaId, cliente }: { tarefaId: strin
   const [lista, setLista] = useState<Assinatura[]>([])
   const [aberto, setAberto] = useState(false)
   const [titulo, setTitulo] = useState('Contrato de honorários')
-  const [texto, setTexto] = useState(() => MODELO(cliente))
+  const escritorio = useNomeEscritorio()
+  const [texto, setTexto] = useState(() => MODELO(cliente, escritorio))
+  const [modeloDe, setModeloDe] = useState(escritorio)
+  // O nome do escritório chega depois do primeiro desenho: troca o modelo só se ninguém mexeu no texto ainda.
+  useEffect(() => { if (escritorio !== modeloDe && texto === MODELO(cliente, modeloDe)) setTexto(MODELO(cliente, escritorio)); setModeloDe(escritorio) }, [escritorio]) // eslint-disable-line react-hooks/exhaustive-deps
   const [erro, setErro] = useState('')
   const [compCopiados, setCompCopiados] = useState(false) // Passo 217
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 282
@@ -61,7 +66,7 @@ export default function AssinaturasCaso({ tarefaId, cliente }: { tarefaId: strin
         ))}
         {!lista.length && <li className="py-2 text-grafite-claro">Nenhum documento para assinar ainda.</li>}
         {/* Passo 149: comprovantes copiáveis (título, assinante, data, hashes) para o processo. */}
-        {lista.length > 0 && <li className="py-2"><button type="button" onClick={() => navigator.clipboard?.writeText(['Assinaturas eletrônicas — THEYE Institute', ...lista.map(a => `${a.titulo} · hash do texto ${a.hash_texto} · ${a.assinado_em ? `assinado por ${a.assinante_nome} (${a.assinante_documento}) em ${formatarData(a.assinado_em.slice(0, 10))} · hash da assinatura ${a.hash_assinatura}` : 'aguardando assinatura'}`)].join('\n')).then(() => setCompCopiados(true)).catch(() => undefined)} data-testid="copiar-assinaturas" title="Copia os comprovantes de assinatura (título, assinante, hashes e data) em texto para juntar ao processo" className="underline text-navy text-xs">{compCopiados ? 'comprovantes copiados' : 'copiar comprovantes'}</button></li>}
+        {lista.length > 0 && <li className="py-2"><button type="button" onClick={() => navigator.clipboard?.writeText([`Assinaturas eletrônicas — ${escritorio}`, ...lista.map(a => `${a.titulo} · hash do texto ${a.hash_texto} · ${a.assinado_em ? `assinado por ${a.assinante_nome} (${a.assinante_documento}) em ${formatarData(a.assinado_em.slice(0, 10))} · hash da assinatura ${a.hash_assinatura}` : 'aguardando assinatura'}`)].join('\n')).then(() => setCompCopiados(true)).catch(() => undefined)} data-testid="copiar-assinaturas" title="Copia os comprovantes de assinatura (título, assinante, hashes e data) em texto para juntar ao processo" className="underline text-navy text-xs">{compCopiados ? 'comprovantes copiados' : 'copiar comprovantes'}</button></li>}
         {lista.length > 0 && <li className="py-2 print:hidden"><button type="button" onClick={() => window.print()} data-testid="imprimir-assinaturas" title="Abre a janela de impressão do navegador para imprimir os comprovantes de assinatura" className="underline text-navy text-xs">imprimir comprovantes</button></li>}{/* Passo 183 */}
         {lista.length > 0 && <li className="py-2 print:hidden"><button type="button" data-testid="copiar-link-assinaturas" title="Copia o endereço desta página para compartilhar com a equipe" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="underline text-navy text-xs">{linkCopiado ? 'link copiado' : 'copiar link'}</button></li>}{/* Passo 251 */}
         {lista.length > 0 && <li><button type="button" data-testid="baixar-assinaturas" aria-live="polite" title="Baixa a planilha CSV com as assinaturas (título, assinante, data e hashes)" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['título;assinante;assinado em;hash do texto;hash da assinatura', ...lista.map(s => `${s.titulo.replace(/;/g, ',')};${s.assinante_nome ?? ''};${s.assinado_em ?? ''};${s.hash_texto};${s.hash_assinatura ?? ''}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'assinaturas.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button></li>}{/* Passo 317 */}

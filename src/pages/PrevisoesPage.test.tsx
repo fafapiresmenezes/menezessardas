@@ -21,6 +21,8 @@ vi.mock('@/hooks/useImoveis', () => ({ useImoveis: () => ({ imoveis: [imovel], l
 vi.mock('@/lib/repositorio', () => ({ repositorio: { listarContratos: async () => previsoes.map(p => p.contrato) } }))
 vi.mock('@/lib/predicao', async (orig) => ({ ...(await orig() as object), preverCarteira: () => previsoes, preverReceita: () => receita, registrarPrevisoes: (l: unknown) => registrar(l) }))
 vi.mock('@/lib/previsaoInstituto', async (orig) => ({ ...(await orig() as object), consultarPrevisaoInstituto: (b: object) => consultarInstituto(b) }))
+let instituto = true
+vi.mock('@/lib/equipe', () => ({ ehInstituto: async () => instituto }))
 vi.mock('@/components/CalibracaoPrevisoes', () => ({ default: ({ versao }: { versao: number }) => <div data-testid="calibracao-stub">v{versao}</div> }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 const { default: PrevisoesPage } = await import('./PrevisoesPage')
@@ -104,6 +106,18 @@ describe('Previsões', () => {
     invoke.mockResolvedValueOnce({ error: { message: 'Failed to fetch' } })
     fireEvent.click(within(s).getByText('Calcular'))
     await waitFor(() => expect(within(s).getByRole('alert')).toBeTruthy())
+  })
+
+  it('escritório cliente (não é Instituto): não vê o cartão do THEYE Institute nem a assinatura dele no resumo', async () => {
+    instituto = false
+    montar()
+    await waitFor(() => expect(screen.getByText(/Banco Central: IGPM 3,5%/)).toBeTruthy())
+    expect(screen.queryByTestId('instituto-calcular')).toBeNull()
+    expect(screen.queryByText(/THEYE/)).toBeNull()
+    fireEvent.click(screen.getByTestId('copiar-previsoes'))
+    await waitFor(() => expect(screen.getByTestId('copiar-previsoes').textContent).toBe('Resumo copiado'))
+    expect(write.mock.calls[0][0]).not.toContain('THEYE')
+    instituto = true
   })
 
   it('THEYE Institute: consulta por classe e tribunal, resultado com grafo, aviso e cópia para o parecer; erro; resumo, link, CSV e impressão; demonstração sem banco e carteira vazia', async () => {

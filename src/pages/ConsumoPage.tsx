@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 import { useBaixado } from '@/hooks/useBaixado'
 import Layout from '@/components/Layout'
 import { projetarMes, sugerirTeto } from '@/lib/projecaoConsumo'
 import { supabase } from '@/lib/supabase'
-import { perfilAtual, ehSede, type Funcao } from '@/lib/equipe'
+import { perfilAtual, ehInstituto, type Funcao } from '@/lib/equipe'
 import { Printer, Wallet, AlertTriangle, Paperclip, Download } from 'lucide-react'
 import { lerNumero } from '@/lib/numero'
 import { abrirEmNovaAba } from '@/lib/abrirAba'
@@ -45,9 +46,10 @@ export default function ConsumoPage() {
   const [mes, setMes] = useState(() => { try { return localStorage.getItem('lsm-consumo-mes') || mesAtual() } catch { return mesAtual() } })
   useEffect(() => { try { localStorage.setItem('lsm-consumo-mes', mes) } catch { /* sem armazenamento */ } }, [mes])
   const [perfil, setPerfil] = useState<Funcao | null>(null)
-  // Escritórios parceiros veem só o próprio consumo e o próprio teto; as faturas dos fornecedores e o e-mail de aviso são da sede.
-  const [sede, setSede] = useState(true)
-  useEffect(() => { ehSede().then(setSede).catch(() => setSede(true)) }, [])
+  // Cada escritório vê só o próprio consumo e o próprio teto; as faturas dos fornecedores, a tabela de preços e o e-mail de
+  // aviso são do Instituto THEYE (dono da plataforma). Na dúvida, esconde.
+  const [instituto, setInstituto] = useState(false)
+  useEffect(() => { ehInstituto().then(setInstituto).catch(() => setInstituto(false)) }, [])
   const [teto, setTeto] = useState('')
   const [faturas, setFaturas] = useState<{ name: string }[]>([])
   const [msg, setMsg] = useState<{ ok: boolean; texto: string } | null>(null)
@@ -57,6 +59,7 @@ export default function ConsumoPage() {
   // Passo 127: tabelas "por função" e "por usuário" copiáveis para a reunião de custos.
   const [tabelaCopiada, setTabelaCopiada] = useState<'funcao' | 'usuario' | null>(null)
   const [carregando, setCarregando] = useState(true)
+  const nomeEscritorio = useNomeEscritorio()
   const [testandoAviso, setTestandoAviso] = useState(false)
   const [baixado, marcarBaixado] = useBaixado() // Passo 388
   // Passo 06: avisos automáticos de 80% e 100% do teto (de hora em hora) e teste pelo administrador.
@@ -142,7 +145,7 @@ export default function ConsumoPage() {
             </label>
           </div>
           <p className="text-4xl font-serif text-navy mt-4" data-testid="total-mes">{carregando ? '…' : brl(totalBrl)}</p>
-          {!carregando && <button type="button" onClick={async () => { const t = [`Consumo de IA e e-mails — ${nomeMes(mes)}`, `Total: ${brl(totalBrl)} em ${doMes.reduce((s, l) => s + Number(l.usos), 0)} uso(s)`, ...(mes === mesAtual() ? [`Projeção para o fim do mês: ${brl(projetarMes(totalBrl, new Date()).projecao)}`] : []), cot ? `Cotação: US$ 1 = ${brl(taxa)} (${cot.data})` : '', 'THEYE Institute'].filter(Boolean).join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoResumo(true); setTimeout(() => setCopiadoResumo(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-consumo" title="Copia o resumo do mês (total, usos, projeção e cotação) em texto para enviar à sócia" className="mt-2 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo do mês'}</button>}
+          {!carregando && <button type="button" onClick={async () => { const t = [`Consumo de IA e e-mails — ${nomeMes(mes)}`, `Total: ${brl(totalBrl)} em ${doMes.reduce((s, l) => s + Number(l.usos), 0)} uso(s)`, ...(mes === mesAtual() ? [`Projeção para o fim do mês: ${brl(projetarMes(totalBrl, new Date()).projecao)}`] : []), cot ? `Cotação: US$ 1 = ${brl(taxa)} (${cot.data})` : '', nomeEscritorio].filter(Boolean).join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoResumo(true); setTimeout(() => setCopiadoResumo(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-consumo" title="Copia o resumo do mês (total, usos, projeção e cotação) em texto para enviar à sócia" className="mt-2 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoResumo ? 'Resumo copiado' : 'Copiar resumo do mês'}</button>}
           {!carregando && <button type="button" onClick={() => window.print()} data-testid="imprimir-consumo" title="Abre a tela de impressão do navegador com o extrato de consumo do mês" className="ml-2 underline text-navy text-sm print:hidden">imprimir</button>}{/* Passo 199 */}
           {!carregando && <button type="button" data-testid="copiar-link-consumo" title="Copia o endereço desta página de consumo para compartilhar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="ml-2 underline text-navy text-sm print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>}{/* Passo 225 */}
           {!carregando && doMes.length > 0 && <button type="button" data-testid="baixar-consumo" title="Baixa o detalhamento do consumo do mês em arquivo CSV para abrir em planilha" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['mês;função;modelo;usuário;usos;tokens de entrada', ...doMes.map(l => `${l.mes};${l.funcao};${l.modelo ?? ''};${l.usuario};${l.usos};${l.tokens_entrada}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'consumo-ia.csv'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">{baixado ? 'baixado' : 'baixar CSV'}</button>}{/* Passo 295 */}
@@ -204,7 +207,7 @@ export default function ConsumoPage() {
           ))}
         </div>
 
-        {sede && <section className="bg-white shadow-sm p-6">
+        {instituto && <section className="bg-white shadow-sm p-6">
           <h3 className="text-base mb-1">Faturas originais do mês</h3>
           <p className="text-sm text-grafite-claro mb-3">As faturas dos fornecedores (Anthropic, Brevo e hospedagem) ficam anexadas aqui e saem junto no extrato.</p>
           {faturas.length === 0 ? <p className="text-sm text-grafite-claro">Nenhuma fatura anexada a este mês.</p> : (
@@ -222,7 +225,7 @@ export default function ConsumoPage() {
           )}
         </section>}
 
-        <section className="bg-white shadow-sm p-6">
+        {instituto && <section className="bg-white shadow-sm p-6">
           <h3 className="text-base mb-1">Tabela de preços usada no cálculo</h3>
           <table className="w-full text-sm mt-2">
             <thead><tr className="text-left text-grafite-claro"><th className="font-normal py-1">Serviço</th><th className="font-normal text-right">Entrada (US$/milhão de tokens)</th><th className="font-normal text-right">Saída (US$/milhão de tokens)</th><th className="font-normal text-right">Por unidade</th></tr></thead>
@@ -237,19 +240,19 @@ export default function ConsumoPage() {
               ))}
             </tbody>
           </table>
-        </section>
+        </section>}
 
         {perfil === 'admin' && (
           <section className="bg-white shadow-sm p-6 print:hidden">
             <h3 className="text-base mb-1">Teto mensal de gasto</h3>
-            <p className="text-sm text-grafite-claro mb-3">{sede ? (<>Ao chegar a 80% aparece um aviso em Alertas e os administradores recebem e-mail; ao chegar a 100% a inteligência artificial pausa até o mês seguinte e sai novo e-mail. A verificação roda de hora em hora. Deixe em branco para não ter teto.</>) : 'Defina quanto o escritório aceita gastar por mês com a inteligência artificial. Ao chegar a 80% a barra acima fica amarela; ao chegar a 100% a inteligência artificial do escritório pausa até o mês seguinte ou até um administrador aumentar o teto.'}</p>
+            <p className="text-sm text-grafite-claro mb-3">{instituto ? (<>Ao chegar a 80% aparece um aviso em Alertas e os administradores recebem e-mail; ao chegar a 100% a inteligência artificial pausa até o mês seguinte e sai novo e-mail. A verificação roda de hora em hora. Deixe em branco para não ter teto.</>) : 'Defina quanto o escritório aceita gastar por mês com a inteligência artificial. Ao chegar a 80% a barra acima fica amarela; ao chegar a 100% a inteligência artificial do escritório pausa até o mês seguinte ou até um administrador aumentar o teto.'}</p>
             <div className="flex flex-wrap gap-3 items-end">
               <label className="text-sm">
                 <span className="block mb-1">Valor em reais</span>
                 <input id="teto" title="Quanto o escritório aceita gastar com IA por mês. Chegando perto, a plataforma avisa; em branco, não há teto." inputMode="decimal" value={teto} onChange={e => setTeto(e.target.value)} placeholder="ex.: 300" className="border border-navy/20 px-3 min-h-[44px] w-40" />
               </label>
               <button onClick={salvarTeto} title="Grava o teto mensal de gasto com IA; em branco, remove o teto" className="min-h-[44px] px-5 bg-navy text-white text-sm">Salvar teto</button>
-              {sede && <button type="button" onClick={testarAviso} disabled={testandoAviso} data-testid="testar-aviso-teto" title="Envia agora um e-mail de teste do aviso de teto para conferir se o alerta automático funciona" className="min-h-[44px] px-5 border border-navy text-navy text-sm disabled:opacity-50">{testandoAviso ? 'Enviando…' : 'Testar e-mail de aviso'}</button>}
+              {instituto && <button type="button" onClick={testarAviso} disabled={testandoAviso} data-testid="testar-aviso-teto" title="Envia agora um e-mail de teste do aviso de teto para conferir se o alerta automático funciona" className="min-h-[44px] px-5 border border-navy text-navy text-sm disabled:opacity-50">{testandoAviso ? 'Enviando…' : 'Testar e-mail de aviso'}</button>}
             </div>
           </section>
         )}

@@ -332,7 +332,7 @@ export default function ProjetosPage() {
             </section>
           ))}
         </div>
-        {!tarefas.length && <p className="text-sm text-grafite-claro flex items-center gap-2"><FolderKanban size={16} aria-hidden="true" /> Comece criando um projeto, por exemplo "Carteira Lagoa 2026", e depois as tarefas dentro dele.</p>}
+        {!tarefas.length && <p className="text-sm text-grafite-claro flex items-center gap-2"><FolderKanban size={16} aria-hidden="true" /> Comece criando um projeto, por exemplo "Contencioso trabalhista 2026", e depois as tarefas dentro dele.</p>}
       </div>
     </Layout>
   )

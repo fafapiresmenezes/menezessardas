@@ -64,7 +64,7 @@ describe('equipe com Supabase', () => {
     await expect(definirSenhaProvisoria(pessoa)).rejects.toThrow('usuário não encontrado')
   })
 
-  it('ehSede consulta uma vez e guarda na sessão; false só quando o banco diz false', async () => {
+  it('ehSede consulta uma vez e guarda na sessão; true só quando o banco diz true', async () => {
     rpc.mockResolvedValueOnce({ data: false, error: null })
     expect(await ehSede()).toBe(false)
     expect(mem.get('gm-sede')).toBe('0')
@@ -75,8 +75,9 @@ describe('equipe com Supabase', () => {
     expect(await ehSede()).toBe(true)
     expect(mem.get('gm-sede')).toBe('1')
     mem.clear()
+    // Sem resposta do banco a casa principal NÃO é assumida: fecha em vez de abrir (18/11/2026).
     rpc.mockResolvedValueOnce({ data: null, error: null })
-    expect(await ehSede()).toBe(true)
+    expect(await ehSede()).toBe(false)
   })
 
   it('escritórios: cobrança convertida em números, criar e mover passam os parâmetros, mapa pessoa→escritório ignora quem não tem', async () => {

@@ -12,6 +12,7 @@ import { preverCarteira, preverReceita, intervaloWilson, registrarPrevisoes, typ
 import { TrendingUp, ShieldAlert, Repeat, Scale, ChevronDown, ChevronUp, Info, FlaskConical } from 'lucide-react'
 import { CLASSES_LOCACAO, consultarPrevisaoInstituto, resumirPrevisaoInstituto, type PrevisaoInstituto , chanceClassesInstituto, textoChanceClasse, type ChanceClasse, probabilidadeUnica } from '@/lib/previsaoInstituto'
 import { hojeLocal } from '@/lib/datas'
+import { ehInstituto } from '@/lib/equipe'
 
 const moeda = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v)
 const COR: Record<Faixa, string> = { baixo: 'bg-regular', moderado: 'bg-atencao', alto: 'bg-critico' }
@@ -244,6 +245,9 @@ export default function PrevisoesPage() {
   const { imoveis } = useImoveis()
   const [contratos, setContratos] = useState<Contrato[]>([])
   const [indices, setIndices] = useState<Record<string, number>>({})
+  // O cartão do Instituto THEYE e a assinatura dele no resumo são só de quem administra o Instituto; o escritório cliente não vê.
+  const [instituto, setInstituto] = useState(false)
+  useEffect(() => { ehInstituto().then(setInstituto).catch(() => setInstituto(false)) }, [])
   useEffect(() => { repositorio.listarContratos().then(setContratos).catch(() => setContratos([])) }, [])
   useEffect(() => {
     if (!supabaseConfigurado) { setIndices({ igpm: 3.35, ipca: 4.5, inpc: 4.3 }); return }
@@ -273,7 +277,7 @@ export default function PrevisoesPage() {
   const [baixado, marcarBaixado] = useBaixado() // Passo 397
   const copiarResumo = async () => {
     const t = [`Previsões da carteira — ${new Date().toLocaleDateString('pt-BR')}`, `Receita contratada (12 meses): ${moeda(totalContratada)}`, `Receita esperada (12 meses): ${moeda(totalEsperada)}`, `Contratos com risco alto: ${altos} de ${previsoes.length}`, `Chance média de renovação: ${renovMedia}%`,
-      ...previsoes.filter(p => p.faixaRisco === 'alto').map(p => `• risco alto: ${p.contrato.parte || 'contrato'} (${p.risco} pontos)`), 'Regras declaradas v1 · THEYE Institute'].join('\n')
+      ...previsoes.filter(p => p.faixaRisco === 'alto').map(p => `• risco alto: ${p.contrato.parte || 'contrato'} (${p.risco} pontos)`), ...(instituto ? ['Regras declaradas v1 · THEYE Institute'] : [])].join('\n')
     try { await navigator.clipboard.writeText(t); setCopiadoResumo(true); setTimeout(() => setCopiadoResumo(false), 2500) } catch { /* sem área de transferência */ }
   }
 
@@ -318,7 +322,7 @@ export default function PrevisoesPage() {
         </section>
         <CalibracaoPrevisoes versao={versaoCalib} />
         <PainelJurimetria />
-        <PainelInstituto />
+        {instituto && <PainelInstituto />}
       </div>
     </Layout>
   )

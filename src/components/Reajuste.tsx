@@ -3,6 +3,7 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import type { Contrato } from '@/lib/repositorio'
 import { Calculator, Copy } from 'lucide-react'
 import { mensagemAmigavel } from '@/lib/erros'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 
 interface Resultado { indice: string; acumulado12m: number; de: string; ate: string; fonte: string; meses?: { data: string; valor: number }[]; desatualizado?: boolean; aviso?: string }
 // Passo 33: simulador com escolha de índice (IGP-M, IPCA, INPC) e gráfico dos últimos 12 meses.
@@ -12,6 +13,7 @@ const brl = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', curren
 
 /** Cálculo do reajuste pelo acumulado de 12 meses do Banco Central e carta pronta ao locatário. */
 export default function Reajuste({ contrato, imovel }: { contrato: Contrato; imovel: string }) {
+  const escritorio = useNomeEscritorio()
   const [res, setRes] = useState<Resultado | null>(null)
   const [erro, setErro] = useState('')
   const [carregando, setCarregando] = useState(false)
@@ -50,7 +52,7 @@ Novo valor: ${brl(novo)}, a partir do próximo vencimento.
 
 Permanecemos à disposição.
 
-THEYE Institute` : ''
+${escritorio}` : ''
 
   return (
     <section className="bg-white p-6 shadow-sm" aria-labelledby="titulo-reajuste">

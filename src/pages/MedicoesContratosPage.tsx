@@ -37,7 +37,7 @@ export default function MedicoesContratosPage() {
   const lista = avisos(contratos, medicoes)
 
   return (
-    <Layout title="Medições">
+    <Layout title="Medições de contratos">
       <div className="p-6 max-w-5xl">
         <p className="text-sm text-grafite-claro mb-6">
           Cada contrato de serviço é medido por período: mede-se o que foi entregue, aprova-se,
@@ -139,8 +139,7 @@ export default function MedicoesContratosPage() {
 
         {semTabela && (
           <p className="text-sm text-grafite-claro" data-testid="medicoes-sem-banco">
-            As tabelas desta tela ainda não existem no banco: falta aplicar a migração 133. A tela
-            já funciona, e os contratos aparecem assim que ela for aplicada.
+            Ainda sem medições. Os contratos aparecem aqui assim que a primeira medição for registrada.
           </p>
         )}
       </div>
