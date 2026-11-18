@@ -94,9 +94,23 @@ export async function lerCargos(): Promise<MapaCargos> {
   } catch { return {} }
 }
 
+/**
+ * Lê o mapa de cargos SEM engolir erro. `lerCargos` devolve {} quando a leitura falha, o que serve para
+ * mostrar a tela, mas não para gravar: gravar por cima de um {} que veio de uma falha apagaria o cargo
+ * de todas as outras pessoas do escritório.
+ */
+export async function lerCargosEstrito(): Promise<MapaCargos> {
+  if (!supabaseConfigurado) return {}
+  const { cargos } = await lerConfig(['cargos'])
+  if (!cargos) return {}
+  let bruto: unknown
+  try { bruto = JSON.parse(cargos) } catch { throw new Error('Não foi possível ler a hierarquia gravada. Nada foi alterado; tente de novo.') }
+  return limpar(bruto)
+}
+
 /** Grava o cargo de uma pessoa (null tira o cargo). Só a administração chama isto. */
 export async function definirCargo(usuarioId: string, cargo: Cargo | null): Promise<MapaCargos> {
-  const atual = await lerCargos()
+  const atual = await lerCargosEstrito()
   if (cargo) atual[usuarioId] = cargo
   else delete atual[usuarioId]
   await gravarConfig({ cargos: JSON.stringify(atual) })
