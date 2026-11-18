@@ -1,14 +1,19 @@
 /** Ecrã C08 — Riscos e litígios (fundos internacionais, DEMONSTRAÇÃO). Nada lê/grava no banco. */
 import Layout from '@/components/Layout'
 import { RISCOS_DEMO, type NivelRisco } from '@/data/operacaoDemo'
+import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
+import { recorte } from '@/lib/visaoFundos'
 const ROT: Record<NivelRisco, string> = { alto: 'Alto', medio: 'Médio', baixo: 'Baixo' }
 const COR: Record<NivelRisco, string> = { alto: 'bg-red-50 text-red-800 border-red-200', medio: 'bg-amber-50 text-amber-800 border-amber-200', baixo: 'bg-emerald-50 text-emerald-800 border-emerald-200' }
 export default function RiscosLitigiosPage() {
+  const quem = usePessoaFundos()
   const ordem: NivelRisco[] = ['alto', 'medio', 'baixo']
-  const lista = [...RISCOS_DEMO].sort((a, b) => ordem.indexOf(a.nivel) - ordem.indexOf(b.nivel))
+  const lista = recorte(quem, RISCOS_DEMO).sort((a, b) => ordem.indexOf(a.nivel) - ordem.indexOf(b.nivel))
   return (
     <Layout title="Riscos e litígios">
+      <SoParaNiveis rota="/riscos-litigios">
       <div className="max-w-5xl mx-auto space-y-4">
+        <VerComoFundos />
         <p className="text-sm text-grafite-claro">Demonstração com dados inventados. Riscos e litígios por nível, cada um com a medida proposta.</p>
         <ul className="space-y-2" data-testid="riscos">
           {lista.map(r => (
@@ -23,8 +28,10 @@ export default function RiscosLitigiosPage() {
               <p className="text-sm text-grafite mt-2">{r.medida}</p>
             </li>
           ))}
+          {lista.length === 0 && <li className="text-sm text-grafite-claro" data-testid="vazio">Nada no seu recorte.</li>}
         </ul>
       </div>
+      </SoParaNiveis>
     </Layout>
   )
 }

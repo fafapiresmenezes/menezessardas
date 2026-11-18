@@ -4,6 +4,8 @@
  */
 import Layout from '@/components/Layout'
 import { PAGAMENTOS_DEMO, RAZAO_RETIDO, type EstadoPag } from '@/data/pagamentosDemo'
+import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
+import { recorte } from '@/lib/visaoFundos'
 
 const money = (v: number, m: string) => `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 0 }).format(v)} ${m}`
 const dia = (s: string) => new Date(s + 'T00:00:00').toLocaleDateString('pt-PT')
@@ -16,11 +18,15 @@ const COR: Record<EstadoPag, string> = {
 }
 
 export default function PagamentosPage() {
+  const quem = usePessoaFundos()
+  const vis = recorte(quem, PAGAMENTOS_DEMO)
   const total = (e: EstadoPag, m: 'Kz' | 'US$') =>
-    PAGAMENTOS_DEMO.filter(p => p.estado === e && p.moeda === m).reduce((s, p) => s + p.valor, 0)
+    vis.filter(p => p.estado === e && p.moeda === m).reduce((s, p) => s + p.valor, 0)
   return (
     <Layout title="Pagamentos">
+      <SoParaNiveis rota="/pagamentos-fundos">
       <div className="max-w-5xl mx-auto space-y-4">
+        <VerComoFundos />
         <p className="text-sm text-grafite-claro">Demonstração com dados inventados. Cada pagamento ligado à medição e ao projecto, com o estado e o motivo de retenção quando há.</p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" data-testid="resumo-pag">
           {(['pago','aprovado','em-analise','retido'] as EstadoPag[]).map(e => (
@@ -32,7 +38,7 @@ export default function PagamentosPage() {
           ))}
         </div>
         <ul className="space-y-2" data-testid="pagamentos">
-          {PAGAMENTOS_DEMO.map(p => (
+          {vis.map(p => (
             <li key={p.id} className="border border-navy/15 rounded-sm p-3">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
@@ -50,8 +56,10 @@ export default function PagamentosPage() {
               </div>
             </li>
           ))}
+          {vis.length === 0 && <li className="text-sm text-grafite-claro" data-testid="vazio">Nada no seu recorte.</li>}
         </ul>
       </div>
+      </SoParaNiveis>
     </Layout>
   )
 }

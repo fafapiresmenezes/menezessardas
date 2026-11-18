@@ -24,9 +24,9 @@ export const rotuloNivel: Record<Nivel, string> = {
 
 export const descricaoNivel: Record<Nivel, string> = {
   N1: 'Vê todos os países, em visão consolidada.',
-  N2: 'Vê tudo do seu país: projetos, contratos, dinheiro e risco.',
-  N3: 'Vê a sua área em todos os projetos do país.',
-  N4: 'Vê os seus projetos, em todas as áreas.',
+  N2: 'Vê tudo do seu país: projectos, contratos, dinheiro e risco.',
+  N3: 'Vê a sua área em todos os projectos do país.',
+  N4: 'Vê os seus projectos, em todas as áreas.',
   N5: 'Vê só o que é seu ou lhe foi atribuído.',
   N6: 'Vê só o que lhe foi partilhado pelo portal.',
 }

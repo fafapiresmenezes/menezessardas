@@ -67,6 +67,7 @@ const GarantiasLicencasPage = lazy(() => import('@/pages/GarantiasLicencasPage')
 const RiscosLitigiosPage = lazy(() => import('@/pages/RiscosLitigiosPage'))
 const DocumentosFundosPage = lazy(() => import('@/pages/DocumentosFundosPage'))
 const AssistenteFundosPage = lazy(() => import('@/pages/AssistenteFundosPage'))
+const EstudosGovernoPage = lazy(() => import('@/pages/EstudosGovernoPage'))
 import InicioPage from '@/pages/InicioPage'
 import ErroTela from '@/components/ErroTela'
 const FontesPage = lazy(() => import('@/pages/FontesPage'))
@@ -540,6 +541,10 @@ function App() {
         <Route
           path="/assistente-fundos"
           element={isAuthenticated ? <AssistenteFundosPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/estudos-governo"
+          element={isAuthenticated ? <EstudosGovernoPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/equipe"

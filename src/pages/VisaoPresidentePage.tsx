@@ -8,6 +8,8 @@ import Layout from '@/components/Layout'
 import { AlertTriangle, TrendingUp, Wallet } from 'lucide-react'
 import { calcularBoletim, desvioDeCronograma, semaforo, type Semaforo } from '@/lib/medicaoObra'
 import { PROJETOS_DEMO } from '@/data/demoObraAngola'
+import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
+import { veProjecto } from '@/lib/visaoFundos'
 
 const kz = (v: number) => `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 0 }).format(v)} Kz`
 const pct = (v: number) => `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 1 }).format(Math.round(v * 1000) / 10)} %`
@@ -15,7 +17,8 @@ const COR: Record<Semaforo, string> = { verde: 'bg-emerald-600', amarelo: 'bg-am
 const NOME: Record<Semaforo, string> = { verde: 'No prazo', amarelo: 'Atenção', vermelho: 'Crítico' }
 
 export default function VisaoPresidentePage() {
-  const linhas = useMemo(() => PROJETOS_DEMO.map(p => {
+  const quem = usePessoaFundos()
+  const linhas = useMemo(() => PROJETOS_DEMO.filter(p => veProjecto(quem, p)).map(p => {
     const b = calcularBoletim(p.itens, p.medidos, p.parametros)
     const contratado = p.itens.reduce((s, i) => s + i.quantidade * i.precoUnitario, 0)
     const desvio = desvioDeCronograma(b.avancoFisico, p.previsto)
@@ -26,7 +29,7 @@ export default function VisaoPresidentePage() {
         ? (p.diasParado >= 7 ? `boletim parado há ${p.diasParado} dias` : 'avanço um pouco abaixo do previsto')
         : 'dentro do previsto'
     return { p, b, contratado, desvio, cor, motivo }
-  }), [])
+  }), [quem])
 
   const totContratado = linhas.reduce((s, l) => s + l.contratado, 0)
   const totMedido = linhas.reduce((s, l) => s + l.b.liquidoAPagar, 0)
@@ -36,7 +39,9 @@ export default function VisaoPresidentePage() {
 
   return (
     <Layout title="Visão do presidente">
+      <SoParaNiveis rota="/visao-presidente">
       <div className="max-w-5xl mx-auto space-y-6">
+        <VerComoFundos />
         <p className="text-sm text-grafite-claro">Demonstração com dados inventados. Cada projecto com a cor e o motivo, o contratado e o medido, e os avisos a tratar. As contas são as de verdade.</p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -89,6 +94,7 @@ export default function VisaoPresidentePage() {
           )}
         </section>
       </div>
+      </SoParaNiveis>
     </Layout>
   )
 }
