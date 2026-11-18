@@ -28,8 +28,8 @@ describe('menu da casa de projectos', () => {
 
   it('quem é da casa de projectos vê só o menu do produto, e cada nível vê só o que é seu', () => {
     const telas = (v: Visao) => gruposVisiveis(v, 'projectos').flatMap(g => g.itens.map(i => i.href))
-    expect(telas(operacao)).toEqual(['/visao-presidente', '/carteira-projectos', '/demonstracao-obra', '/settings'])
-    expect(telas(direccao)).toEqual(['/visao-presidente', '/carteira-projectos', '/demonstracao-obra', '/trilha', '/hierarquia', '/settings'])
+    expect(telas(operacao)).toEqual(['/visao-presidente', '/carteira-projectos', '/demonstracao-obra', '/contratos-obrigacoes', '/pagamentos-fundos', '/fornecedores-fundos', '/garantias-licencas', '/riscos-litigios', '/documentos-fundos', '/assistente-fundos', '/settings'])
+    expect(telas(direccao)).toEqual(['/visao-presidente', '/carteira-projectos', '/demonstracao-obra', '/contratos-obrigacoes', '/pagamentos-fundos', '/fornecedores-fundos', '/garantias-licencas', '/riscos-litigios', '/documentos-fundos', '/assistente-fundos', '/trilha', '/hierarquia', '/settings'])
     for (const h of ['/processos', '/intimacoes', '/modelos', '/honorarios', '/imoveis', '/instituto']) expect(telas(direccao)).not.toContain(h)
   })
 

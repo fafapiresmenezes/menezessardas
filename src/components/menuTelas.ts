@@ -135,6 +135,27 @@ export const gruposProjectos: GrupoMenu[] = [
   { id: 'obra', titulo: '2. Obra', bloco: 'Obra', nivel: 'todos', dica: 'Medição e assinaturas por nível', itens: [
     { icon: Ruler, label: 'Medição de obra por nível', href: '/demonstracao-obra' },
   ] },
+  { id: 'contratos', titulo: '3. Contratos', bloco: 'Contratos', nivel: 'todos', dica: 'Contratos, obrigações e prazos', itens: [
+    { icon: FileText, label: 'Contratos e obrigações', href: '/contratos-obrigacoes' },
+  ] },
+  { id: 'pagamentos', titulo: '4. Pagamentos', bloco: 'Pagamentos', nivel: 'todos', dica: 'Fila de pagamentos por estado', itens: [
+    { icon: Wallet, label: 'Pagamentos', href: '/pagamentos-fundos' },
+  ] },
+  { id: 'fornecedores', titulo: '5. Fornecedores', bloco: 'Fornecedores', nivel: 'todos', dica: 'Fornecedores por estado e nota', itens: [
+    { icon: Store, label: 'Fornecedores', href: '/fornecedores-fundos' },
+  ] },
+  { id: 'garantias', titulo: '6. Garantias e licenças', bloco: 'Garantias', nivel: 'todos', dica: 'Garantias e licenças por validade', itens: [
+    { icon: KeySquare, label: 'Garantias e licenças', href: '/garantias-licencas' },
+  ] },
+  { id: 'riscos', titulo: '7. Riscos', bloco: 'Riscos', nivel: 'todos', dica: 'Riscos e litígios por nível', itens: [
+    { icon: Radar, label: 'Riscos e litígios', href: '/riscos-litigios' },
+  ] },
+  { id: 'documentos', titulo: '8. Documentos', bloco: 'Documentos', nivel: 'todos', dica: 'Documentos e registo de auditoria', itens: [
+    { icon: Library, label: 'Documentos e auditoria', href: '/documentos-fundos' },
+  ] },
+  { id: 'assistente-f', titulo: '9. Assistente', bloco: 'Assistente', nivel: 'todos', dica: 'Perguntas em linguagem simples', itens: [
+    { icon: MessageSquare, label: 'Assistente', href: '/assistente-fundos' },
+  ] },
   { id: 'risco', titulo: '2. Risco e auditoria', bloco: 'Risco e auditoria', nivel: 'gestao', dica: 'Quem fez o quê, e quando', itens: [
     { icon: ClipboardList, label: 'Trilha de auditoria', href: '/trilha' },
   ] },
@@ -228,6 +249,13 @@ export function atalhosDoMenu(escolhidos: string[] | undefined, v: Visao): Atalh
 export const DICAS: Record<string, string> = {
   '/visao-presidente': 'Todos os projectos num ecrã, com a cor de cada um, o contratado, o medido e os avisos a tratar',
   '/carteira-projectos': 'Lista dos projectos por país e sector, com cor e avanço, e filtros para encontrar depressa',
+  '/contratos-obrigacoes': 'Cada contrato com partes, valor, lei e foro, e as obrigações como prazos com dono',
+  '/pagamentos-fundos': 'Fila de pagamentos por estado, ligados à medição e ao projecto, com o motivo de retenção quando há',
+  '/fornecedores-fundos': 'Fornecedores por estado, com o tipo, o país, os projectos e uma nota de desempenho',
+  '/garantias-licencas': 'Garantias e licenças por validade, com alerta de proximidade',
+  '/riscos-litigios': 'Riscos e litígios por nível, cada um com a medida proposta',
+  '/documentos-fundos': 'Os documentos do projecto e o registo de quem fez o quê e quando',
+  '/assistente-fundos': 'Perguntas do dia a dia respondidas em linguagem simples a partir dos dados da plataforma',
   '/demonstracao-obra': 'Boletim de medição, assinaturas por nível e o que cada cargo vê, com dados de demonstração',
   '/inicio': 'A tela de entrada: o que fazer agora e todas as matérias do direito',
   '/meu-dia': 'O que vence hoje e nos próximos dias, separado por área do direito',
@@ -357,6 +385,13 @@ export const FRENTES: Frente[] = [
     { icon: Building2, label: "Plataforma, Governança, Fundos Internacionais", href: '/fundos-internacionais' },
     { icon: Gauge, label: 'Visão do presidente', href: '/visao-presidente' },
     { icon: FolderKanban, label: 'Carteira de projectos', href: '/carteira-projectos' },
+    { icon: FileText, label: 'Contratos e obrigações', href: '/contratos-obrigacoes' },
+    { icon: Wallet, label: 'Pagamentos', href: '/pagamentos-fundos' },
+    { icon: Store, label: 'Fornecedores', href: '/fornecedores-fundos' },
+    { icon: KeySquare, label: 'Garantias e licenças', href: '/garantias-licencas' },
+    { icon: Radar, label: 'Riscos e litígios', href: '/riscos-litigios' },
+    { icon: Library, label: 'Documentos e auditoria', href: '/documentos-fundos' },
+    { icon: MessageSquare, label: 'Assistente', href: '/assistente-fundos' },
     { icon: Ruler, label: 'Medição de obra por nível', href: '/demonstracao-obra' },
   ] },
   { id: 'ia', nome: 'IA e superinteligência', itens: [
