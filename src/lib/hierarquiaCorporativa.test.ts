@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { podeVerItem, filtrarItens, conflitoDeFuncao, temAlcada, proximaEstacao, NIVEIS, rotuloNivel, type Pessoa, type Item, type Alcada } from './hierarquiaCorporativa'
+import { podeVerItem, filtrarItens, conflitoDeFuncao, temAlcada, proximaEstacao, motivoParaNaoAssinar, NIVEIS, rotuloNivel, type Pessoa, type Item, type Alcada } from './hierarquiaCorporativa'
+import { ALCADAS_DEMO, ITENS_DEMO, PESSOAS_DEMO } from '@/data/demoObraAngola'
 
 const base: Pessoa = { id: 'x', nivel: null, paises: ['AO'], setores: ['obra'], projetos: ['P1'] }
 const p = (o: Partial<Pessoa>): Pessoa => ({ ...base, ...o })
@@ -91,5 +92,33 @@ describe('Segregação de funções e alçadas', () => {
     expect(proximaEstacao([])).toBe('medir')
     expect(proximaEstacao([{ estacao: 'medir', pessoaId: 'a' }])).toBe('fiscalizar')
     expect(proximaEstacao(['medir', 'fiscalizar', 'aprovar_tecnica', 'validar_contrato', 'liberar_pagamento'].map(e => ({ estacao: e as never, pessoaId: 'a' })))).toBeNull()
+  })
+})
+
+describe('motivoParaNaoAssinar (dados fictícios da demonstração)', () => {
+  const boletim = ITENS_DEMO.find(i => i.id === 'i1')!
+  const quem = (id: string) => PESSOAS_DEMO.find(p => p.id === id)!
+
+  it('quem mediu não fiscaliza: o técnico é recusado por falta de alçada', () => {
+    expect(motivoParaNaoAssinar(quem('medidor'), boletim, [{ estacao: 'medir', pessoaId: 'medidor' }], 1e6, ALCADAS_DEMO)).toMatch(/Sem alçada/)
+  })
+  it('o gestor do projecto fiscaliza, e depois não pode aprovar tecnicamente', () => {
+    const feitas = [{ estacao: 'medir' as const, pessoaId: 'medidor' }]
+    expect(motivoParaNaoAssinar(quem('gestor'), boletim, feitas, 1e6, ALCADAS_DEMO)).toBeNull()
+    expect(motivoParaNaoAssinar(quem('gestor'), boletim, [...feitas, { estacao: 'fiscalizar', pessoaId: 'gestor' }], 1e6, ALCADAS_DEMO)).toMatch(/Sem alçada/)
+  })
+  it('a directora financeira não vê o boletim de obra, logo não assina', () => {
+    expect(motivoParaNaoAssinar(quem('dir-fin'), boletim, [], 1e6, ALCADAS_DEMO)).toMatch(/não aparece/)
+  })
+  it('o presidente executivo tem alçada para tudo, mas não aprova e paga o mesmo boletim', () => {
+    const feitas = [
+      { estacao: 'medir' as const, pessoaId: 'medidor' }, { estacao: 'fiscalizar' as const, pessoaId: 'gestor' },
+      { estacao: 'aprovar_tecnica' as const, pessoaId: 'ceo' }, { estacao: 'validar_contrato' as const, pessoaId: 'dir-jur' },
+    ]
+    expect(motivoParaNaoAssinar(quem('ceo'), boletim, feitas, 9e8, ALCADAS_DEMO)).toMatch(/mesma pessoa/)
+  })
+  it('cada nível vê uma fatia diferente dos doze itens', () => {
+    const conta = (id: string) => filtrarItens(ITENS_DEMO, quem(id)).length
+    expect([conta('grupo'), conta('ceo'), conta('dir-obra'), conta('gestor'), conta('medidor'), conta('fiscal')]).toEqual([12, 12, 3, 5, 2, 1])
   })
 })

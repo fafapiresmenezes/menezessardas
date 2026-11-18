@@ -143,3 +143,16 @@ export function temAlcada(p: Pessoa, estacao: Estacao, valor: number, matriz: Al
 export function proximaEstacao(feitas: Passagem[], cadeia: Estacao[] = ESTACOES): Estacao | null {
   return cadeia.find(e => !feitas.some(f => f.estacao === e)) ?? null
 }
+
+/**
+ * A pessoa pode dar a PRÓXIMA assinatura deste documento? Junta as quatro perguntas, na ordem em que
+ * a recusa é mais útil de ler: vê o documento, é a vez de alguma estação, tem alçada, não acumula função.
+ * Devolve o motivo da recusa em português claro, ou null se pode assinar.
+ */
+export function motivoParaNaoAssinar(p: Pessoa, doc: Item, feitas: Passagem[], valor: number, matriz: Alcada[]): string | null {
+  if (!podeVerItem(p, doc)) return 'Este documento não aparece para o seu nível: não é possível assinar o que não se vê.'
+  const estacao = proximaEstacao(feitas)
+  if (!estacao) return 'O documento já passou por todas as estações.'
+  if (!temAlcada(p, estacao, valor, matriz)) return `Sem alçada para ${rotuloEstacao[estacao]} neste valor: a matriz de alçadas não tem linha que sirva ao seu nível e sector.`
+  return conflitoDeFuncao(feitas, { estacao, pessoaId: p.id })
+}
