@@ -7,6 +7,8 @@ import { useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
 import { calcularBoletim, desvioDeCronograma, semaforo, type Semaforo } from '@/lib/medicaoObra'
 import { PROJETOS_DEMO } from '@/data/demoObraAngola'
+import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
+import { veProjecto } from '@/lib/visaoFundos'
 
 const kz = (v: number) => `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 0 }).format(v)} Kz`
 const pct = (v: number) => `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 1 }).format(Math.round(v * 1000) / 10)} %`
@@ -17,19 +19,22 @@ const PAIS: Record<string, string> = { AO: 'Angola', NA: 'Namíbia' }
 export default function CarteiraProjectosPage() {
   const [cor, setCor] = useState<'todas' | Semaforo>('todas')
   const [pais, setPais] = useState<'todos' | 'AO' | 'NA'>('todos')
+  const quem = usePessoaFundos()
 
-  const linhas = useMemo(() => PROJETOS_DEMO.map(p => {
+  const linhas = useMemo(() => PROJETOS_DEMO.filter(p => veProjecto(quem, p)).map(p => {
     const b = calcularBoletim(p.itens, p.medidos, p.parametros)
     const contratado = p.itens.reduce((s, i) => s + i.quantidade * i.precoUnitario, 0)
     const c = semaforo(desvioDeCronograma(b.avancoFisico, p.previsto), p.diasParado)
     return { p, b, contratado, c }
-  }), [])
+  }), [quem])
 
   const vis = linhas.filter(l => (cor === 'todas' || l.c === cor) && (pais === 'todos' || l.p.pais === pais))
 
   return (
     <Layout title="Carteira de projectos">
+      <SoParaNiveis rota="/carteira-projectos">
       <div className="max-w-5xl mx-auto space-y-4">
+        <VerComoFundos />
         <p className="text-sm text-grafite-claro">Demonstração com dados inventados. Projectos por país e sector, com cor, avanço e o que há a pagar.</p>
         <div className="flex flex-wrap gap-2">
           <label className="text-sm text-grafite-claro">Cor:
@@ -60,6 +65,7 @@ export default function CarteiraProjectosPage() {
           {vis.length === 0 && <li className="text-sm text-grafite-claro" data-testid="vazio">Nenhum projecto com estes filtros.</li>}
         </ul>
       </div>
+      </SoParaNiveis>
     </Layout>
   )
 }

@@ -1,14 +1,19 @@
 /** Ecrã C07 — Garantias e licenças (fundos internacionais, DEMONSTRAÇÃO). Nada lê/grava no banco. */
 import Layout from '@/components/Layout'
 import { GARANTIAS_DEMO } from '@/data/operacaoDemo'
+import { DATA_REFERENCIA_LEGIVEL, diasAte } from '@/data/referenciaDemo'
+import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
+import { recorte } from '@/lib/visaoFundos'
 const dia = (s: string) => new Date(s + 'T00:00:00').toLocaleDateString('pt-PT')
-const diasAte = (s: string) => Math.round((new Date(s + 'T00:00:00').getTime() - new Date('2026-11-18T00:00:00').getTime()) / 86400000)
 export default function GarantiasLicencasPage() {
-  const ordenado = [...GARANTIAS_DEMO].sort((a, b) => a.validade.localeCompare(b.validade))
+  const quem = usePessoaFundos()
+  const ordenado = recorte(quem, GARANTIAS_DEMO).sort((a, b) => a.validade.localeCompare(b.validade))
   return (
     <Layout title="Garantias e licenças">
+      <SoParaNiveis rota="/garantias-licencas">
       <div className="max-w-5xl mx-auto space-y-4">
-        <p className="text-sm text-grafite-claro">Demonstração com dados inventados. Garantias e licenças por validade, com alerta de proximidade (vermelho &lt; 15 dias, âmbar &lt; 45).</p>
+        <VerComoFundos />
+        <p className="text-sm text-grafite-claro">Demonstração com dados inventados. Garantias e licenças por validade, com alerta de proximidade (vermelho &lt; 15 dias, âmbar &lt; 45). Os dias contam-se a partir de {DATA_REFERENCIA_LEGIVEL}.</p>
         <ul className="space-y-2" data-testid="garantias">
           {ordenado.map(g => {
             const d = diasAte(g.validade)
@@ -23,8 +28,10 @@ export default function GarantiasLicencasPage() {
               </li>
             )
           })}
+          {ordenado.length === 0 && <li className="text-sm text-grafite-claro" data-testid="vazio">Nada no seu recorte.</li>}
         </ul>
       </div>
+      </SoParaNiveis>
     </Layout>
   )
 }

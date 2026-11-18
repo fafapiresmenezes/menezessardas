@@ -13,7 +13,9 @@ describe('visão do presidente', () => {
     const itens = within(getByTestId('lista-projectos')).getAllByRole('listitem')
     expect(itens.length).toBe(3)
     for (const li of itens) expect(li.getAttribute('data-cor')).toMatch(/verde|amarelo|vermelho/)
-    expect(container.textContent).not.toMatch(/jur[ií]dic|processo|advoga/i)
+    // Os cargos legítimos no selector "ver como" (Director jurídico) não contam como advocacia.
+    const semCargos = (container.textContent ?? '').replace(/Director jur[ií]dico|Jur[ií]dico e conformidade/g, '')
+    expect(semCargos).not.toMatch(/jur[ií]dic|processo|advoga/i)
   })
 
   it('mostra um aviso para o projecto com o boletim parado há mais tempo', () => {

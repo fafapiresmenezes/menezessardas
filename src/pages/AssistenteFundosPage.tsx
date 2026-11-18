@@ -5,6 +5,7 @@
  */
 import { useState } from 'react'
 import Layout from '@/components/Layout'
+import VerComoFundos, { SoParaNiveis } from '@/components/VerComoFundos'
 
 interface QA { p: string; r: string }
 const RESPOSTAS: QA[] = [
@@ -18,7 +19,9 @@ export default function AssistenteFundosPage() {
   const [aberta, setAberta] = useState<number | null>(null)
   return (
     <Layout title="Assistente">
+      <SoParaNiveis rota="/assistente-fundos">
       <div className="max-w-3xl mx-auto space-y-4">
+        <VerComoFundos />
         <p className="text-sm text-grafite-claro">
           Demonstração. Perguntas do dia a dia, respondidas em linguagem simples a partir dos dados da plataforma.
           Nesta amostra as respostas são fixas; na versão ligada, o assistente lê os projectos em tempo real.
@@ -41,6 +44,7 @@ export default function AssistenteFundosPage() {
           ))}
         </ul>
       </div>
+      </SoParaNiveis>
     </Layout>
   )
 }

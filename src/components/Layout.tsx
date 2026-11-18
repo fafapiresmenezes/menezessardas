@@ -28,6 +28,8 @@ import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
 import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal, Compass, LayoutGrid, AppWindow } from 'lucide-react'
 import { gruposMenu, gruposVisiveis, atalhosDoMenu, frenteDe, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao } from './menuTelas'
+import { usePessoaFundos } from '@/components/VerComoFundos'
+import { veEcra } from '@/lib/visaoFundos'
 import { meuAlcance, ALCANCE_FECHADO } from '@/lib/hierarquia'
 import { lerMeuJeito, carregarMeuJeito, esquecerMeuJeito, aplicarLetra, EVENTO_JEITO, type MeuJeito } from '@/lib/meuJeito'
 
@@ -89,7 +91,11 @@ export default function Layout({ children, title }: LayoutProps) {
   const visao: Visao = { veTudo, admin, instituto: escritorio?.instituto === true, sede }
   // Casa de perfil "projectos" (fundos internacionais): produto próprio, com menu próprio e sem nada de advocacia.
   const projectos = marca?.perfil === 'projectos'
+  // Separação por nível (plano v5, fase R): na casa de fundos, o menu obedece ao nível de quem vê.
+  const pessoaFundos = usePessoaFundos()
   const gruposDaPessoa = gruposVisiveis(visao, projectos ? 'projectos' : 'direito')
+    .map(g => projectos ? { ...g, itens: g.itens.filter(i => veEcra(pessoaFundos, i.href)) } : g)
+    .filter(g => g.itens.length > 0)
   // Cada frente do Instituto é uma plataforma à parte: dentro dela, o menu do direito some.
   const frente = frenteDe(pathname)
   const meusAtalhos = atalhosDoMenu(jeito.atalhos, visao)
