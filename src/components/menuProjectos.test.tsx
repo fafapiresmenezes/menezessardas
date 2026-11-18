@@ -1,4 +1,4 @@
-// Casa de perfil "projectos" (Imbono, 18/11/2026): produto próprio. Estes testes falham se alguma palavra de
+// Casa de perfil "projectos" (fundos internacionais, 18/11/2026): produto próprio. Estes testes falham se alguma palavra de
 // advocacia aparecer no menu ou na moldura dessa casa, ou se as outras casas mudarem por causa dela.
 import { describe, it, expect, afterEach } from 'vitest'
 import { readFileSync } from 'fs'
@@ -41,9 +41,10 @@ describe('menu da casa de projectos', () => {
 
 describe('moldura da casa de projectos', () => {
   it('mostra o nome da casa e o nome do produto, sem "jurídico"', () => {
-    const { container, getByTestId } = render(<Marca marca={{ nome: 'Imbono Demonstração', cor: '#0B0B0C', logo_url: null, sede: false, perfil: 'projectos' }} />)
+    const { container, getByTestId } = render(<Marca marca={{ nome: 'THEYE', cor: '#0B0B0C', logo_url: null, sede: false, perfil: 'projectos' }} />)
     expect(getByTestId('marca-produto').textContent).toBe(NOME_PRODUTO_PROJECTOS)
-    expect(container.textContent).toContain('Imbono Demonstração')
+    expect(container.textContent).toContain('THEYE')
+    expect(container.textContent).not.toMatch(/imbono/i)
     expect(container.textContent).not.toMatch(/jur[ií]dic/i)
   })
 

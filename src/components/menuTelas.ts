@@ -122,7 +122,7 @@ export const gruposMenu: GrupoMenu[] = [
 ]
 
 /**
- * Menu da casa de perfil "projectos" (Imbono, 18/11/2026). É um produto próprio: nenhuma tela de advocacia entra aqui.
+ * Menu da casa de perfil "projectos" (fundos internacionais, 18/11/2026). É um produto próprio: nenhuma tela de advocacia entra aqui.
  * Só aparecem telas que já existem; os ecrãs da fase C do trilho entram neste menu à medida que ficam prontos.
  * Os nomes são os mesmos do título de cada tela, como em todo o menu.
  */

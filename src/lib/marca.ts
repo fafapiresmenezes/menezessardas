@@ -2,7 +2,7 @@
 // e pode usar domínio próprio. O rodapé "Desenvolvido pelo Instituto THEYE" permanece.
 import { supabase, supabaseConfigurado } from './supabase'
 
-/** Perfil da casa: 'direito' é a plataforma jurídica; 'projectos' é o produto de entrega de projectos (Imbono). */
+/** Perfil da casa: 'direito' é a plataforma jurídica; 'projectos' é a plataforma de governança para fundos internacionais. */
 export type PerfilCasa = 'direito' | 'projectos'
 export type MarcaEscritorio = { nome: string; cor: string; logo_url: string | null; sede: boolean; perfil?: PerfilCasa }
 export const COR_PADRAO = '#0B0B0C'

@@ -1,6 +1,6 @@
 /**
  * Leis e normas por país, como DADOS e não como código (decisão de M em 16/11/2026: acrescentar um país
- * é acrescentar linhas aqui, sem programar). Pedido de 18/11/2026: a casa Imbono é internacional.
+ * é acrescentar linhas aqui, sem programar). Pedido de 18/11/2026: a casa de fundos internacionais trabalha em vários países.
  * Só entram diplomas identificados por número e ano. Isto é um índice de partida para a equipa jurídica:
  * a versão em vigor e as alterações posteriores têm de ser conferidas por advogado do país antes de usar.
  */

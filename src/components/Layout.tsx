@@ -87,7 +87,7 @@ export default function Layout({ children, title }: LayoutProps) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const visao: Visao = { veTudo, admin, instituto: escritorio?.instituto === true, sede }
-  // Casa de perfil "projectos" (Imbono): produto próprio, com menu próprio e sem nada de advocacia.
+  // Casa de perfil "projectos" (fundos internacionais): produto próprio, com menu próprio e sem nada de advocacia.
   const projectos = marca?.perfil === 'projectos'
   const gruposDaPessoa = gruposVisiveis(visao, projectos ? 'projectos' : 'direito')
   // Cada frente do Instituto é uma plataforma à parte: dentro dela, o menu do direito some.
