@@ -4,3 +4,8 @@ export const NOME_PLATAFORMA = 'Theye.club'
 export const SUBTITULO_PLATAFORMA = 'Suporte Jurídico'
 /** Nome completo do Instituto THEYE (pedido do M em 14/11/2026: tem de aparecer escrito na plataforma). */
 export const NOME_INSTITUTO_COMPLETO = 'Instituto de Ontologia com Soluções Multidisciplinares'
+/**
+ * Produto da casa de perfil "projectos" (Imbono, 18/11/2026): não é a plataforma jurídica, é um produto próprio
+ * sobre o mesmo motor. A grafia é a de Angola, porque é lá que o produto é usado.
+ */
+export const NOME_PRODUTO_PROJECTOS = 'Entrega de Projectos'

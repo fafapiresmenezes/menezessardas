@@ -121,7 +121,25 @@ export const gruposMenu: GrupoMenu[] = [
   ] },
 ]
 
-const NOMES: Record<string, string> = Object.fromEntries(gruposMenu.flatMap(g => g.itens.map(i => [i.href, i.label])))
+/**
+ * Menu da casa de perfil "projectos" (Imbono, 18/11/2026). É um produto próprio: nenhuma tela de advocacia entra aqui.
+ * Só aparecem telas que já existem; os ecrãs da fase C do trilho entram neste menu à medida que ficam prontos.
+ * Os nomes são os mesmos do título de cada tela, como em todo o menu.
+ */
+export const gruposProjectos: GrupoMenu[] = [
+  { id: 'obra', titulo: '1. Obra', bloco: 'Obra', nivel: 'todos', dica: 'Medição e assinaturas por nível', itens: [
+    { icon: Ruler, label: 'Medição de obra por nível', href: '/demonstracao-obra' },
+  ] },
+  { id: 'risco', titulo: '2. Risco e auditoria', bloco: 'Risco e auditoria', nivel: 'gestao', dica: 'Quem fez o quê, e quando', itens: [
+    { icon: ClipboardList, label: 'Trilha de auditoria', href: '/trilha' },
+  ] },
+  { id: 'casa', titulo: '3. Casa', bloco: 'Casa', nivel: 'todos', dica: 'Pessoas, níveis e conta', itens: [
+    { icon: Users, label: 'Hierarquia', href: '/hierarquia', nivel: 'gestao' },
+    { icon: Settings, label: 'Configurações', href: '/settings' },
+  ] },
+]
+
+const NOMES: Record<string, string> = Object.fromEntries([...gruposProjectos, ...gruposMenu].flatMap(g => g.itens.map(i => [i.href, i.label])))
 /** O nome da tela, um só, para o menu, a entrada, a busca e a lista de telas. */
 export const nomeDaTela = (href: string): string | undefined => NOMES[href]
 
@@ -175,7 +193,13 @@ export function podeVerNivel(nivel: Nivel, v: Visao): boolean {
 }
 
 /** Os grupos que a pessoa enxerga, já sem as telas que não são para ela. */
-export function gruposVisiveis(v: Visao): GrupoMenu[] {
+export function gruposVisiveis(v: Visao, perfil: 'direito' | 'projectos' = 'direito'): GrupoMenu[] {
+  if (perfil === 'projectos') {
+    return gruposProjectos
+      .filter(g => podeVerNivel(g.nivel, v))
+      .map(g => ({ ...g, itens: g.itens.filter(i => podeVerNivel(i.nivel ?? 'todos', v)) }))
+      .filter(g => g.itens.length > 0)
+  }
   return gruposMenu
     .filter(g => podeVerNivel(g.nivel, v))
     .map(g => ({ ...g, itens: g.itens.filter(i => (v.sede || !SO_SEDE.includes(i.href)) && podeVerNivel(i.nivel ?? 'todos', v)) }))
@@ -197,6 +221,7 @@ export function atalhosDoMenu(escolhidos: string[] | undefined, v: Visao): Atalh
 
 // Autoexplicativo: ao passar o mouse em qualquer item do menu, uma frase diz para que a tela serve.
 export const DICAS: Record<string, string> = {
+  '/demonstracao-obra': 'Boletim de medição, assinaturas por nível e o que cada cargo vê, com dados de demonstração',
   '/inicio': 'A tela de entrada: o que fazer agora e todas as matérias do direito',
   '/meu-dia': 'O que vence hoje e nos próximos dias, separado por área do direito',
   '/processos-antigos': 'Trazer processos de antes da plataforma: planilha ou busca no tribunal',
