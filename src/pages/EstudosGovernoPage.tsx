@@ -7,7 +7,7 @@ import { useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
 import { recorte } from '@/lib/visaoFundos'
-import { TIPOS_ESTUDO, ESTUDOS_DEMO } from '@/data/estudosGovernoDemo'
+import { TIPOS_ESTUDO, ESTUDOS_DEMO, FONTES_VIVAS } from '@/data/estudosGovernoDemo'
 
 export default function EstudosGovernoPage() {
   const quem = usePessoaFundos()
@@ -39,6 +39,24 @@ export default function EstudosGovernoPage() {
                 </div>
                 <p className="text-sm text-grafite mt-1">{t.paraQue}</p>
                 {t.fechado && <p className="text-sm text-amber-900 mt-1">{t.fechado}</p>}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="font-semibold text-navy mb-2">Fontes vivas: satélites e eventos públicos</h2>
+          <p className="text-sm text-grafite-claro mb-2">
+            Dados abertos que vão alimentar os estudos na versão real, sempre citados. Servem para observar e registar,
+            nunca para prever: a predição continua fechada até calibração provada.
+          </p>
+          <ul className="space-y-2" data-testid="fontes-vivas">
+            {FONTES_VIVAS.map(f => (
+              <li key={f.id} className="border border-navy/15 rounded-sm p-3">
+                <p className="font-medium text-navy">{f.nome}</p>
+                <p className="text-sm text-grafite mt-1">{f.oQueDa}</p>
+                <p className="text-xs text-grafite-claro mt-1">Onde entra: {f.ondeEntra}</p>
+                <p className="text-xs text-grafite-claro">Licença: {f.licenca}</p>
               </li>
             ))}
           </ul>

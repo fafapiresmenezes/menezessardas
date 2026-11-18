@@ -33,7 +33,7 @@ export default function ContratosPage() {
                 <p className="text-sm text-navy whitespace-nowrap">{money(c.valor, c.moeda)}</p>
               </div>
               <ul className="mt-3 space-y-1 border-t border-navy/10 pt-2" data-testid={`obrig-${c.id}`}>
-                {c.obrigacoes.map((o, i) => {
+                {[...c.obrigacoes].sort((a, b) => a.prazo.localeCompare(b.prazo)).map((o, i) => {
                   const d = diasAte(o.prazo)
                   const cor = d < 15 ? 'text-red-700' : d < 45 ? 'text-amber-700' : 'text-grafite'
                   return (

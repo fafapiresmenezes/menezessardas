@@ -17,6 +17,14 @@ export const TIPOS_ESTUDO: TipoEstudo[] = [
   { id: 'predicao', nome: 'Predição', paraQue: 'Prever prazos e custos a partir do histórico.', fechado: 'Só entra no ar com calibração provada (medida contra casos reais e dentro da meta). Até lá, nenhuma previsão é publicada.' },
 ]
 
+/** Fontes vivas: dados abertos que alimentam os estudos na versão real. Sem predição; só observação citada. */
+export interface FonteViva { id: string; nome: string; oQueDa: string; ondeEntra: string; licenca: string }
+export const FONTES_VIVAS: FonteViva[] = [
+  { id: 'sentinel', nome: 'Satélites Sentinel (programa Copernicus, União Europeia)', oQueDa: 'Imagens abertas e regulares do terreno: o avanço visível de uma obra, a mancha de água, a estrada a abrir. O Sentinel-1 (radar) vê mesmo com nuvens.', ondeEntra: 'Carteira e Medição (avanço físico observado, lado a lado com o boletim), Estudos de impacto (antes e depois da obra).', licenca: 'Dados abertos Copernicus, uso livre com citação.' },
+  { id: 'landsat', nome: 'Landsat (NASA/USGS)', oQueDa: 'Arquivo de décadas de imagens do mesmo lugar: a história do terreno antes do projecto.', ondeEntra: 'Estudos de impacto e notas sectoriais (linha de base histórica).', licenca: 'Domínio público (USGS).' },
+  { id: 'gdelt', nome: 'GDELT Project', oQueDa: 'Registo aberto e contínuo de eventos noticiados no mundo, por país e tema: protestos, decisões de governo, acontecimentos económicos, com a ligação a cada notícia.', ondeEntra: 'Riscos e litígios (contexto do país, com a notícia citada) e estudos de mercado. Observação citada, nunca previsão.', licenca: 'Dados abertos, citação ao GDELT Project.' },
+]
+
 export interface SeccaoEstudo { titulo: string; corpo: string }
 export interface EstudoDemo {
   id: string; tipo: string; titulo: string; data: string; estado: 'exemplo'

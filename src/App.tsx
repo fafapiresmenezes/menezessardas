@@ -68,6 +68,9 @@ const RiscosLitigiosPage = lazy(() => import('@/pages/RiscosLitigiosPage'))
 const DocumentosFundosPage = lazy(() => import('@/pages/DocumentosFundosPage'))
 const AssistenteFundosPage = lazy(() => import('@/pages/AssistenteFundosPage'))
 const EstudosGovernoPage = lazy(() => import('@/pages/EstudosGovernoPage'))
+const BibliotecaTesesPage = lazy(() => import('@/pages/BibliotecaTesesPage'))
+const CriadorProjectosGovernoPage = lazy(() => import('@/pages/CriadorProjectosGovernoPage'))
+const RobosProjectosGovernoPage = lazy(() => import('@/pages/RobosProjectosGovernoPage'))
 import InicioPage from '@/pages/InicioPage'
 import ErroTela from '@/components/ErroTela'
 const FontesPage = lazy(() => import('@/pages/FontesPage'))
@@ -545,6 +548,18 @@ function App() {
         <Route
           path="/estudos-governo"
           element={isAuthenticated ? <EstudosGovernoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/biblioteca-teses"
+          element={isAuthenticated ? <BibliotecaTesesPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/criador-projectos"
+          element={isAuthenticated ? <CriadorProjectosGovernoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/robos-governo"
+          element={isAuthenticated ? <RobosProjectosGovernoPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/equipe"

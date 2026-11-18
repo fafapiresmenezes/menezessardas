@@ -8,7 +8,7 @@ const COR: Record<NivelRisco, string> = { alto: 'bg-red-50 text-red-800 border-r
 export default function RiscosLitigiosPage() {
   const quem = usePessoaFundos()
   const ordem: NivelRisco[] = ['alto', 'medio', 'baixo']
-  const lista = recorte(quem, RISCOS_DEMO).sort((a, b) => ordem.indexOf(a.nivel) - ordem.indexOf(b.nivel))
+  const lista = recorte(quem, RISCOS_DEMO).sort((a, b) => ordem.indexOf(a.nivel) - ordem.indexOf(b.nivel) || a.projecto.localeCompare(b.projecto))
   return (
     <Layout title="Riscos e litígios">
       <SoParaNiveis rota="/riscos-litigios">
