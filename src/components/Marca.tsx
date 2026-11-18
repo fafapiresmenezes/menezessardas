@@ -1,5 +1,5 @@
 import type { MarcaEscritorio } from '@/lib/marca'
-import { NOME_PLATAFORMA, SUBTITULO_PLATAFORMA, NOME_INSTITUTO_COMPLETO } from '@/lib/plataforma'
+import { NOME_PLATAFORMA, SUBTITULO_PLATAFORMA, NOME_INSTITUTO_COMPLETO, NOME_PRODUTO_PROJECTOS } from '@/lib/plataforma'
 import MarcaOlho from '@/components/MarcaOlho'
 
 interface MarcaProps {
@@ -30,7 +30,7 @@ export default function Marca({ tamanho = 'pequena', comSubtitulo = true, classN
       <div className={`flex flex-col items-center ${className}`} data-testid="marca-parceiro">
         {marca.logo_url ? <img src={marca.logo_url} alt={marca.nome} className={`${grande ? 'max-h-20' : 'max-h-10'} max-w-full object-contain`} />
           : <div className={`font-serif tracking-[0.12em] text-white text-center leading-tight ${grande ? 'text-3xl' : 'text-base'}`}>{marca.nome}</div>}
-        {comSubtitulo && <div className={`font-sans uppercase text-neutral-300 tracking-[0.18em] ${grande ? 'text-xs mt-2' : 'text-[12px] mt-1'}`}>{NOME_PLATAFORMA}</div>}
+        {comSubtitulo && <div className={`font-sans uppercase text-neutral-300 tracking-[0.18em] ${grande ? 'text-xs mt-2' : 'text-[12px] mt-1'}`} data-testid="marca-produto">{marca.perfil === 'projectos' ? NOME_PRODUTO_PROJECTOS : NOME_PLATAFORMA}</div>}
       </div>
     )
   }

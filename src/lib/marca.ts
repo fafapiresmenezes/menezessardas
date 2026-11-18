@@ -2,9 +2,11 @@
 // e pode usar domínio próprio. O rodapé "Desenvolvido pelo Instituto THEYE" permanece.
 import { supabase, supabaseConfigurado } from './supabase'
 
-export type MarcaEscritorio = { nome: string; cor: string; logo_url: string | null; sede: boolean }
+/** Perfil da casa: 'direito' é a plataforma jurídica; 'projectos' é a plataforma de governança para fundos internacionais. */
+export type PerfilCasa = 'direito' | 'projectos'
+export type MarcaEscritorio = { nome: string; cor: string; logo_url: string | null; sede: boolean; perfil?: PerfilCasa }
 export const COR_PADRAO = '#0B0B0C'
-const CHAVE = 'gm-marca-v1'
+const CHAVE = 'gm-marca-v2'
 const DOMINIOS_DA_PLATAFORMA = ['localhost', '127.0.0.1', 'vercel.app', 'github.io']
 
 // O azul antigo (#14213D) era o padrão da plataforma: quem nunca escolheu cor passa a ver o preto do theye.club.
@@ -22,7 +24,7 @@ function normalizar(d: unknown): MarcaEscritorio | null {
   if (m.sede === true) return null
   const nome = typeof m.nome === 'string' ? m.nome.trim() : ''
   if (!nome) return null
-  return { nome, cor: corValida(m.cor as string), logo_url: logoValida(m.logo_url as string), sede: false }
+  return { nome, cor: corValida(m.cor as string), logo_url: logoValida(m.logo_url as string), sede: false, perfil: m.perfil === 'projectos' ? 'projectos' : 'direito' }
 }
 
 /** Marca do escritório da pessoa logada; null para a sede (lockup Instituto THEYE). Guardada na sessão. */
