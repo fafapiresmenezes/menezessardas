@@ -31,6 +31,7 @@ const SEM_MOLDURA = [
   '/transumanismo',
   '/marketing',
   '/publicidade',
+  '/fundos-internacionais',
   '/ia',
 ]
 

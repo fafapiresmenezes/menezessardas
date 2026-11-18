@@ -68,6 +68,7 @@ export type RotaPortal =
   | '/transumanismo'
   | '/marketing'
   | '/publicidade'
+  | '/fundos-internacionais'
 
 export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> = {
   '/preditiva': {
@@ -740,6 +741,48 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "Lo que la plataforma no hace: no crea anuncios que engañen o exploten la vulnerabilidad",
       ],
       comoEsta: "Investigación y diseño. Todavía no hay pantalla para usar.",
+    },
+  },
+  '/fundos-internacionais': {
+    pt: {
+      nome: "Plataforma, Governança, Fundos Internacionais",
+      resumo: "Governar projetos financiados por fundos internacionais: quem decide, o que foi medido e o que se presta de contas a cada financiador.",
+      escopo: [
+        "Governança do projeto: alçadas, conselho e quem aprova cada etapa, com a trilha de cada decisão",
+        "Prestação de contas ao financiador: medição, custo e prazo no formato que bancos de desenvolvimento e fundos pedem",
+        "Padrões socioambientais e de integridade exigidos por fundos internacionais, com a fonte de cada exigência",
+      ],
+      comoEsta: "Protótipo. Trilha de auditoria, hierarquia e medições já funcionam dentro da plataforma; o espaço próprio desta frente está sendo montado.",
+    },
+    en: {
+      nome: "Platform, Governance, International Funds",
+      resumo: "Governing projects financed by international funds: who decides, what was measured and what is reported to each funder.",
+      escopo: [
+        "Project governance: approval limits, board and who signs off each stage, with the trail of every decision",
+        "Reporting to funders: progress, cost and schedule in the format development banks and funds ask for",
+        "Environmental, social and integrity standards required by international funds, with the source of each requirement",
+      ],
+      comoEsta: "Prototype. Audit trail, hierarchy and progress measurement already work inside the platform; this front's own space is being built.",
+    },
+    zh: {
+      nome: "平台、治理、国际基金",
+      resumo: "治理由国际基金资助的项目：谁做决定、测量了什么、向每个出资方报告什么。",
+      escopo: [
+        "项目治理：审批权限、董事会及每个阶段由谁批准，每项决定均留有记录",
+        "向出资方报告：按开发银行和基金要求的格式报告进度、成本和工期",
+        "国际基金要求的环境、社会与廉洁标准，并注明每项要求的出处",
+      ],
+      comoEsta: "原型阶段。审计轨迹、层级和计量已在平台内运行；该方向的独立空间正在搭建。",
+    },
+    es: {
+      nome: "Plataforma, Gobernanza, Fondos Internacionales",
+      resumo: "Gobernar proyectos financiados por fondos internacionales: quién decide, qué se midió y qué se rinde a cada financiador.",
+      escopo: [
+        "Gobernanza del proyecto: niveles de aprobación, consejo y quién aprueba cada etapa, con la traza de cada decisión",
+        "Rendición de cuentas al financiador: avance, costo y plazo en el formato que piden bancos de desarrollo y fondos",
+        "Estándares socioambientales y de integridad exigidos por fondos internacionales, con la fuente de cada exigencia",
+      ],
+      comoEsta: "Prototipo. La traza de auditoría, la jerarquía y las mediciones ya funcionan dentro de la plataforma; el espacio propio de este frente está en construcción.",
     },
   },
 }

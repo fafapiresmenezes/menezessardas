@@ -296,6 +296,7 @@ function App() {
         <Route path="/transumanismo" element={<PortalInstitutoPage />} />
         <Route path="/marketing" element={<PortalInstitutoPage />} />
         <Route path="/publicidade" element={<PortalInstitutoPage />} />
+        <Route path="/fundos-internacionais" element={<PortalInstitutoPage />} />
         {/* Passo 1: Fechar /cotas-quanticas conforme planejamento */}
         {/* <Route
           path="/cotas-quanticas"
