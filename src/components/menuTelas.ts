@@ -138,6 +138,9 @@ export const gruposProjectos: GrupoMenu[] = [
   { id: 'contratos', titulo: '3. Contratos', bloco: 'Contratos', nivel: 'todos', dica: 'Contratos, obrigações e prazos', itens: [
     { icon: FileText, label: 'Contratos e obrigações', href: '/contratos-obrigacoes' },
   ] },
+  { id: 'pagamentos', titulo: '4. Pagamentos', bloco: 'Pagamentos', nivel: 'todos', dica: 'Fila de pagamentos por estado', itens: [
+    { icon: Wallet, label: 'Pagamentos', href: '/pagamentos-fundos' },
+  ] },
   { id: 'risco', titulo: '2. Risco e auditoria', bloco: 'Risco e auditoria', nivel: 'gestao', dica: 'Quem fez o quê, e quando', itens: [
     { icon: ClipboardList, label: 'Trilha de auditoria', href: '/trilha' },
   ] },
@@ -232,6 +235,7 @@ export const DICAS: Record<string, string> = {
   '/visao-presidente': 'Todos os projectos num ecrã, com a cor de cada um, o contratado, o medido e os avisos a tratar',
   '/carteira-projectos': 'Lista dos projectos por país e sector, com cor e avanço, e filtros para encontrar depressa',
   '/contratos-obrigacoes': 'Cada contrato com partes, valor, lei e foro, e as obrigações como prazos com dono',
+  '/pagamentos-fundos': 'Fila de pagamentos por estado, ligados à medição e ao projecto, com o motivo de retenção quando há',
   '/demonstracao-obra': 'Boletim de medição, assinaturas por nível e o que cada cargo vê, com dados de demonstração',
   '/inicio': 'A tela de entrada: o que fazer agora e todas as matérias do direito',
   '/meu-dia': 'O que vence hoje e nos próximos dias, separado por área do direito',
@@ -362,6 +366,7 @@ export const FRENTES: Frente[] = [
     { icon: Gauge, label: 'Visão do presidente', href: '/visao-presidente' },
     { icon: FolderKanban, label: 'Carteira de projectos', href: '/carteira-projectos' },
     { icon: FileText, label: 'Contratos e obrigações', href: '/contratos-obrigacoes' },
+    { icon: Wallet, label: 'Pagamentos', href: '/pagamentos-fundos' },
     { icon: Ruler, label: 'Medição de obra por nível', href: '/demonstracao-obra' },
   ] },
   { id: 'ia', nome: 'IA e superinteligência', itens: [
