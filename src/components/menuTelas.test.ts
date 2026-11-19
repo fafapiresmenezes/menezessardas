@@ -22,7 +22,10 @@ describe('mapa das telas em hierarquia', () => {
     expect(ids(ninguem)).toEqual(['hoje', 'processos', 'pecas', 'escritorio', 'conta'])
     // o bloco do Escritório existe para todos (conformidade e consultores), mas o dinheiro só aparece para quem pode
     expect(telasDe(ninguem, 'escritorio')).toEqual(['/consultores', '/compliance', '/trilha'])
-    expect(telasDe({ ...ninguem, veTudo: true }, 'escritorio')).toContain('/financeiro')
+    // O dinheiro é só do chefe e de quem ele liberar: gestor (veTudo) sozinho não basta.
+    expect(telasDe({ ...ninguem, veTudo: true }, 'escritorio')).not.toContain('/financeiro')
+    expect(telasDe({ ...ninguem, financeiro: true }, 'escritorio')).toContain('/financeiro')
+    expect(telasDe({ ...ninguem, financeiro: true }, 'escritorio')).toContain('/honorarios')
     expect(telasDe({ ...ninguem, veTudo: true }, 'escritorio')).not.toContain('/equipe')
     expect(telasDe({ ...ninguem, admin: true }, 'escritorio')).toEqual(expect.arrayContaining(['/financeiro', '/equipe', '/consumo']))
     // as telas do Instituto ficam fora do menu do escritório

@@ -18,6 +18,8 @@ vi.mock('@/lib/supabase', () => ({
     : t === 'parcelas_honorarios' ? { select: () => ({ order: async () => ({ data: parcelas }) }) }
     : { select: () => ({ order: async () => ({ data: pagamentos }) }), insert: (r: object) => insert(r), delete: () => ({ eq: async () => { await del(); return {} } }) }, rpc: (f: string, a: object) => rpc(f, a) },
 }))
+// Quem olha nestes testes é o chefe: vê os honorários do escritório inteiro.
+vi.mock('@/lib/hierarquia', async () => ({ ...(await vi.importActual<typeof import('@/lib/hierarquia')>('@/lib/hierarquia')), meuAlcance: async () => ({ id: 'u1', cargo: 'socio', admin: false, veTudo: true, financeiro: true }) }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 vi.mock('@/components/CobrancaPix', () => ({ default: ({ valor, caso, referencia }: { valor: number; caso: string; referencia?: string }) => <div data-testid="pix-stub">{caso} {valor}{referencia ? ` ${referencia}` : ''}</div> }))
 const { default: HonorariosPage } = await import('./HonorariosPage')

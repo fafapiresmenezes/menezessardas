@@ -4,6 +4,7 @@ import { destinoSeguro } from '@/lib/destino'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { useIdiomaEscolhido } from '@/lib/i18n'
 import LoginPage from '@/pages/LoginPage'
+import RedefinirSenhaPage from '@/pages/RedefinirSenhaPage'
 import BoasVindasPage from '@/pages/BoasVindasPage'
 // Passo 3: Fechar /stokasticos conforme planejamento
 // const StokasticosPage = lazy(() => import('@/pages/StokasticosPage'))
@@ -185,6 +186,11 @@ function App() {
         </div>
       </div>
     )
+  }
+
+  // Link de "criar ou trocar a senha" enviado por e-mail: volta com ?redefinir=1. Só esta tela aparece.
+  if (new URLSearchParams(window.location.search).get('redefinir') === '1') {
+    return <RedefinirSenhaPage />
   }
 
   return (

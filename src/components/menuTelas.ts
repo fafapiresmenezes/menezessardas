@@ -8,16 +8,17 @@
 // protege os dados; aqui é só arrumação, para ninguém ver botão que não é para si.
 import { Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, AppWindow, Network, MapPin, HeartPulse, type LucideIcon, Droplets, Ruler, Target, Coins, Landmark} from 'lucide-react'
 
-export type Nivel = 'todos' | 'gestao' | 'admin' | 'instituto'
+export type Nivel = 'todos' | 'gestao' | 'financeiro' | 'admin' | 'instituto'
 export interface Tela { icon: LucideIcon; label: string; href: string; nivel?: Nivel }
 export interface GrupoMenu { id: string; titulo: string; bloco: string; nivel: Nivel; dica: string; itens: Tela[] }
 /** O que a pessoa pode ver: vem do cargo (sócio e gestor veem o conjunto), da função de administrador e do Instituto. */
-export interface Visao { veTudo: boolean; admin: boolean; instituto: boolean; sede: boolean }
+export interface Visao { veTudo: boolean; admin: boolean; instituto: boolean; sede: boolean; /** Pedido de M (19/11/2026): o dinheiro do escritório é só do chefe (sócio ou administração) e de quem ele liberar na tela Hierarquia. */ financeiro?: boolean }
 
-export const ROTULO_NIVEL: Record<Nivel, string> = { todos: '', gestao: 'sócios, gestor e administração', admin: 'administrador', instituto: 'só o Instituto' }
+export const ROTULO_NIVEL: Record<Nivel, string> = { todos: '', gestao: 'sócios, gestor e administração', financeiro: 'sócios, administração e quem eles liberarem', admin: 'administrador', instituto: 'só o Instituto' }
 export const EXPLICA_NIVEL: Record<Nivel, string> = {
   todos: 'Todas as pessoas do escritório veem este grupo.',
   gestao: 'Só sócios, o gestor e a administração veem isto: são os números e o dinheiro do escritório inteiro.',
+  financeiro: 'Só sócios, a administração e quem eles liberarem na tela Hierarquia veem isto: é o dinheiro do escritório.',
   admin: 'Só quem administra o escritório vê isto: liberar pessoas, definir cargos e acompanhar o consumo.',
   instituto: 'Só a administração do Instituto THEYE vê isto: é o que cuida da plataforma inteira.',
 }
@@ -69,8 +70,8 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: ShieldCheck, label: 'Trilha de auditoria', href: '/trilha' },
     { icon: Gauge, label: 'Indicadores', href: '/indicadores', nivel: 'gestao' },
     { icon: Filter, label: 'Funil de vendas', href: '/funil', nivel: 'gestao' },
-    { icon: PiggyBank, label: 'Financeiro', href: '/financeiro', nivel: 'gestao' },
-    { icon: Banknote, label: 'Honorários', href: '/honorarios', nivel: 'gestao' },
+    { icon: PiggyBank, label: 'Financeiro', href: '/financeiro', nivel: 'financeiro' },
+    { icon: Banknote, label: 'Honorários', href: '/honorarios', nivel: 'financeiro' },
     { icon: FileBarChart, label: 'Relatórios', href: '/relatorios', nivel: 'gestao' },
     { icon: TrendingUp, label: 'Previsões', href: '/previsoes', nivel: 'gestao' },
     { icon: Users, label: 'Área do administrador', href: '/equipe', nivel: 'admin' },
@@ -226,6 +227,7 @@ export const MAX_ATALHOS = 14
 
 export function podeVerNivel(nivel: Nivel, v: Visao): boolean {
   if (nivel === 'gestao') return v.veTudo || v.admin
+  if (nivel === 'financeiro') return v.admin || v.financeiro === true
   if (nivel === 'admin') return v.admin
   if (nivel === 'instituto') return v.instituto
   return true

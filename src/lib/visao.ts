@@ -5,9 +5,9 @@ import type { Visao } from '@/components/menuTelas'
 
 export async function minhaVisao(): Promise<Visao> {
   const [alcance, escritorio, sede] = await Promise.all([
-    meuAlcance().catch(() => ({ veTudo: false, admin: false })),
+    meuAlcance().catch(() => ({ veTudo: false, admin: false, financeiro: false })),
     meuEscritorio().catch(() => null),
     ehSede().catch(() => true),
   ])
-  return { veTudo: alcance.veTudo, admin: alcance.admin, instituto: escritorio?.instituto === true, sede }
+  return { veTudo: alcance.veTudo, admin: alcance.admin, instituto: escritorio?.instituto === true, sede, financeiro: alcance.financeiro === true }
 }

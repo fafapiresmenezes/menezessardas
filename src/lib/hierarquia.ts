@@ -31,14 +31,14 @@ export const descricaoCargo: Record<Cargo | 'nenhum', string> = {
 export type MapaCargos = Record<string, Cargo>
 
 /** Quem está olhando: identidade, cargo e se enxerga o escritório inteiro. */
-export type Alcance = { id: string; cargo: Cargo | null; admin: boolean; veTudo: boolean }
+export type Alcance = { id: string; cargo: Cargo | null; admin: boolean; veTudo: boolean; /** Vê o dinheiro do escritório: sócio, administração ou quem o chefe liberou. */ financeiro?: boolean }
 
 /**
  * Alcance mais estreito que existe: ninguém conhecido, nenhum cargo, nada além do que não tem dono.
  * É o valor com que as telas começam e o que usam quando não conseguem saber quem está logado:
  * errar para o lado de esconder é só um incômodo; errar para o lado de mostrar vaza o caso do colega.
  */
-export const ALCANCE_FECHADO: Alcance = { id: '', cargo: null, admin: false, veTudo: false }
+export const ALCANCE_FECHADO: Alcance = { id: '', cargo: null, admin: false, veTudo: false, financeiro: false }
 
 /** Sócio e gestor enxergam o escritório inteiro; os demais, só o que é deles. */
 export function veTudo(cargo: Cargo | null | undefined): boolean {
@@ -117,18 +117,51 @@ export async function definirCargo(usuarioId: string, cargo: Cargo | null): Prom
   return atual
 }
 
+/**
+ * Financeiro (pedido de M, 19/11/2026): só o chefe vê o dinheiro do escritório, e só vê também quem o chefe liberar.
+ * "Chefe" aqui é o sócio ou a administração do escritório. A lista de liberados fica nas configurações do
+ * escritório (chave "financeiro_liberados", JSON com os ids). Se a lista não puder ser lida, ninguém a mais é liberado.
+ */
+export function podeVerFinanceiro(viewer: { id: string; cargo: Cargo | null; admin?: boolean }, liberados: string[]): boolean {
+  return !!viewer.admin || viewer.cargo === 'socio' || (!!viewer.id && liberados.includes(viewer.id))
+}
+
+const limparLista = (bruto: unknown): string[] => (Array.isArray(bruto) ? bruto.filter((x): x is string => typeof x === 'string' && x !== '') : [])
+
+/** Quem o chefe liberou para ver o financeiro. Falha de leitura devolve lista vazia (esconder incomoda, mostrar vaza). */
+export async function lerLiberadosFinanceiro(): Promise<string[]> {
+  if (!supabaseConfigurado) return []
+  try {
+    const { financeiro_liberados } = await lerConfig(['financeiro_liberados'])
+    return limparLista(financeiro_liberados ? JSON.parse(financeiro_liberados) : [])
+  } catch { return [] }
+}
+
+/** Libera (ou tira) uma pessoa do financeiro. Leitura estrita antes de gravar, para não apagar a lista por causa de uma falha. */
+export async function definirLiberadoFinanceiro(usuarioId: string, liberar: boolean): Promise<string[]> {
+  const { financeiro_liberados } = await lerConfig(['financeiro_liberados'])
+  let atual: string[] = []
+  if (financeiro_liberados) {
+    try { atual = limparLista(JSON.parse(financeiro_liberados)) } catch { throw new Error('Não foi possível ler a lista do financeiro. Nada foi alterado; tente de novo.') }
+  }
+  const nova = liberar ? Array.from(new Set([...atual, usuarioId])) : atual.filter(id => id !== usuarioId)
+  await gravarConfig({ financeiro_liberados: JSON.stringify(nova) })
+  return nova
+}
+
 /** Cargo e visão de quem está logado, numa chamada só. */
 export async function meuAlcance(): Promise<Alcance> {
-  if (!supabaseConfigurado) return { id: 'demo', cargo: 'socio', admin: true, veTudo: true }
-  const [u, cargos, perfil] = await Promise.all([
+  if (!supabaseConfigurado) return { id: 'demo', cargo: 'socio', admin: true, veTudo: true, financeiro: true }
+  const [u, cargos, perfil, liberados] = await Promise.all([
     Promise.resolve(supabase.auth?.getUser?.()).then(r => r?.data?.user?.id ?? '', () => ''),
     lerCargos(),
     Promise.resolve(supabase.rpc?.('perfil_atual')).then(r => (r?.data as string | null) ?? null, () => null),
+    lerLiberadosFinanceiro(),
   ])
   const id = u
   const cargo = cargos[id] ?? null
   const admin = perfil === 'admin'
   // Sem cargo definido (ou sem saber quem está logado) vale o alcance mais estreito, nunca o mais largo:
   // a hierarquia do escritório ainda vai ser nomeada, e até lá cada pessoa vê o que é seu.
-  return { id, cargo, admin, veTudo: admin || veTudo(cargo) }
+  return { id, cargo, admin, veTudo: admin || veTudo(cargo), financeiro: podeVerFinanceiro({ id, cargo, admin }, liberados) }
 }
