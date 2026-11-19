@@ -22,7 +22,7 @@ export type EstadoVertente = 'no-ar' | 'em-teste' | 'em-desenvolvimento' | 'em-e
 
 export const VERTENTES = [
   { id: 'direito', estado: 'no-ar', rota: '/inicio' },
-  { id: 'fundos', estado: 'em-desenvolvimento', rota: '/fundos-internacionais' },
+  { id: 'fundos', estado: 'em-teste', rota: '/fundos-internacionais' },
   { id: 'predicao', estado: 'em-desenvolvimento', rota: '/preditiva' },
   { id: 'geolocalizacao', estado: 'em-desenvolvimento', rota: '/geolocalizacao' },
   { id: 'engenharia', estado: 'em-desenvolvimento', rota: '/engenharia' },

@@ -4,7 +4,7 @@
  * só aparece aqui depois de aprovação humana. Predição fechada até calibração provada.
  */
 import { useMemo, useState } from 'react'
-import Layout from '@/components/Layout'
+import LayoutFundos from '@/components/LayoutFundos'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
 import SaberDaMateria from '@/components/SaberDaMateria'
 import { recorte } from '@/lib/visaoFundos'
@@ -15,7 +15,7 @@ export default function EstudosGovernoPage() {
   const estudos = useMemo(() => recorte(quem, ESTUDOS_DEMO), [quem])
   const [aberto, setAberto] = useState<string | null>(null)
   return (
-    <Layout title="Estudos para o governo">
+    <LayoutFundos title="Estudos para o governo">
       <SoParaNiveis rota="/estudos-governo">
       <div className="max-w-3xl mx-auto space-y-6">
         <VerComoFundos />
@@ -104,6 +104,6 @@ export default function EstudosGovernoPage() {
         </section>
       </div>
       </SoParaNiveis>
-    </Layout>
+    </LayoutFundos>
   )
 }

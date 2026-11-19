@@ -4,7 +4,7 @@
  * com os estudos de base, a equipa de agentes e as fontes a ligar. Tudo RASCUNHO até aprovação humana.
  */
 import { useState } from 'react'
-import Layout from '@/components/Layout'
+import LayoutFundos from '@/components/LayoutFundos'
 import VerComoFundos, { SoParaNiveis } from '@/components/VerComoFundos'
 import SaberDaMateria from '@/components/SaberDaMateria'
 
@@ -22,7 +22,7 @@ export default function CriadorProjectosGovernoPage() {
   const t = TIPOS.find(x => x.id === tipo)!
   const p = PAISES.find(x => x.id === pais)!
   return (
-    <Layout title="Criador de projectos para o governo">
+    <LayoutFundos title="Criador de projectos para o governo">
       <SoParaNiveis rota="/criador-projectos">
       <div className="max-w-3xl mx-auto space-y-5">
         <VerComoFundos />
@@ -74,6 +74,6 @@ export default function CriadorProjectosGovernoPage() {
         </article>
       </div>
       </SoParaNiveis>
-    </Layout>
+    </LayoutFundos>
   )
 }
