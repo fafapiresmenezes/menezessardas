@@ -1,0 +1,71 @@
+# R8: monta o aplicativo "THEYE Geo" (APK) para M instalar direto no celular, sem loja.
+#
+# POR QUE ESTE FLUXO EXISTE: o contêiner de desenvolvimento não alcança dl.google.com, de onde
+# vêm o SDK do Android e o plugin do Gradle (o proxy de saída recusa). O runner do GitHub já vem
+# com o SDK instalado, então a montagem acontece aqui. O APK sai como "artefato" do fluxo, que M
+# baixa pela página do GitHub.
+#
+# ASSINATURA: é um APK de depuração, assinado com a chave de depuração padrão do Android, que
+# serve para instalar no próprio aparelho. NENHUMA credencial de assinatura entra no repositório.
+# Loja só no R12, e só com o OK de M.
+name: "THEYE Geo: montar o APK"
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'android/**'
+      - 'capacitor.config.ts'
+      - 'src/pages/GeolocalizacaoPage.tsx'
+      - 'src/lib/geo/**'
+      - 'src/components/geo/**'
+      - '.github/workflows/geo-apk.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Preparar o SDK do Android
+        uses: android-actions/setup-android@v3
+
+      - name: Instalar as dependências
+        run: npm ci
+
+      - name: Provar que o geo continua passando
+        run: npx vitest run src/lib/geo src/components/geo src/pages/geo
+
+      - name: Montar o site
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: npm run build
+
+      - name: Copiar o site para dentro do app
+        run: npx cap sync android
+
+      - name: Montar o APK
+        run: ./gradlew --no-daemon assembleDebug
+        working-directory: android
+
+      - name: Guardar o APK para baixar
+        uses: actions/upload-artifact@v4
+        with:
+          name: theye-geo-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
