@@ -27,3 +27,7 @@ verify_jwt = false
 # isso que fez C3 ficar em zero eventos até 14/11/2026, mesmo com o cron marcando "succeeded".
 [functions.ana-agua]
 verify_jwt = false
+
+# Águas (19/11/2026): telemetria aberta da ANA, chamada pelo pg_cron só com x-cron-secret.
+[functions.ana-telemetria]
+verify_jwt = false
