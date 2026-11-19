@@ -6,6 +6,7 @@
 import { useState } from 'react'
 import Layout from '@/components/Layout'
 import VerComoFundos, { SoParaNiveis } from '@/components/VerComoFundos'
+import SaberDaMateria from '@/components/SaberDaMateria'
 
 interface QA { p: string; r: string }
 const RESPOSTAS: QA[] = [
@@ -22,6 +23,7 @@ export default function AssistenteFundosPage() {
       <SoParaNiveis rota="/assistente-fundos">
       <div className="max-w-3xl mx-auto space-y-4">
         <VerComoFundos />
+        <SaberDaMateria rota="/assistente-fundos" />
         <p className="text-sm text-grafite-claro">
           Demonstração. Perguntas do dia a dia, respondidas em linguagem simples a partir dos dados da plataforma.
           Nesta amostra as respostas são fixas; na versão ligada, o assistente lê os projectos em tempo real.

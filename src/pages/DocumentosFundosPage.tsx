@@ -2,6 +2,7 @@
 import Layout from '@/components/Layout'
 import { DOCUMENTOS_DEMO, AUDITORIA_DEMO } from '@/data/documentosDemo'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
+import SaberDaMateria from '@/components/SaberDaMateria'
 import { recorte } from '@/lib/visaoFundos'
 const dia = (s: string) => new Date(s + 'T00:00:00').toLocaleDateString('pt-PT')
 export default function DocumentosFundosPage() {
@@ -13,6 +14,7 @@ export default function DocumentosFundosPage() {
       <SoParaNiveis rota="/documentos-fundos">
       <div className="max-w-5xl mx-auto space-y-6">
         <VerComoFundos />
+        <SaberDaMateria rota="/documentos-fundos" />
         <p className="text-sm text-grafite-claro">Demonstração com dados inventados. Os documentos do projecto e o registo de quem fez o quê e quando.</p>
         <section>
           <h2 className="text-sm font-medium text-navy mb-2">Documentos</h2>

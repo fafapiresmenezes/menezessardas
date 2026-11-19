@@ -8,6 +8,7 @@ import Layout from '@/components/Layout'
 import { calcularBoletim, desvioDeCronograma, semaforo, type Semaforo } from '@/lib/medicaoObra'
 import { PROJETOS_DEMO } from '@/data/demoObraAngola'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
+import SaberDaMateria from '@/components/SaberDaMateria'
 import { veProjecto } from '@/lib/visaoFundos'
 import { EXEMPLOS_INTERNACIONAIS, REPOSITORIOS_FUNDOS } from '@/data/exemplosInternacionais'
 
@@ -36,6 +37,7 @@ export default function CarteiraProjectosPage() {
       <SoParaNiveis rota="/carteira-projectos">
       <div className="max-w-5xl mx-auto space-y-4">
         <VerComoFundos />
+        <SaberDaMateria rota="/carteira-projectos" />
         <p className="text-sm text-grafite-claro">Demonstração com dados inventados. Projectos por país e sector, com cor, avanço e o que há a pagar.</p>
         <div className="flex flex-wrap gap-2">
           <label className="text-sm text-grafite-claro">Cor:

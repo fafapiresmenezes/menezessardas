@@ -5,6 +5,7 @@
  */
 import Layout from '@/components/Layout'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
+import SaberDaMateria from '@/components/SaberDaMateria'
 import { recorte } from '@/lib/visaoFundos'
 import type { Item } from '@/lib/hierarquiaCorporativa'
 
@@ -31,6 +32,7 @@ export default function RobosProjectosGovernoPage() {
       <SoParaNiveis rota="/robos-governo">
       <div className="max-w-3xl mx-auto space-y-6">
         <VerComoFundos />
+        <SaberDaMateria rota="/robos-governo" />
         <p className="text-sm text-grafite-claro">
           Demonstração. Os robôs preparam e apresentam; <strong>quem decide e quem entrega é sempre uma pessoa</strong>.
           Nenhum robô envia nada para fora da casa, e a predição continua fechada até calibração provada.

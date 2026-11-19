@@ -18,7 +18,14 @@ export default function SoInstituto({ children }: { children: ReactNode }) {
     ehInstituto().then(ok => { if (vivo) setEstado(ok ? 'sim' : 'nao') }).catch(() => { if (vivo) setEstado('nao') })
     return () => { vivo = false }
   }, [])
-  if (estado === 'conferindo') return null
-  if (estado === 'nao') return <Navigate to="/inicio" replace />
+  if (estado === 'conferindo') return <p className="p-6 text-sm text-grafite-claro">A conferir o acesso…</p>
+  if (estado === 'nao') {
+    return (
+      <>
+        <p className="p-6 text-sm text-grafite-claro">Esta parte é só dos membros do Instituto. A voltar ao início…</p>
+        <Navigate to="/inicio" replace />
+      </>
+    )
+  }
   return <>{children}</>
 }

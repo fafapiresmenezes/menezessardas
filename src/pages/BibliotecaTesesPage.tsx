@@ -6,6 +6,7 @@
 import { useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
 import VerComoFundos, { SoParaNiveis } from '@/components/VerComoFundos'
+import SaberDaMateria from '@/components/SaberDaMateria'
 import { REPOSITORIOS_TESES, CURSOS_ABERTOS } from '@/data/bibliotecaDemo'
 import { ESPECIALISTAS_FUNDOS } from '@/data/especialistasFundos'
 
@@ -21,6 +22,7 @@ export default function BibliotecaTesesPage() {
       <SoParaNiveis rota="/biblioteca-teses">
       <div className="max-w-4xl mx-auto space-y-6">
         <VerComoFundos />
+        <SaberDaMateria rota="/biblioteca-teses" />
         <p className="text-sm text-grafite-claro">
           A biblioteca interna da casa: os repositórios de teses das melhores escolas do mundo e os cursos abertos,
           cada um com a ligação oficial e a licença, e o catálogo de especialistas formados por essa estante.

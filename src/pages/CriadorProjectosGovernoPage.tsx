@@ -6,6 +6,7 @@
 import { useState } from 'react'
 import Layout from '@/components/Layout'
 import VerComoFundos, { SoParaNiveis } from '@/components/VerComoFundos'
+import SaberDaMateria from '@/components/SaberDaMateria'
 
 const TIPOS = [
   { id: 'estrada', nome: 'Estrada ou ponte', estudos: ['Nota sectorial de obras', 'Impacto económico do corredor'], agentes: ['Gestor de projecto', 'Especialistas em pavimentos e em medição', 'Jurídico (contratação pública)', 'Socioambiental'] },
@@ -25,6 +26,7 @@ export default function CriadorProjectosGovernoPage() {
       <SoParaNiveis rota="/criador-projectos">
       <div className="max-w-3xl mx-auto space-y-5">
         <VerComoFundos />
+        <SaberDaMateria rota="/criador-projectos" />
         <p className="text-sm text-grafite-claro">
           Demonstração. Escolhe o tipo de projecto e o país, e a casa monta o dossiê-rascunho no molde fixo:
           objectivo, estudos de base, equipa de agentes e fontes a ligar. <strong>Tudo nasce RASCUNHO</strong>:
