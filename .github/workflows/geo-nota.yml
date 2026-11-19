@@ -30,7 +30,10 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # Node 22, e não 20: os scripts do geo usam fs.globSync (chegou no 22) e o
+          # medir-nota.mjs lê um .ts com --experimental-strip-types. No 20 a obra morria
+          # em "node:fs does not provide an export named globSync".
+          node-version: '22'
           cache: npm
 
       - run: npm ci
