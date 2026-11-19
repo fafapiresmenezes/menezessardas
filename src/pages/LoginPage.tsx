@@ -87,6 +87,9 @@ export default function LoginPage() {
     window.scrollTo({ top: 0 })
     document.getElementById('email')?.focus({ preventScroll: true })
   }, [doSegmento, destino])
+  // Pedido de M (19/11/2026): a entrada com e-mail e senha não fica na primeira tela. Ela só aparece
+  // depois que a pessoa clica no quadradinho da frente dela (ou em domínio próprio de escritório).
+  const mostrarCartao = doSegmento || !!marca || pedirCodigo
   const seguir = () => { lembrarUltimaFrente(destino); navigate(destino) }
 
   // Dois fatores: se a conta tem aplicativo autenticador, a sessão só vale depois do código (nível aal2).
@@ -166,7 +169,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen bg-navy px-4 py-10 md:py-14" style={marca ? { backgroundColor: marca.cor } : undefined}>
       <div className="mx-auto w-full max-w-6xl">
-      <div className="grid items-center gap-10 lg:grid-cols-[1fr_minmax(0,28rem)]">
+      <div className={mostrarCartao ? 'grid items-center gap-10 lg:grid-cols-[1fr_minmax(0,28rem)]' : 'grid items-center gap-8'}>
         {/* Lado de quem chega: o Instituto inteiro, não só o jurídico. Em domínio de escritório
             parceiro (marca própria) este lado mostra só a marca dele. */}
         <div className="porta text-center lg:text-left" data-testid="porta-instituto">
@@ -221,6 +224,7 @@ export default function LoginPage() {
         </div>
 
         <div>
+        {mostrarCartao && (
         <div className="cartao-entrada rounded-sm p-8 md:p-10" data-testid="cartao-entrada">
           {!marca && (
             <p data-testid="so-membros" className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-grafite">{t('login.soMembros')}</p>
@@ -378,6 +382,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => {
                 setErro('')
+                if (!emailRecuperar) setEmailRecuperar(email)
                 setAvisoRecuperacao(true)
               }}
               title={t('login.esqueciSenhaTitulo')}
@@ -401,6 +406,8 @@ export default function LoginPage() {
             )}
           </div>
         </div>
+
+        )}
 
         {!doSegmento && !marca && (
           <p data-testid="outros-segmentos" className="mt-5 text-center text-base leading-relaxed text-neutral-100">
