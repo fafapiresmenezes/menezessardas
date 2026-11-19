@@ -286,7 +286,8 @@ export function lerMedicoesSar0(html: string): Medicao[] {
 
 export async function pegarSar0(params: Record<string, string>): Promise<{ html: string } | { erro: string }> {
   try {
-    const r = await fetch(`${SAR0}?${new URLSearchParams(params).toString()}`, { headers: UA })
+    const q = new URLSearchParams(params).toString()
+    const r = await fetch(q ? `${SAR0}?${q}` : SAR0, { headers: UA })
     const t = await r.text()
     if (!r.ok) return { erro: `MedicaoSin ${r.status}` }
     return { html: t }
@@ -443,7 +444,7 @@ export async function coletar(db: Banco, o: { de: string; ate: string; agora: st
   // Cadastro: primeiro o SAR novo (MedicaoSin); se não vier nada, o ServiceANA antigo.
   let reservatorios: Reservatorio[] = []
   let novo = false
-  const pagina = await pegarSar0({ dropDownListReservatorios: '' })
+  const pagina = await pegarSar0({}) // sem parâmetro: a página vem com o cadastro (com o select vazio a ANA devolve 500)
   if ('html' in pagina) reservatorios = lerOpcoesSar0(pagina.html)
   if (reservatorios.length) { novo = true; via.push('cadastro:MedicaoSin') }
   else {
