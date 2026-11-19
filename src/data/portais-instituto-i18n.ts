@@ -752,7 +752,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "Prestação de contas ao financiador: medição, custo e prazo no formato que bancos de desenvolvimento e fundos pedem",
         "Padrões socioambientais e de integridade exigidos por fundos internacionais, com a fonte de cada exigência",
       ],
-      comoEsta: "Protótipo. Trilha de auditoria, hierarquia e medições já funcionam dentro da plataforma; o espaço próprio desta frente está sendo montado.",
+      comoEsta: "A demonstração completa já funciona: 14 telas com carteira, medição, pagamentos, riscos, documentos e prestação de contas, com dados de exemplo citados e as regras da literatura dentro de cada tela.",
     },
     en: {
       nome: "Platform, Governance, International Funds",
@@ -762,7 +762,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "Reporting to funders: progress, cost and schedule in the format development banks and funds ask for",
         "Environmental, social and integrity standards required by international funds, with the source of each requirement",
       ],
-      comoEsta: "Prototype. Audit trail, hierarchy and progress measurement already work inside the platform; this front's own space is being built.",
+      comoEsta: "The full demonstration already works: 14 screens with portfolio, measurement, payments, risks, documents and reporting, with cited sample data and the literature's rules inside each screen.",
     },
     zh: {
       nome: "平台、治理、国际基金",
@@ -772,7 +772,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "向出资方报告：按开发银行和基金要求的格式报告进度、成本和工期",
         "国际基金要求的环境、社会与廉洁标准，并注明每项要求的出处",
       ],
-      comoEsta: "原型阶段。审计轨迹、层级和计量已在平台内运行；该方向的独立空间正在搭建。",
+      comoEsta: "完整演示已经可用：14个页面，涵盖项目组合、计量、付款、风险、文件与报告，示例数据均注明出处，每个页面内都有文献规则。",
     },
     es: {
       nome: "Plataforma, Gobernanza, Fondos Internacionales",
@@ -782,7 +782,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "Rendición de cuentas al financiador: avance, costo y plazo en el formato que piden bancos de desarrollo y fondos",
         "Estándares socioambientales y de integridad exigidos por fondos internacionales, con la fuente de cada exigencia",
       ],
-      comoEsta: "Prototipo. La traza de auditoría, la jerarquía y las mediciones ya funcionan dentro de la plataforma; el espacio propio de este frente está en construcción.",
+      comoEsta: "La demostración completa ya funciona: 14 pantallas con cartera, medición, pagos, riesgos, documentos y rendición de cuentas, con datos de ejemplo citados y las reglas de la literatura dentro de cada pantalla.",
     },
   },
 }
