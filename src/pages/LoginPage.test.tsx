@@ -21,7 +21,8 @@ vi.mock('@/components/Marca', () => ({ default: () => <div data-testid="marca" /
 const { default: LoginPage } = await import('./LoginPage')
 
 function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathname}</p> }
-const montar = () => render(<MemoryRouter initialEntries={['/login?ir=/instituto']}><Routes><Route path="/login" element={<LoginPage />} /><Route path="*" element={<Onde />} /></Routes></MemoryRouter>)
+// Pedido de M (19/11/2026 21h17): o cartão de e-mail e senha só existe na Plataforma jurídica (/inicio).
+const montar = () => render(<MemoryRouter initialEntries={['/login?ir=/inicio']}><Routes><Route path="/login" element={<LoginPage />} /><Route path="*" element={<Onde />} /></Routes></MemoryRouter>)
 const preencher = (email: string, senha: string) => { fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: email } }); fireEvent.change(screen.getByLabelText('Senha'), { target: { value: senha } }) }
 // No cadastro há também o campo do escritório (pedido de M, 12/11/2026), sempre em maiúsculas.
 const preencherEscritorio = (nome = 'SARDAS E MENEZES') => {
@@ -45,6 +46,12 @@ describe('Tela de login', () => {
     expect(screen.queryByLabelText('Senha')).toBeNull()
     cleanup(); montar()
     expect(screen.getByTestId('cartao-entrada')).toBeTruthy()
+    // Pedido de M (19/11/2026 21h17): os outros quadradinhos não têm cartão; apontam para a jurídica.
+    cleanup()
+    render(<MemoryRouter initialEntries={['/login?ir=/engenharia']}><Routes><Route path="/login" element={<LoginPage />} /></Routes></MemoryRouter>)
+    expect(screen.queryByTestId('cartao-entrada')).toBeNull()
+    expect(screen.queryByLabelText('Senha')).toBeNull()
+    expect(screen.getByTestId('ir-entrada-juridica').getAttribute('href')).toBe('/login?ir=%2Finicio')
   })
   beforeEach(() => { cleanup(); configurado = true; nivel = { nextLevel: 'aal1', currentLevel: 'aal1' }; signInWithPassword.mockClear(); signUp.mockClear(); challengeAndVerify.mockClear() })
 
@@ -53,7 +60,7 @@ describe('Tela de login', () => {
     preencher('fatima@gmenezes.com', 'segredo123')
     fireEvent.click(screen.getByText('Entrar'))
     await waitFor(() => expect(signInWithPassword).toHaveBeenCalledWith({ email: 'fatima@gmenezes.com', password: 'segredo123' }))
-    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/instituto'))
+    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/inicio'))
     cleanup(); montar()
     signInWithPassword.mockResolvedValueOnce({ error: { status: 400, message: 'Invalid login credentials' } })
     preencher('a@b.com', 'x'); fireEvent.click(screen.getByText('Entrar'))
@@ -76,7 +83,7 @@ describe('Tela de login', () => {
     await waitFor(() => expect(screen.getAllByRole('alert').some(a => a.textContent === 'Código não confere. Tente de novo.')).toBe(true))
     expect(challengeAndVerify).toHaveBeenCalledWith({ factorId: 'f1', code: '123456' })
     fireEvent.click(screen.getByText('Confirmar código'))
-    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/instituto'))
+    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/inicio'))
   })
 
   it('criar conta: bloqueia robô (menos de 3 s), exige 8 caracteres, cadastra e avisa que não precisa de aprovação; esqueci a senha orienta', async () => {
@@ -116,7 +123,7 @@ describe('Tela de login', () => {
     vi.setSystemTime(new Date('2026-11-10T10:00:05Z'))
     signUp.mockResolvedValueOnce({ data: { session: { access_token: 't' } }, error: null })
     fireEvent.click(screen.getByText('Criar acesso'))
-    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/instituto'))
+    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/inicio'))
     vi.useRealTimers()
     cleanup(); montar()
     signInWithPassword.mockResolvedValueOnce({ error: { status: 400, message: 'Email not confirmed' } })

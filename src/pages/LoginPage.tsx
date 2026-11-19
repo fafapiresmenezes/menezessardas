@@ -127,7 +127,10 @@ export default function LoginPage() {
   }, [doSegmento, destino])
   // Pedido de M (19/11/2026): a entrada com e-mail e senha não fica na primeira tela. Ela só aparece
   // depois que a pessoa clica no quadradinho da frente dela (ou em domínio próprio de escritório).
-  const mostrarCartao = doSegmento || !!marca || pedirCodigo
+  // Pedido de M (19/11/2026 21h17): o quadrado de e-mail e senha só existe na Plataforma jurídica.
+  // Os outros quadradinhos apresentam a frente e apontam a entrada para lá.
+  const entradaComCartao = destino === '/inicio'
+  const mostrarCartao = (doSegmento && entradaComCartao) || !!marca || pedirCodigo
   const seguir = () => { lembrarUltimaFrente(destino); navigate(destino) }
 
   // Dois fatores: se a conta tem aplicativo autenticador, a sessão só vale depois do código (nível aal2).
@@ -478,6 +481,20 @@ export default function LoginPage() {
           </div>
         </div>
 
+        )}
+
+        {doSegmento && !mostrarCartao && (
+          <div className="rounded-sm border border-white/20 p-8 text-center" data-testid="entrada-pela-juridica">
+            <p className="text-base leading-relaxed text-neutral-100">{t('login.entradaNaJuridica')}</p>
+            <Link
+              to="/login?ir=%2Finicio"
+              title={t('login.entradaNaJuridicaDica')}
+              data-testid="ir-entrada-juridica"
+              className="mt-5 inline-block bg-[#fff] px-6 py-3 text-sm font-semibold uppercase tracking-wider text-[#000] no-underline transition hover:bg-neutral-200"
+            >
+              {t('login.entradaNaJuridicaBotao')}
+            </Link>
+          </div>
         )}
 
         {!doSegmento && !marca && (

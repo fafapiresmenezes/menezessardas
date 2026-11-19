@@ -19,7 +19,7 @@ const { default: BoasVindasPage } = await import('./BoasVindasPage')
 
 function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathname}</p> }
 // A entrada com e-mail e senha só aparece depois de escolher um quadradinho (M, 19/11/2026).
-const montarEntrada = () => render(<MemoryRouter initialEntries={['/login?ir=/instituto']}><LoginPage /></MemoryRouter>)
+const montarEntrada = () => render(<MemoryRouter initialEntries={['/login?ir=/inicio']}><LoginPage /></MemoryRouter>)
 const montarBoasVindas = () => render(
   <MemoryRouter initialEntries={['/boas-vindas']}>
     <Routes><Route path="/boas-vindas" element={<BoasVindasPage />} /><Route path="*" element={<Onde />} /></Routes>
