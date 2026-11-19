@@ -9,5 +9,5 @@ export async function minhaVisao(): Promise<Visao> {
     meuEscritorio().catch(() => null),
     ehSede().catch(() => true),
   ])
-  return { veTudo: alcance.veTudo, admin: alcance.admin, instituto: escritorio?.instituto === true, sede, financeiro: alcance.financeiro === true }
+  return { veTudo: alcance.veTudo, admin: alcance.admin, instituto: escritorio?.instituto === true, sede, financeiro: alcance.financeiro === true, ocultas: ('ocultas' in alcance ? alcance.ocultas : undefined) ?? [] }
 }

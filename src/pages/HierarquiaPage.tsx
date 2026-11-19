@@ -8,6 +8,7 @@
  * Fonte única dos cargos: src/lib/hierarquia.ts (configuracoes.cargos). Esta tela só lê e grava por lá.
  * Nenhum cargo é atribuído por padrão: quem define é o escritório, nunca a plataforma.
  */
+import VisaoPorNivel from '@/components/VisaoPorNivel'
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { Crown, Users, FolderOpen, Database } from 'lucide-react'
@@ -114,7 +115,9 @@ export default function HierarquiaPage() {
             <p className="text-sm">Somente quem administra o escritório define a hierarquia. Peça a um administrador do escritório para ajustar o seu cargo.</p>
             {msg && <p role="alert" className="mt-3 text-sm text-critico">{msg.texto}</p>}
           </section>
-        ) : (
+        ) : null}
+        {perfil !== 'carregando' && perfil !== 'admin' && <VisaoPorNivel />}
+        {perfil === 'carregando' || perfil !== 'admin' ? null : (
           <>
             <section className="bg-dourado/10 p-6 shadow-sm border-l-4 border-dourado" aria-labelledby="o-que-e">
               <h2 id="o-que-e" className="text-lg font-serif font-semibold flex items-center gap-2">
@@ -239,6 +242,7 @@ export default function HierarquiaPage() {
                 <strong> Carteira de processos</strong>.
               </p>
             </section>
+            <VisaoPorNivel />
           </>
         )}
       </div>

@@ -12,7 +12,7 @@ export type Nivel = 'todos' | 'gestao' | 'financeiro' | 'admin' | 'instituto'
 export interface Tela { icon: LucideIcon; label: string; href: string; nivel?: Nivel }
 export interface GrupoMenu { id: string; titulo: string; bloco: string; nivel: Nivel; dica: string; itens: Tela[] }
 /** O que a pessoa pode ver: vem do cargo (sócio e gestor veem o conjunto), da função de administrador e do Instituto. */
-export interface Visao { veTudo: boolean; admin: boolean; instituto: boolean; sede: boolean; /** Pedido de M (19/11/2026): o dinheiro do escritório é só do chefe (sócio ou administração) e de quem ele liberar na tela Hierarquia. */ financeiro?: boolean }
+export interface Visao { veTudo: boolean; admin: boolean; instituto: boolean; sede: boolean; /** Pedido de M (19/11/2026): o dinheiro do escritório é só do chefe (sócio ou administração) e de quem ele liberar na tela Hierarquia. */ financeiro?: boolean; /** Telas que o nível de cima escondeu desta pessoa (três níveis em cascata). */ ocultas?: string[] }
 
 export const ROTULO_NIVEL: Record<Nivel, string> = { todos: '', gestao: 'sócios, gestor e administração', financeiro: 'sócios, administração e quem eles liberarem', admin: 'administrador', instituto: 'só o Instituto' }
 export const EXPLICA_NIVEL: Record<Nivel, string> = {
@@ -75,7 +75,7 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: FileBarChart, label: 'Relatórios', href: '/relatorios', nivel: 'gestao' },
     { icon: TrendingUp, label: 'Previsões', href: '/previsoes', nivel: 'gestao' },
     { icon: Users, label: 'Área do administrador', href: '/equipe', nivel: 'admin' },
-    { icon: Network, label: 'Hierarquia', href: '/hierarquia', nivel: 'admin' },
+    { icon: Network, label: 'Hierarquia', href: '/hierarquia', nivel: 'gestao' },
     { icon: Wallet, label: 'Consumo', href: '/consumo', nivel: 'admin' },
   ] },
   // Passo A27: as telas do Instituto saem do menu do escritório. O escritório cliente não vê a administração
@@ -225,6 +225,9 @@ export const BLOCOS_INICIO = gruposMenu
 export const ATALHOS_PADRAO = ['/inicio', '/meu-dia', '/agenda', '/intimacoes', '/processos', '/assistente', '/meu-estilo', '/parametros-escrita']
 export const MAX_ATALHOS = 14
 
+/** Telas que ninguém esconde de ninguém: sem elas a pessoa não trabalha nem cuida da própria conta. */
+export const TELAS_FIXAS = ['/meu-dia', '/inicio', '/settings', '/meu-jeito', '/hierarquia']
+
 export function podeVerNivel(nivel: Nivel, v: Visao): boolean {
   if (nivel === 'gestao') return v.veTudo || v.admin
   if (nivel === 'financeiro') return v.admin || v.financeiro === true
@@ -243,7 +246,7 @@ export function gruposVisiveis(v: Visao, perfil: 'direito' | 'projectos' = 'dire
   }
   return gruposMenu
     .filter(g => podeVerNivel(g.nivel, v))
-    .map(g => ({ ...g, itens: g.itens.filter(i => (v.sede || !SO_SEDE.includes(i.href)) && podeVerNivel(i.nivel ?? 'todos', v)) }))
+    .map(g => ({ ...g, itens: g.itens.filter(i => (v.sede || !SO_SEDE.includes(i.href)) && podeVerNivel(i.nivel ?? 'todos', v) && !(v.ocultas ?? []).includes(i.href)) }))
     .filter(g => g.itens.length > 0)
 }
 

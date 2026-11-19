@@ -31,7 +31,7 @@ export const descricaoCargo: Record<Cargo | 'nenhum', string> = {
 export type MapaCargos = Record<string, Cargo>
 
 /** Quem está olhando: identidade, cargo e se enxerga o escritório inteiro. */
-export type Alcance = { id: string; cargo: Cargo | null; admin: boolean; veTudo: boolean; /** Vê o dinheiro do escritório: sócio, administração ou quem o chefe liberou. */ financeiro?: boolean }
+export type Alcance = { id: string; cargo: Cargo | null; admin: boolean; veTudo: boolean; /** Vê o dinheiro do escritório: sócio, administração ou quem o chefe liberou. */ financeiro?: boolean; /** Telas que o nível de cima escondeu de quem olha (cascata dos três níveis). */ ocultas?: string[] }
 
 /**
  * Alcance mais estreito que existe: ninguém conhecido, nenhum cargo, nada além do que não tem dono.
@@ -149,19 +149,68 @@ export async function definirLiberadoFinanceiro(usuarioId: string, liberar: bool
   return nova
 }
 
+/**
+ * Três níveis em cascata (pedido de M, 19/11/2026): chefe, gestor e advogado.
+ * O chefe (sócio ou administração) define o que o gestor vê; o gestor define o que o advogado vê.
+ * O advogado nunca vê o que foi escondido do gestor: o que o de cima não tem, não pode repassar.
+ * Fica nas configurações do escritório (chave "visao_niveis", JSON { gestor: [telas], advogado: [telas] }),
+ * guardando as telas ESCONDIDAS: uma tela nova nasce visível, como já era, até alguém a esconder.
+ */
+export type NivelHierarquia = 'chefe' | 'gestor' | 'advogado'
+export type NivelAbaixo = 'gestor' | 'advogado'
+export type MapaOcultas = Record<NivelAbaixo, string[]>
+export const rotuloNivelHierarquia: Record<NivelHierarquia, string> = { chefe: 'Chefe (sócios e administração)', gestor: 'Gestor(a)', advogado: 'Advogado(a)' }
+export const OCULTAS_VAZIAS: MapaOcultas = { gestor: [], advogado: [] }
+
+export function nivelDe(viewer: { cargo: Cargo | null; admin?: boolean }): NivelHierarquia {
+  if (viewer.admin || viewer.cargo === 'socio') return 'chefe'
+  return viewer.cargo === 'gestor' ? 'gestor' : 'advogado'
+}
+
+/** O que está escondido de um nível: o do gestor vale também para o advogado. */
+export function ocultasDoNivel(nivel: NivelHierarquia, mapa: MapaOcultas): string[] {
+  if (nivel === 'chefe') return []
+  if (nivel === 'gestor') return mapa.gestor
+  return Array.from(new Set([...mapa.gestor, ...mapa.advogado]))
+}
+
+const limparOcultas = (bruto: unknown): MapaOcultas => {
+  const o = (bruto && typeof bruto === 'object' ? bruto : {}) as Record<string, unknown>
+  const telas = (x: unknown) => limparLista(x).filter(t => /^\/[a-z0-9/_-]{1,60}$/.test(t))
+  return { gestor: telas(o.gestor), advogado: telas(o.advogado) }
+}
+
+/** Lê o que cada nível não vê. Se não der para ler, nada a mais é escondido: as regras de cargo e do banco continuam valendo. */
+export async function lerOcultas(): Promise<MapaOcultas> {
+  if (!supabaseConfigurado) return OCULTAS_VAZIAS
+  try {
+    const { visao_niveis } = await lerConfig(['visao_niveis'])
+    return limparOcultas(visao_niveis ? JSON.parse(visao_niveis) : {})
+  } catch { return OCULTAS_VAZIAS }
+}
+
+/** Grava as telas escondidas de UM nível. O banco confere quem pede: chefe grava os dois, gestor só o do advogado. */
+export async function gravarOcultas(nivel: NivelAbaixo, telas: string[]): Promise<void> {
+  const { error } = await supabase.rpc('visao_niveis_gravar', { p_nivel: nivel, p_ocultas: telas })
+  if (error) throw new Error(/could not find the function|does not exist|PGRST202/i.test(`${error.code ?? ''} ${error.message ?? ''}`)
+    ? 'O banco de dados ainda não recebeu a atualização dos três níveis (arquivo 144). Peça à administração para aplicar.'
+    : error.message)
+}
+
 /** Cargo e visão de quem está logado, numa chamada só. */
 export async function meuAlcance(): Promise<Alcance> {
   if (!supabaseConfigurado) return { id: 'demo', cargo: 'socio', admin: true, veTudo: true, financeiro: true }
-  const [u, cargos, perfil, liberados] = await Promise.all([
+  const [u, cargos, perfil, liberados, ocultas] = await Promise.all([
     Promise.resolve(supabase.auth?.getUser?.()).then(r => r?.data?.user?.id ?? '', () => ''),
     lerCargos(),
     Promise.resolve(supabase.rpc?.('perfil_atual')).then(r => (r?.data as string | null) ?? null, () => null),
     lerLiberadosFinanceiro(),
+    lerOcultas(),
   ])
   const id = u
   const cargo = cargos[id] ?? null
   const admin = perfil === 'admin'
   // Sem cargo definido (ou sem saber quem está logado) vale o alcance mais estreito, nunca o mais largo:
   // a hierarquia do escritório ainda vai ser nomeada, e até lá cada pessoa vê o que é seu.
-  return { id, cargo, admin, veTudo: admin || veTudo(cargo), financeiro: podeVerFinanceiro({ id, cargo, admin }, liberados) }
+  return { id, cargo, admin, veTudo: admin || veTudo(cargo), financeiro: podeVerFinanceiro({ id, cargo, admin }, liberados), ocultas: ocultasDoNivel(nivelDe({ cargo, admin }), ocultas) }
 }
