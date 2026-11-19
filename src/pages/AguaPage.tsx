@@ -115,7 +115,7 @@ export default function AguaPage() {
           <section className="bg-white shadow-sm p-6 space-y-4">
             <div>
               <h2 className="font-serif text-xl">Risco hídrico — todos os reservatórios</h2>
-              <p className="text-sm text-grafite">Volume útil mais recente. Crítico: abaixo de 30%. Atenção: 30 a 50%. Normal: acima de 50%.</p>
+              <p className="text-sm text-grafite">Volume útil mais recente. As faixas são um guia de leitura do Instituto, não a classificação oficial da ANA (cada reservatório tem regras próprias de operação): crítico abaixo de 30%, atenção de 30 a 50%, normal acima de 50%.</p>
             </div>
             {painelErro && <p className="text-sm text-critico">{painelErro}</p>}
             {painelCarregando && <p className="text-sm text-grafite">Carregando painel…</p>}

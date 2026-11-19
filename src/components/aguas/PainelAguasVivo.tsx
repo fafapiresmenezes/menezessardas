@@ -16,17 +16,18 @@ export default function PainelAguasVivo() {
   if (!d) return <section className="bg-white shadow-sm p-6"><p className="text-sm text-grafite">Buscando os números medidos…</p></section>
 
   const altoAlto = d.barragens?.porClasse.find(c => c.risco === 'Alto' && c.dano === 'Alto')?.n ?? 0
+  const semClasse = total(d.barragens?.porClasse.filter(c => c.risco === 'Não Classificado' && c.dano === 'Não Classificado') ?? [])
   return (
     <>
       <section className="bg-white shadow-sm p-6" data-testid="aguas-rios">
         <h2 className="font-serif text-xl">Rios agora</h2>
         <p className="text-sm text-grafite mb-3">
-          Resumo do último dia fechado em {d.rios.estacoes} estações da rede da ANA (chuva somada no dia; nível e vazão em média). As estações entram em rodízio, um lote por dia.
+          Resumo do último dia fechado em {d.rios.estacoes} estações da rede da ANA (chuva somada no dia; nível e vazão em média; nas estações de barragem o nível é a cota do reservatório, por isso aparece em centenas de metros). As estações entram em rodízio, um lote por dia.
         </p>
         {d.rios.linhas.length === 0 ? <p className="text-sm">Ainda sem estação coletada.</p> : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead><tr className="text-left text-grafite"><th className="py-1 pr-2">Estação</th><th className="pr-2">Local</th><th className="pr-2">Dia</th><th className="pr-2 text-right">Chuva (mm)</th><th className="pr-2 text-right">Nível (cm)</th><th className="text-right">Vazão (m³/s)</th></tr></thead>
+              <thead><tr className="text-left text-grafite"><th className="py-1 pr-2">Estação</th><th className="pr-2">Local</th><th className="pr-2">Dia</th><th className="pr-2 text-right">Chuva (mm)</th><th className="pr-2 text-right" title="Altura da água na régua da estação. Nas barragens é a cota do reservatório (altitude).">Nível (m)</th><th className="text-right">Vazão (m³/s)</th></tr></thead>
               <tbody>
                 {d.rios.linhas.slice(0, mostrarRios).map(r => (
                   <tr key={r.estacao} className="border-t border-grafite-claro">
@@ -34,7 +35,7 @@ export default function PainelAguasVivo() {
                     <td className="pr-2">{[r.municipio, r.uf].filter(Boolean).join(' - ')}</td>
                     <td className="pr-2">{dataBr(r.dia)}</td>
                     <td className="pr-2 text-right">{numeroBr(r.chuva_mm, 1)}</td>
-                    <td className="pr-2 text-right">{numeroBr(r.nivel_cm, 0)}</td>
+                    <td className="pr-2 text-right">{numeroBr(r.nivel_cm === null ? null : r.nivel_cm / 100, 2)}</td>
                     <td className="text-right">{numeroBr(r.vazao_m3s, 1)}</td>
                   </tr>
                 ))}
@@ -71,6 +72,7 @@ export default function PainelAguasVivo() {
           <h2 className="font-serif text-xl">Barragens</h2>
           <p className="text-sm text-grafite mb-3">
             {numeroBr(total(d.barragens.porClasse))} barragens no cadastro nacional em {dataBr(d.barragens.dia)}. {numeroBr(altoAlto)} delas têm risco alto e dano potencial alto ao mesmo tempo, que é o grupo que a Lei 12.334/2010 mais cobra.
+            {semClasse > 0 && <> Outras {numeroBr(semClasse)} ainda não foram classificadas pelo fiscal, nem em risco nem em dano, então o retrato é parcial.</>}
           </p>
           <ul className="grid gap-2 md:grid-cols-3">
             {d.barragens.porUf.slice(0, 9).map(u => (

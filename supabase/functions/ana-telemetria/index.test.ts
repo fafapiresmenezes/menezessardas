@@ -44,6 +44,14 @@ describe('telemetria da ANA', () => {
     expect(vistos.size).toBe(250)
   })
 
+  it('um dia só já espalha pelo país inteiro (salto, não bloco)', () => {
+    const est = Array.from({ length: 250 }, (_, i) => ({ codigo: String(i).padStart(5, '0') })) as never[]
+    const lote = (mod.escolher(est, 50, 0) as { codigo: string }[]).map(e => Number(e.codigo))
+    expect(lote.length).toBe(50)
+    expect(Math.min(...lote)).toBeLessThan(10)
+    expect(Math.max(...lote)).toBeGreaterThan(240)
+  })
+
   it('o hash usa a mesma receita da biblioteca do navegador', () => {
     const c = { b: 1, a: { y: 2, x: [1, 'z'] }, n: null }
     expect(mod.canonizar(c)).toBe(canonSrc(c))
