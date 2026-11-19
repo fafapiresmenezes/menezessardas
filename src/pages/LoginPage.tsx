@@ -27,6 +27,19 @@ export default function LoginPage() {
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [avisoRecuperacao, setAvisoRecuperacao] = useState(false)
+  const [emailRecuperar, setEmailRecuperar] = useState('')
+  const [recuperacaoEnviada, setRecuperacaoEnviada] = useState(false)
+
+  // Manda o link de criar ou trocar a senha para o e-mail. A resposta é sempre a mesma, para não revelar contas.
+  const pedirLinkRecuperacao = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setCarregando(true)
+    try {
+      await supabase.auth.resetPasswordForEmail(emailRecuperar.trim(), { redirectTo: `${window.location.origin}/?redefinir=1` })
+    } catch { /* mesma resposta de qualquer forma */ }
+    setRecuperacaoEnviada(true)
+    setCarregando(false)
+  }
   const [primeiroAcesso, setPrimeiroAcesso] = useState(false)
   const [escritorio, setEscritorio] = useState('')
   const [avisoCadastro, setAvisoCadastro] = useState('')
@@ -219,7 +232,27 @@ export default function LoginPage() {
 
           {avisoRecuperacao && (
             <div role="status" className="mb-5 p-3 bg-atencaoFundo border-l-2 border-atencao text-atencao text-sm">
-              {supabaseConfigurado ? t('login.avisoRecuperacao') : t('login.avisoRecuperacaoSemBanco')}
+              {!supabaseConfigurado && t('login.avisoRecuperacaoSemBanco')}
+              {supabaseConfigurado && !recuperacaoEnviada && (
+                <form onSubmit={pedirLinkRecuperacao} className="space-y-3" data-testid="form-recuperar">
+                  <p>Digite o e-mail da sua conta. Enviamos um link para criar ou trocar a senha. Se preferir, peça uma senha provisória (menu Equipe) a uma pessoa administradora da sua equipe.</p>
+                  <input
+                    type="email"
+                    autoComplete="email"
+                    required
+                    aria-label="E-mail da conta"
+                    value={emailRecuperar}
+                    onChange={e => setEmailRecuperar(e.target.value)}
+                    className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm bg-white text-grafite"
+                  />
+                  <button type="submit" disabled={carregando} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-60">
+                    {carregando ? 'Enviando…' : 'Enviar link'}
+                  </button>
+                </form>
+              )}
+              {supabaseConfigurado && recuperacaoEnviada && (
+                <p>Se este e-mail estiver cadastrado, o link chega em alguns minutos. Confira também a caixa de spam.</p>
+              )}
             </div>
           )}
 
