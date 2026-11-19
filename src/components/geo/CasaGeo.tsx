@@ -12,7 +12,7 @@ export default function CasaGeo({ children }: { children: React.ReactNode }) {
     return () => { document.title = anterior }
   }, [])
   return (
-    <div className="min-h-screen bg-pergaminho flex flex-col">
+    <div className="casa-geo min-h-screen bg-pergaminho flex flex-col">
       <header className="bg-black text-white">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <Link to="/geomapeamento" className="flex items-center gap-2" title="Voltar à porta do geomapeamento no Instituto THEYE">

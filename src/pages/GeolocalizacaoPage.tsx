@@ -296,7 +296,7 @@ export default function GeolocalizacaoPage() {
         {msg && <p className="text-sm text-regular">{msg}</p>}
         {ocupado && <p className="text-sm text-grafite">{ocupado}</p>}
 
-        <Suspense fallback={<div className="h-[55vh] bg-pergaminho" />}>
+        <Suspense fallback={<div className="h-[55vh] min-h-[320px] bg-pergaminho" role="status" aria-label="Carregando o mapa" aria-busy="true" />}>
           <MapaGeo pontos={dados.pontos} lugares={calc?.lugares ?? []} camadas={camadas} ligadas={ligadas} cenaTiles={cenaTiles} malha={municipio?.malha ?? null} centro={pos} />
         </Suspense>
         <div className="flex flex-wrap gap-2 text-xs">
@@ -309,7 +309,7 @@ export default function GeolocalizacaoPage() {
         </div>
 
         <nav className="flex flex-wrap gap-1 border-b border-navy/10" role="tablist">
-          {ABAS.map(a => <button key={a.id} role="tab" aria-selected={aba === a.id} title={a.dica} onClick={() => setAba(a.id)} className={`px-3 min-h-[40px] text-sm ${aba === a.id ? 'bg-navy text-white' : 'text-navy'}`}>{a.nome}</button>)}
+          {ABAS.map(a => <button key={a.id} role="tab" aria-selected={aba === a.id} title={a.dica} onClick={() => setAba(a.id)} className={`px-3 min-h-[44px] text-sm ${aba === a.id ? 'bg-navy text-white' : 'text-navy'}`}>{a.nome}</button>)}
         </nav>
 
         {aba === 'onde' && (
@@ -327,8 +327,8 @@ export default function GeolocalizacaoPage() {
             <p className="text-xs text-grafite-claro">Limite honesto: o navegador do celular para de gravar quando a tela apaga ou o app vai para o fundo. Enquanto grava, a plataforma pede para a tela ficar acesa. Para gravar o dia inteiro com tela apagada, o próximo passo é um app nativo (G8). {bateria != null && `Bateria agora: ${Math.round(bateria * 100)}%.`}</p>
             {ultimo && <p className="text-sm text-navy"><MapPin className="inline w-4 h-4" /> Última posição: {ultimo.lat.toFixed(5)}, {ultimo.lon.toFixed(5)} · margem de erro ±{Math.round(ultimo.precisao)} m · {new Date(ultimo.t).toLocaleString('pt-BR')}</p>}
             <h2 className="font-semibold text-navy pt-2">Tudo o que foi gravado ({dados.pontos.length} pontos)</h2>
-            <div className="max-h-72 overflow-auto text-xs">
-              <table className="w-full"><thead><tr className="text-left text-grafite"><th>Horário</th><th>Posição</th><th title="Quanto a posição pode estar errada, em metros">Erro</th><th>Velocidade</th></tr></thead>
+            <div className="max-h-72 overflow-auto text-xs" tabIndex={0} role="region" aria-label="Lista de posições gravadas">
+              <table className="w-full" tabIndex={0} aria-label="Posições gravadas"><thead><tr className="text-left text-grafite"><th>Horário</th><th>Posição</th><th title="Quanto a posição pode estar errada, em metros">Erro</th><th>Velocidade</th></tr></thead>
                 <tbody>{[...dados.pontos].reverse().slice(0, 300).map(p => <tr key={p.hash} className="border-t border-navy/5"><td>{new Date(p.t).toLocaleString('pt-BR')}</td><td>{p.lat.toFixed(5)}, {p.lon.toFixed(5)}</td><td>±{Math.round(p.precisao)} m</td><td>{p.velocidade != null ? `${(p.velocidade * 3.6).toFixed(0)} km/h` : '—'}</td></tr>)}</tbody>
               </table>
               {dados.pontos.length > 300 && <p className="text-grafite-claro mt-1">Mostrando os 300 mais recentes. A exportação traz todos.</p>}
@@ -371,7 +371,7 @@ export default function GeolocalizacaoPage() {
             </div>
             {ultimaCena && <p className="text-sm text-navy">Agora: <b>{ultimaCena.ambiente}</b> · {ultimaCena.pessoas} pessoa(s) na cena · {ultimaCena.objetos.join(', ') || 'sem objetos de referência'}{ultimaCena.codigos.length ? ` · códigos: ${ultimaCena.codigos.join(', ')}` : ''}</p>}
             <h2 className="font-semibold text-navy pt-2">Leituras gravadas ({dados.cenas.length})</h2>
-            <ul className="text-xs max-h-60 overflow-auto">{[...dados.cenas].reverse().slice(0, 100).map(c => <li key={c.hash} className="border-t border-navy/5 py-1">{new Date(c.t).toLocaleString('pt-BR')} · {c.ambiente} · {c.pessoas} pessoa(s) · {c.objetos.join(', ')}</li>)}</ul>
+            <ul className="text-xs max-h-60 overflow-auto" tabIndex={0} aria-label="Cenas da câmera gravadas">{[...dados.cenas].reverse().slice(0, 100).map(c => <li key={c.hash} className="border-t border-navy/5 py-1">{new Date(c.t).toLocaleString('pt-BR')} · {c.ambiente} · {c.pessoas} pessoa(s) · {c.objetos.join(', ')}</li>)}</ul>
           </div>
         )}
 
@@ -405,7 +405,7 @@ export default function GeolocalizacaoPage() {
             </div>
             <div className={cartao}>
               <h2 className="font-semibold text-navy">Satélites abertos (inventário G5)</h2>
-              <div className="overflow-auto"><table className="w-full text-xs"><thead><tr className="text-left text-grafite"><th>Satélite</th><th>O que mede</th><th>Resolução</th><th>Passa a cada</th><th>Licença</th><th>No mapa</th></tr></thead>
+              <div className="overflow-auto"><table className="w-full text-xs" tabIndex={0} aria-label="Satélites disponíveis"><thead><tr className="text-left text-grafite"><th>Satélite</th><th>O que mede</th><th>Resolução</th><th>Passa a cada</th><th>Licença</th><th>No mapa</th></tr></thead>
                 <tbody>{SATELITES.map(s => <tr key={s.nome} className="border-t border-navy/5 align-top" title={s.catalogo}><td>{s.nome}</td><td>{s.mede}</td><td>{s.resolucao}</td><td>{s.revisita}</td><td>{s.licenca}</td><td>{s.noMapa ? 'sim' : 'ainda não'}</td></tr>)}</tbody></table></div>
               <h3 className="font-semibold text-navy pt-3">Camadas públicas que ainda faltam (G6)</h3>
               <ul className="text-xs list-disc pl-5">{CAMADAS_PENDENTES.map(c => <li key={c.nome}>{c.nome}: {c.caminho}</li>)}</ul>
@@ -419,7 +419,7 @@ export default function GeolocalizacaoPage() {
               <h2 className="font-semibold text-navy"><Network className="inline w-4 h-4 mr-1" />Grafo</h2>
               <p className="text-sm text-grafite">{grafo.nos.length} nós e {grafo.arestas.length} ligações.</p>
               <ul className="text-xs mt-2">{Object.entries(grafo.nos.reduce<Record<string, number>>((a, n) => ({ ...a, [n.tipo]: (a[n.tipo] ?? 0) + 1 }), {})).map(([t, n]) => <li key={t}>{t}: {n}</li>)}</ul>
-              <div className="max-h-60 overflow-auto text-xs mt-2">{grafo.arestas.slice(0, 80).map((a, i) => <div key={i} className="border-t border-navy/5 py-0.5" title={a.fonte}>{rotulo(grafo.nos, a.de)} <b>{a.tipo}</b> {rotulo(grafo.nos, a.para)}{a.peso != null ? ` (${a.peso})` : ''}</div>)}</div>
+              <div className="max-h-60 overflow-auto text-xs mt-2" tabIndex={0} role="region" aria-label="Ligações do grafo">{grafo.arestas.slice(0, 80).map((a, i) => <div key={i} className="border-t border-navy/5 py-0.5" title={a.fonte}>{rotulo(grafo.nos, a.de)} <b>{a.tipo}</b> {rotulo(grafo.nos, a.para)}{a.peso != null ? ` (${a.peso})` : ''}</div>)}</div>
             </div>
             <div className={cartao}>
               <h2 className="font-semibold text-navy">Para onde você deve ir em seguida</h2>
@@ -434,7 +434,7 @@ export default function GeolocalizacaoPage() {
           <div className={cartao + ' space-y-4'}>
             <h2 className="font-semibold text-navy"><Bot className="inline w-4 h-4 mr-1" />IA local — Ollama</h2>
             <p className="text-sm text-grafite">O Ollama roda um modelo de linguagem <b>no seu computador</b>. Nada dos seus dados sai do aparelho. Para funcionar, você precisa ter o <a href="https://ollama.com" target="_blank" rel="noreferrer noopener" title="Abrir o site do Ollama para baixar e instalar" className="underline">Ollama</a> instalado e rodando com permissão de acesso entre origens (CORS) aberta:</p>
-            <pre className="text-xs bg-pergaminho px-3 py-2 overflow-x-auto">OLLAMA_ORIGINS=https://theye.club ollama serve</pre>
+            <pre className="text-xs bg-pergaminho px-3 py-2 overflow-x-auto" tabIndex={0} role="region" aria-label="Comando para iniciar o Ollama">OLLAMA_ORIGINS=https://theye.club ollama serve</pre>
             <div className="grid sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs text-grafite block mb-1">Endereço do Ollama</label>
@@ -510,7 +510,7 @@ export default function GeolocalizacaoPage() {
             </div>
             <div className={cartao + ' md:col-span-2'}>
               <h2 className="font-semibold text-navy">Registro de acesso ({dados.acessos.length})</h2>
-              <ul className="text-xs max-h-60 overflow-auto">{[...dados.acessos].reverse().map(a => <li key={a.hash} className="border-t border-navy/5 py-0.5" title={a.hash}>{new Date(a.t).toLocaleString('pt-BR')} · {a.acao}{a.detalhe ? ` · ${a.detalhe}` : ''}</li>)}</ul>
+              <ul className="text-xs max-h-60 overflow-auto" tabIndex={0} aria-label="Registro de acessos">{[...dados.acessos].reverse().map(a => <li key={a.hash} className="border-t border-navy/5 py-0.5" title={a.hash}>{new Date(a.t).toLocaleString('pt-BR')} · {a.acao}{a.detalhe ? ` · ${a.detalhe}` : ''}</li>)}</ul>
               <p className="text-xs text-grafite-claro mt-2">Termo aceito por {dados.consentimento.titular} em {new Date(dados.consentimento.aceitoEm).toLocaleString('pt-BR')} · hash {dados.consentimento.hash.slice(0, 16)}…</p>
             </div>
           </div>
