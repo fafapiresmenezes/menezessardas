@@ -27,6 +27,7 @@ const RoyaltiesPage = lazy(() => import('@/pages/RoyaltiesPage'))
 const MedicoesContratosPage = lazy(() => import('@/pages/MedicoesContratosPage'))
 const SuperficieAtaquePage = lazy(() => import('@/pages/SuperficieAtaquePage'))
 const AguaPage = lazy(() => import('@/pages/AguaPage'))
+const AguasPage = lazy(() => import('@/pages/AguasPage'))
 const TrilhasPage = lazy(() => import('@/pages/TrilhasPage'))
 const PesquisaIaPage = lazy(() => import('@/pages/PesquisaIaPage'))
 const ReguaPage = lazy(() => import('@/pages/ReguaPage'))
@@ -221,6 +222,10 @@ function App() {
         <Route
           path="/superficie-de-ataque"
           element={isAuthenticated ? <SoInstituto><SuperficieAtaquePage /></SoInstituto> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/aguas"
+          element={isAuthenticated ? <SoInstituto><AguasPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/agua"

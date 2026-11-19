@@ -107,6 +107,7 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
     { icon: Store, label: 'Soluções jurídicas', href: '/solucoes' },
     { icon: ShieldCheck, label: 'Superfície de ataque', href: '/superficie-de-ataque' },
+    { icon: Droplets, label: 'Águas', href: '/aguas' },
     { icon: Droplets, label: 'Água dos reservatórios (ANA)', href: '/agua' },
     { icon: GraduationCap, label: 'Trilhas de estudo', href: '/trilhas' },
     { icon: FlaskConical, label: 'Agenda de pesquisa em IA', href: '/pesquisa-ia' },
@@ -295,6 +296,7 @@ export const DICAS: Record<string, string> = {
   '/royalties': 'Os 5% do Instituto em cada venda de serviço, e em que conta eles caem',
   '/engenharia': 'A plataforma de engenharia: matérias, consultores e cálculo de estrutura com memória de cálculo',
   '/superficie-de-ataque': 'Mapa do que um invasor alcançaria e o que fazer em cada ponto, por enquanto com dados de exemplo',
+  '/aguas': 'A casa de Águas: reservatórios, leis de água e saneamento com link oficial, casos e fontes públicas',
   '/agua': 'Medição diária dos reservatórios publicada pela ANA: volume, nível e vazões, com a data em que cada número chegou',
   '/trilhas': 'Plano de estudo por nicho, montado sobre a ementa dos consultores, com a fonte de cada módulo',
   '/pesquisa-ia': 'O que a frente de IA está tentando descobrir, como mede e o que faria abandonar cada hipótese',
@@ -369,6 +371,10 @@ export const FRENTES: Frente[] = [
   { id: 'predicao', nome: 'Predição', itens: [
     { icon: TrendingUp, label: 'Predição (mercado)', href: '/preditiva' },
     { icon: Ruler, label: 'Régua de acerto dos modelos', href: '/regua' },
+  ] },
+  { id: 'aguas', nome: 'Águas', itens: [
+    { icon: Droplets, label: 'Águas', href: '/aguas' },
+    { icon: Droplets, label: 'Água dos reservatórios (ANA)', href: '/agua' },
   ] },
   { id: 'educacao', nome: 'Educação e capacitação', itens: [
     { icon: GraduationCap, label: 'Educação e capacitação', href: '/educacao' },
