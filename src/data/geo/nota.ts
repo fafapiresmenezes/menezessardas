@@ -35,7 +35,7 @@ export const RUBRICA: Dimensao[] = [
   { n: 9, nome: 'Manutenção', norma: 'ISO/IEC 25010', criterio10: 'CI verde · cobertura ≥80% nas libs geo',
     nota: 3, estado: 'medida', evidencia: 'ainda não há testes automatizados nas libs geo', ate10: 'cada elo daqui em diante entra com teste' },
   { n: 10, nome: 'Honestidade científica', norma: 'FAIR + regra da casa', criterio10: '0 números sem fonte; predição só calibrada',
-    nota: 9, estado: 'medida', evidencia: 'números com fonte; previsão mostra nº de observações; predição municipal bloqueada até calibração (Brier ≤0,20)', ate10: 'R4 liga cada métrica ao paper' },
+    nota: 10, estado: 'medida', evidencia: 'cada métrica de mobilidade (raio de giração, previsibilidade, perfil) traz o estudo de origem com link; o painel mostra o teto de previsibilidade e avisa quando há poucos dados; predição municipal bloqueada até calibração (Brier ≤0,20)', ate10: 'mantido: nenhum número novo entra sem fonte' },
 ]
 
 export const META = 10
