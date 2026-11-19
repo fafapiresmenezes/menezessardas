@@ -50,3 +50,24 @@ describe('o aprendizado da casa', () => {
     expect(semResposta(lista).map(a => a.pergunta)).toEqual(['como emito nota fiscal', 'como mudo a senha'])
   })
 })
+
+describe('o copiloto aprende com o uso', () => {
+  it('a tela que o escritório disse que resolveu sobe para o primeiro lugar na mesma pergunta', () => {
+    const antes = procurar('como vejo os prazos')
+    expect(antes.length).toBeGreaterThan(1)
+    const ultima = [...antes].reverse().find(r => r.origem === 'tela' && r.rota)!
+    expect(antes[0].rota).not.toBe(ultima.rota)
+    const aprendido: Aprendido[] = [{ pergunta: 'Como vejo os prazos?', vezes: 4, achou: true, resolveu: 3, naoResolveu: 0, rotas: { [ultima.rota!]: 3 } }]
+    const depois = procurar('como vejo os prazos', 5, undefined, aprendido)
+    expect(depois.findIndex(r => r.rota === ultima.rota && r.origem === 'tela')).toBeLessThan(antes.findIndex(r => r.rota === ultima.rota && r.origem === 'tela'))
+  })
+  it('voto de outra pergunta não mexe nesta', () => {
+    const aprendido: Aprendido[] = [{ pergunta: 'outra coisa', vezes: 1, achou: true, resolveu: 1, naoResolveu: 0, rotas: { '/horas': 9 } }]
+    expect(procurar('como vejo os prazos', 5, undefined, aprendido)).toEqual(procurar('como vejo os prazos'))
+  })
+  it('quem não vê a tela não a recebe, mesmo com voto', () => {
+    const fechada = { veTudo: false, admin: false, instituto: false, sede: true }
+    const aprendido: Aprendido[] = [{ pergunta: 'royalties', vezes: 1, achou: true, resolveu: 5, naoResolveu: 0, rotas: { '/royalties': 5 } }]
+    expect(procurar('royalties', 5, fechada, aprendido).some(r => r.rota === '/royalties')).toBe(false)
+  })
+})
