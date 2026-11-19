@@ -40,8 +40,13 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      # O runner do GitHub já traz o SDK do Android instalado. Só pedimos as peças
+      # que a montagem usa (API 35). O pacote antigo "tools", que esta ação instala
+      # por padrão, não existe mais no repositório da Google e derrubava o fluxo.
       - name: Preparar o SDK do Android
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
 
       - name: Instalar as dependências
         run: npm ci
