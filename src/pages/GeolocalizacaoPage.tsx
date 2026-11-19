@@ -13,6 +13,7 @@ import { FONTE_MODO, resumoDeModos } from '@/lib/geo/modo'
 import { pdfFicha } from '@/lib/geo/fichaPdf'
 import { Camera, Download, Lock, MapPin, Pause, Play, Satellite, ShieldCheck, Trash2, Network, Bot } from 'lucide-react'
 import { carregarConfigOllama, gerarTexto, listarModelos, promptNoticias, promptSemana, salvarConfigOllama, type OllamaConfig } from '@/lib/geo/ollama'
+import { AVISO_TITULO, abrirAjustesDoApp, desligarFundo, deveGravar, fundoDisponivel, ligarFundo, paraPonto } from '@/lib/geo/fundo'
 
 const MapaGeo = lazy(() => import('@/components/geo/MapaGeo'))
 
@@ -59,7 +60,9 @@ export default function GeolocalizacaoPage() {
   const [ollamaErro, setOllamaErro] = useState('')
   const [iaSaida, setIaSaida] = useState('')
   const [iaGerando, setIaGerando] = useState(false)
+  const [noFundo, setNoFundo] = useState(false)
   const vigia = useRef<number | null>(null)
+  const vigiaFundo = useRef<string | null>(null)
   const ultimoGravado = useRef(0)
   const travaTela = useRef<{ release: () => Promise<void> } | null>(null)
   const video = useRef<HTMLVideoElement>(null)
@@ -115,7 +118,39 @@ export default function GeolocalizacaoPage() {
     if (vigia.current != null) navigator.geolocation.clearWatch(vigia.current)
     vigia.current = null
     travaTela.current?.release().catch(() => {}); travaTela.current = null
+    if (vigiaFundo.current) { desligarFundo(vigiaFundo.current); vigiaFundo.current = null; setNoFundo(false) }
     setGravando(false)
+  }
+
+  // ---------- R9: gravação com a tela apagada (só dentro do aplicativo) ----------
+  // O ponto do fundo entra pelo MESMO cofre e pela MESMA corrente de hash do primeiro plano.
+  // Enquanto o fundo grava, a gravação do navegador é desligada, senão o mesmo trajeto entraria duas vezes.
+  const ligarNoFundo = async () => {
+    if (!cofre) return
+    setErro('')
+    try {
+      if (vigia.current != null) { navigator.geolocation.clearWatch(vigia.current); vigia.current = null }
+      ultimoGravado.current = 0
+      const id = await ligarFundo({ metros: 0 }, async l => {
+        if (!cofre) return
+        if (!deveGravar(ultimoGravado.current, l.time ?? 0, cofre.dados.intervaloSeg || 60)) return
+        const p = paraPonto(l, bateria)
+        if (!p) return
+        ultimoGravado.current = p.t
+        try { await cofre.gravarPonto(p); atualizar(cofre) } catch (e) { falhar(e) }
+      }, recadoDoAparelho => setErro(recadoDoAparelho))
+      vigiaFundo.current = id
+      setNoFundo(true); setGravando(true)
+      await cofre.anotarAcesso('gravacao', 'Gravação em segundo plano ligada (notificação permanente à vista)')
+      atualizar(cofre)
+    } catch (e) { falhar(e) }
+  }
+
+  const desligarNoFundo = async () => {
+    if (vigiaFundo.current) await desligarFundo(vigiaFundo.current)
+    vigiaFundo.current = null
+    setNoFundo(false); setGravando(false)
+    if (cofre) { await cofre.anotarAcesso('gravacao', 'Gravação em segundo plano desligada'); atualizar(cofre) }
   }
 
   // ---------- G3: cálculo ----------
@@ -331,7 +366,31 @@ export default function GeolocalizacaoPage() {
                 </select>
               </label>
             </div>
-            <p className="text-xs text-grafite-claro">Limite honesto: o navegador do celular para de gravar quando a tela apaga ou o app vai para o fundo. Enquanto grava, a plataforma pede para a tela ficar acesa. Para gravar o dia inteiro com tela apagada, o próximo passo é um app nativo (G8). {bateria != null && `Bateria agora: ${Math.round(bateria * 100)}%.`}</p>
+            {fundoDisponivel() ? (
+              <div className="border border-navy/20 bg-navy/[0.03] p-3 space-y-2">
+                <div className="flex flex-wrap gap-2 items-center justify-between">
+                  <h3 className="font-semibold text-navy text-sm">Gravar com a tela apagada</h3>
+                  {noFundo
+                    ? <button className="min-h-[44px] px-4 text-sm bg-critico text-white" onClick={desligarNoFundo} title="Parar de gravar com a tela apagada e tirar a notificação permanente">Desligar</button>
+                    : <button className={botaoCheio} onClick={ligarNoFundo} title="Continuar gravando sua posição mesmo com a tela apagada e o celular no bolso">Ligar</button>}
+                </div>
+                <p className="text-xs text-grafite">
+                  Com isto ligado, o celular continua gravando sua posição no bolso, o dia inteiro. Enquanto grava, o Android mostra
+                  uma notificação permanente dizendo <b>“{AVISO_TITULO}”</b>, que você não pode dispensar sem desligar aqui:
+                  é a sua garantia de que nunca gravamos escondido. O ponto gravado dormindo vai para o mesmo cofre cifrado e entra
+                  na mesma corrente de conferência dos outros. Nada vai para servidor.
+                </p>
+                <p className="text-xs text-grafite-claro">
+                  {noFundo ? 'Gravando com a tela apagada. ' : 'Desligado. '}
+                  Gasta mais bateria do que a gravação comum, e quanto menor o intervalo, mais gasta.
+                  {bateria != null && ` Bateria agora: ${Math.round(bateria * 100)}%.`}
+                  {' '}Se o aparelho recusar a localização,{' '}
+                  <button className="underline text-navy" onClick={abrirAjustesDoApp} title="Abrir os ajustes do THEYE Geo no Android para liberar a localização">abra os ajustes do app</button>.
+                </p>
+              </div>
+            ) : (
+              <p className="text-xs text-grafite-claro">Limite honesto: aqui no navegador, o celular para de gravar quando a tela apaga ou o app vai para o fundo — é regra do navegador, não escolha nossa. Enquanto grava, a plataforma pede para a tela ficar acesa. Para gravar o dia inteiro com a tela apagada, use o aplicativo THEYE Geo. {bateria != null && `Bateria agora: ${Math.round(bateria * 100)}%.`}</p>
+            )}
             {ultimo && <p className="text-sm text-navy"><MapPin className="inline w-4 h-4" /> Última posição: {ultimo.lat.toFixed(5)}, {ultimo.lon.toFixed(5)} · margem de erro ±{Math.round(ultimo.precisao)} m · {new Date(ultimo.t).toLocaleString('pt-BR')}</p>}
             <h2 className="font-semibold text-navy pt-2">Tudo o que foi gravado ({dados.pontos.length} pontos)</h2>
             <div className="max-h-72 overflow-auto text-xs" tabIndex={0} role="region" aria-label="Lista de posições gravadas">
@@ -375,14 +434,14 @@ export default function GeolocalizacaoPage() {
                   <div className="text-2xl font-semibold text-navy">{calc.mobilidade.raioGiracaoKm.toFixed(2)} <span className="text-sm text-grafite-claro">km</span></div>
                   <h3 className="text-sm font-semibold text-navy mt-1">Raio de giração</h3>
                   <p className="text-xs text-grafite">A largura da sua vida no mapa: o quanto você se espalha em volta do seu centro. Quem só faz casa–trabalho tem raio pequeno.</p>
-                  <a className="text-xs text-navy underline" href={FONTES.giracao.url} target="_blank" rel="noreferrer">{FONTES.giracao.autores}, {FONTES.giracao.onde}</a>
+                  <a className="text-xs text-navy underline" href={FONTES.giracao.url} target="_blank" rel="noreferrer noopener" title="Abrir o estudo que define o raio de giração, em outra aba">{FONTES.giracao.autores}, {FONTES.giracao.onde}</a>
                 </div>
                 <div className="border border-navy/10 p-3">
                   <div className="text-2xl font-semibold text-navy">{Math.round(calc.mobilidade.previsibilidadeMaxima * 100)}<span className="text-sm text-grafite-claro">%</span></div>
                   <h3 className="text-sm font-semibold text-navy mt-1">Previsibilidade máxima</h3>
                   <p className="text-xs text-grafite">O <b>teto</b>: nenhum método, por melhor que seja, acerta o seu próximo lugar mais do que isto. Na pesquisa, esse teto fica perto de {Math.round(TETO_PREVISIBILIDADE * 100)}%. Quem promete mais está errando ou mentindo.</p>
                   <p className="text-xs text-grafite-claro">Desordem do seu trajeto: {calc.mobilidade.entropiaReal.toFixed(2)} bits (ao acaso seriam {calc.mobilidade.entropiaAleatoria.toFixed(2)}).</p>
-                  <a className="text-xs text-navy underline" href={FONTES.entropia.url} target="_blank" rel="noreferrer">{FONTES.entropia.autores}, {FONTES.entropia.onde}</a>
+                  <a className="text-xs text-navy underline" href={FONTES.entropia.url} target="_blank" rel="noreferrer noopener" title="Abrir o estudo que mede o teto da previsibilidade, em outra aba">{FONTES.entropia.autores}, {FONTES.entropia.onde}</a>
                 </div>
                 <div className="border border-navy/10 p-3">
                   <div className="text-2xl font-semibold text-navy capitalize">{calc.mobilidade.perfil.perfil === 'indefinido' ? '—' : calc.mobilidade.perfil.perfil}</div>
@@ -392,7 +451,7 @@ export default function GeolocalizacaoPage() {
                       : calc.mobilidade.perfil.perfil === 'explorador' ? 'Explorador: você se espalha por lugares novos, além dos de costume.'
                       : 'Ainda não dá para dizer: faltam lugares com visitas repetidas.'}
                   </p>
-                  <a className="text-xs text-navy underline" href={FONTES.explorador.url} target="_blank" rel="noreferrer">Pappalardo et al., {FONTES.explorador.onde}</a>
+                  <a className="text-xs text-navy underline" href={FONTES.explorador.url} target="_blank" rel="noreferrer noopener" title="Abrir o estudo que separa retornante de explorador, em outra aba">Pappalardo et al., {FONTES.explorador.onde}</a>
                 </div>
               </div>
               <h3 className="text-sm font-semibold text-navy mt-4">Como você se deslocou</h3>
@@ -406,7 +465,7 @@ export default function GeolocalizacaoPage() {
                       <li key={m.modo}><b className="capitalize">{m.modo}</b>: {fmtMin(m.minutos)} · {m.km.toFixed(1)} km</li>
                     ))}
                   </ul>}
-              <a className="text-xs text-navy underline" href={FONTE_MODO.url} target="_blank" rel="noreferrer">{FONTE_MODO.autores}, {FONTE_MODO.onde}</a>
+              <a className="text-xs text-navy underline" href={FONTE_MODO.url} target="_blank" rel="noreferrer noopener" title="Abrir o estudo que deduz o modo de transporte pela velocidade, em outra aba">{FONTE_MODO.autores}, {FONTE_MODO.onde}</a>
             </div>
           </div>
         )}

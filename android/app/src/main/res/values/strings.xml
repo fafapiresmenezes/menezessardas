@@ -4,4 +4,16 @@
     <string name="title_activity_main">THEYE Geo</string>
     <string name="package_name">club.theye.geo</string>
     <string name="custom_url_scheme">club.theye.geo</string>
+
+    <!-- R9: nome do canal da notificação permanente de gravação em segundo plano.
+         É o que o titular lê ao apertar e segurar a notificação, e o que aparece nos
+         ajustes de notificação do Android. Em português, porque quem usa é brasileiro. -->
+    <string name="capacitor_background_geolocation_notification_channel_name">
+        Gravação da sua posição
+    </string>
+
+    <!-- Cor da notificação: o preto da marca THEYE. -->
+    <string name="capacitor_background_geolocation_notification_color">
+        #0B0B0C
+    </string>
 </resources>
