@@ -104,9 +104,11 @@ export function resumirDias(xml: string, hoje: string): Dia[] {
 export function escolher(estacoes: Estacao[], limite: number, diaDoAno: number): Estacao[] {
   const ord = [...estacoes].sort((a, b) => a.codigo < b.codigo ? -1 : 1)
   if (ord.length <= limite) return ord
+  // Salto em vez de bloco: o código da ANA segue a bacia, então um bloco seguido cai todo numa
+  // região (19/11 saíram 51 estações só de SP e MS). Pegando uma a cada `voltas`, cada dia cobre o país.
   const voltas = Math.ceil(ord.length / limite)
-  const ini = (diaDoAno % voltas) * limite
-  return ord.slice(ini, ini + limite)
+  const passo = diaDoAno % voltas
+  return ord.filter((_, i) => i % voltas === passo).slice(0, limite)
 }
 
 // --- Hash (mesma receita de src/lib/predicao/ontologia.ts e de ana-agua) ------------------------
