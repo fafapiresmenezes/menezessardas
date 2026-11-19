@@ -7,6 +7,7 @@ import { agruparLugares, detectarParadas, distancia, fmtMin, linhaDoTempo, preve
 import { CAMADAS_PENDENTES, SATELITES, buscarCenas, camadasSatelite, municipioDe, ndviMedio, leituraNdvi, noticiasGdelt, tileNdvi, trilhaNoMunicipio, tilesDaCena, type Cena, type Municipio, type Noticia } from '@/lib/geo/fontes'
 import { baixar, csvPontos, geojson, montarGrafo } from '@/lib/geo/grafo'
 import { lerQuadro } from '@/lib/geo/camera'
+import { FONTES, TETO_PREVISIBILIDADE, metricasDeMobilidade } from '@/lib/geo/mobilidade'
 import { pdfFicha } from '@/lib/geo/fichaPdf'
 import { Camera, Download, Lock, MapPin, Pause, Play, Satellite, ShieldCheck, Trash2, Network, Bot } from 'lucide-react'
 import { carregarConfigOllama, gerarTexto, listarModelos, promptNoticias, promptSemana, salvarConfigOllama, type OllamaConfig } from '@/lib/geo/ollama'
@@ -126,7 +127,10 @@ export default function GeolocalizacaoPage() {
     const doDia = resumoPeriodo(dados.pontos, lugares, paradas, ini, ini + 86400000)
     const atual = paradas.length ? paradas[paradas.length - 1].lugarId! : ''
     const previsao = atual ? preverProximo(paradas, atual).slice(0, 3) : []
-    return { lugares, paradas, linha: linhaDoTempo(paradas, lugares, d), semana, doDia, atual, previsao }
+    // A sequência de visitas, na ordem do tempo, é o que alimenta as contas de mobilidade (R4).
+    const sequencia = paradas.map(p => p.lugarId).filter((x): x is string => !!x)
+    const mobilidade = metricasDeMobilidade(dados.pontos, lugares, sequencia)
+    return { lugares, paradas, linha: linhaDoTempo(paradas, lugares, d), semana, doDia, atual, previsao, mobilidade }
   }, [dados, dia])
 
   const ultimo = dados?.pontos.length ? dados.pontos[dados.pontos.length - 1] : null
@@ -354,6 +358,40 @@ export default function GeolocalizacaoPage() {
               <p className="text-xs text-grafite-claro mb-2">Paradas de 5 minutos ou mais num raio de 100 m viram um lugar. Dê um nome (casa, trabalho, academia).</p>
               {calc.lugares.length === 0 ? <p className="text-sm text-grafite">Ainda não há paradas. Grave por algumas horas.</p> :
                 <ul className="space-y-2">{calc.lugares.map(l => <LinhaLugar key={l.id} l={l} onNome={n => nomear(l, n)} />)}</ul>}
+            </div>
+            <div className={cartao + ' md:col-span-2'}>
+              <h2 className="font-semibold text-navy">A ciência do seu movimento</h2>
+              <p className="text-xs text-grafite-claro mb-1">
+                Três medidas que a pesquisa de mobilidade humana usa para descrever como uma pessoa se move. Contas feitas aqui no aparelho, com os seus pontos; cada número traz o estudo de onde veio.
+              </p>
+              <p className={`text-xs mb-3 ${calc.mobilidade.confianca.nivel === 'boa' ? 'text-regular' : 'text-atencao'}`}>
+                Confiança {calc.mobilidade.confianca.nivel === 'boa' ? 'boa' : calc.mobilidade.confianca.nivel === 'media' ? 'média' : 'baixa'}: {calc.mobilidade.confianca.motivo} ({calc.mobilidade.nPontos} pontos, {calc.mobilidade.nLugares} {calc.mobilidade.nLugares === 1 ? 'lugar' : 'lugares'}).
+              </p>
+              <div className="grid sm:grid-cols-3 gap-3">
+                <div className="border border-navy/10 p-3">
+                  <div className="text-2xl font-semibold text-navy">{calc.mobilidade.raioGiracaoKm.toFixed(2)} <span className="text-sm text-grafite-claro">km</span></div>
+                  <h3 className="text-sm font-semibold text-navy mt-1">Raio de giração</h3>
+                  <p className="text-xs text-grafite">A largura da sua vida no mapa: o quanto você se espalha em volta do seu centro. Quem só faz casa–trabalho tem raio pequeno.</p>
+                  <a className="text-xs text-navy underline" href={FONTES.giracao.url} target="_blank" rel="noreferrer">{FONTES.giracao.autores}, {FONTES.giracao.onde}</a>
+                </div>
+                <div className="border border-navy/10 p-3">
+                  <div className="text-2xl font-semibold text-navy">{Math.round(calc.mobilidade.previsibilidadeMaxima * 100)}<span className="text-sm text-grafite-claro">%</span></div>
+                  <h3 className="text-sm font-semibold text-navy mt-1">Previsibilidade máxima</h3>
+                  <p className="text-xs text-grafite">O <b>teto</b>: nenhum método, por melhor que seja, acerta o seu próximo lugar mais do que isto. Na pesquisa, esse teto fica perto de {Math.round(TETO_PREVISIBILIDADE * 100)}%. Quem promete mais está errando ou mentindo.</p>
+                  <p className="text-xs text-grafite-claro">Desordem do seu trajeto: {calc.mobilidade.entropiaReal.toFixed(2)} bits (ao acaso seriam {calc.mobilidade.entropiaAleatoria.toFixed(2)}).</p>
+                  <a className="text-xs text-navy underline" href={FONTES.entropia.url} target="_blank" rel="noreferrer">{FONTES.entropia.autores}, {FONTES.entropia.onde}</a>
+                </div>
+                <div className="border border-navy/10 p-3">
+                  <div className="text-2xl font-semibold text-navy capitalize">{calc.mobilidade.perfil.perfil === 'indefinido' ? '—' : calc.mobilidade.perfil.perfil}</div>
+                  <h3 className="text-sm font-semibold text-navy mt-1">Seu jeito de circular</h3>
+                  <p className="text-xs text-grafite">
+                    {calc.mobilidade.perfil.perfil === 'retornante' ? 'Retornante: os poucos lugares de sempre já explicam quase todo o seu deslocamento.'
+                      : calc.mobilidade.perfil.perfil === 'explorador' ? 'Explorador: você se espalha por lugares novos, além dos de costume.'
+                      : 'Ainda não dá para dizer: faltam lugares com visitas repetidas.'}
+                  </p>
+                  <a className="text-xs text-navy underline" href={FONTES.explorador.url} target="_blank" rel="noreferrer">Pappalardo et al., {FONTES.explorador.onde}</a>
+                </div>
+              </div>
             </div>
           </div>
         )}
