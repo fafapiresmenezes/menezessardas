@@ -31,3 +31,7 @@ verify_jwt = false
 # Águas (19/11/2026): telemetria aberta da ANA, chamada pelo pg_cron só com x-cron-secret.
 [functions.ana-telemetria]
 verify_jwt = false
+
+# Águas (19/11/2026): retratos semanais de outorgas e barragens do SNIRH, chamada pelo pg_cron.
+[functions.agua-snirh]
+verify_jwt = false
