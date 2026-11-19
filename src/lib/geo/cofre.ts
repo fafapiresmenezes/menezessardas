@@ -18,6 +18,7 @@ export interface Cena {
   pessoas: number         // quantas pessoas na cena, sem identificar quem
   objetos: string[]
   codigos: string[]       // QR e códigos impressos lidos (para confirmar o lugar)
+  confianca?: number      // 0 a 1: o quanto a leitura do ambiente se sustenta (R5). Antigas não têm.
   hash?: string
 }
 
