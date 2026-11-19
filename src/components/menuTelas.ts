@@ -6,7 +6,7 @@
 // (src/data/rotas.ts) leem daqui, por `nomeDaTela`. Assim uma tela não volta a ter três nomes diferentes.
 // Cada tela (ou bloco) tem um NÍVEL: quem não é daquele nível nem vê o item no menu. O banco continua sendo quem
 // protege os dados; aqui é só arrumação, para ninguém ver botão que não é para si.
-import { Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, AppWindow, Network, MapPin, HeartPulse, type LucideIcon, Droplets, Ruler, Target, Coins, Landmark} from 'lucide-react'
+import { KeyRound, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, AppWindow, Network, MapPin, HeartPulse, type LucideIcon, Droplets, Ruler, Target, Coins, Landmark} from 'lucide-react'
 
 export type Nivel = 'todos' | 'gestao' | 'financeiro' | 'admin' | 'instituto'
 export interface Tela { icon: LucideIcon; label: string; href: string; nivel?: Nivel }
@@ -76,6 +76,7 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: TrendingUp, label: 'Previsões', href: '/previsoes', nivel: 'gestao' },
     { icon: Users, label: 'Área do administrador', href: '/equipe', nivel: 'admin' },
     { icon: Network, label: 'Hierarquia', href: '/hierarquia', nivel: 'gestao' },
+    { icon: KeyRound, label: 'Banco de senhas', href: '/banco-de-senhas', nivel: 'gestao' },
     { icon: Wallet, label: 'Consumo', href: '/consumo', nivel: 'admin' },
   ] },
   // Passo A27: as telas do Instituto saem do menu do escritório. O escritório cliente não vê a administração
@@ -325,6 +326,7 @@ export const DICAS: Record<string, string> = {
   '/nuvem': 'Arquivos do escritório guardados na nuvem',
   '/consumo': 'Quanto cada pessoa consome de IA e quanto custa',
   '/equipe': 'Pessoas do escritório: liberar acesso e definir a função',
+  '/banco-de-senhas': 'Senhas do escritório, guardadas embaralhadas com a frase-mestra',
   '/hierarquia': 'Quem é sócio, gestor, pleno e júnior — o cargo decide o que cada pessoa vê',
   '/settings': 'Configurações da conta e da plataforma',
   '/meu-jeito': 'Escolher o que aparece no seu menu, onde a plataforma abre e o tamanho da letra',
