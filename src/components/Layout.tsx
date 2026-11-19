@@ -63,7 +63,8 @@ export default function Layout({ children, title }: LayoutProps) {
   useEffect(() => { meuEscritorio().then(setEscritorio).catch(() => setEscritorio(null)) }, [])
   // Hierarquia: sócios e gestor veem os números do conjunto; os demais nem veem esses grupos no menu.
   const [veTudo, setVeTudo] = useState(false)
-  useEffect(() => { meuAlcance().then(a => setVeTudo(a.veTudo)).catch(() => setVeTudo(false)) }, [])
+  const [financeiro, setFinanceiro] = useState(false)
+  useEffect(() => { meuAlcance().then(a => { setVeTudo(a.veTudo); setFinanceiro(a.financeiro === true) }).catch(() => { setVeTudo(false); setFinanceiro(false) }) }, [])
   // Meu jeito de trabalhar: o menu simples e o tamanho da letra são os que a pessoa escolheu.
   const [jeito, setJeito] = useState<MeuJeito>(lerMeuJeito)
   useEffect(() => {
@@ -88,7 +89,7 @@ export default function Layout({ children, title }: LayoutProps) {
   }, [])
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const visao: Visao = { veTudo, admin, instituto: escritorio?.instituto === true, sede }
+  const visao: Visao = { veTudo, admin, instituto: escritorio?.instituto === true, sede, financeiro }
   // 18/11/2026 (M): o escritório cliente vê a própria marca no menu, nunca a do Instituto. Sem logo cadastrado,
   // entra o nome do escritório; a marca THEYE fica só para quem administra o Instituto.
   const marcaVisivel: MarcaEscritorio | null = marca ?? (!visao.instituto && escritorio

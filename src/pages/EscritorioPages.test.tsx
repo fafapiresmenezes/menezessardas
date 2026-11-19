@@ -300,8 +300,8 @@ describe('Financeiro', () => {
     fireEvent.change(screen.getByTestId('saldo-inicial'), { target: { value: '10.000' } })
     expect(txt('previsao-90')).toContain('R$')
   })
-  // Privacidade por advogado: pleno e júnior veem só os números dos próprios casos.
-  it('júnior não vê os honorários do caso do colega; o sócio vê os dois', async () => {
+  // Pedido de M (19/11/2026): o financeiro é só do chefe e de quem ele liberar; os demais não veem número nenhum.
+  it('júnior não vê número nenhum do financeiro; o sócio vê o escritório inteiro', async () => {
     falso = criarSupabaseFalso({
       lancamentos_financeiros: [],
       pagamentos_honorarios: [{ id: 'p1', caso_id: 'c1', data: hoje, valor: 1500 }, { id: 'p2', caso_id: 'c2', data: hoje, valor: 9000 }],
@@ -317,8 +317,8 @@ describe('Financeiro', () => {
       : { data: null, error: null })
     cargos({ u1: 'junior' })
     tela(<FinanceiroPage />)
-    await waitFor(() => expect(screen.getByTestId('financeiro-alcance').textContent).toContain('os números dos seus casos'))
-    await waitFor(() => expect(txt('financeiro-resumo')).toContain('Recebido no mêsR$ 1.500,00'))
+    await waitFor(() => expect(screen.getByTestId('financeiro-alcance').textContent).toContain('O financeiro é reservado'))
+    expect(txt('financeiro-resumo')).toContain('Recebido no mêsR$ 0,00')
 
     cleanup(); cargos({ u1: 'socio' })
     tela(<FinanceiroPage />)

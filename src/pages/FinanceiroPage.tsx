@@ -40,10 +40,11 @@ export default function FinanceiroPage() {
     setLanc((l.data ?? []) as Lancamento[]); setPg((p.data ?? []) as PagamentoHonorario[]); setParcelas((pc.data ?? []) as ParcelaHonorario[]); setCasos((c.data ?? []) as (CasoFin & { responsavel_id?: string | null })[])
   }
   useEffect(() => { carregar(); meuAlcance().then(setAlcance).catch(() => setAlcance(ALCANCE_FECHADO)) }, [])
-  // Hierarquia: pleno e júnior veem só os números dos próprios casos; despesas gerais do escritório ficam com sócios e gestor.
+  // Pedido de M (19/11/2026): o financeiro é só do chefe (sócio ou administração) e de quem ele liberar na Hierarquia.
+  // Quem não foi liberado não vê número nenhum aqui, nem dos próprios casos.
   const alc = alcance ?? ALCANCE_FECHADO
-  const restrito = !alc.veTudo
-  const casos = useMemo(() => (restrito ? casosTudo.filter(c => !c.responsavel_id || c.responsavel_id === alc.id) : casosTudo), [casosTudo, restrito, alc])
+  const restrito = alc.financeiro !== true
+  const casos = useMemo(() => (restrito ? [] : casosTudo), [casosTudo, restrito])
   const idsMeus = useMemo(() => new Set(casos.map(c => c.id)), [casos])
   const lanc = useMemo(() => (restrito ? lancTudo.filter(l => l.caso_id && idsMeus.has(l.caso_id)) : lancTudo), [lancTudo, restrito, idsMeus])
   const pg = useMemo(() => (restrito ? pgTudo.filter(x => idsMeus.has(x.caso_id)) : pgTudo), [pgTudo, restrito, idsMeus])
@@ -99,8 +100,8 @@ export default function FinanceiroPage() {
     <Layout title="Financeiro">
       <div className="space-y-5">
         {restrito && alcance && (
-          <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="financeiro-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
-            Você está vendo <strong>os números dos seus casos</strong> ({rotuloCargo[alcance.cargo ?? 'nenhum']}). O financeiro completo do escritório fica com sócios, gestor e administração.
+          <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="financeiro-alcance" title="Quem libera o financeiro é o sócio ou a administração, na tela Hierarquia.">
+            <strong>O financeiro é reservado.</strong> Seu cargo hoje: {rotuloCargo[alcance.cargo ?? 'nenhum']}. Só os sócios, a administração e quem eles liberarem na tela Hierarquia veem o dinheiro do escritório.
           </p>
         )}
         {ausente && <p role="status" className="bg-white shadow-sm border-l-4 border-dourado p-4 text-sm" data-testid="financeiro-ausente">Os honorários e parcelas já aparecem aqui. Para lançar despesas e outras receitas, um administrador aplica a atualização <code>108_funil_financeiro.sql</code> no banco.</p>}

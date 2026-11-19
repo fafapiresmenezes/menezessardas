@@ -17,6 +17,8 @@ import { listarPessoas, perfilAtual, type Funcao, type Pessoa } from '@/lib/equi
 import {
   CARGOS,
   definirCargo,
+  definirLiberadoFinanceiro,
+  lerLiberadosFinanceiro,
   descricaoCargo,
   lerCargosEstrito,
   meuAlcance,
@@ -32,6 +34,7 @@ export default function HierarquiaPage() {
   const [perfil, setPerfil] = useState<Funcao | null | 'carregando'>('carregando')
   const [pessoas, setPessoas] = useState<Pessoa[]>([])
   const [cargos, setCargos] = useState<MapaCargos>({})
+  const [liberados, setLiberados] = useState<string[]>([])
   const [eu, setEu] = useState(ALCANCE_FECHADO.id)
   // Quantos processos ainda não têm advogado responsável: enquanto não tiverem, aparecem para todo mundo.
   const [processos, setProcessos] = useState<{ total: number; semDono: number } | null>(null)
@@ -53,6 +56,7 @@ export default function HierarquiaPage() {
           setLeituraFalhou(true)
           setMsg({ tipo: 'erro', texto: `Não foi possível carregar os cargos já gravados (${mensagemAmigavel(e)}). Recarregue a página antes de alterar.` })
         })
+        lerLiberadosFinanceiro().then(setLiberados).catch(() => undefined)
         meuAlcance().then(a => setEu(a.id)).catch(() => undefined)
         if (supabaseConfigurado) {
           const { data } = await supabase.from('tarefas').select('responsavel_id').eq('nivel', 'projeto')
@@ -81,6 +85,18 @@ export default function HierarquiaPage() {
       setMsg({ tipo: 'ok', texto: `${pessoa.nome}: ${rotuloCargo[valor as Cargo | 'nenhum'] ?? valor}. Salvo.` })
     } catch (e) {
       clearTimeout(timeout)
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
+    } finally { setOcupado('') }
+  }
+
+  // Financeiro: o chefe (sócio ou administração) decide quem mais vê o dinheiro do escritório.
+  const alterarFinanceiro = async (pessoa: Pessoa, liberar: boolean) => {
+    setOcupado(pessoa.id); setMsg(null); setSalvoAgora('')
+    try {
+      setLiberados(await definirLiberadoFinanceiro(pessoa.id, liberar))
+      setSalvoAgora(pessoa.id)
+      setMsg({ tipo: 'ok', texto: `${pessoa.nome}: ${liberar ? 'agora vê o financeiro' : 'não vê mais o financeiro'}. Salvo.` })
+    } catch (e) {
       setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
     } finally { setOcupado('') }
   }
@@ -174,6 +190,21 @@ export default function HierarquiaPage() {
                         ))}
                       </select>
                       <p className="text-xs text-grafite-claro mt-1">{ocupado === p.id ? 'Salvando…' : salvoAgora === p.id ? 'Salvo agora.' : 'Salvo na hora; pode trocar quando quiser.'}</p>
+                      <label className="mt-3 flex items-start gap-2 text-sm min-h-[44px]" title="Só os sócios e a administração veem o dinheiro do escritório. Marque para liberar esta pessoa também.">
+                        <input
+                          type="checkbox"
+                          data-testid={`financeiro-${p.id}`}
+                          className="mt-1 h-5 w-5"
+                          title="Marque para esta pessoa ver as telas Financeiro e Honorários do escritório inteiro"
+                          checked={cargos[p.id] === 'socio' || p.funcao === 'admin' || liberados.includes(p.id)}
+                          disabled={ocupado !== '' || leituraFalhou || cargos[p.id] === 'socio' || p.funcao === 'admin'}
+                          onChange={e => alterarFinanceiro(p, e.target.checked)}
+                        />
+                        <span>
+                          Pode ver o financeiro
+                          <span className="block text-xs text-grafite-claro">{cargos[p.id] === 'socio' || p.funcao === 'admin' ? 'Sócios e a administração sempre veem.' : 'Só vê se você marcar aqui.'}</span>
+                        </span>
+                      </label>
                     </div>
                   </li>
                 ))}
