@@ -54,6 +54,7 @@ const PrevisoesPage = lazy(() => import('@/pages/PrevisoesPage'))
 const InstitutoPage = lazy(() => import('@/pages/InstitutoPage'))
 const GeolocalizacaoPage = lazy(() => import('@/pages/GeolocalizacaoPage'))
 const NotaGeo = lazy(() => import('@/pages/geo/NotaGeo'))
+const BibliotecaGeo = lazy(() => import('@/pages/geo/BibliotecaGeo'))
 const LegislacaoPage = lazy(() => import('@/pages/LegislacaoPage'))
 const FornecedoresPage = lazy(() => import('@/pages/FornecedoresPage'))
 const FornecedorPage = lazy(() => import('@/pages/FornecedorPage'))
@@ -405,6 +406,7 @@ function App() {
             e os dados ficam só no aparelho. A rota antiga redireciona para cá. */}
         <Route path="/geo" element={<GeolocalizacaoPage />} />
         <Route path="/geo/nota" element={<NotaGeo />} />
+        <Route path="/geo/biblioteca" element={<BibliotecaGeo />} />
         <Route path="/geolocalizacao" element={<Navigate to="/geo" replace />} />
         <Route
           path="/instituto"
