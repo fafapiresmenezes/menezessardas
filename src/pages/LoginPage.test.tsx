@@ -21,7 +21,7 @@ vi.mock('@/components/Marca', () => ({ default: () => <div data-testid="marca" /
 const { default: LoginPage } = await import('./LoginPage')
 
 function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathname}</p> }
-const montar = () => render(<MemoryRouter initialEntries={['/login']}><Routes><Route path="/login" element={<LoginPage />} /><Route path="*" element={<Onde />} /></Routes></MemoryRouter>)
+const montar = () => render(<MemoryRouter initialEntries={['/login?ir=/instituto']}><Routes><Route path="/login" element={<LoginPage />} /><Route path="*" element={<Onde />} /></Routes></MemoryRouter>)
 const preencher = (email: string, senha: string) => { fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: email } }); fireEvent.change(screen.getByLabelText('Senha'), { target: { value: senha } }) }
 // No cadastro há também o campo do escritório (pedido de M, 12/11/2026), sempre em maiúsculas.
 const preencherEscritorio = (nome = 'SARDAS E MENEZES') => {
@@ -31,6 +31,14 @@ const preencherEscritorio = (nome = 'SARDAS E MENEZES') => {
 }
 
 describe('Tela de login', () => {
+  it('a primeira tela não mostra e-mail e senha: a entrada só aparece depois de clicar num quadradinho', () => {
+    cleanup()
+    render(<MemoryRouter initialEntries={['/login']}><Routes><Route path="/login" element={<LoginPage />} /></Routes></MemoryRouter>)
+    expect(screen.queryByTestId('cartao-entrada')).toBeNull()
+    expect(screen.queryByLabelText('Senha')).toBeNull()
+    cleanup(); montar()
+    expect(screen.getByTestId('cartao-entrada')).toBeTruthy()
+  })
   beforeEach(() => { cleanup(); configurado = true; nivel = { nextLevel: 'aal1', currentLevel: 'aal1' }; signInWithPassword.mockClear(); signUp.mockClear(); challengeAndVerify.mockClear() })
 
   it('entra com e-mail e senha e vai para a entrada por área; senha errada e servidor fora viram avisos diferentes', async () => {
@@ -87,7 +95,7 @@ describe('Tela de login', () => {
     expect((await screen.findByRole('status')).textContent).toContain('precisa liberar a sua entrada')
     expect(screen.getByText('Entrar')).toBeTruthy()
     fireEvent.click(screen.getByText('Esqueci minha senha'))
-    expect(screen.getAllByRole('status').some(s => s.textContent!.includes('senha provisória (menu Equipe)'))).toBe(true)
+    expect(screen.getAllByRole('status').some(s => s.textContent!.includes('mandamos um link para você mesmo criar uma senha nova'))).toBe(true)
     vi.useRealTimers()
   })
 
@@ -95,7 +103,7 @@ describe('Tela de login', () => {
     vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date('2026-11-10T10:00:00Z'))
     montar()
     fireEvent.click(screen.getByText('Criar conta'))
-    expect(screen.getByText(/só entra depois que essa pessoa\s+liberar/)).toBeTruthy()
+    expect(screen.getByText(/precisa liberar a sua entrada/)).toBeTruthy()
     preencher('aluna@escritorio.com', 'senhaforte1')
     preencherEscritorio('ESCRITÓRIO NOVO')
     vi.setSystemTime(new Date('2026-11-10T10:00:05Z'))

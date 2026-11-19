@@ -18,7 +18,8 @@ const { default: LoginPage } = await import('./LoginPage')
 const { default: BoasVindasPage } = await import('./BoasVindasPage')
 
 function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathname}</p> }
-const montarEntrada = () => render(<MemoryRouter><LoginPage /></MemoryRouter>)
+// A entrada com e-mail e senha só aparece depois de escolher um quadradinho (M, 19/11/2026).
+const montarEntrada = () => render(<MemoryRouter initialEntries={['/login?ir=/instituto']}><LoginPage /></MemoryRouter>)
 const montarBoasVindas = () => render(
   <MemoryRouter initialEntries={['/boas-vindas']}>
     <Routes><Route path="/boas-vindas" element={<BoasVindasPage />} /><Route path="*" element={<Onde />} /></Routes>
@@ -78,7 +79,7 @@ describe('entrada do instituto em várias línguas', () => {
     expect((screen.getByTestId('campo-escritorio') as HTMLInputElement).placeholder).toBe('EJ.: SARDAS E MENEZES')
     expect(screen.getByText('Crear acceso')).toBeTruthy()
     fireEvent.click(screen.getByText('Olvidé mi contraseña'))
-    expect(screen.getAllByRole('status').some(s => s.textContent!.includes('contraseña provisional'))).toBe(true)
+    expect(screen.getAllByRole('status').some(s => s.textContent!.includes('le enviamos un enlace'))).toBe(true)
   })
 
   it('o símbolo escondido do Stokasticos continua intocado na tela de escolha', () => {
