@@ -69,13 +69,14 @@ export const FONTES_AGUAS: FonteOficial[] = [
   { nome: 'SNIS / SINISA (Ministério das Cidades)', oQueTem: 'Dados de água e esgoto de cada município.', link: 'https://www.gov.br/cidades/' },
 ]
 
-/** Áreas que a casa vai cobrir. Só a primeira já tem tela funcionando. */
+/** Áreas que a casa cobre; 'pronta' quando já tem número medido ou conteúdo conferido na tela. */
 export const AREAS_AGUAS: { nome: string; descricao: string; pronta: boolean }[] = [
   { nome: 'Reservatórios', descricao: 'Nível e volume dos reservatórios, todo dia, com a data em que cada número chegou.', pronta: true },
+  { nome: 'Rios: chuva, nível e vazão', descricao: 'Resumo diário das estações da rede da ANA, em rodízio (nesta página).', pronta: true },
   { nome: 'Leis e normas', descricao: 'As leis de água e saneamento com número, assunto e link oficial (nesta página).', pronta: true },
-  { nome: 'Outorga e cobrança', descricao: 'O caminho de um pedido de uso de água e quanto se paga em cada bacia.', pronta: false },
-  { nome: 'Qualidade da água', descricao: 'Classe de cada rio, limites e o que a medição mostra.', pronta: false },
-  { nome: 'Segurança de barragens', descricao: 'Classificação de risco, plano de emergência e prazos de cada barragem.', pronta: false },
-  { nome: 'Saneamento nos municípios', descricao: 'Cobertura de água e esgoto de cada cidade comparada com as metas de 2033.', pronta: false },
-  { nome: 'Rios entre países', descricao: 'Tratados e comissões das bacias que o Brasil divide com os vizinhos.', pronta: false },
+  { nome: 'Outorgas', descricao: 'Autorizações federais de uso de água em vigor, por finalidade e estado (nesta página). Cobrança por bacia ainda em construção.', pronta: true },
+  { nome: 'Segurança de barragens', descricao: 'Barragens do cadastro nacional por estado, risco e dano potencial (nesta página).', pronta: true },
+  { nome: 'Rios entre países', descricao: 'Tratados e casos das bacias que o Brasil divide com os vizinhos (nesta página).', pronta: true },
+  { nome: 'Qualidade da água', descricao: 'Sem série nacional recente aberta pela ANA (a última vai até 2017); entra como referência até haver fonte.', pronta: false },
+  { nome: 'Saneamento nos municípios', descricao: 'Cobertura de água e esgoto comparada com as metas de 2033; aguarda fonte aberta que a plataforma leia sozinha.', pronta: false },
 ]
