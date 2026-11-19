@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import { AREAS_AGUAS, CASOS_AGUAS, FONTES_AGUAS, NORMAS_AGUAS } from '@/data/aguas'
+import PainelAguasVivo from '@/components/aguas/PainelAguasVivo'
+import BibliotecaAguas from '@/components/aguas/BibliotecaAguas'
 
 /**
  * Casa de Águas: a porta da frente de Águas dentro da plataforma (19/11/2026).
@@ -16,9 +18,9 @@ export default function AguasPage() {
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6 space-y-3" data-testid="aguas-abertura">
           <h2 className="font-serif text-xl">A casa de Águas do Instituto</h2>
           <p className="text-sm text-grafite">
-            Água dos reservatórios medida todo dia, as leis de água e saneamento com o link oficial, os casos
-            que mudaram as regras no Brasil e as fontes públicas de onde vem cada número. Nenhum número aqui
-            é previsão.
+            Reservatórios e rios medidos todo dia, outorgas e barragens toda semana, as leis de água e
+            saneamento com o link oficial, os casos que mudaram as regras e a biblioteca de estudos. Nenhum
+            número aqui é previsão.
           </p>
           <Link
             to="/agua"
@@ -29,6 +31,8 @@ export default function AguasPage() {
             Abrir reservatórios (ANA)
           </Link>
         </section>
+
+        <PainelAguasVivo />
 
         <section className="bg-white shadow-sm p-6" data-testid="aguas-areas">
           <h2 className="font-serif text-xl mb-4">O que esta casa cobre</h2>
@@ -47,7 +51,7 @@ export default function AguasPage() {
           </ul>
         </section>
 
-        {[{ titulo: 'Leis e normas do Brasil', lista: brasil, id: 'brasil' }, { titulo: 'Tratados e referências internacionais', lista: fora, id: 'internacional' }].map(bloco => (
+        {[{ titulo: 'Leis e normas do Brasil', lista: brasil, id: 'brasil' }, { titulo: 'Rios entre países e tratados', lista: fora, id: 'internacional' }].map(bloco => (
           <section key={bloco.id} className="bg-white shadow-sm p-6" data-testid={`aguas-normas-${bloco.id}`}>
             <h2 className="font-serif text-xl mb-4">{bloco.titulo}</h2>
             <ul className="divide-y divide-grafite-claro">
@@ -90,6 +94,7 @@ export default function AguasPage() {
             ))}
           </ul>
         </section>
+        <BibliotecaAguas />
       </div>
     </Layout>
   )
