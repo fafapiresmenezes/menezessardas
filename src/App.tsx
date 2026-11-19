@@ -55,6 +55,7 @@ const InstitutoPage = lazy(() => import('@/pages/InstitutoPage'))
 const GeolocalizacaoPage = lazy(() => import('@/pages/GeolocalizacaoPage'))
 const NotaGeo = lazy(() => import('@/pages/geo/NotaGeo'))
 const BibliotecaGeo = lazy(() => import('@/pages/geo/BibliotecaGeo'))
+const PrecisaoGeo = lazy(() => import('@/pages/geo/PrecisaoGeo'))
 const LegislacaoPage = lazy(() => import('@/pages/LegislacaoPage'))
 const FornecedoresPage = lazy(() => import('@/pages/FornecedoresPage'))
 const FornecedorPage = lazy(() => import('@/pages/FornecedorPage'))
@@ -407,6 +408,7 @@ function App() {
         <Route path="/geo" element={<GeolocalizacaoPage />} />
         <Route path="/geo/nota" element={<NotaGeo />} />
         <Route path="/geo/biblioteca" element={<BibliotecaGeo />} />
+        <Route path="/geo/precisao" element={<PrecisaoGeo />} />
         <Route path="/geolocalizacao" element={<Navigate to="/geo" replace />} />
         <Route
           path="/instituto"
