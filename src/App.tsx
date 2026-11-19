@@ -50,6 +50,7 @@ const ImportarImoveisPage = lazy(() => import('@/pages/ImportarImoveisPage'))
 const PrevisoesPage = lazy(() => import('@/pages/PrevisoesPage'))
 const InstitutoPage = lazy(() => import('@/pages/InstitutoPage'))
 const GeolocalizacaoPage = lazy(() => import('@/pages/GeolocalizacaoPage'))
+const NotaGeo = lazy(() => import('@/pages/geo/NotaGeo'))
 const LegislacaoPage = lazy(() => import('@/pages/LegislacaoPage'))
 const FornecedoresPage = lazy(() => import('@/pages/FornecedoresPage'))
 const FornecedorPage = lazy(() => import('@/pages/FornecedorPage'))
@@ -395,6 +396,7 @@ function App() {
         {/* Casa própria do geomapeamento (fase G): sem login jurídico; a porta é a senha do cofre
             e os dados ficam só no aparelho. A rota antiga redireciona para cá. */}
         <Route path="/geo" element={<GeolocalizacaoPage />} />
+        <Route path="/geo/nota" element={<NotaGeo />} />
         <Route path="/geolocalizacao" element={<Navigate to="/geo" replace />} />
         <Route
           path="/instituto"
