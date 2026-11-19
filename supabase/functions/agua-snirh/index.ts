@@ -34,6 +34,22 @@ export function urlEstatistica(camada: string, onde: string, agrupar: string[], 
   return `${camada}/query?${p.toString()}`
 }
 
+/**
+ * Vencimento vem como TEXTO "dd/mm/aaaa" no SNIRH, então não dá para comparar data no servidor.
+ * "Vigente no dia" vira uma lista de LIKE: os dias que faltam no mês, os meses que faltam no ano e
+ * os próximos 60 anos. Isso conta exatamente as outorgas com vencimento depois do dia.
+ */
+export function ondeVigentes(dia: string): string {
+  const [a, m, d] = dia.split('-').map(Number)
+  const ult = new Date(Date.UTC(a, m, 0)).getUTCDate()
+  const p2 = (n: number) => String(n).padStart(2, '0')
+  const c: string[] = []
+  for (let x = d + 1; x <= ult; x++) c.push(`DATA_DE_VENCIMENTO = '${p2(x)}/${p2(m)}/${a}'`)
+  for (let x = m + 1; x <= 12; x++) c.push(`DATA_DE_VENCIMENTO LIKE '%/${p2(x)}/${a}'`)
+  for (let x = a + 1; x <= a + 60; x++) c.push(`DATA_DE_VENCIMENTO LIKE '%/${x}'`)
+  return c.join(' OR ')
+}
+
 export type Grupo = Record<string, string | number | null>
 export function lerGrupos(corpo: unknown): Grupo[] {
   const c = corpo as { features?: { attributes: Record<string, unknown> }[]; error?: { message?: string } }
@@ -122,7 +138,7 @@ export async function coletar(db: Banco, agora: string) {
   const dia = new Date(new Date(agora).getTime() - 3 * 3600000).toISOString().slice(0, 10)
   const fora: Record<string, unknown> = { em: agora, dia }
   const tarefas = {
-    outorgas: urlEstatistica(FONTES.outorgas.url, `DATA_DE_VENCIMENTO > DATE '${dia}'`, ['UF', 'FINALIDADE_PRINCIPAL'], [{ tipo: 'count', campo: 'INT_CD', nome: 'n' }, { tipo: 'sum', campo: 'VOLUME_ANUAL_M3', nome: 'vol' }]),
+    outorgas: urlEstatistica(FONTES.outorgas.url, ondeVigentes(dia), ['UF', 'FINALIDADE_PRINCIPAL'], [{ tipo: 'count', campo: 'INT_CD', nome: 'n' }, { tipo: 'sum', campo: 'VOLUME_ANUAL_M3', nome: 'vol' }]),
     barragens: urlEstatistica(FONTES.barragens.url, '1=1', ['ING_SG_UFMUNICIPIO', 'CATEGORIA_RISCO', 'DANO_POTENCIAL'], [{ tipo: 'count', campo: 'OBJECTID', nome: 'n' }]),
   } as const
   for (const [tipo, url] of Object.entries(tarefas) as ['outorgas' | 'barragens', string][]) {

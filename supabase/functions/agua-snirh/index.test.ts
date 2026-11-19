@@ -35,3 +35,16 @@ describe('retratos do SNIRH', () => {
     expect(mod.canonizar(c)).toBe(canonSrc(c))
   })
 })
+
+describe('outorgas vigentes', () => {
+  it('conta só o que vence depois do dia, com o vencimento escrito como texto dd/mm/aaaa', () => {
+    const w = mod.ondeVigentes('2026-11-18')
+    expect(w).toContain("DATA_DE_VENCIMENTO = '19/11/2026'")
+    expect(w).toContain("DATA_DE_VENCIMENTO = '30/11/2026'")
+    expect(w).not.toContain("'18/11/2026'")
+    expect(w).toContain("LIKE '%/12/2026'")
+    expect(w).not.toContain("LIKE '%/11/2026'")
+    expect(w).toContain("LIKE '%/2027'")
+    expect(w).not.toContain("LIKE '%/2026'")
+  })
+})
