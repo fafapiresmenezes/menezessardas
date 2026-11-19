@@ -301,6 +301,7 @@ export const DICAS: Record<string, string> = {
   '/trilha': 'Registro do que foi feito, com carimbo que prova a data',
   '/instituto': 'Pesquisa e estudos do Instituto THEYE',
   '/frentes-do-instituto': 'Lista das frentes do Instituto: cada uma abre direto no seu segmento',
+  '/escritorios-do-projeto': 'Cadastro dos escritórios que aparecem na lista do Criar conta',
   '/preditiva': 'Plataforma preditiva: previsões de mercado com incerteza declarada',
   '/educacao': 'Educação e capacitação do Instituto: trilhas, cursos e materiais',
   '/ciberseguranca': 'Cibersegurança: rastros, superfície de ataque e resposta a incidentes',
@@ -343,6 +344,7 @@ export const FRENTES: Frente[] = [
   { id: 'instituto', nome: 'Plataforma do Instituto', itens: [
     { icon: LayoutGrid, label: 'Frentes do Instituto', href: '/frentes-do-instituto' },
     { icon: FlaskConical, label: 'Administração do Instituto', href: '/instituto' },
+    { icon: Building2, label: 'Escritórios do projeto', href: '/escritorios-do-projeto' },
     { icon: BookOpen, label: 'Caderno de produtos', href: '/caderno-de-produtos' },
     { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
     { icon: Store, label: 'Soluções jurídicas', href: '/solucoes' },

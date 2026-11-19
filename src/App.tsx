@@ -19,6 +19,7 @@ const FundosInicioPage = lazy(() => import('@/pages/FundosInicioPage'))
 const PortaisInstitutoPage = lazy(() => import('@/pages/PortaisInstitutoPage'))
 // Passo 2: Fechar /frentes-do-instituto conforme planejamento
 const FrentesDoInstitutoPage = lazy(() => import('@/pages/FrentesDoInstitutoPage'))
+const EscritoriosDoProjetoPage = lazy(() => import('@/pages/EscritoriosDoProjetoPage'))
 // Passo T2: conferir a corrente do trilho no navegador de quem duvida.
 const LastroPage = lazy(() => import('@/pages/LastroPage'))
 const AreasPage = lazy(() => import('@/pages/AreasPage'))
@@ -314,6 +315,10 @@ function App() {
         <Route
           path="/frentes-do-instituto"
           element={isAuthenticated ? <SoInstituto><FrentesDoInstitutoPage /></SoInstituto> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/escritorios-do-projeto"
+          element={isAuthenticated ? <SoInstituto><EscritoriosDoProjetoPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route path="/lastro" element={<LastroPage />} />
         <Route path="/exemplos" element={<ExemplosPage />} />
