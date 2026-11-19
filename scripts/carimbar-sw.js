@@ -10,14 +10,19 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const swPath = path.resolve(__dirname, '../dist/sw.js')
+// A pasta do build vem como argumento: `npm run build` usa dist/, e scripts/publicar.sh usa
+// dist-prod/. Até 19/11/2026 o publicar.sh não carimbava, então TODO deploy de produção saía com
+// VERSAO='theye-v1' e o service worker do visitante nunca percebia que havia build novo — foi isso
+// que fez a tela /geo/nota parecer quebrada no R1, servida de um cache velho.
+const pasta = process.argv[2] || 'dist'
+const swPath = path.resolve(__dirname, '..', pasta, 'sw.js')
 
 const versao = `theye-${Date.now().toString(36)}`
 const conteudo = readFileSync(swPath, 'utf8')
 const atualizado = conteudo.replace(/const VERSAO = '[^']*'/, `const VERSAO = '${versao}'`)
 
 if (atualizado === conteudo) {
-  throw new Error('carimbar-sw.js: não encontrou "const VERSAO = \'...\'" em dist/sw.js — build do service worker pode ter mudado de formato.')
+  throw new Error('carimbar-sw.js: não encontrou "const VERSAO = \'...\'" em ' + pasta + '/sw.js — build do service worker pode ter mudado de formato.')
 }
 
 writeFileSync(swPath, atualizado)

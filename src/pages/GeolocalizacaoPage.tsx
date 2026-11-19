@@ -6,7 +6,10 @@ import { Cofre, TERMO, VERSAO_TERMO, cofreExiste, conferirCorrente, type Cena as
 import { agruparLugares, detectarParadas, distancia, fmtMin, linhaDoTempo, preverProximo, resumoPeriodo, type Lugar, type Ponto } from '@/lib/geo/calculo'
 import { CAMADAS_PENDENTES, SATELITES, buscarCenas, camadasSatelite, municipioDe, ndviMedio, leituraNdvi, noticiasGdelt, tileNdvi, trilhaNoMunicipio, tilesDaCena, type Cena, type Municipio, type Noticia } from '@/lib/geo/fontes'
 import { baixar, csvPontos, geojson, montarGrafo } from '@/lib/geo/grafo'
+import GrafoVivo from '@/components/geo/GrafoVivo'
 import { lerQuadro } from '@/lib/geo/camera'
+import { FONTES, TETO_PREVISIBILIDADE, metricasDeMobilidade } from '@/lib/geo/mobilidade'
+import { FONTE_MODO, resumoDeModos } from '@/lib/geo/modo'
 import { pdfFicha } from '@/lib/geo/fichaPdf'
 import { Camera, Download, Lock, MapPin, Pause, Play, Satellite, ShieldCheck, Trash2, Network, Bot } from 'lucide-react'
 import { carregarConfigOllama, gerarTexto, listarModelos, promptNoticias, promptSemana, salvarConfigOllama, type OllamaConfig } from '@/lib/geo/ollama'
@@ -126,7 +129,11 @@ export default function GeolocalizacaoPage() {
     const doDia = resumoPeriodo(dados.pontos, lugares, paradas, ini, ini + 86400000)
     const atual = paradas.length ? paradas[paradas.length - 1].lugarId! : ''
     const previsao = atual ? preverProximo(paradas, atual).slice(0, 3) : []
-    return { lugares, paradas, linha: linhaDoTempo(paradas, lugares, d), semana, doDia, atual, previsao }
+    // A sequência de visitas, na ordem do tempo, é o que alimenta as contas de mobilidade (R4).
+    const sequencia = paradas.map(p => p.lugarId).filter((x): x is string => !!x)
+    const mobilidade = metricasDeMobilidade(dados.pontos, lugares, sequencia)
+    const modos = resumoDeModos(dados.pontos)
+    return { lugares, paradas, linha: linhaDoTempo(paradas, lugares, d), semana, doDia, atual, previsao, mobilidade, modos }
   }, [dados, dia])
 
   const ultimo = dados?.pontos.length ? dados.pontos[dados.pontos.length - 1] : null
@@ -355,6 +362,52 @@ export default function GeolocalizacaoPage() {
               {calc.lugares.length === 0 ? <p className="text-sm text-grafite">Ainda não há paradas. Grave por algumas horas.</p> :
                 <ul className="space-y-2">{calc.lugares.map(l => <LinhaLugar key={l.id} l={l} onNome={n => nomear(l, n)} />)}</ul>}
             </div>
+            <div className={cartao + ' md:col-span-2'}>
+              <h2 className="font-semibold text-navy">A ciência do seu movimento</h2>
+              <p className="text-xs text-grafite-claro mb-1">
+                Três medidas que a pesquisa de mobilidade humana usa para descrever como uma pessoa se move. Contas feitas aqui no aparelho, com os seus pontos; cada número traz o estudo de onde veio.
+              </p>
+              <p className={`text-xs mb-3 ${calc.mobilidade.confianca.nivel === 'boa' ? 'text-regular' : 'text-atencao'}`}>
+                Confiança {calc.mobilidade.confianca.nivel === 'boa' ? 'boa' : calc.mobilidade.confianca.nivel === 'media' ? 'média' : 'baixa'}: {calc.mobilidade.confianca.motivo} ({calc.mobilidade.nPontos} pontos, {calc.mobilidade.nLugares} {calc.mobilidade.nLugares === 1 ? 'lugar' : 'lugares'}).
+              </p>
+              <div className="grid sm:grid-cols-3 gap-3">
+                <div className="border border-navy/10 p-3">
+                  <div className="text-2xl font-semibold text-navy">{calc.mobilidade.raioGiracaoKm.toFixed(2)} <span className="text-sm text-grafite-claro">km</span></div>
+                  <h3 className="text-sm font-semibold text-navy mt-1">Raio de giração</h3>
+                  <p className="text-xs text-grafite">A largura da sua vida no mapa: o quanto você se espalha em volta do seu centro. Quem só faz casa–trabalho tem raio pequeno.</p>
+                  <a className="text-xs text-navy underline" href={FONTES.giracao.url} target="_blank" rel="noreferrer">{FONTES.giracao.autores}, {FONTES.giracao.onde}</a>
+                </div>
+                <div className="border border-navy/10 p-3">
+                  <div className="text-2xl font-semibold text-navy">{Math.round(calc.mobilidade.previsibilidadeMaxima * 100)}<span className="text-sm text-grafite-claro">%</span></div>
+                  <h3 className="text-sm font-semibold text-navy mt-1">Previsibilidade máxima</h3>
+                  <p className="text-xs text-grafite">O <b>teto</b>: nenhum método, por melhor que seja, acerta o seu próximo lugar mais do que isto. Na pesquisa, esse teto fica perto de {Math.round(TETO_PREVISIBILIDADE * 100)}%. Quem promete mais está errando ou mentindo.</p>
+                  <p className="text-xs text-grafite-claro">Desordem do seu trajeto: {calc.mobilidade.entropiaReal.toFixed(2)} bits (ao acaso seriam {calc.mobilidade.entropiaAleatoria.toFixed(2)}).</p>
+                  <a className="text-xs text-navy underline" href={FONTES.entropia.url} target="_blank" rel="noreferrer">{FONTES.entropia.autores}, {FONTES.entropia.onde}</a>
+                </div>
+                <div className="border border-navy/10 p-3">
+                  <div className="text-2xl font-semibold text-navy capitalize">{calc.mobilidade.perfil.perfil === 'indefinido' ? '—' : calc.mobilidade.perfil.perfil}</div>
+                  <h3 className="text-sm font-semibold text-navy mt-1">Seu jeito de circular</h3>
+                  <p className="text-xs text-grafite">
+                    {calc.mobilidade.perfil.perfil === 'retornante' ? 'Retornante: os poucos lugares de sempre já explicam quase todo o seu deslocamento.'
+                      : calc.mobilidade.perfil.perfil === 'explorador' ? 'Explorador: você se espalha por lugares novos, além dos de costume.'
+                      : 'Ainda não dá para dizer: faltam lugares com visitas repetidas.'}
+                  </p>
+                  <a className="text-xs text-navy underline" href={FONTES.explorador.url} target="_blank" rel="noreferrer">Pappalardo et al., {FONTES.explorador.onde}</a>
+                </div>
+              </div>
+              <h3 className="text-sm font-semibold text-navy mt-4">Como você se deslocou</h3>
+              <p className="text-xs text-grafite-claro mb-2">
+                Deduzido da velocidade entre os seus pontos, com suavização para um sinal solto de GPS não virar "andou de carro por 3 segundos". Nenhum sensor extra é ligado para isto.
+              </p>
+              {calc.modos.porModo.length === 0
+                ? <p className="text-sm text-grafite">Ainda não há deslocamento gravado para dizer como você se moveu.</p>
+                : <ul className="text-sm space-y-1">
+                    {calc.modos.porModo.map(m => (
+                      <li key={m.modo}><b className="capitalize">{m.modo}</b>: {fmtMin(m.minutos)} · {m.km.toFixed(1)} km</li>
+                    ))}
+                  </ul>}
+              <a className="text-xs text-navy underline" href={FONTE_MODO.url} target="_blank" rel="noreferrer">{FONTE_MODO.autores}, {FONTE_MODO.onde}</a>
+            </div>
           </div>
         )}
 
@@ -369,7 +422,7 @@ export default function GeolocalizacaoPage() {
               <video ref={video} playsInline muted className="w-full border-4 border-critico" />
               <span className="absolute top-2 left-2 bg-critico text-white text-xs px-2 py-1">● CÂMERA LIGADA</span>
             </div>
-            {ultimaCena && <p className="text-sm text-navy">Agora: <b>{ultimaCena.ambiente}</b> · {ultimaCena.pessoas} pessoa(s) na cena · {ultimaCena.objetos.join(', ') || 'sem objetos de referência'}{ultimaCena.codigos.length ? ` · códigos: ${ultimaCena.codigos.join(', ')}` : ''}</p>}
+            {ultimaCena && <p className="text-sm text-navy">Agora: <b>{ultimaCena.ambiente}</b>{ultimaCena.confianca != null && ultimaCena.confianca > 0 ? <span className="text-grafite-claro"> (confiança {Math.round(ultimaCena.confianca * 100)}%)</span> : <span className="text-grafite-claro"> (sem sinal suficiente para afirmar o lugar)</span>} · {ultimaCena.pessoas} pessoa(s) na cena · {ultimaCena.objetos.join(', ') || 'sem objetos de referência'}{ultimaCena.codigos.length ? ` · códigos: ${ultimaCena.codigos.join(', ')}` : ''}</p>}
             <h2 className="font-semibold text-navy pt-2">Leituras gravadas ({dados.cenas.length})</h2>
             <ul className="text-xs max-h-60 overflow-auto" tabIndex={0} aria-label="Cenas da câmera gravadas">{[...dados.cenas].reverse().slice(0, 100).map(c => <li key={c.hash} className="border-t border-navy/5 py-1">{new Date(c.t).toLocaleString('pt-BR')} · {c.ambiente} · {c.pessoas} pessoa(s) · {c.objetos.join(', ')}</li>)}</ul>
           </div>
@@ -414,9 +467,15 @@ export default function GeolocalizacaoPage() {
         )}
 
         {aba === 'grafo' && grafo && calc && (
+          <div className="space-y-4">
+            <div className={cartao}>
+              <h2 className="font-semibold text-navy"><Network className="inline w-4 h-4 mr-1" />O seu grafo, desenhado</h2>
+              <p className="text-sm text-grafite mb-2">Cada ponto é uma coisa (você, um lugar seu, o município, uma notícia, uma cena da câmera) e cada linha é uma ligação entre elas, com a origem do dado escrita junto.</p>
+              <GrafoVivo nos={grafo.nos} arestas={grafo.arestas} />
+            </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div className={cartao}>
-              <h2 className="font-semibold text-navy"><Network className="inline w-4 h-4 mr-1" />Grafo</h2>
+              <h2 className="font-semibold text-navy">Tudo em lista</h2>
               <p className="text-sm text-grafite">{grafo.nos.length} nós e {grafo.arestas.length} ligações.</p>
               <ul className="text-xs mt-2">{Object.entries(grafo.nos.reduce<Record<string, number>>((a, n) => ({ ...a, [n.tipo]: (a[n.tipo] ?? 0) + 1 }), {})).map(([t, n]) => <li key={t}>{t}: {n}</li>)}</ul>
               <div className="max-h-60 overflow-auto text-xs mt-2" tabIndex={0} role="region" aria-label="Ligações do grafo">{grafo.arestas.slice(0, 80).map((a, i) => <div key={i} className="border-t border-navy/5 py-0.5" title={a.fonte}>{rotulo(grafo.nos, a.de)} <b>{a.tipo}</b> {rotulo(grafo.nos, a.para)}{a.peso != null ? ` (${a.peso})` : ''}</div>)}</div>
@@ -427,6 +486,7 @@ export default function GeolocalizacaoPage() {
                 <ul className="text-sm space-y-1">{calc.previsao.map(p => { const l = calc.lugares.find(x => x.id === p.lugarId); return <li key={p.lugarId}>{l?.nome || 'Lugar sem nome'}: {Math.round(p.chance * 100)}% <span className="text-xs text-grafite-claro">(visto {p.vezes} vez(es))</span></li> })}</ul>}
               <p className="text-xs text-grafite-claro mt-2">Como é feita: conta quantas vezes, saindo do lugar atual, você foi para cada outro (cadeia de Markov com suavização). Poucos dados = chance pouco confiável; o número de vezes vistas está ao lado para isso ficar claro.</p>
             </div>
+          </div>
           </div>
         )}
 

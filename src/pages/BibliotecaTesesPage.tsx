@@ -4,7 +4,7 @@
  * e o catálogo de especialistas formados por essa estante. Catalogar e citar, nunca copiar.
  */
 import { useMemo, useState } from 'react'
-import Layout from '@/components/Layout'
+import LayoutFundos from '@/components/LayoutFundos'
 import VerComoFundos, { SoParaNiveis } from '@/components/VerComoFundos'
 import SaberDaMateria from '@/components/SaberDaMateria'
 import { REPOSITORIOS_TESES, CURSOS_ABERTOS } from '@/data/bibliotecaDemo'
@@ -18,7 +18,7 @@ export default function BibliotecaTesesPage() {
     return ESPECIALISTAS_FUNDOS.filter(e => `${e.nome} ${e.disciplina} ${e.ambito}`.toLowerCase().includes(q))
   }, [busca])
   return (
-    <Layout title="Biblioteca e especialistas">
+    <LayoutFundos title="Biblioteca e especialistas">
       <SoParaNiveis rota="/biblioteca-teses">
       <div className="max-w-4xl mx-auto space-y-6">
         <VerComoFundos />
@@ -81,6 +81,6 @@ export default function BibliotecaTesesPage() {
         </section>
       </div>
       </SoParaNiveis>
-    </Layout>
+    </LayoutFundos>
   )
 }

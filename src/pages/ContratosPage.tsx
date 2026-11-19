@@ -3,7 +3,7 @@
  * Cada contrato com partes, valor, lei e foro, e as obrigações extraídas como prazos com dono.
  * Nada lê nem grava no banco.
  */
-import Layout from '@/components/Layout'
+import LayoutFundos from '@/components/LayoutFundos'
 import { CONTRATOS_DEMO } from '@/data/contratosDemo'
 import { DATA_REFERENCIA_LEGIVEL, diasAte } from '@/data/referenciaDemo'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
@@ -17,7 +17,7 @@ export default function ContratosPage() {
   const quem = usePessoaFundos()
   const vis = recorte(quem, CONTRATOS_DEMO)
   return (
-    <Layout title="Contratos e obrigações">
+    <LayoutFundos title="Contratos e obrigações">
       <SoParaNiveis rota="/contratos-obrigacoes">
       <div className="max-w-5xl mx-auto space-y-4">
         <VerComoFundos />
@@ -52,6 +52,6 @@ export default function ContratosPage() {
         </ul>
       </div>
       </SoParaNiveis>
-    </Layout>
+    </LayoutFundos>
   )
 }

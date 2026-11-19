@@ -1,5 +1,5 @@
 /** Ecrã C06 — Fornecedores (casa de fundos internacionais, DEMONSTRAÇÃO). Nada lê/grava no banco. */
-import Layout from '@/components/Layout'
+import LayoutFundos from '@/components/LayoutFundos'
 import { FORNECEDORES_DEMO } from '@/data/operacaoDemo'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
 import { recorte } from '@/lib/visaoFundos'
@@ -9,7 +9,7 @@ export default function FornecedoresFundosPage() {
   const quem = usePessoaFundos()
   const vis = recorte(quem, FORNECEDORES_DEMO)
   return (
-    <Layout title="Fornecedores">
+    <LayoutFundos title="Fornecedores">
       <SoParaNiveis rota="/fornecedores-fundos">
       <div className="max-w-5xl mx-auto space-y-4">
         <VerComoFundos />
@@ -31,6 +31,6 @@ export default function FornecedoresFundosPage() {
         </ul>
       </div>
       </SoParaNiveis>
-    </Layout>
+    </LayoutFundos>
   )
 }

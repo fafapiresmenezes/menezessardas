@@ -18,6 +18,7 @@ if [ -r "$CORRENTE" ]; then cp "$CORRENTE" public/trilho-v4.jsonl; echo "corrent
 
 rm -rf dist-prod
 ./node_modules/.bin/vite build --outDir dist-prod >/dev/null
+node scripts/carimbar-sw.js dist-prod
 grep -q hlraekzvgxdpiiigdxdo dist-prod/assets/*.js || { echo "ERRO: build sem a URL do Supabase"; exit 1; }
 
 git fetch -q origin gh-pages
