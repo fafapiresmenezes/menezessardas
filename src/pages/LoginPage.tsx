@@ -16,6 +16,9 @@ import ProvaDaPorta from '@/components/ProvaDaPorta'
 import { VERTENTES } from '@/data/vertentes'
 import type { Chave } from '@/lib/i18n'
 import { acessoEmail } from '@/lib/acessoEmail'
+import { problemaDaSenha } from '@/lib/senha'
+import { captchaLigado } from '@/lib/captcha'
+import CaptchaRobo from '@/components/CaptchaRobo'
 
 // Lista de casa dos escritórios clientes: vale enquanto o banco não devolve o registro.
 const ESCRITORIOS_DA_CASA = ['SARDAS E MENEZES']
@@ -31,6 +34,9 @@ export function lerLinkDeSenha(texto: string): { token?: string; acesso?: string
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
+  // Comprovante da caixinha "não sou robô": o servidor recusa a entrada com senha sem ele. Vale para um pedido só.
+  const [comprovante, setComprovante] = useState('')
+  const [rodadaRobo, setRodadaRobo] = useState(0)
   const [armadilha, setArmadilha] = useState('')
   const [abertoEm] = useState(() => Date.now())
   // Passo D22: em domínio próprio de parceiro, a tela de entrada mostra a marca dele.
@@ -164,8 +170,9 @@ export default function LoginPage() {
         setCarregando(false)
         return
       }
-      if (senha.length < 8) {
-        setErro(t('erro.senhaCurta'))
+      const faltaNaSenha = problemaDaSenha(senha)
+      if (faltaNaSenha) {
+        setErro(faltaNaSenha)
         setCarregando(false)
         return
       }
@@ -190,9 +197,16 @@ export default function LoginPage() {
       return
     }
 
+    if (captchaLigado() && !comprovante) {
+      setErro('Marque a caixinha "não sou robô" antes de entrar.')
+      setCarregando(false)
+      return
+    }
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password: senha })
+      const { error } = await supabase.auth.signInWithPassword(captchaLigado() ? { email, password: senha, options: { captchaToken: comprovante } } : { email, password: senha })
+      if (captchaLigado()) setRodadaRobo(n => n + 1)
       if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else seguir() }
+      else if (/captcha/i.test(error.message ?? '')) setErro(mensagemAmigavel(error))
       else if (/not confirmed/i.test(error.message ?? '')) setErro(t('erro.emailNaoConfirmado'))
       else if (error.status === 400 || error.status === 401 || /invalid/i.test(mensagemAmigavel(error))) setErro(t('erro.credenciais'))
       else setErro(t('erro.servidorPrefixo') + mensagemAmigavel(error) + t('erro.servidorSufixo'))
@@ -420,6 +434,8 @@ export default function LoginPage() {
                 )}
               </div>
             )}
+
+            {!primeiroAcesso && captchaLigado() && <CaptchaRobo aoMudar={setComprovante} rodada={rodadaRobo} />}
 
             <button
               type="submit"

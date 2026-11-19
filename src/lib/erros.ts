@@ -1,5 +1,10 @@
 // Passo 55 (Onda E): traduz erros técnicos do Supabase, das funções Edge e da rede para português simples, com o que fazer.
 const MAPA: [RegExp, string][] = [
+  // Recusas de senha e da trava anti-robô vêm primeiro: o texto delas traz números e cairia em regras erradas mais abaixo.
+  [/Password should (contain|be at least)|weak_password/i, 'A senha não foi aceita. Ela precisa ter pelo menos 12 caracteres, com letra maiúscula, letra minúscula e número.'],
+  [/should be different from the old password|same_password/i, 'A senha nova precisa ser diferente da senha atual.'],
+  [/known to be weak|pwned|leaked/i, 'Esta senha é muito comum e fácil de adivinhar. Escolha outra.'],
+  [/captcha/i, 'A conferência "não sou robô" não passou. Recarregue a página e tente de novo; se continuar, avise o Instituto.'],
   [/Failed to fetch|NetworkError|Load failed|ERR_INTERNET|net::/i, 'Sem conexão com a internet. Verifique a rede e tente de novo.'],
   [/JWT expired|invalid JWT|refresh_token|session_not_found|not authenticated/i, 'Sua sessão expirou. Entre de novo para continuar.'],
   [/permission denied|row-level security|42501|insufficient_privilege/i, 'Você não tem permissão para esta ação. Peça a um administrador em Equipe.'],

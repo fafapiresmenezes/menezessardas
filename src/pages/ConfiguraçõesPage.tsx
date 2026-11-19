@@ -11,6 +11,7 @@ import { perfilAtual, rotuloFuncao, type Funcao } from '@/lib/equipe'
 import SecaoPix from '@/components/SecaoPix'
 import AvisosCelular from '@/components/AvisosCelular'
 import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
+import { problemaDaSenha } from '@/lib/senha'
 
 const ABAS = [{ id: 'perfil', rotulo: 'Perfil e avisos' }, { id: 'seguranca', rotulo: 'Segurança' }, { id: 'ia', rotulo: 'IA e escrita' }, { id: 'integracoes', rotulo: 'Integrações' }, { id: 'avaliacao', rotulo: 'Avaliação' }, { id: 'tudo', rotulo: 'Tudo' }]
 
@@ -256,8 +257,9 @@ function SecaoSenha() {
   const salvar = async (e: React.FormEvent) => {
     e.preventDefault()
     setMsg(null)
-    if (nova.length < 8) {
-      setMsg({ tipo: 'erro', texto: 'A nova senha precisa ter pelo menos 8 caracteres.' })
+    const falta = problemaDaSenha(nova)
+    if (falta) {
+      setMsg({ tipo: 'erro', texto: falta })
       return
     }
     if (nova !== confirma) {
@@ -323,7 +325,7 @@ function SecaoSenha() {
               />
             </div>
           </div>
-          <p id="ajuda-senha" className="text-xs text-grafite-claro">Pelo menos 8 caracteres. Vale só para o seu acesso.</p>
+          <p id="ajuda-senha" className="text-xs text-grafite-claro">Pelo menos 12 caracteres, com letra maiúscula, letra minúscula e número. Vale só para o seu acesso.</p>
           <div className="flex flex-wrap gap-3">
             <button
               type="submit"
