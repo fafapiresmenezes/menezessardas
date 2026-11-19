@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { mensagemAmigavel } from '@/lib/erros'
 import { codigoDoLink } from '@/lib/acessoEmail'
+import { problemaDaSenha, REGRA_DA_SENHA, SENHA_MINIMO } from '@/lib/senha'
 
 /**
  * Tela de criar ou redefinir a senha, aberta pelo link que o Supabase envia por e-mail.
@@ -33,7 +34,8 @@ export default function RedefinirSenhaPage() {
   const salvar = async (e: React.FormEvent) => {
     e.preventDefault()
     setMsg(null)
-    if (nova.length < 8) { setMsg({ tipo: 'erro', texto: 'A senha precisa ter pelo menos 8 caracteres.' }); return }
+    const falta = problemaDaSenha(nova)
+    if (falta) { setMsg({ tipo: 'erro', texto: falta }); return }
     if (nova !== confirma) { setMsg({ tipo: 'erro', texto: 'As duas senhas não são iguais.' }); return }
     setOcupado(true)
     try {
@@ -70,12 +72,13 @@ export default function RedefinirSenhaPage() {
         {pronta && !concluida && (
           <form onSubmit={salvar} className="mt-4 space-y-4">
             <label className="block text-sm">
-              Nova senha (mínimo 8 caracteres)
-              <input type="password" autoComplete="new-password" title="Digite a senha nova, com pelo menos 8 caracteres" value={nova} onChange={e => setNova(e.target.value)} className={`${campo} mt-1`} required minLength={8} />
+              Nova senha
+              <input type="password" autoComplete="new-password" title="Digite a senha nova: 12 caracteres ou mais, com letra maiúscula, minúscula e número" aria-describedby="regra-senha" value={nova} onChange={e => setNova(e.target.value)} className={`${campo} mt-1`} required minLength={SENHA_MINIMO} />
+              <span id="regra-senha" className="mt-1 block text-xs text-grafite">{REGRA_DA_SENHA}</span>
             </label>
             <label className="block text-sm">
               Repita a nova senha
-              <input type="password" autoComplete="new-password" title="Repita a mesma senha para confirmar" value={confirma} onChange={e => setConfirma(e.target.value)} className={`${campo} mt-1`} required minLength={8} />
+              <input type="password" autoComplete="new-password" title="Repita a mesma senha para confirmar" value={confirma} onChange={e => setConfirma(e.target.value)} className={`${campo} mt-1`} required minLength={SENHA_MINIMO} />
             </label>
             {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={`text-sm ${msg.tipo === 'erro' ? 'text-critico' : 'text-regular'}`}>{msg.texto}</p>}
             <button type="submit" disabled={ocupado} title="Grava a senha nova e encerra esta sessão de recuperação" className="w-full min-h-[44px] bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-60">
