@@ -559,4 +559,5 @@ export async function atender(req: Request, abrirBanco: () => Promise<Banco> = b
   return json({ erro: `Modo desconhecido: ${modo}. Use conferir, coletar, serie ou painel.` }, 400)
 }
 
-if (!Deno.env.get('VITEST')) Deno.serve(atender)
+// Deno.serve passa (req, info): chamar atender(req) para não trocar o banco pelo info (erro "abrirBanco is not a function" de 14 a 18/11).
+if (!Deno.env.get('VITEST')) Deno.serve((req) => atender(req))
