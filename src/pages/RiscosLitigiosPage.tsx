@@ -1,5 +1,5 @@
 /** Ecrã C08 — Riscos e litígios (fundos internacionais, DEMONSTRAÇÃO). Nada lê/grava no banco. */
-import Layout from '@/components/Layout'
+import LayoutFundos from '@/components/LayoutFundos'
 import { RISCOS_DEMO, type NivelRisco } from '@/data/operacaoDemo'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
 import SaberDaMateria from '@/components/SaberDaMateria'
@@ -11,7 +11,7 @@ export default function RiscosLitigiosPage() {
   const ordem: NivelRisco[] = ['alto', 'medio', 'baixo']
   const lista = recorte(quem, RISCOS_DEMO).sort((a, b) => ordem.indexOf(a.nivel) - ordem.indexOf(b.nivel) || a.projecto.localeCompare(b.projecto))
   return (
-    <Layout title="Riscos e litígios">
+    <LayoutFundos title="Riscos e litígios">
       <SoParaNiveis rota="/riscos-litigios">
       <div className="max-w-5xl mx-auto space-y-4">
         <VerComoFundos />
@@ -34,6 +34,6 @@ export default function RiscosLitigiosPage() {
         </ul>
       </div>
       </SoParaNiveis>
-    </Layout>
+    </LayoutFundos>
   )
 }

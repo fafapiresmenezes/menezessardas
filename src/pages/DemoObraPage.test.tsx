@@ -5,6 +5,7 @@ afterEach(cleanup)
 import DemoObraPage from './DemoObraPage'
 
 vi.mock('@/components/Layout', () => ({ default: ({ children }: { children: React.ReactNode }) => <div>{children}</div> }))
+vi.mock('@/components/LayoutFundos', () => ({ default: ({ children }: { children: React.ReactNode }) => <div>{children}</div> }))
 
 describe('Medição de obra por nível (demonstração)', () => {
   it('avisa que os dados são fictícios e abre na visão do presidente executivo, com os três projectos', () => {

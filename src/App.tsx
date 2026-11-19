@@ -13,6 +13,7 @@ import BoasVindasPage from '@/pages/BoasVindasPage'
 const PortalInstitutoPage = lazy(() => import('@/pages/PortalInstitutoPage'))
 const AgentesInstitutoPage = lazy(() => import('@/pages/AgentesInstitutoPage'))
 const QualidadePage = lazy(() => import('@/pages/QualidadePage'))
+const FundosInicioPage = lazy(() => import('@/pages/FundosInicioPage'))
 const PortaisInstitutoPage = lazy(() => import('@/pages/PortaisInstitutoPage'))
 // Passo 2: Fechar /frentes-do-instituto conforme planejamento
 const FrentesDoInstitutoPage = lazy(() => import('@/pages/FrentesDoInstitutoPage'))
@@ -27,6 +28,7 @@ const RoyaltiesPage = lazy(() => import('@/pages/RoyaltiesPage'))
 const MedicoesContratosPage = lazy(() => import('@/pages/MedicoesContratosPage'))
 const SuperficieAtaquePage = lazy(() => import('@/pages/SuperficieAtaquePage'))
 const AguaPage = lazy(() => import('@/pages/AguaPage'))
+const AguasPage = lazy(() => import('@/pages/AguasPage'))
 const TrilhasPage = lazy(() => import('@/pages/TrilhasPage'))
 const PesquisaIaPage = lazy(() => import('@/pages/PesquisaIaPage'))
 const ReguaPage = lazy(() => import('@/pages/ReguaPage'))
@@ -221,6 +223,10 @@ function App() {
         <Route
           path="/superficie-de-ataque"
           element={isAuthenticated ? <SoInstituto><SuperficieAtaquePage /></SoInstituto> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/aguas"
+          element={isAuthenticated ? <SoInstituto><AguasPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/agua"
@@ -511,6 +517,10 @@ function App() {
         <Route
           path="/hierarquia"
           element={isAuthenticated ? <HierarquiaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/fundos"
+          element={isAuthenticated ? <FundosInicioPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/demonstracao-obra"

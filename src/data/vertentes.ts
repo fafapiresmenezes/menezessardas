@@ -22,7 +22,7 @@ export type EstadoVertente = 'no-ar' | 'em-teste' | 'em-desenvolvimento' | 'em-e
 
 export const VERTENTES = [
   { id: 'direito', estado: 'no-ar', rota: '/inicio' },
-  { id: 'fundos', estado: 'em-desenvolvimento', rota: '/fundos-internacionais' },
+  { id: 'fundos', estado: 'em-teste', rota: '/fundos-internacionais' },
   { id: 'predicao', estado: 'em-desenvolvimento', rota: '/preditiva' },
   { id: 'geolocalizacao', estado: 'em-desenvolvimento', rota: '/geolocalizacao' },
   { id: 'engenharia', estado: 'em-desenvolvimento', rota: '/engenharia' },
@@ -34,7 +34,7 @@ export const VERTENTES = [
   { id: 'civico', estado: 'em-estudo', rota: '/civico' },
   { id: 'quantum', estado: 'em-estudo', rota: '/quantum' },
   { id: 'ia', estado: 'em-teste', rota: '/ia' },
-  { id: 'aguas', estado: 'em-desenvolvimento', rota: '/agua' },
+  { id: 'aguas', estado: 'em-desenvolvimento', rota: '/aguas' },
   { id: 'carbono', estado: 'em-estudo', rota: '/carbono' },
   { id: 'petroleo', estado: 'em-estudo', rota: '/petroleo' },
   { id: 'psicologia', estado: 'em-estudo', rota: '/psicologia' },

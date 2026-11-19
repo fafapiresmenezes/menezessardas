@@ -132,7 +132,8 @@ describe('prova dos ecrãs da casa de fundos', () => {
 
   it('Q10 Assistente: perguntas abrem e fecham, respostas coerentes com os dados', () => {
     montar(<AssistenteFundosPage />)
-    const botoes = screen.getAllByRole('button')
+    // Só os botões das perguntas (dentro do conteúdo), fora o menu e o Sair da moldura da casa.
+    const botoes = screen.getAllByRole('button').filter(b => b.hasAttribute('aria-expanded'))
     expect(botoes.length).toBe(4)
     fireEvent.click(botoes[0])
     expect(texto()).toContain('Estrada do Planalto')

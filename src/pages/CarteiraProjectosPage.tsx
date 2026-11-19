@@ -4,7 +4,7 @@
  * Nada lê nem grava no banco. Contas reais (src/lib/medicaoObra.ts).
  */
 import { useMemo, useState } from 'react'
-import Layout from '@/components/Layout'
+import LayoutFundos from '@/components/LayoutFundos'
 import { calcularBoletim, desvioDeCronograma, semaforo, type Semaforo } from '@/lib/medicaoObra'
 import { PROJETOS_DEMO } from '@/data/demoObraAngola'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
@@ -33,7 +33,7 @@ export default function CarteiraProjectosPage() {
   const vis = linhas.filter(l => (cor === 'todas' || l.c === cor) && (pais === 'todos' || l.p.pais === pais))
 
   return (
-    <Layout title="Carteira de projectos">
+    <LayoutFundos title="Carteira de projectos">
       <SoParaNiveis rota="/carteira-projectos">
       <div className="max-w-5xl mx-auto space-y-4">
         <VerComoFundos />
@@ -90,6 +90,6 @@ export default function CarteiraProjectosPage() {
         </section>
       </div>
       </SoParaNiveis>
-    </Layout>
+    </LayoutFundos>
   )
 }

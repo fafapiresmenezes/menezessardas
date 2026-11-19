@@ -3,7 +3,7 @@
  * Os robôs que preparam e apresentam propostas, e a esteira de propostas por estado.
  * Regra fixa: nenhum envio externo automático; tudo passa por aprovação humana; predição fechada.
  */
-import Layout from '@/components/Layout'
+import LayoutFundos from '@/components/LayoutFundos'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
 import SaberDaMateria from '@/components/SaberDaMateria'
 import { recorte } from '@/lib/visaoFundos'
@@ -28,7 +28,7 @@ export default function RobosProjectosGovernoPage() {
   const quem = usePessoaFundos()
   const vis = recorte(quem, PROPOSTAS)
   return (
-    <Layout title="Robôs de projectos para o governo">
+    <LayoutFundos title="Robôs de projectos para o governo">
       <SoParaNiveis rota="/robos-governo">
       <div className="max-w-3xl mx-auto space-y-6">
         <VerComoFundos />
@@ -68,6 +68,6 @@ export default function RobosProjectosGovernoPage() {
         </section>
       </div>
       </SoParaNiveis>
-    </Layout>
+    </LayoutFundos>
   )
 }

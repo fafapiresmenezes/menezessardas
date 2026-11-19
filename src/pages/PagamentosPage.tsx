@@ -2,7 +2,7 @@
  * Ecrã C05 — Pagamentos (fundos internacionais, DEMONSTRAÇÃO, dados fictícios).
  * Fila de pagamentos por estado, ligados à medição e ao projecto. Nada lê/grava no banco.
  */
-import Layout from '@/components/Layout'
+import LayoutFundos from '@/components/LayoutFundos'
 import { PAGAMENTOS_DEMO, RAZAO_RETIDO, type EstadoPag } from '@/data/pagamentosDemo'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
 import SaberDaMateria from '@/components/SaberDaMateria'
@@ -25,7 +25,7 @@ export default function PagamentosPage() {
   const total = (e: EstadoPag, m: 'Kz' | 'US$') =>
     vis.filter(p => p.estado === e && p.moeda === m).reduce((s, p) => s + p.valor, 0)
   return (
-    <Layout title="Pagamentos">
+    <LayoutFundos title="Pagamentos">
       <SoParaNiveis rota="/pagamentos-fundos">
       <div className="max-w-5xl mx-auto space-y-4">
         <VerComoFundos />
@@ -63,6 +63,6 @@ export default function PagamentosPage() {
         </ul>
       </div>
       </SoParaNiveis>
-    </Layout>
+    </LayoutFundos>
   )
 }

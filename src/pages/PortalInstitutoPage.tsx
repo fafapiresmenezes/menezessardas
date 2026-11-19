@@ -165,7 +165,7 @@ export default function PortalInstitutoPage() {
           <div className="mt-8 border border-dourado/60 p-4" data-testid="demo-fundos">
             <h2 className="text-lg font-serif text-white mb-2">{DEMO_FUNDOS_TITULO[idioma]}</h2>
             <p className="text-sm text-white/80 mb-3">{DEMO_FUNDOS_TEXTO[idioma]}</p>
-            <Link to="/visao-presidente" title={DEMO_FUNDOS_TEXTO[idioma]} className="inline-block min-h-[44px] leading-[44px] px-5 bg-white text-black text-sm">{DEMO_FUNDOS_BOTAO[idioma]}</Link>
+            <Link to="/fundos" title={DEMO_FUNDOS_TEXTO[idioma]} className="inline-block min-h-[44px] leading-[44px] px-5 bg-white text-black text-sm">{DEMO_FUNDOS_BOTAO[idioma]}</Link>
           </div>
         )}
 
