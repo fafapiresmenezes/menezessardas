@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
 import {
   GRANDEZAS, SEM_COLETA, atrasoMedio, caminho, coordenadas, dataBr, diasSemDado,
-  lerReservatorios, lerSerie, numeroBr, revisadas, variacao,
+  lerPainel, lerReservatorios, lerSerie, numeroBr, revisadas, riscoHidrico, variacao,
 } from '@/lib/predicao/agua'
-import type { Ponto, Reservatorio, Subtipo } from '@/lib/predicao/agua'
+import type { PainelPonto, Ponto, Reservatorio, Risco, Subtipo } from '@/lib/predicao/agua'
 
 const hoje = () => new Date().toISOString().slice(0, 10)
 const diasAtras = (n: number) => new Date(Date.now() - n * 86400000).toISOString().slice(0, 10)
@@ -22,12 +22,24 @@ export default function AguaPage() {
   const [serie, setSerie] = useState<Ponto[] | null>(null)
   const [erro, setErro] = useState<string | null>(null)
   const [carregando, setCarregando] = useState(true)
+  const [aba, setAba] = useState<'serie' | 'painel'>('serie')
+  const [painel, setPainel] = useState<PainelPonto[] | null>(null)
+  const [painelErro, setPainelErro] = useState<string | null>(null)
+  const [painelCarregando, setPainelCarregando] = useState(false)
 
   useEffect(() => {
     lerReservatorios()
       .then(l => { setReservatorios(l); setCodigo(l[0]?.chave_natural ?? ''); setCarregando(false) })
       .catch(e => { setErro((e as Error).message); setCarregando(false) })
   }, [])
+
+  useEffect(() => {
+    if (aba !== 'painel' || painel !== null) return
+    setPainelCarregando(true)
+    lerPainel()
+      .then(l => { setPainel(l); setPainelErro(null); setPainelCarregando(false) })
+      .catch(e => { setPainelErro((e as Error).message); setPainelCarregando(false) })
+  }, [aba, painel])
 
   useEffect(() => {
     if (!codigo) { setSerie(null); return }
@@ -42,6 +54,19 @@ export default function AguaPage() {
   const falta = serie ? diasSemDado(serie, de, ate) : 0
   const v = serie ? variacao(serie) : null
   const escolhido = reservatorios?.find(r => r.chave_natural === codigo)
+
+  const corRisco: Record<Risco, string> = {
+    critico: 'bg-critico text-white',
+    atencao: 'bg-atencao text-white',
+    normal: 'bg-green-600 text-white',
+    sem_dado: 'bg-grafite-claro text-grafite',
+  }
+  const labelRisco: Record<Risco, string> = {
+    critico: 'Crítico',
+    atencao: 'Atenção',
+    normal: 'Normal',
+    sem_dado: 'Sem dado',
+  }
 
   return (
     <Layout title="Água dos reservatórios (ANA)">
@@ -69,7 +94,58 @@ export default function AguaPage() {
           </p>
         </section>
 
-        <section className="bg-white shadow-sm p-6 grid gap-4 md:grid-cols-4">
+        <div className="flex gap-2">
+          <button
+            onClick={() => setAba('serie')}
+            title="Ver a série histórica de medições do reservatório selecionado"
+            className={`px-4 py-2 text-sm border ${aba === 'serie' ? 'bg-preto text-white border-preto' : 'border-grafite-claro text-grafite'}`}
+          >
+            Série histórica
+          </button>
+          <button
+            onClick={() => setAba('painel')}
+            title="Ver o painel de risco hídrico com todos os reservatórios"
+            className={`px-4 py-2 text-sm border ${aba === 'painel' ? 'bg-preto text-white border-preto' : 'border-grafite-claro text-grafite'}`}
+          >
+            Painel de risco
+          </button>
+        </div>
+
+        {aba === 'painel' && (
+          <section className="bg-white shadow-sm p-6 space-y-4">
+            <div>
+              <h2 className="font-serif text-xl">Risco hídrico — todos os reservatórios</h2>
+              <p className="text-sm text-grafite">Volume útil mais recente. Crítico: abaixo de 30%. Atenção: 30 a 50%. Normal: acima de 50%.</p>
+            </div>
+            {painelErro && <p className="text-sm text-critico">{painelErro}</p>}
+            {painelCarregando && <p className="text-sm text-grafite">Carregando painel…</p>}
+            {painel && !painel.length && (
+              <p className="text-sm text-atencao bg-atencaoFundo p-3">Nenhum reservatório com medição de volume útil coletada ainda.</p>
+            )}
+            {painel && painel.length > 0 && (
+              <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {painel.map(r => {
+                  const risco = riscoHidrico(r.valor)
+                  return (
+                    <div key={r.chave_natural} className="border border-grafite-claro p-3 space-y-1">
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="text-sm font-medium leading-tight">{r.nome}</span>
+                        <span className={`text-xs px-1.5 py-0.5 shrink-0 ${corRisco[risco]}`}>{labelRisco[risco]}</span>
+                      </div>
+                      <p className="text-xs text-grafite">{(r.atributos as { uf?: string | null })?.uf ?? '—'}</p>
+                      <p className="text-lg">
+                        {r.valor !== null ? `${numeroBr(r.valor)} %` : '—'}
+                      </p>
+                      {r.ocorrido_em && <p className="text-xs text-grafite">{dataBr(r.ocorrido_em)}</p>}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </section>
+        )}
+
+        <section className={`bg-white shadow-sm p-6 grid gap-4 md:grid-cols-4 ${aba === 'painel' ? 'hidden' : ''}`}>
           <label className="block text-sm">
             <span className="block mb-1 text-grafite">Reservatório</span>
             <select
@@ -122,7 +198,7 @@ export default function AguaPage() {
           </label>
         </section>
 
-        <section className="bg-white shadow-sm p-6 space-y-4">
+        {aba === 'serie' && <section className="bg-white shadow-sm p-6 space-y-4">
           <div>
             <h2 className="font-serif text-xl">
               {escolhido?.nome ?? 'Reservatório'} · {grandeza.nome}
@@ -194,7 +270,14 @@ export default function AguaPage() {
               {serie.length > 30 && <p className="text-xs text-grafite">A tabela mostra os 30 dias mais recentes; a linha mostra o período inteiro.</p>}
             </>
           )}
-        </section>
+
+          {/* A tendência de 30 dias (nowcasting30) saiu da tela em 19/11/2026: regra do Instituto, nada de
+              previsão na tela sem calibração provada. A função continua em src/lib/predicao/agua.ts para a
+              calibração; volta para cá só com a régua de erro aprovada. */}
+          <p className="mt-6 pt-4 border-t border-grafite-claro text-xs text-grafite" data-testid="agua-sem-previsao">
+            Previsão desligada até a calibração ser provada. Esta tela mostra só o que a ANA mediu.
+          </p>
+        </section>}
       </div>
     </Layout>
   )

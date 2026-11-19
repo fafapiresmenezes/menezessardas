@@ -6,6 +6,8 @@
  * e as frases honestas de cada estado — nada de número inventado quando a série está vazia.
  */
 import { supabase } from '../supabase'
+import { sazonalMaisTendencia } from './baseline'
+export type { Previsao } from './baseline'
 
 export const GRANDEZAS = [
   { subtipo: 'volume_util', nome: 'Volume útil', unidade: '%', oque: 'Quanto do volume que se pode usar ainda está lá, em por cento.' },
@@ -19,6 +21,8 @@ export type Subtipo = typeof GRANDEZAS[number]['subtipo']
 export interface Ponto { dia: string; valor: number; unidade: string; observado_em: string; revisoes: number; atraso_horas: number }
 export interface Reservatorio { chave_natural: string; nome: string; atributos: { sistema?: string | null; uf?: string | null; latitude?: number | null; longitude?: number | null } }
 export interface Resposta { codigo: string; subtipo: string; de: string; ate: string; pontos: number; serie: Ponto[]; unidade: string | null; grandeza: string | null }
+export interface PainelPonto { chave_natural: string; nome: string; atributos: { sistema?: string | null; uf?: string | null }; valor: number | null; unidade: string | null; ocorrido_em: string | null }
+export type Risco = 'critico' | 'atencao' | 'normal' | 'sem_dado'
 
 /** O que a tela mostra quando não tem o que mostrar. Cada caso tem a sua frase e o seu motivo. */
 export type Estado =
@@ -29,6 +33,19 @@ export type Estado =
 
 export const SEM_COLETA =
   'A ANA tem o dado, mas ele ainda não foi trazido para cá. A coleta roda no servidor (função ana-agua) e precisa ser disparada uma vez; até lá esta tela fica vazia de propósito, em vez de mostrar número inventado.'
+
+export function riscoHidrico(volume: number | null): Risco {
+  if (volume === null) return 'sem_dado'
+  if (volume < 30) return 'critico'
+  if (volume < 50) return 'atencao'
+  return 'normal'
+}
+
+export const lerPainel = async (): Promise<PainelPonto[]> => {
+  const { data, error } = await supabase.functions.invoke('ana-agua', { body: { modo: 'painel' } })
+  if (error) throw new Error('Não consegui falar com o servidor da água agora.')
+  return (data?.painel ?? []) as PainelPonto[]
+}
 
 export const lerReservatorios = async (): Promise<Reservatorio[]> => {
   const { data, error } = await supabase.functions.invoke('ana-agua', { body: { modo: 'serie' } })
@@ -82,6 +99,17 @@ export function variacao(serie: Ponto[]): { delta: number; unidade: string; sent
   if (serie.length < 2) return null
   const delta = Math.round((serie[serie.length - 1].valor - serie[0].valor) * 100) / 100
   return { delta, unidade: serie[0].unidade, sentido: delta > 0 ? 'subiu' : delta < 0 ? 'desceu' : 'igual' }
+}
+
+/**
+ * Nowcasting 30 dias para volume útil.
+ * Converte a série da ANA para o formato do baseline e aplica tendência + ciclo semanal.
+ * Retorna null se a série for curta demais (mínimo 14 pontos).
+ */
+export function nowcasting30(serie: Ponto[]): import('./baseline').Previsao[] | null {
+  if (serie.length < 14) return null
+  const pts = serie.map(p => ({ quando: p.dia, valor: p.valor }))
+  return sazonalMaisTendencia(7).prever(pts, 30)
 }
 
 export const dataBr = (iso: string): string => {

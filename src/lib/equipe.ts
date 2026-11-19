@@ -27,7 +27,7 @@ export const rotuloFuncao: Record<Funcao | 'nenhuma', string> = {
 
 export const descricaoFuncao: Record<Funcao | 'nenhuma', string> = {
   admin: 'Faz tudo, inclusive equipe e chave da IA.',
-  operador: 'Cadastra e edita imóveis, contratos, documentos e fornecedores.',
+  operador: 'Cadastra e edita processos, prazos, documentos e contratos; não mexe na equipe.',
   leitor: 'Só consulta; não altera nada.',
   nenhuma: 'Não entra na plataforma até receber uma função.',
 }
@@ -49,8 +49,17 @@ export async function perfilAtual(): Promise<Funcao | null> {
 }
 
 export async function listarPessoas(): Promise<Pessoa[]> {
+  return listarPessoasDe('listar_usuarios')
+}
+
+/** Só para quem administra o Instituto: as pessoas de TODAS as casas (painel de escritórios parceiros, migração 141). */
+export async function listarPessoasTodasCasas(): Promise<Pessoa[]> {
+  return listarPessoasDe('listar_usuarios_todas_casas')
+}
+
+async function listarPessoasDe(rpc: 'listar_usuarios' | 'listar_usuarios_todas_casas'): Promise<Pessoa[]> {
   if (!supabaseConfigurado) return demoAtual
-  const { data, error } = await supabase.rpc('listar_usuarios')
+  const { data, error } = await supabase.rpc(rpc)
   if (error) throw new Error(error.message)
   return ((data ?? []) as Record<string, unknown>[]).map(r => ({
     id: String(r.id),
@@ -116,9 +125,10 @@ export interface Escritorio { id: string; nome: string; plano: string; criadoEm:
 export async function ehSede(): Promise<boolean> {
   if (!supabaseConfigurado) return true
   try { const k = sessionStorage.getItem('gm-sede'); if (k) return k === '1' } catch { /* sem sessionStorage */ }
-  const { data } = await supabase.rpc('eh_sede')
-  const v = data !== false
-  try { sessionStorage.setItem('gm-sede', v ? '1' : '0') } catch { /* ignora */ }
+  const { data, error } = await supabase.rpc('eh_sede')
+  const v = data === true
+  // Em erro de rede não se guarda nada: a próxima chamada pergunta de novo.
+  if (!error) try { sessionStorage.setItem('gm-sede', v ? '1' : '0') } catch { /* ignora */ }
   return v
 }
 
@@ -143,7 +153,8 @@ export async function moverParaEscritorio(pessoaId: string, escritorioId: string
 
 export async function escritorioDasPessoas(): Promise<Record<string, string>> {
   if (!supabaseConfigurado) return {}
-  const { data } = await supabase.rpc('listar_usuarios_v2')
+  // Migração 141: a lista da casa (listar_usuarios_v2) passou a ser só da própria casa; aqui é preciso ver todas.
+  const { data } = await supabase.rpc('listar_usuarios_todas_casas')
   const m: Record<string, string> = {}
   for (const r of (data ?? []) as Record<string, unknown>[]) if (r.escritorio_id) m[String(r.id)] = String(r.escritorio_id)
   return m
@@ -216,9 +227,19 @@ export async function meuEscritorio(): Promise<MeuEscritorio | null> {
     const { data: e } = await supabase.from('escritorios').select('nome, nome_exibicao').eq('id', p.escritorio_id).maybeSingle()
     const nome = String(e?.nome_exibicao || e?.nome || '').trim()
     if (!nome) return null
+    // Sem a resposta do banco ninguém é tratado como Instituto: ser administração da casa principal (a Fátima,
+    // do Sardas e Menezes) não é administrar o Instituto. Só a lista instituto_admins (migração 118) decide isso.
     const sede = p.escritorio_id === SEDE_ID
-    return lembrar({ nome, sede, pessoa: String(p.nome_completo || p.email || ''), email: String(p.email || ''), instituto: sede && p.funcao === 'admin' })
+    // Resposta provisória (sem a função do banco): não fica guardada, para a próxima chamada tentar de novo.
+    return { nome, sede, pessoa: String(p.nome_completo || p.email || ''), email: String(p.email || ''), instituto: false }
   } catch { return null }
+}
+
+/** Nome do escritório para documentos, cartas e exportações: o escritório de advocacia (nunca o Instituto, dono da plataforma).
+ * Na sede devolve o nome da advocacia; num escritório cliente, o nome dele. Vazio quando ninguém está identificado. */
+export async function nomeDoEscritorio(): Promise<string> {
+  const m = await meuEscritorio()
+  return m ? (m.advocacia || m.nome || '').trim() : ''
 }
 
 /** Quem administra o Instituto (a plataforma inteira). Quem administra só o escritório de advocacia não entra aqui. */

@@ -6,13 +6,11 @@ import AvaliacaoSUS from '../components/AvaliacaoSUS'
 import Layout from '@/components/Layout'
 import { Save, User, Bell, Sparkles, Eye, EyeOff, KeyRound, Mail } from 'lucide-react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
-import { minhaPreferencia, definirMinhaPreferencia } from '@/lib/preferencias'
-import { ROTAS_TELAS } from '@/data/rotas'
 import { estadoChaveIA, removerChaveIA, salvarChaveIA, testarChaveIA, type EstadoChaveIA } from '@/lib/ia'
 import { perfilAtual, rotuloFuncao, type Funcao } from '@/lib/equipe'
-import { lerConfig, gravarConfig } from '@/lib/config'
 import SecaoPix from '@/components/SecaoPix'
 import AvisosCelular from '@/components/AvisosCelular'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 
 const ABAS = [{ id: 'perfil', rotulo: 'Perfil e avisos' }, { id: 'seguranca', rotulo: 'Segurança' }, { id: 'ia', rotulo: 'IA e escrita' }, { id: 'integracoes', rotulo: 'Integrações' }, { id: 'avaliacao', rotulo: 'Avaliação' }, { id: 'tudo', rotulo: 'Tudo' }]
 
@@ -44,13 +42,14 @@ function carregar(): Preferencias {
 }
 
 export default function ConfiguraçõesPage() {
+  const escritorio = useNomeEscritorio()
   const [prefs, setPrefs] = useState<Preferencias>(carregar)
   const [aviso, setAviso] = useState('')
   // Passo 136: resumo das preferências em texto (sem chaves nem senhas) para conferir com a administradora.
   const [resumoCopiado, setResumoCopiado] = useState(false)
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 261
   const copiarResumoPrefs = async () => {
-    const t = ['Minhas preferências — THEYE Institute', `Nome: ${prefs.nomeCompleto || '(em branco)'}`, `E-mail: ${prefs.email || '(em branco)'}`, `Avisos na plataforma: ${prefs.notificacoes ? 'ligados' : 'desligados'}`, `Alertas por e-mail: ${prefs.alertasEmail ? 'ligados' : 'desligados'}`, `Antecedência dos alertas: ${prefs.diasAntecedencia} dia(s)`].join('\n')
+    const t = [`Minhas preferências — ${escritorio}`, `Nome: ${prefs.nomeCompleto || '(em branco)'}`, `E-mail: ${prefs.email || '(em branco)'}`, `Avisos na plataforma: ${prefs.notificacoes ? 'ligados' : 'desligados'}`, `Alertas por e-mail: ${prefs.alertasEmail ? 'ligados' : 'desligados'}`, `Antecedência dos alertas: ${prefs.diasAntecedencia} dia(s)`].join('\n')
     try { await navigator.clipboard.writeText(t); setResumoCopiado(true); setTimeout(() => setResumoCopiado(false), 2500) } catch { /* sem área de transferência */ }
   }
   const [erro, setErro] = useState('')
@@ -91,15 +90,6 @@ export default function ConfiguraçõesPage() {
   const rotulo = 'block text-xs uppercase tracking-wider text-grafite mb-2'
 
   const [aba, setAba] = useState<string>(() => { try { return localStorage.getItem('lsm-config-aba') || 'perfil' } catch { return 'perfil' } })
-  // Passos 10 e 11 do plano: tela inicial por usuário (vale em qualquer aparelho).
-  const [telaInicial, setTelaInicial] = useState('')
-  const [msgTela, setMsgTela] = useState('')
-  useEffect(() => { minhaPreferencia().then(p => setTelaInicial(p.telaInicial ?? '')).catch(() => undefined) }, [])
-  const salvarTelaInicial = async () => {
-    setMsgTela('')
-    try { await definirMinhaPreferencia({ telaInicial: telaInicial || undefined }); setMsgTela(telaInicial ? 'Tela inicial salva.' : 'Voltou ao padrão do cargo.') }
-    catch (e) { setMsgTela(e instanceof Error ? e.message : 'Não foi possível salvar.') }
-  }
   const mostra = (id: string) => (aba === id || aba === 'tudo' ? '' : 'hidden')
 
   return (
@@ -120,7 +110,7 @@ export default function ConfiguraçõesPage() {
         <button type="button" onClick={copiarResumoPrefs} data-testid="copiar-preferencias" title="Copia o resumo das suas preferências em texto (sem senhas nem chaves) para conferir com a administradora" className="min-h-[44px] px-4 border border-navy text-navy text-sm">{resumoCopiado ? 'Resumo copiado' : 'Copiar resumo das preferências'}</button>
         <button type="button" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(prefs, null, 2)], { type: 'application/json' })); a.download = 'preferencias-theye.json'; a.click(); URL.revokeObjectURL(a.href) }} data-testid="baixar-preferencias" title="Baixa suas preferências em um arquivo de texto (JSON), como cópia de segurança" className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">Baixar preferências (JSON)</button>{/* Passo 213 */}
         <button type="button" data-testid="copiar-link-configuracoes" title="Copia o endereço desta página de configurações para compartilhar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="min-h-[44px] px-4 border border-navy/20 text-navy text-sm ml-2 print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 233 */}
-        <button type="button" data-testid="baixar-preferencias" title="Baixa o resumo das preferências em arquivo de texto simples" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Preferências — THEYE Institute\nNome: ${prefs.nomeCompleto}\nE-mail: ${prefs.email}\nNotificações: ${prefs.notificacoes ? 'sim' : 'não'}\nAlertas por e-mail: ${prefs.alertasEmail ? 'sim' : 'não'}\nDias de antecedência: ${prefs.diasAntecedencia}`], { type: 'text/plain;charset=utf-8' })); a.download = 'preferencias.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden min-h-[44px] inline-flex items-center">baixar preferências</button>{/* Passo 316 */}
+        <button type="button" data-testid="baixar-preferencias" title="Baixa o resumo das preferências em arquivo de texto simples" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`Preferências — ${escritorio}\nNome: ${prefs.nomeCompleto}\nE-mail: ${prefs.email}\nNotificações: ${prefs.notificacoes ? 'sim' : 'não'}\nAlertas por e-mail: ${prefs.alertasEmail ? 'sim' : 'não'}\nDias de antecedência: ${prefs.diasAntecedencia}`], { type: 'text/plain;charset=utf-8' })); a.download = 'preferencias.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden min-h-[44px] inline-flex items-center">baixar preferências</button>{/* Passo 316 */}
         {aviso && (
           <p role="status" className="p-3 bg-regularFundo border-l-2 border-regular text-regular text-sm">
             ✓ {aviso}
@@ -233,18 +223,6 @@ export default function ConfiguraçõesPage() {
         </button>
       </form>
       <div className={`max-w-2xl ${mostra('perfil')}`}><AvisosCelular /></div>{/* Passo D19 */}
-      <section aria-labelledby="t-tela-inicial" className={`max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado ${mostra('perfil')}`} data-testid="tela-inicial">
-        <h2 id="t-tela-inicial" className="font-serif text-lg text-navy mb-2">Sua tela inicial</h2>
-        <p className="text-sm text-grafite-claro mb-3">Quando você entra na plataforma, esta é a primeira tela que abre. Sem escolha, vale o padrão do seu cargo: sócios e gestor abrem com os números; os demais, com o Meu dia.</p>
-        <div className="flex flex-wrap items-center gap-2">
-          <select aria-label="Tela inicial" data-testid="tela-inicial-select" title="Escolhe a primeira tela que abre quando você entra na plataforma" value={telaInicial} onChange={e => setTelaInicial(e.target.value)} className="border px-3 py-2 min-h-[44px] text-sm">
-            <option value="">Padrão do meu cargo</option>
-            {ROTAS_TELAS.map(r => <option key={r.rota} value={r.rota}>{r.nome}</option>)}
-          </select>
-          <button type="button" data-testid="tela-inicial-salvar" title="Grava a tela inicial escolhida; vale no celular e no computador" onClick={salvarTelaInicial} className="min-h-[44px] px-4 bg-navy text-white text-sm">Salvar</button>
-          {msgTela && <span role="status" className="text-sm" data-testid="tela-inicial-msg">{msgTela}</span>}
-        </div>
-      </section>
 
       <div className={mostra('seguranca')}>
         <SecaoSenha />
@@ -260,7 +238,6 @@ export default function ConfiguraçõesPage() {
         <SecaoTransparencia />
         <SecaoIcs />
         <SecaoPix />
-        <SecaoStokasticos />
       </div>
       <div className={mostra('avaliacao')}>
         <AvaliacaoSUS />
@@ -269,85 +246,6 @@ export default function ConfiguraçõesPage() {
   )
 }
 
-/**
- * Senha única de entrada do Stokasticos (a escola oculta). Só a administração vê esta seção.
- * A senha atual nunca aparece na tela: a seção diz apenas se existe uma.
- */
-function SecaoStokasticos() {
-  const [admin, setAdmin] = useState(false)
-  const [definida, setDefinida] = useState<boolean | null>(null)
-  const [senha, setSenha] = useState('')
-  const [ocupado, setOcupado] = useState(false)
-  const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
-
-  // Guardamos só se existe senha, nunca o texto dela.
-  const carregar = async () => {
-    try { setDefinida(Boolean((await lerConfig(['stokasticos_senha'])).stokasticos_senha?.trim())) }
-    catch { setDefinida(null) }
-  }
-
-  useEffect(() => {
-    if (!supabaseConfigurado) return
-    perfilAtual().then(p => { setAdmin(p === 'admin'); if (p === 'admin') carregar() }).catch(() => undefined)
-  }, [])
-
-  if (!supabaseConfigurado || !admin) return null
-
-  const salvar = async () => {
-    setOcupado(true)
-    setMsg(null)
-    try {
-      await gravarConfig({ stokasticos_senha: senha.trim() })
-      setSenha('')
-      setMsg({ tipo: 'ok', texto: 'Senha salva. Passe-a a quem você quer deixar entrar.' })
-      await carregar()
-    } catch (e) {
-      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
-    } finally {
-      setOcupado(false)
-    }
-  }
-
-  return (
-    <section aria-labelledby="stokasticos" className="max-w-2xl mt-6 bg-white p-6 shadow-sm border-t-2 border-dourado" data-testid="secao-stokasticos">
-      <h2 id="stokasticos" className="text-lg mb-1 flex items-center gap-2">
-        <KeyRound size={18} className="text-dourado" aria-hidden="true" />
-        Stokasticos
-      </h2>
-      <p className="text-sm text-grafite-claro mb-3">
-        Senha única de entrada da escola oculta. Enquanto ela estiver em branco, ninguém entra. Os pedidos de
-        acesso chegam por e-mail no endereço guardado em <code>stokasticos_email_admin</code>.
-      </p>
-      <p className="text-sm mb-3" aria-live="polite">
-        {definida === null ? 'Consultando…' : definida ? 'Senha definida. Para trocá-la, escreva outra abaixo e salve.' : 'Nenhuma senha definida: a entrada está fechada para todos.'}
-      </p>
-      {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={`p-3 text-sm border-l-2 mb-3 ${msg.tipo === 'ok' ? 'bg-regularFundo border-regular text-regular' : 'bg-criticoFundo border-critico text-critico'}`}>{msg.texto}</p>}
-      <label htmlFor="stokasticos-senha" className="block text-xs uppercase tracking-wider text-grafite mb-2">
-        {definida ? 'Nova senha do Stokasticos' : 'Senha do Stokasticos'}
-      </label>
-      <input
-        id="stokasticos-senha"
-        type="password"
-        autoComplete="off"
-        value={senha}
-        onChange={e => setSenha(e.target.value)}
-        title="Senha única que abre o Stokasticos; ela é guardada no servidor e nunca volta para esta tela"
-        className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white"
-        data-testid="stokasticos-senha"
-      />
-      <button
-        type="button"
-        onClick={salvar}
-        disabled={!senha.trim() || ocupado}
-        title="Grava a senha de entrada do Stokasticos no servidor"
-        className="mt-3 min-h-[44px] px-5 bg-navy text-white text-sm uppercase tracking-wider disabled:bg-grafite-claro/40"
-        data-testid="stokasticos-salvar"
-      >
-        {ocupado ? 'Salvando…' : 'Salvar senha'}
-      </button>
-    </section>
-  )
-}
 
 function SecaoSenha() {
   const [nova, setNova] = useState('')

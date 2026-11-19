@@ -220,6 +220,80 @@ export async function chamar(op: string, params: Record<string, string> = {}): P
   return { erro: `${'erro' in g ? g.erro : 'GET sem <Table>'} | ${s.erro}` }
 }
 
+// --- SAR novo (sar0/MedicaoSin) -----------------------------------------------------------------
+// Em 19/11/2026 o ServiceANA.asmx passou a devolver 404 (a ANA levou o SAR para www.ana.gov.br/sar).
+// A consulta pública que segue de pé é a página MedicaoSin: o <select> traz o cadastro (~180
+// reservatórios do SIN) e a tabela traz a medição diária do período pedido. Lemos as duas direto
+// do HTML. O ServiceANA continua como reserva, caso a ANA o religue.
+export const SAR0 = 'https://www.ana.gov.br/sar0/MedicaoSin'
+
+const desHtml = (s: string): string =>
+  texto(s.replace(/<[^>]+>/g, ''))
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+/** O cadastro de reservatórios, lido do <select name="dropDownListReservatorios">. */
+export function lerOpcoesSar0(html: string): Reservatorio[] {
+  const sel = html.match(/<select[^>]*name="dropDownListReservatorios"[^>]*>([\s\S]*?)<\/select>/i)
+  if (!sel) return []
+  const fora: Reservatorio[] = []
+  for (const o of sel[1].matchAll(/<option[^>]*value="(\d+)"[^>]*>([\s\S]*?)<\/option>/gi)) {
+    const nome = desHtml(o[2])
+    if (nome) fora.push({ codigo: o[1], nome, sistema: null, uf: null, latitude: null, longitude: null, bruto: { codigo: o[1], nome } })
+  }
+  return fora
+}
+
+/** Colunas da tabela do MedicaoSin (classe coluna_N) e o nome que guardamos no bruto. */
+const COLUNAS_SAR0: Record<string, string> = {
+  coluna_1: 'codigo', coluna_2: 'reservatorio', coluna_3: 'cota', coluna_4: 'afluencia', coluna_5: 'defluencia',
+  coluna_6: 'vazaovertida', coluna_7: 'vazaoturbinada', coluna_8: 'vazaonatural', coluna_9: 'volumeutil',
+  coluna_11: 'vazaoincremental', coluna_13: 'datamedicao',
+}
+
+/** As linhas da tabela do MedicaoSin no mesmo formato { campo: texto } do DataSet antigo. */
+export function linhasSar0(html: string): Record<string, string>[] {
+  const corpo = html.match(/<tbody[^>]*>([\s\S]*?)<\/tbody>/i)
+  if (!corpo) return []
+  const fora: Record<string, string>[] = []
+  for (const tr of corpo[1].matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)) {
+    const l: Record<string, string> = {}
+    for (const td of tr[1].matchAll(/<td[^>]*class="[^"]*\b(coluna_\d+)\b[^"]*"[^>]*>([\s\S]*?)<\/td>/gi)) {
+      const nome = COLUNAS_SAR0[td[1]]
+      if (nome) l[nome] = desHtml(td[2])
+    }
+    if (l.datamedicao) fora.push(l)
+  }
+  return fora
+}
+
+/** Medições do MedicaoSin: a mesma regra de lerMedicoes, sobre as linhas do HTML. */
+export function lerMedicoesSar0(html: string): Medicao[] {
+  const fora: Medicao[] = []
+  for (const l of linhasSar0(html)) {
+    const quando = dia(l.datamedicao)
+    if (!quando) continue
+    for (const g of GRANDEZAS) {
+      const v = PRIMEIRO(l, [...g.campos], numero)
+      if (v === null) continue
+      fora.push({ ocorrido_em: quando, subtipo: g.subtipo, valor: v, unidade: g.unidade, bruto: l })
+    }
+  }
+  return fora
+}
+
+export async function pegarSar0(params: Record<string, string>): Promise<{ html: string } | { erro: string }> {
+  try {
+    const q = new URLSearchParams(params).toString()
+    const r = await fetch(q ? `${SAR0}?${q}` : SAR0, { headers: UA })
+    const t = await r.text()
+    if (!r.ok) return { erro: `MedicaoSin ${r.status}` }
+    return { html: t }
+  } catch (e) { return { erro: `MedicaoSin falhou: ${(e as Error).message}` } }
+}
+
 // --- Banco ------------------------------------------------------------------------------------
 export interface Banco {
   registrarFonte(l: typeof FONTE_ANA): Promise<void>
@@ -231,6 +305,7 @@ export interface Banco {
   inserirVinculos(l: { evento_id: string; entidade_id: string; papel: string }[]): Promise<number>
   serie(codigo: string, subtipo: string, de: string, ate: string): Promise<{ ocorrido_em: string; observado_em: string; valor: number; unidade: string }[]>
   reservatorios(): Promise<{ chave_natural: string; nome: string; atributos: Record<string, unknown> }[]>
+  painel(): Promise<{ chave_natural: string; nome: string; atributos: Record<string, unknown>; valor: number | null; unidade: string | null; ocorrido_em: string | null }[]>
   fechar(): Promise<void>
 }
 
@@ -299,6 +374,15 @@ export async function bancoPostgres(): Promise<Banco> {
     reservatorios: () => linhas(
       `select chave_natural, nome, atributos from instituto.entidades
         where fonte = $1 and tipo = 'corpo_dagua' order by nome`, [FONTE]),
+    painel: () => linhas(
+      `select distinct on (e.chave_natural)
+         e.chave_natural, e.nome, e.atributos,
+         ev.valor::float as valor, ev.unidade, ev.ocorrido_em::text
+       from instituto.entidades e
+       join instituto.evento_entidades ee on ee.entidade_id = e.id
+       join instituto.eventos ev on ev.id = ee.evento_id
+       where e.fonte = $1 and e.tipo = 'corpo_dagua' and ev.subtipo = 'volume_util'
+       order by e.chave_natural, ev.ocorrido_em desc`, [FONTE]),
     fechar: () => c.end(),
   }
 }
@@ -357,12 +441,21 @@ export async function coletar(db: Banco, o: { de: string; ate: string; agora: st
   const falhas: string[] = []
   const via: string[] = []
 
-  const lista = await chamar('ReservatoriosSIN')
-  if ('erro' in lista) {
-    return { em: o.agora, de: o.de, ate: o.ate, reservatorios_lidos: 0, reservatorios_novos: 0, medicoes_lidas: 0, medicoes_novas: 0, medicoes_repetidas: 0, lugares_novos: 0, vinculos_novos: 0, via, ms: Date.now() - t0, falhas: [`ReservatoriosSIN: ${lista.erro}`] }
+  // Cadastro: primeiro o SAR novo (MedicaoSin); se não vier nada, o ServiceANA antigo.
+  let reservatorios: Reservatorio[] = []
+  let novo = false
+  const pagina = await pegarSar0({}) // sem parâmetro: a página vem com o cadastro (com o select vazio a ANA devolve 500)
+  if ('html' in pagina) reservatorios = lerOpcoesSar0(pagina.html)
+  if (reservatorios.length) { novo = true; via.push('cadastro:MedicaoSin') }
+  else {
+    const lista = await chamar('ReservatoriosSIN')
+    if ('erro' in lista) {
+      const antes = 'erro' in pagina ? pagina.erro : 'MedicaoSin sem cadastro'
+      return { em: o.agora, de: o.de, ate: o.ate, reservatorios_lidos: 0, reservatorios_novos: 0, medicoes_lidas: 0, medicoes_novas: 0, medicoes_repetidas: 0, lugares_novos: 0, vinculos_novos: 0, via, ms: Date.now() - t0, falhas: [`${antes} | ReservatoriosSIN: ${lista.erro}`] }
+    }
+    via.push(`ReservatoriosSIN:${lista.via}`)
+    reservatorios = lerReservatorios(lista.xml)
   }
-  via.push(`ReservatoriosSIN:${lista.via}`)
-  let reservatorios = lerReservatorios(lista.xml)
   if (o.so?.length) reservatorios = reservatorios.filter(r => o.so!.includes(r.codigo))
   reservatorios = reservatorios.slice(0, o.limiteReservatorios)
 
@@ -404,12 +497,22 @@ export async function coletar(db: Banco, o: { de: string; ate: string; agora: st
   // 2) Medições do período, por reservatório.
   let lidas = 0, novas = 0, repetidas = 0, vinculos = 0
   for (const r of reservatorios) {
-    const med = await chamar('DadosHistoricos', {
-      CodigoReservatorio: r.codigo, DataInicial: ddmmaaaa(o.de), DataFinal: ddmmaaaa(o.ate),
-    })
-    if ('erro' in med) { falhas.push(`DadosHistoricos ${r.codigo}: ${med.erro}`); continue }
-    if (!via.includes(`DadosHistoricos:${med.via}`)) via.push(`DadosHistoricos:${med.via}`)
-    const medicoes = lerMedicoes(med.xml)
+    let medicoes: Medicao[]
+    if (novo) {
+      const med = await pegarSar0({
+        dropDownListReservatorios: r.codigo, dataInicial: ddmmaaaa(o.de), dataFinal: ddmmaaaa(o.ate), button: 'Buscar',
+      })
+      if ('erro' in med) { falhas.push(`MedicaoSin ${r.codigo}: ${med.erro}`); continue }
+      if (!via.includes('medicoes:MedicaoSin')) via.push('medicoes:MedicaoSin')
+      medicoes = lerMedicoesSar0(med.html)
+    } else {
+      const med = await chamar('DadosHistoricos', {
+        CodigoReservatorio: r.codigo, DataInicial: ddmmaaaa(o.de), DataFinal: ddmmaaaa(o.ate),
+      })
+      if ('erro' in med) { falhas.push(`DadosHistoricos ${r.codigo}: ${med.erro}`); continue }
+      if (!via.includes(`DadosHistoricos:${med.via}`)) via.push(`DadosHistoricos:${med.via}`)
+      medicoes = lerMedicoes(med.xml)
+    }
     lidas += medicoes.length
     if (!medicoes.length) continue
 
@@ -488,6 +591,13 @@ export async function atender(req: Request, abrirBanco: () => Promise<Banco> = b
   try { corpo = await req.json() } catch { corpo = {} }
   const modo = String(corpo.modo ?? 'serie')
 
+  if (modo === 'painel') {
+    const db = await abrirBanco()
+    try {
+      return json({ painel: await db.painel(), fonte: FONTE_ANA })
+    } finally { await db.fechar() }
+  }
+
   if (modo === 'serie') {
     const codigo = String(corpo.codigo ?? '')
     const subtipo = String(corpo.subtipo ?? 'volume_util')
@@ -539,7 +649,8 @@ export async function atender(req: Request, abrirBanco: () => Promise<Banco> = b
     } finally { await db.fechar() }
   }
 
-  return json({ erro: `Modo desconhecido: ${modo}. Use conferir, coletar ou serie.` }, 400)
+  return json({ erro: `Modo desconhecido: ${modo}. Use conferir, coletar, serie ou painel.` }, 400)
 }
 
-if (!Deno.env.get('VITEST')) Deno.serve(atender)
+// Deno.serve passa (req, info): chamar atender(req) para não trocar o banco pelo info (erro "abrirBanco is not a function" de 14 a 18/11).
+if (!Deno.env.get('VITEST')) Deno.serve((req) => atender(req))

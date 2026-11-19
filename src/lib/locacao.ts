@@ -80,11 +80,12 @@ export function compararVistorias(entrada: ItemVistoria[], saida: ItemVistoria[]
   return out
 }
 
+/** `escritorio`: nome do escritório que emite o documento (sem ele, o cabeçalho sai neutro). */
 type Cabecalho = { escritorio?: string; imovel: string; proprietario: string; inquilino: string }
 
 export function linhasPrestacao(p: Prestacao, cab: Cabecalho, taxaPct: number) {
   const L: { texto: string; tamanho?: number; negrito?: boolean; x?: number }[] = []
-  L.push({ texto: cab.escritorio ?? 'THEYE Institute', tamanho: 10, negrito: true })
+  L.push({ texto: cab.escritorio || 'Escritório', tamanho: 10, negrito: true })
   L.push({ texto: `Prestação de contas — ${rotuloCompetencia(p.competencia)}`, tamanho: 16, negrito: true })
   L.push({ texto: `Imóvel: ${cab.imovel}`, tamanho: 10 }); L.push({ texto: `Proprietário: ${cab.proprietario}   Inquilino: ${cab.inquilino}`, tamanho: 10 }); L.push({ texto: ' ' })
   L.push({ texto: 'Lançamentos do mês', tamanho: 12, negrito: true })
@@ -104,7 +105,7 @@ export function pdfPrestacao(p: Prestacao, cab: Cabecalho, taxaPct: number) { re
 
 export function linhasLaudo(v: Vistoria, cab: Omit<Cabecalho, 'proprietario'> & { proprietario?: string }) {
   const L: { texto: string; tamanho?: number; negrito?: boolean }[] = []
-  L.push({ texto: cab.escritorio ?? 'THEYE Institute', tamanho: 10, negrito: true })
+  L.push({ texto: cab.escritorio || 'Escritório', tamanho: 10, negrito: true })
   L.push({ texto: `Laudo de ${TIPOS_VISTORIA[v.tipo].toLowerCase()} — ${formatarData(v.data)}`, tamanho: 16, negrito: true })
   L.push({ texto: `Imóvel: ${cab.imovel}`, tamanho: 10 }); L.push({ texto: `Inquilino: ${cab.inquilino}${v.responsavel ? '   Responsável pela vistoria: ' + v.responsavel : ''}`, tamanho: 10 })
   L.push({ texto: `Estado geral: ${ESTADOS[v.estado_geral]}`, tamanho: 11, negrito: true }); L.push({ texto: ' ' })

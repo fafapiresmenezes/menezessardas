@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
-import { ROTAS_TELAS } from '@/data/rotas'
+import { rotasVisiveis } from '@/data/rotas'
+import { minhaVisao } from '@/lib/visao'
+import type { Visao } from '@/components/menuTelas'
 import { useNavigate } from 'react-router-dom'
 import { repositorio, type Imovel, type Contrato } from '@/lib/repositorio'
 import { listarFornecedores, type Fornecedor } from '@/lib/fornecedores'
@@ -22,10 +24,15 @@ const PAGINAS: Resultado[] = [
 ]
 
 // Passo 58: todas as telas do mapa de rotas entram na busca, sem repetir as já listadas.
-const TODAS_PAGINAS: Resultado[] = [
-  ...PAGINAS,
-  ...ROTAS_TELAS.filter(r => !PAGINAS.some(p => p.href === r.rota)).map<Resultado>(r => ({ grupo: 'Páginas', rotulo: r.nome, href: r.rota, icone: LayoutGrid })),
-]
+// 18/11/2026: só as telas que a pessoa pode ver. Antes, qualquer advogado do escritório achava na busca
+// Royalties, Caderno de produtos, Transumanismo e as outras telas do Instituto.
+const paginasDe = (v: Visao): Resultado[] => {
+  const visiveis = rotasVisiveis(v)
+  return [
+    ...PAGINAS.filter(p => visiveis.some(r => r.rota === p.href)),
+    ...visiveis.filter(r => !PAGINAS.some(p => p.href === r.rota)).map<Resultado>(r => ({ grupo: 'Páginas', rotulo: r.nome, href: r.rota, icone: LayoutGrid })),
+  ]
+}
 const ICONES: Record<string, typeof Search> = { 'Imóveis': Building2, 'Contratos': FileText, 'Fornecedores': Truck, 'Casos e projetos': FolderKanban, 'Documentos': FileCheck2 }
 
 const normalizar = (s: string) =>
@@ -42,6 +49,8 @@ export default function Busca({ aberta, fechar }: { aberta: boolean; fechar: () 
   const [contratos, setContratos] = useState<Contrato[]>([])
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([])
   const [servidor, setServidor] = useState<Resultado[]>([])
+  // Só as telas que a pessoa pode ver: o escritório cliente não acha as telas do Instituto nem as de administração.
+  const [paginas, setPaginas] = useState<Resultado[]>([])
   const [buscando, setBuscando] = useState(false)
   const campo = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
@@ -51,6 +60,7 @@ export default function Busca({ aberta, fechar }: { aberta: boolean; fechar: () 
     setTermo('')
     setAtivo(0)
     setTimeout(() => campo.current?.focus(), 30)
+    minhaVisao().then(v => setPaginas(paginasDe(v))).catch(() => setPaginas([]))
     Promise.all([repositorio.listarImoveis(), repositorio.listarContratos(), listarFornecedores()])
       .then(([i, c, f]) => {
         setImoveis(i)
@@ -78,11 +88,11 @@ export default function Busca({ aberta, fechar }: { aberta: boolean; fechar: () 
 
   const resultados = useMemo<Resultado[]>(() => {
     const t = normalizar(termo.trim())
-    if (supabaseConfigurado && t.length >= 2) return [...TODAS_PAGINAS.filter(p => normalizar(p.rotulo).includes(t)).slice(0, 4), ...servidor].slice(0, 20)
+    if (supabaseConfigurado && t.length >= 2) return [...paginas.filter(p => normalizar(p.rotulo).includes(t)).slice(0, 4), ...servidor].slice(0, 20)
     const bate = (...campos: (string | undefined)[]) => !t || campos.some(c => c && normalizar(c).includes(t))
     const porImovel = new Map(imoveis.map(i => [i.id, i.endereco]))
     const lista: Resultado[] = [
-      ...TODAS_PAGINAS.filter(p => bate(p.rotulo)),
+      ...paginas.filter(p => bate(p.rotulo)),
       ...imoveis
         .filter(i => bate(i.endereco, i.proprietario))
         .map<Resultado>(i => ({ grupo: 'Imóveis', rotulo: i.endereco, detalhe: i.proprietario, href: `/imoveis/${i.id}`, icone: Building2 })),

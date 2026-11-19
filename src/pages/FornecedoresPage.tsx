@@ -191,7 +191,7 @@ export default function FornecedoresPage() {
             <label className="text-sm flex items-center gap-2">Ordenar por
               <select value={ordem} onChange={e => setOrdem(e.target.value as typeof ordem)} title="Muda a ordem da lista de fornecedores (nome, ranking de SLA ou metas descumpridas)" className="border px-2 py-2 min-h-[44px]" data-testid="ordem-fornecedores">
                 <option value="nome">Nome</option>
-                <option value="sla">Ranking de SLA (melhor primeiro)</option>
+                <option value="sla">Pontualidade (melhor primeiro)</option>
                 <option value="descumpridas">Mais metas descumpridas</option>
               </select>
             </label>

@@ -1,26 +1,32 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor, cleanup, within } from '@testing-library/react'
+import { render as renderRtl, screen, fireEvent, waitFor, cleanup, within } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+// A tela tem um Link para a Hierarquia, por isso precisa de um roteador.
+const render = (ui: React.ReactElement) => renderRtl(<MemoryRouter>{ui}</MemoryRouter>)
 const pessoasNaLista = () => within(document.querySelector('section[aria-labelledby="pessoas"] ul') as HTMLElement).queryAllByRole('listitem')
 
 let perfil: string | null = 'admin'
 let pessoas: object[] = []
 let pedidos: object[] = []
+let instituto = true
 const definirFuncao = vi.fn(async (_p: object, _f: string | null) => undefined)
 const definirSenhaProvisoria = vi.fn(async (_p: object) => 'Abc12345')
 vi.mock('@/lib/equipe', async () => {
   const real = await vi.importActual<typeof import('@/lib/equipe')>('@/lib/equipe')
-  return { ...real, perfilAtual: async () => perfil, listarPessoas: async () => pessoas, pedidosPendentes: async () => pedidos, ehSede: async () => false, definirFuncao: (p: object, f: string | null) => definirFuncao(p, f), definirSenhaProvisoria: (p: object) => definirSenhaProvisoria(p) }
+  return { ...real, perfilAtual: async () => perfil, listarPessoas: async () => pessoas, pedidosPendentes: async () => pedidos, ehSede: async () => false, ehInstituto: async () => instituto, definirFuncao: (p: object, f: string | null) => definirFuncao(p, f), definirSenhaProvisoria: (p: object) => definirSenhaProvisoria(p) }
 })
 vi.mock('@/lib/supabase', () => ({ supabaseConfigurado: true, supabase: { rpc: async () => ({ data: [{ usuario_id: 'p1', versao: '1.0', hash: 'abcdef1234567890', aceito_em: '2026-10-20T12:00:00Z' }] }) } }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
 vi.mock('@/components/TesteGeral', () => ({ default: () => <div data-testid="teste-geral" /> }))
 vi.mock('@/components/TesteTelas', () => ({ default: () => <div data-testid="teste-telas" /> }))
 vi.mock('@/components/EscritoriosParceiros', () => ({ default: () => null }))
+vi.mock('@/components/PedidosEntradaAdmin', () => ({ default: () => <div data-testid="pedidos-entrada-admin" /> }))
+vi.mock('@/components/PainelVisitasPorta', () => ({ default: () => <div data-testid="painel-visitas-porta" /> }))
 const { default: EquipePage } = await import('./EquipePage')
 
 describe('Área do administrador (equipe)', () => {
-  beforeEach(() => { cleanup(); localStorage.clear(); definirFuncao.mockClear(); definirSenhaProvisoria.mockClear(); perfil = 'admin'; pedidos = []
+  beforeEach(() => { cleanup(); localStorage.clear(); definirFuncao.mockClear(); definirSenhaProvisoria.mockClear(); perfil = 'admin'; pedidos = []; instituto = true
     pessoas = [
       { id: 'p1', nome: 'Fátima', email: 'fatima@exemplo.com', funcao: 'admin', confirmado: true, ultimoAcesso: '2026-11-01T10:00:00Z' },
       { id: 'p2', nome: 'Hélio', email: 'helio@exemplo.com', funcao: 'leitor', confirmado: true, ultimoAcesso: null },
@@ -36,12 +42,20 @@ describe('Área do administrador (equipe)', () => {
     render(<EquipePage />)
     await waitFor(() => expect(screen.getByText('Pessoas com acesso (3)')).toBeTruthy())
     expect(screen.getByTestId('teste-geral')).toBeTruthy(); expect(screen.getByTestId('teste-telas')).toBeTruthy()
-    expect(screen.getByTestId('resumo-funcoes').textContent).toBe('1 esperando liberação1 admin0 operador(es)1 leitor(es)')
+    expect(screen.getByTestId('resumo-funcoes').textContent).toBe('1 esperando liberação1 Administração0 Operação1 Leitura')
     const itens = pessoasNaLista()
     expect(itens[0].textContent).toContain('Nova Pessoa')
     expect(itens[0].textContent).toContain('Aguardando confirmação do e-mail')
     await waitFor(() => expect(screen.getByTestId('aceite-p1').textContent).toContain('Termos e LGPD aceitos em'))
-    expect(screen.getByTestId('aceite-p1').textContent).toContain('(v1.0) · hash abcdef123456…')
+    expect(screen.getByTestId('aceite-p1').textContent).toContain('(v1.0)')
+    expect(screen.getByTestId('aceite-p1').textContent).not.toContain('abcdef')
+    expect(screen.getByTestId('aceite-p1').querySelector('span')?.getAttribute('title')).toBe('SHA-256 abcdef1234567890')
+    // O escritório cliente (não é Instituto) não vê as ferramentas de teste da plataforma.
+    cleanup(); instituto = false
+    render(<EquipePage />)
+    await waitFor(() => expect(screen.getByText('Pessoas com acesso (3)')).toBeTruthy())
+    expect(screen.queryByTestId('teste-geral')).toBeNull(); expect(screen.queryByTestId('teste-telas')).toBeNull()
+    expect(screen.queryByTestId('pedidos-entrada-admin')).toBeNull(); expect(screen.queryByTestId('painel-visitas-porta')).toBeNull()
     expect(screen.getByTestId('aceite-p2').textContent).toContain('ainda não aceitos')
   })
 
@@ -76,7 +90,8 @@ describe('Área do administrador (equipe)', () => {
     fireEvent.click(screen.getByTestId('copiar-equipe'))
     await waitFor(() => expect(screen.getByTestId('copiar-equipe').textContent).toBe('Lista copiada'))
     expect(write.mock.calls[0][0]).toContain('• Nova Pessoa <nova@exemplo.com> — esperando liberação')
-    expect(write.mock.calls[0][0]).toContain('• Fátima <fatima@exemplo.com> — administrador')
+    expect(write.mock.calls[0][0]).toContain('• Fátima <fatima@exemplo.com> — Administração')
+    expect(write.mock.calls[0][0]).not.toContain('THEYE')
     fireEvent.click(screen.getByTestId('baixar-equipe'))
     expect(click).toHaveBeenCalled()
     expect(screen.getByTestId('baixar-equipe').textContent).toBe('baixado')

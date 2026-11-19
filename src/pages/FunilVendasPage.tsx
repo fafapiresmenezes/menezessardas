@@ -8,6 +8,7 @@ import { formatarData, hojeLocal } from '@/lib/datas'
 import { ETAPAS, ORIGENS, MOTIVOS_PERDA, resumoFunil, proximaEtapa, validarMudanca, telefoneWhatsapp, mensagemRetorno, casoDoLead, rotuloEtapa, type Lead, type Etapa } from '@/lib/escritorio/funil'
 import { tabelaAusente } from '@/lib/escritorio/tabelaAusente'
 import { Filter, Plus, MessageCircle, ArrowRight, Trash2 } from 'lucide-react'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 import { meuAlcance, filtrarPorHierarquia, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
 
 // Funil de vendas do escritório: do primeiro contato ao contrato fechado, que vira caso com honorário no financeiro.
@@ -18,6 +19,7 @@ const VAZIO = { nome: '', telefone: '', email: '', origem: 'indicacao', area: 'C
 const CAMPOS = 'id,nome,telefone,email,origem,area,assunto,etapa,valor_estimado,proximo_contato,motivo_perda,observacoes,responsavel_id,caso_id,criado_em,etapa_desde'
 
 export default function FunilVendasPage() {
+  const escritorio = useNomeEscritorio()
   const [todosLeads, setLeads] = useState<Lead[]>([])
   // Hierarquia: sócios e gestor veem o funil inteiro; os demais, os seus contatos (e os sem responsável, para alguém assumir).
   const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
@@ -167,7 +169,7 @@ export default function FunilVendasPage() {
                           <div className="flex flex-wrap items-center gap-2 mt-2">
                             <select value={l.etapa} onChange={ev => mover(l, ev.target.value as Etapa)} aria-label={`Etapa de ${l.nome}`} title="Move este contato para outra etapa do funil" className="text-xs border px-1 py-0.5">{ETAPAS.map(x => <option key={x.valor} value={x.valor}>{x.rotulo}</option>)}</select>
                             {prox && <button type="button" onClick={() => mover(l, prox)} title={`Avança este contato para a etapa "${rotuloEtapa(prox)}"`} className="text-xs underline text-navy inline-flex items-center gap-1" data-testid="lead-avancar">{rotuloEtapa(prox)} <ArrowRight size={12} aria-hidden /></button>}
-                            {wa && <a href={`https://wa.me/${wa}?text=${encodeURIComponent(mensagemRetorno(l))}`} target="_blank" rel="noreferrer" title="Abre o WhatsApp com a mensagem de retorno já escrita para este contato" className="text-xs underline text-navy inline-flex items-center gap-1" data-testid="lead-whatsapp"><MessageCircle size={12} aria-hidden /> WhatsApp</a>}
+                            {wa && <a href={`https://wa.me/${wa}?text=${encodeURIComponent(mensagemRetorno(l, escritorio))}`} target="_blank" rel="noreferrer" title="Abre o WhatsApp com a mensagem de retorno já escrita para este contato" className="text-xs underline text-navy inline-flex items-center gap-1" data-testid="lead-whatsapp"><MessageCircle size={12} aria-hidden /> WhatsApp</a>}
                             {l.etapa === 'ganho' && !l.caso_id && <button type="button" onClick={() => converter(l)} title="Cria um caso em Casos e projetos a partir deste contato, com os honorários estimados" className="text-xs underline text-navy" data-testid="lead-converter">Criar caso</button>}
                             {l.caso_id && <Link to={`/projetos?caso=${l.caso_id}`} title="Abre em Casos e projetos o caso criado a partir deste contato" className="text-xs underline text-navy">Ver caso</Link>}
                             <button type="button" onClick={() => apagar(l)} aria-label={`Apagar ${l.nome}`} title="Apaga este contato do funil de forma definitiva, após confirmação" className="text-xs text-grafite-claro"><Trash2 size={12} aria-hidden /></button>

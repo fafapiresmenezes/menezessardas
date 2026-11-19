@@ -54,6 +54,42 @@ const REFERENCIA_PT: Record<string, string> = {
   zh: '基准版本:葡萄牙语。译文尚未经过人工审校。',
   es: 'Versión de referencia: portugués. Las traducciones aún no las revisó una persona.',
 }
+const MVP_GEO_TITULO: Record<string, string> = {
+  pt: 'O MVP já está no ar',
+  en: 'The MVP is already live',
+  zh: 'MVP 已经上线',
+  es: 'El MVP ya está en el aire',
+}
+const MVP_GEO_TEXTO: Record<string, string> = {
+  pt: 'Geolocalização no próprio titular: posição, mapa, câmera como sensor de lugar, satélites e município. Tudo cifrado, só no seu aparelho; a porta é a senha do cofre que você cria.',
+  en: 'Geolocation on the data subject themself: position, map, camera as a place sensor, satellites and municipality. All encrypted, only on your device; the door is the vault password you create.',
+  zh: '在数据主体本人身上做地理定位:位置、地图、作为地点传感器的相机、卫星与市级数据。全部加密,只存于您的设备;入口是您自己创建的保险柜密码。',
+  es: 'Geolocalización en el propio titular: posición, mapa, cámara como sensor de lugar, satélites y municipio. Todo cifrado, solo en su aparato; la puerta es la contraseña del cofre que usted crea.',
+}
+const MVP_GEO_BOTAO: Record<string, string> = {
+  pt: 'Abrir o MVP de geomapeamento',
+  en: 'Open the geomapping MVP',
+  zh: '打开地理图谱 MVP',
+  es: 'Abrir el MVP de geomapeo',
+}
+const DEMO_FUNDOS_TITULO: Record<string, string> = {
+  pt: 'A demonstração já funciona',
+  en: 'The demonstration already works',
+  zh: '演示已经可用',
+  es: 'La demostración ya funciona',
+}
+const DEMO_FUNDOS_TEXTO: Record<string, string> = {
+  pt: 'Catorze telas a funcionar: carteira por país e cor, medição de obra, pagamentos, riscos, garantias, documentos e prestação de contas — com dados de exemplo citados e as regras da literatura dentro de cada tela. Quem tem acesso entra direto; quem ainda não tem passa pela entrada.',
+  en: 'Fourteen working screens: portfolio by country and colour, works measurement, payments, risks, guarantees, documents and reporting — with cited sample data and the literature’s rules inside each screen. Those with access go straight in; those without pass through the entrance.',
+  zh: '十四个可用页面：按国家和状态分类的项目组合、工程计量、付款、风险、担保、文件与报告——示例数据均注明出处，每个页面内都有文献规则。有权限者直接进入；尚无权限者经由入口。',
+  es: 'Catorce pantallas funcionando: cartera por país y color, medición de obra, pagos, riesgos, garantías, documentos y rendición de cuentas — con datos de ejemplo citados y las reglas de la literatura dentro de cada pantalla. Quien tiene acceso entra directo; quien aún no, pasa por la entrada.',
+}
+const DEMO_FUNDOS_BOTAO: Record<string, string> = {
+  pt: 'Abrir a demonstração',
+  en: 'Open the demonstration',
+  zh: '打开演示',
+  es: 'Abrir la demostración',
+}
 const VEJA_PORTAS: Record<string, (link: JSX.Element) => JSX.Element> = {
   pt: link => <>Veja as portas do Instituto em {link}.</>,
   en: link => <>See the Institute's doors at {link}.</>,
@@ -117,6 +153,22 @@ export default function PortalInstitutoPage() {
           ))}
         </ul>
 
+        {portal.rota === '/geomapeamento' && (
+          <div className="mt-8 border border-dourado/60 p-4" data-testid="mvp-geo">
+            <h2 className="text-lg font-serif text-white mb-2">{MVP_GEO_TITULO[idioma]}</h2>
+            <p className="text-sm text-white/80 mb-3">{MVP_GEO_TEXTO[idioma]}</p>
+            <Link to="/geo" title={MVP_GEO_TEXTO[idioma]} className="inline-block min-h-[44px] leading-[44px] px-5 bg-white text-black text-sm">{MVP_GEO_BOTAO[idioma]}</Link>
+          </div>
+        )}
+
+        {portal.rota === '/fundos-internacionais' && (
+          <div className="mt-8 border border-dourado/60 p-4" data-testid="demo-fundos">
+            <h2 className="text-lg font-serif text-white mb-2">{DEMO_FUNDOS_TITULO[idioma]}</h2>
+            <p className="text-sm text-white/80 mb-3">{DEMO_FUNDOS_TEXTO[idioma]}</p>
+            <Link to="/fundos" title={DEMO_FUNDOS_TEXTO[idioma]} className="inline-block min-h-[44px] leading-[44px] px-5 bg-white text-black text-sm">{DEMO_FUNDOS_BOTAO[idioma]}</Link>
+          </div>
+        )}
+
         {/* Sem prazo, de propósito: é regra do plano, e fica dito na própria página. */}
         <p className="text-xs text-neutral-300 mt-6">
           {AVISO_SEM_PRAZO[idioma]}
@@ -128,13 +180,13 @@ export default function PortalInstitutoPage() {
         </p>
 
         <nav className="mt-12 pt-6 border-t border-neutral-500 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-          <Link to="/portais" title={TODAS_AS_PORTAS[idioma]} className="text-neutral-500 hover:text-white underline decoration-white/20">{TODAS_AS_PORTAS[idioma]}</Link>
+          <Link to="/portais" title={TODAS_AS_PORTAS[idioma]} className="text-neutral-400 hover:text-white underline decoration-white/20">{TODAS_AS_PORTAS[idioma]}</Link>
           {PORTAIS_INSTITUTO.filter(p => p.rota !== portal.rota).map(p => {
             const outro = PORTAIS_I18N[p.rota as RotaPortal]?.[idioma] ?? PORTAIS_I18N[p.rota as RotaPortal]?.pt
             const nomeOutro = outro?.nome ?? p.nome
             const resumoOutro = outro?.resumo ?? p.resumo
             return (
-              <Link key={p.rota} to={p.rota} title={resumoOutro} className="text-neutral-500 hover:text-white underline decoration-white/20">{nomeOutro}</Link>
+              <Link key={p.rota} to={p.rota} title={resumoOutro} className="text-neutral-400 hover:text-white underline decoration-white/20">{nomeOutro}</Link>
             )
           })}
         </nav>

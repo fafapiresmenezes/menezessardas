@@ -58,6 +58,10 @@ export default function MapaGeo({ pontos, lugares, camadas, ligadas, cenaTiles, 
         'circle-radius': ['interpolate', ['exponential', 2], ['zoom'], 10, ['/', ['get', 'precisao'], 152], 20, ['/', ['get', 'precisao'], 0.149]],
       } })
       m.addLayer({ id: 'pontos', type: 'circle', source: 'pontos', paint: { 'circle-color': '#0B0B0C', 'circle-radius': 3 } })
+      // "Estou aqui": bolinha azul bem visível na última posição gravada, com halo.
+      m.addSource('agora', { type: 'geojson', data: VAZIO as never })
+      m.addLayer({ id: 'agora-halo', type: 'circle', source: 'agora', paint: { 'circle-color': '#1A73E8', 'circle-opacity': 0.25, 'circle-radius': 16 } })
+      m.addLayer({ id: 'agora', type: 'circle', source: 'agora', paint: { 'circle-color': '#1A73E8', 'circle-stroke-color': '#fff', 'circle-stroke-width': 3, 'circle-radius': 8 } })
       m.addSource('lugares', { type: 'geojson', data: VAZIO as never })
       m.addLayer({ id: 'lugares', type: 'circle', source: 'lugares', paint: { 'circle-color': '#fff', 'circle-stroke-color': '#0B0B0C', 'circle-stroke-width': 3, 'circle-radius': 8 } })
       m.addLayer({ id: 'lugares-nome', type: 'symbol', source: 'lugares', layout: { 'text-field': ['get', 'nome'], 'text-font': ['Open Sans Semibold'], 'text-offset': [0, 1.4], 'text-size': 12 } })
@@ -80,6 +84,8 @@ export default function MapaGeo({ pontos, lugares, camadas, ligadas, cenaTiles, 
       const ord = [...pontos].sort((a, b) => a.t - b.t)
       ;(m.getSource('trajeto') as GeoJSONSource)?.setData({ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: ord.map(p => [p.lon, p.lat]) } })
       ;(m.getSource('pontos') as GeoJSONSource)?.setData({ type: 'FeatureCollection', features: ord.map(p => ({ type: 'Feature', properties: { t: p.t, precisao: p.precisao }, geometry: { type: 'Point', coordinates: [p.lon, p.lat] } })) })
+      const ult = ord[ord.length - 1]
+      ;(m.getSource('agora') as GeoJSONSource)?.setData(ult ? { type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [ult.lon, ult.lat] } } : (VAZIO as never))
       ;(m.getSource('lugares') as GeoJSONSource)?.setData({ type: 'FeatureCollection', features: lugares.map(l => ({ type: 'Feature', properties: { nome: l.nome || '' }, geometry: { type: 'Point', coordinates: [l.lon, l.lat] } })) })
       ;(m.getSource('municipio') as GeoJSONSource)?.setData((malha ?? VAZIO) as never)
       for (const c of camadas) if (m.getLayer(`sat-${c.id}`)) m.setLayoutProperty(`sat-${c.id}`, 'visibility', ligadas.includes(c.id) ? 'visible' : 'none')

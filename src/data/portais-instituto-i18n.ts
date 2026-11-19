@@ -68,6 +68,7 @@ export type RotaPortal =
   | '/transumanismo'
   | '/marketing'
   | '/publicidade'
+  | '/fundos-internacionais'
 
 export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> = {
   '/preditiva': {
@@ -121,7 +122,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Cruzamento com a ficha do imóvel que o escritório já tem na plataforma',
         'Exportar o mapa e a lista de camadas usadas, com a data de cada fonte',
       ],
-      comoEsta: 'Levantamento das fontes públicas em andamento. Ainda não há mapa para usar.',
+      comoEsta: 'O MVP no próprio titular está no ar em /geo: posição, mapa, câmera como sensor de lugar, satélites e ficha do município, tudo cifrado só no aparelho.',
     },
     en: {
       nome: 'Geomapping',
@@ -131,7 +132,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Cross-reference with the property record the firm already has in the platform',
         'Export the map and the list of layers used, with the date of each source',
       ],
-      comoEsta: 'Survey of public sources in progress. There is no map to use yet.',
+      comoEsta: 'The MVP on the data subject themself is live at /geo: position, map, camera as a place sensor, satellites and the municipality record, all encrypted on the device only.',
     },
     zh: {
       nome: '地理图谱',
@@ -141,7 +142,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         '与事务所平台中已有的地产档案交叉比对',
         '可导出地图及所用图层清单,附每个来源的日期',
       ],
-      comoEsta: '公共数据源梳理进行中,尚无可用地图。',
+      comoEsta: '以数据主体本人为对象的 MVP 已在 /geo 上线:位置、地图、作为地点传感器的相机、卫星与市级档案,全部只在设备上加密保存。',
     },
     es: {
       nome: 'Geomapeo',
@@ -151,7 +152,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Cruce con la ficha del inmueble que el despacho ya tiene en la plataforma',
         'Exportar el mapa y la lista de capas usadas, con la fecha de cada fuente',
       ],
-      comoEsta: 'Relevamiento de las fuentes públicas en curso. Aún no hay mapa para usar.',
+      comoEsta: 'El MVP en el propio titular está en el aire en /geo: posición, mapa, cámara como sensor de lugar, satélites y ficha del municipio, todo cifrado solo en el aparato.',
     },
   },
   '/governo': {
@@ -740,6 +741,48 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "Lo que la plataforma no hace: no crea anuncios que engañen o exploten la vulnerabilidad",
       ],
       comoEsta: "Investigación y diseño. Todavía no hay pantalla para usar.",
+    },
+  },
+  '/fundos-internacionais': {
+    pt: {
+      nome: "Plataforma, Governança, Fundos Internacionais",
+      resumo: "Governar projetos financiados por fundos internacionais: quem decide, o que foi medido e o que se presta de contas a cada financiador.",
+      escopo: [
+        "Governança do projeto: alçadas, conselho e quem aprova cada etapa, com a trilha de cada decisão",
+        "Prestação de contas ao financiador: medição, custo e prazo no formato que bancos de desenvolvimento e fundos pedem",
+        "Padrões socioambientais e de integridade exigidos por fundos internacionais, com a fonte de cada exigência",
+      ],
+      comoEsta: "A demonstração completa já funciona: 14 telas com carteira, medição, pagamentos, riscos, documentos e prestação de contas, com dados de exemplo citados e as regras da literatura dentro de cada tela.",
+    },
+    en: {
+      nome: "Platform, Governance, International Funds",
+      resumo: "Governing projects financed by international funds: who decides, what was measured and what is reported to each funder.",
+      escopo: [
+        "Project governance: approval limits, board and who signs off each stage, with the trail of every decision",
+        "Reporting to funders: progress, cost and schedule in the format development banks and funds ask for",
+        "Environmental, social and integrity standards required by international funds, with the source of each requirement",
+      ],
+      comoEsta: "The full demonstration already works: 14 screens with portfolio, measurement, payments, risks, documents and reporting, with cited sample data and the literature's rules inside each screen.",
+    },
+    zh: {
+      nome: "平台、治理、国际基金",
+      resumo: "治理由国际基金资助的项目：谁做决定、测量了什么、向每个出资方报告什么。",
+      escopo: [
+        "项目治理：审批权限、董事会及每个阶段由谁批准，每项决定均留有记录",
+        "向出资方报告：按开发银行和基金要求的格式报告进度、成本和工期",
+        "国际基金要求的环境、社会与廉洁标准，并注明每项要求的出处",
+      ],
+      comoEsta: "完整演示已经可用：14个页面，涵盖项目组合、计量、付款、风险、文件与报告，示例数据均注明出处，每个页面内都有文献规则。",
+    },
+    es: {
+      nome: "Plataforma, Gobernanza, Fondos Internacionales",
+      resumo: "Gobernar proyectos financiados por fondos internacionales: quién decide, qué se midió y qué se rinde a cada financiador.",
+      escopo: [
+        "Gobernanza del proyecto: niveles de aprobación, consejo y quién aprueba cada etapa, con la traza de cada decisión",
+        "Rendición de cuentas al financiador: avance, costo y plazo en el formato que piden bancos de desarrollo y fondos",
+        "Estándares socioambientales y de integridad exigidos por fondos internacionales, con la fuente de cada exigencia",
+      ],
+      comoEsta: "La demostración completa ya funciona: 14 pantallas con cartera, medición, pagos, riesgos, documentos y rendición de cuentas, con datos de ejemplo citados y las reglas de la literatura dentro de cada pantalla.",
     },
   },
 }

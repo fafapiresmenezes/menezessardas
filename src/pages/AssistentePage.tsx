@@ -21,6 +21,7 @@ import { carregarFormatacao } from '@/lib/formatacaoUsuario'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { mensagemAmigavel } from '@/lib/erros'
 import { guardarNaBiblioteca } from '@/lib/biblioteca'
+import { ehInstituto } from '@/lib/equipe'
 
 const EXEMPLOS = [
   'O locatário de loja com contrato de 5 anos tem direito à renovação? Qual o prazo para a ação?',
@@ -102,6 +103,11 @@ function MatrizCaminhos({ m }: { m: Matriz }) {
 
 export default function AssistentePage() {
   const [especialidade, setEspecialidade] = useState<Especialidade>('imobiliario')
+  // O agente "Pesquisador do Instituto" é só de quem administra o Instituto THEYE; o escritório cliente não o vê.
+  const [instituto, setInstituto] = useState(false)
+  useEffect(() => { ehInstituto().then(setInstituto).catch(() => setInstituto(false)) }, [])
+  // Se a especialidade de pesquisa veio pela URL e a pessoa não é do Instituto, volta para a padrão.
+  useEffect(() => { if (!instituto && especialidade === 'pesquisa') setEspecialidade('imobiliario') }, [instituto, especialidade])
   const [pergunta, setPergunta] = useState(() => { try { return localStorage.getItem('lsm-assistente-pergunta') ?? '' } catch { return '' } }) // Passo 203
   const [modo, setModo] = useState<Modo>('responder')
   const [contexto, setContexto] = useState('')
@@ -195,7 +201,7 @@ export default function AssistentePage() {
         <section className="bg-white p-6 shadow-sm" aria-labelledby="titulo-especialidade">
           <h2 id="titulo-especialidade" className="text-lg mb-1">Seu agente</h2>
           <p className="text-sm text-grafite-claro mb-4">A escolha fica guardada para o seu usuário.</p>
-          <Escolha nome="Especialidade do agente" opcoes={ESPECIALIDADES} valor={especialidade} onChange={mudarEspecialidade} colunas={3} />
+          <Escolha nome="Especialidade do agente" opcoes={instituto ? ESPECIALIDADES : ESPECIALIDADES.filter(e => e.valor !== 'pesquisa')} valor={especialidade} onChange={mudarEspecialidade} colunas={3} />
         </section>
 
         <section className="bg-white p-6 shadow-sm" aria-labelledby="titulo-pergunta">

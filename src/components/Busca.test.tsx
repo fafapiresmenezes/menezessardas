@@ -13,7 +13,8 @@ vi.mock('@/lib/repositorio', () => ({
   },
 }))
 vi.mock('@/lib/fornecedores', () => ({ listarFornecedores: async () => [{ id: 'f1', nome: 'Limpeza Total', cnpj: '12.345.678/0001-90' }] }))
-vi.mock('@/data/rotas', () => ({ ROTAS_TELAS: [{ rota: '/dashboard', nome: 'Painel' }, { rota: '/meu-dia', nome: 'Meu dia' }] }))
+vi.mock('@/data/rotas', () => ({ rotasVisiveis: () => [{ rota: '/imoveis/novo', nome: 'Novo imóvel' }, { rota: '/contrato/novo', nome: 'Novo contrato' }, { rota: '/dashboard', nome: 'Painel de imóveis' }, { rota: '/meu-dia', nome: 'Meu dia' }] }))
+vi.mock('@/lib/visao', () => ({ minhaVisao: async () => ({ veTudo: true, admin: true, instituto: false, sede: true }) }))
 const { default: Busca } = await import('./Busca')
 
 function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathname}</p> }
@@ -27,7 +28,7 @@ describe('Busca global (Ctrl+K)', () => {
     expect(container.querySelector('[role=dialog]')).toBeNull()
     cleanup(); montar()
     expect(screen.getByRole('dialog', { name: 'Busca global' })).toBeTruthy()
-    expect(screen.getAllByRole('option').length).toBe(4) // 2 telas internas + as 2 telas da lista simulada
+    expect((await screen.findAllByRole('option')).length).toBeGreaterThanOrEqual(4) // 2 telas internas + as 2 telas da lista simulada (+ os dados, quando chegam)
     fireEvent.change(screen.getByLabelText('Buscar na plataforma'), { target: { value: 'acacias' } })
     await waitFor(() => expect(screen.getAllByText('Rua das Acácias, 10').length).toBe(2))
     expect(screen.getByRole('option', { name: /Maria Locatária/ })).toBeTruthy()
@@ -42,7 +43,7 @@ describe('Busca global (Ctrl+K)', () => {
     const campo = screen.getByLabelText('Buscar na plataforma')
     fireEvent.change(campo, { target: { value: 'meu dia' } })
     fireEvent.keyDown(campo, { key: 'ArrowDown' }); fireEvent.keyDown(campo, { key: 'ArrowUp' })
-    expect(screen.getByRole('option', { name: /Meu dia/ }).getAttribute('aria-selected')).toBe('true')
+    expect((await screen.findByRole('option', { name: /Meu dia/ })).getAttribute('aria-selected')).toBe('true')
     fireEvent.keyDown(campo, { key: 'Enter' })
     expect(fechar).toHaveBeenCalledTimes(1)
     expect(screen.getByTestId('onde').textContent).toBe('/meu-dia')

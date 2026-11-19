@@ -1,15 +1,19 @@
 // Fase G do plano mestre THEYE v4 (G1 a G7): MVP de geolocalização e geomapeamento feito no próprio titular (M).
 // Tudo fica cifrado neste aparelho. A câmera é sensor de lugar, nunca de rosto, emoção ou perfil.
 import { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react'
-import Layout from '@/components/Layout'
+import CasaGeo from '@/components/geo/CasaGeo'
 import { Cofre, TERMO, VERSAO_TERMO, cofreExiste, conferirCorrente, type Cena as CenaCamera, type DadosGeo } from '@/lib/geo/cofre'
 import { agruparLugares, detectarParadas, distancia, fmtMin, linhaDoTempo, preverProximo, resumoPeriodo, type Lugar, type Ponto } from '@/lib/geo/calculo'
 import { CAMADAS_PENDENTES, SATELITES, buscarCenas, camadasSatelite, municipioDe, ndviMedio, leituraNdvi, noticiasGdelt, tileNdvi, trilhaNoMunicipio, tilesDaCena, type Cena, type Municipio, type Noticia } from '@/lib/geo/fontes'
 import { baixar, csvPontos, geojson, montarGrafo } from '@/lib/geo/grafo'
+import GrafoVivo from '@/components/geo/GrafoVivo'
 import { lerQuadro } from '@/lib/geo/camera'
+import { FONTES, TETO_PREVISIBILIDADE, metricasDeMobilidade } from '@/lib/geo/mobilidade'
+import { FONTE_MODO, resumoDeModos } from '@/lib/geo/modo'
 import { pdfFicha } from '@/lib/geo/fichaPdf'
 import { Camera, Download, Lock, MapPin, Pause, Play, Satellite, ShieldCheck, Trash2, Network, Bot } from 'lucide-react'
 import { carregarConfigOllama, gerarTexto, listarModelos, promptNoticias, promptSemana, salvarConfigOllama, type OllamaConfig } from '@/lib/geo/ollama'
+import { AVISO_TITULO, abrirAjustesDoApp, desligarFundo, deveGravar, fundoDisponivel, ligarFundo, paraPonto } from '@/lib/geo/fundo'
 
 const MapaGeo = lazy(() => import('@/components/geo/MapaGeo'))
 
@@ -56,7 +60,9 @@ export default function GeolocalizacaoPage() {
   const [ollamaErro, setOllamaErro] = useState('')
   const [iaSaida, setIaSaida] = useState('')
   const [iaGerando, setIaGerando] = useState(false)
+  const [noFundo, setNoFundo] = useState(false)
   const vigia = useRef<number | null>(null)
+  const vigiaFundo = useRef<string | null>(null)
   const ultimoGravado = useRef(0)
   const travaTela = useRef<{ release: () => Promise<void> } | null>(null)
   const video = useRef<HTMLVideoElement>(null)
@@ -112,7 +118,39 @@ export default function GeolocalizacaoPage() {
     if (vigia.current != null) navigator.geolocation.clearWatch(vigia.current)
     vigia.current = null
     travaTela.current?.release().catch(() => {}); travaTela.current = null
+    if (vigiaFundo.current) { desligarFundo(vigiaFundo.current); vigiaFundo.current = null; setNoFundo(false) }
     setGravando(false)
+  }
+
+  // ---------- R9: gravação com a tela apagada (só dentro do aplicativo) ----------
+  // O ponto do fundo entra pelo MESMO cofre e pela MESMA corrente de hash do primeiro plano.
+  // Enquanto o fundo grava, a gravação do navegador é desligada, senão o mesmo trajeto entraria duas vezes.
+  const ligarNoFundo = async () => {
+    if (!cofre) return
+    setErro('')
+    try {
+      if (vigia.current != null) { navigator.geolocation.clearWatch(vigia.current); vigia.current = null }
+      ultimoGravado.current = 0
+      const id = await ligarFundo({ metros: 0 }, async l => {
+        if (!cofre) return
+        if (!deveGravar(ultimoGravado.current, l.time ?? 0, cofre.dados.intervaloSeg || 60)) return
+        const p = paraPonto(l, bateria)
+        if (!p) return
+        ultimoGravado.current = p.t
+        try { await cofre.gravarPonto(p); atualizar(cofre) } catch (e) { falhar(e) }
+      }, recadoDoAparelho => setErro(recadoDoAparelho))
+      vigiaFundo.current = id
+      setNoFundo(true); setGravando(true)
+      await cofre.anotarAcesso('gravacao', 'Gravação em segundo plano ligada (notificação permanente à vista)')
+      atualizar(cofre)
+    } catch (e) { falhar(e) }
+  }
+
+  const desligarNoFundo = async () => {
+    if (vigiaFundo.current) await desligarFundo(vigiaFundo.current)
+    vigiaFundo.current = null
+    setNoFundo(false); setGravando(false)
+    if (cofre) { await cofre.anotarAcesso('gravacao', 'Gravação em segundo plano desligada'); atualizar(cofre) }
   }
 
   // ---------- G3: cálculo ----------
@@ -126,7 +164,11 @@ export default function GeolocalizacaoPage() {
     const doDia = resumoPeriodo(dados.pontos, lugares, paradas, ini, ini + 86400000)
     const atual = paradas.length ? paradas[paradas.length - 1].lugarId! : ''
     const previsao = atual ? preverProximo(paradas, atual).slice(0, 3) : []
-    return { lugares, paradas, linha: linhaDoTempo(paradas, lugares, d), semana, doDia, atual, previsao }
+    // A sequência de visitas, na ordem do tempo, é o que alimenta as contas de mobilidade (R4).
+    const sequencia = paradas.map(p => p.lugarId).filter((x): x is string => !!x)
+    const mobilidade = metricasDeMobilidade(dados.pontos, lugares, sequencia)
+    const modos = resumoDeModos(dados.pontos)
+    return { lugares, paradas, linha: linhaDoTempo(paradas, lugares, d), semana, doDia, atual, previsao, mobilidade, modos }
   }, [dados, dia])
 
   const ultimo = dados?.pontos.length ? dados.pontos[dados.pontos.length - 1] : null
@@ -248,7 +290,7 @@ export default function GeolocalizacaoPage() {
   // ---------- Telas ----------
   if (!cofre || !dados) {
     return (
-      <Layout title="Geolocalização">
+      <CasaGeo>
         <div className="max-w-xl mx-auto space-y-4">
           <h1 className="text-2xl font-semibold text-navy">Geolocalização: MVP em você mesmo</h1>
           {msg && <p className="text-sm text-regular">{msg}</p>}
@@ -261,13 +303,13 @@ export default function GeolocalizacaoPage() {
             {erro && <p className="text-sm text-critico mt-2">{erro}</p>}
           </div>
         </div>
-      </Layout>
+      </CasaGeo>
     )
   }
 
   if (!dados.consentimento) {
     return (
-      <Layout title="Geolocalização">
+      <CasaGeo>
         <div className="max-w-2xl mx-auto space-y-4">
           <h1 className="text-2xl font-semibold text-navy">Antes de gravar: o termo</h1>
           <div className={cartao}>
@@ -278,12 +320,12 @@ export default function GeolocalizacaoPage() {
             <button className={botaoCheio + ' mt-3'} disabled={!titular.trim()} onClick={consentir} title="Registra o seu consentimento com data e com um código que prova que o registro não foi alterado (hash)"><ShieldCheck className="inline w-4 h-4 mr-1" />Li e aceito</button>
           </div>
         </div>
-      </Layout>
+      </CasaGeo>
     )
   }
 
   return (
-    <Layout title="Geolocalização">
+    <CasaGeo>
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h1 className="text-2xl font-semibold text-navy">Geolocalização e geomapeamento</h1>
@@ -296,7 +338,7 @@ export default function GeolocalizacaoPage() {
         {msg && <p className="text-sm text-regular">{msg}</p>}
         {ocupado && <p className="text-sm text-grafite">{ocupado}</p>}
 
-        <Suspense fallback={<div className="h-[55vh] bg-pergaminho" />}>
+        <Suspense fallback={<div className="h-[55vh] min-h-[320px] bg-pergaminho" role="status" aria-label="Carregando o mapa" aria-busy="true" />}>
           <MapaGeo pontos={dados.pontos} lugares={calc?.lugares ?? []} camadas={camadas} ligadas={ligadas} cenaTiles={cenaTiles} malha={municipio?.malha ?? null} centro={pos} />
         </Suspense>
         <div className="flex flex-wrap gap-2 text-xs">
@@ -309,7 +351,7 @@ export default function GeolocalizacaoPage() {
         </div>
 
         <nav className="flex flex-wrap gap-1 border-b border-navy/10" role="tablist">
-          {ABAS.map(a => <button key={a.id} role="tab" aria-selected={aba === a.id} title={a.dica} onClick={() => setAba(a.id)} className={`px-3 min-h-[40px] text-sm ${aba === a.id ? 'bg-navy text-white' : 'text-navy'}`}>{a.nome}</button>)}
+          {ABAS.map(a => <button key={a.id} role="tab" aria-selected={aba === a.id} title={a.dica} onClick={() => setAba(a.id)} className={`px-3 min-h-[44px] text-sm ${aba === a.id ? 'bg-navy text-white' : 'text-navy'}`}>{a.nome}</button>)}
         </nav>
 
         {aba === 'onde' && (
@@ -324,11 +366,35 @@ export default function GeolocalizacaoPage() {
                 </select>
               </label>
             </div>
-            <p className="text-xs text-grafite-claro">Limite honesto: o navegador do celular para de gravar quando a tela apaga ou o app vai para o fundo. Enquanto grava, a plataforma pede para a tela ficar acesa. Para gravar o dia inteiro com tela apagada, o próximo passo é um app nativo (G8). {bateria != null && `Bateria agora: ${Math.round(bateria * 100)}%.`}</p>
+            {fundoDisponivel() ? (
+              <div className="border border-navy/20 bg-navy/[0.03] p-3 space-y-2">
+                <div className="flex flex-wrap gap-2 items-center justify-between">
+                  <h3 className="font-semibold text-navy text-sm">Gravar com a tela apagada</h3>
+                  {noFundo
+                    ? <button className="min-h-[44px] px-4 text-sm bg-critico text-white" onClick={desligarNoFundo} title="Parar de gravar com a tela apagada e tirar a notificação permanente">Desligar</button>
+                    : <button className={botaoCheio} onClick={ligarNoFundo} title="Continuar gravando sua posição mesmo com a tela apagada e o celular no bolso">Ligar</button>}
+                </div>
+                <p className="text-xs text-grafite">
+                  Com isto ligado, o celular continua gravando sua posição no bolso, o dia inteiro. Enquanto grava, o Android mostra
+                  uma notificação permanente dizendo <b>“{AVISO_TITULO}”</b>, que você não pode dispensar sem desligar aqui:
+                  é a sua garantia de que nunca gravamos escondido. O ponto gravado dormindo vai para o mesmo cofre cifrado e entra
+                  na mesma corrente de conferência dos outros. Nada vai para servidor.
+                </p>
+                <p className="text-xs text-grafite-claro">
+                  {noFundo ? 'Gravando com a tela apagada. ' : 'Desligado. '}
+                  Gasta mais bateria do que a gravação comum, e quanto menor o intervalo, mais gasta.
+                  {bateria != null && ` Bateria agora: ${Math.round(bateria * 100)}%.`}
+                  {' '}Se o aparelho recusar a localização,{' '}
+                  <button className="underline text-navy" onClick={abrirAjustesDoApp} title="Abrir os ajustes do THEYE Geo no Android para liberar a localização">abra os ajustes do app</button>.
+                </p>
+              </div>
+            ) : (
+              <p className="text-xs text-grafite-claro">Limite honesto: aqui no navegador, o celular para de gravar quando a tela apaga ou o app vai para o fundo — é regra do navegador, não escolha nossa. Enquanto grava, a plataforma pede para a tela ficar acesa. Para gravar o dia inteiro com a tela apagada, use o aplicativo THEYE Geo. {bateria != null && `Bateria agora: ${Math.round(bateria * 100)}%.`}</p>
+            )}
             {ultimo && <p className="text-sm text-navy"><MapPin className="inline w-4 h-4" /> Última posição: {ultimo.lat.toFixed(5)}, {ultimo.lon.toFixed(5)} · margem de erro ±{Math.round(ultimo.precisao)} m · {new Date(ultimo.t).toLocaleString('pt-BR')}</p>}
             <h2 className="font-semibold text-navy pt-2">Tudo o que foi gravado ({dados.pontos.length} pontos)</h2>
-            <div className="max-h-72 overflow-auto text-xs">
-              <table className="w-full"><thead><tr className="text-left text-grafite"><th>Horário</th><th>Posição</th><th title="Quanto a posição pode estar errada, em metros">Erro</th><th>Velocidade</th></tr></thead>
+            <div className="max-h-72 overflow-auto text-xs" tabIndex={0} role="region" aria-label="Lista de posições gravadas">
+              <table className="w-full" tabIndex={0} aria-label="Posições gravadas"><thead><tr className="text-left text-grafite"><th>Horário</th><th>Posição</th><th title="Quanto a posição pode estar errada, em metros">Erro</th><th>Velocidade</th></tr></thead>
                 <tbody>{[...dados.pontos].reverse().slice(0, 300).map(p => <tr key={p.hash} className="border-t border-navy/5"><td>{new Date(p.t).toLocaleString('pt-BR')}</td><td>{p.lat.toFixed(5)}, {p.lon.toFixed(5)}</td><td>±{Math.round(p.precisao)} m</td><td>{p.velocidade != null ? `${(p.velocidade * 3.6).toFixed(0)} km/h` : '—'}</td></tr>)}</tbody>
               </table>
               {dados.pontos.length > 300 && <p className="text-grafite-claro mt-1">Mostrando os 300 mais recentes. A exportação traz todos.</p>}
@@ -351,9 +417,55 @@ export default function GeolocalizacaoPage() {
             </div>
             <div className={cartao + ' md:col-span-2'}>
               <h2 className="font-semibold text-navy">Lugares frequentes</h2>
-              <p className="text-xs text-grafite-claro mb-2">Paradas de 5 minutos ou mais num raio de 100 m viram um lugar. Dê um nome (casa, escritório, fórum).</p>
+              <p className="text-xs text-grafite-claro mb-2">Paradas de 5 minutos ou mais num raio de 100 m viram um lugar. Dê um nome (casa, trabalho, academia).</p>
               {calc.lugares.length === 0 ? <p className="text-sm text-grafite">Ainda não há paradas. Grave por algumas horas.</p> :
                 <ul className="space-y-2">{calc.lugares.map(l => <LinhaLugar key={l.id} l={l} onNome={n => nomear(l, n)} />)}</ul>}
+            </div>
+            <div className={cartao + ' md:col-span-2'}>
+              <h2 className="font-semibold text-navy">A ciência do seu movimento</h2>
+              <p className="text-xs text-grafite-claro mb-1">
+                Três medidas que a pesquisa de mobilidade humana usa para descrever como uma pessoa se move. Contas feitas aqui no aparelho, com os seus pontos; cada número traz o estudo de onde veio.
+              </p>
+              <p className={`text-xs mb-3 ${calc.mobilidade.confianca.nivel === 'boa' ? 'text-regular' : 'text-atencao'}`}>
+                Confiança {calc.mobilidade.confianca.nivel === 'boa' ? 'boa' : calc.mobilidade.confianca.nivel === 'media' ? 'média' : 'baixa'}: {calc.mobilidade.confianca.motivo} ({calc.mobilidade.nPontos} pontos, {calc.mobilidade.nLugares} {calc.mobilidade.nLugares === 1 ? 'lugar' : 'lugares'}).
+              </p>
+              <div className="grid sm:grid-cols-3 gap-3">
+                <div className="border border-navy/10 p-3">
+                  <div className="text-2xl font-semibold text-navy">{calc.mobilidade.raioGiracaoKm.toFixed(2)} <span className="text-sm text-grafite-claro">km</span></div>
+                  <h3 className="text-sm font-semibold text-navy mt-1">Raio de giração</h3>
+                  <p className="text-xs text-grafite">A largura da sua vida no mapa: o quanto você se espalha em volta do seu centro. Quem só faz casa–trabalho tem raio pequeno.</p>
+                  <a className="text-xs text-navy underline" href={FONTES.giracao.url} target="_blank" rel="noreferrer noopener" title="Abrir o estudo que define o raio de giração, em outra aba">{FONTES.giracao.autores}, {FONTES.giracao.onde}</a>
+                </div>
+                <div className="border border-navy/10 p-3">
+                  <div className="text-2xl font-semibold text-navy">{Math.round(calc.mobilidade.previsibilidadeMaxima * 100)}<span className="text-sm text-grafite-claro">%</span></div>
+                  <h3 className="text-sm font-semibold text-navy mt-1">Previsibilidade máxima</h3>
+                  <p className="text-xs text-grafite">O <b>teto</b>: nenhum método, por melhor que seja, acerta o seu próximo lugar mais do que isto. Na pesquisa, esse teto fica perto de {Math.round(TETO_PREVISIBILIDADE * 100)}%. Quem promete mais está errando ou mentindo.</p>
+                  <p className="text-xs text-grafite-claro">Desordem do seu trajeto: {calc.mobilidade.entropiaReal.toFixed(2)} bits (ao acaso seriam {calc.mobilidade.entropiaAleatoria.toFixed(2)}).</p>
+                  <a className="text-xs text-navy underline" href={FONTES.entropia.url} target="_blank" rel="noreferrer noopener" title="Abrir o estudo que mede o teto da previsibilidade, em outra aba">{FONTES.entropia.autores}, {FONTES.entropia.onde}</a>
+                </div>
+                <div className="border border-navy/10 p-3">
+                  <div className="text-2xl font-semibold text-navy capitalize">{calc.mobilidade.perfil.perfil === 'indefinido' ? '—' : calc.mobilidade.perfil.perfil}</div>
+                  <h3 className="text-sm font-semibold text-navy mt-1">Seu jeito de circular</h3>
+                  <p className="text-xs text-grafite">
+                    {calc.mobilidade.perfil.perfil === 'retornante' ? 'Retornante: os poucos lugares de sempre já explicam quase todo o seu deslocamento.'
+                      : calc.mobilidade.perfil.perfil === 'explorador' ? 'Explorador: você se espalha por lugares novos, além dos de costume.'
+                      : 'Ainda não dá para dizer: faltam lugares com visitas repetidas.'}
+                  </p>
+                  <a className="text-xs text-navy underline" href={FONTES.explorador.url} target="_blank" rel="noreferrer noopener" title="Abrir o estudo que separa retornante de explorador, em outra aba">Pappalardo et al., {FONTES.explorador.onde}</a>
+                </div>
+              </div>
+              <h3 className="text-sm font-semibold text-navy mt-4">Como você se deslocou</h3>
+              <p className="text-xs text-grafite-claro mb-2">
+                Deduzido da velocidade entre os seus pontos, com suavização para um sinal solto de GPS não virar "andou de carro por 3 segundos". Nenhum sensor extra é ligado para isto.
+              </p>
+              {calc.modos.porModo.length === 0
+                ? <p className="text-sm text-grafite">Ainda não há deslocamento gravado para dizer como você se moveu.</p>
+                : <ul className="text-sm space-y-1">
+                    {calc.modos.porModo.map(m => (
+                      <li key={m.modo}><b className="capitalize">{m.modo}</b>: {fmtMin(m.minutos)} · {m.km.toFixed(1)} km</li>
+                    ))}
+                  </ul>}
+              <a className="text-xs text-navy underline" href={FONTE_MODO.url} target="_blank" rel="noreferrer noopener" title="Abrir o estudo que deduz o modo de transporte pela velocidade, em outra aba">{FONTE_MODO.autores}, {FONTE_MODO.onde}</a>
             </div>
           </div>
         )}
@@ -369,9 +481,9 @@ export default function GeolocalizacaoPage() {
               <video ref={video} playsInline muted className="w-full border-4 border-critico" />
               <span className="absolute top-2 left-2 bg-critico text-white text-xs px-2 py-1">● CÂMERA LIGADA</span>
             </div>
-            {ultimaCena && <p className="text-sm text-navy">Agora: <b>{ultimaCena.ambiente}</b> · {ultimaCena.pessoas} pessoa(s) na cena · {ultimaCena.objetos.join(', ') || 'sem objetos de referência'}{ultimaCena.codigos.length ? ` · códigos: ${ultimaCena.codigos.join(', ')}` : ''}</p>}
+            {ultimaCena && <p className="text-sm text-navy">Agora: <b>{ultimaCena.ambiente}</b>{ultimaCena.confianca != null && ultimaCena.confianca > 0 ? <span className="text-grafite-claro"> (confiança {Math.round(ultimaCena.confianca * 100)}%)</span> : <span className="text-grafite-claro"> (sem sinal suficiente para afirmar o lugar)</span>} · {ultimaCena.pessoas} pessoa(s) na cena · {ultimaCena.objetos.join(', ') || 'sem objetos de referência'}{ultimaCena.codigos.length ? ` · códigos: ${ultimaCena.codigos.join(', ')}` : ''}</p>}
             <h2 className="font-semibold text-navy pt-2">Leituras gravadas ({dados.cenas.length})</h2>
-            <ul className="text-xs max-h-60 overflow-auto">{[...dados.cenas].reverse().slice(0, 100).map(c => <li key={c.hash} className="border-t border-navy/5 py-1">{new Date(c.t).toLocaleString('pt-BR')} · {c.ambiente} · {c.pessoas} pessoa(s) · {c.objetos.join(', ')}</li>)}</ul>
+            <ul className="text-xs max-h-60 overflow-auto" tabIndex={0} aria-label="Cenas da câmera gravadas">{[...dados.cenas].reverse().slice(0, 100).map(c => <li key={c.hash} className="border-t border-navy/5 py-1">{new Date(c.t).toLocaleString('pt-BR')} · {c.ambiente} · {c.pessoas} pessoa(s) · {c.objetos.join(', ')}</li>)}</ul>
           </div>
         )}
 
@@ -405,7 +517,7 @@ export default function GeolocalizacaoPage() {
             </div>
             <div className={cartao}>
               <h2 className="font-semibold text-navy">Satélites abertos (inventário G5)</h2>
-              <div className="overflow-auto"><table className="w-full text-xs"><thead><tr className="text-left text-grafite"><th>Satélite</th><th>O que mede</th><th>Resolução</th><th>Passa a cada</th><th>Licença</th><th>No mapa</th></tr></thead>
+              <div className="overflow-auto"><table className="w-full text-xs" tabIndex={0} aria-label="Satélites disponíveis"><thead><tr className="text-left text-grafite"><th>Satélite</th><th>O que mede</th><th>Resolução</th><th>Passa a cada</th><th>Licença</th><th>No mapa</th></tr></thead>
                 <tbody>{SATELITES.map(s => <tr key={s.nome} className="border-t border-navy/5 align-top" title={s.catalogo}><td>{s.nome}</td><td>{s.mede}</td><td>{s.resolucao}</td><td>{s.revisita}</td><td>{s.licenca}</td><td>{s.noMapa ? 'sim' : 'ainda não'}</td></tr>)}</tbody></table></div>
               <h3 className="font-semibold text-navy pt-3">Camadas públicas que ainda faltam (G6)</h3>
               <ul className="text-xs list-disc pl-5">{CAMADAS_PENDENTES.map(c => <li key={c.nome}>{c.nome}: {c.caminho}</li>)}</ul>
@@ -414,12 +526,18 @@ export default function GeolocalizacaoPage() {
         )}
 
         {aba === 'grafo' && grafo && calc && (
+          <div className="space-y-4">
+            <div className={cartao}>
+              <h2 className="font-semibold text-navy"><Network className="inline w-4 h-4 mr-1" />O seu grafo, desenhado</h2>
+              <p className="text-sm text-grafite mb-2">Cada ponto é uma coisa (você, um lugar seu, o município, uma notícia, uma cena da câmera) e cada linha é uma ligação entre elas, com a origem do dado escrita junto.</p>
+              <GrafoVivo nos={grafo.nos} arestas={grafo.arestas} />
+            </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div className={cartao}>
-              <h2 className="font-semibold text-navy"><Network className="inline w-4 h-4 mr-1" />Grafo</h2>
+              <h2 className="font-semibold text-navy">Tudo em lista</h2>
               <p className="text-sm text-grafite">{grafo.nos.length} nós e {grafo.arestas.length} ligações.</p>
               <ul className="text-xs mt-2">{Object.entries(grafo.nos.reduce<Record<string, number>>((a, n) => ({ ...a, [n.tipo]: (a[n.tipo] ?? 0) + 1 }), {})).map(([t, n]) => <li key={t}>{t}: {n}</li>)}</ul>
-              <div className="max-h-60 overflow-auto text-xs mt-2">{grafo.arestas.slice(0, 80).map((a, i) => <div key={i} className="border-t border-navy/5 py-0.5" title={a.fonte}>{rotulo(grafo.nos, a.de)} <b>{a.tipo}</b> {rotulo(grafo.nos, a.para)}{a.peso != null ? ` (${a.peso})` : ''}</div>)}</div>
+              <div className="max-h-60 overflow-auto text-xs mt-2" tabIndex={0} role="region" aria-label="Ligações do grafo">{grafo.arestas.slice(0, 80).map((a, i) => <div key={i} className="border-t border-navy/5 py-0.5" title={a.fonte}>{rotulo(grafo.nos, a.de)} <b>{a.tipo}</b> {rotulo(grafo.nos, a.para)}{a.peso != null ? ` (${a.peso})` : ''}</div>)}</div>
             </div>
             <div className={cartao}>
               <h2 className="font-semibold text-navy">Para onde você deve ir em seguida</h2>
@@ -428,13 +546,14 @@ export default function GeolocalizacaoPage() {
               <p className="text-xs text-grafite-claro mt-2">Como é feita: conta quantas vezes, saindo do lugar atual, você foi para cada outro (cadeia de Markov com suavização). Poucos dados = chance pouco confiável; o número de vezes vistas está ao lado para isso ficar claro.</p>
             </div>
           </div>
+          </div>
         )}
 
         {aba === 'ia' && (
           <div className={cartao + ' space-y-4'}>
             <h2 className="font-semibold text-navy"><Bot className="inline w-4 h-4 mr-1" />IA local — Ollama</h2>
             <p className="text-sm text-grafite">O Ollama roda um modelo de linguagem <b>no seu computador</b>. Nada dos seus dados sai do aparelho. Para funcionar, você precisa ter o <a href="https://ollama.com" target="_blank" rel="noreferrer noopener" title="Abrir o site do Ollama para baixar e instalar" className="underline">Ollama</a> instalado e rodando com permissão de acesso entre origens (CORS) aberta:</p>
-            <pre className="text-xs bg-pergaminho px-3 py-2 overflow-x-auto">OLLAMA_ORIGINS=https://theye.club ollama serve</pre>
+            <pre className="text-xs bg-pergaminho px-3 py-2 overflow-x-auto" tabIndex={0} role="region" aria-label="Comando para iniciar o Ollama">OLLAMA_ORIGINS=https://theye.club ollama serve</pre>
             <div className="grid sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs text-grafite block mb-1">Endereço do Ollama</label>
@@ -510,13 +629,13 @@ export default function GeolocalizacaoPage() {
             </div>
             <div className={cartao + ' md:col-span-2'}>
               <h2 className="font-semibold text-navy">Registro de acesso ({dados.acessos.length})</h2>
-              <ul className="text-xs max-h-60 overflow-auto">{[...dados.acessos].reverse().map(a => <li key={a.hash} className="border-t border-navy/5 py-0.5" title={a.hash}>{new Date(a.t).toLocaleString('pt-BR')} · {a.acao}{a.detalhe ? ` · ${a.detalhe}` : ''}</li>)}</ul>
+              <ul className="text-xs max-h-60 overflow-auto" tabIndex={0} aria-label="Registro de acessos">{[...dados.acessos].reverse().map(a => <li key={a.hash} className="border-t border-navy/5 py-0.5" title={a.hash}>{new Date(a.t).toLocaleString('pt-BR')} · {a.acao}{a.detalhe ? ` · ${a.detalhe}` : ''}</li>)}</ul>
               <p className="text-xs text-grafite-claro mt-2">Termo aceito por {dados.consentimento.titular} em {new Date(dados.consentimento.aceitoEm).toLocaleString('pt-BR')} · hash {dados.consentimento.hash.slice(0, 16)}…</p>
             </div>
           </div>
         )}
       </div>
-    </Layout>
+    </CasaGeo>
   )
 }
 

@@ -65,7 +65,7 @@ export default function AlertasPage() {
 
   if (loading) {
     return (
-      <Layout title="Alertas">
+      <Layout title="Alertas de contratos">
         <div className="space-y-6">
           <SkeletonIndicator count={4} />
           <SkeletonTable />
@@ -97,7 +97,7 @@ export default function AlertasPage() {
     : true)
 
   return (
-    <Layout title="Alertas">
+    <Layout title="Alertas de contratos">
       <div className="space-y-8">
         <div>
           <p className="text-sm text-grafite-claro mb-6">

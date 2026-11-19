@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { veTudo, podeVer, filtrarPorHierarquia, filtrarPorUsuario, filtrarPorCriador, rotuloCargo, CARGOS, ALCANCE_FECHADO } from './hierarquia'
 
 describe('Hierarquia do escritório (sócio, gestor, pleno, júnior)', () => {
@@ -45,5 +45,31 @@ describe('Hierarquia do escritório (sócio, gestor, pleno, júnior)', () => {
 
   it('todo cargo tem rótulo em português para a tela', () => {
     for (const c of CARGOS) expect(rotuloCargo[c].length).toBeGreaterThan(2)
+  })
+})
+
+describe('definirCargo não apaga a hierarquia quando a leitura falha', () => {
+  it('se o banco não devolve os cargos atuais, nada é gravado', async () => {
+    vi.resetModules()
+    const gravar = vi.fn(async () => undefined)
+    vi.doMock('./supabase', () => ({ supabaseConfigurado: true, supabase: {} }))
+    vi.doMock('./config', () => ({ lerConfig: async () => { throw new Error('sem conexão') }, gravarConfig: gravar }))
+    const h = await import('./hierarquia')
+    await expect(h.definirCargo('u1', 'socio')).rejects.toThrow('sem conexão')
+    expect(gravar).not.toHaveBeenCalled()
+    // A leitura tolerante, usada só para exibir, continua devolvendo vazio.
+    expect(await h.lerCargos()).toEqual({})
+    vi.doUnmock('./supabase'); vi.doUnmock('./config')
+  })
+
+  it('com a leitura em ordem, grava o mapa inteiro e preserva os outros cargos', async () => {
+    vi.resetModules()
+    const gravar = vi.fn(async () => undefined)
+    vi.doMock('./supabase', () => ({ supabaseConfigurado: true, supabase: {} }))
+    vi.doMock('./config', () => ({ lerConfig: async () => ({ cargos: JSON.stringify({ u2: 'pleno' }) }), gravarConfig: gravar }))
+    const h = await import('./hierarquia')
+    expect(await h.definirCargo('u1', 'socio')).toEqual({ u2: 'pleno', u1: 'socio' })
+    expect(gravar).toHaveBeenCalledWith({ cargos: JSON.stringify({ u2: 'pleno', u1: 'socio' }) })
+    vi.doUnmock('./supabase'); vi.doUnmock('./config')
   })
 })

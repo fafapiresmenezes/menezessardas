@@ -16,7 +16,7 @@
  *    pergunta e, para a administração, a lista do que ninguém conseguiu responder — que é a fila
  *    do que falta explicar na plataforma. A chave é por escritório, como todas as outras.
  */
-import { DICAS, gruposMenu, nomeDaTela } from '@/components/menuTelas'
+import { DICAS, gruposMenu, nomeDaTela, gruposVisiveis, type Visao } from '@/components/menuTelas'
 import { TOURS } from '@/data/tours'
 import { GLOSSARIO } from '@/data/glossario'
 import { lerConfig, gravarConfig } from './config'
@@ -39,13 +39,16 @@ const palavras = (s: string): string[] =>
   normalizar(s).split(' ').filter(p => p.length > 2 && !VAZIAS.has(p))
 
 /** Tudo o que a plataforma já diz de si mesma, numa lista só. */
-export function baseDeConhecimento(): Item[] {
+export function baseDeConhecimento(visao?: Visao): Item[] {
   const itens: Item[] = []
+  // 18/11/2026 (M): o ajudante só fala das telas que a pessoa pode ver. Antes ele explicava Royalties,
+  // Caderno de produtos e as frentes do Instituto para qualquer advogado do escritório cliente.
+  const permitidas = visao ? new Set(gruposVisiveis(visao).flatMap(g => g.itens.map(i => i.href))) : null
   for (const [rota, dica] of Object.entries(DICAS))
-    itens.push({ titulo: nomeDaTela(rota) ?? rota, texto: dica, rota, origem: 'tela' })
+    if (!permitidas || permitidas.has(rota)) itens.push({ titulo: nomeDaTela(rota) ?? rota, texto: dica, rota, origem: 'tela' })
   for (const [rota, tour] of Object.entries(TOURS))
     for (const passo of tour.passos)
-      itens.push({ titulo: `${tour.nome}: ${passo.titulo}`, texto: passo.texto, rota, origem: 'passo' })
+      if (!permitidas || permitidas.has(rota)) itens.push({ titulo: `${tour.nome}: ${passo.titulo}`, texto: passo.texto, rota, origem: 'passo' })
   for (const [termo, explicacao] of Object.entries(GLOSSARIO))
     itens.push({ titulo: termo, texto: explicacao, origem: 'palavra' })
   return itens
@@ -55,11 +58,11 @@ export function baseDeConhecimento(): Item[] {
  * Procura a pergunta na base. Pontua palavra no título mais alto do que no texto, porque o título
  * é o nome da tela ou do passo, e é por ele que a pessoa costuma perguntar.
  */
-export function procurar(pergunta: string, limite = 5): Resposta[] {
+export function procurar(pergunta: string, limite = 5, visao?: Visao): Resposta[] {
   const termos = palavras(pergunta)
   if (!termos.length) return []
   const saida: Resposta[] = []
-  for (const item of baseDeConhecimento()) {
+  for (const item of baseDeConhecimento(visao)) {
     const t = normalizar(item.titulo)
     const x = normalizar(item.texto)
     let pontos = 0

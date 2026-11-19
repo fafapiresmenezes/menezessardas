@@ -59,8 +59,8 @@ export const PORTAIS_INSTITUTO: PortalInstituto[] = [
       'Cruzamento com a ficha do imóvel que o escritório já tem na plataforma',
       'Exportar o mapa e a lista de camadas usadas, com a data de cada fonte',
     ],
-    estado: 'estudo',
-    comoEsta: 'Levantamento das fontes públicas em andamento. Ainda não há mapa para usar.',
+    estado: 'prototipo',
+    comoEsta: 'O MVP no próprio titular está no ar em /geo: posição, mapa, câmera como sensor de lugar, satélites e ficha do município, tudo cifrado só no aparelho.',
   },
   {
     rota: '/governo',
@@ -229,5 +229,17 @@ export const PORTAIS_INSTITUTO: PortalInstituto[] = [
     ],
     estado: 'estudo',
     comoEsta: "Pesquisa e desenho. Nenhuma tela para usar ainda.",
+  },
+  {
+    rota: '/fundos-internacionais',
+    nome: "Plataforma, Governança, Fundos Internacionais",
+    resumo: "Governar projetos financiados por fundos internacionais: quem decide, o que foi medido e o que se presta de contas a cada financiador.",
+    escopo: [
+      "Governança do projeto: alçadas, conselho e quem aprova cada etapa, com a trilha de cada decisão",
+      "Prestação de contas ao financiador: medição, custo e prazo no formato que bancos de desenvolvimento e fundos pedem",
+      "Padrões socioambientais e de integridade exigidos por fundos internacionais, com a fonte de cada exigência",
+    ],
+    estado: 'piloto',
+    comoEsta: "A demonstração completa já funciona: 14 telas com carteira, medição, pagamentos, riscos, documentos e prestação de contas, com dados de exemplo citados e as regras da literatura dentro de cada tela.",
   },
 ]

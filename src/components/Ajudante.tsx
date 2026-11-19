@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { HelpCircle, X, Search, ThumbsUp, ThumbsDown } from 'lucide-react'
+import { minhaVisao } from '@/lib/visao'
+import type { Visao } from '@/components/menuTelas'
 import { procurar, registrarPergunta, lerAprendizado, maisPerguntadas, exemplosDePergunta, type Resposta, type Aprendido } from '@/lib/ajudante'
 
 // Ajudante "como faço" (pedido de M, 13/11/2026). Botão flutuante em todas as telas.
@@ -15,12 +17,15 @@ export default function Ajudante() {
   const [avaliada, setAvaliada] = useState(false)
   const [aprendido, setAprendido] = useState<Aprendido[]>([])
   const navigate = useNavigate()
+  // Começa com a visão mais fechada; só abre o que o banco confirmar.
+  const [visao, setVisao] = useState<Visao>({ veTudo: false, admin: false, instituto: false, sede: false })
+  useEffect(() => { minhaVisao().then(setVisao).catch(() => undefined) }, [])
   const exemplos = useMemo(() => exemplosDePergunta().slice(0, 3), [])
 
   useEffect(() => { if (aberto) lerAprendizado().then(setAprendido).catch(() => undefined) }, [aberto])
 
   const perguntar = (texto: string) => {
-    const achadas = procurar(texto)
+    const achadas = procurar(texto, 5, visao)
     setPergunta(texto)
     setPerguntada(texto)
     setRespostas(achadas)

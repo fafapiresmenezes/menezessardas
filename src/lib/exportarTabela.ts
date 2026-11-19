@@ -39,9 +39,10 @@ function tituloAnterior(t: Element): string {
   return ''
 }
 
-export function paraPdf(g: Grade, tela: string): Uint8Array<ArrayBuffer> {
+/** `escritorio`: nome do escritório no cabeçalho do PDF (sem ele, 'Escritório'). */
+export function paraPdf(g: Grade, tela: string, escritorio = 'Escritório'): Uint8Array<ArrayBuffer> {
   const linhas: Parameters<typeof gerarPdfTexto>[1] = [
-    { texto: 'THEYE Institute', tamanho: 14, negrito: true, cor: [0.08, 0.13, 0.24] },
+    { texto: escritorio || 'Escritório', tamanho: 14, negrito: true, cor: [0.08, 0.13, 0.24] },
     { texto: `${tela} · ${g.titulo}`, tamanho: 11, negrito: true },
     { texto: `Exportado em ${new Date().toLocaleString('pt-BR')} · ${g.linhas.length} linha(s)`, tamanho: 8, cor: [0.4, 0.4, 0.4] },
     { texto: ' ', tamanho: 6 },
@@ -51,7 +52,6 @@ export function paraPdf(g: Grade, tela: string): Uint8Array<ArrayBuffer> {
     quebrar(pares, 8.5).forEach((t, i) => linhas.push({ texto: t, tamanho: 8.5, x: i ? 52 : undefined }))
     linhas.push({ texto: ' ', tamanho: 3 })
   }
-  linhas.push({ texto: ' ', tamanho: 6 }, { texto: 'Desenvolvido pelo THEYE Institute.', tamanho: 7, cor: [0.4, 0.4, 0.4] })
   return gerarPdfTexto(`${tela} - ${g.titulo}`, linhas)
 }
 

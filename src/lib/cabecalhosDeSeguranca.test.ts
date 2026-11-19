@@ -110,9 +110,15 @@ describe('cabeçalhos de segurança do site', () => {
     expect(valor('Permissions-Policy')).toContain('screen-wake-lock=(self)')
   })
 
-  it('a página inicial nunca fica guardada em cache do navegador', () => {
-    const indice = vercel.headers.find(h => h.source === '/index.html')!
-    expect(indice.headers[0].value).toContain('no-store')
+  // A regra tem de estar no bloco que casa com TODO caminho. Já existiu uma regra só para
+  // "/index.html", e quem abre theye.club pede "/", que não casa com ela: o navegador guardava a
+  // página e continuava mostrando a versão anterior depois de uma publicação. Acrescentar "/"
+  // também não bastou — por isso a conferência agora é no bloco global.
+  it('nenhuma página fica guardada em cache do navegador, em caminho nenhum', () => {
+    const global = vercel.headers.find(h => h.source === '/(.*)')!
+    const cache = global.headers.find(h => h.key === 'Cache-Control')!
+    expect(cache.value).toContain('no-store')
+    expect(cache.value).toContain('must-revalidate')
   })
 })
 

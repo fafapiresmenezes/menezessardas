@@ -1,0 +1,82 @@
+/**
+ * Casa de Águas do Instituto THEYE (thread "Montar plataforma de Águas", 19/11/2026).
+ *
+ * De onde vem o conteúdo: o mapa inicial do nicho (project-files/aguas/estrutura-aguas-br.json,
+ * 15/11/2026) foi relido item por item antes de entrar aqui. Ficou de FORA tudo o que não se
+ * confirma: números de lei trocados (ex.: "Decreto 8.235/2014" como política de barragens, que é a
+ * Lei 12.334/2010; "Lei 9.478/1997" como lei de energia elétrica, que é a lei do petróleo), leis
+ * estrangeiras com número errado, um "acordo Brasil-França de ilhas fluviais" que não existe e
+ * empresas de referência sem fonte. Também ficaram de fora os nomes de pesquisadores reais: o
+ * Instituto não pode dar a entender que alguém trabalha com ele sem que essa pessoa tenha aceitado.
+ *
+ * Regra para quem acrescentar itens: só entra o que tem número, nome oficial e link de fonte
+ * pública conferidos. Na dúvida, não entra.
+ */
+
+export interface Norma {
+  id: string
+  ambito: 'Brasil' | 'Internacional'
+  codigo: string
+  assunto: string
+  paraQueServe: string
+  fonte: string
+}
+
+export const NORMAS_AGUAS: Norma[] = [
+  { id: 'cf-20-26', ambito: 'Brasil', codigo: 'Constituição Federal, art. 20, III, e art. 26, I', assunto: 'De quem é a água', paraQueServe: 'Rios que passam por mais de um estado são da União; os demais e as águas subterrâneas são dos estados. Define quem dá a outorga.', fonte: 'https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm' },
+  { id: 'l9433', ambito: 'Brasil', codigo: 'Lei 9.433/1997', assunto: 'Política Nacional de Recursos Hídricos', paraQueServe: 'A lei das águas: outorga, cobrança, planos de bacia, comitês de bacia e o sistema nacional de informações.', fonte: 'https://www.planalto.gov.br/ccivil_03/leis/l9433.htm' },
+  { id: 'l9984', ambito: 'Brasil', codigo: 'Lei 9.984/2000', assunto: 'Criação da ANA', paraQueServe: 'Cria a Agência Nacional de Águas, hoje Agência Nacional de Águas e Saneamento Básico, que regula rios da União.', fonte: 'https://www.planalto.gov.br/ccivil_03/leis/l9984.htm' },
+  { id: 'l11445', ambito: 'Brasil', codigo: 'Lei 11.445/2007', assunto: 'Diretrizes do saneamento básico', paraQueServe: 'Água, esgoto, lixo e drenagem nas cidades: quem presta, quem regula, como se cobra.', fonte: 'https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2007/lei/l11445.htm' },
+  { id: 'l14026', ambito: 'Brasil', codigo: 'Lei 14.026/2020', assunto: 'Novo marco legal do saneamento', paraQueServe: 'Metas de 99% de água e 90% de esgoto até 2033 e normas de referência da ANA para o setor.', fonte: 'https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/lei/l14026.htm' },
+  { id: 'l12334', ambito: 'Brasil', codigo: 'Lei 12.334/2010 (alterada pela Lei 14.066/2020)', assunto: 'Política Nacional de Segurança de Barragens', paraQueServe: 'Plano de segurança, classificação de risco e plano de emergência de cada barragem.', fonte: 'https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12334.htm' },
+  { id: 'conama357', ambito: 'Brasil', codigo: 'Resolução CONAMA 357/2005', assunto: 'Classes dos rios e lagos', paraQueServe: 'Diz para que cada corpo d\'água pode ser usado e os limites de qualidade de cada classe.', fonte: 'https://conama.mma.gov.br/' },
+  { id: 'conama430', ambito: 'Brasil', codigo: 'Resolução CONAMA 430/2011', assunto: 'Lançamento de efluentes', paraQueServe: 'Condições para devolver esgoto e efluente tratado aos rios.', fonte: 'https://conama.mma.gov.br/' },
+  { id: 'ms888', ambito: 'Brasil', codigo: 'Portaria GM/MS 888/2021', assunto: 'Água potável', paraQueServe: 'Padrão de potabilidade da água que chega à torneira e o controle que o fornecedor deve fazer.', fonte: 'https://www.gov.br/saude/' },
+  { id: 'l6938', ambito: 'Brasil', codigo: 'Lei 6.938/1981', assunto: 'Política Nacional do Meio Ambiente', paraQueServe: 'Base do licenciamento ambiental de obras que mexem com água.', fonte: 'https://www.planalto.gov.br/ccivil_03/leis/l6938.htm' },
+  { id: 'l9605', ambito: 'Brasil', codigo: 'Lei 9.605/1998', assunto: 'Crimes ambientais', paraQueServe: 'Penas para poluição de água, entre outros crimes contra o meio ambiente.', fonte: 'https://www.planalto.gov.br/ccivil_03/leis/l9605.htm' },
+  { id: 'l12651', ambito: 'Brasil', codigo: 'Lei 12.651/2012', assunto: 'Código Florestal', paraQueServe: 'Matas na beira de rios e nascentes (áreas de preservação permanente).', fonte: 'https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/lei/l12651.htm' },
+  { id: 'l12787', ambito: 'Brasil', codigo: 'Lei 12.787/2013', assunto: 'Política Nacional de Irrigação', paraQueServe: 'Regras para projetos de irrigação, o maior uso de água do país.', fonte: 'https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/lei/l12787.htm' },
+  { id: 'l11107', ambito: 'Brasil', codigo: 'Lei 11.107/2005', assunto: 'Consórcios públicos', paraQueServe: 'Permite que municípios se juntem para cuidar de água e esgoto em conjunto.', fonte: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2005/lei/l11107.htm' },
+  { id: 'prata', ambito: 'Internacional', codigo: 'Tratado da Bacia do Prata (1969)', assunto: 'Bacia do Prata', paraQueServe: 'Brasil, Argentina, Bolívia, Paraguai e Uruguai cooperam na bacia que inclui os rios Paraná, Paraguai e Uruguai.', fonte: 'https://cicplata.org/' },
+  { id: 'itaipu', ambito: 'Internacional', codigo: 'Tratado de Itaipu (1973)', assunto: 'Rio Paraná, Brasil e Paraguai', paraQueServe: 'Uso compartilhado do rio para a usina binacional de Itaipu.', fonte: 'https://www.itaipu.gov.br/' },
+  { id: 'tca', ambito: 'Internacional', codigo: 'Tratado de Cooperação Amazônica (1978)', assunto: 'Bacia Amazônica', paraQueServe: 'Oito países amazônicos cooperam; a secretaria (OTCA) fica em Brasília.', fonte: 'https://otca.org/' },
+  { id: 'guarani', ambito: 'Internacional', codigo: 'Acordo sobre o Aquífero Guarani (2010, em vigor desde 2020)', assunto: 'Água subterrânea compartilhada', paraQueServe: 'Brasil, Argentina, Paraguai e Uruguai combinam como usar e proteger o aquífero.', fonte: 'https://www.gov.br/mre/' },
+  { id: 'ramsar', ambito: 'Internacional', codigo: 'Convenção de Ramsar (1971)', assunto: 'Áreas úmidas', paraQueServe: 'Proteção de áreas úmidas de importância internacional, como partes do Pantanal.', fonte: 'https://www.ramsar.org/' },
+  { id: 'onu1997', ambito: 'Internacional', codigo: 'Convenção da ONU sobre cursos d\'água internacionais (Nova York, 1997)', assunto: 'Rios entre países', paraQueServe: 'Regras gerais de uso justo de rios compartilhados. O Brasil não é parte; serve de referência.', fonte: 'https://legal.un.org/' },
+  { id: 'onu64292', ambito: 'Internacional', codigo: 'Resolução A/RES/64/292 da ONU (2010)', assunto: 'Direito humano à água', paraQueServe: 'Reconhece o acesso à água e ao saneamento como direito humano.', fonte: 'https://www.un.org/' },
+  { id: 'ods6', ambito: 'Internacional', codigo: 'ODS 6 da Agenda 2030', assunto: 'Água limpa e saneamento', paraQueServe: 'Metas mundiais de água e saneamento até 2030, usadas por fundos e governos.', fonte: 'https://brasil.un.org/pt-br/sdgs/6' },
+]
+
+export interface Caso { id: string; titulo: string; ano: string; licao: string }
+
+export const CASOS_AGUAS: Caso[] = [
+  { id: 'cantareira', titulo: 'Crise hídrica de São Paulo (Sistema Cantareira)', ano: '2014–2015', licao: 'O reservatório chegou ao volume morto. Mostrou o custo de não acompanhar nível e consumo todos os dias.' },
+  { id: 'mariana', titulo: 'Rompimento da barragem de Fundão, Mariana (MG)', ano: '2015', licao: 'A lama atingiu o Rio Doce até o mar. Levou a regras mais duras de segurança de barragens.' },
+  { id: 'brumadinho', titulo: 'Rompimento da barragem B1, Brumadinho (MG)', ano: '2019', licao: 'Motivou a Lei 14.066/2020, que proibiu barragens a montante e reforçou os planos de emergência.' },
+  { id: 'saofrancisco', titulo: 'Integração do Rio São Francisco (transposição)', ano: '2007 em diante', licao: 'Levar água ao semiárido exigiu acordo entre estados sobre quem recebe quanto e quem paga a operação.' },
+  { id: 'itaipu', titulo: 'Itaipu Binacional', ano: '1973 em diante', licao: 'Exemplo de rio dividido entre dois países com tratado, empresa conjunta e regra de divisão.' },
+  { id: 'prata', titulo: 'Cooperação na Bacia do Prata', ano: '1969 em diante', licao: 'Cinco países com um comitê comum para dados e obras na mesma bacia.' },
+]
+
+export interface FonteOficial { nome: string; oQueTem: string; link: string }
+
+export const FONTES_AGUAS: FonteOficial[] = [
+  { nome: 'ANA, Sistema de Acompanhamento de Reservatórios (SAR)', oQueTem: 'Volume, nível e vazões dos reservatórios, todo dia. É a fonte da tela de reservatórios.', link: 'https://www.ana.gov.br/sar/' },
+  { nome: 'ANA, HidroWeb', oQueTem: 'Séries históricas de chuva, nível e vazão das estações do país.', link: 'https://www.snirh.gov.br/hidroweb/' },
+  { nome: 'SNIRH, Sistema Nacional de Informações sobre Recursos Hídricos', oQueTem: 'Outorgas, qualidade da água, bacias e planos.', link: 'https://www.snirh.gov.br/' },
+  { nome: 'Cemaden', oQueTem: 'Alertas de risco de desastres por chuva e seca.', link: 'https://www.gov.br/cemaden/' },
+  { nome: 'INMET', oQueTem: 'Chuva e clima medidos nas estações meteorológicas.', link: 'https://portal.inmet.gov.br/' },
+  { nome: 'SNIS / SINISA (Ministério das Cidades)', oQueTem: 'Dados de água e esgoto de cada município.', link: 'https://www.gov.br/cidades/' },
+]
+
+/** Áreas que a casa cobre; 'pronta' quando já tem número medido ou conteúdo conferido na tela. */
+export const AREAS_AGUAS: { nome: string; descricao: string; pronta: boolean }[] = [
+  { nome: 'Reservatórios', descricao: 'Nível e volume dos reservatórios, todo dia, com a data em que cada número chegou.', pronta: true },
+  { nome: 'Rios: chuva, nível e vazão', descricao: 'Resumo diário das estações da rede da ANA, em rodízio (nesta página).', pronta: true },
+  { nome: 'Leis e normas', descricao: 'As leis de água e saneamento com número, assunto e link oficial (nesta página).', pronta: true },
+  { nome: 'Outorgas', descricao: 'Autorizações federais de uso de água em vigor, por finalidade e estado (nesta página). Cobrança por bacia ainda em construção.', pronta: true },
+  { nome: 'Segurança de barragens', descricao: 'Barragens do cadastro nacional por estado, risco e dano potencial (nesta página).', pronta: true },
+  { nome: 'Rios entre países', descricao: 'Tratados e casos das bacias que o Brasil divide com os vizinhos (nesta página).', pronta: true },
+  { nome: 'Qualidade da água', descricao: 'Sem série nacional recente aberta pela ANA (a última vai até 2017); entra como referência até haver fonte.', pronta: false },
+  { nome: 'Saneamento nos municípios', descricao: 'Cobertura de água e esgoto comparada com as metas de 2033; aguarda fonte aberta que a plataforma leia sozinha.', pronta: false },
+]

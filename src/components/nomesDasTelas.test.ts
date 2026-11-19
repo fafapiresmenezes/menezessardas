@@ -15,6 +15,7 @@ const app = readFileSync('src/App.tsx', 'utf8')
  * portal do Instituto (PortalInstitutoPage), que já traz seu próprio cabeçalho. */
 const SEM_MOLDURA = [
   '/inicio',
+  '/geolocalizacao', // redireciona para /geo, a casa própria do geomapeamento, sem a moldura jurídica (#40)
   '/frentes-do-instituto',
   '/preditiva',
   '/educacao',
@@ -31,6 +32,7 @@ const SEM_MOLDURA = [
   '/transumanismo',
   '/marketing',
   '/publicidade',
+  '/fundos-internacionais',
   '/ia',
 ]
 

@@ -47,13 +47,14 @@ export async function selarDigest(sha256Hex: string): Promise<{ ots: Uint8Array<
   return { ots, calendario: prova.calendario }
 }
 
-export async function exportarTrilhaPeriodo(de: string, ate: string, rotuloEscritorio = 'THEYE Institute'): Promise<ExportacaoTrilha> {
+/** `rotuloEscritorio`: nome do escritório no cabeçalho do PDF (sem ele, 'Escritório'). */
+export async function exportarTrilhaPeriodo(de: string, ate: string, rotuloEscritorio = 'Escritório'): Promise<ExportacaoTrilha> {
   const [todos, verificacao] = await Promise.all([listarTrilha(), verificarTrilha()])
   const ini = `${de}T00:00:00`, fim = `${ate}T23:59:59.999`
   const eventos: EventoTrilha[] = todos.filter(e => e.em >= new Date(ini).toISOString() && e.em <= new Date(fim).toISOString())
   const geradoEm = new Date()
   const linhas: Parameters<typeof gerarPdfTexto>[1] = [
-    { texto: rotuloEscritorio, tamanho: 16, negrito: true, cor: [0.08, 0.13, 0.24] },
+    { texto: rotuloEscritorio || 'Escritório', tamanho: 16, negrito: true, cor: [0.08, 0.13, 0.24] },
     { texto: `Trilha de auditoria - exportação do período ${de.split('-').reverse().join('/')} a ${ate.split('-').reverse().join('/')}`, tamanho: 11, negrito: true },
     { texto: `Gerado em ${geradoEm.toLocaleString('pt-BR')} · ${eventos.length} registro(s) no período · ${todos.length} na cadeia inteira`, tamanho: 8, cor: [0.4, 0.4, 0.4] },
     { texto: verificacao.integra ? `Cadeia íntegra: ${verificacao.total} registro(s) verificado(s). Selo atual (hash do último registro): ${verificacao.selo}` : `ATENÇÃO: cadeia comprometida a partir do registro nº ${verificacao.quebraEm}.`, tamanho: 8, cor: verificacao.integra ? [0.1, 0.4, 0.2] : [0.7, 0.1, 0.1] },
@@ -69,7 +70,7 @@ export async function exportarTrilhaPeriodo(de: string, ate: string, rotuloEscri
     linhas.push({ texto: ' ', tamanho: 4 })
   }
   if (!eventos.length) linhas.push({ texto: 'Nenhum registro no período.', tamanho: 9 })
-  linhas.push({ texto: ' ', tamanho: 6 }, { texto: 'Desenvolvido pelo THEYE Institute. Conferência: calcule o SHA-256 deste arquivo e verifique o .ots em opentimestamps.org.', tamanho: 7, cor: [0.4, 0.4, 0.4] })
+  linhas.push({ texto: ' ', tamanho: 6 }, { texto: 'Conferência: calcule o SHA-256 deste arquivo e verifique o .ots em opentimestamps.org.', tamanho: 7, cor: [0.4, 0.4, 0.4] })
 
   const pdf = gerarPdfTexto(`Trilha de auditoria ${de} a ${ate}`, linhas)
   const sha256 = hex(await crypto.subtle.digest('SHA-256', pdf))

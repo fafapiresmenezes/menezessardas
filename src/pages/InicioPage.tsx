@@ -9,6 +9,7 @@ import { lerMeuJeito, carregarMeuJeito, esquecerMeuJeito, EVENTO_JEITO } from '@
 import { esquecerMarca } from '@/lib/marca'
 import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck, Scale, type LucideIcon } from 'lucide-react'
 import AceiteTermos from '@/components/AceiteTermos'
+import InstalarApp from '@/components/InstalarApp'
 import { BLOCOS_INICIO } from '@/components/menuTelas'
 
 // Tela de entrada: o escritório escolhe a área de trabalho antes de entrar na plataforma.
@@ -82,7 +83,7 @@ export default function InicioPage() {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 276
   const copiarMapa = async () => {
-    const t = ['Áreas da plataforma — THEYE Institute', ...AREAS.map((a, i) => `${i + 1}. ${a.titulo}: ${a.texto}`)].join('\n')
+    const t = [`Áreas da plataforma — ${escritorio?.nome ?? 'Escritório'}`, ...AREAS.map((a, i) => `${i + 1}. ${a.titulo}: ${a.texto}`)].join('\n')
     try { await navigator.clipboard.writeText(t); setMapaCopiado(true); setTimeout(() => setMapaCopiado(false), 2500) } catch { /* sem área de transferência */ }
   }
   useEffect(() => {
@@ -138,17 +139,17 @@ export default function InicioPage() {
               </>
             )}
             {escritorio && alcance?.admin && (
-              <p className="text-sm text-grafite mt-2" data-testid="inicio-administra" title="Quem administra libera as pessoas que pedem para entrar e define o cargo de cada uma, na Área do administrador.">
+              <p className="text-sm text-grafite mt-2" data-testid="inicio-administra" title="Quem administra libera, na Área do administrador, as pessoas que pedem para entrar e define o cargo de cada uma na tela Hierarquia.">
                 {escritorio.instituto && escritorio.sede && supabaseConfigurado
-                  ? <>Você administra o <strong>Instituto THEYE</strong>, que cuida da plataforma inteira{escritorio.advocacia ? <>, e também o escritório <strong>{escritorio.advocacia}</strong></> : null}. <Link to="/frentes-do-instituto" className="underline underline-offset-4" data-testid="atalho-frentes-instituto" title="Abre a lista das 12 frentes do Instituto, cada uma leva direto ao seu segmento.">Ver todas as frentes →</Link></>
+                  ? <>Você administra o <strong>Instituto THEYE</strong>, que cuida da plataforma inteira{escritorio.advocacia ? <>, e também o escritório <strong>{escritorio.advocacia}</strong></> : null}. <Link to="/frentes-do-instituto" className="underline underline-offset-4" data-testid="atalho-frentes-instituto" title="Abre a lista das frentes do Instituto; cada uma leva direto ao seu segmento.">Ver todas as frentes →</Link></>
                   : <>Você <strong>administra este escritório</strong>: libera quem pede para entrar e define o cargo de cada pessoa.</>}
               </p>
             )}
             {alcance && (
-              <p className="text-sm text-grafite mt-2" data-testid="inicio-hierarquia" title="O cargo de cada pessoa é definido pela administração na Área do administrador.">
+              <p className="text-sm text-grafite mt-2" data-testid="inicio-hierarquia" title="O cargo de cada pessoa é definido pela administração na tela Hierarquia.">
                 {alcance.veTudo
                   ? <>Você entrou como <strong>{alcance.cargo ? rotuloCargo[alcance.cargo] : 'administração'}</strong>: enxerga todos os processos e números do escritório.</>
-                  : <>Você entrou como <strong>{alcance.cargo ? rotuloCargo[alcance.cargo] : 'advogado(a)'}</strong>: cada um é dono dos seus processos, e você vê os seus. Sócios e o gestor veem o conjunto.</>}
+                  : <>Você entrou como <strong>{alcance.cargo ? rotuloCargo[alcance.cargo] : 'Sem cargo definido'}</strong>: vê os seus processos e os que ainda não têm responsável. Sócios e o gestor veem o conjunto.</>}
               </p>
             )}
           </div>
@@ -162,6 +163,42 @@ export default function InicioPage() {
           )}
         </section>
       )}
+      {/* Quadradinho do Instituto (pedido de M, 18/11/2026): quem administra o Instituto entra logado e
+          precisa de ver a casa dos fundos internacionais a um clique daqui — a porta de visitantes não chega. */}
+      {escritorio?.instituto && alcance?.admin && (
+        <button
+          type="button"
+          data-testid="quadradinho-fundos"
+          onClick={() => navigate('/fundos')}
+          title="Plataforma, Governança, Fundos Internacionais — abre a plataforma de fundos, com menu e casa próprios"
+          className="w-full max-w-6xl mb-8 bg-dourado text-navy text-left p-5 shadow-lg border-t-4 border-white hover:-translate-y-0.5 transition focus:outline-none focus:ring-4 focus:ring-white/60 flex items-start gap-3"
+        >
+          <Landmark className="w-8 h-8 mt-0.5 shrink-0" aria-hidden />
+          <span className="min-w-0">
+            <span className="block text-[11px] uppercase tracking-wider">Instituto THEYE</span>
+            <span className="block font-serif text-2xl leading-tight">Plataforma, Governança, Fundos Internacionais</span>
+            <span className="block text-sm mt-1">Clique para ver a plataforma a funcionar: carteira, contratos, pagamentos, medição de obra, estudos para o governo, biblioteca e robôs — com exemplos citados de repositórios internacionais.</span>
+          </span>
+        </button>
+      )}
+      {/* Quadradinho dos Agentes do Instituto (pedido de M, 18/11/2026): mesmo cadeado do de cima. */}
+      {escritorio?.instituto && alcance?.admin && (
+        <button
+          type="button"
+          data-testid="quadradinho-agentes"
+          onClick={() => navigate('/agentes-instituto')}
+          title="Agentes do Instituto — os especialistas do acervo e os 500 consultores, só para membros do Instituto"
+          className="w-full max-w-6xl mb-8 -mt-4 bg-white text-navy text-left p-5 shadow-lg border-t-4 border-dourado hover:-translate-y-0.5 transition focus:outline-none focus:ring-4 focus:ring-dourado/50 flex items-start gap-3"
+        >
+          <Users className="w-8 h-8 mt-0.5 shrink-0 text-dourado" aria-hidden />
+          <span className="min-w-0">
+            <span className="block text-[11px] uppercase tracking-wider text-grafite-claro">Instituto THEYE · só membros</span>
+            <span className="block font-serif text-2xl leading-tight">Agentes do Instituto</span>
+            <span className="block text-sm mt-1 text-grafite">Os agentes especialistas nascidos do acervo da casa e o catálogo dos 500 consultores com ementa e fontes.</span>
+          </span>
+        </button>
+      )}
+      <InstalarApp />
       {/* Atalhos divididos por assunto: quem entra acha o que precisa sem abrir o menu. */}
       <div className="w-full max-w-6xl mb-8" aria-label="Por onde começar">
         <p className="text-white text-lg mb-3 text-center">O que você precisa agora?</p>
@@ -234,8 +271,8 @@ export default function InicioPage() {
           <div className="flex flex-wrap items-center gap-2">
           <button type="button" onClick={copiarMapa} data-testid="copiar-mapa-areas" title="Copia a lista das áreas e do que cada uma faz, para orientar quem entra na equipe" className="mt-2 min-h-[44px] underline text-white/80 text-xs">{mapaCopiado ? 'mapa copiado' : 'copiar mapa das áreas'}</button>
           <button type="button" onClick={() => window.print()} data-testid="imprimir-mapa" title="Abre a janela de impressão do navegador com o mapa das áreas" className="mt-2 ml-3 min-h-[44px] underline text-white/80 text-xs print:hidden">imprimir</button>{/* Passo 204 */}
-          <button type="button" data-testid="copiar-link-inicio" title="Copia o endereço desta tela de entrada" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-2 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 238 */}
-          <button type="button" data-testid="baixar-areas" title="Baixa a lista das áreas em planilha CSV" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['área;descrição', ...AREAS.map(a => `${a.titulo};${a.texto}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'areas.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-2 underline text-navy text-sm print:hidden">baixar lista</button>{/* Passo 315 */}
+          <button type="button" data-testid="copiar-link-inicio" title="Copia o endereço desta tela de entrada" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mt-2 ml-3 min-h-[44px] underline text-white/80 text-xs print:hidden">{linkCopiado ? 'link copiado' : 'copiar link'}</button>{/* Passo 238 */}
+          <button type="button" data-testid="baixar-areas" title="Baixa a lista das áreas em planilha CSV" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([['área;descrição', ...AREAS.map(a => `${a.titulo};${a.texto}`)].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'areas.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="ml-3 min-h-[44px] underline text-white/80 text-xs print:hidden">baixar lista</button>{/* Passo 315 */}
           </div>
         </details>
         {buscaArea && <p className="text-white/70 text-xs mt-1" data-testid="busca-area-resultado">{areasVisiveis.length ? `${areasVisiveis.length} área(s); Enter abre ${areasVisiveis[0].titulo}.` : 'Nenhuma área com esse termo. Tente "contrato" ou "cível".'}</p>}
@@ -256,7 +293,7 @@ export default function InicioPage() {
         ))}
       </div>
       </details>
-      <p className="text-white/50 text-xs mt-12">Desenvolvido pelo THEYE Institute</p>
+      {escritorio?.instituto && <p className="text-white/50 text-xs mt-12">Desenvolvido pelo Instituto THEYE</p>}
     </main>
   )
 }

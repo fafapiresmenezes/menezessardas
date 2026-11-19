@@ -46,3 +46,23 @@ dist-prod
 resultado-u17.json
 conferencia-cnj/
 __pycache__/
+
+# R8 (app Android): o site copiado para dentro do app e' gerado por `npx cap sync`,
+# nao e' codigo-fonte. O resto da pasta android/ vai para o repositorio, para o
+# fluxo do GitHub conseguir montar o APK.
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+
+# iOS (Capacitor): a copia do site e' gerada por "npx cap sync ios" e nao e' codigo-fonte.
+# O resto da pasta ios/ vai para o repositorio, igual ao android/, para o projeto ser montavel
+# em qualquer Mac sem refazer a configuracao.
+ios/App/App/public/
+ios/App/App/capacitor.config.json
+ios/App/Pods/
+ios/App/Podfile.lock
+ios/App/build/
+ios/DerivedData/

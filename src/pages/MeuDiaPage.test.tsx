@@ -28,6 +28,7 @@ vi.mock('@/lib/supabase', () => ({
 }))
 vi.mock('@/pages/AssistentePage', () => ({ render: (md: string) => <div data-testid="diagnostico-md">{md}</div> }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
+vi.mock('@/lib/visao', () => ({ minhaVisao: async () => ({ veTudo: true, admin: true, instituto: false, sede: true }) }))
 const { default: MeuDiaPage } = await import('./MeuDiaPage')
 
 const hoje = new Date(); const iso = (d: number) => new Date(hoje.getTime() + d * 86400000).toISOString().slice(0, 10)
@@ -61,7 +62,7 @@ describe('Meu dia', () => {
     expect(screen.getByTestId('alerta-horas').getAttribute('role')).toBe('alert')
     fireEvent.click(screen.getByTestId('papel-socia'))
     expect(localStorage.getItem('lsm-papel')).toBe('socia')
-    expect(screen.getByText('Indicadores e OKRs').getAttribute('href')).toBe('/indicadores')
+    await waitFor(() => expect(screen.getByText('Indicadores').getAttribute('href')).toBe('/indicadores'))
     await waitFor(() => expect(screen.getByTestId('resumo-valor_60_dias').textContent!.replace(/ /g, ' ')).toBe('Valor mensal em risco (60 dias)R$ 1.234,50'))
     await waitFor(() => expect(rpc).toHaveBeenCalledWith('definir_papel', { p_papel: 'socia' }))
   })

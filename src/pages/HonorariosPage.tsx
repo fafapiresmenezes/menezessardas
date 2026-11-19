@@ -12,6 +12,7 @@ import { lerNumero } from '@/lib/numero'
 import { escaparHtml } from '@/lib/abrirAba'
 import { meuAlcance, filtrarPorHierarquia, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
 import Vazio from '@/components/Vazio'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 
 // Honorários e rentabilidade: por caso, o combinado, o recebido, o vencimento e a régua de cobrança;
 // a rentabilidade cruza honorários recebidos com as horas lançadas para o mesmo cliente.
@@ -23,6 +24,7 @@ const MEIOS: Record<string, string> = { pix: 'PIX', transferencia: 'Transferênc
 const brl = (v: number) => (v ?? 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
 export default function HonorariosPage() {
+  const escritorio = useNomeEscritorio()
   const [todos, setTodos] = useState<Caso[]>([])
   // Hierarquia: sócios e gestor veem todos os casos; os demais, só os seus (itens sem dono aparecem para todos).
   const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
@@ -119,11 +121,11 @@ export default function HonorariosPage() {
     const r = regua(c)
     const w = window.open('', '_blank'); if (!w) return
     w.document.write(`<html><head><title>Cobrança de honorários</title><style>body{font-family:Georgia,serif;max-width:700px;margin:40px auto;line-height:1.6}</style></head><body>
-<p>THEYE Institute</p><p>Rio de Janeiro, ${new Date().toLocaleDateString('pt-BR')}</p>
+<p>${escaparHtml(escritorio)}</p><p>${new Date().toLocaleDateString('pt-BR')}</p>
 <p>Prezado(a) ${escaparHtml(c.cliente ?? 'cliente')},</p>
 <p>Em relação ao caso <strong>${escaparHtml(c.titulo)}</strong>, informamos que há honorários em aberto no valor de <strong>${brl(r.aberto)}</strong>${c.vencimento_honorario ? `, com vencimento em ${formatarData(c.vencimento_honorario)}` : ''}.</p>
 <p>Pedimos a gentileza de regularizar o pagamento ou entrar em contato para combinar a melhor forma. Ficamos à disposição.</p>
-<p>Atenciosamente,<br/>THEYE Institute</p></body></html>`)
+<p>Atenciosamente,<br/>${escaparHtml(escritorio)}</p></body></html>`)
     w.document.close(); w.print()
   }
 

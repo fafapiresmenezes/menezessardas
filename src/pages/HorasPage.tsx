@@ -9,6 +9,7 @@ import { lerNumero, lerHoras } from '@/lib/numero'
 import { meuAlcance, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
 import Vazio from '@/components/Vazio'
 import { irParaCampo } from '@/lib/foco'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 
 // Passo 21: meta mensal de horas por função (tabela metas_horas, só admin edita) e progresso da pessoa logada (RPC progresso_horas).
 const PAPEIS: Record<string, string> = { socia: 'Sócia', advogada: 'Advogada', estagiario: 'Estagiário ou paralegal', secretaria: 'Secretária', financeiro: 'Financeiro' }
@@ -22,6 +23,7 @@ const hm = (m: number) => `${Math.floor(m / 60)}h${String(m % 60).padStart(2, '0
 const mesAtual = () => new Date().toISOString().slice(0, 7)
 
 export default function HorasPage() {
+  const escritorio = useNomeEscritorio()
   // Passo 153: o mês escolhido é lembrado neste navegador.
   const [mes, setMes] = useState(() => { try { return localStorage.getItem('lsm-horas-mes') || mesAtual() } catch { return mesAtual() } })
   useEffect(() => { try { localStorage.setItem('lsm-horas-mes', mes) } catch { /* sem armazenamento */ } }, [mes])
@@ -108,7 +110,7 @@ export default function HorasPage() {
     const nomeMes = new Date(Number(a), Number(m) - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
     const texto = [`Resumo de horas — ${nomeMes}`, `Total: ${hm(totalMin)} (${hm(totalFat)} faturáveis) · a faturar: ${brl(totalValor)}`, '',
       ...porCliente.map(c => `• ${c.cliente}: ${hm(c.min)} faturáveis = ${brl(c.valor)}${c.naoFat ? ` (+ ${hm(c.naoFat)} não faturáveis)` : ''}`),
-      '', 'THEYE Institute'].join('\n')
+      '', escritorio].join('\n')
     try { await navigator.clipboard.writeText(texto); setCopiado(true); setTimeout(() => setCopiado(false), 2500) } catch { setErro('Não foi possível copiar; use a planilha ou o relatório.') }
   }
   return (

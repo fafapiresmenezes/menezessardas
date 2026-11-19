@@ -20,12 +20,12 @@ describe('white-label (D22)', () => {
   it('sede: sem marca própria; parceiro: nome, cor e logo válidos, guardados na sessão', async () => {
     resposta = { nome: 'GMenezes', cor: '#0B0B0C', logo_url: null, sede: true }
     expect(await minhaMarca()).toBeNull()
-    expect(mem.get('gm-marca-v1')).toBe('')
+    expect(mem.get('gm-marca-v2')).toBe('')
     expect(await minhaMarca()).toBeNull(); expect(rpc).toHaveBeenCalledTimes(1)
     esquecerMarca()
     resposta = { nome: 'Alfa Advocacia', cor: 'zzz', logo_url: 'ftp://x', sede: false }
-    expect(await minhaMarca()).toEqual({ nome: 'Alfa Advocacia', cor: '#0B0B0C', logo_url: null, sede: false })
-    expect(JSON.parse(mem.get('gm-marca-v1')!).nome).toBe('Alfa Advocacia')
+    expect(await minhaMarca()).toEqual({ nome: 'Alfa Advocacia', cor: '#0B0B0C', logo_url: null, sede: false, perfil: 'direito' })
+    expect(JSON.parse(mem.get('gm-marca-v2')!).nome).toBe('Alfa Advocacia')
   })
   it('marca por domínio: só em domínio próprio, sem www, nula quando não há parceiro', async () => {
     expect(await marcaPorDominio('gmenezes-advogados.vercel.app')).toBeNull(); expect(rpc).not.toHaveBeenCalled()

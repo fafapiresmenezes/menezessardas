@@ -6,6 +6,7 @@ import { Printer, MessageSquare, UserCheck } from 'lucide-react'
 import { gerarRelatorioSelado } from '@/lib/relatorioCompliance'
 import { baixarArquivo } from '@/lib/ancoragem'
 import { mensagemAmigavel } from '@/lib/erros'
+import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 import { hojeLocal, isoLocal } from '@/lib/datas'
 import { meuAlcance, podeVer, ALCANCE_FECHADO, rotuloCargo, type Alcance } from '@/lib/hierarquia'
 
@@ -48,6 +49,7 @@ const PILARES: { nome: string; perguntas: Pergunta[] }[] = [
 const OPCOES = [{ v: 0, r: 'Não' }, { v: 1, r: 'Em parte' }, { v: 2, r: 'Sim' }]
 
 export default function CompliancePage() {
+  const escritorio = useNomeEscritorio()
   const [empresa, setEmpresa] = useState(() => { try { return localStorage.getItem('lsm-compliance-empresa') ?? '' } catch { return '' } }) // Passo 195
   const [resp, setResp] = useState<Record<string, number>>({})
   const total = PILARES.reduce((s, p) => s + p.perguntas.length, 0)
@@ -109,7 +111,7 @@ export default function CompliancePage() {
     if (geral === null) return
     setSelando(true); setMsgSelo('Gerando o PDF e pedindo o selo…')
     try {
-      const r = await gerarRelatorioSelado({ empresa: empresa.trim(), geral, nivel, pilares: PILARES.map((p, pi) => ({ nome: p.nome, nota: nota(p.perguntas, pi) })), lacunas: lacunas.map(l => ({ pilar: l.pilar, acao: l.acao, base: l.base, v: l.v ?? 0 })), codigo })
+      const r = await gerarRelatorioSelado({ empresa: empresa.trim(), geral, nivel, pilares: PILARES.map((p, pi) => ({ nome: p.nome, nota: nota(p.perguntas, pi) })), lacunas: lacunas.map(l => ({ pilar: l.pilar, acao: l.acao, base: l.base, v: l.v ?? 0 })), codigo, escritorio })
       baixarArquivo(`${r.nomeBase}.pdf`, r.pdf as BlobPart, 'application/pdf')
       if (r.ots) baixarArquivo(`${r.nomeBase}.pdf.ots`, r.ots as BlobPart)
       setMsgSelo(`PDF baixado (SHA-256 ${r.sha256.slice(0, 12)}…)${r.ots ? ` com o selo .ots via ${r.calendario?.replace('https://', '')}` : '; o selo não veio agora (calendário fora do ar), o SHA-256 ficou na Trilha'}.`)
@@ -126,7 +128,7 @@ export default function CompliancePage() {
     <Layout title="Compliance e LGPD">
       <div className="space-y-6">
         <header className="hidden print:block border-b-2 border-dourado pb-3" data-testid="cabecalho-relatorio">
-          <p className="font-serif text-2xl text-navy">THEYE Institute</p>
+          <p className="font-serif text-2xl text-navy">{escritorio}</p>
           <p className="text-sm">Relatório de diagnóstico de integridade{empresa.trim() && ` · ${empresa.trim()}`} · {new Date().toLocaleDateString('pt-BR')}</p>
         </header>
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6 print:shadow-none">
@@ -169,8 +171,8 @@ export default function CompliancePage() {
             {/* Passo 161: imprimir o diagnóstico de compliance com o código de integridade. */}
             <button type="button" onClick={() => window.print()} data-testid="imprimir-compliance" title="Abre a tela de impressão do navegador com o diagnóstico e o código de integridade" className="mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">Imprimir</button>
             <button type="button" data-testid="copiar-link-compliance" title="Copia o endereço desta página de diagnóstico para compartilhar" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => setLinkCopiado(true)).catch(() => undefined)} className="mr-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{linkCopiado ? 'Link copiado' : 'Copiar link'}</button>{/* Passo 220 */}
-            <button type="button" data-testid="baixar-diagnostico" title="Baixa o diagnóstico em arquivo de texto com a nota, o plano de ação e o código de integridade" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([[`Diagnóstico de compliance — ${new Date().toLocaleDateString('pt-BR')}`, `Nota geral: ${geral}% (${nivel}) · ${respondidas} de ${total} perguntas`, ...lacunas.map((l, i) => `${i + 1}. ${l.pilar}: ${l.acao}`), codigo ? `Código de integridade: ${codigo}` : '', 'THEYE Institute'].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'diagnostico-compliance.txt'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar'}</button>{/* Passo 292 */}
-            <button type="button" onClick={async () => { const t = [`Diagnóstico de compliance${empresa.trim() ? ` — ${empresa.trim()}` : ''} — ${new Date().toLocaleDateString('pt-BR')}`, `Nota geral: ${geral}% (${nivel}) · ${respondidas} de ${total} perguntas`, '', `Plano de ação (${lacunas.length} lacunas):`, ...[...lacunas].sort((a, b) => (a.v ?? 0) - (b.v ?? 0)).map((l, i) => `${i + 1}. ${l.pilar}: ${l.acao} (${l.v === 0 ? 'prioridade alta' : 'prioridade média'})`), codigo ? `\nCódigo de integridade: ${codigo}` : '', 'THEYE Institute'].filter(x => x !== '' || true).join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoDiag(true); setTimeout(() => setCopiadoDiag(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-diagnostico" title="Copia o diagnóstico completo em texto (nota, plano de ação e código) para enviar ao cliente por e-mail" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoDiag ? 'Diagnóstico copiado' : 'Copiar diagnóstico para o cliente'}</button>
+            <button type="button" data-testid="baixar-diagnostico" title="Baixa o diagnóstico em arquivo de texto com a nota, o plano de ação e o código de integridade" aria-live="polite" onClick={() => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([[`Diagnóstico de compliance — ${new Date().toLocaleDateString('pt-BR')}`, `Nota geral: ${geral}% (${nivel}) · ${respondidas} de ${total} perguntas`, ...lacunas.map((l, i) => `${i + 1}. ${l.pilar}: ${l.acao}`), codigo ? `Código de integridade: ${codigo}` : '', escritorio].join('\n')], { type: 'text/plain;charset=utf-8' })); a.download = 'diagnostico-compliance.txt'; a.click(); marcarBaixado(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }} className="mt-3 ml-2 min-h-[44px] px-4 border border-navy/20 text-navy text-sm print:hidden">{baixado ? 'Baixado' : 'Baixar'}</button>{/* Passo 292 */}
+            <button type="button" onClick={async () => { const t = [`Diagnóstico de compliance${empresa.trim() ? ` — ${empresa.trim()}` : ''} — ${new Date().toLocaleDateString('pt-BR')}`, `Nota geral: ${geral}% (${nivel}) · ${respondidas} de ${total} perguntas`, '', `Plano de ação (${lacunas.length} lacunas):`, ...[...lacunas].sort((a, b) => (a.v ?? 0) - (b.v ?? 0)).map((l, i) => `${i + 1}. ${l.pilar}: ${l.acao} (${l.v === 0 ? 'prioridade alta' : 'prioridade média'})`), codigo ? `\nCódigo de integridade: ${codigo}` : '', escritorio].filter(x => x !== '' || true).join('\n'); try { await navigator.clipboard.writeText(t); setCopiadoDiag(true); setTimeout(() => setCopiadoDiag(false), 2500) } catch { /* sem área de transferência */ } }} data-testid="copiar-diagnostico" title="Copia o diagnóstico completo em texto (nota, plano de ação e código) para enviar ao cliente por e-mail" className="mt-3 min-h-[44px] px-4 border border-navy text-navy text-sm print:hidden">{copiadoDiag ? 'Diagnóstico copiado' : 'Copiar diagnóstico para o cliente'}</button>
             {codigo && <p className="text-xs text-grafite-claro mt-4 break-all" data-testid="codigo-integridade">Código de integridade (SHA-256 das respostas, empresa e data): {codigo}. Qualquer alteração nas respostas muda este código. <button type="button" onClick={copiarCodigo} data-testid="copiar-codigo" title="Copia o código que prova que o relatório não foi alterado (SHA-256) para colar no e-mail ao cliente" className="underline text-navy print:hidden">{codigoCopiado ? 'código copiado' : 'copiar código'}</button></p>}
             <div className="flex flex-wrap gap-3 mt-4 print:hidden">
               <button type="button" onClick={() => window.print()} title="Abre a tela de impressão do navegador, onde você pode imprimir o relatório ou salvá-lo em PDF" className="min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider inline-flex items-center gap-2"><Printer className="w-4 h-4" aria-hidden />Imprimir ou salvar em PDF</button>
