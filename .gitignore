@@ -56,3 +56,13 @@ android/.gradle/
 android/app/build/
 android/build/
 android/local.properties
+
+# iOS (Capacitor): a copia do site e' gerada por "npx cap sync ios" e nao e' codigo-fonte.
+# O resto da pasta ios/ vai para o repositorio, igual ao android/, para o projeto ser montavel
+# em qualquer Mac sem refazer a configuracao.
+ios/App/App/public/
+ios/App/App/capacitor.config.json
+ios/App/Pods/
+ios/App/Podfile.lock
+ios/App/build/
+ios/DerivedData/
