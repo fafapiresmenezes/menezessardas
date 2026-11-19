@@ -85,7 +85,9 @@ describe('Área do administrador (equipe)', () => {
     render(<EquipePage />)
     await waitFor(() => expect(screen.getByText('Pessoas com acesso (3)')).toBeTruthy())
     fireEvent.click(screen.getAllByRole('button', { name: 'Senha provisória' })[0])
-    await waitFor(() => expect(screen.getByRole('status').textContent).toContain('Senha provisória de Nova Pessoa: Abc12345'))
+    // A senha aparece no cartão grande no topo, na hora, sem precisar rolar a tela.
+    await waitFor(() => expect(screen.getByTestId('senha-provisoria').textContent).toBe('Abc12345'))
+    expect(screen.getByTestId('cartao-senha-provisoria').textContent).toContain('Senha provisória de Nova Pessoa')
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('Nova Pessoa'))
     fireEvent.click(screen.getByTestId('copiar-equipe'))
     await waitFor(() => expect(screen.getByTestId('copiar-equipe').textContent).toBe('Lista copiada'))
