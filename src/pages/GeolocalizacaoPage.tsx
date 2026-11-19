@@ -6,6 +6,7 @@ import { Cofre, TERMO, VERSAO_TERMO, cofreExiste, conferirCorrente, type Cena as
 import { agruparLugares, detectarParadas, distancia, fmtMin, linhaDoTempo, preverProximo, resumoPeriodo, type Lugar, type Ponto } from '@/lib/geo/calculo'
 import { CAMADAS_PENDENTES, SATELITES, buscarCenas, camadasSatelite, municipioDe, ndviMedio, leituraNdvi, noticiasGdelt, tileNdvi, trilhaNoMunicipio, tilesDaCena, type Cena, type Municipio, type Noticia } from '@/lib/geo/fontes'
 import { baixar, csvPontos, geojson, montarGrafo } from '@/lib/geo/grafo'
+import GrafoVivo from '@/components/geo/GrafoVivo'
 import { lerQuadro } from '@/lib/geo/camera'
 import { FONTES, TETO_PREVISIBILIDADE, metricasDeMobilidade } from '@/lib/geo/mobilidade'
 import { FONTE_MODO, resumoDeModos } from '@/lib/geo/modo'
@@ -466,9 +467,15 @@ export default function GeolocalizacaoPage() {
         )}
 
         {aba === 'grafo' && grafo && calc && (
+          <div className="space-y-4">
+            <div className={cartao}>
+              <h2 className="font-semibold text-navy"><Network className="inline w-4 h-4 mr-1" />O seu grafo, desenhado</h2>
+              <p className="text-sm text-grafite mb-2">Cada ponto é uma coisa (você, um lugar seu, o município, uma notícia, uma cena da câmera) e cada linha é uma ligação entre elas, com a origem do dado escrita junto.</p>
+              <GrafoVivo nos={grafo.nos} arestas={grafo.arestas} />
+            </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div className={cartao}>
-              <h2 className="font-semibold text-navy"><Network className="inline w-4 h-4 mr-1" />Grafo</h2>
+              <h2 className="font-semibold text-navy">Tudo em lista</h2>
               <p className="text-sm text-grafite">{grafo.nos.length} nós e {grafo.arestas.length} ligações.</p>
               <ul className="text-xs mt-2">{Object.entries(grafo.nos.reduce<Record<string, number>>((a, n) => ({ ...a, [n.tipo]: (a[n.tipo] ?? 0) + 1 }), {})).map(([t, n]) => <li key={t}>{t}: {n}</li>)}</ul>
               <div className="max-h-60 overflow-auto text-xs mt-2" tabIndex={0} role="region" aria-label="Ligações do grafo">{grafo.arestas.slice(0, 80).map((a, i) => <div key={i} className="border-t border-navy/5 py-0.5" title={a.fonte}>{rotulo(grafo.nos, a.de)} <b>{a.tipo}</b> {rotulo(grafo.nos, a.para)}{a.peso != null ? ` (${a.peso})` : ''}</div>)}</div>
@@ -479,6 +486,7 @@ export default function GeolocalizacaoPage() {
                 <ul className="text-sm space-y-1">{calc.previsao.map(p => { const l = calc.lugares.find(x => x.id === p.lugarId); return <li key={p.lugarId}>{l?.nome || 'Lugar sem nome'}: {Math.round(p.chance * 100)}% <span className="text-xs text-grafite-claro">(visto {p.vezes} vez(es))</span></li> })}</ul>}
               <p className="text-xs text-grafite-claro mt-2">Como é feita: conta quantas vezes, saindo do lugar atual, você foi para cada outro (cadeia de Markov com suavização). Poucos dados = chance pouco confiável; o número de vezes vistas está ao lado para isso ficar claro.</p>
             </div>
+          </div>
           </div>
         )}
 
