@@ -169,8 +169,8 @@ export default function InicioPage() {
         <button
           type="button"
           data-testid="quadradinho-fundos"
-          onClick={() => navigate('/fundos-internacionais')}
-          title="Plataforma, Governança, Fundos Internacionais — abre a demonstração a funcionar, com dados de exemplo citados"
+          onClick={() => navigate('/fundos')}
+          title="Plataforma, Governança, Fundos Internacionais — abre a plataforma de fundos, com menu e casa próprios"
           className="w-full max-w-6xl mb-8 bg-dourado text-navy text-left p-5 shadow-lg border-t-4 border-white hover:-translate-y-0.5 transition focus:outline-none focus:ring-4 focus:ring-white/60 flex items-start gap-3"
         >
           <Landmark className="w-8 h-8 mt-0.5 shrink-0" aria-hidden />

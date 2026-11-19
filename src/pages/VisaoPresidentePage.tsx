@@ -4,7 +4,7 @@
  * e os avisos mais graves. Nada lê nem grava no banco. As contas são as de verdade (src/lib/medicaoObra.ts).
  */
 import { useMemo } from 'react'
-import Layout from '@/components/Layout'
+import LayoutFundos from '@/components/LayoutFundos'
 import { AlertTriangle, TrendingUp, Wallet } from 'lucide-react'
 import { calcularBoletim, desvioDeCronograma, semaforo, type Semaforo } from '@/lib/medicaoObra'
 import { PROJETOS_DEMO } from '@/data/demoObraAngola'
@@ -42,7 +42,7 @@ export default function VisaoPresidentePage() {
   const retidos = recorte(quem, PAGAMENTOS_DEMO).filter(p => p.estado === 'retido')
 
   return (
-    <Layout title="Visão do presidente">
+    <LayoutFundos title="Visão do presidente">
       <SoParaNiveis rota="/visao-presidente">
       <div className="max-w-5xl mx-auto space-y-6">
         <VerComoFundos />
@@ -106,6 +106,6 @@ export default function VisaoPresidentePage() {
         </section>
       </div>
       </SoParaNiveis>
-    </Layout>
+    </LayoutFundos>
   )
 }

@@ -4,7 +4,7 @@
  * NÃO é um assistente com IA ligada; é uma amostra de como funcionaria. Nada lê/grava no banco.
  */
 import { useState } from 'react'
-import Layout from '@/components/Layout'
+import LayoutFundos from '@/components/LayoutFundos'
 import VerComoFundos, { SoParaNiveis } from '@/components/VerComoFundos'
 import SaberDaMateria from '@/components/SaberDaMateria'
 
@@ -19,7 +19,7 @@ const RESPOSTAS: QA[] = [
 export default function AssistenteFundosPage() {
   const [aberta, setAberta] = useState<number | null>(null)
   return (
-    <Layout title="Assistente">
+    <LayoutFundos title="Assistente">
       <SoParaNiveis rota="/assistente-fundos">
       <div className="max-w-3xl mx-auto space-y-4">
         <VerComoFundos />
@@ -47,6 +47,6 @@ export default function AssistenteFundosPage() {
         </ul>
       </div>
       </SoParaNiveis>
-    </Layout>
+    </LayoutFundos>
   )
 }

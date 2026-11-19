@@ -7,7 +7,7 @@
  * As regras são as de verdade: src/lib/hierarquiaCorporativa.ts e src/lib/medicaoObra.ts.
  */
 import { useMemo, useState } from 'react'
-import Layout from '@/components/Layout'
+import LayoutFundos from '@/components/LayoutFundos'
 import SaberDaMateria from '@/components/SaberDaMateria'
 import { Eye, EyeOff, Gauge, Globe, PenLine, ShieldCheck, RotateCcw } from 'lucide-react'
 import {
@@ -55,7 +55,7 @@ export default function DemoObraPage() {
   }
 
   return (
-    <Layout title="Medição de obra por nível">
+    <LayoutFundos title="Medição de obra por nível">
       <div className="max-w-5xl space-y-6">
         <SaberDaMateria rota="/demonstracao-obra" />
         <p className="bg-navy text-white text-sm px-4 py-2" data-testid="aviso-ficticio">
@@ -240,6 +240,6 @@ export default function DemoObraPage() {
           <p className="text-xs text-grafite-claro mt-3">Índice de partida. A versão em vigor de cada diploma é conferida pela equipa jurídica do país antes de qualquer uso.</p>
         </section>
       </div>
-    </Layout>
+    </LayoutFundos>
   )
 }

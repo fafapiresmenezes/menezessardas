@@ -13,6 +13,7 @@ import BoasVindasPage from '@/pages/BoasVindasPage'
 const PortalInstitutoPage = lazy(() => import('@/pages/PortalInstitutoPage'))
 const AgentesInstitutoPage = lazy(() => import('@/pages/AgentesInstitutoPage'))
 const QualidadePage = lazy(() => import('@/pages/QualidadePage'))
+const FundosInicioPage = lazy(() => import('@/pages/FundosInicioPage'))
 const PortaisInstitutoPage = lazy(() => import('@/pages/PortaisInstitutoPage'))
 // Passo 2: Fechar /frentes-do-instituto conforme planejamento
 const FrentesDoInstitutoPage = lazy(() => import('@/pages/FrentesDoInstitutoPage'))
@@ -511,6 +512,10 @@ function App() {
         <Route
           path="/hierarquia"
           element={isAuthenticated ? <HierarquiaPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/fundos"
+          element={isAuthenticated ? <FundosInicioPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/demonstracao-obra"

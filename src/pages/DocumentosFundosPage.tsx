@@ -1,5 +1,5 @@
 /** Ecrã C09 — Documentos e auditoria (casa de fundos internacionais, DEMONSTRAÇÃO). Nada lê/grava no banco. */
-import Layout from '@/components/Layout'
+import LayoutFundos from '@/components/LayoutFundos'
 import { DOCUMENTOS_DEMO, AUDITORIA_DEMO } from '@/data/documentosDemo'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
 import SaberDaMateria from '@/components/SaberDaMateria'
@@ -10,7 +10,7 @@ export default function DocumentosFundosPage() {
   const docs = recorte(quem, DOCUMENTOS_DEMO)
   const eventos = recorte(quem, AUDITORIA_DEMO)
   return (
-    <Layout title="Documentos e auditoria">
+    <LayoutFundos title="Documentos e auditoria">
       <SoParaNiveis rota="/documentos-fundos">
       <div className="max-w-5xl mx-auto space-y-6">
         <VerComoFundos />
@@ -42,6 +42,6 @@ export default function DocumentosFundosPage() {
         </section>
       </div>
       </SoParaNiveis>
-    </Layout>
+    </LayoutFundos>
   )
 }
