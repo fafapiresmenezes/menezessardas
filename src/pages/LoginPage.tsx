@@ -20,6 +20,13 @@ import type { Chave } from '@/lib/i18n'
 const ESCRITORIOS_DA_CASA = ['SARDAS E MENEZES']
 const OUTRO = '__outro__'
 
+/** Tira de um endereço colado o que serve para abrir a troca de senha: o código do link do e-mail ou a sessão que veio na página de erro. */
+export function lerLinkDeSenha(texto: string): { token?: string; acesso?: string; renovacao?: string } {
+  const t = texto.trim()
+  const pega = (nome: string) => { const m = t.match(new RegExp(`[?&#]${nome}=([^&#\\s]+)`)); return m ? decodeURIComponent(m[1]) : undefined }
+  return { token: pega('token') ?? pega('token_hash'), acesso: pega('access_token'), renovacao: pega('refresh_token') }
+}
+
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
@@ -43,6 +50,28 @@ export default function LoginPage() {
     } catch { /* mesma resposta de qualquer forma */ }
     setRecuperacaoEnviada(true)
     setCarregando(false)
+  }
+  // Saída para quando o link do e-mail não abre (por exemplo, volta para um endereço errado):
+  // a pessoa cola o link aqui e a própria plataforma abre a tela de criar a senha (M, 19/11/2026).
+  const [linkColado, setLinkColado] = useState('')
+  const [erroLink, setErroLink] = useState('')
+  const abrirPeloLinkColado = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setErroLink(''); setCarregando(true)
+    try {
+      const partes = lerLinkDeSenha(linkColado)
+      const { error } = partes.acesso && partes.renovacao
+        ? await supabase.auth.setSession({ access_token: partes.acesso, refresh_token: partes.renovacao })
+        : partes.token
+          ? await supabase.auth.verifyOtp({ token_hash: partes.token, type: 'recovery' })
+          : { error: new Error('sem token') }
+      if (error) setErroLink('Este link não serve mais (cada link só vale uma vez e por pouco tempo). Peça um novo em "Esqueci minha senha" e cole aqui sem abrir.')
+      else window.location.assign(`${window.location.origin}/?redefinir=1`)
+    } catch {
+      setErroLink('Não consegui ler este link. Copie o endereço inteiro e cole de novo.')
+    } finally {
+      setCarregando(false)
+    }
   }
   const [primeiroAcesso, setPrimeiroAcesso] = useState(false)
   const [escritorio, setEscritorio] = useState('')
@@ -275,7 +304,25 @@ export default function LoginPage() {
                 </form>
               )}
               {supabaseConfigurado && recuperacaoEnviada && (
-                <p>Se este e-mail estiver cadastrado, o link chega em alguns minutos. Confira também a caixa de spam.</p>
+                <div className="space-y-3">
+                  <p>Se este e-mail estiver cadastrado, o link chega em alguns minutos. Confira também a caixa de spam.</p>
+                  <form onSubmit={abrirPeloLinkColado} className="space-y-2" data-testid="form-link-colado">
+                    <p>O link do e-mail não abriu? No e-mail, clique no link com o botão direito, escolha "Copiar endereço do link" e cole aqui. Também serve o endereço da página que deu erro.</p>
+                    <input
+                      type="text"
+                      required
+                      aria-label="Endereço do link que chegou no e-mail"
+                      data-testid="campo-link-colado"
+                      value={linkColado}
+                      onChange={e => setLinkColado(e.target.value)}
+                      className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm bg-white text-grafite"
+                    />
+                    <button type="submit" disabled={carregando} title="Abre a tela de criar a senha nova usando o link colado" className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-60">
+                      {carregando ? 'Abrindo…' : 'Criar senha nova'}
+                    </button>
+                    {erroLink && <p role="alert" className="text-critico">{erroLink}</p>}
+                  </form>
+                </div>
               )}
             </div>
           )}

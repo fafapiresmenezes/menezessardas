@@ -31,6 +31,13 @@ const preencherEscritorio = (nome = 'SARDAS E MENEZES') => {
 }
 
 describe('Tela de login', () => {
+  it('link de senha colado: lê o código do link do e-mail e a sessão da página que deu erro', async () => {
+    const { lerLinkDeSenha } = await import('./LoginPage')
+    expect(lerLinkDeSenha('https://x.supabase.co/auth/v1/verify?token=abc123&type=recovery&redirect_to=http://localhost:3000').token).toBe('abc123')
+    const s = lerLinkDeSenha(' http://localhost:3000/#access_token=AAA.BBB&expires_in=3600&refresh_token=rrr&type=recovery ')
+    expect(s.acesso).toBe('AAA.BBB'); expect(s.renovacao).toBe('rrr')
+    expect(lerLinkDeSenha('nada aqui')).toEqual({ token: undefined, acesso: undefined, renovacao: undefined })
+  })
   it('a primeira tela não mostra e-mail e senha: a entrada só aparece depois de clicar num quadradinho', () => {
     cleanup()
     render(<MemoryRouter initialEntries={['/login']}><Routes><Route path="/login" element={<LoginPage />} /></Routes></MemoryRouter>)
