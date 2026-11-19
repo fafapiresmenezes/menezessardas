@@ -21,6 +21,7 @@ export default function CasaGeo({ children }: { children: React.ReactNode }) {
           </Link>
           <div className="flex items-center gap-3">
             <Link to="/geo/nota" className="text-xs text-white/70 hover:text-white underline decoration-white/30" title="A régua de nota do app: as 10 dimensões de qualidade, à vista">régua de nota</Link>
+            <Link to="/geo/biblioteca" className="text-xs text-white/70 hover:text-white underline decoration-white/30" title="Os artigos e teses que sustentam cada coisa que este app faz">biblioteca</Link>
             <span className="text-xs text-white/60 hidden sm:inline" title="Os dados gravados ficam cifrados só neste aparelho; nenhum ponto vai para servidor">dados só neste aparelho</span>
           </div>
         </div>

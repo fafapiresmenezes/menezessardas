@@ -54,6 +54,13 @@ for (const nome of abas) {
   telas.push(await rodarAxe(`aba:${nome}`))
 }
 
+// 5) As telas abertas da casa (não dependem do cofre): régua de nota e biblioteca (R7).
+for (const [nome, rota] of [['regua-de-nota', '/#/geo/nota'], ['biblioteca', '/#/geo/biblioteca']]) {
+  await page.goto(`${base}${rota}`, { waitUntil: 'load', timeout: 60000 })
+  await page.waitForTimeout(800)
+  telas.push(await rodarAxe(nome))
+}
+
 await browser.close()
 
 let bundleKB = 0
