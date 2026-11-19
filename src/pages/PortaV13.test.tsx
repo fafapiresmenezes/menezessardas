@@ -25,13 +25,14 @@ describe('porta redesenhada (V13)', () => {
   it('mostra a promessa grande, a faixa de prova e um botão forte de conhecer', () => {
     montar()
     const h1 = screen.getByRole('heading', { level: 1 })
-    expect(h1.textContent).toBe('Um instituto de soluções multidisciplinares.')
+    // Faixa única (M, 19/11/2026): Instituto de AI, o nome oficial e "um instituto que enxerga antes".
+    expect(h1.textContent).toBe('Instituto de AI')
+    expect(screen.getByTestId('porta-nome-oficial').textContent).toBe('Instituto de Ontologia com Soluções Multidisciplinares')
     expect(screen.getByTestId('prova-da-porta')).toBeTruthy()
     expect(screen.getByTestId('porta-conhecer').textContent).toContain('Quero conhecer')
-    // A promessa vem antes da prova, e a prova antes da escolha de idioma.
-    const html = document.body.innerHTML
-    expect(html.indexOf('soluções multidisciplinares')).toBeLessThan(html.indexOf('prova-da-porta'))
-    expect(html.indexOf('prova-da-porta')).toBeLessThan(html.indexOf('escolha-idioma'))
+    // O bloco de senha saiu do começo: o login só aparece ao clicar numa área, lá embaixo.
+    expect(screen.queryByTestId('escolha-idioma')).toBeNull()
+    expect(screen.queryByTestId('porta-ja-tenho-acesso')).toBeNull()
   })
 
   it('sem frente guardada, não aparece a faixa de retomar', () => {
@@ -79,12 +80,6 @@ describe('contagem de visitas na porta (V10)', () => {
   it('abrir a porta conta uma visita', () => {
     montar()
     expect(contarVisita).toHaveBeenCalledWith('visita')
-  })
-
-  it('escolher a língua conta o idioma', () => {
-    montar()
-    fireEvent.click(screen.getByTestId('idioma-zh'))
-    expect(contarVisita).toHaveBeenCalledWith('idioma', 'zh')
   })
 
   it('clicar num quadradinho conta aquele quadradinho', () => {
