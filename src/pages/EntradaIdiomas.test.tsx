@@ -72,6 +72,8 @@ describe('entrada do instituto em várias línguas', () => {
     fireEvent.click(screen.getByTestId('trocar-idioma-es'))
     fireEvent.click(screen.getByText('Crear cuenta'))
     expect(screen.getByText(/Cree su cuenta con correo, contraseña/)).toBeTruthy()
+    expect(screen.getByText('¿Cuál es su despacho?')).toBeTruthy()
+    fireEvent.change(screen.getByTestId('lista-escritorio'), { target: { value: '__outro__' } })
     expect(screen.getByText('Despacho (en letras mayúsculas)')).toBeTruthy()
     expect((screen.getByTestId('campo-escritorio') as HTMLInputElement).placeholder).toBe('EJ.: SARDAS E MENEZES')
     expect(screen.getByText('Crear acceso')).toBeTruthy()

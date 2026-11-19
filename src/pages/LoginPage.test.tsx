@@ -24,7 +24,11 @@ function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathn
 const montar = () => render(<MemoryRouter initialEntries={['/login']}><Routes><Route path="/login" element={<LoginPage />} /><Route path="*" element={<Onde />} /></Routes></MemoryRouter>)
 const preencher = (email: string, senha: string) => { fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: email } }); fireEvent.change(screen.getByLabelText('Senha'), { target: { value: senha } }) }
 // No cadastro há também o campo do escritório (pedido de M, 12/11/2026), sempre em maiúsculas.
-const preencherEscritorio = (nome = 'sardas e menezes') => fireEvent.change(screen.getByTestId('campo-escritorio'), { target: { value: nome } })
+const preencherEscritorio = (nome = 'SARDAS E MENEZES') => {
+  if (nome === 'SARDAS E MENEZES') { fireEvent.change(screen.getByTestId('lista-escritorio'), { target: { value: nome } }); return }
+  fireEvent.change(screen.getByTestId('lista-escritorio'), { target: { value: '__outro__' } })
+  fireEvent.change(screen.getByTestId('campo-escritorio'), { target: { value: nome } })
+}
 
 describe('Tela de login', () => {
   beforeEach(() => { cleanup(); configurado = true; nivel = { nextLevel: 'aal1', currentLevel: 'aal1' }; signInWithPassword.mockClear(); signUp.mockClear(); challengeAndVerify.mockClear() })
@@ -67,7 +71,10 @@ describe('Tela de login', () => {
     expect(screen.getByText(/Crie sua conta com e-mail, senha e o nome do seu escritório/)).toBeTruthy()
     preencher('novo@gmenezes.com', 'senhaforte1')
     preencherEscritorio()
-    expect((screen.getByTestId('campo-escritorio') as HTMLInputElement).value).toBe('SARDAS E MENEZES')
+    // A pergunta é uma lista suspensa com o registro dos escritórios; o campo escrito só aparece em "não está na lista".
+    expect(screen.getByLabelText('Qual é o seu escritório?')).toBeTruthy()
+    expect(screen.queryByTestId('campo-escritorio')).toBeNull()
+    expect((screen.getByTestId('lista-escritorio') as HTMLSelectElement).value).toBe('SARDAS E MENEZES')
     fireEvent.click(screen.getByText('Criar acesso'))
     expect((await screen.findByRole('alert')).textContent).toContain('Tente novamente em alguns segundos')
     vi.setSystemTime(new Date('2026-11-02T10:00:05Z'))
