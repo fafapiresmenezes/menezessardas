@@ -11,6 +11,10 @@ const config: CapacitorConfig = {
     // O app roda os arquivos do próprio aparelho, não um site remoto:
     // é isso que permite, no R9, gravar com a tela apagada.
     allowMixedContent: false,
+    // R9, exigência do plugin de localização em segundo plano: sem a ponte antiga, o Android
+    // corta as leituras depois de cinco minutos com o app no fundo
+    // (capacitor-community/background-geolocation, issue 89).
+    useLegacyBridge: true,
   },
   server: {
     androidScheme: 'https',
