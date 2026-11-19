@@ -207,7 +207,8 @@ export interface MeuEscritorio { nome: string; sede: boolean; pessoa: string; em
 const CHAVE_ESCRITORIO = 'gm-escritorio-v2'
 
 export async function meuEscritorio(): Promise<MeuEscritorio | null> {
-  if (!supabaseConfigurado) return { nome: 'ESCRITÓRIO DE DEMONSTRAÇÃO', sede: true, pessoa: 'Visitante', email: '', instituto: true }
+  // Sem banco configurado ninguém é administração do Instituto: quem não entrou não vê nada dele.
+  if (!supabaseConfigurado) return { nome: 'ESCRITÓRIO DE DEMONSTRAÇÃO', sede: false, pessoa: 'Visitante', email: '', instituto: false }
   try { const k = sessionStorage.getItem(CHAVE_ESCRITORIO); if (k) return JSON.parse(k) as MeuEscritorio } catch { /* sem sessionStorage */ }
   const lembrar = (meu: MeuEscritorio) => { try { sessionStorage.setItem(CHAVE_ESCRITORIO, JSON.stringify(meu)) } catch { /* ignora */ } return meu }
   try {
