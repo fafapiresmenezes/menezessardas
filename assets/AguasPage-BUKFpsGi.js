@@ -1,1 +1,0 @@
-import{j as a,L as s}from"./index-BHQw1P0B.js";import{C as t}from"./CasaAguas-0B4qMcTQ.js";import"./vendor-D_ufswWq.js";function e(){return a.jsx(s,{title:"Águas",children:a.jsx(t,{})})}export{e as default};
