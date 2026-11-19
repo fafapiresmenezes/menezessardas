@@ -84,7 +84,7 @@ async function tratar(req: Request, origemBoa: boolean): Promise<Response> {
   if (acao === 'cadastrar') {
     const senha = String(b.senha ?? '')
     const escritorio = String(b.escritorio ?? '').toUpperCase().replace(/\s+/g, ' ').trim().slice(0, 120)
-    if (senha.length < 8 || senha.length > 200) return json({ erro: 'A senha precisa ter pelo menos 8 caracteres.' }, 400)
+    if (senha.length < 12 || senha.length > 200 || !/[a-z]/.test(senha) || !/[A-Z]/.test(senha) || !/[0-9]/.test(senha)) return json({ erro: 'A senha precisa ter pelo menos 12 caracteres, com letra maiúscula, letra minúscula e número.' }, 400)
     if (escritorio.length < 3) return json({ erro: 'Escolha o seu escritório.' }, 400)
     if (!(await dentroDoLimite(email))) return json({ erro: 'Muitos pedidos em pouco tempo. Aguarde alguns minutos e tente de novo.' }, 429)
     const { data, error } = await db().auth.admin.generateLink({ type: 'signup', email, password: senha, options: { data: { escritorio }, redirectTo: SITE } })
@@ -97,7 +97,8 @@ async function tratar(req: Request, origemBoa: boolean): Promise<Response> {
         if (cod) await enviar(email, 'senha', `${SITE}/?redefinir=1&th=${encodeURIComponent(cod)}`)
         return json({ ok: true })
       }
-      if (/Cadastro fechado/i.test(m)) return json({ erro: 'Este escritório ainda não está na lista. Fale com o Instituto para incluir.' }, 403)
+      // A recusa da porta do banco chega aqui como "Database error saving new user": é a única regra do banco que barra conta nova.
+      if (/Cadastro fechado|Database error/i.test(m)) return json({ erro: 'Criar conta é só para quem usa o e-mail do próprio escritório ou recebeu convite. Fale com o responsável do seu escritório ou com o Instituto.' }, 403)
       return json({ erro: 'Não foi possível criar a conta agora. Tente de novo em instantes.' }, 400)
     }
     const codigo = data?.properties?.hashed_token

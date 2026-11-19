@@ -57,7 +57,7 @@ const pt = {
   'login.qualEscritorioTitulo': 'Escolha na lista o escritório de advocacia em que você trabalha. A lista é o registro de todos os escritórios clientes da plataforma.',
   'login.escolhaEscritorio': 'Escolha o seu escritório',
   'login.escritorioForaDaLista': 'Meu escritório não está na lista',
-  'login.qualEscritorioAjuda': 'Depois de criar a conta, o responsável pelo escritório libera a sua entrada. Até lá você não vê nada de ninguém.',
+  'login.qualEscritorioAjuda': 'Use o e-mail do seu escritório. Com outro e-mail, a conta só é criada se o escritório tiver mandado um convite.',
   'login.escritorioForaAjuda': 'Escritórios novos entram na lista quando contratam a plataforma. Escreva o nome e fale com o Instituto para liberar.',
   'login.avisoPrimeiroAcesso': 'Crie sua conta com e-mail, senha e o nome do seu escritório. Mandamos um link de confirmação para o seu e-mail. Com o e-mail do próprio escritório você entra sozinho depois de confirmar; com outro e-mail, o responsável pelo escritório precisa liberar a sua entrada.',
   'login.avisoRecuperacao': 'Esqueceu a senha? Escreva o seu e-mail e mandamos um link para você mesmo criar uma senha nova. Não precisa pedir a ninguém.',
