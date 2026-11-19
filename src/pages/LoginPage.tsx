@@ -245,7 +245,7 @@ export default function LoginPage() {
                     onChange={e => setEmailRecuperar(e.target.value)}
                     className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm bg-white text-grafite"
                   />
-                  <button type="submit" disabled={carregando} className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-60">
+                  <button type="submit" disabled={carregando} title="Manda para o e-mail o link para criar ou trocar a senha" className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-60">
                     {carregando ? 'Enviando…' : 'Enviar link'}
                   </button>
                 </form>

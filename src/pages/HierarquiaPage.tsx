@@ -119,9 +119,9 @@ export default function HierarquiaPage() {
               </dl>
               <p className="text-sm text-grafite mt-4 flex items-start gap-2">
                 <Database size={16} className="text-navy mt-0.5 shrink-0" aria-hidden="true" />
-                <span title="A regra de privacidade por advogado já está aplicada no banco de dados do escritório.">
-                  Isto não é só aparência: o próprio <strong>banco de dados</strong> já obedece a este cargo — sócio(a), gestor(a)
-                  e a administração leem tudo; quem tem outro cargo, ou nenhum, só alcança o que é seu.
+                <span title="Hoje o cargo organiza só o que cada pessoa vê na tela.">
+                  Hoje o cargo <strong>organiza só a tela</strong>: o banco de dados ainda não aplica esta regra. Quem tem acesso
+                  direto ao banco de dados vê tudo, independentemente do cargo.
                 </span>
               </p>
             </section>

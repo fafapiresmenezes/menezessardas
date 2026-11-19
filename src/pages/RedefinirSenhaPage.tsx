@@ -59,7 +59,7 @@ export default function RedefinirSenhaPage() {
         {pronta === false && (
           <div className="mt-4 space-y-4">
             <p role="alert" className="text-sm text-critico">Este link não está mais válido. Peça um novo na tela de entrada, em “Esqueci a senha”.</p>
-            <button type="button" onClick={irParaEntrada} className="inline-flex min-h-[44px] items-center text-sm text-navy underline underline-offset-4">Ir para a entrada</button>
+            <button type="button" onClick={irParaEntrada} title="Volta para a tela de entrada" className="inline-flex min-h-[44px] items-center text-sm text-navy underline underline-offset-4">Ir para a entrada</button>
           </div>
         )}
 
@@ -67,14 +67,14 @@ export default function RedefinirSenhaPage() {
           <form onSubmit={salvar} className="mt-4 space-y-4">
             <label className="block text-sm">
               Nova senha (mínimo 8 caracteres)
-              <input type="password" autoComplete="new-password" value={nova} onChange={e => setNova(e.target.value)} className={`${campo} mt-1`} required minLength={8} />
+              <input type="password" autoComplete="new-password" title="Digite a senha nova, com pelo menos 8 caracteres" value={nova} onChange={e => setNova(e.target.value)} className={`${campo} mt-1`} required minLength={8} />
             </label>
             <label className="block text-sm">
               Repita a nova senha
-              <input type="password" autoComplete="new-password" value={confirma} onChange={e => setConfirma(e.target.value)} className={`${campo} mt-1`} required minLength={8} />
+              <input type="password" autoComplete="new-password" title="Repita a mesma senha para confirmar" value={confirma} onChange={e => setConfirma(e.target.value)} className={`${campo} mt-1`} required minLength={8} />
             </label>
             {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={`text-sm ${msg.tipo === 'erro' ? 'text-critico' : 'text-regular'}`}>{msg.texto}</p>}
-            <button type="submit" disabled={ocupado} className="w-full min-h-[44px] bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-60">
+            <button type="submit" disabled={ocupado} title="Grava a senha nova e encerra esta sessão de recuperação" className="w-full min-h-[44px] bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-60">
               {ocupado ? 'Gravando…' : 'Gravar a senha'}
             </button>
           </form>
@@ -83,7 +83,7 @@ export default function RedefinirSenhaPage() {
         {concluida && (
           <div className="mt-4 space-y-4">
             <p role="status" className="text-sm text-regular">Senha gravada. Agora entre com a senha nova.</p>
-            <button type="button" onClick={irParaEntrada} className="inline-flex min-h-[44px] items-center px-4 bg-navy text-white text-sm uppercase tracking-wider">Entrar</button>
+            <button type="button" onClick={irParaEntrada} title="Vai para a tela de entrada para usar a senha nova" className="inline-flex min-h-[44px] items-center px-4 bg-navy text-white text-sm uppercase tracking-wider">Entrar</button>
           </div>
         )}
       </section>
