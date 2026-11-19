@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { mensagemAmigavel } from '@/lib/erros'
+import { codigoDoLink } from '@/lib/acessoEmail'
 
 /**
  * Tela de criar ou redefinir a senha, aberta pelo link que o Supabase envia por e-mail.
@@ -20,7 +21,10 @@ export default function RedefinirSenhaPage() {
   useEffect(() => {
     if (!supabaseConfigurado) { setPronta(false); return }
     let vivo = true
-    supabase.auth.getSession()
+    // Link do e-mail da casa: traz o código de uso único em &th=. Confere o código e abre a sessão de troca.
+    const th = codigoDoLink()
+    const abrir = th ? supabase.auth.verifyOtp({ token_hash: th, type: 'recovery' }).then(() => undefined, () => undefined) : Promise.resolve()
+    abrir.then(() => supabase.auth.getSession())
       .then(({ data }) => { if (vivo) setPronta(!!data.session) })
       .catch(() => { if (vivo) setPronta(false) })
     return () => { vivo = false }

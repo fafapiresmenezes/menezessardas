@@ -15,6 +15,7 @@ import { destinoSeguro, DESTINO_PADRAO, DESTINOS_PERMITIDOS, lembrarUltimaFrente
 import ProvaDaPorta from '@/components/ProvaDaPorta'
 import { VERTENTES } from '@/data/vertentes'
 import type { Chave } from '@/lib/i18n'
+import { acessoEmail } from '@/lib/acessoEmail'
 
 // Lista de casa dos escritórios clientes: vale enquanto o banco não devolve o registro.
 const ESCRITORIOS_DA_CASA = ['SARDAS E MENEZES']
@@ -46,7 +47,9 @@ export default function LoginPage() {
     e.preventDefault()
     setCarregando(true)
     try {
-      await supabase.auth.resetPasswordForEmail(emailRecuperar.trim(), { redirectTo: `${window.location.origin}/?redefinir=1` })
+      // Primeiro o envio da casa (sem o limite de poucos e-mails por hora); o do Supabase fica de reserva.
+      const r = await acessoEmail({ acao: 'recuperar', email: emailRecuperar.trim() })
+      if (r.indisponivel) await supabase.auth.resetPasswordForEmail(emailRecuperar.trim(), { redirectTo: `${window.location.origin}/?redefinir=1` })
     } catch { /* mesma resposta de qualquer forma */ }
     setRecuperacaoEnviada(true)
     setCarregando(false)
@@ -154,7 +157,9 @@ export default function LoginPage() {
 
     if (primeiroAcesso) {
       // Anti-robô simples: campo invisível preenchido ou formulário enviado em menos de 3 s = robô.
-      if (armadilha || Date.now() - abertoEm < 3000) {
+      // O campo invisível deixou de barrar aqui: o preenchimento automático do navegador às vezes o
+      // preenche e pessoas de verdade eram recusadas. Ele segue para o servidor, que decide.
+      if (Date.now() - abertoEm < 3000) {
         setErro(t('erro.robo'))
         setCarregando(false)
         return
@@ -167,6 +172,9 @@ export default function LoginPage() {
       try {
         // O nome do escritório segue o padrão da casa: tudo em letras maiúsculas, sem espaços sobrando.
         const nomeEscritorio = (escolha === OUTRO ? escritorio : escolha).toUpperCase().replace(/\s+/g, ' ').trim()
+        const r = await acessoEmail({ acao: 'cadastrar', email: email.trim(), senha, escritorio: nomeEscritorio })
+        if (r.ok) { setAvisoCadastro(t('login.avisoContaCriada')); setPrimeiroAcesso(false); return }
+        if (!r.indisponivel) { setErro(r.erro ?? t('erro.criarAcesso')); return }
         const { data, error } = await supabase.auth.signUp({ email, password: senha, options: { data: { escritorio: nomeEscritorio } } })
         if (error) setErro(/rate limit/i.test(error.message ?? '') ? t('erro.muitasContas') : t('erro.criarAcessoPrefixo') + mensagemAmigavel(error))
         else if (data?.session) seguir() // sem confirmação de e-mail: já entra; se o escritório existe, cai na tela de espera
