@@ -72,6 +72,24 @@ const MVP_GEO_BOTAO: Record<string, string> = {
   zh: '打开地理图谱 MVP',
   es: 'Abrir el MVP de geomapeo',
 }
+const DEMO_FUNDOS_TITULO: Record<string, string> = {
+  pt: 'A demonstração já funciona',
+  en: 'The demonstration already works',
+  zh: '演示已经可用',
+  es: 'La demostración ya funciona',
+}
+const DEMO_FUNDOS_TEXTO: Record<string, string> = {
+  pt: 'Catorze telas a funcionar: carteira por país e cor, medição de obra, pagamentos, riscos, garantias, documentos e prestação de contas — com dados de exemplo citados e as regras da literatura dentro de cada tela. Quem tem acesso entra direto; quem ainda não tem passa pela entrada.',
+  en: 'Fourteen working screens: portfolio by country and colour, works measurement, payments, risks, guarantees, documents and reporting — with cited sample data and the literature’s rules inside each screen. Those with access go straight in; those without pass through the entrance.',
+  zh: '十四个可用页面：按国家和状态分类的项目组合、工程计量、付款、风险、担保、文件与报告——示例数据均注明出处，每个页面内都有文献规则。有权限者直接进入；尚无权限者经由入口。',
+  es: 'Catorce pantallas funcionando: cartera por país y color, medición de obra, pagos, riesgos, garantías, documentos y rendición de cuentas — con datos de ejemplo citados y las reglas de la literatura dentro de cada pantalla. Quien tiene acceso entra directo; quien aún no, pasa por la entrada.',
+}
+const DEMO_FUNDOS_BOTAO: Record<string, string> = {
+  pt: 'Abrir a demonstração',
+  en: 'Open the demonstration',
+  zh: '打开演示',
+  es: 'Abrir la demostración',
+}
 const VEJA_PORTAS: Record<string, (link: JSX.Element) => JSX.Element> = {
   pt: link => <>Veja as portas do Instituto em {link}.</>,
   en: link => <>See the Institute's doors at {link}.</>,
@@ -140,6 +158,14 @@ export default function PortalInstitutoPage() {
             <h2 className="text-lg font-serif text-white mb-2">{MVP_GEO_TITULO[idioma]}</h2>
             <p className="text-sm text-white/80 mb-3">{MVP_GEO_TEXTO[idioma]}</p>
             <Link to="/geo" title={MVP_GEO_TEXTO[idioma]} className="inline-block min-h-[44px] leading-[44px] px-5 bg-white text-black text-sm">{MVP_GEO_BOTAO[idioma]}</Link>
+          </div>
+        )}
+
+        {portal.rota === '/fundos-internacionais' && (
+          <div className="mt-8 border border-dourado/60 p-4" data-testid="demo-fundos">
+            <h2 className="text-lg font-serif text-white mb-2">{DEMO_FUNDOS_TITULO[idioma]}</h2>
+            <p className="text-sm text-white/80 mb-3">{DEMO_FUNDOS_TEXTO[idioma]}</p>
+            <Link to="/visao-presidente" title={DEMO_FUNDOS_TEXTO[idioma]} className="inline-block min-h-[44px] leading-[44px] px-5 bg-white text-black text-sm">{DEMO_FUNDOS_BOTAO[idioma]}</Link>
           </div>
         )}
 

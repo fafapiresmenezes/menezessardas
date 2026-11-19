@@ -239,7 +239,7 @@ export const PORTAIS_INSTITUTO: PortalInstituto[] = [
       "Prestação de contas ao financiador: medição, custo e prazo no formato que bancos de desenvolvimento e fundos pedem",
       "Padrões socioambientais e de integridade exigidos por fundos internacionais, com a fonte de cada exigência",
     ],
-    estado: 'prototipo',
-    comoEsta: "Protótipo. Trilha de auditoria, hierarquia e medições já funcionam dentro da plataforma; o espaço próprio desta frente está sendo montado.",
+    estado: 'piloto',
+    comoEsta: "A demonstração completa já funciona: 14 telas com carteira, medição, pagamentos, riscos, documentos e prestação de contas, com dados de exemplo citados e as regras da literatura dentro de cada tela.",
   },
 ]
