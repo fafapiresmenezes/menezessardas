@@ -19,7 +19,10 @@ export default function CasaGeo({ children }: { children: React.ReactNode }) {
             <MarcaOlho tamanho={24} />
             <span className="text-sm tracking-[0.15em] uppercase">THEYE · Geomapeamento</span>
           </Link>
-          <span className="text-xs text-white/60 hidden sm:inline" title="Os dados gravados ficam cifrados só neste aparelho; nenhum ponto vai para servidor">dados só neste aparelho</span>
+          <div className="flex items-center gap-3">
+            <Link to="/geo/nota" className="text-xs text-white/70 hover:text-white underline decoration-white/30" title="A régua de nota do app: as 10 dimensões de qualidade, à vista">régua de nota</Link>
+            <span className="text-xs text-white/60 hidden sm:inline" title="Os dados gravados ficam cifrados só neste aparelho; nenhum ponto vai para servidor">dados só neste aparelho</span>
+          </div>
         </div>
       </header>
       <main className="flex-1 w-full max-w-5xl mx-auto px-4 py-6">{children}</main>
