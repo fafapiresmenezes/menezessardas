@@ -76,6 +76,9 @@ const boletim = {
   acessibilidade: { total_violacoes: totalViol, por_tela: telas },
   pacote: { js_total_kb: Math.round(bundleKB), entrada_kb: Math.round(entradaKB) },
 }
-writeFileSync('/mnt/project-files/geo-replano/boletim-nota-R2.json', JSON.stringify(boletim, null, 2))
+// Onde gravar o boletim. Na máquina do projeto vai para /mnt/project-files; no CI, que não tem
+// essa pasta, passe BOLETIM_GEO=caminho.json (é o que .github/workflows/geo-nota.yml faz).
+const destino = process.env.BOLETIM_GEO || '/mnt/project-files/geo-replano/boletim-nota-R2.json'
+writeFileSync(destino, JSON.stringify(boletim, null, 2))
 console.log('FCP(ms):', boletim.desempenho.fcp_ms, '| load(ms):', boletim.desempenho.load_ms, '| axe total violações:', totalViol, '| entrada(kb):', boletim.pacote.entrada_kb)
 for (const t of telas) { console.log(`  [${t.tela}] violações: ${t.violacoes}`); for (const v of t.detalhe) console.log('     -', v.id, `(${v.impact}, ${v.n})`, v.help, '::', v.alvos.join(' | ')) }

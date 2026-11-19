@@ -1,0 +1,22 @@
+{
+  "quando": "2026-11-19T03:25:52.799Z",
+  "dimensoes": {
+    "3": {
+      "nota": 9,
+      "valor": "0 violações em 12 telas",
+      "como": "axe-core nas telas da casa /geo (scripts/geo/auditar-r2.mjs)"
+    },
+    "9": {
+      "nota": 7,
+      "valor": "9 de 14 arquivos de lib com teste",
+      "como": "um arquivo de teste ao lado de cada src/lib/geo/*.ts",
+      "sem_teste": [
+        "calculo.ts",
+        "fichaPdf.ts",
+        "fontes.ts",
+        "grafo.ts",
+        "ollama.ts"
+      ]
+    }
+  }
+}
