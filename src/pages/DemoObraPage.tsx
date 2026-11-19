@@ -8,6 +8,7 @@
  */
 import { useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
+import SaberDaMateria from '@/components/SaberDaMateria'
 import { Eye, EyeOff, Gauge, Globe, PenLine, ShieldCheck, RotateCcw } from 'lucide-react'
 import {
   ESTACOES, descricaoNivel, filtrarItens, motivoParaNaoAssinar, podeVerItem, proximaEstacao, rotuloEstacao, rotuloNivel,
@@ -56,6 +57,7 @@ export default function DemoObraPage() {
   return (
     <Layout title="Medição de obra por nível">
       <div className="max-w-5xl space-y-6">
+        <SaberDaMateria rota="/demonstracao-obra" />
         <p className="bg-navy text-white text-sm px-4 py-2" data-testid="aviso-ficticio">
           Demonstração com dados fictícios. Empresas, pessoas, projectos e valores foram inventados; nada é gravado.
         </p>

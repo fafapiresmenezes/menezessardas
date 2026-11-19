@@ -5,6 +5,7 @@
 import Layout from '@/components/Layout'
 import { PAGAMENTOS_DEMO, RAZAO_RETIDO, type EstadoPag } from '@/data/pagamentosDemo'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
+import SaberDaMateria from '@/components/SaberDaMateria'
 import { recorte } from '@/lib/visaoFundos'
 
 const money = (v: number, m: string) => `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 0 }).format(v)} ${m}`
@@ -28,6 +29,7 @@ export default function PagamentosPage() {
       <SoParaNiveis rota="/pagamentos-fundos">
       <div className="max-w-5xl mx-auto space-y-4">
         <VerComoFundos />
+        <SaberDaMateria rota="/pagamentos-fundos" />
         <p className="text-sm text-grafite-claro">Demonstração com dados inventados. Cada pagamento ligado à medição e ao projecto, com o estado e o motivo de retenção quando há.</p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" data-testid="resumo-pag">
           {(['pago','aprovado','em-analise','retido'] as EstadoPag[]).map(e => (

@@ -27,7 +27,8 @@ export default function AgentesInstitutoPage() {
       <div className="max-w-5xl mx-auto space-y-6">
         <p className="text-sm text-grafite-claro">
           Só para membros do Instituto. Cada agente é uma ficha de especialista ancorada em evidência — do acervo da casa ou de fonte académica aberta.
-          Nenhum agente decide nem assina: quem decide é sempre uma pessoa.
+          Nenhum agente decide nem assina: quem decide é sempre uma pessoa.{' '}
+          <a href="#/qualidade" className="underline text-navy" title="Abre a régua de qualidade da casa: os 11 parâmetros, com o valor medido, a data e o método">Ver a régua de qualidade da casa</a>.
         </p>
 
         <section aria-label="Agentes do acervo">
