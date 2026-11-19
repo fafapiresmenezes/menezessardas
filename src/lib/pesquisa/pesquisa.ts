@@ -40,21 +40,18 @@ export function acoesPara(d: Detectado): Acao[] {
     intern('prazos', 'Calcular o prazo do próximo ato', 'Escolha o ato pelo código (CPC, CLT, CPP…) e veja a data final.', '/prazos', 'Prazos por código'),
     intern('intim', 'Intimações deste processo', 'Publicações do Diário de Justiça Eletrônico Nacional para as OABs do escritório.', '/intimacoes', 'DJEN (CNJ)'),
     intern('cart', 'Acompanhar na carteira', 'Cadastre o processo para monitorar andamentos e prazos.', '/processos/importar', 'Carteira de processos'),
-    ext('escavador', 'Abrir no Escavador', 'Capa, partes e movimentações no Escavador.', `https://www.escavador.com/busca?q=${q(t)}`, 'Escavador'),
     ext('jusbrasil', 'Abrir no Jusbrasil', 'Processo e jurisprudência relacionada.', `https://www.jusbrasil.com.br/busca?q=${q(t)}`, 'Jusbrasil'),
   ]
   if (d.tipo === 'cnpj') return [
     intern('kyc', 'Checagem de contraparte (empresa)', 'Situação na Receita, sócios, sanções e conflito de interesse.', `/kyc?doc=${q(t)}`, 'Receita Federal, CGU'),
     intern('parte', 'Ficha da parte adversa', 'Publicações, diários oficiais e processos citando a empresa, com finalidade e caso.', `/parte-adversa?parte=${q(t)}&cnpj=${q(t)}`, 'Comunica PJe, Querido Diário'),
     intern('mon', 'Monitorar a empresa', 'Aviso de novas publicações e de ação distribuída contra ou a favor.', '/monitoramento', 'DJEN (CNJ)'),
-    intern('fontes', 'Buscar processos no Escavador (token do escritório)', 'Processos e publicações por CNPJ.', `/fontes?termo=${q(t)}`, 'Escavador'),
-    ext('escavador', 'Abrir no Escavador', 'Busca pelo CNPJ no site.', `https://www.escavador.com/busca?q=${q(t)}`, 'Escavador'),
+    intern('fontes', 'Buscar nas fontes públicas', 'Publicações e diários oficiais que citam o CNPJ.', `/fontes?termo=${q(t)}`, 'Comunica PJe, DataJud, Querido Diário'),
   ]
   if (d.tipo === 'cpf') return [
     intern('parte', 'Ficha da parte adversa (pessoa física)', 'Publicações e diários oficiais com o nome; exige finalidade e caso (LGPD, art. 7º, VI).', '/parte-adversa', 'Comunica PJe, Querido Diário'),
-    intern('fontes', 'Buscar processos no Escavador (token do escritório)', 'Processos por CPF.', `/fontes?termo=${q(t)}`, 'Escavador'),
+    intern('fontes', 'Buscar nas fontes públicas', 'Publicações e diários oficiais que citam a pessoa.', `/fontes?termo=${q(t)}`, 'Comunica PJe, DataJud, Querido Diário'),
     ext('receita', 'Situação do CPF na Receita', 'Confere nome, nascimento e situação cadastral.', 'https://servicos.receita.fazenda.gov.br/servicos/cpf/consultasituacao/consultapublica.asp', 'Receita Federal'),
-    ext('escavador', 'Abrir no Escavador', 'Busca pelo CPF no site.', `https://www.escavador.com/busca?q=${q(t)}`, 'Escavador'),
   ]
   if (d.tipo === 'oab') return [
     intern('importar', 'Importar todos os processos desta OAB', 'Busca o histórico de publicações da OAB e lista os processos para você escolher.', '/processos/importar', 'DJEN (CNJ)'),
@@ -64,8 +61,7 @@ export function acoesPara(d: Detectado): Acao[] {
   return [
     intern('parte', 'Ficha da parte adversa', 'Publicações e diários oficiais com o nome; exige finalidade e caso.', `/parte-adversa?parte=${q(t)}`, 'Comunica PJe, Querido Diário'),
     intern('mon', 'Monitorar o nome', 'Avisa de novas publicações, com variações de grafia e termos obrigatórios ou excludentes.', '/monitoramento', 'DJEN (CNJ)'),
-    intern('fontes', 'Buscar processos no Escavador (token do escritório)', 'Processos e publicações por nome.', `/fontes?termo=${q(t)}`, 'Escavador'),
-    ext('escavador', 'Abrir no Escavador', 'Busca pelo nome no site.', `https://www.escavador.com/busca?q=${q(t)}`, 'Escavador'),
+    intern('fontes', 'Buscar nas fontes públicas', 'Publicações e diários oficiais com o nome.', `/fontes?termo=${q(t)}`, 'Comunica PJe, DataJud, Querido Diário'),
     ext('jusbrasil', 'Abrir no Jusbrasil', 'Processos, diários e jurisprudência.', `https://www.jusbrasil.com.br/busca?q=${q(t)}`, 'Jusbrasil'),
   ]
 }
@@ -83,7 +79,7 @@ export const DILIGENCIAS: Diligencia[] = [
     { id: 'cndt', item: 'Certidão negativa de débitos trabalhistas (CNDT)', fonte: 'Tribunal Superior do Trabalho', link: 'https://www.tst.jus.br/certidao', prova: 'Inexistência de dívida trabalhista já reconhecida em decisão.', validade: '180 dias' },
     { id: 'estadual-municipal', item: 'Certidões de tributos estaduais e municipais', fonte: 'Secretaria de Fazenda do estado e da prefeitura', prova: 'Regularidade de ICMS, ISS e taxas.', validade: 'conforme a certidão' },
     { id: 'distribuicao', item: 'Certidões de distribuição cível, fiscal, criminal e trabalhista da empresa e dos sócios', fonte: 'Tribunais de Justiça, Justiça Federal e TRT', prova: 'Processos em andamento que possam afetar o patrimônio.', validade: 'conforme a certidão' },
-    { id: 'processos', item: 'Processos e publicações pelo CNPJ e pelo nome', fonte: 'Escavador, Comunica PJe (DJEN) e DataJud', prova: 'Histórico de litígios, mesmo sem certidão.', interno: '/parte-adversa' },
+    { id: 'processos', item: 'Processos e publicações pelo CNPJ e pelo nome', fonte: 'Comunica PJe (DJEN) e DataJud', prova: 'Histórico de litígios, mesmo sem certidão.', interno: '/parte-adversa' },
     { id: 'sancoes', item: 'Sanções e impedimentos (CEIS, CNEP e outros cadastros)', fonte: 'Portal da Transparência (CGU)', link: 'https://portaldatransparencia.gov.br/sancoes/consulta', prova: 'Empresa punida ou impedida de contratar com o poder público.', interno: '/kyc' },
     { id: 'protestos', item: 'Protestos', fonte: 'Cartórios de protesto (consulta nacional)', link: 'https://www.cenprotnacional.org.br/', prova: 'Títulos protestados contra a empresa.' },
     { id: 'marcas', item: 'Marcas e patentes registradas', fonte: 'INPI', link: 'https://busca.inpi.gov.br/pePI/', prova: 'Titularidade de marca ou patente usada no negócio.' },
@@ -95,7 +91,7 @@ export const DILIGENCIAS: Diligencia[] = [
     { id: 'criminal', item: 'Certidões criminais (Estadual e Federal)', fonte: 'Tribunal de Justiça e Justiça Federal; Polícia Federal (antecedentes)', prova: 'Ações penais e antecedentes.', validade: 'conforme a certidão' },
     { id: 'trab', item: 'Certidão trabalhista (CNDT) e ações no TRT', fonte: 'Tribunal Superior do Trabalho e TRT', link: 'https://www.tst.jus.br/certidao', prova: 'Dívidas e ações trabalhistas.', validade: '180 dias' },
     { id: 'bnmp', item: 'Mandados de prisão', fonte: 'BNMP (CNJ)', link: 'https://portalbnmp.cnj.jus.br/', prova: 'Mandado de prisão em aberto.' },
-    { id: 'processos', item: 'Processos e publicações pelo nome e pelo CPF', fonte: 'Escavador, Comunica PJe (DJEN), DataJud e Querido Diário', prova: 'Histórico de litígios e atos em diários oficiais.', interno: '/parte-adversa' },
+    { id: 'processos', item: 'Processos e publicações pelo nome e pelo CPF', fonte: 'Comunica PJe (DJEN), DataJud e Querido Diário', prova: 'Histórico de litígios e atos em diários oficiais.', interno: '/parte-adversa' },
     { id: 'protestos', item: 'Protestos', fonte: 'Cartórios de protesto (consulta nacional)', link: 'https://www.cenprotnacional.org.br/', prova: 'Títulos protestados.' },
     { id: 'cnib', item: 'Indisponibilidade de bens', fonte: 'CNIB (Central Nacional de Indisponibilidade de Bens)', link: 'https://www.indisponibilidade.org.br/', prova: 'Bens bloqueados por ordem judicial ou administrativa.' },
     { id: 'sancoes', item: 'Sanções e cadastros públicos', fonte: 'Portal da Transparência (CGU)', link: 'https://portaldatransparencia.gov.br/sancoes/consulta', prova: 'Pessoa punida ou impedida de contratar com o poder público.' },
@@ -106,7 +102,7 @@ export const DILIGENCIAS: Diligencia[] = [
     { id: 'condominio', item: 'Declaração de quitação do condomínio', fonte: 'Síndico ou administradora', prova: 'Dívida condominial acompanha o imóvel.' },
     { id: 'vendedor', item: 'Certidões do vendedor (cível, fiscal, trabalhista, protesto) e dos cônjuges', fonte: 'Tribunais, Receita e cartórios', prova: 'Evita fraude à execução e penhora do imóvel por dívida do vendedor.', validade: 'conforme a certidão' },
     { id: 'cnib', item: 'Indisponibilidade de bens do vendedor', fonte: 'CNIB', link: 'https://www.indisponibilidade.org.br/', prova: 'Bloqueio que impede a venda.' },
-    { id: 'processos', item: 'Processos contra o imóvel e o vendedor', fonte: 'Escavador, Comunica PJe e DataJud', prova: 'Ações reipersecutórias e execuções.', interno: '/parte-adversa' },
+    { id: 'processos', item: 'Processos contra o imóvel e o vendedor', fonte: 'Comunica PJe e DataJud', prova: 'Ações reipersecutórias e execuções.', interno: '/parte-adversa' },
     { id: 'habitese', item: 'Habite-se, planta aprovada e regularidade urbanística', fonte: 'Prefeitura', prova: 'Imóvel regular perante o município.' },
     { id: 'ambiental', item: 'Áreas embargadas e restrições ambientais (imóvel rural ou grande)', fonte: 'IBAMA e órgão ambiental do estado', prova: 'Embargos e áreas protegidas.' },
   ] },
@@ -131,7 +127,6 @@ export const COBERTURA: Cobertura[] = [
   { fonte: 'Querido Diário', o_que_traz: 'Diários oficiais de municípios (licitações, nomeações, atos).', historico: 'Conforme os municípios já coletados pelo projeto.', limite: 'Cobertura de municípios é parcial.', onde: 'Parte adversa', gratis: true },
   { fonte: 'Receita Federal (CNPJ e CPF)', o_que_traz: 'Situação cadastral, sócios e atividade.', historico: 'Situação atual (não mostra a linha do tempo de alterações).', limite: 'Alterações antigas estão na Junta Comercial.', onde: 'Checagem de contraparte', gratis: true },
   { fonte: 'Portal da Transparência (sanções)', o_que_traz: 'Empresas e pessoas punidas ou impedidas de contratar com o poder público.', historico: 'Vigência de cada sanção.', limite: 'Só sanções federais cadastradas.', onde: 'Checagem de contraparte', gratis: true },
-  { fonte: 'Escavador (opcional, pago por crédito)', o_que_traz: 'Processos por nome, CPF, CNPJ, OAB ou número; partes e movimentações; diários.', historico: 'Conforme a base do Escavador, que reúne tribunais, diários e autos que o DataJud não mostra.', limite: 'Opcional: a busca nas fontes oficiais já cobre andamentos e publicações. Serve para autos que não foram publicados e tribunais fora do DataJud. Exige token e consome créditos; uso conforme a LGPD.', onde: 'Fontes do advogado', gratis: false },
   { fonte: 'Certidões (Receita, PGFN, FGTS, TST, tribunais)', o_que_traz: 'Prova oficial e datada de regularidade.', historico: 'Instantâneo do dia da emissão.', limite: 'Têm validade; precisam ser emitidas no site do órgão e anexadas ao caso.', onde: 'Due diligence (lista abaixo)', gratis: true },
   { fonte: 'Sistemas do Judiciário (autos, SISBAJUD, RENAJUD, INFOJUD)', o_que_traz: 'Autos completos, bloqueios e consultas patrimoniais.', historico: 'Completo.', limite: 'Acesso só pelo tribunal ou pela autoridade; a plataforma não substitui.', onde: 'Fora da plataforma', gratis: true },
 ]

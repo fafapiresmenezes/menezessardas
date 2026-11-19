@@ -33,7 +33,6 @@ export const SITES: SiteAtalho[] = [
   { grupo: 'Jurisprudência', nome: 'STF – jurisprudência', url: 'https://jurisprudencia.stf.jus.br/', busca: t => `https://jurisprudencia.stf.jus.br/pages/search?base=acordaos&queryString=${e(t)}` },
   { grupo: 'Jurisprudência', nome: 'TST – jurisprudência', url: 'https://jurisprudencia.tst.jus.br/' },
   { grupo: 'Jurisprudência', nome: 'JusBrasil', url: 'https://www.jusbrasil.com.br/', busca: t => `https://www.jusbrasil.com.br/busca?q=${e(t)}` },
-  { grupo: 'Jurisprudência', nome: 'Escavador', url: 'https://www.escavador.com/', busca: t => `https://www.escavador.com/busca?q=${e(t)}` },
   { grupo: 'Legislação', nome: 'Planalto – Código Civil', url: 'https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm' },
   { grupo: 'Legislação', nome: 'Planalto – CPC', url: 'https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm' },
   { grupo: 'Legislação', nome: 'Planalto – Lei do Inquilinato', url: 'https://www.planalto.gov.br/ccivil_03/leis/l8245.htm' },
@@ -47,7 +46,7 @@ export const SITES: SiteAtalho[] = [
 
 // Domínios que sabidamente se recusam a aparecer dentro de outra página. Começam em "janela ao lado".
 const BLOQUEIAM = [
-  'google.', 'jusbrasil.com.br', 'escavador.com', 'gov.br', 'jus.br', 'oab.org.br', 'bing.com', 'linkedin.com',
+  'google.', 'jusbrasil.com.br', 'gov.br', 'jus.br', 'oab.org.br', 'bing.com', 'linkedin.com',
   'facebook.com', 'instagram.com', 'x.com', 'twitter.com', 'youtube.com', 'whatsapp.com', 'microsoft.com', 'office.com',
 ]
 // Exceções conhecidas que deixam ser mostradas dentro (páginas estáticas antigas do Planalto, Wikipédia).

@@ -10,19 +10,18 @@ import { analisarPlanilha, analisarLista, analisarResultados, paraCaso, importav
 import ConexaoCnj from '@/components/ConexaoCnj'
 import PassosImportacao from '@/components/PassosImportacao'
 import { janelas, lerOabs } from '@/lib/escritorio/historicoOab'
-import { Download, Upload, CheckCircle2, FileSpreadsheet, ListOrdered, Inbox, Search } from 'lucide-react'
+import { Download, Upload, CheckCircle2, FileSpreadsheet, ListOrdered, Inbox } from 'lucide-react'
 import { meuAlcance, ALCANCE_FECHADO } from '@/lib/hierarquia'
 import AbasProcessosAntigos from '@/components/AbasProcessosAntigos'
 
 // Importar processos anteriores: o escritório traz a carteira que já tem e não começa do zero.
-// Quatro caminhos: planilha (Excel/CSV de outro sistema), lista de números, intimações das OABs do escritório
-// (DJEN, já captadas pela plataforma) e busca no Escavador por nome, CPF/CNPJ ou número.
-type Fonte = 'planilha' | 'lista' | 'intimacoes' | 'escavador'
+// Três caminhos: planilha (Excel/CSV de outro sistema), lista de números e intimações das OABs do escritório
+// (DJEN, já captadas pela plataforma).
+type Fonte = 'planilha' | 'lista' | 'intimacoes'
 const FONTES: { valor: Fonte; rotulo: string; icone: JSX.Element }[] = [
   { valor: 'planilha', rotulo: 'Planilha', icone: <FileSpreadsheet size={16} aria-hidden /> },
   { valor: 'lista', rotulo: 'Lista de números', icone: <ListOrdered size={16} aria-hidden /> },
   { valor: 'intimacoes', rotulo: 'Das intimações das OABs', icone: <Inbox size={16} aria-hidden /> },
-  { valor: 'escavador', rotulo: 'Busca no Escavador', icone: <Search size={16} aria-hidden /> },
 ]
 const COR: Record<string, string> = { ok: 'text-regular', sem_numero: 'text-navy', ja_cadastrado: 'text-grafite-claro', duplicado_arquivo: 'text-grafite-claro', invalido: 'text-critico' }
 
@@ -38,7 +37,6 @@ export default function ImportarProcessosPage() {
   const [eu, setEu] = useState('')
   const [monitorar, setMonitorar] = useState(true)
   const [marcadas, setMarcadas] = useState<Set<number>>(new Set())
-  const [termo, setTermo] = useState('')
   const [buscando, setBuscando] = useState(false)
   const [importando, setImportando] = useState(false)
   const [relatorio, setRelatorio] = useState<{ casos: number; monitorados: number; falhas: string[] } | null>(null)
@@ -137,16 +135,6 @@ export default function ImportarProcessosPage() {
     setProgresso(p => (p ? { ...p, novas } : p))
     await buscarIntimacoes()
   }
-  const buscarEscavador = async () => {
-    if (termo.trim().length < 3) return setErro('Escreva o nome, o CPF/CNPJ ou o número do processo.')
-    setBuscando(true); setErro('')
-    const { data, error } = await supabase.functions.invoke('escavador', { body: { termo: termo.trim() } })
-    setBuscando(false)
-    if (error || data?.erro) return setErro(data?.erro ?? 'O Escavador não respondeu. Tente de novo.')
-    const procs = (data?.processos ?? []) as { numero: string; titulo: string; tribunal: string | null; classe: string | null }[]
-    if (!procs.length) setErro('O Escavador não encontrou processos para esse termo.')
-    mostrar(analisarResultados(procs.map(p => ({ numero: p.numero, titulo: p.titulo || p.classe || undefined, tribunal: p.tribunal ?? undefined })), existentes))
-  }
 
   const prontas = useMemo(() => linhas.filter(l => importavel(l) && marcadas.has(l.linha)), [linhas, marcadas])
   const contagem = useMemo(() => { const m: Record<string, number> = {}; for (const l of linhas) m[l.situacao] = (m[l.situacao] ?? 0) + 1; return m }, [linhas])
@@ -193,7 +181,7 @@ export default function ImportarProcessosPage() {
         <section className="bg-white shadow-sm border-t-2 border-dourado p-5">
           <p className="text-sm">Traga a carteira que o escritório já tem. Cada processo vira um caso em Projetos, com cliente, área, parte contrária, vara e honorários, e (se quiser) entra no monitoramento diário do DataJud. Nada é gravado antes da conferência: número CNJ com dígito errado, repetido ou já cadastrado fica de fora.</p>
           <div role="tablist" aria-label="De onde vêm os processos" className="flex flex-wrap gap-2 mt-4">
-            {FONTES.map(f => <button key={f.valor} role="tab" type="button" aria-selected={fonte === f.valor} onClick={() => trocarFonte(f.valor)} title={f.valor === 'planilha' ? 'Mostra a importação por planilha CSV exportada de outro sistema ou do Excel' : f.valor === 'lista' ? 'Mostra a importação colando uma lista de números de processo' : f.valor === 'intimacoes' ? 'Mostra a importação a partir das intimações já captadas pelas OABs do escritório' : 'Mostra a busca de processos no Escavador por nome, CPF/CNPJ ou número'} data-testid={`fonte-${f.valor}`} className={`min-h-[44px] px-4 text-sm border inline-flex items-center gap-2 ${fonte === f.valor ? 'bg-navy text-white' : 'text-navy'}`}>{f.icone}{f.rotulo}</button>)}
+            {FONTES.map(f => <button key={f.valor} role="tab" type="button" aria-selected={fonte === f.valor} onClick={() => trocarFonte(f.valor)} title={f.valor === 'planilha' ? 'Mostra a importação por planilha CSV exportada de outro sistema ou do Excel' : f.valor === 'lista' ? 'Mostra a importação colando uma lista de números de processo' : f.valor === 'intimacoes' ? 'Mostra a importação a partir das intimações já captadas pelas OABs do escritório' : 'Mostra as intimações já captadas pelas OABs do escritório'} data-testid={`fonte-${f.valor}`} className={`min-h-[44px] px-4 text-sm border inline-flex items-center gap-2 ${fonte === f.valor ? 'bg-navy text-white' : 'text-navy'}`}>{f.icone}{f.rotulo}</button>)}
           </div>
 
           {fonte === 'planilha' && <div className="mt-4 space-y-3">
@@ -207,6 +195,9 @@ export default function ImportarProcessosPage() {
               <textarea title="Cole aqui o conteúdo da planilha, com a primeira linha de títulos. A plataforma descobre as colunas sozinha." value={texto} onChange={e => analisar(e.target.value)} rows={5} className="w-full border px-3 py-2 mt-1 font-mono text-xs" data-testid="planilha-texto" /></label>
           </div>}
 
+          {fonte === 'lista' && <p className="text-xs text-grafite-claro mt-4" data-testid="dica-fontes-oficiais">
+            Não tem os números? Em <Link to="/pesquisa" className="underline text-navy" title="Abre a Pesquisa, que lista os processos pelo nome do advogado, do escritório ou do cliente, pela OAB ou pelo CNPJ, direto nas fontes oficiais">Pesquisa</Link>, busque pelo nome do advogado, do escritório ou do cliente, pela OAB ou pelo CNPJ, clique em copiar os números e cole aqui.
+          </p>}
           {fonte === 'lista' && <label className="block text-sm mt-4">Cole os números dos processos (um por linha, ou no meio de qualquer texto: e-mail, relatório, PDF copiado)
             <textarea title="Cole os números dos processos, um por linha. Número com dígito errado, repetido ou já cadastrado fica de fora." value={texto} onChange={e => analisar(e.target.value, 'lista')} rows={6} placeholder="0001234-56.2023.8.19.0001" className="w-full border px-3 py-2 mt-1 font-mono text-xs" data-testid="lista-texto" /></label>}
 
@@ -233,13 +224,6 @@ export default function ImportarProcessosPage() {
             <button type="button" onClick={buscarIntimacoes} disabled={buscando} title="Lista os processos das intimações já captadas pela plataforma que ainda não são casos, sem buscar nada novo" data-testid="buscar-intimacoes" className="min-h-[44px] px-4 border border-navy text-navy text-sm disabled:opacity-50">{buscando ? 'Procurando…' : 'Só listar o que já foi captado: procurar processos nas intimações'}</button>
           </div>}
 
-          {fonte === 'escavador' && <div className="mt-4">
-            <p className="text-xs text-grafite-claro mb-2">Usa o token do Escavador do escritório (cada busca gasta crédito). Busque pelo nome do advogado ou do escritório para trazer toda a carteira, ou pelo nome/CPF/CNPJ de um cliente.</p>
-            <div className="flex flex-wrap gap-2">
-              <input value={termo} onChange={e => setTermo(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') buscarEscavador() }} placeholder="Nome, CPF/CNPJ ou número do processo" aria-label="Termo para buscar no Escavador" data-testid="escavador-termo" className="border px-3 py-2 min-h-[44px] flex-1 min-w-[240px]" />
-              <button type="button" onClick={buscarEscavador} disabled={buscando} title="Busca processos no Escavador pelo termo digitado (cada busca gasta crédito do token do escritório)" data-testid="buscar-escavador" className="min-h-[44px] px-4 bg-navy text-white text-sm disabled:opacity-50">{buscando ? 'Buscando…' : 'Buscar'}</button>
-            </div>
-          </div>}
           {erro && <p role="alert" className="text-sm text-critico mt-3" data-testid="importar-erro">{erro}</p>}
         </section>
 

@@ -23,21 +23,24 @@ const { default: FontesPage } = await import('./FontesPage')
 describe('Fontes do advogado', () => {
   beforeEach(() => { cleanup(); salvas = []; insert.mockClear(); update.mockClear(); del.mockClear(); invoke.mockReset().mockImplementation(async () => ({ data: null, error: null })); localStorage.clear() })
 
-  it('10 fontes abrem já com o termo; termo lembrado; botões só habilitam com 4 letras', async () => {
+  it('9 fontes abrem já com o termo; termo lembrado; botões só habilitam com 4 letras', async () => {
     render(<MemoryRouter><FontesPage /></MemoryRouter>)
-    expect(screen.getAllByTestId('fonte').length).toBe(10)
-    expect(screen.getByTestId('contador-fontes').textContent).toContain('10 fontes públicas e gratuitas; cada cartão')
+    expect(screen.getAllByTestId('fonte').length).toBe(9)
+    expect(screen.getByTestId('contador-fontes').textContent).toContain('9 fontes públicas e gratuitas; cada cartão')
     const botao = screen.getByTestId('buscar-gratis') as HTMLButtonElement
     expect(botao.disabled).toBe(true)
     fireEvent.change(screen.getByLabelText('O que você quer procurar?'), { target: { value: 'Maria Silva' } })
     expect(botao.disabled).toBe(false)
     expect(localStorage.getItem('lsm-fontes-termo')).toBe('Maria Silva')
     expect(screen.getByTestId('contador-fontes').textContent).toContain('todas prontas para "Maria Silva"')
-    expect(screen.getAllByTestId('fonte')[1].getAttribute('href')).toBe('https://www.jusbrasil.com.br/busca?q=Maria%20Silva')
+    expect(screen.getAllByTestId('fonte')[0].getAttribute('href')).toBe('https://www.jusbrasil.com.br/busca?q=Maria%20Silva')
+    // O que o Escavador fazia (listar processos pelo nome) passa pela Pesquisa, nas fontes oficiais.
+    fireEvent.click(screen.getByTestId('buscar-oficiais'))
+    expect(localStorage.getItem('lsm-pesquisa-termo')).toBe('Maria Silva')
     expect(screen.getByText('Ligada à plataforma: Perfil do julgador')).toBeTruthy()
   })
 
-  it('Enter busca nas fontes públicas e lista comunicações e diários; erro vira alerta; Escavador lista processos com copiar número', async () => {
+  it('Enter busca nas fontes públicas e lista comunicações e diários; erro vira alerta; o Escavador saiu da tela', async () => {
     const write = vi.fn(async (_t: string) => undefined); Object.assign(navigator, { clipboard: { writeText: write } })
     invoke.mockResolvedValueOnce({ data: { tipo: 'nome', comunica: { ok: true, total: 1, itens: [{ numero: '0001-11', tribunal: 'TJRJ', data: '2026-10-20', tipo: 'Intimação', trecho: 'trecho A' }] }, queridoDiario: { ok: true, total: 1, itens: [{ data: '2026-10-21', municipio: 'Rio de Janeiro', link: 'https://qd/1', trecho: 'trecho B' }] } }, error: null })
     render(<MemoryRouter><FontesPage /></MemoryRouter>)
@@ -50,11 +53,7 @@ describe('Fontes do advogado', () => {
     invoke.mockResolvedValueOnce({ data: { erro: 'CNJ fora do ar' }, error: null })
     fireEvent.click(screen.getByTestId('buscar-gratis'))
     await waitFor(() => expect(screen.getByRole('alert').textContent).toBe('CNJ fora do ar'))
-    invoke.mockResolvedValueOnce({ data: { processos: [{ numero: '0002-22', titulo: 'Maria x Banco', tribunal: 'TJSP', ultimaMovimentacao: '2026-10-01T12:00:00Z', classe: 'Cível', link: 'https://trib/2' }] }, error: null })
-    fireEvent.click(screen.getByText('Buscar processos no Escavador aqui'))
-    await waitFor(() => expect(screen.getByText('1 processo(s) encontrado(s):')).toBeTruthy())
-    fireEvent.click(screen.getByTestId('copiar-numero'))
-    expect(write).toHaveBeenCalledWith('0002-22')
+    expect(document.body.textContent).not.toMatch(/escavador/i)
   })
 
   it('salvar busca repete todo dia (primeira rodada imediata); duplicada avisa; ligar a caso e apagar; copiar buscas salvas', async () => {
