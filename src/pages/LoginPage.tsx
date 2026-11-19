@@ -235,7 +235,7 @@ export default function LoginPage() {
               {!supabaseConfigurado && t('login.avisoRecuperacaoSemBanco')}
               {supabaseConfigurado && !recuperacaoEnviada && (
                 <form onSubmit={pedirLinkRecuperacao} className="space-y-3" data-testid="form-recuperar">
-                  <p>Digite o e-mail da sua conta. Enviamos um link para criar ou trocar a senha. Se preferir, peça uma senha provisória (menu Equipe) a uma pessoa administradora da sua equipe.</p>
+                  <p>{t('login.avisoRecuperacao')}</p>
                   <input
                     type="email"
                     autoComplete="email"
