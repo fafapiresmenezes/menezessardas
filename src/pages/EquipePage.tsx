@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useBaixado } from '@/hooks/useBaixado'
 import { mensagemAmigavel } from '@/lib/erros'
@@ -46,6 +46,11 @@ export default function EquipePage() {
   useEffect(() => { try { localStorage.setItem('lsm-equipe-funcao', filtroFuncao) } catch { /* sem armazenamento */ } }, [filtroFuncao])
   const [ocupado, setOcupado] = useState<string>('')
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+  // Senha provisória recém-criada: fica num cartão grande no topo da tela, até a administração fechar.
+  // Não é guardada em lugar nenhum (nem no navegador, nem no banco): quem vê é quem acabou de criar.
+  const [senhaEntregue, setSenhaEntregue] = useState<{ nome: string; email: string; senha: string } | null>(null)
+  const cartaoSenha = useRef<HTMLDivElement>(null)
+  const [copiadaAgora, setCopiadaAgora] = useState(false)
   // Passo 09: aceite de termos de uso e LGPD por pessoa (data, versão e hash).
   const [aceites, setAceites] = useState<Record<string, { versao: string; hash: string; aceito_em: string }>>({})
   const [linkCopiado, setLinkCopiado] = useState(false) // Passo 284
@@ -77,7 +82,10 @@ export default function EquipePage() {
     setMsg(null)
     try {
       const senha = await definirSenhaProvisoria(pessoa)
-      setMsg({ tipo: 'ok', texto: `Senha provisória de ${pessoa.nome}: ${senha} — copie e entregue a pessoa; a pessoa troca em Configurações → Senha. Esta senha não aparece de novo.` })
+      setSenhaEntregue({ nome: pessoa.nome, email: pessoa.email, senha })
+      setCopiadaAgora(false)
+      setMsg({ tipo: 'ok', texto: `Senha provisória de ${pessoa.nome} criada. Ela aparece no cartão no topo da tela.` })
+      setTimeout(() => cartaoSenha.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
     } catch (e) {
       setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
     } finally {
@@ -127,6 +135,22 @@ export default function EquipePage() {
           </section>
         ) : (
           <>
+            {senhaEntregue && (
+              <div ref={cartaoSenha} role="status" aria-label="Senha provisória criada" data-testid="cartao-senha-provisoria" className="p-5 mb-4 bg-regularFundo border-l-4 border-regular text-navy shadow-sm">
+                <p className="font-semibold">Senha provisória de {senhaEntregue.nome}</p>
+                <p className="text-sm mt-1">Entregue esta senha à pessoa agora. Ela troca em Configurações → Senha, depois de entrar.</p>
+                <p className="mt-3 font-mono text-xl tracking-wider select-all break-all" data-testid="senha-provisoria">{senhaEntregue.senha}</p>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <button type="button" onClick={async () => { try { await navigator.clipboard.writeText(senhaEntregue.senha); setCopiadaAgora(true) } catch { setCopiadaAgora(false) } }} title="Copia a senha para colar na mensagem à pessoa" className="min-h-[44px] px-4 bg-navy text-white text-sm">
+                    {copiadaAgora ? 'Senha copiada' : 'Copiar senha'}
+                  </button>
+                  <button type="button" onClick={() => setSenhaEntregue(null)} title="Fecha este cartão. A senha não fica guardada em lugar nenhum." className="min-h-[44px] px-4 border border-navy text-navy text-sm">
+                    Já entreguei, fechar
+                  </button>
+                </div>
+              </div>
+            )}
+
             {pedidos.length > 0 && (
               <section className="bg-white p-6 shadow-sm border-l-4 border-navy" aria-labelledby="pedidos-entrada" data-testid="pedidos-entrada">
                 <h2 id="pedidos-entrada" className="text-lg font-semibold">{pedidos.length === 1 ? '1 pessoa pediu' : `${pedidos.length} pessoas pediram`} para entrar no escritório</h2>
