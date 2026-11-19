@@ -80,43 +80,11 @@ export const gruposMenu: GrupoMenu[] = [
   ] },
   // Passo A27: as telas do Instituto saem do menu do escritório. O escritório cliente não vê a administração
   // da plataforma nem a pesquisa do Instituto; só quem entra pelo Instituto THEYE vê este bloco.
-  { id: 'instituto', titulo: 'Instituto THEYE', bloco: 'Instituto', nivel: 'instituto', dica: 'Todas as frentes', itens: [
+  // Pedido de M (19/11/2026): o Instituto não mora dentro da plataforma jurídica. Ele é um quadrado à parte,
+  // uma plataforma própria, como a do direito. Aqui fica só a porta de saída, e só a administração do
+  // Instituto a enxerga: as telas do Instituto estão em FRENTES ('instituto'), com menu próprio.
+  { id: 'instituto', titulo: 'Instituto THEYE', bloco: 'Instituto', nivel: 'instituto', dica: 'Plataforma à parte', itens: [
     { icon: LayoutGrid, label: 'Frentes do Instituto', href: '/frentes-do-instituto' },
-    { icon: FlaskConical, label: 'Administração do Instituto', href: '/instituto' },
-    { icon: BookOpen, label: 'Caderno de produtos', href: '/caderno-de-produtos' },
-    { icon: TrendingUp, label: 'Predição (mercado)', href: '/preditiva' },
-    { icon: MapPin, label: 'Geolocalização', href: '/geolocalizacao' },
-    { icon: Wrench, label: 'Engenharia', href: '/engenharia' },
-    { icon: HeartPulse, label: 'Saúde', href: '/saude' },
-    { icon: GraduationCap, label: 'Educação e capacitação', href: '/educacao' },
-    { icon: ShieldCheck, label: 'Cibersegurança', href: '/ciberseguranca' },
-    { icon: Compass, label: 'Geomapeamento', href: '/geomapeamento' },
-    { icon: Building2, label: 'Governo', href: '/governo' },
-    { icon: Vote, label: 'Cívico', href: '/civico' },
-    { icon: FlaskConical, label: 'Computação quântica', href: '/quantum' },
-    { icon: FlaskConical, label: "Carbono", href: '/carbono' },
-    { icon: FlaskConical, label: "Petróleo e gás", href: '/petroleo' },
-    { icon: FlaskConical, label: "Psicologia", href: '/psicologia' },
-    { icon: FlaskConical, label: "Psiquiatria", href: '/psiquiatria' },
-    { icon: FlaskConical, label: "Biossegurança", href: '/biosseguranca' },
-    { icon: FlaskConical, label: "Transumanismo", href: '/transumanismo' },
-    { icon: FlaskConical, label: "Marketing", href: '/marketing' },
-    { icon: FlaskConical, label: "Publicidade", href: '/publicidade' },
-    { icon: Building2, label: "Plataforma, Governança, Fundos Internacionais", href: '/fundos-internacionais' },
-    { icon: FlaskConical, label: 'IA e superinteligência', href: '/ia' },
-    { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
-    { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
-    { icon: Store, label: 'Soluções jurídicas', href: '/solucoes' },
-    { icon: ShieldCheck, label: 'Superfície de ataque', href: '/superficie-de-ataque' },
-    { icon: Droplets, label: 'Águas', href: '/aguas' },
-    { icon: Droplets, label: 'Água dos reservatórios (ANA)', href: '/agua' },
-    { icon: GraduationCap, label: 'Trilhas de estudo', href: '/trilhas' },
-    { icon: FlaskConical, label: 'Agenda de pesquisa em IA', href: '/pesquisa-ia' },
-    { icon: Ruler, label: 'Régua de acerto dos modelos', href: '/regua' },
-    { icon: Target, label: 'Escolha do mercado', href: '/escolha-do-mercado' },
-    { icon: Coins, label: 'Mapa de receita', href: '/mapa-de-receita' },
-    { icon: Banknote, label: 'Royalties', href: '/royalties' },
-    { icon: ClipboardList, label: 'Medições de contratos', href: '/medicoes' },
   ] },
   { id: 'conta', titulo: 'Minha conta', bloco: 'Minha conta', nivel: 'todos', dica: 'Do seu jeito', itens: [
     { icon: SlidersHorizontal, label: 'Meu jeito de trabalhar', href: '/meu-jeito' },
@@ -181,7 +149,7 @@ export const gruposProjectos: GrupoMenu[] = [
 
 const NOMES: Record<string, string> = Object.fromEntries([...gruposProjectos, ...gruposMenu].flatMap(g => g.itens.map(i => [i.href, i.label])))
 /** O nome da tela, um só, para o menu, a entrada, a busca e a lista de telas. */
-export const nomeDaTela = (href: string): string | undefined => NOMES[href]
+export const nomeDaTela = (href: string): string | undefined => NOMES[href] ?? TELAS_DO_INSTITUTO().find(i => i.href === href)?.label
 
 /** Os atalhos de cada bloco na tela de entrada: só o destino e a frase que explica. O NOME vem do menu. */
 export interface AtalhoInicio { id: string; destino: string; texto: string; icone: LucideIcon; so?: 'admin' | 'veTudo' }
@@ -370,6 +338,17 @@ export const DICAS: Record<string, string> = {
  */
 export interface Frente { id: string; nome: string; itens: Tela[] }
 export const FRENTES: Frente[] = [
+  { id: 'instituto', nome: 'Plataforma do Instituto', itens: [
+    { icon: LayoutGrid, label: 'Frentes do Instituto', href: '/frentes-do-instituto' },
+    { icon: FlaskConical, label: 'Administração do Instituto', href: '/instituto' },
+    { icon: BookOpen, label: 'Caderno de produtos', href: '/caderno-de-produtos' },
+    { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
+    { icon: Store, label: 'Soluções jurídicas', href: '/solucoes' },
+    { icon: Target, label: 'Escolha do mercado', href: '/escolha-do-mercado' },
+    { icon: Coins, label: 'Mapa de receita', href: '/mapa-de-receita' },
+    { icon: Banknote, label: 'Royalties', href: '/royalties' },
+    { icon: ClipboardList, label: 'Medições de contratos', href: '/medicoes' },
+  ] },
   { id: 'engenharia', nome: 'Engenharia', itens: [{ icon: Wrench, label: 'Engenharia', href: '/engenharia' }] },
   { id: 'saude', nome: 'Saúde', itens: [{ icon: HeartPulse, label: 'Saúde', href: '/saude' }] },
   { id: 'geolocalizacao', nome: 'Geolocalização', itens: [{ icon: MapPin, label: 'Geolocalização', href: '/geolocalizacao' }] },
@@ -430,6 +409,11 @@ export const FRENTES: Frente[] = [
   ] },
 ]
 /** A frente da tela aberta, ou nada quando a tela é do direito (ou da administração). */
+/** As telas da Plataforma do Instituto (saíram do menu do direito em 19/11/2026). */
+export function TELAS_DO_INSTITUTO(): Tela[] {
+  return FRENTES.find(f => f.id === 'instituto')?.itens ?? []
+}
+
 export function frenteDe(pathname: string): Frente | undefined {
   return FRENTES.find(f => f.itens.some(i => pathname === i.href || pathname.startsWith(`${i.href}/`)))
 }
