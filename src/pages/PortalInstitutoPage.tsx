@@ -1,5 +1,8 @@
 import { Link, useLocation } from 'react-router-dom'
 import Marca from '@/components/Marca'
+import { cadernoUrl } from '@/components/Cadernos'
+import { useTexto } from '@/lib/i18n'
+import { VERTENTES } from '@/data/vertentes'
 import { PORTAIS_INSTITUTO } from '@/data/portais-instituto'
 import { PORTAIS_I18N, ROTULO_ESTADO_I18N, EXPLICACAO_ESTADO_I18N, type RotaPortal } from '@/data/portais-instituto-i18n'
 import { useIdioma } from '@/lib/i18n'
@@ -101,6 +104,7 @@ export default function PortalInstitutoPage() {
   const { pathname } = useLocation()
   const idioma = useIdioma()
   const rota = pathname.replace(/\/$/, '')
+  const tt = useTexto()
   const portal = PORTAIS_INSTITUTO.find(p => p.rota === rota)
   const traduzido = portal ? PORTAIS_I18N[portal.rota as RotaPortal]?.[idioma] ?? PORTAIS_I18N[portal.rota as RotaPortal]?.pt : null
   const nome = traduzido?.nome ?? portal?.nome ?? ''
@@ -152,6 +156,19 @@ export default function PortalInstitutoPage() {
             </li>
           ))}
         </ul>
+
+        {/* Caderno de produtos da frente, para baixar sem senha (M, 19/11/2026). */}
+        {VERTENTES.some(v => v.rota === portal.rota) && (
+          <a
+            href={cadernoUrl(VERTENTES.find(v => v.rota === portal.rota)!.id)}
+            download
+            data-testid="baixar-caderno"
+            title={tt('cadernos.baixar')}
+            className="inline-block mt-8 min-h-[44px] leading-[44px] px-5 bg-white text-black text-sm no-underline"
+          >
+            {tt('cadernos.baixar')} ↓
+          </a>
+        )}
 
         {portal.rota === '/geomapeamento' && (
           <div className="mt-8 border border-dourado/60 p-4" data-testid="mvp-geo">

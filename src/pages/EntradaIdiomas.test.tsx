@@ -29,28 +29,11 @@ describe('entrada do instituto em várias línguas', () => {
   beforeEach(() => { cleanup(); localStorage.clear(); reiniciarIdioma() })
   afterEach(() => { localStorage.clear(); reiniciarIdioma() })
 
-  it('a tela de escolha mostra os quatro idiomas no nome de cada um e convida nas quatro línguas', () => {
+  it('a porta não tem mais bloco de senha nem escolha de idioma no topo (M, 19/11/2026)', () => {
     montarBoasVindas()
-    for (const nome of ['Português', 'English', '中文', 'Español']) expect(screen.getAllByText(nome).length).toBeGreaterThan(0)
-    for (const codigo of ['pt', 'en', 'zh', 'es']) expect(screen.getByTestId(`idioma-${codigo}`)).toBeTruthy()
-    const convite = screen.getByText(/Escolha o seu idioma/)
-    expect(convite.textContent).toContain('Choose your language')
-    expect(convite.textContent).toContain('请选择语言')
-    expect(convite.textContent).toContain('Elija su idioma')
-  })
-
-  it('escolher chinês leva ao login e a tela de entrada já fala chinês', () => {
-    montarBoasVindas()
-    fireEvent.click(screen.getByTestId('idioma-zh'))
-    expect(screen.getByTestId('onde').textContent).toBe('/login')
-    expect(localStorage.getItem('theye-idioma')).toBe('zh')
-    cleanup()
-    montarEntrada()
-    expect(screen.getByText('登录')).toBeTruthy()
-    expect(screen.getByLabelText('邮箱')).toBeTruthy()
-    expect(screen.getByLabelText('密码')).toBeTruthy()
-    expect(screen.getByText('忘记密码')).toBeTruthy()
-    expect(screen.getByText('创建账户')).toBeTruthy()
+    expect(screen.queryByTestId('escolha-idioma')).toBeNull()
+    expect(screen.queryByTestId('porta-ja-tenho-acesso')).toBeNull()
+    // A língua se troca na fileira do pé da tela de entrada, que continua existindo.
   })
 
   it('por padrão a entrada fala português (nada escolhido ainda)', () => {
