@@ -9,7 +9,8 @@ import { VERTENTES } from '@/data/vertentes'
  */
 export const DESTINOS_PERMITIDOS: readonly string[] = [...VERTENTES.map(v => v.rota), '/caderno-de-produtos', '/instituto']
 
-export const DESTINO_PADRAO = '/inicio'
+// Depois da senha, sem frente escolhida, a pessoa cai na área do Instituto (governança), não no jurídico (M, 19/11/2026).
+export const DESTINO_PADRAO = '/instituto'
 
 /** O destino pedido, se for um dos permitidos; senão, a tela de início. */
 export function destinoSeguro(pedido: string | null | undefined): string {

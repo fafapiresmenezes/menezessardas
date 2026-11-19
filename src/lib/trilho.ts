@@ -47,6 +47,12 @@ export interface Conferencia {
   ligacaoIntegra: boolean
   reproduzidos: number
   ultimoHash: string
+  /**
+   * Emendas documentadas: posições (contando de 1) de elo escrito sem o campo `anterior` cuja
+   * quebra um elo REPARO posterior assume por escrito. A quebra não é escondida: ela aparece aqui
+   * e na tela. O que a emenda documentada NÃO é: ligação íntegra. Ela é uma quebra confessada.
+   */
+  emendasDocumentadas: number[]
 }
 
 export const anteriorDe = (elo: Elo): string => elo.anterior || elo.hash_anterior || ''
@@ -89,12 +95,20 @@ export async function conferirCorrente(elos: Elo[]): Promise<Conferencia> {
   const resultado: ConferenciaElo[] = []
   let esperado = GENESE
   let ligacaoIntegra = true
+  const emendasDocumentadas: number[] = []
+  // Um elo com código REPARO assume por escrito a quebra de um elo anterior sem `anterior`
+  // (aconteceu uma vez, em 15-16/11/2026; o reparo de 18/11 documenta e religa dali em diante).
+  const haReparoApos = (pos: number) => elos.some((e, j) => j > pos && e.codigo === 'REPARO')
   for (const [i, elo] of elos.entries()) {
+    const semCampoAnterior = !('anterior' in elo) && !('hash_anterior' in elo)
     const ligado = anteriorDe(elo) === esperado
-    if (!ligado) ligacaoIntegra = false
+    if (!ligado) {
+      if (semCampoAnterior && haReparoApos(i)) emendasDocumentadas.push(i + 1)
+      else ligacaoIntegra = false
+    }
     resultado.push({
       n: i + 1,
-      passo: String(elo.passo ?? '—'),
+      passo: String(elo.passo ?? elo.codigo ?? '—'),
       ligado,
       reproduzido: (await recalcular(elo)) === elo.hash,
       hash: elo.hash,
@@ -106,6 +120,7 @@ export async function conferirCorrente(elos: Elo[]): Promise<Conferencia> {
     ligacaoIntegra,
     reproduzidos: resultado.filter(e => e.reproduzido).length,
     ultimoHash: esperado,
+    emendasDocumentadas,
   }
 }
 

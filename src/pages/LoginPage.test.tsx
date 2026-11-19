@@ -34,7 +34,7 @@ describe('Tela de login', () => {
     preencher('fatima@gmenezes.com', 'segredo123')
     fireEvent.click(screen.getByText('Entrar'))
     await waitFor(() => expect(signInWithPassword).toHaveBeenCalledWith({ email: 'fatima@gmenezes.com', password: 'segredo123' }))
-    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/inicio'))
+    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/instituto'))
     cleanup(); montar()
     signInWithPassword.mockResolvedValueOnce({ error: { status: 400, message: 'Invalid login credentials' } })
     preencher('a@b.com', 'x'); fireEvent.click(screen.getByText('Entrar'))
@@ -57,7 +57,7 @@ describe('Tela de login', () => {
     await waitFor(() => expect(screen.getAllByRole('alert').some(a => a.textContent === 'Código não confere. Tente de novo.')).toBe(true))
     expect(challengeAndVerify).toHaveBeenCalledWith({ factorId: 'f1', code: '123456' })
     fireEvent.click(screen.getByText('Confirmar código'))
-    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/inicio'))
+    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/instituto'))
   })
 
   it('criar conta: bloqueia robô (menos de 3 s), exige 8 caracteres, cadastra e avisa que não precisa de aprovação; esqueci a senha orienta', async () => {
@@ -94,7 +94,7 @@ describe('Tela de login', () => {
     vi.setSystemTime(new Date('2026-11-10T10:00:05Z'))
     signUp.mockResolvedValueOnce({ data: { session: { access_token: 't' } }, error: null })
     fireEvent.click(screen.getByText('Criar acesso'))
-    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/inicio'))
+    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/instituto'))
     vi.useRealTimers()
     cleanup(); montar()
     signInWithPassword.mockResolvedValueOnce({ error: { status: 400, message: 'Email not confirmed' } })

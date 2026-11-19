@@ -602,8 +602,8 @@ function App() {
           path="/settings"
           element={isAuthenticated ? <ConfiguraçõesPage /> : <Navigate to="/login" />}
         />
-        <Route path="/" element={<ParaOnde autenticado={isAuthenticated} logado="/inicio" />} />
-        <Route path="*" element={<ParaOnde autenticado={isAuthenticated} logado="/inicio" substituir />} />
+        <Route path="/" element={<ParaOnde autenticado={isAuthenticated} logado="/instituto" />} />
+        <Route path="*" element={<ParaOnde autenticado={isAuthenticated} logado="/instituto" substituir />} />
       </Routes>
       </Suspense>
       </ProtecaoRotas>

@@ -21,12 +21,11 @@ afterEach(() => { localStorage.clear(); reiniciarIdioma() })
 const montar = () => render(<MemoryRouter><Vertentes /></MemoryRouter>)
 
 describe('vitrine das vertentes', () => {
-  it('mostra todas as vertentes, inclusive as que ainda estão em desenvolvimento', () => {
+  it('mostra todas as vertentes, todas no ar (M, 19/11/2026: tudo no ar, cada uma com senha)', () => {
     montar()
     expect(VERTENTES.length).toBeGreaterThanOrEqual(12)
     for (const v of VERTENTES) expect(screen.getByTestId(`vertente-${v.id}`), v.id).toBeTruthy()
-    expect(VERTENTES.some(v => v.estado === 'em-desenvolvimento')).toBe(true)
-    expect(VERTENTES.some(v => v.estado === 'em-estudo')).toBe(true)
+    expect(VERTENTES.every(v => v.estado === 'no-ar')).toBe(true)
   })
 
   it('não é só a parte jurídica: engenharia, saúde, predição e geolocalização estão lá', () => {
@@ -87,7 +86,6 @@ describe('vitrine das vertentes', () => {
     trocarIdioma('es')
     montar()
     const texto = screen.getByTestId('vertentes').textContent!
-    expect(texto).toContain(DICIONARIOS.es['vertenteEstado.em-desenvolvimento'])
     expect(texto).toContain(DICIONARIOS.es['vertenteEstado.no-ar'])
   })
 })
