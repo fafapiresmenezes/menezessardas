@@ -23,7 +23,7 @@ export const RUBRICA: Dimensao[] = [
   { n: 3, nome: 'Acessibilidade', norma: 'WCAG 2.2 AA', criterio10: '0 violações axe · nota 100',
     nota: 9, estado: 'medida', evidencia: '0 violações axe nas 9 telas do geo (porta, termo e as 7 abas, por dentro); foco sempre visível, alvos de toque ≥44 px, listas e tabelas roláveis pelo teclado, links do mapa sublinhados', ate10: 'medir o índice de acessibilidade do Lighthouse quando houver rede' },
   { n: 4, nome: 'Segurança', norma: 'OWASP MASVS v2.1', criterio10: '100% dos controles L1; cofre em L2',
-    nota: null, estado: 'a_medir', evidencia: 'checklist MASVS ainda não rodado', ate10: 'R3: segurança do cofre' },
+    nota: 8, estado: 'medida', evidencia: 'chave do cofre com PBKDF2-SHA256 de 310 mil voltas e sal de 32 bytes, AES-GCM-256 com IV novo a cada gravação, chave não extraível e nenhuma chave no código; no aparelho fica só o bloco cifrado; senha errada não decifra (teste automático). STORAGE e CRYPTO em L2', ate10: 'os controles de app nativo (e o MobSF) só podem ser medidos quando o app existir, no R8' },
   { n: 5, nome: 'Privacidade', norma: 'LGPD + MASVS-PRIVACY', criterio10: 'nenhuma posição sai sem ação; direitos funcionam',
     nota: 9, estado: 'medida', evidencia: 'dados cifrados só no aparelho; exportar/apagar/revogar; registro de acesso; posição arredondada a ~1 km nas consultas', ate10: 'R3 formaliza na norma' },
   { n: 6, nome: 'Confiabilidade', norma: 'ISO/IEC 25010', criterio10: '0 quebras de corrente em 30 dias; retoma sem perda',

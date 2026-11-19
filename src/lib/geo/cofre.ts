@@ -77,9 +77,18 @@ export async function conferirCorrente<T extends { hash?: string }>(itens: T[], 
   return { ok: true, quebraEm: null }
 }
 
-async function chaveDe(senha: string, sal: Uint8Array<ArrayBuffer>): Promise<CryptoKey> {
+// Parâmetros da derivação da chave (elo R3, OWASP MASVS v2.1 / MASVS-CRYPTO).
+// VOLTAS segue a recomendação da OWASP para PBKDF2-HMAC-SHA256 (≥310 000).
+// VOLTAS_LEGADO é o que os cofres criados antes de 19/11/2026 usaram: um cofre antigo
+// PRECISA continuar abrindo, senão o titular perde o que já gravou. Por isso os parâmetros
+// passaram a ser guardados junto do registro, e um cofre antigo é reforçado sozinho ao abrir.
+const VOLTAS = 310000
+const VOLTAS_LEGADO = 250000
+const SAL_BYTES = 32
+
+async function chaveDe(senha: string, sal: Uint8Array<ArrayBuffer>, voltas: number): Promise<CryptoKey> {
   const base = await crypto.subtle.importKey('raw', enc.encode(senha), 'PBKDF2', false, ['deriveKey'])
-  return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: sal, iterations: 250000, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt'])
+  return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: sal, iterations: voltas, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt'])
 }
 
 export const vazio = (): DadosGeo => ({ consentimento: null, pontos: [], lugares: [], cenas: [], acessos: [], intervaloSeg: 60 })
@@ -87,33 +96,50 @@ export const vazio = (): DadosGeo => ({ consentimento: null, pontos: [], lugares
 export const cofreExiste = () => { try { return !!localStorage.getItem(CHAVE) } catch { return false } }
 
 export class Cofre {
-  private constructor(private chave: CryptoKey, private sal: Uint8Array<ArrayBuffer>, public dados: DadosGeo) {}
+  private constructor(private chave: CryptoKey, private sal: Uint8Array<ArrayBuffer>, private voltas: number, public dados: DadosGeo) {}
 
   static async abrir(senha: string): Promise<Cofre> {
     const bruto = localStorage.getItem(CHAVE)
     if (!bruto) {
-      const sal = crypto.getRandomValues(new Uint8Array(16))
-      const c = new Cofre(await chaveDe(senha, sal), sal, vazio())
+      const sal = crypto.getRandomValues(new Uint8Array(SAL_BYTES))
+      const c = new Cofre(await chaveDe(senha, sal, VOLTAS), sal, VOLTAS, vazio())
       await c.salvar()
       return c
     }
-    const { sal, iv, dados } = JSON.parse(bruto) as { sal: string; iv: string; dados: string }
+    const { sal, iv, dados, voltas } = JSON.parse(bruto) as { sal: string; iv: string; dados: string; voltas?: number }
     const s = deB64(sal)
-    const k = await chaveDe(senha, s)
+    // Cofre antigo não gravava `voltas`: era sempre 250 mil. Ler o que está guardado é o que
+    // faz a senha de ontem continuar abrindo o cofre de ontem.
+    const v = typeof voltas === 'number' && voltas > 0 ? voltas : VOLTAS_LEGADO
+    const k = await chaveDe(senha, s, v)
     let claro: ArrayBuffer
     try {
       claro = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: deB64(iv) }, k, deB64(dados))
     } catch {
       throw new Error('Senha errada. Sem a senha certa ninguém lê estes dados, nem a plataforma.')
     }
-    return new Cofre(k, s, { ...vazio(), ...JSON.parse(dec.decode(claro)) })
+    const c = new Cofre(k, s, v, { ...vazio(), ...JSON.parse(dec.decode(claro)) })
+    // Reforço silencioso: um cofre aberto com parâmetros antigos é regravado com os novos,
+    // com a MESMA senha. Se algo falhar, o registro antigo continua lá e o cofre segue aberto.
+    if (v < VOLTAS || s.length < SAL_BYTES) {
+      try {
+        const salNovo = crypto.getRandomValues(new Uint8Array(SAL_BYTES))
+        c.chave = await chaveDe(senha, salNovo, VOLTAS)
+        c.sal = salNovo
+        c.voltas = VOLTAS
+        await c.salvar()
+      } catch {
+        c.chave = k; c.sal = s; c.voltas = v
+      }
+    }
+    return c
   }
 
   async salvar() {
     const iv = crypto.getRandomValues(new Uint8Array(12))
     const cifrado = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, this.chave, enc.encode(JSON.stringify(this.dados))))
     try {
-      localStorage.setItem(CHAVE, JSON.stringify({ sal: b64(this.sal), iv: b64(iv), dados: b64(cifrado) }))
+      localStorage.setItem(CHAVE, JSON.stringify({ sal: b64(this.sal), iv: b64(iv), dados: b64(cifrado), voltas: this.voltas }))
     } catch {
       throw new Error('O espaço do navegador encheu. Exporte e apague os dias mais antigos.')
     }
