@@ -16,6 +16,10 @@ import ProvaDaPorta from '@/components/ProvaDaPorta'
 import { VERTENTES } from '@/data/vertentes'
 import type { Chave } from '@/lib/i18n'
 
+// Lista de casa dos escritórios clientes: vale enquanto o banco não devolve o registro.
+const ESCRITORIOS_DA_CASA = ['SARDAS E MENEZES']
+const OUTRO = '__outro__'
+
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
@@ -42,6 +46,22 @@ export default function LoginPage() {
   }
   const [primeiroAcesso, setPrimeiroAcesso] = useState(false)
   const [escritorio, setEscritorio] = useState('')
+  // Registro dos escritórios clientes: a pessoa escolhe o dela numa lista (pedido de M, 19/11/2026).
+  // A lista vem do banco; enquanto ele não responde, vale a lista de casa. Escolher um escritório
+  // só cria um pedido de entrada: ninguém vê nada antes de o responsável liberar.
+  const [listaEscritorios, setListaEscritorios] = useState<string[]>(ESCRITORIOS_DA_CASA)
+  const [escolha, setEscolha] = useState('')
+  useEffect(() => {
+    let vivo = true
+    ;(async () => {
+      try {
+        const { data, error } = await supabase.rpc('escritorios_para_cadastro')
+        const nomes = error ? [] : ((data ?? []) as unknown[]).map(r => String(typeof r === 'string' ? r : (r as { nome?: string })?.nome ?? '').trim().toUpperCase()).filter(Boolean)
+        if (vivo && nomes.length > 0) setListaEscritorios([...new Set(nomes)].sort((a, b) => a.localeCompare(b, 'pt')))
+      } catch { /* fica a lista de casa */ }
+    })()
+    return () => { vivo = false }
+  }, [])
   const [avisoCadastro, setAvisoCadastro] = useState('')
   const [pedirCodigo, setPedirCodigo] = useState(false)
   const [codigo, setCodigo] = useState('')
@@ -114,7 +134,7 @@ export default function LoginPage() {
       }
       try {
         // O nome do escritório segue o padrão da casa: tudo em letras maiúsculas, sem espaços sobrando.
-        const nomeEscritorio = escritorio.toUpperCase().replace(/\s+/g, ' ').trim()
+        const nomeEscritorio = (escolha === OUTRO ? escritorio : escolha).toUpperCase().replace(/\s+/g, ' ').trim()
         const { data, error } = await supabase.auth.signUp({ email, password: senha, options: { data: { escritorio: nomeEscritorio } } })
         if (error) setErro(/rate limit/i.test(error.message ?? '') ? t('erro.muitasContas') : t('erro.criarAcessoPrefixo') + mensagemAmigavel(error))
         else if (data?.session) seguir() // sem confirmação de e-mail: já entra; se o escritório existe, cai na tela de espera
@@ -301,22 +321,44 @@ export default function LoginPage() {
 
             {primeiroAcesso && (
               <div>
-                <label htmlFor="escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title={t('login.escritorioRotuloTitulo')}>
-                  {t('login.escritorio')}
+                <label htmlFor="lista-escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title={t('login.qualEscritorioTitulo')}>
+                  {t('login.qualEscritorio')}
                 </label>
-                <input
-                  id="escritorio"
-                  name="escritorio"
-                  type="text"
-                  data-testid="campo-escritorio"
-                  value={escritorio}
-                  onChange={(e) => setEscritorio(e.target.value.toUpperCase())}
+                <select
+                  id="lista-escritorio"
+                  name="lista-escritorio"
+                  data-testid="lista-escritorio"
+                  value={escolha}
+                  onChange={(e) => setEscolha(e.target.value)}
                   required
-                  placeholder={t('login.escritorioExemplo')}
-                  title={t('login.escritorioCampoTitulo')}
-                  className="w-full px-4 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado uppercase"
-                />
-                <p className="text-xs text-grafite-claro mt-1">{t('login.escritorioAjuda')}</p>
+                  title={t('login.qualEscritorioTitulo')}
+                  className="w-full px-4 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white"
+                >
+                  <option value="">{t('login.escolhaEscritorio')}</option>
+                  {listaEscritorios.map(n => <option key={n} value={n}>{n}</option>)}
+                  <option value={OUTRO}>{t('login.escritorioForaDaLista')}</option>
+                </select>
+                <p className="text-xs text-grafite-claro mt-1">{t('login.qualEscritorioAjuda')}</p>
+                {escolha === OUTRO && (
+                  <div className="mt-3">
+                    <label htmlFor="escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title={t('login.escritorioRotuloTitulo')}>
+                      {t('login.escritorio')}
+                    </label>
+                    <input
+                      id="escritorio"
+                      name="escritorio"
+                      type="text"
+                      data-testid="campo-escritorio"
+                      value={escritorio}
+                      onChange={(e) => setEscritorio(e.target.value.toUpperCase())}
+                      required
+                      placeholder={t('login.escritorioExemplo')}
+                      title={t('login.escritorioCampoTitulo')}
+                      className="w-full px-4 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado uppercase"
+                    />
+                    <p className="text-xs text-grafite-claro mt-1">{t('login.escritorioForaAjuda')}</p>
+                  </div>
+                )}
               </div>
             )}
 
