@@ -21,7 +21,8 @@ describe('Pesquisa e due diligence', () => {
     expect(screen.getByTestId('reconhecido').textContent).toContain('Número de processo (CNJ)')
     expect(screen.getByTestId('reconhecido').textContent).toContain('Número conferido')
     expect((screen.getByTestId('acao-linha') as HTMLAnchorElement).getAttribute('href')).toBe(`/monitoramento?lt=${encodeURIComponent(n)}`)
-    expect((screen.getByTestId('acao-escavador') as HTMLAnchorElement).target).toBe('_blank')
+    expect(screen.queryByTestId('acao-escavador')).toBeNull()
+    expect((screen.getByTestId('acao-jusbrasil') as HTMLAnchorElement).target).toBe('_blank')
     expect(screen.getByTestId('assunto-processo').getAttribute('aria-selected')).toBe('true')
   })
   it('CNPJ com dígito errado avisa, mas ainda deixa pesquisar; lista passa a ser a da empresa', () => {

@@ -98,7 +98,7 @@ describe('Configurações', () => {
     expect(nova.value).toBe(''); expect(confirma.value).toBe('')
   })
 
-  it('chave da IA (estado, salvar, testar), e-mail de avisos ativo com teste, Escavador e convite .ics por e-mail', async () => {
+  it('chave da IA (estado, salvar, testar), e-mail de avisos ativo com teste e convite .ics; o Escavador saiu por e-mail', async () => {
     render(<ConfiguracoesPage />)
     const ia = secao('ia')
     await waitFor(() => expect(texto(ia.textContent)).toContain('Chave configurada — termina em ····x9Qz.'))
@@ -120,8 +120,7 @@ describe('Configurações', () => {
     fireEvent.click(within(notif).getByRole('button', { name: /Enviar e-mail de teste|Enviando/ }))
     await waitFor(() => expect(within(notif).getByRole('status').textContent).toBe('E-mail de teste enviado para fatima@gmenezes.com.'))
     expect(invoke).toHaveBeenCalledWith('agendar-notificacoes', { body: { teste: true } })
-    await waitFor(() => expect(secao('escavador')).toBeTruthy())
-    expect(within(secao('escavador')).getByRole('heading', { name: 'Escavador' })).toBeTruthy()
+    expect(screen.queryByRole('heading', { name: 'Escavador' })).toBeNull()
     const ics = screen.getByTestId('ics-por-email') as HTMLInputElement
     await waitFor(() => expect(ics.checked).toBe(true))
     fireEvent.click(ics)

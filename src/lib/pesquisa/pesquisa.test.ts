@@ -39,7 +39,7 @@ describe('ações por tipo de busca', () => {
     const a = acoesPara(detectar(n))
     expect(a.find(x => x.id === 'linha')?.href).toBe(`/monitoramento?lt=${encodeURIComponent(n)}`)
     expect(a.some(x => x.href === '/prazos')).toBe(true)
-    expect(a.filter(x => x.externo).map(x => x.id)).toEqual(['escavador', 'jusbrasil'])
+    expect(a.filter(x => x.externo).map(x => x.id)).toEqual(['jusbrasil'])
   })
   it('CNPJ: checagem de contraparte e ficha preenchidas', () => {
     const a = acoesPara(detectar('11.222.333/0001-81'))
@@ -51,7 +51,7 @@ describe('ações por tipo de busca', () => {
     expect(acoesPara(detectar(''))).toEqual([])
   })
   it('nome com acento é codificado nos links', () => {
-    expect(acoesPara(detectar('José da Conceição')).find(x => x.id === 'escavador')?.href).toContain('Jos%C3%A9')
+    expect(acoesPara(detectar('José da Conceição')).find(x => x.id === 'jusbrasil')?.href).toContain('Jos%C3%A9')
   })
 })
 

@@ -13,7 +13,6 @@ import { meuAlcance, filtrarPorHierarquia, ALCANCE_FECHADO } from '@/lib/hierarq
 // Fontes que o advogado usa todo dia: digita uma vez (nome, CNPJ, número do processo ou tema)
 // e abre cada site já com a busca feita. As que têm ligação direta estão marcadas.
 const FONTES: { nome: string; para: string; url: (t: string) => string; direta?: string }[] = [
-  { nome: 'Escavador', para: 'Processos e publicações por nome, CPF/CNPJ ou número', url: t => `https://www.escavador.com/busca?q=${encodeURIComponent(t)}`, direta: 'Busca acima (com token)' },
   { nome: 'JusBrasil', para: 'Jurisprudência, diários e processos', url: t => `https://www.jusbrasil.com.br/busca?q=${encodeURIComponent(t)}` },
   { nome: 'DataJud (CNJ)', para: 'Estatísticas de varas e câmaras', url: () => 'https://datajud-wiki.cnj.jus.br/', direta: 'Perfil do julgador' },
   { nome: 'TJRJ – consulta processual', para: 'Andamento de processos no Rio', url: () => 'https://www3.tjrj.jus.br/consultaprocessual/' },
@@ -29,16 +28,7 @@ export default function FontesPage() {
   // A central de pesquisa abre /fontes?termo=... já com o termo preenchido.
   const [params] = useSearchParams()
   const [termo, setTermo] = useState(() => { const t = params.get('termo'); if (t) return t; try { return localStorage.getItem('lsm-fontes-termo') ?? '' } catch { return '' } }) // Passo 201
-  const [busca, setBusca] = useState<{ carregando?: boolean; erro?: string; processos?: { numero: string; titulo: string; tribunal: string | null; ultimaMovimentacao: string | null; classe: string | null; link: string | null }[] } | null>(null)
-  const buscarEscavador = async () => {
-    setBusca({ carregando: true })
-    const { data, error } = await supabase.functions.invoke('escavador', { body: { termo } })
-    // Respostas de erro (503, 502…) chegam em error.context; mostramos a mensagem do servidor.
-    const corpo = error ? await (error as { context?: Response }).context?.json?.().catch(() => null) : data
-    if (error || corpo?.erro) return setBusca({ erro: corpo?.erro ?? 'O Escavador não respondeu. Tente de novo.' })
-    setBusca({ processos: data.processos ?? [] })
-  }
-  // Busca gratuita nas mesmas fontes públicas que o Escavador usa (Comunica PJe, diários oficiais, DataJud).
+  // Busca gratuita nas fontes públicas (Comunica PJe, diários oficiais, DataJud).
   const [gratis, setGratis] = useState<{ carregando?: boolean; erro?: string; r?: any } | null>(null)
   const buscarGratis = async () => {
     setGratis({ carregando: true })
@@ -100,9 +90,9 @@ export default function FontesPage() {
           <button type="button" onClick={buscarGratis} data-testid="buscar-gratis" title="Busca o termo nas fontes públicas gratuitas (Comunica PJe, DataJud e Querido Diário) e mostra o resultado aqui" disabled={termo.trim().length < 4 || !!gratis?.carregando} className="mt-3 mr-2 min-h-[44px] bg-dourado text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">
             {gratis?.carregando ? 'Buscando…' : 'Buscar grátis (fontes públicas)'}
           </button>
-          <button type="button" onClick={buscarEscavador} title="Busca processos pelo termo no Escavador e lista os resultados nesta página" disabled={termo.trim().length < 3 || !!busca?.carregando} className="mt-3 min-h-[44px] bg-navy text-white px-5 text-sm uppercase tracking-wider disabled:opacity-50">
-            {busca?.carregando ? 'Buscando…' : 'Buscar processos no Escavador aqui'}
-          </button>
+          <Link to="/pesquisa" onClick={() => { try { localStorage.setItem('lsm-pesquisa-termo', termo) } catch { /* sem memória local */ } }} data-testid="buscar-oficiais" title="Abre a Pesquisa com este termo e lista os processos pelo nome, OAB, CNPJ ou número, direto no DataJud, no Diário de Justiça Eletrônico Nacional e na Receita" className="mt-3 inline-flex items-center min-h-[44px] bg-navy text-white px-5 text-sm no-underline">
+            Listar processos nas fontes oficiais
+          </Link>
           <button type="button" onClick={salvarBusca} data-testid="salvar-busca" title="Salva esta busca para o servidor repeti-la todo dia; as novidades aparecem em Intimações e Alertas" disabled={termo.trim().length < 4 || termo.replace(/\D/g, '').length === 20} className="mt-3 ml-2 min-h-[44px] border border-navy text-navy px-5 text-sm uppercase tracking-wider disabled:opacity-50">
             Salvar e repetir todo dia
           </button>
@@ -119,23 +109,6 @@ export default function FontesPage() {
                   <ul className="divide-y">{(gratis.r.queridoDiario.itens ?? []).map((g: any, k: number) => <li key={k} className="py-2">{dt(g.data)} · {g.municipio} · <a href={g.link} target="_blank" rel="noreferrer" title="Abre esta edição do diário oficial municipal em uma nova aba" className="underline">abrir diário</a><span className="block text-grafite-claro">{g.trecho}</span></li>)}</ul></div>
               </>)}
               <p className="text-xs text-grafite-claro">Fontes públicas e gratuitas: Comunica PJe e DataJud (CNJ) e Querido Diário. Use só para a finalidade do caso (LGPD).</p>
-            </div>
-          )}
-          {busca?.erro && <p role="alert" className="mt-3 p-3 text-sm border-l-2 bg-criticoFundo border-critico text-critico">{busca.erro}</p>}
-          {busca?.processos && (
-            <div className="mt-4" aria-live="polite">
-              <p className="text-sm mb-2">{busca.processos.length ? `${busca.processos.length} processo(s) encontrado(s):` : 'Nenhum processo encontrado.'}</p>
-              <ul className="divide-y">
-                {busca.processos.map(p => (
-                  <li key={p.numero} className="py-2 text-sm">
-                    <span className="font-mono">{p.numero}</span>{p.tribunal && ` · ${p.tribunal}`}{p.classe && ` · ${p.classe}`}
-                    <button type="button" onClick={() => navigator.clipboard?.writeText(p.numero).catch(() => undefined)} title="Copia o número deste processo para a área de transferência" className="ml-2 underline text-navy text-xs" data-testid="copiar-numero" aria-label={`Copiar o número ${p.numero}`}>copiar número</button>
-                    {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" title="Abre a consulta deste processo no site do tribunal em uma nova aba" className="ml-2 underline text-navy text-xs">abrir no tribunal</a>}
-                    {p.titulo && <span className="block text-grafite-claro">{p.titulo}</span>}
-                    {p.ultimaMovimentacao && <span className="block text-xs text-grafite-claro">Última movimentação: {new Date(p.ultimaMovimentacao).toLocaleDateString('pt-BR')}</span>}
-                  </li>
-                ))}
-              </ul>
             </div>
           )}
         </section>

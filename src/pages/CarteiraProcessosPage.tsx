@@ -11,7 +11,7 @@ import { meuAlcance, filtrarPorHierarquia, rotuloCargo, ALCANCE_FECHADO, type Al
 import { contarPorArea, nomeDaArea } from '@/lib/areaDoDireito'
 import { Briefcase, Upload, Radar, Download } from 'lucide-react'
 
-// Carteira de processos (como o painel do Escavador e do Jusbrasil): todos os processos do escritório numa tabela,
+// Carteira de processos (painel único do escritório): todos os processos do escritório numa tabela,
 // com tribunal, última movimentação no DataJud, tempo parado, intimações não lidas e próximo prazo.
 const hojeIso = () => hojeLocal()
 const ALERTAS: [NonNullable<FiltroCarteira['alerta']>, string][] = [['', 'Todos'], ['intimacao', 'Com intimação não lida'], ['parado90', 'Parados há mais de 90 dias'], ['parado180', 'Parados há mais de 180 dias'], ['sem_monitor', 'Sem monitoramento'], ['nao_encontrado', 'Não achados no DataJud']]
@@ -145,7 +145,6 @@ export default function CarteiraProcessosPage() {
                       <td className="text-xs space-y-1">
                         {l.numero && <Link className="block underline text-navy" to={`/monitoramento?lt=${l.numero}`} title="Mostra todos os andamentos deste processo no DataJud (CNJ)" data-testid="carteira-historico">Histórico (DataJud)</Link>}
                         {l.numero && <a className="block underline text-navy" href={`https://www.jusbrasil.com.br/busca?q=${l.numero_processo}`} target="_blank" rel="noreferrer" title="Abre a busca pelo processo no Jusbrasil (site externo)">Jusbrasil</a>}
-                        {l.numero && <a className="block underline text-navy" href={`https://www.escavador.com/busca?q=${l.numero_processo}`} target="_blank" rel="noreferrer" title="Abre a busca pelo processo no Escavador (site externo)">Escavador</a>}
                         <button type="button" onClick={() => encerrar(l.id, l.situacao === 'feito' ? 'fazendo' : 'feito')} title={l.situacao === 'feito' ? 'Reabre este processo na carteira' : 'Marca este processo como encerrado'} className="block underline text-navy" data-testid="carteira-encerrar">{l.situacao === 'feito' ? 'Reabrir' : 'Encerrar'}</button>
                       </td>
                     </tr>
