@@ -2,6 +2,7 @@
 import Layout from '@/components/Layout'
 import { RISCOS_DEMO, type NivelRisco } from '@/data/operacaoDemo'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
+import SaberDaMateria from '@/components/SaberDaMateria'
 import { recorte } from '@/lib/visaoFundos'
 const ROT: Record<NivelRisco, string> = { alto: 'Alto', medio: 'Médio', baixo: 'Baixo' }
 const COR: Record<NivelRisco, string> = { alto: 'bg-red-50 text-red-800 border-red-200', medio: 'bg-amber-50 text-amber-800 border-amber-200', baixo: 'bg-emerald-50 text-emerald-800 border-emerald-200' }
@@ -14,6 +15,7 @@ export default function RiscosLitigiosPage() {
       <SoParaNiveis rota="/riscos-litigios">
       <div className="max-w-5xl mx-auto space-y-4">
         <VerComoFundos />
+        <SaberDaMateria rota="/riscos-litigios" />
         <p className="text-sm text-grafite-claro">Demonstração com dados inventados. Riscos e litígios por nível, cada um com a medida proposta.</p>
         <ul className="space-y-2" data-testid="riscos">
           {lista.map(r => (

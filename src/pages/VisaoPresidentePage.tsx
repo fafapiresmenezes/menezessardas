@@ -10,6 +10,7 @@ import { calcularBoletim, desvioDeCronograma, semaforo, type Semaforo } from '@/
 import { PROJETOS_DEMO } from '@/data/demoObraAngola'
 import { PAGAMENTOS_DEMO, RAZAO_RETIDO } from '@/data/pagamentosDemo'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
+import SaberDaMateria from '@/components/SaberDaMateria'
 import { recorte, veProjecto } from '@/lib/visaoFundos'
 
 const kz = (v: number) => `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 0 }).format(v)} Kz`
@@ -45,6 +46,7 @@ export default function VisaoPresidentePage() {
       <SoParaNiveis rota="/visao-presidente">
       <div className="max-w-5xl mx-auto space-y-6">
         <VerComoFundos />
+        <SaberDaMateria rota="/visao-presidente" />
         <p className="text-sm text-grafite-claro">Demonstração com dados inventados. Cada projecto com a cor e o motivo, o contratado e o medido, e os avisos a tratar. As contas são as de verdade.</p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

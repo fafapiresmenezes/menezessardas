@@ -154,13 +154,13 @@ export default function PortalInstitutoPage() {
         </p>
 
         <nav className="mt-12 pt-6 border-t border-neutral-500 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-          <Link to="/portais" title={TODAS_AS_PORTAS[idioma]} className="text-neutral-500 hover:text-white underline decoration-white/20">{TODAS_AS_PORTAS[idioma]}</Link>
+          <Link to="/portais" title={TODAS_AS_PORTAS[idioma]} className="text-neutral-400 hover:text-white underline decoration-white/20">{TODAS_AS_PORTAS[idioma]}</Link>
           {PORTAIS_INSTITUTO.filter(p => p.rota !== portal.rota).map(p => {
             const outro = PORTAIS_I18N[p.rota as RotaPortal]?.[idioma] ?? PORTAIS_I18N[p.rota as RotaPortal]?.pt
             const nomeOutro = outro?.nome ?? p.nome
             const resumoOutro = outro?.resumo ?? p.resumo
             return (
-              <Link key={p.rota} to={p.rota} title={resumoOutro} className="text-neutral-500 hover:text-white underline decoration-white/20">{nomeOutro}</Link>
+              <Link key={p.rota} to={p.rota} title={resumoOutro} className="text-neutral-400 hover:text-white underline decoration-white/20">{nomeOutro}</Link>
             )
           })}
         </nav>

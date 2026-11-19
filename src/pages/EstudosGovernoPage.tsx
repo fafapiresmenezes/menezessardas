@@ -6,6 +6,7 @@
 import { useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
+import SaberDaMateria from '@/components/SaberDaMateria'
 import { recorte } from '@/lib/visaoFundos'
 import { TIPOS_ESTUDO, ESTUDOS_DEMO, FONTES_VIVAS } from '@/data/estudosGovernoDemo'
 
@@ -18,6 +19,7 @@ export default function EstudosGovernoPage() {
       <SoParaNiveis rota="/estudos-governo">
       <div className="max-w-3xl mx-auto space-y-6">
         <VerComoFundos />
+        <SaberDaMateria rota="/estudos-governo" />
         <p className="text-sm text-grafite-claro">
           Demonstração com dados inventados. Aqui a casa prepara estudos para apresentar ao governo,
           num molde fixo: pergunta, método, contas abertas, limites e fontes. Um estudo preparado pelo

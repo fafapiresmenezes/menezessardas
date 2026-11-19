@@ -3,6 +3,7 @@ import Layout from '@/components/Layout'
 import { GARANTIAS_DEMO } from '@/data/operacaoDemo'
 import { DATA_REFERENCIA_LEGIVEL, diasAte } from '@/data/referenciaDemo'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
+import SaberDaMateria from '@/components/SaberDaMateria'
 import { recorte } from '@/lib/visaoFundos'
 const dia = (s: string) => new Date(s + 'T00:00:00').toLocaleDateString('pt-PT')
 export default function GarantiasLicencasPage() {
@@ -13,6 +14,7 @@ export default function GarantiasLicencasPage() {
       <SoParaNiveis rota="/garantias-licencas">
       <div className="max-w-5xl mx-auto space-y-4">
         <VerComoFundos />
+        <SaberDaMateria rota="/garantias-licencas" />
         <p className="text-sm text-grafite-claro">Demonstração com dados inventados. Garantias e licenças por validade, com alerta de proximidade (vermelho &lt; 15 dias, âmbar &lt; 45). Os dias contam-se a partir de {DATA_REFERENCIA_LEGIVEL}.</p>
         <ul className="space-y-2" data-testid="garantias">
           {ordenado.map(g => {

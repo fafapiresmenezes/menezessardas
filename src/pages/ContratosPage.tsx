@@ -7,6 +7,7 @@ import Layout from '@/components/Layout'
 import { CONTRATOS_DEMO } from '@/data/contratosDemo'
 import { DATA_REFERENCIA_LEGIVEL, diasAte } from '@/data/referenciaDemo'
 import VerComoFundos, { SoParaNiveis, usePessoaFundos } from '@/components/VerComoFundos'
+import SaberDaMateria from '@/components/SaberDaMateria'
 import { recorte } from '@/lib/visaoFundos'
 
 const money = (v: number, m: string) => `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 0 }).format(v)} ${m}`
@@ -20,6 +21,7 @@ export default function ContratosPage() {
       <SoParaNiveis rota="/contratos-obrigacoes">
       <div className="max-w-5xl mx-auto space-y-4">
         <VerComoFundos />
+        <SaberDaMateria rota="/contratos-obrigacoes" />
         <p className="text-sm text-grafite-claro">Demonstração com dados inventados. Cada contrato com as partes, o valor, a lei e o foro, e as obrigações como prazos com dono. Os dias contam-se a partir de {DATA_REFERENCIA_LEGIVEL}.</p>
         <ul className="space-y-3" data-testid="contratos">
           {vis.map(c => (

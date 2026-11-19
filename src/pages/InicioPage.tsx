@@ -9,6 +9,7 @@ import { lerMeuJeito, carregarMeuJeito, esquecerMeuJeito, EVENTO_JEITO } from '@
 import { esquecerMarca } from '@/lib/marca'
 import { Building2, Users, Briefcase, Landmark, Factory, ShoppingCart, HeartPulse, Gavel, FileSignature, ShieldCheck, Scale, type LucideIcon } from 'lucide-react'
 import AceiteTermos from '@/components/AceiteTermos'
+import InstalarApp from '@/components/InstalarApp'
 import { BLOCOS_INICIO } from '@/components/menuTelas'
 
 // Tela de entrada: o escritório escolhe a área de trabalho antes de entrar na plataforma.
@@ -197,6 +198,7 @@ export default function InicioPage() {
           </span>
         </button>
       )}
+      <InstalarApp />
       {/* Atalhos divididos por assunto: quem entra acha o que precisa sem abrir o menu. */}
       <div className="w-full max-w-6xl mb-8" aria-label="Por onde começar">
         <p className="text-white text-lg mb-3 text-center">O que você precisa agora?</p>
