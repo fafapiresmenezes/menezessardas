@@ -3,7 +3,7 @@
 // (sem saber quem são) e os objetos de referência. Não há modelo de rosto, emoção ou identidade aqui.
 
 export interface Deteccao { classe: string; confianca: number }
-export interface LeituraCena { ambiente: string; pessoas: number; objetos: string[]; codigos: string[] }
+export interface LeituraCena { ambiente: string; pessoas: number; objetos: string[]; codigos: string[]; confianca: number }
 
 const PT: Record<string, string> = {
   person: 'pessoa', car: 'carro', bus: 'ônibus', truck: 'caminhão', motorcycle: 'moto', bicycle: 'bicicleta', 'traffic light': 'semáforo',
@@ -22,19 +22,40 @@ const SINAIS: { ambiente: string; classes: string[] }[] = [
   { ambiente: 'Cozinha', classes: ['refrigerator', 'oven', 'microwave', 'sink'] },
   { ambiente: 'Banheiro', classes: ['toilet', 'sink'] },
   { ambiente: 'Transporte', classes: ['train', 'airplane', 'boat', 'suitcase'] },
+  { ambiente: 'Refeição', classes: ['wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl', 'pizza', 'sandwich', 'cake', 'donut'] },
+  { ambiente: 'Natureza / área aberta', classes: ['bird', 'horse', 'sheep', 'cow', 'elephant', 'bear', 'zebra', 'giraffe', 'kite'] },
+  { ambiente: 'Esporte / lazer', classes: ['sports ball', 'tennis racket', 'baseball bat', 'skateboard', 'surfboard', 'skis', 'snowboard', 'frisbee'] },
 ]
 
-/** Classifica o ambiente pelos objetos vistos (regra transparente, sem caixa-preta). Função pura, testada. */
+/**
+ * Classifica o ambiente pelos objetos vistos (regra transparente, sem caixa-preta). Função pura, testada.
+ *
+ * Também devolve uma `confianca` de 0 a 1, que é uma ESTIMATIVA honesta: quanto o modelo
+ * confiou nos objetos que sustentaram a escolha, descontado o quanto o segundo lugar chegou
+ * perto. Dois sinais empatados dão confiança baixa, e é isso que a tela mostra.
+ *
+ * Pessoas são CONTADAS, nunca identificadas: não há modelo de rosto, emoção ou perfil aqui.
+ */
 export function classificarAmbiente(dets: Deteccao[], minimo = 0.5): LeituraCena {
   const v = dets.filter(d => d.confianca >= minimo)
   const pessoas = v.filter(d => d.classe === 'person').length
-  const classes = v.map(d => d.classe).filter(c => c !== 'person')
+  const naoPessoas = v.filter(d => d.classe !== 'person')
+  const classes = naoPessoas.map(d => d.classe)
   let melhor = { ambiente: 'Indefinido', pontos: 0 }
+  let segundo = 0
   for (const s of SINAIS) {
     const pontos = classes.filter(c => s.classes.includes(c)).length
-    if (pontos > melhor.pontos) melhor = { ambiente: s.ambiente, pontos }
+    if (pontos > melhor.pontos) { segundo = melhor.pontos; melhor = { ambiente: s.ambiente, pontos } }
+    else if (pontos > segundo) segundo = pontos
   }
-  return { ambiente: melhor.ambiente, pessoas, objetos: [...new Set(classes.map(c => PT[c] ?? c))], codigos: [] }
+  let confianca = 0
+  if (melhor.pontos > 0) {
+    const apoio = SINAIS.find(s => s.ambiente === melhor.ambiente)!.classes
+    const sustentam = naoPessoas.filter(d => apoio.includes(d.classe))
+    const media = sustentam.reduce((s, d) => s + d.confianca, 0) / sustentam.length
+    confianca = media * (melhor.pontos / (melhor.pontos + segundo))
+  }
+  return { ambiente: melhor.ambiente, pessoas, objetos: [...new Set(classes.map(c => PT[c] ?? c))], codigos: [], confianca }
 }
 
 declare global {

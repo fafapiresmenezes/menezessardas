@@ -8,6 +8,7 @@ import { CAMADAS_PENDENTES, SATELITES, buscarCenas, camadasSatelite, municipioDe
 import { baixar, csvPontos, geojson, montarGrafo } from '@/lib/geo/grafo'
 import { lerQuadro } from '@/lib/geo/camera'
 import { FONTES, TETO_PREVISIBILIDADE, metricasDeMobilidade } from '@/lib/geo/mobilidade'
+import { FONTE_MODO, resumoDeModos } from '@/lib/geo/modo'
 import { pdfFicha } from '@/lib/geo/fichaPdf'
 import { Camera, Download, Lock, MapPin, Pause, Play, Satellite, ShieldCheck, Trash2, Network, Bot } from 'lucide-react'
 import { carregarConfigOllama, gerarTexto, listarModelos, promptNoticias, promptSemana, salvarConfigOllama, type OllamaConfig } from '@/lib/geo/ollama'
@@ -130,7 +131,8 @@ export default function GeolocalizacaoPage() {
     // A sequência de visitas, na ordem do tempo, é o que alimenta as contas de mobilidade (R4).
     const sequencia = paradas.map(p => p.lugarId).filter((x): x is string => !!x)
     const mobilidade = metricasDeMobilidade(dados.pontos, lugares, sequencia)
-    return { lugares, paradas, linha: linhaDoTempo(paradas, lugares, d), semana, doDia, atual, previsao, mobilidade }
+    const modos = resumoDeModos(dados.pontos)
+    return { lugares, paradas, linha: linhaDoTempo(paradas, lugares, d), semana, doDia, atual, previsao, mobilidade, modos }
   }, [dados, dia])
 
   const ultimo = dados?.pontos.length ? dados.pontos[dados.pontos.length - 1] : null
@@ -392,6 +394,18 @@ export default function GeolocalizacaoPage() {
                   <a className="text-xs text-navy underline" href={FONTES.explorador.url} target="_blank" rel="noreferrer">Pappalardo et al., {FONTES.explorador.onde}</a>
                 </div>
               </div>
+              <h3 className="text-sm font-semibold text-navy mt-4">Como você se deslocou</h3>
+              <p className="text-xs text-grafite-claro mb-2">
+                Deduzido da velocidade entre os seus pontos, com suavização para um sinal solto de GPS não virar "andou de carro por 3 segundos". Nenhum sensor extra é ligado para isto.
+              </p>
+              {calc.modos.porModo.length === 0
+                ? <p className="text-sm text-grafite">Ainda não há deslocamento gravado para dizer como você se moveu.</p>
+                : <ul className="text-sm space-y-1">
+                    {calc.modos.porModo.map(m => (
+                      <li key={m.modo}><b className="capitalize">{m.modo}</b>: {fmtMin(m.minutos)} · {m.km.toFixed(1)} km</li>
+                    ))}
+                  </ul>}
+              <a className="text-xs text-navy underline" href={FONTE_MODO.url} target="_blank" rel="noreferrer">{FONTE_MODO.autores}, {FONTE_MODO.onde}</a>
             </div>
           </div>
         )}
@@ -407,7 +421,7 @@ export default function GeolocalizacaoPage() {
               <video ref={video} playsInline muted className="w-full border-4 border-critico" />
               <span className="absolute top-2 left-2 bg-critico text-white text-xs px-2 py-1">● CÂMERA LIGADA</span>
             </div>
-            {ultimaCena && <p className="text-sm text-navy">Agora: <b>{ultimaCena.ambiente}</b> · {ultimaCena.pessoas} pessoa(s) na cena · {ultimaCena.objetos.join(', ') || 'sem objetos de referência'}{ultimaCena.codigos.length ? ` · códigos: ${ultimaCena.codigos.join(', ')}` : ''}</p>}
+            {ultimaCena && <p className="text-sm text-navy">Agora: <b>{ultimaCena.ambiente}</b>{ultimaCena.confianca != null && ultimaCena.confianca > 0 ? <span className="text-grafite-claro"> (confiança {Math.round(ultimaCena.confianca * 100)}%)</span> : <span className="text-grafite-claro"> (sem sinal suficiente para afirmar o lugar)</span>} · {ultimaCena.pessoas} pessoa(s) na cena · {ultimaCena.objetos.join(', ') || 'sem objetos de referência'}{ultimaCena.codigos.length ? ` · códigos: ${ultimaCena.codigos.join(', ')}` : ''}</p>}
             <h2 className="font-semibold text-navy pt-2">Leituras gravadas ({dados.cenas.length})</h2>
             <ul className="text-xs max-h-60 overflow-auto" tabIndex={0} aria-label="Cenas da câmera gravadas">{[...dados.cenas].reverse().slice(0, 100).map(c => <li key={c.hash} className="border-t border-navy/5 py-1">{new Date(c.t).toLocaleString('pt-BR')} · {c.ambiente} · {c.pessoas} pessoa(s) · {c.objetos.join(', ')}</li>)}</ul>
           </div>
