@@ -41,7 +41,8 @@ export default function RedefinirSenhaPage() {
     try {
       const { error } = await supabase.auth.updateUser({ password: nova })
       if (error) throw new Error(mensagemAmigavel(error))
-      await supabase.auth.signOut()
+      // A pessoa acabou de provar que é dona do e-mail e criou a senha: já entra direto,
+      // sem passar pela tela de entrada de novo (M, 19/11/2026, depois de "senha não confere" em série).
       setConcluida(true)
     } catch (err) {
       setMsg({ tipo: 'erro', texto: mensagemAmigavel(err) })
@@ -52,6 +53,8 @@ export default function RedefinirSenhaPage() {
 
   // Sai do modo de redefinição (sem ?redefinir=1) e abre a entrada normal.
   const irParaEntrada = () => { window.location.replace(`${window.location.origin}/#/login`) }
+  // Com a sessão aberta pelo link do e-mail, vai direto para dentro da plataforma.
+  const irParaDentro = () => { window.location.replace(`${window.location.origin}/#/inicio`) }
 
   const campo = 'w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white'
 
@@ -89,8 +92,8 @@ export default function RedefinirSenhaPage() {
 
         {concluida && (
           <div className="mt-4 space-y-4">
-            <p role="status" className="text-sm text-regular">Senha gravada. Agora entre com a senha nova.</p>
-            <button type="button" onClick={irParaEntrada} title="Vai para a tela de entrada para usar a senha nova" className="inline-flex min-h-[44px] items-center px-4 bg-navy text-white text-sm uppercase tracking-wider">Entrar</button>
+            <p role="status" className="text-sm text-regular">Senha gravada. Você já está dentro.</p>
+            <button type="button" onClick={irParaDentro} title="Abre a plataforma, já com a sua entrada feita" className="inline-flex min-h-[44px] items-center px-4 bg-navy text-white text-sm uppercase tracking-wider">Abrir a plataforma</button>
           </div>
         )}
       </section>
