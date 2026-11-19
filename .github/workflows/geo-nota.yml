@@ -1,0 +1,69 @@
+# R11: a régua de nota do geomapeamento, conferida pela máquina a cada rodada.
+#
+# O que esta obra garante: as duas dimensões que a máquina sabe medir (3 acessibilidade,
+# 9 manutenção) não podem ter, em src/data/geo/nota.ts, um número diferente do medido aqui.
+# Se tiverem, a obra fica vermelha. É o que impede alguém — nós inclusive — de subir a nota
+# da régua sem ter melhorado nada.
+#
+# Também confere que src/data/geo/nota-historico.json continua igual ao que o git conta.
+name: nota do geo
+
+on:
+  push:
+    paths:
+      - 'src/data/geo/**'
+      - 'src/lib/geo/**'
+      - 'src/pages/geo/**'
+      - 'src/components/geo/**'
+      - 'scripts/geo/**'
+      - '.github/workflows/geo-nota.yml'
+  workflow_dispatch:
+
+jobs:
+  conferir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # o histórico da régua é lido do git: sem os commits, não há como conferir
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Provas do geo
+        run: npx vitest run src/lib/geo src/components/geo src/pages/geo src/data
+
+      - name: Montar o site, para medir a casa /geo por dentro
+        run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Medir acessibilidade das telas da casa /geo (axe-core)
+        run: |
+          npx playwright install --with-deps chromium
+          npx vite preview --port 4173 --strictPort &
+          for i in $(seq 1 60); do curl -sf http://localhost:4173 >/dev/null && break; sleep 1; done
+          node scripts/geo/auditar-r2.mjs http://localhost:4173
+        env:
+          BOLETIM_GEO: boletim-nota-geo.json
+
+      - name: Conferir a régua contra a medição
+        run: node --experimental-strip-types scripts/geo/medir-nota.mjs boletim-nota-geo.json
+
+      - name: Conferir o histórico da régua contra o git
+        run: node scripts/geo/historico-nota.mjs --conferir
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: geo-medicoes
+          path: |
+            src/data/geo/medicoes-ci.json
+            boletim-nota-geo.json
+          retention-days: 30
