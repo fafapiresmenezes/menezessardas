@@ -66,7 +66,7 @@ describe('cada quadradinho leva à sua própria tela', () => {
   })
 
   it('só a plataforma jurídica cai na tela de início', () => {
-    expect(VERTENTES.filter(v => v.rota === DESTINO_PADRAO).map(v => v.id)).toEqual(['direito'])
+    expect(VERTENTES.filter(v => v.rota === '/inicio').map(v => v.id)).toEqual(['direito'])
   })
 
   it('o quadradinho manda para a entrada lembrando o destino', () => {

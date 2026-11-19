@@ -1,30 +1,25 @@
-// Erro #7 do planejamento: a mesma frente tinha dois estados — Educação aparecia "No ar" na porta
-// e "Em estudo" na página. Uma frente, um estado. Este teste trava isso: para toda frente que tem
-// página de apresentação (portal), o estado mostrado na porta tem de ser o mesmo da página.
+// Erro #7 do planejamento: a mesma frente tinha dois estados e a porta prometia mais do que a
+// página entregava. Em 19/11/2026 M decidiu: TODAS as frentes ficam acessíveis na porta ("no ar",
+// cada uma abrindo com senha), para ele testar tudo. A honestidade muda de lugar, não some: a
+// página de cada frente continua dizendo a maturidade real (estudo, protótipo ou piloto) no campo
+// "como está". Este teste trava as duas coisas.
 import { describe, it, expect } from 'vitest'
-import { VERTENTES, type EstadoVertente } from '@/data/vertentes'
-import { PORTAIS_INSTITUTO, type EstadoPortal } from '@/data/portais-instituto'
+import { VERTENTES } from '@/data/vertentes'
+import { PORTAIS_INSTITUTO } from '@/data/portais-instituto'
 
-// Como o vocabulário da porta (no-ar/em-teste/em-desenvolvimento/em-estudo) e o do portal
-// (estudo/prototipo/piloto) ainda são dois, a correspondência fica explícita aqui.
-const PORTAL_PARA_VERTENTE: Record<EstadoPortal, EstadoVertente> = {
-  estudo: 'em-estudo',
-  prototipo: 'em-desenvolvimento',
-  piloto: 'em-teste',
-}
+describe('uma frente, um estado (erro #7, regra de 19/11/2026)', () => {
+  it('a porta deixa todas as frentes acessíveis, com senha', () => {
+    for (const v of VERTENTES) expect(v.estado, v.id).toBe('no-ar')
+  })
 
-describe('uma frente, um estado (erro #7)', () => {
-  it('toda frente com portal mostra o mesmo estado na porta e na página', () => {
+  it('a página de cada frente continua dizendo a maturidade real, sem promessa vazia', () => {
     for (const p of PORTAIS_INSTITUTO) {
-      const v = VERTENTES.find(x => x.rota === p.rota)
-      if (!v) continue // nem todo portal está na grade da porta
-      expect(v.estado, `frente ${p.rota}: porta diz "${v.estado}", página diz "${p.estado}"`)
-        .toBe(PORTAL_PARA_VERTENTE[p.estado])
+      expect(['estudo', 'prototipo', 'piloto'], p.rota).toContain(p.estado)
+      expect(p.comoEsta.length, p.rota).toBeGreaterThan(40)
     }
   })
 
-  it('a Educação não está mais "no ar" (o caso que o planejamento apontou)', () => {
-    const educacao = VERTENTES.find(v => v.id === 'educacao')
-    expect(educacao?.estado).toBe('em-estudo')
+  it('a Educação segue honesta na página: em estudo', () => {
+    expect(PORTAIS_INSTITUTO.find(p => p.rota === '/educacao')?.estado).toBe('estudo')
   })
 })
