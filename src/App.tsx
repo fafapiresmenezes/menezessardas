@@ -48,6 +48,7 @@ const AlertasPage = lazy(() => import('@/pages/AlertasPage'))
 const RelatóriosPage = lazy(() => import('@/pages/RelatóriosPage'))
 const IndicadoresPage = lazy(() => import('@/pages/IndicadoresPage'))
 const TrilhaPage = lazy(() => import('@/pages/TrilhaPage'))
+const BancoDeSenhasPage = lazy(() => import('@/pages/BancoDeSenhasPage'))
 const ConsumoPage = lazy(() => import('@/pages/ConsumoPage'))
 const AssistentePage = lazy(() => import('@/pages/AssistentePage'))
 const ImportarImoveisPage = lazy(() => import('@/pages/ImportarImoveisPage'))
@@ -423,6 +424,10 @@ function App() {
         <Route
           path="/legislacao"
           element={isAuthenticated ? <LegislacaoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/banco-de-senhas"
+          element={isAuthenticated ? <BancoDeSenhasPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/trilha"
