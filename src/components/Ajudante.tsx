@@ -25,7 +25,7 @@ export default function Ajudante() {
   useEffect(() => { if (aberto) lerAprendizado().then(setAprendido).catch(() => undefined) }, [aberto])
 
   const perguntar = (texto: string) => {
-    const achadas = procurar(texto, 5, visao)
+    const achadas = procurar(texto, 5, visao, aprendido)
     setPergunta(texto)
     setPerguntada(texto)
     setRespostas(achadas)
@@ -35,16 +35,16 @@ export default function Ajudante() {
 
   const avaliar = (resolveu: boolean) => {
     setAvaliada(true)
-    registrarPergunta(perguntada, (respostas?.length ?? 0) > 0, resolveu).then(setAprendido).catch(() => undefined)
+    registrarPergunta(perguntada, (respostas?.length ?? 0) > 0, resolveu, respostas?.find(r => r.rota)?.rota).then(setAprendido).catch(() => undefined)
   }
 
   const ir = (rota?: string) => { if (!rota) return; setAberto(false); navigate(rota) }
 
   if (!aberto) return (
     <button type="button" onClick={() => setAberto(true)} data-testid="abrir-ajudante"
-      title="Abre o ajudante: pergunte com suas palavras como se faz alguma coisa na plataforma"
+      title="Abre o copiloto: pergunte com suas palavras como se faz alguma coisa na plataforma, ou tire uma dúvida de direito brasileiro"
       className="fixed bottom-5 right-5 z-40 min-h-[44px] px-4 bg-navy text-white text-sm shadow-lg inline-flex items-center gap-2 print:hidden">
-      <HelpCircle size={18} aria-hidden="true" /> Como faço?
+      <HelpCircle size={18} aria-hidden="true" /> Copiloto
     </button>
   )
 
@@ -53,7 +53,7 @@ export default function Ajudante() {
       className="fixed bottom-0 right-0 sm:bottom-5 sm:right-5 z-40 w-full sm:w-[28rem] max-h-[85vh] overflow-y-auto bg-white shadow-2xl border-t-2 border-dourado print:hidden">
       <div className="p-5 space-y-4">
         <div className="flex items-start justify-between gap-3">
-          <h2 id="ajudante-titulo" className="font-serif text-xl">Como faço?</h2>
+          <h2 id="ajudante-titulo" className="font-serif text-xl">Copiloto</h2>
           <button type="button" onClick={() => setAberto(false)} data-testid="fechar-ajudante"
             title="Fecha o ajudante e volta para a tela" className="min-h-[44px] px-2 text-grafite">
             <X size={20} aria-hidden="true" /><span className="sr-only">Fechar</span>
@@ -72,7 +72,7 @@ export default function Ajudante() {
 
         {respostas === null && (
           <div className="text-sm text-grafite-claro space-y-2">
-            <p>Escreva com as suas palavras. A resposta sai do que a plataforma já explica sobre cada tela, então nada aqui é inventado.</p>
+            <p>Escreva com as suas palavras. O copiloto só fala das telas que você pode ver e de direito brasileiro. Como se usa a plataforma, ele responde na hora; dúvida de direito, ele leva ao Assistente jurídico, que cita a lei.</p>
             <ul className="space-y-1">
               {exemplos.map(e => (
                 <li key={e}><button type="button" onClick={() => perguntar(e)} title={`Pergunta: ${e}`} className="underline text-navy text-left min-h-[44px]">{e}</button></li>
@@ -85,7 +85,7 @@ export default function Ajudante() {
           <div className="text-sm space-y-2" data-testid="ajudante-sem-resposta">
             <p className="font-medium">Não achei isso no que a plataforma explica hoje.</p>
             <p className="text-grafite-claro">Guardei a sua pergunta: ela entra na lista do que falta explicar, que a administração do escritório vê. Enquanto isso, o Assistente jurídico responde pergunta de direito.</p>
-            <button type="button" onClick={() => ir('/assistente')} title="Abre o Assistente jurídico, que responde pergunta de direito e redige peças" className="underline text-navy min-h-[44px]">Abrir o Assistente jurídico</button>
+            <button type="button" onClick={() => ir(`/assistente?pedido=${encodeURIComponent(perguntada)}`)} data-testid="levar-ao-assistente" title="Leva esta pergunta ao Assistente jurídico, que responde citando a lei brasileira" className="underline text-navy min-h-[44px]">Perguntar isto ao Assistente jurídico</button>
           </div>
         )}
 
@@ -106,7 +106,8 @@ export default function Ajudante() {
                 <button type="button" onClick={() => avaliar(true)} data-testid="resolveu" title="Diz que a resposta resolveu; ajuda a plataforma a saber o que explica bem" className="min-h-[44px] px-3 border inline-flex items-center gap-1"><ThumbsUp size={14} aria-hidden="true" />Sim</button>
                 <button type="button" onClick={() => avaliar(false)} data-testid="nao-resolveu" title="Diz que a resposta não resolveu; a pergunta entra na fila do que falta explicar" className="min-h-[44px] px-3 border inline-flex items-center gap-1"><ThumbsDown size={14} aria-hidden="true" />Não</button>
               </div>
-            ) : <p className="text-sm text-grafite-claro" data-testid="ajudante-obrigado">Anotado. Isso melhora o ajudante para a equipe inteira.</p>}
+            ) : <p className="text-sm text-grafite-claro" data-testid="ajudante-obrigado">Anotado. O copiloto aprende com isso: o que resolveu sobe na resposta da equipe inteira.</p>}
+            <button type="button" onClick={() => ir(`/assistente?pedido=${encodeURIComponent(perguntada)}`)} data-testid="duvida-de-direito" title="Leva esta pergunta ao Assistente jurídico, que responde citando a lei brasileira" className="underline text-navy text-sm min-h-[44px] text-left">É dúvida de direito? Perguntar ao Assistente jurídico</button>
           </div>
         )}
 
