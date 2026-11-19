@@ -152,7 +152,7 @@ export default function CarteiraProcessosPage() {
                 </tbody>
               </table>
             </div>
-          ) : carregado && <Vazio icone={<Briefcase size={28} />} titulo={linhas.length ? 'Nenhum processo com esses filtros' : 'A carteira está vazia'} texto={linhas.length ? 'Limpe a busca ou troque os filtros.' : 'Importe os processos que o escritório já tem: planilha de outro sistema, lista de números, intimações das OABs ou Escavador.'} acao={linhas.length ? undefined : { rotulo: 'Importar processos', para: '/processos/importar' }} />}
+          ) : carregado && <Vazio icone={<Briefcase size={28} />} titulo={linhas.length ? 'Nenhum processo com esses filtros' : 'A carteira está vazia'} texto={linhas.length ? 'Limpe a busca ou troque os filtros.' : 'Importe os processos que o escritório já tem: planilha de outro sistema, lista de números ou intimações das OABs.'} acao={linhas.length ? undefined : { rotulo: 'Importar processos', para: '/processos/importar' }} />}
         </section>
       </div>
     </Layout>
