@@ -1,19 +1,19 @@
 -- =====================================================================================
--- COLE-ISTO-155: Pesquisas de Investimentos Tokenizáveis Preditivos (20/11/2026, pedido de M)
+-- COLE-ISTO-155: Jogo de estalecas da frente de Predição (20/11/2026, pedido de M)
 --
 -- O QUE FAZ, em palavras simples: cria as duas tabelas do novo quadrado do Instituto, onde os
--- membros fazem previsões com PONTOS DE PESQUISA (sem valor em dinheiro), e as funções que
--- contam os pontos, mostram a chance que o grupo vê e o ranking.
+-- membros fazem previsões com ESTALECAS (moeda de brincadeira, sem valor em dinheiro), e as funções que
+-- contam as estalecas, mostram a chance que o grupo vê e o ranking.
 --   · previsoes_perguntas : as perguntas, cada uma com a fonte pública que vai resolvê-la
---   · previsoes_palpites  : os palpites (resposta escolhida + pontos colocados)
+--   · previsoes_palpites  : os palpites (resposta escolhida + estalecas colocadas)
 --
 -- REGRAS QUE O BANCO GARANTE:
 --   · Só quem administra o Instituto (eh_admin_instituto) lê ou grava. O escritório Sardas e
 --     Menezes e qualquer outro cliente não veem nada disto.
 --   · Ninguém vê o palpite de outra pessoa; só a soma por resposta e o ranking por primeiro nome.
---   · Pontos não têm valor em dinheiro: não existe coluna de dinheiro, depósito, saque, carteira
---     ou token. Cada pessoa começa com 1000 pontos.
---   · Palpite só com a pergunta aberta, de 1 a 200 pontos, e só com saldo.
+--   · Estalecas não têm valor em dinheiro: não existe coluna de dinheiro, depósito, saque, carteira
+--     ou token. Cada pessoa começa com 1000 estalecas. Não é aposta.
+--   · Palpite só com a pergunta aberta, de 1 a 200 estalecas, e só com saldo.
 --
 -- NÃO APAGA NADA e não mexe em nenhuma outra tabela. Pode rodar duas vezes sem medo.
 -- PARA DESFAZER: rodar sozinho o bloco "DESFAZER" do fim deste arquivo (está comentado).
@@ -108,9 +108,9 @@ BEGIN
   IF NOT FOUND THEN RAISE EXCEPTION 'Pergunta não encontrada.'; END IF;
   IF q.resultado IS NOT NULL OR q.fecha_em <= now() THEN RAISE EXCEPTION 'Esta pergunta já fechou.'; END IF;
   IF p_opcao < 0 OR p_opcao >= array_length(q.opcoes, 1) THEN RAISE EXCEPTION 'Escolha uma das respostas.'; END IF;
-  IF p_pontos < 1 OR p_pontos > 200 THEN RAISE EXCEPTION 'De 1 a 200 pontos por palpite.'; END IF;
+  IF p_pontos < 1 OR p_pontos > 200 THEN RAISE EXCEPTION 'De 1 a 200 estalecas por palpite.'; END IF;
   v_saldo := public.previsoes_saldo_de(auth.uid());
-  IF p_pontos > v_saldo THEN RAISE EXCEPTION 'Você não tem pontos suficientes.'; END IF;
+  IF p_pontos > v_saldo THEN RAISE EXCEPTION 'Você não tem estalecas suficientes.'; END IF;
   INSERT INTO public.previsoes_palpites (pergunta_id, usuario_id, opcao, pontos) VALUES (p_pergunta, auth.uid(), p_opcao, p_pontos);
   RETURN v_saldo - p_pontos;
 END $$;

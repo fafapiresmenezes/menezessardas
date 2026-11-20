@@ -8,11 +8,11 @@ import {
 } from '@/lib/pesquisasPreditivas'
 
 /**
- * Quadrado "Pesquisas de Investimentos Tokenizáveis Preditivos" (pedido de M, 20/11/2026).
+ * Jogo de estalecas da frente de Predição (pedido de M, 20/11/2026 00h26: "não é aposta, é estaleca").
  *
- * Nesta fase é uma pesquisa de opinião com cara de mercado de previsões, só com PONTOS DE PESQUISA:
- * sem depósito, sem saque, sem token negociável, sem carteira. Os pontos não valem dinheiro.
- * A parte de dinheiro real fica no mapa jurídico, para decisão de M com um advogado.
+ * Nesta fase é uma pesquisa de opinião com cara de mercado de previsões, só com ESTALECAS (moeda de brincadeira):
+ * sem depósito, sem saque, sem token negociável, sem carteira. As estalecas não valem dinheiro.
+ * A parte com dinheiro foi parada por M; o mapa jurídico ficou guardado no plano.
  *
  * Antes do SQL 155 ser colado, a tela abre em demonstração com perguntas de exemplo e nada é gravado.
  */
@@ -20,9 +20,9 @@ import {
 type Aba = 'perguntas' | 'ranking' | 'dados' | 'regras'
 const ABAS: { id: Aba; nome: string; dica: string }[] = [
   { id: 'perguntas', nome: 'Perguntas', dica: 'As perguntas abertas e a chance que o grupo vê em cada resposta' },
-  { id: 'ranking', nome: 'Ranking', dica: 'Quem tem mais pontos de pesquisa (só o primeiro nome)' },
+  { id: 'ranking', nome: 'Ranking', dica: 'Quem tem mais estalecas (só o primeiro nome)' },
   { id: 'dados', nome: 'Dados da pesquisa', dica: 'O quanto o grupo acertou nas perguntas já resolvidas' },
-  { id: 'regras', nome: 'Regras e lei', dica: 'Como funciona e o que a lei exige para um dia usar dinheiro real' },
+  { id: 'regras', nome: 'Regras', dica: 'Como o jogo funciona' },
 ]
 
 type PainelLinha = { pergunta_id: number; opcao: number; pontos: number; pessoas: number }
@@ -30,7 +30,7 @@ type Ranking = { nome: string; saldo: number; palpites: number }
 
 const fmtData = (s: string) => new Date(s).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
 
-export default function PesquisasTokenizaveisPage() {
+export default function EstalecasPage() {
   const [aba, setAba] = useState<Aba>('perguntas')
   const [demo, setDemo] = useState(false)
   const [carregando, setCarregando] = useState(true)
@@ -88,31 +88,31 @@ export default function PesquisasTokenizaveisPage() {
       // Em demonstração o palpite vale só nesta tela, até recarregar a página.
       const novo = { pergunta_id: p.id, opcao, pontos }
       setMeus(m => [...m, novo]); setTodos(t => [...t, novo])
-      setMsg({ ok: `Palpite de demonstração: ${pontos} pontos em "${p.opcoes[opcao]}". Nada foi gravado.` })
+      setMsg({ ok: `Palpite de demonstração: ${pontos} estalecas em "${p.opcoes[opcao]}". Nada foi gravado.` })
       return
     }
     const r = await supabase.rpc('previsoes_palpitar', { p_pergunta: p.id, p_opcao: opcao, p_pontos: pontos })
     if (r.error) { setMsg({ erro: r.error.message || 'Não deu para gravar agora. Tente de novo.' }); return }
-    setMsg({ ok: `Palpite gravado: ${pontos} pontos em "${p.opcoes[opcao]}".` })
+    setMsg({ ok: `Palpite gravado: ${pontos} estalecas em "${p.opcoes[opcao]}".` })
     await carregar()
   }
 
   return (
-    <Layout title="Pesquisas de Investimentos Tokenizáveis Preditivos">
+    <Layout title="Jogo de estalecas">
       <div className="space-y-6">
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6 space-y-3" data-testid="ptp-abertura">
-          <h2 className="font-serif text-xl">Pesquisa preditiva com pontos</h2>
+          <h2 className="font-serif text-xl">Previsões de brincadeira, com estalecas</h2>
           <p className="text-sm text-grafite">
-            Aqui os membros do Instituto dizem o que acham que vai acontecer, usando <strong>pontos de pesquisa</strong>.
-            A soma dos pontos mostra a chance que o grupo vê em cada resposta. Quando a pergunta se resolve pela fonte
-            pública combinada, quem acertou recebe os pontos da rodada. As respostas viram dado para os estudos do Instituto.
+            Aqui os membros do Instituto dizem o que acham que vai acontecer, usando <strong>estalecas</strong>, uma moeda de brincadeira.
+            A soma das estalecas mostra a chance que o grupo vê em cada resposta. Quando a pergunta se resolve pela fonte
+            pública combinada, quem acertou recebe as estalecas da rodada. As respostas viram dado para o estudo de calibragem da frente de Predição. Não é aposta.
           </p>
           <p className="text-sm bg-grafite/5 border border-grafite-claro p-3" data-testid="ptp-sem-dinheiro">
-            Os pontos <strong>não valem dinheiro</strong>: não se compram, não se vendem, não se trocam e não saem da
-            plataforma. Não há depósito, saque, token nem carteira. Cada pessoa começa com {PONTOS_INICIAIS} pontos.
+            As estalecas <strong>não valem dinheiro</strong>: não se compram, não se vendem, não se trocam e não saem da
+            plataforma. Não há depósito, saque, token nem carteira. Cada pessoa começa com {PONTOS_INICIAIS} estalecas.
           </p>
           <div className="flex flex-wrap items-center gap-4 text-sm">
-            <span data-testid="ptp-saldo">Seus pontos: <strong>{saldo.toLocaleString('pt-BR')}</strong></span>
+            <span data-testid="ptp-saldo">Suas estalecas: <strong>{saldo.toLocaleString('pt-BR')}</strong></span>
             <span>{abertas.length} pergunta(s) aberta(s)</span>
           </div>
           {demo && !carregando && (
@@ -168,7 +168,7 @@ export default function PesquisasTokenizaveisPage() {
 
         {!carregando && aba === 'ranking' && (
           <section className="bg-white shadow-sm p-6" data-testid="ptp-ranking">
-            <h2 className="font-serif text-xl mb-3">Ranking de pontos</h2>
+            <h2 className="font-serif text-xl mb-3">Ranking de estalecas</h2>
             {ranking.length === 0 ? (
               <p className="text-sm text-grafite">Ainda não há palpites gravados.</p>
             ) : (
@@ -176,7 +176,7 @@ export default function PesquisasTokenizaveisPage() {
                 {ranking.map((r, i) => (
                   <li key={`${r.nome}-${i}`} className="py-2 flex justify-between text-sm">
                     <span>{i + 1}. {r.nome}</span>
-                    <span>{r.saldo.toLocaleString('pt-BR')} pontos · {r.palpites} palpite(s)</span>
+                    <span>{r.saldo.toLocaleString('pt-BR')} estalecas · {r.palpites} palpite(s)</span>
                   </li>
                 ))}
               </ol>
@@ -228,24 +228,24 @@ function CartaoPergunta({ p, pote, pessoas, meus, onPalpitar }: {
         ))}
       </ul>
       <p className="text-xs text-grafite">
-        {total === 0 ? 'Ainda sem palpites: o grupo não tem opinião nesta pergunta.' : `Chance que o grupo vê, com ${pessoas} pessoa(s) e ${total} pontos. É opinião do grupo, não previsão do Instituto.`}
-        {meusPontos > 0 && ` Você já colocou ${meusPontos} pontos aqui.`}
+        {total === 0 ? 'Ainda sem palpites: o grupo não tem opinião nesta pergunta.' : `Chance que o grupo vê, com ${pessoas} pessoa(s) e ${total} estalecas. É opinião do grupo, não previsão do Instituto.`}
+        {meusPontos > 0 && ` Você já colocou ${meusPontos} estalecas aqui.`}
       </p>
       <div className="flex flex-wrap items-center gap-2">
         <label className="text-sm">
-          Pontos{' '}
+          Estalecas{' '}
           <input
             type="number" min={1} max={PONTOS_MAXIMO_POR_PALPITE} value={pontos}
             onChange={e => setPontos(Math.trunc(Number(e.target.value)))}
             className="w-24 border border-grafite-claro px-2 min-h-[44px]"
-            aria-label={`Pontos para a pergunta ${p.titulo}`}
+            aria-label={`Estalecas para a pergunta ${p.titulo}`}
           />
         </label>
         <button
           type="button"
           disabled={opcao === null}
           onClick={() => opcao !== null && void onPalpitar(p, opcao, pontos)}
-          title="Grava o seu palpite com os pontos escolhidos"
+          title="Grava o seu palpite com as estalecas escolhidas"
           className="min-h-[44px] px-5 bg-grafite text-white text-sm disabled:opacity-40"
         >
           Palpitar
@@ -269,7 +269,7 @@ function LinhaFechada({ p, pote, demo, onResolvida, setMsg }: {
     if (demo || escolha === '') return
     const r = await supabase.rpc('previsoes_resolver', { p_pergunta: p.id, p_resultado: Number(escolha) })
     if (r.error) { setMsg({ erro: r.error.message }); return }
-    setMsg({ ok: 'Pergunta resolvida. Os pontos já foram distribuídos.' })
+    setMsg({ ok: 'Pergunta resolvida. As estalecas já foram distribuídas.' })
     await onResolvida()
   }
   return (
@@ -277,7 +277,7 @@ function LinhaFechada({ p, pote, demo, onResolvida, setMsg }: {
       <p className="font-medium">{p.titulo}</p>
       <p className="text-grafite">
         {p.opcoes.map((o, i) => `${o}: ${chances[i]}%`).join(' · ')}
-        {p.resultado === -1 && ' · Anulada (pontos devolvidos)'}
+        {p.resultado === -1 && ' · Anulada (estalecas devolvidas)'}
         {p.resultado !== null && p.resultado >= 0 && ` · Aconteceu: ${p.opcoes[p.resultado]}`}
         {p.resultado === null && ' · Esperando o resultado oficial'}
       </p>
@@ -286,9 +286,9 @@ function LinhaFechada({ p, pote, demo, onResolvida, setMsg }: {
           <select value={escolha} onChange={e => setEscolha(e.target.value)} className="border border-grafite-claro min-h-[44px] px-2" aria-label="O que aconteceu">
             <option value="">O que aconteceu?</option>
             {p.opcoes.map((o, i) => <option key={o} value={i}>{o}</option>)}
-            <option value="-1">Anular (devolve os pontos)</option>
+            <option value="-1">Anular (devolve as estalecas)</option>
           </select>
-          <button type="button" onClick={() => void resolver()} disabled={escolha === ''} className="min-h-[44px] px-4 border border-grafite text-sm disabled:opacity-40" title="Registra o resultado oficial e distribui os pontos">
+          <button type="button" onClick={() => void resolver()} disabled={escolha === ''} className="min-h-[44px] px-4 border border-grafite text-sm disabled:opacity-40" title="Registra o resultado oficial e distribui as estalecas">
             Registrar resultado
           </button>
         </div>
@@ -370,23 +370,18 @@ function RegrasELei() {
     <section className="bg-white shadow-sm p-6 space-y-4 text-sm" data-testid="ptp-regras">
       <h2 className="font-serif text-xl">Como funciona</h2>
       <ul className="list-disc pl-5 space-y-1 text-grafite">
-        <li>Cada membro do Instituto começa com {PONTOS_INICIAIS} pontos de pesquisa.</li>
-        <li>Num palpite você escolhe uma resposta e coloca de 1 a {PONTOS_MAXIMO_POR_PALPITE} pontos.</li>
-        <li>Quando a pergunta se resolve, os pontos de todos daquela pergunta são divididos entre quem acertou, na proporção do que cada um colocou. Pergunta anulada devolve os pontos.</li>
+        <li>Cada membro do Instituto começa com {PONTOS_INICIAIS} estalecas.</li>
+        <li>Num palpite você escolhe uma resposta e coloca de 1 a {PONTOS_MAXIMO_POR_PALPITE} estalecas.</li>
+        <li>Quando a pergunta se resolve, as estalecas de todos daquela pergunta são divididas entre quem acertou, na proporção do que cada um colocou. Pergunta anulada devolve as estalecas.</li>
         <li>Toda pergunta diz antes qual fonte pública vai resolvê-la.</li>
+        <li>Estaleca é brincadeira: não se compra, não se vende, não se troca por nada e não sai daqui. Não é aposta.</li>
         <li>Só membros do Instituto entram. O escritório cliente não vê nada disto.</li>
       </ul>
-      <h2 className="font-serif text-xl">E com dinheiro de verdade?</h2>
+      <h2 className="font-serif text-xl">Para que serve</h2>
       <p className="text-grafite">
-        Hoje não. Desde 4 de maio de 2026 a Resolução CMN 5.298/2026 proíbe no Brasil contratos sobre eventos esportivos,
-        políticos, eleitorais, sociais, culturais e de entretenimento, inclusive os oferecidos do exterior; e o governo
-        bloqueou 27 sites desse tipo, entre eles Polymarket e Kalshi. Em Singapura, o órgão de jogos bloqueou o
-        Polymarket em 2025 e o banco central (MAS) diz que, em geral, não dá licença para empresa de token que atende só
-        clientes de fora. Ter sede lá não libera a oferta para quem mora no Brasil.
-      </p>
-      <p className="text-grafite">
-        O mapa jurídico completo, com as fontes, está no plano entregue ao presidente do Instituto. Ele é pesquisa
-        informativa e não substitui um advogado.
+        O jogo junta a opinião do grupo e mede, pergunta por pergunta, o quanto ela acerta. Isso faz parte do estudo
+        de calibragem da frente de Predição: entender quando uma chance dita, por pessoas ou por mercados, bate com o que
+        acontece, antes de o Instituto mostrar qualquer previsão.
       </p>
     </section>
   )

@@ -1,5 +1,5 @@
 /**
- * Pesquisas de Investimentos Tokenizáveis Preditivos (pedido de M, 20/11/2026).
+ * Jogo de estalecas da frente de Predição (pedido de M, 20/11/2026).
  *
  * O que é, nesta fase: uma pesquisa de opinião em formato de mercado de previsões. Cada membro do
  * Instituto recebe pontos de pesquisa e usa esses pontos para dizer em que resultado acredita. A soma
@@ -89,9 +89,9 @@ export function aberta(p: Pergunta, agora = new Date()): boolean {
 export function validarPalpite(p: Pergunta, opcao: number, pontos: number, saldo: number, agora = new Date()): string | null {
   if (!aberta(p, agora)) return 'Esta pergunta já fechou.'
   if (!Number.isInteger(opcao) || opcao < 0 || opcao >= p.opcoes.length) return 'Escolha uma das respostas.'
-  if (!Number.isInteger(pontos) || pontos < PONTOS_MINIMO) return 'Coloque pelo menos 1 ponto.'
-  if (pontos > PONTOS_MAXIMO_POR_PALPITE) return `No máximo ${PONTOS_MAXIMO_POR_PALPITE} pontos por palpite.`
-  if (pontos > saldo) return 'Você não tem pontos suficientes.'
+  if (!Number.isInteger(pontos) || pontos < PONTOS_MINIMO) return 'Coloque pelo menos 1 estaleca.'
+  if (pontos > PONTOS_MAXIMO_POR_PALPITE) return `No máximo ${PONTOS_MAXIMO_POR_PALPITE} estalecas por palpite.`
+  if (pontos > saldo) return 'Você não tem estalecas suficientes.'
   return null
 }
 

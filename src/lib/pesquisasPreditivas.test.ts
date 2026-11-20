@@ -64,7 +64,7 @@ describe('pesquisas preditivas com pontos (sem dinheiro)', () => {
 
   it('nenhuma palavra de dinheiro real na lógica: só pontos', async () => {
     const fs = await import('fs')
-    const tela = fs.readFileSync('src/pages/PesquisasTokenizaveisPage.tsx', 'utf8')
+    const tela = fs.readFileSync('src/pages/EstalecasPage.tsx', 'utf8')
     expect(tela).not.toMatch(/R\$|binance|depositar|sacar|carteira cripto|pix/i)
     expect(tela).toContain('não valem dinheiro')
   })
