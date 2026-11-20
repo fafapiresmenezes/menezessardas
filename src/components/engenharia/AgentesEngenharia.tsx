@@ -1,19 +1,21 @@
 // Aba "Agentes" do quadradinho Engenharia (Plano Atlas-Engenharia v1, 19/11/2026).
 // Mostra as 46 fichas (prompt completo) por matriz, o estado do corpus Atlas e as provas.
 // Os 12 especialistas já fizeram a 1.ª volta de provas de cálculo fechado; os restantes continuam por provar.
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ONDE_BIBLIOTECA, contarBiblioteca, filtrarBiblioteca, lerBiblioteca, type PecaAtlas } from '@/lib/atlasBiblioteca'
 import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, EMITIDO_AGENTES, RESULTADO_PROVAS, FONTES_ATLAS, MATRIZES, REGRAS_AGENTES, type FichaAgente, type MatrizAgente } from '@/data/agentesEngenharia'
 
 // Quanto é que cada agente já tem para estudar, pela classificação do corpus.
 const ESTANTE = new Map(CLASSIFICACAO_ATLAS.estantes.map(e => [e.agente, e]))
 const NOTA = new Map(RESULTADO_PROVAS.notas.map(n => [n.agente, n]))
 
-type SubAba = MatrizAgente | 'atlas' | 'provas'
+type SubAba = MatrizAgente | 'atlas' | 'biblioteca' | 'provas'
 
 const SUBABAS: { id: SubAba; nome: string; dica: string }[] = [
   ...MATRIZES,
   { id: 'atlas', nome: 'Atlas', dica: 'O corpus: o que já está inventariado e as fontes abertas por ingerir' },
+  { id: 'biblioteca', nome: 'Biblioteca', dica: 'As peças escolhidas do corpus, com busca, licença e endereço de origem' },
   { id: 'provas', nome: 'Provas', dica: 'Nota de cada agente na bateria do Instituto; nenhum entra sem passar' },
 ]
 
@@ -53,6 +55,71 @@ function Ficha({ a }: { a: FichaAgente }) {
   )
 }
 
+/** Sub-aba Biblioteca: busca nas peças escolhidas do corpus. O ficheiro só é baixado quando se abre a aba. */
+function Biblioteca() {
+  const [pecas, setPecas] = useState<PecaAtlas[] | null>(null)
+  const [erro, setErro] = useState('')
+  const [busca, setBusca] = useState('')
+  const [esp, setEsp] = useState('')
+  const [soGuardaveis, setSoGuardaveis] = useState(false)
+  const [soLocal, setSoLocal] = useState(false)
+
+  useEffect(() => {
+    let vivo = true
+    ;(async () => {
+      for (const onde of ONDE_BIBLIOTECA) {
+        try {
+          const r = await fetch(onde)
+          if (!r.ok) continue
+          const lidas = lerBiblioteca(await r.text())
+          if (vivo && lidas.length > 0) { setPecas(lidas); return }
+        } catch { /* tenta o próximo */ }
+      }
+      if (vivo) setErro('Não deu para baixar a biblioteca agora. O ficheiro fica em cdn.jsdelivr.net/gh/fafapiresmenezes/menezessardas@gh-pages/atlas-biblioteca-v1.jsonl.')
+    })()
+    return () => { vivo = false }
+  }, [])
+
+  const filtradas = useMemo(() => pecas ? filtrarBiblioteca(pecas, { busca, especialidade: esp, soGuardaveis, soContextoLocal: soLocal }) : [], [pecas, busca, esp, soGuardaveis, soLocal])
+  const contas = useMemo(() => pecas ? contarBiblioteca(pecas) : null, [pecas])
+  const especialidades = useMemo(() => {
+    const m = new Map<string, string>()
+    for (const p of pecas ?? []) m.set(p.especialidade, p.especialidadeNome)
+    return [...m.entries()].sort((a, b) => a[1].localeCompare(b[1], 'pt'))
+  }, [pecas])
+
+  return (
+    <section className="bg-white p-5 shadow-sm text-sm" data-testid="biblioteca-atlas">
+      <p className="mb-3">As peças escolhidas do corpus, as melhores de cada especialidade pela nota de utilidade. Só metadados e o endereço de origem: quem quiser o trabalho inteiro abre na fonte. Normas não entram aqui, citam-se por número.</p>
+      {erro && <p className="text-xs text-grafite-claro">{erro}</p>}
+      {!pecas && !erro && <p className="text-xs text-grafite-claro">A baixar a biblioteca…</p>}
+      {pecas && contas && (
+        <>
+          <p className="text-xs text-grafite-claro mb-3">{contas.total.toLocaleString('pt-PT')} peças, {contas.guardaveis.toLocaleString('pt-PT')} com licença que deixa guardar, {contas.contextoLocal.toLocaleString('pt-PT')} com contexto africano ou tropical, em {contas.especialidades} especialidades.</p>
+          <div className="flex flex-wrap gap-2 items-center mb-3">
+            <input className="border border-navy/20 px-2 py-1 flex-1 min-w-[200px]" placeholder="Buscar na biblioteca (ex.: tailings, laterite, flood)" value={busca} onChange={e => setBusca(e.target.value)} aria-label="Buscar na biblioteca" />
+            <select className="border border-navy/20 px-2 py-1" value={esp} onChange={e => setEsp(e.target.value)} aria-label="Especialidade">
+              <option value="">Todas as especialidades</option>
+              {especialidades.map(([id, nome]) => <option key={id} value={id}>{nome}</option>)}
+            </select>
+            <label className="text-xs flex items-center gap-1"><input type="checkbox" checked={soGuardaveis} onChange={e => setSoGuardaveis(e.target.checked)} /> só as que podemos guardar</label>
+            <label className="text-xs flex items-center gap-1"><input type="checkbox" checked={soLocal} onChange={e => setSoLocal(e.target.checked)} /> só contexto local</label>
+          </div>
+          <p className="text-xs text-grafite-claro mb-2" data-testid="biblioteca-contagem">{filtradas.length.toLocaleString('pt-PT')} peças encontradas{filtradas.length > 60 ? ', a mostrar as 60 primeiras' : ''}.</p>
+          <ul className="space-y-2" data-testid="biblioteca-lista">
+            {filtradas.slice(0, 60).map(p => (
+              <li key={p.id} className="border-t border-navy/10 pt-2">
+                <div className="text-navy">{p.url ? <a href={p.url} target="_blank" rel="noreferrer" className="underline" title="Abre na fonte">{p.titulo}</a> : p.titulo}</div>
+                <div className="text-xs text-grafite-claro">{p.especialidadeNome} · {p.tipo}{p.ano ? ` · ${p.ano}` : ''} · {p.fonte} · {p.licenca}{p.guardavel ? ' (podemos guardar)' : ' (só referência)'}{p.contextoLocal ? ' · contexto local' : ''}</div>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </section>
+  )
+}
+
 export default function AgentesEngenharia() {
   const [sub, setSub] = useState<SubAba>('especialidade')
   const [busca, setBusca] = useState('')
@@ -76,11 +143,11 @@ export default function AgentesEngenharia() {
             className={`text-sm px-3 py-1 border ${sub === s.id ? 'bg-navy text-white border-navy' : 'border-navy/30 text-navy'}`}
             onClick={() => setSub(s.id)} data-testid={`subaba-agentes-${s.id}`}>{s.nome}</button>
         ))}
-        {sub !== 'atlas' && sub !== 'provas' && (
+        {sub !== 'atlas' && sub !== 'provas' && sub !== 'biblioteca' && (
           <input className="border border-navy/20 px-2 py-1 text-sm flex-1 min-w-[200px]" placeholder="Buscar agente (ex.: geotecnia, presidente, medição)" value={busca} onChange={e => setBusca(e.target.value)} aria-label="Buscar agente" />
         )}
       </div>
-      {sub !== 'atlas' && sub !== 'provas' && (
+      {sub !== 'atlas' && sub !== 'provas' && sub !== 'biblioteca' && (
         <section className="grid md:grid-cols-2 gap-4">
           {lista.map(a => <Ficha key={a.id} a={a} />)}
           {lista.length === 0 && <p className="text-sm text-grafite-claro">Nenhum agente com esse nome.</p>}
@@ -143,6 +210,7 @@ export default function AgentesEngenharia() {
           </table>
         </section>
       )}
+      {sub === 'biblioteca' && <Biblioteca />}
       {sub === 'provas' && (
         <section className="bg-white p-5 shadow-sm overflow-x-auto" data-testid="provas-agentes">
           <p className="text-sm mb-3">Bateria do Instituto: 20 questões por especialidade (10 de cálculo, 5 de norma, 5 de prática local), 10 cenários por posição, 5 percursos por produto. Verde entra (nota ≥ 8), amarelo só com supervisão (6 a 8), vermelho não entra. Os gabaritos de julgamento são escritos por engenheiros habilitados e ainda não foram aplicados; a parte de cálculo fechado já foi.</p>
