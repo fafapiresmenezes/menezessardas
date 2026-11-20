@@ -12,7 +12,7 @@ import Vertentes from '@/components/Vertentes'
 import Produtos from '@/components/Produtos'
 import Doacoes from '@/components/Doacoes'
 import { destinoSeguro, DESTINO_PADRAO, DESTINOS_PERMITIDOS, lembrarUltimaFrente } from '@/lib/destino'
-import ProvaDaPorta from '@/components/ProvaDaPorta'
+import AberturaInstituto from '@/components/AberturaInstituto'
 import { VERTENTES } from '@/data/vertentes'
 import type { Chave } from '@/lib/i18n'
 import { acessoEmail } from '@/lib/acessoEmail'
@@ -131,6 +131,8 @@ export default function LoginPage() {
   // Os outros quadradinhos apresentam a frente e apontam a entrada para lá.
   const entradaComCartao = destino === '/inicio'
   const mostrarCartao = (doSegmento && entradaComCartao) || !!marca || pedirCodigo
+  // Entrada geral: quem escolheu a língua e chegou sem segmento nem marca de escritório parceiro.
+  const entradaGeral = !marca && !doSegmento && !mostrarCartao
   const seguir = () => { lembrarUltimaFrente(destino); navigate(destino) }
 
   // Dois fatores: se a conta tem aplicativo autenticador, a sessão só vale depois do código (nível aal2).
@@ -222,10 +224,14 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-navy px-4 py-10 md:py-14" style={marca ? { backgroundColor: marca.cor } : undefined}>
+      {/* Entrada geral, sem segmento e sem marca de parceiro: a abertura do Instituto refeita em
+          20/11/2026 (tela cheia, história, ontologia, frentes). Pedido de M nesta mesma tela. */}
+      {entradaGeral && <div className="-mx-4 -mt-10 md:-mt-14"><AberturaInstituto /></div>}
       <div className="mx-auto w-full max-w-6xl">
       <div className={mostrarCartao ? 'grid items-center gap-10 lg:grid-cols-[1fr_minmax(0,28rem)]' : 'grid items-center gap-8'}>
         {/* Lado de quem chega: o Instituto inteiro, não só o jurídico. Em domínio de escritório
             parceiro (marca própria) este lado mostra só a marca dele. */}
+        {!entradaGeral && (
         <div className="porta text-center lg:text-left" data-testid="porta-instituto">
           <div className="flex justify-center lg:justify-start mb-6">
             <Marca tamanho="grande" marca={marca} tipo="instituto" subtitulo={t('marca.instituto')} />
@@ -257,25 +263,8 @@ export default function LoginPage() {
               </Link>
             </div>
           )}
-          {!marca && !doSegmento && (
-            <>
-              <p className="text-sm font-medium uppercase tracking-[0.25em] text-neutral-300">{t('boasVindas.instituto')}</p>
-              <h1 className="mt-4 font-serif text-5xl leading-[1.05] md:text-6xl">{t('porta.promessa')}</h1>
-              <p className="mt-6 text-lg leading-relaxed text-neutral-100">{t('porta.chamada')}</p>
-              <p className="mt-2 text-base text-neutral-300">{t('porta.apoio')}</p>
-              <a
-                href="#frentes"
-                onClick={e => { e.preventDefault(); document.getElementById('frentes')?.scrollIntoView({ behavior: 'smooth' }) }}
-                title={t('porta.verFrentesDica')}
-                data-testid="porta-ver-frentes"
-                className="mt-8 inline-block bg-[#fff] px-6 py-3 text-sm font-semibold uppercase tracking-wider text-[#000] no-underline transition hover:bg-neutral-200"
-              >
-                {t('porta.conhecer')} <span aria-hidden="true">↓</span>
-              </a>
-              <ProvaDaPorta />
-            </>
-          )}
         </div>
+        )}
 
         <div>
         {mostrarCartao && (
@@ -504,7 +493,7 @@ export default function LoginPage() {
         )}
 
         {/* Fileira de idiomas: sempre visivel na primeira tela, troca a lingua na hora. */}
-        <SeletorIdioma />
+        {!entradaGeral && <SeletorIdioma />}
         </div>
       </div>
 

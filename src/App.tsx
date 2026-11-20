@@ -341,6 +341,18 @@ function App() {
         <Route path="/marketing" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/estalecas" element={isAuthenticated ? <SoInstituto><EstalecasPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/publicidade" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/infraestrutura" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/energia" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/agronegocio" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/mineracao" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/transporte" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/seguranca-publica" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/cidades-inteligentes" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/financas" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/telecom" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/espacial" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/robotica" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/ontologia-empresas" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/fundos-internacionais" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/agentes-instituto" element={isAuthenticated ? <SoInstituto><AgentesInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/qualidade" element={isAuthenticated ? <SoInstituto><QualidadePage /></SoInstituto> : <Navigate to="/login" />} />

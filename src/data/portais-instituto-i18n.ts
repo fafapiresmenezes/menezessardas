@@ -1,7 +1,7 @@
 /**
  * V6 do plano mestre v6 (pedido de M, 13/11/2026): cada porta do Instituto é lida nas quatro
  * línguas da plataforma. O arquivo `portais-instituto.ts` segue sendo a fonte do que a porta é
- * (rota, estado), e este arquivo traz o texto em PT/EN/ZH/ES. O português bate letra a letra com
+ * (rota, estado), e este arquivo traz o texto em PT/EN/ES/DE. O português bate letra a letra com
  * o original, para que a tradução seja um espelho e nada se perca no meio.
  *
  * Estado e a frase que explica o estado também ficam traduzidos aqui: antes vinham como
@@ -20,8 +20,8 @@ export interface PortalTraduzido {
 export const ROTULO_ESTADO_I18N: Record<Idioma, Record<EstadoPortal, string>> = {
   pt: { estudo: 'Em estudo', prototipo: 'Protótipo em construção', piloto: 'Piloto com quem já usa' },
   en: { estudo: 'Under study', prototipo: 'Prototype in construction', piloto: 'Pilot with current users' },
-  zh: { estudo: '研究中', prototipo: '原型搭建中', piloto: '小范围试点' },
   es: { estudo: 'En estudio', prototipo: 'Prototipo en construcción', piloto: 'Piloto con quienes ya usan' },
+  de: { estudo: 'In Untersuchung', prototipo: 'Prototyp im Aufbau', piloto: 'Pilotbetrieb mit ersten Nutzern' },
 }
 
 export const EXPLICACAO_ESTADO_I18N: Record<Idioma, Record<EstadoPortal, string>> = {
@@ -35,15 +35,15 @@ export const EXPLICACAO_ESTADO_I18N: Record<Idioma, Record<EstadoPortal, string>
     prototipo: 'Part of it already works, under test, and it is not yet open to the public.',
     piloto: 'It is in real use with a small group, before being opened to everyone.',
   },
-  zh: {
-    estudo: '设计与研究已有,但尚无可用的程序。',
-    prototipo: '部分功能已在运行并测试中,尚未对公众开放。',
-    piloto: '在小范围实际使用,尚未对所有人开放。',
-  },
   es: {
     estudo: 'Existen el diseño y la investigación; todavía no hay programa para usar.',
     prototipo: 'Ya hay una parte funcionando, en pruebas, y aún no está abierta al público.',
     piloto: 'Está en uso real con un grupo pequeño, antes de abrirse a todos.',
+  },
+  de: {
+    estudo: 'Entwurf und Forschung gibt es; ein nutzbares Programm gibt es noch nicht.',
+    prototipo: 'Ein Teil funktioniert bereits, im Test, und ist noch nicht öffentlich zugänglich.',
+    piloto: 'Es ist mit einer kleinen Gruppe im echten Einsatz, bevor es für alle geöffnet wird.',
   },
 }
 
@@ -69,6 +69,18 @@ export type RotaPortal =
   | '/marketing'
   | '/publicidade'
   | '/fundos-internacionais'
+  | '/infraestrutura'
+  | '/energia'
+  | '/agronegocio'
+  | '/mineracao'
+  | '/transporte'
+  | '/seguranca-publica'
+  | '/cidades-inteligentes'
+  | '/financas'
+  | '/telecom'
+  | '/espacial'
+  | '/robotica'
+  | '/ontologia-empresas'
 
 export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> = {
   '/preditiva': {
@@ -92,16 +104,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: 'Lawsuit forecasting already works inside the law platform, on the Forecasts screen, with calibration in view. The market series are being connected one by one.',
     },
-    zh: {
-      nome: '预测平台',
-      resumo: '在声明不确定度的前提下,估算案件或市场的走向。',
-      escopo: [
-        '基于已公布的判决预测结果与时限,始终显示误差范围',
-        '水资源、矿产、毁林与农业的公开时序,每个数据都注明官方来源',
-        '任何人都可核验的简报:每个数字都可追溯到原始数据',
-      ],
-      comoEsta: '案件预测已在法律平台的“预测”界面运行,并显示校准信息。市场时序正在逐一接入。',
-    },
     es: {
       nome: 'Plataforma predictiva',
       resumo: 'Estimar, con la incertidumbre declarada, cómo tiende a avanzar un proceso o un mercado.',
@@ -111,6 +113,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Boletín que cualquiera puede verificar: cada número lleva al dato de origen',
       ],
       comoEsta: 'La previsión de proceso ya funciona dentro de la plataforma de derecho, en la pantalla Previsiones, con la calibración a la vista. Las series de mercado se van conectando una a una.',
+    },
+    de: {
+      nome: 'Prognoseplattform',
+      resumo: 'Mit angegebener Unsicherheit abschätzen, wie sich ein Verfahren oder ein Markt voraussichtlich entwickelt.',
+      escopo: [
+        'Prognose von Ausgang und Dauer aus bereits veröffentlichten Entscheidungen, immer mit sichtbarer Fehlermarge',
+        'Öffentliche Reihen zu Wasser, Bergbau, Entwaldung und Landwirtschaft, mit der amtlichen Quelle jeder Zahl',
+        'Ein Bericht, den jede Person prüfen kann: Jede Zahl führt zu ihrer Quelle',
+      ],
+      comoEsta: 'Die Verfahrensprognose funktioniert bereits in der Rechtsplattform, auf der Seite Prognosen, mit sichtbarer Kalibrierung. Die Marktreihen werden nach und nach angebunden.',
     },
   },
   '/geomapeamento': {
@@ -134,16 +146,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: 'The MVP on the data subject themself is live at /geo: position, map, camera as a place sensor, satellites and the municipality record, all encrypted on the device only.',
     },
-    zh: {
-      nome: '地理图谱',
-      resumo: '将某市的公共图层叠加在地图上,直观看到地产或工地周围的情况。',
-      escopo: [
-        '各市公共图层:分区、保护区、风险区、流域',
-        '与事务所平台中已有的地产档案交叉比对',
-        '可导出地图及所用图层清单,附每个来源的日期',
-      ],
-      comoEsta: '以数据主体本人为对象的 MVP 已在 /geo 上线:位置、地图、作为地点传感器的相机、卫星与市级档案,全部只在设备上加密保存。',
-    },
     es: {
       nome: 'Geomapeo',
       resumo: 'Reunir en un mapa las capas públicas de un municipio para ver qué hay en torno a un inmueble o a una obra.',
@@ -153,6 +155,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Exportar el mapa y la lista de capas usadas, con la fecha de cada fuente',
       ],
       comoEsta: 'El MVP en el propio titular está en el aire en /geo: posición, mapa, cámara como sensor de lugar, satélites y ficha del municipio, todo cifrado solo en el aparato.',
+    },
+    de: {
+      nome: 'Geokartierung',
+      resumo: 'Die öffentlichen Ebenen einer Gemeinde auf einer Karte zusammenführen, um zu sehen, was ein Grundstück oder eine Baustelle umgibt.',
+      escopo: [
+        'Öffentliche Ebenen je Gemeinde: Zonierung, Schutzgebiet, Risiko, Einzugsgebiet',
+        'Abgleich mit der Grundstücksakte, die die Kanzlei bereits in der Plattform hat',
+        'Die Karte und die Liste der verwendeten Ebenen exportieren, mit dem Datum jeder Quelle',
+      ],
+      comoEsta: 'Das MVP für die betroffene Person selbst ist unter /geo online: Position, Karte, Kamera als Ortssensor, Satelliten und Gemeindeakte, alles nur auf dem Gerät verschlüsselt.',
     },
   },
   '/governo': {
@@ -176,16 +188,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: 'The method is written and the library of sources exists. No study has been commissioned yet.',
     },
-    zh: {
-      nome: '为政府提供研究',
-      resumo: '面向公共部门的技术研究,方法公开,数据来自官方来源。',
-      escopo: [
-        '按需承接研究,开工前先写明问题、方法与边界',
-        '数据只来自公开且官方来源,逐一列明',
-        '交付时附路径,任何人都能复现计算',
-      ],
-      comoEsta: '方法已编写,来源库已就绪。尚未有研究被委托。',
-    },
     es: {
       nome: 'Estudios para el gobierno',
       resumo: 'Estudios técnicos para organismos públicos, con método abierto y datos de fuente oficial.',
@@ -195,6 +197,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Entrega con el camino para que cualquier persona repita el cálculo',
       ],
       comoEsta: 'El método está escrito y la biblioteca de fuentes existe. Aún no se ha encargado ningún estudio.',
+    },
+    de: {
+      nome: 'Studien für die öffentliche Hand',
+      resumo: 'Fachstudien für Behörden, mit offener Methode und Daten aus amtlichen Quellen.',
+      escopo: [
+        'Auftragsstudie, bei der Frage, Methode und Grenzen vor Beginn festgehalten werden',
+        'Daten nur aus öffentlichen und amtlichen Quellen, einzeln zitiert',
+        'Lieferung mit dem Weg, auf dem jede Person die Rechnung wiederholen kann',
+      ],
+      comoEsta: 'Die Methode ist geschrieben und die Quellenbibliothek existiert. Bisher wurde noch keine Studie beauftragt.',
     },
   },
   '/educacao': {
@@ -218,16 +230,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: 'Being designed. The content is being assembled from what is already used inside the platform.',
     },
-    zh: {
-      nome: '人工智能教育与培训',
-      resumo: '教团队在自己的工作中使用人工智能,不做夸大承诺。',
-      escopo: [
-        '按职业设置短期训练路径,练习就来自学员的真实工作',
-        '工具做不到的事,与它能做到的事说得同样清楚',
-        '课程结束后留给团队的资料',
-      ],
-      comoEsta: '设计阶段。内容正从平台中已在使用的部分整理而来。',
-    },
     es: {
       nome: 'Educación y capacitación en IA',
       resumo: 'Enseñar a un equipo a usar la inteligencia artificial en su propio trabajo, sin promesa mágica.',
@@ -237,6 +239,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Material que queda con el equipo después del curso',
       ],
       comoEsta: 'En diseño. El contenido se arma a partir de lo que ya se usa dentro de la plataforma.',
+    },
+    de: {
+      nome: 'Bildung und Weiterbildung in KI',
+      resumo: 'Ein Team lehren, künstliche Intelligenz in der eigenen Arbeit zu nutzen, ohne Wunderversprechen.',
+      escopo: [
+        'Kurzer Lernpfad je Beruf, mit Übungen an der echten Arbeit der Lernenden',
+        'Was das Werkzeug nicht leistet, ebenso klar gesagt wie das, was es leistet',
+        'Material, das nach dem Kurs beim Team bleibt',
+      ],
+      comoEsta: 'In Planung. Der Inhalt wird aus dem zusammengestellt, was bereits in der Plattform genutzt wird.',
     },
   },
   '/civico': {
@@ -260,16 +272,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: 'Being designed. There is no public page with any data yet.',
     },
-    zh: {
-      nome: '公民门户',
-      resumo: '把今天只有业内人能看懂的公共数据与账本,送到每位公民手上。',
-      escopo: [
-        '用平实的语言提问,回答背后附上官方数据',
-        '不做评论:门户只展示数字及其来源',
-        '开放访问,无需登录,不收费',
-      ],
-      comoEsta: '设计阶段。尚无含任何数据的公开页面。',
-    },
     es: {
       nome: 'Portal Cívico',
       resumo: 'Poner en manos de cualquier ciudadano las cuentas y los datos públicos que hoy sólo lee quien es del área.',
@@ -279,6 +281,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Abierto, sin login, sin cobrar',
       ],
       comoEsta: 'En diseño. Todavía no hay página pública con ningún dato.',
+    },
+    de: {
+      nome: 'Bürgerportal',
+      resumo: 'Allen Bürgerinnen und Bürgern die öffentlichen Zahlen und Daten in die Hand geben, die heute nur Fachleute lesen können.',
+      escopo: [
+        'Eine Frage in einfacher Sprache, eine Antwort mit der amtlichen Angabe dahinter',
+        'Keine Meinung: Das Portal zeigt die Zahl und woher sie stammt',
+        'Offen, ohne Anmeldung, ohne Gebühr',
+      ],
+      comoEsta: 'In Planung. Es gibt noch keine öffentliche Seite mit Daten.',
     },
   },
   '/ciberseguranca': {
@@ -302,16 +314,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: 'All three are already in use in the law platform: second factor, access trail and database-rule auditing. What is missing is turning it into a service for other firms.',
     },
-    zh: {
-      nome: '网络安全',
-      resumo: '守护事务所所存:客户资料、诉状、合同与时限。',
-      escopo: [
-        '核查谁能访问什么,核到数据库层,而不仅是界面',
-        '登录时的双重验证与可审计的访问轨迹',
-        '事件响应:要做什么,按什么顺序,通知谁',
-      ],
-      comoEsta: '上述三项已在法律平台中使用:双重验证、访问轨迹与数据库规则审计。目前尚待将其发展为对其他事务所的服务。',
-    },
     es: {
       nome: 'Ciberseguridad',
       resumo: 'Cuidar lo que el despacho guarda: datos del cliente, pieza, contrato y plazo.',
@@ -321,6 +323,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Respuesta a incidente: qué hacer, en qué orden y a quién avisar',
       ],
       comoEsta: 'Las tres cosas ya están en uso en la plataforma de derecho: segundo factor, rastro de acceso y auditoría de las reglas de la base de datos. Falta convertirlo en servicio para otros despachos.',
+    },
+    de: {
+      nome: 'Cybersicherheit',
+      resumo: 'Schützen, was die Kanzlei verwahrt: Mandantendaten, Schriftsätze, Verträge und Fristen.',
+      escopo: [
+        'Prüfung, wer worauf zugreift, in der Datenbank und nicht nur auf dem Bildschirm',
+        'Zweiter Faktor bei der Anmeldung und Zugriffsprotokoll für Prüfungen',
+        'Reaktion auf Vorfälle: was zu tun ist, in welcher Reihenfolge und wen man benachrichtigt',
+      ],
+      comoEsta: 'Alle drei sind in der Rechtsplattform bereits im Einsatz: zweiter Faktor, Zugriffsprotokoll und Prüfung der Datenbankregeln. Es fehlt, daraus einen Dienst für andere Kanzleien zu machen.',
     },
   },
   '/quantum': {
@@ -344,16 +356,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: "Reading research, with no deadline promised. What is available for hire is IBM quantum processor time, resold by the Institute: prices, uses and limits at /cotas-quanticas.",
     },
-    zh: {
-      nome: '量子计算',
-      resumo: '只做研究,不做售卖:理解量子计算对我们当下所存资料安全的影响。',
-      escopo: [
-        '跟踪什么已成共识,什么仍只是承诺',
-        '为更换会被量子计算机攻破的密码做准备',
-        '公开所学,哪怕结论是“目前尚无变化”',
-      ],
-      comoEsta: '研究阅读中,不承诺期限。目前可购买的是由学院转售的 IBM 量子处理器机时:价格、用途与限制见 /cotas-quanticas。',
-    },
     es: {
       nome: 'Computación cuántica',
       resumo: 'Investigación, sin venta: entender qué cambia la computación cuántica en la seguridad de lo que guardamos hoy.',
@@ -363,6 +365,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Publicar lo que se aprende, incluso cuando la conclusión es "aún no cambia nada"',
       ],
       comoEsta: 'Investigación en lectura, sin plazo prometido. Lo que ya se puede contratar es tiempo de procesador cuántico de IBM, revendido por el Instituto: precios, usos y límites en /cotas-quanticas.',
+    },
+    de: {
+      nome: 'Quantencomputing',
+      resumo: 'Forschung, kein Verkauf: verstehen, was Quantencomputing an der Sicherheit dessen ändert, was wir heute speichern.',
+      escopo: [
+        'Verfolgen, was schon Konsens ist und was noch Versprechen',
+        'Den Ersatz der Verschlüsselungen vorbereiten, die ein Quantencomputer brechen würde',
+        'Veröffentlichen, was gelernt wird, auch wenn das Ergebnis "es ändert noch nichts" lautet',
+      ],
+      comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Buchbar ist Rechenzeit auf IBM-Quantenprozessoren, vom Institut weiterverkauft: Preise, Einsatzzwecke und Grenzen unter /cotas-quanticas.',
     },
   },
   '/ia': {
@@ -386,16 +398,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: 'In real use inside the law platform, with these rules in force today, not as intent.',
     },
-    zh: {
-      nome: '人工智能与超级智能',
-      resumo: '人工智能可以参与的严肃工作在哪里,又不该进入哪里。',
-      escopo: [
-        '所有诉状均以草稿交付,由律师审阅并签署:此项不可妥协',
-        '所有预测都声明其不确定度',
-        '书面写明本平台拒绝做的事:不进行面部、情绪、谎言或心理画像分析;不扒取当事人、律师或法官的社交网络',
-      ],
-      comoEsta: '已在法律平台中实际使用,且这些规则现在生效,而非仅是承诺。',
-    },
     es: {
       nome: 'IA y superinteligencia',
       resumo: 'Dónde la inteligencia artificial entra en el trabajo serio y dónde no debe entrar.',
@@ -405,6 +407,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Lo que la plataforma se niega a hacer, por escrito: nada de análisis de rostro, emoción, mentira o perfil psicológico, y nada de rastrear redes sociales de la parte, el abogado o el juez',
       ],
       comoEsta: 'En uso real dentro de la plataforma de derecho, con estas reglas vigentes hoy, no como intención.',
+    },
+    de: {
+      nome: 'KI und Superintelligenz',
+      resumo: 'Wo künstliche Intelligenz in ernsthafte Arbeit gehört und wo nicht.',
+      escopo: [
+        'Jeder Schriftsatz entsteht als Entwurf, und die Anwältin oder der Anwalt prüft und unterschreibt ihn: Das ist nicht verhandelbar',
+        'Jede Prognose erscheint mit angegebener Unsicherheit',
+        'Was die Plattform ablehnt, schriftlich: keine Analyse von Gesicht, Emotion, Lüge oder psychologischem Profil und kein Auslesen sozialer Netzwerke von Parteien, Anwälten oder Richtern',
+      ],
+      comoEsta: 'Im echten Einsatz in der Rechtsplattform, mit diesen Regeln schon heute in Kraft, nicht als Absicht.',
     },
   },
   '/carbono': {
@@ -428,16 +440,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: "Reading research. Nothing has been sold or promised.",
     },
-    zh: {
-      nome: "碳",
-      resumo: "了解受监管与自愿碳市场，每个数字的规则与来源一目了然。",
-      escopo: [
-        "跟踪碳市场监管及其对排放方的要求",
-        "阅读项目与碳信用，并声明方法与来源",
-        "明确说明目前还不能断言的内容",
-      ],
-      comoEsta: "研究阅读阶段。尚未出售或承诺任何东西。",
-    },
     es: {
       nome: "Carbono",
       resumo: "Entender el mercado de carbono regulado y voluntario, con la regla y la fuente de cada número a la vista.",
@@ -447,6 +449,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "Decir con claridad lo que todavía no se puede afirmar",
       ],
       comoEsta: "Investigación en lectura. Nada se vendió ni se prometió.",
+    },
+    de: {
+      nome: 'Kohlenstoff',
+      resumo: 'Den regulierten und den freiwilligen Kohlenstoffmarkt verstehen, mit Regel und Quelle jeder Zahl im Blick.',
+      escopo: [
+        'Die Regulierung des Kohlenstoffmarkts verfolgen und was sie von Emittenten verlangt',
+        'Projekte und Zertifikate mit angegebener Methode und Quelle lesen',
+        'Offen sagen, was sich noch nicht behaupten lässt',
+      ],
+      comoEsta: 'Forschung in Lektüre. Nichts wurde verkauft oder versprochen.',
     },
   },
   '/petroleo': {
@@ -470,16 +482,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: "Reading research, no deadline promised. There is no screen to use yet.",
     },
-    zh: {
-      nome: "石油与天然气",
-      resumo: "石油天然气监管、合同与特许权使用费，每项论断都有规范与来源。",
-      escopo: [
-        "跟踪国家石油局（ANP）监管与勘探合同",
-        "看得见计算过程地理解特许权使用费与分成",
-        "区分规范与观点",
-      ],
-      comoEsta: "研究阅读阶段，不承诺期限。目前还没有可使用的界面。",
-    },
     es: {
       nome: "Petróleo y gas",
       resumo: "Regulación de petróleo y gas, contratos y regalías, con la norma y la fuente de cada afirmación.",
@@ -489,6 +491,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "Separar lo que es norma de lo que es opinión",
       ],
       comoEsta: "Investigación en lectura, sin plazo prometido. Todavía no hay pantalla para usar.",
+    },
+    de: {
+      nome: 'Öl und Gas',
+      resumo: 'Regulierung, Verträge und Förderabgaben bei Öl und Gas, mit Norm und Quelle hinter jeder Aussage.',
+      escopo: [
+        'Die ANP-Regulierung und die Explorationsverträge verfolgen',
+        'Förderabgaben und Beteiligungen mit sichtbarer Rechnung verstehen',
+        'Trennen, was Norm und was Meinung ist',
+      ],
+      comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Eine nutzbare Seite gibt es noch nicht.',
     },
   },
   '/psicologia': {
@@ -512,16 +524,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: "Reading research. Only the design and the list of limits exist; no screen to use.",
     },
-    zh: {
-      nome: "心理学",
-      resumo: "为心理学从业者提供带引文的文献与职业伦理支持，不对任何人做诊断。",
-      escopo: [
-        "领域文献摘要，并注明论文出处",
-        "职业委员会与数据保护规范",
-        "平台不做的事：不评估个人，也不建立心理画像",
-      ],
-      comoEsta: "研究阅读阶段。目前只有设计与限制清单，没有可使用的界面。",
-    },
     es: {
       nome: "Psicología",
       resumo: "Apoyo a psicólogos con literatura citada y ética profesional, sin diagnosticar a nadie.",
@@ -531,6 +533,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "Lo que la plataforma no hace: no evalúa personas ni arma perfiles psicológicos",
       ],
       comoEsta: "Investigación en lectura. Sólo existen el diseño y la lista de límites; ninguna pantalla para usar.",
+    },
+    de: {
+      nome: 'Psychologie',
+      resumo: 'Unterstützung für Psychologinnen und Psychologen mit zitierter Literatur und Berufsethik, ohne jemanden zu diagnostizieren.',
+      escopo: [
+        'Fachliteratur zusammengefasst, mit zitiertem Artikel',
+        'Regeln der Berufskammer und des Datenschutzes',
+        'Was die Plattform nicht tut: Sie bewertet keine Personen und erstellt keine psychologischen Profile',
+      ],
+      comoEsta: 'Forschung in Lektüre. Es gibt nur den Entwurf und die Liste der Grenzen; keine nutzbare Seite.',
     },
   },
   '/psiquiatria': {
@@ -554,16 +566,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: "Reading research. Only the design and the list of limits exist; no screen to use.",
     },
-    zh: {
-      nome: "精神医学",
-      resumo: "为精神科医生提供带引文的文献支持，不做诊断，也不开处方。",
-      escopo: [
-        "领域文献摘要，并注明论文出处",
-        "医学委员会与健康数据保护规范",
-        "平台不做的事：不诊断、不开处方、不取代医生",
-      ],
-      comoEsta: "研究阅读阶段。目前只有设计与限制清单，没有可使用的界面。",
-    },
     es: {
       nome: "Psiquiatría",
       resumo: "Apoyo a médicos psiquiatras con literatura citada, sin diagnosticar ni recetar.",
@@ -573,6 +575,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "Lo que la plataforma no hace: no diagnostica, no receta y no reemplaza al médico",
       ],
       comoEsta: "Investigación en lectura. Sólo existen el diseño y la lista de límites; ninguna pantalla para usar.",
+    },
+    de: {
+      nome: 'Psychiatrie',
+      resumo: 'Unterstützung für Psychiaterinnen und Psychiater mit zitierter Literatur, ohne zu diagnostizieren oder zu verschreiben.',
+      escopo: [
+        'Fachliteratur zusammengefasst, mit zitiertem Artikel',
+        'Regeln der Ärztekammer und des Gesundheitsdatenschutzes',
+        'Was die Plattform nicht tut: Sie diagnostiziert nicht, verschreibt nicht und ersetzt nicht die Ärztin oder den Arzt',
+      ],
+      comoEsta: 'Forschung in Lektüre. Es gibt nur den Entwurf und die Liste der Grenzen; keine nutzbare Seite.',
     },
   },
   '/biosseguranca': {
@@ -596,16 +608,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: "Reading research. Only the design exists; no screen to use.",
     },
-    zh: {
-      nome: "生物安全",
-      resumo: "生物安全与生物研究规范，仅限合规与防护一侧。",
-      escopo: [
-        "生物安全规范及各自的监管者",
-        "实验室与研究的合规检查清单",
-        "平台不做的事：不提供任何可能被用来造成伤害的操作规程",
-      ],
-      comoEsta: "研究阅读阶段。目前只有设计，没有可使用的界面。",
-    },
     es: {
       nome: "Bioseguridad",
       resumo: "Normas de bioseguridad y de investigación con organismos, sólo del lado del cumplimiento y la protección.",
@@ -615,6 +617,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "Lo que la plataforma no hace: no trae protocolos que sirvan para causar daño",
       ],
       comoEsta: "Investigación en lectura. Sólo existe el diseño; ninguna pantalla para usar.",
+    },
+    de: {
+      nome: 'Biosicherheit',
+      resumo: 'Regeln der Biosicherheit und der Forschung mit Organismen, ausschließlich auf der Seite von Compliance und Schutz.',
+      escopo: [
+        'Biosicherheitsregeln und wer jede davon durchsetzt',
+        'Compliance-Checkliste für Labore und Forschung',
+        'Was die Plattform nicht tut: Sie enthält kein Protokoll, mit dem Schaden angerichtet werden könnte',
+      ],
+      comoEsta: 'Forschung in Lektüre. Es gibt nur den Entwurf; keine nutzbare Seite.',
     },
   },
   '/transumanismo': {
@@ -638,16 +650,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: "Reading research. No product, no sales and no deadline.",
     },
-    zh: {
-      nome: "超人类主义",
-      resumo: "研究身体与技术结合的伦理、法律与监管，公开研究，不作承诺。",
-      escopo: [
-        "哪些已成共识，哪些仍属推测",
-        "神经技术、基因编辑与植入物的法律与伦理框架",
-        "公开所学，哪怕结论是“目前还不知道”",
-      ],
-      comoEsta: "研究阅读阶段。没有产品、不销售、不承诺期限。",
-    },
     es: {
       nome: "Transhumanismo",
       resumo: "Ética, derecho y regulación de lo que une cuerpo y tecnología, como investigación abierta y sin promesas.",
@@ -657,6 +659,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "Publicar lo que se aprende, incluso cuando la conclusión es \"todavía no se sabe\"",
       ],
       comoEsta: "Investigación en lectura. Sin producto, sin venta y sin plazo.",
+    },
+    de: {
+      nome: 'Transhumanismus',
+      resumo: 'Ethik, Recht und Regulierung dessen, was Körper und Technologie verbindet, als offene Forschung ohne Versprechen.',
+      escopo: [
+        'Was schon Konsens ist und was noch Spekulation',
+        'Rechtlicher und ethischer Rahmen für Neurotechnologie, Genom-Editierung und Implantate',
+        'Veröffentlichen, was gelernt wird, auch wenn das Ergebnis "noch unbekannt" lautet',
+      ],
+      comoEsta: 'Forschung in Lektüre. Kein Produkt, kein Verkauf und kein Termin.',
     },
   },
   '/marketing': {
@@ -680,16 +692,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: "Research and design. The Institute's brand and sales plan exists; the screen does not yet.",
     },
-    zh: {
-      nome: "市场营销",
-      resumo: "有依据的营销：每项主张都有来源，数据与消费者法规始终可见。",
-      escopo: [
-        "基于可证明内容撰写的定位与信息",
-        "把个人数据与消费者保护规范应用于营销活动",
-        "衡量每项行动的结果，而不追踪个人",
-      ],
-      comoEsta: "研究与设计阶段。研究所的品牌与销售规划已存在，界面尚未有。",
-    },
     es: {
       nome: "Marketing",
       resumo: "Marketing con prueba: lo que se afirma tiene fuente, y la ley de datos y de consumo queda a la vista.",
@@ -699,6 +701,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "Medir el resultado de cada acción sin rastrear personas",
       ],
       comoEsta: "Investigación y diseño. El plan de marca y ventas del Instituto existe; la pantalla todavía no.",
+    },
+    de: {
+      nome: 'Marketing',
+      resumo: 'Marketing mit Beleg: Jede Aussage hat eine Quelle, und Daten- und Verbraucherrecht bleiben im Blick.',
+      escopo: [
+        'Positionierung und Botschaften aus dem, was sich belegen lässt',
+        'Regeln zu personenbezogenen Daten und Verbraucherschutz, auf die Kampagne angewandt',
+        'Das Ergebnis jeder Maßnahme messen, ohne Menschen zu verfolgen',
+      ],
+      comoEsta: 'Forschung und Entwurf. Der Marken- und Vertriebsplan des Instituts existiert; die Seite noch nicht.',
     },
   },
   '/publicidade': {
@@ -722,16 +734,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: "Research and design. No screen to use yet.",
     },
-    zh: {
-      nome: "广告",
-      resumo: "合规的广告：自律规范与消费者法律允许什么、禁止什么。",
-      escopo: [
-        "按广告类型整理的广告与自律规则",
-        "投放前审查广告作品，并说明每处修改的理由",
-        "平台不做的事：不制作欺骗性或利用弱势的广告",
-      ],
-      comoEsta: "研究与设计阶段。目前还没有可使用的界面。",
-    },
     es: {
       nome: "Publicidad",
       resumo: "Publicidad dentro de la regla: lo que el código de autorregulación y la ley de consumo permiten y prohíben.",
@@ -741,6 +743,16 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "Lo que la plataforma no hace: no crea anuncios que engañen o exploten la vulnerabilidad",
       ],
       comoEsta: "Investigación y diseño. Todavía no hay pantalla para usar.",
+    },
+    de: {
+      nome: 'Werbung',
+      resumo: 'Werbung im Rahmen der Regeln: was der Selbstregulierungskodex und das Verbraucherrecht erlauben und verbieten.',
+      escopo: [
+        'Werbe- und Selbstregulierungsregeln nach Anzeigentyp',
+        'Prüfung eines Werbemittels vor der Schaltung, mit Begründung jeder Änderung',
+        'Was die Plattform nicht tut: Sie gestaltet keine Werbung, die täuscht oder Verletzlichkeit ausnutzt',
+      ],
+      comoEsta: 'Forschung und Entwurf. Noch keine nutzbare Seite.',
     },
   },
   '/fundos-internacionais': {
@@ -764,16 +776,6 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       ],
       comoEsta: "The full demonstration already works: 14 screens with portfolio, measurement, payments, risks, documents and reporting, with cited sample data and the literature's rules inside each screen.",
     },
-    zh: {
-      nome: "平台、治理、国际基金",
-      resumo: "治理由国际基金资助的项目：谁做决定、测量了什么、向每个出资方报告什么。",
-      escopo: [
-        "项目治理：审批权限、董事会及每个阶段由谁批准，每项决定均留有记录",
-        "向出资方报告：按开发银行和基金要求的格式报告进度、成本和工期",
-        "国际基金要求的环境、社会与廉洁标准，并注明每项要求的出处",
-      ],
-      comoEsta: "完整演示已经可用：14个页面，涵盖项目组合、计量、付款、风险、文件与报告，示例数据均注明出处，每个页面内都有文献规则。",
-    },
     es: {
       nome: "Plataforma, Gobernanza, Fondos Internacionales",
       resumo: "Gobernar proyectos financiados por fondos internacionales: quién decide, qué se midió y qué se rinde a cada financiador.",
@@ -783,6 +785,520 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         "Estándares socioambientales y de integridad exigidos por fondos internacionales, con la fuente de cada exigencia",
       ],
       comoEsta: "La demostración completa ya funciona: 14 pantallas con cartera, medición, pagos, riesgos, documentos y rendición de cuentas, con datos de ejemplo citados y las reglas de la literatura dentro de cada pantalla.",
+    },
+    de: {
+      nome: 'Plattform, Governance, Internationale Fonds',
+      resumo: 'Steuerung von Projekten, die von internationalen Fonds finanziert werden: wer entscheidet, was gemessen wurde und was jedem Geldgeber berichtet wird.',
+      escopo: [
+        'Projektsteuerung: Freigabegrenzen, Gremium und wer jede Phase abzeichnet, mit dem Protokoll jeder Entscheidung',
+        'Berichte an Geldgeber: Fortschritt, Kosten und Zeitplan im Format, das Entwicklungsbanken und Fonds verlangen',
+        'Umwelt-, Sozial- und Integritätsstandards internationaler Fonds, mit der Quelle jeder Anforderung',
+      ],
+      comoEsta: 'Die vollständige Demonstration funktioniert bereits: 14 Seiten mit Portfolio, Aufmaß, Zahlungen, Risiken, Dokumenten und Berichten, mit belegten Beispieldaten und den Regeln der Fachliteratur auf jeder Seite.',
+    },
+  },
+  '/infraestrutura': {
+    pt: {
+      nome: 'Infraestrutura e obras públicas',
+      resumo: 'Obras, concessões e parcerias público-privadas, do edital à medição, com método aberto.',
+      escopo: [
+        'Do edital à assinatura: prazo estimado com margem de erro declarada',
+        'Concessões, PPPs e matriz de riscos',
+        'Medição de obra e reequilíbrio de contrato com a conta à vista',
+      ],
+      comoEsta: 'Pesquisa em leitura, sem prazo prometido. Existe o desenho do escopo; ainda não existe tela para usar.',
+    },
+    en: {
+      nome: 'Infrastructure and public works',
+      resumo: 'Works, concessions and public-private partnerships, from tender to measurement, with an open method.',
+      escopo: [
+        'From tender to signature: estimated time with the margin of error stated',
+        'Concessions, PPPs and risk matrix',
+        'Works measurement and contract rebalancing with the calculation in view',
+      ],
+      comoEsta: 'Reading research, no deadline promised. The scope is designed; there is no screen to use yet.',
+    },
+    es: {
+      nome: 'Infraestructura y obras públicas',
+      resumo: 'Obras, concesiones y asociaciones público-privadas, del pliego a la medición, con método abierto.',
+      escopo: [
+        'Del pliego a la firma: plazo estimado con margen de error declarado',
+        'Concesiones, APP y matriz de riesgos',
+        'Medición de obra y reequilibrio de contrato con la cuenta a la vista',
+      ],
+      comoEsta: 'Investigación en lectura, sin plazo prometido. Existe el diseño del alcance; todavía no hay pantalla para usar.',
+    },
+    de: {
+      nome: 'Infrastruktur und öffentliche Bauvorhaben',
+      resumo: 'Bauvorhaben, Konzessionen und öffentlich-private Partnerschaften, von der Ausschreibung bis zum Aufmaß, mit offener Methode.',
+      escopo: [
+        'Von der Ausschreibung bis zur Unterschrift: geschätzte Dauer mit angegebener Fehlermarge',
+        'Konzessionen, ÖPP und Risikomatrix',
+        'Aufmaß und Vertragsanpassung mit sichtbarer Rechnung',
+      ],
+      comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Der Umfang ist entworfen; eine nutzbare Seite gibt es noch nicht.',
+    },
+  },
+  '/energia': {
+    pt: {
+      nome: 'Energia',
+      resumo: 'Setor elétrico, renováveis e transição energética, com a regra da ANEEL e o dado oficial à vista.',
+      escopo: [
+        'Regulação da ANEEL e leilões de energia',
+        'Solar, eólica, hidrogênio verde e armazenamento, com o que já é norma',
+        'Eficiência energética para prédios públicos e empresas',
+      ],
+      comoEsta: 'Pesquisa em leitura, sem prazo prometido. Existe o desenho do escopo; ainda não existe tela para usar.',
+    },
+    en: {
+      nome: 'Energy',
+      resumo: 'Power sector, renewables and the energy transition, with the ANEEL rule and official data in view.',
+      escopo: [
+        'ANEEL regulation and energy auctions',
+        'Solar, wind, green hydrogen and storage, with what is already law',
+        'Energy efficiency for public buildings and companies',
+      ],
+      comoEsta: 'Reading research, no deadline promised. The scope is designed; there is no screen to use yet.',
+    },
+    es: {
+      nome: 'Energía',
+      resumo: 'Sector eléctrico, renovables y transición energética, con la norma de ANEEL y el dato oficial a la vista.',
+      escopo: [
+        'Regulación de ANEEL y subastas de energía',
+        'Solar, eólica, hidrógeno verde y almacenamiento, con lo que ya es norma',
+        'Eficiencia energética para edificios públicos y empresas',
+      ],
+      comoEsta: 'Investigación en lectura, sin plazo prometido. Existe el diseño del alcance; todavía no hay pantalla para usar.',
+    },
+    de: {
+      nome: 'Energie',
+      resumo: 'Stromsektor, erneuerbare Energien und Energiewende, mit der ANEEL-Regel und amtlichen Daten im Blick.',
+      escopo: [
+        'ANEEL-Regulierung und Energieauktionen',
+        'Solar, Wind, grüner Wasserstoff und Speicher, mit dem, was schon Norm ist',
+        'Energieeffizienz für öffentliche Gebäude und Unternehmen',
+      ],
+      comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Der Umfang ist entworfen; eine nutzbare Seite gibt es noch nicht.',
+    },
+  },
+  '/agronegocio': {
+    pt: {
+      nome: 'Agronegócio',
+      resumo: 'Safra, crédito rural, rastreabilidade e regra ambiental do campo, com o dado oficial de cada número.',
+      escopo: [
+        'Séries públicas de safra, preço e clima, com a fonte de cada número',
+        'Rastreabilidade e conformidade socioambiental do fornecedor rural',
+        'Crédito rural e seguro agrícola explicados com a norma à vista',
+      ],
+      comoEsta: 'Pesquisa em leitura, sem prazo prometido. Existe o desenho do escopo; ainda não existe tela para usar.',
+    },
+    en: {
+      nome: 'Agribusiness',
+      resumo: 'Harvests, rural credit, traceability and environmental rules in the field, with the official source of every number.',
+      escopo: [
+        'Public series on harvest, price and climate, with the source of every number',
+        'Traceability and social-environmental compliance of rural suppliers',
+        'Rural credit and crop insurance explained with the rule in view',
+      ],
+      comoEsta: 'Reading research, no deadline promised. The scope is designed; there is no screen to use yet.',
+    },
+    es: {
+      nome: 'Agronegocio',
+      resumo: 'Cosecha, crédito rural, trazabilidad y norma ambiental del campo, con el dato oficial de cada número.',
+      escopo: [
+        'Series públicas de cosecha, precio y clima, con la fuente de cada número',
+        'Trazabilidad y cumplimiento socioambiental del proveedor rural',
+        'Crédito rural y seguro agrícola explicados con la norma a la vista',
+      ],
+      comoEsta: 'Investigación en lectura, sin plazo prometido. Existe el diseño del alcance; todavía no hay pantalla para usar.',
+    },
+    de: {
+      nome: 'Agrarwirtschaft',
+      resumo: 'Ernte, Agrarkredit, Rückverfolgbarkeit und Umweltregeln auf dem Land, mit der amtlichen Quelle jeder Zahl.',
+      escopo: [
+        'Öffentliche Reihen zu Ernte, Preis und Klima, mit der Quelle jeder Zahl',
+        'Rückverfolgbarkeit und sozial-ökologische Compliance ländlicher Lieferanten',
+        'Agrarkredit und Ernteversicherung, erklärt mit der Norm im Blick',
+      ],
+      comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Der Umfang ist entworfen; eine nutzbare Seite gibt es noch nicht.',
+    },
+  },
+  '/mineracao': {
+    pt: {
+      nome: 'Mineração',
+      resumo: 'Títulos minerários, barragens e royalties da mineração, com a norma e a fonte oficial de cada dado.',
+      escopo: [
+        'Processos e títulos na ANM, lidos com a data de cada consulta',
+        'Segurança de barragens e plano de emergência, do lado da conformidade',
+        'CFEM e royalties com a conta à vista',
+      ],
+      comoEsta: 'Pesquisa em leitura, sem prazo prometido. Existe o desenho do escopo; ainda não existe tela para usar.',
+    },
+    en: {
+      nome: 'Mining',
+      resumo: 'Mining rights, tailings dams and mining royalties, with the rule and official source of every datum.',
+      escopo: [
+        'Cases and titles at ANM, read with the date of each lookup',
+        'Dam safety and emergency plans, on the compliance side',
+        'CFEM and royalties with the calculation in view',
+      ],
+      comoEsta: 'Reading research, no deadline promised. The scope is designed; there is no screen to use yet.',
+    },
+    es: {
+      nome: 'Minería',
+      resumo: 'Títulos mineros, represas y regalías de la minería, con la norma y la fuente oficial de cada dato.',
+      escopo: [
+        'Procesos y títulos en la ANM, leídos con la fecha de cada consulta',
+        'Seguridad de represas y plan de emergencia, del lado del cumplimiento',
+        'CFEM y regalías con la cuenta a la vista',
+      ],
+      comoEsta: 'Investigación en lectura, sin plazo prometido. Existe el diseño del alcance; todavía no hay pantalla para usar.',
+    },
+    de: {
+      nome: 'Bergbau',
+      resumo: 'Bergbaurechte, Absetzbecken und Bergbauabgaben, mit Norm und amtlicher Quelle jeder Angabe.',
+      escopo: [
+        'Verfahren und Rechte bei der ANM, gelesen mit dem Datum jeder Abfrage',
+        'Dammsicherheit und Notfallplan, auf der Seite der Compliance',
+        'CFEM und Förderabgaben mit sichtbarer Rechnung',
+      ],
+      comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Der Umfang ist entworfen; eine nutzbare Seite gibt es noch nicht.',
+    },
+  },
+  '/transporte': {
+    pt: {
+      nome: 'Transporte e logística',
+      resumo: 'Rodovias, portos, ferrovias, frete e cadeia de suprimentos, com o dado público de cada trecho.',
+      escopo: [
+        'Corredores logísticos e custo de frete com fonte oficial',
+        'Cadeia de suprimentos e distribuição entre empresas',
+        'Mobilidade urbana e transporte coletivo',
+      ],
+      comoEsta: 'Pesquisa em leitura, sem prazo prometido. Existe o desenho do escopo; ainda não existe tela para usar.',
+    },
+    en: {
+      nome: 'Transport and logistics',
+      resumo: 'Highways, ports, railways, freight and supply chains, with public data for every stretch.',
+      escopo: [
+        'Logistics corridors and freight cost with official sources',
+        'Supply chain and business-to-business distribution',
+        'Urban mobility and public transport',
+      ],
+      comoEsta: 'Reading research, no deadline promised. The scope is designed; there is no screen to use yet.',
+    },
+    es: {
+      nome: 'Transporte y logística',
+      resumo: 'Carreteras, puertos, ferrocarriles, flete y cadena de suministro, con el dato público de cada tramo.',
+      escopo: [
+        'Corredores logísticos y costo de flete con fuente oficial',
+        'Cadena de suministro y distribución entre empresas',
+        'Movilidad urbana y transporte colectivo',
+      ],
+      comoEsta: 'Investigación en lectura, sin plazo prometido. Existe el diseño del alcance; todavía no hay pantalla para usar.',
+    },
+    de: {
+      nome: 'Verkehr und Logistik',
+      resumo: 'Straßen, Häfen, Eisenbahnen, Fracht und Lieferketten, mit öffentlichen Daten zu jedem Abschnitt.',
+      escopo: [
+        'Logistikkorridore und Frachtkosten mit amtlicher Quelle',
+        'Lieferkette und Vertrieb zwischen Unternehmen',
+        'Städtische Mobilität und öffentlicher Nahverkehr',
+      ],
+      comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Der Umfang ist entworfen; eine nutzbare Seite gibt es noch nicht.',
+    },
+  },
+  '/seguranca-publica': {
+    pt: {
+      nome: 'Segurança pública',
+      resumo: 'Estudos de segurança pública com dado oficial, sem perfilar pessoas nem prever crime de indivíduo.',
+      escopo: [
+        'Indicadores oficiais de violência por território, com a fonte',
+        'Avaliação de política pública e de programa de prevenção',
+        'O que a plataforma não faz: não perfila pessoas nem aponta suspeitos',
+      ],
+      comoEsta: 'Pesquisa em leitura, sem prazo prometido. Existe o desenho do escopo; ainda não existe tela para usar.',
+    },
+    en: {
+      nome: 'Public safety',
+      resumo: 'Public-safety studies with official data, without profiling people or predicting individual crime.',
+      escopo: [
+        'Official violence indicators by territory, with the source',
+        'Evaluation of public policy and prevention programmes',
+        'What the platform does not do: it does not profile people or point to suspects',
+      ],
+      comoEsta: 'Reading research, no deadline promised. The scope is designed; there is no screen to use yet.',
+    },
+    es: {
+      nome: 'Seguridad pública',
+      resumo: 'Estudios de seguridad pública con dato oficial, sin perfilar personas ni predecir delitos de individuos.',
+      escopo: [
+        'Indicadores oficiales de violencia por territorio, con la fuente',
+        'Evaluación de política pública y de programas de prevención',
+        'Lo que la plataforma no hace: no perfila personas ni señala sospechosos',
+      ],
+      comoEsta: 'Investigación en lectura, sin plazo prometido. Existe el diseño del alcance; todavía no hay pantalla para usar.',
+    },
+    de: {
+      nome: 'Öffentliche Sicherheit',
+      resumo: 'Studien zur öffentlichen Sicherheit mit amtlichen Daten, ohne Profile von Menschen und ohne Vorhersage individueller Straftaten.',
+      escopo: [
+        'Amtliche Gewaltindikatoren nach Gebiet, mit Quelle',
+        'Bewertung öffentlicher Politik und von Präventionsprogrammen',
+        'Was die Plattform nicht tut: Sie erstellt keine Personenprofile und benennt keine Verdächtigen',
+      ],
+      comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Der Umfang ist entworfen; eine nutzbare Seite gibt es noch nicht.',
+    },
+  },
+  '/cidades-inteligentes': {
+    pt: {
+      nome: 'Cidades inteligentes',
+      resumo: 'Serviços urbanos com sensor, dado aberto e privacidade desde o desenho.',
+      escopo: [
+        'Iluminação, trânsito, resíduos e zeladoria com dado aberto',
+        'Painel do município com a fonte de cada indicador',
+        'Privacidade desde o desenho: medir a cidade, não vigiar pessoas',
+      ],
+      comoEsta: 'Pesquisa em leitura, sem prazo prometido. Existe o desenho do escopo; ainda não existe tela para usar.',
+    },
+    en: {
+      nome: 'Smart cities',
+      resumo: 'Urban services with sensors, open data and privacy by design.',
+      escopo: [
+        'Lighting, traffic, waste and maintenance with open data',
+        'Municipal dashboard with the source of every indicator',
+        'Privacy by design: measure the city, do not watch people',
+      ],
+      comoEsta: 'Reading research, no deadline promised. The scope is designed; there is no screen to use yet.',
+    },
+    es: {
+      nome: 'Ciudades inteligentes',
+      resumo: 'Servicios urbanos con sensores, datos abiertos y privacidad desde el diseño.',
+      escopo: [
+        'Alumbrado, tránsito, residuos y mantenimiento con datos abiertos',
+        'Panel del municipio con la fuente de cada indicador',
+        'Privacidad desde el diseño: medir la ciudad, no vigilar personas',
+      ],
+      comoEsta: 'Investigación en lectura, sin plazo prometido. Existe el diseño del alcance; todavía no hay pantalla para usar.',
+    },
+    de: {
+      nome: 'Intelligente Städte',
+      resumo: 'Städtische Dienste mit Sensoren, offenen Daten und Datenschutz durch Technikgestaltung.',
+      escopo: [
+        'Beleuchtung, Verkehr, Abfall und Instandhaltung mit offenen Daten',
+        'Gemeinde-Cockpit mit der Quelle jedes Indikators',
+        'Datenschutz von Anfang an: die Stadt messen, nicht Menschen überwachen',
+      ],
+      comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Der Umfang ist entworfen; eine nutzbare Seite gibt es noch nicht.',
+    },
+  },
+  '/financas': {
+    pt: {
+      nome: 'Finanças, bancos e seguros',
+      resumo: 'Regulação financeira, pagamentos, crédito e seguros, com a norma do Banco Central e da SUSEP à vista.',
+      escopo: [
+        'Open finance, Pix e sandbox regulatório',
+        'Prevenção à lavagem de dinheiro e integridade',
+        'Seguros e previdência com a norma da SUSEP, sem recomendação de investimento',
+      ],
+      comoEsta: 'Pesquisa em leitura, sem prazo prometido. Existe o desenho do escopo; ainda não existe tela para usar.',
+    },
+    en: {
+      nome: 'Finance, banking and insurance',
+      resumo: 'Financial regulation, payments, credit and insurance, with Central Bank and SUSEP rules in view.',
+      escopo: [
+        'Open finance, Pix and the regulatory sandbox',
+        'Anti-money-laundering and integrity',
+        'Insurance and pensions under SUSEP rules, with no investment advice',
+      ],
+      comoEsta: 'Reading research, no deadline promised. The scope is designed; there is no screen to use yet.',
+    },
+    es: {
+      nome: 'Finanzas, bancos y seguros',
+      resumo: 'Regulación financiera, pagos, crédito y seguros, con la norma del Banco Central y de la SUSEP a la vista.',
+      escopo: [
+        'Open finance, Pix y sandbox regulatorio',
+        'Prevención del lavado de dinero e integridad',
+        'Seguros y previsión con la norma de la SUSEP, sin recomendación de inversión',
+      ],
+      comoEsta: 'Investigación en lectura, sin plazo prometido. Existe el diseño del alcance; todavía no hay pantalla para usar.',
+    },
+    de: {
+      nome: 'Finanzen, Banken und Versicherungen',
+      resumo: 'Finanzregulierung, Zahlungen, Kredit und Versicherungen, mit den Regeln der Zentralbank und der SUSEP im Blick.',
+      escopo: [
+        'Open Finance, Pix und regulatorische Sandbox',
+        'Geldwäscheprävention und Integrität',
+        'Versicherung und Vorsorge nach SUSEP-Regeln, ohne Anlageempfehlung',
+      ],
+      comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Der Umfang ist entworfen; eine nutzbare Seite gibt es noch nicht.',
+    },
+  },
+  '/telecom': {
+    pt: {
+      nome: 'Telecomunicações e conectividade',
+      resumo: 'Redes, 5G, satélite e inclusão digital, com a regra da Anatel e o mapa de cobertura oficial.',
+      escopo: [
+        'Regulação da Anatel e editais de espectro',
+        'Cobertura e conectividade de escolas e municípios',
+        'Data centers e soberania de dados',
+      ],
+      comoEsta: 'Pesquisa em leitura, sem prazo prometido. Existe o desenho do escopo; ainda não existe tela para usar.',
+    },
+    en: {
+      nome: 'Telecommunications and connectivity',
+      resumo: 'Networks, 5G, satellite and digital inclusion, with the Anatel rule and the official coverage map.',
+      escopo: [
+        'Anatel regulation and spectrum tenders',
+        'Coverage and connectivity for schools and municipalities',
+        'Data centres and data sovereignty',
+      ],
+      comoEsta: 'Reading research, no deadline promised. The scope is designed; there is no screen to use yet.',
+    },
+    es: {
+      nome: 'Telecomunicaciones y conectividad',
+      resumo: 'Redes, 5G, satélite e inclusión digital, con la norma de Anatel y el mapa de cobertura oficial.',
+      escopo: [
+        'Regulación de Anatel y licitaciones de espectro',
+        'Cobertura y conectividad de escuelas y municipios',
+        'Centros de datos y soberanía de datos',
+      ],
+      comoEsta: 'Investigación en lectura, sin plazo prometido. Existe el diseño del alcance; todavía no hay pantalla para usar.',
+    },
+    de: {
+      nome: 'Telekommunikation und Konnektivität',
+      resumo: 'Netze, 5G, Satellit und digitale Teilhabe, mit der Anatel-Regel und der amtlichen Abdeckungskarte.',
+      escopo: [
+        'Anatel-Regulierung und Frequenzausschreibungen',
+        'Abdeckung und Anbindung von Schulen und Gemeinden',
+        'Rechenzentren und Datensouveränität',
+      ],
+      comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Der Umfang ist entworfen; eine nutzbare Seite gibt es noch nicht.',
+    },
+  },
+  '/espacial': {
+    pt: {
+      nome: 'Espaço e satélites',
+      resumo: 'Observação da Terra, satélites e economia espacial, para governo e empresa.',
+      escopo: [
+        'Imagens de satélite aplicadas a água, agro e cidades',
+        'Regras de uso de dado espacial e de lançamento',
+        'Nanossatélites e cooperação internacional em pesquisa',
+      ],
+      comoEsta: 'Pesquisa em leitura, sem prazo prometido. Existe o desenho do escopo; ainda não existe tela para usar.',
+    },
+    en: {
+      nome: 'Space and satellites',
+      resumo: 'Earth observation, satellites and the space economy, for government and business.',
+      escopo: [
+        'Satellite imagery applied to water, agriculture and cities',
+        'Rules on space data use and launches',
+        'Nanosatellites and international research cooperation',
+      ],
+      comoEsta: 'Reading research, no deadline promised. The scope is designed; there is no screen to use yet.',
+    },
+    es: {
+      nome: 'Espacio y satélites',
+      resumo: 'Observación de la Tierra, satélites y economía espacial, para gobierno y empresa.',
+      escopo: [
+        'Imágenes satelitales aplicadas al agua, el agro y las ciudades',
+        'Normas de uso de datos espaciales y de lanzamiento',
+        'Nanosatélites y cooperación internacional en investigación',
+      ],
+      comoEsta: 'Investigación en lectura, sin plazo prometido. Existe el diseño del alcance; todavía no hay pantalla para usar.',
+    },
+    de: {
+      nome: 'Raumfahrt und Satelliten',
+      resumo: 'Erdbeobachtung, Satelliten und Raumfahrtwirtschaft, für Staat und Unternehmen.',
+      escopo: [
+        'Satellitenbilder für Wasser, Landwirtschaft und Städte',
+        'Regeln zur Nutzung von Raumfahrtdaten und zu Starts',
+        'Nanosatelliten und internationale Forschungskooperation',
+      ],
+      comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Der Umfang ist entworfen; eine nutzbare Seite gibt es noch nicht.',
+    },
+  },
+  '/robotica': {
+    pt: {
+      nome: 'Robótica e automação',
+      resumo: 'Robôs, automação industrial e agentes de software, com segurança e responsabilidade definidas.',
+      escopo: [
+        'Automação de processos na indústria e no serviço público',
+        'Agentes de software que trabalham com uma pessoa revisando',
+        'Normas de segurança e responsabilidade civil por máquina',
+      ],
+      comoEsta: 'Pesquisa em leitura, sem prazo prometido. Existe o desenho do escopo; ainda não existe tela para usar.',
+    },
+    en: {
+      nome: 'Robotics and automation',
+      resumo: 'Robots, industrial automation and software agents, with safety and liability defined.',
+      escopo: [
+        'Process automation in industry and public service',
+        'Software agents that work with a person reviewing',
+        'Safety standards and civil liability for machines',
+      ],
+      comoEsta: 'Reading research, no deadline promised. The scope is designed; there is no screen to use yet.',
+    },
+    es: {
+      nome: 'Robótica y automatización',
+      resumo: 'Robots, automatización industrial y agentes de software, con seguridad y responsabilidad definidas.',
+      escopo: [
+        'Automatización de procesos en la industria y el servicio público',
+        'Agentes de software que trabajan con una persona revisando',
+        'Normas de seguridad y responsabilidad civil por máquinas',
+      ],
+      comoEsta: 'Investigación en lectura, sin plazo prometido. Existe el diseño del alcance; todavía no hay pantalla para usar.',
+    },
+    de: {
+      nome: 'Robotik und Automatisierung',
+      resumo: 'Roboter, industrielle Automatisierung und Software-Agenten, mit festgelegter Sicherheit und Haftung.',
+      escopo: [
+        'Prozessautomatisierung in Industrie und öffentlichem Dienst',
+        'Software-Agenten, die mit einem prüfenden Menschen arbeiten',
+        'Sicherheitsnormen und zivilrechtliche Haftung für Maschinen',
+      ],
+      comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Der Umfang ist entworfen; eine nutzbare Seite gibt es noch nicht.',
+    },
+  },
+  '/ontologia-empresas': {
+    pt: {
+      nome: 'Ontologia preditiva para empresas',
+      resumo: 'O método central do Instituto aplicado ao negócio: um grafo que liga clientes, fornecedores, mercado e risco.',
+      escopo: [
+        'Grafo do negócio: quem se liga a quem, e por quê',
+        'Sinais antecipados de mudança, sempre com margem de erro declarada',
+        'Prova antes de produto: nada vira previsão sem medir o acerto',
+      ],
+      comoEsta: 'Pesquisa em leitura, sem prazo prometido. Existe o desenho do escopo; ainda não existe tela para usar.',
+    },
+    en: {
+      nome: 'Predictive ontology for business',
+      resumo: 'The Institute\'s core method applied to business: a graph linking customers, suppliers, market and risk.',
+      escopo: [
+        'Business graph: who is linked to whom, and why',
+        'Early signals of change, always with the margin of error stated',
+        'Proof before product: nothing becomes a forecast until its accuracy is measured',
+      ],
+      comoEsta: 'Reading research, no deadline promised. The scope is designed; there is no screen to use yet.',
+    },
+    es: {
+      nome: 'Ontología predictiva para empresas',
+      resumo: 'El método central del Instituto aplicado al negocio: un grafo que une clientes, proveedores, mercado y riesgo.',
+      escopo: [
+        'Grafo del negocio: quién se une a quién, y por qué',
+        'Señales anticipadas de cambio, siempre con margen de error declarado',
+        'Prueba antes del producto: nada se vuelve previsión sin medir el acierto',
+      ],
+      comoEsta: 'Investigación en lectura, sin plazo prometido. Existe el diseño del alcance; todavía no hay pantalla para usar.',
+    },
+    de: {
+      nome: 'Prädiktive Ontologie für Unternehmen',
+      resumo: 'Die Kernmethode des Instituts für das Geschäft: ein Graph, der Kunden, Lieferanten, Markt und Risiko verbindet.',
+      escopo: [
+        'Geschäftsgraph: wer mit wem verbunden ist, und warum',
+        'Frühe Signale für Veränderungen, immer mit angegebener Fehlermarge',
+        'Beleg vor Produkt: Nichts wird zur Prognose, bevor die Trefferquote gemessen ist',
+      ],
+      comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Der Umfang ist entworfen; eine nutzbare Seite gibt es noch nicht.',
     },
   },
 }
