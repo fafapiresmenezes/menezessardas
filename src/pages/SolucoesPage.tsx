@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import { Building2, Rocket, LineChart, Check, Mail, PlayCircle, MousePointerClick } from 'lucide-react'
 
 /** Vídeo-tour gravado da plataforma (passo 19) e ambiente de teste limitado, com dados fictícios. */
-export const VIDEO_TOUR = 'https://cdn.jsdelivr.net/gh/fafapiresmenezes/menezessardas@fa9195bc20b6db7d3dd5b494b6be57840d1f88f6/tour-theye.mp4'
+export const VIDEO_TOUR = '/tour-theye.mp4'
 export const AMBIENTE_TESTE = '/demo/'
 
 const BLOCOS = [

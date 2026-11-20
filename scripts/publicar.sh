@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
-# Publica a produção: build, branch gh-pages e index.html da Vercel gerado a partir do próprio build.
-# Trava: só gera o index.html se TODOS os arquivos que ele cita existirem no commit publicado no gh-pages.
+# Publica a produção À MÃO (reserva): build com TODOS os arquivos no próprio site, empurrado ao ramo gh-pages.
+# Desde 20/11/2026 nada sai do jsDelivr nem do GitHub Pages: o index.html cita ./assets/ e a Vercel
+# serve tudo (pedido de M: ninguém copia nada). O caminho normal é o workflow "Publicar a plataforma",
+# que publica sozinho a cada merge no main quando o VERCEL_TOKEN está cadastrado.
+# Este script só serve enquanto o repositório for público: a Vercel busca o ramo gh-pages pelo GitHub.
 # Uso: VITE_SUPABASE_URL=... VITE_SUPABASE_ANON_KEY=... scripts/publicar.sh "mensagem"
-# Saída: caminho do index.html pronto para enviar à Vercel (create_deployment), sem editar à mão.
+# Depois: mcp__Vercel__create_deployment com gitSource {type: github, org: fafapiresmenezes,
+#   repo: menezessardas, ref: gh-pages}, project theye-club, target production.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 : "${VITE_SUPABASE_URL:?defina VITE_SUPABASE_URL}" "${VITE_SUPABASE_ANON_KEY:?defina VITE_SUPABASE_ANON_KEY}"
@@ -26,6 +30,9 @@ git fetch -q origin gh-pages
 # gh-pages a cada publicação, o que congelava os dois arquivos na versão de outubro de 2026: eles
 # ainda anunciavam o domínio antigo, e qualquer correção feita no repositório nunca chegava ao ar.
 touch dist-prod/.nojekyll
+# Os cabeçalhos de segurança (CSP, HSTS, anti-moldura, noai) vão DENTRO do pacote: a Vercel lê o
+# vercel.json da raiz do que publica. Sem ele o site sai sem nenhuma dessas proteções.
+cp deploy/vercel.json dist-prod/vercel.json
 
 INDICE=$(mktemp -u)
 GIT_INDEX_FILE=$INDICE git --work-tree=dist-prod add -A
@@ -40,28 +47,5 @@ done
 grep -q '\.css' dist-prod/index.html || { echo "ERRO: index.html sem CSS"; exit 1; }
 
 git push -q origin "$COMMIT:refs/heads/gh-pages"
-CDN="https://cdn.jsdelivr.net/gh/fafapiresmenezes/menezessardas@$COMMIT"
-PASTA="$(dirname "$SAIDA")/vercel"
-rm -rf "$PASTA"; mkdir -p "$PASTA"
-
-# O index.html e o manifesto passam a apontar para o CDN; os três ícones PNG ficam só no gh-pages,
-# de onde o jsDelivr os serve. Assim nenhum arquivo binário precisa viajar para a Vercel.
-sed "s#\./assets/#$CDN/assets/#g; s#\./apple-touch-icon\.png#$CDN/apple-touch-icon.png#g" dist-prod/index.html > "$SAIDA"
-# O manifesto, ao contrário dos ícones, TEM de ser servido pelo próprio domínio: é dele que saem o
-# `scope` e o `start_url`, e um manifesto de outro domínio deixa o aplicativo não instalável.
-sed "s#\"src\": \"icone-#\"src\": \"$CDN/icone-#g" dist-prod/manifest.webmanifest > "$PASTA/manifest.webmanifest"
-# O trilho vai junto: a tela /lastro o baixa para recalcular a corrente no navegador de quem
-# duvida. Sem ele em theye.club, a tela cai na reserva pelo jsDelivr, que atrasa até 12 h.
-cp dist-prod/robots.txt dist-prod/sitemap.xml dist-prod/sw.js dist-prod/trilho-v4.jsonl "$PASTA/"
-# Imagem social (og:image): crawlers de WhatsApp, Facebook e Twitter preferem o mesmo domínio.
-[ -f dist-prod/og-instituto.png ] && cp dist-prod/og-instituto.png "$PASTA/"
-# Os cabeçalhos de segurança (pedido de M, 13/11/2026 21:38: "blinde"). Sem ESTE arquivo no envio,
-# a Vercel serve o site sem Content-Security-Policy, sem HSTS e sem anti-moldura: foi o que estava
-# acontecendo até 13/11/2026, porque o vercel.json existia no repositório e nunca era enviado.
-# Conferido na implantação dpl_HUsuJzedrSx3TMNgHarkfVu4Tz6X, que tinha só cinco arquivos.
-cp deploy/vercel.json "$PASTA/"
-cp "$SAIDA" "$PASTA/index.html"
-
 echo "gh-pages: $COMMIT"
-echo "index.html pronto: $SAIDA (enviar este arquivo exatamente como está)"
-echo "arquivos da Vercel: $PASTA (index.html, manifest.webmanifest, robots.txt, sitemap.xml, sw.js, trilho-v4.jsonl, vercel.json)"
+echo "Agora publicar na Vercel pelo ramo gh-pages (gitSource), alvo production, e conferir como visitante."

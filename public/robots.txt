@@ -57,3 +57,43 @@ User-agent: Scrapy
 Disallow: /
 
 Sitemap: https://theye.club/sitemap.xml
+
+# 20/11/2026, pedido de M: nenhuma inteligência artificial lê o site. Mais robôs de IA que se anunciam.
+User-agent: Claude-SearchBot
+Disallow: /
+User-agent: Claude-User
+Disallow: /
+User-agent: Perplexity-User
+Disallow: /
+User-agent: Google-CloudVertexBot
+Disallow: /
+User-agent: GoogleOther
+Disallow: /
+User-agent: cohere-ai
+Disallow: /
+User-agent: cohere-training-data-crawler
+Disallow: /
+User-agent: Meta-ExternalFetcher
+Disallow: /
+User-agent: MistralAI-User
+Disallow: /
+User-agent: YouBot
+Disallow: /
+User-agent: DuckAssistBot
+Disallow: /
+User-agent: Ai2Bot
+Disallow: /
+User-agent: Timpibot
+Disallow: /
+User-agent: ICC-Crawler
+Disallow: /
+User-agent: PanguBot
+Disallow: /
+User-agent: img2dataset
+Disallow: /
+User-agent: Kangaroo Bot
+Disallow: /
+User-agent: Webzio-Extended
+Disallow: /
+User-agent: FirecrawlAgent
+Disallow: /
