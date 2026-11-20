@@ -39,12 +39,13 @@ export default function MarcaOlho({ tamanho = 40, className = '', titulo = 'Inst
       stroke="currentColor"
       data-testid="marca-olho"
     >
-      {/* contorno do olho (amêndoa) */}
-      <path d="M6 32 C 18 16, 46 16, 58 32 C 46 48, 18 48, 6 32 Z" strokeWidth="2.5" strokeLinejoin="round" />
-      {/* íris */}
-      <circle cx="32" cy="32" r="10.5" strokeWidth="2.5" />
+      {/* contorno do olho (lente/amêndoa), com o traço fino e gracioso da logo nova (20/11/2026) */}
+      <path d="M4 32 C 16 17.5, 48 17.5, 60 32 C 48 46.5, 16 46.5, 4 32 Z" strokeWidth="1.8" strokeLinejoin="round" />
+      {/* íris: anel duplo, dá o ar de lente/joia */}
+      <circle cx="32" cy="32" r="11" strokeWidth="1.8" />
+      <circle cx="32" cy="32" r="7" strokeWidth="1" strokeOpacity="0.55" />
       {/* pupila */}
-      <circle cx="32" cy="32" r="3.5" fill="currentColor" stroke="none" />
+      <circle cx="32" cy="32" r="3.2" fill="currentColor" stroke="none" />
       {estrela && (
         <path
           d={RAIOS}

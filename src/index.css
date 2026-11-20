@@ -315,12 +315,14 @@ section.porta, .porta section { background: transparent; }
   outline-offset: 2px;
 }
 
-/* Lapidação de 20/11/2026 (opção A, escolhida por M): letra de alta joalheria nos títulos e
-   acabamento fino. As cores não mudam. */
+/* Lapidação v2 de 20/11/2026 (Fraunces + Inter, escolhida por M por ser mais high-end que a Bodoni):
+   títulos trabalhados, com o traço reto (WONK 0) e pouco amaciado (SOFT 0), e acabamento fino.
+   As cores não mudam. */
 html { text-rendering: optimizeLegibility; font-feature-settings: "kern", "liga", "calt"; font-optical-sizing: auto; }
 a { text-underline-offset: 5px; text-decoration-thickness: 1px; }
-.porta h1 { font-weight: 400; letter-spacing: 0.3em; line-height: 1.12; }
-.porta h2 { font-weight: 400; letter-spacing: 0.01em; }
-.porta p { font-weight: 300; letter-spacing: 0.005em; }
+.porta h1, .porta h2, .porta h3 { font-variation-settings: "SOFT" 0, "WONK" 0; }
+.porta h1 { font-weight: 500; letter-spacing: 0.14em; line-height: 1.08; }
+.porta h2 { font-weight: 500; letter-spacing: 0.005em; }
+.porta p { font-weight: 300; letter-spacing: 0.004em; }
 .porta a[class*="uppercase"], .porta button[class*="uppercase"] { letter-spacing: 0.22em; font-weight: 500; }
-.porta nav a, .porta nav button { font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 400; }
+.porta nav a, .porta nav button { font-family: 'Inter', system-ui, sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 500; }
