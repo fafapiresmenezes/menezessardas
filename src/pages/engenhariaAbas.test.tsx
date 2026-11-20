@@ -3,7 +3,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { AGENTES_ENGENHARIA, ATLAS_RESUMO, FONTES_ATLAS, REGRAS_AGENTES } from '@/data/agentesEngenharia'
+import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES } from '@/data/agentesEngenharia'
 
 vi.mock('@/lib/supabase', () => ({ supabase: { functions: { invoke: vi.fn().mockResolvedValue({ data: null, error: null }) } }, supabaseConfigurado: true }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
@@ -30,7 +30,7 @@ describe('fichas dos agentes de engenharia', () => {
   })
 
   it('nunca escreve o nome do cliente nem palavras da plataforma de direito', () => {
-    const blob = JSON.stringify({ AGENTES_ENGENHARIA, ATLAS_RESUMO, FONTES_ATLAS, REGRAS_AGENTES })
+    const blob = JSON.stringify({ AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES })
     for (const re of PROIBIDAS) expect(blob).not.toMatch(re)
   })
 
@@ -43,6 +43,24 @@ describe('fichas dos agentes de engenharia', () => {
     for (const e of ATLAS_RESUMO.porEspecialidade) {
       expect(e.guardaveis).toBeLessThanOrEqual(e.itens)
       expect(e.universidades).toBeLessThanOrEqual(ATLAS_RESUMO.universidades)
+    }
+  })
+
+  it('a classificação do corpus bate com o corpus e aponta para agentes que existem', () => {
+    expect(CLASSIFICACAO_ATLAS.medidoEm).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+    expect(CLASSIFICACAO_ATLAS.classificados).toBe(ATLAS_RESUMO.externos)
+    expect(CLASSIFICACAO_ATLAS.comContextoAfricano).toBeLessThanOrEqual(CLASSIFICACAO_ATLAS.classificados)
+    expect(CLASSIFICACAO_ATLAS.tipos.reduce((s, t) => s + t.n, 0)).toBe(CLASSIFICACAO_ATLAS.classificados)
+    expect(CLASSIFICACAO_ATLAS.estantes.length).toBeGreaterThanOrEqual(14)
+    const ids = new Set(AGENTES_ENGENHARIA.map(a => a.id))
+    for (const e of CLASSIFICACAO_ATLAS.estantes) {
+      expect(ids.has(e.agente)).toBe(true)
+      expect(e.guardaveis).toBeLessThanOrEqual(e.itens)
+      expect(e.itens).toBeLessThanOrEqual(CLASSIFICACAO_ATLAS.classificados)
+    }
+    // todo especialista tem estante própria
+    for (const a of AGENTES_ENGENHARIA.filter(x => x.matriz === 'especialidade')) {
+      expect(CLASSIFICACAO_ATLAS.estantes.some(e => e.agente === a.id)).toBe(true)
     }
   })
 
@@ -64,6 +82,7 @@ describe('abas novas do quadradinho Engenharia', () => {
     render(<MemoryRouter initialEntries={['/engenharia?aba=agentes']}><EngenhariaPage /></MemoryRouter>)
     expect(screen.getByRole('tab', { name: 'Agentes' }).getAttribute('aria-selected')).toBe('true')
     expect(screen.getAllByTestId('ficha-agente')).toHaveLength(14)
+    expect(screen.getAllByTestId('estante-agente')[0].textContent).toMatch(/Estante no Atlas:.*peças/)
     fireEvent.click(screen.getByTestId('subaba-agentes-posicao'))
     expect(screen.getAllByTestId('ficha-agente')).toHaveLength(14)
     fireEvent.click(screen.getByTestId('subaba-agentes-mestre'))
@@ -74,6 +93,7 @@ describe('abas novas do quadradinho Engenharia', () => {
     expect(screen.getByTestId('atlas-fontes').textContent).toContain('216')
     expect(screen.getByTestId('atlas-numeros')).toBeTruthy()
     expect(screen.getByTestId('atlas-por-especialidade').querySelectorAll('tbody tr')).toHaveLength(14)
+    expect(screen.getByTestId('atlas-classificacao').querySelectorAll('tbody tr')).toHaveLength(CLASSIFICACAO_ATLAS.estantes.length)
     fireEvent.click(screen.getByTestId('subaba-agentes-provas'))
     expect(screen.getByTestId('provas-agentes').querySelectorAll('tbody tr')).toHaveLength(46)
   })

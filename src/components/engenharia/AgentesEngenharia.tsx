@@ -3,7 +3,10 @@
 // Nenhum agente responde ainda: são fichas à espera da bateria de provas (nota "por provar").
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { AGENTES_ENGENHARIA, ATLAS_RESUMO, EMITIDO_AGENTES, FONTES_ATLAS, MATRIZES, REGRAS_AGENTES, type FichaAgente, type MatrizAgente } from '@/data/agentesEngenharia'
+import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, EMITIDO_AGENTES, FONTES_ATLAS, MATRIZES, REGRAS_AGENTES, type FichaAgente, type MatrizAgente } from '@/data/agentesEngenharia'
+
+// Quanto é que cada agente já tem para estudar, pela classificação do corpus.
+const ESTANTE = new Map(CLASSIFICACAO_ATLAS.estantes.map(e => [e.agente, e]))
 
 type SubAba = MatrizAgente | 'atlas' | 'provas'
 
@@ -22,6 +25,7 @@ function baixarFicha(a: FichaAgente) {
 
 function Ficha({ a }: { a: FichaAgente }) {
   const [aberta, setAberta] = useState(false)
+  const estante = ESTANTE.get(a.id)
   return (
     <article className="bg-white p-4 shadow-sm text-sm space-y-2" data-testid="ficha-agente">
       <div className="text-xs uppercase text-grafite-claro">{a.grupo}{a.nivel ? ` · nível ${a.nivel}` : ''} · <span className="border border-navy/30 px-1">por provar</span></div>
@@ -30,6 +34,12 @@ function Ficha({ a }: { a: FichaAgente }) {
       {a.pontos.length > 0 && <ul className="list-disc ml-4 text-grafite">{a.pontos.map(p => <li key={p}>{p}</li>)}</ul>}
       {a.normas.length > 0 && <p className="text-xs text-grafite-claro"><strong>Normas (citadas por número, nunca copiadas):</strong> {a.normas.join('; ')}</p>}
       {a.escolas.length > 0 && <p className="text-xs text-grafite-claro"><strong>Formação de referência:</strong> {a.escolas.join(', ')}</p>}
+      <p className="text-xs text-grafite-claro" data-testid="estante-agente">
+        <strong>Estante no Atlas:</strong>{' '}
+        {estante
+          ? `${estante.itens.toLocaleString('pt-PT')} peças separadas para este agente, ${estante.guardaveis.toLocaleString('pt-PT')} com licença que deixa guardar`
+          : 'ainda sem peças separadas; estuda pela estante da sua especialidade'}
+      </p>
       <div className="flex flex-wrap gap-2 pt-1">
         <button type="button" className="text-xs px-3 py-1.5 border border-navy/30 text-navy" aria-expanded={aberta} onClick={() => setAberta(!aberta)} title="Mostra o prompt completo desta ficha, tal como está no plano">
           {aberta ? 'Fechar o prompt' : 'Ver o prompt completo'}
@@ -102,6 +112,18 @@ export default function AgentesEngenharia() {
                 <td className="pr-3">{e.guardaveis.toLocaleString('pt-PT')}</td>
                 <td className="pr-3">{e.internos.toLocaleString('pt-PT')}</td>
                 <td>{e.universidades}</td>
+              </tr>
+            ))}</tbody>
+          </table>
+          <h3 className="text-navy mb-2">O que cada agente tem para estudar</h3>
+          <p className="text-xs text-grafite-claro mb-2">Cada peça foi arrumada por regra escrita (tema, tipo, licença e menção a Angola, Namíbia ou contexto tropical), não por palpite. {CLASSIFICACAO_ATLAS.classificados.toLocaleString('pt-PT')} peças arrumadas, {CLASSIFICACAO_ATLAS.comContextoAfricano.toLocaleString('pt-PT')} delas com contexto africano ou tropical. Tipos: {CLASSIFICACAO_ATLAS.tipos.map(t => `${t.nome} (${t.n.toLocaleString('pt-PT')})`).join(', ')}.</p>
+          <table className="w-full text-sm mb-6" data-testid="atlas-classificacao">
+            <thead><tr className="text-left text-xs uppercase text-grafite-claro"><th className="py-2 pr-3">Agente</th><th className="pr-3">Peças</th><th>Com licença aberta</th></tr></thead>
+            <tbody>{CLASSIFICACAO_ATLAS.estantes.map(e => (
+              <tr key={e.agente} className="border-t border-navy/10">
+                <td className="py-1.5 pr-3 text-navy">{AGENTES_ENGENHARIA.find(a => a.id === e.agente)?.nome ?? e.agente}</td>
+                <td className="pr-3">{e.itens.toLocaleString('pt-PT')}</td>
+                <td>{e.guardaveis.toLocaleString('pt-PT')}</td>
               </tr>
             ))}</tbody>
           </table>
