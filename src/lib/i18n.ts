@@ -225,7 +225,7 @@ const pt = {
   'vertente.ia.resumo': 'Onde a inteligência artificial entra no trabalho sério, e onde ela não deve entrar.',
   // Página inicial refeita (M, 20/11/2026) e as 12 frentes novas
   'idioma.de': 'Alemão',
-  'porta.lema': 'Ontologia aplicada: soluções sob medida para o seu nicho.',
+  'porta.lema': 'Um instituto que enxerga antes. Soluções sob medida para o seu nicho.',
   'porta.historiaRotulo': 'Nossa história',
   'porta.historiaTitulo': 'Nascemos para estudar o que ainda está por vir.',
   'porta.historia': 'O Instituto THEYE se formou para desenvolver estudos de inteligência artificial e superinteligência, computação quântica, biossegurança e biotecnologia, neurotecnologia, robótica, cibersegurança e criptografia pós-quântica, blockchain, satélites e geointeligência, energia e clima.',
@@ -483,7 +483,7 @@ const en: Dicionario = {
   'vertente.ia.resumo': 'Where artificial intelligence belongs in serious work, and where it does not.',
   // Página inicial refeita (M, 20/11/2026) e as 12 frentes novas
   'idioma.de': 'German',
-  'porta.lema': 'Applied ontology: solutions tailored to your niche.',
+  'porta.lema': 'An institute that sees ahead. Solutions tailored to your niche.',
   'porta.historiaRotulo': 'Our story',
   'porta.historiaTitulo': 'We were founded to study what is still to come.',
   'porta.historia': 'Instituto THEYE was formed to carry out research on artificial intelligence and superintelligence, quantum computing, biosafety and biotechnology, neurotechnology, robotics, cybersecurity and post-quantum cryptography, blockchain, satellites and geointelligence, energy and climate.',
@@ -728,7 +728,7 @@ const de: Dicionario = {
   'login.entradaApoio': 'Spenden und Unterstützung',
   'vertente.ia.resumo': 'Wo künstliche Intelligenz in ernsthafte Arbeit gehört und wo nicht.',
   'idioma.de': 'Deutsch',
-  'porta.lema': 'Angewandte Ontologie: Lösungen nach Maß für Ihre Nische.',
+  'porta.lema': 'Ein Institut, das vorausblickt. Lösungen nach Maß für Ihre Nische.',
   'porta.historiaRotulo': 'Unsere Geschichte',
   'porta.historiaTitulo': 'Wir sind entstanden, um zu erforschen, was noch kommt.',
   'porta.historia': 'Das Instituto THEYE wurde gegründet, um Forschung zu künstlicher Intelligenz und Superintelligenz, Quantencomputing, Biosicherheit und Biotechnologie, Neurotechnologie, Robotik, Cybersicherheit und Post-Quanten-Kryptografie, Blockchain, Satelliten und Geointelligenz, Energie und Klima zu betreiben.',
@@ -982,7 +982,7 @@ const es: Dicionario = {
   'vertente.ia.resumo': 'Dónde entra la inteligencia artificial en el trabajo serio y dónde no debe entrar.',
   // Página inicial refeita (M, 20/11/2026) e as 12 frentes novas
   'idioma.de': 'Alemán',
-  'porta.lema': 'Ontología aplicada: soluciones a la medida de su nicho.',
+  'porta.lema': 'Un instituto que ve antes. Soluciones a la medida de su nicho.',
   'porta.historiaRotulo': 'Nuestra historia',
   'porta.historiaTitulo': 'Nacimos para estudiar lo que todavía está por venir.',
   'porta.historia': 'El Instituto THEYE se formó para desarrollar estudios de inteligencia artificial y superinteligencia, computación cuántica, bioseguridad y biotecnología, neurotecnología, robótica, ciberseguridad y criptografía poscuántica, blockchain, satélites y geointeligencia, energía y clima.',

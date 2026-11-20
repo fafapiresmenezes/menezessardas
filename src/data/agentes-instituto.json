@@ -1,5 +1,5 @@
 {
- "total": 501,
+ "total": 514,
  "meta": 500,
  "faltam": 0,
  "agentes": [
@@ -29352,6 +29352,367 @@
    "frequencia": "mensal",
    "origem": "NIST FIPS 203 (ML-KEM), FIPS 204 (ML-DSA), FIPS 205 (SLH-DSA), 2024; roadmap ANPD de segurança da informação; Marco Civil da Internet (Lei 12.965/2014)",
    "status": "catalogado; ementa completa ainda não importada"
+  },
+  {
+   "id": "agente-502",
+   "nome": "Doutor em tipografia e hierarquia visual",
+   "area": "Design",
+   "nicho": "Tipografia aplicada a interfaces",
+   "base_oficial": false,
+   "frequencia": "sob demanda",
+   "origem": "pedido de M de 20/11/2026 (lapidação high-end do site)",
+   "status": "ementa completa (fontes abertas) — 20/11/2026",
+   "ementa": {
+    "topicos": [
+     "Formação de referência (nível PhD): RISD, Parsons, Royal College of Art, Carnegie Mellon (HCII), MIT Media Lab, Stanford d.school, Aalto, Politecnico di Milano, ArtCenter, Pratt",
+     "Anatomia do tipo, pareamento de famílias, escalas modulares",
+     "Hierarquia, ritmo vertical, medida de linha e entreletra",
+     "Tipografia responsiva e variável na web",
+     "Legibilidade: contraste, tamanho mínimo, WCAG"
+    ],
+    "fontes": [
+     {
+      "titulo": "Top 50 Graphic Design Schools 2025 (Animation Career Review)",
+      "url": "https://www.animationcareerreview.com/articles/top-50-graphic-design-schools-and-colleges-us-2025-rankings"
+     },
+     {
+      "titulo": "MIT OCW — Design (cursos abertos)",
+      "url": "https://ocw.mit.edu/search/?t=Design"
+     }
+    ]
+   }
+  },
+  {
+   "id": "agente-503",
+   "nome": "Doutor em sistemas de design e identidade",
+   "area": "Design",
+   "nicho": "Design system e consistência",
+   "base_oficial": false,
+   "frequencia": "sob demanda",
+   "origem": "pedido de M de 20/11/2026 (lapidação high-end do site)",
+   "status": "ementa completa (fontes abertas) — 20/11/2026",
+   "ementa": {
+    "topicos": [
+     "Formação de referência: RISD, Parsons, Royal College of Art, Carnegie Mellon (HCII), MIT Media Lab, Stanford d.school, Aalto, Politecnico di Milano, ArtCenter, Pratt",
+     "Tokens de design: cor, espaço, raio, sombra",
+     "Grids, espaçamento em escala e alinhamento óptico",
+     "Identidade: do símbolo à voz da marca",
+     "Governança do sistema: um só lugar para cada decisão"
+    ],
+    "fontes": [
+     {
+      "titulo": "Top 50 Graphic Design Schools 2025 (Animation Career Review)",
+      "url": "https://www.animationcareerreview.com/articles/top-50-graphic-design-schools-and-colleges-us-2025-rankings"
+     },
+     {
+      "titulo": "MIT OCW — Design (cursos abertos)",
+      "url": "https://ocw.mit.edu/search/?t=Design"
+     }
+    ]
+   }
+  },
+  {
+   "id": "agente-504",
+   "nome": "Doutor em interação e microinterações",
+   "area": "Design",
+   "nicho": "Interação humano-computador",
+   "base_oficial": false,
+   "frequencia": "sob demanda",
+   "origem": "pedido de M de 20/11/2026 (lapidação high-end do site)",
+   "status": "ementa completa (fontes abertas) — 20/11/2026",
+   "ementa": {
+    "topicos": [
+     "Formação de referência: RISD, Parsons, Royal College of Art, Carnegie Mellon (HCII), MIT Media Lab, Stanford d.school, Aalto, Politecnico di Milano, ArtCenter, Pratt",
+     "Modelos mentais, affordances e feedback",
+     "Estados: vazio, carregando, erro, sucesso",
+     "Movimento com propósito: duração, curva, continuidade",
+     "Custo de atenção e carga cognitiva"
+    ],
+    "fontes": [
+     {
+      "titulo": "Top 50 Graphic Design Schools 2025 (Animation Career Review)",
+      "url": "https://www.animationcareerreview.com/articles/top-50-graphic-design-schools-and-colleges-us-2025-rankings"
+     },
+     {
+      "titulo": "MIT OCW — Design (cursos abertos)",
+      "url": "https://ocw.mit.edu/search/?t=Design"
+     }
+    ]
+   }
+  },
+  {
+   "id": "agente-505",
+   "nome": "Doutor em arquitetura de informação",
+   "area": "Design",
+   "nicho": "Organização e navegação",
+   "base_oficial": false,
+   "frequencia": "sob demanda",
+   "origem": "pedido de M de 20/11/2026 (lapidação high-end do site)",
+   "status": "ementa completa (fontes abertas) — 20/11/2026",
+   "ementa": {
+    "topicos": [
+     "Formação de referência: RISD, Parsons, Royal College of Art, Carnegie Mellon (HCII), MIT Media Lab, Stanford d.school, Aalto, Politecnico di Milano, ArtCenter, Pratt",
+     "Taxonomias, rotulagem e cheiro de informação",
+     "Navegação: profundidade vs largura",
+     "Card sorting e teste de árvore",
+     "Conteúdo primeiro: a página serve à tarefa"
+    ],
+    "fontes": [
+     {
+      "titulo": "Top 50 Graphic Design Schools 2025 (Animation Career Review)",
+      "url": "https://www.animationcareerreview.com/articles/top-50-graphic-design-schools-and-colleges-us-2025-rankings"
+     },
+     {
+      "titulo": "MIT OCW — Design (cursos abertos)",
+      "url": "https://ocw.mit.edu/search/?t=Design"
+     }
+    ]
+   }
+  },
+  {
+   "id": "agente-506",
+   "nome": "Doutor em acessibilidade e inclusão",
+   "area": "Design",
+   "nicho": "Acessibilidade web (WCAG)",
+   "base_oficial": false,
+   "frequencia": "sob demanda",
+   "origem": "pedido de M de 20/11/2026 (lapidação high-end do site)",
+   "status": "ementa completa (fontes abertas) — 20/11/2026",
+   "ementa": {
+    "topicos": [
+     "Formação de referência: RISD, Parsons, Royal College of Art, Carnegie Mellon (HCII), MIT Media Lab, Stanford d.school, Aalto, Politecnico di Milano, ArtCenter, Pratt",
+     "WCAG 2.2: contraste, foco, alvo de toque",
+     "Leitores de tela e HTML semântico",
+     "Tipografia e cor para baixa visão e daltonismo",
+     "Acessibilidade como qualidade, não como remendo"
+    ],
+    "fontes": [
+     {
+      "titulo": "Top 50 Graphic Design Schools 2025 (Animation Career Review)",
+      "url": "https://www.animationcareerreview.com/articles/top-50-graphic-design-schools-and-colleges-us-2025-rankings"
+     },
+     {
+      "titulo": "MIT OCW — Design (cursos abertos)",
+      "url": "https://ocw.mit.edu/search/?t=Design"
+     }
+    ]
+   }
+  },
+  {
+   "id": "agente-507",
+   "nome": "Doutor em storytelling visual",
+   "area": "Design",
+   "nicho": "Narrativa de páginas e produtos",
+   "base_oficial": false,
+   "frequencia": "sob demanda",
+   "origem": "pedido de M de 20/11/2026 (lapidação high-end do site)",
+   "status": "ementa completa (fontes abertas) — 20/11/2026",
+   "ementa": {
+    "topicos": [
+     "Formação de referência: RISD, Parsons, Royal College of Art, Carnegie Mellon (HCII), MIT Media Lab, Stanford d.school, Aalto, Politecnico di Milano, ArtCenter, Pratt",
+     "Arco narrativo aplicado a páginas: promessa, prova, convite",
+     "Ritmo de leitura e dobras",
+     "Mostrar antes de dizer: evidência visual",
+     "Tom de voz institucional sem promessa não medida"
+    ],
+    "fontes": [
+     {
+      "titulo": "Top 50 Graphic Design Schools 2025 (Animation Career Review)",
+      "url": "https://www.animationcareerreview.com/articles/top-50-graphic-design-schools-and-colleges-us-2025-rankings"
+     },
+     {
+      "titulo": "MIT OCW — Design (cursos abertos)",
+      "url": "https://ocw.mit.edu/search/?t=Design"
+     }
+    ]
+   }
+  },
+  {
+   "id": "agente-508",
+   "nome": "Doutor em direção de arte publicitária",
+   "area": "Publicidade",
+   "nicho": "Direção de arte",
+   "base_oficial": false,
+   "frequencia": "sob demanda",
+   "origem": "pedido de M de 20/11/2026 (lapidação high-end do site)",
+   "status": "ementa completa (fontes abertas) — 20/11/2026",
+   "ementa": {
+    "topicos": [
+     "Formação de referência (nível pós/PhD): VCU Brandcenter, Miami Ad School, Northwestern Medill, UT Austin (Stan Richards), Boston University COM",
+     "Conceito antes de execução: a grande ideia",
+     "Composição, fotografia e uso do branco",
+     "Craft: o detalhe que separa bom de excelente",
+     "Ética publicitária: CONAR, CDC, sem escassez inventada"
+    ],
+    "fontes": [
+     {
+      "titulo": "VCU Brandcenter nº 1 entre programas criativos de pós (One Club, 2024/25)",
+      "url": "https://brandcenter.vcu.edu/news/us-top-creative-grad-program-2025/"
+     }
+    ]
+   }
+  },
+  {
+   "id": "agente-509",
+   "nome": "Doutor em redação publicitária (copy)",
+   "area": "Publicidade",
+   "nicho": "Redação e títulos",
+   "base_oficial": false,
+   "frequencia": "sob demanda",
+   "origem": "pedido de M de 20/11/2026 (lapidação high-end do site)",
+   "status": "ementa completa (fontes abertas) — 20/11/2026",
+   "ementa": {
+    "topicos": [
+     "Formação de referência: VCU Brandcenter, Miami Ad School, Northwestern Medill, UT Austin (Stan Richards), Boston University COM",
+     "Títulos que carregam a ideia inteira",
+     "Clareza acima de esperteza; cortar até doer",
+     "Voz da marca e consistência entre peças",
+     "Nada de depoimento inventado nem promessa sem medida"
+    ],
+    "fontes": [
+     {
+      "titulo": "VCU Brandcenter nº 1 entre programas criativos de pós (One Club, 2024/25)",
+      "url": "https://brandcenter.vcu.edu/news/us-top-creative-grad-program-2025/"
+     }
+    ]
+   }
+  },
+  {
+   "id": "agente-510",
+   "nome": "Doutor em planejamento de marca",
+   "area": "Publicidade",
+   "nicho": "Estratégia e posicionamento criativo",
+   "base_oficial": false,
+   "frequencia": "sob demanda",
+   "origem": "pedido de M de 20/11/2026 (lapidação high-end do site)",
+   "status": "ementa completa (fontes abertas) — 20/11/2026",
+   "ementa": {
+    "topicos": [
+     "Formação de referência: VCU Brandcenter, Miami Ad School, Northwestern Medill, UT Austin (Stan Richards), Boston University COM",
+     "Insight: tensão humana que a marca resolve",
+     "Brief de uma página: problema, público, promessa, prova",
+     "Arquitetura de mensagem por página e por quadradinho",
+     "Medição: o que cada peça deve mover"
+    ],
+    "fontes": [
+     {
+      "titulo": "VCU Brandcenter nº 1 entre programas criativos de pós (One Club, 2024/25)",
+      "url": "https://brandcenter.vcu.edu/news/us-top-creative-grad-program-2025/"
+     }
+    ]
+   }
+  },
+  {
+   "id": "agente-511",
+   "nome": "Doutor em posicionamento e branding",
+   "area": "Marketing",
+   "nicho": "Posicionamento",
+   "base_oficial": false,
+   "frequencia": "sob demanda",
+   "origem": "pedido de M de 20/11/2026 (lapidação high-end do site)",
+   "status": "ementa completa (fontes abertas) — 20/11/2026",
+   "ementa": {
+    "topicos": [
+     "Formação de referência (nível PhD): Wharton, Kellogg, Harvard Business School, Stanford GSB, Columbia",
+     "Segmentação, alvo e posicionamento (STP)",
+     "Diferenciação: por que nós e não outro",
+     "Marca como ativo: consistência gera valor",
+     "Categoria nova: educar sem exagerar"
+    ],
+    "fontes": [
+     {
+      "titulo": "Melhores escolas de negócios para marketing (BusinessBecause)",
+      "url": "https://www.businessbecause.com/news/best-business-schools-for/8193/marketing"
+     }
+    ]
+   }
+  },
+  {
+   "id": "agente-512",
+   "nome": "Doutor em comportamento do consumidor",
+   "area": "Marketing",
+   "nicho": "Decisão e confiança",
+   "base_oficial": false,
+   "frequencia": "sob demanda",
+   "origem": "pedido de M de 20/11/2026 (lapidação high-end do site)",
+   "status": "ementa completa (fontes abertas) — 20/11/2026",
+   "ementa": {
+    "topicos": [
+     "Formação de referência: Wharton, Kellogg, Harvard Business School, Stanford GSB, Columbia",
+     "Como as pessoas decidem: heurísticas e fricção",
+     "Confiança: prova, transparência e reversibilidade",
+     "Ética: nunca explorar viés contra o cliente",
+     "Jornada: do primeiro contato à recomendação"
+    ],
+    "fontes": [
+     {
+      "titulo": "Melhores escolas de negócios para marketing (BusinessBecause)",
+      "url": "https://www.businessbecause.com/news/best-business-schools-for/8193/marketing"
+     }
+    ]
+   }
+  },
+  {
+   "id": "agente-513",
+   "nome": "Doutor em marketing digital e medição",
+   "area": "Marketing",
+   "nicho": "Canais e análise",
+   "base_oficial": false,
+   "frequencia": "sob demanda",
+   "origem": "pedido de M de 20/11/2026 (lapidação high-end do site)",
+   "status": "ementa completa (fontes abertas) — 20/11/2026",
+   "ementa": {
+    "topicos": [
+     "Formação de referência: Wharton, Kellogg, Harvard Business School, Stanford GSB, Columbia",
+     "Funil e atribuição honesta",
+     "SEO técnico e de conteúdo",
+     "Experimentos A/B: hipótese, amostra, decisão",
+     "LGPD: medir sem vigiar"
+    ],
+    "fontes": [
+     {
+      "titulo": "Melhores escolas de negócios para marketing (BusinessBecause)",
+      "url": "https://www.businessbecause.com/news/best-business-schools-for/8193/marketing"
+     }
+    ]
+   }
+  },
+  {
+   "id": "agente-514",
+   "nome": "Maestro da lapidação (design, publicidade e marketing)",
+   "area": "Design",
+   "nicho": "Coordenação multidisciplinar",
+   "base_oficial": false,
+   "frequencia": "sob demanda",
+   "origem": "pedido de M de 20/11/2026 (lapidação high-end do site)",
+   "status": "ementa completa (fontes abertas) — 20/11/2026",
+   "ementa": {
+    "topicos": [
+     "Coordena os agentes 502–513 numa só voz",
+     "Regra de ouro de M (20/11/2026): sem mudança radical; cores ficam; muda a letra, os detalhes e o storytelling — \"estamos criando um diamante\"",
+     "Toda proposta sai como antes/depois para M decidir",
+     "Checklist de saída: tipografia, espaçamento, estados, acessibilidade, narrativa",
+     "Só fontes e ferramentas grátis"
+    ],
+    "fontes": [
+     {
+      "titulo": "Top 50 Graphic Design Schools 2025 (Animation Career Review)",
+      "url": "https://www.animationcareerreview.com/articles/top-50-graphic-design-schools-and-colleges-us-2025-rankings"
+     },
+     {
+      "titulo": "MIT OCW — Design (cursos abertos)",
+      "url": "https://ocw.mit.edu/search/?t=Design"
+     },
+     {
+      "titulo": "VCU Brandcenter nº 1 entre programas criativos de pós (One Club, 2024/25)",
+      "url": "https://brandcenter.vcu.edu/news/us-top-creative-grad-program-2025/"
+     },
+     {
+      "titulo": "Melhores escolas de negócios para marketing (BusinessBecause)",
+      "url": "https://www.businessbecause.com/news/best-business-schools-for/8193/marketing"
+     }
+    ]
+   }
   }
  ],
  "ementas_atualizadas_em": "2026-11-12"
