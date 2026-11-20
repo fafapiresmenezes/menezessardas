@@ -50,15 +50,15 @@ describe('vitrine de produtos na porta', () => {
     expect(soma).toBe(PRODUTOS.length)
   })
 
-  it('fala a língua escolhida, e o chinês não repete o português', () => {
+  it('fala a língua escolhida, e o alemão não repete o português', () => {
     for (const chave of ['produtos.titulo', 'produtos.resumo', 'produtos.semPreco', 'doacoes.resumo'] as Chave[]) {
       for (const i of IDIOMAS) expect(DICIONARIOS[i.codigo][chave], `${i.codigo} ${chave}`).toBeTruthy()
-      expect(DICIONARIOS.zh[chave], chave).not.toBe(DICIONARIOS.pt[chave])
+      expect(DICIONARIOS.de[chave], chave).not.toBe(DICIONARIOS.pt[chave])
       expect(DICIONARIOS.es[chave], chave).not.toBe(DICIONARIOS.pt[chave])
     }
-    trocarIdioma('zh')
+    trocarIdioma('de')
     montar()
-    expect(screen.getByTestId('produtos').textContent).toContain(DICIONARIOS.zh['produtos.titulo'])
+    expect(screen.getByTestId('produtos').textContent).toContain(DICIONARIOS.de['produtos.titulo'])
   })
 
   it('o nome de cada eixo existe nas quatro línguas', () => {

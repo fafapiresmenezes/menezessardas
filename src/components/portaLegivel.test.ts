@@ -26,6 +26,7 @@ const ARQUIVOS = [
   'src/components/SeletorIdioma.tsx',
   'src/components/ProvaDaPorta.tsx',
   'src/pages/BoasVindasPage.tsx',
+  'src/components/AberturaInstituto.tsx',
 ]
 
 // O atalho do Stokasticos fica de fora: é discreto de propósito e está parado por ordem de M.
@@ -101,11 +102,11 @@ describe('o cartão de entrada tem um botão forte só', () => {
   it('o cartão é preto nos dois modos, e não cinza', () => {
     expect(css).toContain('.cartao-entrada { background: #0A0A0A !important;')
   })
-  it('a tela de entrada usa o cartão, a promessa e a faixa de prova', () => {
+  it('a tela de entrada usa o cartão e a abertura do Instituto', () => {
     const tela = readFileSync(join(process.cwd(), 'src/pages/LoginPage.tsx'), 'utf-8')
     expect(tela).toContain('cartao-entrada')
-    expect(tela).toContain("t('porta.promessa')")
-    expect(tela).toContain('<ProvaDaPorta />')
+    // Desde 20/11/2026 a entrada geral mostra a abertura do Instituto (tela cheia, história, frentes).
+    expect(tela).toContain('<AberturaInstituto />')
     expect(tela.indexOf('<Vertentes />')).toBeLessThan(tela.indexOf('<Produtos />'))
   })
 })
