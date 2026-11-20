@@ -306,7 +306,7 @@ export default function BancadasColaborativasPage() {
                     required
                   />
                   <label htmlFor="termos" className="text-sm text-grafite">
-                    Concordo em participar das bancadas colaborativas, assinando contratos específicos por projeto e aceitando rastreamento por smart contract para transparência total.
+                    Concordo em participar das bancadas colaborativas, assinando contratos específicos por projeto e aceitando rastreamento por smart contract para transparência total. Autorizo o uso dos dados deste formulário apenas para avaliar e responder meu pedido (LGPD); posso pedir a exclusão a qualquer momento pelo e-mail contato@theye.club.
                   </label>
                 </div>
 
