@@ -81,6 +81,7 @@ export type RotaPortal =
   | '/espacial'
   | '/robotica'
   | '/ontologia-empresas'
+  | '/transparencia-social'
 
 export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> = {
   '/preditiva': {
@@ -1299,6 +1300,48 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Beleg vor Produkt: Nichts wird zur Prognose, bevor die Trefferquote gemessen ist',
       ],
       comoEsta: 'Forschung in Lektüre, ohne versprochenen Termin. Der Umfang ist entworfen; eine nutzbare Seite gibt es noch nicht.',
+    },
+  },
+  '/transparencia-social': {
+    pt: {
+      nome: 'Projetos sociais',
+      resumo: '2% de tudo o que o Instituto recebe sai primeiro para causas sociais no Brasil, com prestação de contas aberta.',
+      escopo: [
+        '2% de cada projeto separados antes de qualquer outra divisão',
+        'Causas sociais no Brasil, escolhidas e publicadas uma a uma',
+        'Página de transparência com cada repasse e o seu comprovante',
+      ],
+      comoEsta: 'O compromisso está registrado. A conta do Instituto e a página de transparência ainda estão sendo montadas; nenhum repasse foi feito até agora.',
+    },
+    en: {
+      nome: 'Social projects',
+      resumo: '2% of everything the Institute receives goes first to social causes in Brazil, with open accounting.',
+      escopo: [
+        '2% of every project set aside before any other split',
+        'Social causes in Brazil, chosen and published one by one',
+        'A transparency page with every transfer and its receipt',
+      ],
+      comoEsta: 'The commitment is on record. The Institute\'s account and the transparency page are still being set up; no transfer has been made so far.',
+    },
+    es: {
+      nome: 'Proyectos sociales',
+      resumo: 'El 2% de todo lo que recibe el Instituto va primero a causas sociales en Brasil, con rendición de cuentas abierta.',
+      escopo: [
+        'El 2% de cada proyecto se aparta antes de cualquier otra división',
+        'Causas sociales en Brasil, elegidas y publicadas una a una',
+        'Página de transparencia con cada transferencia y su comprobante',
+      ],
+      comoEsta: 'El compromiso está registrado. La cuenta del Instituto y la página de transparencia aún se están montando; hasta ahora no se hizo ninguna transferencia.',
+    },
+    de: {
+      nome: 'Soziale Projekte',
+      resumo: '2 % von allem, was das Institut erhält, gehen zuerst an soziale Zwecke in Brasilien, mit offener Rechenschaft.',
+      escopo: [
+        '2 % jedes Projekts werden vor jeder anderen Aufteilung abgezweigt',
+        'Soziale Zwecke in Brasilien, einzeln ausgewählt und veröffentlicht',
+        'Eine Transparenzseite mit jeder Überweisung und ihrem Beleg',
+      ],
+      comoEsta: 'Die Verpflichtung ist festgehalten. Das Konto des Instituts und die Transparenzseite werden noch eingerichtet; bisher wurde keine Überweisung getätigt.',
     },
   },
 }

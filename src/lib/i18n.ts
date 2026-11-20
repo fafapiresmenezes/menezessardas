@@ -269,6 +269,9 @@ const pt = {
   'vertente.ontologia.nome': 'Ontologia preditiva para empresas',
   'vertente.ontologia.resumo': 'O método central do Instituto aplicado ao negócio: um grafo que liga clientes, fornecedores, mercado e risco.',
   'vertente.ontologia.dentro': 'Grafo do negócio: quem se liga a quem, e por quê | Sinais antecipados de mudança, sempre com margem de erro declarada | Prova antes de produto: nada vira previsão sem medir o acerto',
+  'vertente.projetos-sociais.nome': 'Projetos sociais',
+  'vertente.projetos-sociais.resumo': '2% de tudo o que o Instituto recebe sai primeiro para causas sociais no Brasil, com prestação de contas aberta.',
+  'vertente.projetos-sociais.dentro': '2% de cada projeto separados antes de qualquer outra divisão | Causas sociais no Brasil, escolhidas e publicadas uma a uma | Página de transparência com cada repasse e o seu comprovante',
 } as const
 
 /** Chaves do dicionário. Vale para os quatro idiomas. */
@@ -524,6 +527,9 @@ const en: Dicionario = {
   'vertente.ontologia.nome': 'Predictive ontology for business',
   'vertente.ontologia.resumo': 'The Institute\'s core method applied to business: a graph linking customers, suppliers, market and risk.',
   'vertente.ontologia.dentro': 'Business graph: who is linked to whom, and why | Early signals of change, always with the margin of error stated | Proof before product: nothing becomes a forecast until its accuracy is measured',
+  'vertente.projetos-sociais.nome': 'Social projects',
+  'vertente.projetos-sociais.resumo': '2% of everything the Institute receives goes first to social causes in Brazil, with open accounting.',
+  'vertente.projetos-sociais.dentro': '2% of every project set aside before any other split | Social causes in Brazil, chosen and published one by one | A transparency page with every transfer and its receipt',
 }
 
 const de: Dicionario = {
@@ -766,6 +772,9 @@ const de: Dicionario = {
   'vertente.ontologia.nome': 'Prädiktive Ontologie für Unternehmen',
   'vertente.ontologia.resumo': 'Die Kernmethode des Instituts für das Geschäft: ein Graph, der Kunden, Lieferanten, Markt und Risiko verbindet.',
   'vertente.ontologia.dentro': 'Geschäftsgraph: wer mit wem verbunden ist, und warum | Frühe Signale für Veränderungen, immer mit angegebener Fehlermarge | Beleg vor Produkt: Nichts wird zur Prognose, bevor die Trefferquote gemessen ist',
+  'vertente.projetos-sociais.nome': 'Soziale Projekte',
+  'vertente.projetos-sociais.resumo': '2 % von allem, was das Institut erhält, gehen zuerst an soziale Zwecke in Brasilien, mit offener Rechenschaft.',
+  'vertente.projetos-sociais.dentro': '2 % jedes Projekts werden vor jeder anderen Aufteilung abgezweigt | Soziale Zwecke in Brasilien, einzeln ausgewählt und veröffentlicht | Eine Transparenzseite mit jeder Überweisung und ihrem Beleg',
 }
 
 const es: Dicionario = {
@@ -1017,6 +1026,9 @@ const es: Dicionario = {
   'vertente.ontologia.nome': 'Ontología predictiva para empresas',
   'vertente.ontologia.resumo': 'El método central del Instituto aplicado al negocio: un grafo que une clientes, proveedores, mercado y riesgo.',
   'vertente.ontologia.dentro': 'Grafo del negocio: quién se une a quién, y por qué | Señales anticipadas de cambio, siempre con margen de error declarado | Prueba antes del producto: nada se vuelve previsión sin medir el acierto',
+  'vertente.projetos-sociais.nome': 'Proyectos sociales',
+  'vertente.projetos-sociais.resumo': 'El 2% de todo lo que recibe el Instituto va primero a causas sociales en Brasil, con rendición de cuentas abierta.',
+  'vertente.projetos-sociais.dentro': 'El 2% de cada proyecto se aparta antes de cualquier otra división | Causas sociales en Brasil, elegidas y publicadas una a una | Página de transparencia con cada transferencia y su comprobante',
 }
 
 /** Os quatro dicionários completos, por código de idioma. */

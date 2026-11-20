@@ -386,4 +386,16 @@ export const PORTAIS_INSTITUTO: PortalInstituto[] = [
     estado: 'estudo',
     comoEsta: 'Pesquisa em leitura, sem prazo prometido. Existe o desenho do escopo; ainda não existe tela para usar.',
   },
+  {
+    rota: '/transparencia-social',
+    nome: 'Projetos sociais',
+    resumo: '2% de tudo o que o Instituto recebe sai primeiro para causas sociais no Brasil, com prestação de contas aberta.',
+    escopo: [
+      '2% de cada projeto separados antes de qualquer outra divisão',
+      'Causas sociais no Brasil, escolhidas e publicadas uma a uma',
+      'Página de transparência com cada repasse e o seu comprovante',
+    ],
+    estado: 'estudo',
+    comoEsta: 'O compromisso está registrado. A conta do Instituto e a página de transparência ainda estão sendo montadas; nenhum repasse foi feito até agora.',
+  },
 ]
