@@ -2,16 +2,16 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import {
-  PERGUNTAS_EXEMPLO, PONTOS_INICIAIS, PONTOS_MAXIMO_POR_PALPITE,
+  PERGUNTAS_EXEMPLO, PONTOS_INICIAIS, PONTOS_MAXIMO_POR_PALPITE, RECARGA_SEMANAL,
   aberta, acertoDoGrupo, chancesDoGrupo, poteDaPergunta, saldoDePontos, validarPalpite, validarPergunta,
   type Palpite, type Pergunta,
 } from '@/lib/pesquisasPreditivas'
 
 /**
- * Jogo de estalecas da frente de Predição (pedido de M, 20/11/2026 00h26: "não é aposta, é estaleca").
+ * Jogo de moedas do olho da frente de Predição (pedido de M, 20/11/2026 00h26: "não é aposta, é estaleca").
  *
  * Nesta fase é uma pesquisa de opinião com cara de mercado de previsões, só com ESTALECAS (moeda de brincadeira):
- * sem depósito, sem saque, sem token negociável, sem carteira. As estalecas não valem dinheiro.
+ * sem depósito, sem saque, sem token negociável, sem carteira. As moedas do olho não valem dinheiro.
  * A parte com dinheiro foi parada por M; o mapa jurídico ficou guardado no plano.
  *
  * Antes do SQL 155 ser colado, a tela abre em demonstração com perguntas de exemplo e nada é gravado.
@@ -20,7 +20,7 @@ import {
 type Aba = 'perguntas' | 'ranking' | 'dados' | 'regras'
 const ABAS: { id: Aba; nome: string; dica: string }[] = [
   { id: 'perguntas', nome: 'Perguntas', dica: 'As perguntas abertas e a chance que o grupo vê em cada resposta' },
-  { id: 'ranking', nome: 'Ranking', dica: 'Quem tem mais estalecas (só o primeiro nome)' },
+  { id: 'ranking', nome: 'Ranking', dica: 'Quem tem mais moedas do olho (só o primeiro nome)' },
   { id: 'dados', nome: 'Dados da pesquisa', dica: 'O quanto o grupo acertou nas perguntas já resolvidas' },
   { id: 'regras', nome: 'Regras', dica: 'Como o jogo funciona' },
 ]
@@ -88,31 +88,31 @@ export default function EstalecasPage() {
       // Em demonstração o palpite vale só nesta tela, até recarregar a página.
       const novo = { pergunta_id: p.id, opcao, pontos }
       setMeus(m => [...m, novo]); setTodos(t => [...t, novo])
-      setMsg({ ok: `Palpite de demonstração: ${pontos} estalecas em "${p.opcoes[opcao]}". Nada foi gravado.` })
+      setMsg({ ok: `Palpite de demonstração: ${pontos} moedas do olho em "${p.opcoes[opcao]}". Nada foi gravado.` })
       return
     }
     const r = await supabase.rpc('previsoes_palpitar', { p_pergunta: p.id, p_opcao: opcao, p_pontos: pontos })
     if (r.error) { setMsg({ erro: r.error.message || 'Não deu para gravar agora. Tente de novo.' }); return }
-    setMsg({ ok: `Palpite gravado: ${pontos} estalecas em "${p.opcoes[opcao]}".` })
+    setMsg({ ok: `Palpite gravado: ${pontos} moedas do olho em "${p.opcoes[opcao]}".` })
     await carregar()
   }
 
   return (
-    <Layout title="Jogo de estalecas">
+    <Layout title="Jogo da Moeda do Olho">
       <div className="space-y-6">
         <section className="bg-white shadow-sm border-t-2 border-dourado p-6 space-y-3" data-testid="ptp-abertura">
-          <h2 className="font-serif text-xl">Previsões de brincadeira, com estalecas</h2>
+          <h2 className="font-serif text-xl">Previsões de brincadeira, com a Moeda do Olho</h2>
           <p className="text-sm text-grafite">
-            Aqui os membros do Instituto dizem o que acham que vai acontecer, usando <strong>estalecas</strong>, uma moeda de brincadeira.
-            A soma das estalecas mostra a chance que o grupo vê em cada resposta. Quando a pergunta se resolve pela fonte
-            pública combinada, quem acertou recebe as estalecas da rodada. As respostas viram dado para o estudo de calibragem da frente de Predição. Não é aposta.
+            Aqui os membros do Instituto dizem o que acham que vai acontecer, usando a <strong>Moeda do Olho</strong>, um crédito interno só para jogar.
+            A soma das moedas do olho mostra a chance que o grupo vê em cada resposta. Quando a pergunta se resolve pela fonte
+            pública combinada, quem acertou recebe as moedas do olho da rodada. As respostas viram dado para o estudo de calibragem da frente de Predição. Não é aposta.
           </p>
           <p className="text-sm bg-grafite/5 border border-grafite-claro p-3" data-testid="ptp-sem-dinheiro">
-            As estalecas <strong>não valem dinheiro</strong>: não se compram, não se vendem, não se trocam e não saem da
-            plataforma. Não há depósito, saque, token nem carteira. Cada pessoa começa com {PONTOS_INICIAIS} estalecas.
+            As moedas do olho <strong>não valem dinheiro</strong>: não se compram, não se vendem, não se trocam e não saem da
+            plataforma. Não há depósito, saque, token nem carteira. Cada pessoa começa com {PONTOS_INICIAIS} moedas do olho e ganha {RECARGA_SEMANAL} de graça toda segunda-feira, para ninguém jogar sem limite.
           </p>
           <div className="flex flex-wrap items-center gap-4 text-sm">
-            <span data-testid="ptp-saldo">Suas estalecas: <strong>{saldo.toLocaleString('pt-BR')}</strong></span>
+            <span data-testid="ptp-saldo">Suas moedas do olho: <strong>{saldo.toLocaleString('pt-BR')}</strong></span>
             <span>{abertas.length} pergunta(s) aberta(s)</span>
           </div>
           {demo && !carregando && (
@@ -168,7 +168,7 @@ export default function EstalecasPage() {
 
         {!carregando && aba === 'ranking' && (
           <section className="bg-white shadow-sm p-6" data-testid="ptp-ranking">
-            <h2 className="font-serif text-xl mb-3">Ranking de estalecas</h2>
+            <h2 className="font-serif text-xl mb-3">Ranking da Moeda do Olho</h2>
             {ranking.length === 0 ? (
               <p className="text-sm text-grafite">Ainda não há palpites gravados.</p>
             ) : (
@@ -176,7 +176,7 @@ export default function EstalecasPage() {
                 {ranking.map((r, i) => (
                   <li key={`${r.nome}-${i}`} className="py-2 flex justify-between text-sm">
                     <span>{i + 1}. {r.nome}</span>
-                    <span>{r.saldo.toLocaleString('pt-BR')} estalecas · {r.palpites} palpite(s)</span>
+                    <span>{r.saldo.toLocaleString('pt-BR')} moedas do olho · {r.palpites} palpite(s)</span>
                   </li>
                 ))}
               </ol>
@@ -228,24 +228,24 @@ function CartaoPergunta({ p, pote, pessoas, meus, onPalpitar }: {
         ))}
       </ul>
       <p className="text-xs text-grafite">
-        {total === 0 ? 'Ainda sem palpites: o grupo não tem opinião nesta pergunta.' : `Chance que o grupo vê, com ${pessoas} pessoa(s) e ${total} estalecas. É opinião do grupo, não previsão do Instituto.`}
-        {meusPontos > 0 && ` Você já colocou ${meusPontos} estalecas aqui.`}
+        {total === 0 ? 'Ainda sem palpites: o grupo não tem opinião nesta pergunta.' : `Chance que o grupo vê, com ${pessoas} pessoa(s) e ${total} moedas do olho. É opinião do grupo, não previsão do Instituto.`}
+        {meusPontos > 0 && ` Você já colocou ${meusPontos} moedas do olho aqui.`}
       </p>
       <div className="flex flex-wrap items-center gap-2">
         <label className="text-sm">
-          Estalecas{' '}
+          Moedas{' '}
           <input
             type="number" min={1} max={PONTOS_MAXIMO_POR_PALPITE} value={pontos}
             onChange={e => setPontos(Math.trunc(Number(e.target.value)))}
             className="w-24 border border-grafite-claro px-2 min-h-[44px]"
-            aria-label={`Estalecas para a pergunta ${p.titulo}`}
+            aria-label={`Moedas do olho para a pergunta ${p.titulo}`}
           />
         </label>
         <button
           type="button"
           disabled={opcao === null}
           onClick={() => opcao !== null && void onPalpitar(p, opcao, pontos)}
-          title="Grava o seu palpite com as estalecas escolhidas"
+          title="Grava o seu palpite com as moedas do olho escolhidas"
           className="min-h-[44px] px-5 bg-grafite text-white text-sm disabled:opacity-40"
         >
           Palpitar
@@ -269,7 +269,7 @@ function LinhaFechada({ p, pote, demo, onResolvida, setMsg }: {
     if (demo || escolha === '') return
     const r = await supabase.rpc('previsoes_resolver', { p_pergunta: p.id, p_resultado: Number(escolha) })
     if (r.error) { setMsg({ erro: r.error.message }); return }
-    setMsg({ ok: 'Pergunta resolvida. As estalecas já foram distribuídas.' })
+    setMsg({ ok: 'Pergunta resolvida. As moedas do olho já foram distribuídas.' })
     await onResolvida()
   }
   return (
@@ -277,7 +277,7 @@ function LinhaFechada({ p, pote, demo, onResolvida, setMsg }: {
       <p className="font-medium">{p.titulo}</p>
       <p className="text-grafite">
         {p.opcoes.map((o, i) => `${o}: ${chances[i]}%`).join(' · ')}
-        {p.resultado === -1 && ' · Anulada (estalecas devolvidas)'}
+        {p.resultado === -1 && ' · Anulada (moedas do olho devolvidas)'}
         {p.resultado !== null && p.resultado >= 0 && ` · Aconteceu: ${p.opcoes[p.resultado]}`}
         {p.resultado === null && ' · Esperando o resultado oficial'}
       </p>
@@ -286,9 +286,9 @@ function LinhaFechada({ p, pote, demo, onResolvida, setMsg }: {
           <select value={escolha} onChange={e => setEscolha(e.target.value)} className="border border-grafite-claro min-h-[44px] px-2" aria-label="O que aconteceu">
             <option value="">O que aconteceu?</option>
             {p.opcoes.map((o, i) => <option key={o} value={i}>{o}</option>)}
-            <option value="-1">Anular (devolve as estalecas)</option>
+            <option value="-1">Anular (devolve as moedas do olho)</option>
           </select>
-          <button type="button" onClick={() => void resolver()} disabled={escolha === ''} className="min-h-[44px] px-4 border border-grafite text-sm disabled:opacity-40" title="Registra o resultado oficial e distribui as estalecas">
+          <button type="button" onClick={() => void resolver()} disabled={escolha === ''} className="min-h-[44px] px-4 border border-grafite text-sm disabled:opacity-40" title="Registra o resultado oficial e distribui as moedas do olho">
             Registrar resultado
           </button>
         </div>
@@ -370,11 +370,11 @@ function RegrasELei() {
     <section className="bg-white shadow-sm p-6 space-y-4 text-sm" data-testid="ptp-regras">
       <h2 className="font-serif text-xl">Como funciona</h2>
       <ul className="list-disc pl-5 space-y-1 text-grafite">
-        <li>Cada membro do Instituto começa com {PONTOS_INICIAIS} estalecas.</li>
-        <li>Num palpite você escolhe uma resposta e coloca de 1 a {PONTOS_MAXIMO_POR_PALPITE} estalecas.</li>
-        <li>Quando a pergunta se resolve, as estalecas de todos daquela pergunta são divididas entre quem acertou, na proporção do que cada um colocou. Pergunta anulada devolve as estalecas.</li>
+        <li>Cada membro do Instituto começa com {PONTOS_INICIAIS} moedas do olho e recebe {RECARGA_SEMANAL} grátis toda segunda-feira. É o limite do jogo: quando acabam, é esperar a recarga ou acertar mais.</li>
+        <li>Num palpite você escolhe uma resposta e coloca de 1 a {PONTOS_MAXIMO_POR_PALPITE} moedas do olho.</li>
+        <li>Quando a pergunta se resolve, as moedas do olho de todos daquela pergunta são divididas entre quem acertou, na proporção do que cada um colocou. Pergunta anulada devolve as moedas do olho.</li>
         <li>Toda pergunta diz antes qual fonte pública vai resolvê-la.</li>
-        <li>Estaleca é brincadeira: não se compra, não se vende, não se troca por nada e não sai daqui. Não é aposta.</li>
+        <li>A Moeda do Olho é só crédito de jogo, não é cripto: não se compra, não se vende, não se troca por nada e não sai daqui. Não é aposta.</li>
         <li>Só membros do Instituto entram. O escritório cliente não vê nada disto.</li>
       </ul>
       <h2 className="font-serif text-xl">Para que serve</h2>

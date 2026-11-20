@@ -319,7 +319,7 @@ export const DICAS: Record<string, string> = {
   '/marketing': "Marketing: Marketing com prova: o que se afirma tem fonte, e a lei de dados e de consumo fica à vista.",
   '/fundos-internacionais': "Plataforma, Governança, Fundos Internacionais: Governar projetos financiados por fundos internacionais: quem decide, o que foi medido e o que se presta de contas a cada financiador.",
   '/publicidade': "Publicidade: Publicidade dentro da regra: o que o código de autorregulação e a lei de consumo permitem e proíbem.",
-  '/estalecas': 'Jogo de estalecas: previsões de brincadeira, sem dinheiro, que alimentam o estudo de calibragem',
+  '/estalecas': 'Jogo da Moeda do Olho: previsões de brincadeira com crédito interno, sem dinheiro, que alimentam o estudo de calibragem',
   '/infraestrutura': "Infraestrutura e obras públicas: Obras, concessões e parcerias público-privadas, do edital à medição, com método aberto.",
   '/energia': "Energia: Setor elétrico, renováveis e transição energética, com a regra da ANEEL e o dado oficial à vista.",
   '/agronegocio': "Agronegócio: Safra, crédito rural, rastreabilidade e regra ambiental do campo, com o dado oficial de cada número.",
@@ -375,7 +375,7 @@ export const FRENTES: Frente[] = [
   { id: 'predicao', nome: 'Predição', itens: [
     { icon: TrendingUp, label: 'Predição (mercado)', href: '/preditiva' },
     { icon: Ruler, label: 'Régua de acerto dos modelos', href: '/regua' },
-    { icon: Vote, label: 'Jogo de estalecas', href: '/estalecas' },
+    { icon: Vote, label: 'Jogo da Moeda do Olho', href: '/estalecas' },
   ] },
   { id: 'aguas', nome: 'Águas', itens: [
     { icon: Droplets, label: 'Águas', href: '/aguas' },

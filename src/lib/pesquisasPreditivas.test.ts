@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
-  PONTOS_INICIAIS, acertoDoGrupo, chancesDoGrupo, poteDaPergunta, retornoDoPalpite, saldoDePontos,
+  PONTOS_INICIAIS, RECARGA_SEMANAL, acertoDoGrupo, recargasAte, chancesDoGrupo, poteDaPergunta, retornoDoPalpite, saldoDePontos,
   validarPalpite, validarPergunta, type Pergunta,
 } from './pesquisasPreditivas'
 
@@ -28,9 +28,18 @@ describe('pesquisas preditivas com pontos (sem dinheiro)', () => {
   it('o saldo é o mesmo que o banco calcula (conferido no ensaio do SQL 155: 1050 e 950)', () => {
     const resolvida = { ...base, resultado: 0 }
     const todos = [{ pergunta_id: 1, opcao: 0, pontos: 100 }, { pergunta_id: 1, opcao: 1, pontos: 50 }]
-    expect(saldoDePontos([resolvida], todos, [todos[0]])).toBe(1050)
-    expect(saldoDePontos([resolvida], todos, [todos[1]])).toBe(950)
-    expect(saldoDePontos([], [], [])).toBe(PONTOS_INICIAIS)
+    const antes = new Date('2026-11-22T00:00:00Z')
+    expect(saldoDePontos([resolvida], todos, [todos[0]], antes)).toBe(1050)
+    expect(saldoDePontos([resolvida], todos, [todos[1]], antes)).toBe(950)
+    expect(saldoDePontos([], [], [], antes)).toBe(PONTOS_INICIAIS)
+  })
+
+  it('a Moeda do Olho recarrega de graça toda segunda-feira', () => {
+    expect(recargasAte(new Date('2026-11-23T02:59:00Z'))).toBe(0)
+    expect(recargasAte(new Date('2026-11-23T03:00:00Z'))).toBe(1)
+    expect(recargasAte(new Date('2026-11-30T02:59:00Z'))).toBe(1)
+    expect(recargasAte(new Date('2026-11-30T03:00:00Z'))).toBe(2)
+    expect(saldoDePontos([], [], [], new Date('2026-12-01T00:00:00Z'))).toBe(PONTOS_INICIAIS + 2 * RECARGA_SEMANAL)
   })
 
   it('palpite inválido diz o motivo em palavras simples', () => {

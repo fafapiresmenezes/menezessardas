@@ -1,5 +1,5 @@
 /**
- * Jogo de estalecas da frente de Predição (pedido de M, 20/11/2026).
+ * Jogo da Moeda do Olho (antes chamado de estalecas) da frente de Predição (pedido de M, 20/11/2026).
  *
  * O que é, nesta fase: uma pesquisa de opinião em formato de mercado de previsões. Cada membro do
  * Instituto recebe pontos de pesquisa e usa esses pontos para dizer em que resultado acredita. A soma
@@ -17,6 +17,20 @@
 export const PONTOS_INICIAIS = 1000
 export const PONTOS_MINIMO = 1
 export const PONTOS_MAXIMO_POR_PALPITE = 200
+/**
+ * Moeda do Olho (pedido de M, 20/11/2026 01h05): crédito interno para limitar o jogo. Recarga grátis
+ * toda semana, sem compra, sem saque, sem transferência e sem conversão em nada.
+ */
+export const RECARGA_SEMANAL = 100
+/** Primeira recarga: segunda-feira 23/11/2026, 00h de Brasília. Depois, toda segunda nesse horário. */
+export const INICIO_DAS_RECARGAS = '2026-11-23T03:00:00Z'
+const SEMANA_MS = 7 * 24 * 60 * 60 * 1000
+
+/** Quantas recargas semanais já caíram até agora (0 antes da primeira). */
+export function recargasAte(agora = new Date()): number {
+  const d = agora.getTime() - new Date(INICIO_DAS_RECARGAS).getTime()
+  return d < 0 ? 0 : Math.floor(d / SEMANA_MS) + 1
+}
 
 export interface Pergunta {
   id: number
@@ -69,9 +83,9 @@ export function retornoDoPalpite(palpite: Palpite, pote: number[], resultado: nu
   return Math.floor((palpite.pontos * total) / vencedor)
 }
 
-/** Saldo de pontos de uma pessoa: os iniciais, menos o que está colocado, mais o que voltou. */
-export function saldoDePontos(perguntas: Pergunta[], todos: Palpite[], meus: Palpite[]): number {
-  let saldo = PONTOS_INICIAIS
+/** Saldo de uma pessoa: os iniciais, mais as recargas semanais, menos o que está colocado, mais o que voltou. */
+export function saldoDePontos(perguntas: Pergunta[], todos: Palpite[], meus: Palpite[], agora = new Date()): number {
+  let saldo = PONTOS_INICIAIS + RECARGA_SEMANAL * recargasAte(agora)
   for (const m of meus) {
     saldo -= m.pontos
     const p = perguntas.find(q => q.id === m.pergunta_id)
@@ -89,9 +103,9 @@ export function aberta(p: Pergunta, agora = new Date()): boolean {
 export function validarPalpite(p: Pergunta, opcao: number, pontos: number, saldo: number, agora = new Date()): string | null {
   if (!aberta(p, agora)) return 'Esta pergunta já fechou.'
   if (!Number.isInteger(opcao) || opcao < 0 || opcao >= p.opcoes.length) return 'Escolha uma das respostas.'
-  if (!Number.isInteger(pontos) || pontos < PONTOS_MINIMO) return 'Coloque pelo menos 1 estaleca.'
-  if (pontos > PONTOS_MAXIMO_POR_PALPITE) return `No máximo ${PONTOS_MAXIMO_POR_PALPITE} estalecas por palpite.`
-  if (pontos > saldo) return 'Você não tem estalecas suficientes.'
+  if (!Number.isInteger(pontos) || pontos < PONTOS_MINIMO) return 'Coloque pelo menos 1 moeda do olho.'
+  if (pontos > PONTOS_MAXIMO_POR_PALPITE) return `No máximo ${PONTOS_MAXIMO_POR_PALPITE} moedas do olho por palpite.`
+  if (pontos > saldo) return 'Você não tem moedas do olho suficientes.'
   return null
 }
 
