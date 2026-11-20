@@ -32,6 +32,7 @@ const MedicoesContratosPage = lazy(() => import('@/pages/MedicoesContratosPage')
 const SuperficieAtaquePage = lazy(() => import('@/pages/SuperficieAtaquePage'))
 const AguaPage = lazy(() => import('@/pages/AguaPage'))
 const AguasPage = lazy(() => import('@/pages/AguasPage'))
+const PesquisasTokenizaveisPage = lazy(() => import('@/pages/PesquisasTokenizaveisPage'))
 const TrilhasPage = lazy(() => import('@/pages/TrilhasPage'))
 const PesquisaIaPage = lazy(() => import('@/pages/PesquisaIaPage'))
 const ReguaPage = lazy(() => import('@/pages/ReguaPage'))
@@ -338,6 +339,7 @@ function App() {
         <Route path="/biosseguranca" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/transumanismo" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/marketing" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/pesquisas-preditivas" element={isAuthenticated ? <SoInstituto><PesquisasTokenizaveisPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/publicidade" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/fundos-internacionais" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/agentes-instituto" element={isAuthenticated ? <SoInstituto><AgentesInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />

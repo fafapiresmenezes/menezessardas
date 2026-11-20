@@ -43,6 +43,7 @@ export const VERTENTES = [
   { id: 'transumanismo', estado: 'no-ar', rota: '/transumanismo' },
   { id: 'marketing', estado: 'no-ar', rota: '/marketing' },
   { id: 'publicidade', estado: 'no-ar', rota: '/publicidade' },
+  { id: 'tokenizaveis', estado: 'no-ar', rota: '/pesquisas-preditivas' },
 ] as const satisfies readonly { id: string; estado: EstadoVertente; rota: string }[]
 
 export type IdVertente = (typeof VERTENTES)[number]['id']

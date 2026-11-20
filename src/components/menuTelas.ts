@@ -319,6 +319,7 @@ export const DICAS: Record<string, string> = {
   '/marketing': "Marketing: Marketing com prova: o que se afirma tem fonte, e a lei de dados e de consumo fica à vista.",
   '/fundos-internacionais': "Plataforma, Governança, Fundos Internacionais: Governar projetos financiados por fundos internacionais: quem decide, o que foi medido e o que se presta de contas a cada financiador.",
   '/publicidade': "Publicidade: Publicidade dentro da regra: o que o código de autorregulação e a lei de consumo permitem e proíbem.",
+  '/pesquisas-preditivas': 'Pesquisas de Investimentos Tokenizáveis Preditivos: previsões com pontos sem valor em dinheiro, para estudo',
   '/ia': 'IA e superinteligência: modelos, agentes e consultores',
   '/consultores': 'Um consultor de IA por área do direito diz o que fazer primeiro',
   '/estudos': 'Estudos para entidades, órgãos e associações',
@@ -392,6 +393,7 @@ export const FRENTES: Frente[] = [
   { id: 'transumanismo', nome: "Transumanismo", itens: [{ icon: FlaskConical, label: "Transumanismo", href: '/transumanismo' }] },
   { id: 'marketing', nome: "Marketing", itens: [{ icon: FlaskConical, label: "Marketing", href: '/marketing' }] },
   { id: 'publicidade', nome: "Publicidade", itens: [{ icon: FlaskConical, label: "Publicidade", href: '/publicidade' }] },
+  { id: 'tokenizaveis', nome: 'Pesquisas de Investimentos Tokenizáveis Preditivos', itens: [{ icon: TrendingUp, label: 'Pesquisas de Investimentos Tokenizáveis Preditivos', href: '/pesquisas-preditivas' }] },
   { id: 'fundos', nome: "Plataforma, Governança, Fundos Internacionais", itens: [
     { icon: Building2, label: "Plataforma, Governança, Fundos Internacionais", href: '/fundos-internacionais' },
     { icon: Gauge, label: 'Visão do presidente', href: '/visao-presidente' },
