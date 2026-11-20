@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Só a raiz, e de propósito. A plataforma é privada e os endereços de dentro vivem depois do #,
+     que nenhum buscador segue: as entradas /imoveis, /indicadores e /legislacao que estavam aqui
+     apontavam para páginas que respondem 404. O domínio antigo também estava errado. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://theye.club/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
