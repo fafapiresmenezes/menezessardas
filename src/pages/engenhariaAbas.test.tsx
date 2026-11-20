@@ -111,6 +111,8 @@ describe('abas novas do quadradinho Engenharia', () => {
     expect(screen.getByTestId('atlas-numeros')).toBeTruthy()
     expect(screen.getByTestId('atlas-por-especialidade').querySelectorAll('tbody tr')).toHaveLength(14)
     expect(screen.getByTestId('atlas-classificacao').querySelectorAll('tbody tr')).toHaveLength(CLASSIFICACAO_ATLAS.estantes.length)
+    fireEvent.click(screen.getByTestId('subaba-agentes-biblioteca'))
+    expect(screen.getByTestId('biblioteca-atlas').textContent).toMatch(/peças escolhidas do corpus/)
     fireEvent.click(screen.getByTestId('subaba-agentes-provas'))
     expect(screen.getByTestId('tabela-provas').querySelectorAll('tbody tr')).toHaveLength(46)
     expect(screen.getByTestId('provas-agentes').textContent).toMatch(/engenheiro habilitado/)
