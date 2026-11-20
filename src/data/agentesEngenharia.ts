@@ -955,11 +955,230 @@ export const MATRIZES: { id: MatrizAgente; nome: string; dica: string }[] = [
   { id: 'produto', nome: 'Produtos', dica: 'Agentes que operam e vendem cada produto, ao cliente e a governos' },
   { id: 'mestre', nome: 'Mestres', dica: 'Maestro, revisor adversário, bibliotecário do Atlas e avaliador' },
 ]
+
+/** O que foi medido no corpus Atlas na data indicada; a colheita continua, por isso os números só crescem. */
+export interface EspecialidadeAtlas { id: string; nome: string; itens: number; guardaveis: number; soReferencia: number; internos: number; universidades: number; programasVerificados: number }
+export interface ContagemAtlas { nome: string; n: number }
+export interface ResumoAtlas {
+  medidoEm: string
+  total: number
+  externos: number
+  internos: number
+  guardaveis: number
+  soReferencia: number
+  universidades: number
+  programasMapeados: number
+  programasVerificados: number
+  repositoriosOai: number
+  fontes: ContagemAtlas[]
+  licencas: ContagemAtlas[]
+  porEspecialidade: EspecialidadeAtlas[]
+}
+export const ATLAS_RESUMO: ResumoAtlas = {
+ "medidoEm": "2026-11-19",
+ "total": 6843,
+ "externos": 5508,
+ "internos": 1335,
+ "guardaveis": 4652,
+ "soReferencia": 856,
+ "universidades": 50,
+ "programasMapeados": 410,
+ "programasVerificados": 376,
+ "repositoriosOai": 50,
+ "fontes": [
+  {
+   "nome": "arxiv",
+   "n": 618
+  },
+  {
+   "nome": "zenodo",
+   "n": 4890
+  }
+ ],
+ "licencas": [
+  {
+   "nome": "cc-by-4.0",
+   "n": 3688
+  },
+  {
+   "nome": "não informada",
+   "n": 728
+  },
+  {
+   "nome": "mit-license",
+   "n": 391
+  },
+  {
+   "nome": "other-open",
+   "n": 224
+  },
+  {
+   "nome": "cc-zero",
+   "n": 122
+  },
+  {
+   "nome": "cc-by-nc-nd-4.0",
+   "n": 50
+  },
+  {
+   "nome": "apache2.0",
+   "n": 45
+  },
+  {
+   "nome": "cc-by-sa-4.0",
+   "n": 37
+  }
+ ],
+ "porEspecialidade": [
+  {
+   "id": "estruturas-betao",
+   "nome": "Estruturas de betão armado e pré-esforçado",
+   "itens": 499,
+   "guardaveis": 379,
+   "soReferencia": 120,
+   "internos": 0,
+   "universidades": 47,
+   "programasVerificados": 41
+  },
+  {
+   "id": "estruturas-aco",
+   "nome": "Estruturas metálicas e mistas",
+   "itens": 246,
+   "guardaveis": 221,
+   "soReferencia": 25,
+   "internos": 0,
+   "universidades": 34,
+   "programasVerificados": 33
+  },
+  {
+   "id": "geotecnia",
+   "nome": "Geotecnia e fundações",
+   "itens": 644,
+   "guardaveis": 418,
+   "soReferencia": 202,
+   "internos": 24,
+   "universidades": 42,
+   "programasVerificados": 36
+  },
+  {
+   "id": "hidraulica-recursos-hidricos",
+   "nome": "Hidráulica, hidrologia e recursos hídricos",
+   "itens": 533,
+   "guardaveis": 409,
+   "soReferencia": 49,
+   "internos": 75,
+   "universidades": 49,
+   "programasVerificados": 43
+  },
+  {
+   "id": "saneamento",
+   "nome": "Saneamento: água, esgoto e tratamento",
+   "itens": 521,
+   "guardaveis": 403,
+   "soReferencia": 94,
+   "internos": 24,
+   "universidades": 26,
+   "programasVerificados": 26
+  },
+  {
+   "id": "transportes-pavimentos",
+   "nome": "Transportes, rodovias e pavimentação",
+   "itens": 343,
+   "guardaveis": 277,
+   "soReferencia": 16,
+   "internos": 50,
+   "universidades": 34,
+   "programasVerificados": 30
+  },
+  {
+   "id": "ambiental-licenciamento",
+   "nome": "Engenharia ambiental e licenciamento",
+   "itens": 415,
+   "guardaveis": 275,
+   "soReferencia": 94,
+   "internos": 46,
+   "universidades": 36,
+   "programasVerificados": 35
+  },
+  {
+   "id": "electrotecnia-energia",
+   "nome": "Electrotecnia, redes e energia",
+   "itens": 532,
+   "guardaveis": 412,
+   "soReferencia": 120,
+   "internos": 0,
+   "universidades": 20,
+   "programasVerificados": 19
+  },
+  {
+   "id": "mecanica-instalacoes",
+   "nome": "Mecânica, climatização e instalações especiais",
+   "itens": 307,
+   "guardaveis": 276,
+   "soReferencia": 10,
+   "internos": 21,
+   "universidades": 14,
+   "programasVerificados": 13
+  },
+  {
+   "id": "materiais-betao",
+   "nome": "Materiais de construção e tecnologia do betão",
+   "itens": 365,
+   "guardaveis": 254,
+   "soReferencia": 61,
+   "internos": 50,
+   "universidades": 39,
+   "programasVerificados": 39
+  },
+  {
+   "id": "gestao-construcao-custos",
+   "nome": "Gestão da construção, planeamento e engenharia de custos",
+   "itens": 416,
+   "guardaveis": 404,
+   "soReferencia": 12,
+   "internos": 0,
+   "universidades": 30,
+   "programasVerificados": 28
+  },
+  {
+   "id": "petroleo-gas",
+   "nome": "Engenharia de petróleo, gás e instalações",
+   "itens": 300,
+   "guardaveis": 279,
+   "soReferencia": 12,
+   "internos": 9,
+   "universidades": 6,
+   "programasVerificados": 4
+  },
+  {
+   "id": "minas-barragens",
+   "nome": "Engenharia de minas e barragens de rejeitos",
+   "itens": 270,
+   "guardaveis": 228,
+   "soReferencia": 24,
+   "internos": 18,
+   "universidades": 8,
+   "programasVerificados": 7
+  },
+  {
+   "id": "sistemas-dados-construcao",
+   "nome": "Engenharia de sistemas, dados e IA aplicada à construção",
+   "itens": 458,
+   "guardaveis": 417,
+   "soReferencia": 17,
+   "internos": 24,
+   "universidades": 25,
+   "programasVerificados": 22
+  }
+ ]
+}
+
 /** Fontes do corpus Atlas: o que já está inventariado e o que tem API aberta para ingerir (levantamento de 19/11/2026). */
 export const FONTES_ATLAS: { nome: string; tipo: string; acesso: string; estado: 'inventariado' | 'por-ingerir'; itens: number | null; url: string }[] = [
   { nome: 'Acervo do Instituto', tipo: 'Interno', acesso: 'Inventário de 18/11/2026 (conteúdo ainda não aberto)', estado: 'inventariado', itens: 216945, url: '' },
-  { nome: 'Zenodo', tipo: 'Teses, dados e código', acesso: 'API REST aberta, metadados CC0', estado: 'por-ingerir', itens: null, url: 'https://zenodo.org/api/' },
-  { nome: 'arXiv / engrXiv', tipo: 'Artigos', acesso: 'API Atom gratuita', estado: 'por-ingerir', itens: null, url: 'https://export.arxiv.org/api/query' },
+  { nome: 'O que o Instituto já tinha (matérias, fichas, estudos de Águas, agentes do acervo)', tipo: 'Interno', acesso: 'Reunido num só índice em 19/11/2026', estado: 'inventariado', itens: 1335, url: '' },
+  { nome: 'Zenodo', tipo: 'Teses, dados e código', acesso: 'API REST aberta, metadados CC0', estado: 'inventariado', itens: 4890, url: 'https://zenodo.org/api/' },
+  { nome: 'arXiv / engrXiv', tipo: 'Artigos', acesso: 'API Atom gratuita', estado: 'inventariado', itens: 618, url: 'https://export.arxiv.org/api/query' },
   { nome: 'CORE', tipo: 'Artigos e teses', acesso: 'API gratuita com chave', estado: 'por-ingerir', itens: null, url: 'https://core.ac.uk/' },
   { nome: 'OpenAIRE Graph', tipo: 'Grafo de publicações', acesso: 'APIs públicas', estado: 'por-ingerir', itens: null, url: 'https://graph.openaire.eu/' },
   { nome: 'EThOS (British Library)', tipo: 'Teses do Reino Unido', acesso: 'Dataset bibliográfico em CSV', estado: 'por-ingerir', itens: null, url: 'https://bl.iro.bl.uk/' },
