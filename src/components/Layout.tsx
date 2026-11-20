@@ -27,7 +27,9 @@ import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
 import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal, Compass, LayoutGrid, AppWindow } from 'lucide-react'
-import { gruposMenu, gruposVisiveis, atalhosDoMenu, frenteDe, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao } from './menuTelas'
+import { gruposMenu, gruposVisiveis, atalhosDoMenu, frenteDe, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao, type Frente } from './menuTelas'
+import { VERTENTES } from '@/data/vertentes'
+import { useTexto } from '@/lib/i18n'
 import { usePessoaFundos } from '@/components/VerComoFundos'
 import { veEcra } from '@/lib/visaoFundos'
 import { meuAlcance, ALCANCE_FECHADO } from '@/lib/hierarquia'
@@ -44,6 +46,7 @@ const estaAtivo = (href: string, pathname: string) => pathname === href || pathn
 const grupoDe = (pathname: string) => gruposMenu.find(g => g.itens.some(i => estaAtivo(i.href, pathname)))?.id
 
 export default function Layout({ children, title }: LayoutProps) {
+  const t = useTexto()
   const [sede, setSede] = useState(true)
   useEffect(() => { ehSede().then(setSede).catch(() => setSede(true)) }, [])
   // Passo D22: white-label — parceiro vê a própria marca e cor no menu.
@@ -103,7 +106,18 @@ export default function Layout({ children, title }: LayoutProps) {
     .map(g => projectos ? { ...g, itens: g.itens.filter(i => veEcra(pessoaFundos, i.href)) } : g)
     .filter(g => g.itens.length > 0)
   // Cada frente do Instituto é uma plataforma à parte: dentro dela, o menu do direito some.
-  const frente = frenteDe(pathname)
+  // Pedido de M (20/11/2026): nenhum quadradinho pode abrir "pela plataforma jurídica". As frentes
+  // com menu próprio já tinham o seu; as demais (uma vertente do Instituto, menos o direito/'/inicio')
+  // ganham aqui uma plataforma própria e vazia — o esqueleto da jurídica, sem o menu do direito,
+  // "em desenvolvimento". O conteúdo da tela continua aparecendo; o que some é a lateral do direito.
+  const frenteEspecifica = frenteDe(pathname)
+  const vertenteFrente = frenteEspecifica
+    ? undefined
+    : VERTENTES.find(v => v.rota !== '/inicio' && (pathname === v.rota || pathname.startsWith(`${v.rota}/`)))
+  const frente: Frente | undefined = frenteEspecifica
+    ?? (vertenteFrente
+      ? { id: `frente-${vertenteFrente.id}`, nome: t(`vertente.${vertenteFrente.id}.nome` as Parameters<typeof t>[0]), itens: [] }
+      : undefined)
   const meusAtalhos = atalhosDoMenu(jeito.atalhos, visao)
   // Com o menu recolhido só há o ícone, então a dica começa pelo nome da tela.
   const dicaDe = (item: { href: string; label: string }) =>

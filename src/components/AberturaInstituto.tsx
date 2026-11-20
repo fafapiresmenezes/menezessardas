@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { useTexto } from '@/lib/i18n'
 import MarcaOlho from '@/components/MarcaOlho'
 import SeletorIdioma from '@/components/SeletorIdioma'
+import EntradaMembros from '@/components/EntradaMembros'
 import ProvaDaPorta from '@/components/ProvaDaPorta'
 
 /**
@@ -28,7 +29,8 @@ export default function AberturaInstituto({ extra }: { extra?: ReactNode }) {
         data-testid="porta-faixa"
         className="relative flex min-h-[100svh] flex-col items-center justify-center px-4 py-16 text-center"
       >
-        <div className="absolute right-4 top-3 md:right-8 md:top-5">
+        <div className="absolute right-4 top-3 flex flex-col items-end gap-2 md:right-8 md:top-5">
+          <EntradaMembros />
           <SeletorIdioma discreto />
         </div>
         <MarcaOlho tamanho={224} estrela className="h-40 w-40 text-[#fff] md:h-56 md:w-56" />
