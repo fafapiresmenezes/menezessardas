@@ -975,24 +975,28 @@ export interface ResumoAtlas {
   porEspecialidade: EspecialidadeAtlas[]
 }
 export const ATLAS_RESUMO: ResumoAtlas = {
- "medidoEm": "2026-11-19",
- "total": 6843,
- "externos": 5508,
+ "medidoEm": "2026-11-20",
+ "total": 12612,
+ "externos": 11277,
  "internos": 1335,
- "guardaveis": 4652,
- "soReferencia": 856,
+ "guardaveis": 7131,
+ "soReferencia": 4146,
  "universidades": 50,
  "programasMapeados": 410,
  "programasVerificados": 376,
  "repositoriosOai": 50,
  "fontes": [
   {
-   "nome": "arxiv",
-   "n": 618
+   "nome": "openalex",
+   "n": 5376
   },
   {
    "nome": "zenodo",
    "n": 4890
+  },
+  {
+   "nome": "arxiv",
+   "n": 1011
   }
  ],
  "licencas": [
@@ -1002,11 +1006,27 @@ export const ATLAS_RESUMO: ResumoAtlas = {
   },
   {
    "nome": "não informada",
-   "n": 728
+   "n": 3098
+  },
+  {
+   "nome": "cc-by",
+   "n": 1932
+  },
+  {
+   "nome": "cc-by-nc-nd",
+   "n": 625
   },
   {
    "nome": "mit-license",
    "n": 391
+  },
+  {
+   "nome": "other-oa",
+   "n": 342
+  },
+  {
+   "nome": "cc-by-nc",
+   "n": 254
   },
   {
    "nome": "other-open",
@@ -1017,25 +1037,25 @@ export const ATLAS_RESUMO: ResumoAtlas = {
    "n": 122
   },
   {
-   "nome": "cc-by-nc-nd-4.0",
-   "n": 50
+   "nome": "cc-by-sa",
+   "n": 106
   },
   {
-   "nome": "apache2.0",
-   "n": 45
+   "nome": "cc-by-nc-sa",
+   "n": 71
   },
   {
-   "nome": "cc-by-sa-4.0",
-   "n": 37
+   "nome": "public-domain",
+   "n": 65
   }
  ],
  "porEspecialidade": [
   {
    "id": "estruturas-betao",
    "nome": "Estruturas de betão armado e pré-esforçado",
-   "itens": 499,
-   "guardaveis": 379,
-   "soReferencia": 120,
+   "itens": 1094,
+   "guardaveis": 635,
+   "soReferencia": 459,
    "internos": 0,
    "universidades": 47,
    "programasVerificados": 41
@@ -1043,9 +1063,9 @@ export const ATLAS_RESUMO: ResumoAtlas = {
   {
    "id": "estruturas-aco",
    "nome": "Estruturas metálicas e mistas",
-   "itens": 246,
-   "guardaveis": 221,
-   "soReferencia": 25,
+   "itens": 840,
+   "guardaveis": 459,
+   "soReferencia": 381,
    "internos": 0,
    "universidades": 34,
    "programasVerificados": 33
@@ -1053,9 +1073,9 @@ export const ATLAS_RESUMO: ResumoAtlas = {
   {
    "id": "geotecnia",
    "nome": "Geotecnia e fundações",
-   "itens": 644,
-   "guardaveis": 418,
-   "soReferencia": 202,
+   "itens": 1242,
+   "guardaveis": 715,
+   "soReferencia": 503,
    "internos": 24,
    "universidades": 42,
    "programasVerificados": 36
@@ -1064,8 +1084,8 @@ export const ATLAS_RESUMO: ResumoAtlas = {
    "id": "hidraulica-recursos-hidricos",
    "nome": "Hidráulica, hidrologia e recursos hídricos",
    "itens": 533,
-   "guardaveis": 409,
-   "soReferencia": 49,
+   "guardaveis": 412,
+   "soReferencia": 46,
    "internos": 75,
    "universidades": 49,
    "programasVerificados": 43
@@ -1074,8 +1094,8 @@ export const ATLAS_RESUMO: ResumoAtlas = {
    "id": "saneamento",
    "nome": "Saneamento: água, esgoto e tratamento",
    "itens": 521,
-   "guardaveis": 403,
-   "soReferencia": 94,
+   "guardaveis": 412,
+   "soReferencia": 85,
    "internos": 24,
    "universidades": 26,
    "programasVerificados": 26
@@ -1083,9 +1103,9 @@ export const ATLAS_RESUMO: ResumoAtlas = {
   {
    "id": "transportes-pavimentos",
    "nome": "Transportes, rodovias e pavimentação",
-   "itens": 343,
-   "guardaveis": 277,
-   "soReferencia": 16,
+   "itens": 742,
+   "guardaveis": 437,
+   "soReferencia": 255,
    "internos": 50,
    "universidades": 34,
    "programasVerificados": 30
@@ -1093,9 +1113,9 @@ export const ATLAS_RESUMO: ResumoAtlas = {
   {
    "id": "ambiental-licenciamento",
    "nome": "Engenharia ambiental e licenciamento",
-   "itens": 415,
-   "guardaveis": 275,
-   "soReferencia": 94,
+   "itens": 1013,
+   "guardaveis": 550,
+   "soReferencia": 417,
    "internos": 46,
    "universidades": 36,
    "programasVerificados": 35
@@ -1104,8 +1124,8 @@ export const ATLAS_RESUMO: ResumoAtlas = {
    "id": "electrotecnia-energia",
    "nome": "Electrotecnia, redes e energia",
    "itens": 532,
-   "guardaveis": 412,
-   "soReferencia": 120,
+   "guardaveis": 415,
+   "soReferencia": 117,
    "internos": 0,
    "universidades": 20,
    "programasVerificados": 19
@@ -1113,9 +1133,9 @@ export const ATLAS_RESUMO: ResumoAtlas = {
   {
    "id": "mecanica-instalacoes",
    "nome": "Mecânica, climatização e instalações especiais",
-   "itens": 307,
-   "guardaveis": 276,
-   "soReferencia": 10,
+   "itens": 905,
+   "guardaveis": 494,
+   "soReferencia": 390,
    "internos": 21,
    "universidades": 14,
    "programasVerificados": 13
@@ -1123,9 +1143,9 @@ export const ATLAS_RESUMO: ResumoAtlas = {
   {
    "id": "materiais-betao",
    "nome": "Materiais de construção e tecnologia do betão",
-   "itens": 365,
-   "guardaveis": 254,
-   "soReferencia": 61,
+   "itens": 962,
+   "guardaveis": 560,
+   "soReferencia": 352,
    "internos": 50,
    "universidades": 39,
    "programasVerificados": 39
@@ -1133,9 +1153,9 @@ export const ATLAS_RESUMO: ResumoAtlas = {
   {
    "id": "gestao-construcao-custos",
    "nome": "Gestão da construção, planeamento e engenharia de custos",
-   "itens": 416,
-   "guardaveis": 404,
-   "soReferencia": 12,
+   "itens": 950,
+   "guardaveis": 659,
+   "soReferencia": 291,
    "internos": 0,
    "universidades": 30,
    "programasVerificados": 28
@@ -1143,9 +1163,9 @@ export const ATLAS_RESUMO: ResumoAtlas = {
   {
    "id": "petroleo-gas",
    "nome": "Engenharia de petróleo, gás e instalações",
-   "itens": 300,
-   "guardaveis": 279,
-   "soReferencia": 12,
+   "itens": 705,
+   "guardaveis": 476,
+   "soReferencia": 220,
    "internos": 9,
    "universidades": 6,
    "programasVerificados": 4
@@ -1153,9 +1173,9 @@ export const ATLAS_RESUMO: ResumoAtlas = {
   {
    "id": "minas-barragens",
    "nome": "Engenharia de minas e barragens de rejeitos",
-   "itens": 270,
-   "guardaveis": 228,
-   "soReferencia": 24,
+   "itens": 827,
+   "guardaveis": 489,
+   "soReferencia": 320,
    "internos": 18,
    "universidades": 8,
    "programasVerificados": 7
@@ -1163,9 +1183,9 @@ export const ATLAS_RESUMO: ResumoAtlas = {
   {
    "id": "sistemas-dados-construcao",
    "nome": "Engenharia de sistemas, dados e IA aplicada à construção",
-   "itens": 458,
-   "guardaveis": 417,
-   "soReferencia": 17,
+   "itens": 752,
+   "guardaveis": 418,
+   "soReferencia": 310,
    "internos": 24,
    "universidades": 25,
    "programasVerificados": 22
@@ -1173,12 +1193,13 @@ export const ATLAS_RESUMO: ResumoAtlas = {
  ]
 }
 
-/** Fontes do corpus Atlas: o que já está inventariado e o que tem API aberta para ingerir (levantamento de 19/11/2026). */
+/** Fontes do corpus Atlas: o que já está inventariado e o que tem API aberta para ingerir (levantamento de 20/11/2026). */
 export const FONTES_ATLAS: { nome: string; tipo: string; acesso: string; estado: 'inventariado' | 'por-ingerir'; itens: number | null; url: string }[] = [
   { nome: 'Acervo do Instituto', tipo: 'Interno', acesso: 'Inventário de 18/11/2026 (conteúdo ainda não aberto)', estado: 'inventariado', itens: 216945, url: '' },
   { nome: 'O que o Instituto já tinha (matérias, fichas, estudos de Águas, agentes do acervo)', tipo: 'Interno', acesso: 'Reunido num só índice em 19/11/2026', estado: 'inventariado', itens: 1335, url: '' },
   { nome: 'Zenodo', tipo: 'Teses, dados e código', acesso: 'API REST aberta, metadados CC0', estado: 'inventariado', itens: 4890, url: 'https://zenodo.org/api/' },
-  { nome: 'arXiv / engrXiv', tipo: 'Artigos', acesso: 'API Atom gratuita', estado: 'inventariado', itens: 618, url: 'https://export.arxiv.org/api/query' },
+  { nome: 'arXiv / engrXiv', tipo: 'Artigos', acesso: 'API Atom gratuita', estado: 'inventariado', itens: 1011, url: 'https://export.arxiv.org/api/query' },
+  { nome: 'OpenAlex', tipo: 'Artigos, teses e dados de acesso aberto', acesso: 'API REST aberta (sem chave)', estado: 'inventariado', itens: 5376, url: 'https://api.openalex.org/works' },
   { nome: 'CORE', tipo: 'Artigos e teses', acesso: 'API gratuita com chave', estado: 'por-ingerir', itens: null, url: 'https://core.ac.uk/' },
   { nome: 'OpenAIRE Graph', tipo: 'Grafo de publicações', acesso: 'APIs públicas', estado: 'por-ingerir', itens: null, url: 'https://graph.openaire.eu/' },
   { nome: 'EThOS (British Library)', tipo: 'Teses do Reino Unido', acesso: 'Dataset bibliográfico em CSV', estado: 'por-ingerir', itens: null, url: 'https://bl.iro.bl.uk/' },
