@@ -1193,6 +1193,187 @@ export const ATLAS_RESUMO: ResumoAtlas = {
  ]
 }
 
+/** Classificação do corpus Atlas: que peça serve a que agente, por regra escrita (nada de palpite). */
+export interface EstanteAgente { agente: string; itens: number; guardaveis: number }
+export interface ClassificacaoAtlas {
+  medidoEm: string
+  classificados: number
+  comContextoAfricano: number
+  tipos: ContagemAtlas[]
+  porDecada: ContagemAtlas[]
+  estantes: EstanteAgente[]
+}
+export const CLASSIFICACAO_ATLAS: ClassificacaoAtlas = {
+ "medidoEm": "2026-11-20",
+ "classificados": 11277,
+ "comContextoAfricano": 1868,
+ "tipos": [
+  {
+   "nome": "artigo",
+   "n": 9291
+  },
+  {
+   "nome": "software",
+   "n": 1533
+  },
+  {
+   "nome": "tese",
+   "n": 429
+  },
+  {
+   "nome": "dados",
+   "n": 24
+  }
+ ],
+ "porDecada": [
+  {
+   "nome": "2020",
+   "n": 7232
+  },
+  {
+   "nome": "2010",
+   "n": 2986
+  },
+  {
+   "nome": "2000",
+   "n": 624
+  },
+  {
+   "nome": "1990",
+   "n": 155
+  },
+  {
+   "nome": "1980",
+   "n": 82
+  },
+  {
+   "nome": "1970",
+   "n": 76
+  },
+  {
+   "nome": "1960",
+   "n": 39
+  }
+ ],
+ "estantes": [
+  {
+   "agente": "AGE-ESP-AMBIENTAL-LICENCIAMENTO",
+   "itens": 967,
+   "guardaveis": 550
+  },
+  {
+   "agente": "AGE-ESP-ELECTROTECNIA-ENERGIA",
+   "itens": 532,
+   "guardaveis": 415
+  },
+  {
+   "agente": "AGE-ESP-ESTRUTURAS-ACO",
+   "itens": 840,
+   "guardaveis": 459
+  },
+  {
+   "agente": "AGE-ESP-ESTRUTURAS-BETAO",
+   "itens": 1094,
+   "guardaveis": 635
+  },
+  {
+   "agente": "AGE-ESP-GEOTECNIA",
+   "itens": 1218,
+   "guardaveis": 715
+  },
+  {
+   "agente": "AGE-ESP-GESTAO-CONSTRUCAO-CUSTOS",
+   "itens": 950,
+   "guardaveis": 659
+  },
+  {
+   "agente": "AGE-ESP-HIDRAULICA-RECURSOS-HIDRICOS",
+   "itens": 458,
+   "guardaveis": 412
+  },
+  {
+   "agente": "AGE-ESP-MATERIAIS-BETAO",
+   "itens": 912,
+   "guardaveis": 560
+  },
+  {
+   "agente": "AGE-ESP-MECANICA-INSTALACOES",
+   "itens": 884,
+   "guardaveis": 494
+  },
+  {
+   "agente": "AGE-ESP-MINAS-BARRAGENS",
+   "itens": 809,
+   "guardaveis": 489
+  },
+  {
+   "agente": "AGE-ESP-PETROLEO-GAS",
+   "itens": 696,
+   "guardaveis": 476
+  },
+  {
+   "agente": "AGE-ESP-SANEAMENTO",
+   "itens": 497,
+   "guardaveis": 412
+  },
+  {
+   "agente": "AGE-ESP-SISTEMAS-DADOS-CONSTRUCAO",
+   "itens": 728,
+   "guardaveis": 418
+  },
+  {
+   "agente": "AGE-ESP-TRANSPORTES-PAVIMENTOS",
+   "itens": 692,
+   "guardaveis": 437
+  },
+  {
+   "agente": "AGE-PROD-CLAIMS-FIDIC",
+   "itens": 377,
+   "guardaveis": 271
+  },
+  {
+   "agente": "AGE-PROD-ESTUDO-PND",
+   "itens": 435,
+   "guardaveis": 281
+  },
+  {
+   "agente": "AGE-PROD-GEMEO-OBRA",
+   "itens": 696,
+   "guardaveis": 404
+  },
+  {
+   "agente": "AGE-PROD-HSE-FINANCIADOR",
+   "itens": 1042,
+   "guardaveis": 599
+  },
+  {
+   "agente": "AGE-PROD-MATERIAIS-LOCAIS",
+   "itens": 792,
+   "guardaveis": 559
+  },
+  {
+   "agente": "AGE-PROD-MEDICAO-AUDITAVEL",
+   "itens": 954,
+   "guardaveis": 584
+  },
+  {
+   "agente": "AGE-PROD-RADAR-CONCURSOS",
+   "itens": 89,
+   "guardaveis": 52
+  },
+  {
+   "agente": "AGE-PROD-REVISOR-PROJECTOS",
+   "itens": 748,
+   "guardaveis": 451
+  },
+  {
+   "agente": "AGE-PROD-TRANSPARENCIA-OBRA",
+   "itens": 212,
+   "guardaveis": 139
+  }
+ ]
+}
+
 /** Fontes do corpus Atlas: o que já está inventariado e o que tem API aberta para ingerir (levantamento de 20/11/2026). */
 export const FONTES_ATLAS: { nome: string; tipo: string; acesso: string; estado: 'inventariado' | 'por-ingerir'; itens: number | null; url: string }[] = [
   { nome: 'Acervo do Instituto', tipo: 'Interno', acesso: 'Inventário de 18/11/2026 (conteúdo ainda não aberto)', estado: 'inventariado', itens: 216945, url: '' },
