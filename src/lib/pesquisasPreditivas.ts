@@ -18,18 +18,19 @@ export const PONTOS_INICIAIS = 1000
 export const PONTOS_MINIMO = 1
 export const PONTOS_MAXIMO_POR_PALPITE = 200
 /**
- * Moeda do Olho (pedido de M, 20/11/2026 01h05): crédito interno para limitar o jogo. Recarga grátis
- * toda semana, sem compra, sem saque, sem transferência e sem conversão em nada.
+ * Moeda do Olho (pedido de M, 20/11/2026 01h05 e 02h00): crédito interno para limitar o jogo. Cada pessoa
+ * recebe 1.000 grátis todo mês, sem compra, sem saque, sem transferência e sem conversão em nada.
+ * Versão paga (mensalidade, adicionais) só depois de parecer de advogado: não existe no código.
  */
-export const RECARGA_SEMANAL = 100
-/** Primeira recarga: segunda-feira 23/11/2026, 00h de Brasília. Depois, toda segunda nesse horário. */
-export const INICIO_DAS_RECARGAS = '2026-11-23T03:00:00Z'
-const SEMANA_MS = 7 * 24 * 60 * 60 * 1000
+export const RECARGA_MENSAL = 1000
+/** Primeira recarga: 01/12/2026, 00h de Brasília. Depois, todo dia 1 nesse horário. */
+export const INICIO_DAS_RECARGAS = { ano: 2026, mes: 12 }
 
-/** Quantas recargas semanais já caíram até agora (0 antes da primeira). */
+/** Quantas recargas mensais já caíram até agora (0 antes da primeira). Usa o horário de Brasília (UTC-3). */
 export function recargasAte(agora = new Date()): number {
-  const d = agora.getTime() - new Date(INICIO_DAS_RECARGAS).getTime()
-  return d < 0 ? 0 : Math.floor(d / SEMANA_MS) + 1
+  const br = new Date(agora.getTime() - 3 * 60 * 60 * 1000)
+  const meses = (br.getUTCFullYear() - INICIO_DAS_RECARGAS.ano) * 12 + (br.getUTCMonth() + 1 - INICIO_DAS_RECARGAS.mes)
+  return meses < 0 ? 0 : meses + 1
 }
 
 export interface Pergunta {
@@ -83,9 +84,9 @@ export function retornoDoPalpite(palpite: Palpite, pote: number[], resultado: nu
   return Math.floor((palpite.pontos * total) / vencedor)
 }
 
-/** Saldo de uma pessoa: os iniciais, mais as recargas semanais, menos o que está colocado, mais o que voltou. */
+/** Saldo de uma pessoa: os iniciais, mais as recargas mensais, menos o que está colocado, mais o que voltou. */
 export function saldoDePontos(perguntas: Pergunta[], todos: Palpite[], meus: Palpite[], agora = new Date()): number {
-  let saldo = PONTOS_INICIAIS + RECARGA_SEMANAL * recargasAte(agora)
+  let saldo = PONTOS_INICIAIS + RECARGA_MENSAL * recargasAte(agora)
   for (const m of meus) {
     saldo -= m.pontos
     const p = perguntas.find(q => q.id === m.pergunta_id)

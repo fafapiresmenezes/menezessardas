@@ -1,12 +1,12 @@
 -- 156 · Moeda do Olho (pedido de M, 20/11/2026 01h05)
--- O crédito do jogo de previsões passa a se chamar Moeda do Olho e ganha recarga GRÁTIS de 100
--- toda segunda-feira 00h de Brasília (primeira em 23/11/2026). Continua sem compra, venda, saque,
+-- O crédito do jogo de previsões passa a se chamar Moeda do Olho e ganha recarga GRÁTIS de 1000
+-- todo dia 1 às 00h de Brasília (primeira em 01/12/2026). Continua sem compra, venda, saque,
 -- transferência ou conversão. Precisa do SQL 155 colado antes.
 
 CREATE OR REPLACE FUNCTION public.previsoes_recargas()
 RETURNS integer LANGUAGE sql STABLE SET search_path = public AS $$
-  SELECT CASE WHEN now() < timestamptz '2026-11-23 03:00:00+00' THEN 0
-              ELSE floor(extract(epoch FROM now() - timestamptz '2026-11-23 03:00:00+00') / 604800)::int + 1 END;
+  SELECT greatest(0, ((extract(year FROM now() AT TIME ZONE 'America/Sao_Paulo')::int - 2026) * 12
+                     + extract(month FROM now() AT TIME ZONE 'America/Sao_Paulo')::int - 12) + 1);
 $$;
 GRANT EXECUTE ON FUNCTION public.previsoes_recargas() TO authenticated;
 
@@ -17,7 +17,7 @@ RETURNS integer LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS
   ), total AS (
     SELECT pergunta_id, sum(v) AS t FROM pote GROUP BY pergunta_id
   )
-  SELECT (1000 + 100 * public.previsoes_recargas() + coalesce(sum(
+  SELECT (1000 + 1000 * public.previsoes_recargas() + coalesce(sum(
     - pa.pontos
     + CASE
         WHEN q.resultado IS NULL THEN 0

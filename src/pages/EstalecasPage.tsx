@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase } from '@/lib/supabase'
 import {
-  PERGUNTAS_EXEMPLO, PONTOS_INICIAIS, PONTOS_MAXIMO_POR_PALPITE, RECARGA_SEMANAL,
+  PERGUNTAS_EXEMPLO, PONTOS_INICIAIS, PONTOS_MAXIMO_POR_PALPITE, RECARGA_MENSAL,
   aberta, acertoDoGrupo, chancesDoGrupo, poteDaPergunta, saldoDePontos, validarPalpite, validarPergunta,
   type Palpite, type Pergunta,
 } from '@/lib/pesquisasPreditivas'
@@ -109,7 +109,7 @@ export default function EstalecasPage() {
           </p>
           <p className="text-sm bg-grafite/5 border border-grafite-claro p-3" data-testid="ptp-sem-dinheiro">
             As moedas do olho <strong>não valem dinheiro</strong>: não se compram, não se vendem, não se trocam e não saem da
-            plataforma. Não há depósito, saque, token nem carteira. Cada pessoa começa com {PONTOS_INICIAIS} moedas do olho e ganha {RECARGA_SEMANAL} de graça toda segunda-feira, para ninguém jogar sem limite.
+            plataforma. Não há depósito, saque, token nem carteira. Cada pessoa começa com {PONTOS_INICIAIS} moedas do olho e ganha mais {RECARGA_MENSAL.toLocaleString('pt-BR')} de graça todo dia 1 do mês, para ninguém jogar sem limite.
           </p>
           <div className="flex flex-wrap items-center gap-4 text-sm">
             <span data-testid="ptp-saldo">Suas moedas do olho: <strong>{saldo.toLocaleString('pt-BR')}</strong></span>
@@ -370,7 +370,7 @@ function RegrasELei() {
     <section className="bg-white shadow-sm p-6 space-y-4 text-sm" data-testid="ptp-regras">
       <h2 className="font-serif text-xl">Como funciona</h2>
       <ul className="list-disc pl-5 space-y-1 text-grafite">
-        <li>Cada membro do Instituto começa com {PONTOS_INICIAIS} moedas do olho e recebe {RECARGA_SEMANAL} grátis toda segunda-feira. É o limite do jogo: quando acabam, é esperar a recarga ou acertar mais.</li>
+        <li>Cada membro do Instituto começa com {PONTOS_INICIAIS} moedas do olho e recebe mais {RECARGA_MENSAL.toLocaleString('pt-BR')} grátis todo dia 1 do mês. É o limite do jogo: quando acabam, é esperar a recarga ou acertar mais.</li>
         <li>Num palpite você escolhe uma resposta e coloca de 1 a {PONTOS_MAXIMO_POR_PALPITE} moedas do olho.</li>
         <li>Quando a pergunta se resolve, as moedas do olho de todos daquela pergunta são divididas entre quem acertou, na proporção do que cada um colocou. Pergunta anulada devolve as moedas do olho.</li>
         <li>Toda pergunta diz antes qual fonte pública vai resolvê-la.</li>
