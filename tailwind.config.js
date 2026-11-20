@@ -33,8 +33,8 @@ export default {
         regularFundo: '#EAF5EF',
       },
       fontFamily: {
-        serif: ['Bodoni Moda', 'Georgia', 'serif'],
-        sans: ['Hanken Grotesk', 'system-ui', 'sans-serif'],
+        serif: ['Fraunces', 'Georgia', 'serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
     },
   },

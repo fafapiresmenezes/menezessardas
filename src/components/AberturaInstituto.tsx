@@ -71,7 +71,17 @@ export default function AberturaInstituto({ extra }: { extra?: ReactNode }) {
           <p className="text-sm font-medium uppercase tracking-[0.25em] text-neutral-300">{t('porta.historiaRotulo')}</p>
           <h2 className="mt-4 font-serif text-4xl leading-tight md:text-5xl">{t('porta.historiaTitulo')}</h2>
           <p className="mt-6 text-lg leading-relaxed text-neutral-100">{t('porta.historia')}</p>
-          <p className="mt-4 text-lg leading-relaxed text-neutral-200">{t('porta.historia2')}</p>
+          {/* Temas centrais em tópicos, na ordem pedida por M em 20/11/2026: concisos e certeiros. */}
+          <ul data-testid="porta-temas" className="mx-auto mt-8 flex max-w-xl flex-col gap-3 text-left">
+            {(['porta.tema1', 'porta.tema2', 'porta.tema3', 'porta.tema4'] as const).map((k, i) => (
+              <li key={k} className="flex items-baseline gap-4 border-b border-white/15 pb-3">
+                <span className="font-serif text-sm tabular-nums text-neutral-400">{String(i + 1).padStart(2, '0')}</span>
+                <span className="font-serif text-xl text-[#fff] md:text-2xl">{t(k)}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mx-auto mt-5 max-w-xl text-left text-base leading-relaxed text-neutral-300">{t('porta.temaMais')}</p>
+          <p className="mt-8 text-lg leading-relaxed text-neutral-200">{t('porta.historia2')}</p>
         </section>
 
         {/* A frase da ontologia: prever com margem de erro, nunca como valor exato. */}

@@ -29,7 +29,9 @@ describe('porta redesenhada (V13)', () => {
     expect(h1.textContent).toBe('INSTITUTOTHEYE')
     expect(screen.getByTestId('porta-nome-oficial').textContent).toBe('Instituto de Ontologia para Soluções Multidisciplinares')
     expect(screen.getByTestId('estrela-na-pupila')).toBeTruthy()
-    expect(screen.getByTestId('porta-historia').textContent).toContain('superinteligência')
+    expect(screen.getByTestId('porta-historia').textContent).toContain('ontologia')
+    // Temas centrais em tópicos, na ordem pedida por M (20/11/2026): superinteligência primeiro.
+    expect(screen.getByTestId('porta-temas').textContent).toContain('Superinteligência')
     expect(screen.getByTestId('porta-chamada').textContent).toContain('margem de erro')
     // Só o número de frentes; os outros números saíram.
     expect(screen.queryByTestId('prova-materias')).toBeNull()
