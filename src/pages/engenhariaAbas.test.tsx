@@ -3,7 +3,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { AGENTES_ENGENHARIA, FONTES_ATLAS, REGRAS_AGENTES } from '@/data/agentesEngenharia'
+import { AGENTES_ENGENHARIA, ATLAS_RESUMO, FONTES_ATLAS, REGRAS_AGENTES } from '@/data/agentesEngenharia'
 
 vi.mock('@/lib/supabase', () => ({ supabase: { functions: { invoke: vi.fn().mockResolvedValue({ data: null, error: null }) } }, supabaseConfigurado: true }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
@@ -30,8 +30,20 @@ describe('fichas dos agentes de engenharia', () => {
   })
 
   it('nunca escreve o nome do cliente nem palavras da plataforma de direito', () => {
-    const blob = JSON.stringify({ AGENTES_ENGENHARIA, FONTES_ATLAS, REGRAS_AGENTES })
+    const blob = JSON.stringify({ AGENTES_ENGENHARIA, ATLAS_RESUMO, FONTES_ATLAS, REGRAS_AGENTES })
     for (const re of PROIBIDAS) expect(blob).not.toMatch(re)
+  })
+
+  it('os números do Atlas são coerentes e medidos', () => {
+    expect(ATLAS_RESUMO.medidoEm).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+    expect(ATLAS_RESUMO.total).toBe(ATLAS_RESUMO.externos + ATLAS_RESUMO.internos)
+    expect(ATLAS_RESUMO.guardaveis + ATLAS_RESUMO.soReferencia).toBe(ATLAS_RESUMO.externos)
+    expect(ATLAS_RESUMO.programasVerificados).toBeLessThanOrEqual(ATLAS_RESUMO.programasMapeados)
+    expect(ATLAS_RESUMO.porEspecialidade).toHaveLength(14)
+    for (const e of ATLAS_RESUMO.porEspecialidade) {
+      expect(e.guardaveis).toBeLessThanOrEqual(e.itens)
+      expect(e.universidades).toBeLessThanOrEqual(ATLAS_RESUMO.universidades)
+    }
   })
 
   it('toda posição tem nível N1 a N6', () => {
@@ -60,6 +72,8 @@ describe('abas novas do quadradinho Engenharia', () => {
     expect(screen.getByTestId('prompt-agente').textContent).toContain('Restrições invioláveis')
     fireEvent.click(screen.getByTestId('subaba-agentes-atlas'))
     expect(screen.getByTestId('atlas-fontes').textContent).toContain('216')
+    expect(screen.getByTestId('atlas-numeros')).toBeTruthy()
+    expect(screen.getByTestId('atlas-por-especialidade').querySelectorAll('tbody tr')).toHaveLength(14)
     fireEvent.click(screen.getByTestId('subaba-agentes-provas'))
     expect(screen.getByTestId('provas-agentes').querySelectorAll('tbody tr')).toHaveLength(46)
   })

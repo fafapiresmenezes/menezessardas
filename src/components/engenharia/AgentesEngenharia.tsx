@@ -3,7 +3,7 @@
 // Nenhum agente responde ainda: são fichas à espera da bateria de provas (nota "por provar").
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { AGENTES_ENGENHARIA, EMITIDO_AGENTES, FONTES_ATLAS, MATRIZES, REGRAS_AGENTES, type FichaAgente, type MatrizAgente } from '@/data/agentesEngenharia'
+import { AGENTES_ENGENHARIA, ATLAS_RESUMO, EMITIDO_AGENTES, FONTES_ATLAS, MATRIZES, REGRAS_AGENTES, type FichaAgente, type MatrizAgente } from '@/data/agentesEngenharia'
 
 type SubAba = MatrizAgente | 'atlas' | 'provas'
 
@@ -77,6 +77,35 @@ export default function AgentesEngenharia() {
       {sub === 'atlas' && (
         <section className="bg-white p-5 shadow-sm overflow-x-auto" data-testid="atlas-fontes">
           <p className="text-sm mb-3">O Atlas é o corpus de onde os agentes aprendem: programas de doutoramento das melhores universidades, teses e código abertos, com licença registada. Só se guarda ficheiro completo com licença aberta; normas nunca se guardam, só a referência.</p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5" data-testid="atlas-numeros">
+            {[
+              { n: ATLAS_RESUMO.total, rotulo: 'itens no corpus', nota: `${ATLAS_RESUMO.internos.toLocaleString('pt-PT')} já eram do Instituto` },
+              { n: ATLAS_RESUMO.guardaveis, rotulo: 'com licença aberta', nota: `${ATLAS_RESUMO.soReferencia.toLocaleString('pt-PT')} ficam só como referência` },
+              { n: ATLAS_RESUMO.universidades, rotulo: 'universidades mapeadas', nota: `${ATLAS_RESUMO.repositoriosOai} com repositório aberto` },
+              { n: ATLAS_RESUMO.programasVerificados, rotulo: 'programas de doutoramento conferidos', nota: `de ${ATLAS_RESUMO.programasMapeados.toLocaleString('pt-PT')} mapeados` },
+            ].map(c => (
+              <div key={c.rotulo} className="border border-navy/15 p-3">
+                <div className="text-2xl text-navy">{c.n.toLocaleString('pt-PT')}</div>
+                <div className="text-sm">{c.rotulo}</div>
+                <div className="text-xs text-grafite-claro">{c.nota}</div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-grafite-claro mb-4">Medido em {ATLAS_RESUMO.medidoEm}. A colheita continua, por isso estes números só crescem. Licenças mais comuns: {ATLAS_RESUMO.licencas.slice(0, 4).map(l => `${l.nome} (${l.n.toLocaleString('pt-PT')})`).join(', ')}.</p>
+          <h3 className="text-navy mb-2">Por especialidade</h3>
+          <table className="w-full text-sm mb-6" data-testid="atlas-por-especialidade">
+            <thead><tr className="text-left text-xs uppercase text-grafite-claro"><th className="py-2 pr-3">Especialidade</th><th className="pr-3">Itens</th><th className="pr-3">Com licença aberta</th><th className="pr-3">Do Instituto</th><th>Universidades com programa</th></tr></thead>
+            <tbody>{ATLAS_RESUMO.porEspecialidade.map(e => (
+              <tr key={e.id} className="border-t border-navy/10">
+                <td className="py-1.5 pr-3 text-navy">{e.nome}</td>
+                <td className="pr-3">{e.itens.toLocaleString('pt-PT')}</td>
+                <td className="pr-3">{e.guardaveis.toLocaleString('pt-PT')}</td>
+                <td className="pr-3">{e.internos.toLocaleString('pt-PT')}</td>
+                <td>{e.universidades}</td>
+              </tr>
+            ))}</tbody>
+          </table>
+          <h3 className="text-navy mb-2">De onde vem</h3>
           <table className="w-full text-sm">
             <thead><tr className="text-left text-xs uppercase text-grafite-claro"><th className="py-2 pr-3">Fonte</th><th className="pr-3">Tipo</th><th className="pr-3">Acesso</th><th className="pr-3">Estado</th><th>Itens</th></tr></thead>
             <tbody>{FONTES_ATLAS.map(f => (
