@@ -27,9 +27,8 @@ export interface PecaAtlas {
 
 /** Onde a tela procura o ficheiro, por ordem. */
 export const ONDE_BIBLIOTECA = [
+  // Só no próprio site: desde 20/11/2026 nada sai do GitHub nem do jsDelivr (pedido de M: ninguém copia).
   './atlas-biblioteca-v1.jsonl',
-  'https://cdn.jsdelivr.net/gh/fafapiresmenezes/menezessardas@gh-pages/atlas-biblioteca-v1.jsonl',
-  'https://fafapiresmenezes.github.io/menezessardas/atlas-biblioteca-v1.jsonl',
 ]
 
 /** Lê o ficheiro linha a linha. Linha estragada é saltada, não derruba a tela. */

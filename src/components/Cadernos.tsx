@@ -6,10 +6,10 @@ import { useTexto, type Chave } from '@/lib/i18n'
  * "qualquer um pode baixar o caderno de produtos", separado por eixos).
  *
  * O que os cadernos não trazem, de propósito: comparativo com outras instituições e tabela de
- * preço — preço é proposta, caso a caso. Os PDFs saem do gh-pages (fafapiresmenezes.github.io),
- * que serve arquivo aberto; a Vercel só carrega a casca do site.
+ * preço — preço é proposta, caso a caso. Os PDFs saem do próprio theye.club (pasta public/cadernos),
+ * desde 20/11/2026, quando o site inteiro passou a ser publicado pela Vercel.
  */
-export const BASE_CADERNOS = 'https://fafapiresmenezes.github.io/menezessardas/cadernos'
+export const BASE_CADERNOS = '/cadernos'
 
 export const cadernoUrl = (id: string) => `${BASE_CADERNOS}/caderno-${id}.pdf`
 

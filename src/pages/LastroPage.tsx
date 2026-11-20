@@ -21,14 +21,9 @@ import {
  * função de servidor ancorar-hash como reserva quando o navegador não os alcança.
  */
 const ONDE = [
-  // 1) Ao lado do pacote publicado: é assim que funciona no gh-pages e na conferência local.
+  // Só no próprio site, ao lado do pacote publicado. Desde 20/11/2026 tudo é publicado pela Vercel
+  // e nada mais sai do GitHub nem do jsDelivr (pedido de M: ninguém copia).
   './trilho-v4.jsonl',
-  // 2 e 3) Reservas, porque em theye.club só vão os arquivos de texto do site. Pelo RAMO, e não
-  // pelo sha, para esta tela não precisar saber qual é a versão publicada. O jsDelivr guarda o
-  // ramo por até 12 horas, então a reserva pode mostrar uma versão um pouco atrás da última volta;
-  // o número de registros e o último código, logo acima, dizem qual versão esta tela leu.
-  'https://cdn.jsdelivr.net/gh/fafapiresmenezes/menezessardas@gh-pages/trilho-v4.jsonl',
-  'https://fafapiresmenezes.github.io/menezessardas/trilho-v4.jsonl',
 ]
 
 /** 13/11/2026 19:04 → "13/11/2026, 19h04". */
@@ -72,7 +67,7 @@ export default function LastroPage() {
           return
         } catch { /* tenta o próximo */ }
       }
-      setErro('Não deu para baixar o arquivo do trilho agora. O arquivo fica em cdn.jsdelivr.net/gh/fafapiresmenezes/menezessardas@gh-pages/trilho-v4.jsonl, e os quatro passos abaixo valem para conferir na mão.')
+      setErro('Não deu para baixar o arquivo do trilho agora. Tente de novo em alguns minutos; os quatro passos abaixo valem para conferir na mão.')
     })()
   }, [])
 

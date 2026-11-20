@@ -26,7 +26,7 @@ concurrency:
 env:
   SUPABASE_REF: hlraekzvgxdpiiigdxdo
   VERCEL_ESCOPO: still12
-  VERCEL_PROJETO: theye-suporte-juridico
+  VERCEL_PROJETO: theye-club
 jobs:
   publicar:
     runs-on: ubuntu-latest
@@ -105,8 +105,10 @@ jobs:
           npm run build
           # A pasta tem o nome do projeto: na primeira vez a Vercel cria o projeto com esse nome; depois reaproveita.
           rm -rf "/tmp/$VERCEL_PROJETO" && cp -r dist "/tmp/$VERCEL_PROJETO"
+          # Cabeçalhos de segurança (CSP, HSTS, anti-moldura, noai): a Vercel lê o vercel.json da raiz.
+          cp deploy/vercel.json "/tmp/$VERCEL_PROJETO/vercel.json"
           cd "/tmp/$VERCEL_PROJETO"
           url=$(npx --yes vercel@39.1.0 deploy --prod --yes --token "$VERCEL_TOKEN" --scope "$VERCEL_ESCOPO")
           echo "Site publicado: $url"
           echo "### Site publicado" >> "$GITHUB_STEP_SUMMARY"
-          echo "Endereço fixo: https://$VERCEL_PROJETO.vercel.app (esta versão: $url)" >> "$GITHUB_STEP_SUMMARY"
+          echo "Endereço: https://theye.club (esta versão: $url)" >> "$GITHUB_STEP_SUMMARY"

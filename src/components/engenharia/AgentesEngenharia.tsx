@@ -75,7 +75,7 @@ function Biblioteca() {
           if (vivo && lidas.length > 0) { setPecas(lidas); return }
         } catch { /* tenta o próximo */ }
       }
-      if (vivo) setErro('Não deu para baixar a biblioteca agora. O ficheiro fica em cdn.jsdelivr.net/gh/fafapiresmenezes/menezessardas@gh-pages/atlas-biblioteca-v1.jsonl.')
+      if (vivo) setErro('Não deu para baixar a biblioteca agora. Tente de novo em alguns minutos.')
     })()
     return () => { vivo = false }
   }, [])

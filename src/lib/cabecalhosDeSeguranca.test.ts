@@ -26,7 +26,7 @@ const robots = readFileSync('public/robots.txt', 'utf-8')
 
 describe('cabeçalhos de segurança do site', () => {
   it('o publicar.sh envia o vercel.json junto, senão nada disso vale', () => {
-    expect(publicar).toMatch(/cp deploy\/vercel\.json "\$PASTA\/"/)
+    expect(publicar).toMatch(/cp deploy\/vercel\.json dist-prod\/vercel\.json/)
   })
 
   it('vale para todas as páginas, não só para a inicial', () => {
@@ -136,5 +136,27 @@ describe('raspagem', () => {
 
   it('diz na cara que robots.txt não é tranca', () => {
     expect(robots).toMatch(/[ée] pedido, n[ãa]o tranca/i)
+  })
+})
+
+// 20/11/2026, pedido de M: "ninguém copia nada da gente". O site inteiro passou a sair da Vercel;
+// nada pode voltar a ser buscado do repositório pelo jsDelivr ou pelo GitHub Pages, senão fechar o
+// repositório deixa o site em branco.
+describe('tudo sai do próprio site', () => {
+  const arquivos = [
+    'index.html', 'src/lib/atlasBiblioteca.ts', 'src/pages/LastroPage.tsx', 'src/pages/SolucoesPage.tsx',
+    'src/components/Cadernos.tsx', 'src/components/engenharia/AgentesEngenharia.tsx', 'scripts/publicar.sh',
+  ]
+  it('nenhum arquivo do site aponta para o repositório no jsDelivr ou no GitHub Pages', () => {
+    for (const a of arquivos) {
+      const t = readFileSync(a, 'utf-8')
+      expect(t, a).not.toContain('cdn.jsdelivr.net/gh/fafapiresmenezes')
+      expect(t, a).not.toContain('fafapiresmenezes.github.io')
+    }
+  })
+  it('o publicar automático vai para o theye.club e leva os cabeçalhos de segurança', () => {
+    const wf = readFileSync('.github/workflows/publicar.yml', 'utf-8')
+    expect(wf).toContain('VERCEL_PROJETO: theye-club')
+    expect(wf).toContain('cp deploy/vercel.json')
   })
 })
