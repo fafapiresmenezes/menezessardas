@@ -12,7 +12,7 @@ import { IDIOMAS } from '@/lib/idioma'
  * língua, inclusive o que ainda está em desenvolvimento — e tudo exige senha.
  *
  * O que estes testes prendem: as doze vertentes na tela, nome e resumo traduzidos nas quatro
- * línguas (sem sobrar português no chinês), o estado de cada uma à vista, e todo item levando à
+ * línguas (sem sobrar português no alemão), o estado de cada uma à vista, e todo item levando à
  * tela de entrada em vez de abrir alguma coisa.
  */
 beforeEach(() => { cleanup(); localStorage.clear(); reiniciarIdioma() })
@@ -48,18 +48,18 @@ describe('vitrine das vertentes', () => {
       const nomes = IDIOMAS.map(i => DICIONARIOS[i.codigo][`vertente.${v.id}.nome` as Chave])
       const resumos = IDIOMAS.map(i => DICIONARIOS[i.codigo][`vertente.${v.id}.resumo` as Chave])
       for (const texto of [...nomes, ...resumos]) expect(texto, v.id).toBeTruthy()
-      // chinês tem de ser diferente do português: igual significaria tradução esquecida
-      expect(DICIONARIOS.zh[`vertente.${v.id}.resumo` as Chave], v.id)
+      // alemão tem de ser diferente do português: igual significaria tradução esquecida
+      expect(DICIONARIOS.de[`vertente.${v.id}.resumo` as Chave], v.id)
         .not.toBe(DICIONARIOS.pt[`vertente.${v.id}.resumo` as Chave])
     }
   })
 
-  it('em chinês a tela fala chinês', () => {
-    trocarIdioma('zh')
+  it('em alemão a tela fala alemão', () => {
+    trocarIdioma('de')
     montar()
     const texto = screen.getByTestId('vertentes').textContent!
-    expect(texto).toContain(DICIONARIOS.zh['vertentes.titulo'])
-    expect(texto).toContain(DICIONARIOS.zh['vertente.engenharia.nome'])
+    expect(texto).toContain(DICIONARIOS.de['vertentes.titulo'])
+    expect(texto).toContain(DICIONARIOS.de['vertente.engenharia.nome'])
     expect(texto).not.toContain('Plataforma jurídica')
   })
 

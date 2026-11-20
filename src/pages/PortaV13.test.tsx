@@ -25,9 +25,15 @@ describe('porta redesenhada (V13)', () => {
   it('mostra a promessa grande, a faixa de prova e um botão forte de conhecer', () => {
     montar()
     const h1 = screen.getByRole('heading', { level: 1 })
-    // Faixa única (M, 19/11/2026): Instituto de AI, o nome oficial e "um instituto que enxerga antes".
-    expect(h1.textContent).toBe('Instituto de AI')
-    expect(screen.getByTestId('porta-nome-oficial').textContent).toBe('Instituto de Ontologia com Soluções Multidisciplinares')
+    // Primeira faixa (M, 20/11/2026): Instituto THEYE em tela cheia, o nome oficial e o lema.
+    expect(h1.textContent).toBe('INSTITUTOTHEYE')
+    expect(screen.getByTestId('porta-nome-oficial').textContent).toBe('Instituto de Ontologia para Soluções Multidisciplinares')
+    expect(screen.getByTestId('estrela-na-pupila')).toBeTruthy()
+    expect(screen.getByTestId('porta-historia').textContent).toContain('superinteligência')
+    expect(screen.getByTestId('porta-chamada').textContent).toContain('margem de erro')
+    // Só o número de frentes; os outros números saíram.
+    expect(screen.queryByTestId('prova-materias')).toBeNull()
+    expect(screen.queryByTestId('prova-especialidades')).toBeNull()
     expect(screen.getByTestId('prova-da-porta')).toBeTruthy()
     expect(screen.getByTestId('porta-conhecer').textContent).toContain('Quero conhecer')
     // O bloco de senha saiu do começo: o login só aparece ao clicar numa área, lá embaixo.

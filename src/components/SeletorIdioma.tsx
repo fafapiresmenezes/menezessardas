@@ -1,13 +1,13 @@
 import { IDIOMAS } from '@/lib/idioma'
 import { trocarIdioma, useIdioma, useTexto, textoEm, chaveIdioma } from '@/lib/i18n'
 
-// Fileira discreta com os quatro idiomas (pedido de M, 13/11/2026): da primeira tela ele
+// Fileira discreta com os quatro idiomas (português, inglês, espanhol e alemão desde 20/11/2026) (pedido de M, 13/11/2026): da primeira tela ele
 // sempre consegue ver e trocar a língua, sem limpar o navegador. A escolha fica guardada.
-export default function SeletorIdioma() {
+export default function SeletorIdioma({ discreto = false }: { discreto?: boolean } = {}) {
   const atual = useIdioma()
   const t = useTexto()
   return (
-    <nav aria-label={t('idioma.trocar')} data-testid="seletor-idioma" className="mt-6 border-t border-neutral-600 pt-4">
+    <nav aria-label={t('idioma.trocar')} data-testid="seletor-idioma" className={discreto ? '' : 'mt-6 border-t border-neutral-600 pt-4'}>
       <ul className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
         {IDIOMAS.map((id, i) => {
           const ativo = id.codigo === atual

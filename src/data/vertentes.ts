@@ -43,6 +43,19 @@ export const VERTENTES = [
   { id: 'transumanismo', estado: 'no-ar', rota: '/transumanismo' },
   { id: 'marketing', estado: 'no-ar', rota: '/marketing' },
   { id: 'publicidade', estado: 'no-ar', rota: '/publicidade' },
+  // 12 frentes novas (M, 20/11/2026: "pesquisa mais frentes de trabalho")
+  { id: 'infraestrutura', estado: 'no-ar', rota: '/infraestrutura' },
+  { id: 'energia', estado: 'no-ar', rota: '/energia' },
+  { id: 'agronegocio', estado: 'no-ar', rota: '/agronegocio' },
+  { id: 'mineracao', estado: 'no-ar', rota: '/mineracao' },
+  { id: 'transporte', estado: 'no-ar', rota: '/transporte' },
+  { id: 'seguranca-publica', estado: 'no-ar', rota: '/seguranca-publica' },
+  { id: 'cidades', estado: 'no-ar', rota: '/cidades-inteligentes' },
+  { id: 'financas', estado: 'no-ar', rota: '/financas' },
+  { id: 'telecom', estado: 'no-ar', rota: '/telecom' },
+  { id: 'espacial', estado: 'no-ar', rota: '/espacial' },
+  { id: 'robotica', estado: 'no-ar', rota: '/robotica' },
+  { id: 'ontologia', estado: 'no-ar', rota: '/ontologia-empresas' },
 ] as const satisfies readonly { id: string; estado: EstadoVertente; rota: string }[]
 
 export type IdVertente = (typeof VERTENTES)[number]['id']

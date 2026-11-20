@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { IDIOMAS, idiomaEscolhido } from './idioma'
 import { DICIONARIOS, idiomaAtual, trocarIdioma, reiniciarIdioma, textoEm, chaveIdioma, type Chave } from './i18n'
 
-const CODIGOS = ['pt', 'en', 'zh', 'es'] as const
+const CODIGOS = ['pt', 'en', 'es', 'de'] as const
 
 describe('camada de tradução da entrada', () => {
   beforeEach(() => { localStorage.clear(); reiniciarIdioma() })
@@ -11,7 +11,7 @@ describe('camada de tradução da entrada', () => {
 
   it('tem os quatro idiomas pedidos por M, na ordem da tela de escolha', () => {
     expect(IDIOMAS.map(i => i.codigo)).toEqual([...CODIGOS])
-    expect(IDIOMAS.map(i => i.nativo)).toEqual(['Português', 'English', '中文', 'Español'])
+    expect(IDIOMAS.map(i => i.nativo)).toEqual(['Português', 'English', 'Español', 'Deutsch'])
     expect(Object.keys(DICIONARIOS).sort()).toEqual([...CODIGOS].sort())
   })
 
@@ -41,10 +41,10 @@ describe('camada de tradução da entrada', () => {
   it('sem escolha, fala português; trocar guarda a escolha e muda o texto', () => {
     expect(idiomaAtual()).toBe('pt')
     expect(textoEm(idiomaAtual(), 'login.entrar')).toBe('Entrar')
-    trocarIdioma('zh')
-    expect(idiomaAtual()).toBe('zh')
-    expect(idiomaEscolhido()).toBe('zh')
-    expect(textoEm(idiomaAtual(), 'login.entrar')).toBe('登录')
+    trocarIdioma('de')
+    expect(idiomaAtual()).toBe('de')
+    expect(idiomaEscolhido()).toBe('de')
+    expect(textoEm(idiomaAtual(), 'login.entrar')).toBe('Anmelden')
     trocarIdioma('en')
     expect(textoEm(idiomaAtual(), 'login.esqueciSenha')).toBe('I forgot my password')
     trocarIdioma('es')
@@ -63,7 +63,7 @@ describe('camada de tradução da entrada', () => {
         expect(textoEm(codigo, chaveIdioma(outro)).trim()).not.toBe('')
       }
     }
-    expect(textoEm('pt', chaveIdioma('zh'))).toBe('Chinês')
+    expect(textoEm('pt', chaveIdioma('de'))).toBe('Alemão')
     expect(textoEm('en', chaveIdioma('pt'))).toBe('Portuguese')
   })
 })
