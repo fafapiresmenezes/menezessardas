@@ -27,7 +27,7 @@ describe('porta redesenhada (V13)', () => {
     const h1 = screen.getByRole('heading', { level: 1 })
     // Primeira faixa (M, 20/11/2026): Instituto THEYE em tela cheia, o nome oficial e o lema.
     expect(h1.textContent).toBe('INSTITUTOTHEYE')
-    expect(screen.getByTestId('porta-nome-oficial').textContent).toBe('Instituto de Ontologia para Soluções Multidisciplinares')
+    expect(screen.getByTestId('porta-nome-oficial').textContent).toBe('Instituto especializado em Ontologia oferecendo soluções multidisciplinares')
     expect(screen.getByTestId('estrela-na-pupila')).toBeTruthy()
     expect(screen.getByTestId('porta-historia').textContent).toContain('ontologia')
     // Temas centrais em tópicos, na ordem pedida por M (20/11/2026): superinteligência primeiro.
