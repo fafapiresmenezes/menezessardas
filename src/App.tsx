@@ -341,6 +341,7 @@ function App() {
         <Route path="/marketing" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/estalecas" element={isAuthenticated ? <SoInstituto><EstalecasPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/publicidade" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/transparencia-social" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/infraestrutura" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/energia" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/agronegocio" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />

@@ -331,6 +331,7 @@ export const DICAS: Record<string, string> = {
   '/telecom': "Telecomunicações e conectividade: Redes, 5G, satélite e inclusão digital, com a regra da Anatel e o mapa de cobertura oficial.",
   '/espacial': "Espaço e satélites: Observação da Terra, satélites e economia espacial, para governo e empresa.",
   '/robotica': "Robótica e automação: Robôs, automação industrial e agentes de software, com segurança e responsabilidade definidas.",
+  '/transparencia-social': "Projetos sociais: 2% de tudo o que o Instituto recebe sai primeiro para causas sociais no Brasil, com prestação de contas aberta.",
   '/ontologia-empresas': "Ontologia preditiva para empresas: O método central do Instituto aplicado ao negócio: um grafo que liga clientes, fornecedores, mercado e risco.",
   '/ia': 'IA e superinteligência: modelos, agentes e consultores',
   '/consultores': 'Um consultor de IA por área do direito diz o que fazer primeiro',
@@ -417,6 +418,7 @@ export const FRENTES: Frente[] = [
   { id: 'telecom', nome: "Telecomunicações e conectividade", itens: [{ icon: FlaskConical, label: "Telecomunicações e conectividade", href: '/telecom' }] },
   { id: 'espacial', nome: "Espaço e satélites", itens: [{ icon: Compass, label: "Espaço e satélites", href: '/espacial' }] },
   { id: 'robotica', nome: "Robótica e automação", itens: [{ icon: FlaskConical, label: "Robótica e automação", href: '/robotica' }] },
+  { id: 'projetos-sociais', nome: "Projetos sociais", itens: [{ icon: HeartPulse, label: "Projetos sociais", href: '/transparencia-social' }] },
   { id: 'ontologia', nome: "Ontologia preditiva para empresas", itens: [{ icon: Gauge, label: "Ontologia preditiva para empresas", href: '/ontologia-empresas' }] },
   { id: 'fundos', nome: "Plataforma, Governança, Fundos Internacionais", itens: [
     { icon: Building2, label: "Plataforma, Governança, Fundos Internacionais", href: '/fundos-internacionais' },

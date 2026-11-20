@@ -44,6 +44,7 @@ const SEM_MOLDURA = [
   '/espacial',
   '/robotica',
   '/ontologia-empresas',
+  '/transparencia-social',
   '/fundos-internacionais',
   '/ia',
 ]

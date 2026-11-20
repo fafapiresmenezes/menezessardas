@@ -22,6 +22,8 @@ export type EstadoVertente = 'no-ar' | 'em-teste' | 'em-desenvolvimento' | 'em-e
 
 export const VERTENTES = [
   { id: 'direito', estado: 'no-ar', rota: '/inicio' },
+  // Imprescindível para M (20/11/2026): 2% de tudo sai primeiro para causas sociais no Brasil.
+  { id: 'projetos-sociais', estado: 'no-ar', rota: '/transparencia-social' },
   { id: 'fundos', estado: 'no-ar', rota: '/fundos-internacionais' },
   { id: 'predicao', estado: 'no-ar', rota: '/preditiva' },
   { id: 'geolocalizacao', estado: 'no-ar', rota: '/geolocalizacao' },
