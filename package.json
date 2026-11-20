@@ -21,7 +21,7 @@
     "lucide-react": "^0.263.0",
     "maplibre-gl": "^4.7.1",
     "pdf-lib": "^1.17.1",
-    "pdfjs-dist": "4.0.379",
+    "pdfjs-dist": "4.10.38",
     "qrcode": "^1.5.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -13,7 +13,7 @@ const LIMITE_CHARS = 40000
 
 export async function extrairTextoPdf(arquivo: File): Promise<string> {
   const buffer = await arquivo.arrayBuffer()
-  const doc = await pdfjs.getDocument({ data: buffer }).promise
+  const doc = await pdfjs.getDocument({ data: buffer, isEvalSupported: false }).promise
   const partes: string[] = []
   for (let n = 1; n <= doc.numPages; n++) {
     const pagina = await doc.getPage(n)

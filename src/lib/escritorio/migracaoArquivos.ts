@@ -63,7 +63,7 @@ export function tabelasDoJson(dado: unknown): { nome: string; linhas: string[][]
 async function textoDoPdf(f: File): Promise<string> {
   const pdfjs = await import('pdfjs-dist')
   pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`
-  const doc = await pdfjs.getDocument({ data: await f.arrayBuffer() }).promise
+  const doc = await pdfjs.getDocument({ data: await f.arrayBuffer(), isEvalSupported: false }).promise
   const partes: string[] = []
   for (let n = 1; n <= doc.numPages; n++) {
     const c = await (await doc.getPage(n)).getTextContent()
