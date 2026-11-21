@@ -40,15 +40,22 @@ export function camadasSatelite(): CamadaMapa[] {
 
 export interface Cena { id: string; data: string; nuvem: number | null; satelite: string; colecao: string; tilejson?: string; miniatura?: string }
 
+const arred = (x: number) => Math.round(x * 100) / 100 // ~1 km: a consulta externa não leva a posição exata
+
 const STAC_PC = 'https://planetarycomputer.microsoft.com/api/stac/v1'
 
 /** G5.2: cenas por área e período (nunca o planeta inteiro). Usa o catálogo STAC aberto do Planetary Computer. */
 export async function buscarCenas(lat: number, lon: number, colecao: 'sentinel-2-l2a' | 'landsat-c2-l2' = 'sentinel-2-l2a', dias = 60): Promise<Cena[]> {
   const fim = new Date(), ini = new Date(Date.now() - dias * 86400000)
   const d = 0.01
+  // A caixa de busca é montada sobre a posição ARREDONDADA, não sobre a exata. Centrada na
+  // posição exata, a caixa entregaria a posição exata ao catálogo pelo próprio ponto médio,
+  // com toda a precisão do número — era um vazamento com cara de anonimato. Arredondada, a
+  // caixa encaixa numa grade de ~1 km e o catálogo vê a célula, nunca o ponto.
+  const aLat = arred(lat), aLon = arred(lon)
   const r = await fetch(`${STAC_PC}/search`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ collections: [colecao], bbox: [lon - d, lat - d, lon + d, lat + d], datetime: `${ini.toISOString()}/${fim.toISOString()}`, limit: 12, sortby: [{ field: 'datetime', direction: 'desc' }] }),
+    body: JSON.stringify({ collections: [colecao], bbox: [aLon - d, aLat - d, aLon + d, aLat + d], datetime: `${ini.toISOString()}/${fim.toISOString()}`, limit: 12, sortby: [{ field: 'datetime', direction: 'desc' }] }),
   })
   if (!r.ok) throw new Error(`Catálogo de satélite respondeu ${r.status}`)
   const j = await r.json() as { features: { id: string; collection: string; properties: Record<string, unknown>; links: { rel: string; href: string }[]; assets: Record<string, { href: string }> }[] }
@@ -80,7 +87,6 @@ export async function tilesDaCena(cena: Cena): Promise<string[]> {
 export interface Municipio { codigo: number; nome: string; uf: string; populacao2022: number | null; malha: GeoJSON.GeoJSON | null; fontes: string[] }
 
 const semAcento = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim()
-const arred = (x: number) => Math.round(x * 100) / 100 // ~1 km: a consulta externa não leva a posição exata
 
 export async function municipioDe(lat: number, lon: number): Promise<Municipio> {
   const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=10&accept-language=pt-BR&lat=${arred(lat)}&lon=${arred(lon)}`)

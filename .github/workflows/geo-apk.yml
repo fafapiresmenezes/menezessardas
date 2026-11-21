@@ -11,6 +11,15 @@
 name: "THEYE Geo: montar o APK"
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'android/**'
+      - 'capacitor.config.ts'
+      - 'src/pages/GeolocalizacaoPage.tsx'
+      - 'src/lib/geo/**'
+      - 'src/components/geo/**'
+      - 'scripts/geo/conferir-apk.mjs'
+      - '.github/workflows/geo-apk.yml'
   push:
     branches: [main]
     paths:
@@ -19,6 +28,7 @@ on:
       - 'src/pages/GeolocalizacaoPage.tsx'
       - 'src/lib/geo/**'
       - 'src/components/geo/**'
+      - 'scripts/geo/conferir-apk.mjs'
       - '.github/workflows/geo-apk.yml'
 
 permissions:
@@ -66,6 +76,14 @@ jobs:
       - name: Montar o APK
         run: ./gradlew --no-daemon assembleDebug
         working-directory: android
+
+      # A prova que importa: o manifesto COMPILADO dentro do APK, lido com o aapt2. O teste
+      # de unidade lê o nosso arquivo-fonte; o merge do Gradle e os manifestos dos plugins do
+      # Capacitor podem acrescentar permissão ou religar a cópia para a nuvem sem tocar nele.
+      # Se qualquer promessa do app estiver quebrada no arquivo que vai para o celular, a obra
+      # para aqui e o APK NÃO é guardado para baixar.
+      - name: Conferir o APK montado
+        run: node scripts/geo/conferir-apk.mjs android/app/build/outputs/apk/debug/app-debug.apk debug
 
       - name: Guardar o APK para baixar
         uses: actions/upload-artifact@v4
