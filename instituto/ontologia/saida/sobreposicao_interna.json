@@ -1,0 +1,358 @@
+{
+ "familia": 7,
+ "nome": "Sobreposição interna (ferramentas em comum)",
+ "selo": "calculado por nós",
+ "rotulo": "interno",
+ "fonte": "f5-ferramentas.json (rodada 2, 21/11)",
+ "sha256_arquivo": "2119d2e838fc2824dd813526228b1d0b8cb26599cf34198183ad8707a2e6063f",
+ "formula": "Jaccard = |A ∩ B| / |A ∪ B| sobre os endereços das ferramentas",
+ "aviso": "Listas de 2 a 8 ferramentas por nicho: índice fraco, mede só o que o Instituto já catalogou, não a economia.",
+ "ferramentas_por_nicho": {
+  "Jurídica": 8,
+  "Marca/Site": 4,
+  "Contratos Públicos": 3,
+  "Engenharia": 2,
+  "Águas": 5,
+  "Imbono": 2,
+  "Saúde": 4,
+  "Geolocalização": 4,
+  "Ontologia/IA": 4,
+  "Expansão (Agro/Blockchain/Energia/Cyber)": 0
+ },
+ "itens_sem_endereco": {
+  "Jurídica": 2,
+  "Marca/Site": 1,
+  "Contratos Públicos": 1,
+  "Engenharia": 1,
+  "Águas": 0,
+  "Imbono": 1,
+  "Saúde": 1,
+  "Geolocalização": 1,
+  "Ontologia/IA": 1,
+  "Expansão (Agro/Blockchain/Energia/Cyber)": 4
+ },
+ "conferencia": {
+  "pares_em_comum_somados": 1,
+  "recontagem_independente": 1,
+  "aprovado": true
+ },
+ "pares": [
+  {
+   "a": "Jurídica",
+   "b": "Marca/Site",
+   "em_comum": [],
+   "uniao": 12,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Jurídica",
+   "b": "Contratos Públicos",
+   "em_comum": [],
+   "uniao": 11,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Jurídica",
+   "b": "Engenharia",
+   "em_comum": [],
+   "uniao": 10,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Jurídica",
+   "b": "Águas",
+   "em_comum": [],
+   "uniao": 13,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Jurídica",
+   "b": "Imbono",
+   "em_comum": [],
+   "uniao": 10,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Jurídica",
+   "b": "Saúde",
+   "em_comum": [],
+   "uniao": 12,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Jurídica",
+   "b": "Geolocalização",
+   "em_comum": [],
+   "uniao": 12,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Jurídica",
+   "b": "Ontologia/IA",
+   "em_comum": [],
+   "uniao": 12,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Jurídica",
+   "b": "Expansão (Agro/Blockchain/Energia/Cyber)",
+   "em_comum": [],
+   "uniao": 8,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Marca/Site",
+   "b": "Contratos Públicos",
+   "em_comum": [],
+   "uniao": 7,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Marca/Site",
+   "b": "Engenharia",
+   "em_comum": [
+    "blender.org"
+   ],
+   "uniao": 5,
+   "jaccard": 0.2
+  },
+  {
+   "a": "Marca/Site",
+   "b": "Águas",
+   "em_comum": [],
+   "uniao": 9,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Marca/Site",
+   "b": "Imbono",
+   "em_comum": [],
+   "uniao": 6,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Marca/Site",
+   "b": "Saúde",
+   "em_comum": [],
+   "uniao": 8,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Marca/Site",
+   "b": "Geolocalização",
+   "em_comum": [],
+   "uniao": 8,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Marca/Site",
+   "b": "Ontologia/IA",
+   "em_comum": [],
+   "uniao": 8,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Marca/Site",
+   "b": "Expansão (Agro/Blockchain/Energia/Cyber)",
+   "em_comum": [],
+   "uniao": 4,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Contratos Públicos",
+   "b": "Engenharia",
+   "em_comum": [],
+   "uniao": 5,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Contratos Públicos",
+   "b": "Águas",
+   "em_comum": [],
+   "uniao": 8,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Contratos Públicos",
+   "b": "Imbono",
+   "em_comum": [],
+   "uniao": 5,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Contratos Públicos",
+   "b": "Saúde",
+   "em_comum": [],
+   "uniao": 7,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Contratos Públicos",
+   "b": "Geolocalização",
+   "em_comum": [],
+   "uniao": 7,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Contratos Públicos",
+   "b": "Ontologia/IA",
+   "em_comum": [],
+   "uniao": 7,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Contratos Públicos",
+   "b": "Expansão (Agro/Blockchain/Energia/Cyber)",
+   "em_comum": [],
+   "uniao": 3,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Engenharia",
+   "b": "Águas",
+   "em_comum": [],
+   "uniao": 7,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Engenharia",
+   "b": "Imbono",
+   "em_comum": [],
+   "uniao": 4,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Engenharia",
+   "b": "Saúde",
+   "em_comum": [],
+   "uniao": 6,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Engenharia",
+   "b": "Geolocalização",
+   "em_comum": [],
+   "uniao": 6,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Engenharia",
+   "b": "Ontologia/IA",
+   "em_comum": [],
+   "uniao": 6,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Engenharia",
+   "b": "Expansão (Agro/Blockchain/Energia/Cyber)",
+   "em_comum": [],
+   "uniao": 2,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Águas",
+   "b": "Imbono",
+   "em_comum": [],
+   "uniao": 7,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Águas",
+   "b": "Saúde",
+   "em_comum": [],
+   "uniao": 9,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Águas",
+   "b": "Geolocalização",
+   "em_comum": [],
+   "uniao": 9,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Águas",
+   "b": "Ontologia/IA",
+   "em_comum": [],
+   "uniao": 9,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Águas",
+   "b": "Expansão (Agro/Blockchain/Energia/Cyber)",
+   "em_comum": [],
+   "uniao": 5,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Imbono",
+   "b": "Saúde",
+   "em_comum": [],
+   "uniao": 6,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Imbono",
+   "b": "Geolocalização",
+   "em_comum": [],
+   "uniao": 6,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Imbono",
+   "b": "Ontologia/IA",
+   "em_comum": [],
+   "uniao": 6,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Imbono",
+   "b": "Expansão (Agro/Blockchain/Energia/Cyber)",
+   "em_comum": [],
+   "uniao": 2,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Saúde",
+   "b": "Geolocalização",
+   "em_comum": [],
+   "uniao": 8,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Saúde",
+   "b": "Ontologia/IA",
+   "em_comum": [],
+   "uniao": 8,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Saúde",
+   "b": "Expansão (Agro/Blockchain/Energia/Cyber)",
+   "em_comum": [],
+   "uniao": 4,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Geolocalização",
+   "b": "Ontologia/IA",
+   "em_comum": [],
+   "uniao": 8,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Geolocalização",
+   "b": "Expansão (Agro/Blockchain/Energia/Cyber)",
+   "em_comum": [],
+   "uniao": 4,
+   "jaccard": 0.0
+  },
+  {
+   "a": "Ontologia/IA",
+   "b": "Expansão (Agro/Blockchain/Energia/Cyber)",
+   "em_comum": [],
+   "uniao": 4,
+   "jaccard": 0.0
+  }
+ ]
+}
