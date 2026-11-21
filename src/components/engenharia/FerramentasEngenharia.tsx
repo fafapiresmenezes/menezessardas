@@ -8,15 +8,19 @@ import { lerCaixas, detectarConflitos, resumoConflitos, CAIXAS_EXEMPLO, ErroCaix
 import { calcularEstimativa, estimativaParaCSV, LINHAS_EXEMPLO, type LinhaCusto, type ParamEstimativa } from '@/lib/engenharia/estimativa'
 import { CLASSES_AACE } from '@/lib/engenharia/normasEstruturais'
 import { AVISO_ENGENHARIA } from '@/lib/engenharia/calculo'
+import InspecaoObra from './InspecaoObra'
+import CoordenacaoBIM from './CoordenacaoBIM'
 
-type Sub = 'mapa' | 'portico' | 'trelica' | 'ifc' | 'conflitos' | 'custo'
+type Sub = 'mapa' | 'portico' | 'trelica' | 'ifc' | 'conflitos' | 'coordenacao' | 'custo' | 'inspecao'
 const SUBS: { id: Sub; nome: string; dica: string }[] = [
   { id: 'mapa', nome: 'As 8 ferramentas', dica: 'O que cada ferramenta do plano faz hoje e o que falta' },
   { id: 'portico', nome: 'Pórticos e vigas', dica: 'Elementos finitos 2D: esforços, reações, deslocamentos e memória de cálculo' },
   { id: 'trelica', nome: 'Treliça paramétrica', dica: 'Escolhe o tipo, o vão e a altura: sai o desenho, a lista de material e os esforços' },
   { id: 'ifc', nome: 'Arquivo IFC', dica: 'Lê o modelo BIM, aponta defeitos e tira a lista de materiais, sem enviar o arquivo a lugar nenhum' },
   { id: 'conflitos', nome: 'Conflitos entre disciplinas', dica: 'Onde tubo, duto e eletrocalha batem na estrutura, ou passam perto demais' },
+  { id: 'coordenacao', nome: 'Mesa de coordenação', dica: 'Sala ao vivo: a equipe vê os mesmos apontamentos e quem está online' },
   { id: 'custo', nome: 'Estimativa de custo', dica: 'Quantidade × preço, BDI, contingência e faixa de precisão AACE' },
+  { id: 'inspecao', nome: 'Inspeção de obra', dica: 'Lista de verificação no celular, sem internet, com fotos, local e hora' },
 ]
 
 const n = (v: number, c = 2) => (Number.isFinite(v) ? (Math.abs(v) < 1e-9 ? 0 : v).toLocaleString('pt-BR', { minimumFractionDigits: c, maximumFractionDigits: c }) : '—')
@@ -361,16 +365,16 @@ const OITO: { nome: string; prioridade: string; estado: 'no ar' | 'em desenvolvi
   { nome: 'Modelagem paramétrica (CAD)', prioridade: 'P1', estado: 'no ar', sub: 'trelica', hoje: 'Treliça paramétrica (Pratt, Howe, Warren): muda o vão, a altura e os painéis e saem o desenho, a lista de material e os esforços.', falta: 'Outras peças (pórtico de galpão, escada, reservatório), desenho técnico com cotas em DXF e exportação STEP.' },
   { nome: 'Gerenciador IFC', prioridade: 'P1', estado: 'no ar', sub: 'ifc', hoje: 'Lê IFC2x3/IFC4 no navegador, aponta referência quebrada, GlobalId repetido, elemento sem andar e falta de quantidades, e tira a lista de materiais em planilha.', falta: 'Visualização 3D, reparo automático e exportação para outros formatos.' },
   { nome: 'Detector de conflitos', prioridade: 'P1', estado: 'no ar', sub: 'conflitos', hoje: 'Cruzamentos e folgas entre disciplinas por caixas envolventes, com relatório por par de disciplinas. Conferido contra força bruta em 200 peças.', falta: 'Geometria exata das peças, leitura direta das caixas do IFC e sugestão de novo traçado.' },
-  { nome: 'Colaboração BIM em tempo real', prioridade: 'P2', estado: 'em desenvolvimento', hoje: 'Ainda não há tela.', falta: 'Precisa de modelo partilhado no servidor (contas e permissões por empresa, histórico de versões). Depende da separação por escritório já usada na plataforma jurídica.' },
+  { nome: 'Colaboração BIM em tempo real', prioridade: 'P2', estado: 'no ar', sub: 'coordenacao', hoje: 'Mesa de coordenação: quem entra na mesma sala vê ao vivo quem está online e a mesma pauta de apontamentos (elemento, disciplinas, responsável, prazo, situação), com os conflitos detectados virando itens da pauta. Funciona sem internet e sincroniza ao voltar.', falta: 'Gravar a pauta no servidor por empresa, histórico de versões do modelo e visualização 3D partilhada.' },
   { nome: 'Estimativa de custo paramétrica', prioridade: 'P2', estado: 'no ar', sub: 'custo', hoje: 'Quantidade × preço, BDI, contingência, faixa AACE 18R-97, curva ABC, 7 moedas e planilha para baixar.', falta: 'Ligar às tabelas oficiais de preço de cada país e puxar quantidades direto do IFC e da treliça.' },
   { nome: 'Gerador de relatórios', prioridade: 'P2', estado: 'no ar', sub: 'portico', hoje: 'Memória de cálculo automática do pórtico e da treliça (modelo, reações, equilíbrio, deslocamentos, esforços, avisos), para baixar.', falta: 'Relatório em PDF com logotipo e assinatura, laudos e relatórios de medição no mesmo molde.' },
-  { nome: 'App de inspeção de obra', prioridade: 'P3', estado: 'em desenvolvimento', hoje: 'A medição de obra já existe na aba "Medição de obra".', falta: 'Uso sem internet no celular, fotos com local e hora, lista de verificação por serviço e sincronização quando a rede voltar.' },
+  { nome: 'App de inspeção de obra', prioridade: 'P3', estado: 'no ar', sub: 'inspecao', hoje: 'Listas de verificação para 7 serviços (fôrmas e armadura, concretagem, alvenaria, impermeabilização, hidráulica, elétrica, segurança), não conformidade com descrição obrigatória, fotos com hora e local, tudo guardado no aparelho sem internet, relatório e planilha para baixar.', falta: 'Enviar ao servidor da empresa para o escritório ver na hora e assinatura digital do responsável.' },
 ]
 
 function Mapa({ ir }: { ir: (s: Sub) => void }) {
   return (
     <div className="space-y-3" data-testid="ferramentas-mapa">
-      <p className="text-sm text-grafite-claro bg-white p-4 shadow-sm">As 8 ferramentas do Plano Master de Engenharia. Seis já funcionam aqui, na versão que roda no navegador; duas estão em desenvolvimento, com o que falta escrito. {AVISO_ENGENHARIA}</p>
+      <p className="text-sm text-grafite-claro bg-white p-4 shadow-sm">As 8 ferramentas do Plano Master de Engenharia, todas funcionando aqui na versão que roda no navegador. Em cada uma está escrito o que vem na fase seguinte. {AVISO_ENGENHARIA}</p>
       <div className="grid md:grid-cols-2 gap-3">
         {OITO.map(f => (
           <article key={f.nome} className={`${caixa} text-sm space-y-1`}>
@@ -400,7 +404,9 @@ export default function FerramentasEngenharia() {
       {sub === 'trelica' && <Trelica />}
       {sub === 'ifc' && <ArquivoIFC />}
       {sub === 'conflitos' && <Conflitos />}
+      {sub === 'coordenacao' && <CoordenacaoBIM />}
       {sub === 'custo' && <Custo />}
+      {sub === 'inspecao' && <InspecaoObra />}
     </div>
   )
 }

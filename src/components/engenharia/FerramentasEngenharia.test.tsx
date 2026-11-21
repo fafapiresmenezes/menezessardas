@@ -4,11 +4,11 @@ import FerramentasEngenharia, { FERRAMENTAS_PLANO } from './FerramentasEngenhari
 
 describe('aba Ferramentas', () => {
   afterEach(cleanup)
-  it('mostra as 8 ferramentas do plano, 6 no ar e 2 em desenvolvimento', () => {
+  it('mostra as 8 ferramentas do plano, todas no ar', () => {
     render(<FerramentasEngenharia />)
     expect(FERRAMENTAS_PLANO).toHaveLength(8)
-    expect(FERRAMENTAS_PLANO.filter(f => f.estado === 'no ar')).toHaveLength(6)
-    expect(screen.getByTestId('ferramentas-mapa').textContent).toContain('em desenvolvimento')
+    expect(FERRAMENTAS_PLANO.filter(f => f.estado === 'no ar')).toHaveLength(8)
+    expect(FERRAMENTAS_PLANO.every(f => f.sub)).toBe(true)
   })
 
   it('pórtico: o exemplo biapoiado dá reações de 30 kN e a memória abre', () => {
@@ -38,5 +38,30 @@ describe('aba Ferramentas', () => {
     expect(screen.getByTestId('conflitos-total').textContent).toMatch(/\d+ cruzamento/)
     fireEvent.click(screen.getByRole('tab', { name: 'Estimativa de custo' }))
     expect(screen.getByTestId('custo-resumo').textContent).toContain('Total base')
+  })
+
+  it('inspeção: cria, marca itens, exige descrição da NC e guarda no aparelho', () => {
+    localStorage.clear()
+    render(<FerramentasEngenharia />)
+    fireEvent.click(screen.getByRole('tab', { name: 'Inspeção de obra' }))
+    fireEvent.click(screen.getByText('Começar inspeção'))
+    const radios = screen.getAllByRole('radio', { name: 'Não conforme' })
+    fireEvent.click(radios[0])
+    expect(screen.getByTestId('inspecao-resumo').textContent).toContain('1 NC')
+    expect((screen.getByText('Fechar inspeção') as HTMLButtonElement).disabled).toBe(true)
+    expect(JSON.parse(localStorage.getItem('theye-engenharia-inspecoes-v1')!)).toHaveLength(1)
+  })
+
+  it('mesa de coordenação: entra na sala em modo local e adiciona apontamento', () => {
+    localStorage.clear()
+    render(<FerramentasEngenharia />)
+    fireEvent.click(screen.getByRole('tab', { name: 'Mesa de coordenação' }))
+    fireEvent.change(screen.getByTestId('coord-nome'), { target: { value: 'Ana' } })
+    fireEvent.click(screen.getByText('Entrar na sala'))
+    fireEvent.change(screen.getByTestId('coord-titulo'), { target: { value: 'Tubo cruza viga' } })
+    fireEvent.click(screen.getByText('Adicionar'))
+    expect(screen.getByTestId('coord-tabela').textContent).toContain('Tubo cruza viga')
+    fireEvent.click(screen.getByText('Trazer os conflitos do exemplo'))
+    expect(screen.getByTestId('coord-painel').textContent).toMatch(/Abertos\d+/)
   })
 })
