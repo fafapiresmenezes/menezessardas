@@ -1,0 +1,25 @@
+[
+ {
+  "id": "MEC-D1",
+  "enunciado": "Unidade de tratamento de ar com 3,0 m³/s de ar (massa volúmica 1,2 kg/m³, calor específico 1,005 kJ/kg·K) e diferença de temperatura de 12,0 °C na bateria. Qual a potência em toneladas de refrigeração?",
+  "dados": {
+   "caudal_m3_s": 3.0,
+   "rho_kg_m3": 1.2,
+   "cp_kJ_kgK": 1.005,
+   "delta_T_C": 12.0,
+   "kW_por_TR": 3.517
+  },
+  "unidade_esperada": "TR"
+ },
+ {
+  "id": "MEC-D2",
+  "enunciado": "Bomba de água com 40 m³/h a 32 m de altura manométrica, rendimento hidráulico de 0,72 e rendimento do motor de 0,92. Qual a potência eléctrica absorvida?",
+  "dados": {
+   "caudal_m3_h": 40.0,
+   "altura_m": 32.0,
+   "rendimento_bomba": 0.72,
+   "rendimento_motor": 0.92
+  },
+  "unidade_esperada": "kW"
+ }
+]

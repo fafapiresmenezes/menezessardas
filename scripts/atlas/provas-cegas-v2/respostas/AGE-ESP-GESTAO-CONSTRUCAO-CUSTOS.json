@@ -1,0 +1,13 @@
+[
+  {
+    "id": "GES-D1",
+    "resposta": 2500000.0,
+    "passos": "CPI = EV/AC = 720 000 / 900 000 = 0,80; EAC = BAC / CPI = 2 000 000 / 0,80 = 2 500 000."
+  },
+  {
+    "id": "GES-D2",
+    "resposta": 115.8465,
+    "passos": "85,00 x 1,18 = 100,30; x 1,10 = 110,33; x 1,05 = 115,8465 por m3 (encadeado, cada taxa sobre o acumulado).",
+    "duvida": "A moeda não vem indicada no enunciado; o valor arredondado a céntimos seria 115,85."
+  }
+]

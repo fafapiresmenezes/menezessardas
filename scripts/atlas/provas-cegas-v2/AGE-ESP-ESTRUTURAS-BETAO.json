@@ -1,0 +1,27 @@
+[
+ {
+  "id": "BET-D1",
+  "enunciado": "Laje maciça de 0,20 m (betão armado, 25 kN/m³) com revestimento de 1,5 kN/m² e sobrecarga de utilização de 3,0 kN/m². A viga apoia-se simplesmente, tem 6,00 m de vão e recebe 3,00 m de largura de laje. Despreza o peso próprio da viga. Qual o momento de cálculo a meio vão, na combinação fundamental?",
+  "dados": {
+   "h_laje_m": 0.2,
+   "gama_betao_kN_m3": 25,
+   "revestimento_kN_m2": 1.5,
+   "sobrecarga_kN_m2": 3.0,
+   "vao_m": 6.0,
+   "largura_influencia_m": 3.0,
+   "gamaG": 1.35,
+   "gamaQ": 1.5
+  },
+  "unidade_esperada": "kNm"
+ },
+ {
+  "id": "BET-D2",
+  "enunciado": "A mesma viga tem a secção da questão BET-02 (b = 300 mm, d = 450 mm, As = 1570 mm², C30/37), sem armadura de esforço transverso. Qual a razão entre o esforço transverso de cálculo no apoio e o resistente sem estribos?",
+  "dados": {
+   "qEd_kN_m": 39.825,
+   "vao_m": 6.0,
+   "VRdc_kN": 88.225
+  },
+  "unidade_esperada": "—"
+ }
+]

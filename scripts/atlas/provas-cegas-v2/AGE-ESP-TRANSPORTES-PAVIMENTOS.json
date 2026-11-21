@@ -1,0 +1,27 @@
+[
+ {
+  "id": "TRA-D1",
+  "enunciado": "Via com 1 200 camiões por dia nos dois sentidos, factor de equivalência 2,4 eixos-padrão por camião, crescimento de 3% por ano, 20 anos de projecto, 50% num sentido e 80% desse tráfego na faixa de projecto. Quantos eixos-padrão acumulados?",
+  "dados": {
+   "camioes_dia": 1200.0,
+   "factor_equivalencia": 2.4,
+   "crescimento": 0.03,
+   "anos": 20,
+   "factor_sentido": 0.5,
+   "factor_faixa": 0.8
+  },
+  "unidade_esperada": "eixos-padrão"
+ },
+ {
+  "id": "TRA-D2",
+  "enunciado": "Trecho com tempo de percurso em fluxo livre de 10,0 minutos, fluxo de 1 800 veículos por hora e capacidade de 2 000 veículos por hora. Qual o tempo de percurso pela função BPR (α = 0,15, β = 4)?",
+  "dados": {
+   "t0_min": 10.0,
+   "fluxo_v_h": 1800.0,
+   "capacidade_v_h": 2000.0,
+   "alfa": 0.15,
+   "beta": 4
+  },
+  "unidade_esperada": "min"
+ }
+]

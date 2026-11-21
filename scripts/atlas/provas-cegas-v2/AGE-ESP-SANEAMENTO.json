@@ -1,0 +1,28 @@
+[
+ {
+  "id": "SAN-D1",
+  "enunciado": "Cidade de 50 000 habitantes, 150 L/hab·dia, retorno 0,80, K1 = 1,2, K2 = 1,5, mais infiltração de 0,20 L/s por km em 10 km de coletor. Qual o caudal de dimensionamento?",
+  "dados": {
+   "hab": 50000,
+   "consumo_L_hab_dia": 150,
+   "retorno": 0.8,
+   "K1": 1.2,
+   "K2": 1.5,
+   "infiltracao_L_s_km": 0.2,
+   "extensao_km": 10
+  },
+  "unidade_esperada": "L/s"
+ },
+ {
+  "id": "SAN-D2",
+  "enunciado": "Estação de 1000 m³/dia com dose de coagulante de 40 mg/L (produz 0,25 kg de lodo por kg aplicado) e remoção de 30 mg/L de sólidos suspensos com 90% de captura. Qual a massa de lodo seco por dia?",
+  "dados": {
+   "Q_m3_dia": 1000.0,
+   "dose_mg_L": 40.0,
+   "fator_lodo_coagulante": 0.25,
+   "SS_removidos_mg_L": 30,
+   "captura": 0.9
+  },
+  "unidade_esperada": "kg/dia"
+ }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "id": "BET-D1",
+    "resposta": 179.21,
+    "passos": "Cargas por m2: laje 0,20 x 25 = 5,0 + revestimento 1,5 = gk 6,5 kN/m2; x 3,0 m = 19,5 kN/m; qk = 3,0 x 3,0 = 9,0 kN/m; qEd = 1,35 x 19,5 + 1,5 x 9,0 = 39,825 kN/m (EN 1990 eq. 6.10 / 6.10a-b, conforme coeficientes dados); M = qL2/8 = 39,825 x 6,0^2 / 8 = 179,21 kNm."
+  },
+  {
+    "id": "BET-D2",
+    "resposta": 1.354,
+    "passos": "V_Ed no apoio = qEd x L/2 = 39,825 x 6,0 / 2 = 119,475 kN; VRd,c verificado a mao por EC2 6.2.2 (C_Rd,c = 0,18/1,5 = 0,12; k = 1 + sqrt(200/450) = 1,667; rho = 1570/(300 x 450) = 0,01163; (100 rho fck)^(1/3) = 3,268; VRd,c = 0,6535 MPa x 135000 mm2 = 88,2 kN, confirma o dado); razao = 119,475 / 88,225 = 1,354.",
+    "duvida": "A questao pede a razao no apoio, como feito. Se a verificacao for feita na seccao a d do apoio (EC2 6.2.2(6), carga uniforme), V_Ed = 101,55 kN e a razao baixa para 1,151. A seccao BET-02 nao foi fornecida; usei apenas os dados desta questao."
+  }
+]

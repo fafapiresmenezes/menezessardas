@@ -1,0 +1,13 @@
+[
+  {
+    "id": "MAT-D1",
+    "resposta": 160.0,
+    "passos": "Água de projecto = 0,50 x 350 = 175 L/m3; água livre na areia = (4% - 1%) x 500 = 15 kg/m3 (≈15 L); água a juntar = 175 - 15 = 160 L/m3.",
+    "duvida": "Assumi que os 500 kg/m3 são massa seca da areia; se forem massa húmida, a água livre sobe ligeiramente (≈14,4 kg) e a água a juntar fica ≈160,6 L/m3."
+  },
+  {
+    "id": "MAT-D2",
+    "resposta": 25.6,
+    "passos": "fc,cubo = 720 000 N / (150 mm)^2 = 32,0 MPa; fc,cilindro = 0,80 x 32,0 = 25,6 MPa."
+  }
+]

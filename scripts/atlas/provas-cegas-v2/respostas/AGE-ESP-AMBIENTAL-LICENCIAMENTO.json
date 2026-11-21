@@ -1,0 +1,12 @@
+[
+ {
+  "id": "AMB-D1",
+  "resposta": 1340.0,
+  "passos": "Energia anual = 500 kW x 4 000 h = 2 000 000 kWh; gasóleo = 2 000 000 x 0,25 = 500 000 L; CO2 = 500 000 x 2,68 = 1 340 000 kg = 1 340 t CO2/ano."
+ },
+ {
+  "id": "AMB-D2",
+  "resposta": 75.8,
+  "passos": "Soma energética a 10 m: 10 log10(10^8,5 + 10^8,8) = 89,76 dB(A); divergência geométrica 20 log10(50/10) = 13,98 dB; 89,76 - 13,98 = 75,78 dB(A) (conferido somando as duas fontes separadamente a 50 m: 71,02 e 74,02 dB(A) -> 75,78 dB(A))."
+ }
+]

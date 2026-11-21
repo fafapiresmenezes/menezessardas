@@ -78,11 +78,15 @@ q(T, "TRA-03", "Mesma velocidade, sobreelevação 6% e atrito lateral 0,14. Qual
   {"V_km_h": Vk, "e": 0.06, "f": 0.14}, "AASHTO (equilíbrio em curva)",
   "R = V²/(127·(e+f))", R, "m", 0.03, [f"R = 6400/(127·0,20) = {R:.1f} m"])
 S = SSD; den = 100*(math.sqrt(2*1.08)+math.sqrt(2*0.60))**2
-Lc = 4.0*S**2/den
-q(T, "TRA-04", "Curva vertical convexa com variação de rasante de 4%, visibilidade de paragem igual à da questão TRA-02, olho a 1,08 m e obstáculo a 0,60 m. Qual o comprimento mínimo (caso L < S não aplicável)?",
-  {"A_percent": 4.0, "S_m": round(S, 1), "h1_m": 1.08, "h2_m": 0.60},
+# Correcção de 20/11/2026 (defeito meu, não do agente): com A = 4% o L calculado
+# (99,9 m) é menor do que S (128,2 m), logo a hipótese "L > S" da fórmula não se
+# verifica e a questão não tinha resposta única. Com A = 8% fica L = 199,8 m > S,
+# e a fórmula do caso L > S é a certa. O enunciado passa a dizer o caso.
+Lc = 8.0*S**2/den
+q(T, "TRA-04", "Curva vertical convexa com variação de rasante de 8%, visibilidade de paragem igual à da questão TRA-02, olho a 1,08 m e obstáculo a 0,60 m. Qual o comprimento mínimo, no caso L > S?",
+  {"A_percent": 8.0, "S_m": round(S, 1), "h1_m": 1.08, "h2_m": 0.60},
   "AASHTO (curva convexa, caso L > S)", "L = A·S²/(100·(√(2h1)+√(2h2))²)", Lc, "m", 0.03,
-  [f"denominador = {den:.2f}", f"L = {Lc:.1f} m"])
+  [f"denominador = {den:.2f}", f"L = {Lc:.1f} m", f"confere a hipótese: L = {Lc:.1f} m > S = {S:.1f} m"])
 q(T, "TRA-05", "Camada de betume de 5 cm em 5,0 km de via com 7,0 m de largura, massa volúmica 2,4 t/m³. Qual a massa de mistura?",
   {"L_km": 5.0, "largura_m": 7.0, "espessura_m": 0.05, "densidade_t_m3": 2.4},
   "Medição por volume (prática de obra)", "m = L·b·e·ρ", 5000*7.0*0.05*2.4, "t", 0.01,

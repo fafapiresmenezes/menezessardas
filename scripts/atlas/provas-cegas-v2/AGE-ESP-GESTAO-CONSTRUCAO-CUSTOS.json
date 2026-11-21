@@ -1,0 +1,24 @@
+[
+ {
+  "id": "GES-D1",
+  "enunciado": "Empreitada com orçamento total de 2 000 000, valor planeado de 800 000, valor ganho de 720 000 e custo real de 900 000 à data. Qual a estimativa de custo final, pelo índice de desempenho de custo?",
+  "dados": {
+   "BAC": 2000000.0,
+   "PV": 800000.0,
+   "EV": 720000.0,
+   "AC": 900000.0
+  },
+  "unidade_esperada": "unidades monetárias"
+ },
+ {
+  "id": "GES-D2",
+  "enunciado": "Custo directo de 85,00 por m³. Sobre ele incidem 18% de encargos de estaleiro, depois 10% de lucro e depois 5% de imposto, cada um sobre o valor já acumulado. Qual o preço unitário?",
+  "dados": {
+   "custo_directo": 85.0,
+   "encargos": 0.18,
+   "lucro": 0.1,
+   "imposto": 0.05
+  },
+  "unidade_esperada": "por m³"
+ }
+]
