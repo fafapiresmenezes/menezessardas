@@ -1,0 +1,71 @@
+[
+ {
+  "id": "BET-01",
+  "enunciado": "Viga retangular simplesmente armada, b=300 mm, d=450 mm, As=1570 mm² (5Ø20), C30/37, A500. Qual o momento resistente de cálculo?",
+  "dados": {
+   "b_mm": 300.0,
+   "d_mm": 450.0,
+   "As_mm2": 1570.0,
+   "fck_MPa": 30.0,
+   "fyk_MPa": 500.0,
+   "gamma_c": 1.5,
+   "gamma_s": 1.15
+  },
+  "unidade_esperada": "kNm"
+ },
+ {
+  "id": "BET-02",
+  "enunciado": "Mesma viga, sem armadura de esforço transverso. Qual o esforço transverso resistente?",
+  "dados": {
+   "b_mm": 300.0,
+   "d_mm": 450.0,
+   "As_mm2": 1570.0,
+   "fck_MPa": 30.0
+  },
+  "unidade_esperada": "kN"
+ },
+ {
+  "id": "BET-03",
+  "enunciado": "Qual a armadura mínima de tração da mesma secção?",
+  "dados": {
+   "b_mm": 300.0,
+   "d_mm": 450.0,
+   "fck_MPa": 30.0,
+   "fyk_MPa": 500.0
+  },
+  "unidade_esperada": "mm²"
+ },
+ {
+  "id": "BET-04",
+  "enunciado": "Comprimento de amarração de referência de um Ø20 em boas condições de aderência, tensão igual a fyd.",
+  "dados": {
+   "phi_mm": 20,
+   "fck_MPa": 30.0,
+   "fyk_MPa": 500.0,
+   "eta1": 1.0,
+   "eta2": 1.0
+  },
+  "unidade_esperada": "mm"
+ },
+ {
+  "id": "BET-05",
+  "enunciado": "Pilar curto 400×400 mm, C30/37, 4Ø20, carga centrada, adotando αcc = 0,85 (coeficiente de longa duração do anexo nacional). Qual a resistência à compressão?",
+  "dados": {
+   "secao_mm": "400x400",
+   "As_mm2": 1257.0,
+   "fck_MPa": 30.0,
+   "fyk_MPa": 500.0,
+   "alpha_cc": 0.85
+  },
+  "unidade_esperada": "kN"
+ },
+ {
+  "id": "BET-06",
+  "enunciado": "Laje maciça de betão armado com 0,20 m de espessura, massa volúmica 25 kN/m³. Qual o peso próprio por metro quadrado?",
+  "dados": {
+   "h_m": 0.2,
+   "gama_kN_m3": 25.0
+  },
+  "unidade_esperada": "kN/m²"
+ }
+]

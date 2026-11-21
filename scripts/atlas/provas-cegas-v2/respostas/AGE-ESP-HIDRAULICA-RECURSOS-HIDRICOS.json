@@ -1,0 +1,13 @@
+[
+  {
+    "id": "HID-D1",
+    "resposta": 10.34,
+    "passos": "Seção A=(b+z·y)·y=5,76 m²; P=b+2y·√(1+z²)=7,327 m; R=A/P=0,786 m; Manning SI Q=(1/n)·A·R^(2/3)·S^(1/2)=(1/0,015)·5,76·0,8518·0,03162≈10,34 m³/s."
+  },
+  {
+    "id": "HID-D2",
+    "resposta": 24.82,
+    "passos": "V=Q/A=0,06/0,04909=1,222 m/s; hf=f·(L/D)·V²/2g=0,022·3200·0,07615≈5,36 m; H=25,00+5,36=30,36 m; P_hidr=ρgQH=1000·9,81·0,06·30,36≈17,87 kW; P_eixo=P_hidr/η=17,87/0,72≈24,82 kW.",
+    "duvida": "Não foram dadas perdas localizadas (válvulas, curvas, entrada/saída); a resposta considera só perdas contínuas (Darcy-Weisbach). Com perdas localizadas a potência sobe, não desce. Confirmar a existência de acessórios e coeficientes K antes de usar o valor."
+  }
+]

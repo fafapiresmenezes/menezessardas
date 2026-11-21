@@ -4,11 +4,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ONDE_BIBLIOTECA, contarBiblioteca, filtrarBiblioteca, lerBiblioteca, type PecaAtlas } from '@/lib/atlasBiblioteca'
-import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, EMITIDO_AGENTES, RESULTADO_PROVAS, FONTES_ATLAS, MATRIZES, REGRAS_AGENTES, type FichaAgente, type MatrizAgente } from '@/data/agentesEngenharia'
+import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, EMITIDO_AGENTES, RESULTADO_PROVAS, FONTES_ATLAS, MATRIZES, REGRAS_AGENTES, type FichaAgente, type MatrizAgente, RESULTADO_PROVAS_DURAS } from '@/data/agentesEngenharia'
 
 // Quanto é que cada agente já tem para estudar, pela classificação do corpus.
 const ESTANTE = new Map(CLASSIFICACAO_ATLAS.estantes.map(e => [e.agente, e]))
 const NOTA = new Map(RESULTADO_PROVAS.notas.map(n => [n.agente, n]))
+const NOTA_DURA = new Map(RESULTADO_PROVAS_DURAS.notas.map(n => [n.agente, n]))
 
 type SubAba = MatrizAgente | 'atlas' | 'biblioteca' | 'provas'
 
@@ -155,13 +156,13 @@ export default function AgentesEngenharia() {
       )}
       {sub === 'atlas' && (
         <section className="bg-white p-5 shadow-sm overflow-x-auto" data-testid="atlas-fontes">
-          <p className="text-sm mb-3">O Atlas é o corpus de onde os agentes aprendem: programas de doutoramento das melhores universidades, teses e código abertos, com licença registada. Só se guarda ficheiro completo com licença aberta; normas nunca se guardam, só a referência.</p>
+          <p className="text-sm mb-3">O Atlas é o corpus de onde os agentes aprendem: programas de doutoramento de universidades fortes dos seis continentes (Ásia, Europa Oriental e Rússia, Europa Ocidental, América do Norte, América Latina e África), teses, artigos e código abertos, com a licença de cada peça registada tal como vem da fonte. Só se guarda ficheiro completo com licença aberta; normas nunca se guardam, só a referência pelo número.</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5" data-testid="atlas-numeros">
             {[
               { n: ATLAS_RESUMO.total, rotulo: 'itens no corpus', nota: `${ATLAS_RESUMO.internos.toLocaleString('pt-PT')} já eram do Instituto` },
               { n: ATLAS_RESUMO.guardaveis, rotulo: 'com licença aberta', nota: `${ATLAS_RESUMO.soReferencia.toLocaleString('pt-PT')} ficam só como referência` },
               { n: ATLAS_RESUMO.universidades, rotulo: 'universidades mapeadas', nota: `${ATLAS_RESUMO.repositoriosOai} com repositório aberto` },
-              { n: ATLAS_RESUMO.programasVerificados, rotulo: 'programas de doutoramento conferidos', nota: `de ${ATLAS_RESUMO.programasMapeados.toLocaleString('pt-PT')} mapeados` },
+              { n: ATLAS_RESUMO.programasVerificados, rotulo: 'programas de doutoramento confirmados um a um', nota: `de ${ATLAS_RESUMO.programasMapeados.toLocaleString('pt-PT')} mapeados; ${ATLAS_RESUMO.programasComEndereco.toLocaleString('pt-PT')} já com endereço` },
             ].map(c => (
               <div key={c.rotulo} className="border border-navy/15 p-3">
                 <div className="text-2xl text-navy">{c.n.toLocaleString('pt-PT')}</div>
@@ -170,6 +171,18 @@ export default function AgentesEngenharia() {
               </div>
             ))}
           </div>
+          <h3 className="text-navy mb-2">De que parte do mundo vem</h3>
+          <p className="text-xs text-grafite-claro mb-2">A região vem da universidade ou do editor gravado na própria peça. Onde a fonte não diz de onde é, a peça fica em "não determinada": é a maior parte, e é assim que está, sem inventar origem.</p>
+          <table className="w-full text-sm mb-6" data-testid="atlas-por-regiao">
+            <thead><tr className="text-left text-xs uppercase text-grafite-claro"><th className="py-2 pr-3">Região</th><th className="pr-3">Peças</th><th>Países com mais peças</th></tr></thead>
+            <tbody>{ATLAS_RESUMO.porRegiao.map((r, i) => (
+              <tr key={r.nome} className="border-t border-navy/10">
+                <td className="py-1.5 pr-3 text-navy">{r.nome}</td>
+                <td className="pr-3">{r.n.toLocaleString('pt-PT')}</td>
+                <td className="text-xs text-grafite-claro">{i === 0 ? ATLAS_RESUMO.porPais.slice(0, 6).map(x => `${x.nome} (${x.n.toLocaleString('pt-PT')})`).join(', ') : ''}</td>
+              </tr>
+            ))}</tbody>
+          </table>
           <p className="text-xs text-grafite-claro mb-4">Medido em {ATLAS_RESUMO.medidoEm}. A colheita continua, por isso estes números só crescem. Licenças mais comuns: {ATLAS_RESUMO.licencas.slice(0, 4).map(l => `${l.nome} (${l.n.toLocaleString('pt-PT')})`).join(', ')}.</p>
           <h3 className="text-navy mb-2">Por especialidade</h3>
           <table className="w-full text-sm mb-6" data-testid="atlas-por-especialidade">
@@ -185,7 +198,7 @@ export default function AgentesEngenharia() {
             ))}</tbody>
           </table>
           <h3 className="text-navy mb-2">O que cada agente tem para estudar</h3>
-          <p className="text-xs text-grafite-claro mb-2">Cada peça foi arrumada por regra escrita (tema, tipo, licença e menção a Angola, Namíbia ou contexto tropical), não por palpite. {CLASSIFICACAO_ATLAS.classificados.toLocaleString('pt-PT')} peças arrumadas, {CLASSIFICACAO_ATLAS.comContextoAfricano.toLocaleString('pt-PT')} delas com contexto africano ou tropical. Tipos: {CLASSIFICACAO_ATLAS.tipos.map(t => `${t.nome} (${t.n.toLocaleString('pt-PT')})`).join(', ')}.</p>
+          <p className="text-xs text-grafite-claro mb-2">Cada peça foi arrumada por regra escrita (tema, tipo, licença e menção a Angola, Namíbia ou contexto tropical), não por palpite. {CLASSIFICACAO_ATLAS.classificados.toLocaleString('pt-PT')} peças arrumadas, {CLASSIFICACAO_ATLAS.comContextoAfricano.toLocaleString('pt-PT')} delas com contexto africano ou tropical. Tipos: {CLASSIFICACAO_ATLAS.tipos.map(t => `${t.nome} (${t.n.toLocaleString('pt-PT')})`).join(', ')}. Numa segunda passagem, {CLASSIFICACAO_ATLAS.passaramPortaDeQualidade.toLocaleString('pt-PT')} peças passaram a porta de qualidade (o próprio título fala da especialidade onde foram postas) e dessas saíram as {CLASSIFICACAO_ATLAS.naBiblioteca.toLocaleString('pt-PT')} da biblioteca que se pesquisa aqui ao lado.</p>
           <table className="w-full text-sm mb-6" data-testid="atlas-classificacao">
             <thead><tr className="text-left text-xs uppercase text-grafite-claro"><th className="py-2 pr-3">Agente</th><th className="pr-3">Peças</th><th>Com licença aberta</th></tr></thead>
             <tbody>{CLASSIFICACAO_ATLAS.estantes.map(e => (
@@ -218,17 +231,22 @@ export default function AgentesEngenharia() {
             <p><strong>1.ª volta aplicada em {RESULTADO_PROVAS.aplicadoEm}:</strong> prova de {RESULTADO_PROVAS.tipo}, {RESULTADO_PROVAS.questoesTotais} questões, {RESULTADO_PROVAS.notas.length} agentes. {RESULTADO_PROVAS.regra}</p>
             <p className="text-xs text-grafite-claro mt-1">{RESULTADO_PROVAS.limite}</p>
           </div>
+          <div className="border border-navy/15 p-3 mb-4 text-sm" data-testid="provas-volta2">
+            <p><strong>2.ª volta aplicada em {RESULTADO_PROVAS_DURAS.aplicadoEm}:</strong> prova de {RESULTADO_PROVAS_DURAS.tipo}, {RESULTADO_PROVAS_DURAS.questoesTotais} questões, {RESULTADO_PROVAS_DURAS.notas.length} agentes, duas por especialidade.</p>
+            <p className="text-xs text-grafite-claro mt-1">{RESULTADO_PROVAS_DURAS.limite}</p>
+          </div>
           <table className="w-full text-sm" data-testid="tabela-provas">
-            <thead><tr className="text-left text-xs uppercase text-grafite-claro"><th className="py-2 pr-3">Agente</th><th className="pr-3">Matriz</th><th className="pr-3">Nota</th><th className="pr-3">Acertos</th><th>Última prova</th></tr></thead>
+            <thead><tr className="text-left text-xs uppercase text-grafite-claro"><th className="py-2 pr-3">Agente</th><th className="pr-3">Matriz</th><th className="pr-3">1.ª volta</th><th className="pr-3">2.ª volta (duras)</th><th>Última prova</th></tr></thead>
             <tbody>{AGENTES_ENGENHARIA.map(a => {
               const n = NOTA.get(a.id)
+              const nd = NOTA_DURA.get(a.id)
               return (
                 <tr key={a.id} className="border-t border-navy/10">
                   <td className="py-1.5 pr-3">{a.nome}</td>
                   <td className="pr-3">{MATRIZES.find(m => m.id === a.matriz)?.nome}</td>
-                  <td className="pr-3">{n ? `${n.nota.toFixed(1)} · ${n.veredito}` : 'por provar'}</td>
-                  <td className="pr-3">{n ? `${n.certos}/${n.questoes}` : '—'}</td>
-                  <td>{n ? RESULTADO_PROVAS.aplicadoEm : '—'}</td>
+                  <td className="pr-3">{n ? `${n.nota.toFixed(1)} · ${n.certos}/${n.questoes}` : 'por provar'}</td>
+                  <td className="pr-3">{nd ? `${nd.nota.toFixed(1)} · ${nd.certos}/${nd.questoes}` : 'por provar'}</td>
+                  <td>{nd ? RESULTADO_PROVAS_DURAS.aplicadoEm : (n ? RESULTADO_PROVAS.aplicadoEm : '—')}</td>
                 </tr>
               )
             })}</tbody>

@@ -972,45 +972,64 @@ export interface ResumoAtlas {
   repositoriosOai: number
   fontes: ContagemAtlas[]
   licencas: ContagemAtlas[]
+  /** Peças por região do mundo, pela origem da universidade ou do autor. */
+  porRegiao: ContagemAtlas[]
+  /** Programas onde já há endereço, confirmado ou achado por pesquisa. */
+  programasComEndereco: number
+  /** Os 12 países com mais peças, por sigla. */
+  porPais: ContagemAtlas[]
   porEspecialidade: EspecialidadeAtlas[]
 }
 export const ATLAS_RESUMO: ResumoAtlas = {
- "medidoEm": "2026-11-20",
- "total": 12612,
- "externos": 11277,
+ "medidoEm": "2026-11-21",
+ "total": 42270,
+ "externos": 40935,
  "internos": 1335,
- "guardaveis": 7131,
- "soReferencia": 4146,
- "universidades": 50,
- "programasMapeados": 410,
- "programasVerificados": 376,
- "repositoriosOai": 50,
+ "guardaveis": 18375,
+ "soReferencia": 22560,
+ "universidades": 193,
+ "programasMapeados": 2702,
+ "programasVerificados": 384,
+ "programasComEndereco": 445,
+ "repositoriosOai": 21,
  "fontes": [
   {
-   "nome": "openalex",
-   "n": 5376
-  },
-  {
    "nome": "zenodo",
-   "n": 4890
+   "n": 16321
   },
   {
    "nome": "arxiv",
-   "n": 1011
+   "n": 10794
+  },
+  {
+   "nome": "mit-dspace",
+   "n": 8444
+  },
+  {
+   "nome": "openalex",
+   "n": 5376
   }
  ],
  "licencas": [
   {
    "nome": "cc-by-4.0",
-   "n": 3688
+   "n": 13470
   },
   {
    "nome": "não informada",
-   "n": 3098
+   "n": 13244
+  },
+  {
+   "nome": "M.I.T. theses are protected by copyright. They may be viewed",
+   "n": 3548
   },
   {
    "nome": "cc-by",
-   "n": 1932
+   "n": 1964
+  },
+  {
+   "nome": "Article is made available in accordance with the publisher's",
+   "n": 751
   },
   {
    "nome": "cc-by-nc-nd",
@@ -1018,176 +1037,248 @@ export const ATLAS_RESUMO: ResumoAtlas = {
   },
   {
    "nome": "mit-license",
-   "n": 391
+   "n": 598
   },
   {
-   "nome": "other-oa",
-   "n": 342
-  },
-  {
-   "nome": "cc-by-nc",
-   "n": 254
-  },
-  {
-   "nome": "other-open",
-   "n": 224
+   "nome": "Creative Commons Attribution-Noncommercial-Share Alike; http",
+   "n": 596
   },
   {
    "nome": "cc-zero",
+   "n": 579
+  },
+  {
+   "nome": "MIT theses are protected by copyright. They may be viewed, d",
+   "n": 567
+  }
+ ],
+ "porRegiao": [
+  {
+   "nome": "não determinada",
+   "n": 29206
+  },
+  {
+   "nome": "América do Norte",
+   "n": 8681
+  },
+  {
+   "nome": "Ásia",
+   "n": 1191
+  },
+  {
+   "nome": "Europa Ocidental",
+   "n": 595
+  },
+  {
+   "nome": "África",
+   "n": 487
+  },
+  {
+   "nome": "Europa Oriental",
+   "n": 381
+  },
+  {
+   "nome": "América Latina",
+   "n": 193
+  },
+  {
+   "nome": "Rússia",
    "n": 122
   },
   {
-   "nome": "cc-by-sa",
-   "n": 106
+   "nome": "Oceânia",
+   "n": 79
+  }
+ ],
+ "porPais": [
+  {
+   "nome": "US",
+   "n": 8615
   },
   {
-   "nome": "cc-by-nc-sa",
-   "n": 71
+   "nome": "IN",
+   "n": 653
   },
   {
-   "nome": "public-domain",
-   "n": 65
+   "nome": "NG",
+   "n": 279
+  },
+  {
+   "nome": "RU",
+   "n": 122
+  },
+  {
+   "nome": "UA",
+   "n": 119
+  },
+  {
+   "nome": "IT",
+   "n": 90
+  },
+  {
+   "nome": "ID",
+   "n": 79
+  },
+  {
+   "nome": "MY",
+   "n": 79
+  },
+  {
+   "nome": "BR",
+   "n": 76
+  },
+  {
+   "nome": "CN",
+   "n": 75
+  },
+  {
+   "nome": "NL",
+   "n": 67
+  },
+  {
+   "nome": "DE",
+   "n": 67
   }
  ],
  "porEspecialidade": [
   {
    "id": "estruturas-betao",
    "nome": "Estruturas de betão armado e pré-esforçado",
-   "itens": 1094,
-   "guardaveis": 635,
-   "soReferencia": 459,
+   "itens": 2196,
+   "guardaveis": 1426,
+   "soReferencia": 770,
    "internos": 0,
-   "universidades": 47,
-   "programasVerificados": 41
+   "universidades": 193,
+   "programasVerificados": 42
   },
   {
    "id": "estruturas-aco",
    "nome": "Estruturas metálicas e mistas",
-   "itens": 840,
-   "guardaveis": 459,
-   "soReferencia": 381,
+   "itens": 2576,
+   "guardaveis": 1035,
+   "soReferencia": 1541,
    "internos": 0,
-   "universidades": 34,
-   "programasVerificados": 33
+   "universidades": 193,
+   "programasVerificados": 34
   },
   {
    "id": "geotecnia",
    "nome": "Geotecnia e fundações",
-   "itens": 1242,
-   "guardaveis": 715,
-   "soReferencia": 503,
+   "itens": 3445,
+   "guardaveis": 1299,
+   "soReferencia": 2122,
    "internos": 24,
-   "universidades": 42,
+   "universidades": 193,
    "programasVerificados": 36
   },
   {
    "id": "hidraulica-recursos-hidricos",
-   "nome": "Hidráulica, hidrologia e recursos hídricos",
-   "itens": 533,
-   "guardaveis": 412,
-   "soReferencia": 46,
+   "nome": "Hidráulica e recursos hídricos",
+   "itens": 3271,
+   "guardaveis": 1776,
+   "soReferencia": 1420,
    "internos": 75,
-   "universidades": 49,
+   "universidades": 193,
    "programasVerificados": 43
   },
   {
    "id": "saneamento",
-   "nome": "Saneamento: água, esgoto e tratamento",
-   "itens": 521,
-   "guardaveis": 412,
-   "soReferencia": 85,
+   "nome": "Saneamento e tratamento de água",
+   "itens": 2613,
+   "guardaveis": 1493,
+   "soReferencia": 1096,
    "internos": 24,
-   "universidades": 26,
+   "universidades": 193,
    "programasVerificados": 26
   },
   {
    "id": "transportes-pavimentos",
-   "nome": "Transportes, rodovias e pavimentação",
-   "itens": 742,
-   "guardaveis": 437,
-   "soReferencia": 255,
+   "nome": "Transportes e pavimentos",
+   "itens": 3043,
+   "guardaveis": 1308,
+   "soReferencia": 1685,
    "internos": 50,
-   "universidades": 34,
+   "universidades": 193,
    "programasVerificados": 30
   },
   {
    "id": "ambiental-licenciamento",
-   "nome": "Engenharia ambiental e licenciamento",
-   "itens": 1013,
-   "guardaveis": 550,
-   "soReferencia": 417,
+   "nome": "Ambiental e licenciamento",
+   "itens": 2665,
+   "guardaveis": 1500,
+   "soReferencia": 1119,
    "internos": 46,
-   "universidades": 36,
-   "programasVerificados": 35
+   "universidades": 193,
+   "programasVerificados": 37
   },
   {
    "id": "electrotecnia-energia",
-   "nome": "Electrotecnia, redes e energia",
-   "itens": 532,
-   "guardaveis": 415,
-   "soReferencia": 117,
+   "nome": "Electrotecnia e energia",
+   "itens": 4435,
+   "guardaveis": 671,
+   "soReferencia": 3764,
    "internos": 0,
-   "universidades": 20,
-   "programasVerificados": 19
+   "universidades": 193,
+   "programasVerificados": 20
   },
   {
    "id": "mecanica-instalacoes",
-   "nome": "Mecânica, climatização e instalações especiais",
-   "itens": 905,
-   "guardaveis": 494,
-   "soReferencia": 390,
+   "nome": "Mecânica e instalações",
+   "itens": 2713,
+   "guardaveis": 1451,
+   "soReferencia": 1241,
    "internos": 21,
-   "universidades": 14,
-   "programasVerificados": 13
+   "universidades": 193,
+   "programasVerificados": 14
   },
   {
    "id": "materiais-betao",
-   "nome": "Materiais de construção e tecnologia do betão",
-   "itens": 962,
-   "guardaveis": 560,
-   "soReferencia": 352,
+   "nome": "Materiais de construção",
+   "itens": 3512,
+   "guardaveis": 1658,
+   "soReferencia": 1804,
    "internos": 50,
-   "universidades": 39,
-   "programasVerificados": 39
+   "universidades": 193,
+   "programasVerificados": 41
   },
   {
    "id": "gestao-construcao-custos",
-   "nome": "Gestão da construção, planeamento e engenharia de custos",
-   "itens": 950,
-   "guardaveis": 659,
-   "soReferencia": 291,
+   "nome": "Gestão da construção e custos",
+   "itens": 2470,
+   "guardaveis": 1498,
+   "soReferencia": 972,
    "internos": 0,
-   "universidades": 30,
+   "universidades": 193,
    "programasVerificados": 28
   },
   {
    "id": "petroleo-gas",
-   "nome": "Engenharia de petróleo, gás e instalações",
-   "itens": 705,
-   "guardaveis": 476,
-   "soReferencia": 220,
+   "nome": "Petróleo e gás",
+   "itens": 2520,
+   "guardaveis": 989,
+   "soReferencia": 1522,
    "internos": 9,
-   "universidades": 6,
+   "universidades": 193,
    "programasVerificados": 4
   },
   {
    "id": "minas-barragens",
-   "nome": "Engenharia de minas e barragens de rejeitos",
-   "itens": 827,
-   "guardaveis": 489,
-   "soReferencia": 320,
+   "nome": "Minas e barragens de rejeitos",
+   "itens": 2413,
+   "guardaveis": 1126,
+   "soReferencia": 1269,
    "internos": 18,
-   "universidades": 8,
+   "universidades": 193,
    "programasVerificados": 7
   },
   {
    "id": "sistemas-dados-construcao",
-   "nome": "Engenharia de sistemas, dados e IA aplicada à construção",
-   "itens": 752,
-   "guardaveis": 418,
-   "soReferencia": 310,
+   "nome": "Sistemas, dados e IA na construção",
+   "itens": 3404,
+   "guardaveis": 1145,
+   "soReferencia": 2235,
    "internos": 24,
-   "universidades": 25,
+   "universidades": 193,
    "programasVerificados": 22
   }
  ]
@@ -1199,177 +1290,211 @@ export interface ClassificacaoAtlas {
   medidoEm: string
   classificados: number
   comContextoAfricano: number
+  /** Peças cujo título fala, ele mesmo, da especialidade onde foram postas. */
+  passaramPortaDeQualidade: number
+  /** Peças escolhidas para a biblioteca que se pesquisa na tela. */
+  naBiblioteca: number
   tipos: ContagemAtlas[]
   porDecada: ContagemAtlas[]
   estantes: EstanteAgente[]
 }
 export const CLASSIFICACAO_ATLAS: ClassificacaoAtlas = {
- "medidoEm": "2026-11-20",
- "classificados": 11277,
- "comContextoAfricano": 1868,
+ "medidoEm": "2026-11-21",
+ "classificados": 40935,
+ "comContextoAfricano": 2506,
+ "passaramPortaDeQualidade": 21753,
+ "naBiblioteca": 4200,
  "tipos": [
   {
    "nome": "artigo",
-   "n": 9291
-  },
-  {
-   "nome": "software",
-   "n": 1533
+   "n": 30915
   },
   {
    "nome": "tese",
-   "n": 429
+   "n": 5714
+  },
+  {
+   "nome": "software",
+   "n": 2393
   },
   {
    "nome": "dados",
-   "n": 24
+   "n": 1913
   }
  ],
  "porDecada": [
   {
    "nome": "2020",
-   "n": 7232
+   "n": 25702
   },
   {
    "nome": "2010",
-   "n": 2986
+   "n": 11687
   },
   {
    "nome": "2000",
-   "n": 624
+   "n": 2878
   },
   {
    "nome": "1990",
-   "n": 155
+   "n": 243
   },
   {
    "nome": "1980",
-   "n": 82
+   "n": 90
   },
   {
    "nome": "1970",
-   "n": 76
+   "n": 79
   },
   {
    "nome": "1960",
-   "n": 39
+   "n": 41
+  },
+  {
+   "nome": "1950",
+   "n": 25
+  },
+  {
+   "nome": "1910",
+   "n": 35
+  },
+  {
+   "nome": "1900",
+   "n": 34
+  },
+  {
+   "nome": "1890",
+   "n": 22
+  },
+  {
+   "nome": "1880",
+   "n": 26
+  },
+  {
+   "nome": "1870",
+   "n": 20
+  },
+  {
+   "nome": "sem ano",
+   "n": 21
   }
  ],
  "estantes": [
   {
    "agente": "AGE-ESP-AMBIENTAL-LICENCIAMENTO",
-   "itens": 967,
-   "guardaveis": 550
+   "itens": 2619,
+   "guardaveis": 1500
   },
   {
    "agente": "AGE-ESP-ELECTROTECNIA-ENERGIA",
-   "itens": 532,
-   "guardaveis": 415
+   "itens": 4435,
+   "guardaveis": 671
   },
   {
    "agente": "AGE-ESP-ESTRUTURAS-ACO",
-   "itens": 840,
-   "guardaveis": 459
+   "itens": 2576,
+   "guardaveis": 1035
   },
   {
    "agente": "AGE-ESP-ESTRUTURAS-BETAO",
-   "itens": 1094,
-   "guardaveis": 635
+   "itens": 2196,
+   "guardaveis": 1426
   },
   {
    "agente": "AGE-ESP-GEOTECNIA",
-   "itens": 1218,
-   "guardaveis": 715
+   "itens": 3421,
+   "guardaveis": 1299
   },
   {
    "agente": "AGE-ESP-GESTAO-CONSTRUCAO-CUSTOS",
-   "itens": 950,
-   "guardaveis": 659
+   "itens": 2470,
+   "guardaveis": 1498
   },
   {
    "agente": "AGE-ESP-HIDRAULICA-RECURSOS-HIDRICOS",
-   "itens": 458,
-   "guardaveis": 412
+   "itens": 3196,
+   "guardaveis": 1776
   },
   {
    "agente": "AGE-ESP-MATERIAIS-BETAO",
-   "itens": 912,
-   "guardaveis": 560
+   "itens": 3462,
+   "guardaveis": 1658
   },
   {
    "agente": "AGE-ESP-MECANICA-INSTALACOES",
-   "itens": 884,
-   "guardaveis": 494
+   "itens": 2692,
+   "guardaveis": 1451
   },
   {
    "agente": "AGE-ESP-MINAS-BARRAGENS",
-   "itens": 809,
-   "guardaveis": 489
+   "itens": 2395,
+   "guardaveis": 1126
   },
   {
    "agente": "AGE-ESP-PETROLEO-GAS",
-   "itens": 696,
-   "guardaveis": 476
+   "itens": 2511,
+   "guardaveis": 989
   },
   {
    "agente": "AGE-ESP-SANEAMENTO",
-   "itens": 497,
-   "guardaveis": 412
+   "itens": 2589,
+   "guardaveis": 1493
   },
   {
    "agente": "AGE-ESP-SISTEMAS-DADOS-CONSTRUCAO",
-   "itens": 728,
-   "guardaveis": 418
+   "itens": 3380,
+   "guardaveis": 1145
   },
   {
    "agente": "AGE-ESP-TRANSPORTES-PAVIMENTOS",
-   "itens": 692,
-   "guardaveis": 437
+   "itens": 2993,
+   "guardaveis": 1308
   },
   {
    "agente": "AGE-PROD-CLAIMS-FIDIC",
-   "itens": 377,
-   "guardaveis": 271
+   "itens": 777,
+   "guardaveis": 482
   },
   {
    "agente": "AGE-PROD-ESTUDO-PND",
-   "itens": 435,
-   "guardaveis": 281
+   "itens": 1843,
+   "guardaveis": 745
   },
   {
    "agente": "AGE-PROD-GEMEO-OBRA",
-   "itens": 696,
-   "guardaveis": 404
+   "itens": 2232,
+   "guardaveis": 1058
   },
   {
    "agente": "AGE-PROD-HSE-FINANCIADOR",
-   "itens": 1042,
-   "guardaveis": 599
+   "itens": 1485,
+   "guardaveis": 844
   },
   {
    "agente": "AGE-PROD-MATERIAIS-LOCAIS",
-   "itens": 792,
-   "guardaveis": 559
+   "itens": 1160,
+   "guardaveis": 856
   },
   {
    "agente": "AGE-PROD-MEDICAO-AUDITAVEL",
-   "itens": 954,
-   "guardaveis": 584
+   "itens": 3460,
+   "guardaveis": 1341
   },
   {
    "agente": "AGE-PROD-RADAR-CONCURSOS",
-   "itens": 89,
-   "guardaveis": 52
+   "itens": 573,
+   "guardaveis": 295
   },
   {
    "agente": "AGE-PROD-REVISOR-PROJECTOS",
-   "itens": 748,
-   "guardaveis": 451
+   "itens": 1655,
+   "guardaveis": 849
   },
   {
    "agente": "AGE-PROD-TRANSPARENCIA-OBRA",
-   "itens": 212,
-   "guardaveis": 139
+   "itens": 886,
+   "guardaveis": 444
   }
  ]
 }
@@ -1480,18 +1605,115 @@ export const RESULTADO_PROVAS: ResultadoProvas = {
  ]
 }
 
+/** 2.ª volta: as mesmas 12 especialidades, com questões de vários passos. */
+export const RESULTADO_PROVAS_DURAS: ResultadoProvas = {
+ "aplicadoEm": "2026-11-21",
+ "volta": 2,
+ "tipo": "cálculo de vários passos, com armadilha",
+ "questoesTotais": 24,
+ "regra": "Nota = 10 × acertos ÷ questões, com tolerância por questão. 8 ou mais entra; 6 a 8 só com supervisão; menos de 6 não entra.",
+ "limite": "Cada questão exige montar a combinação, converter unidades ou escolher o caso que governa antes de aplicar a fórmula, e cada uma traz uma armadilha declarada no gabarito. Os 12 especialistas acertaram as 24. Isto diz que a parte calculável está sólida e que a bateria de cálculo já não separa os agentes: a próxima volta tem de medir o que esta não mede, que é o julgamento de engenharia, a escolha de norma e a recusa a responder quando falta um dado. Nenhum resultado dispensa a assinatura de engenheiro habilitado.",
+ "notas": [
+  {
+   "agente": "AGE-ESP-AMBIENTAL-LICENCIAMENTO",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-ELECTROTECNIA-ENERGIA",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-ESTRUTURAS-ACO",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-ESTRUTURAS-BETAO",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-GEOTECNIA",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-GESTAO-CONSTRUCAO-CUSTOS",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-HIDRAULICA-RECURSOS-HIDRICOS",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-MATERIAIS-BETAO",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-MECANICA-INSTALACOES",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-PETROLEO-GAS",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-SANEAMENTO",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-TRANSPORTES-PAVIMENTOS",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  }
+ ]
+}
+
 /** Fontes do corpus Atlas: o que já está inventariado e o que tem API aberta para ingerir (levantamento de 20/11/2026). */
 export const FONTES_ATLAS: { nome: string; tipo: string; acesso: string; estado: 'inventariado' | 'por-ingerir'; itens: number | null; url: string }[] = [
   { nome: 'Acervo do Instituto', tipo: 'Interno', acesso: 'Inventário de 18/11/2026 (conteúdo ainda não aberto)', estado: 'inventariado', itens: 216945, url: '' },
   { nome: 'O que o Instituto já tinha (matérias, fichas, estudos de Águas, agentes do acervo)', tipo: 'Interno', acesso: 'Reunido num só índice em 19/11/2026', estado: 'inventariado', itens: 1335, url: '' },
-  { nome: 'Zenodo', tipo: 'Teses, dados e código', acesso: 'API REST aberta, metadados CC0', estado: 'inventariado', itens: 4890, url: 'https://zenodo.org/api/' },
-  { nome: 'arXiv / engrXiv', tipo: 'Artigos', acesso: 'API Atom gratuita', estado: 'inventariado', itens: 1011, url: 'https://export.arxiv.org/api/query' },
+  { nome: 'Zenodo', tipo: 'Teses, dados e código', acesso: 'API REST aberta, metadados CC0', estado: 'inventariado', itens: 16321, url: 'https://zenodo.org/api/' },
+  { nome: 'arXiv / engrXiv', tipo: 'Artigos', acesso: 'API Atom gratuita', estado: 'inventariado', itens: 10794, url: 'https://export.arxiv.org/api/query' },
   { nome: 'OpenAlex', tipo: 'Artigos, teses e dados de acesso aberto', acesso: 'API REST aberta (sem chave)', estado: 'inventariado', itens: 5376, url: 'https://api.openalex.org/works' },
   { nome: 'CORE', tipo: 'Artigos e teses', acesso: 'API gratuita com chave', estado: 'por-ingerir', itens: null, url: 'https://core.ac.uk/' },
   { nome: 'OpenAIRE Graph', tipo: 'Grafo de publicações', acesso: 'APIs públicas', estado: 'por-ingerir', itens: null, url: 'https://graph.openaire.eu/' },
   { nome: 'EThOS (British Library)', tipo: 'Teses do Reino Unido', acesso: 'Dataset bibliográfico em CSV', estado: 'por-ingerir', itens: null, url: 'https://bl.iro.bl.uk/' },
   { nome: 'OATD', tipo: 'Teses abertas', acesso: 'OAI-PMH', estado: 'por-ingerir', itens: null, url: 'https://oatd.org/' },
-  { nome: 'DSpace@MIT, Caltech, TU Delft, ETH, Apollo', tipo: 'Repositórios de universidades', acesso: 'OAI-PMH / páginas públicas', estado: 'por-ingerir', itens: null, url: 'https://dspace.mit.edu/' },
+  { nome: 'DSpace@MIT (teses e relatórios de engenharia)', tipo: 'Repositório de universidade', acesso: 'OAI-PMH aberto', estado: 'inventariado', itens: 8444, url: 'https://dspace.mit.edu/oai/request' },
+  { nome: 'Imperial, Edinburgh, TUM, RWTH Aachen, Ghent, Porto, Cornell, Virginia Tech, UFSC, UnB, Tec de Monterrey, Chile, UNLP, Uniandes', tipo: 'Repositórios de universidades que responderam ao OAI-PMH', acesso: 'OAI-PMH aberto, colheita por fazer', estado: 'por-ingerir', itens: null, url: 'https://spiral.imperial.ac.uk/oai/request' },
   { nome: 'BDTD / RCAAP', tipo: 'Teses lusófonas', acesso: 'A confirmar', estado: 'por-ingerir', itens: null, url: 'https://bdtd.ibict.br/' },
   { nome: 'GitHub (OpenSees, FEniCS, Code_Aster, EPANET, SWMM, OpenFOAM, pandapower)', tipo: 'Código aberto de engenharia', acesso: 'Licença conferida item a item', estado: 'por-ingerir', itens: null, url: 'https://github.com/topics/civil-engineering' },
 ]

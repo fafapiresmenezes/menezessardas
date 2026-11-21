@@ -16,12 +16,27 @@ export default function AguardandoLiberacao({ aoEntrar }: { aoEntrar: () => void
   const [ocupado, setOcupado] = useState(false)
   const [erro, setErro] = useState('')
 
+  // Pedido de M (21/11/2026): quem fica aguardando recebe um e-mail dizendo isso, e o
+  // administrador recebe um e-mail com o link para liberar. A função só manda uma vez por dia.
+  const avisar = async () => {
+    try {
+      if (sessionStorage.getItem('gm-aviso-pendente')) return
+      sessionStorage.setItem('gm-aviso-pendente', '1')
+    } catch { /* sem sessionStorage, o freio fica só no servidor */ }
+    try {
+      const { data } = await supabase.auth.getUser()
+      const email = data?.user?.email
+      if (email) await supabase.functions.invoke('acesso-email', { body: { acao: 'avisar-pendente', email } })
+    } catch { /* o aviso é cortesia: se falhar, a tela continua certa e o servidor ainda freia repetições */ }
+  }
+
   const conferir = async () => {
     setOcupado(true); setErro('')
     try {
       const p = await meuPedidoEntrada()
       if (p.estado === 'dentro') { aoEntrar(); return }
       setPedido(p)
+      if (p.estado === 'pendente') avisar()
     } finally { setOcupado(false) }
   }
   useEffect(() => { conferir() }, [])
@@ -52,11 +67,11 @@ export default function AguardandoLiberacao({ aoEntrar }: { aoEntrar: () => void
 
         {estado === 'pendente' && (
           <div className="mt-4 text-sm text-grafite space-y-3" data-testid="pedido-pendente">
-            <p>Você pediu para entrar no escritório <strong>{pedido?.escritorio}</strong>{pedido?.desde ? <> em {dia(pedido.desde)}</> : null}. Por segurança, ninguém entra em um escritório sem que alguém de lá confirme.</p>
+            <p>Você pediu para entrar no escritório <strong>{pedido?.escritorio}</strong>{pedido?.desde ? <> em {dia(pedido.desde)}</> : null}. Por segurança, ninguém entra sem a liberação do administrador.</p>
             <ol className="list-decimal pl-5 space-y-1">
-              <li>Avise a pessoa que administra o escritório (sócio ou gestor).</li>
-              <li>Ela abre o menu <strong>Área do administrador</strong> e toca em <strong>Liberar</strong> ao lado do seu nome.</li>
-              <li>Volte aqui e toque em <strong>Já fui liberado, conferir</strong>.</li>
+              <li>O administrador já recebeu um e-mail com o seu pedido e o link para liberar.</li>
+              <li>Você também recebeu um e-mail confirmando que a sua conta aguarda liberação.</li>
+              <li>Quando for liberado, volte aqui e toque em <strong>Já fui liberado, conferir</strong>.</li>
             </ol>
           </div>
         )}
@@ -89,7 +104,7 @@ export default function AguardandoLiberacao({ aoEntrar }: { aoEntrar: () => void
           <form onSubmit={enviar} className="mt-5 space-y-3" data-testid="form-escritorio">
             {estado === 'nenhum' && (
               <p className="text-sm text-grafite">
-                Escreva o nome do seu escritório. Se ele já usa a plataforma, o pedido vai para quem administra lá. Se ainda não usa, ele é criado agora e você passa a administrá-lo.
+                Escreva o nome do seu escritório igualzinho ao da lista do Criar conta. Só escritórios já cadastrados pelo Instituto são aceitos; se o seu não estiver na lista, fale com o Instituto.
               </p>
             )}
             <label htmlFor="nome-escritorio" className="block text-xs uppercase tracking-wider text-grafite">Nome do escritório (em letras maiúsculas)</label>

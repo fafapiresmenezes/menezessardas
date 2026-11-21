@@ -1,0 +1,62 @@
+[
+ {
+  "id": "HID-01",
+  "enunciado": "Canal retangular de 3,00 m de base, altura de água 1,20 m, n de Manning 0,015, declive 0,001. Qual o caudal?",
+  "dados": {
+   "b_m": 3.0,
+   "y_m": 1.2,
+   "n": 0.015,
+   "S": 0.001
+  },
+  "unidade_esperada": "m³/s"
+ },
+ {
+  "id": "HID-02",
+  "enunciado": "No mesmo canal, qual o número de Froude e o regime?",
+  "dados": {
+   "V_m_s": 1.6088,
+   "y_m": 1.2
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "HID-03",
+  "enunciado": "Qual a altura crítica desse canal para o caudal calculado?",
+  "dados": {
+   "Q_m3_s": 5.792,
+   "b_m": 3.0
+  },
+  "unidade_esperada": "m"
+ },
+ {
+  "id": "HID-04",
+  "enunciado": "Conduta de 300 mm, 1000 m, caudal 100 L/s, fator de atrito 0,02. Qual a perda de carga?",
+  "dados": {
+   "D_m": 0.3,
+   "L_m": 1000.0,
+   "Q_m3_s": 0.1,
+   "f": 0.02
+  },
+  "unidade_esperada": "m"
+ },
+ {
+  "id": "HID-05",
+  "enunciado": "Bacia de 2,5 km², coeficiente de escoamento 0,70, intensidade 60 mm/h. Qual o caudal de ponta?",
+  "dados": {
+   "C": 0.7,
+   "i_mm_h": 60,
+   "A_km2": 2.5
+  },
+  "unidade_esperada": "m³/s"
+ },
+ {
+  "id": "HID-06",
+  "enunciado": "Descarregador retangular de soleira delgada, 2,00 m de largura, carga 0,30 m, Cd = 0,62. Qual o caudal?",
+  "dados": {
+   "b_m": 2.0,
+   "H_m": 0.3,
+   "Cd": 0.62
+  },
+  "unidade_esperada": "m³/s"
+ }
+]

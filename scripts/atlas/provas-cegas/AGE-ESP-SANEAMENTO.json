@@ -1,0 +1,58 @@
+[
+ {
+  "id": "SAN-01",
+  "enunciado": "Cidade de 50 000 habitantes, consumo 150 L/hab·dia, coeficiente de retorno 0,80. Qual o caudal médio de esgoto?",
+  "dados": {
+   "hab": 50000,
+   "consumo_L_hab_dia": 150.0,
+   "retorno": 0.8
+  },
+  "unidade_esperada": "L/s"
+ },
+ {
+  "id": "SAN-02",
+  "enunciado": "Para a mesma cidade, com K1 = 1,2 e K2 = 1,5, qual o caudal máximo horário?",
+  "dados": {
+   "Qmed_L_s": 69.44,
+   "K1": 1.2,
+   "K2": 1.5
+  },
+  "unidade_esperada": "L/s"
+ },
+ {
+  "id": "SAN-03",
+  "enunciado": "Decantador de 500 m³ tratando 1000 m³/dia. Qual o tempo de retenção?",
+  "dados": {
+   "V_m3": 500,
+   "Q_m3_dia": 1000
+  },
+  "unidade_esperada": "h"
+ },
+ {
+  "id": "SAN-04",
+  "enunciado": "Esse decantador tem 20,0 × 5,0 m em planta. Qual a taxa de escoamento superficial?",
+  "dados": {
+   "area_m2": 100,
+   "Q_m3_dia": 1000
+  },
+  "unidade_esperada": "m³/m²·dia"
+ },
+ {
+  "id": "SAN-05",
+  "enunciado": "Afluente com 300 mg/L de DBO, efluente com 30 mg/L. Qual a eficiência de remoção?",
+  "dados": {
+   "DBO_entrada_mg_L": 300,
+   "DBO_saida_mg_L": 30
+  },
+  "unidade_esperada": "%"
+ },
+ {
+  "id": "SAN-06",
+  "enunciado": "Dose de cloro de 2,0 mg/L num caudal de 1000 m³/dia. Qual o consumo diário?",
+  "dados": {
+   "dose_mg_L": 2.0,
+   "Q_m3_dia": 1000
+  },
+  "unidade_esperada": "kg/dia"
+ }
+]
