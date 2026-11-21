@@ -21,7 +21,7 @@ import ExigirDoisFatores from './ExigirDoisFatores'
 import AceiteContratoSaas from './AceiteContratoSaas'
 import AceiteTermos from './AceiteTermos'
 import { aplicarTema, temaAtual } from '@/lib/tema'
-import { NOME_PLATAFORMA, NOME_INSTITUTO_COMPLETO } from '@/lib/plataforma'
+import { NOME_PLATAFORMA, NOME_INSTITUTO_COMPLETO, SUBTITULO_PLATAFORMA } from '@/lib/plataforma'
 import { listarPessoas, perfilAtual, meuEscritorio, esquecerEscritorio, type MeuEscritorio } from '@/lib/equipe'
 import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
@@ -213,7 +213,7 @@ export default function Layout({ children, title }: LayoutProps) {
       >
         <div className="p-4 border-b border-white/10 flex items-center justify-between gap-2">
           {menuAberto ? (
-            <Marca className="flex-1 min-w-0" marca={projectos ? marca : marcaVisivel} subtitulo={frente ? frente.nome : undefined} />
+            <Marca className="flex-1 min-w-0" marca={projectos ? marca : marcaVisivel} subtitulo={frente ? frente.nome : SUBTITULO_PLATAFORMA} />
           ) : (
             <span className="font-serif text-dourado tracking-widest text-lg mx-auto" aria-hidden="true">
               {marcaVisivel ? marcaVisivel.nome.slice(0, 2).toUpperCase() : 'TH'}

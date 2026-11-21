@@ -30,9 +30,9 @@ export default function FrentesDoInstitutoPage() {
         <div className="mb-10 flex items-center justify-between">
           <Marca tamanho="pequena" tipo="instituto" />
           <Link
-            to="/inicio"
+            to="/instituto"
             className="text-sm text-neutral-300 underline underline-offset-4 hover:text-neutral-100"
-            title="Voltar para o Início da plataforma jurídica"
+            title="Voltar para a área do Instituto"
           >
             ← Início
           </Link>

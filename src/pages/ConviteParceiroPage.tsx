@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import Marca from '@/components/Marca'
 import { problemaDaSenha } from '@/lib/senha'
+import { SUBTITULO_PLATAFORMA } from '@/lib/plataforma'
 
 // Passo 36 (Onda D): página pública de aceite do convite de escritório parceiro. Cria o acesso e entra na plataforma.
 type Convite = { nome_escritorio: string; email: string; funcao: string; aceito: boolean; expirado: boolean }
@@ -30,7 +31,7 @@ export default function ConviteParceiroPage() {
   }
   return (
     <main className="min-h-screen bg-pergaminho">
-      <header className="bg-navy py-6"><Marca /></header>
+      <header className="bg-navy py-6"><Marca subtitulo={SUBTITULO_PLATAFORMA} /></header>
       <div className="max-w-md mx-auto px-4 py-8">
         {convite === undefined && <p className="text-grafite">Carregando…</p>}
         {convite === null && <p role="alert" className="text-grafite">Convite não encontrado. Peça um novo link à sede.</p>}

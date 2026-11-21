@@ -58,7 +58,7 @@ describe('Aceite dos termos no primeiro acesso', () => {
 describe('Marca (monograma provisório)', () => {
   beforeEach(cleanup)
   it('mostra THEYE Institute com subtítulo e versão grande sem subtítulo', () => {
-    const { rerender, container } = render(<Marca />)
+    const { rerender, container } = render(<Marca subtitulo="Suporte Jurídico" />)
     expect(container.textContent).toContain('Theye.club')
     expect(container.textContent).toContain('Suporte Jurídico')
     rerender(<Marca tamanho="grande" comSubtitulo={false} />)

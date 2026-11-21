@@ -1,5 +1,5 @@
 import type { MarcaEscritorio } from '@/lib/marca'
-import { NOME_PLATAFORMA, SUBTITULO_PLATAFORMA, NOME_INSTITUTO_COMPLETO, NOME_PRODUTO_PROJECTOS } from '@/lib/plataforma'
+import { NOME_PLATAFORMA, SUBTITULO_INSTITUTO, NOME_INSTITUTO_COMPLETO, NOME_PRODUTO_PROJECTOS } from '@/lib/plataforma'
 import MarcaOlho from '@/components/MarcaOlho'
 
 interface MarcaProps {
@@ -24,7 +24,9 @@ interface MarcaProps {
  */
 export default function Marca({ tamanho = 'pequena', comSubtitulo = true, className = '', marca = null, subtitulo, tipo = 'plataforma' }: MarcaProps) {
   const grande = tamanho === 'grande'
-  const legenda = subtitulo ?? SUBTITULO_PLATAFORMA
+  // Sem subtítulo pedido, fica a linha do Instituto. "Suporte Jurídico" só aparece onde a tela é do
+  // nicho jurídico e o pede (M, 21/11/2026: a entrada jurídica fica só no nicho jurídico).
+  const legenda = subtitulo ?? SUBTITULO_INSTITUTO
   if (marca) {
     return (
       <div className={`flex flex-col items-center ${className}`} data-testid="marca-parceiro">

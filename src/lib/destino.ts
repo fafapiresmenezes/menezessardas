@@ -56,3 +56,21 @@ export function ultimaFrente(): string | null {
 export function esquecerUltimaFrente(): void {
   try { localStorage.removeItem(CHAVE_ULTIMA) } catch { /* nada a esquecer */ }
 }
+
+/**
+ * A "casa" de quem já entrou e não está pedindo tela nenhuma (M, 21/11/2026: a entrada jurídica
+ * fica SÓ no nicho jurídico). Vale, nesta ordem: o quadradinho pedido no endereço (?ir=), o último
+ * quadradinho que a pessoa usou neste aparelho e, só sem nenhum dos dois, o Início jurídico — que
+ * hoje é a casa dos únicos clientes de fora do Instituto (Sardas e Menezes).
+ */
+export function casaDaPessoa(pedido?: string | null): string {
+  if (pedido && pedido !== DESTINO_PADRAO && DESTINOS_PERMITIDOS.includes(pedido) && !ehEntradaAdmin(pedido)) return pedido
+  return ultimaFrente() ?? '/inicio'
+}
+
+/** A entrada (e-mail e senha) do quadradinho da pessoa, ou a vitrine geral quando não se sabe qual é. */
+export function entradaDaPessoa(pedido?: string | null): string {
+  const ok = (r: string | null | undefined) => !!r && r !== DESTINO_PADRAO && DESTINOS_PERMITIDOS.includes(r) && !ehEntradaAdmin(r)
+  const rota = ok(pedido) ? pedido! : ultimaFrente()
+  return rota && ok(rota) ? entradaPara(rota) : '/login'
+}

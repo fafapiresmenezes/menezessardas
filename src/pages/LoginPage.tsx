@@ -124,6 +124,11 @@ export default function LoginPage() {
   // Pedido de M (21/11/2026 04h34): cada nicho tem a sua área de login e os SEUS clientes.
   // O quadradinho diz o segmento; a lista suspensa do Criar conta mostra só os clientes dele.
   const nichoDestino = destino === '/inicio' ? 'juridico' : (vertenteDestino?.id ?? '')
+  // Pedido de M (21/11/2026): a entrada jurídica fica SÓ no nicho jurídico. O cadastro dos outros
+  // quadradinhos não fala de "escritório de advocacia": fala de empresa ou organização. O texto de
+  // advocacia vale só no quadradinho jurídico e em domínio de escritório parceiro.
+  const ehJuridico = nichoDestino === 'juridico' || !!marca
+  const tc = (k: Chave) => t((ehJuridico ? k : `${k}Geral`) as Chave)
   useEffect(() => {
     let vivo = true
     ;(async () => {
@@ -214,14 +219,18 @@ export default function LoginPage() {
       try {
         // O nome do escritório segue o padrão da casa: tudo em letras maiúsculas, sem espaços sobrando.
         const nomeEscritorio = (escolha === OUTRO ? escritorio : escolha).toUpperCase().replace(/\s+/g, ' ').trim()
-        const r = await acessoEmail({ acao: 'cadastrar', email: email.trim(), senha, escritorio: nomeEscritorio })
-        if (r.ok) { setAvisoCadastro(t('login.avisoContaCriada')); setPrimeiroAcesso(false); return }
+        // Lembra o quadradinho de onde a pessoa se cadastrou: o link de confirmação do e-mail a
+        // devolve à entrada DESTE nicho, e não à jurídica (M, 21/11/2026).
+        if (doSegmento) lembrarUltimaFrente(destino)
+        const ir = doSegmento && !ehEntradaAdmin(destino) ? destino : undefined
+        const r = await acessoEmail({ acao: 'cadastrar', email: email.trim(), senha, escritorio: nomeEscritorio, ir })
+        if (r.ok) { setAvisoCadastro(tc('login.avisoContaCriada')); setPrimeiroAcesso(false); return }
         if (!r.indisponivel) { setErro(r.erro ?? t('erro.criarAcesso')); return }
         const { data, error } = await supabase.auth.signUp({ email, password: senha, options: { data: { escritorio: nomeEscritorio } } })
         if (error) setErro(/rate limit/i.test(error.message ?? '') ? t('erro.muitasContas') : t('erro.criarAcessoPrefixo') + mensagemAmigavel(error))
         else if (data?.session) seguir() // sem confirmação de e-mail: já entra; se o escritório existe, cai na tela de espera
         else {
-          setAvisoCadastro(t('login.avisoContaCriada'))
+          setAvisoCadastro(tc('login.avisoContaCriada'))
           setPrimeiroAcesso(false)
         }
       } catch {
@@ -316,7 +325,7 @@ export default function LoginPage() {
             {entradaAdmin ? t('login.areaAdministrativa') : doSegmento ? `${t('vertentes.entrarEm')} ${nomeDestino}` : NOME_PLATAFORMA}
           </h1>
           <p className="text-sm text-grafite-claro text-center mt-2 mb-7">
-            {primeiroAcesso ? t('login.subtituloCadastro') : t('login.subtitulo')}
+            {primeiroAcesso ? tc('login.subtituloCadastro') : t('login.subtitulo')}
           </p>
 
           {erro && (
@@ -333,7 +342,7 @@ export default function LoginPage() {
 
           {primeiroAcesso && (
             <div role="status" className="mb-5 p-3 bg-atencaoFundo border-l-2 border-atencao text-atencao text-sm">
-              {t('login.avisoPrimeiroAcesso')}
+              {tc('login.avisoPrimeiroAcesso')}
             </div>
           )}
 
@@ -426,8 +435,8 @@ export default function LoginPage() {
 
             {primeiroAcesso && (
               <div>
-                <label htmlFor="lista-escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title={t('login.qualEscritorioTitulo')}>
-                  {t('login.qualEscritorio')}
+                <label htmlFor="lista-escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title={tc('login.qualEscritorioTitulo')}>
+                  {tc('login.qualEscritorio')}
                 </label>
                 <select
                   id="lista-escritorio"
@@ -436,21 +445,21 @@ export default function LoginPage() {
                   value={escolha}
                   onChange={(e) => setEscolha(e.target.value)}
                   required
-                  title={t('login.qualEscritorioTitulo')}
+                  title={tc('login.qualEscritorioTitulo')}
                   className="w-full px-4 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white"
                 >
-                  <option value="">{t('login.escolhaEscritorio')}</option>
+                  <option value="">{tc('login.escolhaEscritorio')}</option>
                   {listaEscritorios.map(n => <option key={n} value={n}>{n}</option>)}
-                  <option value={OUTRO}>{t('login.escritorioForaDaLista')}</option>
+                  <option value={OUTRO}>{tc('login.escritorioForaDaLista')}</option>
                 </select>
-                <p className="text-xs text-grafite-claro mt-1">{t('login.qualEscritorioAjuda')}</p>
+                <p className="text-xs text-grafite-claro mt-1">{tc('login.qualEscritorioAjuda')}</p>
                 {listaEscritorios.length === 0 && (
-                  <p className="text-xs text-atencao mt-1" data-testid="sem-escritorios-do-segmento">{t('login.semEscritoriosDoSegmento')}</p>
+                  <p className="text-xs text-atencao mt-1" data-testid="sem-escritorios-do-segmento">{tc('login.semEscritoriosDoSegmento')}</p>
                 )}
                 {escolha === OUTRO && (
                   <div className="mt-3">
-                    <label htmlFor="escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title={t('login.escritorioRotuloTitulo')}>
-                      {t('login.escritorio')}
+                    <label htmlFor="escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title={tc('login.escritorioRotuloTitulo')}>
+                      {tc('login.escritorio')}
                     </label>
                     <input
                       id="escritorio"
@@ -460,11 +469,11 @@ export default function LoginPage() {
                       value={escritorio}
                       onChange={(e) => setEscritorio(e.target.value.toUpperCase())}
                       required
-                      placeholder={t('login.escritorioExemplo')}
-                      title={t('login.escritorioCampoTitulo')}
+                      placeholder={tc('login.escritorioExemplo')}
+                      title={tc('login.escritorioCampoTitulo')}
                       className="w-full px-4 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado uppercase"
                     />
-                    <p className="text-xs text-grafite-claro mt-1">{t('login.escritorioForaAjuda')}</p>
+                    <p className="text-xs text-grafite-claro mt-1">{tc('login.escritorioForaAjuda')}</p>
                   </div>
                 )}
               </div>
@@ -475,7 +484,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={carregando}
-              title={primeiroAcesso ? t('login.criarAcessoTitulo') : t('login.entrarTitulo')}
+              title={primeiroAcesso ? tc('login.criarAcessoTitulo') : t('login.entrarTitulo')}
               className="w-full bg-navy hover:bg-navy-700 disabled:bg-grafite-claro text-white tracking-wider uppercase text-sm py-3 rounded-sm transition"
             >
               {carregando ? t('login.aguarde') : primeiroAcesso ? t('login.criarAcesso') : t('login.entrar')}
@@ -504,7 +513,7 @@ export default function LoginPage() {
                   setAvisoCadastro('')
                   setPrimeiroAcesso(v => !v)
                 }}
-                title={primeiroAcesso ? t('login.jaTenhoAcessoTitulo') : t('login.criarContaTitulo')}
+                title={primeiroAcesso ? t('login.jaTenhoAcessoTitulo') : tc('login.criarContaTitulo')}
                 className="block mx-auto mt-3 min-h-[44px] text-sm text-navy underline underline-offset-4 hover:text-dourado-escuro"
               >
                 {primeiroAcesso ? t('login.jaTenhoAcesso') : t('login.criarConta')}
