@@ -77,7 +77,7 @@ jobs:
       - name: Conferir o histórico da régua contra o git
         run: node scripts/geo/historico-nota.mjs --conferir
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: geo-medicoes

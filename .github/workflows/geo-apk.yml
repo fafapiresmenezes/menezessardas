@@ -91,7 +91,7 @@ jobs:
         run: node scripts/geo/conferir-apk.mjs android/app/build/outputs/apk/debug/app-debug.apk debug
 
       - name: Guardar o APK para baixar
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: theye-geo-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
@@ -126,7 +126,7 @@ jobs:
 
       - name: Guardar o APK de publicacao
         if: env.TEM_CHAVE == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: theye-geo-apk-publicacao
           path: android/app/build/outputs/apk/release/app-release.apk
