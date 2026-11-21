@@ -39,6 +39,12 @@ describe('leitor IFC', () => {
     expect(lixo.problemas.filter(p => p.gravidade === 'erro').length).toBeGreaterThanOrEqual(2)
   })
 
+  it('texto hostil com muitas aspas não trava o leitor (sem retrocesso exponencial)', () => {
+    const t0 = Date.now()
+    lerIFC(`ISO-10303-21;\nDATA;\n#0=0('${"''".repeat(20000)}`)
+    expect(Date.now() - t0).toBeLessThan(1000)
+  })
+
   it('não confunde ponto e vírgula dentro de string com fim de instância', () => {
     const t = IFC_EXEMPLO.replace("'Parede bloco 14'", "'Parede; bloco 14 (fachada)'")
     const r = lerIFC(t)

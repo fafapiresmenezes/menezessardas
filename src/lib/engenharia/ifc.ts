@@ -59,6 +59,43 @@ export function separarArgs(s: string): string[] {
   return out
 }
 
+/** separa a seção DATA em instâncias pelo ; que fica fora de string ('' é aspa escapada) */
+export function cortarInstancias(dados: string): string[] {
+  const out: string[] = []
+  let ini = 0, emString = false
+  for (let k = 0; k < dados.length; k++) {
+    const ch = dados[k]
+    if (ch === "'") { if (emString && dados[k + 1] === "'") { k++; continue } emString = !emString; continue }
+    if (ch === ';' && !emString) { out.push(dados.slice(ini, k)); ini = k + 1 }
+  }
+  return out
+}
+
+/** referências #n fora de string e conteúdo das strings, numa só passada linear */
+export function varrerArgs(args: string): { refs: number[]; strings: string[] } {
+  const refs: number[] = [], strings: string[] = []
+  let k = 0
+  while (k < args.length) {
+    const ch = args[k]
+    if (ch === "'") {
+      let txt = ''; k++
+      while (k < args.length) {
+        if (args[k] === "'") { if (args[k + 1] === "'") { txt += "'"; k += 2; continue } k++; break }
+        txt += args[k++]
+      }
+      strings.push(txt); continue
+    }
+    if (ch === '#') {
+      let j = k + 1
+      while (j < args.length && args[j] >= '0' && args[j] <= '9') j++
+      if (j > k + 1) refs.push(Number(args.slice(k + 1, j)))
+      k = j; continue
+    }
+    k++
+  }
+  return { refs, strings }
+}
+
 const tirarAspas = (a: string | undefined) => (a && a.startsWith("'") && a.endsWith("'") ? a.slice(1, -1).replace(/''/g, "'") : '')
 const numero = (a: string | undefined) => { const v = Number(a); return Number.isFinite(v) ? v : NaN }
 
@@ -73,14 +110,13 @@ export function lerIFC(texto: string): ResultadoIFC {
   const dados = t.split(/\bDATA\s*;/i)[1] ?? ''
   const ents = new Map<number, EntidadeIFC>()
   const duplicadosId: number[] = []
-  // uma instância: #123 = TIPO( ... );   (o ; final fora de string)
-  const re = /#(\d+)\s*=\s*([A-Z0-9_]+)\s*\(((?:'(?:[^']|'')*'|[^;'])*)\)\s*;/gi
-  for (const m of dados.matchAll(re)) {
+  // uma instância: #123 = TIPO( ... );   — corta no ; fora de string com um leitor linear (sem regex que retrocede)
+  for (const inst of cortarInstancias(dados)) {
+    const m = /^\s*#(\d+)\s*=\s*([A-Za-z0-9_]+)\s*\(([\s\S]*)\)\s*$/.exec(inst)
+    if (!m) continue
     const id = Number(m[1]); const tipo = m[2].toUpperCase(); const args = m[3]
     if (ents.has(id)) duplicadosId.push(id)
-    const semStrings = args.replace(/'(?:[^']|'')*'/g, "''")
-    const refs = [...semStrings.matchAll(/#(\d+)/g)].map(r => Number(r[1]))
-    const strings = [...args.matchAll(/'((?:[^']|'')*)'/g)].map(r => r[1].replace(/''/g, "'"))
+    const { refs, strings } = varrerArgs(args)
     ents.set(id, { id, tipo, args, refs, strings })
   }
   if (ents.size === 0) problemas.push({ gravidade: 'erro', codigo: 'vazio', texto: 'Nenhuma instância encontrada na seção DATA.', ids: [] })
