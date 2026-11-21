@@ -9,16 +9,32 @@
 // nenhuma saída de rede existe fora do registro abaixo. Saída nova faz este teste falhar, e só
 // passa depois de alguém escrever no registro para onde ela vai, o que leva e por quê.
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { readFileSync, globSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import { buscarCenas, municipioDe } from './fontes'
 
 afterEach(() => vi.restoreAllMocks())
 
-/** Os arquivos do geo que vão para o navegador do titular. Teste e tipo de fora. */
+/**
+ * Os arquivos do geo que vão para o navegador do titular. Teste de fora.
+ *
+ * A varredura é feita com readdirSync e não com fs.globSync de propósito: o globSync só existe no
+ * Node 22, e o fluxo que monta o APK roda no Node 20. Um portão que não roda em todo lugar onde a
+ * obra roda não é um portão.
+ */
+function varrer(pasta: string): string[] {
+  let achados: string[] = []
+  for (const item of readdirSync(pasta, { withFileTypes: true })) {
+    const caminho = `${pasta}/${item.name}`
+    if (item.isDirectory()) achados = achados.concat(varrer(caminho))
+    else if (/\.(ts|tsx)$/.test(item.name) && !item.name.endsWith('.d.ts')) achados.push(caminho)
+  }
+  return achados
+}
+
 const ARQUIVOS = [
-  ...globSync('src/lib/geo/*.ts'),
-  ...globSync('src/components/geo/**/*.{ts,tsx}'),
-  ...globSync('src/pages/geo/**/*.{ts,tsx}'),
+  ...varrer('src/lib/geo'),
+  ...varrer('src/components/geo'),
+  ...varrer('src/pages/geo'),
   'src/pages/GeolocalizacaoPage.tsx',
 ].filter(a => !a.includes('.test.'))
 
