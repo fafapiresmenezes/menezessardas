@@ -7,7 +7,15 @@ import { VERTENTES } from '@/data/vertentes'
  * Endereço é coisa que qualquer um escreve, então o destino só vale se estiver NESTA lista: sem
  * isso, alguém mandaria um link nosso que, depois da senha, levaria a pessoa para onde ele quisesse.
  */
-export const DESTINOS_PERMITIDOS: readonly string[] = [...VERTENTES.map(v => v.rota), '/caderno-de-produtos', '/instituto']
+/** A plataforma de gestão do Instituto inteiro, aberta pelo símbolo do ouro (M, 21/11/2026). */
+export const ROTA_ADMIN = '/gestao-instituto'
+
+export const DESTINOS_PERMITIDOS: readonly string[] = [...VERTENTES.map(v => v.rota), '/caderno-de-produtos', '/instituto', ROTA_ADMIN]
+
+/** Entrada administrativa: só quem administra o Instituto passa dela. */
+export function ehEntradaAdmin(rota: string): boolean {
+  return rota === ROTA_ADMIN || rota === '/instituto'
+}
 
 // Depois da senha, sem frente escolhida, a pessoa cai na área do Instituto (governança), não no jurídico (M, 19/11/2026).
 export const DESTINO_PADRAO = '/instituto'

@@ -5,13 +5,14 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import Marca from '@/components/Marca'
 import { NOME_PLATAFORMA } from '@/lib/plataforma'
 import { marcaPorDominio, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
-import { esquecerEscritorio } from '@/lib/equipe'
+import { esquecerEscritorio, ehInstituto } from '@/lib/equipe'
+import { SimboloOuro } from '@/components/EntradaMembros'
 import { useTexto } from '@/lib/i18n'
 import SeletorIdioma from '@/components/SeletorIdioma'
 import Vertentes from '@/components/Vertentes'
 import Produtos from '@/components/Produtos'
 import Doacoes from '@/components/Doacoes'
-import { destinoSeguro, DESTINO_PADRAO, DESTINOS_PERMITIDOS, lembrarUltimaFrente } from '@/lib/destino'
+import { destinoSeguro, DESTINO_PADRAO, DESTINOS_PERMITIDOS, lembrarUltimaFrente, ehEntradaAdmin } from '@/lib/destino'
 import AberturaInstituto from '@/components/AberturaInstituto'
 import { VERTENTES } from '@/data/vertentes'
 import type { Chave } from '@/lib/i18n'
@@ -118,7 +119,7 @@ export default function LoginPage() {
   // embaixo, e parecia que o botão não funcionava.
   const vertenteDestino = pedidoValido ? VERTENTES.find(v => v.rota === destino) : undefined
   const nomeDestino = vertenteDestino ? t(`vertente.${vertenteDestino.id}.nome` as Chave)
-    : !pedidoValido ? '' : destino === '/caderno-de-produtos' ? t('produtos.titulo') : destino === '/instituto' ? t('login.entradaApoio') : ''
+    : !pedidoValido ? '' : destino === '/caderno-de-produtos' ? t('produtos.titulo') : ehEntradaAdmin(destino) ? t('login.entradaAdministracao') : ''
   const doSegmento = !!nomeDestino
   useEffect(() => {
     if (!doSegmento) return
@@ -127,13 +128,34 @@ export default function LoginPage() {
   }, [doSegmento, destino])
   // Pedido de M (19/11/2026): a entrada com e-mail e senha não fica na primeira tela. Ela só aparece
   // depois que a pessoa clica no quadradinho da frente dela (ou em domínio próprio de escritório).
-  // Pedido de M (19/11/2026 21h17): o quadrado de e-mail e senha só existe na Plataforma jurídica.
-  // Os outros quadradinhos apresentam a frente e apontam a entrada para lá.
-  const entradaComCartao = destino === '/inicio'
-  const mostrarCartao = (doSegmento && entradaComCartao) || !!marca || pedirCodigo
+  // Pedido de M (21/11/2026): tudo segmentado. Cada quadradinho (Projetos sociais, Engenharia…) e o
+  // símbolo do ouro (administração do Instituto) abrem o SEU quadro de e-mail e senha, com o nome
+  // daquela plataforma. Nenhum deles manda mais para a entrada da Plataforma jurídica.
+  const mostrarCartao = doSegmento || !!marca || pedirCodigo
+  // O cadastro pede o escritório: é coisa da Plataforma jurídica (ou do domínio de um escritório
+  // parceiro). Nas outras plataformas e na administração, só entra quem já recebeu acesso.
+  const permiteCadastro = destino === '/inicio' || !!marca
   // Entrada geral: quem escolheu a língua e chegou sem segmento nem marca de escritório parceiro.
   const entradaGeral = !marca && !doSegmento && !mostrarCartao
-  const seguir = () => { lembrarUltimaFrente(destino); navigate(destino) }
+  // Entrada administrativa (M, 21/11/2026): login e senha só da administração do Instituto. Quem
+  // não está na lista de administradores (configuracoes.instituto_admins, conferida no banco por
+  // eh_admin_instituto) é desconectado na hora e fica nesta tela, sem cair em outra plataforma.
+  const entradaAdmin = pedidoValido && ehEntradaAdmin(destino) && !marca
+  const seguir = async () => {
+    if (entradaAdmin) {
+      esquecerEscritorio()
+      let ok = false
+      try { ok = await ehInstituto() } catch { ok = false }
+      if (!ok) {
+        esquecerEscritorio()
+        await supabase.auth.signOut()
+        setPedirCodigo(false)
+        setErro(t('login.soAdministracao'))
+        return
+      }
+    }
+    lembrarUltimaFrente(destino); navigate(destino)
+  }
 
   // Dois fatores: se a conta tem aplicativo autenticador, a sessão só vale depois do código (nível aal2).
   const precisaCodigo = async () => {
@@ -149,7 +171,7 @@ export default function LoginPage() {
       if (!fator) { setErro(t('erro.semAutenticador')); return }
       const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId: fator.id, code: codigo.replace(/\s/g, '') })
       if (error) setErro(t('erro.codigoErrado'))
-      else seguir()
+      else await seguir()
     } finally { setCarregando(false) }
   }
 
@@ -210,7 +232,7 @@ export default function LoginPage() {
     try {
       const { error } = await supabase.auth.signInWithPassword(captchaLigado() ? { email, password: senha, options: { captchaToken: comprovante } } : { email, password: senha })
       if (captchaLigado()) setRodadaRobo(n => n + 1)
-      if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else seguir() }
+      if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else await seguir() }
       else if (/captcha/i.test(error.message ?? '')) setErro(mensagemAmigavel(error))
       else if (/not confirmed/i.test(error.message ?? '')) setErro(t('erro.emailNaoConfirmado'))
       else if (error.status === 400 || error.status === 401 || /invalid/i.test(mensagemAmigavel(error))) setErro(t('erro.credenciais'))
@@ -228,10 +250,20 @@ export default function LoginPage() {
           20/11/2026 (tela cheia, história, ontologia, frentes). Pedido de M nesta mesma tela. */}
       {entradaGeral && <div className="-mx-4 -mt-10 md:-mt-14"><AberturaInstituto /></div>}
       <div className="mx-auto w-full max-w-6xl">
-      <div className={mostrarCartao ? 'grid items-center gap-10 lg:grid-cols-[1fr_minmax(0,28rem)]' : 'grid items-center gap-8'}>
+      {/* Entrada administrativa: tela própria, centrada, com o símbolo do ouro em destaque (M, 21/11/2026:
+          "tá no cantinho, melhora"). Nada de vitrine de frentes nem de plataforma jurídica aqui. */}
+      {entradaAdmin && (
+        <div className="porta mx-auto mb-10 flex max-w-xl flex-col items-center pt-6 text-center" data-testid="cabecalho-administracao">
+          <SimboloOuro largura={180} className="drop-shadow-[0_0_24px_rgba(201,162,74,0.45)]" />
+          <p className="mt-8 text-xs font-semibold uppercase tracking-[0.35em] text-[#C9A24A]">{t('login.areaAdministrativa')}</p>
+          <h1 className="mt-4 font-serif text-4xl leading-tight tracking-[0.12em] md:text-5xl">INSTITUTO THEYE</h1>
+          <p data-testid="resumo-administracao" className="mt-5 text-base leading-relaxed text-neutral-200">{t('login.entradaAdministracaoResumo')}</p>
+        </div>
+      )}
+      <div className={entradaAdmin ? 'mx-auto grid w-full max-w-md' : mostrarCartao ? 'grid items-center gap-10 lg:grid-cols-[1fr_minmax(0,28rem)]' : 'grid items-center gap-8'}>
         {/* Lado de quem chega: o Instituto inteiro, não só o jurídico. Em domínio de escritório
             parceiro (marca própria) este lado mostra só a marca dele. */}
-        {!entradaGeral && (
+        {!entradaGeral && !entradaAdmin && (
         <div className="porta text-center lg:text-left" data-testid="porta-instituto">
           <div className="flex justify-center lg:justify-start mb-6">
             <Marca tamanho="grande" marca={marca} tipo="instituto" subtitulo={t('marca.instituto')} />
@@ -273,7 +305,7 @@ export default function LoginPage() {
             <p data-testid="so-membros" className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-grafite">{t('login.soMembros')}</p>
           )}
           <h1 className="font-serif text-2xl text-navy text-center" data-testid="titulo-do-cartao">
-            {doSegmento ? `${t('vertentes.entrarEm')} ${nomeDestino}` : NOME_PLATAFORMA}
+            {entradaAdmin ? t('login.areaAdministrativa') : doSegmento ? `${t('vertentes.entrarEm')} ${nomeDestino}` : NOME_PLATAFORMA}
           </h1>
           <p className="text-sm text-grafite-claro text-center mt-2 mb-7">
             {primeiroAcesso ? t('login.subtituloCadastro') : t('login.subtitulo')}
@@ -453,7 +485,7 @@ export default function LoginPage() {
             >
               {t('login.esqueciSenha')}
             </button>
-            {supabaseConfigurado && (
+            {supabaseConfigurado && permiteCadastro && (
               <button
                 type="button"
                 onClick={() => {
@@ -470,20 +502,6 @@ export default function LoginPage() {
           </div>
         </div>
 
-        )}
-
-        {doSegmento && !mostrarCartao && (
-          <div className="rounded-sm border border-white/20 p-8 text-center" data-testid="entrada-pela-juridica">
-            <p className="text-base leading-relaxed text-neutral-100">{t('login.entradaNaJuridica')}</p>
-            <Link
-              to="/login?ir=%2Finicio"
-              title={t('login.entradaNaJuridicaDica')}
-              data-testid="ir-entrada-juridica"
-              className="mt-5 inline-block bg-[#fff] px-6 py-3 text-sm font-semibold uppercase tracking-wider text-[#000] no-underline transition hover:bg-neutral-200"
-            >
-              {t('login.entradaNaJuridicaBotao')}
-            </Link>
-          </div>
         )}
 
         {!doSegmento && !marca && (
