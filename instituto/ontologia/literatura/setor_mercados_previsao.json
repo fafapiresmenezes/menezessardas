@@ -225,7 +225,9 @@
       "onde": "p. 21, Tabela 3"
      }
     ],
-    "obs": "Os autores não medem o viés do favorito contra o azarão ('deixamos de lado', p. 4). Sem desvio padrão nem intervalo."
+    "obs": "Os autores não medem o viés do favorito contra o azarão ('deixamos de lado', p. 4). Sem desvio padrão nem intervalo.",
+    "sha256_pdf": null,
+    "conferencia_local": "NÃO conferido em arquivo: o site da Kalshi bloqueia download automático (página de checagem de robô no lugar do PDF), então não há cópia com impressão digital. Números lidos da leitura do PDF pela web em 21/11; valem como 'da literatura, sem cópia conferível' até M ou alguém baixar o PDF à mão."
    },
    {
     "id": "K2",
@@ -255,9 +257,12 @@
       "onde": "p. 8, Tabela 1"
      }
     ],
-    "obs": "Estudo da própria Kalshi sobre a própria Kalshi: conflito de interesse declarado pelo tipo de autor. Sem desvio padrão nem intervalo."
+    "obs": "Estudo da própria Kalshi sobre a própria Kalshi: conflito de interesse declarado pelo tipo de autor. Sem desvio padrão nem intervalo.",
+    "sha256_pdf": null,
+    "conferencia_local": "NÃO conferido em arquivo: o site da Kalshi bloqueia download automático (página de checagem de robô no lugar do PDF), então não há cópia com impressão digital. Números lidos da leitura do PDF pela web em 21/11; valem como 'da literatura, sem cópia conferível' até M ou alguém baixar o PDF à mão."
    }
   ],
-  "uso_na_arvore": "A Tabela 2 de K1 mostra o erro caindo de 0,0631 para 0,0090 quando o volume passa de menos de 10 mil para 200 mil dólares ou mais. Isso sustenta o piso de 10 mil dólares que usamos para guardar um mercado. Não transforma o preço em predição nossa."
+  "uso_na_arvore": "A Tabela 2 de K1 mostra o erro caindo de 0,0631 para 0,0090 quando o volume passa de menos de 10 mil para 200 mil dólares ou mais (número da literatura sem cópia conferível). Daí o piso de 10 mil que usamos para guardar um mercado, aplicado na unidade de cada plataforma: dólares negociados na Polymarket e contratos de US$ 1 na Kalshi. Não transforma o preço em predição nossa.",
+  "selo_dos_numeros": "da literatura, sem cópia conferível"
  }
 }

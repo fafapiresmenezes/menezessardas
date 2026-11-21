@@ -40,8 +40,12 @@ API = "https://atlas.hks.harvard.edu/api/graphql"
 ANO = 2024
 # Tentativa 3, declarada ANTES de rodar (21/11, 09h20 UTC): o Atlas mede a proximidade com 50 anos de dados;
 # 1 ano só reprovou duas vezes no critério "≥ 80% no top 5%". Aqui juntamos os 10 anos de 2015 a 2024
-# (cada país-ano conta como uma observação, como no artigo de 2007). Seja qual for o resultado, ele é
-# publicado como está; não haverá quarta tentativa nesta rodada.
+# (cada país-ano conta como uma observação; escolha nossa, não conferida no texto do artigo de 2007).
+# Seja qual for o resultado, ele é publicado como está; não haverá quarta tentativa de critério.
+# Rodada 5: correção de DEFEITO achado na revisão (não é tentativa nova): o código XXXX
+# ("Trade data discrepancies", diferença estatística do comércio) não é produto e saiu da conta.
+# Limites anotados: o filtro de países usa só 2024 em toda a janela; ninguém testou se o critério
+# "80% no top 5%" é alcançável nem com a φ do próprio Atlas (o mapa do Atlas é árvore + corte).
 ANOS = (2015, 2024)
 
 NICHOS = {
@@ -85,7 +89,7 @@ def main():
     regs = []
     prod, h = pergunta('{ productHs92(productLevel: 4, servicesClass: unilateral){ productId code nameShortEn productType } }', "produtos.json")
     regs.append({"arquivo": "produtos.json", "sha256": h})
-    prod = [p for p in prod["data"]["productHs92"] if p["code"] != "unspecified"]
+    prod = [p for p in prod["data"]["productHs92"] if p["code"] not in ("unspecified", "XXXX")]
     loc, h = pergunta("{ locationCountry { countryId iso3Code nameShortEn inRankings } }", "paises_v2.json")
     regs.append({"arquivo": "paises_v2.json", "sha256": h})
     todos = loc["data"]["locationCountry"]
@@ -193,7 +197,8 @@ def main():
                   "classificacao": "HS92, 4 dígitos, mais serviços", "anos": list(ANOS), "observacoes_pais_ano": int(tem.sum()), "paises": C, "paises_no_cadastro": len(todos),
                   "filtro_de_paises": "população ≥ 1 milhão e (exportação + importação)/2 ≥ 1 bilhão de dólares em 2024 (regra publicada no FAQ do Atlas para os rankings)",
                   "diferenca_do_atlas": "o Atlas mede a proximidade com 128 países e 50 anos (glossário, verbete Distance); aqui são 10 anos (2015–2024), então a conferência é por posição, não por igualdade",
-                  "tentativas": ["1: todos os 233 países, só 2024: mediana 96,1, 54,2% no top 5% (reprovada)", "2: regra de países do Atlas, só 2024: mediana 95,7, 52,8% no top 5% (reprovada)", "3: regra de países do Atlas, 2015–2024 juntos: resultado abaixo (última desta rodada)"],
+                  "tentativas": ["1: todos os 233 países, só 2024: mediana 96,1, 54,2% no top 5% (reprovada)", "2: regra de países do Atlas, só 2024: mediana 95,7, 52,8% no top 5% (reprovada)", "3: regra de países do Atlas, 2015–2024 juntos: mediana 97,83, 66,1% no top 5% (reprovada)", "3b (rodada 5, mesma regra, só sem o falso produto XXXX): resultado abaixo"],
+                  "limites": ["filtro de países feito só com 2024 e aplicado a 2015–2024", "não se testou se o critério de 80% no top 5% é alcançável nem com a φ do próprio Atlas, porque o mapa publicado é árvore mais corte, não as ligações mais fortes de cada linha"],
                   
                   "produtos": P, "conferencia_publicada": "Dataverse doi:10.7910/DVN/FCDZBN, top_edges_hs92.csv, md5 8646568807730ef1117d8a48f055da45"},
         "metodo": {"M": "M[c,p] = 1 se RCA ≥ 1", "phi": "φ[i,j] = Σc M[c,i]·M[c,j] ÷ max(Σc M[c,i], Σc M[c,j])",

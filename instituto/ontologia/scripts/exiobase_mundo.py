@@ -30,7 +30,12 @@ def bloco_regiao(r):  # cadeia completa por R$ 1 de demanda final do setor j na 
     dom = L[reg.index(r) * S:(reg.index(r) + 1) * S, cols]                    # só fornecedores da própria região
     Ad = A[reg.index(r) * S:(reg.index(r) + 1) * S, cols]
     return {'L_total': tot[idx].round(6).tolist(), 'L_dentro_da_regiao': dom[idx].round(6).tolist(), 'A_dentro_da_regiao': Ad[idx].round(6).tolist(),
+            # o total inclui o R$ 1,00 inicial da própria demanda (diagonal de I em L = I + A + A² + ...), que é sempre da região
             'parte_da_cadeia_fora_da_regiao': [round(float(1 - dom[:, c].sum() / tot[:, c].sum()), 4) for c in range(len(idx))],
+            # mesma parte, contando só os insumos (tira o R$ 1,00 inicial dos dois lados): 1 - (D - 1) / (T - 1)
+            'parte_dos_insumos_fora_da_regiao': [round(float(1 - (dom[:, c].sum() - 1) / (tot[:, c].sum() - 1)), 4) for c in range(len(idx))],
+            'soma_coluna_L_total': [round(float(tot[:, c].sum()), 6) for c in range(len(idx))],
+            'soma_coluna_L_dentro': [round(float(dom[:, c].sum()), 6) for c in range(len(idx))],
             'producao_milhoes_eur': [round(float(x[reg.index(r) * S + j]), 1) for j in idx]}
 sha = {f: hashlib.sha256(open(f'{P}/{f}', 'rb').read()).hexdigest() for f in ('Z.txt', 'A.txt', 'x.txt')}
 json.dump({'familia': 1, 'nome': 'Dependência econômica, base mundial', 'selo': 'calculado por nós',

@@ -161,7 +161,7 @@
    "tipo_de_numero": "simulação de rede com dados reais de pagamentos (não é correlação)",
    "numeros": [
     {
-     "o_que": "parte da rede de pagamentos atingida, em média, quando um dos 5 maiores bancos dos EUA é paralisado",
+     "o_que": "parte da rede de pagamentos atingida (medida pelos ativos dos bancos, p. 5), em média, quando um dos 5 bancos mais ativos no sistema de pagamentos dos EUA é paralisado (texto: “five most active U.S. banks”)",
      "valor": "38%"
     },
     {

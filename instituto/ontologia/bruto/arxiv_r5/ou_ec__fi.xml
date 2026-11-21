@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/orO6YIppjqzYC/2jOM4Wo29hOHA</id>
+  <title>arXiv Query: search_query=(cat:econ.* OR (cat:q-fin.* OR cat:econ.GN) )&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:44:59Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:econ.*+OR+(cat:q-fin.*+OR+cat:econ.GN)&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>36659</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1810.02485v2</id>
+    <title>Exact Replication of the Best Rebalancing Rule in Hindsight</title>
+    <updated>2019-03-14T21:04:03Z</updated>
+    <link href="https://arxiv.org/abs/1810.02485v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1810.02485v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper prices and replicates the financial derivative whose payoff at $T$ is the wealth that would have accrued to a $\$1$ deposit into the best continuously-rebalanced portfolio (or fixed-fraction betting scheme) determined in hindsight. For the single-stock Black-Scholes market, Ordentlich and Cover (1998) only priced this derivative at time-0, giving $C_0=1+σ\sqrt{T/(2π)}$. Of course, the general time-$t$ price is not equal to $1+σ\sqrt{(T-t)/(2π)}$. I complete the Ordentlich-Cover (1998) analysis by deriving the price at any time $t$. By contrast, I also study the more natural case of the best levered rebalancing rule in hindsight. This yields $C(S,t)=\sqrt{T/t}\cdot\,\exp\{rt+σ^2b(S,t)^2\cdot t/2\}$, where $b(S,t)$ is the best rebalancing rule in hindsight over the observed history $[0,t]$. I show that the replicating strategy amounts to betting the fraction $b(S,t)$ of wealth on the stock over the interval $[t,t+dt].$ This fact holds for the general market with $n$ correlated stocks in geometric Brownian motion: we get $C(S,t)=(T/t)^{n/2}\exp(rt+b'Σb\cdot t/2)$, where $Σ$ is the covariance of instantaneous returns per unit time. This result matches the $\mathcal{O}(T^{n/2})$ "cost of universality" derived by Cover in his "universal portfolio theory" (1986, 1991, 1996, 1998), which super-replicates the same derivative in discrete-time. The replicating strategy compounds its money at the same asymptotic rate as the best levered rebalancing rule in hindsight, thereby beating the market asymptotically. Naturally enough, we find that the American-style version of Cover's Derivative is never exercised early in equilibrium.</summary>
+    <category term="q-fin.PR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.TH" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.MF" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.PM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-10-05T01:36:19Z</published>
+    <arxiv:comment>37 pages, 10 figures</arxiv:comment>
+    <arxiv:primary_category term="q-fin.PR"/>
+    <arxiv:journal_ref>The Journal of Derivatives 26(4), pp.35-53 (2019)</arxiv:journal_ref>
+    <author>
+      <name>Alex Garivaltis</name>
+    </author>
+  </entry>
+</feed>

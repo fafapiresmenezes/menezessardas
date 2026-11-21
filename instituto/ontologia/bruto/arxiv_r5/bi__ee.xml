@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/BD/kkeNa7IqUNvPiBGmazaK61oA</id>
+  <title>arXiv Query: search_query=cat:q-bio.* AND cat:eess.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:53:04Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:q-bio.*+AND+cat:eess.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>2746</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2007.04853v1</id>
+    <title>Identifying efficient controls of complex interaction networks using genetic algorithms</title>
+    <updated>2020-07-09T14:56:54Z</updated>
+    <link href="https://arxiv.org/abs/2007.04853v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2007.04853v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Control theory has seen recently impactful applications in network science, especially in connections with applications in network medicine. A key topic of research is that of finding minimal external interventions that offer control over the dynamics of a given network, a problem known as network controllability. We propose in this article a new solution for this problem based on genetic algorithms. We tailor our solution for applications in computational drug repurposing, seeking to maximise its use of FDA-approved drug targets in a given disease-specific protein-protein interaction network. We show how our algorithm identifies a number of potentially efficient drugs for breast, ovarian, and pancreatic cancer. We demonstrate our algorithm on several benchmark networks from cancer medicine, social networks, electronic circuits, and several random networks with their edges distributed according to the Erdős-Rényi, the small-world, and the scale-free properties. Overall, we show that our new algorithm is more efficient in identifying relevant drug targets in a disease network, advancing the computational solutions needed for new therapeutic and drug repurposing approaches.</summary>
+    <category term="q-bio.MN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.QM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-07-09T14:56:54Z</published>
+    <arxiv:comment>The submission contains 34 pages, 9 figures and 6 tables</arxiv:comment>
+    <arxiv:primary_category term="q-bio.MN"/>
+    <author>
+      <name>Victor-Bogdan Popescu</name>
+    </author>
+    <author>
+      <name>Krishna Kanhaiya</name>
+    </author>
+    <author>
+      <name>Iulian Năstac</name>
+    </author>
+    <author>
+      <name>Eugen Czeizler</name>
+    </author>
+    <author>
+      <name>Ion Petre</name>
+    </author>
+  </entry>
+</feed>

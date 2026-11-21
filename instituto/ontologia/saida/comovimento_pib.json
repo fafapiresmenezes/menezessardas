@@ -18,6 +18,8 @@
   "n_efetivo": "n / (1 + 2 Σ_(k=1..8) ρx(k)·ρy(k))  (Bartlett 1935)",
   "ic95": "tanh(atanh(r) ± 1,959964 / √(n_ef − 3))",
   "parcial": "(r_xy − r_xp·r_yp) / √((1 − r_xp²)(1 − r_yp²)), p = PIB",
+  "aviso_parcial": "O PIB contém os próprios setores x e y; tirar o PIB tira também um pedaço deles, o que puxa a parcial para baixo de forma mecânica. Ler a parcial como piso, não como valor exato.",
+  "teto_n_efetivo": "n efetivo limitado a n (nunca mais observações do que as que existem)",
   "regra_fraco": "n_efetivo < 36",
   "robustez": "Pearson sem 2020T1–2021T4; aviso se |r−ρ|>0,2 ou |r−r_sem_pandemia|>0,2"
  },
@@ -2007,21 +2009,21 @@
    "nome_b": "Atividades financeiras e seguros",
    "n": 118,
    "soma_autocorr_cruzada": -0.0974093267233645,
-   "n_efetivo": 146.5508366594942,
+   "n_efetivo": 118.0,
    "pearson": 0.023440891705805586,
    "spearman": 0.06261435473798385,
    "fisher_z": 0.023445186519644372,
-   "erro_padrao_z": 0.08346360441220387,
+   "erro_padrao_z": 0.09325048082403138,
    "ic95": [
-    -0.13923019966046524,
-    0.18488012044841323
+    -0.15798788563285027,
+    0.20333867042649906
    ],
    "r_a_pib": 0.18629723415382735,
    "r_b_pib": 0.4509467424266911,
    "parcial_sem_pib": -0.06907000558034794,
    "ic95_parcial": [
-    -0.2291939805511546,
-    0.09469370940126043
+    -0.24749970720453252,
+    0.11389098727860134
    ],
    "selo": "calculado",
    "ic_cruza_zero": true,

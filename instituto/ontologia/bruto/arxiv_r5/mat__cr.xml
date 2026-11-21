@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api//RMFvqWjVi4/xS8u8/EoyKPbXXY</id>
+  <title>arXiv Query: search_query=(cat:math.* OR cat:math-ph OR cat:cs.IT) AND cat:cs.CR&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:39:21Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:math.*+OR+(cat:math-ph+OR+cat:cs.IT))+AND+cat:cs.CR&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>3295</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/0808.1417v2</id>
+    <title>The finite harmonic oscillator and its associated sequences</title>
+    <updated>2008-12-30T08:10:33Z</updated>
+    <link href="https://arxiv.org/abs/0808.1417v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/0808.1417v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>  A system of functions (signals) on the finite line, called the oscillator system, is described and studied. Applications of this system for discrete radar and digital communication theory are explained.
+  Keywords: Weil representation, commutative subgroups, eigenfunctions, random behavior, deterministic construction</summary>
+    <category term="cs.IT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.GR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.NT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.PR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.QA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.RT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.SG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2008-08-10T17:49:20Z</published>
+    <arxiv:comment>Published in the Proceedings of the National Academy of Sciences of the United States of America (Communicated by Joseph Bernstein, Tel Aviv University, Tel Aviv, Israel)</arxiv:comment>
+    <arxiv:primary_category term="cs.IT"/>
+    <arxiv:journal_ref>PNAS, July 22, 2008 vol. 105 no. 29 9869-9873 http://www.pnas.org/content/105/29/9869.abstract</arxiv:journal_ref>
+    <author>
+      <name>Shamgar Gurevich</name>
+    </author>
+    <author>
+      <name>Ronny Hadani</name>
+    </author>
+    <author>
+      <name>Nir Sochen</name>
+    </author>
+    <arxiv:doi>10.1073/pnas.0801656105</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1073/pnas.0801656105" title="doi"/>
+  </entry>
+</feed>

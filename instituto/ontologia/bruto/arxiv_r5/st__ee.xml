@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/B5FBYXENMqYXKOUGtWdMKwmpLpY</id>
+  <title>arXiv Query: search_query=(cat:stat.* OR cat:math.ST) AND cat:eess.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:44:03Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:stat.*+OR+cat:math.ST)+AND+cat:eess.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>6280</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1803.05130v1</id>
+    <title>Signal Processing and Piecewise Convex Estimation</title>
+    <updated>2018-03-14T04:17:21Z</updated>
+    <link href="https://arxiv.org/abs/1803.05130v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1803.05130v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Many problems on signal processing reduce to nonparametric function estimation. We propose a new methodology, piecewise convex fitting (PCF), and give a two-stage adaptive estimate. In the first stage, the number and location of the change points is estimated using strong smoothing. In the second stage, a constrained smoothing spline fit is performed with the smoothing level chosen to minimize the MSE. The imposed constraint is that a single change point occurs in a region about each empirical change point of the first-stage estimate. This constraint is equivalent to requiring that the third derivative of the second-stage estimate has a single sign in a small neighborhood about each first-stage change point. We sketch how PCF may be applied to signal recovery, instantaneous frequency estimation, surface reconstruction, image segmentation, spectral estimation and multivariate adaptive regression.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.data-an" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-03-14T04:17:21Z</published>
+    <arxiv:primary_category term="stat.ME"/>
+    <arxiv:journal_ref>ICIAM Proceedings 1993</arxiv:journal_ref>
+    <author>
+      <name>Kurt Riedel</name>
+    </author>
+  </entry>
+</feed>

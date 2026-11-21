@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/oBFle2LzE7h/AS+h07mFUX/R+G0</id>
+  <title>arXiv Query: search_query=cat:cs.AI AND (cat:stat.* OR cat:math.ST)&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:42:41Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.AI+AND+(cat:stat.*+OR+cat:math.ST)&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>12120</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2502.10485v1</id>
+    <title>Forecasting time series with constraints</title>
+    <updated>2025-02-14T08:18:17Z</updated>
+    <link href="https://arxiv.org/abs/2502.10485v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2502.10485v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Time series forecasting presents unique challenges that limit the effectiveness of traditional machine learning algorithms. To address these limitations, various approaches have incorporated linear constraints into learning algorithms, such as generalized additive models and hierarchical forecasting. In this paper, we propose a unified framework for integrating and combining linear constraints in time series forecasting. Within this framework, we show that the exact minimizer of the constrained empirical risk can be computed efficiently using linear algebra alone. This approach allows for highly scalable implementations optimized for GPUs. We validate the proposed methodology through extensive benchmarking on real-world tasks, including electricity demand forecasting and tourism forecasting, achieving state-of-the-art performance.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-02-14T08:18:17Z</published>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Nathan Doumèche</name>
+      <arxiv:affiliation>LPSM, EDF R&amp;D OSIRIS</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Francis Bach</name>
+      <arxiv:affiliation>DI-ENS, SIERRA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Éloi Bedek</name>
+      <arxiv:affiliation>EDF R&amp;D OSIRIS</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Gérard Biau</name>
+      <arxiv:affiliation>LPSM, IUF</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Claire Boyer</name>
+      <arxiv:affiliation>LMO, IUF</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Yannig Goude</name>
+      <arxiv:affiliation>EDF R&amp;D OSIRIS, LMO</arxiv:affiliation>
+    </author>
+  </entry>
+</feed>

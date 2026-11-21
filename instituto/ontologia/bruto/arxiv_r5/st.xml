@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/sVhosaMgWEK2AhhT6WJ9mcnti2U</id>
+  <title>arXiv Query: search_query=(cat:stat.* OR cat:math.ST)&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:37:29Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:stat.*+OR+cat:math.ST&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>155088</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2008.09498v1</id>
+    <title>Testing for equality between conditional copulas given discretized conditioning events</title>
+    <updated>2020-08-21T14:26:05Z</updated>
+    <link href="https://arxiv.org/abs/2008.09498v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2008.09498v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Several procedures have been recently proposed to test the simplifying assumption for conditional copulas. Instead of considering pointwise conditioning events, we study the constancy of the conditional dependence structure when some covariates belong to general borelian conditioning subsets. Several test statistics based on the equality of conditional Kendall's tau are introduced, and we derive their asymptotic distributions under the null. When such conditioning events are not fixed ex ante, we propose a data-driven procedure to recursively build such relevant subsets. It is based on decision trees that maximize the differences between the conditional Kendall's taus corresponding to the leaves of the trees. The performances of such tests are illustrated in a simulation experiment. Moreover, a study of the conditional dependence between financial stock returns is managed, given some clustering of their past values. The last application deals with the conditional dependence between coverage amounts in an insurance dataset.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-08-21T14:26:05Z</published>
+    <arxiv:comment>28 pages, 4 figures</arxiv:comment>
+    <arxiv:primary_category term="stat.ME"/>
+    <author>
+      <name>Alexis Derumigny</name>
+    </author>
+    <author>
+      <name>Jean-David Fermanian</name>
+    </author>
+    <author>
+      <name>Aleksey Min</name>
+    </author>
+  </entry>
+</feed>

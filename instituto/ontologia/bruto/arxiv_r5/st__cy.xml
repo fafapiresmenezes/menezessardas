@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/tur7RvtQhGmxxMHxrwzFIOSc8oA</id>
+  <title>arXiv Query: search_query=(cat:stat.* OR cat:math.ST) AND cat:cs.CY&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:44:06Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:stat.*+OR+cat:math.ST)+AND+cat:cs.CY&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>1571</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1911.06723v1</id>
+    <title>A nonparametric framework for inferring orders of categorical data from category-real ordered pairs</title>
+    <updated>2019-11-15T16:10:27Z</updated>
+    <link href="https://arxiv.org/abs/1911.06723v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1911.06723v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Given a dataset of careers and incomes, how large a difference of income between any pair of careers would be? Given a dataset of travel time records, how long do we need to spend more when choosing a public transportation mode $A$ instead of $B$ to travel? In this paper, we propose a framework that is able to infer orders of categories as well as magnitudes of difference of real numbers between each pair of categories using Estimation statistics framework. Not only reporting whether an order of categories exists, but our framework also reports the magnitude of difference of each consecutive pairs of categories in the order. In large dataset, our framework is scalable well compared with the existing framework. The proposed framework has been applied to two real-world case studies: 1) ordering careers by incomes based on information of 350,000 households living in Khon Kaen province, Thailand, and 2) ordering sectors by closing prices based on 1060 companies' closing prices of NASDAQ stock markets between years 2000 and 2016. The results of careers ordering show income inequality among different careers. The stock market results illustrate dynamics of sector domination that can change over time. Our approach is able to be applied in any research area that has category-real ordered pairs. Our proposed "Dominant-Distribution Network" provides a novel approach to gain new insight of analyzing category orders. The software of this framework is available for researchers or practitioners within R package: EDOIF.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.data-an" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-11-15T16:10:27Z</published>
+    <arxiv:comment>The R package can be found at https://github.com/DarkEyes/EDOIF</arxiv:comment>
+    <arxiv:primary_category term="stat.ME"/>
+    <arxiv:journal_ref>Heliyon, Volume 6, Issue 11, 2020, e05435</arxiv:journal_ref>
+    <author>
+      <name>Chainarong Amornbunchornvej</name>
+    </author>
+    <author>
+      <name>Navaporn Surasvadi</name>
+    </author>
+    <author>
+      <name>Anon Plangprasopchok</name>
+    </author>
+    <author>
+      <name>Suttipong Thajchayapong</name>
+    </author>
+    <arxiv:doi>10.1016/j.heliyon.2020.e05435</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.heliyon.2020.e05435" title="doi"/>
+  </entry>
+</feed>

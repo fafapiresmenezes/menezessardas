@@ -35,13 +35,15 @@ setor = json.load(open(L / "setor_mercados_previsao.json"))
 n67 = len(le["codigos"])
 nprod = len(np.load(S / "ibge_2015_intermediarios.npz", allow_pickle=True)["prod_cod"])
 n_ex = len(ex["regioes"]) * len(ex["setores"])
+nS = len(ex["setores"])
 cat = []
 
 
-def v(familia, nome, simbolo, tipo, unidade, faixa, fonte, periodo, granularidade, instancias, selo="calculado por nós", obs=""):
+def v(familia, nome, simbolo, tipo, unidade, faixa, fonte, periodo, granularidade, instancias, selo="calculado por nós", obs="", guardados=None):
+    # instancias = valores que a conta produz; guardados = valores que ficam gravados em saida/ (o resto se refaz rodando o script)
     cat.append({"familia": familia, "nome": nome, "simbolo": simbolo, "tipo": tipo, "unidade": unidade, "faixa": faixa,
                 "fonte": fonte, "periodo": periodo, "granularidade": granularidade, "instancias": instancias,
-                "selo": selo, "obs": obs})
+                "guardados": instancias if guardados is None else guardados, "selo": selo, "obs": obs})
 
 
 F1, F1w = "1 · Dependência (IBGE)", "1 · Dependência (mundo)"
@@ -54,16 +56,26 @@ v(F1, "Efeito em cadeia (Leontief)", "L[i,j]", "razão contínua", "R$ por R$ 1 
 v(F1, "Ligação para trás", "BL[j]", "índice relativo", "média da economia = 1", "> 0", "conta nossa (Rasmussen-Hirschman)", "2015", "atividade", n67)
 v(F1, "Ligação para frente", "FL[i]", "índice relativo", "média da economia = 1", "> 0", "conta nossa (Rasmussen-Hirschman)", "2015", "atividade", n67)
 v(F1, "Setor-chave", "BL>1 e FL>1", "binária", "sim/não", "0 ou 1", "conta nossa", "2015", "atividade", n67)
-v(F1, "Parcela de cada produto em A", "D·Un/g", "razão contínua", "R$ por R$ 1", "≥ 0", "conta nossa (memória)", "2015", "par × produto", len(me["pares"]) * nprod)
-v(F1w, "Fluxo entre setores e regiões", "Z", "razão contínua", "milhões de euros", "≥ 0", "EXIOBASE 3.9.6", "2019", "região-setor × região-setor", n_ex * n_ex)
-v(F1w, "Coeficiente técnico mundial", "A", "proporção", "euro por euro", "0 a 1", "conta nossa, conferida com a A publicada", "2019", "região-setor × região-setor", n_ex * n_ex)
-v(F1w, "Efeito em cadeia mundial", "L", "razão contínua", "euro por euro de demanda final", "≥ 0", "conta nossa (inversão completa)", "2019", "região-setor × região-setor", n_ex * n_ex)
-v(F1w, "Parte da cadeia vinda de fora da região", "1 − L_dentro/L_total", "proporção", "sem unidade", "0 a 1", "conta nossa", "2019", "região × setor dos nichos", len(ex["por_regiao"]) * len(ex["indices_nichos"]))
+v(F1, "Parcela de cada produto em A", "D·Un/g", "razão contínua", "R$ por R$ 1", "≥ 0", "conta nossa (memória)", "2015", "par × produto", len(me["pares"]) * nprod,
+  guardados=sum(len(p["produtos_que_mais_pesam"]) for p in me["pares"]),
+  obs="só as maiores parcelas de cada par ficam gravadas")
+v(F1w, "Fluxo entre setores e regiões", "Z", "razão contínua", "milhões de euros", "≥ 0", "EXIOBASE 3.9.6", "2019", "região-setor × região-setor", n_ex * n_ex,
+  guardados=len(ex["indices_nichos"]) ** 2, obs="lido do arquivo da EXIOBASE; gravado só entre os setores dos nichos")
+v(F1w, "Coeficiente técnico mundial", "A", "proporção", "euro por euro", "0 a 1", "conta nossa, conferida com a A publicada", "2019", "região-setor × região-setor", n_ex * n_ex,
+  guardados=nS ** 2 + len(ex["por_regiao"]) * len(ex["indices_nichos"]) ** 2, obs="gravados: mundo agregado e blocos das regiões")
+v(F1w, "Efeito em cadeia mundial", "L", "razão contínua", "euro por euro de demanda final", "≥ 0", "conta nossa (inversão completa)", "2019", "região-setor × região-setor", n_ex * n_ex,
+  guardados=nS ** 2 + 2 * len(ex["por_regiao"]) * len(ex["indices_nichos"]) ** 2, obs="a L completa é calculada e conferida, mas não gravada")
+v(F1w, "Parte da cadeia vinda de fora da região", "1 − L_dentro/L_total", "proporção", "sem unidade", "0 a 1", "conta nossa", "2019", "região × setor dos nichos", len(ex["por_regiao"]) * len(ex["indices_nichos"]),
+  obs="o total inclui o R$ 1,00 inicial da própria demanda")
+v(F1w, "Parte dos insumos vinda de fora da região", "1 − (L_dentro − 1)/(L_total − 1)", "proporção", "sem unidade", "0 a 1", "conta nossa", "2019", "região × setor dos nichos", len(ex["por_regiao"]) * len(ex["indices_nichos"]),
+  obs="sem o R$ 1,00 inicial: só o que vem pela cadeia de insumos")
 
 F2 = "2 · Proximidade (Harvard)"
-v(F2, "Vantagem comparativa revelada", "RCA[c,p]", "índice relativo", "média do mundo = 1", "≥ 0", "Harvard Atlas", "2015–2024", "país-ano × produto", px["fonte"]["observacoes_pais_ano"] * px["fonte"]["produtos"], selo="da fonte")
-v(F2, "Exporta com vantagem", "M[c,p]", "binária", "sim/não", "0 ou 1", "conta nossa", "2015–2024", "país-ano × produto", px["fonte"]["observacoes_pais_ano"] * px["fonte"]["produtos"])
-v(F2, "Proximidade entre produtos", "φ[i,j]", "proporção", "sem unidade", "0 a 1", "conta nossa (Hidalgo et al. 2007)", "2015–2024", "produto × produto", px["fonte"]["produtos"] ** 2, selo=px["selo"])
+v(F2, "Vantagem comparativa revelada", "RCA[c,p]", "índice relativo", "média do mundo = 1", "≥ 0", "Harvard Atlas", "2015–2024", "país-ano × produto", px["fonte"]["observacoes_pais_ano"] * px["fonte"]["produtos"], selo="da fonte",
+  guardados=0, obs="respostas brutas do Atlas guardadas fora do repositório (grandes), com impressão digital de cada arquivo")
+v(F2, "Exporta com vantagem", "M[c,p]", "binária", "sim/não", "0 ou 1", "conta nossa", "2015–2024", "país-ano × produto", px["fonte"]["observacoes_pais_ano"] * px["fonte"]["produtos"], guardados=0)
+v(F2, "Proximidade entre produtos", "φ[i,j]", "proporção", "sem unidade", "0 a 1", "conta nossa (Hidalgo et al. 2007)", "2015–2024", "produto × produto", px["fonte"]["produtos"] * (px["fonte"]["produtos"] - 1) // 2, selo=px["selo"],
+  guardados=0, obs="pares distintos, sem diagonal; calculada e usada nas médias, não gravada")
 v(F2, "Proximidade entre grupos de nichos", "φ̄(A,B)", "proporção", "sem unidade", "0 a 1", "conta nossa", "2015–2024", "nicho × nicho", sum(1 for p in px["pares"] if p["phi_ponderada"] is not None), selo=px["selo"],
   obs=f"{sum(1 for p in px['pares'] if p['phi_ponderada'] is None)} pares sem base (serviços)")
 
@@ -79,11 +91,12 @@ for base, d, per in (("PIB trimestral IBGE", co, "trimestre"), ("bolsa dos EUA",
 
 F4 = "4 · Mercados de previsão"
 v(F4, "Preço do Sim", "p", "probabilidade de mercado", "dólar por contrato de 1 dólar", "0 a 1", "Polymarket e Kalshi", mp["coletado_utc"][:10], "mercado", len(mp["mercados"]), selo="dado de terceiros", obs="não é predição do Instituto")
-v(F4, "Volume negociado", "V", "razão contínua", "dólares", "≥ 0", "Polymarket e Kalshi", mp["coletado_utc"][:10], "mercado", len(mp["mercados"]), selo="dado de terceiros")
+v(F4, "Volume", "V", "razão contínua", "Polymarket: dólares negociados; Kalshi: contratos × US$ 1 de face", "≥ 0", "Polymarket e Kalshi", mp["coletado_utc"][:10], "mercado", len(mp["mercados"]), selo="dado de terceiros")
 v(F4, "Nicho ligado ao mercado", "nicho", "categórica", "rótulo", "lista de nichos", "regra escrita por termos", mp["coletado_utc"][:10], "mercado", sum(len(m["nichos"]) for m in mp["mercados"]))
 v(F4, "Startup comprada", "compra", "categórica", "rótulo e data", "—", "imprensa", "2025–2026", "compra", len(setor["compras"]), selo="da literatura")
 v(F4, "Previsão de crescimento do setor", "série", "da literatura", "dólares", "≥ 0", "Bernstein, Citizens, EKG", "2025–2030", "previsão × ano", sum(len(p["serie"]) for p in setor["previsoes"]), selo="da literatura")
-v(F4, "Escore de Brier publicado", "Brier", "da literatura", "erro quadrático médio", "0 a 1 (0,25 = cara ou coroa)", "Kalshi Research", "2021–2026", "estudo × recorte", sum(len(e["numeros"]) for e in setor["calibragem"]["estudos"]), selo="da literatura")
+v(F4, "Escore de Brier publicado", "Brier", "da literatura", "erro quadrático médio", "0 a 1 (0,25 = cara ou coroa)", "Kalshi Research", "2021–2026", "estudo × recorte", sum(1 for e in setor["calibragem"]["estudos"] for n in e["numeros"] if "Brier" in n["o_que"]), selo=setor["calibragem"]["selo_dos_numeros"])
+v(F4, "Acerto e contagens dos estudos de calibragem", "acerto", "da literatura", "% ou contagem", "—", "Kalshi Research", "2021–2026", "estudo × recorte", sum(1 for e in setor["calibragem"]["estudos"] for n in e["numeros"] if "Brier" not in n["o_que"]), selo=setor["calibragem"]["selo_dos_numeros"])
 
 F5 = "5 · Ligação entre ciências"
 v(F5, "Artigos da área", "n_A", "contagem", "artigos", "≥ 0", "arXiv", ci["fonte"]["coleta_fim_utc"][:10], "área", len(ci["areas"]), selo="da fonte")
@@ -103,9 +116,11 @@ v(F7, "Jaccard interno", "J", "proporção", "sem unidade", "0 a 1", "conta noss
 catalogo = {"regra": "Catálogo gerado das saídas conferidas; nenhuma contagem digitada.", "escala_de_tipos": "Stevens (1946), On the Theory of Scales of Measurement, Science 103:677-680, mais os tipos de dado do projeto",
             "tipos_de_variavel": len({c["tipo"] for c in cat}), "linhas": len(cat),
             "instancias_total": sum(c["instancias"] for c in cat),
+            "guardados_total": sum(c["guardados"] for c in cat),
+            "leitura": "instâncias = valores que as contas produzem; guardados = valores gravados em saida/ (o resto se refaz rodando os scripts)",
             "por_tipo": {t: {"linhas": sum(1 for c in cat if c["tipo"] == t), "instancias": sum(c["instancias"] for c in cat if c["tipo"] == t)} for t in sorted({c["tipo"] for c in cat})},
             "catalogo": cat}
 (S / "catalogo_variaveis.json").write_text(json.dumps(catalogo, ensure_ascii=False, indent=1))
-print(catalogo["linhas"], "linhas,", catalogo["tipos_de_variavel"], "tipos,", f"{catalogo['instancias_total']:,}", "valores")
+print(catalogo["linhas"], "linhas,", catalogo["tipos_de_variavel"], "tipos,", f"{catalogo['instancias_total']:,}", "valores calculados,", f"{catalogo['guardados_total']:,}", "guardados")
 for t, d in catalogo["por_tipo"].items():
     print(f"  {t:28s} {d['linhas']:4d} linhas {d['instancias']:>16,} valores")

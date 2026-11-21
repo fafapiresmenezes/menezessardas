@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/78VugjaXnGardh+PN5E9Rav+V/4</id>
+  <title>arXiv Query: search_query=(cat:math.* OR cat:math-ph OR cat:cs.IT) AND (cat:q-fin.* OR cat:econ.GN)&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:39:44Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:math.*+OR+(cat:math-ph+OR+cat:cs.IT))+AND+(cat:q-fin.*+OR+cat:econ.GN)&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>4696</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2312.15119v2</id>
+    <title>Functional CLTs for subordinated Lévy models in physics, finance, and econometrics</title>
+    <updated>2024-01-25T10:04:38Z</updated>
+    <link href="https://arxiv.org/abs/2312.15119v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2312.15119v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present a simple unifying treatment of a broad class of applications from statistical mechanics, econometrics, mathematical finance, and insurance mathematics, where (possibly subordinated) Lévy noise arises as a scaling limit of some form of continuous-time random walk (CTRW). For each application, it is natural to rely on weak convergence results for stochastic integrals on Skorokhod space in Skorokhod's J1 or M1 topologies. As compared to earlier and entirely separate works, we are able to give a more streamlined account while also allowing for greater generality and providing important new insights. For each application, we first elucidate how the fundamental conclusions for J1 convergent CTRWs emerge as special cases of the same general principles, and we then illustrate how the specific settings give rise to different results for strictly M1 convergent CTRWs.</summary>
+    <category term="math.PR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.EM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.MF" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-12-22T23:39:26Z</published>
+    <arxiv:comment>13 pages. arXiv admin note: text overlap with arXiv:2309.12197</arxiv:comment>
+    <arxiv:primary_category term="math.PR"/>
+    <author>
+      <name>Andreas Søjmark</name>
+    </author>
+    <author>
+      <name>Fabrice Wunderlich</name>
+    </author>
+  </entry>
+</feed>

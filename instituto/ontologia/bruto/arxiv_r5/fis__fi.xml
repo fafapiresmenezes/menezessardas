@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/3I0Ug7QngnCJ+UDPLqVITvj0QSI</id>
+  <title>arXiv Query: search_query=cat:physics.* AND (cat:q-fin.* OR cat:econ.GN)&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:40:29Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:physics.*+AND+(cat:q-fin.*+OR+cat:econ.GN)&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>2485</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1809.08681v3</id>
+    <title>Financial accumulation implies ever-increasing wealth inequality</title>
+    <updated>2019-11-26T12:32:15Z</updated>
+    <link href="https://arxiv.org/abs/1809.08681v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1809.08681v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Wealth inequality is an important matter for economic theory and policy. Ongoing debates have been discussing recent rise in wealth inequality in connection with recent development of active financial markets around the world. Existing literature on wealth distribution connects the origins of wealth inequality with a variety of drivers. Our approach develops a minimalist modelling strategy that combines three featuring mechanisms: active financial markets; individual wealth accumulation; and compound interest structure. We provide mathematical proof that accumulated financial investment returns involve ever-increasing wealth concentration and inequality across individual investors through time. This cumulative effect through space and time depends on the financial accumulation process and holds also under efficient financial markets, which generate some fair investment game that individual investors do repeatedly play through time.</summary>
+    <category term="q-fin.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-09-23T21:24:18Z</published>
+    <arxiv:primary_category term="q-fin.GN"/>
+    <arxiv:journal_ref>Journal of Economic Interaction and Coordination (JEIC), vol. 15(4), October 2020, pages 943-951</arxiv:journal_ref>
+    <author>
+      <name>Yuri Biondi</name>
+    </author>
+    <author>
+      <name>Stefano Olla</name>
+    </author>
+    <arxiv:doi>10.1007/s11403-020-00281-7</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/s11403-020-00281-7" title="doi"/>
+  </entry>
+</feed>

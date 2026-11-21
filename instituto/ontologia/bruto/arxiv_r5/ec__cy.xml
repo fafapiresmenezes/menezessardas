@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/aQUJvWyRieaQWpxQY6sshj/HmU0</id>
+  <title>arXiv Query: search_query=cat:econ.* AND cat:cs.CY&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:52:49Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:econ.*+AND+cat:cs.CY&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>565</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2601.03547v1</id>
+    <title>Governance of Technological Transition: A Predator-Prey Analysis of AI Capital in China's Economy and Its Policy Implications</title>
+    <updated>2026-01-07T03:30:46Z</updated>
+    <link href="https://arxiv.org/abs/2601.03547v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2601.03547v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The rapid integration of Artificial Intelligence (AI) into China's economy presents a classic governance challenge: how to harness its growth potential while managing its disruptive effects on traditional capital and labor markets. This study addresses this policy dilemma by modeling the dynamic interactions between AI capital, physical capital, and labor within a Lotka-Volterra predator-prey framework. Using annual Chinese data (2016-2023), we quantify the interaction strengths, identify stable equilibria, and perform a global sensitivity analysis. Our results reveal a consistent pattern where AI capital acts as the 'prey', stimulating both physical capital accumulation and labor compensation (wage bill), while facing only weak constraining feedback. The equilibrium points are stable nodes, indicating a policy-mediated convergence path rather than volatile cycles. Critically, the sensitivity analysis shows that the labor market equilibrium is overwhelmingly driven by AI-related parameters, whereas the physical capital equilibrium is also influenced by its own saturation dynamics. These findings provide a systemic, quantitative basis for policymakers: (1) to calibrate AI promotion policies by recognizing the asymmetric leverage points in capital vs. labor markets; (2) to anticipate and mitigate structural rigidities that may arise from current regulatory settings; and (3) to prioritize interventions that foster complementary growth between AI and traditional economic structures while ensuring broad-base distribution of technological gains.</summary>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.EM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-01-07T03:30:46Z</published>
+    <arxiv:comment>Number of figures: 10</arxiv:comment>
+    <arxiv:primary_category term="econ.GN"/>
+    <author>
+      <name>Kunpeng Wang</name>
+    </author>
+    <author>
+      <name>Jiahui Hu</name>
+    </author>
+  </entry>
+</feed>

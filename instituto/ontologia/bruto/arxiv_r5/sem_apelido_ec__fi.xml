@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/jS+DV/XY8PkdMzBts7EwvqGPAMg</id>
+  <title>arXiv Query: search_query=cat:econ.* AND cat:q-fin.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:52:38Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:econ.*+AND+cat:q-fin.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>1205</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2009.12838v1</id>
+    <title>On the Continuity of the Feasible Set Mapping in Optimal Transport</title>
+    <updated>2020-09-27T13:17:26Z</updated>
+    <link href="https://arxiv.org/abs/2009.12838v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2009.12838v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Consider the set of probability measures with given marginal distributions on the product of two complete, separable metric spaces, seen as a correspondence when the marginal distributions vary. In problems of optimal transport, continuity of this correspondence from marginal to joint distributions is often desired, in light of Berge's Maximum Theorem, to establish continuity of the value function in the marginal distributions, as well as stability of the set of optimal transport plans. Bergin (1999) established the continuity of this correspondence, and in this note, we present a novel and considerably shorter proof of this important result. We then examine an application to an assignment game (transferable utility matching problem) with unknown type distributions.</summary>
+    <category term="q-fin.RM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.TH" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.MF" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-09-27T13:17:26Z</published>
+    <arxiv:primary_category term="q-fin.RM"/>
+    <author>
+      <name>Mario Ghossoub</name>
+    </author>
+    <author>
+      <name>David Saunders</name>
+    </author>
+  </entry>
+</feed>

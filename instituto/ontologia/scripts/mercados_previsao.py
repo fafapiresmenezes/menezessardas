@@ -16,6 +16,7 @@ Resposta bruta de cada pergunta gravada em bruto/mercados/ com hash.
 import hashlib
 import json
 import re
+import sys
 import time
 import urllib.parse
 import urllib.error
@@ -29,7 +30,9 @@ SAIDA = AQUI / "saida" / "mercados_previsao.json"
 VOLUME_MIN = 10_000
 # esporte FICA (pedido de M, 21/11): serve para treino, mapeamento de jogador e outros usos,
 # sem nada de aposta. Só ganha a marca do nicho "Esporte".
-ESPORTE = re.compile(r"Série A|AFCON|World Cup|Copa|Champions|FIFA|NBA|NFL|UFC|Grand Prix|F1|Olympic", re.I)
+# palavra inteira (\b dos dois lados): sem isso "NFL" casava dentro de "iNFLation" (achado da revisão, rodada 5)
+ESPORTE = re.compile(r"\b(?:Série A|AFCON|World Cup|Copa|Champions|FIFA|NBA|NFL|UFC|Grand Prix|F1|Olympics?)\b", re.I)
+DO_BRUTO = "--do-bruto" in sys.argv  # refaz a saída a partir das respostas já gravadas, sem baixar de novo
 
 TERMOS = {
     "quantum": ["Quântica", "IA e Cibersegurança"],
@@ -51,6 +54,9 @@ TERMOS = {
 
 
 def baixar(url, nome):
+    if DO_BRUTO:
+        corpo = (BRUTO / nome).read_bytes()
+        return json.loads(corpo), hashlib.sha256(corpo).hexdigest()
     req = urllib.request.Request(url, headers={"User-Agent": "pesquisa-academica/1.0"})
     for tentativa in range(6):
         try:
@@ -102,7 +108,7 @@ def polymarket(agora, regs):
                 chave = "pm:" + str(m.get("id"))
                 itens.setdefault(chave, {
                     "fonte": "Polymarket", "pergunta": q, "evento": e.get("title"),
-                    "preco_sim": sim, "volume_dolares": vol,
+                    "preco_sim": sim, "volume": vol, "volume_unidade": "dólares negociados",
                     "encerra": m.get("endDate"), "url": f"https://polymarket.com/event/{e.get('slug')}",
                     "coletado_utc": agora, "termos": [], "nichos": set(),
                 })
@@ -130,14 +136,17 @@ def kalshi(agora, regs):
                     continue
                 vol_contratos = num(m.get("volume_fp")) or num(m.get("volume")) or 0
                 preco = num(m.get("last_price_dollars")) or (num(m.get("last_price")) or 0) / 100
-                vol = vol_contratos * 1.0  # cada contrato paga 1 dólar; volume em contratos ≈ dólares de face
+                face = num(m.get("notional_value_dollars")) or 1.0
+                # volume_fp conta CONTRATOS; × valor de face (US$ 1) dá dólares DE FACE, não dólares negociados.
+                # A API não traz dólares negociados, então as duas plataformas não são comparáveis entre si.
+                vol = vol_contratos * face
                 if vol < VOLUME_MIN or m.get("status") not in ("active", "open"):
                     continue
                 itens["ks:" + m["ticker"]] = {
                     "fonte": "Kalshi", "pergunta": (m.get("title") or titulo) +
                     (f" — {m.get('yes_sub_title')}" if m.get("yes_sub_title") else ""),
-                    "evento": titulo, "preco_sim": preco, "volume_dolares": vol,
-                    "volume_observacao": "Kalshi informa volume em contratos de 1 dólar de face",
+                    "evento": titulo, "preco_sim": preco, "volume": vol, "volume_unidade": "contratos × US$ 1 de face",
+                    "contratos": vol_contratos,
                     "encerra": m.get("close_time"),
                     "url": f"https://kalshi.com/markets/{(e.get('series_ticker') or '').lower()}",
                     "coletado_utc": agora, "termos": achados,
@@ -153,7 +162,8 @@ def kalshi(agora, regs):
 
 def main():
     BRUTO.mkdir(parents=True, exist_ok=True)
-    agora = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    agora = (json.loads(SAIDA.read_text())["coletado_utc"] if DO_BRUTO
+             else datetime.now(timezone.utc).isoformat(timespec="seconds"))
     regs = []
     itens = polymarket(agora, regs)
     k, paginas = kalshi(agora, regs)
@@ -166,17 +176,24 @@ def main():
             v["nichos"].add("Esporte")
         v["nichos"] = sorted(v["nichos"])
         assert 0 <= v["preco_sim"] <= 1, v
+        # aberto, mas com data de encerramento já vencida na hora da coleta (aguarda resolução)
+        v["data_vencida"] = bool(v["encerra"]) and v["encerra"][:19] < agora[:19]
         lista.append(v)
-    lista.sort(key=lambda v: -v["volume_dolares"])
+    # ordena DENTRO de cada plataforma: as unidades de volume são diferentes
+    lista.sort(key=lambda v: (v["fonte"] != "Polymarket", -v["volume"]))
     saida = {
         "familia": 4,
         "nome": "Mercados de previsão (dado de terceiros)",
         "aviso": ("Preço de mercado, não predição do Instituto. Ninguém aqui calibrou estes números; "
                   "servem só de termômetro externo, com data e endereço."),
         "coletado_utc": agora,
-        "filtros": {"marca_esporte": ESPORTE.pattern, "aberto": True, "volume_minimo_dolares": VOLUME_MIN, "termos": list(TERMOS)},
+        "filtros": {"marca_esporte": ESPORTE.pattern, "aberto": True, "volume_minimo": VOLUME_MIN,
+                    "volume_aviso": ("Polymarket: dólares negociados. Kalshi: contratos × US$ 1 de face (a API não "
+                                     "informa dólares negociados). O piso de 10 mil vale na unidade de cada plataforma; "
+                                     "volumes NÃO se comparam entre as duas."), "termos": list(TERMOS)},
         "paginas_kalshi_lidas": paginas,
         "marcados_como_esporte": marcados_esporte,
+        "com_data_vencida": sum(v["data_vencida"] for v in lista),
         "mercados": lista,
         "registros": regs,
     }
@@ -184,7 +201,7 @@ def main():
     print(len(lista), "mercados;", sum(v["fonte"] == "Polymarket" for v in lista), "Polymarket,",
           sum(v["fonte"] == "Kalshi" for v in lista), "Kalshi; páginas Kalshi", paginas)
     for v in lista[:25]:
-        print(f"{v['fonte'][:4]} {v['preco_sim']:.3f} {v['volume_dolares']:>12,.0f} {v['pergunta'][:90]}")
+        print(f"{v['fonte'][:4]} {v['preco_sim']:.3f} {v['volume']:>12,.0f} {v['pergunta'][:90]}")
 
 
 if __name__ == "__main__":

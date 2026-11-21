@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/fWj7mMamsIYV4QPYQXRJcJqf57w</id>
+  <title>arXiv Query: search_query=(cat:stat.* OR cat:math.ST) AND (cat:q-fin.* OR cat:econ.GN)&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:43:55Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:stat.*+OR+cat:math.ST)+AND+(cat:q-fin.*+OR+cat:econ.GN)&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>2557</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2401.14593v4</id>
+    <title>Robust Estimation of the Tail Index of a Single Parameter Pareto Distribution from Grouped Data</title>
+    <updated>2024-02-21T03:28:11Z</updated>
+    <link href="https://arxiv.org/abs/2401.14593v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2401.14593v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Numerous robust estimators exist as alternatives to the maximum likelihood estimator (MLE) when a completely observed ground-up loss severity sample dataset is available. However, the options for robust alternatives to MLE become significantly limited when dealing with grouped loss severity data, with only a handful of methods like least squares, minimum Hellinger distance, and optimal bounded influence function available. This paper introduces a novel robust estimation technique, the Method of Truncated Moments (MTuM), specifically designed to estimate the tail index of a Pareto distribution from grouped data. Inferential justification of MTuM is established by employing the central limit theorem and validating them through a comprehensive simulation study.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.RM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-01-26T01:42:06Z</published>
+    <arxiv:comment>18 pages, 1 figure, 6 tables</arxiv:comment>
+    <arxiv:primary_category term="stat.ME"/>
+    <author>
+      <name>Chudamani Poudyal</name>
+    </author>
+  </entry>
+</feed>

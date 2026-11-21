@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/JkC/kcLkFAfcjf0CJKcWHXRjBEM</id>
+  <title>arXiv Query: search_query=(cat:math.* OR cat:math-ph OR cat:cs.IT) AND cat:econ.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:39:40Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:math.*+OR+(cat:math-ph+OR+cat:cs.IT))+AND+cat:econ.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>1825</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2202.12106v3</id>
+    <title>The classification of preordered spaces in terms of monotones: complexity and optimization</title>
+    <updated>2022-08-14T12:28:42Z</updated>
+    <link href="https://arxiv.org/abs/2202.12106v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2202.12106v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The study of complexity and optimization in decision theory involves both partial and complete characterizations of preferences over decision spaces in terms of real-valued monotones. With this motivation, and following the recent introduction of new classes of monotones, like injective monotones or strict monotone multi-utilities, we present the classification of preordered spaces in terms of both the existence and cardinality of real-valued monotones and the cardinality of the quotient space. In particular, we take advantage of a characterization of real-valued monotones in terms of separating families of increasing sets in order to obtain a more complete classification consisting of classes that are strictly different from each other. As a result, we gain new insight into both complexity and optimization, and clarify their interplay in preordered spaces.</summary>
+    <category term="math.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.TH" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.FA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-02-24T14:00:10Z</published>
+    <arxiv:primary_category term="math.CO"/>
+    <author>
+      <name>Pedro Hack</name>
+    </author>
+    <author>
+      <name>Daniel A. Braun</name>
+    </author>
+    <author>
+      <name>Sebastian Gottwald</name>
+    </author>
+    <arxiv:doi>10.1007/s11238-022-09904-w</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/s11238-022-09904-w" title="doi"/>
+  </entry>
+</feed>

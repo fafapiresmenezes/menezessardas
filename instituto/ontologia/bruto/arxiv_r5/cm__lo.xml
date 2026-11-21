@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/kKdH6vFuAdY53xN5IW7k7DsTrbg</id>
+  <title>arXiv Query: search_query=cat:cond-mat* AND cat:cs.LO&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:49:19Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cond-mat*+AND+cat:cs.LO&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>7</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1310.0967v3</id>
+    <title>The SAT-UNSAT transition in the adversarial SAT problem</title>
+    <updated>2014-03-07T19:07:59Z</updated>
+    <link href="https://arxiv.org/abs/1310.0967v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1310.0967v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Adversarial SAT (AdSAT) is a generalization of the satisfiability (SAT) problem in which two players try to make a boolean formula true (resp. false) by controlling their respective sets of variables. AdSAT belongs to a higher complexity class in the polynomial hierarchy than SAT and therefore the nature of the critical region and the transition are not easily paralleled to those of SAT and worth of independent study. AdSAT also provides an upper bound for the transition threshold of the quantum satisfiability problem (QSAT). We present a complete algorithm for AdSAT, show that 2-AdSAT is in $\mathbf{P}$, and then study two stochastic algorithms (simulated annealing and its improved variant) and compare their performances in detail for 3-AdSAT. Varying the density of clauses $α$ we find a sharp SAT-UNSAT transition at a critical value whose upper bound is $α_c \lesssim 1.5$, thus providing a much stricter upper bound for the QSAT transition than those previously found.</summary>
+    <category term="cs.CC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.dis-nn" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.stat-mech" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2013-10-03T13:03:20Z</published>
+    <arxiv:comment>13 pages, 8 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CC"/>
+    <arxiv:journal_ref>Phys. Rev. E 89, 032128 (2014)</arxiv:journal_ref>
+    <author>
+      <name>Marco Bardoscia</name>
+    </author>
+    <author>
+      <name>Daniel Nagaj</name>
+    </author>
+    <author>
+      <name>Antonello Scardicchio</name>
+    </author>
+    <arxiv:doi>10.1103/PhysRevE.89.032128</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1103/PhysRevE.89.032128" title="doi"/>
+  </entry>
+</feed>

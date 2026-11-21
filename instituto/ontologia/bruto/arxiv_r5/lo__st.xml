@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/VJGjfw/+UneUaXyfPUwng1NHh3s</id>
+  <title>arXiv Query: search_query=cat:cs.LO AND (cat:stat.* OR cat:math.ST)&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:43:29Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.LO+AND+(cat:stat.*+OR+cat:math.ST)&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>128</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1005.3014v4</id>
+    <title>On the computability of conditional probability</title>
+    <updated>2019-11-16T06:49:45Z</updated>
+    <link href="https://arxiv.org/abs/1005.3014v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1005.3014v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>As inductive inference and machine learning methods in computer science see continued success, researchers are aiming to describe ever more complex probabilistic models and inference algorithms. It is natural to ask whether there is a universal computational procedure for probabilistic inference. We investigate the computability of conditional probability, a fundamental notion in probability theory and a cornerstone of Bayesian statistics. We show that there are computable joint distributions with noncomputable conditional distributions, ruling out the prospect of general inference algorithms, even inefficient ones. Specifically, we construct a pair of computable random variables in the unit interval such that the conditional distribution of the first variable given the second encodes the halting problem. Nevertheless, probabilistic inference is possible in many common modeling settings, and we prove several results giving broadly applicable conditions under which conditional distributions are computable. In particular, conditional distributions become computable when measurements are corrupted by independent computable noise with a sufficiently smooth bounded density.</summary>
+    <category term="math.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.PR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2010-05-17T19:58:54Z</published>
+    <arxiv:comment>44 pages, 3 figures. Final published version</arxiv:comment>
+    <arxiv:primary_category term="math.LO"/>
+    <arxiv:journal_ref>Journal of the ACM, 66:3 (2019), pp. 23:1-23:40</arxiv:journal_ref>
+    <author>
+      <name>Nathanael L. Ackerman</name>
+    </author>
+    <author>
+      <name>Cameron E. Freer</name>
+    </author>
+    <author>
+      <name>Daniel M. Roy</name>
+    </author>
+    <arxiv:doi>10.1145/3321699</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3321699" title="doi"/>
+  </entry>
+</feed>

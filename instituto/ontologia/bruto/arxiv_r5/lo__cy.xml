@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/iVcvQLO7T7ihJrZFzS1y8I0jvEE</id>
+  <title>arXiv Query: search_query=cat:cs.LO AND cat:cs.CY&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:52:15Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.LO+AND+cat:cs.CY&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>99</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2403.18537v1</id>
+    <title>A Path Towards Legal Autonomy: An interoperable and explainable approach to extracting, transforming, loading and computing legal information using large language models, expert systems and Bayesian networks</title>
+    <updated>2024-03-27T13:12:57Z</updated>
+    <link href="https://arxiv.org/abs/2403.18537v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2403.18537v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Legal autonomy - the lawful activity of artificial intelligence agents - can be achieved in one of two ways. It can be achieved either by imposing constraints on AI actors such as developers, deployers and users, and on AI resources such as data, or by imposing constraints on the range and scope of the impact that AI agents can have on the environment. The latter approach involves encoding extant rules concerning AI driven devices into the software of AI agents controlling those devices (e.g., encoding rules about limitations on zones of operations into the agent software of an autonomous drone device). This is a challenge since the effectivity of such an approach requires a method of extracting, loading, transforming and computing legal information that would be both explainable and legally interoperable, and that would enable AI agents to reason about the law. In this paper, we sketch a proof of principle for such a method using large language models (LLMs), expert legal systems known as legal decision paths, and Bayesian networks. We then show how the proposed method could be applied to extant regulation in matters of autonomous cars, such as the California Vehicle Code.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-03-27T13:12:57Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Axel Constant</name>
+    </author>
+    <author>
+      <name>Hannes Westermann</name>
+    </author>
+    <author>
+      <name>Bryan Wilson</name>
+    </author>
+    <author>
+      <name>Alex Kiefer</name>
+    </author>
+    <author>
+      <name>Ines Hipolito</name>
+    </author>
+    <author>
+      <name>Sylvain Pronovost</name>
+    </author>
+    <author>
+      <name>Steven Swanson</name>
+    </author>
+    <author>
+      <name>Mahault Albarracin</name>
+    </author>
+    <author>
+      <name>Maxwell J. D. Ramstead</name>
+    </author>
+  </entry>
+</feed>

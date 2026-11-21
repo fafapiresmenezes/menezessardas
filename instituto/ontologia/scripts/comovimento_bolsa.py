@@ -8,7 +8,7 @@ Mesma conta da base do IBGE (scripts/comovimento_pib.py), trocando a taxa:
   x_t = retorno mensal do setor em % (já é variação; não se sobrepõe, então n_ef ≈ n)
   Pearson, Spearman, n efetivo de Bartlett (8 defasagens), IC 95% de Fisher,
   parcial tirando o MERCADO inteiro (Mkt−RF + RF), e teste sem a pandemia (2020–2021).
-Janela: jan/1996 a set/2026, a mesma do PIB trimestral do IBGE.
+Janela: jan/1996 a set/2026, os mesmos anos da série trimestral do IBGE (as taxas anuais do PIB vão de 1997T1 a 2026T2).
 
 Leitura: duas ações setoriais que se movem juntas mesmo depois de tirar o mercado
 dividem algum risco comum (juros, petróleo, consumo, regulação). Não é dependência.
@@ -124,6 +124,9 @@ def main():
                   "primeiro_mes": meses[0], "ultimo_mes": meses[-1]},
         "metodo": {"taxa": "retorno mensal ponderado pelo valor de mercado, em %",
                    "parcial": "tira o retorno do mercado (Mkt−RF + RF)",
+                   "aviso_parcial": ("O retorno do mercado contém as próprias ações dos dois setores; tirar o mercado tira "
+                                     "também um pedaço deles, o que puxa a parcial para baixo. Ler a parcial como piso."),
+                   "teto_n_efetivo": "n efetivo limitado a n",
                    "resto": "igual à base do IBGE: Pearson, Spearman, n efetivo de Bartlett, IC 95% de Fisher, teste sem 2020–2021"},
         "setores": [{"codigo": c, "nome": n_, "nichos": ni} for c, n_, ni in SETORES],
         "pares": pares,

@@ -20,9 +20,14 @@
   "tentativas": [
    "1: todos os 233 países, só 2024: mediana 96,1, 54,2% no top 5% (reprovada)",
    "2: regra de países do Atlas, só 2024: mediana 95,7, 52,8% no top 5% (reprovada)",
-   "3: regra de países do Atlas, 2015–2024 juntos: resultado abaixo (última desta rodada)"
+   "3: regra de países do Atlas, 2015–2024 juntos: mediana 97,83, 66,1% no top 5% (reprovada)",
+   "3b (rodada 5, mesma regra, só sem o falso produto XXXX): resultado abaixo"
   ],
-  "produtos": 1247,
+  "limites": [
+   "filtro de países feito só com 2024 e aplicado a 2015–2024",
+   "não se testou se o critério de 80% no top 5% é alcançável nem com a φ do próprio Atlas, porque o mapa publicado é árvore mais corte, não as ligações mais fortes de cada linha"
+  ],
+  "produtos": 1246,
   "conferencia_publicada": "Dataverse doi:10.7910/DVN/FCDZBN, top_edges_hs92.csv, md5 8646568807730ef1117d8a48f055da45"
  },
  "metodo": {
@@ -782,8 +787,8 @@
  "conferencia": {
   "max_dif_phi_matriz_vs_laco_simples": 0.0,
   "ligacoes_publicadas_pelo_atlas": 3876,
-  "mediana_percentil_da_nossa_phi": 97.8330658105939,
-  "parte_no_top_5_por_cento": 0.6612487100103199,
+  "mediana_percentil_da_nossa_phi": 97.83132530120481,
+  "parte_no_top_5_por_cento": 0.6615067079463365,
   "criterio": "mediana ≥ 95 e ≥ 80% no top 5%",
   "aprovado": false
  },

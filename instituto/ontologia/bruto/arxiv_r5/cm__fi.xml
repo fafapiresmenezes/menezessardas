@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/l7K59mEPe32dycF57xyhm7MV6h8</id>
+  <title>arXiv Query: search_query=cat:cond-mat* AND (cat:q-fin.* OR cat:econ.GN)&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:41:09Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cond-mat*+AND+(cat:q-fin.*+OR+cat:econ.GN)&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>1137</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2502.17906v5</id>
+    <title>Why financial prices exhibit Brownian motion despite predictable order flow: An exactly solvable nonlinear price impact model</title>
+    <updated>2026-11-05T09:23:27Z</updated>
+    <link href="https://arxiv.org/abs/2502.17906v5" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2502.17906v5" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In econophysics, there are two enigmatic empirical laws of financial market microstructure: (i) the market-order flow has predictable persistence due to metaorder splitting by institutional investors, as formulated by the Lillo--Mike--Farmer model. However, this phenomenon seems paradoxical given the diffusive and unpredictable price dynamics. (ii) The price impact $I(Q_{\rm tot})$ of a large metaorder $Q_{\rm tot}$ follows the square-root law, $I(Q_{\rm tot})\propto \sqrt{Q_{\rm tot}}$. In this Letter, we reveal why price dynamics follows Brownian motion despite predictable order flow by unifying these enigmas via an exactly solvable model. We generalize the Lillo--Mike--Farmer model to nonlinear price-impact dynamics, which is mapped to a solvable Lévy-walk model. Our exact solution shows that the price dynamics remains diffusive under the square-root law, even under persistent order flow, reflecting the finite variance of metaorder impact; our model is thus a minimal representative of the universality class of nonlinear price-impact models with finite-variance metaorder impact. This work illustrates the crucial role of the square-root law in mitigating price movements by large metaorders, leading to Brownian price dynamics, consistent with the efficient market hypothesis over long timescales.</summary>
+    <category term="q-fin.TR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.stat-mech" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.MF" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.PR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-02-25T07:12:03Z</published>
+    <arxiv:comment>Main: 8 pages, 4 figures</arxiv:comment>
+    <arxiv:primary_category term="q-fin.TR"/>
+    <author>
+      <name>Yuki Sato</name>
+    </author>
+    <author>
+      <name>Shunta Fujiwara</name>
+    </author>
+    <author>
+      <name>Kiyoshi Kanazawa</name>
+    </author>
+  </entry>
+</feed>

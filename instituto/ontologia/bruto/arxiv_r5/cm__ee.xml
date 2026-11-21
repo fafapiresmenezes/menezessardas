@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/vHWBt3bjRQYnpFrU+xWN/VOkaaI</id>
+  <title>arXiv Query: search_query=cat:cond-mat* AND cat:eess.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:49:39Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cond-mat*+AND+cat:eess.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>453</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2303.02447v1</id>
+    <title>Free form three dimensional integrated circuits and wearables on a thread using organic eutectogel gated electrochemical transistors</title>
+    <updated>2023-03-04T16:12:07Z</updated>
+    <link href="https://arxiv.org/abs/2303.02447v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2303.02447v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Existing flexible electronics are planar, nonbreathable, and easily damaged. In this work, authors introduce a new paradigm of free-form three-dimensional integrated circuits assembled on a single textile thread for ultimate flexibility. Transistors are assembled as daisy chain on a thread and utilize deep eutectic solvent gels, or eutectogels as nonvolatile, breathable, and repairable dielectric for gating organic electrochemical transistor. The eutectogels provide stable transistor performance without the need for encapsulation, are air permeable to the skin, and make the Organic Eutectogel Gated Electrochemical Transistor (OEGET) a promising candidate for wearable electronics. Complex analog integrated circuits, such as single stage and multi-stage amplifiers can be realized on a single thread which can bend out of the plane of stretching for true three-dimensional flexibility. An all-thread based wearable that uses a thread-based strain sensor and thread-based integrated circuit for eye motion and respiration monitoring is also presented.</summary>
+    <category term="cond-mat.mtrl-sci" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.soft" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-03-04T16:12:07Z</published>
+    <arxiv:primary_category term="cond-mat.mtrl-sci"/>
+    <author>
+      <name>Rachel E. Owyeung</name>
+    </author>
+    <author>
+      <name>Wenxin Zeng</name>
+    </author>
+    <author>
+      <name>Matthew J. Panzer</name>
+    </author>
+    <author>
+      <name>Sameer Sonkusale</name>
+    </author>
+  </entry>
+</feed>

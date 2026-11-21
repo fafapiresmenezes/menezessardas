@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/mHFE3HizSfzBReI+cza2RZg8lQQ</id>
+  <title>arXiv Query: search_query=cat:quant-ph&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:46:47Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:quant-ph&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>191558</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2012.12321v1</id>
+    <title>Quantum Request-Answer Game with Buffer Model for Online Algorithms</title>
+    <updated>2020-12-22T19:48:45Z</updated>
+    <link href="https://arxiv.org/abs/2012.12321v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.12321v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We consider online algorithms as a request-answer game. An adversary that generates input requests, and an online algorithm answers. We consider a generalized version of the game that has a buffer of limited size. The adversary loads data to the buffer, and the algorithm has random access to elements of the buffer. We consider quantum and classical (deterministic or randomized) algorithms for the model.
+  In the paper, we provide a specific problem (The Most Frequent Keyword Problem) and a quantum algorithm that works better than any classical (deterministic or randomized) algorithm in terms of competitive ratio. At the same time, for the problem, classical online algorithms in the standard model are equivalent to the classical algorithms in the request-answer game with buffer model.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-22T19:48:45Z</published>
+    <arxiv:comment>12 pages</arxiv:comment>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Kamil Khadiev</name>
+    </author>
+  </entry>
+</feed>

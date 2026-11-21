@@ -69,7 +69,9 @@ def autocorr(x, k):
 
 def n_efetivo(x, y):
     soma = sum(autocorr(x, k) * autocorr(y, k) for k in range(1, K_LAGS + 1))
-    return len(x) / (1 + 2 * soma), soma
+    # teto em n (rodada 5): autocorrelações de sinais opostos podem dar n/(1+2Σ) > n, o que daria
+    # intervalo de confiança mais estreito que o de dados independentes; isso não se aceita.
+    return min(float(len(x)), len(x) / (1 + 2 * soma)), soma
 
 
 def pearson_manual(x, y):
@@ -154,6 +156,9 @@ def main():
             "n_efetivo": f"n / (1 + 2 Σ_(k=1..{K_LAGS}) ρx(k)·ρy(k))  (Bartlett 1935)",
             "ic95": "tanh(atanh(r) ± 1,959964 / √(n_ef − 3))",
             "parcial": "(r_xy − r_xp·r_yp) / √((1 − r_xp²)(1 − r_yp²)), p = PIB",
+            "aviso_parcial": ("O PIB contém os próprios setores x e y; tirar o PIB tira também um pedaço deles, o que "
+                              "puxa a parcial para baixo de forma mecânica. Ler a parcial como piso, não como valor exato."),
+            "teto_n_efetivo": "n efetivo limitado a n (nunca mais observações do que as que existem)",
             "regra_fraco": "n_efetivo < 36",
             "robustez": "Pearson sem 2020T1–2021T4; aviso se |r−ρ|>0,2 ou |r−r_sem_pandemia|>0,2",
         },

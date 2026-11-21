@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/OR70nor7/DvR6ZVP6eqft9CmLKM</id>
+  <title>arXiv Query: search_query=(cat:q-fin.* OR cat:econ.GN) AND cat:cs.CY&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:44:32Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:q-fin.*+OR+cat:econ.GN)+AND+cat:cs.CY&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>571</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2409.00843v2</id>
+    <title>Global Public Sentiment on Decentralized Finance: A Spatiotemporal Analysis of Geo-tagged Tweets from 150 Countries</title>
+    <updated>2025-02-03T18:18:48Z</updated>
+    <link href="https://arxiv.org/abs/2409.00843v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2409.00843v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Blockchain technology and decentralized finance (DeFi) are reshaping global financial systems. Despite their impact, the spatial distribution of public sentiment and its economic and geopolitical determinants are often overlooked. This study analyzes over 150 million geo-tagged, DeFi-related tweets from 2012 to 2022, sourced from a larger dataset of 7.4 billion tweets. Using sentiment scores from a BERT-based multilingual classification model, we integrated these tweets with economic and geopolitical data to create a multimodal dataset. Employing techniques like sentiment analysis, spatial econometrics, clustering, and topic modeling, we uncovered significant global variations in DeFi engagement and sentiment. Our findings indicate that economic development significantly influences DeFi engagement, particularly after 2015. Geographically weighted regression analysis revealed GDP per capita as a key predictor of DeFi tweet proportions, with its impact growing following major increases in cryptocurrency values such as bitcoin. While wealthier nations are more actively engaged in DeFi discourse, the lowest-income countries often discuss DeFi in terms of financial security and sudden wealth. Conversely, middle-income countries relate DeFi to social and religious themes, whereas high-income countries view it mainly as a speculative instrument or entertainment. This research advances interdisciplinary studies in computational social science and finance and supports open science by making our dataset and code available on GitHub, and providing a non-code workflow on the KNIME platform. These contributions enable a broad range of scholars to explore DeFi adoption and sentiment, aiding policymakers, regulators, and developers in promoting financial inclusion and responsible DeFi engagement globally.</summary>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.CP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-09-01T21:14:49Z</published>
+    <arxiv:primary_category term="econ.GN"/>
+    <author>
+      <name>Yuqi Chen</name>
+    </author>
+    <author>
+      <name>Yifan Li</name>
+    </author>
+    <author>
+      <name>Kyrie Zhixuan Zhou</name>
+    </author>
+    <author>
+      <name>Xiaokang Fu</name>
+    </author>
+    <author>
+      <name>Lingbo Liu</name>
+    </author>
+    <author>
+      <name>Shuming Bao</name>
+    </author>
+    <author>
+      <name>Daniel Sui</name>
+    </author>
+    <author>
+      <name>Luyao Zhang</name>
+    </author>
+  </entry>
+</feed>

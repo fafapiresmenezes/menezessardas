@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/sZrY4RzETM9LqhWYdVg6BprIf1E</id>
+  <title>arXiv Query: search_query=(cat:math.* OR cat:math-ph OR cat:cs.IT) AND cat:cs.CY&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:39:56Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:math.*+OR+(cat:math-ph+OR+cat:cs.IT))+AND+cat:cs.CY&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>354</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2409.19017v1</id>
+    <title>Repetition effects in a Sequential Monte Carlo sampler</title>
+    <updated>2024-09-24T19:33:16Z</updated>
+    <link href="https://arxiv.org/abs/2409.19017v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2409.19017v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We investigate the prevalence of sample repetition in a Sequential Monte Carlo (SMC) method recently introduced for political redistricting.</summary>
+    <category term="math.PR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-09-24T19:33:16Z</published>
+    <arxiv:primary_category term="math.PR"/>
+    <author>
+      <name>Sarah Cannon</name>
+    </author>
+    <author>
+      <name>Daryl DeFord</name>
+    </author>
+    <author>
+      <name>Moon Duchin</name>
+    </author>
+  </entry>
+</feed>

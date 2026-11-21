@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/5gurRZ0Val4/Osn9sH0bXVsiKJI</id>
+  <title>arXiv Query: search_query=(cat:math.* OR cat:math-ph OR cat:cs.IT) AND cat:cs.LO&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:39:33Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:math.*+OR+(cat:math-ph+OR+cat:cs.IT))+AND+cat:cs.LO&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>3824</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2105.10822v2</id>
+    <title>Homotopies in Multiway (Non-Deterministic) Rewriting Systems as $n$-Fold Categories</title>
+    <updated>2021-11-25T01:13:22Z</updated>
+    <link href="https://arxiv.org/abs/2105.10822v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2105.10822v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We investigate algebraic and compositional properties of abstract multiway rewriting systems, which are archetypical structures underlying the formalism of the Wolfram model. We demonstrate the existence of higher homotopies in this class of rewriting systems, where homotopical maps are induced by the inclusion of appropriate rewriting rules taken from an abstract rulial space of all possible such rules. Furthermore, we show that a multiway rewriting system with homotopies up to order $n$ may naturally be formalized as an $n$-fold category, such that (upon inclusion of appropriate inverse morphisms via invertible rewriting relations) the infinite limit of this structure yields an ${\infty}$-groupoid. Via Grothendieck's homotopy hypothesis, this ${\infty}$-groupoid thus inherits the structure of a formal homotopy space. We conclude with some comments on how this computational framework of homotopical multiway systems may potentially be used for making formal connections to homotopy spaces upon which models relevant to physics may be instantiated.</summary>
+    <category term="math.CT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-05-22T22:37:37Z</published>
+    <arxiv:comment>16 pages, 5 figures</arxiv:comment>
+    <arxiv:primary_category term="math.CT"/>
+    <author>
+      <name>Xerxes D. Arsiwalla</name>
+    </author>
+    <author>
+      <name>Jonathan Gorard</name>
+    </author>
+    <author>
+      <name>Hatem Elshatlawy</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/ozD1t2TGHEpWBottdxKj0TLQtIA</id>
+  <title>arXiv Query: search_query=cat:cs.CR&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:46:51Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.CR&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>54694</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2012.11541v1</id>
+    <title>Privacy Interpretation of Behavioural-based Anomaly Detection Approaches</title>
+    <updated>2020-12-21T18:21:09Z</updated>
+    <link href="https://arxiv.org/abs/2012.11541v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.11541v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper proposes the notion of 'Privacy-Anomaly Detection' and considers the question of whether behavioural-based anomaly detection approaches can have a privacy semantic interpretation and whether the detected anomalies can be related to the conventional (formal) definitions of privacy semantics such as k-anonymity. The idea is to learn the user's past querying behaviour in terms of privacy and then identifying deviations from past behaviour in order to detect privacy violations. Privacy attacks, violations of formal privacy definition, based on a sequence of SQL queries (query correlations) are also considered in the paper and it is shown that interactive querying settings are vulnerable to privacy attacks based on query sequences. Investigation on whether these types of privacy attacks can potentially manifest themselves as anomalies, specifically as privacy-anomalies was carried out. It is shown that in this paper that behavioural-based anomaly detection approaches have the potential to detect privacy attacks based on query sequences (violation of formal privacy definition) as privacy-anomalies.</summary>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-21T18:21:09Z</published>
+    <arxiv:comment>19 Pages</arxiv:comment>
+    <arxiv:primary_category term="cs.CR"/>
+    <author>
+      <name>Muhammad Imran Khan</name>
+    </author>
+    <author>
+      <name>Simon Foley</name>
+    </author>
+    <author>
+      <name>Barry O'Sullivan</name>
+    </author>
+  </entry>
+</feed>

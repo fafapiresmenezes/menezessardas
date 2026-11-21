@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/0AhKMGyO1GcK7WFOXUO/mNZkXIc</id>
+  <title>arXiv Query: search_query=cat:quant-ph AND cat:cs.CY&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:50:20Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:quant-ph+AND+cat:cs.CY&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>45</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2306.03321v1</id>
+    <title>Quantum Blockchain Miners Provide Massive Energy Savings</title>
+    <updated>2023-06-06T00:22:06Z</updated>
+    <link href="https://arxiv.org/abs/2306.03321v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2306.03321v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Blockchain-based cryptocurrencies have become an extremely important, highly-used, technology. A major criticism of cryptocurrencies, however, is their energy consumption. In May 2022 Bitcoin alone was reported to be consuming 150 terawatt-hours of electricity annually; more than many entire countries. Hence, any meaningful efficiency increase in this process would have a tremendous positive impact. Meanwhile, practical applications of quantum information technologies, and in particular of near-term quantum computers (NISQ) continue to be an important research question. Here, we study the efficiency benefits of moving cryptocurrency mining from current ASIC-based miners to quantum, and in particular NISQ, miners. While the time-efficiency benefits of quantum technologies is extremely well-studied, here we focus on energy savings. We show that the transition to quantum-based mining could incur an energy saving, by relatively conservative estimates, of about roughly 126.7TWH, or put differently the total energy consumption of Sweden in 2020.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.NI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-06-06T00:22:06Z</published>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Joseph Kearney</name>
+    </author>
+    <author>
+      <name>Carlos A Perez-Delgado</name>
+    </author>
+  </entry>
+</feed>

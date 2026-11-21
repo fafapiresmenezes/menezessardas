@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/4Dnu0ZhHqfzGBTaJXuSw1v01VoI</id>
+  <title>arXiv Query: search_query=cat:cs.CR AND (cat:q-fin.* OR cat:econ.GN)&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:42:19Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.CR+AND+(cat:q-fin.*+OR+cat:econ.GN)&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>244</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2109.10958v1</id>
+    <title>Who are the arbitrageurs? Empirical evidence from Bitcoin traders in the Mt. Gox exchange platform</title>
+    <updated>2021-09-22T18:23:43Z</updated>
+    <link href="https://arxiv.org/abs/2109.10958v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2109.10958v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We mine the leaked history of trades on Mt. Gox, the dominant Bitcoin exchange from 2011 to early 2014, to detect the triangular arbitrage activity conducted within the platform. The availability of user identifiers per trade allows us to focus on the historical record of 440 investors, detected as arbitrageurs, and consequently to describe their trading behavior. We begin by showing that a considerable difference appears between arbitrageurs when indicators of their expertise are taken into account. In particular, we distinguish between those who conducted arbitrage in a single or in multiple markets: using this element as a proxy for trade ability, we find that arbitrage actions performed by expert users are on average non-profitable when transaction costs are accounted for, while skilled investors conduct arbitrage at a positive and statistically significant premium. Next, we show that specific trading strategies, such as splitting orders or conducting arbitrage non aggressively, are further indicators of expertise that increase the profitability of arbitrage. Most importantly, we exploit within-user (across hours and markets) variation and document that expert users make profits on arbitrage by reacting quickly to plausible exogenous variations on the official exchange rates. We present further evidence that such differences are chiefly due to a better ability of the latter in incorporating information, both on the transactions costs and on the exchange rates volatility, eventually resulting in a better timing choice at small time scale intervals. Our results support the hypothesis that arbitrageurs are few and sophisticated users.</summary>
+    <category term="q-fin.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.PM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-09-22T18:23:43Z</published>
+    <arxiv:primary_category term="q-fin.GN"/>
+    <author>
+      <name>Pietro Saggese</name>
+    </author>
+    <author>
+      <name>Alessandro Belmonte</name>
+    </author>
+    <author>
+      <name>Nicola Dimitri</name>
+    </author>
+    <author>
+      <name>Angelo Facchini</name>
+    </author>
+    <author>
+      <name>Rainer Böhme</name>
+    </author>
+  </entry>
+</feed>

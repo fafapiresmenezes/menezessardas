@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/2C0mZRKQz7lpBt/GN/OHUgNQ5DM</id>
+  <title>arXiv Query: search_query=cat:quant-ph AND (cat:stat.* OR cat:math.ST)&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:41:38Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:quant-ph+AND+(cat:stat.*+OR+cat:math.ST)&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>789</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1903.02964v1</id>
+    <title>Estimation and uncertainty quantification for the output from quantum simulators</title>
+    <updated>2019-03-07T14:55:30Z</updated>
+    <link href="https://arxiv.org/abs/1903.02964v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1903.02964v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The problem of estimating certain distributions over $\{0,1\}^d$ is considered here. The distribution represents a quantum system of $d$ qubits, where there are non-trivial dependencies between the qubits. A maximum entropy approach is adopted to reconstruct the distribution from exact moments or observed empirical moments. The Robbins Monro algorithm is used to solve the intractable maximum entropy problem, by constructing an unbiased estimator of the un-normalized target with a sequential Monte Carlo sampler at each iteration. In the case of empirical moments, this coincides with a maximum likelihood estimator. A Bayesian formulation is also considered in order to quantify posterior uncertainty. Several approaches are proposed in order to tackle this challenging problem, based on recently developed methodologies. In particular, unbiased estimators of the gradient of the log posterior are constructed and used within a provably convergent Langevin-based Markov chain Monte Carlo method. The methods are illustrated on classically simulated output from quantum simulators.</summary>
+    <category term="stat.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-03-07T14:55:30Z</published>
+    <arxiv:primary_category term="stat.CO"/>
+    <author>
+      <name>Ryan Bennink</name>
+    </author>
+    <author>
+      <name>Ajay Jasra</name>
+    </author>
+    <author>
+      <name>Kody J. H. Law</name>
+    </author>
+    <author>
+      <name>Pavel Lougovski</name>
+    </author>
+  </entry>
+</feed>

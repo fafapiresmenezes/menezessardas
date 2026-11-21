@@ -1,0 +1,51 @@
+{
+ "quem": "Revisão independente feita por outro agente, só em leitura, em 21/11/2026 (09h15 a 09h30 UTC). Cada achado foi conferido de novo antes de corrigir.",
+ "achados": [
+  {
+   "n": 1,
+   "achado": "Selo Esporte errado: a expressão não exigia palavra inteira, e 'NFL' casava dentro de 'inflation'. 11 mercados de inflação no Brasil saíram como Esporte.",
+   "feito": "Palavra inteira dos dois lados. Refeito das respostas já gravadas (mesma coleta das 08:59 UTC): 4 mercados de esporte, não 15."
+  },
+  {
+   "n": 2,
+   "achado": "Volume da Kalshi vem em contratos (US$ 1 de face), não em dólares negociados, e estava na mesma coluna da Polymarket.",
+   "feito": "Coluna separada por unidade, ordenação dentro de cada plataforma e aviso de que os volumes não se comparam. A API da Kalshi não traz dólares negociados. 246 mercados da Kalshi seguem com piso de 10 mil contratos."
+  },
+  {
+   "n": 3,
+   "achado": "A parte da cadeia vinda de fora da região inclui o R$ 1,00 inicial da própria demanda, que dilui o número.",
+   "feito": "Nova medida só com os insumos: 1 − (L_dentro − 1)/(L_total − 1). Soja: Brasil 27,4% → 42,8%; Resto da África 17,2% → 57,1%. As duas aparecem lado a lado."
+  },
+  {
+   "n": 4,
+   "achado": "arXiv: categorias-apelido (stat.TH, q-fin.EC, math.IT, math.MP, cs.SY) dão zero na busca, e a conferência por ordem inversa não testava nada.",
+   "feito": "Áreas refeitas somando o nome principal de cada apelido; nova coleta completa. Conferência trocada por inclusão e exclusão em 6 pares: todas bateram. Nos 2 pares com categoria dos dois lados, o desenho usa a ponte sem ela (Economia × Finanças: 0,378 com, 0,064 sem). Estatística × aprendizado de máquina: 84,1% de stat.ML também está em cs.LG, anotado."
+  },
+  {
+   "n": 5,
+   "achado": "Os 13 números dos estudos da Kalshi não têm cópia conferível: o arquivo baixado era a página de checagem de robô.",
+   "feito": "Selo rebaixado para 'da literatura, sem cópia conferível', escrito na página e no PDF. Não se tentou passar pela checagem de robô."
+  },
+  {
+   "n": 6,
+   "achado": "O catálogo somava valores que não ficam gravados (matrizes mundiais inteiras) e contava φ com diagonal e repetição.",
+   "feito": "Duas colunas: valores calculados e valores gravados. φ conta só pares distintos. Brier e acerto viraram linhas separadas."
+  },
+  {
+   "n": 7,
+   "achado": "A correlação parcial tira um total (PIB ou bolsa) que contém os próprios setores.",
+   "feito": "Aviso escrito no método das duas bases: a parcial é piso, não valor exato."
+  },
+  {
+   "n": 8,
+   "achado": "Atlas: o falso produto XXXX (diferença estatística do comércio) entrava na conta; filtro de países só de 2024; critério de 80% nunca testado contra o próprio Atlas.",
+   "feito": "XXXX retirado (correção de defeito, não tentativa nova): mediana 97,83, 66,2% no top 5%, segue reprovada e publicada. Limites escritos na página."
+  },
+  {
+   "n": 9,
+   "achado": "Detalhes: n efetivo passava de n; janela da bolsa descrita errado; 3 mercados com data vencida; L4 dizia '5 maiores bancos'.",
+   "feito": "Teto do n efetivo em n (1 par do IBGE e 50 da bolsa); janela corrigida; 3 mercados marcados com data vencida; L4 agora diz 'bancos mais ativos no sistema de pagamentos' e que os 38% são pelos ativos (p. 5)."
+  }
+ ],
+ "conferido_certo": "IBGE (A e L batem com as Tabelas 14 e 15), EXIOBASE (A bate com a publicada), fórmulas de Bartlett e Fisher, serviços sem base no Atlas, palavras-chave dos mercados, e todos os números e páginas dos 9 estudos da literatura com impressão digital."
+}

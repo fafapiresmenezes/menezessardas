@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/riyegZoEm772VdiCJUz9lZVYu6Y</id>
+  <title>arXiv Query: search_query=cat:cs.AI AND cat:cs.LO&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:51:02Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.AI+AND+cat:cs.LO&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>3331</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1904.13196v1</id>
+    <title>Semantic Referee: A Neural-Symbolic Framework for Enhancing Geospatial Semantic Segmentation</title>
+    <updated>2019-04-30T12:44:22Z</updated>
+    <link href="https://arxiv.org/abs/1904.13196v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1904.13196v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Understanding why machine learning algorithms may fail is usually the task of the human expert that uses domain knowledge and contextual information to discover systematic shortcomings in either the data or the algorithm. In this paper, we propose a semantic referee, which is able to extract qualitative features of the errors emerging from deep machine learning frameworks and suggest corrections. The semantic referee relies on ontological reasoning about spatial knowledge in order to characterize errors in terms of their spatial relations with the environment. Using semantics, the reasoner interacts with the learning algorithm as a supervisor. In this paper, the proposed method of the interaction between a neural network classifier and a semantic referee shows how to improve the performance of semantic segmentation for satellite imagery data.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-04-30T12:44:22Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Marjan Alirezaie</name>
+    </author>
+    <author>
+      <name>Martin Längkvist</name>
+    </author>
+    <author>
+      <name>Michael Sioutis</name>
+    </author>
+    <author>
+      <name>Amy Loutfi</name>
+    </author>
+  </entry>
+</feed>

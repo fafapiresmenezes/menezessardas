@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/X4xgMHIHOreQLjuacoypWPSKR1E</id>
+  <title>arXiv Query: search_query=cat:cs.AI AND (cat:q-fin.* OR cat:econ.GN)&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:42:49Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.AI+AND+(cat:q-fin.*+OR+cat:econ.GN)&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>1242</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2601.00810v1</id>
+    <title>Can Large Language Models Improve Venture Capital Exit Timing After IPO?</title>
+    <updated>2025-12-22T00:19:34Z</updated>
+    <link href="https://arxiv.org/abs/2601.00810v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2601.00810v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Exit timing after an IPO is one of the most consequential decisions for venture capital (VC) investors, yet existing research focuses mainly on describing when VCs exit rather than evaluating whether those choices are economically optimal. Meanwhile, large language models (LLMs) have shown promise in synthesizing complex financial data and textual information but have not been applied to post-IPO exit decisions. This study introduces a framework that uses LLMs to estimate the optimal time for VC exit by analyzing monthly post IPO information financial performance, filings, news, and market signals and recommending whether to sell or continue holding. We compare these LLM generated recommendations with the actual exit dates observed for VCs and compute the return differences between the two strategies. By quantifying gains or losses associated with following the LLM, this study provides evidence on whether AI-driven guidance can improve exit timing and complements traditional hazard and real-options models in venture capital research.</summary>
+    <category term="q-fin.PM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-12-22T00:19:34Z</published>
+    <arxiv:primary_category term="q-fin.PM"/>
+    <author>
+      <name>Mohammadhossien Rashidi</name>
+    </author>
+  </entry>
+</feed>
