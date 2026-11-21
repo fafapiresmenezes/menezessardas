@@ -1,0 +1,13 @@
+[
+  {
+    "id": "ELE-T1",
+    "resposta": -1,
+    "passos": "Queda de tensão trifásica ΔU = √3·I·ρ·L·cosφ/S com I = P/(√3·U·cosφ) = 192,5 A; sem o comprimento L a secção não é determinável.",
+    "dado_que_falta": "Comprimento do circuito L (m)"
+  },
+  {
+    "id": "ELE-T2",
+    "resposta": 96.75,
+    "passos": "I = 120 000/(√3·400·0,9) = 192,5 A; S ≥ √3·I·ρ·L·cosφ/(0,04·U) = 333,3·0,0172·300·0,9/16 = 96,75 mm², governa sobre 70 mm² (corrente); comercial imediata 120 mm² (IEC 60228); reactância e correção de temperatura de ρ não incluídas, não confirmado."
+  }
+]

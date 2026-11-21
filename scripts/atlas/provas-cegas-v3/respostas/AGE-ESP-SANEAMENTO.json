@@ -1,0 +1,13 @@
+[
+ {
+  "id": "SAN-T1",
+  "resposta": -1,
+  "passos": "Consumo diário de cloro = dose (2,0 mg/L) x caudal diário tratado; o caudal não está nos dados, por isso não se calcula.",
+  "dado_que_falta": "Caudal diário de água a desinfectar (m³/dia)"
+ },
+ {
+  "id": "SAN-T2",
+  "resposta": 2160,
+  "passos": "Q = 8640/24 = 360 m³/h; V_tempo = 360 x 6,0 = 2160 m³; V_carga = (360/1,2) x 3,0 = 300 m² x 3,0 m = 900 m³; governa o maior, 2160 m³."
+ }
+]

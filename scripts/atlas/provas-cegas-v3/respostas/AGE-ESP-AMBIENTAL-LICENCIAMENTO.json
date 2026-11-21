@@ -1,0 +1,13 @@
+[
+  {
+    "id": "AMB-T1",
+    "resposta": -1,
+    "passos": "Só há massa de combustível (1 200 t/ano); a emissão de CO₂ = massa × fator de emissão do combustível, e o tipo de combustível e o fator não foram dados.",
+    "dado_que_falta": "Tipo de combustível (ex.: gasóleo, fuelóleo, carvão) e respetivo fator de emissão de CO₂ (tCO₂/t de combustível), ou poder calorífico inferior e fator de emissão por unidade de energia, com unidades."
+  },
+  {
+    "id": "AMB-T2",
+    "resposta": 87.5,
+    "passos": "Governa o critério mais exigente (30 mg/L, financiador), pois o projecto tem de cumprir também a norma local; η = (240 − 30) / 240 = 0,875 = 87,5 %."
+  }
+]

@@ -1,0 +1,28 @@
+[
+ {
+  "id": "ELE-T1",
+  "enunciado": "Alimentação trifásica de 120 kW a 400 V com factor de potência 0,9, em cabo de cobre. Qual a secção necessária para a queda de tensão ficar abaixo de 4%?",
+  "dados": {
+   "P_kW": 120.0,
+   "U_V": 400.0,
+   "cos_fi": 0.9,
+   "limite_queda": 0.04,
+   "rho_ohm_mm2_m": 0.0172
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "ELE-T2",
+  "enunciado": "O mesmo circuito, agora com 300 m de comprimento. Pela corrente admissível do cabo, bastariam 70 mm². Qual a secção que governa, para a queda de tensão não passar de 4%?",
+  "dados": {
+   "P_W": 120000.0,
+   "U_V": 400.0,
+   "cos_fi": 0.9,
+   "L_m": 300.0,
+   "rho_ohm_mm2_m": 0.0172,
+   "limite_queda": 0.04,
+   "secao_por_corrente_mm2": 70.0
+  },
+  "unidade_esperada": "mm²"
+ }
+]

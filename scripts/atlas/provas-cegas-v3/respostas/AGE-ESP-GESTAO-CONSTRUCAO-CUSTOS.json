@@ -1,0 +1,13 @@
+[
+  {
+    "id": "GES-T1",
+    "resposta": -1,
+    "passos": "Estimativa de custo final (EAC) exige CPI = EV/AC, e o enunciado só dá BAC=3 000 000 e EV=900 000; sem AC não se calcula EAC.",
+    "dado_que_falta": "Custo real acumulado à data (AC), na mesma moeda do BAC (AOA, NAD ou USD, indicar qual)."
+  },
+  {
+    "id": "GES-T2",
+    "resposta": 41,
+    "passos": "Caminho 1 = 12+18+9 = 39 dias; caminho 2 = 15+10+16 = 41 dias; duração = máximo dos caminhos = 41 dias (caminho 2 é o crítico), assumindo actividades encadeadas sem folgas nem sobreposições."
+  }
+]

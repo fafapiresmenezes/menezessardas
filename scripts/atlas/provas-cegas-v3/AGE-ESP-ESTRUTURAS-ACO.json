@@ -1,0 +1,24 @@
+[
+ {
+  "id": "ACO-T1",
+  "enunciado": "Pilar de aço S275 com secção de 7 680 mm². Qual o esforço axial resistente à encurvadura?",
+  "dados": {
+   "A_mm2": 7680,
+   "fy_MPa": 275,
+   "gamma_M1": 1.0
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "ACO-T2",
+  "enunciado": "O mesmo pilar, agora com factor de redução por encurvadura χ = 0,62 e γM0 = γM1 = 1,0. Qual a resistência que governa o dimensionamento?",
+  "dados": {
+   "A_mm2": 7680.0,
+   "fy_MPa": 275.0,
+   "chi": 0.62,
+   "gamma_M0": 1.0,
+   "gamma_M1": 1.0
+  },
+  "unidade_esperada": "kN"
+ }
+]

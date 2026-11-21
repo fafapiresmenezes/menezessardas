@@ -1,0 +1,13 @@
+[
+  {
+    "id": "PET-T1",
+    "resposta": -1,
+    "passos": "Sem factor de atrito de Darcy não se obtém o regime de escoamento (Re) nem a perda por Darcy-Weisbach; não se assume o valor típico.",
+    "dado_que_falta": "Factor de atrito de Darcy (ou, em alternativa, viscosidade dinâmica do petróleo e rugosidade absoluta da conduta, para o calcular por Colebrook-White)."
+  },
+  {
+    "id": "PET-T2",
+    "resposta": 0.0779,
+    "passos": "Limite de velocidade: Q = 3,0 x pi x 0,25^2/4 = 0,1473 m3/s. Limite de perda: v = sqrt(2 x 250000 x 0,25 / (0,019 x 3000 x 870)) = 1,588 m/s, Q = 1,588 x 0,04909 = 0,0779 m3/s (Darcy-Weisbach, f de Darcy). Governa o menor: 0,0779 m3/s (cerca de 78 L/s)."
+  }
+]

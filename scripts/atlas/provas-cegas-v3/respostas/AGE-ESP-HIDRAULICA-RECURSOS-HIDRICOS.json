@@ -1,0 +1,13 @@
+[
+  {
+    "id": "HID-T1",
+    "resposta": -1,
+    "passos": "Método racional Q = C·i·A/3,6 (Q em m³/s, i em mm/h, A em km²); com i = 60 mm/h e A = 2,5 km² resta Q = C·41,67 m³/s, pelo que o coeficiente de escoamento C é indispensável e não foi fornecido.",
+    "dado_que_falta": "Coeficiente de escoamento superficial C da bacia (adimensional, 0 a 1), com a sua fonte ou a descrição da ocupação do solo que o justifique."
+  },
+  {
+    "id": "HID-T2",
+    "resposta": 24.5,
+    "passos": "Altura manométrica governada pela altura estática máxima: H = 18,0 m + 6,5 m = 24,5 m, assumindo que os 6,5 m incluem todas as perdas (sucção e recalque) e que a descarga é livre à atmosfera; a altura mínima (12,0 m) não governa e serve só para verificar o NPSH disponível."
+  }
+]

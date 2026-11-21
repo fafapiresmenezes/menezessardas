@@ -1,0 +1,4 @@
+[
+  {"id": "TRA-T1", "resposta": -1, "passos": "Área = 4000 m x 7,5 m = 30 000 m²; a massa depende da espessura da camada (m · t/m³) e a espessura não consta do enunciado.", "dado_que_falta": "Espessura da camada de mistura betuminosa (em m, p.ex. 0,05 m)"},
+  {"id": "TRA-T2", "resposta": 715.8, "passos": "R = V²/(127·(e+f)): equilíbrio 100²/(127·0,19) = 414,4 m; conforto 100²/(127·0,11) = 715,8 m; governa o maior, 715,8 m (m)."}
+]

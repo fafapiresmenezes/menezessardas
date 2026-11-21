@@ -1,0 +1,13 @@
+[
+  {
+    "id": "ACO-T1",
+    "resposta": -1,
+    "passos": "Resistência à encurvadura N_b,Rd = χ·A·fy/γM1; com A = 7680 mm², fy = 275 MPa e γM1 = 1,0 a secção não basta, pois falta χ (Eurocódigo 3, EN 1993-1-1, cláusula 6.3.1).",
+    "dado_que_falta": "Factor de redução por encurvadura χ (ou, em alternativa, esbelteza reduzida λ̄ e curva de encurvadura a/b/c/d, para o cálculo de χ)."
+  },
+  {
+    "id": "ACO-T2",
+    "resposta": 1309.44,
+    "passos": "N_pl,Rd = A·fy/γM0 = 7680·275/1,0 = 2112 kN; N_b,Rd = χ·A·fy/γM1 = 0,62·2112/1,0 = 1309,44 kN; governa o mínimo, N_b,Rd (EN 1993-1-1, 6.3.1); assume-se secção de classe 1 a 3 (área bruta A), classe 4 não confirmada."
+  }
+]

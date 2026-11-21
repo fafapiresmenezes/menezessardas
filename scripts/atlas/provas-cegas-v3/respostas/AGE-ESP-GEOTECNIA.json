@@ -1,0 +1,13 @@
+[
+  {
+    "id": "GEO-T1",
+    "resposta": -1,
+    "passos": "Assentamento por consolidação s = (Cc/(1+e0))·H·log10((σ'0+Δσ)/σ'0); com H = 4,0 m e Δσ = 60 kPa, falta Cc, e0 e σ'0.",
+    "dado_que_falta": "Índice de compressibilidade Cc (ou Cr e e0) da argila mole e tensão efectiva inicial σ'0 no meio da camada (kPa); sem eles o assentamento não se determina."
+  },
+  {
+    "id": "GEO-T2",
+    "resposta": 857.14,
+    "passos": "Resistência de cálculo do terreno Rc;d = (Rb;k + Rs;k)/γt = (700 + 500)/1,4 = 857,14 kN; governa face a 980 kN da secção (857,14 < 980)."
+  }
+]
