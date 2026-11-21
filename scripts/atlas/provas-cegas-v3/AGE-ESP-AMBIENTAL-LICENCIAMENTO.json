@@ -1,0 +1,20 @@
+[
+ {
+  "id": "AMB-T1",
+  "enunciado": "Central térmica que vai queimar 1 200 toneladas de combustível por ano. Qual a emissão anual de CO₂?",
+  "dados": {
+   "combustivel_t_ano": 1200.0
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "AMB-T2",
+  "enunciado": "Efluente com 240 mg/L de CBO₅. A norma local admite descarga até 60 mg/L; o padrão do banco financiador admite 30 mg/L. Qual a eficiência de remoção que governa o projecto?",
+  "dados": {
+   "CBO_entrada_mg_L": 240.0,
+   "limite_local_mg_L": 60.0,
+   "limite_financiador_mg_L": 30.0
+  },
+  "unidade_esperada": "%"
+ }
+]

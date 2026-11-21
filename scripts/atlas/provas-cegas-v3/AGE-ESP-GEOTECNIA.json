@@ -1,0 +1,22 @@
+[
+ {
+  "id": "GEO-T1",
+  "enunciado": "Camada de argila mole com 4,0 m de espessura sob um aterro que aumenta a tensão efectiva em 60 kPa. Qual o assentamento por consolidação?",
+  "dados": {
+   "H_m": 4.0,
+   "delta_sigma_kPa": 60.0
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "GEO-T2",
+  "enunciado": "Estaca com resistência de ponta característica de 700 kN e resistência lateral característica de 500 kN, com coeficiente parcial global de 1,4 no lado do terreno. A secção de betão da estaca resiste a 980 kN de cálculo. Qual a carga de cálculo que governa?",
+  "dados": {
+   "Rb_k_kN": 700.0,
+   "Rs_k_kN": 500.0,
+   "gamma_t": 1.4,
+   "resistencia_estrutural_kN": 980.0
+  },
+  "unidade_esperada": "kN"
+ }
+]

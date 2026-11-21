@@ -1,0 +1,21 @@
+[
+ {
+  "id": "SAN-T1",
+  "enunciado": "Estação de tratamento de água que vai desinfectar com uma dose de 2,0 mg/L de cloro. Qual o consumo diário de cloro?",
+  "dados": {
+   "dose_mg_L": 2.0
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "SAN-T2",
+  "enunciado": "Decantador para 8 640 m³/dia. O critério de tempo de retenção pede 6,0 horas; o critério de carga superficial pede 1,2 m/h de velocidade ascensional, com 3,0 m de altura útil. Qual o volume que governa?",
+  "dados": {
+   "caudal_m3_dia": 8640.0,
+   "tempo_retencao_h": 6.0,
+   "velocidade_ascensional_m_h": 1.2,
+   "altura_util_m": 3.0
+  },
+  "unidade_esperada": "m³"
+ }
+]

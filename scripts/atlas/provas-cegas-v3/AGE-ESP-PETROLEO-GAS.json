@@ -1,0 +1,26 @@
+[
+ {
+  "id": "PET-T1",
+  "enunciado": "Conduta de 250 mm de diâmetro interno e 3 000 m de comprimento transporta 0,060 m³/s de petróleo com 870 kg/m³. Qual a perda de pressão?",
+  "dados": {
+   "caudal_m3_s": 0.06,
+   "diametro_m": 0.25,
+   "comprimento_m": 3000.0,
+   "rho_kg_m3": 870.0
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "PET-T2",
+  "enunciado": "A mesma conduta de 250 mm e 3 000 m, com petróleo de 870 kg/m³ e factor de atrito 0,019. A prática limita a velocidade a 3,0 m/s e o sistema admite no máximo 250 kPa de perda de pressão. Qual o caudal máximo que governa?",
+  "dados": {
+   "diametro_m": 0.25,
+   "comprimento_m": 3000.0,
+   "rho_kg_m3": 870.0,
+   "factor_atrito": 0.019,
+   "velocidade_maxima_m_s": 3.0,
+   "perda_admissivel_kPa": 250.0
+  },
+  "unidade_esperada": "m³/s"
+ }
+]

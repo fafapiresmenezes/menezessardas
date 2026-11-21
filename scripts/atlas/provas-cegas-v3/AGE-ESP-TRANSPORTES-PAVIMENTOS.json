@@ -1,0 +1,23 @@
+[
+ {
+  "id": "TRA-T1",
+  "enunciado": "Camada de mistura betuminosa em 4,0 km de via com 7,5 m de largura, massa volúmica 2,4 t/m³. Qual a massa de mistura a produzir?",
+  "dados": {
+   "comprimento_km": 4.0,
+   "largura_m": 7.5,
+   "densidade_t_m3": 2.4
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "TRA-T2",
+  "enunciado": "Curva horizontal para 100 km/h. Pelo equilíbrio com sobreelevação de 7% e atrito lateral de 0,12, resulta um raio mínimo; por um critério de conforto que admite só 7% de sobreelevação e um terço daquele atrito, resulta outro. Qual o raio que governa?",
+  "dados": {
+   "V_km_h": 100.0,
+   "e": 0.07,
+   "f_equilibrio": 0.12,
+   "f_conforto": 0.04
+  },
+  "unidade_esperada": "m"
+ }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "id": "MEC-T1",
+    "resposta": -1,
+    "passos": "P_eixo = Q·Δp / η; Q = 5,0 m³/s e η = 0,70 conhecidos, mas Δp não foi dado, por isso não é calculável.",
+    "dado_que_falta": "Pressão do ventilador Δp em Pa (indicar se é pressão total ou estática, e se o rendimento η é total ou estático)."
+  },
+  {
+    "id": "MEC-T2",
+    "resposta": 4.98,
+    "passos": "Caudal de ar novo = 200 × 10 L/s = 2,0 m³/s; caudal sensível = P / (ρ·cp·ΔT) = 60 kW / (1,2 × 1,005 × 10) = 4,975 m³/s; governa o maior dos dois, 4,98 m³/s (sensível)."
+  }
+]

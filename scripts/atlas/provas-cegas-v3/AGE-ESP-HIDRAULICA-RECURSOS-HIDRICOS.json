@@ -1,0 +1,21 @@
+[
+ {
+  "id": "HID-T1",
+  "enunciado": "Bacia urbana de 2,5 km² com chuvada de intensidade 60 mm/h. Qual o caudal de ponta pelo método racional?",
+  "dados": {
+   "area_km2": 2.5,
+   "intensidade_mm_h": 60.0
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "HID-T2",
+  "enunciado": "Estação elevatória que aspira de um reservatório cujo nível varia: altura estática mínima de 12,0 m e máxima de 18,0 m, com 6,5 m de perda de carga no caudal de projecto. Para que altura manométrica se dimensiona a bomba?",
+  "dados": {
+   "estatica_minima_m": 12.0,
+   "estatica_maxima_m": 18.0,
+   "perda_de_carga_m": 6.5
+  },
+  "unidade_esperada": "m"
+ }
+]
