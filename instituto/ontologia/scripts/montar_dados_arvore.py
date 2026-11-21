@@ -65,6 +65,7 @@ dados['ciencias'] = {k: ci[k] for k in ('nome', 'aviso', 'fonte', 'metodo', 'are
 dados['mercados'] = {k: mp[k] for k in ('nome', 'aviso', 'coletado_utc', 'filtros', 'mercados')}
 dados['mercados']['setor'] = json.load(open('literatura/setor_mercados_previsao.json'))
 dados['mercados']['marcados_como_esporte'] = mp.get('marcados_como_esporte', 0)
+dados['variaveis'] = json.load(open('saida/catalogo_variaveis.json'))
 F = {f['n']: f for f in dados['familias']}
 F[3].update({'nome': 'Movimento conjunto', 'estado': 'feito', 'selo': 'calculado por nós', 'fonte': 'IBGE, PIB trimestral 1996–2026 (12 setores) + bolsa dos EUA, 1996–2026 (23 setores)', 'pares': len(co['pares']) + len(cb['pares'])})
 F[4].update({'estado': 'feito', 'selo': 'dado de terceiros', 'fonte': f"Polymarket e Kalshi, {len(mp['mercados'])} mercados (não é predição nossa)"})

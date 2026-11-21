@@ -97,7 +97,7 @@ a { color: var(--accent) }
   <section class="fams" id="fams" aria-label="As sete famílias de índice"></section>
 
   <nav class="tabs" aria-label="Vistas">
-    <a href="#arvore">Árvore</a><a href="#matriz">Matriz</a><a href="#mundo">Mundo</a><a href="#proximidade">Proximidade</a><a href="#movimento">Movimento conjunto</a><a href="#ciencias">Ciências</a><a href="#mercados">Mercados</a><a href="#literatura">Literatura</a><a href="#setores">Setores</a><a href="#interno">Interno</a><a href="#metodo">Método</a>
+    <a href="#arvore">Árvore</a><a href="#matriz">Matriz</a><a href="#mundo">Mundo</a><a href="#proximidade">Proximidade</a><a href="#movimento">Movimento conjunto</a><a href="#ciencias">Ciências</a><a href="#mercados">Mercados</a><a href="#literatura">Literatura</a><a href="#setores">Setores</a><a href="#interno">Interno</a><a href="#variaveis">Variáveis</a><a href="#metodo">Método</a>
   </nav>
 
   <div class="main">
@@ -209,6 +209,14 @@ a { color: var(--accent) }
         <h2>Sobreposição interna do Instituto</h2>
         <p class="note" id="internoAviso"></p>
         <div class="scroll"><table id="tabInt"></table></div>
+      </section>
+
+      <section class="card" data-vista="variaveis" hidden>
+        <h2>Todas as variáveis, com o tipo de cada uma</h2>
+        <p class="note" id="varResumo"></p>
+        <div class="fams" id="varTipos"></div>
+        <div class="controls"><label for="varFam">Família <select id="varFam"></select></label><span class="note" id="varCont"></span></div>
+        <div class="scroll"><table id="tabVar"></table></div>
       </section>
 
       <section class="card" data-vista="metodo" hidden>
@@ -423,7 +431,7 @@ function desenharLiteratura() {
   document.getElementById('litLista').innerHTML = D0.literatura.registro.map(cartaoLit).join('');
 }
 function desenharMundo() {
-  const W = D0.mundo, reg = document.getElementById('regiao').value, med = document.getElementById('medidaW').value, n = W.setores.length;
+  const W = D0.mundo, regSel = document.getElementById('regiao').value, reg = regSel === 'mundo' ? 'mundo' : (Object.keys(W.regioes).find(k => k === regSel) || 'mundo'), med = document.getElementById('medidaW').value, n = W.setores.length;
   document.getElementById('mundoFonte').textContent = `${W.fonte}. Valores em ${W.unidade}. ${W.aviso_angola}`;
   let M, nota;
   if (reg === 'mundo') { M = W[med]; nota = 'Mundo: todas as 49 regiões somadas numa tabela só, antes da conta.'; }
@@ -442,8 +450,9 @@ function desenharMundo() {
     document.getElementById('tabFora').innerHTML = '<tr><th>Setor</th><th>Nicho</th><th class="num">Parte de fora</th><th></th></tr>' + W.setores.map((s, c) => ({ s, f: b.parte_da_cadeia_fora_da_regiao[c] })).sort((a, z) => z.f - a.f)
       .map(r => `<tr><td>${esc(r.s.pt)}</td><td>${esc(r.s.nicho)}</td><td class="num">${fmt(100 * r.f, 1)}%</td><td style="width:30%"><div class="bar" style="width:${Math.min(100, 200 * r.f)}%"></div></td></tr>`).join(''); }
 }
-function mostrarParMundo(i, j, reg) {
+function mostrarParMundo(i, j, regIn) {
   const W = D0.mundo, si = W.setores[i], sj = W.setores[j];
+  const reg = regIn === 'mundo' ? 'mundo' : Object.keys(W.regioes).find(k => k === regIn); if (!reg) return;
   let corpo;
   if (reg === 'mundo') corpo = `<div class="big">${fmt(W.A[i][j], 6)}</div><p class="note">compra direta, mundo inteiro</p>
     <div class="formula">A[${esc(si.pt)} → ${esc(sj.pt)}] = Zw ÷ xw
@@ -453,11 +462,11 @@ A  = ${fmt(W.Z[i][j], 2)} ÷ ${fmt(W.x[j], 1)} = ${fmt(W.Z[i][j] / W.x[j], 6)}</
     <div class="big" style="font-size:1.4rem">${fmt(W.L[i][j], 6)}</div><p class="note">efeito em cadeia mundial: Lw = (I − Aw)⁻¹, conferido pela soma de ${W.conferencia.termos_serie_mundo} rodadas.</p>`;
   else { const b = W.por_regiao[reg], tot = b.L_total[i][j], dom = b.L_dentro_da_regiao[i][j];
     corpo = `<div class="big">${fmt(tot, 6)}</div><p class="note">efeito em cadeia para 1 euro de demanda final de ${esc(sj.pt)} em ${esc(W.regioes[reg])}, somando fornecedores do mundo todo</p>
-    <div class="formula">L_total = Σ regiões r  L[(r, ${esc(si.pt)}), (${reg}, ${esc(sj.pt)})]
-dentro de ${reg}      ${fmt(dom, 6)}
-fora de ${reg}        ${fmt(tot - dom, 6)}
+    <div class="formula">L_total = Σ regiões r  L[(r, ${esc(si.pt)}), (${esc(reg)}, ${esc(sj.pt)})]
+dentro de ${esc(reg)}      ${fmt(dom, 6)}
+fora de ${esc(reg)}        ${fmt(tot - dom, 6)}
 total               ${fmt(tot, 6)}
-compra direta dentro de ${reg} (A)  ${fmt(b.A_dentro_da_regiao[i][j], 6)}</div>`; }
+compra direta dentro de ${esc(reg)} (A)  ${fmt(b.A_dentro_da_regiao[i][j], 6)}</div>`; }
   document.getElementById('painel').innerHTML = `<h3>Memória de cálculo · Família 1 · base mundial · calculado por nós</h3>
     <p class="frase"><b>${esc(sj.pt)}</b> compra de <b>${esc(si.pt)}</b></p>${corpo}
     <p class="note">Conferência: nossa A contra a A publicada pelo EXIOBASE, diferença ${W.conferencia.max_dif_A_nossa_vs_A_publicada.toExponential(1)}; resíduo da inversão completa (7.987 linhas) ${W.conferencia['max_residuo_(I-A)L-I_completo'].toExponential(1)}. Nomes originais: ${esc(si.en)} / ${esc(sj.en)}.</p>`;
@@ -635,7 +644,21 @@ dentro do grupo B                   = ${fmt(B.phi_media_dentro, 6)}</div>
     <p class="note">${esc(X.metodo.referencia)}. Proximidade de capacidades, não compra e venda.</p>`;
 }
 
-const VISTAS = ['arvore', 'matriz', 'mundo', 'proximidade', 'movimento', 'ciencias', 'mercados', 'literatura', 'setores', 'interno', 'metodo'];
+/* ---------- Catálogo de variáveis ---------- */
+const TIPO_TXT = { 'razão contínua': 'tem zero de verdade e pode multiplicar (reais, euros, dias)', 'proporção': 'fica entre 0 e 1', 'correlação': 'de −1 a 1, sem unidade', 'índice relativo': 'comparado com a média (média = 1)', 'contagem': 'número inteiro de coisas', 'binária': 'sim ou não', 'categórica': 'rótulo, sem número', 'probabilidade de mercado': 'preço de 0 a 1 de terceiros, sem calibragem nossa', 'da literatura': 'número copiado da fonte' };
+function desenharVar() {
+  const V = D0.variaveis; if (!V) return;
+  document.getElementById('varResumo').textContent = `${V.linhas} variáveis de ${V.tipos_de_variavel} tipos, somando ${V.instancias_total.toLocaleString('pt-BR')} valores guardados. ${V.regra} Tipos pela escala de medida de ${V.escala_de_tipos}.`;
+  document.getElementById('varTipos').innerHTML = Object.entries(V.por_tipo).sort((a, b) => b[1].instancias - a[1].instancias).map(([t, d]) => `<div class="fam"><b>${esc(t)}</b><small>${esc(TIPO_TXT[t] || '')}</small><small class="num">${d.linhas} variáveis · ${d.instancias.toLocaleString('pt-BR')} valores</small></div>`).join('');
+  const sel = document.getElementById('varFam');
+  if (!sel.options.length) sel.innerHTML = '<option value="">Todas</option>' + [...new Set(V.catalogo.map(c => c.familia))].map(f => `<option>${esc(f)}</option>`).join('');
+  const lista = V.catalogo.filter(c => !sel.value || c.familia === sel.value);
+  document.getElementById('varCont').textContent = `${lista.length} variáveis`;
+  document.getElementById('tabVar').innerHTML = '<tr><th>Família</th><th>Variável</th><th>Símbolo</th><th>Tipo</th><th>Unidade · faixa</th><th>Fonte · período</th><th>Granularidade</th><th class="num">Valores</th><th>Selo</th></tr>' +
+    lista.map(c => `<tr><td>${esc(c.familia)}</td><td>${esc(c.nome)}${c.obs ? `<br><span class="note">${esc(c.obs)}</span>` : ''}</td><td class="mono">${esc(c.simbolo)}</td><td>${esc(c.tipo)}</td><td>${esc(c.unidade)}<br><span class="note">${esc(c.faixa)}</span></td><td>${esc(c.fonte)}<br><span class="note">${esc(c.periodo)}</span></td><td>${esc(c.granularidade)}</td><td class="num">${c.instancias.toLocaleString('pt-BR')}</td><td><span class="pill ${c.selo === 'calculado por nós' ? 'ok' : c.selo.startsWith('da lit') ? 'and' : ''}">${esc(c.selo)}</span></td></tr>`).join('');
+}
+
+const VISTAS = ['arvore', 'matriz', 'mundo', 'proximidade', 'movimento', 'ciencias', 'mercados', 'literatura', 'setores', 'interno', 'variaveis', 'metodo'];
 function rota() {
   const v = VISTAS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'arvore';
   document.querySelectorAll('[data-vista]').forEach(s => s.hidden = s.dataset.vista !== v);
@@ -644,9 +667,10 @@ function rota() {
 
 fetch('arvore-dados.json').then(r => r.json()).then(d => {
   D0 = d; IB = d.ibge; IB.cod.forEach((c, k) => ix[c] = k);
-  desenharFamilias(); desenharPx(); desenharMov(); desenharCi(); desenharMp(); desenharSetorMp(); desenharMundo(); desenharLiteratura(); desenharGrafo(); desenharMatriz(); desenharSetores(); desenharInterno(); desenharMetodo(); rota();
+  desenharFamilias(); desenharVar(); desenharPx(); desenharMov(); desenharCi(); desenharMp(); desenharSetorMp(); desenharMundo(); desenharLiteratura(); desenharGrafo(); desenharMatriz(); desenharSetores(); desenharInterno(); desenharMetodo(); rota();
   ['medida', 'corte'].forEach(id => document.getElementById(id).addEventListener('input', desenharGrafo));
   document.getElementById('medidaC').addEventListener('input', desenharMov);
+  document.getElementById('varFam').addEventListener('input', desenharVar);
   document.getElementById('baseC').addEventListener('input', () => { desenharMov(); const C = baseC(), p = C.pares[0]; mostrarMov(p.a, p.b); });
   document.getElementById('corteCi').addEventListener('input', desenharCi);
   document.getElementById('mpNicho').addEventListener('input', desenharMp);
