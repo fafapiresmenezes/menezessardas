@@ -28,7 +28,7 @@ jobs:
           # o histórico da régua é lido do git: sem os commits, não há como conferir
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           # Node 22, e não 20: os scripts do geo usam fs.globSync (chegou no 22) e o
           # medir-nota.mjs lê um .ts com --experimental-strip-types. No 20 a obra morria
