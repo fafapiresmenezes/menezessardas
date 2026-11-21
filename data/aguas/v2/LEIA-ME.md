@@ -6,3 +6,6 @@
   - Conteúdo: 25.974 trechos de rio (o sentido do traço no OpenStreetMap é o sentido da água), 329 lagos e reservatórios ligados à rede, 27.292 ligações "drena para".
   - Ligações "ponte": onde o mapa tem um buraco, ligamos o fim de um trecho ao trecho mais próximo (até 2 km) ou ao trecho do mesmo rio (até 40 km), sempre sem criar volta. Cada ponte vem marcada, com a distância.
   - Tempo de viagem: estimativa por faixa de velocidade (0,3 a 1,5 m/s, central 0,8 m/s), sem vazão medida. A travessia de lagos ainda não é estimada. O P12 refina isso com a vazão do GloFAS.
+
+## br-rede-v1.json.gz (Rio de Janeiro)
+Rede de rios do estado do RJ com a transposição de Santa Cecília (Paraíba do Sul → Guandu): 16.294 trechos, 194 lagos, 17.165 ligações (1.279 pontes marcadas). Fonte: Overture Maps 2026-11-18.0 (OpenStreetMap, ODbL). Tempo de viagem por faixa 0,3–1,5 m/s (central 0,8). Carregada pela função agua-carga-grafo pelo URL deste commit com o sha256 do JSON.
