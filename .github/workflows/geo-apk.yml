@@ -37,6 +37,11 @@ permissions:
 jobs:
   apk:
     runs-on: ubuntu-latest
+    env:
+      # O contexto `secrets` NAO funciona dentro de `if:` de passo; funciona aqui, e o `if` le
+      # daqui. Escrito direto no `if`, a condicao seria sempre falsa e os passos da versao de
+      # publicacao nunca rodariam, sem erro nenhum aparecer.
+      TEM_CHAVE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -92,3 +97,49 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
+
+      # ---- Versao de PUBLICACAO, so quando a chave de assinatura existir nos segredos ----
+      # Enquanto o segredo ANDROID_KEYSTORE_BASE64 nao existir, estes passos sao pulados e o
+      # fluxo termina exatamente como antes. Quando existir, sai um APK de publicacao assinado e
+      # nao depuravel, e a MESMA conferencia roda sobre ele exigindo que nao seja depuravel.
+      # E o que falta para a dimensao 4 da regua chegar a 10. Criar a chave e de graca; o passo
+      # a passo esta em /mnt/project-files/geo-replano/PASSO-A-PASSO-M-geo.md.
+      - name: Recompor a chave de assinatura a partir do segredo
+        if: env.TEM_CHAVE == 'true'
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/theye.jks"
+          test -s "$RUNNER_TEMP/theye.jks"
+
+      - name: Montar o APK de publicacao, assinado
+        if: env.TEM_CHAVE == 'true'
+        env:
+          ANDROID_KEYSTORE_FILE: ${{ runner.temp }}/theye.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: ./gradlew --no-daemon assembleRelease
+        working-directory: android
+
+      - name: Conferir o APK de publicacao
+        if: env.TEM_CHAVE == 'true'
+        run: node scripts/geo/conferir-apk.mjs android/app/build/outputs/apk/release/app-release.apk release
+
+      - name: Guardar o APK de publicacao
+        if: env.TEM_CHAVE == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: theye-geo-apk-publicacao
+          path: android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Dizer, no log, que a chave ainda nao existe
+        if: env.TEM_CHAVE != 'true'
+        run: |
+          echo "So o APK de DEPURACAO foi montado."
+          echo "A versao de publicacao exige a chave de assinatura nos segredos do repositorio:"
+          echo "ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS e"
+          echo "ANDROID_KEY_PASSWORD. Criar a chave e de graca, e o passo a passo esta em"
+          echo "/mnt/project-files/geo-replano/PASSO-A-PASSO-M-geo.md."
+          echo "Enquanto isso a dimensao 4 da regua fica em 9, e nao em 10."
+
