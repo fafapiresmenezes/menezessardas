@@ -1,0 +1,27 @@
+[
+ {
+  "id": "HID-D1",
+  "enunciado": "Canal trapezoidal de base 3,00 m, taludes 1V:1,5H, altura de água 1,20 m, n = 0,015, declive 0,001. Qual o caudal?",
+  "dados": {
+   "b_m": 3.0,
+   "z": 1.5,
+   "y_m": 1.2,
+   "n": 0.015,
+   "S": 0.001
+  },
+  "unidade_esperada": "m³/s"
+ },
+ {
+  "id": "HID-D2",
+  "enunciado": "Bombagem de 60 L/s por conduta de 250 mm e 800 m, f = 0,022, desnível geométrico de 25,00 m, rendimento do grupo 72%. Qual a potência no eixo?",
+  "dados": {
+   "Q_m3_s": 0.06,
+   "D_m": 0.25,
+   "L_m": 800.0,
+   "f": 0.022,
+   "desnivel_m": 25.0,
+   "eta": 0.72
+  },
+  "unidade_esperada": "kW"
+ }
+]

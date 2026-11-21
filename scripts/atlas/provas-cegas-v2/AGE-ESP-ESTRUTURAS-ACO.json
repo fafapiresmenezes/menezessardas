@@ -1,0 +1,25 @@
+[
+ {
+  "id": "ACO-D1",
+  "enunciado": "Pilar IPE 300 em S235, bi-articulado, 4,00 m, encurvadura em torno do eixo fraco, curva de encurvadura b (α = 0,34), γM1 = 1,0. Qual a resistência à encurvadura por flexão?",
+  "dados": {
+   "perfil": "IPE 300",
+   "L_mm": 4000,
+   "A_mm2": 5381.0,
+   "Iz_mm4": 6038000.0,
+   "fy_MPa": 235.0,
+   "alpha": 0.34,
+   "gamma_M1": 1.0
+  },
+  "unidade_esperada": "kN"
+ },
+ {
+  "id": "ACO-D2",
+  "enunciado": "Para o mesmo pilar, qual a razão entre a resistência à encurvadura e a resistência plástica da secção?",
+  "dados": {
+   "Nb_kN": 557.5,
+   "Npl_kN": 1264.5
+  },
+  "unidade_esperada": "—"
+ }
+]

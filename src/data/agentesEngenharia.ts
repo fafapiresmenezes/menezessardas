@@ -1605,6 +1605,102 @@ export const RESULTADO_PROVAS: ResultadoProvas = {
  ]
 }
 
+/** 2.ª volta: as mesmas 12 especialidades, com questões de vários passos. */
+export const RESULTADO_PROVAS_DURAS: ResultadoProvas = {
+ "aplicadoEm": "2026-11-21",
+ "volta": 2,
+ "tipo": "cálculo de vários passos, com armadilha",
+ "questoesTotais": 24,
+ "regra": "Nota = 10 × acertos ÷ questões, com tolerância por questão. 8 ou mais entra; 6 a 8 só com supervisão; menos de 6 não entra.",
+ "limite": "Cada questão exige montar a combinação, converter unidades ou escolher o caso que governa antes de aplicar a fórmula, e cada uma traz uma armadilha declarada no gabarito. Os 12 especialistas acertaram as 24. Isto diz que a parte calculável está sólida e que a bateria de cálculo já não separa os agentes: a próxima volta tem de medir o que esta não mede, que é o julgamento de engenharia, a escolha de norma e a recusa a responder quando falta um dado. Nenhum resultado dispensa a assinatura de engenheiro habilitado.",
+ "notas": [
+  {
+   "agente": "AGE-ESP-AMBIENTAL-LICENCIAMENTO",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-ELECTROTECNIA-ENERGIA",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-ESTRUTURAS-ACO",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-ESTRUTURAS-BETAO",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-GEOTECNIA",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-GESTAO-CONSTRUCAO-CUSTOS",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-HIDRAULICA-RECURSOS-HIDRICOS",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-MATERIAIS-BETAO",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-MECANICA-INSTALACOES",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-PETROLEO-GAS",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-SANEAMENTO",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  },
+  {
+   "agente": "AGE-ESP-TRANSPORTES-PAVIMENTOS",
+   "questoes": 2,
+   "certos": 2,
+   "nota": 10.0,
+   "veredito": "aprovado"
+  }
+ ]
+}
+
 /** Fontes do corpus Atlas: o que já está inventariado e o que tem API aberta para ingerir (levantamento de 20/11/2026). */
 export const FONTES_ATLAS: { nome: string; tipo: string; acesso: string; estado: 'inventariado' | 'por-ingerir'; itens: number | null; url: string }[] = [
   { nome: 'Acervo do Instituto', tipo: 'Interno', acesso: 'Inventário de 18/11/2026 (conteúdo ainda não aberto)', estado: 'inventariado', itens: 216945, url: '' },

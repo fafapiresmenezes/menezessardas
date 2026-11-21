@@ -1,0 +1,24 @@
+[
+ {
+  "id": "MAT-D1",
+  "enunciado": "Composição de betão com 350 kg de cimento por m³ e razão água/cimento de 0,50. A areia entra com 500 kg por m³, tem 4% de humidade e 1% de absorção. Qual a água a juntar na amassadura?",
+  "dados": {
+   "cimento_kg_m3": 350.0,
+   "agua_cimento": 0.5,
+   "areia_kg_m3": 500.0,
+   "humidade": 0.04,
+   "absorcao": 0.01
+  },
+  "unidade_esperada": "L/m³"
+ },
+ {
+  "id": "MAT-D2",
+  "enunciado": "Cubo de 150 mm de aresta rompe a 720 kN. Qual a resistência equivalente em provete cilíndrico, tomando 0,80 como razão entre cilindro e cubo?",
+  "dados": {
+   "carga_N": 720000.0,
+   "aresta_mm": 150.0,
+   "razao_cilindro_cubo": 0.8
+  },
+  "unidade_esperada": "MPa"
+ }
+]

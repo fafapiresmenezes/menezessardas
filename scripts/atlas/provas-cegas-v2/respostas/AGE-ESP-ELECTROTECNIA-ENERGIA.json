@@ -1,0 +1,12 @@
+[
+  {
+    "id": "ELE-D1",
+    "resposta": 5.09,
+    "passos": "I = P/(√3·U·cosφ) ≈ 254,7 A; R = ρ·L/S = 0,0172·300/95 ≈ 0,05432 Ω; sem reactância, ΔU = √3·I·R·cosφ = (P/U)·R = 375 A × 0,05432 Ω ≈ 20,37 V, que é 5,09 % de 400 V (o mesmo % resulta da base fase-neutro)."
+  },
+  {
+    "id": "ELE-D2",
+    "resposta": 782925,
+    "passos": "E = P_kWp × H_anual × PR / G_STC (1 kW/m²) = 500 × (5,5 × 365) × 0,78 = 500 × 2007,5 × 0,78 ≈ 782 925 kWh/ano (≈ 783 MWh/ano), assumindo 365 dias e irradiação já no plano dos módulos."
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "id": "GEO-D1",
+    "resposta": 108.33,
+    "passos": "Rankine com Ka = (1 - sen30)/(1 + sen30) = 0,3333; empuxo = Ka(γH²/2 + q·H) = 0,3333(225 + 100) = 108,33 kN/m, parcela do solo 75,0 e da sobrecarga 33,33."
+  },
+  {
+    "id": "GEO-D2",
+    "resposta": 1.92,
+    "passos": "Momento em relação à base: solo (triângulo) a H/3 = 1,667 m e sobrecarga (retângulo) a H/2 = 2,50 m; altura = (75,0·1,667 + 33,33·2,50)/108,33 = 1,923 m."
+  }
+]

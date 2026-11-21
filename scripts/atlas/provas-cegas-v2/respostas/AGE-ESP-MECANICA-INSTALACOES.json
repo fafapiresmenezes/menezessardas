@@ -1,0 +1,12 @@
+[
+  {
+    "id": "MEC-D1",
+    "resposta": 12.3446,
+    "passos": "Caudal mássico m = 3,0 x 1,2 = 3,6 kg/s; Q = m x cp x dT = 3,6 x 1,005 x 12,0 = 43,416 kW; TR = 43,416 / 3,517 = 12,3446 TR."
+  },
+  {
+    "id": "MEC-D2",
+    "resposta": 5.2657,
+    "passos": "Caudal Q = 40/3600 = 0,01111 m3/s; potência hidráulica P = rho g Q H = 1000 x 9,81 x 0,01111 x 32 = 3,488 kW (rho da água 1000 kg/m3 assumida); potência eléctrica = P / (0,72 x 0,92) = 3,488 / 0,6624 = 5,2657 kW."
+  }
+]

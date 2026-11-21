@@ -4,7 +4,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS } from '@/data/agentesEngenharia'
+import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS } from '@/data/agentesEngenharia'
 
 vi.mock('@/lib/supabase', () => ({ supabase: { functions: { invoke: vi.fn().mockResolvedValue({ data: null, error: null }) } }, supabaseConfigurado: true }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
@@ -31,7 +31,7 @@ describe('fichas dos agentes de engenharia', () => {
   })
 
   it('nunca escreve o nome do cliente nem palavras da plataforma de direito', () => {
-    const blob = JSON.stringify({ AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS })
+    const blob = JSON.stringify({ AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS })
     for (const re of PROIBIDAS) expect(blob).not.toMatch(re)
   })
 
@@ -104,6 +104,23 @@ describe('fichas dos agentes de engenharia', () => {
     expect(soma).toBeLessThanOrEqual(RESULTADO_PROVAS.questoesTotais)
   })
 
+  it('a 2.ª volta é mais dura, cobre os 12 especialistas e diz o que ainda não mede', () => {
+    expect(RESULTADO_PROVAS_DURAS.volta).toBe(2)
+    expect(RESULTADO_PROVAS_DURAS.notas).toHaveLength(12)
+    expect(RESULTADO_PROVAS_DURAS.questoesTotais).toBe(
+      RESULTADO_PROVAS_DURAS.notas.reduce((s, n) => s + n.questoes, 0),
+    )
+    const ids = new Set(AGENTES_ENGENHARIA.map(a => a.id))
+    for (const n of RESULTADO_PROVAS_DURAS.notas) {
+      expect(ids.has(n.agente)).toBe(true)
+      expect(n.certos).toBeLessThanOrEqual(n.questoes)
+      expect(n.nota).toBeCloseTo(10 * n.certos / n.questoes, 2)
+      expect(['aprovado', 'com supervisão', 'reprovado']).toContain(n.veredito)
+    }
+    expect(RESULTADO_PROVAS_DURAS.limite).toMatch(/engenheiro habilitado/)
+    expect(RESULTADO_PROVAS_DURAS.limite).toMatch(/julgamento de engenharia/)
+  })
+
   it('toda posição tem nível N1 a N6', () => {
     for (const a of AGENTES_ENGENHARIA.filter(x => x.matriz === 'posicao')) expect(a.nivel).toMatch(/^N[1-6]$/)
   })
@@ -140,6 +157,7 @@ describe('abas novas do quadradinho Engenharia', () => {
     fireEvent.click(screen.getByTestId('subaba-agentes-biblioteca'))
     expect(screen.getByTestId('biblioteca-atlas').textContent).toMatch(/peças escolhidas do corpus/)
     fireEvent.click(screen.getByTestId('subaba-agentes-provas'))
+    expect(screen.getByTestId('provas-volta2').textContent).toContain('2.ª volta')
     expect(screen.getByTestId('tabela-provas').querySelectorAll('tbody tr')).toHaveLength(46)
     expect(screen.getByTestId('provas-agentes').textContent).toMatch(/engenheiro habilitado/)
   })
