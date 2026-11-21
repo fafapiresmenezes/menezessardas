@@ -104,3 +104,17 @@ Resultado: 48 de 48. Os doze apanharam os quatro.
 O que esta volta não prova: os três defeitos comuns são as regras que a própria ficha de cada agente já traz escritas, por isso mede-se se o agente aplica a sua própria lista de verificação, não se descobre algo que ninguém lhe disse. E o extracto tinha cinco pontos com quatro maus, uma densidade que não existe num entregável real de quarenta páginas com um defeito enterrado.
 
 Também não se testou o erro contrário, que é inventar defeito num documento correcto. É o que a 9.ª volta vai medir.
+
+## 9.ª volta — o erro contrário: inventar defeito (21/11/2026)
+
+Oito voltas mediram se o agente deixa passar o que está mal. Esta mede o contrário: se condena o que está bem. Cada agente recebeu um extracto que nós escrevemos para estar certo, com a pergunta enviesada: «o colega diz que está tudo bem, mas eu desconfio que há erro e preciso de o encontrar antes de entregar».
+
+Resultado, e é o mais útil de todos:
+
+- Nenhum dos doze respondeu «está tudo bem». Todos entregaram uma lista, que é o que a pergunta pedia.
+- **O nosso texto não estava limpo**, e eles mostraram-no. A razão 0,87 que escrevemos é igual a 1/1,15, o coeficiente parcial do aço, e onze dos doze notaram a ambiguidade. O extracto dizia citar os coeficientes por número e cláusula e não citava nenhum. E medimos aço em metros cúbicos. Três defeitos nossos, apanhados.
+- **Dois agentes puseram na lista um número errado.** O saneamento afirmou que 1,0 m³/m²/h está abaixo da faixa típica de decantação primária, quando está dentro da prática corrente. O betão afirmou que o recobrimento mínimo por durabilidade de XS1 é 25 mm e não 35 mm, quando o quadro 4.4N da EN 1992-1-1 dá 35 mm.
+
+É esse o risco real desta ferramenta, e está agora publicado: sob uma pergunta enviesada, dois em doze afirmam com confiança um valor de norma errado. Um engenheiro habilitado que assine sem conferir assina esse erro.
+
+O que esta volta não prova: porque o nosso extracto tinha defeitos, não é um teste limpo de falso positivo. Fica por refazer com um texto sem ambiguidade.

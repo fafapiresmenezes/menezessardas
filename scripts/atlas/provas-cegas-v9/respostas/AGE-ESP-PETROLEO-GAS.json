@@ -1,0 +1,6 @@
+[
+  {
+    "id": "C1",
+    "resposta": "1. A classe de local 3 com factor de projecto F=0,50 coincide com ASME B31.8 (§841.1.6, Tabela 841.1.6-1), mas falta o número de edifícios que justifica a classe (§840.2): não confirmado.\n2. Erro principal: o extracto mistura dois métodos. O F=0,50 é um factor de tensão admissível da B31.8, e o 0,87 aparece com coeficientes parciais de estados-limite; a coerência só se fecha com a norma do contrato, cujos números e cláusulas o texto diz citar mas não cita.\n3. O 0,87 não é conferível: não vêm os valores do efeito das acções nem da resistência de cálculo, em unidades SI.\n4. O quantitativo de 1.300 / 1.480 / 1.700 m³ tem unidade suspeita para tubagem de aço (usar toneladas ou metros lineares; se for betão ou enchimento, confirmar); confirmar também se os cinco por cento de perda já estão incluídos no provável.\n5. Os cenários e o rodapé estão conformes; é rascunho para conferência e assinatura do engenheiro responsável. Não confirmado: número de edifícios, edição e cláusulas da norma do contrato, valores de cálculo."
+  }
+]
