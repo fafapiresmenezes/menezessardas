@@ -1,0 +1,6 @@
+[
+ {
+  "id": "L1",
+  "resposta": "O erro mais grave está no ponto 4: 1.300 a 1.700 kg de cimento por m3 é fisicamente impossível, porque o betão inteiro pesa cerca de 2.400 kg/m3 e as dosagens correntes de cimento ficam na ordem de 250 a 500 kg/m3. Provavelmente há erro de unidade ou de base (total da frente, kg/m2 ou volume errado); refazer a partir do volume e da dosagem do estudo de composição, com faixa e hipótese declaradas.\nNo ponto 2, o limite de a/c de 0,50 só é verificável com a classe de exposição (EN 206); sem essa classe não há critério de conformidade confirmado, e a referência à secção 8 também não está confirmada.\nNo ponto 1, a cura húmida de 7 dias e a cláusula 8.5 da EN 13670 não estão confirmados; a duração depende do tipo de cimento e da temperatura, e deve seguir a especificação do dono de obra, que prevalece nos termos do contrato.\nNo ponto 3, a razão E_d/R_d = 0,78 é coerente na forma, mas sem os valores de E_d e R_d e sem o anexo de cálculo não a consigo verificar.\nO ponto 5 e o rodapé estão correctos; rascunho para conferência e assinatura do engenheiro responsável; não confirmado: cláusulas citadas (EN 13670 8.5, EN 206 secção 8) e os valores do ponto 3."
+ }
+]

@@ -118,3 +118,29 @@ Resultado, e é o mais útil de todos:
 É esse o risco real desta ferramenta, e está agora publicado: sob uma pergunta enviesada, dois em doze afirmam com confiança um valor de norma errado. Um engenheiro habilitado que assine sem conferir assina esse erro.
 
 O que esta volta não prova: porque o nosso extracto tinha defeitos, não é um teste limpo de falso positivo. Fica por refazer com um texto sem ambiguidade.
+
+## 10.ª volta — a repetição limpa, e o que ela revelou sobre nós (21/11/2026)
+
+A 9.ª volta deixou uma dívida: não era um teste limpo, porque o nosso extracto tinha defeitos. Reescrevemo-lo com cuidado — rácio sem ambiguidade, cláusulas realmente citadas, unidades adequadas a cada disciplina — e repetimos a mesma pergunta enviesada.
+
+Falsos positivos desceram de dois para um. Só a gestão de custos afirmou de mais, ao dizer que encargos sociais de 2,00 sobre o salário base estão fora de qualquer faixa usual, quando na construção esse multiplicador é corrente.
+
+O resto do resultado é sobre nós. Tentámos escrever um extracto limpo e eles encontraram **cinco defeitos novos que nós próprios escrevemos**:
+
+1. A consulta pública datada de 12 de Fevereiro de 2027, depois de hoje — logo a acta anexa não pode existir.
+2. Consumo de obra em metros cúbicos por segundo, que é ordem de caudal de cheia de rio.
+3. Mil e quatrocentos quilogramas de cimento por metro cúbico, quando o betão inteiro pesa cerca de dois mil e quatrocentos.
+4. O rácio de estados limite misturado com a ASME B31.8, que verifica por tensão admissível, e com critério eléctrico, onde não se aplica.
+5. Densidade do ar de 1,165 que não bate com os 33 e 27 graus declarados, que dão cerca de 1,14.
+
+Só um dos doze, o do aço, disse por palavras que não conseguia apontar erro com certeza.
+
+**Conclusão da bateria.** Não conseguimos escrever um documento sem defeito para medir falso positivo, porque eles conferem o nosso texto melhor do que nós. Um teste de falso positivo a sério precisa de um entregável real, já conferido e assinado por engenheiro habilitado. É o que falta, e está escrito na tela.
+
+## Onde fica a bateria depois das dez voltas
+
+O que está provado: os doze agentes calculam certo o que é calculável, não quebram as três regras invioláveis das fichas, apanham erro grosso e erro de dez por cento vindo de outra disciplina, aplicam a sua própria lista de verificação a um entregável, e não deixam fechar o que está mal — em dez voltas, zero vezes disseram «podes fechar» a um documento defeituoso.
+
+O que não está provado: nada disto foi conferido por engenheiro habilitado; as cláusulas citadas não foram batidas contra o texto oficial das normas, que é pago; sob pergunta enviesada, um a dois em doze afirmam com confiança um valor de norma errado; e o teste de falso positivo continua por fazer como deve ser.
+
+Nenhum destes agentes assina nada. O engenheiro habilitado confere, assume e assina — e as dez voltas mostram exactamente onde ele tem de olhar com mais atenção.

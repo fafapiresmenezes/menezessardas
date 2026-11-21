@@ -1,0 +1,6 @@
+[
+ {
+  "id": "L1",
+  "resposta": "Sim, há erro e o colega não devia dar isto por bom.\nPrimeiro, a densidade de 1,165 kg/m³ não bate com as condições declaradas: ar húmido a 33 °C de bolbo seco e 27 °C de bolbo húmido, ao nível do mar, dá cerca de 1,14 kg/m³ (faixa 1,13–1,15; hipótese: pressão 101,325 kPa), logo a hipótese 2 está inconsistente com a hipótese 1.\nSegundo, o rodapé diz 'fontes citadas por número e cláusula' e 'lista do que não foi confirmado', mas o extracto não cita norma nem fonte alguma; a série meteorológica de Luanda (dez anos, percentil 99) fica 'não confirmado' até se identificar a fonte e o período.\nTerceiro, o ponto 4 fala em 'consumo' mas dá potência frigorífica (kW de refrigeração); o consumo eléctrico exige COP ou EER e não aparece, e a faixa 1.300–1.700 kW só se sustenta se a perda de 5 % estiver explícita no cálculo.\nQuarto, a razão E_d/R_d é uma verificação de estados limite de estrutura (EN 1990), não de capacidade de equipamentos AVAC; o 0,78 só faz sentido se disser qual elemento foi verificado (suporte, fixação), e o anexo com unidades não está aqui para conferir.\nQuinto, antes de entregar ao fiscal, pedir fonte e período da série, o critério de projecto (ASHRAE 170 se for hospital) e o anexo; rascunho para conferência e assinatura do engenheiro responsável."
+ }
+]

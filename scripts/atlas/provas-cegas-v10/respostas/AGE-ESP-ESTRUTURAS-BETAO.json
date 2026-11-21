@@ -1,0 +1,6 @@
+[
+ {
+  "id": "L1",
+  "resposta": "1) Não vejo erro aritmético: 35 mm + 10 mm (cl. 4.4.1.3) = 45 mm de recobrimento nominal; gama_c 1,5 e gama_s 1,15 (cl. 2.4.2.4) e a razão E_d/R_d = 0,78 < 1,0 estão corretos na forma.\n2) Confirmar os 35 mm no quadro 4.4N da edição em uso para XS1, S4, 50 anos; e acrescentar a classe de betão mínima para XS1 (C30/37, EN 206) e o fck adoptado, que o extracto não indica.\n3) Ponto de risco: XS1 pressupõe atmosfera salina sem contacto directo; em Luanda, Lobito ou Walvis Bay, se houver salpicos ou zona de marés, a classe é XS2/XS3 e o recobrimento sobe para 40-45 mm + 10 mm. Confirmar a distância ao mar antes de fechar.\n4) A estimativa 1.300 / 1.480 / 1.700 m3 tem faixa e hipótese, mas a fonte é só \"quantitativos do desenho\": marcar como não confirmado até citar a prancha e o número.\n5) Rascunho para conferência e assinatura do engenheiro responsável; fontes: EN 1992-1-1 quadro 4.4N, cl. 4.4.1.3, cl. 2.4.2.4; não confirmado: classe de exposição real e fck."
+ }
+]

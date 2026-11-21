@@ -1,0 +1,6 @@
+[
+ {
+  "id": "L1",
+  "resposta": "Erro principal no ponto 4: 1.300 a 1.700 m3/s é a ordem de grandeza de um caudal de cheia de rio, não de consumo de uma frente de obra (que se exprime em L/s ou m3/dia). Quantitativos de desenho não dão caudal, e a perda de 5 % não tem base declarada. Refazer com unidades explícitas, faixa mínimo-provável-máximo e hipótese escrita; enquanto não houver fonte, marcar como não confirmado. Ponto 2: n = 0,013 é plausível para betão, mas 'fonte identificada' não cita número nem cláusula; citar a fonte e confirmar o estado da superfície. Pontos 1 e 3: confirmar a cláusula 4.2 da especificação do dono de obra (prevalece sobre o Eurocódigo) e que o anexo tem as combinações de acções e os coeficientes parciais; E_d/R_d = 0,78 só vale com esses dados. Ponto 5 correcto (cenários, sem probabilidade). Rascunho para conferência e assinatura do engenheiro responsável."
+ }
+]
