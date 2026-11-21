@@ -28,6 +28,14 @@ function Lista({ titulo, itens }: { titulo: string; itens: string[] }) {
 }
 
 function Ficha({ a, fechar }: { a: AgenteAdministracao; fechar: () => void }) {
+  const [copiado, setCopiado] = useState(false)
+
+  const iniciarConversa = () => {
+    navigator.clipboard.writeText(a.prompt_base)
+    setCopiado(true)
+    setTimeout(() => setCopiado(false), 2000)
+  }
+
   return (
     <div className="border border-dourado/40 bg-white p-6 shadow-sm" data-testid="ficha-agente">
       <div className="flex items-start justify-between gap-4">
@@ -43,6 +51,21 @@ function Ficha({ a, fechar }: { a: AgenteAdministracao; fechar: () => void }) {
           className="shrink-0 border border-navy/20 px-3 py-1 text-sm text-navy hover:border-dourado"
         >
           Fechar
+        </button>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={iniciarConversa}
+          title="Copia o roteiro do agente para conversa ao vivo"
+          className={`border px-3 py-2 text-sm font-medium transition ${
+            copiado
+              ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+              : 'border-navy/20 bg-dourado/10 text-navy hover:border-dourado'
+          }`}
+        >
+          {copiado ? '✓ Copiado' : 'Iniciar conversa'}
         </button>
       </div>
 
