@@ -7,7 +7,7 @@ nicho_de = {}
 for f in me['fichas']:
     for a in f['atividades']: nicho_de.setdefault(a['cod'], []).append(f['nicho'])
 dados = {
-  'rodada': 3, 'data': '2026-11-21',
+  'rodada': 4, 'data': '2026-11-21',
   'familias': [
     {'n': 1, 'nome': 'Dependência econômica', 'estado': 'feito', 'selo': 'calculado por nós', 'fonte': le['fonte'], 'pares': 67 * 66},
     {'n': 2, 'nome': 'Proximidade produtiva', 'estado': 'próxima rodada', 'fonte': 'Atlas de Complexidade Econômica (Harvard Growth Lab)'},
@@ -44,16 +44,29 @@ dados['literatura'] = lit
 dados['familias'][0]['fonte'] += ' + ' + ex['fonte'].split(' (')[0]
 dados['familias'][5]['estado'] = 'em andamento'; dados['familias'][5]['fonte'] = f"{sum(1 for r in lit['registro'] if r['selo'] == 'da literatura')} estudos lidos e conferidos"
 co = json.load(open('saida/comovimento_pib.json')); ci = json.load(open('saida/ciencias_arxiv.json')); mp = json.load(open('saida/mercados_previsao.json'))
+def normaliza(c, ref, pux, per):
+    out = {k: c[k] for k in ('nome', 'aviso', 'fonte', 'metodo', 'setores', 'conferencia')}
+    out['periodos'] = c[per]; out['ref'] = ref
+    out['taxas'] = {k: [round(v, 5) for v in vs] for k, vs in c['taxas'].items()}
+    ren = {'parcial_sem_pib': 'parcial', 'parcial_sem_mercado': 'parcial', 'r_a_pib': 'r_a_ref', 'r_b_pib': 'r_b_ref', 'r_a_mercado': 'r_a_ref', 'r_b_mercado': 'r_b_ref',
+           'puxado_por_poucos_trimestres': 'puxado', 'puxado_por_poucos_meses': 'puxado'}
+    out['pares'] = [{ren.get(k, k): ([r4(x) for x in v] if isinstance(v, list) else r4(v)) for k, v in p_.items()} for p_ in c['pares']]
+    return out
 r4 = lambda v: None if v is None else (round(v, 6) if isinstance(v, float) else v)
-dados['comovimento'] = {k: co[k] for k in ('nome', 'aviso', 'fonte', 'metodo', 'setores', 'conferencia', 'trimestres_das_taxas')}
-dados['comovimento']['taxas'] = {c: [round(v, 5) for v in vs] for c, vs in co['taxas'].items()}
-dados['comovimento']['pares'] = [{k: ([r4(x) for x in v] if isinstance(v, list) else r4(v)) for k, v in p_.items()} for p_ in co['pares']]
+cb = json.load(open('saida/comovimento_bolsa.json'))
+dados['comovimento'] = {'ibge': normaliza(co, 'PIB inteiro', 'puxado_por_poucos_trimestres', 'trimestres_das_taxas'),
+                        'bolsa': normaliza(cb, 'mercado inteiro (bolsa)', 'puxado_por_poucos_meses', 'periodos')}
+if __import__('os').path.exists('saida/atlas_proximidade.json'):
+    dados['proximidade'] = json.load(open('saida/atlas_proximidade.json'))
+    dados['proximidade'].pop('registros_sha256', None)
+    _px = dados['proximidade']
+    dados['familias'][1].update({'estado': 'feito', 'selo': _px['selo'], 'fonte': f"Harvard Atlas, {_px['fonte']['produtos']} produtos, {_px['fonte']['paises']} países, {_px['fonte']['anos'][0]}–{_px['fonte']['anos'][1]} · conferência parcial", 'pares': len(_px['pares'])})
 dados['ciencias'] = {k: ci[k] for k in ('nome', 'aviso', 'fonte', 'metodo', 'areas', 'pares', 'conferencia')}
 dados['mercados'] = {k: mp[k] for k in ('nome', 'aviso', 'coletado_utc', 'filtros', 'mercados')}
 dados['mercados']['setor'] = json.load(open('literatura/setor_mercados_previsao.json'))
 dados['mercados']['marcados_como_esporte'] = mp.get('marcados_como_esporte', 0)
 F = {f['n']: f for f in dados['familias']}
-F[3].update({'nome': 'Movimento conjunto', 'estado': 'feito', 'selo': 'calculado por nós', 'fonte': 'IBGE, PIB trimestral 1996–2026 (12 setores)', 'pares': len(co['pares'])})
+F[3].update({'nome': 'Movimento conjunto', 'estado': 'feito', 'selo': 'calculado por nós', 'fonte': 'IBGE, PIB trimestral 1996–2026 (12 setores) + bolsa dos EUA, 1996–2026 (23 setores)', 'pares': len(co['pares']) + len(cb['pares'])})
 F[4].update({'estado': 'feito', 'selo': 'dado de terceiros', 'fonte': f"Polymarket e Kalshi, {len(mp['mercados'])} mercados (não é predição nossa)"})
 F[5].update({'estado': 'feito', 'selo': 'calculado por nós', 'fonte': f"arXiv, {len(ci['areas'])} áreas da ciência", 'pares': len(ci['pares'])})
 s = json.dumps(dados, ensure_ascii=False, separators=(',', ':'))

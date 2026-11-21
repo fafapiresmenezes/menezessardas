@@ -27,6 +27,7 @@ h3 { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color:
 p { margin: 0 }
 .lead { color: var(--muted); max-width: 70ch }
 .mono, .num { font-family: var(--mono); font-variant-numeric: tabular-nums }
+p .mono, .note .mono { overflow-wrap: anywhere; word-break: break-all }
 header { display: grid; gap: 10px }
 .selos { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: .88rem }
 .selo { display: inline-flex; align-items: center; gap: 8px }
@@ -46,9 +47,9 @@ nav.tabs a:focus-visible, button:focus-visible, select:focus-visible, input:focu
 @media (max-width: 960px) { .main { grid-template-columns: minmax(0, 1fr) } }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 12px; min-width: 0 }
 .controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: .88rem }
-.controls label { display: inline-flex; gap: 6px; align-items: center }
+.controls label { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; max-width: 100%; min-width: 0 }
 select, input[type=range] { font: inherit; accent-color: var(--accent) }
-select { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px }
+select { max-width: 100%; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px }
 .scroll { overflow-x: auto }
 svg text { font-family: var(--body) }
 .edge { cursor: pointer }
@@ -63,7 +64,9 @@ th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line
 th { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; cursor: default }
 th.sort { cursor: pointer }
 td.num, th.num { text-align: right }
-.formula { font-family: var(--mono); font-size: .82rem; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; overflow-x: auto; white-space: pre-wrap }
+.formula { font-family: var(--mono); font-size: .82rem; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; overflow-x: auto; white-space: pre-wrap; overflow-wrap: anywhere }
+#metodo > div, #vistas > section > * { min-width: 0 }
+#metodo table { display: block; overflow-x: auto }
 .chips { display: flex; flex-wrap: wrap; gap: 6px }
 .chip { font-size: .8rem; padding: 3px 10px; border-radius: 99px; border: 1px dashed var(--nobase); color: var(--muted) }
 .chip.lig { border-style: solid; border-color: var(--line); color: var(--ink) }
@@ -80,7 +83,7 @@ a { color: var(--accent) }
 
 <div class="wrap">
   <header>
-    <h3>Instituto THEYE · Ontologia · rodada 3 · 21/11/2026</h3>
+    <h3>Instituto THEYE · Ontologia · rodada 4 · 21/11/2026</h3>
     <h1>Árvore de intercorrelações</h1>
     <p class="lead">Como os setores se ligam, medido de cinco jeitos que nunca se misturam na mesma régua: quem compra de quem, quem sobe e desce junto, quais ciências publicam juntas, o que os estudos já mediram e o que os mercados de previsão mostram. Cada número leva um selo e abre a sua memória de cálculo. Onde ainda não há conta, aparece "sem base".</p>
     <div class="selos" aria-label="Legenda dos selos">
@@ -94,7 +97,7 @@ a { color: var(--accent) }
   <section class="fams" id="fams" aria-label="As sete famílias de índice"></section>
 
   <nav class="tabs" aria-label="Vistas">
-    <a href="#arvore">Árvore</a><a href="#matriz">Matriz</a><a href="#mundo">Mundo</a><a href="#movimento">Movimento conjunto</a><a href="#ciencias">Ciências</a><a href="#mercados">Mercados</a><a href="#literatura">Literatura</a><a href="#setores">Setores</a><a href="#interno">Interno</a><a href="#metodo">Método</a>
+    <a href="#arvore">Árvore</a><a href="#matriz">Matriz</a><a href="#mundo">Mundo</a><a href="#proximidade">Proximidade</a><a href="#movimento">Movimento conjunto</a><a href="#ciencias">Ciências</a><a href="#mercados">Mercados</a><a href="#literatura">Literatura</a><a href="#setores">Setores</a><a href="#interno">Interno</a><a href="#metodo">Método</a>
   </nav>
 
   <div class="main">
@@ -137,12 +140,22 @@ a { color: var(--accent) }
         <div id="foraBox"><h3>Quanto da cadeia vem de fora da região</h3><div class="scroll"><table id="tabFora"></table></div></div>
       </section>
 
+      <section class="card" data-vista="proximidade" hidden>
+        <h2>Quais setores usam as mesmas capacidades</h2>
+        <p class="note" id="pxAviso"></p>
+        <p style="border-left:3px solid var(--lit);padding:6px 10px;background:var(--bg);border-radius:4px" id="pxConf"></p>
+        <div class="scroll"><div class="heat" id="heatP"></div></div>
+        <p class="note">Quanto mais escura a célula, mais os países que exportam um grupo também exportam o outro. Clique para ver a conta. Serviços jurídicos, saúde (atendimento), educação e governo não entram: o Atlas só mede o que é exportado. Os quatro grupos de serviços aparecem como "sem base": o Atlas publica quanto cada país exporta deles, mas não publica a vantagem comparativa, que é a base desta conta.</p>
+      </section>
+
       <section class="card" data-vista="movimento" hidden>
         <h2>Quem sobe e desce junto</h2>
         <p class="note" id="movAviso"></p>
         <div class="controls">
+          <label for="baseC">Base
+            <select id="baseC"><option value="ibge">PIB trimestral do Brasil (IBGE)</option><option value="bolsa">Bolsa dos EUA (retorno mensal)</option></select></label>
           <label for="medidaC">Índice
-            <select id="medidaC"><option value="pearson">Correlação de Pearson</option><option value="spearman">Correlação de Spearman (por posição)</option><option value="parcial_sem_pib">Parcial, tirando o PIB inteiro</option><option value="pearson_sem_pandemia">Pearson sem 2020 e 2021</option></select></label>
+            <select id="medidaC"><option value="pearson">Correlação de Pearson</option><option value="spearman">Correlação de Spearman (por posição)</option><option value="parcial">Parcial, tirando o efeito comum (PIB ou bolsa)</option><option value="pearson_sem_pandemia">Pearson sem 2020 e 2021</option></select></label>
           <span class="note" id="movLegenda"></span>
         </div>
         <div class="scroll"><div class="heat" id="heatC"></div></div>
@@ -372,10 +385,14 @@ ${esc(IB.leitura_L)}</div>
       <table><tr><td>Nossa A contra a A publicada no pacote</td><td class="num">${D0.mundo.conferencia.max_dif_A_nossa_vs_A_publicada.toExponential(1)}</td></tr>
         <tr><td>Resíduo de (I − A)·L − I, inversão completa</td><td class="num">${D0.mundo.conferencia['max_residuo_(I-A)L-I_completo'].toExponential(1)}</td></tr>
         <tr><td>Mundo: L por inversão contra soma de ${D0.mundo.conferencia.termos_serie_mundo} rodadas</td><td class="num">${D0.mundo.conferencia.max_dif_Lw_inversao_vs_serie.toExponential(1)}</td></tr></table></div>
+    ${D0.proximidade ? `<div><h3>Família 2 · Proximidade produtiva · ${esc(D0.proximidade.selo)}</h3>
+      <p>${esc(D0.proximidade.fonte.orgao)}. ${esc(D0.proximidade.metodo.referencia)}.</p>
+      <div class="formula">${esc(D0.proximidade.metodo.phi)}\n${esc(D0.proximidade.metodo.nicho)}\nPaíses: ${esc(D0.proximidade.fonte.filtro_de_paises)}</div>
+      <p class="note">Conferência contra o mapa publicado (${esc(D0.proximidade.fonte.conferencia_publicada)}), critério escrito antes: ${esc(D0.proximidade.conferencia.criterio)}.</p>
+      <ul class="note">${D0.proximidade.fonte.tentativas.map(t => `<li>${esc(t)}</li>`).join('')}<li>Resultado da 3: mediana ${fmt(D0.proximidade.conferencia.mediana_percentil_da_nossa_phi, 1)}, ${fmt(100 * D0.proximidade.conferencia.parte_no_top_5_por_cento, 1)}% no top 5%: reprovada. Publicada com selo de conferência parcial.</li></ul>
+      <p class="note">${esc(D0.proximidade.fonte.diferenca_do_atlas)}</p></div>` : ''}
     <div><h3>Família 3 · Movimento conjunto · calculado por nós</h3>
-      <p>${esc(D0.comovimento.fonte.orgao)}, ${esc(D0.comovimento.fonte.tabela)}. Arquivo bruto com impressão digital <span class="mono">${esc(D0.comovimento.fonte.sha256.slice(0, 16))}…</span>.</p>
-      <div class="formula">${Object.entries(D0.comovimento.metodo).map(([k, v]) => esc(k) + ': ' + esc(v)).join('\n')}</div>
-      <p class="note">Conferência: Pearson refeito por outra biblioteca, diferença ${D0.comovimento.conferencia.max_dif_pearson_manual_vs_numpy.toExponential(1)}; Spearman refeito, diferença ${D0.comovimento.conferencia.max_dif_spearman_manual_vs_scipy.toExponential(1)}.</p></div>
+      ${['ibge', 'bolsa'].map(b => { const C = D0.comovimento[b]; return `<p><b>${esc(C.nome)}.</b> ${esc(C.fonte.orgao)}${C.fonte.tabela ? ', ' + esc(C.fonte.tabela) : ''}.</p><div class="formula">${Object.entries(C.metodo).map(([k, v]) => esc(k) + ': ' + esc(v)).join('\n')}</div><p class="note">Conferência: Pearson refeito por outra biblioteca, diferença ${C.conferencia.max_dif_pearson_manual_vs_numpy.toExponential(1)}; Spearman refeito, diferença ${C.conferencia.max_dif_spearman_manual_vs_scipy.toExponential(1)}.</p>`; }).join('')}</div>
     <div><h3>Família 5 · Ligação entre ciências · calculado por nós</h3>
       <p>${esc(D0.ciencias.fonte.orgao)}, API pública. ${esc(D0.ciencias.metodo.observacao)}</p>
       <div class="formula">cosseno = ${esc(D0.ciencias.metodo.cosseno)}\nJaccard = ${esc(D0.ciencias.metodo.jaccard)}\nparte   = ${esc(D0.ciencias.metodo.parte)}</div>
@@ -395,7 +412,7 @@ function cartaoLit(r) {
     <b>${esc(r.titulo)}</b><p class="note">${esc(r.autores)} · ${esc(r.instituicao)} · ${r.ano}${r.veiculo ? ' · ' + esc(r.veiculo) : ''}</p>
     ${r.par ? `<p><b>Liga:</b> ${esc(r.direcao)}. <span class="note">Tipo de número: ${esc(r.tipo_de_numero)}.</span></p>` : `<p>${esc(r.uso)}</p><p>${esc(r.resultado)}</p>`}
     ${nums ? `<table><tr><th>O que mede</th><th class="num">Valor (IC 95%)</th></tr>${nums}</table>` : ''}
-    <p class="note">Onde está: ${esc(r.onde)}. <a href="${esc(r.url)}" target="_blank" rel="noopener">Abrir a fonte</a>. Impressão digital ${esc((r.sha256_pdf || r.sha256_pagina || '').slice(0, 16))}…</p></div>`;
+    ${r.obs ? `<p class="note">${esc(r.obs)}</p>` : ''}<p class="note">Onde está: ${esc(r.onde)}. <a href="${esc(r.url)}" target="_blank" rel="noopener">Abrir a fonte</a>. Impressão digital ${esc((r.sha256_pdf || r.sha256_pagina || '').slice(0, 16))}…</p></div>`;
 }
 function mostrarLit(ids) {
   const rs = D0.literatura.registro.filter(r => ids.includes(r.id));
@@ -454,16 +471,17 @@ function desenharFamilias() {
 
 /* ---------- Família 3: movimento conjunto ---------- */
 const cor2 = v => { if (v == null || isNaN(v)) return 'var(--heat-0)'; const t = Math.min(1, Math.abs(v)); return `color-mix(in srgb, ${v >= 0 ? 'var(--accent)' : 'var(--neg)'} ${Math.round(6 + 94 * t)}%, var(--heat-0))`; };
-function parC(a, b) { return D0.comovimento.pares.find(p => (p.a === a && p.b === b) || (p.a === b && p.b === a)); }
+const baseC = () => D0.comovimento[document.getElementById('baseC').value];
+function parC(a, b) { return baseC().pares.find(p => (p.a === a && p.b === b) || (p.a === b && p.b === a)); }
 function desenharMov() {
-  const C = D0.comovimento, med = document.getElementById('medidaC').value, S = C.setores, n = S.length;
-  document.getElementById('movAviso').textContent = `${C.aviso} Fonte: ${C.fonte.orgao}, ${C.fonte.tabela}, de ${C.trimestres_das_taxas[0].slice(0, 4)} a ${C.trimestres_das_taxas.at(-1).slice(0, 4)}.`;
-  const el = document.getElementById('heatC'); el.style.gridTemplateColumns = `210px repeat(${n}, minmax(34px, 1fr))`;
+  const C = baseC(), med = document.getElementById('medidaC').value, S = C.setores, n = S.length;
+  document.getElementById('movAviso').textContent = `${C.aviso} Fonte: ${C.fonte.orgao}${C.fonte.tabela ? ', ' + C.fonte.tabela : ''}, de ${C.periodos[0].slice(0, 4)} a ${C.periodos.at(-1).slice(0, 4)}.`;
+  const el = document.getElementById('heatC'); el.style.gridTemplateColumns = `${n > 15 ? 170 : 210}px repeat(${n}, minmax(${n > 15 ? 22 : 34}px, 1fr))`;
   let h = '<div></div>' + S.map(s => `<div class="lab labc" title="${esc(s.nome)}">${esc(s.nome).slice(0, 22)}</div>`).join('');
   S.forEach((si, i) => { h += `<div class="lab" title="${esc(si.nome)}">${esc(si.nome).slice(0, 30)}</div>`;
     S.forEach((sj, j) => { if (i === j) { h += `<button disabled style="background:var(--heat-0);cursor:default" aria-label="mesmo setor"></button>`; return; }
-      const p = parC(si.codigo, sj.codigo), v = p[med], cruza = med === 'parcial_sem_pib' ? (p.ic95_parcial && p.ic95_parcial[0] < 0 && p.ic95_parcial[1] > 0) : med === 'pearson' ? p.ic_cruza_zero : false;
-      h += `<button data-a="${si.codigo}" data-b="${sj.codigo}" style="background:${cor2(v)};font:600 10px var(--mono);color:${Math.abs(v) > .55 ? '#fff' : 'var(--ink)'}" title="${esc(si.nome)} × ${esc(sj.nome)}: ${fmt(v, 3)}" aria-label="${esc(si.nome)} com ${esc(sj.nome)}: ${fmt(v, 3)}">${p.puxado_por_poucos_trimestres ? '✱' : cruza ? '·' : ''}</button>`; }); });
+      const p = parC(si.codigo, sj.codigo), v = p[med], cruza = med === 'parcial' ? (p.ic95_parcial && p.ic95_parcial[0] < 0 && p.ic95_parcial[1] > 0) : med === 'pearson' ? p.ic_cruza_zero : false;
+      h += `<button data-a="${si.codigo}" data-b="${sj.codigo}" style="background:${cor2(v)};font:600 10px var(--mono);color:${Math.abs(v) > .55 ? '#fff' : 'var(--ink)'}" title="${esc(si.nome)} × ${esc(sj.nome)}: ${fmt(v, 3)}" aria-label="${esc(si.nome)} com ${esc(sj.nome)}: ${fmt(v, 3)}">${p.puxado ? '✱' : cruza ? '·' : ''}</button>`; }); });
   el.innerHTML = h;
   el.querySelectorAll('button[data-a]').forEach(b => b.onclick = () => mostrarMov(b.dataset.a, b.dataset.b));
   document.getElementById('movLegenda').textContent = `${C.pares.length} pares · ${C.pares.filter(p => p.ic_cruza_zero).length} com intervalo que cruza o zero`;
@@ -478,15 +496,15 @@ function linhaDupla(xa, xb, tri) {
     <text x="6" y="${H - 2}" font-size="10" fill="var(--muted)">${tri[0].slice(0, 4)}</text><text x="${W - 6}" y="${H - 2}" font-size="10" fill="var(--muted)" text-anchor="end">${tri.at(-1).slice(0, 4)}</text></svg>`;
 }
 function mostrarMov(a, b) {
-  const C = D0.comovimento, p = parC(a, b), na = C.setores.find(s => s.codigo === p.a), nb = C.setores.find(s => s.codigo === p.b);
+  const C = baseC(), p = parC(a, b), na = C.setores.find(s => s.codigo === p.a), nb = C.setores.find(s => s.codigo === p.b);
   const ic = p.ic95, icp = p.ic95_parcial;
   document.getElementById('painel').innerHTML = `<h3>Memória de cálculo · Família 3 · calculado por nós${p.selo === 'fraco' ? ' · amostra fraca' : ''}</h3>
     <p class="frase"><b>${esc(na.nome)}</b> × <b>${esc(nb.nome)}</b></p>
     <div class="big">${fmt(p.pearson, 3)}</div><p class="note">de −1 (sempre em sentidos opostos) a +1 (sempre juntos). Intervalo de 95%: ${fmt(ic[0], 3)} a ${fmt(ic[1], 3)}${p.ic_cruza_zero ? ', <b>cruza o zero</b>: não dá para afirmar que andam juntos' : ''}.</p>
-    ${linhaDupla(C.taxas[p.a], C.taxas[p.b], C.trimestres_das_taxas)}
-    <p class="note"><span style="color:var(--accent)">━</span> ${esc(na.nome)} · <span style="color:var(--lit)">━</span> ${esc(nb.nome)} · crescimento sobre o mesmo trimestre do ano anterior</p>
-    <div class="formula">taxa g = ln(índice_t) − ln(índice_t−4)
-n (trimestres)              ${p.n}
+    ${linhaDupla(C.taxas[p.a], C.taxas[p.b], C.periodos)}
+    <p class="note"><span style="color:var(--accent)">━</span> ${esc(na.nome)} · <span style="color:var(--lit)">━</span> ${esc(nb.nome)} · ${C.metodo.taxa}</p>
+    <div class="formula">taxa: ${esc(C.metodo.taxa)}
+n (períodos)                ${p.n}
 Pearson r                   ${fmt(p.pearson, 6)}
 Spearman ρ (por posição)    ${fmt(p.spearman, 6)}
 Σ ρa(k)·ρb(k), k = 1..8     ${fmt(p.soma_autocorr_cruzada, 4)}
@@ -494,12 +512,12 @@ n efetivo = n ÷ (1 + 2·Σ)   ${fmt(p.n_efetivo, 1)}
 z = atanh(r)                ${fmt(p.fisher_z, 4)}
 erro = 1 ÷ √(n_ef − 3)      ${fmt(p.erro_padrao_z, 4)}
 IC 95% = tanh(z ± 1,96·erro) ${fmt(ic[0], 3)} a ${fmt(ic[1], 3)}</div>
-    <h3>Tirando o efeito do PIB inteiro</h3>
-    <div class="formula">r com o PIB: ${esc(na.nome).slice(0, 18)} ${fmt(p.r_a_pib, 3)} · ${esc(nb.nome).slice(0, 18)} ${fmt(p.r_b_pib, 3)}
-parcial = (r − ra·rb) ÷ √((1 − ra²)(1 − rb²)) = ${fmt(p.parcial_sem_pib, 4)}
+    <h3>Tirando o efeito comum: ${esc(C.ref)}</h3>
+    <div class="formula">r com ${esc(C.ref)}: ${esc(na.nome).slice(0, 18)} ${fmt(p.r_a_ref, 3)} · ${esc(nb.nome).slice(0, 18)} ${fmt(p.r_b_ref, 3)}
+parcial = (r − ra·rb) ÷ √((1 − ra²)(1 − rb²)) = ${fmt(p.parcial, 4)}
 IC 95%: ${icp ? fmt(icp[0], 3) + ' a ' + fmt(icp[1], 3) : 'sem base'}</div>
-    <p class="note">Sem 2020 e 2021 (pandemia), n = ${p.n_sem_pandemia}: Pearson ${fmt(p.pearson_sem_pandemia, 3)}.${p.puxado_por_poucos_trimestres ? ' <b>Aviso: o número muda muito sem poucos trimestres; não usar sozinho.</b>' : ''}</p>
-    <p class="note">Nichos: ${esc(na.nichos.join(', ') || '—')} · ${esc(nb.nichos.join(', ') || '—')}. Co-movimento não é dependência: quem compra de quem está na aba Árvore. Arquivo bruto do IBGE com impressão digital ${C.fonte.sha256.slice(0, 16)}…</p>`;
+    <p class="note">Sem 2020 e 2021 (pandemia), n = ${p.n_sem_pandemia}: Pearson ${fmt(p.pearson_sem_pandemia, 3)}.${p.puxado ? ' <b>Aviso: o número muda muito sem poucos períodos; não usar sozinho.</b>' : ''}</p>
+    <p class="note">Nichos: ${esc(na.nichos.join(', ') || '—')} · ${esc(nb.nichos.join(', ') || '—')}. Co-movimento não é dependência: quem compra de quem está na aba Árvore. Arquivo bruto com impressão digital ${esc((C.fonte.sha256 || Object.values(C.fonte.arquivos)[0]).slice(0, 16))}…</p>`;
 }
 
 /* ---------- Família 5: ciências ---------- */
@@ -578,7 +596,46 @@ function desenharSetorMp() {
   document.getElementById('calib').innerHTML = `<p><b>${esc(K.pergunta_de_M)}</b> ${esc(K.resposta)}</p>` + K.estudos.map(e => `<div class="card" style="gap:6px"><b>${esc(e.titulo)}</b><p class="note">${esc(e.autores)} · ${esc(e.data)} · <a href="${esc(e.url)}" target="_blank" rel="noopener">abrir</a></p><table><tr><th>O que mede</th><th class="num">Valor</th><th>Onde</th></tr>${e.numeros.map(n => `<tr><td>${esc(n.o_que)}</td><td class="num">${typeof n.valor === 'number' ? (n.valor > 1 ? n.valor.toLocaleString('pt-BR') : exato(n.valor)) : esc(n.valor)}</td><td class="mono">${esc(n.onde)}</td></tr>`).join('')}</table><p class="note">${esc(e.obs)}</p></div>`).join('') + `<p class="note">${esc(K.uso_na_arvore)}</p>`;
 }
 
-const VISTAS = ['arvore', 'matriz', 'mundo', 'movimento', 'ciencias', 'mercados', 'literatura', 'setores', 'interno', 'metodo'];
+/* ---------- Família 2: proximidade produtiva ---------- */
+function parP(a, b) { return D0.proximidade.pares.find(p => (p.a === a && p.b === b) || (p.a === b && p.b === a)); }
+function desenharPx() {
+  const X = D0.proximidade; if (!X) return;
+  const N = Object.keys(X.nichos), n = N.length, c = X.conferencia;
+  document.getElementById('pxAviso').textContent = `${X.aviso} Fonte: ${X.fonte.orgao}, ${X.fonte.classificacao}, ${X.fonte.paises} países, ${X.fonte.anos[0]} a ${X.fonte.anos[1]}.`;
+  document.getElementById('pxConf').innerHTML = `<b>Selo: ${esc(X.selo)}.</b> A conta da fórmula está certa (refeita por um segundo caminho, diferença ${c.max_dif_phi_matriz_vs_laco_simples}). Mas comparada com o mapa que o próprio Atlas publica, ${fmt(100 * c.parte_no_top_5_por_cento, 1)}% das ligações dele caem no nosso top 5%, abaixo da meta de 80% escrita antes da conta (mediana do percentil: ${fmt(c.mediana_percentil_da_nossa_phi, 1)}). Motivo provável: o Atlas usa 50 anos de dados e nós 10. Foram ${X.fonte.tentativas.length} tentativas, todas publicadas na aba Método.`;
+  const vals = X.pares.map(p => p.phi_ponderada).filter(v => v != null), vmax = Math.max(...vals);
+  const el = document.getElementById('heatP'); el.style.gridTemplateColumns = `230px repeat(${n}, minmax(40px, 1fr))`;
+  let h = '<div></div>' + N.map(k => `<div class="lab labc" title="${esc(k)}">${esc(k).slice(0, 24)}</div>`).join('');
+  N.forEach(a => { h += `<div class="lab" title="${esc(a)}">${esc(a).slice(0, 34)}</div>`;
+    N.forEach(b => { if (a === b) { const d = X.nichos[a].phi_media_dentro; if (d == null) { h += `<button disabled style="background:var(--bg);font:600 9px var(--body);color:var(--nobase);cursor:default" title="sem base">—</button>`; return; } h += `<button data-a="${esc(a)}" data-b="" style="background:var(--heat-0);font:600 10px var(--mono);color:var(--muted)" title="${esc(a)} com ele mesmo: ${fmt(d, 3)}">${fmt(d, 2)}</button>`; return; }
+      const p = parP(a, b), v = p.phi_ponderada;
+      if (v == null) { h += `<button disabled style="background:var(--bg);border:1px dashed var(--line);font:600 9px var(--body);color:var(--nobase);cursor:default" title="${esc(a)} × ${esc(b)}: sem base" aria-label="${esc(a)} com ${esc(b)}: sem base">sem base</button>`; return; }
+      const t = Math.sqrt(v / vmax);
+      h += `<button data-a="${esc(a)}" data-b="${esc(b)}" style="background:color-mix(in srgb, var(--accent) ${Math.round(6 + 94 * t)}%, var(--heat-0));font:600 10px var(--mono);color:${t > .6 ? '#fff' : 'var(--ink)'}" title="${esc(a)} × ${esc(b)}: ${fmt(v, 4)}" aria-label="${esc(a)} com ${esc(b)}: ${fmt(v, 4)}">${fmt(v, 2)}</button>`; }); });
+  el.innerHTML = h;
+  el.querySelectorAll('button[data-b]').forEach(bt => bt.onclick = () => bt.dataset.b ? mostrarPx(bt.dataset.a, bt.dataset.b) : null);
+}
+function mostrarPx(a, b) {
+  const X = D0.proximidade, p = parP(a, b), A = X.nichos[p.a], B = X.nichos[p.b];
+  document.getElementById('painel').innerHTML = `<h3>Memória de cálculo · Família 2 · ${esc(X.selo)}</h3>
+    <p class="frase"><b>${esc(p.a)}</b> × <b>${esc(p.b)}</b></p>
+    <div class="big">${fmt(p.phi_ponderada, 4)}</div><p class="note">proximidade média, de 0 (ninguém exporta os dois) a 1 (quem exporta um sempre exporta o outro), ponderada pelo valor exportado no mundo.</p>
+    <div class="formula">M[país, produto] = 1 se vantagem comparativa (RCA) ≥ 1
+φ[i,j] = países com i e j ÷ max(países com i, países com j)
+
+grupo A: ${A.n_produtos} produtos (códigos ${esc(A.prefixos_hs.join(', '))})
+grupo B: ${B.n_produtos} produtos (códigos ${esc(B.prefixos_hs.join(', '))})
+pares de produtos somados: ${(A.n_produtos * B.n_produtos).toLocaleString('pt-BR')}
+
+média ponderada Σ wᵢ·wⱼ·φ ÷ (Σwᵢ·Σwⱼ) = ${fmt(p.phi_ponderada, 6)}
+média simples                       = ${fmt(p.phi_media_simples, 6)}
+dentro do grupo A                   = ${fmt(A.phi_media_dentro, 6)}
+dentro do grupo B                   = ${fmt(B.phi_media_dentro, 6)}</div>
+    <p class="note"><b>Par de produtos mais próximo:</b> ${esc(p.par_mais_proximo[0])} e ${esc(p.par_mais_proximo[1])}, φ = ${fmt(p.par_mais_proximo[2], 3)}.</p>
+    <p class="note">${esc(X.metodo.referencia)}. Proximidade de capacidades, não compra e venda.</p>`;
+}
+
+const VISTAS = ['arvore', 'matriz', 'mundo', 'proximidade', 'movimento', 'ciencias', 'mercados', 'literatura', 'setores', 'interno', 'metodo'];
 function rota() {
   const v = VISTAS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'arvore';
   document.querySelectorAll('[data-vista]').forEach(s => s.hidden = s.dataset.vista !== v);
@@ -587,9 +644,10 @@ function rota() {
 
 fetch('arvore-dados.json').then(r => r.json()).then(d => {
   D0 = d; IB = d.ibge; IB.cod.forEach((c, k) => ix[c] = k);
-  desenharFamilias(); desenharMov(); desenharCi(); desenharMp(); desenharSetorMp(); desenharMundo(); desenharLiteratura(); desenharGrafo(); desenharMatriz(); desenharSetores(); desenharInterno(); desenharMetodo(); rota();
+  desenharFamilias(); desenharPx(); desenharMov(); desenharCi(); desenharMp(); desenharSetorMp(); desenharMundo(); desenharLiteratura(); desenharGrafo(); desenharMatriz(); desenharSetores(); desenharInterno(); desenharMetodo(); rota();
   ['medida', 'corte'].forEach(id => document.getElementById(id).addEventListener('input', desenharGrafo));
   document.getElementById('medidaC').addEventListener('input', desenharMov);
+  document.getElementById('baseC').addEventListener('input', () => { desenharMov(); const C = baseC(), p = C.pares[0]; mostrarMov(p.a, p.b); });
   document.getElementById('corteCi').addEventListener('input', desenharCi);
   document.getElementById('mpNicho').addEventListener('input', desenharMp);
   ['regiao', 'medidaW'].forEach(id => document.getElementById(id).addEventListener('input', desenharMundo));

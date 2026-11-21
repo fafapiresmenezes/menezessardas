@@ -10,10 +10,10 @@ ETAPAS = [  # (etapa, % feito, como foi medido)
  ('2. Setores, fichas e tipos de variável', 60, '15 fichas nicho→IBGE, 13 nichos ligados ao EXIOBASE e 6 sem correspondência escritos; catálogo de variáveis com tipo ainda não montado em dado'),
  ('3. Família 7, sobreposição interna', 100, f"{len(si['pares'])} pares de 10 nichos calculados e recontados"),
  ('4. Família 1, dependência econômica', 67 if r >= 2 else 33, '2 de 3 bases feitas (IBGE 2015 e EXIOBASE 2019 mundial); OCDE bloqueia acesso automático' if r >= 2 else '1 de 3 bases feita (IBGE 2015)'),
- ('5. Famílias 3 e 4, mercados', 75 if r >= 3 else 0, 'família 3: 1 de 2 bases (PIB trimestral do IBGE feito; bolsa B3/FRED pendente) = 50%; família 4: coleta Polymarket e Kalshi feita = 100%; média 75%' if r >= 3 else 'fontes testadas e abertas; conta não começou'),
- ('6. Famílias 2 e 5, Harvard e OpenAlex', 25 if r >= 3 else 0, 'família 5: 1 de 2 bases (arXiv feito; OpenAlex esgotou a cota grátis do dia) = 50%; família 2 (Harvard) = 0%; média 25%' if r >= 3 else 'fontes testadas; conta não começou'),
+ ('5. Famílias 3 e 4, mercados', 100 if r >= 4 else 75 if r >= 3 else 0, 'família 3: 2 de 2 bases (PIB trimestral do IBGE e bolsa dos EUA) = 100%; família 4 = 100%' if r >= 4 else 'família 3: 1 de 2 bases (PIB trimestral do IBGE feito; bolsa B3/FRED pendente) = 50%; família 4: coleta Polymarket e Kalshi feita = 100%; média 75%' if r >= 3 else 'fontes testadas e abertas; conta não começou'),
+ ('6. Famílias 2 e 5, Harvard e OpenAlex', 50 if r >= 4 else 25 if r >= 3 else 0, 'família 2: conta feita, conferência contra o Atlas reprovada (66,1% contra meta de 80%), vale 50%; família 5: 1 de 2 bases (arXiv) = 50%; média 50%' if r >= 4 else 'família 5: 1 de 2 bases (arXiv feito; OpenAlex esgotou a cota grátis do dia) = 50%; família 2 (Harvard) = 0%; média 25%' if r >= 3 else 'fontes testadas; conta não começou'),
  ('7. Família 6, literatura', min(100, n_lit * 10), f'{n_lit} estudos lidos e conferidos de uma meta de 10 (um por nicho principal), mais 1 estudo usado só para conferir'),
- ('8. Desenho, segunda conta e carimbo', 45 if r >= 3 else 40 if r >= 2 else 30, ('desenho com 10 vistas publicado' if r >= 3 else 'desenho com 7 vistas publicado') + '; revisão de adversário e carimbo pendentes'),
+ ('8. Desenho, segunda conta e carimbo', 50 if r >= 4 else 45 if r >= 3 else 40 if r >= 2 else 30, ('desenho com 11 vistas publicado' if r >= 4 else 'desenho com 10 vistas publicado' if r >= 3 else 'desenho com 7 vistas publicado') + '; revisão de adversário e carimbo pendentes'),
 ]
 total = sum(p for _, p, _ in ETAPAS) / len(ETAPAS)
 c = le['conferencia']
@@ -26,6 +26,26 @@ linhas_chave = ''.join(f"<tr><td>{l['cod']}</td><td>{E(l['atividade'])}{' ◆' i
 etapas = ''.join(f"<tr><td>{E(n)}</td><td class=n>{p}%</td><td><div class=b><i style='width:{p}%'></i></div></td><td>{E(m)}</td></tr>" for n, p, m in ETAPAS)
 sem = ''.join(f"<li><b>{E(k)}</b>: {E(v)}</li>" for k, v in me['sem_correspondencia'].items())
 extra = ''
+extra4 = ''
+if r >= 4:
+    px = json.load(open('saida/atlas_proximidade.json')); cb = json.load(open('saida/comovimento_bolsa.json'))
+    cfx = px['conferencia']
+    tpx = ''.join(f"<tr><td>{E(q['a'])} × {E(q['b'])}</td><td class=n>{q['phi_ponderada']:.4f}</td><td class=n>{q['phi_media_simples']:.4f}</td><td>{E(q['par_mais_proximo'][0])} / {E(q['par_mais_proximo'][1])}: {q['par_mais_proximo'][2]:.3f}</td></tr>" for q in sorted([q for q in px['pares'] if q['phi_ponderada'] is not None], key=lambda q: -q['phi_ponderada'])[:12])
+    tcb = ''.join(f"<tr><td>{E(q['nome_a'])} × {E(q['nome_b'])}</td><td class=n>{q['pearson']:+.3f}</td><td class=n>{q['ic95'][0]:+.2f} a {q['ic95'][1]:+.2f}</td><td class=n>{q['parcial_sem_mercado']:+.3f}</td><td class=n>{q['n_efetivo']:.0f}</td></tr>" for q in sorted(cb['pares'], key=lambda q: -q['parcial_sem_mercado'])[:12])
+    extra4 = f"""<h2>Família 2: proximidade produtiva (Harvard), selo: {E(px['selo'])}</h2>
+<p>{E(px['aviso'])} {px['fonte']['produtos']} produtos, {px['fonte']['paises']} países, {px['fonte']['anos'][0]}–{px['fonte']['anos'][1]}. {E(px['metodo']['referencia'])}.</p>
+<pre>{E(px['metodo']['phi'])}
+{E(px['metodo']['nicho'])}
+Países: {E(px['fonte']['filtro_de_paises'])}
+Conferência 1 (conta refeita por laço simples): diferença {cfx['max_dif_phi_matriz_vs_laco_simples']}
+Conferência 2 (mapa publicado pelo Atlas, {cfx['ligacoes_publicadas_pelo_atlas']} ligações): mediana do percentil {cfx['mediana_percentil_da_nossa_phi']:.1f}; {100*cfx['parte_no_top_5_por_cento']:.1f}% no top 5%. Critério escrito antes: {E(cfx['criterio'])}. REPROVADA.
+Tentativas: {E(' | '.join(px['fonte']['tentativas']))}
+{E(px['fonte']['diferenca_do_atlas'])}
+Sem base: {E(', '.join(k for k, v in px['nichos'].items() if v['sem_base']))} (o Atlas não publica a RCA dos serviços).</pre>
+<table><tr><th>Par</th><th class=n>φ ponderada</th><th class=n>φ simples</th><th>Par de produtos mais próximo</th></tr>{tpx}</table>
+<h2>Família 3, segunda base: setores da bolsa dos EUA</h2>
+<p>{E(cb['aviso'])} {len(cb['setores'])} setores, {cb['pares'][0]['n']} meses ({cb['fonte']['primeiro_mes']} a {cb['fonte']['ultimo_mes']}), {len(cb['pares'])} pares. Fonte: {E(cb['fonte']['orgao'])}. Conferência: Pearson refeito, diferença {cb['conferencia']['max_dif_pearson_manual_vs_numpy']:.1e}.</p>
+<table><tr><th>Par (os 12 que mais andam juntos depois de tirar a bolsa inteira)</th><th class=n>Pearson</th><th class=n>IC 95%</th><th class=n>Sem mercado</th><th class=n>n efetivo</th></tr>{tcb}</table>"""
 if r >= 3:
     co = json.load(open('saida/comovimento_pib.json')); ci = json.load(open('saida/ciencias_arxiv.json')); mp = json.load(open('saida/mercados_previsao.json'))
     pc = sorted(co['pares'], key=lambda p: -p['pearson'])
@@ -91,6 +111,7 @@ Impressão digital do pacote igual à publicada: {ex['sha256_zip_conferido_com_o
 <p>{E(ex['aviso_angola'])}</p>
 <h2>Quanto da cadeia de cada setor vem de fora do país (Brasil e Resto da África)</h2>
 <table><tr><th>Setor (EXIOBASE)</th><th class=n>Brasil</th><th class=n>Resto da África</th></tr>{''.join(f"<tr><td>{E(ex['setores'][j])}</td><td class=n>{100*ex['por_regiao']['BR']['parte_da_cadeia_fora_da_regiao'][c]:.1f}%</td><td class=n>{100*ex['por_regiao']['WF']['parte_da_cadeia_fora_da_regiao'][c]:.1f}%</td></tr>" for c, j in enumerate(ex['indices_nichos']))}</table>
+{extra4}
 {extra}
 <h2>Família 6: literatura lida e conferida</h2>
 <table><tr><th>Estudo</th><th>Liga</th><th>Número como está no texto</th></tr>{''.join(f"<tr><td>{E(x['autores'])} ({x['ano']}), {E(x['instituicao'])}. {E(x['titulo'])}. {E(x['onde'])}.</td><td>{E(x.get('direcao') or 'conferência')}</td><td>{'; '.join(E(n['o_que']) + ': ' + str(n['valor']).replace('.', ',') for n in x.get('numeros', [])) or E(x.get('resultado', ''))}</td></tr>" for x in lit)}</table>

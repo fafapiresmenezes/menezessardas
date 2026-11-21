@@ -141,6 +141,184 @@
    "onde": "p. 19, Resultados",
    "uso": "Conferir nossa lista de setores-chave do IBGE 2015. Ela usa 42 setores de 2000 a 2020; nós usamos 67 setores de 2015.",
    "resultado": "Dos 10 setores-chave que ela cita, 8 também saem chave na nossa conta (refino, químicos orgânicos, defensivos e químicos diversos, borracha e plástico, aço, eletricidade, celulose e papel, transporte). Não batem: alimentos e bebidas (na nossa matriz está dividido em 4 atividades) e extração de petróleo (ela mesma diz que é chave com pouca regularidade)."
+  },
+  {
+   "id": "L4",
+   "selo": "da literatura",
+   "par": [
+    "IA e Cibersegurança",
+    "Finanças"
+   ],
+   "direcao": "Ataque cibernético num banco → resto do sistema de pagamentos (propagação)",
+   "autores": "Thomas M. Eisenbach, Anna Kovner e Michael Junho Lee",
+   "instituicao": "Federal Reserve Bank of New York",
+   "ano": 2021,
+   "titulo": "Cyber Risk and the U.S. Financial System: A Pre-Mortem Analysis",
+   "veiculo": "Staff Report nº 909 (jan/2020, revisado mai/2021)",
+   "url": "https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr909.pdf",
+   "sha256_pdf": "89066b4f7cc1371ebe1cd08ea6c728f729d77d52637be68991d6356d87b4138f",
+   "onde": "Resumo (p. 2 do PDF) e Introdução (p. 5 do PDF)",
+   "tipo_de_numero": "simulação de rede com dados reais de pagamentos (não é correlação)",
+   "numeros": [
+    {
+     "o_que": "parte da rede de pagamentos atingida, em média, quando um dos 5 maiores bancos dos EUA é paralisado",
+     "valor": "38%"
+    },
+    {
+     "o_que": "pagamentos que deixam de acontecer se os bancos passam a segurar liquidez, em vezes o PIB diário",
+     "valor": "mais de 2,5"
+    }
+   ]
+  },
+  {
+   "id": "L5",
+   "selo": "da literatura",
+   "par": [
+    "Saúde",
+    "Economia inteira"
+   ],
+   "direcao": "Saúde → produção (depende de)",
+   "autores": "David E. Bloom, David Canning e Jaypee Sevilla",
+   "instituicao": "Harvard School of Public Health e Queen's University Belfast",
+   "ano": 2001,
+   "titulo": "The Effect of Health on Economic Growth: Theory and Evidence",
+   "veiculo": "NBER Working Paper 8587 (publicado em World Development 32(1), 2004)",
+   "url": "https://www.nber.org/system/files/working_papers/w8587/w8587.pdf",
+   "sha256_pdf": "d4c89e7c0af64585ec69a8c2d3cb264cc6ab77ff0788995392ac3892eef48ef1",
+   "onde": "p. 5, p. 18 e p. 20 do PDF",
+   "tipo_de_numero": "coeficiente de regressão de função de produção entre países",
+   "numeros": [
+    {
+     "o_que": "aumento da produção para cada ano a mais de expectativa de vida",
+     "valor": "4%"
+    }
+   ]
+  },
+  {
+   "id": "L6",
+   "selo": "da literatura",
+   "par": [
+    "Educação",
+    "Economia inteira"
+   ],
+   "direcao": "Educação (habilidade medida em prova) → crescimento",
+   "autores": "Eric A. Hanushek e Ludger Woessmann",
+   "instituicao": "Hoover Institution (Stanford) e Universidade de Munique",
+   "ano": 2009,
+   "titulo": "Do Better Schools Lead to More Growth? Cognitive Skills, Economic Outcomes, and Causation",
+   "veiculo": "NBER Working Paper 14633",
+   "url": "https://www.nber.org/system/files/working_papers/w14633/w14633.pdf",
+   "sha256_pdf": "c4d5e07fa9609e8d6324dd4762b1d950f9ff484e3bbac94436ce6814ad5fd0b2",
+   "onde": "p. 11 e p. 25 do PDF",
+   "tipo_de_numero": "coeficiente de regressão de crescimento entre países, com testes de causalidade",
+   "numeros": [
+    {
+     "o_que": "crescimento anual a mais do PIB per capita por 1 desvio-padrão nas provas (40 anos)",
+     "valor": "2 pontos percentuais"
+    },
+    {
+     "o_que": "crescimento anual a mais por +10 pontos percentuais de alunos com alfabetização básica",
+     "valor": "0,3 ponto percentual"
+    },
+    {
+     "o_que": "crescimento anual a mais por +10 pontos percentuais de alunos de alto desempenho",
+     "valor": "1,3 ponto percentual"
+    }
+   ]
+  },
+  {
+   "id": "L7",
+   "selo": "da literatura",
+   "par": [
+    "Energia",
+    "Indústria"
+   ],
+   "direcao": "Falta de energia → receita das fábricas (depende de)",
+   "autores": "Hunt Allcott, Allan Collard-Wexler e Stephen D. O'Connell",
+   "instituicao": "NYU, Duke e CUNY",
+   "ano": 2014,
+   "titulo": "How Do Electricity Shortages Affect Industry? Evidence from India",
+   "veiculo": "NBER Working Paper 19977 (publicado na American Economic Review 106(3), 2016)",
+   "url": "https://www.nber.org/system/files/working_papers/w19977/w19977.pdf",
+   "sha256_pdf": "64b4eb5e2feac5892a4318032decfb09727208b609d31cee9aeb33d78912ccc3",
+   "onde": "Resumo, p. 2 do PDF",
+   "tipo_de_numero": "efeito causal (variável instrumental: oferta de hidrelétrica)",
+   "numeros": [
+    {
+     "o_que": "queda da receita e do excedente da fábrica média com o nível médio de falta de energia da Índia",
+     "valor": "5% a 10%"
+    }
+   ]
+  },
+  {
+   "id": "L8",
+   "selo": "da literatura",
+   "par": [
+    "Telecom (internet rápida)",
+    "Emprego"
+   ],
+   "direcao": "Chegada de internet rápida (cabos submarinos) → emprego na África",
+   "autores": "Jonas Hjort e Jonas Poulsen",
+   "instituicao": "Columbia University e Harvard University",
+   "ano": 2018,
+   "titulo": "The Arrival of Fast Internet and Employment in Africa",
+   "veiculo": "NBER Working Paper 23582 (publicado na American Economic Review 109(3), 2019)",
+   "url": "https://www.nber.org/system/files/working_papers/w23582/w23582.pdf",
+   "sha256_pdf": "b206b187ff08f543b61b82bbe45ae141ed2ddda0f4f2f2613496763bdd15ed55",
+   "onde": "p. 4 e p. 14 do PDF",
+   "tipo_de_numero": "efeito causal (diferenças em diferenças)",
+   "numeros": [
+    {
+     "o_que": "aumento da chance de estar empregado, 9 países do Afrobarometer",
+     "valor": "13,2%"
+    },
+    {
+     "o_que": "aumento da chance de estar empregado, segundo grupo de países",
+     "valor": "6,9%"
+    },
+    {
+     "o_que": "aumento da chance de estar empregado, África do Sul",
+     "valor": "3,1%"
+    }
+   ],
+   "obs": "Angola não está na amostra; serve de referência para o nicho Imbono com essa ressalva."
+  },
+  {
+   "id": "L9",
+   "selo": "da literatura",
+   "par": [
+    "Jurídica",
+    "Finanças e contratos"
+   ],
+   "direcao": "Formalismo da Justiça → tempo para cobrar e despejar",
+   "autores": "Simeon Djankov, Rafael La Porta, Florencio Lopez-de-Silanes e Andrei Shleifer",
+   "instituicao": "Banco Mundial, Harvard e Yale",
+   "ano": 2002,
+   "titulo": "Courts: The Lex Mundi Project",
+   "veiculo": "NBER Working Paper 8890 (publicado no Quarterly Journal of Economics 118(2), 2003)",
+   "url": "https://www.nber.org/system/files/working_papers/w8890/w8890.pdf",
+   "sha256_pdf": "ee55fccc165a43549e85eb97ecf2f61b3880a18b9f0464591a67652308cc0c36",
+   "onde": "Tabela 6 (p. 56 do PDF), Tabelas 2A e 2B (p. 48 e p. 50 do PDF)",
+   "tipo_de_numero": "medição direta em 109 países (dados de cerca de 2000)",
+   "numeros": [
+    {
+     "o_que": "Brasil: dias para despejar inquilino por falta de pagamento",
+     "valor": 120
+    },
+    {
+     "o_que": "Brasil: dias para cobrar um cheque sem fundo",
+     "valor": 180
+    },
+    {
+     "o_que": "Brasil: índice de formalismo, despejo (escala do estudo)",
+     "valor": 3.83
+    },
+    {
+     "o_que": "Brasil: índice de formalismo, cheque",
+     "valor": 3.06
+    }
+   ],
+   "obs": "Resumo: formalismo maior está ligado a processos mais longos, mais corrupção e menos acesso à Justiça. Dados antigos (por volta de 2000)."
   }
  ]
 }
