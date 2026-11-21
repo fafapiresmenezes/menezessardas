@@ -1,5 +1,11 @@
 ext {
-    minSdkVersion = 23
+    // 24 (Android 7.0) e nao 23, por um motivo concreto achado pelo MobSF: o
+    // android:networkSecurityConfig do nosso manifesto SO existe a partir da API 24. Com
+    // minSdk 23 o app se instalava no Android 6, onde essa protecao e simplesmente ignorada —
+    // ou seja, a promessa de "nenhuma conexao em texto claro" nao valia nos aparelhos mais
+    // antigos que o app aceitava. O Android 6 tambem nao recebe mais correcao de seguranca.
+    // O Capacitor 7 pede 23 e o plugin de gravacao pede 22, entao 24 cabe nos dois.
+    minSdkVersion = 24
     compileSdkVersion = 35
     targetSdkVersion = 35
     androidxActivityVersion = '1.9.2'
