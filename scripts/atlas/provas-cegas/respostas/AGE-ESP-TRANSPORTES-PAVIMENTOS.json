@@ -1,0 +1,83 @@
+[
+  {
+    "id": "TRA-01",
+    "resposta": 2.441,
+    "unidade": "—",
+    "formula": "FE = (P / P_padrao)^n, com n = 4 (lei da quarta potência, eixo simples)",
+    "passos": [
+      "Dados: P = 100 kN, P_padrao = 80 kN, n = 4.",
+      "Razão de cargas: 100 / 80 = 1,25.",
+      "FE = 1,25^4 = 2,4414 (adimensional).",
+      "Faixa de sensibilidade: com n entre 3,5 e 4,5 o FE fica entre 2,14 e 2,76; o valor 2,44 é o de referência com n = 4.",
+      "Fonte: AASHTO Guide for Design of Pavement Structures (1993), equação de equivalência de eixo simples; cláusula não confirmada."
+    ]
+  },
+  {
+    "id": "TRA-02",
+    "resposta": 128.2,
+    "unidade": "m",
+    "formula": "d_p = 0,278 · V · t + V² / (2 · a), com V em km/h e a em m/s²; rasante plana (sem termo de declive)",
+    "passos": [
+      "Dados: V = 80 km/h, t = 2,5 s, a = 3,4 m/s², rasante plana.",
+      "Conversão: V = 80 / 3,6 = 22,22 m/s.",
+      "Distância de reação: 22,22 · 2,5 = 55,56 m.",
+      "Distância de travagem: 22,22² / (2 · 3,4) = 493,8 / 6,8 = 72,62 m.",
+      "Distância de paragem: 55,56 + 72,62 = 128,18 m, arredondada a 128,2 m.",
+      "Faixa de sensibilidade: com t = 2,0 s e a = 3,4 m/s² d_p é cerca de 117 m; com t = 2,5 s e a = 3,0 m/s² d_p é cerca de 138 m. Valor de referência: 128,2 m.",
+      "Fonte: AASHTO Green Book (2018), capítulo de distância de visibilidade de paragem; cláusula não confirmada."
+    ]
+  },
+  {
+    "id": "TRA-03",
+    "resposta": 252,
+    "unidade": "m",
+    "formula": "R_min = V² / (127 · (e + f)), com V em km/h",
+    "passos": [
+      "Dados: V = 80 km/h, e = 0,06, f = 0,14.",
+      "Soma e + f = 0,20.",
+      "R_min = 80² / (127 · 0,20) = 6400 / 25,4 = 251,97 m, arredondado a 252 m.",
+      "Verificação de ordem de grandeza: com V = 80 km/h e e + f = 0,20 é típico um raio na ordem de 250 m, consistente com a prática.",
+      "Fonte: AASHTO Green Book (2018), equação de curva horizontal mínima; cláusula não confirmada."
+    ]
+  },
+  {
+    "id": "TRA-04",
+    "resposta": 199.8,
+    "unidade": "m",
+    "formula": "Caso L > S: L = A · S² / [200 · (√h1 + √h2)²], com A = 8 %",
+    "passos": [
+      "Dados: A = 4 %, S = 128,2 m (da TRA-02), h1 = 1,08 m, h2 = 0,60 m.",
+      "Caso pedido (enunciado corrigido): L > S, com L = A · S² / [200 · (√h1 + √h2)²], A = 8 %, S = 128,2 m, h1 = 1,08 m, h2 = 0,60 m.",
+      "(√1,08 + √0,60)² = (1,0392 + 0,7746)² = 3,2900.",
+      "L = 8 · 128,2² / (200 · 3,2900) = 131 482 / 658,0 = 199,8 m.",
+      "Verificação da hipótese: L = 199,8 m é superior a S = 128,2 m, logo a hipótese L > S verifica-se com A = 8 %.",
+      "Faixa de sensibilidade: com S entre 117 m e 138 m (cenários da TRA-02), L = A·S²/658 fica entre cerca de 166 m e 232 m; valor de referência 199,8 m. Com S = 117 m, L > S mantém-se.",
+      "Fonte: AASHTO Green Book (2018), curvas verticais convexas, critério de visibilidade de paragem; cláusula não confirmada."
+    ]
+  },
+  {
+    "id": "TRA-05",
+    "resposta": 4200,
+    "unidade": "t",
+    "formula": "m = L · largura · espessura · ρ",
+    "passos": [
+      "Dados: L = 5,0 km = 5000 m, largura = 7,0 m, espessura = 0,05 m, ρ = 2,4 t/m³.",
+      "Volume: 5000 · 7,0 · 0,05 = 1750 m³.",
+      "Massa: 1750 · 2,4 = 4200 t.",
+      "Verificação de unidades: m³ · t/m³ = t.",
+      "Nota: não considera perdas de mistura, sobre-largura de ombros nem compactação; a quantidade de obra deve ser confirmada com o projeto e o caderno de encargos."
+    ]
+  },
+  {
+    "id": "TRA-06",
+    "resposta": 18061,
+    "unidade": "veículos/dia",
+    "formula": "TMD_n = TMD_0 · (1 + i)^n, crescimento geométrico anual",
+    "passos": [
+      "Dados: TMD_0 = 10 000 veículos/dia, i = 0,03, n = 20 anos.",
+      "Fator de crescimento: (1,03)^20 = 1,80611.",
+      "TMD_20 = 10 000 · 1,80611 = 18 061 veículos/dia, arredondado a 18 061.",
+      "Verificação: duplicação em cerca de 23 anos (regra de 70 / 3 = 23,3), logo 20 anos dá um valor entre 1,8 e 2 vezes o inicial, coerente."
+    ]
+  }
+]

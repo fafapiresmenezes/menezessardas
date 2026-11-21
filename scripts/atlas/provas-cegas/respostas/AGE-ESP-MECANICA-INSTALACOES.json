@@ -1,0 +1,64 @@
+[
+ {
+  "id": "MEC-01",
+  "resposta": 12.06,
+  "unidade": "kW",
+  "formula": "Q = rho * V * cp * dT",
+  "passos": [
+   "Caudal massico: m_dot = rho * V_dot = 1,2 kg/m3 * 1,00 m3/s = 1,2 kg/s",
+   "Diferenca de temperatura: dT = 10 K (uma diferenca de 10 C equivale a 10 K)",
+   "Potencia sensivel: Q = m_dot * cp * dT = 1,2 kg/s * 1,005 kJ/(kg.K) * 10 K = 12,06 kW"
+  ]
+ },
+ {
+  "id": "MEC-02",
+  "resposta": 3000,
+  "unidade": "m3/h",
+  "formula": "V_dot = V_sala * RPH",
+  "passos": [
+   "V_dot = 500 m3 * 6 h^-1 = 3000 m3/h",
+   "Equivale a 0,833 m3/s, consistente com MEC-03"
+  ]
+ },
+ {
+  "id": "MEC-03",
+  "resposta": 641,
+  "unidade": "W",
+  "formula": "P = V_dot * dp / eta",
+  "passos": [
+   "V_dot * dp = 0,8333 m3/s * 500 Pa = 416,65 W",
+   "P = 416,65 W / 0,65 = 641 W (arredondado; ~641 W)"
+  ]
+ },
+ {
+  "id": "MEC-04",
+  "resposta": 854,
+  "unidade": "L/min",
+  "formula": "Q = A * densidade de aplicacao",
+  "passos": [
+   "Densidade 6,1 mm/min sobre 1 m2 = 6,1 L/min por m2",
+   "Q = 140 m2 * 6,1 L/(min.m2) = 854 L/min"
+  ]
+ },
+ {
+  "id": "MEC-05",
+  "resposta": 11.21,
+  "unidade": "kW",
+  "formula": "P_eixo = rho * g * Q * H / eta",
+  "passos": [
+   "Q = 20 L/s = 0,02 m3/s",
+   "P_hidraulica = 1000 kg/m3 * 9,81 m/s2 * 0,02 m3/s * 40 m = 7848 W = 7,848 kW",
+   "P_eixo = 7,848 kW / 0,70 = 11,21 kW"
+  ]
+ },
+ {
+  "id": "MEC-06",
+  "resposta": 1.27,
+  "unidade": "m/s",
+  "formula": "v = Q / A, A = pi * D^2 / 4",
+  "passos": [
+   "A = pi * (0,10 m)^2 / 4 = 7,854e-3 m2",
+   "v = 0,01 m3/s / 7,854e-3 m2 = 1,273 m/s"
+  ]
+ }
+]

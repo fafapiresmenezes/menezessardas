@@ -1,0 +1,60 @@
+[
+ {
+  "id": "MEC-01",
+  "enunciado": "Caudal de ar de 1,00 m³/s com diferença de 10 °C, ρ = 1,2 kg/m³ e cp = 1,005 kJ/kg·K. Qual a potência sensível?",
+  "dados": {
+   "V_m3_s": 1.0,
+   "dT_C": 10,
+   "rho": 1.2,
+   "cp_kJ_kgK": 1.005
+  },
+  "unidade_esperada": "kW"
+ },
+ {
+  "id": "MEC-02",
+  "enunciado": "Sala de 500 m³ com 6 renovações por hora. Qual o caudal de ar?",
+  "dados": {
+   "V_m3": 500,
+   "RPH": 6
+  },
+  "unidade_esperada": "m³/h"
+ },
+ {
+  "id": "MEC-03",
+  "enunciado": "Esse caudal (0,833 m³/s) com pressão total de 500 Pa e rendimento de 65%. Qual a potência do ventilador?",
+  "dados": {
+   "V_m3_s": 0.8333,
+   "dp_Pa": 500,
+   "eta": 0.65
+  },
+  "unidade_esperada": "W"
+ },
+ {
+  "id": "MEC-04",
+  "enunciado": "Área de operação de 140 m² com densidade de 6,1 mm/min. Qual o caudal de água dos sprinklers?",
+  "dados": {
+   "area_m2": 140,
+   "densidade_mm_min": 6.1
+  },
+  "unidade_esperada": "L/min"
+ },
+ {
+  "id": "MEC-05",
+  "enunciado": "Bomba com caudal 20 L/s, altura manométrica 40 m e rendimento 70%. Qual a potência no eixo?",
+  "dados": {
+   "Q_m3_s": 0.02,
+   "H_m": 40,
+   "eta": 0.7
+  },
+  "unidade_esperada": "kW"
+ },
+ {
+  "id": "MEC-06",
+  "enunciado": "Tubagem de aço de 100 mm com caudal de 10 L/s. Qual a velocidade de escoamento?",
+  "dados": {
+   "D_m": 0.1,
+   "Q_m3_s": 0.01
+  },
+  "unidade_esperada": "m/s"
+ }
+]

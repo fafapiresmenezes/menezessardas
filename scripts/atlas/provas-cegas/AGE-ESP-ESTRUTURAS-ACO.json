@@ -1,0 +1,70 @@
+[
+ {
+  "id": "ACO-01",
+  "enunciado": "IPE 300 em S235, tração centrada. Qual a resistência plástica da secção?",
+  "dados": {
+   "perfil": "IPE 300",
+   "A_mm2": 5381.0,
+   "fy_MPa": 235.0,
+   "gamma_M0": 1.0
+  },
+  "unidade_esperada": "kN"
+ },
+ {
+  "id": "ACO-02",
+  "enunciado": "IPE 300 em S235, flexão em torno do eixo forte, secção classe 1. Qual o momento plástico resistente?",
+  "dados": {
+   "perfil": "IPE 300",
+   "Wpl_y_mm3": 628400.0,
+   "fy_MPa": 235.0,
+   "gamma_M0": 1.0
+  },
+  "unidade_esperada": "kNm"
+ },
+ {
+  "id": "ACO-03",
+  "enunciado": "IPE 300 em S235. Qual o esforço transverso plástico resistente?",
+  "dados": {
+   "perfil": "IPE 300",
+   "b_mm": 150.0,
+   "tf_mm": 10.7,
+   "tw_mm": 7.1,
+   "r_mm": 15.0,
+   "fy_MPa": 235.0
+  },
+  "unidade_esperada": "kN"
+ },
+ {
+  "id": "ACO-04",
+  "enunciado": "Pilar IPE 300 bi-articulado, 4,00 m, encurvadura em torno do eixo fraco. Qual a carga crítica de Euler?",
+  "dados": {
+   "perfil": "IPE 300",
+   "L_mm": 4000.0,
+   "Iz_mm4": 6038000.0,
+   "E_MPa": 210000.0
+  },
+  "unidade_esperada": "kN"
+ },
+ {
+  "id": "ACO-05",
+  "enunciado": "Para esse mesmo pilar, qual a esbelteza normalizada?",
+  "dados": {
+   "A_mm2": 5381.0,
+   "fy_MPa": 235.0,
+   "Ncr_kN": 782.2
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "ACO-06",
+  "enunciado": "Parafuso M20 classe 8.8, corte simples, plano de corte na zona roscada. Qual a resistência ao corte?",
+  "dados": {
+   "parafuso": "M20 8.8",
+   "As_mm2": 245,
+   "fub_MPa": 800,
+   "alpha_v": 0.6,
+   "gamma_M2": 1.25
+  },
+  "unidade_esperada": "kN"
+ }
+]

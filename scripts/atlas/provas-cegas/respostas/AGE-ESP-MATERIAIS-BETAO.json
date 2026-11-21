@@ -1,0 +1,79 @@
+[
+  {
+    "id": "MAT-01",
+    "resposta": 175,
+    "unidade": "L/m³",
+    "formula": "a = (a/c) × c",
+    "passos": [
+      "Relação água/cimento a/c = 0,50 e cimento c = 350 kg/m³.",
+      "Água a = 0,50 × 350 = 175 kg/m³; massa volúmica da água ≈ 1 kg/L, logo 175 L/m³.",
+      "Faixa: sem outros dados de absorção dos agregados, água total ≈ 175 L/m³ (assumida como água de amassadura efetiva; humidade dos agregados não considerada, não confirmado).",
+      "Verificação: ordem de grandeza típica para betão de c ≈ 350 kg/m³ e a/c ≈ 0,5 (dosagem de referência, não confirmado por norma nesta resposta)."
+    ]
+  },
+  {
+    "id": "MAT-02",
+    "resposta": 693.9,
+    "unidade": "L/m³",
+    "formula": "V_agregados = 1000 − V_cimento − V_água − V_ar, com V_cimento = m_c / ρ_c",
+    "passos": [
+      "Volume absoluto do cimento: V_c = 350 kg / 3,15 kg/dm³ = 111,11 dm³ = 111,11 L/m³.",
+      "Volume de água: 175 L/m³ (resultado de MAT-01).",
+      "Volume de ar: 2 % de 1000 L = 20 L/m³.",
+      "V_agregados = 1000 − 111,11 − 175 − 20 = 693,89 L/m³ ≈ 693,9 L/m³.",
+      "Faixa: ± 5 L/m³ pela incerteza de massa volúmica do cimento (variabilidade do cimento local, Cimangola / Nova Cimangola, não confirmada) e do teor de ar (1 a 3 %, assumido).",
+      "Hipótese: betão sem adições e sem aditivos com volume relevante; a massa volúmica do cimento de 3,15 kg/dm³ é dado do enunciado."
+    ]
+  },
+  {
+    "id": "MAT-03",
+    "resposta": 38,
+    "unidade": "MPa",
+    "formula": "f_cm = f_ck + 8 MPa (para f_ck ≥ 12 MPa)",
+    "passos": [
+      "Dado: f_ck = 30 MPa.",
+      "Resistência média para cálculo de propriedades (EN 1992-1-1, Quadro 3.1, relação f_cm = f_ck + 8 MPa): f_cm = 30 + 8 = 38 MPa.",
+      "Faixa: 38 MPa (valor normativo, sem dispersão); a resistência média real do lote é outra grandeza e depende do desvio padrão (ver MAT-04).",
+      "Nota de divergência: a prática brasileira (NBR 6118) trabalha com f_ck e relações próprias; não aplicada aqui. Cláusula exata do Quadro 3.1 confirmada por memória, não verificada em documento nesta sessão."
+    ]
+  },
+  {
+    "id": "MAT-04",
+    "resposta": 38.2,
+    "unidade": "MPa",
+    "formula": "f_cm,alvo = f_ck + k × σ, com k = 1,645 (5 % de defeituosos, distribuição normal)",
+    "passos": [
+      "Dados: f_ck = 30 MPa; σ = 5,0 MPa; k = 1,645.",
+      "f_cm,alvo = 30 + 1,645 × 5,0 = 30 + 8,225 = 38,225 MPa ≈ 38,2 MPa.",
+      "Faixa: com σ entre 4,0 e 6,0 MPa, f_cm,alvo fica entre 36,6 e 39,9 MPa (hipótese: σ de produção estável; σ estimado não confirmado por ensaios).",
+      "Nota: o critério de conformidade e o valor de k devem ser conferidos na EN 206 (secção de conformidade) e na especificação do dono de obra; o valor de k usado no enunciado é o dado, não confirmado contra a norma nesta resposta.",
+      "Ação: confirmar σ com histórico de ensaios EN 12390 antes de fixar o alvo de dosagem."
+    ]
+  },
+  {
+    "id": "MAT-05",
+    "resposta": 32.8,
+    "unidade": "GPa",
+    "formula": "E_cm = 22 × (f_cm / 10)^0,3, com f_cm em MPa (EN 1992-1-1, eq. 3.5)",
+    "passos": [
+      "Dado: f_cm = 38,0 MPa.",
+      "f_cm / 10 = 3,8.",
+      "3,8^0,3 = exp(0,3 × ln 3,8) = exp(0,4005) ≈ 1,4926.",
+      "E_cm = 22 × 1,4926 ≈ 32,84 GPa ≈ 32,8 GPa.",
+      "Faixa: cerca de 31 a 34 GPa, conforme a variante do módulo (secante no ensaio, tangente na origem) e a incerteza da resistência média; hipótese: betão de brita calcária/granítica sem correção por tipo de agregado (não confirmado).",
+      "Nota de divergência: a formulação brasileira (NBR 6118, E_ci = 5600 √f_ck) dá valor diferente e usa f_ck; não aplicada aqui por se tratar de questão EN 1992-1-1."
+    ]
+  },
+  {
+    "id": "MAT-06",
+    "resposta": 1200,
+    "unidade": "kg",
+    "formula": "m = ρ × V",
+    "passos": [
+      "Dados: V = 0,50 m³; ρ = 2400 kg/m³.",
+      "m = 2400 × 0,50 = 1200 kg.",
+      "Faixa: 1150 a 1250 kg, para ρ entre 2300 e 2500 kg/m³ (hipótese de betão de massa normal; ρ real a confirmar por ensaio de massa volúmica no estado fresco).",
+      "Verificação: ordem de grandeza coerente (betão normal ≈ 2,4 t/m³)."
+    ]
+  }
+]

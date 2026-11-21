@@ -66,3 +66,4 @@ ios/App/Pods/
 ios/App/Podfile.lock
 ios/App/build/
 ios/DerivedData/
+dist-demo/
