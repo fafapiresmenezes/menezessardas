@@ -13,7 +13,7 @@ const ELOS = [
   ['R6', 'd1f95ed4'], ['R7', '0dcbb29f'], ['R8', '13a52f35'], ['R9', '538df38d'], ['R10', 'd0f0443a'],
   // R11 e R12 não mexeram em nota nenhuma (ligaram o CI e prepararam as lojas). R13 voltou a
   // medir a casa do geo, e não a porta do site: dim. 2 de 6 para 10, dim. 3 de 9 para 10.
-  ['R13', '62de1401'],
+  ['R13', '8e46490d'],
 ]
 const ALVO = 'src/data/geo/nota-historico.json'
 
