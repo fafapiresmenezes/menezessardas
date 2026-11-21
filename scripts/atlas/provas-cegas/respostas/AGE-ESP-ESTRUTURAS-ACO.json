@@ -1,0 +1,76 @@
+[
+  {
+    "id": "ACO-01",
+    "resposta": 1264.5,
+    "unidade": "kN",
+    "formula": "N_pl,Rd = A * fy / gamma_M0 (EN 1993-1-1, 6.2.3)",
+    "passos": [
+      "Dados: A = 5381 mm2, fy = 235 MPa, gamma_M0 = 1,00 (EN 1993-1-1, 6.1).",
+      "N_pl,Rd = 5381 * 235 / 1,00 = 1 264 535 N = 1264,5 kN.",
+      "Hipotese: secao bruta (sem furos), pelo que a verificacao de N_net,Rd (6.2.3(2)) nao se aplica. Confirmar se ha furos.",
+      "Ordem de grandeza: fy * A ~ 1,26 MN, coerente com um IPE 300 em S235."
+    ]
+  },
+  {
+    "id": "ACO-02",
+    "resposta": 147.7,
+    "unidade": "kNm",
+    "formula": "M_pl,Rd = Wpl,y * fy / gamma_M0 (EN 1993-1-1, 6.2.5)",
+    "passos": [
+      "Dados: Wpl,y = 628 400 mm3, fy = 235 MPa, gamma_M0 = 1,00.",
+      "M_pl,Rd = 628 400 * 235 / 1,00 = 147 674 000 N.mm = 147,67 kN.m.",
+      "Hipotese: secao classe 1 (enunciado), logo a capacidade plastica e admissivel (6.2.5(2)). Nao cobre encurvadura lateral (verificar em 6.3.2)."
+    ]
+  },
+  {
+    "id": "ACO-03",
+    "resposta": 348.4,
+    "unidade": "kN",
+    "formula": "V_pl,Rd = A_v * (fy / sqrt(3)) / gamma_M0 (EN 1993-1-1, 6.2.6(2)); A_v para secao laminada I em 6.2.6(3)",
+    "passos": [
+      "Dados: A = 5381 mm2 (ACO-01), b = 150 mm, tf = 10,7 mm, tw = 7,1 mm, r = 15 mm, fy = 235 MPa.",
+      "Hipotese: altura do perfil h = 300 mm (designacao IPE 300; nao vem nos dados). Confirmar no catalogo.",
+      "A_v = A - 2*b*tf + (tw + 2r)*tf = 5381 - 2*150*10,7 + (7,1 + 30)*10,7 = 5381 - 3210 + 397,0 = 2568,0 mm2.",
+      "Verificacao do minimo eta * hw * tw (6.2.6(3)): hw = h - 2tf = 278,6 mm; eta = 1,20 (aco <= S460); eta*hw*tw = 1,20*278,6*7,1 = 2373 mm2 <= 2568 mm2. Cumpre; A_v = 2568,0 mm2.",
+      "V_pl,Rd = 2568,0 * (235 / sqrt(3)) / 1,00 = 2568,0 * 135,69 = 348 440 N = 348,4 kN.",
+      "Nota: a interacao com o momento (6.2.8) so se aplica se V_Ed > 0,5 V_pl,Rd. Nao considerada aqui."
+    ]
+  },
+  {
+    "id": "ACO-04",
+    "resposta": 782.2,
+    "unidade": "kN",
+    "formula": "N_cr = pi^2 * E * I / L_cr^2 (Euler; comprimento de encurvadura L_cr conforme EN 1993-1-1, 6.3.1.2 e Anexo BB)",
+    "passos": [
+      "Dados: L = 4000 mm, Iz = 6 038 000 mm4 (eixo fraco), E = 210 000 MPa.",
+      "Bi-articulado: coeficiente de comprimento de encurvadura K = 1,0, logo L_cr = L = 4000 mm.",
+      "N_cr = pi^2 * 210 000 * 6 038 000 / 4000^2 = 9,8696 * 1,26798e12 / 1,6e7 = 1,25145e13 / 1,6e7 = 782 150 N = 782,2 kN.",
+      "Hipotese: encurvadura elastica pura, sem imperfeicoes; eixo fraco z (Iz), como pede o enunciado. Confirmar o valor de Iz no catalogo do perfil."
+    ]
+  },
+  {
+    "id": "ACO-05",
+    "resposta": 1.272,
+    "unidade": "—",
+    "formula": "lambda_rel = sqrt(A * fy / N_cr) (EN 1993-1-1, 6.3.1.2)",
+    "passos": [
+      "Dados: A = 5381 mm2, fy = 235 MPa, N_cr = 782,2 kN (ACO-04).",
+      "A * fy = 5381 * 235 = 1 264 535 N = 1264,5 kN.",
+      "lambda_rel^2 = 1264,5 / 782,2 = 1,6168; lambda_rel = sqrt(1,6168) = 1,2715.",
+      "Ordem de grandeza: lambda_rel > 0,2, ha efeito de encurvadura; coerente com um pilar esbelto de 4 m no eixo fraco.",
+      "Hipotese: secao classe 1, logo A_eff = A (area bruta). Para obter chi a partir de lambda_rel, a curva de encurvadura do eixo z de um I laminado com h/b > 1,2 e a curva b (EN 1993-1-1, Quadro 6.2), a confirmar."
+    ]
+  },
+  {
+    "id": "ACO-06",
+    "resposta": 94.08,
+    "unidade": "kN",
+    "formula": "F_v,Rd = alpha_v * f_ub * A_s / gamma_M2 (EN 1993-1-8, Quadro 3.4 e 3.6.1)",
+    "passos": [
+      "Dados: parafuso M20 classe 8.8, f_ub = 800 MPa, A_s = 245 mm2 (area da zona roscada), alpha_v = 0,6 (dado do enunciado, classe 8.8 com plano de corte nos filetes), gamma_M2 = 1,25.",
+      "F_v,Rd = 0,6 * 800 * 245 / 1,25 = 117 600 / 1,25 = 94 080 N = 94,08 kN.",
+      "Corte simples: uma seccao de corte, logo sem factor de multiplicacao.",
+      "Hipotese: plano de corte nos filetes, como indica o enunciado. Confirmar o alpha_v aplicavel no quadro da norma."
+    ]
+  }
+]

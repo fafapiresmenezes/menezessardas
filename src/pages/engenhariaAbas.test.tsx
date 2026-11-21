@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 // Abas novas do quadradinho Engenharia (19/11/2026): "Agentes" e "Águas". Nada do que existia foi apagado.
 import { describe, it, expect, afterEach, vi } from 'vitest'
+import { readFileSync } from 'node:fs'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS } from '@/data/agentesEngenharia'
@@ -44,6 +45,29 @@ describe('fichas dos agentes de engenharia', () => {
       expect(e.guardaveis).toBeLessThanOrEqual(e.itens)
       expect(e.universidades).toBeLessThanOrEqual(ATLAS_RESUMO.universidades)
     }
+  })
+
+  it('o corpus do mundo soma por região e não inventa origem onde a fonte não diz', () => {
+    expect(ATLAS_RESUMO.porRegiao.reduce((s, r) => s + r.n, 0)).toBe(ATLAS_RESUMO.externos)
+    const nomes = ATLAS_RESUMO.porRegiao.map(r => r.nome)
+    expect(nomes).toContain('não determinada')
+    for (const r of ['Ásia', 'Europa Oriental', 'Rússia', 'América Latina', 'América do Norte', 'Europa Ocidental', 'África']) {
+      expect(nomes).toContain(r)
+      expect(ATLAS_RESUMO.porRegiao.find(x => x.nome === r)!.n).toBeGreaterThan(0)
+    }
+    expect(ATLAS_RESUMO.porPais.length).toBeGreaterThanOrEqual(10)
+    for (const p of ATLAS_RESUMO.porPais) expect(p.nome).toMatch(/^[A-Z]{2}$/)
+    expect(ATLAS_RESUMO.universidades).toBeGreaterThanOrEqual(190)
+    expect(ATLAS_RESUMO.programasComEndereco).toBeGreaterThanOrEqual(ATLAS_RESUMO.programasVerificados)
+    expect(ATLAS_RESUMO.programasComEndereco).toBeLessThanOrEqual(ATLAS_RESUMO.programasMapeados)
+  })
+
+  it('a porta de qualidade da biblioteca é mais estreita que o corpus', () => {
+    expect(CLASSIFICACAO_ATLAS.passaramPortaDeQualidade).toBeLessThan(CLASSIFICACAO_ATLAS.classificados)
+    expect(CLASSIFICACAO_ATLAS.naBiblioteca).toBeLessThanOrEqual(CLASSIFICACAO_ATLAS.passaramPortaDeQualidade)
+    expect(CLASSIFICACAO_ATLAS.naBiblioteca).toBe(
+      readFileSync('public/atlas-biblioteca-v1.jsonl', 'utf8').split('\n').filter(l => l.trim()).length,
+    )
   })
 
   it('a classificação do corpus bate com o corpus e aponta para agentes que existem', () => {
@@ -111,6 +135,8 @@ describe('abas novas do quadradinho Engenharia', () => {
     expect(screen.getByTestId('atlas-numeros')).toBeTruthy()
     expect(screen.getByTestId('atlas-por-especialidade').querySelectorAll('tbody tr')).toHaveLength(14)
     expect(screen.getByTestId('atlas-classificacao').querySelectorAll('tbody tr')).toHaveLength(CLASSIFICACAO_ATLAS.estantes.length)
+    expect(screen.getByTestId('atlas-por-regiao').querySelectorAll('tbody tr')).toHaveLength(ATLAS_RESUMO.porRegiao.length)
+    expect(screen.getByTestId('atlas-por-regiao').textContent).toContain('Rússia')
     fireEvent.click(screen.getByTestId('subaba-agentes-biblioteca'))
     expect(screen.getByTestId('biblioteca-atlas').textContent).toMatch(/peças escolhidas do corpus/)
     fireEvent.click(screen.getByTestId('subaba-agentes-provas'))

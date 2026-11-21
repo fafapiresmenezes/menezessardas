@@ -1,0 +1,62 @@
+[
+ {
+  "id": "ELE-01",
+  "enunciado": "Cabo de cobre de 95 mm², 200 m, corrente 150 A, fator de potência unitário, rede trifásica. Qual a queda de tensão?",
+  "dados": {
+   "S_mm2": 95,
+   "L_m": 200,
+   "I_A": 150,
+   "rho_ohm_mm2_m": 0.0175,
+   "cos_phi": 1.0
+  },
+  "unidade_esperada": "V"
+ },
+ {
+  "id": "ELE-02",
+  "enunciado": "Nessa linha, quanto se perde em potência?",
+  "dados": {
+   "I_A": 150,
+   "R_ohm": 0.03684
+  },
+  "unidade_esperada": "kW"
+ },
+ {
+  "id": "ELE-03",
+  "enunciado": "Carga de 450 kW com fator de potência 0,85. Que potência aparente tem de ter o transformador?",
+  "dados": {
+   "P_kW": 450,
+   "cos_phi": 0.85
+  },
+  "unidade_esperada": "kVA"
+ },
+ {
+  "id": "ELE-04",
+  "enunciado": "Transformador de 630 kVA, 400 V no secundário, tensão de curto-circuito 4%. Qual a corrente de curto-circuito simétrica no secundário (rede a montante ideal)?",
+  "dados": {
+   "S_kVA": 630,
+   "U_V": 400,
+   "ucc_percent": 4
+  },
+  "unidade_esperada": "kA"
+ },
+ {
+  "id": "ELE-05",
+  "enunciado": "Central solar de 100 kWp, irradiação 5,5 kWh/m²·dia, razão de desempenho 0,80. Qual a energia diária?",
+  "dados": {
+   "P_kWp": 100,
+   "H_kWh_m2_dia": 5.5,
+   "PR": 0.8
+  },
+  "unidade_esperada": "kWh/dia"
+ },
+ {
+  "id": "ELE-06",
+  "enunciado": "Consumo nocturno de 10 kWh, profundidade de descarga 80% e rendimento do conversor 90%. Que capacidade útil tem de ter a bateria?",
+  "dados": {
+   "E_kWh": 10,
+   "DoD": 0.8,
+   "eta": 0.9
+  },
+  "unidade_esperada": "kWh"
+ }
+]

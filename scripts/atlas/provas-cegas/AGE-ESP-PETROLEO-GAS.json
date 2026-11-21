@@ -1,0 +1,62 @@
+[
+ {
+  "id": "PET-01",
+  "enunciado": "Oleoduto de 20\" (508 mm), pressão de projeto 10 MPa, aço X60 (SMYS 413 MPa), fator de projeto 0,72. Qual a espessura mínima de parede?",
+  "dados": {
+   "P_MPa": 10.0,
+   "D_mm": 508.0,
+   "SMYS_MPa": 413.0,
+   "F": 0.72
+  },
+  "unidade_esperada": "mm"
+ },
+ {
+  "id": "PET-02",
+  "enunciado": "Com parede de 9,5 mm e a mesma pressão, qual a tensão circunferencial?",
+  "dados": {
+   "P_MPa": 10.0,
+   "D_mm": 508.0,
+   "t_mm": 9.5
+  },
+  "unidade_esperada": "MPa"
+ },
+ {
+  "id": "PET-03",
+  "enunciado": "Com 9,5 mm instalados e 8,54 mm necessários, a taxa de corrosão medida é 0,10 mm/ano. Quantos anos de margem?",
+  "dados": {
+   "t_instalado_mm": 9.5,
+   "t_minimo_mm": 8.54,
+   "taxa_mm_ano": 0.1
+  },
+  "unidade_esperada": "anos"
+ },
+ {
+  "id": "PET-04",
+  "enunciado": "Conduta de 400 mm com 500 m³/h de crude. Qual a velocidade?",
+  "dados": {
+   "Q_m3_h": 500,
+   "D_m": 0.4
+  },
+  "unidade_esperada": "m/s"
+ },
+ {
+  "id": "PET-05",
+  "enunciado": "Mesmo escoamento, ρ = 850 kg/m³ e μ = 5,0·10⁻³ Pa·s. Qual o número de Reynolds e o regime?",
+  "dados": {
+   "rho": 850,
+   "V_m_s": 1.105,
+   "D_m": 0.4,
+   "mu_Pa_s": 0.005
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "PET-06",
+  "enunciado": "Tanque cilíndrico de 30 m de diâmetro e 12 m de altura útil. Qual o volume?",
+  "dados": {
+   "D_m": 30,
+   "H_m": 12
+  },
+  "unidade_esperada": "m³"
+ }
+]

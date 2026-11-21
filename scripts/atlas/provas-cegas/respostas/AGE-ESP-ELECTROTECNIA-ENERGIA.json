@@ -1,0 +1,66 @@
+[
+  {
+    "id": "ELE-01",
+    "resposta": 9.57,
+    "unidade": "V",
+    "formula": "R = rho·L/S; delta_U = sqrt(3)·I·R·cos(phi)  (X desprezado, cos(phi)=1)",
+    "passos": [
+      "R = 0,0175 Ω·mm²/m × 200 m / 95 mm² = 0,03684 Ω por fase",
+      "delta_U = sqrt(3) × 150 A × 0,03684 Ω × 1,0 = 1,7321 × 5,5263 V ≈ 9,57 V",
+      "Hipóteses: rede trifásica equilibrada; queda de tensão composta (fase-fase); reactância desprezada (cabo de 95 mm² com cos(phi)=1 e reactância pequena); rho a 20 °C sem correcção térmica. Em % de 400 V ≈ 2,4 %. Confirmar com a norma de queda de tensão do dono de obra e com a temperatura de serviço do cabo."
+    ]
+  },
+  {
+    "id": "ELE-02",
+    "resposta": 2.49,
+    "unidade": "kW",
+    "formula": "P_perdas = 3·I²·R",
+    "passos": [
+      "I² = 150² = 22 500 A²",
+      "P_perdas = 3 × 22 500 A² × 0,03684 Ω = 2 486,7 W ≈ 2,49 kW",
+      "Hipótese: R = 0,03684 Ω é a resistência por fase (sistema trifásico). Se R fosse total por fase e se usasse I²R sem o factor 3, obter-se-ia 0,83 kW; não aplicado por ser rede trifásica."
+    ]
+  },
+  {
+    "id": "ELE-03",
+    "resposta": 529.41,
+    "unidade": "kVA",
+    "formula": "S = P / cos(phi)",
+    "passos": [
+      "S = 450 kW / 0,85 = 529,41 kVA",
+      "Hipótese: carga constante, sem factor de simultaneidade nem reserva de crescimento. Na prática escolhe-se o valor normalizado imediatamente superior (ex.: 630 kVA), a confirmar pelo engenheiro responsável e pelo dono de obra."
+    ]
+  },
+  {
+    "id": "ELE-04",
+    "resposta": 22.73,
+    "unidade": "kA",
+    "formula": "I_n = S/(sqrt(3)·U);  I_cc = I_n / u_cc",
+    "passos": [
+      "I_n = 630 000 VA / (sqrt(3) × 400 V) = 630 000 / 692,82 = 909,3 A",
+      "I_cc = 909,3 A / 0,04 = 22 733 A ≈ 22,73 kA",
+      "Hipóteses: rede a montante de potência de curto-circuito infinita (tensão constante); impedância do transformador como única impedância; sem contribuição de motores, sem impedância de cabos nem da aparelhagem; valor simétrico inicial. Para o poder de corte e a verificação de protecções é necessário cálculo com impedâncias completas e método normalizado (ex.: IEC 60909), não confirmado neste rascunho."
+    ]
+  },
+  {
+    "id": "ELE-05",
+    "resposta": 440,
+    "unidade": "kWh/dia",
+    "formula": "E = P_pico · H · PR",
+    "passos": [
+      "E = 100 kWp × 5,5 kWh/(m²·dia) × 0,80 = 440 kWh/dia",
+      "Hipótese: irradiação diária média anual sobre plano inclinado de referência (1 kW/m² STC); PR de 0,80 inclui perdas de temperatura, cabos, inversor e sujidade. Intervalo típico de PR a confirmar com ensaio ou simulação (ex.: PVLib); não confirmado para o local."
+    ]
+  },
+  {
+    "id": "ELE-06",
+    "resposta": 13.89,
+    "unidade": "kWh",
+    "formula": "E_bat = E_carga / (DoD · eta)",
+    "passos": [
+      "Energia a retirar da bateria = 10 kWh / 0,90 = 11,11 kWh (energia útil nos terminais da bateria)",
+      "Capacidade nominal = 11,11 kWh / 0,80 = 13,89 kWh",
+      "Hipótese: 'capacidade útil' interpretada como capacidade nominal necessária para cobrir a DoD de 80 %; se o enunciado quiser apenas a energia que a bateria tem de fornecer, o valor é 11,11 kWh. Sem degradação por envelhecimento nem reserva de autonomia (a confirmar)."
+    ]
+  }
+]

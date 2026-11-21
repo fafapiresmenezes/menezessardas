@@ -1,0 +1,60 @@
+[
+ {
+  "id": "GES-01",
+  "enunciado": "Obra com orçamento total de 10 M, valor planeado 4,0 M, valor realizado 3,6 M e custo real 4,2 M. Qual o índice de desempenho de custo?",
+  "dados": {
+   "BAC": 10000000.0,
+   "PV": 4000000.0,
+   "EV": 3600000.0,
+   "AC": 4200000.0
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "GES-02",
+  "enunciado": "Nos mesmos dados, qual o índice de desempenho de prazo?",
+  "dados": {
+   "EV": 3600000.0,
+   "PV": 4000000.0
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "GES-03",
+  "enunciado": "Mantido esse desempenho de custo, qual o custo final estimado?",
+  "dados": {
+   "BAC": 10000000.0,
+   "CPI": 0.8571
+  },
+  "unidade_esperada": "milhões"
+ },
+ {
+  "id": "GES-04",
+  "enunciado": "Qual o índice de desempenho para concluir dentro do orçamento?",
+  "dados": {
+   "BAC": 10000000.0,
+   "EV": 3600000.0,
+   "AC": 4200000.0
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "GES-05",
+  "enunciado": "Equipa que betona 8 m³/h e um volume de 120 m³. Quantas horas de betonagem?",
+  "dados": {
+   "volume_m3": 120,
+   "produtividade_m3_h": 8
+  },
+  "unidade_esperada": "h"
+ },
+ {
+  "id": "GES-06",
+  "enunciado": "Pagamento de 1,0 M a receber em 3 anos, taxa de desconto de 8% ao ano. Qual o valor presente?",
+  "dados": {
+   "FV": 1000000.0,
+   "i": 0.08,
+   "n": 3
+  },
+  "unidade_esperada": "unidades monetárias"
+ }
+]

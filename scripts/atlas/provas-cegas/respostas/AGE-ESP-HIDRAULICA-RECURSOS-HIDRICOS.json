@@ -1,0 +1,82 @@
+[
+  {
+    "id": "HID-01",
+    "resposta": 5.792,
+    "unidade": "m³/s",
+    "formula": "Q = (1/n)·A·R^(2/3)·S^(1/2)  (Manning, SI)",
+    "passos": [
+      "A = b·y = 3,00 × 1,20 = 3,60 m²",
+      "P = b + 2y = 3,00 + 2,40 = 5,40 m",
+      "R = A/P = 3,60/5,40 = 0,6667 m",
+      "R^(2/3) = 0,6667^(2/3) = 0,7631",
+      "S^(1/2) = √0,001 = 0,03162",
+      "Q = (1/0,015) × 3,60 × 0,7631 × 0,03162 = 5,792 m³/s",
+      "Faixa: n e S são valores dados, não estimados; sem faixa adicional. Hipóteses: escoamento uniforme e permanente, canal prismático retangular, Manning em SI."
+    ]
+  },
+  {
+    "id": "HID-02",
+    "resposta": 0.469,
+    "unidade": "—",
+    "formula": "Fr = V/√(g·y), com V = Q/A",
+    "passos": [
+      "Q = 5,792 m³/s e A = 3,60 m² (HID-01); V = 5,792/3,60 = 1,609 m/s (confere com o dado 1,6088 m/s)",
+      "g = 9,81 m/s²; √(g·y) = √(9,81 × 1,20) = √11,77 = 3,431 m/s",
+      "Fr = 1,609/3,431 = 0,469",
+      "Regime: Fr < 1, escoamento subcrítico (fluvial)",
+      "Faixa: depende apenas de Q (HID-01) e de y, ambos dados; sem faixa adicional."
+    ]
+  },
+  {
+    "id": "HID-03",
+    "resposta": 0.724,
+    "unidade": "m",
+    "formula": "yc = (q²/g)^(1/3), com q = Q/b (canal retangular)",
+    "passos": [
+      "q = Q/b = 5,792/3,00 = 1,931 m²/s",
+      "q² = 3,728 m⁴/s²; q²/g = 3,728/9,81 = 0,3800 m³",
+      "yc = 0,3800^(1/3) = 0,724 m",
+      "Verificação: Fr_c = 1 com Vc = √(g·yc) = 2,66 m/s e Vc = q/yc = 1,931/0,724 = 2,67 m/s (consistente)",
+      "Faixa: sem faixa adicional, Q é o valor calculado em HID-01. Hipótese: canal retangular com distribuição hidrostática de pressões."
+    ]
+  },
+  {
+    "id": "HID-04",
+    "resposta": 6.80,
+    "unidade": "m",
+    "formula": "hf = f·(L/D)·V²/(2g)  (Darcy-Weisbach); V = Q/(π·D²/4)",
+    "passos": [
+      "A = π·0,30²/4 = 0,07069 m²",
+      "V = 0,100/0,07069 = 1,415 m/s",
+      "V²/(2g) = 2,001/19,62 = 0,1020 m",
+      "f·L/D = 0,02 × 1000/0,30 = 66,67",
+      "hf = 66,67 × 0,1020 = 6,80 m",
+      "Faixa: f = 0,02 é valor dado; se f fosse estimado, hf escala linearmente com f (por exemplo, f de 0,018 a 0,022 daria cerca de 6,1 a 7,5 m, não confirmado). Hipótese: escoamento turbulento em tubo liso ou de rugosidade fixa; perdas localizadas não incluídas."
+    ]
+  },
+  {
+    "id": "HID-05",
+    "resposta": 29.17,
+    "unidade": "m³/s",
+    "formula": "Q = C·i·A  (método racional); com i em mm/h e A em km²: Q = C·i·A/3,6",
+    "passos": [
+      "Conversão: 1 mm/h × 1 km² = 10⁻³ m/h × 10⁶ m² = 1000 m³/h = 1000/3600 m³/s = 0,2778 m³/s; logo Q = C·i·A/3,6 com i em mm/h e A em km²",
+      "Q = 0,70 × 60 × 2,5/3,6 = 105/3,6 = 29,17 m³/s",
+      "Verificação: i = 1,667×10⁻⁵ m/s; A = 2,5×10⁶ m²; Q = 0,70 × 1,667×10⁻⁵ × 2,5×10⁶ = 29,17 m³/s",
+      "Faixa: C = 0,70 é valor dado; se C fosse estimado, a faixa de Q escalaria linearmente com C (não confirmado). Hipóteses: intensidade uniforme na duração igual ao tempo de concentração; método racional válido para bacias pequenas (ordem de 2,5 km², verificar limite da norma local)."
+    ]
+  },
+  {
+    "id": "HID-06",
+    "resposta": 0.602,
+    "unidade": "m³/s",
+    "formula": "Q = (2/3)·Cd·b·√(2g)·H^(3/2)  (soleira delgada, rectangular, sem contracções laterais)",
+    "passos": [
+      "(2/3) × Cd × b = 0,6667 × 0,62 × 2,00 = 0,8267",
+      "√(2g) = √19,62 = 4,429 m^(1/2)/s",
+      "H^(3/2) = 0,30^(1,5) = 0,1643 m^(3/2)",
+      "Q = 0,8267 × 4,429 × 0,1643 = 0,602 m³/s",
+      "Faixa: Cd = 0,62 é valor dado; sem faixa estimada. Hipóteses: soleira delgada sem afogamento, aeração adequada e contracções laterais nulas; a correcção de velocidade de aproximação não foi aplicada (não confirmado se é necessária)."
+    ]
+  }
+]

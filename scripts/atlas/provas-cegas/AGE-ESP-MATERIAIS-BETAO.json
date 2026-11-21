@@ -1,0 +1,57 @@
+[
+ {
+  "id": "MAT-01",
+  "enunciado": "Dosagem de 350 kg de cimento por m³ com relação água/cimento de 0,50. Qual a água de amassadura?",
+  "dados": {
+   "cimento_kg_m3": 350,
+   "a_c": 0.5
+  },
+  "unidade_esperada": "L/m³"
+ },
+ {
+  "id": "MAT-02",
+  "enunciado": "No mesmo betão, cimento com massa volúmica 3,15 kg/dm³ e 2% de ar. Que volume sobra para os agregados?",
+  "dados": {
+   "cimento_kg": 350,
+   "rho_cimento_kg_dm3": 3.15,
+   "agua_L": 175,
+   "ar_percent": 2
+  },
+  "unidade_esperada": "L/m³"
+ },
+ {
+  "id": "MAT-03",
+  "enunciado": "Betão com fck = 30 MPa. Qual a resistência média a usar no cálculo de propriedades?",
+  "dados": {
+   "fck_MPa": 30
+  },
+  "unidade_esperada": "MPa"
+ },
+ {
+  "id": "MAT-04",
+  "enunciado": "Com desvio padrão de produção de 5,0 MPa e fck = 30 MPa, qual a resistência média a visar (5% de defeituosos)?",
+  "dados": {
+   "fck_MPa": 30,
+   "sigma_MPa": 5.0,
+   "k": 1.645
+  },
+  "unidade_esperada": "MPa"
+ },
+ {
+  "id": "MAT-05",
+  "enunciado": "Para fcm = 38 MPa, qual o módulo de elasticidade secante?",
+  "dados": {
+   "fcm_MPa": 38.0
+  },
+  "unidade_esperada": "GPa"
+ },
+ {
+  "id": "MAT-06",
+  "enunciado": "Betonagem de 0,50 m³ de betão com massa volúmica 2400 kg/m³. Qual a massa?",
+  "dados": {
+   "V_m3": 0.5,
+   "rho_kg_m3": 2400
+  },
+  "unidade_esperada": "kg"
+ }
+]

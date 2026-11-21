@@ -1,0 +1,64 @@
+[
+ {
+  "id": "TRA-01",
+  "enunciado": "Eixo simples de 100 kN comparado com o eixo-padrão de 80 kN. Qual o fator de equivalência de carga?",
+  "dados": {
+   "P_kN": 100,
+   "P_padrao_kN": 80,
+   "expoente": 4
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "TRA-02",
+  "enunciado": "Velocidade de projeto 80 km/h, tempo de reação 2,5 s, desaceleração 3,4 m/s², rasante plana. Qual a distância de visibilidade de paragem?",
+  "dados": {
+   "V_km_h": 80.0,
+   "t_s": 2.5,
+   "a_m_s2": 3.4
+  },
+  "unidade_esperada": "m"
+ },
+ {
+  "id": "TRA-03",
+  "enunciado": "Mesma velocidade, sobreelevação 6% e atrito lateral 0,14. Qual o raio mínimo em curva horizontal?",
+  "dados": {
+   "V_km_h": 80.0,
+   "e": 0.06,
+   "f": 0.14
+  },
+  "unidade_esperada": "m"
+ },
+ {
+  "id": "TRA-04",
+  "enunciado": "Curva vertical convexa com variação de rasante de 8%, visibilidade de paragem igual à da questão TRA-02, olho a 1,08 m e obstáculo a 0,60 m. Considera o caso em que o comprimento da curva é maior que a distância de visibilidade (L > S). Qual o comprimento mínimo?",
+  "dados": {
+   "A_percent": 8.0,
+   "S_m": 128.2,
+   "h1_m": 1.08,
+   "h2_m": 0.6
+  },
+  "unidade_esperada": "m"
+ },
+ {
+  "id": "TRA-05",
+  "enunciado": "Camada de betume de 5 cm em 5,0 km de via com 7,0 m de largura, massa volúmica 2,4 t/m³. Qual a massa de mistura?",
+  "dados": {
+   "L_km": 5.0,
+   "largura_m": 7.0,
+   "espessura_m": 0.05,
+   "densidade_t_m3": 2.4
+  },
+  "unidade_esperada": "t"
+ },
+ {
+  "id": "TRA-06",
+  "enunciado": "Tráfego médio diário de 10 000 veículos a crescer 3% por ano. Qual o tráfego no ano 20?",
+  "dados": {
+   "TMD0": 10000,
+   "i": 0.03,
+   "n": 20
+  },
+  "unidade_esperada": "veículos/dia"
+ }
+]

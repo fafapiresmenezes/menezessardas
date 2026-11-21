@@ -1,0 +1,84 @@
+[
+  {
+    "id": "AMB-01",
+    "resposta": 3.81,
+    "unidade": "mg/L",
+    "formula": "C_jus = (Qe·Ce + Qr·Cr) / (Qe + Qr), mistura completa e instantânea, sem decaimento nem sedimentação",
+    "passos": [
+      "Carga do efluente: Qe·Ce = 0,5 m³/s × 40 mg/L = 20 g/s",
+      "Carga do rio a montante: Qr·Cr = 10 m³/s × 2 mg/L = 20 g/s",
+      "Caudal a jusante: Qe + Qr = 10,5 m³/s",
+      "C_jus = (20 + 20) / 10,5 = 3,81 mg/L",
+      "Faixa: se a mistura for só parcial, a concentração a jusante imediato fica acima de 3,81 mg/L (máximo de referência: 40 mg/L no ponto de descarga); a faixa não está quantificada e fica não confirmado",
+      "Hipóteses: mistura completa na secção de controlo; sem degradação no troço; caudais constantes. Rascunho para conferência e assinatura do engenheiro responsável"
+    ]
+  },
+  {
+    "id": "AMB-02",
+    "resposta": 2676,
+    "unidade": "kg",
+    "formula": "E = m × PCI ; m_CO2 = E × FE (fator de emissão por defeito, kg CO₂/GJ)",
+    "passos": [
+      "Massa de gasóleo: m = V × ρ = 1000 L × 0,84 kg/L = 840 kg = 0,84 t",
+      "Energia: E = 0,84 t × 43,0 GJ/t = 36,12 GJ",
+      "CO₂: m_CO2 = 36,12 GJ × 74,1 kg/GJ = 2676,5 kg",
+      "Resultado: ≈ 2,68 t de CO₂ (≈ 2676 kg)",
+      "Faixa: a incerteza dominante é o fator por defeito (não confirmado que coincide com a tabela de referência do IPCC 2006, Vol. 2); assumindo ±5 % no fator e na densidade, a faixa é ≈ 2540 – 2676 – 2810 kg (mínimo – provável – máximo)",
+      "Hipótese: combustão completa e os valores de densidade, PCI e fator fornecidos no enunciado. Rascunho para conferência e assinatura do engenheiro responsável"
+    ]
+  },
+  {
+    "id": "AMB-03",
+    "resposta": 73.0,
+    "unidade": "dB",
+    "formula": "L_total = 10·log₁₀(Σ 10^(Li/10))",
+    "passos": [
+      "Energias sonoras: 10^(70/10) = 10^7 para cada fonte",
+      "Soma: 2 × 10^7",
+      "L_total = 10·log₁₀(2 × 10^7) = 70 + 10·log₁₀2 = 70 + 3,01 = 73,0 dB",
+      "Faixa: com fontes iguais e não correlacionadas, o resultado é 73,0 dB; se as fontes forem correlacionadas (mesma fase e frequência), o acréscimo pode ser superior, não confirmado",
+      "Hipótese: fontes incoerentes e independentes. Rascunho para conferência e assinatura do engenheiro responsável"
+    ]
+  },
+  {
+    "id": "AMB-04",
+    "resposta": 65.0,
+    "unidade": "dB",
+    "formula": "L2 = L1 − 20·log₁₀(r2/r1) (fonte pontual, campo livre, sem atenuação atmosférica nem do solo)",
+    "passos": [
+      "Razão de distâncias: r2/r1 = 100 m / 10 m = 10",
+      "Atenuação por divergência geométrica: 20·log₁₀(10) = 20 dB",
+      "L(100 m) = 85 − 20 = 65,0 dB",
+      "Faixa: sem atenuação atmosférica, do solo nem de obstáculos, o valor é o máximo possível; na prática o nível será inferior (não quantificado, não confirmado)",
+      "Hipótese: fonte pontual omnidirecional em campo livre. Rascunho para conferência e assinatura do engenheiro responsável"
+    ]
+  },
+  {
+    "id": "AMB-05",
+    "resposta": 205.0,
+    "unidade": "mg/L",
+    "formula": "DBO_t = L0·(1 − e^(−k·t)) ; DBO₅ com t = 5 dias",
+    "passos": [
+      "Expoente: k·t = 0,23 d⁻¹ × 5 d = 1,15",
+      "e^(−1,15) = 0,3166",
+      "DBO₅ = 300 mg/L × (1 − 0,3166) = 300 × 0,6834 = 205,0 mg/L",
+      "Faixa: com k entre 0,20 e 0,26 d⁻¹ (faixa típica, não confirmada para este efluente), DBO₅ fica entre ≈ 195 e ≈ 215 mg/L",
+      "Hipóteses: cinética de primeira ordem; k a 20 °C; sem nitrificação. Rascunho para conferência e assinatura do engenheiro responsável"
+    ]
+  },
+  {
+    "id": "AMB-06",
+    "resposta": 2.243,
+    "unidade": "mm/s",
+    "formula": "Lei de Stokes: v = g·(ρs − ρw)·d² / (18·μ), válida para Re < 1",
+    "passos": [
+      "Dados: d = 0,05 mm = 5,0·10⁻⁵ m; Δρ = 2650 − 1000 = 1650 kg/m³; μ = 1,002·10⁻³ Pa·s; g = 9,81 m/s²",
+      "Numerador: 9,81 × 1650 × (5,0·10⁻⁵)² = 9,81 × 1650 × 2,5·10⁻⁹ = 4,047·10⁻⁵",
+      "Denominador: 18 × 1,002·10⁻³ = 1,8036·10⁻²",
+      "v = 4,047·10⁻⁵ / 1,8036·10⁻² = 2,244·10⁻³ m/s = 2,243 mm/s",
+      "Verificação do regime: Re = ρw·v·d / μ = 1000 × 2,24·10⁻³ × 5·10⁻⁵ / 1,002·10⁻³ ≈ 0,11 < 1, logo Stokes é válida",
+      "Faixa: a forma da partícula não esférica pode reduzir a velocidade (fator de forma não confirmado); com fator de forma 0,7–1,0 a faixa é ≈ 1,6 – 2,2 – 2,24 mm/s (mínimo – provável – máximo; o valor de referência para a resposta é o de partícula esférica, 2,243 mm/s)",
+      "Hipótese: partícula esférica, lisa, em água a 20 °C, sem efeito de concentração. Rascunho para conferência e assinatura do engenheiro responsável"
+    ]
+  }
+]

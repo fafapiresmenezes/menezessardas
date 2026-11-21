@@ -1,0 +1,66 @@
+[
+ {
+  "id": "GEO-01",
+  "enunciado": "Muro de 5,00 m, aterro arenoso seco, γ = 18 kN/m³, φ' = 30°, superfície horizontal, muro sem atrito. Qual o empuxo ativo total por metro?",
+  "dados": {
+   "H_m": 5.0,
+   "gama_kN_m3": 18.0,
+   "phi_graus": 30.0
+  },
+  "unidade_esperada": "kN/m"
+ },
+ {
+  "id": "GEO-02",
+  "enunciado": "Sapata corrida sobre argila saturada, cu = 50 kPa, assente a 1,50 m, γ = 18 kN/m³. Qual a capacidade de carga última a curto prazo?",
+  "dados": {
+   "cu_kPa": 50.0,
+   "D_m": 1.5,
+   "gama_kN_m3": 18.0
+  },
+  "unidade_esperada": "kPa"
+ },
+ {
+  "id": "GEO-03",
+  "enunciado": "Perfil com nível de água a 2,00 m: 0–2 m γ = 18 kN/m³, 2–6 m γsat = 20 kN/m³. Qual a tensão vertical efetiva a 6,00 m?",
+  "dados": {
+   "NA_m": 2.0,
+   "gama_kN_m3": 18.0,
+   "gama_sat_kN_m3": 20.0,
+   "z_m": 6.0,
+   "gama_w_kN_m3": 9.81
+  },
+  "unidade_esperada": "kPa"
+ },
+ {
+  "id": "GEO-04",
+  "enunciado": "Camada de argila normalmente consolidada de 4,00 m, Cc = 0,30, e0 = 0,90, σ'0 = 100 kPa, acréscimo de 80 kPa. Qual o assentamento por consolidação?",
+  "dados": {
+   "Cc": 0.3,
+   "e0": 0.9,
+   "H_mm": 4000.0,
+   "sigma0_kPa": 100.0,
+   "delta_sigma_kPa": 80.0
+  },
+  "unidade_esperada": "mm"
+ },
+ {
+  "id": "GEO-05",
+  "enunciado": "Mesma camada, drenada pelas duas faces, cv = 3,0 m²/ano. Em quanto tempo atinge 90% da consolidação?",
+  "dados": {
+   "U_percent": 90,
+   "Tv": 0.848,
+   "H_dr_m": 2.0,
+   "cv_m2_ano": 3.0
+  },
+  "unidade_esperada": "anos"
+ },
+ {
+  "id": "GEO-06",
+  "enunciado": "Talude infinito em areia seca sem coesão, φ' = 32°, inclinação 20°. Qual o fator de segurança?",
+  "dados": {
+   "phi_graus": 32.0,
+   "beta_graus": 20.0
+  },
+  "unidade_esperada": "—"
+ }
+]
