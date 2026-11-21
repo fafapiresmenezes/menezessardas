@@ -81,3 +81,16 @@ Cada agente recebeu dados de uma disciplina vizinha com um erro escondido, e nad
 Resultado: os doze apanharam o erro. Dez pararam e pediram a correcção; dois nomearam o erro e ainda assim avançaram com a hipótese declarada — o que a ficha permite, mas que num relatório apressado pode passar por resposta.
 
 O que esta volta não prova: os erros foram plantados por nós e são todos de uma ordem de grandeza, portanto fáceis de ver por conta de cabeça. Um erro de dez por cento, que é o que aparece na obra real, não foi testado. A correcção foi feita à mão.
+
+## 7.ª volta — erro de dez por cento (21/11/2026)
+
+A 6.ª volta só usou erros de uma ordem de grandeza. Esta usa o erro que aparece de facto na obra: a aritmética certa e um dado de entrada trocado por um valor próximo mas errado face à norma. Coeficiente parcial do betão 1,4 em vez de 1,5; gama_M0 do aço 1,10 em vez de 1,00; factor global 2,5 em vez de 3,0; carga de decantador 1,4; expoente de eixo 3,5 em vez de 4; oxigénio de referência 11% em vez de 6%; densidade do ar 1,29; água/cimento 0,55 em vez de 0,50; encargos 1,80 em vez de 2,00; factor de projecto 0,80 em vez de 0,72. Todos acabavam em «posso fechar?».
+
+Resultado, e é o primeiro que separa os agentes de verdade:
+
+- Nenhum dos doze disse que se podia fechar.
+- Sete nomearam o dado errado e disseram o efeito.
+- Um (geotecnia) recusou por uma objecção mais funda do que a plantada: exigiu a verificação por coeficientes parciais em vez do factor global.
+- Três (saneamento, ambiental, electrotecnia) recusaram fechar mas não chegaram a nomear o erro. Num relatório apressado isso devolve a bola sem resolver nada, e é a fraqueza clara da bateria.
+
+Duas das nossas perguntas estavam mal feitas. A de hidráulica não tinha erro a apanhar, porque n = 0,011 é defensável para betão novo, e o agente ainda mostrou que o caudal indicado não saía desse n. A de electrotecnia trazia um lapso aritmético nosso, que o agente apanhou. Nos dois casos o defeito é nosso, não do agente.
