@@ -1,0 +1,22 @@
+[
+  {
+    "id": "R1",
+    "resposta": "1. Hipótese de OD a jusante: não está verificada. Falta o balanço de oxigénio na linha de água (caudal de estiagem, OD e DBO a montante e a jusante do lançamento), com faixa e fonte; sem isso, a hipótese fica aberta. Enquanto não houver dados, escrever 'não confirmado'."
+  },
+  {
+    "id": "R2",
+    "resposta": "2. Verificação principal: não é rastreável. Não cita a norma nem a cláusula, nem os coeficientes parciais nem os valores de cálculo; 'dentro dos limites' não é um resultado. Indicar norma e cláusula, cada coeficiente com valor e fonte, e a margem numérica."
+  },
+  {
+    "id": "R3",
+    "resposta": "3. Estimativa de 1.480 unidades: sem unidade de medida definida, sem faixa (mínimo–provável–máximo), sem hipótese que a gerou e sem fonte. Apresentar com faixa e hipótese, ou marcar 'não confirmado' até haver quantitativos de projecto."
+  },
+  {
+    "id": "R4",
+    "resposta": "4. Probabilidade de 85 por cento de aprovação: remover. Não há calibração documentada que a suporte; em vez dela, descrever cenários (aprovação sem comentários, com comentários, com revisão do cálculo) e o que os distingue."
+  },
+  {
+    "id": "R5",
+    "resposta": "5. Documento 'pronto a entregar' sem conferência: não pode seguir ao fiscal do dono de obra. Deve ser marcado como 'Rascunho para conferência e assinatura do engenheiro responsável', com a identificação do engenheiro habilitado e a lista do que não foi confirmado."
+  }
+]

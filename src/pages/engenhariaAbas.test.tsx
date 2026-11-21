@@ -4,7 +4,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES, RESULTADO_PROVAS_ERRO_FINO } from '@/data/agentesEngenharia'
+import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES, RESULTADO_PROVAS_ERRO_FINO, RESULTADO_PROVAS_REVISAO } from '@/data/agentesEngenharia'
 
 vi.mock('@/lib/supabase', () => ({ supabase: { functions: { invoke: vi.fn().mockResolvedValue({ data: null, error: null }) } }, supabaseConfigurado: true }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
@@ -31,7 +31,7 @@ describe('fichas dos agentes de engenharia', () => {
   })
 
   it('nunca escreve o nome do cliente nem palavras da plataforma de direito', () => {
-    const blob = JSON.stringify({ AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES, RESULTADO_PROVAS_ERRO_FINO })
+    const blob = JSON.stringify({ AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES, RESULTADO_PROVAS_ERRO_FINO, RESULTADO_PROVAS_REVISAO })
     for (const re of PROIBIDAS) expect(blob).not.toMatch(re)
   })
 
@@ -212,6 +212,22 @@ describe('fichas dos agentes de engenharia', () => {
     expect(RESULTADO_PROVAS_ERRO_FINO.limite).toMatch(/defeito é nosso/)
   })
 
+  it('a 8.ª volta conta defeitos por entregável e diz que a densidade não é a de uma obra real', () => {
+    expect(RESULTADO_PROVAS_REVISAO.volta).toBe(8)
+    expect(RESULTADO_PROVAS_REVISAO.estados).toHaveLength(12)
+    expect(RESULTADO_PROVAS_REVISAO.questoes).toBe(RESULTADO_PROVAS_REVISAO.estados.length * RESULTADO_PROVAS_REVISAO.defeitosPorEntregavel)
+    const ids = new Set(AGENTES_ENGENHARIA.map(a => a.id))
+    for (const e of RESULTADO_PROVAS_REVISAO.estados) {
+      expect(ids.has(e.agente)).toBe(true)
+      expect(e.encontrados).toBeGreaterThanOrEqual(0)
+      expect(e.encontrados).toBeLessThanOrEqual(RESULTADO_PROVAS_REVISAO.defeitosPorEntregavel)
+      expect(e.nota.length).toBeGreaterThan(20)
+    }
+    expect(RESULTADO_PROVAS_REVISAO.limite).toMatch(/à mão/)
+    expect(RESULTADO_PROVAS_REVISAO.limite).toMatch(/ainda não prova/)
+    expect(RESULTADO_PROVAS_REVISAO.limite).toMatch(/quarenta páginas/)
+  })
+
   it('toda posição tem nível N1 a N6', () => {
     for (const a of AGENTES_ENGENHARIA.filter(x => x.matriz === 'posicao')) expect(a.nivel).toMatch(/^N[1-6]$/)
   })
@@ -254,6 +270,7 @@ describe('abas novas do quadradinho Engenharia', () => {
     expect(screen.getByTestId('provas-volta5').textContent).toContain('5.ª volta')
     expect(screen.getByTestId('provas-volta6').textContent).toContain('6.ª volta')
     expect(screen.getByTestId('provas-volta7').textContent).toContain('7.ª volta')
+    expect(screen.getByTestId('provas-volta8').textContent).toContain('8.ª volta')
     expect(screen.getByTestId('tabela-provas').querySelectorAll('tbody tr')).toHaveLength(46)
     expect(screen.getByTestId('provas-agentes').textContent).toMatch(/engenheiro habilitado/)
   })
