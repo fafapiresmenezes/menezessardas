@@ -48,12 +48,39 @@ const ESPERADOS_NA_DEPURACAO = [
   { marca: 'janus', porque: 'vulnerabilidade de assinatura v1, que deixa de existir com a versão de publicação assinada' },
 ]
 
+/**
+ * Achados que NAO sao da montagem de depuracao, e que foram JULGADOS um por um, com o motivo
+ * escrito. Lista separada de proposito: a de cima se encerra com a chave de assinatura, esta
+ * nao se encerra com nada — e uma decisao nossa, e precisa continuar visivel.
+ *
+ * A marca de cada um e amarrada ao VALOR de hoje, nao a classe do achado. Se o valor voltar
+ * atras, o texto do achado muda, a marca deixa de casar e a obra para de novo. E o que separa
+ * "julgado" de "silenciado".
+ */
+const JULGADOS = [
+  {
+    marca: 'minsdk=24',
+    porque:
+      'o MobSF levanta esta regra para QUALQUER versao minima que ainda tenha falha conhecida no ' +
+      'proprio Android, e vai levantar de novo em 25, em 26, e assim por diante. A rodada anterior ' +
+      'achou a MESMA regra em minSdk=23, e aquela era um defeito de verdade por um motivo nosso: o ' +
+      'android:networkSecurityConfig do nosso manifesto so existe a partir da API 24, entao a nossa ' +
+      'promessa de nenhuma conexao em texto claro era ignorada no Android 6. A partir de 24 a ' +
+      'promessa vale. Daqui para cima nao existe promessa nossa que caia: sobram falhas do sistema ' +
+      'operacional, que subir a versao minima nao conserta, so esconde — ao custo de recusar ' +
+      'aparelhos, sem motivo escrito. Fica em 24. ATENCAO: a marca e o proprio "minSdk=24"; se ' +
+      'alguem baixar a versao minima, o texto muda, este motivo deixa de valer e a obra para.',
+  },
+]
+
 const texto = a => [a?.title, a?.description, a?.section, a?.rule].filter(Boolean).join(' ').toLowerCase()
 
 const esperado = a => ESPERADOS_NA_DEPURACAO.find(e => texto(a).includes(e.marca))
+const julgado = a => JULGADOS.find(e => texto(a).includes(e.marca))
 
-const altosNovos = alto.filter(a => !esperado(a))
+const altosNovos = alto.filter(a => !esperado(a) && !julgado(a))
 const altosEsperados = alto.filter(a => esperado(a))
+const altosJulgados = alto.filter(a => !esperado(a) && julgado(a))
 
 const nome = a => a?.title || a?.description || a?.section || JSON.stringify(a).slice(0, 120)
 
@@ -66,6 +93,12 @@ console.log(`  ${alto.length} grave(s), ${aviso.length} aviso(s), ${info.length}
 if (altosEsperados.length) {
   console.log('Graves JÁ previstos pela régua (a versão de depuração os causa, e a de publicação os encerra):')
   for (const a of altosEsperados) console.log(`  · ${nome(a)}\n      ${esperado(a).porque}`)
+  console.log('')
+}
+
+if (altosJulgados.length) {
+  console.log('Graves JULGADOS, com o motivo escrito (não são desculpa, são decisão registrada):')
+  for (const a of altosJulgados) console.log(`  · ${nome(a)}\n      ${julgado(a).porque}`)
   console.log('')
 }
 
@@ -86,4 +119,8 @@ if (altosNovos.length) {
   process.exit(1)
 }
 
-console.log('Nenhum achado grave fora dos que a régua já declara. Passou.')
+console.log(
+  altosJulgados.length
+    ? `Nenhum achado grave novo. ${altosEsperados.length} da montagem de depuração e ${altosJulgados.length} julgado(s) acima. Passou.`
+    : 'Nenhum achado grave fora dos que a régua já declara. Passou.',
+)
