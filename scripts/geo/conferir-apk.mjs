@@ -51,7 +51,8 @@ const cracha = correr('dump', 'badging', apk)
 
 const quebrou = []
 const ok = []
-const prova = (promessa, condicao, detalhe) => (condicao ? ok : quebrou).push(`${promessa}${detalhe ? ` — ${detalhe}` : ''}`)
+const prova = (promessa, condicao, detalhe) =>
+  condicao ? ok.push(promessa) : quebrou.push(`${promessa}${detalhe ? ` — ${detalhe}` : ''}`)
 
 // --- 1. a cópia automática do Android está desligada -------------------------------------
 // No manifesto compilado o booleano aparece como (type 0x12)0x0 (falso) ou 0xffffffff (verdadeiro).
@@ -77,18 +78,32 @@ prova('usesCleartextTraffic não ligado por nenhum plugin',
 
 // --- 4. só as permissões que este app precisa --------------------------------------------
 // O cracha lista as permissões DEPOIS do merge: é aqui que a permissão de um plugin apareceria.
-// A lista é exatamente a do nosso AndroidManifest.xml, de propósito: se um plugin do Capacitor
-// acrescentar qualquer outra, esta conferência FALHA e a permissão tem de ser olhada uma por uma
-// antes de entrar aqui. Uma lista folgada por precaução não conferiria nada.
+// Cada permissão permitida está aqui com o motivo escrito. A lista é apertada de propósito: se o
+// merge do Gradle ou um plugin acrescentar outra, esta conferência FALHA e a nova tem de ser
+// olhada uma por uma antes de entrar aqui. Uma lista folgada por precaução não conferiria nada.
+//
+// As quatro primeiras são do nosso AndroidManifest.xml. As quatro seguintes NÃO estão lá: a
+// primeira rodada desta conferência mostrou que elas chegam ao APK pelo merge, e é exatamente o
+// tipo de coisa que o teste que lê o arquivo-fonte nunca ia acusar.
 const PERMITIDAS = new Set([
-  'android.permission.INTERNET',
-  'android.permission.ACCESS_FINE_LOCATION',
-  'android.permission.ACCESS_COARSE_LOCATION',
-  'android.permission.CAMERA',
+  'android.permission.INTERNET',                        // nosso: fontes abertas (satélite, IBGE)
+  'android.permission.ACCESS_FINE_LOCATION',            // nosso: gravar a posição do titular
+  'android.permission.ACCESS_COARSE_LOCATION',          // nosso: idem, com margem larga
+  'android.permission.CAMERA',                          // nosso: a câmera como sensor de LUGAR
+  // Do plugin @capacitor-community/background-geolocation, que é quem implementa gravar com a
+  // tela apagada. As três juntas são o desenho honesto desse recurso no Android moderno: serviço
+  // em primeiro plano com notificação permanente à vista, em vez da localização "sempre".
+  'android.permission.FOREGROUND_SERVICE',
+  'android.permission.FOREGROUND_SERVICE_LOCATION',
+  'android.permission.POST_NOTIFICATIONS',
 ])
+
+/** Permissão de assinatura que o próprio AndroidX gera com o nome do pacote; não dá acesso a nada
+ *  de fora do app, e só o app assinado com a mesma chave a obtém. */
+const PERMISSAO_INTERNA = /^[a-z0-9_.]+\.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION$/
 const pedidas = [...cracha.matchAll(/^uses-permission: name='([^']+)'/gm)].map(m => m[1])
 console.log(`  permissões no APK montado: ${pedidas.length ? pedidas.join(', ') : '(nenhuma)'}`)
-const intrusas = pedidas.filter(p => !PERMITIDAS.has(p))
+const intrusas = pedidas.filter(p => !PERMITIDAS.has(p) && !PERMISSAO_INTERNA.test(p))
 prova('nenhuma permissão além das previstas',
   intrusas.length === 0,
   `entraram ${intrusas.join(', ')}`)
@@ -120,6 +135,14 @@ for (const linha of quebrou) console.error(`  FALHOU  ${linha}`)
 
 console.log(`\n${ok.length} promessas conferidas no APK montado (${tipo}), ${quebrou.length} quebradas.`)
 if (quebrou.length > 0) {
+  // Sem isto, um erro de leitura desta conferência e um defeito de verdade no APK dão
+  // exatamente a mesma linha vermelha. Com o manifesto compilado no log, dá para dizer qual é.
+  console.error('\n--- manifesto compilado dentro do APK (elemento application e permissões) ---')
+  for (const linha of arvore.split('\n')) {
+    if (/E: (application|activity|service|provider|receiver|uses-permission)|A: (android:(allowBackup|dataExtractionRules|networkSecurityConfig|usesCleartextTraffic|exported|name)|name)/.test(linha)) {
+      console.error(linha.replace(/\s+$/, ''))
+    }
+  }
   console.error('\nO APK montado não cumpre o que o manifesto promete. A obra para aqui de propósito.')
   process.exit(1)
 }
