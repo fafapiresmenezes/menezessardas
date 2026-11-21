@@ -1,0 +1,6 @@
+[
+ {
+  "id": "I1",
+  "resposta": "Antes de calcular o caudal, as cotas parecem invertidas: a soleira a montante (102,40 m) está 0,70 m abaixo da soleira a jusante (103,10 m), o que dá uma pendente adversa de cerca de -0,82 ‰ no sentido do escoamento; se a leitura estiver correta, a conduta não escoa por gravidade de montante para jusante e o caudal nesse sentido é nulo. Se as cotas estiverem trocadas, a pendente é +0,82 ‰ (0,70 m / 850 m) e o caudal depende do diâmetro interior e da rugosidade, que ainda não tenho: peço o diâmetro (m, ex.: DN 800 = 0,80 m) e o material (ex.: betão, n de Manning cerca de 0,013). Como orientação, com seção cheia, n = 0,013 e pendente 0,82 ‰, o caudal ficaria entre cerca de 0,18 m³/s (D = 0,6 m) e 1,1 m³/s (D = 1,2 m); hipótese, não confirmado. Peço à topografia a confirmação das cotas (geratriz inferior ou eixo, e sentido do traçado) antes de qualquer decisão de prazo ou custo. Rascunho para conferência e assinatura do engenheiro responsável."
+ }
+]

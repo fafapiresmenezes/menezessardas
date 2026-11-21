@@ -1,0 +1,6 @@
+[
+ {
+  "id": "I1",
+  "resposta": "Pedido: decantador primário para ETAR de 5 000 hab. com Q_méd = 50 L/s (4 320 m³/d). Alerta antes de usar o valor: 50 L/s equivale a 864 L/hab·d, cerca de 4 vezes o típico de esgoto doméstico (faixa de literatura 150–250 L/hab·d, não confirmada); confirmar com o termo de referência se o caudal inclui infiltração ou industrial, ou se houve erro (p. ex. 10 L/s).\nHipóteses: fator de ponta 2,0–2,5 (Q_ponta 100–125 L/s, não confirmado); decantador circular; carga hidráulica média 30–50 m³/m²·d e de ponta até 120 m³/m²·d (Metcalf & Eddy, literatura; não é cláusula de norma).\nÁrea: A = 4 320/50 = 86 m² (mínimo) a 4 320/30 = 144 m² (máximo); valor provável 110 m² (carga média 39 m³/m²·d). Verificação de ponta: 10 800/110 ≈ 98 m³/m²·d, dentro do limite.\nGeometria: diâmetro ≈ 11,8 m (faixa 10,5–13,5 m); tempo de retenção a Q_méd de 2 h (1,5–2,5 h), V ≈ 360 m³ (270–450 m³); altura útil ≈ 3,3 m (2,5–4,1 m); vertedouro periférico ≈ 37 m, carga de ponta ≈ 290 m³/m·d (literatura 250–500, não confirmada).\nRascunho para conferência e assinatura do engenheiro responsável. Normas: prevalece o contrato (FIDIC Red Book) e a especificação do dono de obra; EN 752 e DP 83/14 são referências, cláusulas não confirmadas. Não confirmado: caudal real, SST e CBO5 afluentes, fator de ponta, tipo de raspadores de lamas."
+ }
+]

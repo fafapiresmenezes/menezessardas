@@ -1,0 +1,6 @@
+[
+ {
+  "id": "I1",
+  "resposta": "1) Não confirmo a protecção: um disjuntor geral de 400 A não protege um cabo de 35 mm2 em cobre, cuja capacidade de corrente é da ordem de 100 a 125 A (mínimo-provável-máximo 100-125-150 A; hipótese: cobre, isolamento PVC, três condutores carregados, instalação em conduta, 30 °C; valor não confirmado, a verificar na IEC 60364-5-52).\n2) Pela IEC 60364-4-43 (cl. 433) exige-se Ib <= In <= Iz e I2 <= 1,45 x Iz; com 400 A esta condição não se cumpre e o cabo fica sem protecção de sobrecarga.\n3) Para fechar preciso só de: corrente de cálculo Ib do QGBT-2 em A (ex.: 180 A) ou, em alternativa, potência em kVA com tensão, e comprimento do cabo em metros (ex.: 45 m).\n4) Com esses dados dimensiono a secção, verifico a queda de tensão e o curto-circuito (Isc no ponto, não confirmado) e proponho o In; o quadro parcial só avança depois disto.\n5) Rascunho para conferência e assinatura do engenheiro responsável; o agente não é responsável técnico."
+ }
+]
