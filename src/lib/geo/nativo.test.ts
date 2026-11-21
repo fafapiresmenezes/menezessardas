@@ -94,6 +94,18 @@ describe('o manifesto do Android não deixa os dados saírem do aparelho', () =>
     expect((manifesto.match(/android:exported="true"/g) ?? []).length).toBe(1)
   })
 
+  it('o app não se instala em Android onde a nossa proteção de rede é ignorada', () => {
+    // Achado pelo MobSF na primeira análise de verdade (nota 57): com minSdk 23 o app se
+    // instalava no Android 6, e o android:networkSecurityConfig do nosso manifesto SÓ existe a
+    // partir da API 24. Ou seja, a promessa de "nenhuma conexão em texto claro" não valia nos
+    // aparelhos mais antigos que o próprio app aceitava. Esta prova existe para a versão
+    // mínima não voltar atrás sem ninguém notar, e para o motivo não se perder.
+    const variaveis = readFileSync('android/variables.gradle', 'utf-8')
+    const min = /minSdkVersion\s*=\s*(\d+)/.exec(variaveis)
+    expect(min).toBeTruthy()
+    expect(Number(min![1])).toBeGreaterThanOrEqual(24)
+  })
+
   it('o serviço de gravação do plugin é fechado para os outros aplicativos', () => {
     // O plugin declara esse serviço alcançável de fora, e a junção de manifestos do Gradle
     // mantinha isso: qualquer outro app instalado podia iniciar ou parar a gravação da posição.

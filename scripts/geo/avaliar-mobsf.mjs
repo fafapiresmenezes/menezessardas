@@ -57,7 +57,10 @@ const altosEsperados = alto.filter(a => esperado(a))
 
 const nome = a => a?.title || a?.description || a?.section || JSON.stringify(a).slice(0, 120)
 
-console.log(`Boletim do MobSF — nota de segurança ${b?.security_score ?? '?'}, conceito ${b?.grade ?? '?'}`)
+// O boletim do MobSF v4.6 traz security_score e nem sempre um conceito; só escrevemos o que
+// ele de fato devolveu, em vez de deixar um "?" parecendo informação.
+const conceito = b?.grade ? `, conceito ${b.grade}` : ''
+console.log(`Boletim do MobSF — nota de segurança ${b?.security_score ?? '(não informada)'}${conceito}`)
 console.log(`  ${alto.length} grave(s), ${aviso.length} aviso(s), ${info.length} informativo(s), ${seguro.length} ponto(s) seguro(s)\n`)
 
 if (altosEsperados.length) {
@@ -72,6 +75,9 @@ if (aviso.length) {
   console.log('')
 }
 
+// Daqui para baixo é o que para a obra. Fica no fim de propósito: na primeira rodada de
+// verdade os avisos saíram DEPOIS do motivo da parada, porque um ia para a saída normal e o
+// outro para a de erro, e quem lesse o log via a explicação no meio da lista.
 if (altosNovos.length) {
   console.error('GRAVES NÃO PREVISTOS — a obra para aqui de propósito:')
   for (const a of altosNovos) console.error(`  · ${nome(a)}`)
