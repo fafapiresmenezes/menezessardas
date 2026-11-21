@@ -98,7 +98,7 @@ async function tratar(req: Request, origemBoa: boolean): Promise<Response> {
         return json({ ok: true })
       }
       // A recusa da porta do banco chega aqui como "Database error saving new user": é a única regra do banco que barra conta nova.
-      if (/Cadastro fechado|Database error/i.test(m)) return json({ erro: 'Criar conta é só para quem usa o e-mail do próprio escritório ou recebeu convite. Fale com o responsável do seu escritório ou com o Instituto.' }, 403)
+      if (/Cadastro fechado|Database error/i.test(m)) return json({ erro: 'O cadastro está fechado. Para solicitar acesso, preencha o formulário em theye.club/pedir-entrada ou aguarde um convite do administrador.' }, 403)
       return json({ erro: 'Não foi possível criar a conta agora. Tente de novo em instantes.' }, 400)
     }
     const codigo = data?.properties?.hashed_token
