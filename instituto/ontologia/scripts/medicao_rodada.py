@@ -10,10 +10,10 @@ ETAPAS = [  # (etapa, % feito, como foi medido)
  ('2. Setores, fichas e tipos de variável', 60, '15 fichas nicho→IBGE, 13 nichos ligados ao EXIOBASE e 6 sem correspondência escritos; catálogo de variáveis com tipo ainda não montado em dado'),
  ('3. Família 7, sobreposição interna', 100, f"{len(si['pares'])} pares de 10 nichos calculados e recontados"),
  ('4. Família 1, dependência econômica', 67 if r >= 2 else 33, '2 de 3 bases feitas (IBGE 2015 e EXIOBASE 2019 mundial); OCDE bloqueia acesso automático' if r >= 2 else '1 de 3 bases feita (IBGE 2015)'),
- ('5. Famílias 3 e 4, mercados', 0, 'fontes testadas e abertas; conta não começou'),
- ('6. Famílias 2 e 5, Harvard e OpenAlex', 0, 'fontes testadas; conta não começou'),
+ ('5. Famílias 3 e 4, mercados', 75 if r >= 3 else 0, 'família 3: 1 de 2 bases (PIB trimestral do IBGE feito; bolsa B3/FRED pendente) = 50%; família 4: coleta Polymarket e Kalshi feita = 100%; média 75%' if r >= 3 else 'fontes testadas e abertas; conta não começou'),
+ ('6. Famílias 2 e 5, Harvard e OpenAlex', 25 if r >= 3 else 0, 'família 5: 1 de 2 bases (arXiv feito; OpenAlex esgotou a cota grátis do dia) = 50%; família 2 (Harvard) = 0%; média 25%' if r >= 3 else 'fontes testadas; conta não começou'),
  ('7. Família 6, literatura', min(100, n_lit * 10), f'{n_lit} estudos lidos e conferidos de uma meta de 10 (um por nicho principal), mais 1 estudo usado só para conferir'),
- ('8. Desenho, segunda conta e carimbo', 40 if r >= 2 else 30, 'desenho com 7 vistas publicado; revisão de adversário e carimbo pendentes'),
+ ('8. Desenho, segunda conta e carimbo', 45 if r >= 3 else 40 if r >= 2 else 30, ('desenho com 10 vistas publicado' if r >= 3 else 'desenho com 7 vistas publicado') + '; revisão de adversário e carimbo pendentes'),
 ]
 total = sum(p for _, p, _ in ETAPAS) / len(ETAPAS)
 c = le['conferencia']
@@ -25,6 +25,40 @@ linhas_top = ''.join(f"<tr><td>{E(nome[p['para']])} ({p['para']})</td><td>{E(nom
 linhas_chave = ''.join(f"<tr><td>{l['cod']}</td><td>{E(l['atividade'])}{' ◆' if l['cod'] in nichos else ''}</td><td class=n>{l['para_tras']:.4f}</td><td class=n>{l['para_frente']:.4f}</td></tr>" for l in sorted(chave, key=lambda l: -l['para_frente']))
 etapas = ''.join(f"<tr><td>{E(n)}</td><td class=n>{p}%</td><td><div class=b><i style='width:{p}%'></i></div></td><td>{E(m)}</td></tr>" for n, p, m in ETAPAS)
 sem = ''.join(f"<li><b>{E(k)}</b>: {E(v)}</li>" for k, v in me['sem_correspondencia'].items())
+extra = ''
+if r >= 3:
+    co = json.load(open('saida/comovimento_pib.json')); ci = json.load(open('saida/ciencias_arxiv.json')); mp = json.load(open('saida/mercados_previsao.json'))
+    pc = sorted(co['pares'], key=lambda p: -p['pearson'])
+    lin = lambda p: (f"<tr><td>{E(p['nome_a'])} × {E(p['nome_b'])}</td><td class=n>{p['pearson']:+.3f}</td><td class=n>{p['spearman']:+.3f}</td><td class=n>{p['n_efetivo']:.1f}</td>"
+                     f"<td class=n>{p['ic95'][0]:+.2f} a {p['ic95'][1]:+.2f}</td><td class=n>{p['parcial_sem_pib']:+.3f}</td><td class=n>{p['pearson_sem_pandemia']:+.3f}</td><td>{'puxado por poucos trimestres' if p['puxado_por_poucos_trimestres'] else ('cruza o zero' if p['ic_cruza_zero'] else '')}</td></tr>")
+    cc = co['conferencia']
+    nomeA = {a['codigo']: a['nome'] for a in ci['areas']}
+    tci = ''.join(f"<tr><td>{E(nomeA[p['a']])} × {E(nomeA[p['b']])}</td><td class=n>{p['n_a']:,}</td><td class=n>{p['n_b']:,}</td><td class=n>{p['n_ab']:,}</td><td class=n>{p['cosseno']:.4f}</td><td class=n>{p['jaccard']:.4f}</td></tr>".replace(',', '.') for p in sorted(ci['pares'], key=lambda p: -p['cosseno'])[:15])
+    st = json.load(open('literatura/setor_mercados_previsao.json'))
+    from collections import Counter
+    cont = Counter(n for m in mp['mercados'] for n in m['nichos'])
+    tmp = ''.join(f"<tr><td>{E(m['fonte'])}</td><td>{E(m['pergunta'])}</td><td class=n>{m['preco_sim']:.3f}</td><td class=n>{m['volume_dolares']:,.0f}</td></tr>".replace(',', '.') for m in mp['mercados'][:15])
+    extra = f"""<h2>Família 3: quem sobe e desce junto (PIB trimestral do IBGE)</h2>
+<p>{E(co['aviso'])} {len(co['pares'])} pares de 12 setores, {co['pares'][0]['n']} trimestres de taxa ({co['trimestres_das_taxas'][0]} a {co['trimestres_das_taxas'][-1]}). Arquivo bruto SHA-256 {co['fonte']['sha256']}.</p>
+<pre>{chr(10).join(f"{k}: {v}" for k, v in co['metodo'].items())}
+Conferência: Pearson refeito por numpy, diferença {cc['max_dif_pearson_manual_vs_numpy']:.1e}; Spearman refeito por scipy, diferença {cc['max_dif_spearman_manual_vs_scipy']:.1e}.
+Pares cujo intervalo de 95% cruza o zero: {sum(p['ic_cruza_zero'] for p in co['pares'])} de {len(co['pares'])}. Puxados por poucos trimestres: {sum(p['puxado_por_poucos_trimestres'] for p in co['pares'])}.</pre>
+<table><tr><th>Par</th><th class=n>Pearson</th><th class=n>Spearman</th><th class=n>n efetivo</th><th class=n>IC 95%</th><th class=n>Sem PIB</th><th class=n>Sem pandemia</th><th>Aviso</th></tr>{''.join(lin(p) for p in pc[:10])}<tr><td colspan=8 class=m>… os 4 mais negativos:</td></tr>{''.join(lin(p) for p in pc[-4:])}</table>
+<h2>Família 5: quais ciências publicam juntas (arXiv)</h2>
+<p>{E(ci['aviso'])} {len(ci['areas'])} áreas, {len(ci['pares'])} pares, coleta {ci['fonte']['coleta_inicio_utc']} a {ci['fonte']['coleta_fim_utc']}. Conferência: {len(ci['conferencia']['pares_invertidos'])} pares perguntados na ordem inversa, todos idênticos.</p>
+<pre>cosseno = {ci['metodo']['cosseno']}    Jaccard = {ci['metodo']['jaccard']}</pre>
+<table><tr><th>Par</th><th class=n>n A</th><th class=n>n B</th><th class=n>Em comum</th><th class=n>Cosseno</th><th class=n>Jaccard</th></tr>{tci}</table>
+<h2>Família 4: mercados de previsão (dado de terceiros)</h2>
+<p>{E(mp['aviso'])} Coleta {mp['coletado_utc']}: {len(mp['mercados'])} mercados abertos com volume a partir de {mp['filtros']['volume_minimo_dolares']:,} dólares ({sum(m['fonte']=='Polymarket' for m in mp['mercados'])} Polymarket, {sum(m['fonte']=='Kalshi' for m in mp['mercados'])} Kalshi). Esporte fica, marcado no nicho Esporte ({mp.get('marcados_como_esporte', 0)} mercados), a pedido de M, para treino e mapeamento de jogador, sem aposta.</p>
+<p class=m>Mercados por nicho: {E(', '.join(f'{k} {v}' for k, v in cont.most_common()))}.</p>
+<table><tr><th>Fonte</th><th>Pergunta (original)</th><th class=n>Preço do Sim</th><th class=n>Volume US$</th></tr>{tmp}</table>
+<h2>O setor de mercados de previsão (da literatura e da imprensa)</h2>
+<p>{E(st['regra'])} {E(st['compras_obs'])}</p>
+<table><tr><th>Comprador</th><th>Startup</th><th>O que faz</th><th>Data</th><th>Preço</th></tr>{''.join(f"<tr><td>{E(c['comprador'])}</td><td>{E(c['comprada'])}</td><td>{E(c['o_que_faz'])}</td><td>{E(c['data'])}</td><td>{E(c['preco_obs'])}</td></tr>" for c in st['compras'])}</table>
+<table style="margin-top:8px"><tr><th>Quem prevê</th><th>O quê</th><th>Série publicada</th><th>Faixa de erro</th></tr>{''.join(f"<tr><td>{E(v['quem'])} ({E(v['data'])})</td><td>{E(v['metrica'])}</td><td>{'; '.join(f'{a or chr(104)+chr(111)+chr(106)+chr(101)}: {x:,.0f}'.replace(',', '.') for a, x in v['serie'])} dólares</td><td>{E(v['faixa'])}</td></tr>" for v in st['previsoes'])}</table>
+<p><b>{E(st['calibragem']['pergunta_de_M'])}</b> {E(st['calibragem']['resposta'])}</p>
+<table><tr><th>Estudo</th><th>O que mede</th><th class=n>Valor</th><th>Onde</th></tr>{''.join(f"<tr><td>{E(e['id'])}</td><td>{E(n['o_que'])}</td><td class=n>{E(str(n['valor']).replace('.', ','))}</td><td>{E(n['onde'])}</td></tr>" for e in st['calibragem']['estudos'] for n in e['numeros'])}</table>
+<p class=m>{E(st['calibragem']['uso_na_arvore'])}</p>"""
 doc = f"""<!doctype html><html lang=pt-BR><meta charset=utf-8><title>Medição árvore rodada {r}</title>
 <style>@page{{size:A4;margin:16mm 14mm}}body{{font-family:Inter,Arial,sans-serif;color:#14212b;font-size:10.5pt;line-height:1.45}}h1{{font-family:Georgia,serif;font-size:21pt;margin:0}}h2{{font-size:12.5pt;margin:18px 0 6px;color:#0f7b6c}}
 table{{border-collapse:collapse;width:100%;font-size:9pt}}td,th{{border-bottom:1px solid #d9e1e6;padding:4px 5px;text-align:left;vertical-align:top}}th{{font-size:8pt;text-transform:uppercase;color:#5b6b77}}.n{{text-align:right;font-family:'IBM Plex Mono',monospace;white-space:nowrap}}
@@ -57,10 +91,11 @@ Impressão digital do pacote igual à publicada: {ex['sha256_zip_conferido_com_o
 <p>{E(ex['aviso_angola'])}</p>
 <h2>Quanto da cadeia de cada setor vem de fora do país (Brasil e Resto da África)</h2>
 <table><tr><th>Setor (EXIOBASE)</th><th class=n>Brasil</th><th class=n>Resto da África</th></tr>{''.join(f"<tr><td>{E(ex['setores'][j])}</td><td class=n>{100*ex['por_regiao']['BR']['parte_da_cadeia_fora_da_regiao'][c]:.1f}%</td><td class=n>{100*ex['por_regiao']['WF']['parte_da_cadeia_fora_da_regiao'][c]:.1f}%</td></tr>" for c, j in enumerate(ex['indices_nichos']))}</table>
+{extra}
 <h2>Família 6: literatura lida e conferida</h2>
 <table><tr><th>Estudo</th><th>Liga</th><th>Número como está no texto</th></tr>{''.join(f"<tr><td>{E(x['autores'])} ({x['ano']}), {E(x['instituicao'])}. {E(x['titulo'])}. {E(x['onde'])}.</td><td>{E(x.get('direcao') or 'conferência')}</td><td>{'; '.join(E(n['o_que']) + ': ' + str(n['valor']).replace('.', ',') for n in x.get('numeros', [])) or E(x.get('resultado', ''))}</td></tr>" for x in lit)}</table>
-<h2>Família 7: sobreposição interna</h2><p>{len(si['pares'])} pares calculados. Só 1 par tem ferramenta em comum (Marca/Site e Engenharia, Jaccard 0,2000, Blender). {E(si['aviso'])}</p>
-<h2>Sem base nesta rodada</h2><ul>{sem}</ul>
+<h2>Família 7: sobreposição interna</h2><p>{len(si['pares'])} pares calculados. Pares com ferramenta em comum: {E('; '.join(f"{p['a']} e {p['b']}, Jaccard {p['jaccard']:.4f} ({', '.join(p['em_comum'])})".replace('.', ',') for p in si['pares'] if p['em_comum']) or 'nenhum')}.  {E(si['aviso'])}</p>
+<h2>Sem base nesta rodada</h2><ul>{sem}<li><b>Família 2 (proximidade produtiva, Harvard)</b>: não começou.</li><li><b>OpenAlex</b>: cota grátis do dia esgotada na rede; volta depois da meia-noite UTC.</li></ul>
 <h2>Onde ver</h2><p>Desenho interativo: https://claude.ai/artifact/GSqTU6xSXsxjRPpY96Zotg (privado). Scripts e dados: instituto/ontologia/ no repositório.</p>
 """
 open(f'saida/MEDICAO-ARVORE-rodada-{r}.html', 'w').write(doc); print(f'{total:.1f}%')

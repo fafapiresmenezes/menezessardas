@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/BjTVXiru0H4twviNWxe2dh6n+mQ</id>
+  <title>arXiv Query: search_query=cat:quant-ph AND cat:cs.LO&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:49:58Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:quant-ph+AND+cat:cs.LO&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>466</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1807.11610v1</id>
+    <title>Toward Automatic Verification of Quantum Programs</title>
+    <updated>2018-07-31T00:00:12Z</updated>
+    <link href="https://arxiv.org/abs/1807.11610v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1807.11610v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper summarises the results obtained by the author and his collaborators in a program logic approach to the verification of quantum programs, including quantum Hoare logic, invariant generation and termination analysis for quantum programs. It also introduces the notion of proof outline and several auxiliary rules for more conveniently reasoning about quantum programs. Some problems for future research are proposed at the end of the paper.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-07-31T00:00:12Z</published>
+    <arxiv:primary_category term="quant-ph"/>
+    <arxiv:journal_ref>Formal Aspect of Computing 2018</arxiv:journal_ref>
+    <author>
+      <name>Mingsheng Ying</name>
+    </author>
+    <arxiv:doi>10.1007/s00165-018-0465-3</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/s00165-018-0465-3" title="doi"/>
+  </entry>
+</feed>

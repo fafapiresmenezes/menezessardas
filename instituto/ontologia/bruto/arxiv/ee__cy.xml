@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/T0sW4cDUx3FAaxKLwq3PCkisNgo</id>
+  <title>arXiv Query: search_query=cat:eess.* AND cat:cs.CY&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:53:12Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:eess.*+AND+cat:cs.CY&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>605</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1907.12370v1</id>
+    <title>Design and Field Implementation of Blockchain Based Renewable Energy Trading in Residential Communities</title>
+    <updated>2019-07-20T06:53:26Z</updated>
+    <link href="https://arxiv.org/abs/1907.12370v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1907.12370v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper proposes a peer to peer (P2P), blockchain based energy trading market platform for residential communities with the objective of reducing overall community peak demand and household electricity bills. Smart homes within the community place energy bids for its available distributed energy resources (DERs) for each discrete trading period during a day, and a double auction mechanism is used to clear the market and compute the market clearing price (MCP). The marketplace is implemented on a permissioned blockchain infrastructure, where bids are stored to the immutable ledger and smart contracts are used to implement the MCP calculation and award service contracts to all winning bids. Utilizing the blockchain obviates the need for a trusted, centralized auctioneer, and eliminates vulnerability to a single point of failure. Simulation results show that the platform enables a community peak demand reduction of 46%, as well as a weekly savings of 6%. The platform is also tested at a real-world Canadian microgrid using the Hyperledger Fabric blockchain framework, to show the end to end connectivity of smart home DERs to the platform.</summary>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-07-20T06:53:26Z</published>
+    <arxiv:primary_category term="eess.SY"/>
+    <author>
+      <name>Shivam Saxena</name>
+    </author>
+    <author>
+      <name>Hany Farag</name>
+    </author>
+    <author>
+      <name>Aidan Brookson</name>
+    </author>
+    <author>
+      <name>Hjalmar Turesson</name>
+    </author>
+    <author>
+      <name>Henry M. Kim</name>
+    </author>
+  </entry>
+</feed>

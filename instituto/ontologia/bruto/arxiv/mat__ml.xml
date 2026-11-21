@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/knTLBxCRP71Lm3RusPzaUNJA0vU</id>
+  <title>arXiv Query: search_query=cat:math.* AND cat:cs.LG&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:47:48Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:math.*+AND+cat:cs.LG&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>22908</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2007.01996v4</id>
+    <title>On the Asymptotic Linear Convergence Speed of Anderson Acceleration, Nesterov Acceleration, and Nonlinear GMRES</title>
+    <updated>2020-11-07T16:24:46Z</updated>
+    <link href="https://arxiv.org/abs/2007.01996v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2007.01996v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We consider nonlinear convergence acceleration methods for fixed-point iteration $x_{k+1}=q(x_k)$, including Anderson acceleration (AA), nonlinear GMRES (NGMRES), and Nesterov-type acceleration (corresponding to AA with window size one). We focus on fixed-point methods that converge asymptotically linearly with convergence factor $ρ&lt;1$ and that solve an underlying fully smooth and non-convex optimization problem. It is often observed that AA and NGMRES substantially improve the asymptotic convergence behavior of the fixed-point iteration, but this improvement has not been quantified theoretically. We investigate this problem under simplified conditions. First, we consider stationary versions of AA and NGMRES, and determine coefficients that result in optimal asymptotic convergence factors, given knowledge of the spectrum of $q'(x)$ at the fixed point $x^*$. This allows us to understand and quantify the asymptotic convergence improvement that can be provided by nonlinear convergence acceleration, viewing $x_{k+1}=q(x_k)$ as a nonlinear preconditioner for AA and NGMRES. Second, for the case of infinite window size, we consider linear asymptotic convergence bounds for GMRES applied to the fixed-point iteration linearized about $x^*$. Since AA and NGMRES are equivalent to GMRES in the linear case, one may expect the GMRES convergence factors to be relevant for AA and NGMRES as $x_k \rightarrow x^*$. Our results are illustrated numerically for a class of test problems from canonical tensor decomposition, comparing steepest descent and alternating least squares (ALS) as the fixed-point iterations that are accelerated by AA and NGMRES. Our numerical tests show that both approaches allow us to estimate asymptotic convergence speed for nonstationary AA and NGMRES with finite window size.</summary>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.NA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-07-04T03:35:35Z</published>
+    <arxiv:comment>Minor update. This version accepted for publication in SIAM Journal on Scientific Computing</arxiv:comment>
+    <arxiv:primary_category term="math.OC"/>
+    <author>
+      <name>Hans De Sterck</name>
+    </author>
+    <author>
+      <name>Yunhui He</name>
+    </author>
+  </entry>
+</feed>

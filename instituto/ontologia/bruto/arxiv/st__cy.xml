@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/InKhVV6B6Y8a2BokAClEx8qWqYg</id>
+  <title>arXiv Query: search_query=cat:stat.* AND cat:cs.CY&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:52:34Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:stat.*+AND+cat:cs.CY&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>1563</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1809.07394v3</id>
+    <title>Improving Subseasonal Forecasting in the Western U.S. with Machine Learning</title>
+    <updated>2019-05-22T10:16:23Z</updated>
+    <link href="https://arxiv.org/abs/1809.07394v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1809.07394v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Water managers in the western United States (U.S.) rely on longterm forecasts of temperature and precipitation to prepare for droughts and other wet weather extremes. To improve the accuracy of these longterm forecasts, the U.S. Bureau of Reclamation and the National Oceanic and Atmospheric Administration (NOAA) launched the Subseasonal Climate Forecast Rodeo, a year-long real-time forecasting challenge in which participants aimed to skillfully predict temperature and precipitation in the western U.S. two to four weeks and four to six weeks in advance. Here we present and evaluate our machine learning approach to the Rodeo and release our SubseasonalRodeo dataset, collected to train and evaluate our forecasting system.
+  Our system is an ensemble of two regression models. The first integrates the diverse collection of meteorological measurements and dynamic model forecasts in the SubseasonalRodeo dataset and prunes irrelevant predictors using a customized multitask model selection procedure. The second uses only historical measurements of the target variable (temperature or precipitation) and introduces multitask nearest neighbor features into a weighted local linear regression. Each model alone is significantly more accurate than the debiased operational U.S. Climate Forecasting System (CFSv2), and our ensemble skill exceeds that of the top Rodeo competitor for each target variable and forecast horizon. Moreover, over 2011-2018, an ensemble of our regression models and debiased CFSv2 improves debiased CFSv2 skill by 40-50% for temperature and 129-169% for precipitation. We hope that both our dataset and our methods will help to advance the state of the art in subseasonal forecasting.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-09-19T20:08:26Z</published>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Jessica Hwang</name>
+    </author>
+    <author>
+      <name>Paulo Orenstein</name>
+    </author>
+    <author>
+      <name>Judah Cohen</name>
+    </author>
+    <author>
+      <name>Karl Pfeiffer</name>
+    </author>
+    <author>
+      <name>Lester Mackey</name>
+    </author>
+  </entry>
+</feed>

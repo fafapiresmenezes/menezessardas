@@ -1,0 +1,263 @@
+{
+ "nome": "O setor de mercados de previsão: compras de startups, previsões de crescimento e calibragem",
+ "regra": "Todo número aqui é DA LITERATURA ou da imprensa, como está escrito na fonte, com endereço e data de leitura (21/11/2026). Nenhum foi calculado por nós. Onde a fonte não publica o número, aparece 'sem base'.",
+ "lido_em": "2026-11-21",
+ "compras": [
+  {
+   "comprador": "Polymarket",
+   "comprada": "QCEX",
+   "o_que_faz": "bolsa de derivativos e câmara de compensação com licença da CFTC (EUA); usada para a Polymarket voltar aos EUA",
+   "data": "2025-07",
+   "preco_dolares": 112000000,
+   "preco_obs": "112 milhões de dólares segundo a Revenue Memo; The Block cita a compra sem preço",
+   "fontes": [
+    "https://www.revenuememo.com/p/who-owns-polymarket",
+    "https://www.theblock.co/post/390546/polymarket-buys-fresh-prediction-market-api-startup-dome-marking-second-official-acquisition"
+   ]
+  },
+  {
+   "comprador": "Polymarket",
+   "comprada": "Dome",
+   "o_que_faz": "API única para mercados de previsão (apps, robôs e painéis sobre Polymarket, Kalshi e outros); turma Y Combinator outono 2025",
+   "data": "2026-02-19",
+   "preco_dolares": null,
+   "preco_obs": "não divulgado",
+   "fontes": [
+    "https://www.theblock.co/post/390546/polymarket-buys-fresh-prediction-market-api-startup-dome-marking-second-official-acquisition"
+   ]
+  },
+  {
+   "comprador": "Polymarket",
+   "comprada": "Lunch",
+   "o_que_faz": "empresa boutique de recrutamento de executivos",
+   "data": "2026-02",
+   "preco_dolares": null,
+   "preco_obs": "não divulgado",
+   "fontes": [
+    "https://fortune.com/2026/03/18/exclusive-polymarket-acquires-the-startup-brahma/"
+   ]
+  },
+  {
+   "comprador": "Polymarket",
+   "comprada": "Brahma",
+   "o_que_faz": "infraestrutura de cripto e DeFi para empresas e pessoas que gerem ativos digitais; fundada em 2021",
+   "data": "2026-03-18",
+   "preco_dolares": null,
+   "preco_obs": "não divulgado",
+   "fontes": [
+    "https://fortune.com/2026/03/18/exclusive-polymarket-acquires-the-startup-brahma/"
+   ]
+  },
+  {
+   "comprador": "Kalshi",
+   "comprada": "FB Securities",
+   "o_que_faz": "corretora (broker-dealer) de Nova York registrada na SEC e na FINRA, criada em 2024; base para negociar ações e ETFs",
+   "data": "2026-07",
+   "preco_dolares": null,
+   "preco_obs": "não divulgado; compra feita em julho sem anúncio, noticiada em 16/11/2026",
+   "fontes": [
+    "https://finance.yahoo.com/markets/stocks/articles/kalshi-start-offering-stock-etf-225842429.html",
+    "https://www.latintimes.com/kalshi-stock-etf-trading-broker-dealer-acquisition-601503"
+   ]
+  },
+  {
+   "comprador": "Kalshi",
+   "comprada": "Oddpool",
+   "o_que_faz": "dados de mercados de previsão para instituições, economistas e formuladores de políticas; saída da Y Combinator com semente de 3 milhões de dólares",
+   "data": "2026-09-16",
+   "preco_dolares": null,
+   "preco_obs": "não divulgado",
+   "fontes": [
+    "https://dealroom.co/news/151169-kalshi-acquires-data-startup-oddpool-months-after-its-3m-seed/"
+   ]
+  }
+ ],
+ "compras_obs": "M pediu as 100 últimas compras. Nas fontes lidas existem 6 (4 da Polymarket, 2 da Kalshi); a lista mostra todas. The Block (fev/2026) diz que a Polymarket 'não fez muitas aquisições'. Uma compra nova que apareça entra na próxima rodada.",
+ "previsoes": [
+  {
+   "quem": "Bernstein",
+   "data": "2026-04-15",
+   "metrica": "volume anual negociado nos mercados de previsão dos EUA (Kalshi e Polymarket)",
+   "serie": [
+    [
+     2025,
+     51000000000.0
+    ],
+    [
+     2026,
+     240000000000.0
+    ],
+    [
+     2030,
+     1000000000000.0
+    ]
+   ],
+   "unidade": "dólares",
+   "crescimento": "cerca de 80% ao ano (taxa composta)",
+   "faixa": "sem base: a fonte não publica cenário baixo/alto nem desvio",
+   "fonte_obs": "fonte primária (CNBC) não abriu; números lidos em duas cópias secundárias que batem entre si",
+   "fontes": [
+    "https://finance.yahoo.com/news/prediction-market-volumes-forecast-hit-134500015.html",
+    "https://www.globenewswire.com/news-release/2026/09/01/3354296/0/en/wall-street-s-next-big-trading-frontier-could-be-prediction-markets-targeting-1-trillion-in-annual-volume.html"
+   ]
+  },
+  {
+   "quem": "Bernstein",
+   "data": "2026-04-15",
+   "metrica": "receita do setor",
+   "serie": [
+    [
+     2025,
+     400000000.0
+    ],
+    [
+     2026,
+     2500000000.0
+    ],
+    [
+     2030,
+     10800000000.0
+    ]
+   ],
+   "unidade": "dólares",
+   "crescimento": null,
+   "faixa": "sem base",
+   "fonte_obs": "2025 'cerca de' 400 milhões; cópias secundárias",
+   "fontes": [
+    "https://finance.yahoo.com/news/prediction-market-volumes-forecast-hit-134500015.html"
+   ]
+  },
+  {
+   "quem": "Citizens (analistas liderados por Devin Ryan)",
+   "data": "2026",
+   "metrica": "receita do setor",
+   "serie": [
+    [
+     null,
+     2000000000.0
+    ],
+    [
+     2030,
+     10000000000.0
+    ]
+   ],
+   "unidade": "dólares",
+   "crescimento": "cinco vezes em quatro anos",
+   "faixa": "sem base",
+   "fonte_obs": "valor atual 'cerca de 2 bilhões por ano', sem ano escrito; 2030 'acima de 10 bilhões'",
+   "fontes": [
+    "https://predictionnews.com/news/prediction-markets-on-pace-for-1-trillion-volume-by-2030-reports-say/"
+   ]
+  },
+  {
+   "quem": "Eilers & Krejcik Gaming (EKG)",
+   "data": "2026",
+   "metrica": "volume anual negociado no MUNDO",
+   "serie": [
+    [
+     2030,
+     1000000000000.0
+    ]
+   ],
+   "unidade": "dólares",
+   "crescimento": null,
+   "faixa": "sem base; a EKG avisa que questões legais 'podem atrasar ou descarrilar' o crescimento",
+   "fonte_obs": "esporte hoje até 80% do volume de contratos de evento; no longo prazo cerca de 44%",
+   "fontes": [
+    "https://predictionnews.com/news/prediction-markets-on-pace-for-1-trillion-volume-by-2030-reports-say/"
+   ]
+  }
+ ],
+ "calibragem": {
+  "pergunta_de_M": "Qual desvio padrão eles usam com os clientes?",
+  "resposta": "Nenhum dos white papers lidos publica desvio padrão, erro-padrão ou intervalo de confiança. A medida que a Kalshi publica é o escore de Brier (erro quadrático médio da probabilidade: 0 = perfeito, 0,25 = cara ou coroa) e a taxa de acerto. Desvio padrão dos clientes: sem base.",
+  "estudos": [
+   {
+    "id": "K1",
+    "titulo": "Calibration in Prediction Markets: Theory and Evidence",
+    "autores": "Nicole Kagan e Rubens Baiocchi (Kalshi Research)",
+    "data": "agosto de 2026, revisado em outubro de 2026",
+    "url": "https://kalshi.com/research/kalshi-research-calibration.pdf",
+    "numeros": [
+     {
+      "o_que": "mercados estudados (2021 a meados de 2026, 11 categorias)",
+      "valor": 2324833,
+      "onde": "p. 1"
+     },
+     {
+      "o_que": "Brier a 3 meses do fim",
+      "valor": 0.087,
+      "onde": "p. 6"
+     },
+     {
+      "o_que": "Brier no fechamento",
+      "valor": "cerca de 0,02",
+      "onde": "p. 1 e p. 6"
+     },
+     {
+      "o_que": "acerto simples a 3 meses",
+      "valor": "88,2%",
+      "onde": "p. 1"
+     },
+     {
+      "o_que": "acerto simples no fechamento",
+      "valor": "97,2%",
+      "onde": "p. 1"
+     },
+     {
+      "o_que": "Brier no fechamento, eventos com volume abaixo de 10 mil dólares (n = 25.368)",
+      "valor": 0.0631,
+      "onde": "p. 20, Tabela 2"
+     },
+     {
+      "o_que": "Brier no fechamento, eventos com volume de 200 mil dólares ou mais (n = 18.709)",
+      "valor": 0.009,
+      "onde": "p. 20, Tabela 2"
+     },
+     {
+      "o_que": "Brier no fechamento, menos de 20 apostadores (n = 49.489)",
+      "valor": 0.0366,
+      "onde": "p. 21, Tabela 3"
+     },
+     {
+      "o_que": "Brier no fechamento, mil apostadores ou mais (n = 1.484)",
+      "valor": 0.0066,
+      "onde": "p. 21, Tabela 3"
+     }
+    ],
+    "obs": "Os autores não medem o viés do favorito contra o azarão ('deixamos de lado', p. 4). Sem desvio padrão nem intervalo."
+   },
+   {
+    "id": "K2",
+    "titulo": "Kalshi and the 2026 Midterms: Calibration and Accuracy",
+    "autores": "Nicole Kagan e Rubens Baiocchi (Kalshi Research)",
+    "data": "novembro de 2026, versão preliminar",
+    "url": "https://kalshi.com/research/kalshi-research-midterms-calibration-and-accuracy.pdf",
+    "numeros": [
+     {
+      "o_que": "acerto de direção, 3 meses antes",
+      "valor": "93,8%",
+      "onde": "p. 1 e p. 5"
+     },
+     {
+      "o_que": "acerto de direção, no fechamento das urnas",
+      "valor": "98,2%",
+      "onde": "p. 1 e p. 5"
+     },
+     {
+      "o_que": "Brier Kalshi (preço médio ponderado), 427 disputas, 9h do dia da eleição",
+      "valor": 0.0139,
+      "onde": "p. 8, Tabela 1"
+     },
+     {
+      "o_que": "Brier do melhor modelo de pesquisa na mesma tabela (Silver Bulletin Deluxe)",
+      "valor": 0.0141,
+      "onde": "p. 8, Tabela 1"
+     }
+    ],
+    "obs": "Estudo da própria Kalshi sobre a própria Kalshi: conflito de interesse declarado pelo tipo de autor. Sem desvio padrão nem intervalo."
+   }
+  ],
+  "uso_na_arvore": "A Tabela 2 de K1 mostra o erro caindo de 0,0631 para 0,0090 quando o volume passa de menos de 10 mil para 200 mil dólares ou mais. Isso sustenta o piso de 10 mil dólares que usamos para guardar um mercado. Não transforma o preço em predição nossa."
+ }
+}

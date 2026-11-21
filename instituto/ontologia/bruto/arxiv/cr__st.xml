@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/XLyvSjdJmiJ3hpWmRM+P4x2wly0</id>
+  <title>arXiv Query: search_query=cat:cs.CR AND cat:stat.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:50:35Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.CR+AND+cat:stat.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>2371</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2404.16287v1</id>
+    <title>Differentially Private Federated Learning: Servers Trustworthiness, Estimation, and Statistical Inference</title>
+    <updated>2024-04-25T02:14:07Z</updated>
+    <link href="https://arxiv.org/abs/2404.16287v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2404.16287v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Differentially private federated learning is crucial for maintaining privacy in distributed environments. This paper investigates the challenges of high-dimensional estimation and inference under the constraints of differential privacy. First, we study scenarios involving an untrusted central server, demonstrating the inherent difficulties of accurate estimation in high-dimensional problems. Our findings indicate that the tight minimax rates depends on the high-dimensionality of the data even with sparsity assumptions. Second, we consider a scenario with a trusted central server and introduce a novel federated estimation algorithm tailored for linear regression models. This algorithm effectively handles the slight variations among models distributed across different machines. We also propose methods for statistical inference, including coordinate-wise confidence intervals for individual parameters and strategies for simultaneous inference. Extensive simulation experiments support our theoretical advances, underscoring the efficacy and reliability of our approaches.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-04-25T02:14:07Z</published>
+    <arxiv:comment>56 pages, 3 figures</arxiv:comment>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Zhe Zhang</name>
+    </author>
+    <author>
+      <name>Ryumei Nakada</name>
+    </author>
+    <author>
+      <name>Linjun Zhang</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/cqN6mYrL1EGbixG4oxvq36vkBqU</id>
+  <title>arXiv Query: search_query=cat:physics.* AND cat:cs.CR&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:48:26Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:physics.*+AND+cat:cs.CR&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>183</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1907.13229v1</id>
+    <title>Toward Physically Unclonable Functions from Plasmonics-Enhanced Silicon Disc Resonators</title>
+    <updated>2019-06-17T10:23:14Z</updated>
+    <link href="https://arxiv.org/abs/1907.13229v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1907.13229v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The omnipresent digitalization trend has enabled a number of related malicious activities, ranging from data theft to disruption of businesses, counterfeiting of devices, and identity fraud, among others. Hence, it is essential to implement security schemes and to ensure the reliability and trustworthiness of electronic circuits. Toward this end, the concept of physically unclonable functions (PUFs) has been established at the beginning of the 21st century. However, most PUFs have eventually, at least partially, fallen short of their promises, which are unpredictability, unclonability, uniqueness, reproducibility, and tamper resilience. That is because most PUFs directly utilize the underlying microelectronics, but that intrinsic randomness can be limited and may thus be predicted, especially by machine learning. Optical PUFs, in contrast, are still considered as promising---they can derive strong, hard-to-predict randomness independently from microelectronics, by using some kind of "optical token." Here we propose a novel concept for plasmonics-enhanced optical PUFs, or peo-PUFs in short. For the first time, we leverage two highly nonlinear phenomena in conjunction by construction: (i) light propagation in a silicon disk resonator, and (ii) surface plasmons arising from nanoparticles arranged randomly on top of the resonator. We elaborate on the physical phenomena, provide simulation results, and conduct a security analysis of peo- PUFs for secure key generation and authentication. This study highlights the good potential of peo-PUFs, and our future work is to focus on fabrication and characterization of such PUFs.</summary>
+    <category term="physics.app-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.optics" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-06-17T10:23:14Z</published>
+    <arxiv:comment>IEEE/OSA J. Lightwave Technology (JLT), 2019</arxiv:comment>
+    <arxiv:primary_category term="physics.app-ph"/>
+    <author>
+      <name>Johann Knechtel</name>
+    </author>
+    <author>
+      <name>Jacek Gosciniak</name>
+    </author>
+    <author>
+      <name>Alabi Bojesomo</name>
+    </author>
+    <author>
+      <name>Satwik Patnaik</name>
+    </author>
+    <author>
+      <name>Ozgur Sinanoglu</name>
+    </author>
+    <author>
+      <name>Mahmoud Rasras</name>
+    </author>
+    <arxiv:doi>10.1109/JLT.2019.2920949</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/JLT.2019.2920949" title="doi"/>
+  </entry>
+</feed>

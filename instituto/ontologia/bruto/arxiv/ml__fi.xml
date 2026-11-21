@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/Fi1H8Fw+CJr4T3fuufVsreBxOOs</id>
+  <title>arXiv Query: search_query=cat:cs.LG AND cat:q-fin.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:51:40Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.LG+AND+cat:q-fin.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>2115</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1812.10479v1</id>
+    <title>Multimodal deep learning for short-term stock volatility prediction</title>
+    <updated>2018-12-25T14:35:08Z</updated>
+    <link href="https://arxiv.org/abs/1812.10479v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1812.10479v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Stock market volatility forecasting is a task relevant to assessing market risk. We investigate the interaction between news and prices for the one-day-ahead volatility prediction using state-of-the-art deep learning approaches. The proposed models are trained either end-to-end or using sentence encoders transfered from other tasks. We evaluate a broad range of stock market sectors, namely Consumer Staples, Energy, Utilities, Heathcare, and Financials. Our experimental results show that adding news improves the volatility forecasting as compared to the mainstream models that rely only on price data. In particular, our model outperforms the widely-recognized GARCH(1,1) model for all sectors in terms of coefficient of determination $R^2$, $MSE$ and $MAE$, achieving the best performance when training from both news and price data.</summary>
+    <category term="q-fin.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.RM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-12-25T14:35:08Z</published>
+    <arxiv:primary_category term="q-fin.ST"/>
+    <author>
+      <name>Marcelo Sardelich</name>
+    </author>
+    <author>
+      <name>Suresh Manandhar</name>
+    </author>
+  </entry>
+</feed>

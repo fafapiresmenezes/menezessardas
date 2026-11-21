@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/oHbrusacWKhHLG58FmNXdg+Giuo</id>
+  <title>arXiv Query: search_query=cat:math.* AND cat:stat.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:47:56Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:math.*+AND+cat:stat.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>23005</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2005.13097v1</id>
+    <title>On the Convergence of Langevin Monte Carlo: The Interplay between Tail Growth and Smoothness</title>
+    <updated>2020-05-27T00:26:20Z</updated>
+    <link href="https://arxiv.org/abs/2005.13097v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2005.13097v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We study sampling from a target distribution ${ν_* = e^{-f}}$ using the unadjusted Langevin Monte Carlo (LMC) algorithm. For any potential function $f$ whose tails behave like ${\|x\|^α}$ for ${α\in [1,2]}$, and has $β$-Hölder continuous gradient, we prove that ${\widetilde{\mathcal{O}} \Big(d^{\frac{1}β+\frac{1+β}β(\frac{2}α - \boldsymbol{1}_{\{α\neq 1\}})} ε^{-\frac{1}β}\Big)}$ steps are sufficient to reach the $ε$-neighborhood of a $d$-dimensional target distribution $ν_*$ in KL-divergence. This convergence rate, in terms of $ε$ dependency, is not directly influenced by the tail growth rate $α$ of the potential function as long as its growth is at least linear, and it only relies on the order of smoothness $β$. One notable consequence of this result is that for potentials with Lipschitz gradient, i.e. $β=1$, our rate recovers the best known rate ${\widetilde{\mathcal{O}}(dε^{-1})}$ which was established for strongly convex potentials in terms of $ε$ dependency, but we show that the same rate is achievable for a wider class of potentials that are degenerately convex at infinity. The growth rate $α$ starts to have an effect on the established rate in high dimensions where $d$ is large; furthermore, it recovers the best-known dimension dependency when the tail growth of the potential is quadratic, i.e. ${α= 2}$, in the current setup. Our framework allows for finite perturbations, and any order of smoothness ${β\in(0,1]}$; consequently, our results are applicable to a wide class of non-convex potentials that are weakly smooth and exhibit at least linear tail growth.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.PR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-05-27T00:26:20Z</published>
+    <arxiv:comment>51 pages, 2 figures</arxiv:comment>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Murat A. Erdogdu</name>
+    </author>
+    <author>
+      <name>Rasa Hosseinzadeh</name>
+    </author>
+  </entry>
+</feed>

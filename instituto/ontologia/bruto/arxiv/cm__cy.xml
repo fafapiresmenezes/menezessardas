@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/Pl0UKI5L9b3WO5h8gXsv6rzXFoY</id>
+  <title>arXiv Query: search_query=cat:cond-mat* AND cat:cs.CY&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:49:42Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cond-mat*+AND+cat:cs.CY&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>42</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2303.01007v2</id>
+    <title>Hierarchical cycle-tree packing model for $K$-core attack problem</title>
+    <updated>2023-12-09T07:16:48Z</updated>
+    <link href="https://arxiv.org/abs/2303.01007v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2303.01007v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The $K$-core of a graph is the unique maximum subgraph within which each vertex connects to $K$ or more other vertices. The optimal $K$-core attack problem asks to delete the minimum number of vertices from the $K$-core to induce its complete collapse. A hierarchical cycle-tree packing model is introduced here for this challenging combinatorial optimization problem. We convert the temporally long-range correlated $K$-core pruning dynamics into locally tree-like static patterns and analyze this model through the replica-symmetric cavity method of statistical physics. A set of coarse-grained belief propagation equations are derived to predict single vertex marginal probabilities efficiently. The associated hierarchical cycle-tree guided attack ({\tt hCTGA}) algorithm is able to construct nearly optimal attack solutions for regular random graphs and Erdös-Rényi random graphs. Our cycle-tree packing model may also be helpful for constructing optimal initial conditions for other irreversible dynamical processes on sparse random graphs.</summary>
+    <category term="cond-mat.dis-nn" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.stat-mech" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-03-02T06:47:33Z</published>
+    <arxiv:comment>25 pages, 8 figures</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.dis-nn"/>
+    <arxiv:journal_ref>Journal of Statistical Physics 190, 200 (2023)</arxiv:journal_ref>
+    <author>
+      <name>Jianwen Zhou</name>
+    </author>
+    <author>
+      <name>Hai-Jun Zhou</name>
+    </author>
+    <arxiv:doi>10.1007/s10955-023-03210-7</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/s10955-023-03210-7" title="doi"/>
+  </entry>
+</feed>

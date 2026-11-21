@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/DBzouPzSxTNfO2EhtICuXMivXY8</id>
+  <title>arXiv Query: search_query=cat:math.* AND cat:q-bio.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:48:07Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:math.*+AND+cat:q-bio.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>5422</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2007.03208v1</id>
+    <title>A Topological Approach to Inferring the Intrinsic Dimension of Convex Sensing Data</title>
+    <updated>2020-07-07T05:35:23Z</updated>
+    <link href="https://arxiv.org/abs/2007.03208v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2007.03208v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We consider a common measurement paradigm, where an unknown subset of an affine space is measured by unknown continuous quasi-convex functions. Given the measurement data, can one determine the dimension of this space? In this paper, we develop a method for inferring the intrinsic dimension of the data from measurements by quasi-convex functions, under natural generic assumptions.
+  The dimension inference problem depends only on discrete data of the ordering of the measured points of space, induced by the sensor functions. We introduce a construction of a filtration of Dowker complexes, associated to measurements by quasi-convex functions. Topological features of these complexes are then used to infer the intrinsic dimension. We prove convergence theorems that guarantee obtaining the correct intrinsic dimension in the limit of large data, under natural generic assumptions. We also illustrate the usability of this method in simulations.</summary>
+    <category term="math.AT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.NC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-07-07T05:35:23Z</published>
+    <arxiv:primary_category term="math.AT"/>
+    <author>
+      <name>Min-Chun Wu</name>
+    </author>
+    <author>
+      <name>Vladimir Itskov</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/Ksr8ABMk3jBQsNrBDsCR+4Z4GkU</id>
+  <title>arXiv Query: search_query=cat:cond-mat* AND cat:quant-ph&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:49:04Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cond-mat*+AND+cat:quant-ph&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>46850</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1905.00088v2</id>
+    <title>Ballistic transport and boundary resistances in inhomogeneous quantum spin chains</title>
+    <updated>2019-10-24T10:01:41Z</updated>
+    <link href="https://arxiv.org/abs/1905.00088v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1905.00088v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Transport phenomena are central to physics, and transport in the many-body and fully-quantum regime is attracting an increasing amount of attention. It has been recently revealed that some quantum spin chains support ballistic transport of excitations at all energies. However, when joining two semi-infinite ballistic parts, such as the XX and XXZ spin-1/2 models, our understanding suddenly becomes less established. Employing a matrix-product-state ansatz of the wavefunction, we study the relaxation dynamics in this latter case. Here we show that it takes place inside a light cone, within which two qualitatively different regions coexist: an inner one with a strong tendency towards thermalization, and an outer one supporting ballistic transport. We comment on the possibility that even at infinite time the system supports stationary currents and displays a non-zero Kapitza boundary resistance. Our study paves the way to the analysis of the interplay between transport, integrability, and local defects.</summary>
+    <category term="cond-mat.stat-mech" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.dis-nn" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.quant-gas" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.str-el" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-04-30T20:08:57Z</published>
+    <arxiv:comment>15 pages, 8 figures</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.stat-mech"/>
+    <arxiv:journal_ref>Nature Communications 10, 4820 (2019)</arxiv:journal_ref>
+    <author>
+      <name>Alberto Biella</name>
+    </author>
+    <author>
+      <name>Mario Collura</name>
+    </author>
+    <author>
+      <name>Davide Rossini</name>
+    </author>
+    <author>
+      <name>Andrea De Luca</name>
+    </author>
+    <author>
+      <name>Leonardo Mazza</name>
+    </author>
+    <arxiv:doi>10.1038/s41467-019-12784-4</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1038/s41467-019-12784-4" title="doi"/>
+  </entry>
+</feed>

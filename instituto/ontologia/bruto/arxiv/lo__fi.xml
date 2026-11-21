@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/w8VS3NvefcuWA/m572yC/cr9De0</id>
+  <title>arXiv Query: search_query=cat:cs.LO AND cat:q-fin.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:52:03Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.LO+AND+cat:q-fin.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>12</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1907.07885v1</id>
+    <title>Formal verification of trading in financial markets</title>
+    <updated>2019-07-18T05:50:29Z</updated>
+    <link href="https://arxiv.org/abs/1907.07885v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1907.07885v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We introduce a formal framework for analyzing trades in financial markets. An exchange is where multiple buyers and sellers participate to trade. These days, all big exchanges use computer algorithms that implement double sided auctions to match buy and sell requests and these algorithms must abide by certain regulatory guidelines. For example, market regulators enforce that a matching produced by exchanges should be \emph{fair}, \emph{uniform} and \emph{individual rational}. To verify these properties of trades, we first formally define these notions in a theorem prover and then give formal proofs of relevant results on matchings. Finally, we use this framework to verify properties of two important classes of double sided auctions. All the definitions and results presented in this paper are completely formalised in the Coq proof assistant without adding any additional axioms to it.</summary>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DS" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.FL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.GT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.TR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-07-18T05:50:29Z</published>
+    <arxiv:comment>Preprint of 12 pages in lipicsv2016</arxiv:comment>
+    <arxiv:primary_category term="cs.LO"/>
+    <author>
+      <name>Suneel Sarswat</name>
+    </author>
+    <author>
+      <name>Abhishek Kr Singh</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/WnR2F1h7deYYa5IwcrmLqlbrgv8</id>
+  <title>arXiv Query: search_query=cat:q-fin.* AND cat:eess.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:52:57Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:q-fin.*+AND+cat:eess.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>149</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2003.04938v5</id>
+    <title>A Mean-Field Game Approach to Equilibrium Pricing in Solar Renewable Energy Certificate Markets</title>
+    <updated>2021-08-09T21:19:22Z</updated>
+    <link href="https://arxiv.org/abs/2003.04938v5" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2003.04938v5" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Solar Renewable Energy Certificate (SREC) markets are a market-based system that incentivizes solar energy generation. A regulatory body imposes a lower bound on the amount of energy each regulated firm must generate via solar means, providing them with a tradeable certificate for each MWh generated. Firms seek to navigate the market optimally by modulating their SREC generation and trading rates. As such, the SREC market can be viewed as a stochastic game, where agents interact through the SREC price. We study this stochastic game by solving the mean-field game (MFG) limit with sub-populations of heterogeneous agents. Market participants optimize costs accounting for trading frictions, cost of generation, non-linear non-compliance costs, and generation uncertainty. Moreover, we endogenize SREC price through market clearing. We characterize firms' optimal controls as the solution of McKean-Vlasov (MV) FBSDEs and determine the equilibrium SREC price. We establish the existence and uniqueness of a solution to this MV-FBSDE, and prove that the MFG strategies form an $ε$-Nash equilibrium for the finite player game. Finally, we develop a numerical scheme for solving the MV-FBSDEs and conduct a simulation study.</summary>
+    <category term="q-fin.MF" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.TH" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.TR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-03-10T19:23:22Z</published>
+    <arxiv:comment>40 pages, 8 figures</arxiv:comment>
+    <arxiv:primary_category term="q-fin.MF"/>
+    <author>
+      <name>Arvind Shrivats</name>
+    </author>
+    <author>
+      <name>Dena Firoozi</name>
+    </author>
+    <author>
+      <name>Sebastian Jaimungal</name>
+    </author>
+  </entry>
+</feed>

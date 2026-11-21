@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/Yi8zTVMCvFr4kQZCav9PEcoCiqc</id>
+  <title>arXiv Query: search_query=cat:cs.CR AND cat:cs.CY&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:50:54Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.CR+AND+cat:cs.CY&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>2298</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1904.13093v1</id>
+    <title>Please, do not decentralize the Internet with (permissionless) blockchains!</title>
+    <updated>2019-04-30T07:59:05Z</updated>
+    <link href="https://arxiv.org/abs/1904.13093v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1904.13093v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The old mantra of decentralizing the Internet is coming again with fanfare, this time around the blockchain technology hype. We have already seen a technology supposed to change the nature of the Internet: peer-to-peer. The reality is that peer-to-peer naming systems failed, peer-to-peer social networks failed, and yes, peer-to-peer storage failed as well. In this paper, we will review the research on distributed systems in the last few years to identify the limits of open peer-to-peer networks. We will address issues like system complexity, security and frailty, instability and performance. We will show how many of the aforementioned problems also apply to the recent breed of permissionless blockchain networks. The applicability of such systems to mature industrial applications is undermined by the same properties that make them so interesting for a libertarian audience: namely, their openness, their pseudo-anonymity and their unregulated cryptocurrencies. As such, we argue that permissionless blockchain networks are unsuitable to be the substrate for a decentralized Internet. Yet, there is still hope for more decentralization, albeit in a form somewhat limited with respect to the libertarian view of decentralized Internet: in cooperation rather than in competition with the superpowerful datacenters that dominate the world today. This is derived from the recent surge in interest in byzantine fault tolerance and permissioned blockchains, which opens the door to a world where use of trusted third parties is not the only way to arbitrate an ensemble of entities. The ability of establish trust through permissioned blockchains enables to move the control from the datacenters to the edge, truly realizing the promises of edge-centric computing.</summary>
+    <category term="cs.DC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-04-30T07:59:05Z</published>
+    <arxiv:comment>11 pages, 1 figure, ICDCS 2019</arxiv:comment>
+    <arxiv:primary_category term="cs.DC"/>
+    <author>
+      <name>Pedro Garcia Lopez</name>
+    </author>
+    <author>
+      <name>Alberto Montresor</name>
+    </author>
+    <author>
+      <name>Anwitaman Datta</name>
+    </author>
+  </entry>
+</feed>

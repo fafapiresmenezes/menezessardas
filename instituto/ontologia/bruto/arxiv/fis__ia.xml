@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/TsTdjGdfHPEhdhmQzV8f29nsNC0</id>
+  <title>arXiv Query: search_query=cat:physics.* AND cat:cs.AI&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:48:30Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:physics.*+AND+cat:cs.AI&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>2653</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2312.07102v1</id>
+    <title>Calibration-free quantitative phase imaging in multi-core fiber endoscopes using end-to-end deep learning</title>
+    <updated>2023-12-12T09:30:12Z</updated>
+    <link href="https://arxiv.org/abs/2312.07102v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2312.07102v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Quantitative phase imaging (QPI) through multi-core fibers (MCFs) has been an emerging in vivo label-free endoscopic imaging modality with minimal invasiveness. However, the computational demands of conventional iterative phase retrieval algorithms have limited their real-time imaging potential. We demonstrate a learning-based MCF phase imaging method, that significantly reduced the phase reconstruction time to 5.5 ms, enabling video-rate imaging at 181 fps. Moreover, we introduce an innovative optical system that automatically generated the first open-source dataset tailored for MCF phase imaging, comprising 50,176 paired speckle and phase images. Our trained deep neural network (DNN) demonstrates robust phase reconstruction performance in experiments with a mean fidelity of up to 99.8\%. Such an efficient fiber phase imaging approach can broaden the applications of QPI in hard-to-reach areas.</summary>
+    <category term="physics.optics" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.bio-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.comp-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-12-12T09:30:12Z</published>
+    <arxiv:comment>5 pages. 5 figures</arxiv:comment>
+    <arxiv:primary_category term="physics.optics"/>
+    <author>
+      <name>Jiawei Sun</name>
+    </author>
+    <author>
+      <name>Bin Zhao</name>
+    </author>
+    <author>
+      <name>Dong Wang</name>
+    </author>
+    <author>
+      <name>Zhigang Wang</name>
+    </author>
+    <author>
+      <name>Jie Zhang</name>
+    </author>
+    <author>
+      <name>Nektarios Koukourakis</name>
+    </author>
+    <author>
+      <name>Juergen W. Czarske</name>
+    </author>
+    <author>
+      <name>Xuelong Li</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/MCZWoUpDxX/MXdH9a8JwGwGnNlg</id>
+  <title>arXiv Query: search_query=cat:econ.* AND cat:q-bio.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:52:41Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:econ.*+AND+cat:q-bio.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>139</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2309.02323v1</id>
+    <title>Projections of Economic Impacts of Climate Change on Marine Protected Areas: Palau, the Great Barrier Reef, and the Bering Sea</title>
+    <updated>2023-09-05T15:42:04Z</updated>
+    <link href="https://arxiv.org/abs/2309.02323v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2309.02323v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Climate change substantially impacts ecological systems. Marine species are shifting their distribution because of climate change towards colder waters, potentially compromising the benefits of currently established Marine Protected Areas (MPAs). Therefore, we demonstrate how three case study regions will be impacted by warming ocean waters to prepare stakeholders to understand how the fisheries around the MPAs is predicted to change. We chose the case studies to focus on large scale MPAs in i) a cold, polar region, ii) a tropical region near the equator, and iii) a tropical region farther from the equator. We quantify the biological impacts of shifts in species distribution due to climate change for fishing communities that depend on the Palau National Marine Sanctuary, the Great Barrier Reef Marine National Park Zone, and the North Bering Sea Research Area MPAs. We find that fisheries sectors will be impacted differently in different regions and show that all three regions can be supported by this methodology for decision making that joins sector income and species diversity.</summary>
+    <category term="q-bio.PE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.QM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-09-05T15:42:04Z</published>
+    <arxiv:primary_category term="q-bio.PE"/>
+    <author>
+      <name>Talya ten Brink</name>
+    </author>
+  </entry>
+</feed>

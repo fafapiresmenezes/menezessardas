@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/PBlXzvp3Kz76bxIc+sqdrzNNRRM</id>
+  <title>arXiv Query: search_query=cat:stat.* AND cat:q-bio.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:52:26Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:stat.*+AND+cat:q-bio.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>4406</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2006.05581v2</id>
+    <title>Semiparametric Bayesian Inference for the Transmission Dynamics of COVID-19 with a State-Space Model</title>
+    <updated>2020-07-02T21:00:15Z</updated>
+    <link href="https://arxiv.org/abs/2006.05581v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2006.05581v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The outbreak of Coronavirus Disease 2019 (COVID-19) is an ongoing pandemic affecting over 200 countries and regions. Inference about the transmission dynamics of COVID-19 can provide important insights into the speed of disease spread and the effects of mitigation policies. We develop a novel Bayesian approach to such inference based on a probabilistic compartmental model using data of daily confirmed COVID-19 cases. In particular, we consider a probabilistic extension of the classical susceptible-infectious-recovered model, which takes into account undocumented infections and allows the epidemiological parameters to vary over time. We estimate the disease transmission rate via a Gaussian process prior, which captures nonlinear changes over time without the need of specific parametric assumptions. We utilize a parallel-tempering Markov chain Monte Carlo algorithm to efficiently sample from the highly correlated posterior space. Predictions for future observations are done by sampling from their posterior predictive distributions. Performance of the proposed approach is assessed using simulated datasets. Finally, our approach is applied to COVID-19 data from four states of the United States: Washington, New York, California, and Illinois. An R package BaySIR is made available at https://github.com/tianjianzhou/BaySIR for the public to conduct independent analysis or reproduce the results in this paper.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.PE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-06-10T00:46:41Z</published>
+    <arxiv:primary_category term="stat.ME"/>
+    <author>
+      <name>Tianjian Zhou</name>
+    </author>
+    <author>
+      <name>Yuan Ji</name>
+    </author>
+  </entry>
+</feed>

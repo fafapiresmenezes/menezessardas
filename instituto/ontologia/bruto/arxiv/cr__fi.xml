@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/UQJYquLPGGdujKAgkXucX/gJopM</id>
+  <title>arXiv Query: search_query=cat:cs.CR AND cat:q-fin.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:50:43Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.CR+AND+cat:q-fin.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>174</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2311.10717v1</id>
+    <title>Arguably Adequate Aqueduct Algorithm: Crossing A Bridge-Less Block-Chain Chasm</title>
+    <updated>2023-09-12T03:24:57Z</updated>
+    <link href="https://arxiv.org/abs/2311.10717v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2311.10717v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We consider the problem of being a cross-chain wealth management platform with deposits, redemptions and investment assets across multiple networks. We discuss the need for blockchain bridges to facilitates fund flows across platforms. We point out several issues with existing bridges. We develop an algorithm - tailored to overcome current constraints - that dynamically changes the utilization of bridge capacities and hence the amounts to be transferred across networks. We illustrate several scenarios using numerical simulations.</summary>
+    <category term="q-fin.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.CP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-09-12T03:24:57Z</published>
+    <arxiv:primary_category term="q-fin.GN"/>
+    <arxiv:journal_ref>Finance Research Letters, September 2023, 104421</arxiv:journal_ref>
+    <author>
+      <name>Ravi Kashyap</name>
+    </author>
+    <arxiv:doi>10.1016/j.frl.2023.104421</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.frl.2023.104421" title="doi"/>
+  </entry>
+</feed>

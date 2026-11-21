@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/6sO6wMmSk0TldT7HSt7/u1eaanY</id>
+  <title>arXiv Query: search_query=cat:cs.LO AND cat:eess.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:52:11Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.LO+AND+cat:eess.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>405</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2106.13083v1</id>
+    <title>A Declarative Goal-oriented Framework for Smart Environments with LPaaS</title>
+    <updated>2021-06-18T14:03:20Z</updated>
+    <link href="https://arxiv.org/abs/2106.13083v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2106.13083v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Smart environments powered by the Internet of Things aim at improving our daily lives by automatically tuning ambient parameters (e.g. temperature, interior light) and by achieving energy savings through self-managing cyber-physical systems. Commercial solutions, however, only permit setting simple target goals on those parameters and do not consider mediating conflicting goals among different users and/or system administrators, and feature limited compatibility across different IoT verticals. In this article, we propose a declarative framework to represent smart environments, user-set goals and customisable mediation policies to reconcile contrasting goals encompassing multiple IoT systems. An open-source Prolog prototype of the framework is showcased over two lifelike motivating examples.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-06-18T14:03:20Z</published>
+    <arxiv:primary_category term="eess.SP"/>
+    <arxiv:journal_ref>CEUR Workshop Proceedings Volume 3002, Pages 143 - 157</arxiv:journal_ref>
+    <author>
+      <name>Giuseppe Bisicchia</name>
+    </author>
+    <author>
+      <name>Stefano Forti</name>
+    </author>
+    <author>
+      <name>Antonio Brogi</name>
+    </author>
+  </entry>
+</feed>
