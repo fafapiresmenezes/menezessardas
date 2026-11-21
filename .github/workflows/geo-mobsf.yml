@@ -1,0 +1,126 @@
+# R8c: roda o MobSF (Mobile Security Framework) sobre o APK do "THEYE Geo".
+#
+# POR QUE SEPARADO do fluxo que monta o APK: o MobSF baixa uma imagem grande e leva alguns
+# minutos. Pendurado em cada mudança do geo, atrasaria toda a frente para repetir um resultado
+# que só muda quando o pacote muda de verdade. Então roda por semana e quando alguém pedir.
+#
+# POR QUE AQUI e não na máquina de desenvolvimento: aquela máquina não alcança dl.google.com,
+# de onde vem o SDK do Android, então não monta APK nenhum. O runner alcança.
+#
+# O QUE ELE ACRESCENTA: as nossas provas olham o manifesto e o código que escrevemos. O MobSF
+# olha o que está DENTRO do pacote montado — assinatura, bibliotecas nativas, strings e segredos
+# embutidos, o que o código compilado chama de fato. É uma segunda opinião que não foi escrita
+# por quem escreveu o app, e é o segundo item que a régua declara como o que falta na dimensão 4.
+name: "THEYE Geo: MobSF sobre o APK"
+on:
+  workflow_dispatch:
+  schedule:
+    # Segunda-feira, 05:20 UTC. Fora do horário em que as frentes mergeiam.
+    - cron: '20 5 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  mobsf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Preparar o SDK do Android
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
+
+      - name: Instalar as dependências
+        run: npm ci
+
+      - name: Montar o site
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: npm run build
+
+      - name: Copiar o site para dentro do app
+        run: npx cap sync android
+
+      - name: Montar o APK
+        run: ./gradlew --no-daemon assembleDebug
+        working-directory: android
+
+      # A chave da interface do MobSF é gerada aqui e vive só dentro desta rodada: o MobSF sobe
+      # na própria máquina da rodada, ninguém de fora o alcança, e a máquina é destruída no fim.
+      # Nenhuma credencial nossa entra nisso.
+      - name: Subir o MobSF
+        run: |
+          echo "MOBSF_CHAVE=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
+
+      - name: Rodar o MobSF e pegar o boletim
+        env:
+          APK: android/app/build/outputs/apk/debug/app-debug.apk
+        run: |
+          set -euo pipefail
+          docker run --rm -d --name mobsf \
+            -p 8000:8000 \
+            -e MOBSF_API_KEY="$MOBSF_CHAVE" \
+            opensecurity/mobile-security-framework-mobsf:v4.6.4
+
+          echo "Esperando o MobSF responder..."
+          for i in $(seq 1 60); do
+            if curl -sf -o /dev/null http://localhost:8000/api_docs; then
+              echo "respondeu na tentativa $i"
+              break
+            fi
+            if [ "$i" = "60" ]; then
+              echo "o MobSF não respondeu em 5 minutos; registro do contêiner abaixo:"
+              docker logs mobsf | tail -40
+              exit 1
+            fi
+            sleep 5
+          done
+
+          curl -sS -X POST http://localhost:8000/api/v1/upload \
+            -H "Authorization: $MOBSF_CHAVE" \
+            -F "file=@$APK;type=application/vnd.android.package-archive" \
+            -o envio.json
+          cat envio.json
+          HASH=$(python3 -c "import json;print(json.load(open('envio.json'))['hash'])")
+
+          curl -sS -X POST http://localhost:8000/api/v1/scan \
+            -H "Authorization: $MOBSF_CHAVE" \
+            -d "scan_type=apk&hash=$HASH&file_name=app-debug.apk" \
+            -o relatorio-mobsf.json
+
+          curl -sS -X POST http://localhost:8000/api/v1/scorecard \
+            -H "Authorization: $MOBSF_CHAVE" \
+            -d "hash=$HASH" \
+            -o boletim-mobsf.json
+
+          docker logs mobsf | tail -20 || true
+          docker stop mobsf || true
+
+      - name: Guardar os boletins para leitura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: theye-geo-mobsf
+          path: |
+            boletim-mobsf.json
+            relatorio-mobsf.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      # A decisão fica num script versionado, e não numa linha de fluxo: é a lista do que é
+      # esperado numa montagem de depuração, cada item com o motivo e com o que o encerra.
+      - name: Julgar o boletim
+        run: node scripts/geo/avaliar-mobsf.mjs boletim-mobsf.json
