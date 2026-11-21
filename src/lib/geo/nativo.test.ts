@@ -93,4 +93,16 @@ describe('o manifesto do Android não deixa os dados saírem do aparelho', () =>
   it('só a tela de abrir é alcançável de fora do app', () => {
     expect((manifesto.match(/android:exported="true"/g) ?? []).length).toBe(1)
   })
+
+  it('o serviço de gravação do plugin é fechado para os outros aplicativos', () => {
+    // O plugin declara esse serviço alcançável de fora, e a junção de manifestos do Gradle
+    // mantinha isso: qualquer outro app instalado podia iniciar ou parar a gravação da posição.
+    // Foi achado conferindo o APK montado (scripts/geo/conferir-apk.mjs), não este arquivo.
+    const bloco = /<service[^>]*BackgroundGeolocationService[\s\S]*?\/>/.exec(manifesto)?.[0]
+    expect(bloco).toBeTruthy()
+    expect(bloco).toContain('android:exported="false"')
+    // Sem o tools:replace a linha do plugin vence a nossa e o fecho não acontece.
+    expect(bloco).toContain('tools:replace="android:exported"')
+    expect(manifesto).toContain('xmlns:tools="http://schemas.android.com/tools"')
+  })
 })

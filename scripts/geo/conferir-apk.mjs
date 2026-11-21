@@ -54,27 +54,35 @@ const ok = []
 const prova = (promessa, condicao, detalhe) =>
   condicao ? ok.push(promessa) : quebrou.push(`${promessa}${detalhe ? ` — ${detalhe}` : ''}`)
 
+// Como o aapt2 imprime de verdade (conferido no log da rodada 44874228071): o nome do atributo
+// vem com a URI inteira do xmlns, e booleano sai como a palavra "true" ou "false".
+//   A: http://schemas.android.com/apk/res/android:allowBackup(0x01010280)=false
+const atributo = nome => new RegExp(`android:${nome}\\(0x[0-9a-f]+\\)=(\\S+)`)
+const ler = nome => {
+  const m = atributo(nome).exec(arvore)
+  return m ? m[1] : null
+}
+
 // --- 1. a cópia automática do Android está desligada -------------------------------------
-// No manifesto compilado o booleano aparece como (type 0x12)0x0 (falso) ou 0xffffffff (verdadeiro).
-const allowBackup = /android:allowBackup\(0x[0-9a-f]+\)=\(type 0x12\)(0x[0-9a-f]+)/.exec(arvore)
+const allowBackup = ler('allowBackup')
 prova('cópia para a nuvem desligada (allowBackup)',
-  allowBackup !== null && allowBackup[1] === '0x0',
-  allowBackup === null ? 'o atributo não está no manifesto compilado' : `veio ${allowBackup[1]}`)
+  allowBackup === 'false',
+  allowBackup === null ? 'o atributo não está no manifesto compilado' : `veio ${allowBackup}`)
 
 // --- 2. nem a troca de celular leva os dados (Android 12+) --------------------------------
 prova('troca de celular não leva dados (dataExtractionRules)',
-  /android:dataExtractionRules\(0x[0-9a-f]+\)=@0x[0-9a-f]+/.test(arvore),
+  /^@0x[0-9a-f]+$/.test(ler('dataExtractionRules') || ''),
   'o atributo não está no manifesto compilado')
 
 // --- 3. nenhuma conexão em texto claro ----------------------------------------------------
 prova('nenhuma conexão em texto claro (networkSecurityConfig)',
-  /android:networkSecurityConfig\(0x[0-9a-f]+\)=@0x[0-9a-f]+/.test(arvore),
+  /^@0x[0-9a-f]+$/.test(ler('networkSecurityConfig') || ''),
   'o atributo não está no manifesto compilado')
 // usesCleartextTraffic, se vier de algum plugin, não pode vir ligado.
-const cleartext = /android:usesCleartextTraffic\(0x[0-9a-f]+\)=\(type 0x12\)(0x[0-9a-f]+)/.exec(arvore)
+const cleartext = ler('usesCleartextTraffic')
 prova('usesCleartextTraffic não ligado por nenhum plugin',
-  cleartext === null || cleartext[1] === '0x0',
-  cleartext ? `algum manifesto ligou (veio ${cleartext[1]})` : '')
+  cleartext === null || cleartext === 'false',
+  `algum manifesto ligou (veio ${cleartext})`)
 
 // --- 4. só as permissões que este app precisa --------------------------------------------
 // O cracha lista as permissões DEPOIS do merge: é aqui que a permissão de um plugin apareceria.
@@ -113,16 +121,51 @@ prova('não pede a localização "sempre" (ACCESS_BACKGROUND_LOCATION)',
   !pedidas.includes('android.permission.ACCESS_BACKGROUND_LOCATION'),
   'a permissão entrou no APK')
 
-// --- 5. só a tela de abrir é alcançável de fora do app -----------------------------------
-const exportados = (arvore.match(/android:exported\(0x[0-9a-f]+\)=\(type 0x12\)0xffffffff/g) || []).length
-prova('só um componente alcançável de fora do app',
-  exportados === 1,
-  `o APK tem ${exportados} componentes exportados`)
+// --- 5. quem é alcançável de fora do app, por NOME ---------------------------------------
+// Contar não serve: uma contagem certa com os componentes trocados passaria igual. Então aqui
+// cada componente exposto é identificado pelo nome e tem de estar no registro abaixo.
+const EXPOSTOS_PERMITIDOS = new Map([
+  ['club.theye.geo.MainActivity',
+   'a tela de abrir; precisa ser alcançável para o ícone do app funcionar'],
+  ['androidx.profileinstaller.ProfileInstallReceiver',
+   'do AndroidX; exposto mas exigindo a permissão android.permission.DUMP, que só o sistema e o shell têm'],
+])
+
+function componentesExpostos(texto) {
+  const achados = []
+  let atual = null
+  for (const linha of texto.split('\n')) {
+    const abre = /E: (activity|service|receiver|provider) \(line=/.exec(linha)
+    if (abre) {
+      if (atual?.exposto) achados.push(atual)
+      atual = { tipo: abre[1], nome: null, exposto: false, permissao: null }
+      continue
+    }
+    if (!atual) continue
+    const nome = /android:name\(0x01010003\)="([^"]+)"/.exec(linha)
+    if (nome && atual.nome === null) { atual.nome = nome[1]; continue }
+    const exp = /android:exported\(0x[0-9a-f]+\)=(true|false)/.exec(linha)
+    if (exp) { atual.exposto = exp[1] === 'true'; continue }
+    const perm = /android:permission\(0x01010006\)="([^"]+)"/.exec(linha)
+    if (perm) atual.permissao = perm[1]
+  }
+  if (atual?.exposto) achados.push(atual)
+  return achados
+}
+
+const expostos = componentesExpostos(arvore)
+for (const c of expostos) {
+  console.log(`  exposto: ${c.tipo} ${c.nome}${c.permissao ? ` (exige ${c.permissao})` : ''}`)
+}
+const expostosIntrusos = expostos.filter(c => !EXPOSTOS_PERMITIDOS.has(c.nome ?? ''))
+prova('nenhum componente exposto fora do registro',
+  expostosIntrusos.length === 0,
+  `expostos sem motivo escrito: ${expostosIntrusos.map(c => `${c.tipo} ${c.nome}`).join(', ')}`)
 
 // --- 6. depurável: o estado tem de casar com o tipo de montagem --------------------------
 // Numa montagem de publicação, depurável é reprovação de nível 1 do MASVS. Numa de depuração é
 // esperado, e é exatamente o que a régua declara como o que falta para a dimensão 4 chegar a 10.
-const depuravel = /^application-debuggable$/m.test(cracha)
+const depuravel = /^application-debuggable$/m.test(cracha) || ler('debuggable') === 'true'
 if (tipo === 'release') {
   prova('versão de publicação não é depurável', !depuravel, 'o APK de publicação saiu depurável')
 } else {

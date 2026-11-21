@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
     <!-- Três controles do MASVS escritos aqui de propósito, conferidos por
          src/lib/geo/nativo.test.ts (a prova lê este arquivo):
            allowBackup="false"      — o Android não copia os dados deste app para a nuvem do
@@ -30,6 +31,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- O plugin @capacitor-community/background-geolocation declara o serviço de gravação
+             alcançável de fora do app. Isso foi achado conferindo o APK MONTADO, e não o
+             arquivo-fonte: exposto, qualquer outro aplicativo instalado no celular pode iniciar
+             ou parar o serviço que grava a posição do titular. O serviço é iniciado por este
+             app e por mais ninguém, então nada se perde fechando. tools:replace é o que faz a
+             nossa linha vencer a do plugin na junção dos manifestos. -->
+        <service
+            android:name="com.equimaps.capacitor_background_geolocation.BackgroundGeolocationService"
+            android:exported="false"
+            tools:replace="android:exported" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
