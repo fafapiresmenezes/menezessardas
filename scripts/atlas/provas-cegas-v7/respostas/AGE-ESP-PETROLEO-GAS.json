@@ -1,0 +1,6 @@
+[
+ {
+  "id": "E1",
+  "resposta": "Não fecho ainda. Pela ASME B31.8 (tabela 841.1.6-1, valores a confirmar na edição em vigor, não verificados nesta sessão), o factor F = 0,80 corresponde à Classe de local 1 Divisão 2; na Divisão 1 o factor é 0,72, o que reduz a espessura mínima calculada.\nFalta confirmar: divisão da classe de local, grau do aço (SMYS), diâmetro externo, espessura nominal, pressão de projecto e factores E e T.\nCom esses dados recalculo t = P·D / (2·S·F·E·T) com faixa mínimo–provável–máximo e hipótese por número.\nRascunho para conferência e assinatura do engenheiro responsável; norma citada por número e cláusula, não transcrita."
+ }
+]

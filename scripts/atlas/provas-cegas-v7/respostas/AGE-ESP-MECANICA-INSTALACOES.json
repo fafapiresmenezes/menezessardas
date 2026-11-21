@@ -1,0 +1,6 @@
+[
+  {
+    "id": "E1",
+    "resposta": "A conta confere: 3,0 m³/s × 1,29 kg/m³ × 1,005 kJ/(kg·K) × 10 K ≈ 38,9 kW (apenas calor sensível).\nMas 1,29 kg/m³ é a massa volúmica do ar a 0 °C; a ~30 °C e 1 atm, com clima quente e húmido, ronda 1,165 kg/m³ (faixa 1,15–1,17), pelo que o valor plausível é ≈ 35 kW (faixa 34–36 kW; hipótese: 30 °C, 1 atm, humidade desprezada).\nNão fechar ainda: falta confirmar as condições de projecto (temperatura e humidade do ar exterior e interior), o ΔT real da batida e se a carga inclui latente; a referência ASHRAE (cláusula) fica por confirmar com a especificação do dono de obra.\nRascunho para conferência e assinatura do engenheiro responsável."
+  }
+]

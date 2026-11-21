@@ -4,7 +4,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES } from '@/data/agentesEngenharia'
+import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES, RESULTADO_PROVAS_ERRO_FINO } from '@/data/agentesEngenharia'
 
 vi.mock('@/lib/supabase', () => ({ supabase: { functions: { invoke: vi.fn().mockResolvedValue({ data: null, error: null }) } }, supabaseConfigurado: true }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
@@ -31,7 +31,7 @@ describe('fichas dos agentes de engenharia', () => {
   })
 
   it('nunca escreve o nome do cliente nem palavras da plataforma de direito', () => {
-    const blob = JSON.stringify({ AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES })
+    const blob = JSON.stringify({ AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES, RESULTADO_PROVAS_ERRO_FINO })
     for (const re of PROIBIDAS) expect(blob).not.toMatch(re)
   })
 
@@ -192,6 +192,26 @@ describe('fichas dos agentes de engenharia', () => {
     expect(RESULTADO_PROVAS_INTERFACES.limite).toMatch(/plantados/)
   })
 
+  it('a 7.ª volta separa os agentes e assume os defeitos das nossas perguntas', () => {
+    expect(RESULTADO_PROVAS_ERRO_FINO.volta).toBe(7)
+    expect(RESULTADO_PROVAS_ERRO_FINO.estados).toHaveLength(12)
+    expect(RESULTADO_PROVAS_ERRO_FINO.questoes).toBe(RESULTADO_PROVAS_ERRO_FINO.estados.length)
+    const ids = new Set(AGENTES_ENGENHARIA.map(a => a.id))
+    const porEstado = new Map<string, number>()
+    for (const e of RESULTADO_PROVAS_ERRO_FINO.estados) {
+      expect(ids.has(e.agente)).toBe(true)
+      expect(['nomeou_o_erro', 'objeccao_mais_funda', 'recusou_sem_nomear', 'pergunta_defeituosa', 'disse_que_pode_fechar']).toContain(e.estado)
+      expect(e.rotulo.length).toBeGreaterThan(0)
+      expect(e.nota.length).toBeGreaterThan(20)
+      porEstado.set(e.estado, (porEstado.get(e.estado) ?? 0) + 1)
+    }
+    expect(porEstado.get('disse_que_pode_fechar') ?? 0).toBe(0)
+    expect(porEstado.get('nomeou_o_erro')).toBeGreaterThan(0)
+    expect(porEstado.get('recusou_sem_nomear')).toBeGreaterThan(0)
+    expect(RESULTADO_PROVAS_ERRO_FINO.limite).toMatch(/à mão/)
+    expect(RESULTADO_PROVAS_ERRO_FINO.limite).toMatch(/defeito é nosso/)
+  })
+
   it('toda posição tem nível N1 a N6', () => {
     for (const a of AGENTES_ENGENHARIA.filter(x => x.matriz === 'posicao')) expect(a.nivel).toMatch(/^N[1-6]$/)
   })
@@ -233,6 +253,7 @@ describe('abas novas do quadradinho Engenharia', () => {
     expect(screen.getByTestId('provas-volta4').textContent).toContain('4.ª volta')
     expect(screen.getByTestId('provas-volta5').textContent).toContain('5.ª volta')
     expect(screen.getByTestId('provas-volta6').textContent).toContain('6.ª volta')
+    expect(screen.getByTestId('provas-volta7').textContent).toContain('7.ª volta')
     expect(screen.getByTestId('tabela-provas').querySelectorAll('tbody tr')).toHaveLength(46)
     expect(screen.getByTestId('provas-agentes').textContent).toMatch(/engenheiro habilitado/)
   })
