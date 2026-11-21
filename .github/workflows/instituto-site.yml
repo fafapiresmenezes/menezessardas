@@ -30,7 +30,7 @@ jobs:
         run: node instituto/testes/u17-teste.mjs
       - name: Guardar resultado
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: u17
           path: resultado-u17.json

@@ -22,7 +22,7 @@ jobs:
         run: node instituto/testes/lighthouse-diario.mjs
       - name: Guardar relatórios
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lighthouse
           path: |
