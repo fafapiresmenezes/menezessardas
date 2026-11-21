@@ -57,8 +57,11 @@ describe('Tela de login', () => {
     expect(screen.getByTestId('titulo-do-cartao').textContent).toBe('Entrar em Projetos sociais')
     expect(screen.queryByTestId('ir-entrada-juridica')).toBeNull()
     expect(screen.queryByText(/Plataforma jurídica/)).toBeNull()
-    // Fora da jurídica não há "criar conta": o cadastro pede escritório, que é coisa do jurídico.
-    expect(screen.queryByText('Criar conta')).toBeNull()
+    // Pedido de M (21/11/2026 04h34): cada nicho tem o seu Criar conta, com os clientes DELE na
+    // lista suspensa. Sem cliente cadastrado no segmento, a lista fica vazia e a tela avisa.
+    expect(screen.getByText('Criar conta')).toBeTruthy()
+    fireEvent.click(screen.getByText('Criar conta'))
+    expect(screen.getByTestId('sem-escritorios-do-segmento')).toBeTruthy()
   })
   it('o símbolo do ouro abre a entrada administrativa, centrada e só para administradores', async () => {
     cleanup()
