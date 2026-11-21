@@ -1,14 +1,15 @@
 // R11: as REGRAS que transformam uma medição em nota. Ficam aqui, em código, por um motivo:
 // quem escreve a régua não pode escolher o número depois de ver o resultado.
 //
-// Duas dimensões da régua são medidas pela máquina a cada rodada do CI:
-//   dim. 3 (acessibilidade) — violações do axe-core nas telas da casa /geo
+// Três dimensões da régua são medidas pela máquina a cada rodada do CI:
+//   dim. 2 (desempenho)     — Lighthouse na casa /geo, com rede de celular simulada
+//   dim. 3 (acessibilidade) — violações do axe-core nas telas da casa /geo + índice do Lighthouse
 //   dim. 9 (manutenção)     — fração dos arquivos de lib do geo que têm teste
 // O script scripts/geo/medir-nota.mjs mede, aplica estas regras e COMPARA com o que
 // src/data/geo/nota.ts declara. Se divergir, o CI fica vermelho. Ou seja: a régua não
-// consegue mentir sobre essas duas sem quebrar a obra.
+// consegue mentir sobre essas três sem quebrar a obra.
 //
-// As outras oito continuam escritas à mão, cada uma com a evidência ao lado, e estão
+// As outras sete continuam escritas à mão, cada uma com a evidência ao lado, e estão
 // marcadas como tal no painel. Dizer que são medidas pela máquina seria mentira.
 
 /** De onde vem a nota de cada dimensão. */
@@ -33,6 +34,29 @@ export function notaAcessibilidade(violacoes: number, lighthouse?: number | null
   if (violacoes === 0) return lighthouse != null && lighthouse >= 95 ? 10 : 9
   if (violacoes <= 2) return 7
   if (violacoes <= 5) return 5
+  return 3
+}
+
+/**
+ * Dimensão 2 — desempenho (Core Web Vitals).
+ * O critério de nota 10 da régua é "LCP ≤2,5s · INP ≤200ms · Lighthouse ≥90". O INP só existe
+ * com gente usando a tela, então no laboratório usamos o TBT, que é o substituto que o próprio
+ * Lighthouse recomenda, com o mesmo teto de 200 ms. Exigimos as quatro coisas juntas: nota do
+ * Lighthouse, LCP, TBT e CLS. Faltar uma já derruba, para a nota não sair de uma média gentil.
+ *
+ * Medimos sempre com a rede de celular simulada do Lighthouse (4G lento, processador 4x mais
+ * devagar). Não é o mesmo que um celular de verdade numa rede de verdade, e a régua diz isso
+ * na evidência em vez de esconder.
+ */
+export function notaDesempenho(lighthouse: number | null | undefined, lcpMs: number, tbtMs: number, cls: number): number {
+  const nums = [lighthouse, lcpMs, tbtMs, cls]
+  if (nums.some(v => v == null || !Number.isFinite(v as number) || (v as number) < 0)) return 0
+  const lh = lighthouse as number
+  const bomLcp = lcpMs <= 2500, bomTbt = tbtMs <= 200, bomCls = cls <= 0.1
+  if (lh >= 90 && bomLcp && bomTbt && bomCls) return 10
+  if (lh >= 80 && bomLcp && bomCls) return 8
+  if (lh >= 70 && bomLcp) return 7
+  if (lh >= 50) return 5
   return 3
 }
 
