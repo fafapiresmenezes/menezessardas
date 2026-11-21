@@ -1,0 +1,80 @@
+[
+  {
+    "id": "SAN-01",
+    "resposta": 69.44,
+    "unidade": "L/s",
+    "formula": "Qmed = P x q x R / 86 400 (caudal medio de esgoto: populacao x consumo per capita x coeficiente de retorno, convertido de L/dia para L/s)",
+    "passos": [
+      "Dados: P = 50 000 hab; q = 150 L/(hab.dia); R = 0,80.",
+      "Consumo total = 50 000 x 150 = 7 500 000 L/dia.",
+      "Esgoto produzido = 7 500 000 x 0,80 = 6 000 000 L/dia.",
+      "Conversao: 6 000 000 / 86 400 = 69,44 L/s.",
+      "Faixa: minimo = provavel = maximo = 69,44 L/s (todos os dados foram dados no enunciado; sem incerteza adicional).",
+      "Hipotese: todo o consumo de agua retorna ao esgoto apenas na fraccao R. Norma/fonte de referencia para o coeficiente de retorno nao confirmada no enunciado."
+    ]
+  },
+  {
+    "id": "SAN-02",
+    "resposta": 124.99,
+    "unidade": "L/s",
+    "formula": "Qmax,h = Qmed x K1 x K2 (caudal maximo horario por coeficientes de variacao diaria e horaria)",
+    "passos": [
+      "Dados: Qmed = 69,44 L/s (valor dado); K1 = 1,2; K2 = 1,5.",
+      "Produto dos coeficientes: K1 x K2 = 1,2 x 1,5 = 1,80.",
+      "Qmax,h = 69,44 x 1,80 = 124,99 L/s.",
+      "Faixa: minimo = provavel = maximo = 124,99 L/s, sobre o Qmed dado. Com Qmed nao arredondado (69,444 L/s) resulta 125,00 L/s; a diferenca e de arredondamento.",
+      "Hipotese: K1 e K2 aplicam-se ao caudal medio de esgoto como definidos no enunciado. Valores tipicos de K1 e K2 nao confirmados na norma local."
+    ]
+  },
+  {
+    "id": "SAN-03",
+    "resposta": 12,
+    "unidade": "h",
+    "formula": "TDH = V / Q (tempo de retencao hidraulico = volume util / caudal)",
+    "passos": [
+      "Dados: V = 500 m3; Q = 1 000 m3/dia.",
+      "TDH = 500 / 1 000 = 0,5 dia.",
+      "Conversao: 0,5 x 24 = 12 h.",
+      "Faixa: minimo = provavel = maximo = 12 h (dados do enunciado).",
+      "Hipotese: volume V e o volume util do decantador, e o caudal Q e constante. Nao confirmado se o volume util e o volume total."
+    ]
+  },
+  {
+    "id": "SAN-04",
+    "resposta": 10,
+    "unidade": "m3/m2.dia",
+    "formula": "TAS = Q / A (taxa de escoamento superficial = caudal / area superficial do decantador)",
+    "passos": [
+      "Dados: Q = 1 000 m3/dia; A = 20,0 x 5,0 = 100 m2.",
+      "TAS = 1 000 / 100 = 10 m3/(m2.dia).",
+      "Faixa: minimo = provavel = maximo = 10 m3/(m2.dia) (dados do enunciado).",
+      "Hipotese: a area considerada e a area em planta da zona de decantacao, sem contar zonas de entrada ou saida. Valor limite de projeto na norma local nao confirmado."
+    ]
+  },
+  {
+    "id": "SAN-05",
+    "resposta": 90,
+    "unidade": "%",
+    "formula": "E = (DBO_entrada - DBO_saida) / DBO_entrada x 100",
+    "passos": [
+      "Dados: DBO entrada = 300 mg/L; DBO saida = 30 mg/L.",
+      "Remocao = 300 - 30 = 270 mg/L.",
+      "E = 270 / 300 x 100 = 90 %.",
+      "Faixa: minimo = provavel = maximo = 90 % (dados do enunciado).",
+      "Hipotese: as duas concentracoes referem-se ao mesmo ponto de amostragem e ao mesmo periodo; nao ha correcao por carga hidraulica nem por sedimentos."
+    ]
+  },
+  {
+    "id": "SAN-06",
+    "resposta": 2.0,
+    "unidade": "kg/dia",
+    "formula": "M = C x Q (massa diaria de cloro = dose x caudal; 1 mg/L = 1 g/m3)",
+    "passos": [
+      "Dados: dose = 2,0 mg/L = 2,0 g/m3; Q = 1 000 m3/dia.",
+      "Massa diaria = 2,0 g/m3 x 1 000 m3/dia = 2 000 g/dia.",
+      "Conversao: 2 000 g = 2,0 kg/dia.",
+      "Faixa: minimo = provavel = maximo = 2,0 kg/dia (dados do enunciado).",
+      "Hipotese: a dose e aplicada de forma continua ao caudal total e o cloro e expresso como massa de produto puro. Nao confirmado se a dose se refere a cloro ativo ou a produto comercial."
+    ]
+  }
+]

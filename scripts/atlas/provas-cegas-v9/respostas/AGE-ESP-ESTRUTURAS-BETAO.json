@@ -1,0 +1,6 @@
+[
+ {
+  "id": "C1",
+  "resposta": "Sim, há erros. 1) O valor 0,87 não é uma razão entre efeito das acções e resistência; é fyd = 0,87 fyk, que resulta de γs = 1,15 (EN 1992-1-1, cl. 3.2.7). O critério ULS é E_d/R_d ≤ 1,0 e tem de ser calculado, não fixado.\n2) Recobrimento: para XS1 com classe estrutural S4 (vida útil de 50 anos) e betão C30/37, o Cmin,dur do quadro 4.4N costuma ser 25 mm, não 35 mm; 35 mm sugere outra classe (S6, XS3 ou outro betão). Confirmar vida útil, classe estrutural, classe do betão e o quadro antes de aceitar Cnom = 45 mm (Cmin + Δcdev de 10 mm, cl. 4.4.1.3).\n3) O ponto 2 diz que os coeficientes da norma do contrato estão citados por número e cláusula, mas o extracto não os cita: não cumpre a regra de citação. Definir primeiro qual norma prevalece no contrato FIDIC (EN ou especificação do dono de obra) e assinalar a divergência, se houver.\n4) Estimativa de betão (1.300 / 1.480 / 1.700 m3): a faixa é aceitável, mas falta indicar a origem da quantidade do desenho e se os 5 % de perda já estão no provável; sem isso fica não confirmado.\n5) Os cenários (ponto 4) e o rodapé estão conformes; o cálculo continua a ser rascunho pendente de conferência e assinatura do engenheiro responsável."
+ }
+]

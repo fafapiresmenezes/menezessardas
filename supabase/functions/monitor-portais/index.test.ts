@@ -5,7 +5,8 @@ import { zerar, estado } from '../_testes/supabase-js'
 
 const caixa = fingirDeno({ SUPABASE_URL: 'https://db', SUPABASE_SERVICE_ROLE_KEY: 'k' })
 await import('./index')
-const chamar = (body: unknown = {}) => caixa.handler!(new Request('https://x.functions.supabase.co/monitor-portais', { method: 'POST', body: JSON.stringify(body) }))
+const chamar = (body: unknown = {}, headers: Record<string, string> = { authorization: 'Bearer x.y.z' }) =>
+  caixa.handler!(new Request('https://x.functions.supabase.co/monitor-portais', { method: 'POST', body: JSON.stringify(body), headers }))
 
 const pedidos: string[] = []
 let camara: (termo: string) => Response
@@ -15,10 +16,18 @@ beforeEach(() => {
   camara = () => jsonResp({ dados: [] })
   noticias = () => new Response('<rss></rss>')
   fingirFetch(u => { pedidos.push(u); const q = new URL(u).searchParams; return u.includes('camara.leg.br') ? camara(q.get('keywords')!) : noticias(q.get('q')!) })
-  zerar({ novidades_portais: [] })
+  zerar({ configuracoes: [{ chave: 'cron_segredo', valor: 'segredo' }], novidades_portais: [] })
+  estado.usuario = { id: 'u1' }
 })
 
 describe('monitor-portais', () => {
+  it('exige token de pessoa logada ou o segredo do cron', async () => {
+    estado.usuario = null
+    expect((await chamar({}, {})).status).toBe(401)
+    expect((await chamar({}, { 'x-cron-secret': 'errado' })).status).toBe(401)
+    expect((await chamar({}, { 'x-cron-secret': 'segredo' })).status).toBe(200)
+  })
+
   it('com área informada consulta só os termos dela; sem novidade nada é gravado', async () => {
     const b = await (await chamar({ area: 'trabalhista' })).json()
     expect(pedidos.filter(p => p.includes('camara')).map(p => decodeURIComponent(new URL(p).searchParams.get('keywords')!))).toEqual(['CLT', 'direito do trabalho'])

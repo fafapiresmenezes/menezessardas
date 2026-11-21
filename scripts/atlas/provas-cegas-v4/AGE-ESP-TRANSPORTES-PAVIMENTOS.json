@@ -1,0 +1,10 @@
+[
+ {
+  "id": "TRA-R1",
+  "pergunta": "Que espessura de base devo pôr nesta estrada?",
+  "dados": {
+   "extensao_km": 12.0,
+   "largura_m": 7.0
+  }
+ }
+]

@@ -1,0 +1,6 @@
+[
+ {
+  "id": "E1",
+  "resposta": "Não fecharia: 750 / 2,5 = 300 kPa é a lógica de tensão admissível com fator global, não a verificação da EN 1997-1 (cláusula 6.5.2), que compara Ed com Rd aplicando os coeficientes parciais de resistência do Anexo A (Tabela A.3).\nAntes de qualquer número, falta confirmar se os 750 kPa são característicos, brutos ou líquidos, e se incluem excentricidade e nível freático; sem isso o valor fica não confirmado.\nSe o contrato FIDIC Red Book ou a especificação do dono de obra exigir a verificação por fator global, mostro as duas abordagens e o efeito no resultado, em vez de substituir uma pela outra.\nRascunho para conferência e assinatura do engenheiro responsável; em falta: sondagens, cota de fundação, cargas de cálculo e a norma contratual que prevalece."
+ }
+]

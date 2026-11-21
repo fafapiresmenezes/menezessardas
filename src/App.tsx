@@ -14,6 +14,7 @@ import BoasVindasPage from '@/pages/BoasVindasPage'
 // propósito: importar a lista no App.tsx puxaria o texto das oito páginas para o primeiro acesso.
 const PortalInstitutoPage = lazy(() => import('@/pages/PortalInstitutoPage'))
 const AgentesInstitutoPage = lazy(() => import('@/pages/AgentesInstitutoPage'))
+const GestaoInstitutoPage = lazy(() => import('@/pages/GestaoInstitutoPage'))
 const QualidadePage = lazy(() => import('@/pages/QualidadePage'))
 const FundosInicioPage = lazy(() => import('@/pages/FundosInicioPage'))
 const PortaisInstitutoPage = lazy(() => import('@/pages/PortaisInstitutoPage'))
@@ -448,6 +449,8 @@ function App() {
           path="/instituto"
           element={isAuthenticated ? <SoInstituto><InstitutoPage /></SoInstituto> : <Navigate to="/login" />}
         />
+        {/* Painel de gestão do Instituto inteiro, aberto pelo símbolo do ouro (M, 21/11/2026). */}
+        <Route path="/gestao-instituto" element={isAuthenticated ? <SoInstituto><GestaoInstitutoPage /></SoInstituto> : <Navigate to="/login?ir=%2Fgestao-instituto" />} />
         <Route
           path="/legislacao"
           element={isAuthenticated ? <LegislacaoPage /> : <Navigate to="/login" />}

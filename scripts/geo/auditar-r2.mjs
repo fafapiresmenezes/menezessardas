@@ -1,6 +1,13 @@
 // Auditoria R2 da casa /geo: desempenho + acessibilidade, entrando no cofre e
 // medindo CADA aba por dentro com axe-core. Senha de teste, só em localhost,
 // sobre a própria aplicação. Uso: node scripts/geo/auditar-r2.mjs <baseURL>
+//
+// IMPORTANTE (21/11/2026): o alvo é a BANCADA DE MEDIÇÃO (auditoria/geo, montada por
+// vite.auditoria.config.ts em dist-auditoria), e não o site. Desde 19/11 as telas do Instituto
+// exigem a tranca SoInstituto, e a auditoria, que entrava como visitante, passou a medir a porta
+// do site em vez da casa do geo — media outra coisa e não dizia. A bancada monta os mesmos
+// componentes com o mesmo CSS, sem a tranca. O caminho do visitante até a casa depende de login
+// e NÃO é medido aqui; isso está escrito na régua, na dimensão 3.
 import { chromium } from 'playwright'
 import { readFileSync, writeFileSync, globSync } from 'node:fs'
 
@@ -54,7 +61,8 @@ for (const nome of abas) {
   telas.push(await rodarAxe(`aba:${nome}`))
 }
 
-// 5) As telas abertas da casa (não dependem do cofre): régua de nota, biblioteca (R7) e a
+// 5) As telas da casa que não dependem do cofre (mas dependem da conta, como todas): régua de
+//    nota, biblioteca (R7) e a
 //    medição de precisão em campo (R10).
 for (const [nome, rota] of [['regua-de-nota', '/#/geo/nota'], ['biblioteca', '/#/geo/biblioteca'], ['precisao', '/#/geo/precisao']]) {
   await page.goto(`${base}${rota}`, { waitUntil: 'load', timeout: 60000 })

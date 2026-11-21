@@ -1,0 +1,6 @@
+[
+ {
+  "id": "R1",
+  "resposta": "1. Primário de 40 µm em ambiente costeiro é insuficiente: o sistema para atmosfera C5 (EN ISO 12944-5) tem normalmente espessura total e número de camadas muito superiores; valor exigido a confirmar na especificação do dono de obra (não confirmado).\n2. \"Dentro dos limites\" sem norma e cláusula, sem razão de utilização e sem combinação de cargas não é verificável: indicar a cláusula (ex.: EN 1993-1-1 para encurvadura, a confirmar) e o valor obtido.\n3. 1.480 unidades sem unidade, base de cálculo, hipótese nem faixa (mínimo–provável–máximo): indicar a unidade (kg, m² ou peças) e a hipótese; sem isso, não confirmado.\n4. Retirar a probabilidade de 85%: não há calibração documentada; descrever cenários em vez de prever a conferência.\n5. Retirar \"pronto a entregar\" e incluir \"Rascunho para conferência e assinatura do engenheiro responsável\"; o engenheiro habilitado confere e assina antes de o documento seguir para o fiscal.\n6. Não confirmado: espessura de protecção exigida pelo contrato, norma contratual exacta e valores de utilização."
+ }
+]

@@ -1,0 +1,6 @@
+[
+  {
+    "id": "L1",
+    "resposta": "Sim, há pelo menos um erro de fundo: o extracto mistura a formulação de estados limite (E_d/R_d, à maneira do Eurocode) com o ASME B31.8, que verifica por tensão admissível (SMYS x F x E x T) e não por razão E_d/R_d.\nSe o 0,78 for tensão circunferencial / SMYS, com factor de projecto F = 0,50, o projecto falha (0,78 > 0,50); se for tensão / (F x SMYS), passa. O texto não diz qual, e é esse o ponto a esclarecer antes de entregar.\nO item 2 não tem valores: faltam SMYS, grau do aço, D, t, E, T e pressão de projecto. A equação da espessura dá a espessura, não a tensão admissível; a referência à cláusula 841.1.1 tem de ser confirmada no texto da edição usada.\nA classe de local 3 depende da contagem de edifícios numa sector de referência, com comprimento definido na norma; o número de edifícios e o comprimento da sector não aparecem no extracto. Número de edifícios, cláusula 840.2 e quadro 841.1.6-1 não confirmados; o factor 0,50 só vale se a classe estiver confirmada.\nA faixa 1.300 / 1.480 / 1.700 m tem uma só hipótese declarada (perda de 5 %); não se explica a origem de mínimo e máximo nem se identifica o desenho de quantitativos. Rascunho para conferência e assinatura do engenheiro responsável; não confirmado: edição da norma, valores de entrada, contagem de edifícios."
+  }
+]

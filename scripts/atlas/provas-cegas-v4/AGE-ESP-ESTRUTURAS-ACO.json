@@ -1,0 +1,12 @@
+[
+ {
+  "id": "ACO-R1",
+  "pergunta": "Qual a resistência ao corte desta ligação?",
+  "dados": {
+   "parafusos": 4,
+   "diametro": "M20",
+   "chapa_mm": 12.0,
+   "aco_chapa": "S275"
+  }
+ }
+]

@@ -1,0 +1,87 @@
+[
+  {
+    "id": "BET-01",
+    "resposta": 268.3,
+    "unidade": "kNm",
+    "formula": "EN 1992-1-1 cl. 6.1 (bloco rectangular simplificado, 3.1.7: lambda=0,8, eta=1,0 para fck<=50); equilibrio de forcas x = As*fyd/(0,8*b*fcd); MRd = As*fyd*(d-0,4x)",
+    "passos": [
+      "fcd = alpha_cc*fck/gamma_c = 1,0*30/1,5 = 20,0 MPa (alpha_cc=1,0 assumido; confirmar Anexo Nacional)",
+      "fyd = fyk/gamma_s = 500/1,15 = 434,78 MPa",
+      "Forca de tracao: Fs = As*fyd = 1570*434,78 = 682,6 kN",
+      "Profundidade da linha neutra: x = Fs/(0,8*b*fcd) = 682,6e3/(0,8*300*20) = 142,2 mm",
+      "Verificacao de ductilidade: xi = x/d = 142,2/450 = 0,316 <= 0,45 (limite de cl. 5.6.3 para fck<=50): OK",
+      "Braco do binario: z = d - 0,4x = 450 - 56,9 = 393,1 mm",
+      "MRd = As*fyd*z = 682,6e3 N * 393,1 mm = 268,3e6 N.mm = 268,3 kNm",
+      "Nota: armadura minima (cl. 9.2.1.1) = 204 mm2 < 1570 mm2, cumpre"
+    ]
+  },
+  {
+    "id": "BET-02",
+    "resposta": 88.2,
+    "unidade": "kN",
+    "formula": "EN 1992-1-1 eq. 6.2a/6.2b (cl. 6.2.2): VRd,c = [CRd,c*k*(100*rho_l*fck)^(1/3)]*bw*d >= (vmin)*bw*d; CRd,c = 0,18/gamma_c; k = 1+sqrt(200/d) <= 2; vmin = 0,035*k^(3/2)*fck^(1/2)",
+    "passos": [
+      "CRd,c = 0,18/1,5 = 0,12",
+      "k = 1 + sqrt(200/450) = 1,667 (<= 2,0)",
+      "rho_l = As/(bw*d) = 1570/(300*450) = 0,01163 (<= 0,02)",
+      "100*rho_l*fck = 100*0,01163*30 = 34,89; (34,89)^(1/3) = 3,268",
+      "Termo 1: CRd,c*k*(...)^(1/3) = 0,12*1,667*3,268 = 0,654 MPa",
+      "Limite inferior: vmin = 0,035*1,667^(3/2)*30^(1/2) = 0,412 MPa (inferior ao termo 1; nao governa)",
+      "sigma_cp = 0 (sem esforco axial)",
+      "VRd,c = 0,654 * 300 * 450 = 88,2e3 N = 88,2 kN",
+      "Nota: ordem de grandeza coerente com betao C30/37 em viga de 300 mm; sem armadura transversa a verificacao e de betao sem armadura"
+    ]
+  },
+  {
+    "id": "BET-03",
+    "resposta": 203.6,
+    "unidade": "mm²",
+    "formula": "EN 1992-1-1 eq. 9.1N (cl. 9.2.1.1): As,min = max(0,26*fctm/fyk*bt*d ; 0,0013*bt*d)",
+    "passos": [
+      "fctm para C30/37 = 2,9 MPa (quadro 3.1, cl. 3.1.2; valor tabelado, nao calculado)",
+      "Termo 1: 0,26*2,9/500 * 300*450 = 0,26*2,9/500 * 135 000 = 203,6 mm2",
+      "Termo 2: 0,0013*300*450 = 175,5 mm2",
+      "As,min = max(203,6 ; 175,5) = 203,6 mm2 (arredondado: 204 mm2)"
+    ]
+  },
+  {
+    "id": "BET-04",
+    "resposta": 724.6,
+    "unidade": "mm",
+    "formula": "EN 1992-1-1 eq. 8.3 (cl. 8.4.2): lb,rqd = (phi/4)*(sigma_sd/fbd), com sigma_sd = fyd e fbd = 2,25*eta1*eta2*fctd; fctd = alpha_ct*fctk0,05/gamma_c",
+    "passos": [
+      "fyd = 500/1,15 = 434,78 MPa",
+      "fctk0,05 para C30/37 = 2,0 MPa (quadro 3.1, cl. 3.1.2; valor tabelado)",
+      "fctd = 1,0*2,0/1,5 = 1,333 MPa (alpha_ct = 1,0 assumido)",
+      "fbd = 2,25*1,0*1,0*1,333 = 3,00 MPa",
+      "lb,rqd = (20/4)*434,78/3,00 = 5*144,93 = 724,6 mm",
+      "Nota: e o comprimento de referencia; o comprimento de calculo lbd = alpha_1...alpha_5*lb,rqd, com alpha = 1 (sem gancho nem confinamento) nao foi aplicado"
+    ]
+  },
+  {
+    "id": "BET-05",
+    "resposta": 3245.2,
+    "unidade": "kN",
+    "formula": "Equilibrio da seccao em compressao centrada (EN 1992-1-1 cl. 6.1; cl. 3.1.6 para fcd): NRd = Ac*fcd + As*fyd, com Ac = Ag - As e alpha_cc = 0,85 (dado do enunciado corrigido, coeficiente de longa duracao do anexo nacional)",
+    "passos": [
+      "fcd = 0,85*30/1,5 = 17,0 MPa (alpha_cc = 0,85, valor dado no enunciado corrigido)",
+      "fyd = 434,78 MPa",
+      "Ag = 400*400 = 160 000 mm2; Ac = Ag - As = 160 000 - 1257 = 158 743 mm2",
+      "Parcela do betao: Ac*fcd = 158 743*17,0 = 2 698,6 kN",
+      "Parcela do aco: As*fyd = 1257*434,78 = 546,5 kN",
+      "NRd = 2 698,6 + 546,5 = 3 245,2 kN",
+      "Nota: pilar curto, sem efeitos de 2a ordem nem excentricidade; com Ac = Ag obteria-se 2 720,0 + 546,5 = 3 266,5 kN (diferenca de 0,7%)"
+    ]
+  },
+  {
+    "id": "BET-06",
+    "resposta": 5.0,
+    "unidade": "kN/m²",
+    "formula": "g_k = h * gamma (EN 1991-1-1, quadro A.1: betao armado 25 kN/m3)",
+    "passos": [
+      "h = 0,20 m; gamma = 25 kN/m3",
+      "g_k = 0,20 * 25 = 5,0 kN/m2",
+      "Nota: valor caracteristico do peso proprio; a majoracao (gamma_G = 1,35 em EN 1990 quadro A1.2(B)) nao foi aplicada"
+    ]
+  }
+]

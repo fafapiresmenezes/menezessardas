@@ -1,0 +1,25 @@
+[
+ {
+  "id": "PET-D1",
+  "enunciado": "Conduta de 200 mm de diâmetro interno e 2 000 m de comprimento transporta 0,050 m³/s de petróleo (massa volúmica 850 kg/m³), com factor de atrito de Darcy de 0,018. Qual a perda de pressão?",
+  "dados": {
+   "caudal_m3_s": 0.05,
+   "diametro_m": 0.2,
+   "comprimento_m": 2000.0,
+   "factor_atrito": 0.018,
+   "rho_kg_m3": 850.0
+  },
+  "unidade_esperada": "kPa"
+ },
+ {
+  "id": "PET-D2",
+  "enunciado": "Poço com 2 500 barris por dia de produção bruta, 30 dias de mês e 95% de disponibilidade. Qual a produção do mês em metros cúbicos (1 barril = 0,158987 m³)?",
+  "dados": {
+   "bpd": 2500.0,
+   "dias": 30.0,
+   "disponibilidade": 0.95,
+   "m3_por_barril": 0.158987
+  },
+  "unidade_esperada": "m³"
+ }
+]

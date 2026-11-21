@@ -1,0 +1,7 @@
+[
+  {
+    "id": "AMB-R1",
+    "resposta": "Não é possível fixar a altura da chaminé com os dados dados. Falta o caudal e a temperatura dos gases de escape, a localização da central e os receptores sensíveis próximos. Ordem de grandeza provisória, não confirmada: mínimo 20 m, provável 25 m, máximo 35 m, assumindo caldeira ou turbina a gás de 20 MW sem edifícios altos junto à chaminé. Dados a pedir: caudal de gases (Nm³/h, base seca, referência de O2 aplicável); temperatura de saída (°C); altura e distância dos edifícios vizinhos (m); localização (Angola ou Namíbia); limites de emissão de NOx, SO2 e CO (mg/Nm³).",
+    "justificacao": "A altura depende do caudal, da temperatura de saída, dos edifícios vizinhos e da meteorologia, e a dispersão exige modelação (AERMOD, citado) com o critério da norma local (Decreto 117/20 em Angola; Environmental Management Act 7/2007 na Namíbia; cláusulas a confirmar). A faixa 20–35 m é hipótese não confirmada. Rascunho para conferência e assinatura do engenheiro responsável."
+  }
+]

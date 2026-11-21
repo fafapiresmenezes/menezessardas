@@ -18,6 +18,8 @@ vi.mock('@/lib/supabase', () => ({
 const entrarDemo = vi.fn((e: string, s: string) => e === 'admin@exemplo.com' && s === 'senha123')
 vi.mock('@/lib/authDemo', () => ({ entrarDemo: (e: string, s: string) => entrarDemo(e, s) }))
 vi.mock('@/components/Marca', () => ({ default: () => <div data-testid="marca" /> }))
+let adminInstituto = false
+vi.mock('@/lib/equipe', () => ({ esquecerEscritorio: () => {}, ehInstituto: async () => adminInstituto }))
 const { default: LoginPage } = await import('./LoginPage')
 
 function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathname}</p> }
@@ -46,12 +48,39 @@ describe('Tela de login', () => {
     expect(screen.queryByLabelText('Senha')).toBeNull()
     cleanup(); montar()
     expect(screen.getByTestId('cartao-entrada')).toBeTruthy()
-    // Pedido de M (20/11/2026): cada setor tem o seu próprio login e senha; nenhum quadradinho
-    // manda mais "entrar pela Plataforma jurídica". Então todo segmento abre o cartão de entrada.
+    // Pedido de M (21/11/2026): tudo segmentado. Cada quadradinho abre o seu próprio quadro de
+    // e-mail e senha, com o nome da plataforma, e nunca a entrada da Plataforma jurídica.
     cleanup()
-    render(<MemoryRouter initialEntries={['/login?ir=/engenharia']}><Routes><Route path="/login" element={<LoginPage />} /></Routes></MemoryRouter>)
+    render(<MemoryRouter initialEntries={['/login?ir=/transparencia-social']}><Routes><Route path="/login" element={<LoginPage />} /></Routes></MemoryRouter>)
     expect(screen.getByTestId('cartao-entrada')).toBeTruthy()
+    expect(screen.getByLabelText('Senha')).toBeTruthy()
+    expect(screen.getByTestId('titulo-do-cartao').textContent).toBe('Entrar em Projetos sociais')
     expect(screen.queryByTestId('ir-entrada-juridica')).toBeNull()
+    expect(screen.queryByText(/Plataforma jurídica/)).toBeNull()
+    // Pedido de M (21/11/2026 04h34): cada nicho tem o seu Criar conta, com os clientes DELE na
+    // lista suspensa. Sem cliente cadastrado no segmento, a lista fica vazia e a tela avisa.
+    expect(screen.getByText('Criar conta')).toBeTruthy()
+    fireEvent.click(screen.getByText('Criar conta'))
+    expect(screen.getByTestId('sem-escritorios-do-segmento')).toBeTruthy()
+  })
+  it('o símbolo do ouro abre a entrada administrativa, centrada e só para administradores', async () => {
+    cleanup()
+    const tela = () => render(<MemoryRouter initialEntries={['/login?ir=/gestao-instituto']}><Routes><Route path="/login" element={<LoginPage />} /><Route path="*" element={<Onde />} /></Routes></MemoryRouter>)
+    tela()
+    expect(screen.getByTestId('cabecalho-administracao')).toBeTruthy()
+    expect(screen.getByTestId('titulo-do-cartao').textContent).toBe('Área administrativa')
+    expect(screen.queryByTestId('porta-instituto')).toBeNull()
+    expect(screen.queryByText(/Doações e apoio/)).toBeNull()
+    expect(screen.queryByText('Criar conta')).toBeNull()
+    // Quem não é administrador do Instituto é desconectado e fica nesta tela, com aviso.
+    adminInstituto = false
+    preencher('alguem@exemplo.com', 'segredo123'); fireEvent.click(screen.getByText('Entrar'))
+    expect((await screen.findByRole('alert')).textContent).toContain('só da administração do Instituto')
+    expect(screen.queryByTestId('onde')).toBeNull()
+    // Administrador entra direto no painel de gestão.
+    cleanup(); adminInstituto = true; tela()
+    preencher('m@exemplo.com', 'segredo123'); fireEvent.click(screen.getByText('Entrar'))
+    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/gestao-instituto'))
   })
   beforeEach(() => { cleanup(); configurado = true; nivel = { nextLevel: 'aal1', currentLevel: 'aal1' }; signInWithPassword.mockClear(); signUp.mockClear(); challengeAndVerify.mockClear() })
 

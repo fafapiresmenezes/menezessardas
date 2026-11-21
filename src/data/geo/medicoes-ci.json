@@ -1,22 +1,21 @@
 {
-  "quando": "2026-11-19T03:25:52.799Z",
+  "quando": "2026-11-21T04:43:12.956Z",
   "dimensoes": {
+    "2": {
+      "nota": 10,
+      "valor": "Lighthouse 100; LCP 0.8s; TBT 60ms; CLS 0.000",
+      "como": "Lighthouse com rede de celular simulada na bancada (http://localhost:4180/#/geo)"
+    },
     "3": {
-      "nota": 9,
-      "valor": "0 violações em 12 telas",
+      "nota": 10,
+      "valor": "0 violações em 12 telas; Lighthouse 100",
       "como": "axe-core nas telas da casa /geo (scripts/geo/auditar-r2.mjs)"
     },
     "9": {
-      "nota": 7,
-      "valor": "9 de 14 arquivos de lib com teste",
+      "nota": 10,
+      "valor": "15 de 15 arquivos de lib com teste",
       "como": "um arquivo de teste ao lado de cada src/lib/geo/*.ts",
-      "sem_teste": [
-        "calculo.ts",
-        "fichaPdf.ts",
-        "fontes.ts",
-        "grafo.ts",
-        "ollama.ts"
-      ]
+      "sem_teste": []
     }
   }
 }

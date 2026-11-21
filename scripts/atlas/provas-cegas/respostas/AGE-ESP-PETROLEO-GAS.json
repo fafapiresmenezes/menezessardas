@@ -1,0 +1,78 @@
+[
+  {
+    "id": "PET-01",
+    "resposta": 8.54,
+    "unidade": "mm",
+    "formula": "t = P·D / (2·SMYS·F·E·T), com E = 1,0 e T = 1,0 (fórmula de Barlow, ASME B31.4/B31.8; cláusula não confirmada)",
+    "passos": [
+      "Hipóteses: D = diâmetro externo nominal (508 mm); E = 1,0 (tubo sem costura/soldadura não especificada); T = 1,0 (temperatura normal); sem sobre-espessura de corrosão.",
+      "P·D = 10 MPa × 508 mm = 5080 MPa·mm",
+      "2·SMYS·F = 2 × 413 MPa × 0,72 = 594,72 MPa",
+      "t = 5080 / 594,72 = 8,542 mm, arredondado a 8,54 mm",
+      "Verificação de unidades: MPa·mm / MPa = mm. Resultado coerente com a espessura de 8,54 mm usada no PET-03."
+    ]
+  },
+  {
+    "id": "PET-02",
+    "resposta": 267.4,
+    "unidade": "MPa",
+    "formula": "σθ = P·D / (2·t)  (tensão circunferencial de parede fina)",
+    "passos": [
+      "Hipóteses: D = 508 mm (externo); t = 9,5 mm nominal; parede fina (t/D = 0,019 < 0,05).",
+      "P·D = 10 × 508 = 5080 MPa·mm",
+      "2·t = 2 × 9,5 = 19 mm",
+      "σθ = 5080 / 19 = 267,37 MPa, arredondado a 267,4 MPa",
+      "Sanidade: 267,4 / 413 = 0,65 de SMYS, abaixo de 0,72 · SMYS = 297,4 MPa, portanto o fator de projeto F = 0,72 é respeitado."
+    ]
+  },
+  {
+    "id": "PET-03",
+    "resposta": 9.6,
+    "unidade": "anos",
+    "formula": "Margem (anos) = (t_instalado − t_mínimo) / taxa de corrosão",
+    "passos": [
+      "Hipóteses: corrosão uniforme, taxa constante de 0,10 mm/ano, t_mínimo = 8,54 mm (valor do enunciado).",
+      "Espessura em excesso: 9,5 − 8,54 = 0,96 mm",
+      "Tempo até atingir t_mínimo: 0,96 / 0,10 = 9,6 anos",
+      "Nota: com t_mínimo = 8,5417 mm (valor não arredondado), a margem seria 9,58 anos. A taxa constante é uma hipótese; sem medição histórica, não confirmado."
+    ]
+  },
+  {
+    "id": "PET-04",
+    "resposta": 1.105,
+    "unidade": "m/s",
+    "formula": "V = Q / A, com A = π·D² / 4",
+    "passos": [
+      "Conversão de vazão: Q = 500 m³/h / 3600 = 0,13889 m³/s",
+      "Área da secção: A = π × 0,4² / 4 = 0,125664 m²",
+      "V = 0,13889 / 0,125664 = 1,1052 m/s, arredondado a 1,105 m/s",
+      "Verificação de unidades: (m³/s) / m² = m/s. Ordem de grandeza típica para crude em conduta (1 a 2 m/s)."
+    ]
+  },
+  {
+    "id": "PET-05",
+    "resposta": 75156,
+    "unidade": "adimensional",
+    "formula": "Re = ρ·V·D / μ",
+    "passos": [
+      "Dados: ρ = 850 kg/m³; V = 1,1052 m/s (PET-04); D = 0,4 m; μ = 5,0·10⁻³ Pa·s",
+      "ρ·V·D = 850 × 1,1052 × 0,4 = 375,78 kg/(m·s)",
+      "Re = 375,78 / 0,005 = 75156",
+      "Regime: turbulento (Re > 4000). Com V = 1,105 m/s o resultado seria 75140, diferença negligenciável.",
+      "Nota: escoamento de crude com alta viscosidade ou parafinas pode alterar μ com a temperatura; não confirmado para esta obra."
+    ]
+  },
+  {
+    "id": "PET-06",
+    "resposta": 8482.3,
+    "unidade": "m³",
+    "formula": "V = π·D² / 4 · H  (cilindro vertical)",
+    "passos": [
+      "Hipóteses: tanque cilíndrico vertical, fundo e teto não considerados, H = altura útil.",
+      "D² = 30² = 900 m²",
+      "A = π × 900 / 4 = 706,86 m²",
+      "V = 706,86 × 12 = 8482,3 m³",
+      "Verificação de unidades: m² × m = m³."
+    ]
+  }
+]

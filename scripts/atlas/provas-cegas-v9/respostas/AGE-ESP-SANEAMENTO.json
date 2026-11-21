@@ -1,0 +1,6 @@
+[
+  {
+    "id": "C1",
+    "resposta": "1. O 0,87 não deve aparecer como \"resistência de cálculo\": é o factor 1/1,15 (f_yk/γs) que converte a tensão característica do aço em tensão de cálculo. A verificação correcta é E_d/R_d ≤ 1,0, com a razão obtida e a norma e cláusula do contrato citadas (o extracto não identifica a norma).\n2. A carga hidráulica superficial de 1,0 m³/m²·h está abaixo da faixa típica de decantação primária em caudal médio (ordem de 1,25 a 2,1 m³/m²·h, a confirmar na fonte); indicar se o valor é de caudal médio ou de ponta.\n3. Os 5 % de perda não estão claros: não se sabe se já estão incluídos em 1.480 m³ ou se são somados. Confirmar, indicar o material e a sua classe, e a origem da faixa 1.300 a 1.700 m³ (não confirmado).\n4. Os três cenários de conferência, sem probabilidade de aprovação, estão correctos.\n5. Rascunho para conferência e assinatura do engenheiro responsável; o rodapé diz que as fontes estão citadas por número, mas nenhuma norma aparece no extracto."
+  }
+]

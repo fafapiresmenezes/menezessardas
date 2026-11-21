@@ -1,9 +1,10 @@
 // @vitest-environment jsdom
 // Abas novas do quadradinho Engenharia (19/11/2026): "Agentes" e "Águas". Nada do que existia foi apagado.
 import { describe, it, expect, afterEach, vi } from 'vitest'
+import { readFileSync } from 'node:fs'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS } from '@/data/agentesEngenharia'
+import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES, RESULTADO_PROVAS_ERRO_FINO, RESULTADO_PROVAS_REVISAO, RESULTADO_PROVAS_FALSO_POSITIVO, RESULTADO_PROVAS_FALSO_POSITIVO_LIMPO } from '@/data/agentesEngenharia'
 
 vi.mock('@/lib/supabase', () => ({ supabase: { functions: { invoke: vi.fn().mockResolvedValue({ data: null, error: null }) } }, supabaseConfigurado: true }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
@@ -30,7 +31,7 @@ describe('fichas dos agentes de engenharia', () => {
   })
 
   it('nunca escreve o nome do cliente nem palavras da plataforma de direito', () => {
-    const blob = JSON.stringify({ AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS })
+    const blob = JSON.stringify({ AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES, RESULTADO_PROVAS_ERRO_FINO, RESULTADO_PROVAS_REVISAO, RESULTADO_PROVAS_FALSO_POSITIVO, RESULTADO_PROVAS_FALSO_POSITIVO_LIMPO })
     for (const re of PROIBIDAS) expect(blob).not.toMatch(re)
   })
 
@@ -44,6 +45,29 @@ describe('fichas dos agentes de engenharia', () => {
       expect(e.guardaveis).toBeLessThanOrEqual(e.itens)
       expect(e.universidades).toBeLessThanOrEqual(ATLAS_RESUMO.universidades)
     }
+  })
+
+  it('o corpus do mundo soma por região e não inventa origem onde a fonte não diz', () => {
+    expect(ATLAS_RESUMO.porRegiao.reduce((s, r) => s + r.n, 0)).toBe(ATLAS_RESUMO.externos)
+    const nomes = ATLAS_RESUMO.porRegiao.map(r => r.nome)
+    expect(nomes).toContain('não determinada')
+    for (const r of ['Ásia', 'Europa Oriental', 'Rússia', 'América Latina', 'América do Norte', 'Europa Ocidental', 'África']) {
+      expect(nomes).toContain(r)
+      expect(ATLAS_RESUMO.porRegiao.find(x => x.nome === r)!.n).toBeGreaterThan(0)
+    }
+    expect(ATLAS_RESUMO.porPais.length).toBeGreaterThanOrEqual(10)
+    for (const p of ATLAS_RESUMO.porPais) expect(p.nome).toMatch(/^[A-Z]{2}$/)
+    expect(ATLAS_RESUMO.universidades).toBeGreaterThanOrEqual(190)
+    expect(ATLAS_RESUMO.programasComEndereco).toBeGreaterThanOrEqual(ATLAS_RESUMO.programasVerificados)
+    expect(ATLAS_RESUMO.programasComEndereco).toBeLessThanOrEqual(ATLAS_RESUMO.programasMapeados)
+  })
+
+  it('a porta de qualidade da biblioteca é mais estreita que o corpus', () => {
+    expect(CLASSIFICACAO_ATLAS.passaramPortaDeQualidade).toBeLessThan(CLASSIFICACAO_ATLAS.classificados)
+    expect(CLASSIFICACAO_ATLAS.naBiblioteca).toBeLessThanOrEqual(CLASSIFICACAO_ATLAS.passaramPortaDeQualidade)
+    expect(CLASSIFICACAO_ATLAS.naBiblioteca).toBe(
+      readFileSync('public/atlas-biblioteca-v1.jsonl', 'utf8').split('\n').filter(l => l.trim()).length,
+    )
   })
 
   it('a classificação do corpus bate com o corpus e aponta para agentes que existem', () => {
@@ -80,6 +104,167 @@ describe('fichas dos agentes de engenharia', () => {
     expect(soma).toBeLessThanOrEqual(RESULTADO_PROVAS.questoesTotais)
   })
 
+  it('a 2.ª volta é mais dura, cobre os 12 especialistas e diz o que ainda não mede', () => {
+    expect(RESULTADO_PROVAS_DURAS.volta).toBe(2)
+    expect(RESULTADO_PROVAS_DURAS.notas).toHaveLength(12)
+    expect(RESULTADO_PROVAS_DURAS.questoesTotais).toBe(
+      RESULTADO_PROVAS_DURAS.notas.reduce((s, n) => s + n.questoes, 0),
+    )
+    const ids = new Set(AGENTES_ENGENHARIA.map(a => a.id))
+    for (const n of RESULTADO_PROVAS_DURAS.notas) {
+      expect(ids.has(n.agente)).toBe(true)
+      expect(n.certos).toBeLessThanOrEqual(n.questoes)
+      expect(n.nota).toBeCloseTo(10 * n.certos / n.questoes, 2)
+      expect(['aprovado', 'com supervisão', 'reprovado']).toContain(n.veredito)
+    }
+    expect(RESULTADO_PROVAS_DURAS.limite).toMatch(/engenheiro habilitado/)
+    expect(RESULTADO_PROVAS_DURAS.limite).toMatch(/julgamento de engenharia/)
+  })
+
+  it('a 3.ª volta mede recusa e critério que governa, e diz o que ainda não mede', () => {
+    expect(RESULTADO_PROVAS_JULGAMENTO.volta).toBe(3)
+    expect(RESULTADO_PROVAS_JULGAMENTO.notas).toHaveLength(12)
+    expect(RESULTADO_PROVAS_JULGAMENTO.questoesTotais).toBe(
+      RESULTADO_PROVAS_JULGAMENTO.notas.reduce((s, n) => s + n.questoes, 0),
+    )
+    const ids = new Set(AGENTES_ENGENHARIA.map(a => a.id))
+    for (const n of RESULTADO_PROVAS_JULGAMENTO.notas) {
+      expect(ids.has(n.agente)).toBe(true)
+      expect(n.nota).toBeCloseTo(10 * n.certos / n.questoes, 2)
+    }
+    expect(RESULTADO_PROVAS_JULGAMENTO.regra).toMatch(/recusar/)
+    expect(RESULTADO_PROVAS_JULGAMENTO.limite).toMatch(/engenheiro habilitado/)
+    expect(RESULTADO_PROVAS_JULGAMENTO.limite).toMatch(/não prova/)
+  })
+
+  it('a 4.ª volta mede postura, cobre os 12 e não esconde que foi corrigida à mão', () => {
+    expect(RESULTADO_PROVAS_DESCONFIANCA.volta).toBe(4)
+    expect(RESULTADO_PROVAS_DESCONFIANCA.estados).toHaveLength(12)
+    expect(RESULTADO_PROVAS_DESCONFIANCA.questoes).toBe(RESULTADO_PROVAS_DESCONFIANCA.estados.length)
+    const ids = new Set(AGENTES_ENGENHARIA.map(a => a.id))
+    for (const e of RESULTADO_PROVAS_DESCONFIANCA.estados) {
+      expect(ids.has(e.agente)).toBe(true)
+      expect(['recusou', 'faixa_sinalizada', 'numero_mudo']).toContain(e.estado)
+      expect(e.rotulo.length).toBeGreaterThan(0)
+      expect(e.nota.length).toBeGreaterThan(20)
+    }
+    expect(RESULTADO_PROVAS_DESCONFIANCA.limite).toMatch(/à mão/)
+    expect(RESULTADO_PROVAS_DESCONFIANCA.limite).toMatch(/ainda não prova/)
+  })
+
+  it('a 5.ª volta mede as regras invioláveis, cobre os 12 e diz o que ficou em falta', () => {
+    expect(RESULTADO_PROVAS_INVARIANTES.volta).toBe(5)
+    expect(RESULTADO_PROVAS_INVARIANTES.estados).toHaveLength(12)
+    expect(RESULTADO_PROVAS_INVARIANTES.questoes).toBe(3 * RESULTADO_PROVAS_INVARIANTES.estados.length)
+    const ids = new Set(AGENTES_ENGENHARIA.map(a => a.id))
+    const porEstado = new Map<string, number>()
+    for (const e of RESULTADO_PROVAS_INVARIANTES.estados) {
+      expect(ids.has(e.agente)).toBe(true)
+      expect(['invariantes_com_citacao', 'invariantes_sem_citacao', 'invariante_quebrada']).toContain(e.estado)
+      expect(e.rotulo.length).toBeGreaterThan(0)
+      expect(e.nota.length).toBeGreaterThan(20)
+      porEstado.set(e.estado, (porEstado.get(e.estado) ?? 0) + 1)
+    }
+    expect(porEstado.get('invariante_quebrada') ?? 0).toBe(0)
+    expect(porEstado.get('invariantes_com_citacao')).toBeGreaterThan(0)
+    expect(porEstado.get('invariantes_sem_citacao')).toBeGreaterThan(0)
+    expect(RESULTADO_PROVAS_INVARIANTES.limite).toMatch(/à mão/)
+    expect(RESULTADO_PROVAS_INVARIANTES.limite).toMatch(/ainda não prova/)
+  })
+
+  it('a 6.ª volta mede interfaces, cobre os 12 e não esconde que os erros foram plantados', () => {
+    expect(RESULTADO_PROVAS_INTERFACES.volta).toBe(6)
+    expect(RESULTADO_PROVAS_INTERFACES.estados).toHaveLength(12)
+    expect(RESULTADO_PROVAS_INTERFACES.questoes).toBe(RESULTADO_PROVAS_INTERFACES.estados.length)
+    const ids = new Set(AGENTES_ENGENHARIA.map(a => a.id))
+    const porEstado = new Map<string, number>()
+    for (const e of RESULTADO_PROVAS_INTERFACES.estados) {
+      expect(ids.has(e.agente)).toBe(true)
+      expect(['viu_e_parou', 'viu_e_avancou', 'nao_viu']).toContain(e.estado)
+      expect(e.rotulo.length).toBeGreaterThan(0)
+      expect(e.nota.length).toBeGreaterThan(20)
+      porEstado.set(e.estado, (porEstado.get(e.estado) ?? 0) + 1)
+    }
+    expect(porEstado.get('nao_viu') ?? 0).toBe(0)
+    expect(porEstado.get('viu_e_parou')).toBeGreaterThan(0)
+    expect(RESULTADO_PROVAS_INTERFACES.limite).toMatch(/à mão/)
+    expect(RESULTADO_PROVAS_INTERFACES.limite).toMatch(/ainda não prova/)
+    expect(RESULTADO_PROVAS_INTERFACES.limite).toMatch(/plantados/)
+  })
+
+  it('a 7.ª volta separa os agentes e assume os defeitos das nossas perguntas', () => {
+    expect(RESULTADO_PROVAS_ERRO_FINO.volta).toBe(7)
+    expect(RESULTADO_PROVAS_ERRO_FINO.estados).toHaveLength(12)
+    expect(RESULTADO_PROVAS_ERRO_FINO.questoes).toBe(RESULTADO_PROVAS_ERRO_FINO.estados.length)
+    const ids = new Set(AGENTES_ENGENHARIA.map(a => a.id))
+    const porEstado = new Map<string, number>()
+    for (const e of RESULTADO_PROVAS_ERRO_FINO.estados) {
+      expect(ids.has(e.agente)).toBe(true)
+      expect(['nomeou_o_erro', 'objeccao_mais_funda', 'recusou_sem_nomear', 'pergunta_defeituosa', 'disse_que_pode_fechar']).toContain(e.estado)
+      expect(e.rotulo.length).toBeGreaterThan(0)
+      expect(e.nota.length).toBeGreaterThan(20)
+      porEstado.set(e.estado, (porEstado.get(e.estado) ?? 0) + 1)
+    }
+    expect(porEstado.get('disse_que_pode_fechar') ?? 0).toBe(0)
+    expect(porEstado.get('nomeou_o_erro')).toBeGreaterThan(0)
+    expect(porEstado.get('recusou_sem_nomear')).toBeGreaterThan(0)
+    expect(RESULTADO_PROVAS_ERRO_FINO.limite).toMatch(/à mão/)
+    expect(RESULTADO_PROVAS_ERRO_FINO.limite).toMatch(/defeito é nosso/)
+  })
+
+  it('a 8.ª volta conta defeitos por entregável e diz que a densidade não é a de uma obra real', () => {
+    expect(RESULTADO_PROVAS_REVISAO.volta).toBe(8)
+    expect(RESULTADO_PROVAS_REVISAO.estados).toHaveLength(12)
+    expect(RESULTADO_PROVAS_REVISAO.questoes).toBe(RESULTADO_PROVAS_REVISAO.estados.length * RESULTADO_PROVAS_REVISAO.defeitosPorEntregavel)
+    const ids = new Set(AGENTES_ENGENHARIA.map(a => a.id))
+    for (const e of RESULTADO_PROVAS_REVISAO.estados) {
+      expect(ids.has(e.agente)).toBe(true)
+      expect(e.encontrados).toBeGreaterThanOrEqual(0)
+      expect(e.encontrados).toBeLessThanOrEqual(RESULTADO_PROVAS_REVISAO.defeitosPorEntregavel)
+      expect(e.nota.length).toBeGreaterThan(20)
+    }
+    expect(RESULTADO_PROVAS_REVISAO.limite).toMatch(/à mão/)
+    expect(RESULTADO_PROVAS_REVISAO.limite).toMatch(/ainda não prova/)
+    expect(RESULTADO_PROVAS_REVISAO.limite).toMatch(/quarenta páginas/)
+  })
+
+  it('a 9.ª volta publica os falsos positivos e que o nosso extracto tinha defeitos', () => {
+    expect(RESULTADO_PROVAS_FALSO_POSITIVO.volta).toBe(9)
+    expect(RESULTADO_PROVAS_FALSO_POSITIVO.estados).toHaveLength(12)
+    expect(RESULTADO_PROVAS_FALSO_POSITIVO.questoes).toBe(RESULTADO_PROVAS_FALSO_POSITIVO.estados.length)
+    const ids = new Set(AGENTES_ENGENHARIA.map(a => a.id))
+    const porEstado = new Map<string, number>()
+    for (const e of RESULTADO_PROVAS_FALSO_POSITIVO.estados) {
+      expect(ids.has(e.agente)).toBe(true)
+      expect(['so_defeitos_reais', 'falso_positivo', 'disse_que_esta_bem']).toContain(e.estado)
+      expect(e.nota.length).toBeGreaterThan(20)
+      porEstado.set(e.estado, (porEstado.get(e.estado) ?? 0) + 1)
+    }
+    expect(porEstado.get('falso_positivo')).toBeGreaterThan(0)
+    expect(RESULTADO_PROVAS_FALSO_POSITIVO.limite).toMatch(/à mão/)
+    expect(RESULTADO_PROVAS_FALSO_POSITIVO.limite).toMatch(/Três defeitos nossos/)
+    expect(RESULTADO_PROVAS_FALSO_POSITIVO.limite).toMatch(/não é um teste limpo/)
+  })
+
+  it('a 10.ª volta fecha a bateria e diz que nem nós escrevemos um documento sem defeito', () => {
+    const r = RESULTADO_PROVAS_FALSO_POSITIVO_LIMPO
+    expect(r.volta).toBe(10)
+    expect(r.estados).toHaveLength(12)
+    expect(r.questoes).toBe(r.estados.length)
+    const ids = new Set(AGENTES_ENGENHARIA.map(a => a.id))
+    const falsos = r.estados.filter(e => e.estado === 'falso_positivo').length
+    const anteriores = RESULTADO_PROVAS_FALSO_POSITIVO.estados.filter(e => e.estado === 'falso_positivo').length
+    for (const e of r.estados) {
+      expect(ids.has(e.agente)).toBe(true)
+      expect(['so_defeitos_reais', 'falso_positivo', 'disse_que_esta_bem']).toContain(e.estado)
+      expect(e.nota.length).toBeGreaterThan(20)
+    }
+    expect(falsos).toBeLessThan(anteriores)
+    expect(r.limite).toMatch(/à mão/)
+    expect(r.limite).toMatch(/cinco defeitos novos/)
+    expect(r.limite).toMatch(/engenheiro habilitado/)
+  })
+
   it('toda posição tem nível N1 a N6', () => {
     for (const a of AGENTES_ENGENHARIA.filter(x => x.matriz === 'posicao')) expect(a.nivel).toMatch(/^N[1-6]$/)
   })
@@ -111,9 +296,20 @@ describe('abas novas do quadradinho Engenharia', () => {
     expect(screen.getByTestId('atlas-numeros')).toBeTruthy()
     expect(screen.getByTestId('atlas-por-especialidade').querySelectorAll('tbody tr')).toHaveLength(14)
     expect(screen.getByTestId('atlas-classificacao').querySelectorAll('tbody tr')).toHaveLength(CLASSIFICACAO_ATLAS.estantes.length)
+    expect(screen.getByTestId('atlas-por-regiao').querySelectorAll('tbody tr')).toHaveLength(ATLAS_RESUMO.porRegiao.length)
+    expect(screen.getByTestId('atlas-por-regiao').textContent).toContain('Rússia')
     fireEvent.click(screen.getByTestId('subaba-agentes-biblioteca'))
     expect(screen.getByTestId('biblioteca-atlas').textContent).toMatch(/peças escolhidas do corpus/)
     fireEvent.click(screen.getByTestId('subaba-agentes-provas'))
+    expect(screen.getByTestId('provas-volta2').textContent).toContain('2.ª volta')
+    expect(screen.getByTestId('provas-volta3').textContent).toContain('3.ª volta')
+    expect(screen.getByTestId('provas-volta4').textContent).toContain('4.ª volta')
+    expect(screen.getByTestId('provas-volta5').textContent).toContain('5.ª volta')
+    expect(screen.getByTestId('provas-volta6').textContent).toContain('6.ª volta')
+    expect(screen.getByTestId('provas-volta7').textContent).toContain('7.ª volta')
+    expect(screen.getByTestId('provas-volta8').textContent).toContain('8.ª volta')
+    expect(screen.getByTestId('provas-volta9').textContent).toContain('9.ª volta')
+    expect(screen.getByTestId('provas-volta10').textContent).toContain('10.ª volta')
     expect(screen.getByTestId('tabela-provas').querySelectorAll('tbody tr')).toHaveLength(46)
     expect(screen.getByTestId('provas-agentes').textContent).toMatch(/engenheiro habilitado/)
   })

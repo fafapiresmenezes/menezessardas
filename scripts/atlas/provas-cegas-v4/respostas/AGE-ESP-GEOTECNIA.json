@@ -1,0 +1,7 @@
+[
+  {
+    "id": "GEO-R1",
+    "resposta": "Sem ensaios de campo não é possível fixar um valor de projecto. Estimativa preliminar (rascunho, não confirmada): capacidade resistente última q_ult ≈ 1,2 – 1,6 – 2,3 MPa (mínimo – provável – máximo) para sapata quadrada 2,0 × 2,0 m, base a 1,5 m, areia drenada com φ' ≈ 30° – 32° – 35° e γ ≈ 18 kN/m³. Pressão admissível indicativa, com FS = 3: ≈ 0,4 – 0,5 – 0,8 MPa, a confirmar por verificação de assentamentos. Para fechar o valor preciso de: N_SPT ou CPT, nível freático, cargas da estrutura (N, M, H) e cota exacta da base.",
+    "justificacao": "Hipóteses: areia sem coesão, nível freático abaixo da base, carga centrada, método analítico tipo Vesic com factores de forma e de profundidade (EN 1997-1, Anexo D; confirmar prática local). Com o nível freático à superfície, os termos de γ caem para cerca de metade. Em areia com 2 m de largura, os assentamentos (não calculados) tendem a governar; esta faixa não substitui essa verificação. Rascunho para conferência e assinatura do engenheiro responsável."
+  }
+]

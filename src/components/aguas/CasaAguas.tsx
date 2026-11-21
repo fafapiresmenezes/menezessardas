@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { AREAS_AGUAS, CASOS_AGUAS, FONTES_AGUAS, NORMAS_AGUAS } from '@/data/aguas'
 import PainelAguasVivo from '@/components/aguas/PainelAguasVivo'
 import BibliotecaAguas from '@/components/aguas/BibliotecaAguas'
+import DiagnosticoAguas from '@/components/aguas/DiagnosticoAguas'
 
 /**
  * Conteúdo da casa de Águas, sem a moldura da página. É montado em dois sítios:
@@ -31,6 +32,8 @@ export default function CasaAguas() {
     </section>
 
     <PainelAguasVivo />
+
+    <DiagnosticoAguas />
 
     <section className="bg-white shadow-sm p-6" data-testid="aguas-areas">
       <h2 className="font-serif text-xl mb-4">O que esta casa cobre</h2>

@@ -1,0 +1,29 @@
+[
+ {
+  "id": "BET-T1",
+  "enunciado": "Viga retangular simplesmente armada, b = 300 mm, d = 450 mm, As = 1570 mm², aço A500. Qual o momento resistente de cálculo?",
+  "dados": {
+   "b_mm": 300,
+   "d_mm": 450,
+   "As_mm2": 1570,
+   "fyk_MPa": 500,
+   "gamma_c": 1.5,
+   "gamma_s": 1.15
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "BET-T2",
+  "enunciado": "Viga com carga permanente de 20,0 kN/m, sobrecarga de utilização de 15,0 kN/m e acção do vento de 12,0 kN/m. Pelos coeficientes 1,35 e 1,5 e por ψ0 = 0,7 para a utilização e 0,6 para o vento, qual a carga de cálculo da combinação que governa?",
+  "dados": {
+   "G_kN_m": 20.0,
+   "Q_utilizacao_kN_m": 15.0,
+   "Q_vento_kN_m": 12.0,
+   "psi0_utilizacao": 0.7,
+   "psi0_vento": 0.6,
+   "gamaG": 1.35,
+   "gamaQ": 1.5
+  },
+  "unidade_esperada": "kN/m"
+ }
+]

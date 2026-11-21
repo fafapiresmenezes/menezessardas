@@ -30,6 +30,34 @@ function emailValido(e: string): string | null {
   return /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(v) ? v : null
 }
 
+async function notificarAdmin(nome: string, email: string, escritorio: string, mensagem: string, protocolo: string) {
+  const { data: conf } = await db().from('configuracoes').select('chave,valor').in('chave', ['brevo_api_key', 'email_remetente', 'email_notificacoes_admin'])
+  const c = Object.fromEntries((conf ?? []).map((x: { chave: string; valor: string }) => [x.chave, x.valor]))
+  if (!c.brevo_api_key || !c.email_remetente || !c.email_notificacoes_admin) return
+  const html = `<div style="font-family:Arial,sans-serif;max-width:520px;color:#151a22">
+<p style="font-family:monospace;font-size:11px;letter-spacing:.1em;color:#6b7280">INSTITUTO THEYE · NOVO PEDIDO DE ACESSO</p>
+<h2 style="font-weight:500">Pedido ${protocolo}</h2>
+<table style="font-size:14px;border-collapse:collapse;width:100%">
+  <tr><td style="padding:4px 8px 4px 0;color:#6b7280;width:100px">Nome</td><td style="padding:4px 0"><strong>${nome}</strong></td></tr>
+  <tr><td style="padding:4px 8px 4px 0;color:#6b7280">E-mail</td><td style="padding:4px 0">${email}</td></tr>
+  ${escritorio ? `<tr><td style="padding:4px 8px 4px 0;color:#6b7280">Escritório</td><td style="padding:4px 0">${escritorio}</td></tr>` : ''}
+  ${mensagem ? `<tr><td style="padding:4px 8px 4px 0;color:#6b7280;vertical-align:top">Mensagem</td><td style="padding:4px 0">${mensagem}</td></tr>` : ''}
+</table>
+<p style="margin-top:20px"><a href="https://theye.club/equipe" style="display:inline-block;background:#151a22;color:#fff;padding:12px 20px;text-decoration:none">Ver pedidos pendentes →</a></p>
+<p style="font-size:12px;color:#7a8190">Para aprovar ou recusar, entre na plataforma e vá em Equipe.</p>
+</div>`
+  await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: { 'api-key': c.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
+    body: JSON.stringify({
+      sender: { name: 'Instituto THEYE', email: c.email_remetente },
+      to: [{ email: c.email_notificacoes_admin }],
+      subject: `Novo pedido de acesso: ${nome} (${protocolo})`,
+      htmlContent: html,
+    }),
+  }).catch(() => null)
+}
+
 Deno.serve(async (req) => {
   const origem = req.headers.get('origin') ?? ''
   const permitida = ORIGENS.includes(origem) ? origem : ORIGENS[0]
@@ -69,5 +97,9 @@ async function tratar(req: Request): Promise<Response> {
   })
   if (error) return json({ erro: 'Não deu para registrar agora. Tente de novo em instantes.' }, 500)
   if (data?.erro === 'limite') return json({ erro: 'Já recebemos vários pedidos desta rede hoje. Tente amanhã ou fale por outro caminho.' }, 429)
+
+  // Notificar o administrador por e-mail (não bloqueia a resposta ao visitante).
+  notificarAdmin(nome, email, String(b.escritorio ?? ''), String(b.mensagem ?? ''), data?.protocolo).catch(() => null)
+
   return json({ ok: true, protocolo: data?.protocolo, criado_em: data?.criado_em })
 }

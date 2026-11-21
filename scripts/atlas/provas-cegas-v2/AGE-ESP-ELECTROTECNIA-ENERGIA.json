@@ -1,0 +1,25 @@
+[
+ {
+  "id": "ELE-D1",
+  "enunciado": "Alimentação trifásica de 150 kW a 400 V, factor de potência 0,85, cabo de cobre de 95 mm² com 300 m de comprimento (resistividade 0,0172 Ω·mm²/m). Desprezando a reactância, qual a queda de tensão em percentagem?",
+  "dados": {
+   "P_W": 150000.0,
+   "U_V": 400.0,
+   "cos_fi": 0.85,
+   "L_m": 300.0,
+   "rho_ohm_mm2_m": 0.0172,
+   "S_mm2": 95.0
+  },
+  "unidade_esperada": "%"
+ },
+ {
+  "id": "ELE-D2",
+  "enunciado": "Central solar de 500 kWp num sítio com 5,5 kWh/m² por dia de irradiação no plano dos módulos e razão de desempenho de 0,78. Qual a produção anual?",
+  "dados": {
+   "potencia_kWp": 500.0,
+   "irradiacao_kWh_m2_dia": 5.5,
+   "razao_desempenho": 0.78
+  },
+  "unidade_esperada": "kWh/ano"
+ }
+]

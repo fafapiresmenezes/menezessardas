@@ -1,0 +1,7 @@
+[
+  {
+    "id": "ACO-R1",
+    "resposta": "Rascunho, não é possível dar um valor único com os dados fornecidos. Com as hipóteses indicadas abaixo, a resistência ao corte da ligação (4 parafusos M20, chapa 12 mm S275) fica na faixa de 188 kN (mínimo) a 376 kN (provável), com máximo teórico de 482 kN. A resistência de cálculo é o mínimo entre corte nos parafusos, pressão de contacto na chapa e rasgamento do bloco (EN 1993-1-8, cl. 3.6.1 e Quadro 3.4). Hipóteses: parafusos classe 8.8, corte simples, roscas no plano de corte, γM2 = 1,25, f_ub = 800 MPa, A_s = 245 mm² (mínimo 188 kN corresponde à classe 4.6). Corte nos parafusos (classe 8.8, roscas no plano): F_v,Rd ≈ 94 kN por parafuso e ≈ 376 kN para 4 parafusos. Pressão na chapa S275 (f_u = 410 MPa, t = 12 mm): ≈ 79 kN × k1·αb por parafuso, com k1·αb a depender de e1, e2 e p1. Com as distâncias mínimas do cl. 3.5 do EN 1993-1-8 (e1 ≥ 1,2·d0, e2 ≥ 1,2·d0), o valor é ≈ 52 kN por parafuso (≈ 209 kN para 4). Falta confirmar: classe do parafuso (ex.: 8.8 ou 10.9), número de planos de corte, se as roscas estão no plano, e as distâncias e1, e2, p1 em mm (ex.: e1 = 40 mm). Rascunho para conferência e assinatura do engenheiro responsável.",
+    "justificacao": "Resistência ao corte em EN 1993-1-8, cl. 3.6.1 e Quadro 3.4 (α_v = 0,6 para 8.8; 0,5 para 10.9), com γM2 = 1,25 e f_u do S275 segundo EN 10025-2. Faixa 188–376 kN por hipóteses (classe, roscas no plano). Sem classe do parafuso e geometria da chapa não é possível confirmar o valor governante."
+  }
+]

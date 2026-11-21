@@ -1,6 +1,6 @@
 // Provas das regras de nota medida pela máquina (elo R11).
 import { describe, it, expect } from 'vitest'
-import { EXPLICA_FONTE, conferir, notaAcessibilidade, notaManutencao } from './medicao'
+import { EXPLICA_FONTE, conferir, notaAcessibilidade, notaDesempenho, notaManutencao } from './medicao'
 import { RUBRICA } from '@/data/geo/nota'
 import medicoes from '@/data/geo/medicoes-ci.json'
 
@@ -25,6 +25,32 @@ describe('nota de acessibilidade', () => {
   it('número sem sentido não vira nota boa', () => {
     expect(notaAcessibilidade(-1)).toBe(0)
     expect(notaAcessibilidade(Number.NaN)).toBe(0)
+  })
+})
+
+describe('nota de desempenho', () => {
+  // os números de hoje, medidos na bancada com rede de celular simulada
+  const hoje = [100, 800, 60, 0] as const
+
+  it('as quatro medidas dentro do limite dão 10', () => {
+    expect(notaDesempenho(...hoje)).toBe(10)
+  })
+
+  it('uma só medida fora do limite já derruba o 10, por boa que esteja a média', () => {
+    expect(notaDesempenho(100, 3000, 60, 0)).toBeLessThan(10) // LCP lento
+    expect(notaDesempenho(100, 800, 400, 0)).toBeLessThan(10) // travando no toque
+    expect(notaDesempenho(100, 800, 60, 0.3)).toBeLessThan(10) // a tela saltando
+    expect(notaDesempenho(85, 800, 60, 0)).toBeLessThan(10) // nota do Lighthouse baixa
+  })
+
+  it('sem relatório do Lighthouse não existe nota de desempenho', () => {
+    expect(notaDesempenho(null, 800, 60, 0)).toBe(0)
+    expect(notaDesempenho(undefined, 800, 60, 0)).toBe(0)
+  })
+
+  it('número sem sentido não vira nota boa', () => {
+    expect(notaDesempenho(100, -1, 60, 0)).toBe(0)
+    expect(notaDesempenho(100, Number.NaN, 60, 0)).toBe(0)
   })
 })
 
@@ -70,9 +96,10 @@ describe('a conferência contra a régua', () => {
     expect(conferir(medicoes as never, RUBRICA)).toEqual([])
   })
 
-  it('as duas regras medidas continuam valendo para os números de hoje', () => {
-    expect(RUBRICA.find(d => d.n === 3)!.nota).toBe(notaAcessibilidade(0))
-    expect(RUBRICA.find(d => d.n === 9)!.nota).toBe(notaManutencao(9, 14))
+  it('as três regras medidas continuam valendo para os números de hoje', () => {
+    expect(RUBRICA.find(d => d.n === 2)!.nota).toBe(notaDesempenho(100, 800, 60, 0))
+    expect(RUBRICA.find(d => d.n === 3)!.nota).toBe(notaAcessibilidade(0, 100))
+    expect(RUBRICA.find(d => d.n === 9)!.nota).toBe(notaManutencao(15, 15))
   })
 
   it('só as dimensões marcadas como medidas pela máquina aparecem na medição', () => {

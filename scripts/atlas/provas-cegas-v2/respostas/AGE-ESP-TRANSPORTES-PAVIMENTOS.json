@@ -1,0 +1,12 @@
+[
+  {
+    "id": "TRA-D1",
+    "resposta": 11298455,
+    "passos": "Eixos-padrão diários na faixa de projecto = 1200 x 2,4 x 0,5 x 0,8 = 1152 ESA/dia; anual = 1152 x 365 = 420 480; acumulado = 420 480 x [(1,03^20 - 1)/0,03] = 420 480 x 26,870 = 11,30 x 10^6 ESA."
+  },
+  {
+    "id": "TRA-D2",
+    "resposta": 10.984,
+    "passos": "v/c = 1800/2000 = 0,9; t = t0 x [1 + 0,15 x (0,9)^4] = 10,0 x [1 + 0,15 x 0,6561] = 10,0 x 1,09842 = 10,984 min."
+  }
+]

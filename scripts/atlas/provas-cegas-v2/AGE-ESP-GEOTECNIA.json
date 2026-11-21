@@ -1,0 +1,23 @@
+[
+ {
+  "id": "GEO-D1",
+  "enunciado": "Muro de 5,00 m, aterro arenoso seco (γ = 18 kN/m³, φ' = 30°), superfície horizontal com sobrecarga uniforme de 20 kPa, muro sem atrito. Qual o empuxo ativo total por metro?",
+  "dados": {
+   "H_m": 5.0,
+   "gama_kN_m3": 18.0,
+   "phi_graus": 30.0,
+   "sobrecarga_kPa": 20.0
+  },
+  "unidade_esperada": "kN/m"
+ },
+ {
+  "id": "GEO-D2",
+  "enunciado": "No mesmo muro, a que altura acima da base atua a resultante do empuxo?",
+  "dados": {
+   "Pa_solo_kN_m": 75.0,
+   "Pa_sobrecarga_kN_m": 33.3,
+   "H_m": 5.0
+  },
+  "unidade_esperada": "m"
+ }
+]

@@ -1,0 +1,70 @@
+[
+  {
+    "id": "GES-01",
+    "resposta": 0.8571,
+    "unidade": "—",
+    "formula": "CPI = EV / AC (valor ganho / custo real)",
+    "passos": [
+      "EV = 3,6 M; AC = 4,2 M",
+      "CPI = 3,6 / 4,2 = 0,857142... ≈ 0,8571",
+      "CPI < 1: custo real acima do valor ganho (sobrecusto)"
+    ]
+  },
+  {
+    "id": "GES-02",
+    "resposta": 0.9,
+    "unidade": "—",
+    "formula": "SPI = EV / PV (valor ganho / valor planeado)",
+    "passos": [
+      "EV = 3,6 M; PV = 4,0 M",
+      "SPI = 3,6 / 4,0 = 0,90",
+      "SPI < 1: obra atrasada em relação ao planeado"
+    ]
+  },
+  {
+    "id": "GES-03",
+    "resposta": 11.6667,
+    "unidade": "milhões",
+    "formula": "EAC = BAC / CPI (estimativa ao concluir, tendência de custo mantida)",
+    "passos": [
+      "BAC = 10 M; CPI = 0,8571 (ou 6/7 exacto)",
+      "EAC = 10 / 0,8571 ≈ 11,67 M (com CPI exacto 6/7: 11,6667 M)",
+      "Hipótese: desempenho de custo mantido até ao fim; sobrecusto estimado de ≈ 1,67 M. Faixa sugerida não calibrada: depende do CPI cumulativo"
+    ]
+  },
+  {
+    "id": "GES-04",
+    "resposta": 1.1034,
+    "unidade": "—",
+    "formula": "TCPI = (BAC - EV) / (BAC - AC) (índice de desempenho para o trabalho restante)",
+    "passos": [
+      "BAC - EV = 10 - 3,6 = 6,4 M",
+      "BAC - AC = 10 - 4,2 = 5,8 M",
+      "TCPI = 6,4 / 5,8 = 1,1034",
+      "TCPI > 1: é preciso melhorar a eficiência de custo no trabalho restante para concluir no orçamento"
+    ]
+  },
+  {
+    "id": "GES-05",
+    "resposta": 15,
+    "unidade": "h",
+    "formula": "t = V / p (volume / produtividade)",
+    "passos": [
+      "V = 120 m3; p = 8 m3/h",
+      "t = 120 / 8 = 15 h",
+      "Hipótese: produtividade constante, sem paragens, sem tempo de preparação nem de cura; não inclui margem de segurança"
+    ]
+  },
+  {
+    "id": "GES-06",
+    "resposta": 793832.24,
+    "unidade": "unidades monetárias",
+    "formula": "PV = FV / (1 + i)^n (desconto composto)",
+    "passos": [
+      "FV = 1 000 000; i = 0,08 ao ano; n = 3 anos",
+      "(1,08)^3 = 1,259712",
+      "PV = 1 000 000 / 1,259712 ≈ 793 832,24",
+      "Hipótese: capitalização anual composta e pagamento no fim de cada período; moeda não indicada no enunciado (AOA, NAD ou USD por confirmar)"
+    ]
+  }
+]

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MASVS-NETWORK: nenhuma conexão em texto claro, de nenhum endereço.
+     Desde o Android 9 o padrão já é recusar, mas o padrão é invisível: escrito aqui, é um
+     controle que se pode auditar e que não muda sozinho se alguém trocar a versão alvo.
+     O app não tem exceção nenhuma: tudo o que ele busca é por HTTPS. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>

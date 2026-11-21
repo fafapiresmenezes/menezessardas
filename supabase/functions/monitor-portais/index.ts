@@ -29,11 +29,30 @@ const POR_AREA: Record<string, { camara: string[]; noticias: string[] }> = {
 
 const cors = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-cron-secret',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
+
+// Antes esta função não checava nada: qualquer um na internet podia chamá-la e gastar as
+// chamadas às APIs externas (Câmara, Google Notícias) e gravar linhas em novidades_portais.
+// Agora exige login válido (Supabase Auth) ou o segredo do cron diário, como as demais funções.
+async function autorizado(req: Request): Promise<boolean> {
+  const token = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '')
+  if (token) {
+    try {
+      const cliente = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!)
+      const { data } = await cliente.auth.getUser(token)
+      if (data?.user) return true
+    } catch { /* segue */ }
+  }
+  const enviado = req.headers.get('x-cron-secret')
+  if (!enviado) return false
+  const sbSegredo = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
+  const { data } = await sbSegredo.from('configuracoes').select('valor').eq('chave', 'cron_segredo').maybeSingle()
+  return !!data?.valor && data.valor === enviado
+}
 
 interface Novidade { id: string; fonte: string; tipo: string; titulo: string; resumo?: string; link: string; data?: string; termo: string; area?: string }
 
@@ -74,6 +93,7 @@ async function noticias(termo: string): Promise<Novidade[]> {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
+  if (!(await autorizado(req))) return json({ erro: 'Entre na plataforma.' }, 401)
   const diagnostico: string[] = []
   const tudo: Novidade[] = []
   const { area: soArea } = await req.json().catch(() => ({}))

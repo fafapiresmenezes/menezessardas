@@ -1,0 +1,6 @@
+[
+ {
+  "id": "L1",
+  "resposta": "1. O erro mais provável está na hipótese de nível freático à superfície: assenta em apenas dois ciclos anuais de piezómetros e não mostra como se chegou ao valor de cálculo. Sem mais leituras ou um valor conservador com faixa, a verificação não está confirmada.\n2. Confirma se o R_d e o rácio 0,78 usam o mesmo nível freático do ponto 1; se o R_d foi calculado com nível mais baixo, o rácio está optimista.\n3. A referência ao quadro A.4 parece errada: pelo que conheço, esse quadro dá coeficientes de propriedades do solo (M), não das acções. A combinação 2 (A2, M1, R2) e o quadro certo devem ser confirmados no Anexo Nacional aplicável e na especificação do dono de obra (FIDIC Red Book). A cláusula 2.4.6.1 também não está confirmada aqui.\n4. A faixa 1.300/1.480/1.700 m não tem base declarada e não se sabe se 1.480 já inclui os 5 por cento; se não incluir, o provável com perda é cerca de 1.554 m. Falta o diâmetro e o número de estacas para passar de metros a volume.\n5. Bem: os três cenários em vez de probabilidade respeitam a regra; falta a lista do que não foi confirmado. Rascunho para conferência e assinatura do engenheiro responsável."
+ }
+]

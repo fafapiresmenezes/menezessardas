@@ -11,8 +11,16 @@
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
+import { FRENTES } from '@/components/menuTelas'
 
-interface Linha { id: string; nome: string; nome_cadastro: string | null; dominios_email: string[] }
+interface Linha { id: string; nome: string; nome_cadastro: string | null; dominios_email: string[]; nichos?: string[] }
+
+// Pedido de M (21/11/2026 04h34): cada nicho tem os seus clientes. Aqui o administrador marca de
+// quais segmentos cada escritório é; a lista suspensa do Criar conta de cada quadradinho mostra só eles.
+const SEGMENTOS: { id: string; nome: string }[] = [
+  { id: 'juridico', nome: 'Plataforma jurídica' },
+  ...FRENTES.filter(f => f.id !== 'instituto').map(f => ({ id: f.id, nome: f.nome })),
+]
 
 const dominiosValidos = (texto: string): string[] => [...new Set(
   texto.split(/[,;\s]+/).map(d => d.trim().toLowerCase().replace(/^@/, '')).filter(d => /^[a-z0-9.-]+\.[a-z]{2,}$/.test(d)),
@@ -28,6 +36,7 @@ export default function EscritoriosDoProjetoPage() {
   const [editando, setEditando] = useState<string | null>(null)
   const [nomeLista, setNomeLista] = useState('')
   const [finais, setFinais] = useState('')
+  const [nichosSel, setNichosSel] = useState<string[]>([])
 
   const carregar = async () => {
     if (!supabaseConfigurado) return
@@ -48,6 +57,7 @@ export default function EscritoriosDoProjetoPage() {
     setEditando(l ? l.id : '')
     setNomeLista(l ? (l.nome_cadastro ?? l.nome) : '')
     setFinais(l ? l.dominios_email.join(', ') : '')
+    setNichosSel(l?.nichos ?? [])
   }
 
   const gravar = async (e: React.FormEvent) => {
@@ -59,12 +69,20 @@ export default function EscritoriosDoProjetoPage() {
     if (doms.length === 0) { setErro('Informe pelo menos um final de e-mail válido, por exemplo: escritorio.com.br'); return }
     setCarregando(true)
     try {
-      const { error } = editando
-        ? await supabase.rpc('escritorio_cadastro_gravar', { p_id: editando, p_nome_cadastro: nome, p_dominios: doms })
-        : await supabase.rpc('escritorio_cadastro_criar', { p_nome: nome, p_dominios: doms })
-      if (error) { setErro(error.message); return }
-      setAviso(`Pronto: ${nome} está na lista do Criar conta, com os finais ${doms.join(', ')}.`)
-      setEditando(null); setNomeLista(''); setFinais('')
+      let r = editando
+        ? await supabase.rpc('escritorio_cadastro_gravar', { p_id: editando, p_nome_cadastro: nome, p_dominios: doms, p_nichos: nichosSel })
+        : await supabase.rpc('escritorio_cadastro_criar', { p_nome: nome, p_dominios: doms, p_nichos: nichosSel })
+      // Banco ainda sem os segmentos (COLE-ISTO-158): grava do jeito antigo e avisa.
+      if (r.error && /function|schema cache|not find/i.test(r.error.message ?? '')) {
+        r = editando
+          ? await supabase.rpc('escritorio_cadastro_gravar', { p_id: editando, p_nome_cadastro: nome, p_dominios: doms })
+          : await supabase.rpc('escritorio_cadastro_criar', { p_nome: nome, p_dominios: doms })
+        if (!r.error) setAviso(`${nome} gravado, mas as frentes ainda não: falta colar o arquivo COLE-ISTO-158 no banco.`)
+      } else if (!r.error) {
+        setAviso(`Pronto: ${nome} está na lista do Criar conta${nichosSel.length > 0 ? ` (${nichosSel.length} frente${nichosSel.length > 1 ? 's' : ''})` : ''}, com os finais ${doms.join(', ')}.`)
+      }
+      if (r.error) { setErro(r.error.message); return }
+      setEditando(null); setNomeLista(''); setFinais(''); setNichosSel([])
       await carregar()
     } finally { setCarregando(false) }
   }
@@ -121,6 +139,11 @@ export default function EscritoriosDoProjetoPage() {
                       ? `Pode criar conta quem tem e-mail terminando em: ${l.dominios_email.map(d => '@' + d).join(', ')}`
                       : 'Sem final de e-mail cadastrado: só entra por convite.'}
                   </p>
+                  <p className="text-sm text-grafite-claro">
+                    {(l.nichos ?? []).length > 0
+                      ? `Frentes: ${(l.nichos ?? []).map(n => SEGMENTOS.find(sg => sg.id === n)?.nome ?? n).join(', ')}`
+                      : 'Sem frente marcada: não aparece na lista de nenhum quadradinho.'}
+                  </p>
                 </div>
                 <div className="flex gap-2">
                   <button type="button" onClick={() => abrirEdicao(l)} title="Muda o nome na lista ou os finais de e-mail" className="min-h-[44px] px-3 text-sm underline text-navy">Editar</button>
@@ -159,6 +182,23 @@ export default function EscritoriosDoProjetoPage() {
               />
               <p className="text-xs text-grafite-claro mt-1">Separe por vírgula. Pode ser com ou sem o @. Só cria conta sozinho quem usa e-mail com um destes finais.</p>
             </div>
+            <fieldset data-testid="segmentos-do-escritorio">
+              <legend className="block text-xs uppercase tracking-wider text-grafite mb-2">De quais frentes este escritório é cliente</legend>
+              <div className="grid gap-x-4 gap-y-1 sm:grid-cols-2">
+                {SEGMENTOS.map(sg => (
+                  <label key={sg.id} className="flex items-center gap-2 text-sm text-grafite min-h-[32px]">
+                    <input
+                      type="checkbox"
+                      checked={nichosSel.includes(sg.id)}
+                      onChange={e => setNichosSel(v => e.target.checked ? [...v, sg.id] : v.filter(x => x !== sg.id))}
+                      title={`Marca o escritório como cliente de ${sg.nome}`}
+                    />
+                    {sg.nome}
+                  </label>
+                ))}
+              </div>
+              <p className="text-xs text-grafite-claro mt-1">O escritório aparece na lista suspensa do Criar conta só das frentes marcadas.</p>
+            </fieldset>
             <div className="flex gap-3">
               <button type="submit" disabled={carregando || faltaBanco} title="Grava o escritório na lista do Criar conta" className="min-h-[44px] px-5 bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-60">
                 {carregando ? 'Gravando…' : 'Gravar'}

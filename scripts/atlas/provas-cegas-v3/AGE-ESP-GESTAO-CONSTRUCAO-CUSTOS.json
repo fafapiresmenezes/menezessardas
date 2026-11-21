@@ -1,0 +1,28 @@
+[
+ {
+  "id": "GES-T1",
+  "enunciado": "Empreitada com orçamento total de 3 000 000 e valor ganho de 900 000 à data. Qual a estimativa de custo final?",
+  "dados": {
+   "BAC": 3000000.0,
+   "EV": 900000.0
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "GES-T2",
+  "enunciado": "Rede de actividades com dois caminhos entre o início e o fim: um de 12, 18 e 9 dias; outro de 15, 10 e 16 dias. Qual a duração do projecto?",
+  "dados": {
+   "caminho_1_dias": [
+    12,
+    18,
+    9
+   ],
+   "caminho_2_dias": [
+    15,
+    10,
+    16
+   ]
+  },
+  "unidade_esperada": "dias"
+ }
+]

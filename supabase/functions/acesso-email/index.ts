@@ -43,6 +43,27 @@ async function enviar(email: string, tipo: 'senha' | 'conta', link: string): Pro
   return !!r?.ok
 }
 
+// Moldura comum dos avisos da casa (mesma cara dos e-mails de senha e conta).
+export function corpoDoAviso(titulo: string, texto: string, link?: { url: string; rotulo: string }): string {
+  const botao = link ? `<p><a href="${link.url}" style="display:inline-block;background:#151a22;color:#fff;padding:12px 20px;text-decoration:none;font-family:Arial,sans-serif">${link.rotulo}</a></p>
+<p style="font-family:Arial,sans-serif;font-size:12px;color:#7a8190">Se o botão não abrir, copie este endereço e cole no navegador:<br>${link.url}</p>` : ''
+  return `<div style="font-family:Georgia,serif;max-width:520px;color:#151a22"><p style="font-family:monospace;font-size:11px;letter-spacing:.1em;color:#6b7280">INSTITUTO THEYE</p>
+<h2 style="font-weight:500">${titulo}</h2>
+<p style="font-family:Arial,sans-serif;font-size:15px;color:#3a4250">${texto}</p>
+${botao}</div>`
+}
+
+async function enviarAviso(email: string, assunto: string, html: string): Promise<boolean> {
+  const { data: conf } = await db().from('configuracoes').select('chave,valor').in('chave', ['brevo_api_key', 'email_remetente'])
+  const c = Object.fromEntries((conf ?? []).map((x: { chave: string; valor: string }) => [x.chave, x.valor]))
+  if (!c.brevo_api_key || !c.email_remetente) return false
+  const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST', headers: { 'api-key': c.brevo_api_key, 'Content-Type': 'application/json', accept: 'application/json' },
+    body: JSON.stringify({ sender: { name: 'Instituto THEYE', email: c.email_remetente }, to: [{ email }], subject: assunto, htmlContent: html }),
+  }).catch(() => null)
+  return !!r?.ok
+}
+
 // Freio simples: poucos pedidos por e-mail e um teto geral por hora. O e-mail é guardado só como resumo irreversível.
 async function dentroDoLimite(email: string): Promise<boolean> {
   const marca = (await sha('acesso:' + email)).slice(0, 32)
@@ -98,12 +119,84 @@ async function tratar(req: Request, origemBoa: boolean): Promise<Response> {
         return json({ ok: true })
       }
       // A recusa da porta do banco chega aqui como "Database error saving new user": é a única regra do banco que barra conta nova.
-      if (/Cadastro fechado|Database error/i.test(m)) return json({ erro: 'Criar conta é só para quem usa o e-mail do próprio escritório ou recebeu convite. Fale com o responsável do seu escritório ou com o Instituto.' }, 403)
+      if (/Cadastro fechado|Database error/i.test(m)) return json({ erro: 'O cadastro está fechado. Para solicitar acesso, preencha o formulário em theye.club/pedir-entrada ou aguarde um convite do administrador.' }, 403)
       return json({ erro: 'Não foi possível criar a conta agora. Tente de novo em instantes.' }, 400)
     }
     const codigo = data?.properties?.hashed_token
     const enviado = codigo ? await enviar(email, 'conta', `${SITE}/?confirmar=1&th=${encodeURIComponent(codigo)}`) : false
     return json({ ok: true, enviado })
+  }
+
+  if (acao === 'avisar-pendente') {
+    // Pedido de M (21/11/2026): quem termina o cadastro recebe um e-mail dizendo que a conta
+    // aguarda a liberação do administrador, e o administrador recebe um e-mail com o link da
+    // tela Equipe para liberar. Quem chama é a própria pessoa logada: tudo sai do token dela,
+    // nunca do corpo do pedido — ninguém dispara aviso em nome de outra pessoa.
+    const jwt = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '')
+    const { data: u } = await db().auth.getUser(jwt)
+    const usuario = u?.user
+    if (!usuario?.email) return json({ erro: 'Entre na sua conta primeiro.' }, 401)
+    const [{ data: pend }, { data: perfil }] = await Promise.all([
+      db().from('pedidos_entrada').select('escritorio_id, nome').eq('usuario_id', usuario.id).is('decidido_em', null).maybeSingle(),
+      db().from('usuarios_perfis').select('id').eq('id', usuario.id).maybeSingle(),
+    ])
+    if (!pend || perfil) return json({ ok: true }) // nada pendente: nenhum aviso, nenhuma pista
+    // Um aviso por pessoa por dia, para ninguém encher a caixa do administrador.
+    const marca = (await sha('pendente:' + usuario.id)).slice(0, 32)
+    const desde = new Date(Date.now() - 86400_000).toISOString()
+    const { count } = await db().from('consumo_api').select('id', { count: 'exact', head: true }).eq('funcao', 'Aviso: pendente').eq('modelo', marca).gte('criado_em', desde)
+    if ((count ?? 0) > 0) return json({ ok: true })
+    await db().from('consumo_api').insert({ funcao: 'Aviso: pendente', modelo: marca, quantidade: 1 })
+    let nomeEsc = ''
+    if (pend.escritorio_id) {
+      const { data: esc } = await db().from('escritorios').select('nome_exibicao, nome').eq('id', pend.escritorio_id).maybeSingle()
+      nomeEsc = String(esc?.nome_exibicao || esc?.nome || '')
+    }
+    // O nome foi digitado pela própria pessoa: entra no e-mail sem virar HTML.
+    const semHtml = (t: string) => t.replace(/[<>&"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c] ?? c))
+    nomeEsc = semHtml(nomeEsc)
+    const quem = semHtml(String(pend.nome || usuario.email).slice(0, 120))
+    await enviarAviso(usuario.email, 'Sua conta aguarda a liberação do administrador',
+      corpoDoAviso('Falta só a liberação do administrador',
+        `O seu cadastro${nomeEsc ? ` no escritório ${nomeEsc}` : ''} foi recebido. Por segurança, ninguém entra na plataforma sem a liberação do administrador. Você será avisado assim que a sua conta for liberada; não precisa fazer mais nada.`))
+    const { data: confA } = await db().from('configuracoes').select('valor').eq('chave', 'email_aviso_admin').maybeSingle()
+    const adm = String(confA?.valor || 'mateusmenezesfigueiredo6@gmail.com')
+    await enviarAviso(adm, `Pedido de entrada aguardando você: ${quem}`,
+      corpoDoAviso('Alguém pediu para entrar na plataforma',
+        `${quem} (${semHtml(usuario.email)})${nomeEsc ? `, do escritório ${nomeEsc},` : ''} terminou o cadastro e está aguardando a sua liberação. Toque no botão para abrir a tela Equipe e decidir.`,
+        { url: `${SITE}/#/equipe`, rotulo: 'Abrir a tela Equipe e liberar' }))
+    return json({ ok: true })
+  }
+
+  if (acao === 'avisar-decidido') {
+    // Pedido de M (21/11/2026): a pessoa recebe um e-mail quando o administrador decide o pedido
+    // dela. Quem chama é a administração logada; a decisão e o e-mail saem do BANCO, nunca do
+    // corpo do pedido — ninguém usa isto para mandar e-mail falso de "liberado".
+    const jwt = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '')
+    const { data: u } = await db().auth.getUser(jwt)
+    const chamador = u?.user
+    if (!chamador) return json({ erro: 'Entre na sua conta primeiro.' }, 401)
+    const { data: perfilAdm } = await db().from('usuarios_perfis').select('funcao').eq('id', chamador.id).maybeSingle()
+    if (perfilAdm?.funcao !== 'admin') return json({ erro: 'Só a administração avisa decisões.' }, 403)
+    const alvo = String(b.usuario ?? '')
+    if (!/^[0-9a-f-]{36}$/.test(alvo)) return json({ erro: 'Pedido não encontrado.' }, 400)
+    const { data: pedido } = await db().from('pedidos_entrada').select('email, nome, aceito, decidido_em').eq('usuario_id', alvo).not('decidido_em', 'is', null).order('decidido_em', { ascending: false }).limit(1).maybeSingle()
+    if (!pedido?.email) return json({ ok: true }) // sem decisão no banco: nenhum e-mail
+    const marca = (await sha('decidido:' + alvo + ':' + String(pedido.decidido_em))).slice(0, 32)
+    const { count } = await db().from('consumo_api').select('id', { count: 'exact', head: true }).eq('funcao', 'Aviso: decidido').eq('modelo', marca)
+    if ((count ?? 0) > 0) return json({ ok: true })
+    await db().from('consumo_api').insert({ funcao: 'Aviso: decidido', modelo: marca, quantidade: 1 })
+    if (pedido.aceito) {
+      await enviarAviso(pedido.email, 'Sua conta foi liberada na plataforma THEYE',
+        corpoDoAviso('Sua conta foi liberada',
+          'O administrador liberou a sua entrada. Toque no botão e entre com o seu e-mail e a sua senha.',
+          { url: `${SITE}/`, rotulo: 'Entrar na plataforma' }))
+    } else {
+      await enviarAviso(pedido.email, 'Sobre o seu pedido de entrada na plataforma THEYE',
+        corpoDoAviso('O pedido não foi aceito',
+          'O administrador não aceitou o pedido de entrada desta conta. Se você acha que houve engano, fale com o responsável do seu escritório ou com o Instituto.'))
+    }
+    return json({ ok: true })
   }
 
   return json({ erro: 'Ação desconhecida.' }, 400)

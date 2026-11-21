@@ -5,13 +5,14 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import Marca from '@/components/Marca'
 import { NOME_PLATAFORMA } from '@/lib/plataforma'
 import { marcaPorDominio, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
-import { esquecerEscritorio } from '@/lib/equipe'
+import { esquecerEscritorio, ehInstituto } from '@/lib/equipe'
+import { SimboloOuro } from '@/components/EntradaMembros'
 import { useTexto } from '@/lib/i18n'
 import SeletorIdioma from '@/components/SeletorIdioma'
 import Vertentes from '@/components/Vertentes'
 import Produtos from '@/components/Produtos'
 import Doacoes from '@/components/Doacoes'
-import { destinoSeguro, DESTINO_PADRAO, DESTINOS_PERMITIDOS, lembrarUltimaFrente } from '@/lib/destino'
+import { destinoSeguro, DESTINO_PADRAO, DESTINOS_PERMITIDOS, lembrarUltimaFrente, ehEntradaAdmin } from '@/lib/destino'
 import AberturaInstituto from '@/components/AberturaInstituto'
 import { VERTENTES } from '@/data/vertentes'
 import type { Chave } from '@/lib/i18n'
@@ -89,17 +90,6 @@ export default function LoginPage() {
   // só cria um pedido de entrada: ninguém vê nada antes de o responsável liberar.
   const [listaEscritorios, setListaEscritorios] = useState<string[]>(ESCRITORIOS_DA_CASA)
   const [escolha, setEscolha] = useState('')
-  useEffect(() => {
-    let vivo = true
-    ;(async () => {
-      try {
-        const { data, error } = await supabase.rpc('escritorios_para_cadastro')
-        const nomes = error ? [] : ((data ?? []) as unknown[]).map(r => String(typeof r === 'string' ? r : (r as { nome?: string })?.nome ?? '').trim().toUpperCase()).filter(Boolean)
-        if (vivo && nomes.length > 0) setListaEscritorios([...new Set(nomes)].sort((a, b) => a.localeCompare(b, 'pt')))
-      } catch { /* fica a lista de casa */ }
-    })()
-    return () => { vivo = false }
-  }, [])
   const [avisoCadastro, setAvisoCadastro] = useState('')
   const [pedirCodigo, setPedirCodigo] = useState(false)
   const [codigo, setCodigo] = useState('')
@@ -118,7 +108,7 @@ export default function LoginPage() {
   // embaixo, e parecia que o botão não funcionava.
   const vertenteDestino = pedidoValido ? VERTENTES.find(v => v.rota === destino) : undefined
   const nomeDestino = vertenteDestino ? t(`vertente.${vertenteDestino.id}.nome` as Chave)
-    : !pedidoValido ? '' : destino === '/caderno-de-produtos' ? t('produtos.titulo') : destino === '/instituto' ? t('login.entradaInstituto') : ''
+    : !pedidoValido ? '' : destino === '/caderno-de-produtos' ? t('produtos.titulo') : ehEntradaAdmin(destino) ? t('login.entradaAdministracao') : ''
   const doSegmento = !!nomeDestino
   useEffect(() => {
     if (!doSegmento) return
@@ -127,13 +117,53 @@ export default function LoginPage() {
   }, [doSegmento, destino])
   // Pedido de M (19/11/2026): a entrada com e-mail e senha não fica na primeira tela. Ela só aparece
   // depois que a pessoa clica no quadradinho da frente dela (ou em domínio próprio de escritório).
-  // Pedido de M (20/11/2026): cada setor tem o seu próprio login e senha — nenhum quadradinho manda
-  // mais "entrar pela Plataforma jurídica". Então todo segmento abre o cartão de entrada.
-  const entradaComCartao = doSegmento
-  const mostrarCartao = (doSegmento && entradaComCartao) || !!marca || pedirCodigo
+  // Pedido de M (21/11/2026): tudo segmentado. Cada quadradinho (Projetos sociais, Engenharia…) e o
+  // símbolo do ouro (administração do Instituto) abrem o SEU quadro de e-mail e senha, com o nome
+  // daquela plataforma. Nenhum deles manda mais para a entrada da Plataforma jurídica.
+  const mostrarCartao = doSegmento || !!marca || pedirCodigo
+  // Pedido de M (21/11/2026 04h34): cada nicho tem a sua área de login e os SEUS clientes.
+  // O quadradinho diz o segmento; a lista suspensa do Criar conta mostra só os clientes dele.
+  const nichoDestino = destino === '/inicio' ? 'juridico' : (vertenteDestino?.id ?? '')
+  useEffect(() => {
+    let vivo = true
+    ;(async () => {
+      try {
+        // A lista vem do banco, filtrada pelo segmento. Enquanto o banco não conhece o filtro
+        // (COLE-ISTO-156), o jurídico cai na lista antiga e os outros segmentos ficam vazios.
+        let r = await supabase.rpc('escritorios_para_cadastro', { p_nicho: nichoDestino || null })
+        if (r.error && nichoDestino === 'juridico') r = await supabase.rpc('escritorios_para_cadastro')
+        const nomes = r.error ? [] : ((r.data ?? []) as unknown[]).map(x => String(typeof x === 'string' ? x : (x as { nome?: string })?.nome ?? '').trim().toUpperCase()).filter(Boolean)
+        if (!vivo) return
+        if (nomes.length > 0) setListaEscritorios([...new Set(nomes)].sort((a, b) => a.localeCompare(b, 'pt')))
+        else setListaEscritorios(nichoDestino === 'juridico' ? ESCRITORIOS_DA_CASA : [])
+      } catch { if (vivo) setListaEscritorios(nichoDestino === 'juridico' ? ESCRITORIOS_DA_CASA : []) }
+    })()
+    return () => { vivo = false }
+  }, [nichoDestino])
+  // O cadastro pede o escritório da lista do segmento. A administração não tem Criar conta:
+  // lá só entra quem já é administração do Instituto.
+  const permiteCadastro = destino === '/inicio' || !!marca || (doSegmento && !!vertenteDestino)
   // Entrada geral: quem escolheu a língua e chegou sem segmento nem marca de escritório parceiro.
   const entradaGeral = !marca && !doSegmento && !mostrarCartao
-  const seguir = () => { lembrarUltimaFrente(destino); navigate(destino) }
+  // Entrada administrativa (M, 21/11/2026): login e senha só da administração do Instituto. Quem
+  // não está na lista de administradores (configuracoes.instituto_admins, conferida no banco por
+  // eh_admin_instituto) é desconectado na hora e fica nesta tela, sem cair em outra plataforma.
+  const entradaAdmin = pedidoValido && ehEntradaAdmin(destino) && !marca
+  const seguir = async () => {
+    if (entradaAdmin) {
+      esquecerEscritorio()
+      let ok = false
+      try { ok = await ehInstituto() } catch { ok = false }
+      if (!ok) {
+        esquecerEscritorio()
+        await supabase.auth.signOut()
+        setPedirCodigo(false)
+        setErro(t('login.soAdministracao'))
+        return
+      }
+    }
+    lembrarUltimaFrente(destino); navigate(destino)
+  }
 
   // Dois fatores: se a conta tem aplicativo autenticador, a sessão só vale depois do código (nível aal2).
   const precisaCodigo = async () => {
@@ -149,7 +179,7 @@ export default function LoginPage() {
       if (!fator) { setErro(t('erro.semAutenticador')); return }
       const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId: fator.id, code: codigo.replace(/\s/g, '') })
       if (error) setErro(t('erro.codigoErrado'))
-      else seguir()
+      else await seguir()
     } finally { setCarregando(false) }
   }
 
@@ -210,7 +240,7 @@ export default function LoginPage() {
     try {
       const { error } = await supabase.auth.signInWithPassword(captchaLigado() ? { email, password: senha, options: { captchaToken: comprovante } } : { email, password: senha })
       if (captchaLigado()) setRodadaRobo(n => n + 1)
-      if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else seguir() }
+      if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else await seguir() }
       else if (/captcha/i.test(error.message ?? '')) setErro(mensagemAmigavel(error))
       else if (/not confirmed/i.test(error.message ?? '')) setErro(t('erro.emailNaoConfirmado'))
       else if (error.status === 400 || error.status === 401 || /invalid/i.test(mensagemAmigavel(error))) setErro(t('erro.credenciais'))
@@ -228,10 +258,20 @@ export default function LoginPage() {
           20/11/2026 (tela cheia, história, ontologia, frentes). Pedido de M nesta mesma tela. */}
       {entradaGeral && <div className="-mx-4 -mt-10 md:-mt-14"><AberturaInstituto /></div>}
       <div className="mx-auto w-full max-w-6xl">
-      <div className={mostrarCartao ? 'grid items-center gap-10 lg:grid-cols-[1fr_minmax(0,28rem)]' : 'grid items-center gap-8'}>
+      {/* Entrada administrativa: tela própria, centrada, com o símbolo do ouro em destaque (M, 21/11/2026:
+          "tá no cantinho, melhora"). Nada de vitrine de frentes nem de plataforma jurídica aqui. */}
+      {entradaAdmin && (
+        <div className="porta mx-auto mb-10 flex max-w-xl flex-col items-center pt-6 text-center" data-testid="cabecalho-administracao">
+          <SimboloOuro largura={180} className="drop-shadow-[0_0_24px_rgba(201,162,74,0.45)]" />
+          <p className="mt-8 text-xs font-semibold uppercase tracking-[0.35em] text-[#C9A24A]">{t('login.areaAdministrativa')}</p>
+          <h1 className="mt-4 font-serif text-4xl leading-tight tracking-[0.12em] md:text-5xl">INSTITUTO THEYE</h1>
+          <p data-testid="resumo-administracao" className="mt-5 text-base leading-relaxed text-neutral-200">{t('login.entradaAdministracaoResumo')}</p>
+        </div>
+      )}
+      <div className={entradaAdmin ? 'mx-auto grid w-full max-w-md' : mostrarCartao ? 'grid items-center gap-10 lg:grid-cols-[1fr_minmax(0,28rem)]' : 'grid items-center gap-8'}>
         {/* Lado de quem chega: o Instituto inteiro, não só o jurídico. Em domínio de escritório
             parceiro (marca própria) este lado mostra só a marca dele. */}
-        {!entradaGeral && (
+        {!entradaGeral && !entradaAdmin && (
         <div className="porta text-center lg:text-left" data-testid="porta-instituto">
           <div className="flex justify-center lg:justify-start mb-6">
             <Marca tamanho="grande" marca={marca} tipo="instituto" subtitulo={t('marca.instituto')} />
@@ -273,7 +313,7 @@ export default function LoginPage() {
             <p data-testid="so-membros" className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-grafite">{t('login.soMembros')}</p>
           )}
           <h1 className="font-serif text-2xl text-navy text-center" data-testid="titulo-do-cartao">
-            {doSegmento ? `${t('vertentes.entrarEm')} ${nomeDestino}` : NOME_PLATAFORMA}
+            {entradaAdmin ? t('login.areaAdministrativa') : doSegmento ? `${t('vertentes.entrarEm')} ${nomeDestino}` : NOME_PLATAFORMA}
           </h1>
           <p className="text-sm text-grafite-claro text-center mt-2 mb-7">
             {primeiroAcesso ? t('login.subtituloCadastro') : t('login.subtitulo')}
@@ -352,22 +392,6 @@ export default function LoginPage() {
           ) : (
           <form onSubmit={entrar} className="space-y-5">
             <input type="text" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" value={armadilha} onChange={e => setArmadilha(e.target.value)} className="absolute opacity-0 h-0 w-0 pointer-events-none" />
-            {/* Entrada da administração do Instituto (M, 20/11/2026): antes do e-mail, de qual setor é. */}
-            {destino === '/instituto' && !primeiroAcesso && (
-              <div>
-                <label htmlFor="setor-instituto" className="block text-xs uppercase tracking-wider text-grafite mb-2">{t('login.setor')}</label>
-                <select
-                  id="setor-instituto"
-                  data-testid="setor-instituto"
-                  value={escolha}
-                  onChange={e => setEscolha(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm bg-white text-grafite"
-                >
-                  <option value="">{t('login.setorEscolha')}</option>
-                  {VERTENTES.map(v => <option key={v.id} value={v.id}>{t(`vertente.${v.id}.nome` as Chave)}</option>)}
-                </select>
-              </div>
-            )}
             <div>
               <label htmlFor="email" className="block text-xs uppercase tracking-wider text-grafite mb-2">
                 {t('login.email')}
@@ -420,6 +444,9 @@ export default function LoginPage() {
                   <option value={OUTRO}>{t('login.escritorioForaDaLista')}</option>
                 </select>
                 <p className="text-xs text-grafite-claro mt-1">{t('login.qualEscritorioAjuda')}</p>
+                {listaEscritorios.length === 0 && (
+                  <p className="text-xs text-atencao mt-1" data-testid="sem-escritorios-do-segmento">{t('login.semEscritoriosDoSegmento')}</p>
+                )}
                 {escolha === OUTRO && (
                   <div className="mt-3">
                     <label htmlFor="escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title={t('login.escritorioRotuloTitulo')}>
@@ -469,7 +496,7 @@ export default function LoginPage() {
             >
               {t('login.esqueciSenha')}
             </button>
-            {supabaseConfigurado && (
+            {supabaseConfigurado && permiteCadastro && (
               <button
                 type="button"
                 onClick={() => {

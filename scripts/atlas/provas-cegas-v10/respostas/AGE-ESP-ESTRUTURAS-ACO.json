@@ -1,0 +1,6 @@
+[
+  {
+    "id": "L1",
+    "resposta": "1) Com este extracto não consigo apontar um erro de norma ou de unidade com certeza; o ponto 3 (E_d/R_d = 0,78 < 1,0) é coerente com a definição, mas falta indicar a verificação (secção, membro ou combinação de acções) a que se refere.\n2) Ponto 1: a espessura nominal de 320 µm para C5-M e a citação do quadro A.5 da EN ISO 12944-5 não as consigo confirmar daqui; conferir o valor na norma e confirmar que o sistema cumpre a durabilidade exigida no caderno de encargos.\n3) Ponto 2: gamma_M0 = 1,00 é o valor recomendado da EN 1993-1-1, cláusula 6.1; confirmar o Anexo Nacional aplicável e a especificação técnica do dono de obra, que prevalece no contrato FIDIC.\n4) Ponto 4: a faixa de 1.300 a 1.700 t tem hipótese declarada (perda de 5 %), mas falta citar a origem dos quantitativos (número e revisão do desenho); sem isso fica não confirmado.\n5) Rascunho para conferência e assinatura do engenheiro responsável. Não confirmado: valor e tabela de espessura de pintura, gamma_M0 no Anexo Nacional, e o cálculo que dá 0,78."
+  }
+]

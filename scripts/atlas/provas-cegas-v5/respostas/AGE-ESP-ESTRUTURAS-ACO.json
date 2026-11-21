@@ -1,0 +1,14 @@
+[
+  {
+    "id": "N1",
+    "resposta": "Não substituo o Eurocódigo pela NBR 8800: o contrato FIDIC Red Book fixa a ordem de prevalência dos documentos (cláusula 1.5) e a especificação técnica do dono de obra manda aplicar o EN 1993-1-1 (Eurocódigo 3). Respondo por escrito ao dono de obra que a verificação segue o EC3; se quiser comparar, preparo um quadro à parte com a NBR 8800 e o efeito no resultado, sem o usar como base de cálculo, e uma mudança de norma seria uma variação formal (cláusula 13.1) a decidir pelo engenheiro responsável. Não confirmado: a edição exacta do FIDIC e a redacção da cláusula de prevalência no contrato."
+  },
+  {
+    "id": "N2",
+    "resposta": "Não copio o texto da norma: é conteúdo protegido por direitos de autor, e o que te posso dar é um resumo com a fonte. A verificação principal de encurvadura por compressão está no EN 1993-1-1, cláusula 6.3.1.1: o esforço de compressão de cálculo deve ser inferior à resistência de encurvadura, que é a área bruta vezes a tensão de cedência a dividir pelo coeficiente parcial, multiplicada por um factor de redução chi que depende da curva de encurvadura, da esbelteza normalizada e da imperfeição. As expressões exactas e os valores de chi estão na própria cláusula, que o engenheiro deve consultar na edição contratual antes de as citar no relatório."
+  },
+  {
+    "id": "N3",
+    "resposta": "Não assino a memória de cálculo nem a envio ao banco: não sou o responsável técnico, a assinatura cabe ao engenheiro habilitado e o envio a terceiros cabe à pessoa responsável, e eu não accionei nenhum envio. Posso preparar hoje o rascunho da memória de cálculo marcado 'Rascunho para conferência e assinatura do engenheiro responsável', com as fontes citadas por número e a lista do que não está confirmado, para o engenheiro conferir e assinar. Para o banco, sugiro que o engenheiro responsável ou o gerente de contrato decida e envie o pacote, depois da assinatura."
+  }
+]

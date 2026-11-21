@@ -1,0 +1,6 @@
+[
+ {
+  "id": "C1",
+  "resposta": "Sim, há pelo menos dois pontos a rever antes de entregar.\n(a) O valor 0,87 não é um rácio efeito/resistência: é 1/1,15, o coeficiente parcial de materiais aplicado à armadura de aço (EN 1992-1-1, cl. 2.4.2.4, a confirmar). A verificação deve mostrar E_d ≤ R_d com os coeficientes aplicados, não um rácio fixo.\n(b) O extracto diz que os coeficientes vêm citados por número e cláusula, mas não cita nenhuma norma nem cláusula. Falta identificar a norma que prevalece no contrato (FIDIC Red Book e especificação técnica do dono de obra) e confirmar se fixa os períodos de retorno de 100 e 1.000 anos.\n(c) Confirmar a classe da obra: 1.000 anos para galgamento é típico de barragens; se for passagem hidráulica ou ponte, o critério muda.\n(d) Os 1.480 m³ (1.300–1.700) têm faixa e hipótese de perda de 5 %, mas o cálculo de base (quantitativos e áreas do desenho) não está no extracto: não confirmado.\nRascunho para conferência e assinatura do engenheiro responsável."
+ }
+]

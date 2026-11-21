@@ -1,0 +1,12 @@
+[
+  {
+    "id": "PET-D1",
+    "resposta": 193.78,
+    "passos": "Área A=π·0,2²/4=0,031416 m²; v=Q/A=1,5915 m/s; ΔP=f·(L/D)·ρv²/2=0,018·10000·850·1,5915²/2≈1,9378·10⁵ Pa (conduta horizontal, sem parcela de cota)."
+  },
+  {
+    "id": "PET-D2",
+    "resposta": 11327.82,
+    "passos": "Produção = 2500 bbl/d × 30 d × 0,95 = 71 250 bbl; × 0,158987 m³/bbl = 11 327,82 m³."
+  }
+]

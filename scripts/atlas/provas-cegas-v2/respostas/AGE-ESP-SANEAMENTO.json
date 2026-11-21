@@ -1,0 +1,14 @@
+[
+  {
+    "id": "SAN-D1",
+    "resposta": 127.0,
+    "passos": "Qmed = 50000 x 150 / 86400 = 86,8 L/s; esgoto = 0,80 x 86,8 = 69,4 L/s; pico = K1 x K2 x esgoto = 1,8 x 69,4 = 125,0 L/s; infiltracao = 0,2 x 10 = 2,0 L/s; total = 127,0 L/s.",
+    "duvida": "Assumi K2 aplicado sobre o caudal do dia de maior consumo (convencao NBR 9649, pico = K1 x K2 x Qmed); se K2 for sobre a media, o resultado seria 106,2 L/s. Assumi tambem que a infiltracao entra sem fator de ponta. Faixa: 106 a 127 L/s conforme a convencao."
+  },
+  {
+    "id": "SAN-D2",
+    "resposta": 37.0,
+    "passos": "Coagulante = 40 g/m3 x 1000 m3/d = 40 kg/d; lodo quimico = 0,25 x 40 = 10 kg/d; SS removidos = 30 g/m3 x 1000 = 30 kg/d; capturados = 0,90 x 30 = 27 kg/d; total = 10 + 27 = 37 kg/d.",
+    "duvida": "Assumi que o lodo total soma o lodo quimico do coagulante e os SS capturados; se o fator 0,25 ja incluir os SS, o total seria 27 kg/d; se se considerar so o lodo quimico, 10 kg/d. Faixa: 27 a 37 kg/d."
+  }
+]

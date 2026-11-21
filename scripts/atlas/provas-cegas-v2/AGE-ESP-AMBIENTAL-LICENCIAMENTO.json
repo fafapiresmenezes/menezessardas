@@ -1,0 +1,24 @@
+[
+ {
+  "id": "AMB-D1",
+  "enunciado": "Grupo gerador a gasóleo de 500 kW a funcionar 4 000 horas por ano à potência nominal, consumo específico de 0,25 litros por kWh e factor de emissão de 2,68 kg de CO₂ por litro de gasóleo. Qual a emissão anual?",
+  "dados": {
+   "potencia_kW": 500.0,
+   "horas_ano": 4000.0,
+   "consumo_L_kWh": 0.25,
+   "factor_kgCO2_L": 2.68
+  },
+  "unidade_esperada": "t CO₂/ano"
+ },
+ {
+  "id": "AMB-D2",
+  "enunciado": "Duas fontes pontuais, medidas a 10 m, dão 85,0 dB(A) e 88,0 dB(A). Qual o nível somado a 50 m, só com divergência geométrica e sem absorção do ar nem do solo?",
+  "dados": {
+   "L1_dBA": 85.0,
+   "L2_dBA": 88.0,
+   "distancia_medida_m": 10,
+   "distancia_pedida_m": 50
+  },
+  "unidade_esperada": "dB(A)"
+ }
+]

@@ -1,0 +1,64 @@
+[
+ {
+  "id": "AMB-01",
+  "enunciado": "Efluente de 0,5 m³/s com 40 mg/L lançado em rio de 10 m³/s com 2 mg/L. Qual a concentração a jusante, com mistura completa?",
+  "dados": {
+   "Qe_m3_s": 0.5,
+   "Ce_mg_L": 40,
+   "Qr_m3_s": 10,
+   "Cr_mg_L": 2
+  },
+  "unidade_esperada": "mg/L"
+ },
+ {
+  "id": "AMB-02",
+  "enunciado": "Queima de 1000 L de gasóleo. Quanto CO₂ resulta, pelos fatores por defeito?",
+  "dados": {
+   "V_L": 1000,
+   "densidade_t_m3": 0.84,
+   "PCI_GJ_t": 43.0,
+   "fator_kg_GJ": 74.1
+  },
+  "unidade_esperada": "kg"
+ },
+ {
+  "id": "AMB-03",
+  "enunciado": "Duas fontes de ruído de 70 dB cada, a funcionar juntas. Qual o nível resultante?",
+  "dados": {
+   "L1_dB": 70,
+   "L2_dB": 70
+  },
+  "unidade_esperada": "dB"
+ },
+ {
+  "id": "AMB-04",
+  "enunciado": "Fonte pontual com 85 dB a 10 m. Qual o nível a 100 m, em campo livre e sem outras perdas?",
+  "dados": {
+   "L_ref_dB": 85,
+   "r_ref_m": 10,
+   "r_m": 100
+  },
+  "unidade_esperada": "dB"
+ },
+ {
+  "id": "AMB-05",
+  "enunciado": "Matéria orgânica com DBO última de 300 mg/L e k = 0,23 /dia. Qual a DBO₅?",
+  "dados": {
+   "L0_mg_L": 300,
+   "k_dia": 0.23,
+   "t_dia": 5
+  },
+  "unidade_esperada": "mg/L"
+ },
+ {
+  "id": "AMB-06",
+  "enunciado": "Partícula de 0,05 mm, massa volúmica 2650 kg/m³, em água a 20 °C (μ = 1,002·10⁻³ Pa·s). Qual a velocidade de sedimentação?",
+  "dados": {
+   "d_mm": 0.05,
+   "rho_s": 2650,
+   "rho_w": 1000,
+   "mu_Pa_s": 0.001002
+  },
+  "unidade_esperada": "mm/s"
+ }
+]

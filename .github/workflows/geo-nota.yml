@@ -1,9 +1,14 @@
 # R11: a régua de nota do geomapeamento, conferida pela máquina a cada rodada.
 #
-# O que esta obra garante: as duas dimensões que a máquina sabe medir (3 acessibilidade,
-# 9 manutenção) não podem ter, em src/data/geo/nota.ts, um número diferente do medido aqui.
-# Se tiverem, a obra fica vermelha. É o que impede alguém — nós inclusive — de subir a nota
-# da régua sem ter melhorado nada.
+# O que esta obra garante: as três dimensões que a máquina sabe medir (2 desempenho,
+# 3 acessibilidade, 9 manutenção) não podem ter, em src/data/geo/nota.ts, um número diferente
+# do medido aqui. Se tiverem, a obra fica vermelha. É o que impede alguém — nós inclusive — de
+# subir a nota da régua sem ter melhorado nada.
+#
+# 21/11/2026: a medição passou a rodar sobre a BANCADA (auditoria/geo), e não sobre o site.
+# Desde 19/11 as telas do Instituto exigem conta, e esta obra, que entrava como visitante,
+# media a porta do site em vez da casa do geo — media outra coisa e não dizia. A tranca está
+# certa e não foi afrouxada: a bancada monta as mesmas telas, com o mesmo CSS, sem a tranca.
 #
 # Também confere que src/data/geo/nota-historico.json continua igual ao que o git conta.
 name: nota do geo
@@ -41,23 +46,33 @@ jobs:
       - name: Provas do geo
         run: npx vitest run src/lib/geo src/components/geo src/pages/geo src/data
 
-      - name: Montar o site, para medir a casa /geo por dentro
+      - name: Montar o site (o pacote que o visitante baixa)
         run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
-      - name: Medir acessibilidade das telas da casa /geo (axe-core)
+      - name: Montar a bancada de medição (as mesmas telas do geo, sem a tranca)
+        run: npx vite build --config vite.auditoria.config.ts
+
+      - name: Medir a casa /geo (axe-core nas 12 telas + Lighthouse)
         run: |
           npx playwright install --with-deps chromium
-          npx vite preview --port 4173 --strictPort &
-          for i in $(seq 1 60); do curl -sf http://localhost:4173 >/dev/null && break; sleep 1; done
-          node scripts/geo/auditar-r2.mjs http://localhost:4173
+          npx vite preview --outDir dist-auditoria --port 4180 --strictPort &
+          for i in $(seq 1 60); do curl -sf http://localhost:4180 >/dev/null && break; sleep 1; done
+          node scripts/geo/auditar-r2.mjs http://localhost:4180
+          export CHROME_PATH="$(node -e "console.log(require('playwright').chromium.executablePath())")"
+          npx -y lighthouse@13.6.0 'http://localhost:4180/#/geo' \
+            --only-categories=accessibility,performance \
+            --output=json --output-path=relatorio-lighthouse-geo.json \
+            --chrome-flags="--headless --no-sandbox --disable-gpu" --quiet
         env:
           BOLETIM_GEO: boletim-nota-geo.json
 
       - name: Conferir a régua contra a medição
         run: node --experimental-strip-types scripts/geo/medir-nota.mjs boletim-nota-geo.json
+        env:
+          LIGHTHOUSE_GEO: relatorio-lighthouse-geo.json
 
       - name: Conferir o histórico da régua contra o git
         run: node scripts/geo/historico-nota.mjs --conferir
@@ -69,4 +84,5 @@ jobs:
           path: |
             src/data/geo/medicoes-ci.json
             boletim-nota-geo.json
+            relatorio-lighthouse-geo.json
           retention-days: 30

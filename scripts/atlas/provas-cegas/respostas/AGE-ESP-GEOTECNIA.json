@@ -1,0 +1,71 @@
+[
+  {
+    "id": "GEO-01",
+    "resposta": 75,
+    "unidade": "kN/m",
+    "formula": "Teoria de Rankine (aterro horizontal, muro sem atrito): Ka = tan²(45° − φ'/2); Pa = ½·Ka·γ·H²",
+    "passos": [
+      "Ka = tan²(45° − 30°/2) = tan²(30°) = 1/3 = 0,3333",
+      "Pa = ½ · (1/3) · 18 kN/m³ · (5,00 m)² = ½ · (1/3) · 18 · 25",
+      "Pa = 75,0 kN/m (por metro de muro)"
+    ]
+  },
+  {
+    "id": "GEO-02",
+    "resposta": 284,
+    "unidade": "kPa",
+    "formula": "Capacidade de carga última, sapata corrida, argila saturada em condições não drenadas (φu = 0): qu = cu·Nc + γ·D, com Nc = 5,14",
+    "passos": [
+      "Nc = 5,14 (sapata corrida, φu = 0; Prandtl/Skempton)",
+      "Sobrecarga ao nível de assentamento: q = γ·D = 18 · 1,50 = 27,0 kPa",
+      "qu = 50 · 5,14 + 27,0 = 257,0 + 27,0 = 284,0 kPa",
+      "Sem fatores de forma (sapata corrida). Não aplicada a verificação de Eurocódigo 7 com fatores parciais (resposta é a capacidade última característica)."
+    ]
+  },
+  {
+    "id": "GEO-03",
+    "resposta": 76.76,
+    "unidade": "kPa",
+    "formula": "Princípio das tensões efetivas: σ' = σ − u, com σ = Σ γ·Δz e u = γw·(z − z_NA)",
+    "passos": [
+      "Tensão total: 0–2 m: 18 · 2,00 = 36,0 kPa; 2–6 m (γsat): 20 · 4,00 = 80,0 kPa; σ = 116,0 kPa",
+      "Pressão neutra a 6,00 m: u = 9,81 · (6,00 − 2,00) = 39,24 kPa",
+      "σ' = 116,0 − 39,24 = 76,76 kPa"
+    ]
+  },
+  {
+    "id": "GEO-04",
+    "resposta": 161.2,
+    "unidade": "mm",
+    "formula": "Assentamento por consolidação primária, argila NC: Sc = (Cc · H / (1 + e0)) · log10((σ'0 + Δσ) / σ'0)",
+    "passos": [
+      "Cc · H / (1 + e0) = 0,30 · 4000 mm / 1,90 = 631,58 mm",
+      "log10((100 + 80) / 100) = log10(1,80) = 0,25527",
+      "Sc = 631,58 · 0,25527 = 161,2 mm",
+      "Faixa indicativa: depende de Cc e e0 (sem ensaio oedométrico confirmado, valores tomados como dados do enunciado; não confirmado em campo)."
+    ]
+  },
+  {
+    "id": "GEO-05",
+    "resposta": 1.13,
+    "unidade": "anos",
+    "formula": "Tempo para grau de consolidação U: t = Tv · H_dr² / cv, com H_dr = meia espessura para drenagem pelas duas faces",
+    "passos": [
+      "H_dr = 4,00 m / 2 = 2,00 m (drenagem pelas duas faces)",
+      "Para U = 90 %: Tv = 0,848 (dado do enunciado)",
+      "t = 0,848 · (2,00 m)² / 3,0 m²/ano = 0,848 · 4,00 / 3,0 = 1,131 anos",
+      "Resultado: aproximadamente 1,13 anos (cerca de 13,6 meses)"
+    ]
+  },
+  {
+    "id": "GEO-06",
+    "resposta": 1.717,
+    "unidade": "—",
+    "formula": "Talude infinito, areia seca sem coesão (c' = 0, percolação nula): FS = tan φ' / tan β",
+    "passos": [
+      "tan 32° = 0,62487",
+      "tan 20° = 0,36397",
+      "FS = 0,62487 / 0,36397 = 1,717 (adimensional)"
+    ]
+  }
+]
