@@ -27,7 +27,9 @@ import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
 import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal, Compass, LayoutGrid, AppWindow } from 'lucide-react'
-import { gruposMenu, gruposVisiveis, atalhosDoMenu, frenteDe, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao } from './menuTelas'
+import { gruposMenu, gruposVisiveis, atalhosDoMenu, frenteDe, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao, type Frente } from './menuTelas'
+import { VERTENTES } from '@/data/vertentes'
+import { useTexto } from '@/lib/i18n'
 import { usePessoaFundos } from '@/components/VerComoFundos'
 import { veEcra } from '@/lib/visaoFundos'
 import { meuAlcance, ALCANCE_FECHADO } from '@/lib/hierarquia'
@@ -44,6 +46,7 @@ const estaAtivo = (href: string, pathname: string) => pathname === href || pathn
 const grupoDe = (pathname: string) => gruposMenu.find(g => g.itens.some(i => estaAtivo(i.href, pathname)))?.id
 
 export default function Layout({ children, title }: LayoutProps) {
+  const t = useTexto()
   const [sede, setSede] = useState(true)
   useEffect(() => { ehSede().then(setSede).catch(() => setSede(true)) }, [])
   // Passo D22: white-label — parceiro vê a própria marca e cor no menu.
@@ -63,7 +66,9 @@ export default function Layout({ children, title }: LayoutProps) {
   useEffect(() => { meuEscritorio().then(setEscritorio).catch(() => setEscritorio(null)) }, [])
   // Hierarquia: sócios e gestor veem os números do conjunto; os demais nem veem esses grupos no menu.
   const [veTudo, setVeTudo] = useState(false)
-  useEffect(() => { meuAlcance().then(a => setVeTudo(a.veTudo)).catch(() => setVeTudo(false)) }, [])
+  const [financeiro, setFinanceiro] = useState(false)
+  const [ocultas, setOcultas] = useState<string[]>([])
+  useEffect(() => { meuAlcance().then(a => { setVeTudo(a.veTudo); setFinanceiro(a.financeiro === true); setOcultas(a.ocultas ?? []) }).catch(() => { setVeTudo(false); setFinanceiro(false) }) }, [])
   // Meu jeito de trabalhar: o menu simples e o tamanho da letra são os que a pessoa escolheu.
   const [jeito, setJeito] = useState<MeuJeito>(lerMeuJeito)
   useEffect(() => {
@@ -88,7 +93,7 @@ export default function Layout({ children, title }: LayoutProps) {
   }, [])
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const visao: Visao = { veTudo, admin, instituto: escritorio?.instituto === true, sede }
+  const visao: Visao = { veTudo, admin, instituto: escritorio?.instituto === true, sede, financeiro, ocultas }
   // 18/11/2026 (M): o escritório cliente vê a própria marca no menu, nunca a do Instituto. Sem logo cadastrado,
   // entra o nome do escritório; a marca THEYE fica só para quem administra o Instituto.
   const marcaVisivel: MarcaEscritorio | null = marca ?? (!visao.instituto && escritorio
@@ -101,7 +106,18 @@ export default function Layout({ children, title }: LayoutProps) {
     .map(g => projectos ? { ...g, itens: g.itens.filter(i => veEcra(pessoaFundos, i.href)) } : g)
     .filter(g => g.itens.length > 0)
   // Cada frente do Instituto é uma plataforma à parte: dentro dela, o menu do direito some.
-  const frente = frenteDe(pathname)
+  // Pedido de M (20/11/2026): nenhum quadradinho pode abrir "pela plataforma jurídica". As frentes
+  // com menu próprio já tinham o seu; as demais (uma vertente do Instituto, menos o direito/'/inicio')
+  // ganham aqui uma plataforma própria e vazia — o esqueleto da jurídica, sem o menu do direito,
+  // "em desenvolvimento". O conteúdo da tela continua aparecendo; o que some é a lateral do direito.
+  const frenteEspecifica = frenteDe(pathname)
+  const vertenteFrente = frenteEspecifica
+    ? undefined
+    : VERTENTES.find(v => v.rota !== '/inicio' && (pathname === v.rota || pathname.startsWith(`${v.rota}/`)))
+  const frente: Frente | undefined = frenteEspecifica
+    ?? (vertenteFrente
+      ? { id: `frente-${vertenteFrente.id}`, nome: t(`vertente.${vertenteFrente.id}.nome` as Parameters<typeof t>[0]), itens: [] }
+      : undefined)
   const meusAtalhos = atalhosDoMenu(jeito.atalhos, visao)
   // Com o menu recolhido só há o ícone, então a dica começa pelo nome da tela.
   const dicaDe = (item: { href: string; label: string }) =>
@@ -506,7 +522,9 @@ export default function Layout({ children, title }: LayoutProps) {
         </header>
 
         <FaixaConexao />
-        <main className="flex-1 overflow-auto p-4 md:p-8"><AceiteTermos /><AceiteContratoSaas admin={admin} sede={sede} /><ExigirDoisFatores admin={admin} /><GuiaDaTela caminho={pathname} /><ErroTela chave={pathname}>{children}</ErroTela></main>
+        <main className="flex-1 overflow-auto p-4 md:p-8"><AceiteTermos /><AceiteContratoSaas admin={admin} sede={sede} /><ExigirDoisFatores admin={admin} /><GuiaDaTela caminho={pathname} /><ErroTela chave={pathname}>{ocultas.some(o => estaAtivo(o, pathname))
+          ? <p role="status" data-testid="tela-escondida" className="bg-white shadow-sm border-l-4 border-dourado p-4 text-sm max-w-xl">Esta tela não está liberada para o seu nível. Quem libera é quem está acima de você na hierarquia do escritório.</p>
+          : children}</ErroTela></main>
         <Atalhos />
       </div>
       <Busca aberta={buscaAberta} fechar={() => setBuscaAberta(false)} />

@@ -14,7 +14,7 @@ vi.mock('@/lib/equipe', () => ({
   esquecerEscritorio: () => undefined,
   listarPessoas: async () => [{ id: '1', funcao: 'admin' }, { id: '2', funcao: null }, { id: '3', funcao: null }],
 }))
-let alcance = { id: 'u1', cargo: null as string | null, admin: false, veTudo: false }
+let alcance: { id: string; cargo: string | null; admin: boolean; veTudo: boolean; financeiro?: boolean } = { id: 'u1', cargo: null, admin: false, veTudo: false }
 vi.mock('@/lib/hierarquia', () => ({ meuAlcance: async () => alcance }))
 const aplicarTema = vi.fn()
 vi.mock('@/lib/tema', () => ({ temaAtual: () => 'claro', aplicarTema: (t: string) => aplicarTema(t) }))
@@ -74,7 +74,7 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
 
   it('o menu é dividido em grupos: abre o da tela atual e "Todo dia", recolhe e abre à vontade, lembra a escolha e mostra a tela escolhida de qualquer grupo', async () => {
     localStorage.setItem('theye-menu-simples', 'nao')
-    alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true }
+    alcance = { id: 'u1', cargo: 'socio', admin: false, veTudo: true, financeiro: true }
     montar('/financeiro')
     const nav = screen.getByRole('navigation', { name: 'Menu principal' })
     const grupo = (nome: string) => screen.getByText(nome).closest('button') as HTMLButtonElement
@@ -114,7 +114,9 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
     montar('/meu-dia')
     await waitFor(() => expect(screen.getByTestId('escritorio-atual')).toBeTruthy())
     // o grupo aberto fica lembrado: não precisa clicar de novo
-    expect(await screen.findByText('Financeiro')).toBeTruthy()
+    expect(await screen.findByText('Indicadores')).toBeTruthy()
+    // Pedido de M (19/11/2026): o gestor vê os números, mas o dinheiro é só do chefe e de quem ele liberar.
+    expect(screen.queryByText('Financeiro')).toBeNull()
     expect(titulos()).toEqual(blocos)
     expect(document.querySelector('[data-nivel=gestao]')!.textContent).toBe('sócios, gestor e administração')
     expect(screen.queryByText('Consumo')).toBeNull()

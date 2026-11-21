@@ -43,6 +43,24 @@ export default function FrentesDoInstitutoPage() {
           Cada quadradinho abre a frente direto. Você já está dentro: não pede senha de novo.
         </p>
 
+        {/* Pedido de M, 19/11/2026: o Instituto é um quadrado próprio, uma plataforma como a do direito,
+            e não uma parte da plataforma jurídica. Só a administração do Instituto chega a esta tela. */}
+        <Link
+          to="/instituto"
+          data-testid="quadrado-plataforma-instituto"
+          title="Abre a Plataforma do Instituto: administração, caderno de produtos, royalties e medições, com menu próprio"
+          className="group block bg-neutral-100 text-neutral-900 border border-neutral-100 hover:bg-white rounded-sm p-6 mb-6 no-underline transition"
+        >
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-600">Só o Instituto</span>
+            <span aria-hidden="true" className="text-neutral-500 group-hover:text-neutral-900">→</span>
+          </div>
+          <h2 className="text-xl font-serif mt-1 mb-2">Plataforma do Instituto</h2>
+          <p className="text-sm text-neutral-700 leading-relaxed max-w-2xl">
+            A casa do Instituto, separada da plataforma do direito: administração, caderno de produtos, enquetes, soluções, mapa de receita, royalties e medições. O escritório cliente não vê este quadrado nem o que está dentro dele.
+          </p>
+        </Link>
+
         <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" data-testid="frentes-instituto-grid">
           {VERTENTES.map(v => (
             <li key={v.id}>

@@ -18,10 +18,12 @@ const abrir = (rota: string) =>
 describe('portas do Instituto em desenvolvimento', () => {
   it('todo endereço da lista está ligado no App.tsx', () => {
     const app = readFileSync('src/App.tsx', 'utf8')
+    // Pedido de M (19/11/2026 21h48): as portas do Instituto são só do Instituto — cada rota
+    // exige login e a tranca SoInstituto; o escritório não alcança nenhuma.
     for (const p of PORTAIS_INSTITUTO) {
-      expect(app, `${p.rota} não está no App.tsx`).toContain(`path="${p.rota}" element={<PortalInstitutoPage />}`)
+      expect(app, `${p.rota} não está no App.tsx com a tranca do Instituto`).toContain(`path="${p.rota}" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />}`)
     }
-    expect(app).toContain('path="/portais" element={<PortaisInstitutoPage />}')
+    expect(app).toContain('path="/portais" element={isAuthenticated ? <SoInstituto><PortaisInstitutoPage /></SoInstituto> : <Navigate to="/login" />}')
   })
 
   it('cada endereço abre a sua porta, com nome, resumo, estado e escopo', () => {
@@ -53,10 +55,10 @@ describe('portas do Instituto em desenvolvimento', () => {
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Esta porta não existe')
   })
 
-  it('a lista mostra as dezessete portas, cada uma com o seu estado', () => {
+  it('a lista mostra as trinta portas, cada uma com o seu estado', () => {
     render(<MemoryRouter><PortaisInstitutoPage /></MemoryRouter>)
     expect(screen.getByTestId('lista-portais').children.length).toBe(PORTAIS_INSTITUTO.length)
-    expect(PORTAIS_INSTITUTO.length).toBe(17)
+    expect(PORTAIS_INSTITUTO.length).toBe(30)
     for (const p of PORTAIS_INSTITUTO) expect(screen.getByText(p.nome), p.rota).toBeTruthy()
   })
 })

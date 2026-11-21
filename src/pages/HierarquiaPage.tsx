@@ -8,6 +8,7 @@
  * Fonte única dos cargos: src/lib/hierarquia.ts (configuracoes.cargos). Esta tela só lê e grava por lá.
  * Nenhum cargo é atribuído por padrão: quem define é o escritório, nunca a plataforma.
  */
+import VisaoPorNivel from '@/components/VisaoPorNivel'
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import { Crown, Users, FolderOpen, Database } from 'lucide-react'
@@ -17,6 +18,8 @@ import { listarPessoas, perfilAtual, type Funcao, type Pessoa } from '@/lib/equi
 import {
   CARGOS,
   definirCargo,
+  definirLiberadoFinanceiro,
+  lerLiberadosFinanceiro,
   descricaoCargo,
   lerCargosEstrito,
   meuAlcance,
@@ -32,6 +35,7 @@ export default function HierarquiaPage() {
   const [perfil, setPerfil] = useState<Funcao | null | 'carregando'>('carregando')
   const [pessoas, setPessoas] = useState<Pessoa[]>([])
   const [cargos, setCargos] = useState<MapaCargos>({})
+  const [liberados, setLiberados] = useState<string[]>([])
   const [eu, setEu] = useState(ALCANCE_FECHADO.id)
   // Quantos processos ainda não têm advogado responsável: enquanto não tiverem, aparecem para todo mundo.
   const [processos, setProcessos] = useState<{ total: number; semDono: number } | null>(null)
@@ -53,6 +57,7 @@ export default function HierarquiaPage() {
           setLeituraFalhou(true)
           setMsg({ tipo: 'erro', texto: `Não foi possível carregar os cargos já gravados (${mensagemAmigavel(e)}). Recarregue a página antes de alterar.` })
         })
+        lerLiberadosFinanceiro().then(setLiberados).catch(() => undefined)
         meuAlcance().then(a => setEu(a.id)).catch(() => undefined)
         if (supabaseConfigurado) {
           const { data } = await supabase.from('tarefas').select('responsavel_id').eq('nivel', 'projeto')
@@ -85,6 +90,18 @@ export default function HierarquiaPage() {
     } finally { setOcupado('') }
   }
 
+  // Financeiro: o chefe (sócio ou administração) decide quem mais vê o dinheiro do escritório.
+  const alterarFinanceiro = async (pessoa: Pessoa, liberar: boolean) => {
+    setOcupado(pessoa.id); setMsg(null); setSalvoAgora('')
+    try {
+      setLiberados(await definirLiberadoFinanceiro(pessoa.id, liberar))
+      setSalvoAgora(pessoa.id)
+      setMsg({ tipo: 'ok', texto: `${pessoa.nome}: ${liberar ? 'agora vê o financeiro' : 'não vê mais o financeiro'}. Salvo.` })
+    } catch (e) {
+      setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })
+    } finally { setOcupado('') }
+  }
+
   const comAcesso = pessoas.filter(p => p.funcao)
   const semCargo = comAcesso.filter(p => !cargos[p.id]).length
 
@@ -98,7 +115,9 @@ export default function HierarquiaPage() {
             <p className="text-sm">Somente quem administra o escritório define a hierarquia. Peça a um administrador do escritório para ajustar o seu cargo.</p>
             {msg && <p role="alert" className="mt-3 text-sm text-critico">{msg.texto}</p>}
           </section>
-        ) : (
+        ) : null}
+        {perfil !== 'carregando' && perfil !== 'admin' && <VisaoPorNivel />}
+        {perfil === 'carregando' || perfil !== 'admin' ? null : (
           <>
             <section className="bg-dourado/10 p-6 shadow-sm border-l-4 border-dourado" aria-labelledby="o-que-e">
               <h2 id="o-que-e" className="text-lg font-serif font-semibold flex items-center gap-2">
@@ -119,9 +138,9 @@ export default function HierarquiaPage() {
               </dl>
               <p className="text-sm text-grafite mt-4 flex items-start gap-2">
                 <Database size={16} className="text-navy mt-0.5 shrink-0" aria-hidden="true" />
-                <span title="A regra de privacidade por advogado já está aplicada no banco de dados do escritório.">
-                  Isto não é só aparência: o próprio <strong>banco de dados</strong> já obedece a este cargo — sócio(a), gestor(a)
-                  e a administração leem tudo; quem tem outro cargo, ou nenhum, só alcança o que é seu.
+                <span title="Hoje o cargo organiza só o que cada pessoa vê na tela.">
+                  Hoje o cargo <strong>organiza só a tela</strong>: o banco de dados ainda não aplica esta regra. Quem tem acesso
+                  direto ao banco de dados vê tudo, independentemente do cargo.
                 </span>
               </p>
             </section>
@@ -174,6 +193,21 @@ export default function HierarquiaPage() {
                         ))}
                       </select>
                       <p className="text-xs text-grafite-claro mt-1">{ocupado === p.id ? 'Salvando…' : salvoAgora === p.id ? 'Salvo agora.' : 'Salvo na hora; pode trocar quando quiser.'}</p>
+                      <label className="mt-3 flex items-start gap-2 text-sm min-h-[44px]" title="Só os sócios e a administração veem o dinheiro do escritório. Marque para liberar esta pessoa também.">
+                        <input
+                          type="checkbox"
+                          data-testid={`financeiro-${p.id}`}
+                          className="mt-1 h-5 w-5"
+                          title="Marque para esta pessoa ver as telas Financeiro e Honorários do escritório inteiro"
+                          checked={cargos[p.id] === 'socio' || p.funcao === 'admin' || liberados.includes(p.id)}
+                          disabled={ocupado !== '' || leituraFalhou || cargos[p.id] === 'socio' || p.funcao === 'admin'}
+                          onChange={e => alterarFinanceiro(p, e.target.checked)}
+                        />
+                        <span>
+                          Pode ver o financeiro
+                          <span className="block text-xs text-grafite-claro">{cargos[p.id] === 'socio' || p.funcao === 'admin' ? 'Sócios e a administração sempre veem.' : 'Só vê se você marcar aqui.'}</span>
+                        </span>
+                      </label>
                     </div>
                   </li>
                 ))}
@@ -208,6 +242,7 @@ export default function HierarquiaPage() {
                 <strong> Carteira de processos</strong>.
               </p>
             </section>
+            <VisaoPorNivel />
           </>
         )}
       </div>

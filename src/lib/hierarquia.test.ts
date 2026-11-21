@@ -73,3 +73,30 @@ describe('definirCargo não apaga a hierarquia quando a leitura falha', () => {
     vi.doUnmock('./supabase'); vi.doUnmock('./config')
   })
 })
+
+describe('três níveis em cascata', () => {
+  it('chefe é sócio ou administração; gestor é o do meio; os demais são advogados', async () => {
+    const { nivelDe } = await import('./hierarquia')
+    expect(nivelDe({ cargo: 'socio' })).toBe('chefe')
+    expect(nivelDe({ cargo: null, admin: true })).toBe('chefe')
+    expect(nivelDe({ cargo: 'gestor' })).toBe('gestor')
+    expect(nivelDe({ cargo: 'pleno' })).toBe('advogado')
+    expect(nivelDe({ cargo: 'junior' })).toBe('advogado')
+    expect(nivelDe({ cargo: null })).toBe('advogado')
+  })
+  it('o que é escondido do gestor fica escondido também do advogado; do chefe nada se esconde', async () => {
+    const { ocultasDoNivel } = await import('./hierarquia')
+    const mapa = { gestor: ['/funil'], advogado: ['/kyc', '/funil'] }
+    expect(ocultasDoNivel('chefe', mapa)).toEqual([])
+    expect(ocultasDoNivel('gestor', mapa)).toEqual(['/funil'])
+    expect(ocultasDoNivel('advogado', mapa).sort()).toEqual(['/funil', '/kyc'])
+  })
+  it('financeiro: sócio e administração sempre; os demais só se estiverem na lista', async () => {
+    const { podeVerFinanceiro } = await import('./hierarquia')
+    expect(podeVerFinanceiro({ id: 'a', cargo: 'socio' }, [])).toBe(true)
+    expect(podeVerFinanceiro({ id: 'a', cargo: null, admin: true }, [])).toBe(true)
+    expect(podeVerFinanceiro({ id: 'a', cargo: 'gestor' }, [])).toBe(false)
+    expect(podeVerFinanceiro({ id: 'a', cargo: 'gestor' }, ['a'])).toBe(true)
+    expect(podeVerFinanceiro({ id: '', cargo: 'pleno' }, [''])).toBe(false)
+  })
+})

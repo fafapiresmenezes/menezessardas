@@ -6,18 +6,19 @@
 // (src/data/rotas.ts) leem daqui, por `nomeDaTela`. Assim uma tela não volta a ter três nomes diferentes.
 // Cada tela (ou bloco) tem um NÍVEL: quem não é daquele nível nem vê o item no menu. O banco continua sendo quem
 // protege os dados; aqui é só arrumação, para ninguém ver botão que não é para si.
-import { Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, AppWindow, Network, MapPin, HeartPulse, type LucideIcon, Droplets, Ruler, Target, Coins, Landmark} from 'lucide-react'
+import { KeyRound, Building2, CalendarDays, Bell, FileBarChart, Gauge, ShieldCheck, Truck, Scale, Settings, Users, MessageSquare, TrendingUp, FlaskConical, Wallet, Home, Globe, FolderKanban, Inbox, UserCheck, Sunrise, Timer, FileText, Radar, Briefcase, Cloud, Banknote, ClipboardList, FileSearch, Library, Vote, KeySquare, Wrench, GraduationCap, Gavel, Filter, PiggyBank, SearchCheck, CalendarClock, UserPlus, PenLine, BookOpen, Compass, FolderInput, Store, LayoutGrid, SlidersHorizontal, AppWindow, Network, MapPin, HeartPulse, type LucideIcon, Droplets, Ruler, Target, Coins, Landmark} from 'lucide-react'
 
-export type Nivel = 'todos' | 'gestao' | 'admin' | 'instituto'
+export type Nivel = 'todos' | 'gestao' | 'financeiro' | 'admin' | 'instituto'
 export interface Tela { icon: LucideIcon; label: string; href: string; nivel?: Nivel }
 export interface GrupoMenu { id: string; titulo: string; bloco: string; nivel: Nivel; dica: string; itens: Tela[] }
 /** O que a pessoa pode ver: vem do cargo (sócio e gestor veem o conjunto), da função de administrador e do Instituto. */
-export interface Visao { veTudo: boolean; admin: boolean; instituto: boolean; sede: boolean }
+export interface Visao { veTudo: boolean; admin: boolean; instituto: boolean; sede: boolean; /** Pedido de M (19/11/2026): o dinheiro do escritório é só do chefe (sócio ou administração) e de quem ele liberar na tela Hierarquia. */ financeiro?: boolean; /** Telas que o nível de cima escondeu desta pessoa (três níveis em cascata). */ ocultas?: string[] }
 
-export const ROTULO_NIVEL: Record<Nivel, string> = { todos: '', gestao: 'sócios, gestor e administração', admin: 'administrador', instituto: 'só o Instituto' }
+export const ROTULO_NIVEL: Record<Nivel, string> = { todos: '', gestao: 'sócios, gestor e administração', financeiro: 'sócios, administração e quem eles liberarem', admin: 'administrador', instituto: 'só o Instituto' }
 export const EXPLICA_NIVEL: Record<Nivel, string> = {
   todos: 'Todas as pessoas do escritório veem este grupo.',
   gestao: 'Só sócios, o gestor e a administração veem isto: são os números e o dinheiro do escritório inteiro.',
+  financeiro: 'Só sócios, a administração e quem eles liberarem na tela Hierarquia veem isto: é o dinheiro do escritório.',
   admin: 'Só quem administra o escritório vê isto: liberar pessoas, definir cargos e acompanhar o consumo.',
   instituto: 'Só a administração do Instituto THEYE vê isto: é o que cuida da plataforma inteira.',
 }
@@ -69,53 +70,22 @@ export const gruposMenu: GrupoMenu[] = [
     { icon: ShieldCheck, label: 'Trilha de auditoria', href: '/trilha' },
     { icon: Gauge, label: 'Indicadores', href: '/indicadores', nivel: 'gestao' },
     { icon: Filter, label: 'Funil de vendas', href: '/funil', nivel: 'gestao' },
-    { icon: PiggyBank, label: 'Financeiro', href: '/financeiro', nivel: 'gestao' },
-    { icon: Banknote, label: 'Honorários', href: '/honorarios', nivel: 'gestao' },
+    { icon: PiggyBank, label: 'Financeiro', href: '/financeiro', nivel: 'financeiro' },
+    { icon: Banknote, label: 'Honorários', href: '/honorarios', nivel: 'financeiro' },
     { icon: FileBarChart, label: 'Relatórios', href: '/relatorios', nivel: 'gestao' },
     { icon: TrendingUp, label: 'Previsões', href: '/previsoes', nivel: 'gestao' },
     { icon: Users, label: 'Área do administrador', href: '/equipe', nivel: 'admin' },
-    { icon: Network, label: 'Hierarquia', href: '/hierarquia', nivel: 'admin' },
+    { icon: Network, label: 'Hierarquia', href: '/hierarquia', nivel: 'gestao' },
+    { icon: KeyRound, label: 'Banco de senhas', href: '/banco-de-senhas', nivel: 'gestao' },
     { icon: Wallet, label: 'Consumo', href: '/consumo', nivel: 'admin' },
   ] },
   // Passo A27: as telas do Instituto saem do menu do escritório. O escritório cliente não vê a administração
   // da plataforma nem a pesquisa do Instituto; só quem entra pelo Instituto THEYE vê este bloco.
-  { id: 'instituto', titulo: 'Instituto THEYE', bloco: 'Instituto', nivel: 'instituto', dica: 'Todas as frentes', itens: [
+  // Pedido de M (19/11/2026): o Instituto não mora dentro da plataforma jurídica. Ele é um quadrado à parte,
+  // uma plataforma própria, como a do direito. Aqui fica só a porta de saída, e só a administração do
+  // Instituto a enxerga: as telas do Instituto estão em FRENTES ('instituto'), com menu próprio.
+  { id: 'instituto', titulo: 'Instituto THEYE', bloco: 'Instituto', nivel: 'instituto', dica: 'Plataforma à parte', itens: [
     { icon: LayoutGrid, label: 'Frentes do Instituto', href: '/frentes-do-instituto' },
-    { icon: FlaskConical, label: 'Administração do Instituto', href: '/instituto' },
-    { icon: BookOpen, label: 'Caderno de produtos', href: '/caderno-de-produtos' },
-    { icon: TrendingUp, label: 'Predição (mercado)', href: '/preditiva' },
-    { icon: MapPin, label: 'Geolocalização', href: '/geolocalizacao' },
-    { icon: Wrench, label: 'Engenharia', href: '/engenharia' },
-    { icon: HeartPulse, label: 'Saúde', href: '/saude' },
-    { icon: GraduationCap, label: 'Educação e capacitação', href: '/educacao' },
-    { icon: ShieldCheck, label: 'Cibersegurança', href: '/ciberseguranca' },
-    { icon: Compass, label: 'Geomapeamento', href: '/geomapeamento' },
-    { icon: Building2, label: 'Governo', href: '/governo' },
-    { icon: Vote, label: 'Cívico', href: '/civico' },
-    { icon: FlaskConical, label: 'Computação quântica', href: '/quantum' },
-    { icon: FlaskConical, label: "Carbono", href: '/carbono' },
-    { icon: FlaskConical, label: "Petróleo e gás", href: '/petroleo' },
-    { icon: FlaskConical, label: "Psicologia", href: '/psicologia' },
-    { icon: FlaskConical, label: "Psiquiatria", href: '/psiquiatria' },
-    { icon: FlaskConical, label: "Biossegurança", href: '/biosseguranca' },
-    { icon: FlaskConical, label: "Transumanismo", href: '/transumanismo' },
-    { icon: FlaskConical, label: "Marketing", href: '/marketing' },
-    { icon: FlaskConical, label: "Publicidade", href: '/publicidade' },
-    { icon: Building2, label: "Plataforma, Governança, Fundos Internacionais", href: '/fundos-internacionais' },
-    { icon: FlaskConical, label: 'IA e superinteligência', href: '/ia' },
-    { icon: GraduationCap, label: 'Estudos para entidades', href: '/estudos' },
-    { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
-    { icon: Store, label: 'Soluções jurídicas', href: '/solucoes' },
-    { icon: ShieldCheck, label: 'Superfície de ataque', href: '/superficie-de-ataque' },
-    { icon: Droplets, label: 'Águas', href: '/aguas' },
-    { icon: Droplets, label: 'Água dos reservatórios (ANA)', href: '/agua' },
-    { icon: GraduationCap, label: 'Trilhas de estudo', href: '/trilhas' },
-    { icon: FlaskConical, label: 'Agenda de pesquisa em IA', href: '/pesquisa-ia' },
-    { icon: Ruler, label: 'Régua de acerto dos modelos', href: '/regua' },
-    { icon: Target, label: 'Escolha do mercado', href: '/escolha-do-mercado' },
-    { icon: Coins, label: 'Mapa de receita', href: '/mapa-de-receita' },
-    { icon: Banknote, label: 'Royalties', href: '/royalties' },
-    { icon: ClipboardList, label: 'Medições de contratos', href: '/medicoes' },
   ] },
   { id: 'conta', titulo: 'Minha conta', bloco: 'Minha conta', nivel: 'todos', dica: 'Do seu jeito', itens: [
     { icon: SlidersHorizontal, label: 'Meu jeito de trabalhar', href: '/meu-jeito' },
@@ -180,7 +150,7 @@ export const gruposProjectos: GrupoMenu[] = [
 
 const NOMES: Record<string, string> = Object.fromEntries([...gruposProjectos, ...gruposMenu].flatMap(g => g.itens.map(i => [i.href, i.label])))
 /** O nome da tela, um só, para o menu, a entrada, a busca e a lista de telas. */
-export const nomeDaTela = (href: string): string | undefined => NOMES[href]
+export const nomeDaTela = (href: string): string | undefined => NOMES[href] ?? TELAS_DO_INSTITUTO().find(i => i.href === href)?.label
 
 /** Os atalhos de cada bloco na tela de entrada: só o destino e a frase que explica. O NOME vem do menu. */
 export interface AtalhoInicio { id: string; destino: string; texto: string; icone: LucideIcon; so?: 'admin' | 'veTudo' }
@@ -224,8 +194,12 @@ export const BLOCOS_INICIO = gruposMenu
 export const ATALHOS_PADRAO = ['/inicio', '/meu-dia', '/agenda', '/intimacoes', '/processos', '/assistente', '/meu-estilo', '/parametros-escrita']
 export const MAX_ATALHOS = 14
 
+/** Telas que ninguém esconde de ninguém: sem elas a pessoa não trabalha nem cuida da própria conta. */
+export const TELAS_FIXAS = ['/meu-dia', '/inicio', '/settings', '/meu-jeito', '/hierarquia']
+
 export function podeVerNivel(nivel: Nivel, v: Visao): boolean {
   if (nivel === 'gestao') return v.veTudo || v.admin
+  if (nivel === 'financeiro') return v.admin || v.financeiro === true
   if (nivel === 'admin') return v.admin
   if (nivel === 'instituto') return v.instituto
   return true
@@ -241,7 +215,7 @@ export function gruposVisiveis(v: Visao, perfil: 'direito' | 'projectos' = 'dire
   }
   return gruposMenu
     .filter(g => podeVerNivel(g.nivel, v))
-    .map(g => ({ ...g, itens: g.itens.filter(i => (v.sede || !SO_SEDE.includes(i.href)) && podeVerNivel(i.nivel ?? 'todos', v)) }))
+    .map(g => ({ ...g, itens: g.itens.filter(i => (v.sede || !SO_SEDE.includes(i.href)) && podeVerNivel(i.nivel ?? 'todos', v) && !(v.ocultas ?? []).includes(i.href)) }))
     .filter(g => g.itens.length > 0)
 }
 
@@ -326,7 +300,11 @@ export const DICAS: Record<string, string> = {
   '/relatorios': 'Relatórios prontos para imprimir ou exportar',
   '/trilha': 'Registro do que foi feito, com carimbo que prova a data',
   '/instituto': 'Pesquisa e estudos do Instituto THEYE',
+  '/gestao-instituto': 'Painel de gestão do Instituto inteiro: frentes, ferramentas e pendências',
   '/frentes-do-instituto': 'Lista das frentes do Instituto: cada uma abre direto no seu segmento',
+  '/escritorios-do-projeto': 'Cadastro dos escritórios que aparecem na lista do Criar conta',
+  '/agentes-instituto': 'Os agentes especialistas do acervo da casa e o catálogo dos consultores com ementa e fontes',
+  '/bancadas-fila': 'Os pedidos de colaboração das bancadas, para a sede aprovar ou recusar',
   '/preditiva': 'Plataforma preditiva: previsões de mercado com incerteza declarada',
   '/educacao': 'Educação e capacitação do Instituto: trilhas, cursos e materiais',
   '/ciberseguranca': 'Cibersegurança: rastros, superfície de ataque e resposta a incidentes',
@@ -343,6 +321,20 @@ export const DICAS: Record<string, string> = {
   '/marketing': "Marketing: Marketing com prova: o que se afirma tem fonte, e a lei de dados e de consumo fica à vista.",
   '/fundos-internacionais': "Plataforma, Governança, Fundos Internacionais: Governar projetos financiados por fundos internacionais: quem decide, o que foi medido e o que se presta de contas a cada financiador.",
   '/publicidade': "Publicidade: Publicidade dentro da regra: o que o código de autorregulação e a lei de consumo permitem e proíbem.",
+  '/estalecas': 'Jogo da Moeda do Olho: previsões de brincadeira com crédito interno, sem dinheiro, que alimentam o estudo de calibragem',
+  '/infraestrutura': "Infraestrutura e obras públicas: Obras, concessões e parcerias público-privadas, do edital à medição, com método aberto.",
+  '/energia': "Energia: Setor elétrico, renováveis e transição energética, com a regra da ANEEL e o dado oficial à vista.",
+  '/agronegocio': "Agronegócio: Safra, crédito rural, rastreabilidade e regra ambiental do campo, com o dado oficial de cada número.",
+  '/mineracao': "Mineração: Títulos minerários, barragens e royalties da mineração, com a norma e a fonte oficial de cada dado.",
+  '/transporte': "Transporte e logística: Rodovias, portos, ferrovias, frete e cadeia de suprimentos, com o dado público de cada trecho.",
+  '/seguranca-publica': "Segurança pública: Estudos de segurança pública com dado oficial, sem perfilar pessoas nem prever crime de indivíduo.",
+  '/cidades-inteligentes': "Cidades inteligentes: Serviços urbanos com sensor, dado aberto e privacidade desde o desenho.",
+  '/financas': "Finanças, bancos e seguros: Regulação financeira, pagamentos, crédito e seguros, com a norma do Banco Central e da SUSEP à vista.",
+  '/telecom': "Telecomunicações e conectividade: Redes, 5G, satélite e inclusão digital, com a regra da Anatel e o mapa de cobertura oficial.",
+  '/espacial': "Espaço e satélites: Observação da Terra, satélites e economia espacial, para governo e empresa.",
+  '/robotica': "Robótica e automação: Robôs, automação industrial e agentes de software, com segurança e responsabilidade definidas.",
+  '/transparencia-social': "Projetos sociais: 2% de tudo o que o Instituto recebe sai primeiro para causas sociais no Brasil, com prestação de contas aberta.",
+  '/ontologia-empresas': "Ontologia preditiva para empresas: O método central do Instituto aplicado ao negócio: um grafo que liga clientes, fornecedores, mercado e risco.",
   '/ia': 'IA e superinteligência: modelos, agentes e consultores',
   '/consultores': 'Um consultor de IA por área do direito diz o que fazer primeiro',
   '/estudos': 'Estudos para entidades, órgãos e associações',
@@ -352,6 +344,7 @@ export const DICAS: Record<string, string> = {
   '/nuvem': 'Arquivos do escritório guardados na nuvem',
   '/consumo': 'Quanto cada pessoa consome de IA e quanto custa',
   '/equipe': 'Pessoas do escritório: liberar acesso e definir a função',
+  '/banco-de-senhas': 'Senhas do escritório, guardadas embaralhadas com a frase-mestra',
   '/hierarquia': 'Quem é sócio, gestor, pleno e júnior — o cargo decide o que cada pessoa vê',
   '/settings': 'Configurações da conta e da plataforma',
   '/meu-jeito': 'Escolher o que aparece no seu menu, onde a plataforma abre e o tamanho da letra',
@@ -365,12 +358,28 @@ export const DICAS: Record<string, string> = {
  */
 export interface Frente { id: string; nome: string; itens: Tela[] }
 export const FRENTES: Frente[] = [
+  { id: 'instituto', nome: 'Plataforma do Instituto', itens: [
+    { icon: Gauge, label: 'Gestão do Instituto', href: '/gestao-instituto' },
+    { icon: LayoutGrid, label: 'Frentes do Instituto', href: '/frentes-do-instituto' },
+    { icon: FlaskConical, label: 'Administração do Instituto', href: '/instituto' },
+    { icon: Building2, label: 'Escritórios do projeto', href: '/escritorios-do-projeto' },
+    { icon: Users, label: 'Agentes do Instituto', href: '/agentes-instituto' },
+    { icon: Users, label: 'Fila das bancadas', href: '/bancadas-fila' },
+    { icon: BookOpen, label: 'Caderno de produtos', href: '/caderno-de-produtos' },
+    { icon: Vote, label: 'Enquetes do direito', href: '/enquetes' },
+    { icon: Store, label: 'Soluções jurídicas', href: '/solucoes' },
+    { icon: Target, label: 'Escolha do mercado', href: '/escolha-do-mercado' },
+    { icon: Coins, label: 'Mapa de receita', href: '/mapa-de-receita' },
+    { icon: Banknote, label: 'Royalties', href: '/royalties' },
+    { icon: ClipboardList, label: 'Medições de contratos', href: '/medicoes' },
+  ] },
   { id: 'engenharia', nome: 'Engenharia', itens: [{ icon: Wrench, label: 'Engenharia', href: '/engenharia' }] },
   { id: 'saude', nome: 'Saúde', itens: [{ icon: HeartPulse, label: 'Saúde', href: '/saude' }] },
   { id: 'geolocalizacao', nome: 'Geolocalização', itens: [{ icon: MapPin, label: 'Geolocalização', href: '/geolocalizacao' }] },
   { id: 'predicao', nome: 'Predição', itens: [
     { icon: TrendingUp, label: 'Predição (mercado)', href: '/preditiva' },
     { icon: Ruler, label: 'Régua de acerto dos modelos', href: '/regua' },
+    { icon: Vote, label: 'Jogo da Moeda do Olho', href: '/estalecas' },
   ] },
   { id: 'aguas', nome: 'Águas', itens: [
     { icon: Droplets, label: 'Águas', href: '/aguas' },
@@ -402,6 +411,19 @@ export const FRENTES: Frente[] = [
   { id: 'transumanismo', nome: "Transumanismo", itens: [{ icon: FlaskConical, label: "Transumanismo", href: '/transumanismo' }] },
   { id: 'marketing', nome: "Marketing", itens: [{ icon: FlaskConical, label: "Marketing", href: '/marketing' }] },
   { id: 'publicidade', nome: "Publicidade", itens: [{ icon: FlaskConical, label: "Publicidade", href: '/publicidade' }] },
+  { id: 'infraestrutura', nome: "Infraestrutura e obras públicas", itens: [{ icon: Building2, label: "Infraestrutura e obras públicas", href: '/infraestrutura' }] },
+  { id: 'energia', nome: "Energia", itens: [{ icon: FlaskConical, label: "Energia", href: '/energia' }] },
+  { id: 'agronegocio', nome: "Agronegócio", itens: [{ icon: FlaskConical, label: "Agronegócio", href: '/agronegocio' }] },
+  { id: 'mineracao', nome: "Mineração", itens: [{ icon: FlaskConical, label: "Mineração", href: '/mineracao' }] },
+  { id: 'transporte', nome: "Transporte e logística", itens: [{ icon: FlaskConical, label: "Transporte e logística", href: '/transporte' }] },
+  { id: 'seguranca-publica', nome: "Segurança pública", itens: [{ icon: ShieldCheck, label: "Segurança pública", href: '/seguranca-publica' }] },
+  { id: 'cidades', nome: "Cidades inteligentes", itens: [{ icon: Compass, label: "Cidades inteligentes", href: '/cidades-inteligentes' }] },
+  { id: 'financas', nome: "Finanças, bancos e seguros", itens: [{ icon: Wallet, label: "Finanças, bancos e seguros", href: '/financas' }] },
+  { id: 'telecom', nome: "Telecomunicações e conectividade", itens: [{ icon: FlaskConical, label: "Telecomunicações e conectividade", href: '/telecom' }] },
+  { id: 'espacial', nome: "Espaço e satélites", itens: [{ icon: Compass, label: "Espaço e satélites", href: '/espacial' }] },
+  { id: 'robotica', nome: "Robótica e automação", itens: [{ icon: FlaskConical, label: "Robótica e automação", href: '/robotica' }] },
+  { id: 'projetos-sociais', nome: "Projetos sociais", itens: [{ icon: HeartPulse, label: "Projetos sociais", href: '/transparencia-social' }] },
+  { id: 'ontologia', nome: "Ontologia preditiva para empresas", itens: [{ icon: Gauge, label: "Ontologia preditiva para empresas", href: '/ontologia-empresas' }] },
   { id: 'fundos', nome: "Plataforma, Governança, Fundos Internacionais", itens: [
     { icon: Building2, label: "Plataforma, Governança, Fundos Internacionais", href: '/fundos-internacionais' },
     { icon: Gauge, label: 'Visão do presidente', href: '/visao-presidente' },
@@ -425,6 +447,11 @@ export const FRENTES: Frente[] = [
   ] },
 ]
 /** A frente da tela aberta, ou nada quando a tela é do direito (ou da administração). */
+/** As telas da Plataforma do Instituto (saíram do menu do direito em 19/11/2026). */
+export function TELAS_DO_INSTITUTO(): Tela[] {
+  return FRENTES.find(f => f.id === 'instituto')?.itens ?? []
+}
+
 export function frenteDe(pathname: string): Frente | undefined {
   return FRENTES.find(f => f.itens.some(i => pathname === i.href || pathname.startsWith(`${i.href}/`)))
 }

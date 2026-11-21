@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react'
 import Layout from '@/components/Layout'
 import {
   GRANDEZAS, SEM_COLETA, atrasoMedio, caminho, coordenadas, dataBr, diasSemDado,
-  lerPainel, lerReservatorios, lerSerie, nowcasting30, numeroBr, revisadas, riscoHidrico, variacao,
+  lerPainel, lerReservatorios, lerSerie, numeroBr, revisadas, riscoHidrico, variacao,
 } from '@/lib/predicao/agua'
-import type { PainelPonto, Ponto, Previsao, Reservatorio, Risco, Subtipo } from '@/lib/predicao/agua'
+import type { PainelPonto, Ponto, Reservatorio, Risco, Subtipo } from '@/lib/predicao/agua'
 
 const hoje = () => new Date().toISOString().slice(0, 10)
 const diasAtras = (n: number) => new Date(Date.now() - n * 86400000).toISOString().slice(0, 10)
@@ -54,10 +54,6 @@ export default function AguaPage() {
   const falta = serie ? diasSemDado(serie, de, ate) : 0
   const v = serie ? variacao(serie) : null
   const escolhido = reservatorios?.find(r => r.chave_natural === codigo)
-  const previsao = useMemo<Previsao[] | null>(
-    () => subtipo === 'volume_util' && serie && serie.length >= 14 ? nowcasting30(serie) : null,
-    [serie, subtipo],
-  )
 
   const corRisco: Record<Risco, string> = {
     critico: 'bg-critico text-white',
@@ -119,7 +115,7 @@ export default function AguaPage() {
           <section className="bg-white shadow-sm p-6 space-y-4">
             <div>
               <h2 className="font-serif text-xl">Risco hídrico — todos os reservatórios</h2>
-              <p className="text-sm text-grafite">Volume útil mais recente. Crítico: abaixo de 30%. Atenção: 30 a 50%. Normal: acima de 50%.</p>
+              <p className="text-sm text-grafite">Volume útil mais recente. As faixas são um guia de leitura do Instituto, não a classificação oficial da ANA (cada reservatório tem regras próprias de operação): crítico abaixo de 30%, atenção de 30 a 50%, normal acima de 50%.</p>
             </div>
             {painelErro && <p className="text-sm text-critico">{painelErro}</p>}
             {painelCarregando && <p className="text-sm text-grafite">Carregando painel…</p>}
@@ -275,50 +271,12 @@ export default function AguaPage() {
             </>
           )}
 
-          {previsao && previsao.length > 0 && (() => {
-            const p0 = previsao[0].valor
-            const p29 = previsao[previsao.length - 1].valor
-            const delta = p29 - (serie?.[serie.length - 1]?.valor ?? p0)
-            const sentido = delta > 0.5 ? '↑ tendência de alta' : delta < -0.5 ? '↓ tendência de queda' : '→ estável'
-            const corSentido = delta > 0.5 ? 'text-green-600' : delta < -0.5 ? 'text-critico' : 'text-grafite'
-            return (
-              <div className="mt-6 pt-4 border-t border-grafite-claro space-y-3">
-                <div>
-                  <h3 className="font-serif text-lg">Tendência 30 dias — modelo baseline</h3>
-                  <p className="text-sm text-grafite">
-                    Reta + ciclo semanal, calculada no navegador, sem enviar dados para fora.
-                    Intervalo de {Math.round(0.8 * 100)}% de confiança.
-                  </p>
-                </div>
-                <p className={`text-base font-medium ${corSentido}`}>{sentido}</p>
-                <table className="w-full text-sm">
-                  <caption className="text-left text-grafite pb-2">Próximos 7 dias (previsão)</caption>
-                  <thead>
-                    <tr className="text-left border-b border-grafite-claro">
-                      <th className="py-1">Dia</th>
-                      <th className="py-1">Previsto %</th>
-                      <th className="py-1">Baixo %</th>
-                      <th className="py-1">Alto %</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {previsao.slice(0, 7).map(p => (
-                      <tr key={p.quando} className="border-b border-pergaminho">
-                        <td className="py-1">{dataBr(p.quando)}</td>
-                        <td className="py-1">{numeroBr(Math.max(0, Math.min(100, p.valor)))}</td>
-                        <td className="py-1 text-grafite">{numeroBr(Math.max(0, p.baixo))}</td>
-                        <td className="py-1 text-grafite">{numeroBr(Math.min(100, p.alto))}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <p className="text-xs text-grafite">
-                  Isto é uma tendência estatística, não uma previsão do tempo do reservatório.
-                  Chuva, operação e demanda mudam o volume real. Use como orientação, nunca como verdade.
-                </p>
-              </div>
-            )
-          })()}
+          {/* A tendência de 30 dias (nowcasting30) saiu da tela em 19/11/2026: regra do Instituto, nada de
+              previsão na tela sem calibração provada. A função continua em src/lib/predicao/agua.ts para a
+              calibração; volta para cá só com a régua de erro aprovada. */}
+          <p className="mt-6 pt-4 border-t border-grafite-claro text-xs text-grafite" data-testid="agua-sem-previsao">
+            Previsão desligada até a calibração ser provada. Esta tela mostra só o que a ANA mediu.
+          </p>
         </section>}
       </div>
     </Layout>

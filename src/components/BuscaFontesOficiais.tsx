@@ -7,7 +7,7 @@ import { mensagemAmigavel } from '@/lib/erros'
 import type { Detectado } from '@/lib/pesquisa/pesquisa'
 import { POLO, agruparPorProcesso, blocos, numerosParaImportar, type ProcessoEncontrado, type Publicacao } from '@/lib/pesquisa/fontesOficiais'
 
-// Busca direto nas fontes oficiais, sem Escavador: DataJud (andamentos), DJEN (publicações com texto integral),
+// Busca direto nas fontes oficiais: DataJud (andamentos), DJEN (publicações com texto integral),
 // Receita (empresa) e Querido Diário (diários municipais). Nome, OAB e empresa percorrem o histórico em blocos de 90 dias.
 type Capa = { ok: boolean; erro?: string; encontrado?: boolean; tribunal?: string; classe?: string; orgao?: string; graus?: string[]; sistema?: string; ajuizamento?: string; assuntos?: string[]; sigilo?: number; movimentos?: { data: string; nome: string; grau: string; complemento?: string }[] }
 type Receita = { ok: boolean; erro?: string; encontrado?: boolean; nome?: string; fantasia?: string | null; situacao?: string; municipio?: string; uf?: string; atividade?: string; socios?: { nome: string; qualificacao: string }[] }
@@ -88,7 +88,7 @@ export default function BuscaFontesOficiais({ d }: { d: Detectado }) {
 
   return (
     <section className="bg-white shadow-sm p-6" aria-label="Busca nas fontes oficiais" data-testid="fontes-oficiais">
-      <h2 className="font-serif text-xl flex items-center gap-2"><Landmark className="w-5 h-5 text-dourado" aria-hidden />Buscar direto nas fontes oficiais (sem Escavador)</h2>
+      <h2 className="font-serif text-xl flex items-center gap-2"><Landmark className="w-5 h-5 text-dourado" aria-hidden />Buscar direto nas fontes oficiais</h2>
       <p className="text-sm text-grafite-claro mt-1">Consulta gratuita na origem: DataJud do CNJ (andamentos de todos os ramos, inclusive STJ, TST, TSE e STM), Diário de Justiça Eletrônico Nacional (publicações com o texto completo, partes e advogados), Receita Federal e diários municipais.</p>
       {d.tipo === 'cpf' ? (
         <p className="mt-3 p-3 text-sm border-l-4 border-atencao bg-atencaoFundo" role="note" data-testid="aviso-cpf">Nenhuma fonte oficial aberta busca processos por CPF (o CNJ não publica o CPF das partes). Digite o nome completo da pessoa para buscar nas publicações.</p>

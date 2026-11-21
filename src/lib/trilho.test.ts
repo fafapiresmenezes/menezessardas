@@ -31,21 +31,29 @@ describe('a corrente do trilho publicada', () => {
     expect(anteriorDe(elos[0])).toBe(GENESE)
   })
 
-  it('a ligação está íntegra de ponta a ponta', async () => {
+  it('a ligação está íntegra, fora a única emenda confessada pelo elo REPARO', async () => {
     const c = await conferirCorrente(elos)
-    const soltos = c.elos.filter(e => !e.ligado).map(e => `${e.n} (${e.passo})`)
+    // A quebra de 15-16/11/2026 (elo escrito sem `anterior`) não é escondida: o elo REPARO a
+    // assume por escrito, e ela fica listada aqui e na tela. Nenhuma quebra além dessa.
+    expect(c.emendasDocumentadas).toEqual([114])
+    const soltos = c.elos.filter(e => !e.ligado && !c.emendasDocumentadas.includes(e.n)).map(e => `${e.n} (${e.passo})`)
     expect(soltos, `elo solto na corrente: ${soltos.join(', ')}`).toEqual([])
     expect(c.ligacaoIntegra).toBe(true)
   })
 
-  it('reproduz todo elo escrito a partir de 13/11/2026, e diz quais não reproduz', async () => {
+  it('reproduz todo elo novo; os de receita antiga são nomeados, não escondidos', async () => {
     const c = await conferirCorrente(elos)
-    // Os três de receita antiga são conhecidos e estão nomeados na tela, não escondidos.
-    const antigos = c.elos.filter(e => !e.reproduzido).map(e => e.passo)
-    expect(antigos.length, `receita antiga em: ${antigos.join(', ')}`).toBeLessThanOrEqual(3)
+    const antigos = c.elos.filter(e => !e.reproduzido)
+    // Receitas antigas conhecidas: os 3 primeiros marcos e o lote de 15-16/11/2026 (schema do
+    // plano, sem campo `passo`). Depois do elo REPARO (18/11/2026) a receita é única.
+    const reparo = c.elos.find(e => e.passo === 'REPARO')!.n
+    const CONHECIDOS = new Set(['EMISSAO', 'ROTEAMENTO', 'A26', 'C13', 'C15', 'C16', 'C4', 'C5', 'C4-setup', 'C4-impl', 'C5-setup', 'C5-impl', 'C6-inicio', 'C6-completo', 'C8-sinal', 'C8-completo', 'D1'])
+    for (const e of antigos) {
+      expect(e.n, `elo novo não reproduzido: ${e.n} (${e.passo})`).toBeLessThan(reparo)
+      expect(CONHECIDOS.has(e.passo), `receita antiga inesperada: ${e.n} (${e.passo})`).toBe(true)
+    }
+    expect(antigos.length).toBeLessThanOrEqual(18)
     expect(c.reproduzidos).toBe(elos.length - antigos.length)
-    // Nenhum elo novo pode entrar na lista de não reproduzidos: a receita de hoje é única.
-    for (const p of antigos) expect(['EMISSAO', 'ROTEAMENTO', 'A26']).toContain(p)
   })
 
   it('mudar uma letra de um elo faz o hash dele deixar de bater', async () => {

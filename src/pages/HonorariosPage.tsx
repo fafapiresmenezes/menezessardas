@@ -10,7 +10,7 @@ import { planoParcelas, situacaoParcela, resumoParcelas, type Parcela } from '@/
 import { CalendarClock } from 'lucide-react'
 import { lerNumero } from '@/lib/numero'
 import { escaparHtml } from '@/lib/abrirAba'
-import { meuAlcance, filtrarPorHierarquia, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
+import { meuAlcance, rotuloCargo, ALCANCE_FECHADO } from '@/lib/hierarquia'
 import Vazio from '@/components/Vazio'
 import { useNomeEscritorio } from '@/hooks/useNomeEscritorio'
 
@@ -30,7 +30,8 @@ export default function HonorariosPage() {
   const [alcance, setAlcance] = useState<Awaited<ReturnType<typeof meuAlcance>> | null>(null)
   // Enquanto não se sabe quem olha, vale o alcance mais estreito: esconder incomoda, mostrar vaza.
   const alc = alcance ?? ALCANCE_FECHADO
-  const casos = useMemo(() => (alc.veTudo ? todos : filtrarPorHierarquia(todos, alc)), [todos, alc])
+  // Pedido de M (19/11/2026): os honorários do escritório inteiro são só do chefe e de quem ele liberar; os demais veem os dos próprios casos.
+  const casos = useMemo(() => (alc.financeiro === true ? todos : todos.filter(c => !!alc.id && c.responsavel_id === alc.id)), [todos, alc])
   const [horas, setHoras] = useState<Hora[]>([])
   const [erro, setErro] = useState('')
   const [editando, setEditando] = useState<Record<string, Partial<Caso>>>({})
@@ -146,9 +147,9 @@ export default function HonorariosPage() {
   return (
     <Layout title="Honorários">
       <div className="space-y-6">
-        {alcance && !alcance.veTudo && (
+        {alcance && alcance.financeiro !== true && (
           <p className="bg-white border-l-2 border-dourado p-3 text-sm" data-testid="honorarios-alcance" title="A hierarquia é definida pela administração na tela Equipe.">
-            Você está vendo <strong>os honorários dos seus casos</strong> ({rotuloCargo[alcance.cargo ?? 'nenhum']}). Sócios e o gestor veem o escritório inteiro.
+            Você está vendo <strong>os honorários dos seus casos</strong> ({rotuloCargo[alcance.cargo ?? 'nenhum']}). Os honorários do escritório inteiro ficam com os sócios, a administração e quem eles liberarem na tela Hierarquia.
           </p>
         )}
         <section className="grid gap-4 sm:grid-cols-4">

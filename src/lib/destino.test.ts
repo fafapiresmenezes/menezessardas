@@ -12,7 +12,7 @@ describe('a última frente usada', () => {
     expect(ultimaFrente()).toBe('/engenharia')
   })
   it('a tela de início não conta como frente a retomar', () => {
-    lembrarUltimaFrente('/inicio')
+    lembrarUltimaFrente('/instituto')
     expect(ultimaFrente()).toBeNull()
   })
   it('endereço fora da lista não é gravado nem devolvido', () => {

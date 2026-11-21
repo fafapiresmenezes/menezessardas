@@ -27,10 +27,12 @@ beforeEach(() => {
     return new Response('', { status: 500 })
   })
   zerar({ configuracoes: [{ chave: 'cron_segredo', valor: 'segredo' }], monitoramentos: [] })
+  estado.usuario = { id: 'u1' }
 })
 
 describe('monitorar', () => {
   it('exige token de pessoa logada ou o segredo do cron', async () => {
+    estado.usuario = null
     expect((await chamar({}, {})).status).toBe(401)
     expect((await chamar({}, { authorization: `Bearer ${ANON}` })).status).toBe(401)
     expect((await chamar({}, { 'x-cron-secret': 'errado' })).status).toBe(401)

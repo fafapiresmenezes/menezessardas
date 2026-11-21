@@ -20,7 +20,7 @@ import { DICAS, gruposMenu, nomeDaTela, gruposVisiveis, type Visao } from '@/com
 import { TOURS } from '@/data/tours'
 import { GLOSSARIO } from '@/data/glossario'
 import { lerConfig, gravarConfig } from './config'
-import { supabaseConfigurado } from './supabase'
+import { supabase, supabaseConfigurado } from './supabase'
 
 export type Origem = 'tela' | 'passo' | 'palavra'
 export interface Item { titulo: string; texto: string; rota?: string; origem: Origem }
@@ -58,9 +58,12 @@ export function baseDeConhecimento(visao?: Visao): Item[] {
  * Procura a pergunta na base. Pontua palavra no título mais alto do que no texto, porque o título
  * é o nome da tela ou do passo, e é por ele que a pessoa costuma perguntar.
  */
-export function procurar(pergunta: string, limite = 5, visao?: Visao): Resposta[] {
+export function procurar(pergunta: string, limite = 5, visao?: Visao, aprendido: Aprendido[] = []): Resposta[] {
   const termos = palavras(pergunta)
   if (!termos.length) return []
+  // O que o escritório já disse que resolveu esta mesma pergunta sobe na lista (até 6 pontos por tela).
+  const chave = normalizar(pergunta)
+  const votos = aprendido.find(a => normalizar(a.pergunta) === chave)?.rotas ?? {}
   const saida: Resposta[] = []
   for (const item of baseDeConhecimento(visao)) {
     const t = normalizar(item.titulo)
@@ -70,6 +73,7 @@ export function procurar(pergunta: string, limite = 5, visao?: Visao): Resposta[
       if (t.includes(termo)) pontos += 3
       if (x.includes(termo)) pontos += 1
     }
+    if (pontos > 0 && item.rota && item.origem === 'tela') pontos += Math.min(6, 2 * (votos[item.rota] ?? 0))
     if (pontos > 0) saida.push({ ...item, pontos })
   }
   return saida.sort((a, b) => b.pontos - a.pontos || a.titulo.localeCompare(b.titulo)).slice(0, limite)
@@ -79,21 +83,29 @@ export function procurar(pergunta: string, limite = 5, visao?: Visao): Resposta[
 export const exemplosDePergunta = (): string[] =>
   gruposMenu.flatMap(g => g.itens).slice(0, 6).map(i => `Como uso ${i.label}?`)
 
-export interface Aprendido { pergunta: string; vezes: number; achou: boolean; resolveu: number; naoResolveu: number }
+export interface Aprendido { pergunta: string; vezes: number; achou: boolean; resolveu: number; naoResolveu: number; rotas?: Record<string, number> }
+
+const paraLista = (texto: unknown): Aprendido[] => {
+  try { const l = typeof texto === 'string' && texto ? JSON.parse(texto) : []; return Array.isArray(l) ? (l as Aprendido[]).filter(a => a && typeof a.pergunta === 'string') : [] } catch { return [] }
+}
 
 export async function lerAprendizado(): Promise<Aprendido[]> {
   if (!supabaseConfigurado) return []
-  try {
-    const c = await lerConfig([CHAVE_APRENDIZADO])
-    const lista = c[CHAVE_APRENDIZADO] ? JSON.parse(c[CHAVE_APRENDIZADO]) : []
-    return Array.isArray(lista) ? (lista as Aprendido[]).filter(a => a && typeof a.pergunta === 'string') : []
-  } catch { return [] }
+  // Caminho novo (arquivo 147): qualquer pessoa do escritório lê o que o escritório já perguntou.
+  try { const { data, error } = await supabase.rpc('ajudante_ler'); if (!error) return paraLista(data) } catch { /* função ainda não criada */ }
+  try { const c = await lerConfig([CHAVE_APRENDIZADO]); return paraLista(c[CHAVE_APRENDIZADO]) } catch { return [] }
 }
 
 /** Soma esta pergunta ao que o escritório já perguntou. Nunca guarda quem perguntou. */
-export async function registrarPergunta(pergunta: string, achou: boolean, resolveu?: boolean): Promise<Aprendido[]> {
+export async function registrarPergunta(pergunta: string, achou: boolean, resolveu?: boolean, rota?: string): Promise<Aprendido[]> {
   const texto = normalizar(pergunta)
   if (!texto) return lerAprendizado()
+  if (supabaseConfigurado) {
+    try {
+      const { data, error } = await supabase.rpc('ajudante_registrar', { p_pergunta: pergunta.trim().slice(0, 160), p_chave: texto.slice(0, 160), p_achou: achou, p_resolveu: resolveu ?? null, p_rota: rota ?? null })
+      if (!error) return paraLista(data)
+    } catch { /* função ainda não criada: tenta o caminho antigo */ }
+  }
   const lista = await lerAprendizado()
   const atual = lista.find(a => normalizar(a.pergunta) === texto)
   if (atual) {

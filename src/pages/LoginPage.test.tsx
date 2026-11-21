@@ -18,15 +18,67 @@ vi.mock('@/lib/supabase', () => ({
 const entrarDemo = vi.fn((e: string, s: string) => e === 'admin@exemplo.com' && s === 'senha123')
 vi.mock('@/lib/authDemo', () => ({ entrarDemo: (e: string, s: string) => entrarDemo(e, s) }))
 vi.mock('@/components/Marca', () => ({ default: () => <div data-testid="marca" /> }))
+let adminInstituto = false
+vi.mock('@/lib/equipe', () => ({ esquecerEscritorio: () => {}, ehInstituto: async () => adminInstituto }))
 const { default: LoginPage } = await import('./LoginPage')
 
 function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathname}</p> }
-const montar = () => render(<MemoryRouter initialEntries={['/login']}><Routes><Route path="/login" element={<LoginPage />} /><Route path="*" element={<Onde />} /></Routes></MemoryRouter>)
+// Pedido de M (19/11/2026 21h17): o cartão de e-mail e senha só existe na Plataforma jurídica (/inicio).
+const montar = () => render(<MemoryRouter initialEntries={['/login?ir=/inicio']}><Routes><Route path="/login" element={<LoginPage />} /><Route path="*" element={<Onde />} /></Routes></MemoryRouter>)
 const preencher = (email: string, senha: string) => { fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: email } }); fireEvent.change(screen.getByLabelText('Senha'), { target: { value: senha } }) }
 // No cadastro há também o campo do escritório (pedido de M, 12/11/2026), sempre em maiúsculas.
-const preencherEscritorio = (nome = 'sardas e menezes') => fireEvent.change(screen.getByTestId('campo-escritorio'), { target: { value: nome } })
+const preencherEscritorio = (nome = 'SARDAS E MENEZES') => {
+  if (nome === 'SARDAS E MENEZES') { fireEvent.change(screen.getByTestId('lista-escritorio'), { target: { value: nome } }); return }
+  fireEvent.change(screen.getByTestId('lista-escritorio'), { target: { value: '__outro__' } })
+  fireEvent.change(screen.getByTestId('campo-escritorio'), { target: { value: nome } })
+}
 
 describe('Tela de login', () => {
+  it('link de senha colado: lê o código do link do e-mail e a sessão da página que deu erro', async () => {
+    const { lerLinkDeSenha } = await import('./LoginPage')
+    expect(lerLinkDeSenha('https://x.supabase.co/auth/v1/verify?token=abc123&type=recovery&redirect_to=http://localhost:3000').token).toBe('abc123')
+    const s = lerLinkDeSenha(' http://localhost:3000/#access_token=AAA.BBB&expires_in=3600&refresh_token=rrr&type=recovery ')
+    expect(s.acesso).toBe('AAA.BBB'); expect(s.renovacao).toBe('rrr')
+    expect(lerLinkDeSenha('nada aqui')).toEqual({ token: undefined, acesso: undefined, renovacao: undefined })
+  })
+  it('a primeira tela não mostra e-mail e senha: a entrada só aparece depois de clicar num quadradinho', () => {
+    cleanup()
+    render(<MemoryRouter initialEntries={['/login']}><Routes><Route path="/login" element={<LoginPage />} /></Routes></MemoryRouter>)
+    expect(screen.queryByTestId('cartao-entrada')).toBeNull()
+    expect(screen.queryByLabelText('Senha')).toBeNull()
+    cleanup(); montar()
+    expect(screen.getByTestId('cartao-entrada')).toBeTruthy()
+    // Pedido de M (21/11/2026): tudo segmentado. Cada quadradinho abre o seu próprio quadro de
+    // e-mail e senha, com o nome da plataforma, e nunca a entrada da Plataforma jurídica.
+    cleanup()
+    render(<MemoryRouter initialEntries={['/login?ir=/transparencia-social']}><Routes><Route path="/login" element={<LoginPage />} /></Routes></MemoryRouter>)
+    expect(screen.getByTestId('cartao-entrada')).toBeTruthy()
+    expect(screen.getByLabelText('Senha')).toBeTruthy()
+    expect(screen.getByTestId('titulo-do-cartao').textContent).toBe('Entrar em Projetos sociais')
+    expect(screen.queryByTestId('ir-entrada-juridica')).toBeNull()
+    expect(screen.queryByText(/Plataforma jurídica/)).toBeNull()
+    // Fora da jurídica não há "criar conta": o cadastro pede escritório, que é coisa do jurídico.
+    expect(screen.queryByText('Criar conta')).toBeNull()
+  })
+  it('o símbolo do ouro abre a entrada administrativa, centrada e só para administradores', async () => {
+    cleanup()
+    const tela = () => render(<MemoryRouter initialEntries={['/login?ir=/gestao-instituto']}><Routes><Route path="/login" element={<LoginPage />} /><Route path="*" element={<Onde />} /></Routes></MemoryRouter>)
+    tela()
+    expect(screen.getByTestId('cabecalho-administracao')).toBeTruthy()
+    expect(screen.getByTestId('titulo-do-cartao').textContent).toBe('Área administrativa')
+    expect(screen.queryByTestId('porta-instituto')).toBeNull()
+    expect(screen.queryByText(/Doações e apoio/)).toBeNull()
+    expect(screen.queryByText('Criar conta')).toBeNull()
+    // Quem não é administrador do Instituto é desconectado e fica nesta tela, com aviso.
+    adminInstituto = false
+    preencher('alguem@exemplo.com', 'segredo123'); fireEvent.click(screen.getByText('Entrar'))
+    expect((await screen.findByRole('alert')).textContent).toContain('só da administração do Instituto')
+    expect(screen.queryByTestId('onde')).toBeNull()
+    // Administrador entra direto no painel de gestão.
+    cleanup(); adminInstituto = true; tela()
+    preencher('m@exemplo.com', 'segredo123'); fireEvent.click(screen.getByText('Entrar'))
+    await waitFor(() => expect(screen.getByTestId('onde').textContent).toBe('/gestao-instituto'))
+  })
   beforeEach(() => { cleanup(); configurado = true; nivel = { nextLevel: 'aal1', currentLevel: 'aal1' }; signInWithPassword.mockClear(); signUp.mockClear(); challengeAndVerify.mockClear() })
 
   it('entra com e-mail e senha e vai para a entrada por área; senha errada e servidor fora viram avisos diferentes', async () => {
@@ -65,22 +117,25 @@ describe('Tela de login', () => {
     montar()
     fireEvent.click(screen.getByText('Criar conta'))
     expect(screen.getByText(/Crie sua conta com e-mail, senha e o nome do seu escritório/)).toBeTruthy()
-    preencher('novo@gmenezes.com', 'senhaforte1')
+    preencher('novo@gmenezes.com', 'SenhaForte123')
     preencherEscritorio()
-    expect((screen.getByTestId('campo-escritorio') as HTMLInputElement).value).toBe('SARDAS E MENEZES')
+    // A pergunta é uma lista suspensa com o registro dos escritórios; o campo escrito só aparece em "não está na lista".
+    expect(screen.getByLabelText('Qual é o seu escritório?')).toBeTruthy()
+    expect(screen.queryByTestId('campo-escritorio')).toBeNull()
+    expect((screen.getByTestId('lista-escritorio') as HTMLSelectElement).value).toBe('SARDAS E MENEZES')
     fireEvent.click(screen.getByText('Criar acesso'))
     expect((await screen.findByRole('alert')).textContent).toContain('Tente novamente em alguns segundos')
     vi.setSystemTime(new Date('2026-11-02T10:00:05Z'))
     fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'curta' } })
     fireEvent.click(screen.getByText('Criar acesso'))
-    await waitFor(() => expect(screen.getByRole('alert').textContent).toBe('A senha precisa ter pelo menos 8 caracteres.'))
-    fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'senhaforte1' } })
+    await waitFor(() => expect(screen.getByRole('alert').textContent).toMatch(/A senha precisa ter pelo menos 12 caracteres/))
+    fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'SenhaForte123' } })
     fireEvent.click(screen.getByText('Criar acesso'))
-    await waitFor(() => expect(signUp).toHaveBeenCalledWith({ email: 'novo@gmenezes.com', password: 'senhaforte1', options: { data: { escritorio: 'SARDAS E MENEZES' } } }))
+    await waitFor(() => expect(signUp).toHaveBeenCalledWith({ email: 'novo@gmenezes.com', password: 'SenhaForte123', options: { data: { escritorio: 'SARDAS E MENEZES' } } }))
     expect((await screen.findByRole('status')).textContent).toContain('precisa liberar a sua entrada')
     expect(screen.getByText('Entrar')).toBeTruthy()
     fireEvent.click(screen.getByText('Esqueci minha senha'))
-    expect(screen.getAllByRole('status').some(s => s.textContent!.includes('senha provisória (menu Equipe)'))).toBe(true)
+    expect(screen.getAllByRole('status').some(s => s.textContent!.includes('mandamos um link para você mesmo criar uma senha nova'))).toBe(true)
     vi.useRealTimers()
   })
 
@@ -88,8 +143,8 @@ describe('Tela de login', () => {
     vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date('2026-11-10T10:00:00Z'))
     montar()
     fireEvent.click(screen.getByText('Criar conta'))
-    expect(screen.getByText(/só entra depois que essa pessoa\s+liberar/)).toBeTruthy()
-    preencher('aluna@escritorio.com', 'senhaforte1')
+    expect(screen.getByText(/precisa liberar a sua entrada/)).toBeTruthy()
+    preencher('aluna@escritorio.com', 'SenhaForte123')
     preencherEscritorio('ESCRITÓRIO NOVO')
     vi.setSystemTime(new Date('2026-11-10T10:00:05Z'))
     signUp.mockResolvedValueOnce({ data: { session: { access_token: 't' } }, error: null })
@@ -98,12 +153,12 @@ describe('Tela de login', () => {
     vi.useRealTimers()
     cleanup(); montar()
     signInWithPassword.mockResolvedValueOnce({ error: { status: 400, message: 'Email not confirmed' } })
-    preencher('aluna@escritorio.com', 'senhaforte1'); fireEvent.click(screen.getByText('Entrar'))
+    preencher('aluna@escritorio.com', 'SenhaForte123'); fireEvent.click(screen.getByText('Entrar'))
     expect((await screen.findByRole('alert')).textContent).toContain('Falta confirmar o seu e-mail')
     cleanup(); montar()
     fireEvent.click(screen.getByText('Criar conta'))
     signUp.mockResolvedValueOnce({ error: { message: 'email rate limit exceeded' } })
-    preencher('outra@escritorio.com', 'senhaforte1')
+    preencher('outra@escritorio.com', 'SenhaForte123')
     preencherEscritorio()
     await new Promise(r => setTimeout(r, 3100))
     fireEvent.click(screen.getByText('Criar acesso'))

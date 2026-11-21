@@ -232,8 +232,18 @@ export async function eventosPorEntidade(entidadeId: string): Promise<Evento[]> 
 
 /** Arestas de uma entidade vigentes numa data, por qualquer das duas pontas. */
 export async function arestasDaEntidade(entidadeId: string, em: string = new Date().toISOString()): Promise<Aresta[]> {
-  const linhas = lista(await tabela<Aresta>('arestas').select('*')
-    .or(`origem_id.eq.${entidadeId},destino_id.eq.${entidadeId}`))
+  // Duas consultas parametrizadas (.eq), em vez de interpolar o id dentro de um filtro .or() em
+  // texto — um id com vírgula ou outro filtro embutido mudaria a consulta inteira.
+  const [comoOrigem, comoDestino] = await Promise.all([
+    lista(await tabela<Aresta>('arestas').select('*').eq('origem_id', entidadeId)),
+    lista(await tabela<Aresta>('arestas').select('*').eq('destino_id', entidadeId)),
+  ])
+  const vistas = new Set<string>()
+  const linhas = [...comoOrigem, ...comoDestino].filter(a => {
+    if (!a.id || vistas.has(a.id)) return false
+    vistas.add(a.id)
+    return true
+  })
   return linhas.filter(a => a.valido_de <= em && (!a.valido_ate || a.valido_ate > em))
 }
 

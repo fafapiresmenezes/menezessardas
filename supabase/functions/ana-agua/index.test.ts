@@ -210,3 +210,45 @@ describe('porta', () => {
     expect(c.fonte.codigo).toBe('ana_snirh')
   })
 })
+
+// 19/11/2026: o ServiceANA.asmx passou a dar 404. O SAR novo (sar0/MedicaoSin) é HTML.
+const PAGINA_SAR0 = (linhas: string[][]) => `<!doctype html><html><body>
+<select id="dropDownListReservatorios" name="dropDownListReservatorios"><option value="">Selecione</option>
+<option value="19058">ITAIPU                                            </option>
+<option value="19015">A. VERMELHA                                       </option>
+</select>
+<table class="table"><thead><tr><th>C&#243;digo</th></tr></thead><tbody class="list">
+${linhas.map(l => `<tr>
+  <td class="text-center coluna_1">19058</td><td class="text-center coluna_2">ITAIPU      </td>
+  <td class="text-center coluna_3">${l[0]}</td><td class="text-center coluna_4">${l[1]}</td>
+  <td class="text-center coluna_5">${l[2]}</td><td class="text-center coluna_6">10361,00</td>
+  <td class="text-center coluna_7">9349,00</td><td class="text-center coluna_8">18782,47</td>
+  <td class="text-center coluna_9">${l[3]}</td><td class="text-center coluna_11">0,00</td>
+  <td class="text-center coluna_13">${l[4]}</td></tr>`).join('')}
+</tbody></table></body></html>`
+
+describe('SAR novo (MedicaoSin, HTML)', () => {
+  const html = PAGINA_SAR0([['219,95', '18304,10', '19710,00', '79,51', '16/11/2026'], ['220,04', '15278,48', '15122,00', '80,02', '17/11/2026']])
+
+  it('lê o cadastro do select e as medições da tabela', () => {
+    const r = mod.lerOpcoesSar0(html)
+    expect(r.map(x => [x.codigo, x.nome])).toEqual([['19058', 'ITAIPU'], ['19015', 'A. VERMELHA']])
+    const m = mod.lerMedicoesSar0(html)
+    expect(m).toHaveLength(8)
+    expect(m.find(x => x.subtipo === 'volume_util' && x.ocorrido_em.startsWith('2026-11-17'))?.valor).toBe(80.02)
+    expect(m.find(x => x.subtipo === 'afluencia')?.valor).toBe(18304.1)
+  })
+
+  it('a coleta usa o SAR novo quando ele responde, sem tocar no ServiceANA', async () => {
+    const f = fingirFetch((url) => {
+      if (url.includes('sar0/MedicaoSin')) return new Response(html, { headers: { 'Content-Type': 'text/html' } })
+      return new Response('não esperado', { status: 404 })
+    })
+    const r = await mod.coletar(banco(), { de: '2026-11-16', ate: '2026-11-17', agora: '2026-11-19T03:00:00.000Z', limiteReservatorios: 1 })
+    expect(r.falhas).toEqual([])
+    expect(r.via).toEqual(['cadastro:MedicaoSin', 'medicoes:MedicaoSin'])
+    expect(r.medicoes_novas).toBe(8)
+    expect(f.mock.calls.some(c => String(c[0]).includes('ServiceANA'))).toBe(false)
+    expect(String(f.mock.calls[1][0])).toContain('dataInicial=16%2F11%2F2026')
+  })
+})

@@ -25,13 +25,22 @@ describe('porta redesenhada (V13)', () => {
   it('mostra a promessa grande, a faixa de prova e um botão forte de conhecer', () => {
     montar()
     const h1 = screen.getByRole('heading', { level: 1 })
-    expect(h1.textContent).toBe('Um instituto de soluções multidisciplinares.')
+    // Primeira faixa (M, 20/11/2026): Instituto THEYE em tela cheia, o nome oficial e o lema.
+    expect(h1.textContent).toBe('INSTITUTOTHEYE')
+    expect(screen.getByTestId('porta-nome-oficial').textContent).toBe('Instituto especializado em Ontologia oferecendo soluções multidisciplinares')
+    expect(screen.getByTestId('estrela-na-pupila')).toBeTruthy()
+    expect(screen.getByTestId('porta-historia').textContent).toContain('ontologia')
+    // Temas centrais em tópicos, na ordem pedida por M (20/11/2026): superinteligência primeiro.
+    expect(screen.getByTestId('porta-temas').textContent).toContain('Superinteligência')
+    expect(screen.getByTestId('porta-chamada').textContent).toContain('margem de erro')
+    // Só o número de frentes; os outros números saíram.
+    expect(screen.queryByTestId('prova-materias')).toBeNull()
+    expect(screen.queryByTestId('prova-especialidades')).toBeNull()
     expect(screen.getByTestId('prova-da-porta')).toBeTruthy()
     expect(screen.getByTestId('porta-conhecer').textContent).toContain('Quero conhecer')
-    // A promessa vem antes da prova, e a prova antes da escolha de idioma.
-    const html = document.body.innerHTML
-    expect(html.indexOf('soluções multidisciplinares')).toBeLessThan(html.indexOf('prova-da-porta'))
-    expect(html.indexOf('prova-da-porta')).toBeLessThan(html.indexOf('escolha-idioma'))
+    // O bloco de senha saiu do começo: o login só aparece ao clicar numa área, lá embaixo.
+    expect(screen.queryByTestId('escolha-idioma')).toBeNull()
+    expect(screen.queryByTestId('porta-ja-tenho-acesso')).toBeNull()
   })
 
   it('sem frente guardada, não aparece a faixa de retomar', () => {
@@ -79,12 +88,6 @@ describe('contagem de visitas na porta (V10)', () => {
   it('abrir a porta conta uma visita', () => {
     montar()
     expect(contarVisita).toHaveBeenCalledWith('visita')
-  })
-
-  it('escolher a língua conta o idioma', () => {
-    montar()
-    fireEvent.click(screen.getByTestId('idioma-zh'))
-    expect(contarVisita).toHaveBeenCalledWith('idioma', 'zh')
   })
 
   it('clicar num quadradinho conta aquele quadradinho', () => {

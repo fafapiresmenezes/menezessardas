@@ -5,20 +5,39 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import Marca from '@/components/Marca'
 import { NOME_PLATAFORMA } from '@/lib/plataforma'
 import { marcaPorDominio, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
-import { esquecerEscritorio } from '@/lib/equipe'
+import { esquecerEscritorio, ehInstituto } from '@/lib/equipe'
+import { SimboloOuro } from '@/components/EntradaMembros'
 import { useTexto } from '@/lib/i18n'
 import SeletorIdioma from '@/components/SeletorIdioma'
 import Vertentes from '@/components/Vertentes'
 import Produtos from '@/components/Produtos'
 import Doacoes from '@/components/Doacoes'
-import { destinoSeguro, DESTINO_PADRAO, DESTINOS_PERMITIDOS, lembrarUltimaFrente } from '@/lib/destino'
-import ProvaDaPorta from '@/components/ProvaDaPorta'
+import { destinoSeguro, DESTINO_PADRAO, DESTINOS_PERMITIDOS, lembrarUltimaFrente, ehEntradaAdmin } from '@/lib/destino'
+import AberturaInstituto from '@/components/AberturaInstituto'
 import { VERTENTES } from '@/data/vertentes'
 import type { Chave } from '@/lib/i18n'
+import { acessoEmail } from '@/lib/acessoEmail'
+import { problemaDaSenha } from '@/lib/senha'
+import { captchaLigado } from '@/lib/captcha'
+import CaptchaRobo from '@/components/CaptchaRobo'
+
+// Lista de casa dos escritórios clientes: vale enquanto o banco não devolve o registro.
+const ESCRITORIOS_DA_CASA = ['SARDAS E MENEZES']
+const OUTRO = '__outro__'
+
+/** Tira de um endereço colado o que serve para abrir a troca de senha: o código do link do e-mail ou a sessão que veio na página de erro. */
+export function lerLinkDeSenha(texto: string): { token?: string; acesso?: string; renovacao?: string } {
+  const t = texto.trim()
+  const pega = (nome: string) => { const m = t.match(new RegExp(`[?&#]${nome}=([^&#\\s]+)`)); return m ? decodeURIComponent(m[1]) : undefined }
+  return { token: pega('token') ?? pega('token_hash'), acesso: pega('access_token'), renovacao: pega('refresh_token') }
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
+  // Comprovante da caixinha "não sou robô": o servidor recusa a entrada com senha sem ele. Vale para um pedido só.
+  const [comprovante, setComprovante] = useState('')
+  const [rodadaRobo, setRodadaRobo] = useState(0)
   const [armadilha, setArmadilha] = useState('')
   const [abertoEm] = useState(() => Date.now())
   // Passo D22: em domínio próprio de parceiro, a tela de entrada mostra a marca dele.
@@ -27,8 +46,61 @@ export default function LoginPage() {
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [avisoRecuperacao, setAvisoRecuperacao] = useState(false)
+  const [emailRecuperar, setEmailRecuperar] = useState('')
+  const [recuperacaoEnviada, setRecuperacaoEnviada] = useState(false)
+
+  // Manda o link de criar ou trocar a senha para o e-mail. A resposta é sempre a mesma, para não revelar contas.
+  const pedirLinkRecuperacao = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setCarregando(true)
+    try {
+      // Primeiro o envio da casa (sem o limite de poucos e-mails por hora); o do Supabase fica de reserva.
+      const r = await acessoEmail({ acao: 'recuperar', email: emailRecuperar.trim() })
+      if (r.indisponivel) await supabase.auth.resetPasswordForEmail(emailRecuperar.trim(), { redirectTo: `${window.location.origin}/?redefinir=1` })
+    } catch { /* mesma resposta de qualquer forma */ }
+    setRecuperacaoEnviada(true)
+    setCarregando(false)
+  }
+  // Saída para quando o link do e-mail não abre (por exemplo, volta para um endereço errado):
+  // a pessoa cola o link aqui e a própria plataforma abre a tela de criar a senha (M, 19/11/2026).
+  const [linkColado, setLinkColado] = useState('')
+  const [erroLink, setErroLink] = useState('')
+  const abrirPeloLinkColado = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setErroLink(''); setCarregando(true)
+    try {
+      const partes = lerLinkDeSenha(linkColado)
+      const { error } = partes.acesso && partes.renovacao
+        ? await supabase.auth.setSession({ access_token: partes.acesso, refresh_token: partes.renovacao })
+        : partes.token
+          ? await supabase.auth.verifyOtp({ token_hash: partes.token, type: 'recovery' })
+          : { error: new Error('sem token') }
+      if (error) setErroLink('Este link não serve mais (cada link só vale uma vez e por pouco tempo). Peça um novo em "Esqueci minha senha" e cole aqui sem abrir.')
+      else window.location.assign(`${window.location.origin}/?redefinir=1`)
+    } catch {
+      setErroLink('Não consegui ler este link. Copie o endereço inteiro e cole de novo.')
+    } finally {
+      setCarregando(false)
+    }
+  }
   const [primeiroAcesso, setPrimeiroAcesso] = useState(false)
   const [escritorio, setEscritorio] = useState('')
+  // Registro dos escritórios clientes: a pessoa escolhe o dela numa lista (pedido de M, 19/11/2026).
+  // A lista vem do banco; enquanto ele não responde, vale a lista de casa. Escolher um escritório
+  // só cria um pedido de entrada: ninguém vê nada antes de o responsável liberar.
+  const [listaEscritorios, setListaEscritorios] = useState<string[]>(ESCRITORIOS_DA_CASA)
+  const [escolha, setEscolha] = useState('')
+  useEffect(() => {
+    let vivo = true
+    ;(async () => {
+      try {
+        const { data, error } = await supabase.rpc('escritorios_para_cadastro')
+        const nomes = error ? [] : ((data ?? []) as unknown[]).map(r => String(typeof r === 'string' ? r : (r as { nome?: string })?.nome ?? '').trim().toUpperCase()).filter(Boolean)
+        if (vivo && nomes.length > 0) setListaEscritorios([...new Set(nomes)].sort((a, b) => a.localeCompare(b, 'pt')))
+      } catch { /* fica a lista de casa */ }
+    })()
+    return () => { vivo = false }
+  }, [])
   const [avisoCadastro, setAvisoCadastro] = useState('')
   const [pedirCodigo, setPedirCodigo] = useState(false)
   const [codigo, setCodigo] = useState('')
@@ -47,14 +119,43 @@ export default function LoginPage() {
   // embaixo, e parecia que o botão não funcionava.
   const vertenteDestino = pedidoValido ? VERTENTES.find(v => v.rota === destino) : undefined
   const nomeDestino = vertenteDestino ? t(`vertente.${vertenteDestino.id}.nome` as Chave)
-    : !pedidoValido ? '' : destino === '/caderno-de-produtos' ? t('produtos.titulo') : destino === '/instituto' ? t('login.entradaApoio') : ''
+    : !pedidoValido ? '' : destino === '/caderno-de-produtos' ? t('produtos.titulo') : ehEntradaAdmin(destino) ? t('login.entradaAdministracao') : ''
   const doSegmento = !!nomeDestino
   useEffect(() => {
     if (!doSegmento) return
     window.scrollTo({ top: 0 })
     document.getElementById('email')?.focus({ preventScroll: true })
   }, [doSegmento, destino])
-  const seguir = () => { lembrarUltimaFrente(destino); navigate(destino) }
+  // Pedido de M (19/11/2026): a entrada com e-mail e senha não fica na primeira tela. Ela só aparece
+  // depois que a pessoa clica no quadradinho da frente dela (ou em domínio próprio de escritório).
+  // Pedido de M (21/11/2026): tudo segmentado. Cada quadradinho (Projetos sociais, Engenharia…) e o
+  // símbolo do ouro (administração do Instituto) abrem o SEU quadro de e-mail e senha, com o nome
+  // daquela plataforma. Nenhum deles manda mais para a entrada da Plataforma jurídica.
+  const mostrarCartao = doSegmento || !!marca || pedirCodigo
+  // O cadastro pede o escritório: é coisa da Plataforma jurídica (ou do domínio de um escritório
+  // parceiro). Nas outras plataformas e na administração, só entra quem já recebeu acesso.
+  const permiteCadastro = destino === '/inicio' || !!marca
+  // Entrada geral: quem escolheu a língua e chegou sem segmento nem marca de escritório parceiro.
+  const entradaGeral = !marca && !doSegmento && !mostrarCartao
+  // Entrada administrativa (M, 21/11/2026): login e senha só da administração do Instituto. Quem
+  // não está na lista de administradores (configuracoes.instituto_admins, conferida no banco por
+  // eh_admin_instituto) é desconectado na hora e fica nesta tela, sem cair em outra plataforma.
+  const entradaAdmin = pedidoValido && ehEntradaAdmin(destino) && !marca
+  const seguir = async () => {
+    if (entradaAdmin) {
+      esquecerEscritorio()
+      let ok = false
+      try { ok = await ehInstituto() } catch { ok = false }
+      if (!ok) {
+        esquecerEscritorio()
+        await supabase.auth.signOut()
+        setPedirCodigo(false)
+        setErro(t('login.soAdministracao'))
+        return
+      }
+    }
+    lembrarUltimaFrente(destino); navigate(destino)
+  }
 
   // Dois fatores: se a conta tem aplicativo autenticador, a sessão só vale depois do código (nível aal2).
   const precisaCodigo = async () => {
@@ -70,7 +171,7 @@ export default function LoginPage() {
       if (!fator) { setErro(t('erro.semAutenticador')); return }
       const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId: fator.id, code: codigo.replace(/\s/g, '') })
       if (error) setErro(t('erro.codigoErrado'))
-      else seguir()
+      else await seguir()
     } finally { setCarregando(false) }
   }
 
@@ -89,19 +190,25 @@ export default function LoginPage() {
 
     if (primeiroAcesso) {
       // Anti-robô simples: campo invisível preenchido ou formulário enviado em menos de 3 s = robô.
-      if (armadilha || Date.now() - abertoEm < 3000) {
+      // O campo invisível deixou de barrar aqui: o preenchimento automático do navegador às vezes o
+      // preenche e pessoas de verdade eram recusadas. Ele segue para o servidor, que decide.
+      if (Date.now() - abertoEm < 3000) {
         setErro(t('erro.robo'))
         setCarregando(false)
         return
       }
-      if (senha.length < 8) {
-        setErro(t('erro.senhaCurta'))
+      const faltaNaSenha = problemaDaSenha(senha)
+      if (faltaNaSenha) {
+        setErro(faltaNaSenha)
         setCarregando(false)
         return
       }
       try {
         // O nome do escritório segue o padrão da casa: tudo em letras maiúsculas, sem espaços sobrando.
-        const nomeEscritorio = escritorio.toUpperCase().replace(/\s+/g, ' ').trim()
+        const nomeEscritorio = (escolha === OUTRO ? escritorio : escolha).toUpperCase().replace(/\s+/g, ' ').trim()
+        const r = await acessoEmail({ acao: 'cadastrar', email: email.trim(), senha, escritorio: nomeEscritorio })
+        if (r.ok) { setAvisoCadastro(t('login.avisoContaCriada')); setPrimeiroAcesso(false); return }
+        if (!r.indisponivel) { setErro(r.erro ?? t('erro.criarAcesso')); return }
         const { data, error } = await supabase.auth.signUp({ email, password: senha, options: { data: { escritorio: nomeEscritorio } } })
         if (error) setErro(/rate limit/i.test(error.message ?? '') ? t('erro.muitasContas') : t('erro.criarAcessoPrefixo') + mensagemAmigavel(error))
         else if (data?.session) seguir() // sem confirmação de e-mail: já entra; se o escritório existe, cai na tela de espera
@@ -117,9 +224,16 @@ export default function LoginPage() {
       return
     }
 
+    if (captchaLigado() && !comprovante) {
+      setErro('Marque a caixinha "não sou robô" antes de entrar.')
+      setCarregando(false)
+      return
+    }
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password: senha })
-      if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else seguir() }
+      const { error } = await supabase.auth.signInWithPassword(captchaLigado() ? { email, password: senha, options: { captchaToken: comprovante } } : { email, password: senha })
+      if (captchaLigado()) setRodadaRobo(n => n + 1)
+      if (!error) { if (await precisaCodigo()) setPedirCodigo(true); else await seguir() }
+      else if (/captcha/i.test(error.message ?? '')) setErro(mensagemAmigavel(error))
       else if (/not confirmed/i.test(error.message ?? '')) setErro(t('erro.emailNaoConfirmado'))
       else if (error.status === 400 || error.status === 401 || /invalid/i.test(mensagemAmigavel(error))) setErro(t('erro.credenciais'))
       else setErro(t('erro.servidorPrefixo') + mensagemAmigavel(error) + t('erro.servidorSufixo'))
@@ -132,10 +246,24 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-navy px-4 py-10 md:py-14" style={marca ? { backgroundColor: marca.cor } : undefined}>
+      {/* Entrada geral, sem segmento e sem marca de parceiro: a abertura do Instituto refeita em
+          20/11/2026 (tela cheia, história, ontologia, frentes). Pedido de M nesta mesma tela. */}
+      {entradaGeral && <div className="-mx-4 -mt-10 md:-mt-14"><AberturaInstituto /></div>}
       <div className="mx-auto w-full max-w-6xl">
-      <div className="grid items-center gap-10 lg:grid-cols-[1fr_minmax(0,28rem)]">
+      {/* Entrada administrativa: tela própria, centrada, com o símbolo do ouro em destaque (M, 21/11/2026:
+          "tá no cantinho, melhora"). Nada de vitrine de frentes nem de plataforma jurídica aqui. */}
+      {entradaAdmin && (
+        <div className="porta mx-auto mb-10 flex max-w-xl flex-col items-center pt-6 text-center" data-testid="cabecalho-administracao">
+          <SimboloOuro largura={180} className="drop-shadow-[0_0_24px_rgba(201,162,74,0.45)]" />
+          <p className="mt-8 text-xs font-semibold uppercase tracking-[0.35em] text-[#C9A24A]">{t('login.areaAdministrativa')}</p>
+          <h1 className="mt-4 font-serif text-4xl leading-tight tracking-[0.12em] md:text-5xl">INSTITUTO THEYE</h1>
+          <p data-testid="resumo-administracao" className="mt-5 text-base leading-relaxed text-neutral-200">{t('login.entradaAdministracaoResumo')}</p>
+        </div>
+      )}
+      <div className={entradaAdmin ? 'mx-auto grid w-full max-w-md' : mostrarCartao ? 'grid items-center gap-10 lg:grid-cols-[1fr_minmax(0,28rem)]' : 'grid items-center gap-8'}>
         {/* Lado de quem chega: o Instituto inteiro, não só o jurídico. Em domínio de escritório
             parceiro (marca própria) este lado mostra só a marca dele. */}
+        {!entradaGeral && !entradaAdmin && (
         <div className="porta text-center lg:text-left" data-testid="porta-instituto">
           <div className="flex justify-center lg:justify-start mb-6">
             <Marca tamanho="grande" marca={marca} tipo="instituto" subtitulo={t('marca.instituto')} />
@@ -167,33 +295,17 @@ export default function LoginPage() {
               </Link>
             </div>
           )}
-          {!marca && !doSegmento && (
-            <>
-              <p className="text-sm font-medium uppercase tracking-[0.25em] text-neutral-300">{t('boasVindas.instituto')}</p>
-              <h1 className="mt-4 font-serif text-5xl leading-[1.05] md:text-6xl">{t('porta.promessa')}</h1>
-              <p className="mt-6 text-lg leading-relaxed text-neutral-100">{t('porta.chamada')}</p>
-              <p className="mt-2 text-base text-neutral-300">{t('porta.apoio')}</p>
-              <a
-                href="#frentes"
-                onClick={e => { e.preventDefault(); document.getElementById('frentes')?.scrollIntoView({ behavior: 'smooth' }) }}
-                title={t('porta.verFrentesDica')}
-                data-testid="porta-ver-frentes"
-                className="mt-8 inline-block bg-[#fff] px-6 py-3 text-sm font-semibold uppercase tracking-wider text-[#000] no-underline transition hover:bg-neutral-200"
-              >
-                {t('porta.conhecer')} <span aria-hidden="true">↓</span>
-              </a>
-              <ProvaDaPorta />
-            </>
-          )}
         </div>
+        )}
 
         <div>
+        {mostrarCartao && (
         <div className="cartao-entrada rounded-sm p-8 md:p-10" data-testid="cartao-entrada">
           {!marca && (
             <p data-testid="so-membros" className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-grafite">{t('login.soMembros')}</p>
           )}
           <h1 className="font-serif text-2xl text-navy text-center" data-testid="titulo-do-cartao">
-            {doSegmento ? `${t('vertentes.entrarEm')} ${nomeDestino}` : NOME_PLATAFORMA}
+            {entradaAdmin ? t('login.areaAdministrativa') : doSegmento ? `${t('vertentes.entrarEm')} ${nomeDestino}` : NOME_PLATAFORMA}
           </h1>
           <p className="text-sm text-grafite-claro text-center mt-2 mb-7">
             {primeiroAcesso ? t('login.subtituloCadastro') : t('login.subtitulo')}
@@ -219,7 +331,45 @@ export default function LoginPage() {
 
           {avisoRecuperacao && (
             <div role="status" className="mb-5 p-3 bg-atencaoFundo border-l-2 border-atencao text-atencao text-sm">
-              {supabaseConfigurado ? t('login.avisoRecuperacao') : t('login.avisoRecuperacaoSemBanco')}
+              {!supabaseConfigurado && t('login.avisoRecuperacaoSemBanco')}
+              {supabaseConfigurado && !recuperacaoEnviada && (
+                <form onSubmit={pedirLinkRecuperacao} className="space-y-3" data-testid="form-recuperar">
+                  <p>{t('login.avisoRecuperacao')}</p>
+                  <input
+                    type="email"
+                    autoComplete="email"
+                    required
+                    aria-label="E-mail da conta"
+                    value={emailRecuperar}
+                    onChange={e => setEmailRecuperar(e.target.value)}
+                    className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm bg-white text-grafite"
+                  />
+                  <button type="submit" disabled={carregando} title="Manda para o e-mail o link para criar ou trocar a senha" className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-60">
+                    {carregando ? 'Enviando…' : 'Enviar link'}
+                  </button>
+                </form>
+              )}
+              {supabaseConfigurado && recuperacaoEnviada && (
+                <div className="space-y-3">
+                  <p>Se este e-mail estiver cadastrado, o link chega em alguns minutos. Confira também a caixa de spam.</p>
+                  <form onSubmit={abrirPeloLinkColado} className="space-y-2" data-testid="form-link-colado">
+                    <p>O link do e-mail não abriu? No e-mail, clique no link com o botão direito, escolha "Copiar endereço do link" e cole aqui. Também serve o endereço da página que deu erro.</p>
+                    <input
+                      type="text"
+                      required
+                      aria-label="Endereço do link que chegou no e-mail"
+                      data-testid="campo-link-colado"
+                      value={linkColado}
+                      onChange={e => setLinkColado(e.target.value)}
+                      className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm bg-white text-grafite"
+                    />
+                    <button type="submit" disabled={carregando} title="Abre a tela de criar a senha nova usando o link colado" className="min-h-[44px] px-4 bg-navy text-white text-sm uppercase tracking-wider disabled:opacity-60">
+                      {carregando ? 'Abrindo…' : 'Criar senha nova'}
+                    </button>
+                    {erroLink && <p role="alert" className="text-critico">{erroLink}</p>}
+                  </form>
+                </div>
+              )}
             </div>
           )}
 
@@ -268,24 +418,48 @@ export default function LoginPage() {
 
             {primeiroAcesso && (
               <div>
-                <label htmlFor="escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title={t('login.escritorioRotuloTitulo')}>
-                  {t('login.escritorio')}
+                <label htmlFor="lista-escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title={t('login.qualEscritorioTitulo')}>
+                  {t('login.qualEscritorio')}
                 </label>
-                <input
-                  id="escritorio"
-                  name="escritorio"
-                  type="text"
-                  data-testid="campo-escritorio"
-                  value={escritorio}
-                  onChange={(e) => setEscritorio(e.target.value.toUpperCase())}
+                <select
+                  id="lista-escritorio"
+                  name="lista-escritorio"
+                  data-testid="lista-escritorio"
+                  value={escolha}
+                  onChange={(e) => setEscolha(e.target.value)}
                   required
-                  placeholder={t('login.escritorioExemplo')}
-                  title={t('login.escritorioCampoTitulo')}
-                  className="w-full px-4 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado uppercase"
-                />
-                <p className="text-xs text-grafite-claro mt-1">{t('login.escritorioAjuda')}</p>
+                  title={t('login.qualEscritorioTitulo')}
+                  className="w-full px-4 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white"
+                >
+                  <option value="">{t('login.escolhaEscritorio')}</option>
+                  {listaEscritorios.map(n => <option key={n} value={n}>{n}</option>)}
+                  <option value={OUTRO}>{t('login.escritorioForaDaLista')}</option>
+                </select>
+                <p className="text-xs text-grafite-claro mt-1">{t('login.qualEscritorioAjuda')}</p>
+                {escolha === OUTRO && (
+                  <div className="mt-3">
+                    <label htmlFor="escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title={t('login.escritorioRotuloTitulo')}>
+                      {t('login.escritorio')}
+                    </label>
+                    <input
+                      id="escritorio"
+                      name="escritorio"
+                      type="text"
+                      data-testid="campo-escritorio"
+                      value={escritorio}
+                      onChange={(e) => setEscritorio(e.target.value.toUpperCase())}
+                      required
+                      placeholder={t('login.escritorioExemplo')}
+                      title={t('login.escritorioCampoTitulo')}
+                      className="w-full px-4 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado uppercase"
+                    />
+                    <p className="text-xs text-grafite-claro mt-1">{t('login.escritorioForaAjuda')}</p>
+                  </div>
+                )}
               </div>
             )}
+
+            {!primeiroAcesso && captchaLigado() && <CaptchaRobo aoMudar={setComprovante} rodada={rodadaRobo} />}
 
             <button
               type="submit"
@@ -303,6 +477,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => {
                 setErro('')
+                if (!emailRecuperar) setEmailRecuperar(email)
                 setAvisoRecuperacao(true)
               }}
               title={t('login.esqueciSenhaTitulo')}
@@ -310,7 +485,7 @@ export default function LoginPage() {
             >
               {t('login.esqueciSenha')}
             </button>
-            {supabaseConfigurado && (
+            {supabaseConfigurado && permiteCadastro && (
               <button
                 type="button"
                 onClick={() => {
@@ -327,6 +502,8 @@ export default function LoginPage() {
           </div>
         </div>
 
+        )}
+
         {!doSegmento && !marca && (
           <p data-testid="outros-segmentos" className="mt-5 text-center text-base leading-relaxed text-neutral-100">
             {t('login.outrosSegmentos')}
@@ -334,7 +511,7 @@ export default function LoginPage() {
         )}
 
         {/* Fileira de idiomas: sempre visivel na primeira tela, troca a lingua na hora. */}
-        <SeletorIdioma />
+        {!entradaGeral && <SeletorIdioma />}
         </div>
       </div>
 

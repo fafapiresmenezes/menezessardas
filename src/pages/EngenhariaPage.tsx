@@ -1,19 +1,26 @@
 // Porta de engenharia do theye.club (plano mestre v4, fase E, prioridade 3), em modo demonstração.
 // E1: catálogo de matérias. E2: equivalências com a plataforma jurídica. E4: cálculo com memória. E7: estudos para órgãos públicos.
 import { useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import catalogo from '@/lib/engenharia/catalogo.json'
 import { EQUIVALENCIAS, ESTUDOS_ENGENHARIA } from '@/lib/engenharia/plataforma'
 import { vigaConcreto, memoriaDeCalculo, AVISO_ENGENHARIA, pilarCompressaoCentrada, lajeUmaDirecao, type DadosViga, type DadosPilar, type DadosLaje } from '@/lib/engenharia/calculo'
 import MedicaoDeObra from '@/components/MedicaoDeObra'
+import AgentesEngenharia from '@/components/engenharia/AgentesEngenharia'
+import CasaAguas from '@/components/aguas/CasaAguas'
 
-type Aba = 'calculo' | 'medicao' | 'catalogo' | 'equivalencias' | 'estudos'
+type Aba = 'calculo' | 'medicao' | 'catalogo' | 'equivalencias' | 'estudos' | 'agentes' | 'aguas'
 const ABAS: { id: Aba; nome: string; dica: string }[] = [
   { id: 'calculo', nome: 'Cálculo estrutural', dica: 'Dimensiona uma viga de concreto armado e mostra toda a conta, item por item da norma' },
   { id: 'medicao', nome: 'Medição de obra', dica: 'Mede quanto da obra está pronto e quanto se paga no período, com a lista de serviços que o cliente monta do jeito dele' },
   { id: 'catalogo', nome: 'Matérias e consultores', dica: 'Todas as matérias de engenharia e do Instituto, com ementa, normas e escolas de origem' },
   { id: 'estudos', nome: 'Estudos para órgãos públicos', dica: 'Estudos do Instituto em IA, cibersegurança, nuvem e superinteligência aplicadas à engenharia' },
+  { id: 'agentes', nome: 'Agentes', dica: 'As fichas dos agentes de engenharia: por especialidade, por posição, produtos, o corpus Atlas e as provas' },
+  { id: 'aguas', nome: 'Águas', dica: 'A casa de Águas do Instituto, vista como disciplina de engenharia (a página /aguas continua a existir)' },
 ]
+const ABA_PADRAO: Aba = 'calculo'
+function abaValida(x: string | null): Aba { return ABAS.some(a => a.id === x) ? (x as Aba) : ABA_PADRAO }
 
 const CAMPOS: { chave: keyof DadosViga; rotulo: string; unidade: string; dica: string }[] = [
   { chave: 'vao', rotulo: 'Vão', unidade: 'm', dica: 'Distância entre os apoios da viga' },
@@ -267,7 +274,10 @@ function Catalogo() {
 }
 
 export default function EngenhariaPage() {
-  const [aba, setAba] = useState<Aba>('calculo')
+  // A aba vive no endereço (?aba=agentes), para se poder ligar directamente a ela a partir de outros sítios.
+  const [params, setParams] = useSearchParams()
+  const aba = abaValida(params.get('aba'))
+  const setAba = (a: Aba) => setParams(a === ABA_PADRAO ? {} : { aba: a }, { replace: true })
   return (
     <Layout title="Engenharia">
       <section className="bg-white p-6 shadow-sm mb-6">
@@ -293,6 +303,13 @@ export default function EngenhariaPage() {
             ))}</tbody>
           </table>
         </section>
+      )}
+      {aba === 'agentes' && <AgentesEngenharia />}
+      {aba === 'aguas' && (
+        <div className="space-y-4" data-testid="engenharia-aguas">
+          <p className="text-sm text-grafite-claro bg-white p-4 shadow-sm">Águas é uma frente do Instituto; aqui aparece como disciplina de engenharia. A mesma casa continua a abrir em Águas, no menu.</p>
+          <CasaAguas />
+        </div>
       )}
       {aba === 'estudos' && (
         <section className="grid md:grid-cols-2 gap-4" data-testid="estudos-engenharia">

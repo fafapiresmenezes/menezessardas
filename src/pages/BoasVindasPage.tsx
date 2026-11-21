@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, Link, useSearchParams } from 'react-router-dom'
-import { IDIOMAS, type Idioma } from '@/lib/idioma'
-import { trocarIdioma, useTexto, textoEm, chaveIdioma, type Chave } from '@/lib/i18n'
-import { destinoSeguro, entradaPara, ultimaFrente, esquecerUltimaFrente } from '@/lib/destino'
+import { Link } from 'react-router-dom'
+import { useTexto, type Chave } from '@/lib/i18n'
+import { entradaPara, ultimaFrente, esquecerUltimaFrente } from '@/lib/destino'
 import { contarVisita } from '@/lib/visitas'
 import { VERTENTES } from '@/data/vertentes'
-import Marca from '@/components/Marca'
+import AberturaInstituto from '@/components/AberturaInstituto'
 import Vertentes from '@/components/Vertentes'
 import Produtos from '@/components/Produtos'
+import Cadernos from '@/components/Cadernos'
 import Doacoes from '@/components/Doacoes'
-import ProvaDaPorta from '@/components/ProvaDaPorta'
 
-// Porta de entrada do Instituto THEYE, redesenhada no passo V13 (pergunta de M em 13/11/2026 23:04:
+// Porta de entrada do Instituto THEYE. Refeita em 20/11/2026 a pedido de M: primeira faixa em tela
+// cheia com a logo grande (estrela de oito raios escondida na pupila), nome oficial e lema; depois a
+// breve história, a frase da ontologia, as frentes e uma faixa com um número só (frentes de trabalho).
+//
+// Desenho anterior: passo V13 (pergunta de M em 13/11/2026 23:04:
 // dá para melhorar o desenho pensando em quem compra, mesmo em padrão alto? Dá).
 //
 // A ordem segue a cabeça de quem chega: nome pequeno em cima, a PROMESSA grande, a prova logo abaixo
@@ -22,8 +25,6 @@ import ProvaDaPorta from '@/components/ProvaDaPorta'
 // confiança. O teste portaLegivel.test.ts proíbe letra apagada, letra miúda e o bg-white que o modo
 // escuro repinta de cinza (M, 13/11/2026 22:47: "cinza com letra branca, não dá para ler").
 export default function BoasVindasPage() {
-  const navigate = useNavigate()
-  const [busca] = useSearchParams()
   const t = useTexto()
   const [retomar, setRetomar] = useState<string | null>(ultimaFrente())
 
@@ -34,77 +35,14 @@ export default function BoasVindasPage() {
     const v = VERTENTES.find(x => x.rota === rota)
     return v ? t(`vertente.${v.id}.nome` as Chave) : ''
   }
-  const escolher = (codigo: Idioma) => {
-    trocarIdioma(codigo)
-    contarVisita('idioma', codigo)
-    // Quem chegou por um quadradinho continua indo para a tela daquele quadradinho.
-    const ir = busca.get('ir'); navigate(ir ? entradaPara(destinoSeguro(ir)) : '/login')
-  }
-  const descerAte = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
 
   return (
-    <div className="porta min-h-screen bg-black px-4 py-12 md:py-16">
-      <div className="mx-auto w-full max-w-5xl">
-        {/* Tarefa 1: o nome do Instituto é a assinatura, fica pequeno em cima; a promessa é a estrela. */}
-        <div className="flex justify-center"><Marca tamanho="pequena" tipo="instituto" comSubtitulo={false} /></div>
-
-        {/* Tarefa 5: motivo para voltar. Quem já entrou numa frente retoma de onde parou, em um clique. */}
-        {retomar && (
-          <div
-            data-testid="porta-retomar"
-            className="mx-auto mt-8 flex max-w-xl flex-col items-center gap-2 border border-neutral-700 px-6 py-5 text-center"
-          >
-            <Link
-              to={entradaPara(retomar)}
-              data-testid="porta-retomar-link"
-              title={`${t('boasVindas.continuarEm')} ${nomeDaFrente(retomar)}`}
-              className="text-lg text-[#fff] no-underline"
-            >
-              {t('boasVindas.continuarEm')} <span className="font-serif">{nomeDaFrente(retomar)}</span> <span aria-hidden="true">→</span>
-            </Link>
-            <button
-              type="button"
-              data-testid="porta-esquecer"
-              onClick={() => { esquecerUltimaFrente(); setRetomar(null) }}
-              title={t('porta.comecarDoZero')}
-              className="text-sm text-neutral-300 underline underline-offset-4 hover:text-[#fff]"
-            >
-              {t('porta.comecarDoZero')}
-            </button>
-          </div>
-        )}
-
-        {/* Tarefas 1 e 2: promessa grande e, logo abaixo, a faixa de prova com número que se confere aqui. */}
-        <div className="text-center">
-          <h1 className="mt-12 text-5xl md:text-6xl font-serif leading-[1.05] max-w-4xl mx-auto">{t('porta.promessa')}</h1>
-          <p className="text-lg text-neutral-100 mt-6 max-w-3xl mx-auto leading-relaxed">{t('porta.chamada')}</p>
-
-          <ProvaDaPorta centro />
-
-          {/* Tarefa 4: um botão forte por tela. Conhecer é o passo de quem chega sem conta. */}
-          <div className="mt-12">
-            <button
-              type="button"
-              onClick={() => descerAte('frentes')}
-              data-testid="porta-conhecer"
-              title={t('porta.queroConhecerDica')}
-              className="inline-block min-h-[52px] px-8 py-3 border border-[#fff] bg-[#fff] text-[#000] font-medium uppercase tracking-[0.15em] text-sm hover:bg-transparent hover:text-[#fff] transition"
-            >
-              {t('porta.queroConhecer')} <span aria-hidden="true">↓</span>
-            </button>
-          </div>
-
-          {/* Tarefa 3: os outros caminhos ficam discretos. Membro entra; quem quer falar pede entrada. */}
+    <div className="porta min-h-screen bg-black">
+      <AberturaInstituto
+        extra={(
+          <>
+          {/* Os outros caminhos ficam discretos. Quem quer falar pede entrada. */}
           <div className="mt-6 flex flex-wrap justify-center gap-x-8 gap-y-3 text-base">
-            <button
-              type="button"
-              onClick={() => descerAte('entrar')}
-              data-testid="porta-ja-tenho-acesso"
-              title={t('porta.tenhoAcessoDica')}
-              className="text-[#fff] underline decoration-neutral-400 underline-offset-4 hover:decoration-[#fff]"
-            >
-              {t('porta.tenhoAcesso')}
-            </button>
             <Link
               to="/admissao"
               data-testid="porta-pedir-entrada"
@@ -122,38 +60,45 @@ export default function BoasVindasPage() {
               {t('porta.verExemplos')}
             </Link>
           </div>
-        </div>
 
-        {/* Tarefa 3: "já tenho acesso". O membro escolhe o idioma e entra nele — a escolha vale de
-            verdade na tela de entrada, na criação de conta e na recuperação de senha. */}
-        <section id="entrar" className="porta mt-20 text-center">
-          <h2 className="text-3xl font-serif">{t('porta.tenhoAcesso')}</h2>
-          <p className="text-base text-neutral-200 mt-3 mb-6">
-            {IDIOMAS.map(id => textoEm(id.codigo, 'boasVindas.titulo')).join(' · ')}
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto" data-testid="escolha-idioma" aria-label={t('boasVindas.lista')}>
-            {IDIOMAS.map(id => (
-              <button
-                key={id.codigo}
-                onClick={() => escolher(id.codigo)}
-                title={`${textoEm(id.codigo, 'boasVindas.continuarEm')} ${textoEm(id.codigo, chaveIdioma(id.codigo))}`}
-                data-testid={`idioma-${id.codigo}`}
-                className="group min-h-[88px] border border-neutral-400 bg-neutral-950 px-5 py-4 text-[#fff] transition hover:border-[#fff] hover:bg-[#fff] hover:text-[#000]"
+          {/* Motivo para voltar. Quem já entrou numa frente retoma de onde parou, em um clique. */}
+          {retomar && (
+            <div
+              data-testid="porta-retomar"
+              className="mx-auto mt-8 flex max-w-xl flex-col items-center gap-2 border border-neutral-700 px-6 py-4 text-center"
+            >
+              <Link
+                to={entradaPara(retomar)}
+                data-testid="porta-retomar-link"
+                title={`${t('boasVindas.continuarEm')} ${nomeDaFrente(retomar)}`}
+                className="text-lg text-[#fff] no-underline"
               >
-                <span className="block text-2xl font-serif">{id.nativo}</span>
-                <span className="mt-1 block text-sm text-neutral-300 group-hover:text-neutral-700">{t(chaveIdioma(id.codigo))}</span>
+                {t('boasVindas.continuarEm')} <span className="font-serif">{nomeDaFrente(retomar)}</span> <span aria-hidden="true">→</span>
+              </Link>
+              <button
+                type="button"
+                data-testid="porta-esquecer"
+                onClick={() => { esquecerUltimaFrente(); setRetomar(null) }}
+                title={t('porta.comecarDoZero')}
+                className="text-sm text-neutral-300 underline underline-offset-4 hover:text-[#fff]"
+              >
+                {t('porta.comecarDoZero')}
               </button>
-            ))}
-          </div>
-          <p className="text-sm text-neutral-300 mt-6">{t('boasVindas.dica')}</p>
-          {/* Regra escrita na porta (V10 tarefa 5): deixamos claro o que a contagem é e o que não é. */}
-          <p className="text-sm text-neutral-300 mt-2" data-testid="porta-sem-rastreio">{t('porta.semRastreio')}</p>
-        </section>
+            </div>
+          )}
 
-        {/* Tarefa 7: ordem de quem compra — o que é (frentes), o caderno de produtos e o apoio. */}
+          </>
+        )}
+      />
+
+      <div className="mx-auto w-full max-w-5xl px-4 pb-16">
+        <p className="text-sm text-neutral-300 mt-10 text-center" data-testid="porta-sem-rastreio">{t('porta.semRastreio')}</p>
+
         <Vertentes />
 
         <Produtos />
+
+        <Cadernos />
 
         <Doacoes />
       </div>

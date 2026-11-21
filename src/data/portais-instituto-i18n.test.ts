@@ -1,6 +1,6 @@
 // Passo V6: cada uma das oito portas do Instituto existe inteira nas quatro línguas. Este teste
 // conta as chaves e garante que nenhuma porta fique só em português (o que apareceria como texto
-// português na tela em chinês). Falha se alguém acrescentar uma porta sem traduzir.
+// português na tela em alemão). Falha se alguém acrescentar uma porta sem traduzir.
 import { describe, it, expect } from 'vitest'
 import { PORTAIS_INSTITUTO, type EstadoPortal } from '@/data/portais-instituto'
 import {
@@ -9,7 +9,7 @@ import {
   EXPLICACAO_ESTADO_I18N,
 } from '@/data/portais-instituto-i18n'
 
-const LINGUAS = ['pt', 'en', 'zh', 'es'] as const
+const LINGUAS = ['pt', 'en', 'es', 'de'] as const
 const ESTADOS: EstadoPortal[] = ['estudo', 'prototipo', 'piloto']
 
 describe('portais do Instituto nas quatro línguas (V6)', () => {
@@ -17,7 +17,7 @@ describe('portais do Instituto nas quatro línguas (V6)', () => {
     const rotasDados = PORTAIS_INSTITUTO.map(p => p.rota).sort()
     const rotasI18n = Object.keys(PORTAIS_I18N).sort()
     expect(rotasI18n).toEqual(rotasDados)
-    expect(rotasDados.length).toBe(17)
+    expect(rotasDados.length).toBe(30)
   })
 
   it('cada porta abre inteira nas quatro línguas, sem campo vazio', () => {

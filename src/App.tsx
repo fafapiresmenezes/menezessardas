@@ -4,6 +4,8 @@ import { destinoSeguro } from '@/lib/destino'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { useIdiomaEscolhido } from '@/lib/i18n'
 import LoginPage from '@/pages/LoginPage'
+import RedefinirSenhaPage from '@/pages/RedefinirSenhaPage'
+import ConfirmarContaPage from '@/pages/ConfirmarContaPage'
 import BoasVindasPage from '@/pages/BoasVindasPage'
 // Passo 3: Fechar /stokasticos conforme planejamento
 // const StokasticosPage = lazy(() => import('@/pages/StokasticosPage'))
@@ -12,11 +14,13 @@ import BoasVindasPage from '@/pages/BoasVindasPage'
 // propósito: importar a lista no App.tsx puxaria o texto das oito páginas para o primeiro acesso.
 const PortalInstitutoPage = lazy(() => import('@/pages/PortalInstitutoPage'))
 const AgentesInstitutoPage = lazy(() => import('@/pages/AgentesInstitutoPage'))
+const GestaoInstitutoPage = lazy(() => import('@/pages/GestaoInstitutoPage'))
 const QualidadePage = lazy(() => import('@/pages/QualidadePage'))
 const FundosInicioPage = lazy(() => import('@/pages/FundosInicioPage'))
 const PortaisInstitutoPage = lazy(() => import('@/pages/PortaisInstitutoPage'))
 // Passo 2: Fechar /frentes-do-instituto conforme planejamento
 const FrentesDoInstitutoPage = lazy(() => import('@/pages/FrentesDoInstitutoPage'))
+const EscritoriosDoProjetoPage = lazy(() => import('@/pages/EscritoriosDoProjetoPage'))
 // Passo T2: conferir a corrente do trilho no navegador de quem duvida.
 const LastroPage = lazy(() => import('@/pages/LastroPage'))
 const AreasPage = lazy(() => import('@/pages/AreasPage'))
@@ -29,6 +33,7 @@ const MedicoesContratosPage = lazy(() => import('@/pages/MedicoesContratosPage')
 const SuperficieAtaquePage = lazy(() => import('@/pages/SuperficieAtaquePage'))
 const AguaPage = lazy(() => import('@/pages/AguaPage'))
 const AguasPage = lazy(() => import('@/pages/AguasPage'))
+const EstalecasPage = lazy(() => import('@/pages/EstalecasPage'))
 const TrilhasPage = lazy(() => import('@/pages/TrilhasPage'))
 const PesquisaIaPage = lazy(() => import('@/pages/PesquisaIaPage'))
 const ReguaPage = lazy(() => import('@/pages/ReguaPage'))
@@ -47,6 +52,7 @@ const AlertasPage = lazy(() => import('@/pages/AlertasPage'))
 const RelatóriosPage = lazy(() => import('@/pages/RelatóriosPage'))
 const IndicadoresPage = lazy(() => import('@/pages/IndicadoresPage'))
 const TrilhaPage = lazy(() => import('@/pages/TrilhaPage'))
+const BancoDeSenhasPage = lazy(() => import('@/pages/BancoDeSenhasPage'))
 const ConsumoPage = lazy(() => import('@/pages/ConsumoPage'))
 const AssistentePage = lazy(() => import('@/pages/AssistentePage'))
 const ImportarImoveisPage = lazy(() => import('@/pages/ImportarImoveisPage'))
@@ -119,6 +125,7 @@ const SaudePage = lazy(() => import('@/pages/SaudePage'))
 const ParametrosEscritaPage = lazy(() => import('@/pages/ParametrosEscritaPage'))
 const NavegadorPage = lazy(() => import('@/pages/NavegadorPage'))
 const BancadasColaborativasPage = lazy(() => import('@/pages/BancadasColaborativasPage'))
+const BancadasFilaPage = lazy(() => import('@/pages/BancadasFilaPage'))
 
 // Com dois fatores ativos, a sessão só libera o sistema depois do código (nível aal2).
 async function segundoFatorOk() {
@@ -185,6 +192,15 @@ function App() {
         </div>
       </div>
     )
+  }
+
+  // Link de "criar ou trocar a senha" enviado por e-mail: volta com ?redefinir=1. Só esta tela aparece.
+  if (new URLSearchParams(window.location.search).get('redefinir') === '1') {
+    return <RedefinirSenhaPage />
+  }
+  // Link de "confirmar a conta" enviado por e-mail: volta com ?confirmar=1&th=código.
+  if (new URLSearchParams(window.location.search).get('confirmar') === '1') {
+    return <ConfirmarContaPage />
   }
 
   return (
@@ -296,41 +312,60 @@ function App() {
         <Route path="/stokasticos/blog" element={<StokasticosPage />} />
         <Route path="/stokasticos/ciencia" element={<StokasticosPage />} />
         <Route path="/stokasticos/magia" element={<StokasticosPage />} /> */}
-        <Route path="/portais" element={<PortaisInstitutoPage />} />
+        <Route path="/portais" element={isAuthenticated ? <SoInstituto><PortaisInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/bancadas-colaborativas" element={<BancadasColaborativasPage />} />
+        <Route path="/bancadas-fila" element={isAuthenticated ? <SoInstituto><BancadasFilaPage /></SoInstituto> : <Navigate to="/login" />} />
         {/* Reaberta em 18/11/2026: o menu e o Início apontam para cá; fechada, o clique caía no painel. */}
         <Route
           path="/frentes-do-instituto"
           element={isAuthenticated ? <SoInstituto><FrentesDoInstitutoPage /></SoInstituto> : <Navigate to="/login" />}
         />
+        <Route
+          path="/escritorios-do-projeto"
+          element={isAuthenticated ? <SoInstituto><EscritoriosDoProjetoPage /></SoInstituto> : <Navigate to="/login" />}
+        />
         <Route path="/lastro" element={<LastroPage />} />
         <Route path="/exemplos" element={<ExemplosPage />} />
         <Route path="/admissao" element={<AdmissaoPage />} />
         <Route path="/pedir-entrada" element={<AdmissaoPage />} />
-        <Route path="/preditiva" element={<PortalInstitutoPage />} />
-        <Route path="/geomapeamento" element={<PortalInstitutoPage />} />
-        <Route path="/governo" element={<PortalInstitutoPage />} />
-        <Route path="/educacao" element={<PortalInstitutoPage />} />
-        <Route path="/civico" element={<PortalInstitutoPage />} />
-        <Route path="/ciberseguranca" element={<PortalInstitutoPage />} />
-        <Route path="/quantum" element={<PortalInstitutoPage />} />
-        <Route path="/carbono" element={<PortalInstitutoPage />} />
-        <Route path="/petroleo" element={<PortalInstitutoPage />} />
-        <Route path="/psicologia" element={<PortalInstitutoPage />} />
-        <Route path="/psiquiatria" element={<PortalInstitutoPage />} />
-        <Route path="/biosseguranca" element={<PortalInstitutoPage />} />
-        <Route path="/transumanismo" element={<PortalInstitutoPage />} />
-        <Route path="/marketing" element={<PortalInstitutoPage />} />
-        <Route path="/publicidade" element={<PortalInstitutoPage />} />
-        <Route path="/fundos-internacionais" element={<PortalInstitutoPage />} />
-        <Route path="/agentes-instituto" element={isAuthenticated ? <AgentesInstitutoPage /> : <Navigate to="/login" />} />
-        <Route path="/qualidade" element={isAuthenticated ? <QualidadePage /> : <Navigate to="/login" />} />
+        <Route path="/preditiva" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/geomapeamento" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/governo" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/educacao" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/civico" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/ciberseguranca" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/quantum" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/carbono" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/petroleo" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/psicologia" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/psiquiatria" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/biosseguranca" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/transumanismo" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/marketing" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/estalecas" element={isAuthenticated ? <SoInstituto><EstalecasPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/publicidade" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/transparencia-social" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/infraestrutura" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/energia" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/agronegocio" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/mineracao" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/transporte" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/seguranca-publica" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/cidades-inteligentes" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/financas" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/telecom" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/espacial" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/robotica" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/ontologia-empresas" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/fundos-internacionais" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/agentes-instituto" element={isAuthenticated ? <SoInstituto><AgentesInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/qualidade" element={isAuthenticated ? <SoInstituto><QualidadePage /></SoInstituto> : <Navigate to="/login" />} />
         {/* Passo 1: Fechar /cotas-quanticas conforme planejamento */}
         {/* <Route
           path="/cotas-quanticas"
           element={isAuthenticated ? <CotasQuanticasPage /> : <Navigate to="/login" />}
         /> */}
-        <Route path="/ia" element={<PortalInstitutoPage />} />
+        <Route path="/ia" element={isAuthenticated ? <SoInstituto><PortalInstitutoPage /></SoInstituto> : <Navigate to="/login" />} />
         <Route
           path="/login"
           element={<Entrada autenticado={isAuthenticated} />}
@@ -405,18 +440,24 @@ function App() {
         />
         {/* Casa própria do geomapeamento (fase G): sem login jurídico; a porta é a senha do cofre
             e os dados ficam só no aparelho. A rota antiga redireciona para cá. */}
-        <Route path="/geo" element={<GeolocalizacaoPage />} />
-        <Route path="/geo/nota" element={<NotaGeo />} />
-        <Route path="/geo/biblioteca" element={<BibliotecaGeo />} />
-        <Route path="/geo/precisao" element={<PrecisaoGeo />} />
+        <Route path="/geo" element={isAuthenticated ? <SoInstituto><GeolocalizacaoPage /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/geo/nota" element={isAuthenticated ? <SoInstituto><NotaGeo /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/geo/biblioteca" element={isAuthenticated ? <SoInstituto><BibliotecaGeo /></SoInstituto> : <Navigate to="/login" />} />
+        <Route path="/geo/precisao" element={isAuthenticated ? <SoInstituto><PrecisaoGeo /></SoInstituto> : <Navigate to="/login" />} />
         <Route path="/geolocalizacao" element={<Navigate to="/geo" replace />} />
         <Route
           path="/instituto"
           element={isAuthenticated ? <SoInstituto><InstitutoPage /></SoInstituto> : <Navigate to="/login" />}
         />
+        {/* Painel de gestão do Instituto inteiro, aberto pelo símbolo do ouro (M, 21/11/2026). */}
+        <Route path="/gestao-instituto" element={isAuthenticated ? <SoInstituto><GestaoInstitutoPage /></SoInstituto> : <Navigate to="/login?ir=%2Fgestao-instituto" />} />
         <Route
           path="/legislacao"
           element={isAuthenticated ? <LegislacaoPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/banco-de-senhas"
+          element={isAuthenticated ? <BancoDeSenhasPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/trilha"
@@ -524,63 +565,63 @@ function App() {
         />
         <Route
           path="/fundos"
-          element={isAuthenticated ? <FundosInicioPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><FundosInicioPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/demonstracao-obra"
-          element={isAuthenticated ? <DemoObraPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><DemoObraPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/visao-presidente"
-          element={isAuthenticated ? <VisaoPresidentePage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><VisaoPresidentePage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/carteira-projectos"
-          element={isAuthenticated ? <CarteiraProjectosPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><CarteiraProjectosPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/contratos-obrigacoes"
-          element={isAuthenticated ? <ContratosPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><ContratosPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/pagamentos-fundos"
-          element={isAuthenticated ? <PagamentosPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><PagamentosPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/fornecedores-fundos"
-          element={isAuthenticated ? <FornecedoresFundosPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><FornecedoresFundosPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/garantias-licencas"
-          element={isAuthenticated ? <GarantiasLicencasPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><GarantiasLicencasPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/riscos-litigios"
-          element={isAuthenticated ? <RiscosLitigiosPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><RiscosLitigiosPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/documentos-fundos"
-          element={isAuthenticated ? <DocumentosFundosPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><DocumentosFundosPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/assistente-fundos"
-          element={isAuthenticated ? <AssistenteFundosPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><AssistenteFundosPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/estudos-governo"
-          element={isAuthenticated ? <EstudosGovernoPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><EstudosGovernoPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/biblioteca-teses"
-          element={isAuthenticated ? <BibliotecaTesesPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><BibliotecaTesesPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/criador-projectos"
-          element={isAuthenticated ? <CriadorProjectosGovernoPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><CriadorProjectosGovernoPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/robos-governo"
-          element={isAuthenticated ? <RobosProjectosGovernoPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <SoInstituto><RobosProjectosGovernoPage /></SoInstituto> : <Navigate to="/login" />}
         />
         <Route
           path="/equipe"
@@ -602,8 +643,8 @@ function App() {
           path="/settings"
           element={isAuthenticated ? <ConfiguraçõesPage /> : <Navigate to="/login" />}
         />
-        <Route path="/" element={<ParaOnde autenticado={isAuthenticated} logado="/inicio" />} />
-        <Route path="*" element={<ParaOnde autenticado={isAuthenticated} logado="/inicio" substituir />} />
+        <Route path="/" element={<ParaOnde autenticado={isAuthenticated} logado="/instituto" />} />
+        <Route path="*" element={<ParaOnde autenticado={isAuthenticated} logado="/instituto" substituir />} />
       </Routes>
       </Suspense>
       </ProtecaoRotas>

@@ -116,19 +116,10 @@ describe('Importar processos anteriores', () => {
     expect(falso.invocacoes).toHaveLength(1)
   })
 
-  it('Escavador: busca pelo termo e mostra o erro do serviço', async () => {
-    falso.responderFuncao((_n, b) => (b.termo === 'falha' ? { data: { erro: 'Créditos do Escavador esgotados.' }, error: null } : { data: { processos: [{ numero: C, titulo: 'Maria x Banco', tribunal: 'TJRJ', classe: null }] }, error: null }))
+  it('o Escavador saiu: importar só oferece planilha, lista e intimações (pedido de M, 19/11/2026)', () => {
     tela(<ImportarProcessosPage />)
-    fireEvent.click(screen.getByTestId('fonte-escavador'))
-    fireEvent.click(screen.getByTestId('buscar-escavador'))
-    expect(txt('importar-erro')).toContain('Escreva o nome')
-    fireEvent.change(screen.getByTestId('escavador-termo'), { target: { value: 'Maria Exemplo' } })
-    fireEvent.click(screen.getByTestId('buscar-escavador'))
-    expect((await screen.findAllByTestId('linha-processo'))[0].textContent).toContain('Maria x Banco')
-    expect(falso.invocacoes[0]).toEqual({ nome: 'escavador', body: { termo: 'Maria Exemplo' } })
-    fireEvent.change(screen.getByTestId('escavador-termo'), { target: { value: 'falha' } })
-    fireEvent.click(screen.getByTestId('buscar-escavador'))
-    await waitFor(() => expect(txt('importar-erro')).toBe('Créditos do Escavador esgotados.'))
+    expect(screen.queryByTestId('fonte-escavador')).toBeNull()
+    expect(document.body.textContent).not.toMatch(/escavador/i)
   })
 
   it('planilha sem colunas reconhecidas e arquivo Excel explicam o que fazer', async () => {
@@ -300,8 +291,8 @@ describe('Financeiro', () => {
     fireEvent.change(screen.getByTestId('saldo-inicial'), { target: { value: '10.000' } })
     expect(txt('previsao-90')).toContain('R$')
   })
-  // Privacidade por advogado: pleno e júnior veem só os números dos próprios casos.
-  it('júnior não vê os honorários do caso do colega; o sócio vê os dois', async () => {
+  // Pedido de M (19/11/2026): o financeiro é só do chefe e de quem ele liberar; os demais não veem número nenhum.
+  it('júnior não vê número nenhum do financeiro; o sócio vê o escritório inteiro', async () => {
     falso = criarSupabaseFalso({
       lancamentos_financeiros: [],
       pagamentos_honorarios: [{ id: 'p1', caso_id: 'c1', data: hoje, valor: 1500 }, { id: 'p2', caso_id: 'c2', data: hoje, valor: 9000 }],
@@ -317,8 +308,8 @@ describe('Financeiro', () => {
       : { data: null, error: null })
     cargos({ u1: 'junior' })
     tela(<FinanceiroPage />)
-    await waitFor(() => expect(screen.getByTestId('financeiro-alcance').textContent).toContain('os números dos seus casos'))
-    await waitFor(() => expect(txt('financeiro-resumo')).toContain('Recebido no mêsR$ 1.500,00'))
+    await waitFor(() => expect(screen.getByTestId('financeiro-alcance').textContent).toContain('O financeiro é reservado'))
+    expect(txt('financeiro-resumo')).toContain('Recebido no mêsR$ 0,00')
 
     cleanup(); cargos({ u1: 'socio' })
     tela(<FinanceiroPage />)

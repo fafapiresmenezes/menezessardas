@@ -18,7 +18,8 @@ const { default: LoginPage } = await import('./LoginPage')
 const { default: BoasVindasPage } = await import('./BoasVindasPage')
 
 function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathname}</p> }
-const montarEntrada = () => render(<MemoryRouter><LoginPage /></MemoryRouter>)
+// A entrada com e-mail e senha só aparece depois de escolher um quadradinho (M, 19/11/2026).
+const montarEntrada = () => render(<MemoryRouter initialEntries={['/login?ir=/inicio']}><LoginPage /></MemoryRouter>)
 const montarBoasVindas = () => render(
   <MemoryRouter initialEntries={['/boas-vindas']}>
     <Routes><Route path="/boas-vindas" element={<BoasVindasPage />} /><Route path="*" element={<Onde />} /></Routes>
@@ -29,28 +30,11 @@ describe('entrada do instituto em várias línguas', () => {
   beforeEach(() => { cleanup(); localStorage.clear(); reiniciarIdioma() })
   afterEach(() => { localStorage.clear(); reiniciarIdioma() })
 
-  it('a tela de escolha mostra os quatro idiomas no nome de cada um e convida nas quatro línguas', () => {
+  it('a porta não tem mais bloco de senha nem escolha de idioma no topo (M, 19/11/2026)', () => {
     montarBoasVindas()
-    for (const nome of ['Português', 'English', '中文', 'Español']) expect(screen.getAllByText(nome).length).toBeGreaterThan(0)
-    for (const codigo of ['pt', 'en', 'zh', 'es']) expect(screen.getByTestId(`idioma-${codigo}`)).toBeTruthy()
-    const convite = screen.getByText(/Escolha o seu idioma/)
-    expect(convite.textContent).toContain('Choose your language')
-    expect(convite.textContent).toContain('请选择语言')
-    expect(convite.textContent).toContain('Elija su idioma')
-  })
-
-  it('escolher chinês leva ao login e a tela de entrada já fala chinês', () => {
-    montarBoasVindas()
-    fireEvent.click(screen.getByTestId('idioma-zh'))
-    expect(screen.getByTestId('onde').textContent).toBe('/login')
-    expect(localStorage.getItem('theye-idioma')).toBe('zh')
-    cleanup()
-    montarEntrada()
-    expect(screen.getByText('登录')).toBeTruthy()
-    expect(screen.getByLabelText('邮箱')).toBeTruthy()
-    expect(screen.getByLabelText('密码')).toBeTruthy()
-    expect(screen.getByText('忘记密码')).toBeTruthy()
-    expect(screen.getByText('创建账户')).toBeTruthy()
+    expect(screen.queryByTestId('escolha-idioma')).toBeNull()
+    expect(screen.queryByTestId('porta-ja-tenho-acesso')).toBeNull()
+    // A língua se troca na fileira do pé da tela de entrada, que continua existindo.
   })
 
   it('por padrão a entrada fala português (nada escolhido ainda)', () => {
@@ -89,11 +73,13 @@ describe('entrada do instituto em várias línguas', () => {
     fireEvent.click(screen.getByTestId('trocar-idioma-es'))
     fireEvent.click(screen.getByText('Crear cuenta'))
     expect(screen.getByText(/Cree su cuenta con correo, contraseña/)).toBeTruthy()
+    expect(screen.getByText('¿Cuál es su despacho?')).toBeTruthy()
+    fireEvent.change(screen.getByTestId('lista-escritorio'), { target: { value: '__outro__' } })
     expect(screen.getByText('Despacho (en letras mayúsculas)')).toBeTruthy()
     expect((screen.getByTestId('campo-escritorio') as HTMLInputElement).placeholder).toBe('EJ.: SARDAS E MENEZES')
     expect(screen.getByText('Crear acceso')).toBeTruthy()
     fireEvent.click(screen.getByText('Olvidé mi contraseña'))
-    expect(screen.getAllByRole('status').some(s => s.textContent!.includes('contraseña provisional'))).toBe(true)
+    expect(screen.getAllByRole('status').some(s => s.textContent!.includes('le enviamos un enlace'))).toBe(true)
   })
 
   it('o símbolo escondido do Stokasticos continua intocado na tela de escolha', () => {
