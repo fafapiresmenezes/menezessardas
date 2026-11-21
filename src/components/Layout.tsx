@@ -27,7 +27,16 @@ import { verificarAvisosCriticos } from '@/lib/pwa'
 import { minhaMarca, esquecerMarca, type MarcaEscritorio } from '@/lib/marca'
 import { emDias } from '@/lib/datas'
 import { Menu, X, LogOut, Search, Moon, Sun, UserCog, FlaskConical, ChevronDown, MoreHorizontal, Compass, LayoutGrid, AppWindow } from 'lucide-react'
-import { gruposMenu, gruposVisiveis, atalhosDoMenu, frenteDe, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao, type Frente } from './menuTelas'
+import { gruposMenu, gruposVisiveis, atalhosDoMenu, frenteDe, FRENTES, DICAS, ROTULO_NIVEL, EXPLICA_NIVEL, type Visao, type Frente } from './menuTelas'
+
+/** Grupos do menu que são do nicho jurídico: só neles aparece a lateral do direito. */
+const GRUPOS_SO_DO_DIREITO = ['hoje', 'processos', 'pecas']
+/**
+ * Telas de gestão que servem a qualquer organização: no Instituto, entram na área administrativa.
+ * Ficam de fora as que falam de advocacia (consultores de advogado, honorários, hierarquia de
+ * processos, indicadores e relatórios do escritório): essas são do nicho jurídico.
+ */
+const TELAS_DE_GESTAO = ['/funil', '/financeiro', '/previsoes', '/equipe', '/banco-de-senhas', '/consumo', '/trilha', '/compliance', '/meu-jeito', '/settings']
 import { VERTENTES } from '@/data/vertentes'
 import { useTexto } from '@/lib/i18n'
 import { usePessoaFundos } from '@/components/VerComoFundos'
@@ -110,14 +119,30 @@ export default function Layout({ children, title }: LayoutProps) {
   // com menu próprio já tinham o seu; as demais (uma vertente do Instituto, menos o direito/'/inicio')
   // ganham aqui uma plataforma própria e vazia — o esqueleto da jurídica, sem o menu do direito,
   // "em desenvolvimento". O conteúdo da tela continua aparecendo; o que some é a lateral do direito.
-  const frenteEspecifica = frenteDe(pathname)
+  // Pedido de M (21/11/2026, print do Funil de vendas): quem está no escritório do Instituto THEYE
+  // não vê nada do jurídico nas telas de gestão (funil, financeiro, indicadores, equipe…). Elas abrem
+  // na ÁREA ADMINISTRATIVA do Instituto, com o menu dela. O cabeçalho "Suporte Jurídico" e o menu do
+  // direito (Intimações, Processos, Peças) ficam só nas telas que são do nicho jurídico.
+  const naTelaDoDireito = gruposMenu
+    .filter(g => GRUPOS_SO_DO_DIREITO.includes(g.id))
+    .some(g => g.itens.some(i => estaAtivo(i.href, pathname)))
+  const areaAdministrativa = visao.instituto && !projectos && !naTelaDoDireito
+  const itensAreaAdministrativa = [
+    ...(FRENTES.find(f => f.id === 'instituto')?.itens ?? []),
+    ...gruposVisiveis(visao).flatMap(g => g.itens).filter(i => TELAS_DE_GESTAO.includes(i.href)),
+  ].filter((item, i, todos) => todos.findIndex(x => x.href === item.href) === i)
+  const frenteDaTela = frenteDe(pathname)
+  // Dentro do Instituto, a plataforma do Instituto e as telas de gestão são uma área só, com um menu só.
+  const frenteEspecifica = areaAdministrativa && frenteDaTela?.id === 'instituto' ? undefined : frenteDaTela
   const vertenteFrente = frenteEspecifica
     ? undefined
     : VERTENTES.find(v => v.rota !== '/inicio' && (pathname === v.rota || pathname.startsWith(`${v.rota}/`)))
   const frente: Frente | undefined = frenteEspecifica
     ?? (vertenteFrente
       ? { id: `frente-${vertenteFrente.id}`, nome: t(`vertente.${vertenteFrente.id}.nome` as Parameters<typeof t>[0]), itens: [] }
-      : undefined)
+      : (areaAdministrativa
+        ? { id: 'instituto-adm', nome: 'Área administrativa', itens: itensAreaAdministrativa }
+        : undefined))
   const meusAtalhos = atalhosDoMenu(jeito.atalhos, visao)
   // Com o menu recolhido só há o ícone, então a dica começa pelo nome da tela.
   const dicaDe = (item: { href: string; label: string }) =>
@@ -413,15 +438,16 @@ export default function Layout({ children, title }: LayoutProps) {
             {/* Em notebooks os rótulos dos botões somem (só ícones) para o título da tela caber inteiro. */}
             <div className="min-w-0">
               <h1 className="font-serif text-2xl md:text-3xl text-navy truncate min-w-0" title={title}>{title}</h1>
-              {frente && <p className="text-xs text-grafite-claro truncate" data-testid="frente-atual" title="Você está numa frente do Instituto THEYE, separada da plataforma de direito.">Instituto THEYE · <strong className="text-grafite">{frente.nome}</strong></p>}
+              {frente && <p className="text-xs text-grafite-claro truncate" data-testid="frente-atual" title="Você está numa área do Instituto THEYE, separada das plataformas dos outros nichos.">Instituto THEYE · <strong className="text-grafite">{frente.nome}</strong></p>}
               {!frente && escritorio && <p className="text-xs text-grafite-claro truncate" data-testid="escritorio-atual" title="Você está trabalhando dentro deste escritório. Só as pessoas dele enxergam estes dados.">{projectos ? 'Empresa' : 'Escritório'}: <strong className="text-grafite">{escritorio.nome}</strong></p>}
             </div>
           </div>
           <div className="flex flex-wrap md:flex-nowrap items-center gap-2 md:flex-shrink-0">
           <TourTela />
-          <PerguntarTela />
+          {/* O botão abre o Assistente jurídico: fora do jurídico ele levaria a pessoa para outro nicho. */}
+          {!frente && <PerguntarTela />}
           {!simples && <BotaoExportar />}
-          {!projectos && <button
+          {!projectos && !frente && <button
             type="button"
             onClick={() => navigate('/navegador')}
             className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center gap-2 px-3 border border-navy/15 rounded-sm text-navy hover:border-dourado transition text-sm"
@@ -525,11 +551,12 @@ export default function Layout({ children, title }: LayoutProps) {
         <main className="flex-1 overflow-auto p-4 md:p-8"><AceiteTermos /><AceiteContratoSaas admin={admin} sede={sede} /><ExigirDoisFatores admin={admin} /><GuiaDaTela caminho={pathname} /><ErroTela chave={pathname}>{ocultas.some(o => estaAtivo(o, pathname))
           ? <p role="status" data-testid="tela-escondida" className="bg-white shadow-sm border-l-4 border-dourado p-4 text-sm max-w-xl">Esta tela não está liberada para o seu nível. Quem libera é quem está acima de você na hierarquia do escritório.</p>
           : children}</ErroTela></main>
-        <Atalhos />
+        {/* Atalhos, boas-vindas e primeiros passos falam de prazos, intimações e peças: só no jurídico. */}
+        {!frente && <Atalhos />}
       </div>
-      <Busca aberta={buscaAberta} fechar={() => setBuscaAberta(false)} />
-      <BoasVindas />
-      <ParametrizarPlataforma />
+      <Busca aberta={buscaAberta} fechar={() => setBuscaAberta(false)} dica={frente ? 'Buscar tela ou documento…' : undefined} />
+      {!frente && <BoasVindas />}
+      {!frente && <ParametrizarPlataforma />}
       <Ajudante />
     </div>
   )

@@ -93,7 +93,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Séries públicas de água, minério, desmatamento e agro, com a fonte oficial de cada número',
         'Boletim que qualquer pessoa pode conferir: todo número leva ao dado de origem',
       ],
-      comoEsta: 'A previsão de processo já funciona dentro da plataforma de direito, na tela Previsões, com a calibragem à vista. As séries de mercado estão sendo ligadas uma a uma.',
+      comoEsta: 'A previsão já funciona numa das plataformas do Instituto, na tela Previsões, com a calibragem à vista. As séries de mercado estão sendo ligadas uma a uma.',
     },
     en: {
       nome: 'Predictive platform',
@@ -103,7 +103,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Public series on water, mining, deforestation and agriculture, with the official source of every figure',
         'A bulletin anyone can verify: every number links back to its source',
       ],
-      comoEsta: 'Lawsuit forecasting already works inside the law platform, on the Forecasts screen, with calibration in view. The market series are being connected one by one.',
+      comoEsta: 'Forecasting already works in one of the Institute platforms, on the Forecasts screen, with calibration in view. The market series are being connected one by one.',
     },
     es: {
       nome: 'Plataforma predictiva',
@@ -113,7 +113,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Series públicas de agua, mineral, deforestación y agro, con la fuente oficial de cada número',
         'Boletín que cualquiera puede verificar: cada número lleva al dato de origen',
       ],
-      comoEsta: 'La previsión de proceso ya funciona dentro de la plataforma de derecho, en la pantalla Previsiones, con la calibración a la vista. Las series de mercado se van conectando una a una.',
+      comoEsta: 'La previsión ya funciona en una de las plataformas del Instituto, en la pantalla Previsiones, con la calibración a la vista. Las series de mercado se van conectando una a una.',
     },
     de: {
       nome: 'Prognoseplattform',
@@ -123,7 +123,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
         'Öffentliche Reihen zu Wasser, Bergbau, Entwaldung und Landwirtschaft, mit der amtlichen Quelle jeder Zahl',
         'Ein Bericht, den jede Person prüfen kann: Jede Zahl führt zu ihrer Quelle',
       ],
-      comoEsta: 'Die Verfahrensprognose funktioniert bereits in der Rechtsplattform, auf der Seite Prognosen, mit sichtbarer Kalibrierung. Die Marktreihen werden nach und nach angebunden.',
+      comoEsta: 'Die Prognose funktioniert bereits in einer der Plattformen des Instituts, auf der Seite Prognosen, mit sichtbarer Kalibrierung. Die Marktreihen werden nach und nach angebunden.',
     },
   },
   '/geomapeamento': {
@@ -132,7 +132,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       resumo: 'Juntar num mapa as camadas públicas de um município para enxergar o que está em volta de um imóvel ou de uma obra.',
       escopo: [
         'Camadas públicas por município: zoneamento, área de proteção, risco, bacia',
-        'Cruzamento com a ficha do imóvel que o escritório já tem na plataforma',
+        'Cruzamento com a ficha do imóvel que o cliente já tem na plataforma',
         'Exportar o mapa e a lista de camadas usadas, com a data de cada fonte',
       ],
       comoEsta: 'O MVP no próprio titular está no ar em /geo: posição, mapa, câmera como sensor de lugar, satélites e ficha do município, tudo cifrado só no aparelho.',
@@ -142,7 +142,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       resumo: "Combine on a map a municipality's public layers to see what surrounds a property or a construction site.",
       escopo: [
         'Public layers by municipality: zoning, protected area, risk, basin',
-        'Cross-reference with the property record the firm already has in the platform',
+        'Cross-reference with the property record the client already has in the platform',
         'Export the map and the list of layers used, with the date of each source',
       ],
       comoEsta: 'The MVP on the data subject themself is live at /geo: position, map, camera as a place sensor, satellites and the municipality record, all encrypted on the device only.',
@@ -152,7 +152,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       resumo: 'Reunir en un mapa las capas públicas de un municipio para ver qué hay en torno a un inmueble o a una obra.',
       escopo: [
         'Capas públicas por municipio: zonificación, área de protección, riesgo, cuenca',
-        'Cruce con la ficha del inmueble que el despacho ya tiene en la plataforma',
+        'Cruce con la ficha del inmueble que el cliente ya tiene en la plataforma',
         'Exportar el mapa y la lista de capas usadas, con la fecha de cada fuente',
       ],
       comoEsta: 'El MVP en el propio titular está en el aire en /geo: posición, mapa, cámara como sensor de lugar, satélites y ficha del municipio, todo cifrado solo en el aparato.',
@@ -162,7 +162,7 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       resumo: 'Die öffentlichen Ebenen einer Gemeinde auf einer Karte zusammenführen, um zu sehen, was ein Grundstück oder eine Baustelle umgibt.',
       escopo: [
         'Öffentliche Ebenen je Gemeinde: Zonierung, Schutzgebiet, Risiko, Einzugsgebiet',
-        'Abgleich mit der Grundstücksakte, die die Kanzlei bereits in der Plattform hat',
+        'Abgleich mit der Grundstücksakte, die der Kunde bereits in der Plattform hat',
         'Die Karte und die Liste der verwendeten Ebenen exportieren, mit dem Datum jeder Quelle',
       ],
       comoEsta: 'Das MVP für die betroffene Person selbst ist unter /geo online: Position, Karte, Kamera als Ortssensor, Satelliten und Gemeindeakte, alles nur auf dem Gerät verschlüsselt.',
@@ -297,43 +297,43 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
   '/ciberseguranca': {
     pt: {
       nome: 'Cibersegurança',
-      resumo: 'Cuidar do que o escritório guarda: dado de cliente, peça, contrato e prazo.',
+      resumo: 'Cuidar do que a organização guarda: dados de clientes, documentos, sistemas e acessos.',
       escopo: [
         'Revisão de quem alcança o quê, no banco e não só na tela',
         'Segundo fator na entrada e trilha de acesso para auditoria',
         'Resposta a incidente: o que fazer, em que ordem, e quem avisar',
       ],
-      comoEsta: 'As três coisas já estão em uso na plataforma de direito: segundo fator, trilha de acesso e auditoria das regras do banco. O que falta é virar serviço para outras casas.',
+      comoEsta: 'As três coisas já estão em uso numa das plataformas do Instituto: segundo fator, trilha de acesso e auditoria das regras do banco. O que falta é virar serviço para outras organizações.',
     },
     en: {
       nome: 'Cybersecurity',
-      resumo: 'Protect what the firm holds: client data, pleadings, contracts and deadlines.',
+      resumo: 'Protect what the organization holds: client data, documents, systems and access.',
       escopo: [
         'Review of who reaches what, in the database and not only on screen',
         'Second factor at sign-in and access trail for auditing',
         'Incident response: what to do, in what order, and who to notify',
       ],
-      comoEsta: 'All three are already in use in the law platform: second factor, access trail and database-rule auditing. What is missing is turning it into a service for other firms.',
+      comoEsta: 'All three are already in use in one of the Institute platforms: second factor, access trail and database-rule auditing. What is missing is turning it into a service for other organizations.',
     },
     es: {
       nome: 'Ciberseguridad',
-      resumo: 'Cuidar lo que el despacho guarda: datos del cliente, pieza, contrato y plazo.',
+      resumo: 'Cuidar lo que la organización guarda: datos de clientes, documentos, sistemas y accesos.',
       escopo: [
         'Revisión de quién llega a qué, en la base de datos y no sólo en la pantalla',
         'Segundo factor al entrar y rastro de acceso para auditoría',
         'Respuesta a incidente: qué hacer, en qué orden y a quién avisar',
       ],
-      comoEsta: 'Las tres cosas ya están en uso en la plataforma de derecho: segundo factor, rastro de acceso y auditoría de las reglas de la base de datos. Falta convertirlo en servicio para otros despachos.',
+      comoEsta: 'Las tres cosas ya están en uso en una de las plataformas del Instituto: segundo factor, rastro de acceso y auditoría de las reglas de la base de datos. Falta convertirlo en servicio para otras organizaciones.',
     },
     de: {
       nome: 'Cybersicherheit',
-      resumo: 'Schützen, was die Kanzlei verwahrt: Mandantendaten, Schriftsätze, Verträge und Fristen.',
+      resumo: 'Schützen, was die Organisation verwahrt: Kundendaten, Dokumente, Systeme und Zugänge.',
       escopo: [
         'Prüfung, wer worauf zugreift, in der Datenbank und nicht nur auf dem Bildschirm',
         'Zweiter Faktor bei der Anmeldung und Zugriffsprotokoll für Prüfungen',
         'Reaktion auf Vorfälle: was zu tun ist, in welcher Reihenfolge und wen man benachrichtigt',
       ],
-      comoEsta: 'Alle drei sind in der Rechtsplattform bereits im Einsatz: zweiter Faktor, Zugriffsprotokoll und Prüfung der Datenbankregeln. Es fehlt, daraus einen Dienst für andere Kanzleien zu machen.',
+      comoEsta: 'Alle drei sind in einer der Plattformen des Instituts bereits im Einsatz: zweiter Faktor, Zugriffsprotokoll und Prüfung der Datenbankregeln. Es fehlt, daraus einen Dienst für andere Organisationen zu machen.',
     },
   },
   '/quantum': {
@@ -383,41 +383,41 @@ export const PORTAIS_I18N: Record<RotaPortal, Record<Idioma, PortalTraduzido>> =
       nome: 'IA e superinteligência',
       resumo: 'Onde a inteligência artificial entra no trabalho sério e onde ela não deve entrar.',
       escopo: [
-        'Toda peça sai como rascunho, e o advogado revisa e assina: isso não é negociável',
+        'Todo texto sai como rascunho, e um profissional responsável revisa e assina: isso não é negociável',
         'Toda previsão sai com a incerteza declarada',
-        'O que a plataforma se recusa a fazer, escrito: nada de análise de rosto, de emoção, de mentira ou de perfil psicológico, e nada de vasculhar rede social de parte, advogado ou julgador',
+        'O que a plataforma se recusa a fazer, escrito: nada de análise de rosto, de emoção, de mentira ou de perfil psicológico, e nada de vasculhar rede social de pessoas',
       ],
-      comoEsta: 'Em uso real dentro da plataforma de direito, com estas regras valendo hoje, não como intenção.',
+      comoEsta: 'Em uso real nas plataformas do Instituto, com estas regras valendo hoje, não como intenção.',
     },
     en: {
       nome: 'AI and superintelligence',
       resumo: 'Where artificial intelligence belongs in serious work, and where it must not.',
       escopo: [
-        'Every pleading comes out as a draft, and the lawyer reviews and signs it: this is non-negotiable',
+        'Every text comes out as a draft, and a responsible professional reviews and signs it: this is non-negotiable',
         'Every forecast comes out with its uncertainty declared',
-        'What the platform refuses to do, in writing: no face, emotion, lie or psychological profile analysis, and no scraping of social networks of a party, lawyer or judge',
+        'What the platform refuses to do, in writing: no face, emotion, lie or psychological profile analysis, and no scraping of people\'s social networks',
       ],
-      comoEsta: 'In real use inside the law platform, with these rules in force today, not as intent.',
+      comoEsta: 'In real use across the Institute platforms, with these rules in force today, not as intent.',
     },
     es: {
       nome: 'IA y superinteligencia',
       resumo: 'Dónde la inteligencia artificial entra en el trabajo serio y dónde no debe entrar.',
       escopo: [
-        'Cada pieza sale como borrador, y el abogado revisa y firma: esto no es negociable',
+        'Cada texto sale como borrador, y un profesional responsable revisa y firma: esto no es negociable',
         'Cada previsión sale con la incertidumbre declarada',
-        'Lo que la plataforma se niega a hacer, por escrito: nada de análisis de rostro, emoción, mentira o perfil psicológico, y nada de rastrear redes sociales de la parte, el abogado o el juez',
+        'Lo que la plataforma se niega a hacer, por escrito: nada de análisis de rostro, emoción, mentira o perfil psicológico, y nada de rastrear redes sociales de personas',
       ],
-      comoEsta: 'En uso real dentro de la plataforma de derecho, con estas reglas vigentes hoy, no como intención.',
+      comoEsta: 'En uso real en las plataformas del Instituto, con estas reglas vigentes hoy, no como intención.',
     },
     de: {
       nome: 'KI und Superintelligenz',
       resumo: 'Wo künstliche Intelligenz in ernsthafte Arbeit gehört und wo nicht.',
       escopo: [
-        'Jeder Schriftsatz entsteht als Entwurf, und die Anwältin oder der Anwalt prüft und unterschreibt ihn: Das ist nicht verhandelbar',
+        'Jeder Text entsteht als Entwurf, und eine verantwortliche Fachperson prüft und unterschreibt ihn: Das ist nicht verhandelbar',
         'Jede Prognose erscheint mit angegebener Unsicherheit',
-        'Was die Plattform ablehnt, schriftlich: keine Analyse von Gesicht, Emotion, Lüge oder psychologischem Profil und kein Auslesen sozialer Netzwerke von Parteien, Anwälten oder Richtern',
+        'Was die Plattform ablehnt, schriftlich: keine Analyse von Gesicht, Emotion, Lüge oder psychologischem Profil und kein Auslesen sozialer Netzwerke von Personen',
       ],
-      comoEsta: 'Im echten Einsatz in der Rechtsplattform, mit diesen Regeln schon heute in Kraft, nicht als Absicht.',
+      comoEsta: 'Im echten Einsatz in den Plattformen des Instituts, mit diesen Regeln schon heute in Kraft, nicht als Absicht.',
     },
   },
   '/carbono': {

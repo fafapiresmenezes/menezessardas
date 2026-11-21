@@ -122,8 +122,8 @@ export default function AdmissaoPage() {
               </div>
 
               <div>
-                <label htmlFor="pe-escritorio" className={ROTULO}>Escritório ou órgão <span className="text-white/30">(se tiver)</span></label>
-                <input id="pe-escritorio" className={CAMPO} value={escritorio} onChange={e => setEscritorio(e.target.value)} title="O nome do seu escritório, empresa ou órgão" />
+                <label htmlFor="pe-escritorio" className={ROTULO}>Empresa ou organização <span className="text-white/30">(se tiver)</span></label>
+                <input id="pe-escritorio" className={CAMPO} value={escritorio} onChange={e => setEscritorio(e.target.value)} title="O nome da sua empresa, organização ou órgão público" />
               </div>
 
               <div>

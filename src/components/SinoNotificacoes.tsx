@@ -66,7 +66,7 @@ export default function SinoNotificacoes() {
             {naoLidas > 0 && <button title="Marca todos os avisos como lidos e apaga o ponto vermelho" type="button" onClick={todasLidas} className="text-xs underline text-navy min-h-[44px]">Marcar todas como lidas</button>}
           </div>
           <ul className="max-h-[60vh] overflow-y-auto divide-y divide-navy/10">
-            {lista.length === 0 && <li className="px-4 py-6 text-sm text-grafite-claro text-center">Nada por aqui. Quando chegar intimação, tarefa ou norma que afete seus casos, aparece aqui.</li>}
+            {lista.length === 0 && <li className="px-4 py-6 text-sm text-grafite-claro text-center">Nada por aqui. Quando chegar um aviso, uma tarefa ou algo que precise da sua atenção, aparece aqui.</li>}
             {lista.map(n => (
               <li key={n.id}>
                 <button title="Abre o que este aviso fala e marca o aviso como lido" type="button" onClick={() => abrir(n)} data-testid="sino-item"

@@ -48,7 +48,7 @@ export const PORTAIS_INSTITUTO: PortalInstituto[] = [
       'Boletim que qualquer pessoa pode conferir: todo número leva ao dado de origem',
     ],
     estado: 'prototipo',
-    comoEsta: 'A previsão de processo já funciona dentro da plataforma de direito, na tela Previsões, com a calibragem à vista. As séries de mercado estão sendo ligadas uma a uma.',
+    comoEsta: 'A previsão já funciona numa das plataformas do Instituto, na tela Previsões, com a calibragem à vista. As séries de mercado estão sendo ligadas uma a uma.',
   },
   {
     rota: '/geomapeamento',
@@ -56,7 +56,7 @@ export const PORTAIS_INSTITUTO: PortalInstituto[] = [
     resumo: 'Juntar num mapa as camadas públicas de um município para enxergar o que está em volta de um imóvel ou de uma obra.',
     escopo: [
       'Camadas públicas por município: zoneamento, área de proteção, risco, bacia',
-      'Cruzamento com a ficha do imóvel que o escritório já tem na plataforma',
+      'Cruzamento com a ficha do imóvel que o cliente já tem na plataforma',
       'Exportar o mapa e a lista de camadas usadas, com a data de cada fonte',
     ],
     estado: 'prototipo',
@@ -101,14 +101,14 @@ export const PORTAIS_INSTITUTO: PortalInstituto[] = [
   {
     rota: '/ciberseguranca',
     nome: 'Cibersegurança',
-    resumo: 'Cuidar do que o escritório guarda: dado de cliente, peça, contrato e prazo.',
+    resumo: 'Cuidar do que a organização guarda: dados de clientes, documentos, sistemas e acessos.',
     escopo: [
       'Revisão de quem alcança o quê, no banco e não só na tela',
       'Segundo fator na entrada e trilha de acesso para auditoria',
       'Resposta a incidente: o que fazer, em que ordem, e quem avisar',
     ],
     estado: 'piloto',
-    comoEsta: 'As três coisas já estão em uso na plataforma de direito: segundo fator, trilha de acesso e auditoria das regras do banco. O que falta é virar serviço para outras casas.',
+    comoEsta: 'As três coisas já estão em uso numa das plataformas do Instituto: segundo fator, trilha de acesso e auditoria das regras do banco. O que falta é virar serviço para outras organizações.',
   },
   {
     rota: '/quantum',
@@ -127,12 +127,12 @@ export const PORTAIS_INSTITUTO: PortalInstituto[] = [
     nome: 'IA e superinteligência',
     resumo: 'Onde a inteligência artificial entra no trabalho sério e onde ela não deve entrar.',
     escopo: [
-      'Toda peça sai como rascunho, e o advogado revisa e assina: isso não é negociável',
+      'Todo texto sai como rascunho, e um profissional responsável revisa e assina: isso não é negociável',
       'Toda previsão sai com a incerteza declarada',
-      'O que a plataforma se recusa a fazer, escrito: nada de análise de rosto, de emoção, de mentira ou de perfil psicológico, e nada de vasculhar rede social de parte, advogado ou julgador',
+      'O que a plataforma se recusa a fazer, escrito: nada de análise de rosto, de emoção, de mentira ou de perfil psicológico, e nada de vasculhar rede social de pessoas',
     ],
     estado: 'piloto',
-    comoEsta: 'Em uso real dentro da plataforma de direito, com estas regras valendo hoje, não como intenção.',
+    comoEsta: 'Em uso real nas plataformas do Instituto, com estas regras valendo hoje, não como intenção.',
   },
   {
     rota: '/carbono',
