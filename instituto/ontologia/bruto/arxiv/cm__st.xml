@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/YYXuF98JDCd64n2iqVapfEv2oWw</id>
+  <title>arXiv Query: search_query=cat:cond-mat* AND cat:stat.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:49:23Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cond-mat*+AND+cat:stat.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>1431</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1004.5408v1</id>
+    <title>Approximation for a Toy Defective Ising Model</title>
+    <updated>2010-04-29T21:41:52Z</updated>
+    <link href="https://arxiv.org/abs/1004.5408v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1004.5408v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>It has been previously shown that one can use the ME methodology (Caticha Giffin 2006) to reproduce a mean field solution for a simple fluid (Tseng 2004). One could easily use the case of a simple ferromagnetic material as well. The drawback to the mean field approach is that one must assume that all atoms must all act the same. The problem becomes more tractable when the agents are only allowed to interact with their nearest neighbors and can be in only two possible states. The easiest case being an Ising model. The purpose of this paper is to illustrate the use of the ME method as an approximation tool. The paper show a simple case to compare with the traditional mean field approach. Then we show two examples that lie outside of traditional methodologies. These cases explore a ferromagnetic material with defects. The main result is that regardless of the case, the ME method provides good approximations for each case which would not otherwise be possible or at least well justified.</summary>
+    <category term="cond-mat.stat-mech" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.mtrl-sci" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2010-04-29T21:41:52Z</published>
+    <arxiv:comment>Presented at the 29th International Workshop on Bayesian Inference and Maximum Entropy Methods in Science and Engineering, Oxford, MS, July 5-10, 2009. 10 pages, 0 figures</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.stat-mech"/>
+    <arxiv:journal_ref>A. Giffin, "Approximation For A Toy Defective Ising Model", Bayesian Inference and Maximum Entropy Methods in Science and Engineering, ed. by P. M. Goggans, C. Y. Chan, AIP Conf. Proc. 1193 79 (2009).</arxiv:journal_ref>
+    <author>
+      <name>Adom Giffin</name>
+    </author>
+    <arxiv:doi>10.1063/1.3275649</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1063/1.3275649" title="doi"/>
+  </entry>
+</feed>

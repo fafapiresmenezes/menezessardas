@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/AlP/zI6kv+Am4WDEsAbwP1ZKgyc</id>
+  <title>arXiv Query: search_query=(cat:stat.* OR cat:math.ST) AND cat:econ.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:43:51Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:stat.*+OR+cat:math.ST)+AND+cat:econ.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>3597</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2307.11857v1</id>
+    <title>Scenario Sampling for Large Supermodular Games</title>
+    <updated>2023-07-21T18:51:32Z</updated>
+    <link href="https://arxiv.org/abs/2307.11857v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2307.11857v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper introduces a simulation algorithm for evaluating the log-likelihood function of a large supermodular binary-action game. Covered examples include (certain types of) peer effect, technology adoption, strategic network formation, and multi-market entry games. More generally, the algorithm facilitates simulated maximum likelihood (SML) estimation of games with large numbers of players, $T$, and/or many binary actions per player, $M$ (e.g., games with tens of thousands of strategic actions, $TM=O(10^4)$). In such cases the likelihood of the observed pure strategy combination is typically (i) very small and (ii) a $TM$-fold integral who region of integration has a complicated geometry. Direct numerical integration, as well as accept-reject Monte Carlo integration, are computationally impractical in such settings. In contrast, we introduce a novel importance sampling algorithm which allows for accurate likelihood simulation with modest numbers of simulation draws.</summary>
+    <category term="econ.EM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.TH" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-07-21T18:51:32Z</published>
+    <arxiv:comment>40 pages, 2 Figures and an 8 page Appendix</arxiv:comment>
+    <arxiv:primary_category term="econ.EM"/>
+    <author>
+      <name>Bryan S. Graham</name>
+    </author>
+    <author>
+      <name>Andrin Pelican</name>
+    </author>
+  </entry>
+</feed>

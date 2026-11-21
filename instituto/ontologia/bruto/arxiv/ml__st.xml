@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/IWkXRdO+V0ELkTW8BklQ+Ec1fpQ</id>
+  <title>arXiv Query: search_query=cat:cs.LG AND cat:stat.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:51:32Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.LG+AND+cat:stat.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>72593</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1906.01131v1</id>
+    <title>Hybrid Machine Learning Forecasts for the FIFA Women's World Cup 2019</title>
+    <updated>2019-06-03T23:48:30Z</updated>
+    <link href="https://arxiv.org/abs/1906.01131v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1906.01131v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this work, we combine two different ranking methods together with several other predictors in a joint random forest approach for the scores of soccer matches. The first ranking method is based on the bookmaker consensus, the second ranking method estimates adequate ability parameters that reflect the current strength of the teams best. The proposed combined approach is then applied to the data from the two previous FIFA Women's World Cups 2011 and 2015. Finally, based on the resulting estimates, the FIFA Women's World Cup 2019 is simulated repeatedly and winning probabilities are obtained for all teams. The model clearly favors the defending champion USA before the host France.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-06-03T23:48:30Z</published>
+    <arxiv:comment>arXiv admin note: substantial text overlap with arXiv:1806.03208</arxiv:comment>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Andreas Groll</name>
+    </author>
+    <author>
+      <name>Christophe Ley</name>
+    </author>
+    <author>
+      <name>Gunther Schauberger</name>
+    </author>
+    <author>
+      <name>Hans Van Eetvelde</name>
+    </author>
+    <author>
+      <name>Achim Zeileis</name>
+    </author>
+  </entry>
+</feed>

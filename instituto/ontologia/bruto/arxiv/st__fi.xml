@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/zD+XgPQU52gM9ZpL4NqBLTR01cE</id>
+  <title>arXiv Query: search_query=cat:stat.* AND cat:q-fin.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:52:22Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:stat.*+AND+cat:q-fin.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>1739</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2006.07771v1</id>
+    <title>Numerical Simulation of Exchange Option with Finite Liquidity: Controlled Variate Model</title>
+    <updated>2020-06-14T02:19:18Z</updated>
+    <link href="https://arxiv.org/abs/2006.07771v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2006.07771v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this paper we develop numerical pricing methodologies for European style Exchange Options written on a pair of correlated assets, in a market with finite liquidity. In contrast to the standard multi-asset Black-Scholes framework, trading in our market model has a direct impact on the asset's price. The price impact is incorporated into the dynamics of the first asset through a specific trading strategy, as in large trader liquidity model. Two-dimensional Milstein scheme is implemented to simulate the pair of assets prices. The option value is numerically estimated by Monte Carlo with the Margrabe option as controlled variate. Time complexity of these numerical schemes are included. Finally, we provide a deep learning framework to implement this model effectively in a production environment.</summary>
+    <category term="q-fin.PR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.CP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-06-14T02:19:18Z</published>
+    <arxiv:comment>24 pages, 8 figures</arxiv:comment>
+    <arxiv:primary_category term="q-fin.PR"/>
+    <author>
+      <name>Kevin S. Zhang</name>
+    </author>
+    <author>
+      <name>Traian A. Pirvu</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/EPihbuxKtqN0IPyLClM2URRDKa4</id>
+  <title>arXiv Query: search_query=(cat:q-fin.* OR cat:econ.GN) AND cat:eess.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:44:29Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:q-fin.*+OR+cat:econ.GN)+AND+cat:eess.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>285</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2507.10052v1</id>
+    <title>Analyzing the Crowding-Out Effect of Investment Herding on Consumption: An Optimal Control Theory Approach</title>
+    <updated>2025-07-14T08:33:20Z</updated>
+    <link href="https://arxiv.org/abs/2507.10052v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2507.10052v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Investment herding, a phenomenon where households mimic the decisions of others rather than relying on their own analysis, has significant effects on financial markets and household behavior. Excessive investment herding may reduce investments and lead to a depletion of household consumption, which is called the crowding-out effect. While existing research has qualitatively examined the impact of investment herding on consumption, quantitative studies in this area remain limited. In this work, we investigate the optimal investment and consumption decisions of households under the impact of investment herding. We formulate an optimization problem to model how investment herding influences household decisions over time. Based on the optimal control theory, we solve for the analytical solutions of optimal investment and consumption decisions. We theoretically analyze the impact of investment herding on household consumption decisions and demonstrate the existence of the crowding-out effect. We further explore how parameters, such as interest rate, excess return rate, and volatility, influence the crowding-out effect. Finally, we conduct a real data test to validate our theoretical analysis of the crowding-out effect. This study is crucial to understanding the impact of investment herding on household consumption and offering valuable insights for policymakers seeking to stimulate consumption and mitigate the negative effects of investment herding on economic growth.</summary>
+    <category term="q-fin.PM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.MF" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-07-14T08:33:20Z</published>
+    <arxiv:primary_category term="q-fin.PM"/>
+    <author>
+      <name>Huisheng Wang</name>
+    </author>
+    <author>
+      <name>H. Vicky Zhao</name>
+    </author>
+  </entry>
+</feed>

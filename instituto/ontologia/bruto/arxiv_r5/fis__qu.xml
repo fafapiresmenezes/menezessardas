@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/glrUcamG9IOfXJ/SkNQ5hmW2h+k</id>
+  <title>arXiv Query: search_query=cat:physics.* AND cat:quant-ph&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:48:22Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:physics.*+AND+cat:quant-ph&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>29300</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2006.01950v1</id>
+    <title>Transient Work Function Gating: A New Photoemission Regime</title>
+    <updated>2020-06-02T21:29:09Z</updated>
+    <link href="https://arxiv.org/abs/2006.01950v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2006.01950v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present the theoretical basis for a new photoemission regime, transient work function gating (TWFG), that temporally and energetically gates photoemission and produces near-threshold photoelectrons with thermally limited emittance, percent-level quantum efficiency, and control over temporal coherence. The technique consists of actively gating the work function of a generalized photocathode using non-ionizing long-wavelength optical field to produce an adiabatic modulation of the carrier density at their surface. We examine TWFG as a means to circumvent the long-standing trade-off between low emittance and high quantum efficiency, untethered to particle source or photocathode specifics. TWFG promises new opportunities in photoemission physics for next generation electron and accelerator-based x-ray photon sources.</summary>
+    <category term="physics.app-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.acc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.optics" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-06-02T21:29:09Z</published>
+    <arxiv:primary_category term="physics.app-ph"/>
+    <author>
+      <name>Sergio Carbajo</name>
+    </author>
+    <arxiv:doi>10.1063/5.0011737</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1063/5.0011737" title="doi"/>
+  </entry>
+</feed>

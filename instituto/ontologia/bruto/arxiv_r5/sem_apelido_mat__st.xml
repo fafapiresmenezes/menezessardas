@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/wmyTopokqPrmqEFfq/GNZaFpVdE</id>
+  <title>arXiv Query: search_query=(cat:math.* OR cat:math-ph OR cat:cs.IT) AND cat:stat.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:46:25Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:math.*+OR+(cat:math-ph+OR+cat:cs.IT))+AND+cat:stat.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>25390</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1012.0366v7</id>
+    <title>Optimal measures and Markov transition kernels</title>
+    <updated>2012-09-05T14:56:52Z</updated>
+    <link href="https://arxiv.org/abs/1012.0366v7" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1012.0366v7" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We study optimal solutions to an abstract optimization problem for measures, which is a generalization of classical variational problems in information theory and statistical physics. In the classical problems, information and relative entropy are defined using the Kullback-Leibler divergence, and for this reason optimal measures belong to a one-parameter exponential family. Measures within such a family have the property of mutual absolute continuity. Here we show that this property characterizes other families of optimal positive measures if a functional representing information has a strictly convex dual. Mutual absolute continuity of optimal probability measures allows us to strictly separate deterministic and non-deterministic Markov transition kernels, which play an important role in theories of decisions, estimation, control, communication and computation. We show that deterministic transitions are strictly sub-optimal, unless information resource with a strictly convex dual is unconstrained. For illustration, we construct an example where, unlike non-deterministic, any deterministic kernel either has negatively infinite expected utility (unbounded expected error) or communicates infinite information.</summary>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.FA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2010-12-02T02:08:15Z</published>
+    <arxiv:comment>Replaced with a final and accepted draft; Journal of Global Optimization, Springer, Jan 1, 2012</arxiv:comment>
+    <arxiv:primary_category term="math.OC"/>
+    <author>
+      <name>Roman V. Belavkin</name>
+    </author>
+    <arxiv:doi>10.1007/s10898-012-9851-1</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/s10898-012-9851-1" title="doi"/>
+  </entry>
+</feed>

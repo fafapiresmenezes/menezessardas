@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/AXbJffqLGluX7feg7qnRCi1YBHo</id>
+  <title>arXiv Query: search_query=cat:cond-mat*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:46:43Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cond-mat*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>434319</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2012.11992v1</id>
+    <title>The Effect of Strained Bonds on the Electronic Structure of Amorphous Silicon</title>
+    <updated>2020-12-22T13:30:43Z</updated>
+    <link href="https://arxiv.org/abs/2012.11992v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.11992v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Several amorphous silicon structures were generated using a classical molecular dynamics (MD) protocol of melting and quenching with different quenching rates. An analysis of the calculated electronic properties of these structures revealed that the midgap state density of a-Si which is of interest for solar cell and thin film transistor applications can be correlated to bond angle standard deviation. We also found that this parameter can strongly determine the excess energy of a-Si, which is an important criteria in theoretically generating realistic atomic structures of a-Si.</summary>
+    <category term="cond-mat.mtrl-sci" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.dis-nn" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-22T13:30:43Z</published>
+    <arxiv:primary_category term="cond-mat.mtrl-sci"/>
+    <author>
+      <name>Reza Vatan Meidanshahi</name>
+    </author>
+    <author>
+      <name>Payam Mehr</name>
+    </author>
+    <author>
+      <name>Stephan Marshal Goodnick</name>
+    </author>
+  </entry>
+</feed>

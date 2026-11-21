@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/VKugwymvhM6Jy04rECa11HejK7o</id>
+  <title>arXiv Query: search_query=cat:physics.* AND cat:stat.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:48:42Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:physics.*+AND+cat:stat.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>4916</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2012.11922v1</id>
+    <title>Learning Structures in Earth Observation Data with Gaussian Processes</title>
+    <updated>2020-12-22T10:46:37Z</updated>
+    <link href="https://arxiv.org/abs/2012.11922v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.11922v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Gaussian Processes (GPs) has experienced tremendous success in geoscience in general and for bio-geophysical parameter retrieval in the last years. GPs constitute a solid Bayesian framework to formulate many function approximation problems consistently. This paper reviews the main theoretical GP developments in the field. We review new algorithms that respect the signal and noise characteristics, that provide feature rankings automatically, and that allow applicability of associated uncertainty intervals to transport GP models in space and time. All these developments are illustrated in the field of geoscience and remote sensing at a local and global scales through a set of illustrative examples.</summary>
+    <category term="physics.geo-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.app-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-22T10:46:37Z</published>
+    <arxiv:primary_category term="physics.geo-ph"/>
+    <arxiv:journal_ref>in Advanced Analysis and Learning on Temporal Data. AALTD 2015.Lecture Notes in Computer Science, vol 9785. Springer, Cham</arxiv:journal_ref>
+    <author>
+      <name>Fernando Mateo</name>
+    </author>
+    <author>
+      <name>Jordi Munoz-Mari</name>
+    </author>
+    <author>
+      <name>Valero Laparra</name>
+    </author>
+    <author>
+      <name>Jochem Verrelst</name>
+    </author>
+    <author>
+      <name>Gustau Camps-Valls</name>
+    </author>
+    <arxiv:doi>10.1007/978-3-319-44412-3_6</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/978-3-319-44412-3_6" title="doi"/>
+  </entry>
+</feed>

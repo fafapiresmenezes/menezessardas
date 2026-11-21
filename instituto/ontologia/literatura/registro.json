@@ -1,0 +1,369 @@
+{
+ "regra": "Número copiado exatamente como está no texto, com página. Nunca vira \"calculado por nós\". Arquivos não são guardados aqui (direito autoral): só endereço e impressão digital.",
+ "registro": [
+  {
+   "id": "L1",
+   "selo": "da literatura",
+   "par": [
+    "Águas e Saneamento",
+    "Saúde"
+   ],
+   "direcao": "Águas → Saúde (depende de)",
+   "autores": "Wolf J, Johnston RB, Ambelu A, et al.",
+   "instituicao": "OMS e London School of Hygiene & Tropical Medicine",
+   "ano": 2023,
+   "titulo": "Burden of disease attributable to unsafe drinking water, sanitation, and hygiene in domestic settings: a global analysis for selected adverse health outcomes",
+   "veiculo": "The Lancet 401:2060–71",
+   "doi": "10.1016/S0140-6736(23)00458-0",
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10290941/",
+   "sha256_pagina": "253709b5950e17c6117ec4afd2178da92144a821612921b3f45a243f36291b35",
+   "onde": "Resumo, seção Findings",
+   "tipo_de_numero": "fração atribuível (epidemiologia), não é correlação",
+   "numeros": [
+    {
+     "o_que": "parte da diarreia atribuível a água, saneamento e higiene inseguros, mundo, 2019",
+     "valor": 0.69,
+     "ic95": [
+      0.65,
+      0.72
+     ]
+    },
+    {
+     "o_que": "parte das infecções respiratórias agudas atribuível, 2019",
+     "valor": 0.14,
+     "ic95": [
+      0.13,
+      0.17
+     ]
+    },
+    {
+     "o_que": "parte da desnutrição atribuível, 2019",
+     "valor": 0.1,
+     "ic95": [
+      0.09,
+      0.1
+     ]
+    },
+    {
+     "o_que": "mortes que poderiam ter sido evitadas, 2019 (milhões)",
+     "valor": 1.4,
+     "ic95": [
+      1.3,
+      1.5
+     ]
+    },
+    {
+     "o_que": "parte de todas as mortes do mundo, 2019",
+     "valor": 0.025
+    }
+   ]
+  },
+  {
+   "id": "L2",
+   "selo": "da literatura",
+   "par": [
+    "Águas e Saneamento",
+    "Saúde"
+   ],
+   "direcao": "Águas → Saúde (depende de)",
+   "autores": "Cutler D, Miller G",
+   "instituicao": "Harvard University e NBER",
+   "ano": 2004,
+   "titulo": "The Role of Public Health Improvements in Health Advances: The 20th Century United States",
+   "veiculo": "NBER Working Paper 10511 (publicado em Demography, 2005)",
+   "url": "https://www.nber.org/system/files/working_papers/w10511/w10511.pdf",
+   "sha256_pdf": "81570a5e8186df6ac260acb4094c54b6f8a5711c657c102d8462454756bc0aff",
+   "onde": "Abstract, p. 1",
+   "tipo_de_numero": "parte causal da queda de mortalidade (variação no tempo de adoção da filtragem e cloração), cidades dos EUA, início do século 20",
+   "numeros": [
+    {
+     "o_que": "parte da queda da mortalidade total explicada por água limpa",
+     "valor": "quase metade",
+     "texto": "nearly half"
+    },
+    {
+     "o_que": "parte da queda da mortalidade infantil",
+     "valor": "três quartos",
+     "texto": "three-quarters"
+    },
+    {
+     "o_que": "parte da queda da mortalidade na infância",
+     "valor": "quase dois terços",
+     "texto": "nearly two-thirds"
+    },
+    {
+     "o_que": "retorno social da tecnologia",
+     "valor": "maior que 23 para 1"
+    }
+   ]
+  },
+  {
+   "id": "L3",
+   "selo": "da literatura",
+   "par": [
+    "Computação quântica",
+    "Ontologia/IA e Cibersegurança"
+   ],
+   "direcao": "Quântica → Cibersegurança (ameaça)",
+   "autores": "Mosca M, Piani M",
+   "instituicao": "Global Risk Institute e evolutionQ (Mosca: Universidade de Waterloo)",
+   "ano": 2024,
+   "titulo": "Quantum Threat Timeline Report 2024, Executive Summary",
+   "url": "https://globalriskinstitute.org/mp-files/quantum-threat-timeline-report-2024-executive-summary.pdf",
+   "sha256_pdf": "298c0a420d55c712652dc09a3a0d2aaec3de22a84947ce6aec3fa169e8ce2ed5",
+   "onde": "p. 1, Summary",
+   "tipo_de_numero": "probabilidade média dada por especialistas, não é correlação",
+   "numeros": [
+    {
+     "o_que": "chance de um computador quântico quebrar RSA-2048 em 24 h dentro de 10 anos, leitura otimista",
+     "valor": 0.34
+    },
+    {
+     "o_que": "mesma chance, leitura pessimista",
+     "valor": 0.19
+    },
+    {
+     "o_que": "chance dentro de 5 anos, leitura otimista",
+     "valor": 0.14
+    }
+   ]
+  },
+  {
+   "id": "C1",
+   "selo": "conferência",
+   "par": null,
+   "autores": "Santos ACD (orientadora Milene)",
+   "instituicao": "Universidade de Brasília, trabalho de conclusão de curso",
+   "ano": 2023,
+   "titulo": "Índices de ligações e setores-chave na economia brasileira",
+   "url": "https://bdm.unb.br/bitstream/10483/37643/1/2023_AnaCarolinaDamasDosSantos_tcc.pdf",
+   "sha256_pdf": "31d247516ca5270464c44bef23c18c63cd53199932abf70e1901d61a4454c2c2",
+   "onde": "p. 19, Resultados",
+   "uso": "Conferir nossa lista de setores-chave do IBGE 2015. Ela usa 42 setores de 2000 a 2020; nós usamos 67 setores de 2015.",
+   "resultado": "Dos 10 setores-chave que ela cita, 8 também saem chave na nossa conta (refino, químicos orgânicos, defensivos e químicos diversos, borracha e plástico, aço, eletricidade, celulose e papel, transporte). Não batem: alimentos e bebidas (na nossa matriz está dividido em 4 atividades) e extração de petróleo (ela mesma diz que é chave com pouca regularidade)."
+  },
+  {
+   "id": "L4",
+   "selo": "da literatura",
+   "par": [
+    "IA e Cibersegurança",
+    "Finanças"
+   ],
+   "direcao": "Ataque cibernético num banco → resto do sistema de pagamentos (propagação)",
+   "autores": "Thomas M. Eisenbach, Anna Kovner e Michael Junho Lee",
+   "instituicao": "Federal Reserve Bank of New York",
+   "ano": 2021,
+   "titulo": "Cyber Risk and the U.S. Financial System: A Pre-Mortem Analysis",
+   "veiculo": "Staff Report nº 909 (jan/2020, revisado mai/2021)",
+   "url": "https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr909.pdf",
+   "sha256_pdf": "89066b4f7cc1371ebe1cd08ea6c728f729d77d52637be68991d6356d87b4138f",
+   "onde": "Resumo (p. 2 do PDF) e Introdução (p. 5 do PDF)",
+   "tipo_de_numero": "simulação de rede com dados reais de pagamentos (não é correlação)",
+   "numeros": [
+    {
+     "o_que": "parte da rede de pagamentos atingida (medida pelos ativos dos bancos, p. 5), em média, quando um dos 5 bancos mais ativos no sistema de pagamentos dos EUA é paralisado (texto: “five most active U.S. banks”)",
+     "valor": "38%"
+    },
+    {
+     "o_que": "pagamentos que deixam de acontecer se os bancos passam a segurar liquidez, em vezes o PIB diário",
+     "valor": "mais de 2,5"
+    }
+   ]
+  },
+  {
+   "id": "L5",
+   "selo": "da literatura",
+   "par": [
+    "Saúde",
+    "Economia inteira"
+   ],
+   "direcao": "Saúde → produção (depende de)",
+   "autores": "David E. Bloom, David Canning e Jaypee Sevilla",
+   "instituicao": "Harvard School of Public Health e Queen's University Belfast",
+   "ano": 2001,
+   "titulo": "The Effect of Health on Economic Growth: Theory and Evidence",
+   "veiculo": "NBER Working Paper 8587 (publicado em World Development 32(1), 2004)",
+   "url": "https://www.nber.org/system/files/working_papers/w8587/w8587.pdf",
+   "sha256_pdf": "d4c89e7c0af64585ec69a8c2d3cb264cc6ab77ff0788995392ac3892eef48ef1",
+   "onde": "p. 5, p. 18 e p. 20 do PDF",
+   "tipo_de_numero": "coeficiente de regressão de função de produção entre países",
+   "numeros": [
+    {
+     "o_que": "aumento da produção para cada ano a mais de expectativa de vida",
+     "valor": "4%"
+    }
+   ]
+  },
+  {
+   "id": "L6",
+   "selo": "da literatura",
+   "par": [
+    "Educação",
+    "Economia inteira"
+   ],
+   "direcao": "Educação (habilidade medida em prova) → crescimento",
+   "autores": "Eric A. Hanushek e Ludger Woessmann",
+   "instituicao": "Hoover Institution (Stanford) e Universidade de Munique",
+   "ano": 2009,
+   "titulo": "Do Better Schools Lead to More Growth? Cognitive Skills, Economic Outcomes, and Causation",
+   "veiculo": "NBER Working Paper 14633",
+   "url": "https://www.nber.org/system/files/working_papers/w14633/w14633.pdf",
+   "sha256_pdf": "c4d5e07fa9609e8d6324dd4762b1d950f9ff484e3bbac94436ce6814ad5fd0b2",
+   "onde": "p. 11 e p. 25 do PDF",
+   "tipo_de_numero": "coeficiente de regressão de crescimento entre países, com testes de causalidade",
+   "numeros": [
+    {
+     "o_que": "crescimento anual a mais do PIB per capita por 1 desvio-padrão nas provas (40 anos)",
+     "valor": "2 pontos percentuais"
+    },
+    {
+     "o_que": "crescimento anual a mais por +10 pontos percentuais de alunos com alfabetização básica",
+     "valor": "0,3 ponto percentual"
+    },
+    {
+     "o_que": "crescimento anual a mais por +10 pontos percentuais de alunos de alto desempenho",
+     "valor": "1,3 ponto percentual"
+    }
+   ]
+  },
+  {
+   "id": "L7",
+   "selo": "da literatura",
+   "par": [
+    "Energia",
+    "Indústria"
+   ],
+   "direcao": "Falta de energia → receita das fábricas (depende de)",
+   "autores": "Hunt Allcott, Allan Collard-Wexler e Stephen D. O'Connell",
+   "instituicao": "NYU, Duke e CUNY",
+   "ano": 2014,
+   "titulo": "How Do Electricity Shortages Affect Industry? Evidence from India",
+   "veiculo": "NBER Working Paper 19977 (publicado na American Economic Review 106(3), 2016)",
+   "url": "https://www.nber.org/system/files/working_papers/w19977/w19977.pdf",
+   "sha256_pdf": "64b4eb5e2feac5892a4318032decfb09727208b609d31cee9aeb33d78912ccc3",
+   "onde": "Resumo, p. 2 do PDF",
+   "tipo_de_numero": "efeito causal (variável instrumental: oferta de hidrelétrica)",
+   "numeros": [
+    {
+     "o_que": "queda da receita e do excedente da fábrica média com o nível médio de falta de energia da Índia",
+     "valor": "5% a 10%"
+    }
+   ]
+  },
+  {
+   "id": "L8",
+   "selo": "da literatura",
+   "par": [
+    "Telecom (internet rápida)",
+    "Emprego"
+   ],
+   "direcao": "Chegada de internet rápida (cabos submarinos) → emprego na África",
+   "autores": "Jonas Hjort e Jonas Poulsen",
+   "instituicao": "Columbia University e Harvard University",
+   "ano": 2018,
+   "titulo": "The Arrival of Fast Internet and Employment in Africa",
+   "veiculo": "NBER Working Paper 23582 (publicado na American Economic Review 109(3), 2019)",
+   "url": "https://www.nber.org/system/files/working_papers/w23582/w23582.pdf",
+   "sha256_pdf": "b206b187ff08f543b61b82bbe45ae141ed2ddda0f4f2f2613496763bdd15ed55",
+   "onde": "p. 4 e p. 14 do PDF",
+   "tipo_de_numero": "efeito causal (diferenças em diferenças)",
+   "numeros": [
+    {
+     "o_que": "aumento da chance de estar empregado, 9 países do Afrobarometer",
+     "valor": "13,2%"
+    },
+    {
+     "o_que": "aumento da chance de estar empregado, segundo grupo de países",
+     "valor": "6,9%"
+    },
+    {
+     "o_que": "aumento da chance de estar empregado, África do Sul",
+     "valor": "3,1%"
+    }
+   ],
+   "obs": "Angola não está na amostra; serve de referência para o nicho Imbono com essa ressalva."
+  },
+  {
+   "id": "L9",
+   "selo": "da literatura",
+   "par": [
+    "Jurídica",
+    "Finanças e contratos"
+   ],
+   "direcao": "Formalismo da Justiça → tempo para cobrar e despejar",
+   "autores": "Simeon Djankov, Rafael La Porta, Florencio Lopez-de-Silanes e Andrei Shleifer",
+   "instituicao": "Banco Mundial, Harvard e Yale",
+   "ano": 2002,
+   "titulo": "Courts: The Lex Mundi Project",
+   "veiculo": "NBER Working Paper 8890 (publicado no Quarterly Journal of Economics 118(2), 2003)",
+   "url": "https://www.nber.org/system/files/working_papers/w8890/w8890.pdf",
+   "sha256_pdf": "ee55fccc165a43549e85eb97ecf2f61b3880a18b9f0464591a67652308cc0c36",
+   "onde": "Tabela 6 (p. 56 do PDF), Tabelas 2A e 2B (p. 48 e p. 50 do PDF)",
+   "tipo_de_numero": "medição direta em 109 países (dados de cerca de 2000)",
+   "numeros": [
+    {
+     "o_que": "Brasil: dias para despejar inquilino por falta de pagamento",
+     "valor": 120
+    },
+    {
+     "o_que": "Brasil: dias para cobrar um cheque sem fundo",
+     "valor": 180
+    },
+    {
+     "o_que": "Brasil: índice de formalismo, despejo (escala do estudo)",
+     "valor": 3.83
+    },
+    {
+     "o_que": "Brasil: índice de formalismo, cheque",
+     "valor": 3.06
+    }
+   ],
+   "obs": "Resumo: formalismo maior está ligado a processos mais longos, mais corrupção e menos acesso à Justiça. Dados antigos (por volta de 2000)."
+  },
+  {
+   "id": "L10",
+   "selo": "da literatura",
+   "par": [
+    "Cadeia distributiva B2B",
+    "toda a economia"
+   ],
+   "direcao": "Choque num fornecedor ou cliente → empresas ligadas pela cadeia (propagação)",
+   "autores": "Vasco M. Carvalho, Makoto Nirei, Yukiko U. Saito e Alireza Tahbaz-Salehi",
+   "instituicao": "Universidade de Cambridge, Universidade de Tóquio, Universidade Waseda e Northwestern (Kellogg)",
+   "ano": 2021,
+   "titulo": "Supply Chain Disruptions: Evidence from the Great East Japan Earthquake",
+   "veiculo": "Quarterly Journal of Economics 136(2), 1255–1321 (cópia do autor no site da Kellogg)",
+   "url": "https://www.kellogg.northwestern.edu/faculty/alirezat/JapanEQ.pdf",
+   "sha256_pdf": "9674395d5096bca42f4e388f49479445e1a421b7859857e736d1cde34690dd10",
+   "onde": "resumo (p. 1 do PDF), introdução (p. 4 e p. 5 do PDF)",
+   "tipo_de_numero": "estimativa com dados de cerca de 1 milhão de empresas japonesas e modelo de equilíbrio geral de redes de produção",
+   "numeros": [
+    {
+     "o_que": "queda no crescimento do PIB real do Japão no ano seguinte ao terremoto de 2011, em pontos percentuais (p. 1)",
+     "valor": 0.47
+    },
+    {
+     "o_que": "a mesma queda num mundo sem ligações de cadeia entre empresas de dentro e de fora da área atingida (p. 5)",
+     "valor": 0.21
+    },
+    {
+     "o_que": "queda no crescimento das empresas com FORNECEDOR atingido, em pontos percentuais (p. 4)",
+     "valor": 3.8
+    },
+    {
+     "o_que": "queda no crescimento das empresas com CLIENTE atingido, em pontos percentuais (p. 4)",
+     "valor": 3.1
+    },
+    {
+     "o_que": "queda nas vendas dos clientes dos clientes das empresas atingidas, em pontos percentuais (p. 4)",
+     "valor": 2.8
+    },
+    {
+     "o_que": "queda nas vendas dos fornecedores dos fornecedores, em pontos percentuais (p. 4)",
+     "valor": 2.1
+    }
+   ],
+   "obs": "É a medida direta do que a família 1 calcula pela matriz: o choque anda para os dois lados da cadeia e passa de um elo para o seguinte. Pela conta dos autores, as ligações de cadeia mais que dobram o efeito no PIB (0,47 contra 0,21). Japão, 2011: serve de ordem de grandeza, não de número para o Brasil."
+  }
+ ]
+}

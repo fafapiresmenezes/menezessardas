@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/mP/RfZp6+fniyJVMwbLEfWWtH/k</id>
+  <title>arXiv Query: search_query=cat:cs.LG AND cat:econ.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:51:36Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.LG+AND+cat:econ.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>1221</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1907.03809v5</id>
+    <title>Competing Models</title>
+    <updated>2021-11-11T16:36:14Z</updated>
+    <link href="https://arxiv.org/abs/1907.03809v5" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1907.03809v5" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Different agents need to make a prediction. They observe identical data, but have different models: they predict using different explanatory variables. We study which agent believes they have the best predictive ability -- as measured by the smallest subjective posterior mean squared prediction error -- and show how it depends on the sample size. With small samples, we present results suggesting it is an agent using a low-dimensional model. With large samples, it is generally an agent with a high-dimensional model, possibly including irrelevant variables, but never excluding relevant ones. We apply our results to characterize the winning model in an auction of productive assets, to argue that entrepreneurs and investors with simple models will be over-represented in new sectors, and to understand the proliferation of "factors" that explain the cross-sectional variation of expected stock returns in the asset-pricing literature.</summary>
+    <category term="econ.TH" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.EM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-07-08T18:50:09Z</published>
+    <arxiv:primary_category term="econ.TH"/>
+    <author>
+      <name>Jose Luis Montiel Olea</name>
+    </author>
+    <author>
+      <name>Pietro Ortoleva</name>
+    </author>
+    <author>
+      <name>Mallesh M Pai</name>
+    </author>
+    <author>
+      <name>Andrea Prat</name>
+    </author>
+    <arxiv:doi>10.1093/qje/qjac015</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1093/qje/qjac015" title="doi"/>
+  </entry>
+</feed>

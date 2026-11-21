@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/MIQyJByYbY/50vFugRQjOAW5cQw</id>
+  <title>arXiv Query: search_query=cat:cs.CY&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:47:25Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.CY&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>31442</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2012.11004v1</id>
+    <title>Fake news agenda in the era of COVID-19: Identifying trends through fact-checking content</title>
+    <updated>2020-12-20T19:35:25Z</updated>
+    <link href="https://arxiv.org/abs/2012.11004v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.11004v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The rise of social media has ignited an unprecedented circulation of false information in our society. It is even more evident in times of crises, such as the COVID-19 pandemic. Fact-checking efforts have expanded greatly and have been touted as among the most promising solutions to fake news, especially in times like these. Several studies have reported the development of fact-checking organizations in Western societies, albeit little attention has been given to the Global South. Here, to fill this gap, we introduce a novel Markov-inspired computational method for identifying topics in tweets. In contrast to other topic modeling approaches, our method clusters topics and their current evolution in a predefined time window. Through these, we collected data from Twitter accounts of two Brazilian fact-checking outlets and presented the topics debunked by these initiatives in fortnights throughout the pandemic. By comparing these organizations, we could identify similarities and differences in what was shared by them. Our method resulted in an important technique to cluster topics in a wide range of scenarios, including an infodemic -- a period overabundance of the same information. In particular, the data clearly revealed a complex intertwining between politics and the health crisis during this period. We conclude by proposing a generic model which, in our opinion, is suitable for topic modeling and an agenda for future research.</summary>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-20T19:35:25Z</published>
+    <arxiv:primary_category term="cs.SI"/>
+    <arxiv:journal_ref>Online Social Networks and Media, 2020</arxiv:journal_ref>
+    <author>
+      <name>Wilson Ceron</name>
+    </author>
+    <author>
+      <name>Mathias-Felipe de-Lima-Santos</name>
+    </author>
+    <author>
+      <name>Marcos G. Quiles</name>
+    </author>
+    <arxiv:doi>10.1016/j.osnem.2020.100116</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.osnem.2020.100116" title="doi"/>
+  </entry>
+</feed>

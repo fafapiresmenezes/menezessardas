@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/4rum7b5ni1Rx+s3EiDsvEtjWGHA</id>
+  <title>arXiv Query: search_query=cat:stat.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:47:06Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:stat.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>136889</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2012.11542v1</id>
+    <title>Uncertainty on the Reproduction Ratio in the SIR Model</title>
+    <updated>2020-12-21T18:21:36Z</updated>
+    <link href="https://arxiv.org/abs/2012.11542v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.11542v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The aim of this paper is to understand the extreme variability on the estimated reproduction ratio $R_0$ observed in practice. For expository purpose we consider a discrete time stochastic version of the Susceptible-Infected-Recovered (SIR) model, and introduce different approximate maximum likelihood (AML) estimators of $R_0$. We carefully discuss the properties of these estimators and illustrate by a Monte-Carlo study the width of confidence intervals on $R_0$.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.EM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-21T18:21:36Z</published>
+    <arxiv:primary_category term="stat.ME"/>
+    <author>
+      <name>Sean Elliott</name>
+    </author>
+    <author>
+      <name>Christian Gourieroux</name>
+    </author>
+  </entry>
+</feed>

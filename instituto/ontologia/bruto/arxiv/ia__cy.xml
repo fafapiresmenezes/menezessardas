@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/ujTCC9Td7zWHtFu85MOpynM/PK4</id>
+  <title>arXiv Query: search_query=cat:cs.AI AND cat:cs.CY&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:51:25Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.AI+AND+cat:cs.CY&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>8626</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2006.04497v1</id>
+    <title>Learning under Invariable Bayesian Safety</title>
+    <updated>2020-06-08T12:07:59Z</updated>
+    <link href="https://arxiv.org/abs/2006.04497v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2006.04497v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A recent body of work addresses safety constraints in explore-and-exploit systems. Such constraints arise where, for example, exploration is carried out by individuals whose welfare should be balanced with overall welfare. In this paper, we adopt a model inspired by recent work on a bandit-like setting for recommendations. We contribute to this line of literature by introducing a safety constraint that should be respected in every round and determines that the expected value in each round is above a given threshold. Due to our modeling, the safe explore-and-exploit policy deserves careful planning, or otherwise, it will lead to sub-optimal welfare. We devise an asymptotically optimal algorithm for the setting and analyze its instance-dependent convergence rate.</summary>
+    <category term="cs.GT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-06-08T12:07:59Z</published>
+    <arxiv:primary_category term="cs.GT"/>
+    <author>
+      <name>Gal Bahar</name>
+    </author>
+    <author>
+      <name>Omer Ben-Porat</name>
+    </author>
+    <author>
+      <name>Kevin Leyton-Brown</name>
+    </author>
+    <author>
+      <name>Moshe Tennenholtz</name>
+    </author>
+  </entry>
+</feed>

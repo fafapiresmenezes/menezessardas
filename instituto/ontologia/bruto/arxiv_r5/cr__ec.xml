@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/L8zqr4/TfI8znhbLlAslTa+PnVU</id>
+  <title>arXiv Query: search_query=cat:cs.CR AND cat:econ.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:50:39Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.CR+AND+cat:econ.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>159</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1808.08585v1</id>
+    <title>Evolutionary dynamics of cryptocurrency transaction networks: An empirical study</title>
+    <updated>2018-08-26T16:27:21Z</updated>
+    <link href="https://arxiv.org/abs/1808.08585v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1808.08585v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Cryptocurrency is a well-developed blockchain technology application that is currently a heated topic throughout the world. The public availability of transaction histories offers an opportunity to analyze and compare different cryptocurrencies. In this paper, we present a dynamic network analysis of three representative blockchain-based cryptocurrencies: Bitcoin, Ethereum, and Namecoin. By analyzing the accumulated network growth, we find that, unlike most other networks, these cryptocurrency networks do not always densify over time, and they are changing all the time with relatively low node and edge repetition ratios. Therefore, we then construct separate networks on a monthly basis, trace the changes of typical network characteristics (including degree distribution, degree assortativity, clustering coefficient, and the largest connected component) over time, and compare the three. We find that the degree distribution of these monthly transaction networks cannot be well fitted by the famous power-law distribution, at the same time, different currency still has different network properties, e.g., both Bitcoin and Ethereum networks are heavy-tailed with disassortative mixing, however, only the former can be treated as a small world. These network properties reflect the evolutionary characteristics and competitive power of these three cryptocurrencies and provide a foundation for future research.</summary>
+    <category term="q-fin.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-08-26T16:27:21Z</published>
+    <arxiv:primary_category term="q-fin.ST"/>
+    <arxiv:journal_ref>PLoS ONE 13(8): e0202202 (2018)</arxiv:journal_ref>
+    <author>
+      <name>Jiaqi Liang</name>
+    </author>
+    <author>
+      <name>Linjing Li</name>
+    </author>
+    <author>
+      <name>Daniel Zeng</name>
+    </author>
+    <arxiv:doi>10.1371/journal.pone.0202202</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1371/journal.pone.0202202" title="doi"/>
+  </entry>
+</feed>

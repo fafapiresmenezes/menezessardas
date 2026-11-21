@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/arzJcWWdGgG7uNKd/J+y0BS62rc</id>
+  <title>arXiv Query: search_query=(cat:math.* OR cat:math-ph OR cat:cs.IT) AND cat:cs.AI&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:39:25Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:math.*+OR+(cat:math-ph+OR+cat:cs.IT))+AND+cat:cs.AI&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>5947</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1906.06994v3</id>
+    <title>Neural network identifiability for a family of sigmoidal nonlinearities</title>
+    <updated>2020-09-02T08:15:05Z</updated>
+    <link href="https://arxiv.org/abs/1906.06994v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1906.06994v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper addresses the following question of neural network identifiability: Does the input-output map realized by a feed-forward neural network with respect to a given nonlinearity uniquely specify the network architecture, weights, and biases? Existing literature on the subject Sussman 1992, Albertini, Sontag et al. 1993, Fefferman 1994 suggests that the answer should be yes, up to certain symmetries induced by the nonlinearity, and provided the networks under consideration satisfy certain "genericity conditions". The results in Sussman 1992 and Albertini, Sontag et al. 1993 apply to networks with a single hidden layer and in Fefferman 1994 the networks need to be fully connected. In an effort to answer the identifiability question in greater generality, we derive necessary genericity conditions for the identifiability of neural networks of arbitrary depth and connectivity with an arbitrary nonlinearity. Moreover, we construct a family of nonlinearities for which these genericity conditions are minimal, i.e., both necessary and sufficient. This family is large enough to approximate many commonly encountered nonlinearities to within arbitrary precision in the uniform norm.</summary>
+    <category term="math.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-06-11T14:48:11Z</published>
+    <arxiv:comment>43 pages, 11 figures</arxiv:comment>
+    <arxiv:primary_category term="math.CO"/>
+    <author>
+      <name>Verner Vlačić</name>
+    </author>
+    <author>
+      <name>Helmut Bölcskei</name>
+    </author>
+  </entry>
+</feed>

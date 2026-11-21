@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/EJnv/bEFBkHwzev+4UQxqBPvdqc</id>
+  <title>arXiv Query: search_query=cat:econ.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:47:10Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:econ.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>18304</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2006.03301v1</id>
+    <title>Inflation Dynamics of Financial Shocks</title>
+    <updated>2020-06-05T08:39:17Z</updated>
+    <link href="https://arxiv.org/abs/2006.03301v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2006.03301v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We study the effects of financial shocks on the United States economy by using a Bayesian structural vector autoregressive (SVAR) model that exploits the non-normalities in the data. We use this method to uniquely identify the model and employ inequality constraints to single out financial shocks. The results point to the existence of two distinct financial shocks that have opposing effects on inflation, which supports the idea that financial shocks are transmitted to the real economy through both demand and supply side channels.</summary>
+    <category term="econ.EM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-06-05T08:39:17Z</published>
+    <arxiv:comment>15 pages</arxiv:comment>
+    <arxiv:primary_category term="econ.EM"/>
+    <author>
+      <name>Olli Palmén</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/6b+Y5vPxZ0BHDGHfBTCoLuDr5bM</id>
+  <title>arXiv Query: search_query=cat:quant-ph AND cat:q-bio.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:50:13Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:quant-ph+AND+cat:q-bio.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>451</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/0803.4197v2</id>
+    <title>Optimization of Enzymatic Biochemical Logic for Noise Reduction and Scalability: How Many Biocomputing Gates Can Be Interconnected in a Circuit?</title>
+    <updated>2008-09-13T16:34:17Z</updated>
+    <link href="https://arxiv.org/abs/0803.4197v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/0803.4197v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>  We report an experimental evaluation of the "input-output surface" for a biochemical AND gate. The obtained data are modeled within the rate-equation approach, with the aim to map out the gate function and cast it in the language of logic variables appropriate for analysis of Boolean logic for scalability. In order to minimize "analog" noise, we consider a theoretical approach for determining an optimal set for the process parameters to minimize "analog" noise amplification for gate concatenation. We establish that under optimized conditions, presently studied biochemical gates can be concatenated for up to order 10 processing steps. Beyond that, new paradigms for avoiding noise build-up will have to be developed. We offer a general discussion of the ideas and possible future challenges for both experimental and theoretical research for advancing scalable biochemical computing.</summary>
+    <category term="q-bio.MN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.other" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.soft" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.BM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.OT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.QM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2008-03-31T19:52:30Z</published>
+    <arxiv:primary_category term="q-bio.MN"/>
+    <arxiv:journal_ref>J. Phys. Chem. B 112, 11777-11784 (2008)</arxiv:journal_ref>
+    <author>
+      <name>V. Privman</name>
+    </author>
+    <author>
+      <name>G. Strack</name>
+    </author>
+    <author>
+      <name>D. Solenov</name>
+    </author>
+    <author>
+      <name>M. Pita</name>
+    </author>
+    <author>
+      <name>E. Katz</name>
+    </author>
+    <arxiv:doi>10.1021/jp802673q</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1021/jp802673q" title="doi"/>
+  </entry>
+</feed>

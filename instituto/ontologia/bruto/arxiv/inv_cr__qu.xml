@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/wfOielYXkhYmEg/GTFvKXhLMxCk</id>
+  <title>arXiv Query: search_query=cat:cs.CR AND cat:quant-ph&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:53:16Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.CR+AND+cat:quant-ph&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>1699</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1905.00062v1</id>
+    <title>Experimental Quantum-enhanced Cryptographic Remote Control</title>
+    <updated>2019-04-30T19:00:02Z</updated>
+    <link href="https://arxiv.org/abs/1905.00062v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1905.00062v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The Internet of Things (IoT), as a cutting-edge integrated cross-technology, promises to informationize people's daily lives, while being threatened by continuous challenges of eavesdropping and tampering. The emerging quantum cryptography, harnessing the random nature of quantum mechanics, may also enable unconditionally secure control network, beyond the applications in secure communications. Here, we present a quantum-enhanced cryptographic remote control scheme that combines quantum randomness and one-time pad algorithm for delivering commands remotely. We experimentally demonstrate this on an unmanned aircraft vehicle (UAV) control system. We precharge quantum random number (QRN) into controller and controlee before launching UAV, instead of distributing QRN like standard quantum communication during flight. We statistically verify the randomness of both quantum keys and the converted ciphertexts to check the security capability. All commands in the air are found to be completely chaotic after encryption, and only matched keys on UAV can decipher those commands precisely. In addition, the controlee does not response to the commands that are not or incorrectly encrypted, showing the immunity against interference and decoy. Our work adds true randomness and quantum enhancement into the realm of secure control algorithm in a straightforward and practical fashion, providing a promoted solution for the security of artificial intelligence and IoT.</summary>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-04-30T19:00:02Z</published>
+    <arxiv:comment>7 pages, 5 figures, 2 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.CR"/>
+    <author>
+      <name>Xiao-Ling Pang</name>
+    </author>
+    <author>
+      <name>Lu-Feng Qiao</name>
+    </author>
+    <author>
+      <name>Ke Sun</name>
+    </author>
+    <author>
+      <name>Yu Liu</name>
+    </author>
+    <author>
+      <name>Ai-Lin Yang</name>
+    </author>
+    <author>
+      <name>Xian-Min Jin</name>
+    </author>
+  </entry>
+</feed>

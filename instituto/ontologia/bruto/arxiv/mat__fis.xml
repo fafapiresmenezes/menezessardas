@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/gMtjQTxav4vJMg/o8umjSVbpig0</id>
+  <title>arXiv Query: search_query=cat:math.* AND cat:physics.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:47:29Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:math.*+AND+cat:physics.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>11928</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2007.01896v2</id>
+    <title>Spatial Iterated Prisoner's Dilemma as a Transformation Semigroup</title>
+    <updated>2020-07-27T15:36:03Z</updated>
+    <link href="https://arxiv.org/abs/2007.01896v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2007.01896v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The prisoner's dilemma (PD) is a game-theoretic model studied in a wide array of fields to understand the emergence of cooperation between rational self-interested agents. In this work, we formulate a spatial iterated PD as a discrete-event dynamical system where agents play the game in each time-step and analyse it algebraically using Krohn-Rhodes algebraic automata theory using a computational implementation of the holonomy decomposition of transformation semigroups. In each iteration all players adopt the most profitable strategy in their immediate neighbourhood. Perturbations resetting the strategy of a given player provide additional generating events for the dynamics. Our initial study shows that the algebraic structure, including how natural subsystems comprising permutation groups acting on the spatial distributions of strategies, arise in certain parameter regimes for the pay-off matrix, and are absent for other parameter regimes. Differences in the number of group levels in the holonomy decomposition (an upper bound for Krohn-Rhodes complexity) are revealed as more pools of reversibility appear when the temptation to defect is at an intermediate level. Algebraic structure uncovered by this analysis can be interpreted to shed light on the dynamics of the spatial iterated PD.</summary>
+    <category term="math.DS" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.TH" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.GR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-07-03T18:20:30Z</published>
+    <arxiv:comment>10 pages, 10 figures, for code used in this paper see https://git.io/JJJcN</arxiv:comment>
+    <arxiv:primary_category term="math.DS"/>
+    <author>
+      <name>Isaiah Farahbakhsh</name>
+    </author>
+    <author>
+      <name>Chrystopher L. Nehaniv</name>
+    </author>
+  </entry>
+</feed>

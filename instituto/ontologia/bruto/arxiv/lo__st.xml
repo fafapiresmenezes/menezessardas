@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/Ao1fZD2ZAUdZ4yAH9nLI4Zy3o1Y</id>
+  <title>arXiv Query: search_query=cat:cs.LO AND cat:stat.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:51:55Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.LO+AND+cat:stat.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>106</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2501.10482v1</id>
+    <title>Simulation of Random LR Fuzzy Intervals</title>
+    <updated>2025-01-17T04:08:57Z</updated>
+    <link href="https://arxiv.org/abs/2501.10482v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2501.10482v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Random fuzzy variables join the modeling of the impreciseness (due to their ``fuzzy part'') and randomness. Statistical samples of such objects are widely used, and their direct, numerically effective generation is therefore necessary. Usually, these samples consist of triangular or trapezoidal fuzzy numbers. In this paper, we describe theoretical results and simulation algorithms for another family of fuzzy numbers -- LR fuzzy numbers with interval-valued cores. Starting from a simulation perspective on the piecewise linear LR fuzzy numbers with the interval-valued cores, their limiting behavior is then considered. This leads us to the numerically efficient algorithm for simulating a sample consisting of such fuzzy values.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.PR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.OT" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-01-17T04:08:57Z</published>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Maciej Romaniuk</name>
+    </author>
+    <author>
+      <name>Abbas Parchami</name>
+    </author>
+    <author>
+      <name>Przemysław Grzegorzewski</name>
+    </author>
+  </entry>
+</feed>

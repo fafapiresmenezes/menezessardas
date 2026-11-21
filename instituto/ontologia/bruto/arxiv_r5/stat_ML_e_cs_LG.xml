@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/8kLniwKTjO5nDdZJDQzUVzJpH+g</id>
+  <title>arXiv Query: search_query=cat:stat.ML AND cat:cs.LG&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:27:31Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:stat.ML+AND+cat:cs.LG&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>68961</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2012.12056v1</id>
+    <title>Data Assimilation in the Latent Space of a Neural Network</title>
+    <updated>2020-12-22T14:43:50Z</updated>
+    <link href="https://arxiv.org/abs/2012.12056v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.12056v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>There is an urgent need to build models to tackle Indoor Air Quality issue. Since the model should be accurate and fast, Reduced Order Modelling technique is used to reduce the dimensionality of the problem. The accuracy of the model, that represent a dynamic system, is improved integrating real data coming from sensors using Data Assimilation techniques. In this paper, we formulate a new methodology called Latent Assimilation that combines Data Assimilation and Machine Learning. We use a Convolutional neural network to reduce the dimensionality of the problem, a Long-Short-Term-Memory to build a surrogate model of the dynamic system and an Optimal Interpolated Kalman Filter to incorporate real data. Experimental results are provided for CO2 concentration within an indoor space. This methodology can be used for example to predict in real-time the load of virus, such as the SARS-COV-2, in the air by linking it to the concentration of CO2.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-22T14:43:50Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Maddalena Amendola</name>
+    </author>
+    <author>
+      <name>Rossella Arcucci</name>
+    </author>
+    <author>
+      <name>Laetitia Mottet</name>
+    </author>
+    <author>
+      <name>Cesar Quilodran Casas</name>
+    </author>
+    <author>
+      <name>Shiwei Fan</name>
+    </author>
+    <author>
+      <name>Christopher Pain</name>
+    </author>
+    <author>
+      <name>Paul Linden</name>
+    </author>
+    <author>
+      <name>Yi-Ke Guo</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/KiPcMr9IjTq4GX5gSVuTlDX6HzY</id>
+  <title>arXiv Query: search_query=cat:cs.LG AND (cat:q-fin.* OR cat:econ.GN)&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:43:15Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.LG+AND+(cat:q-fin.*+OR+cat:econ.GN)&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>2415</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2006.13934v2</id>
+    <title>Investor Emotions and Earnings Announcements</title>
+    <updated>2020-06-26T01:23:16Z</updated>
+    <link href="https://arxiv.org/abs/2006.13934v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2006.13934v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Armed with a decade of social media data, I explore the impact of investor emotions on earnings announcements. In particular, I test whether the emotional content of firm-specific messages posted on social media just prior to a firm's earnings announcement predicts its earnings and announcement returns. I find that investors are typically excited about firms that end up exceeding expectations, yet their enthusiasm results in lower announcement returns. Specifically, a standard deviation increase in excitement is associated with an 7.8 basis points lower announcement return, which translates into an approximately -5.8% annualized loss. My findings confirm that emotions and market dynamics are closely related and highlight the importance of considering investor emotions when assessing a firm's short-term value.</summary>
+    <category term="q-fin.PM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-06-24T16:38:45Z</published>
+    <arxiv:primary_category term="q-fin.PM"/>
+    <author>
+      <name>Domonkos F. Vamossy</name>
+    </author>
+  </entry>
+</feed>

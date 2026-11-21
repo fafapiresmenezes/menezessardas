@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/mFYz1W2QyyRwD8S3VXm0tueLXBk</id>
+  <title>arXiv Query: search_query=cat:physics.* AND cat:cond-mat*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:48:19Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:physics.*+AND+cat:cond-mat*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>65986</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2012.13202v1</id>
+    <title>Chemical Reactivity Studies by the Natural-Orbital-Functional 2nd-Order-Moller-Plesset (NOF-MP2) method. Water Dehydrogenation by the Scandium Cation</title>
+    <updated>2020-12-24T11:36:16Z</updated>
+    <link href="https://arxiv.org/abs/2012.13202v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.13202v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The reliability of the recently proposed natural orbital functional supplemented with second-order Møller-Plesset calculations, (NOF-MP2), has been assessed for the mechanistic studies of elementary reactions of transition metal compounds by investigating the dehydrogenation of water by the scandium cation. Both high- and low-spin state potential energy surfaces have been searched thoroughly. Special attention has been paid to the assessment of the capability of the NOF-MP2 method to describe the strong, both static and dynamic, electron correlation effects on the reactivity of Sc+(3D,1D) with water. In agreement with experimental observations, our calculations correctly predict that the only exothermic products are the lowest-lying ScO+(1Σ) and H2(1Σ_g+) species. Nevertheless, an in-depth analysis of the reaction paths leading to several additional products was carried out, including the characterization of various minima and several key transition states. Our results have been compared with the highly accurate multiconfigurational supplemented with quasi degenerate perturbation theory, MCQDPT, wavefunction-type calculations, and with the available experimental data. It is observed that NOF-MP2 is able to give a satisfactorily quantitative agreement, with a performance on par with that of the MCQDPT method.</summary>
+    <category term="physics.chem-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.str-el" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.comp-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-24T11:36:16Z</published>
+    <arxiv:comment>9 pages, 3 figures, 4 tables</arxiv:comment>
+    <arxiv:primary_category term="physics.chem-ph"/>
+    <author>
+      <name>Jose M. Mercero</name>
+    </author>
+    <author>
+      <name>Jesus M. Ugalde</name>
+    </author>
+    <author>
+      <name>Mario Piris</name>
+    </author>
+  </entry>
+</feed>

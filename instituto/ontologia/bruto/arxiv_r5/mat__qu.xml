@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/388dUUtj3Bf/VZK3ReJZvwCkOFs</id>
+  <title>arXiv Query: search_query=(cat:math.* OR cat:math-ph OR cat:cs.IT) AND cat:quant-ph&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:39:17Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:math.*+OR+(cat:math-ph+OR+cat:cs.IT))+AND+cat:quant-ph&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>20627</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2008.12019v15</id>
+    <title>Quantum information theory and Fourier multipliers on quantum groups</title>
+    <updated>2025-02-04T20:21:43Z</updated>
+    <link href="https://arxiv.org/abs/2008.12019v15" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2008.12019v15" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this paper, we compute the exact values of the minimum output entropy and the completely bounded minimal entropy of very large classes of quantum channels acting on matrix algebras $\mathrm{M}_n$. Our new and simple approach relies on the theory of locally compact quantum groups and our results use a new and precise description of bounded Fourier multipliers from $\mathrm{L}^1(\mathbb{G})$ into $\mathrm{L}^p(\mathbb{G})$ for $1 &lt; p \leq \infty$ where $\mathbb{G}$ is a co-amenable locally compact quantum group and on the automatic completely boundedness of these multipliers that this description entails. Indeed, our approach even allows to use convolution operators on quantum hypergroups. This enable us to connect equally the topic of computation of entropies and capacities to subfactor planar algebras. We also give a upper bound of the classical capacity of each considered quantum channel which is already sharp in the commutative case. Quite surprisingly, we observe by direct computations that some Fourier multipliers identifies to direct sums of classical examples of quantum channels (as dephasing channel or depolarizing channels). Indeed, we show that the study of unital qubit channels can be seen as a part of the theory of Fourier multipliers on the von Neumann algebra of the quaternion group $\mathbb{Q}_8$. Unexpectedly, we also connect ergodic actions of (quantum) groups to this topic of computation, allowing some transference to other channels. We also connect the Quantum Harmonic analysis of Werner. Finally, we investigate entangling breaking and $\mathrm{PPT}$ Fourier multipliers and we characterize conditional expectations which are entangling breaking.</summary>
+    <category term="math.OA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.FA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-08-27T09:47:10Z</published>
+    <arxiv:comment>136 pages</arxiv:comment>
+    <arxiv:primary_category term="math.OA"/>
+    <author>
+      <name>Cédric Arhancet</name>
+    </author>
+  </entry>
+</feed>

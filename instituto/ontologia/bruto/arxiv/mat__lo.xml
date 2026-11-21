@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/Q6U8JUhd2tWfMhw2q/wZ9L5QYK4</id>
+  <title>arXiv Query: search_query=cat:math.* AND cat:cs.LO&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:47:52Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:math.*+AND+cat:cs.LO&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>3745</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1808.10690v1</id>
+    <title>On the Formalization of Higher Inductive Types and Synthetic Homotopy Theory</title>
+    <updated>2018-08-31T11:34:04Z</updated>
+    <link href="https://arxiv.org/abs/1808.10690v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1808.10690v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The goal of this dissertation is to present synthetic homotopy theory in the setting of homotopy type theory. We will present various results in this framework, most notably the construction of the Atiyah-Hirzebruch and Serre spectral sequences for cohomology, which have been fully formalized in the Lean proof assistant.</summary>
+    <category term="math.AT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-08-31T11:34:04Z</published>
+    <arxiv:comment>Dissertation, 146 pages</arxiv:comment>
+    <arxiv:primary_category term="math.AT"/>
+    <author>
+      <name>Floris van Doorn</name>
+    </author>
+  </entry>
+</feed>

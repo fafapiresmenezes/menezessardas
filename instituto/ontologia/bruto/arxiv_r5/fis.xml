@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/om/UImQrPRLdkBUosSAtNM0S9N0</id>
+  <title>arXiv Query: search_query=cat:physics.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:46:40Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:physics.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>320959</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2012.10207v1</id>
+    <title>Mapping Humidity-dependent Mechanical Properties of a Single Cellulose Fibre</title>
+    <updated>2020-12-18T13:01:46Z</updated>
+    <link href="https://arxiv.org/abs/2012.10207v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.10207v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Modelling of single cellulose fibres is usually performed by assuming homogenous properties, such as strength and Young s modulus, for the whole fibre. Additionally, the inhomogeneity in size and swelling behaviour along the fibre is often disregarded. For better numerical models, a more detailed characterization of the fibre is required. Herein, we report a method based on atomic force microscopy to map these properties along the fibre. A fibre was mechanically characterized by static colloidal probe AFM measurements along the fibre axis. Thus, the contact stress and strain at each loading point can be extracted. Stress strain curves can be obtained along the fibre. Additionally, mechanical properties such as adhesion or dissipation can be mapped. The inhomogeneous swelling behaviour was recorded via confocal laser scanning microscopy along the fibre. Scanning electron microscopy measurements revealed the local macroscopic fibril orientation and provided an overview of the fibre topology. By combining these data, regions along the fibre with higher adhesion, dissipation, bending ability and strain or differences in the contact stress when increasing the relative humidity could be identified. This combined approach allows for one to obtain a detailed picture of the mechanical properties of single fibres.</summary>
+    <category term="physics.app-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.chem-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-18T13:01:46Z</published>
+    <arxiv:primary_category term="physics.app-ph"/>
+    <author>
+      <name>Julia Auernhammer</name>
+    </author>
+    <author>
+      <name>Tom Keil</name>
+    </author>
+    <author>
+      <name>Binbin Lin</name>
+    </author>
+    <author>
+      <name>Jan-Lukas Schäfer</name>
+    </author>
+    <author>
+      <name>Bai-Xiang Xu</name>
+    </author>
+    <author>
+      <name>Markus Biesalski</name>
+    </author>
+    <author>
+      <name>Robert W. Stark</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/zHolQktKvqCzUDNZZ4OadcSdxWM</id>
+  <title>arXiv Query: search_query=(cat:cs.LG OR cat:q-bio.*)&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:45:02Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.LG+OR+cat:q-bio.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>348736</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2008.03493v1</id>
+    <title>An AI-powered blood test to detect cancer using nanoDSF</title>
+    <updated>2020-08-08T11:20:53Z</updated>
+    <link href="https://arxiv.org/abs/2008.03493v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2008.03493v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We describe a novel cancer diagnostic method based on plasma denaturation profiles obtained by a non-conventional use of Differential Scanning Fluorimetry. We show that 84 glioma patients and 63 healthy controls can be automatically classified using denaturation profiles with the help of machine learning algorithms with 92% accuracy. Proposed high throughput workflow can be applied to any type of cancer and could become a powerful pan-cancer diagnostic and monitoring tool from a simple blood test.</summary>
+    <category term="q-bio.QM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.TO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-08-08T11:20:53Z</published>
+    <arxiv:primary_category term="q-bio.QM"/>
+    <author>
+      <name>Philipp O. Tsvetkov</name>
+    </author>
+    <author>
+      <name>Rémi Eyraud</name>
+    </author>
+    <author>
+      <name>Stéphane Ayache</name>
+    </author>
+    <author>
+      <name>Anton A. Bougaev</name>
+    </author>
+    <author>
+      <name>Soazig Malesinski</name>
+    </author>
+    <author>
+      <name>Hamed Benazha</name>
+    </author>
+    <author>
+      <name>Svetlana Gorokhova</name>
+    </author>
+    <author>
+      <name>Christophe Buffat</name>
+    </author>
+    <author>
+      <name>Caroline Dehais</name>
+    </author>
+    <author>
+      <name>Marc Sanson</name>
+    </author>
+    <author>
+      <name>Franck Bielle</name>
+    </author>
+    <author>
+      <name>Dominique Figarella-Branger</name>
+    </author>
+    <author>
+      <name>Olivier Chinot</name>
+    </author>
+    <author>
+      <name>Emeline Tabouret</name>
+    </author>
+    <author>
+      <name>François Devred</name>
+    </author>
+  </entry>
+</feed>

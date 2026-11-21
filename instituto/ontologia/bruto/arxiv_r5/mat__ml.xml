@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/iRkTp4oAHOT/4HSBXkonBFjTvQ0</id>
+  <title>arXiv Query: search_query=(cat:math.* OR cat:math-ph OR cat:cs.IT) AND cat:cs.LG&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:39:29Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:math.*+OR+(cat:math-ph+OR+cat:cs.IT))+AND+cat:cs.LG&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>27495</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2107.06936v2</id>
+    <title>Performance of Bayesian linear regression in a model with mismatch</title>
+    <updated>2021-11-10T20:24:38Z</updated>
+    <link href="https://arxiv.org/abs/2107.06936v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2107.06936v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this paper we analyze, for a model of linear regression with gaussian covariates, the performance of a Bayesian estimator given by the mean of a log-concave posterior distribution with gaussian prior, in the high-dimensional limit where the number of samples and the covariates' dimension are large and proportional. Although the high-dimensional analysis of Bayesian estimators has been previously studied for Bayesian-optimal linear regression where the correct posterior is used for inference, much less is known when there is a mismatch. Here we consider a model in which the responses are corrupted by gaussian noise and are known to be generated as linear combinations of the covariates, but the distributions of the ground-truth regression coefficients and of the noise are unknown. This regression task can be rephrased as a statistical mechanics model known as the Gardner spin glass, an analogy which we exploit. Using a leave-one-out approach we characterize the mean-square error for the regression coefficients. We also derive the log-normalizing constant of the posterior. Similar models have been studied by Shcherbina and Tirozzi and by Talagrand, but our arguments are much more straightforward. An interesting consequence of our analysis is that in the quadratic loss case, the performance of the Bayesian estimator is independent of a global "temperature" hyperparameter and matches the ridge estimator: sampling and optimizing are equally good.</summary>
+    <category term="math.PR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.dis-nn" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-07-14T18:50:13Z</published>
+    <arxiv:primary_category term="math.PR"/>
+    <author>
+      <name>Jean Barbier</name>
+    </author>
+    <author>
+      <name>Wei-Kuo Chen</name>
+    </author>
+    <author>
+      <name>Dmitry Panchenko</name>
+    </author>
+    <author>
+      <name>Manuel Sáenz</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/jDl3QOXTqbnKJxcYg2Vfa3e5P7Y</id>
+  <title>arXiv Query: search_query=(cat:cs.LG OR (cat:stat.* OR cat:math.ST) )&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:44:55Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.LG+OR+(cat:stat.*+OR+cat:math.ST)&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>381740</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1810.12169v3</id>
+    <title>Fast Computation of Genome-Metagenome Interaction Effects</title>
+    <updated>2020-06-18T16:19:38Z</updated>
+    <link href="https://arxiv.org/abs/1810.12169v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1810.12169v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Motivation. Association studies have been widely used to search for associations between common genetic variants observations and a given phenotype. However, it is now generally accepted that genes and environment must be examined jointly when estimating phenotypic variance. In this work we consider two types of biological markers: genotypic markers, which characterize an observation in terms of inherited genetic information, and metagenomic marker which are related to the environment. Both types of markers are available in their millions and can be used to characterize any observation uniquely. Objective. Our focus is on detecting interactions between groups of genetic and metagenomic markers in order to gain a better understanding of the complex relationship between environment and genome in the expression of a given phenotype. Contributions. We propose a novel approach for efficiently detecting interactions between complementary datasets in a high-dimensional setting with a reduced computational cost. The method, named SICOMORE, reduces the dimension of the search space by selecting a subset of supervariables in the two complementary datasets. These supervariables are given by a weighted group structure defined on sets of variables at different scales. A Lasso selection is then applied on each type of supervariable to obtain a subset of potential interactions that will be explored via linear model testing. Results. We compare SICOMORE with other approaches in simulations, with varying sample sizes, noise, and numbers of true interactions. SICOMORE exhibits convincing results in terms of recall, as well as competitive performances with respect to running time. The method is also used to detect interaction between genomic markers in Medicago truncatula and metagenomic markers in its rhizosphere bacterial community. Software availability. A R package is available, along with its documentation and associated scripts, allowing the reader to reproduce the results presented in the paper.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-10-29T14:57:02Z</published>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Florent Guinot</name>
+      <arxiv:affiliation>LaMME</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Marie Szafranski</name>
+      <arxiv:affiliation>LaMME</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Julien Chiquet</name>
+      <arxiv:affiliation>MIA-Paris</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Anouk Zancarini</name>
+      <arxiv:affiliation>IGEPP</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Christine Le Signor</name>
+      <arxiv:affiliation>IGEPP</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Christophe Mougel</name>
+      <arxiv:affiliation>IGEPP</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Christophe Ambroise</name>
+      <arxiv:affiliation>LaMME</arxiv:affiliation>
+    </author>
+  </entry>
+</feed>

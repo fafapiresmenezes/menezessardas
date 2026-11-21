@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/4TotQ2qrJQyArH4AlfhFUq8GJjM</id>
+  <title>arXiv Query: search_query=cat:econ.* AND cat:eess.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:52:45Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:econ.*+AND+cat:eess.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>261</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2203.08933v1</id>
+    <title>The Digital Divide in Canada and the Role of LEO Satellites in Bridging the Gap</title>
+    <updated>2022-03-16T20:39:49Z</updated>
+    <link href="https://arxiv.org/abs/2203.08933v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2203.08933v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Overcoming the digital divide in rural and remote areas has always been a big challenge for Canada with its huge geographical area. In 2016, the Canadian Radio-television and Telecommunications Commission announced broadband Internet as a basic service available for all Canadians. However, approximately one million Canadians still do not have access to broadband services as of 2020. The COVID-19 pandemic has made the situation more challenging, as social, economic, and educational activities have increasingly been transferred online. The condition is more unfavorable for Indigenous communities. A key challenge in deploying rural and remote broadband Internet is to plan and implement high-capacity backbones, which are now available only in denser urban areas. For any Internet provider, it is almost impossible to make a viable business proposal in these areas. For example, the vast land of the Northwest Territories, Yukon, and Nunavuts diverse geographical features present obstacles for broadband infrastructure. In this paper, we investigate the digital divide in Canada with a focus on rural and remote areas. In so doing, we highlight two potential solutions using low Earth orbit (LEO) constellations to deliver broadband Internet in rural and remote areas to address the access inequality and the digital divide. The first solution involves integrating LEO constellations as a backbone for the existing 4G/5G telecommunications network. This solution uses satellites in a LEO constellation to provide a backhaul network connecting the 4G/5G access network to its core network. The 3rd Generation Partnership Project already specifies how to integrate LEO satellite networks into the 4G/5G network, and the Canadian satellite operator Telesat has already showcased this solution with one terrestrial operator, TIM Brasil, in their 4G network.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-03-16T20:39:49Z</published>
+    <arxiv:comment>Accepted for publication in IEEE Communications Magazine, Total 7 pages, 5 figures, 1 table</arxiv:comment>
+    <arxiv:primary_category term="eess.SP"/>
+    <author>
+      <name>Tuheen Ahmmed</name>
+    </author>
+    <author>
+      <name>Afsoon Alidadi</name>
+    </author>
+    <author>
+      <name>Zichao Zhang</name>
+    </author>
+    <author>
+      <name>Aizaz U. Chaudhry</name>
+    </author>
+    <author>
+      <name>Halim Yanikomeroglu</name>
+    </author>
+    <arxiv:doi>10.13140/RG.2.2.18223.20648</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.13140/RG.2.2.18223.20648" title="doi"/>
+  </entry>
+</feed>

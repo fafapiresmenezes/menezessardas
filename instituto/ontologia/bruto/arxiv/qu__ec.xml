@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/GTL9U4yMgbrT8rNQGRNUTkSqTrY</id>
+  <title>arXiv Query: search_query=cat:quant-ph AND cat:econ.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:50:05Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:quant-ph+AND+cat:econ.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>23</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1811.00875v1</id>
+    <title>Quantum Structures in Human Decision-making: Towards Quantum Expected Utility</title>
+    <updated>2018-10-29T12:29:51Z</updated>
+    <link href="https://arxiv.org/abs/1811.00875v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1811.00875v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>{\it Ellsberg thought experiments} and empirical confirmation of Ellsberg preferences pose serious challenges to {\it subjective expected utility theory} (SEUT). We have recently elaborated a quantum-theoretic framework for human decisions under uncertainty which satisfactorily copes with the Ellsberg paradox and other puzzles of SEUT. We apply here the quantum-theoretic framework to the {\it Ellsberg two-urn example}, showing that the paradox can be explained by assuming a state change of the conceptual entity that is the object of the decision ({\it decision-making}, or {\it DM}, {\it entity}) and representing subjective probabilities by quantum probabilities. We also model the empirical data we collected in a DM test on human participants within the theoretic framework above. The obtained results are relevant, as they provide a line to model real life, e.g., financial and medical, decisions that show the same empirical patterns as the two-urn experiment.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.NC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-10-29T12:29:51Z</published>
+    <arxiv:comment>13 pages, 1 figure, standard LateX</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Sandro Sozzo</name>
+    </author>
+    <arxiv:doi>10.1007/s10773-019-04022-w</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/s10773-019-04022-w" title="doi"/>
+  </entry>
+</feed>

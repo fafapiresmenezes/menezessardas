@@ -1,0 +1,2358 @@
+{
+ "familia": 5,
+ "nome": "Ligação entre ciências (artigos listados em duas áreas no arXiv)",
+ "aviso": "Proximidade de conhecimento, não dependência. Contagens crescem todo dia; valem para a data da coleta.",
+ "fonte": {
+  "orgao": "arXiv (Cornell University)",
+  "api": "https://export.arxiv.org/api/query",
+  "coleta_inicio_utc": "2026-11-21T09:38:19+00:00",
+  "coleta_fim_utc": "2026-11-21T09:46:32+00:00",
+  "arquivos": "bruto/arxiv/*.xml (uma resposta por pergunta)"
+ },
+ "metodo": {
+  "cosseno": "n_AB / √(n_A·n_B)",
+  "jaccard": "n_AB / (n_A + n_B − n_AB)",
+  "parte": "n_AB / n_A",
+  "observacao": "Categorias-apelido somadas (ver consultas): Matemática inclui math-ph e cs.IT; Estatística inclui math.ST; Finanças inclui econ.GN. Um mesmo artigo listado em econ.GN entra em Economia e em Finanças, porque o arXiv o põe nas duas.",
+  "categoria_compartilhada": {
+   "texto": "Nos pares Matemática × Estatística e Economia × Finanças, uma categoria pertence aos dois arquivos por definição do arXiv; todo artigo dela conta como ponte. Abaixo, a mesma ponte com e sem essa categoria.",
+   "pares": [
+    {
+     "par": [
+      "mat",
+      "st"
+     ],
+     "categoria_compartilhada": "math.ST = stat.TH",
+     "com": {
+      "n_a": 807139,
+      "n_b": 155088,
+      "n_ab": 43589,
+      "cosseno": 0.12320083231698627
+     },
+     "sem": {
+      "consulta_a": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29",
+      "consulta_b": "cat:stat.*",
+      "n_a": 807139,
+      "n_b": 136889,
+      "n_ab": 25390,
+      "cosseno": 0.07638432747138682
+     }
+    },
+    {
+     "par": [
+      "ec",
+      "fi"
+     ],
+     "categoria_compartilhada": "econ.GN = q-fin.EC",
+     "com": {
+      "n_a": 18304,
+      "n_b": 26720,
+      "n_ab": 8365,
+      "cosseno": 0.37824632298136457
+     },
+     "sem": {
+      "consulta_a": "cat:econ.*",
+      "consulta_b": "cat:q-fin.*",
+      "n_a": 18304,
+      "n_b": 19560,
+      "n_ab": 1205,
+      "cosseno": 0.06368389507362547
+     }
+    }
+   ]
+  },
+  "aviso_estatistica_ml": {
+   "n_stat_ML": 81998,
+   "n_stat_ML_e_cs_LG": 68961,
+   "parte": 0.8410083172760311,
+   "texto": "A maior parte de stat.ML também está listada em cs.LG. A ponte Estatística × Aprendizado de máquina mede, em boa parte, o costume de listar nas duas, não só proximidade espontânea; o motivo exato (regra de moderação) não foi conferido em documento do arXiv por nós."
+  }
+ },
+ "areas": [
+  {
+   "codigo": "mat",
+   "nome": "Matemática",
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29",
+   "nichos": [
+    "Matemática"
+   ],
+   "n": 807139
+  },
+  {
+   "codigo": "fis",
+   "nome": "Física (geral e aplicada)",
+   "consulta": "cat:physics.*",
+   "nichos": [
+    "Física"
+   ],
+   "n": 320959
+  },
+  {
+   "codigo": "cm",
+   "nome": "Matéria condensada",
+   "consulta": "cat:cond-mat*",
+   "nichos": [
+    "Física",
+    "Quântica"
+   ],
+   "n": 434319
+  },
+  {
+   "codigo": "qu",
+   "nome": "Física e computação quântica",
+   "consulta": "cat:quant-ph",
+   "nichos": [
+    "Quântica"
+   ],
+   "n": 191558
+  },
+  {
+   "codigo": "cr",
+   "nome": "Criptografia e segurança",
+   "consulta": "cat:cs.CR",
+   "nichos": [
+    "IA e Cibersegurança",
+    "Segurança"
+   ],
+   "n": 54694
+  },
+  {
+   "codigo": "ia",
+   "nome": "Inteligência artificial",
+   "consulta": "cat:cs.AI",
+   "nichos": [
+    "IA e Cibersegurança"
+   ],
+   "n": 214063
+  },
+  {
+   "codigo": "ml",
+   "nome": "Aprendizado de máquina",
+   "consulta": "cat:cs.LG",
+   "nichos": [
+    "IA e Cibersegurança"
+   ],
+   "n": 300288
+  },
+  {
+   "codigo": "lo",
+   "nome": "Lógica em computação (ontologia formal)",
+   "consulta": "cat:cs.LO",
+   "nichos": [
+    "Ontologia"
+   ],
+   "n": 20716
+  },
+  {
+   "codigo": "st",
+   "nome": "Estatística",
+   "consulta": "%28cat:stat.*+OR+cat:math.ST%29",
+   "nichos": [
+    "Predição e calibragem"
+   ],
+   "n": 155088
+  },
+  {
+   "codigo": "ec",
+   "nome": "Economia",
+   "consulta": "cat:econ.*",
+   "nichos": [
+    "B2B",
+    "Contratos públicos",
+    "Cadeia distributiva"
+   ],
+   "n": 18304
+  },
+  {
+   "codigo": "fi",
+   "nome": "Finanças quantitativas",
+   "consulta": "%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "nichos": [
+    "Finanças"
+   ],
+   "n": 26720
+  },
+  {
+   "codigo": "bi",
+   "nome": "Biologia quantitativa",
+   "consulta": "cat:q-bio.*",
+   "nichos": [
+    "Saúde",
+    "Agro"
+   ],
+   "n": 56455
+  },
+  {
+   "codigo": "ee",
+   "nome": "Engenharia elétrica e sistemas",
+   "consulta": "cat:eess.*",
+   "nichos": [
+    "Engenharia",
+    "Energia",
+    "Telecom"
+   ],
+   "n": 144093
+  },
+  {
+   "codigo": "cy",
+   "nome": "Computação e sociedade (direito e políticas)",
+   "consulta": "cat:cs.CY",
+   "nichos": [
+    "Jurídica"
+   ],
+   "n": 31442
+  }
+ ],
+ "pares": [
+  {
+   "a": "mat",
+   "b": "fis",
+   "n_a": 807139,
+   "n_b": 320959,
+   "n_ab": 17070,
+   "cosseno": 0.03353780040755075,
+   "jaccard": 0.01536414923836303,
+   "parte_de_a_em_b": 0.02114877363130762,
+   "parte_de_b_em_a": 0.053184363111799325,
+   "cosseno_ponte": 0.03353780040755075,
+   "n_ab_ponte": 17070,
+   "jaccard_ponte": 0.01536414923836303,
+   "parte_de_a_em_b_ponte": 0.02114877363130762
+  },
+  {
+   "a": "mat",
+   "b": "cm",
+   "n_a": 807139,
+   "n_b": 434319,
+   "n_ab": 17758,
+   "cosseno": 0.029992693615907326,
+   "jaccard": 0.01451172673040778,
+   "parte_de_a_em_b": 0.02200116708522324,
+   "parte_de_b_em_a": 0.04088699780576028,
+   "cosseno_ponte": 0.029992693615907326,
+   "n_ab_ponte": 17758,
+   "jaccard_ponte": 0.01451172673040778,
+   "parte_de_a_em_b_ponte": 0.02200116708522324
+  },
+  {
+   "a": "mat",
+   "b": "qu",
+   "n_a": 807139,
+   "n_b": 191558,
+   "n_ab": 20627,
+   "cosseno": 0.052458003210534565,
+   "jaccard": 0.02108949257210629,
+   "parte_de_a_em_b": 0.025555697345810324,
+   "parte_de_b_em_a": 0.10768018041533113,
+   "cosseno_ponte": 0.052458003210534565,
+   "n_ab_ponte": 20627,
+   "jaccard_ponte": 0.02108949257210629,
+   "parte_de_a_em_b_ponte": 0.025555697345810324
+  },
+  {
+   "a": "mat",
+   "b": "cr",
+   "n_a": 807139,
+   "n_b": 54694,
+   "n_ab": 3295,
+   "cosseno": 0.015682359653115173,
+   "jaccard": 0.003837919812518491,
+   "parte_de_a_em_b": 0.004082320393389491,
+   "parte_de_b_em_a": 0.06024426810984752,
+   "cosseno_ponte": 0.015682359653115173,
+   "n_ab_ponte": 3295,
+   "jaccard_ponte": 0.003837919812518491,
+   "parte_de_a_em_b_ponte": 0.004082320393389491
+  },
+  {
+   "a": "mat",
+   "b": "ia",
+   "n_a": 807139,
+   "n_b": 214063,
+   "n_ab": 5947,
+   "cosseno": 0.014307144665331381,
+   "jaccard": 0.005857641676229125,
+   "parte_de_a_em_b": 0.007367999811680516,
+   "parte_de_b_em_a": 0.027781540948225523,
+   "cosseno_ponte": 0.014307144665331381,
+   "n_ab_ponte": 5947,
+   "jaccard_ponte": 0.005857641676229125,
+   "parte_de_a_em_b_ponte": 0.007367999811680516
+  },
+  {
+   "a": "mat",
+   "b": "ml",
+   "n_a": 807139,
+   "n_b": 300288,
+   "n_ab": 27495,
+   "cosseno": 0.05584837859722187,
+   "jaccard": 0.02545993636636381,
+   "parte_de_a_em_b": 0.034064764557281954,
+   "parte_de_b_em_a": 0.09156210038363172,
+   "cosseno_ponte": 0.05584837859722187,
+   "n_ab_ponte": 27495,
+   "jaccard_ponte": 0.02545993636636381,
+   "parte_de_a_em_b_ponte": 0.034064764557281954
+  },
+  {
+   "a": "mat",
+   "b": "lo",
+   "n_a": 807139,
+   "n_b": 20716,
+   "n_ab": 3824,
+   "cosseno": 0.029572685606356803,
+   "jaccard": 0.00464060211327001,
+   "parte_de_a_em_b": 0.004737721755484496,
+   "parte_de_b_em_a": 0.18459162000386176,
+   "cosseno_ponte": 0.029572685606356803,
+   "n_ab_ponte": 3824,
+   "jaccard_ponte": 0.00464060211327001,
+   "parte_de_a_em_b_ponte": 0.004737721755484496
+  },
+  {
+   "a": "mat",
+   "b": "st",
+   "n_a": 807139,
+   "n_b": 155088,
+   "n_ab": 43589,
+   "cosseno": 0.12320083231698627,
+   "jaccard": 0.047449593855250924,
+   "parte_de_a_em_b": 0.05400432887024416,
+   "parte_de_b_em_a": 0.2810597854121531,
+   "cosseno_ponte": 0.07638432747138682,
+   "n_ab_ponte": 25390,
+   "jaccard_ponte": 0.027638743444098765,
+   "parte_de_a_em_b_ponte": 0.0314567874926128,
+   "categoria_compartilhada": "math.ST = stat.TH",
+   "n_ab_sem_compartilhada": 25390
+  },
+  {
+   "a": "mat",
+   "b": "ec",
+   "n_a": 807139,
+   "n_b": 18304,
+   "n_ab": 1825,
+   "cosseno": 0.015014666803223293,
+   "jaccard": 0.002215833068242802,
+   "parte_de_a_em_b": 0.0022610727520290803,
+   "parte_de_b_em_a": 0.09970498251748251,
+   "cosseno_ponte": 0.015014666803223293,
+   "n_ab_ponte": 1825,
+   "jaccard_ponte": 0.002215833068242802,
+   "parte_de_a_em_b_ponte": 0.0022610727520290803
+  },
+  {
+   "a": "mat",
+   "b": "fi",
+   "n_a": 807139,
+   "n_b": 26720,
+   "n_ab": 4696,
+   "cosseno": 0.031976851135971866,
+   "jaccard": 0.005663542632751341,
+   "parte_de_a_em_b": 0.005818080900563596,
+   "parte_de_b_em_a": 0.17574850299401198,
+   "cosseno_ponte": 0.031976851135971866,
+   "n_ab_ponte": 4696,
+   "jaccard_ponte": 0.005663542632751341,
+   "parte_de_a_em_b_ponte": 0.005818080900563596
+  },
+  {
+   "a": "mat",
+   "b": "bi",
+   "n_a": 807139,
+   "n_b": 56455,
+   "n_ab": 6022,
+   "cosseno": 0.028210798511012863,
+   "jaccard": 0.007022150909777838,
+   "parte_de_a_em_b": 0.007460920609709108,
+   "parte_de_b_em_a": 0.10666902842972278,
+   "cosseno_ponte": 0.028210798511012863,
+   "n_ab_ponte": 6022,
+   "jaccard_ponte": 0.007022150909777838,
+   "parte_de_a_em_b_ponte": 0.007460920609709108
+  },
+  {
+   "a": "mat",
+   "b": "ee",
+   "n_a": 807139,
+   "n_b": 144093,
+   "n_ab": 22487,
+   "cosseno": 0.06593802152718424,
+   "jaccard": 0.024212243403732993,
+   "parte_de_a_em_b": 0.027860133136919416,
+   "parte_de_b_em_a": 0.15605893416057684,
+   "cosseno_ponte": 0.06593802152718424,
+   "n_ab_ponte": 22487,
+   "jaccard_ponte": 0.024212243403732993,
+   "parte_de_a_em_b_ponte": 0.027860133136919416
+  },
+  {
+   "a": "mat",
+   "b": "cy",
+   "n_a": 807139,
+   "n_b": 31442,
+   "n_ab": 354,
+   "cosseno": 0.002222153288569178,
+   "jaccard": 0.0004223199682186329,
+   "parte_de_a_em_b": 0.0004385861666949559,
+   "parte_de_b_em_a": 0.01125882577444183,
+   "cosseno_ponte": 0.002222153288569178,
+   "n_ab_ponte": 354,
+   "jaccard_ponte": 0.0004223199682186329,
+   "parte_de_a_em_b_ponte": 0.0004385861666949559
+  },
+  {
+   "a": "fis",
+   "b": "cm",
+   "n_a": 320959,
+   "n_b": 434319,
+   "n_ab": 65986,
+   "cosseno": 0.17673501831317154,
+   "jaccard": 0.09573011147670363,
+   "parte_de_a_em_b": 0.2055901221028231,
+   "parte_de_b_em_a": 0.1519298027486709,
+   "cosseno_ponte": 0.17673501831317154,
+   "n_ab_ponte": 65986,
+   "jaccard_ponte": 0.09573011147670363,
+   "parte_de_a_em_b_ponte": 0.2055901221028231
+  },
+  {
+   "a": "fis",
+   "b": "qu",
+   "n_a": 320959,
+   "n_b": 191558,
+   "n_ab": 29300,
+   "cosseno": 0.11816604342538259,
+   "jaccard": 0.060635283940755395,
+   "parte_de_a_em_b": 0.09128891852230347,
+   "parte_de_b_em_a": 0.15295628478058865,
+   "cosseno_ponte": 0.11816604342538259,
+   "n_ab_ponte": 29300,
+   "jaccard_ponte": 0.060635283940755395,
+   "parte_de_a_em_b_ponte": 0.09128891852230347
+  },
+  {
+   "a": "fis",
+   "b": "cr",
+   "n_a": 320959,
+   "n_b": 54694,
+   "n_ab": 183,
+   "cosseno": 0.001381199674936017,
+   "jaccard": 0.0004873891389458545,
+   "parte_de_a_em_b": 0.0005701662829208715,
+   "parte_de_b_em_a": 0.003345888031593959,
+   "cosseno_ponte": 0.001381199674936017,
+   "n_ab_ponte": 183,
+   "jaccard_ponte": 0.0004873891389458545,
+   "parte_de_a_em_b_ponte": 0.0005701662829208715
+  },
+  {
+   "a": "fis",
+   "b": "ia",
+   "n_a": 320959,
+   "n_b": 214063,
+   "n_ab": 2653,
+   "cosseno": 0.01012142513407466,
+   "jaccard": 0.004983385584059177,
+   "parte_de_a_em_b": 0.008265853270978537,
+   "parte_de_b_em_a": 0.012393547693903197,
+   "cosseno_ponte": 0.01012142513407466,
+   "n_ab_ponte": 2653,
+   "jaccard_ponte": 0.004983385584059177,
+   "parte_de_a_em_b_ponte": 0.008265853270978537
+  },
+  {
+   "a": "fis",
+   "b": "ml",
+   "n_a": 320959,
+   "n_b": 300288,
+   "n_ab": 9381,
+   "cosseno": 0.030217279949145564,
+   "jaccard": 0.01533178833273952,
+   "parte_de_a_em_b": 0.029228032240878117,
+   "parte_de_b_em_a": 0.031240009590792837,
+   "cosseno_ponte": 0.030217279949145564,
+   "n_ab_ponte": 9381,
+   "jaccard_ponte": 0.01533178833273952,
+   "parte_de_a_em_b_ponte": 0.029228032240878117
+  },
+  {
+   "a": "fis",
+   "b": "lo",
+   "n_a": 320959,
+   "n_b": 20716,
+   "n_ab": 26,
+   "cosseno": 0.000318856751848949,
+   "jaccard": 7.610149597979213e-05,
+   "parte_de_a_em_b": 8.100723145323858e-05,
+   "parte_de_b_em_a": 0.0012550685460513613,
+   "cosseno_ponte": 0.000318856751848949,
+   "n_ab_ponte": 26,
+   "jaccard_ponte": 7.610149597979213e-05,
+   "parte_de_a_em_b_ponte": 8.100723145323858e-05
+  },
+  {
+   "a": "fis",
+   "b": "st",
+   "n_a": 320959,
+   "n_b": 155088,
+   "n_ab": 5170,
+   "cosseno": 0.02317270144640833,
+   "jaccard": 0.010979512696521598,
+   "parte_de_a_em_b": 0.01610797640820167,
+   "parte_de_b_em_a": 0.033335912514185495,
+   "cosseno_ponte": 0.02317270144640833,
+   "n_ab_ponte": 5170,
+   "jaccard_ponte": 0.010979512696521598,
+   "parte_de_a_em_b_ponte": 0.01610797640820167
+  },
+  {
+   "a": "fis",
+   "b": "ec",
+   "n_a": 320959,
+   "n_b": 18304,
+   "n_ab": 843,
+   "cosseno": 0.010998407128856642,
+   "jaccard": 0.002490987530287808,
+   "parte_de_a_em_b": 0.002626503696733851,
+   "parte_de_b_em_a": 0.04605550699300699,
+   "cosseno_ponte": 0.010998407128856642,
+   "n_ab_ponte": 843,
+   "jaccard_ponte": 0.002490987530287808,
+   "parte_de_a_em_b_ponte": 0.002626503696733851
+  },
+  {
+   "a": "fis",
+   "b": "fi",
+   "n_a": 320959,
+   "n_b": 26720,
+   "n_ab": 2485,
+   "cosseno": 0.02683387467130108,
+   "jaccard": 0.0071988505014571515,
+   "parte_de_a_em_b": 0.007742421929280687,
+   "parte_de_b_em_a": 0.09300149700598802,
+   "cosseno_ponte": 0.02683387467130108,
+   "n_ab_ponte": 2485,
+   "jaccard_ponte": 0.0071988505014571515,
+   "parte_de_a_em_b_ponte": 0.007742421929280687
+  },
+  {
+   "a": "fis",
+   "b": "bi",
+   "n_a": 320959,
+   "n_b": 56455,
+   "n_ab": 12001,
+   "cosseno": 0.08915412679982092,
+   "jaccard": 0.032842290777832205,
+   "parte_de_a_em_b": 0.03739106864116601,
+   "parte_de_b_em_a": 0.21257638827384642,
+   "cosseno_ponte": 0.08915412679982092,
+   "n_ab_ponte": 12001,
+   "jaccard_ponte": 0.032842290777832205,
+   "parte_de_a_em_b_ponte": 0.03739106864116601
+  },
+  {
+   "a": "fis",
+   "b": "ee",
+   "n_a": 320959,
+   "n_b": 144093,
+   "n_ab": 5863,
+   "cosseno": 0.027263001870556178,
+   "jaccard": 0.012768163000420307,
+   "parte_de_a_em_b": 0.0182671306927053,
+   "parte_de_b_em_a": 0.0406889994656229,
+   "cosseno_ponte": 0.027263001870556178,
+   "n_ab_ponte": 5863,
+   "jaccard_ponte": 0.012768163000420307,
+   "parte_de_a_em_b_ponte": 0.0182671306927053
+  },
+  {
+   "a": "fis",
+   "b": "cy",
+   "n_a": 320959,
+   "n_b": 31442,
+   "n_ab": 1530,
+   "cosseno": 0.015230409137162575,
+   "jaccard": 0.004360576964183418,
+   "parte_de_a_em_b": 0.00476696400474827,
+   "parte_de_b_em_a": 0.048661026652248585,
+   "cosseno_ponte": 0.015230409137162575,
+   "n_ab_ponte": 1530,
+   "jaccard_ponte": 0.004360576964183418,
+   "parte_de_a_em_b_ponte": 0.00476696400474827
+  },
+  {
+   "a": "cm",
+   "b": "qu",
+   "n_a": 434319,
+   "n_b": 191558,
+   "n_ab": 46850,
+   "cosseno": 0.16242580724031414,
+   "jaccard": 0.08091159825016796,
+   "parte_de_a_em_b": 0.10787002180424987,
+   "parte_de_b_em_a": 0.24457344511844978,
+   "cosseno_ponte": 0.16242580724031414,
+   "n_ab_ponte": 46850,
+   "jaccard_ponte": 0.08091159825016796,
+   "parte_de_a_em_b_ponte": 0.10787002180424987
+  },
+  {
+   "a": "cm",
+   "b": "cr",
+   "n_a": 434319,
+   "n_b": 54694,
+   "n_ab": 54,
+   "cosseno": 0.00035036402130810576,
+   "jaccard": 0.00011043870753989598,
+   "parte_de_a_em_b": 0.00012433257582560283,
+   "parte_de_b_em_a": 0.0009873112224375617,
+   "cosseno_ponte": 0.00035036402130810576,
+   "n_ab_ponte": 54,
+   "jaccard_ponte": 0.00011043870753989598,
+   "parte_de_a_em_b_ponte": 0.00012433257582560283
+  },
+  {
+   "a": "cm",
+   "b": "ia",
+   "n_a": 434319,
+   "n_b": 214063,
+   "n_ab": 928,
+   "cosseno": 0.0030434961595676375,
+   "jaccard": 0.0014333064588372302,
+   "parte_de_a_em_b": 0.0021366783401140636,
+   "parte_de_b_em_a": 0.004335172355801797,
+   "cosseno_ponte": 0.0030434961595676375,
+   "n_ab_ponte": 928,
+   "jaccard_ponte": 0.0014333064588372302,
+   "parte_de_a_em_b_ponte": 0.0021366783401140636
+  },
+  {
+   "a": "cm",
+   "b": "ml",
+   "n_a": 434319,
+   "n_b": 300288,
+   "n_ab": 3714,
+   "cosseno": 0.010284152223467053,
+   "jaccard": 0.005081455151438035,
+   "parte_de_a_em_b": 0.008551318270672018,
+   "parte_de_b_em_a": 0.012368126598465473,
+   "cosseno_ponte": 0.010284152223467053,
+   "n_ab_ponte": 3714,
+   "jaccard_ponte": 0.005081455151438035,
+   "parte_de_a_em_b_ponte": 0.008551318270672018
+  },
+  {
+   "a": "cm",
+   "b": "lo",
+   "n_a": 434319,
+   "n_b": 20716,
+   "n_ab": 7,
+   "cosseno": 7.379733428718895e-05,
+   "jaccard": 1.5383668697310935e-05,
+   "parte_de_a_em_b": 1.6117185755170738e-05,
+   "parte_de_b_em_a": 0.0003379030700907511,
+   "cosseno_ponte": 7.379733428718895e-05,
+   "n_ab_ponte": 7,
+   "jaccard_ponte": 1.5383668697310935e-05,
+   "parte_de_a_em_b_ponte": 1.6117185755170738e-05
+  },
+  {
+   "a": "cm",
+   "b": "st",
+   "n_a": 434319,
+   "n_b": 155088,
+   "n_ab": 1644,
+   "cosseno": 0.006334441083777787,
+   "jaccard": 0.0027970457480310943,
+   "parte_de_a_em_b": 0.003785236197357242,
+   "parte_de_b_em_a": 0.010600433302383163,
+   "cosseno_ponte": 0.006334441083777787,
+   "n_ab_ponte": 1644,
+   "jaccard_ponte": 0.0027970457480310943,
+   "parte_de_a_em_b_ponte": 0.003785236197357242
+  },
+  {
+   "a": "cm",
+   "b": "ec",
+   "n_a": 434319,
+   "n_b": 18304,
+   "n_ab": 108,
+   "cosseno": 0.0012112849956138869,
+   "jaccard": 0.000238666121565031,
+   "parte_de_a_em_b": 0.00024866515165120566,
+   "parte_de_b_em_a": 0.00590034965034965,
+   "cosseno_ponte": 0.0012112849956138869,
+   "n_ab_ponte": 108,
+   "jaccard_ponte": 0.000238666121565031,
+   "parte_de_a_em_b_ponte": 0.00024866515165120566
+  },
+  {
+   "a": "cm",
+   "b": "fi",
+   "n_a": 434319,
+   "n_b": 26720,
+   "n_ab": 1137,
+   "cosseno": 0.010554503869068858,
+   "jaccard": 0.002472265830546508,
+   "parte_de_a_em_b": 0.002617891457661304,
+   "parte_de_b_em_a": 0.04255239520958084,
+   "cosseno_ponte": 0.010554503869068858,
+   "n_ab_ponte": 1137,
+   "jaccard_ponte": 0.002472265830546508,
+   "parte_de_a_em_b_ponte": 0.002617891457661304
+  },
+  {
+   "a": "cm",
+   "b": "bi",
+   "n_a": 434319,
+   "n_b": 56455,
+   "n_ab": 7243,
+   "cosseno": 0.046255445164121306,
+   "jaccard": 0.014979391186914593,
+   "parte_de_a_em_b": 0.016676682346385953,
+   "parte_de_b_em_a": 0.12829687361615447,
+   "cosseno_ponte": 0.046255445164121306,
+   "n_ab_ponte": 7243,
+   "jaccard_ponte": 0.014979391186914593,
+   "parte_de_a_em_b_ponte": 0.016676682346385953
+  },
+  {
+   "a": "cm",
+   "b": "ee",
+   "n_a": 434319,
+   "n_b": 144093,
+   "n_ab": 453,
+   "cosseno": 0.001810807755866096,
+   "jaccard": 0.0007837926219679943,
+   "parte_de_a_em_b": 0.001043012163870335,
+   "parte_de_b_em_a": 0.0031438029605879536,
+   "cosseno_ponte": 0.001810807755866096,
+   "n_ab_ponte": 453,
+   "jaccard_ponte": 0.0007837926219679943,
+   "parte_de_a_em_b_ponte": 0.001043012163870335
+  },
+  {
+   "a": "cm",
+   "b": "cy",
+   "n_a": 434319,
+   "n_b": 31442,
+   "n_ab": 42,
+   "cosseno": 0.00035940970032217556,
+   "jaccard": 9.018313618297729e-05,
+   "parte_de_a_em_b": 9.670311453102443e-05,
+   "parte_de_b_em_a": 0.0013357928884930985,
+   "cosseno_ponte": 0.00035940970032217556,
+   "n_ab_ponte": 42,
+   "jaccard_ponte": 9.018313618297729e-05,
+   "parte_de_a_em_b_ponte": 9.670311453102443e-05
+  },
+  {
+   "a": "qu",
+   "b": "cr",
+   "n_a": 191558,
+   "n_b": 54694,
+   "n_ab": 1699,
+   "cosseno": 0.016598673742815758,
+   "jaccard": 0.00694736928191435,
+   "parte_de_a_em_b": 0.00886937637686758,
+   "parte_de_b_em_a": 0.031063736424470693,
+   "cosseno_ponte": 0.016598673742815758,
+   "n_ab_ponte": 1699,
+   "jaccard_ponte": 0.00694736928191435,
+   "parte_de_a_em_b_ponte": 0.00886937637686758
+  },
+  {
+   "a": "qu",
+   "b": "ia",
+   "n_a": 191558,
+   "n_b": 214063,
+   "n_ab": 1176,
+   "cosseno": 0.005807461921930373,
+   "jaccard": 0.0029076883136149537,
+   "parte_de_a_em_b": 0.006139132795289155,
+   "parte_de_b_em_a": 0.005493709795714345,
+   "cosseno_ponte": 0.005807461921930373,
+   "n_ab_ponte": 1176,
+   "jaccard_ponte": 0.0029076883136149537,
+   "parte_de_a_em_b_ponte": 0.006139132795289155
+  },
+  {
+   "a": "qu",
+   "b": "ml",
+   "n_a": 191558,
+   "n_b": 300288,
+   "n_ab": 3177,
+   "cosseno": 0.01324640652224048,
+   "jaccard": 0.006501333213279337,
+   "parte_de_a_em_b": 0.016585055179110242,
+   "parte_de_b_em_a": 0.010579843350383632,
+   "cosseno_ponte": 0.01324640652224048,
+   "n_ab_ponte": 3177,
+   "jaccard_ponte": 0.006501333213279337,
+   "parte_de_a_em_b_ponte": 0.016585055179110242
+  },
+  {
+   "a": "qu",
+   "b": "lo",
+   "n_a": 191558,
+   "n_b": 20716,
+   "n_ab": 466,
+   "cosseno": 0.007397463287328006,
+   "jaccard": 0.0022001057561565193,
+   "parte_de_a_em_b": 0.002432683573643492,
+   "parte_de_b_em_a": 0.02249469009461286,
+   "cosseno_ponte": 0.007397463287328006,
+   "n_ab_ponte": 466,
+   "jaccard_ponte": 0.0022001057561565193,
+   "parte_de_a_em_b_ponte": 0.002432683573643492
+  },
+  {
+   "a": "qu",
+   "b": "st",
+   "n_a": 191558,
+   "n_b": 155088,
+   "n_ab": 789,
+   "cosseno": 0.004577599135948783,
+   "jaccard": 0.002281289665960209,
+   "parte_de_a_em_b": 0.004118856951941448,
+   "parte_de_b_em_a": 0.0050874342308882695,
+   "cosseno_ponte": 0.004577599135948783,
+   "n_ab_ponte": 789,
+   "jaccard_ponte": 0.002281289665960209,
+   "parte_de_a_em_b_ponte": 0.004118856951941448
+  },
+  {
+   "a": "qu",
+   "b": "ec",
+   "n_a": 191558,
+   "n_b": 18304,
+   "n_ab": 23,
+   "cosseno": 0.00038842277391205274,
+   "jaccard": 0.0001096078422028317,
+   "parte_de_a_em_b": 0.00012006807337725389,
+   "parte_de_b_em_a": 0.001256555944055944,
+   "cosseno_ponte": 0.00038842277391205274,
+   "n_ab_ponte": 23,
+   "jaccard_ponte": 0.0001096078422028317,
+   "parte_de_a_em_b_ponte": 0.00012006807337725389
+  },
+  {
+   "a": "qu",
+   "b": "fi",
+   "n_a": 191558,
+   "n_b": 26720,
+   "n_ab": 205,
+   "cosseno": 0.0028654015212802647,
+   "jaccard": 0.000940052184360283,
+   "parte_de_a_em_b": 0.0010701719583624803,
+   "parte_de_b_em_a": 0.007672155688622754,
+   "cosseno_ponte": 0.0028654015212802647,
+   "n_ab_ponte": 205,
+   "jaccard_ponte": 0.000940052184360283,
+   "parte_de_a_em_b_ponte": 0.0010701719583624803
+  },
+  {
+   "a": "qu",
+   "b": "bi",
+   "n_a": 191558,
+   "n_b": 56455,
+   "n_ab": 451,
+   "cosseno": 0.004336857865480134,
+   "jaccard": 0.0018217658606732858,
+   "parte_de_a_em_b": 0.0023543783083974567,
+   "parte_de_b_em_a": 0.007988663537330618,
+   "cosseno_ponte": 0.004336857865480134,
+   "n_ab_ponte": 451,
+   "jaccard_ponte": 0.0018217658606732858,
+   "parte_de_a_em_b_ponte": 0.0023543783083974567
+  },
+  {
+   "a": "qu",
+   "b": "ee",
+   "n_a": 191558,
+   "n_b": 144093,
+   "n_ab": 834,
+   "cosseno": 0.005019893020006781,
+   "jaccard": 0.0024909129464752385,
+   "parte_de_a_em_b": 0.004353772747679554,
+   "parte_de_b_em_a": 0.005787928629426829,
+   "cosseno_ponte": 0.005019893020006781,
+   "n_ab_ponte": 834,
+   "jaccard_ponte": 0.0024909129464752385,
+   "parte_de_a_em_b_ponte": 0.004353772747679554
+  },
+  {
+   "a": "qu",
+   "b": "cy",
+   "n_a": 191558,
+   "n_b": 31442,
+   "n_ab": 45,
+   "cosseno": 0.0005798388162809237,
+   "jaccard": 0.0002018344508981633,
+   "parte_de_a_em_b": 0.00023491579573810544,
+   "parte_de_b_em_a": 0.0014312066662426053,
+   "cosseno_ponte": 0.0005798388162809237,
+   "n_ab_ponte": 45,
+   "jaccard_ponte": 0.0002018344508981633,
+   "parte_de_a_em_b_ponte": 0.00023491579573810544
+  },
+  {
+   "a": "cr",
+   "b": "ia",
+   "n_a": 54694,
+   "n_b": 214063,
+   "n_ab": 9076,
+   "cosseno": 0.08387911512577854,
+   "jaccard": 0.03495057397345204,
+   "parte_de_a_em_b": 0.16594141953413538,
+   "parte_de_b_em_a": 0.04239873308325119,
+   "cosseno_ponte": 0.08387911512577854,
+   "n_ab_ponte": 9076,
+   "jaccard_ponte": 0.03495057397345204,
+   "parte_de_a_em_b_ponte": 0.16594141953413538
+  },
+  {
+   "a": "cr",
+   "b": "ml",
+   "n_a": 54694,
+   "n_b": 300288,
+   "n_ab": 13170,
+   "cosseno": 0.10276540617330282,
+   "jaccard": 0.03852995213743227,
+   "parte_de_a_em_b": 0.24079423702782754,
+   "parte_de_b_em_a": 0.04385789641943734,
+   "cosseno_ponte": 0.10276540617330282,
+   "n_ab_ponte": 13170,
+   "jaccard_ponte": 0.03852995213743227,
+   "parte_de_a_em_b_ponte": 0.24079423702782754
+  },
+  {
+   "a": "cr",
+   "b": "lo",
+   "n_a": 54694,
+   "n_b": 20716,
+   "n_ab": 435,
+   "cosseno": 0.01292309278961753,
+   "jaccard": 0.005801933977992664,
+   "parte_de_a_em_b": 0.007953340402969246,
+   "parte_de_b_em_a": 0.02099826221278239,
+   "cosseno_ponte": 0.01292309278961753,
+   "n_ab_ponte": 435,
+   "jaccard_ponte": 0.005801933977992664,
+   "parte_de_a_em_b_ponte": 0.007953340402969246
+  },
+  {
+   "a": "cr",
+   "b": "st",
+   "n_a": 54694,
+   "n_b": 155088,
+   "n_ab": 2470,
+   "cosseno": 0.026818717921852947,
+   "jaccard": 0.011914409199660416,
+   "parte_de_a_em_b": 0.04516034665594032,
+   "parte_de_b_em_a": 0.015926441762096358,
+   "cosseno_ponte": 0.026818717921852947,
+   "n_ab_ponte": 2470,
+   "jaccard_ponte": 0.011914409199660416,
+   "parte_de_a_em_b_ponte": 0.04516034665594032
+  },
+  {
+   "a": "cr",
+   "b": "ec",
+   "n_a": 54694,
+   "n_b": 18304,
+   "n_ab": 159,
+   "cosseno": 0.0050252107206451855,
+   "jaccard": 0.0021828965252131413,
+   "parte_de_a_em_b": 0.0029070830438439315,
+   "parte_de_b_em_a": 0.008686625874125874,
+   "cosseno_ponte": 0.0050252107206451855,
+   "n_ab_ponte": 159,
+   "jaccard_ponte": 0.0021828965252131413,
+   "parte_de_a_em_b_ponte": 0.0029070830438439315
+  },
+  {
+   "a": "cr",
+   "b": "fi",
+   "n_a": 54694,
+   "n_b": 26720,
+   "n_ab": 244,
+   "cosseno": 0.0063826606733324385,
+   "jaccard": 0.0030060367130713317,
+   "parte_de_a_em_b": 0.004461184042125279,
+   "parte_de_b_em_a": 0.009131736526946108,
+   "cosseno_ponte": 0.0063826606733324385,
+   "n_ab_ponte": 244,
+   "jaccard_ponte": 0.0030060367130713317,
+   "parte_de_a_em_b_ponte": 0.004461184042125279
+  },
+  {
+   "a": "cr",
+   "b": "bi",
+   "n_a": 54694,
+   "n_b": 56455,
+   "n_ab": 81,
+   "cosseno": 0.0014576859568183427,
+   "jaccard": 0.0007292829617891742,
+   "parte_de_a_em_b": 0.0014809668336563425,
+   "parte_de_b_em_a": 0.0014347710565937473,
+   "cosseno_ponte": 0.0014576859568183427,
+   "n_ab_ponte": 81,
+   "jaccard_ponte": 0.0007292829617891742,
+   "parte_de_a_em_b_ponte": 0.0014809668336563425
+  },
+  {
+   "a": "cr",
+   "b": "ee",
+   "n_a": 54694,
+   "n_b": 144093,
+   "n_ab": 2146,
+   "cosseno": 0.024173438648287984,
+   "jaccard": 0.010913288683438348,
+   "parte_de_a_em_b": 0.03923647932131495,
+   "parte_de_b_em_a": 0.014893159279076707,
+   "cosseno_ponte": 0.024173438648287984,
+   "n_ab_ponte": 2146,
+   "jaccard_ponte": 0.010913288683438348,
+   "parte_de_a_em_b_ponte": 0.03923647932131495
+  },
+  {
+   "a": "cr",
+   "b": "cy",
+   "n_a": 54694,
+   "n_b": 31442,
+   "n_ab": 2298,
+   "cosseno": 0.055414714430480745,
+   "jaccard": 0.02741000500966149,
+   "parte_de_a_em_b": 0.04201557757706512,
+   "parte_de_b_em_a": 0.07308695375612238,
+   "cosseno_ponte": 0.055414714430480745,
+   "n_ab_ponte": 2298,
+   "jaccard_ponte": 0.02741000500966149,
+   "parte_de_a_em_b_ponte": 0.04201557757706512
+  },
+  {
+   "a": "ia",
+   "b": "ml",
+   "n_a": 214063,
+   "n_b": 300288,
+   "n_ab": 86317,
+   "cosseno": 0.34045251382783714,
+   "jaccard": 0.20165921398767386,
+   "parte_de_a_em_b": 0.4032317588747238,
+   "parte_de_b_em_a": 0.2874473838448423,
+   "cosseno_ponte": 0.34045251382783714,
+   "n_ab_ponte": 86317,
+   "jaccard_ponte": 0.20165921398767386,
+   "parte_de_a_em_b_ponte": 0.4032317588747238
+  },
+  {
+   "a": "ia",
+   "b": "lo",
+   "n_a": 214063,
+   "n_b": 20716,
+   "n_ab": 3331,
+   "cosseno": 0.05002082815564588,
+   "jaccard": 0.014392001659119975,
+   "parte_de_a_em_b": 0.015560839565922182,
+   "parte_de_b_em_a": 0.1607935894960417,
+   "cosseno_ponte": 0.05002082815564588,
+   "n_ab_ponte": 3331,
+   "jaccard_ponte": 0.014392001659119975,
+   "parte_de_a_em_b_ponte": 0.015560839565922182
+  },
+  {
+   "a": "ia",
+   "b": "st",
+   "n_a": 214063,
+   "n_b": 155088,
+   "n_ab": 12120,
+   "cosseno": 0.06651854151931204,
+   "jaccard": 0.03394663208516908,
+   "parte_de_a_em_b": 0.056618845853790706,
+   "parte_de_b_em_a": 0.07814917982048901,
+   "cosseno_ponte": 0.06651854151931204,
+   "n_ab_ponte": 12120,
+   "jaccard_ponte": 0.03394663208516908,
+   "parte_de_a_em_b_ponte": 0.056618845853790706
+  },
+  {
+   "a": "ia",
+   "b": "ec",
+   "n_a": 214063,
+   "n_b": 18304,
+   "n_ab": 872,
+   "cosseno": 0.01393069159163711,
+   "jaccard": 0.0037668200177109657,
+   "parte_de_a_em_b": 0.004073567127434447,
+   "parte_de_b_em_a": 0.047639860139860137,
+   "cosseno_ponte": 0.01393069159163711,
+   "n_ab_ponte": 872,
+   "jaccard_ponte": 0.0037668200177109657,
+   "parte_de_a_em_b_ponte": 0.004073567127434447
+  },
+  {
+   "a": "ia",
+   "b": "fi",
+   "n_a": 214063,
+   "n_b": 26720,
+   "n_ab": 1242,
+   "cosseno": 0.01642224644290267,
+   "jaccard": 0.0051849161521409694,
+   "parte_de_a_em_b": 0.005802030243433008,
+   "parte_de_b_em_a": 0.04648203592814371,
+   "cosseno_ponte": 0.01642224644290267,
+   "n_ab_ponte": 1242,
+   "jaccard_ponte": 0.0051849161521409694,
+   "parte_de_a_em_b_ponte": 0.005802030243433008
+  },
+  {
+   "a": "ia",
+   "b": "bi",
+   "n_a": 214063,
+   "n_b": 56455,
+   "n_ab": 3831,
+   "cosseno": 0.03484898570787173,
+   "jaccard": 0.014365154656957407,
+   "parte_de_a_em_b": 0.017896600533487805,
+   "parte_de_b_em_a": 0.06785935701000798,
+   "cosseno_ponte": 0.03484898570787173,
+   "n_ab_ponte": 3831,
+   "jaccard_ponte": 0.014365154656957407,
+   "parte_de_a_em_b_ponte": 0.017896600533487805
+  },
+  {
+   "a": "ia",
+   "b": "ee",
+   "n_a": 214063,
+   "n_b": 144093,
+   "n_ab": 12309,
+   "cosseno": 0.07008587926815174,
+   "jaccard": 0.03559088267355218,
+   "parte_de_a_em_b": 0.05750176349953051,
+   "parte_de_b_em_a": 0.08542399700193624,
+   "cosseno_ponte": 0.07008587926815174,
+   "n_ab_ponte": 12309,
+   "jaccard_ponte": 0.03559088267355218,
+   "parte_de_a_em_b_ponte": 0.05750176349953051
+  },
+  {
+   "a": "ia",
+   "b": "cy",
+   "n_a": 214063,
+   "n_b": 31442,
+   "n_ab": 8626,
+   "cosseno": 0.10514377567901663,
+   "jaccard": 0.036415216207430795,
+   "parte_de_a_em_b": 0.040296548212442135,
+   "parte_de_b_em_a": 0.27434641562241585,
+   "cosseno_ponte": 0.10514377567901663,
+   "n_ab_ponte": 8626,
+   "jaccard_ponte": 0.036415216207430795,
+   "parte_de_a_em_b_ponte": 0.040296548212442135
+  },
+  {
+   "a": "ml",
+   "b": "lo",
+   "n_a": 300288,
+   "n_b": 20716,
+   "n_ab": 1115,
+   "cosseno": 0.014136859035770982,
+   "jaccard": 0.0034855840619714964,
+   "parte_de_a_em_b": 0.0037131020886615514,
+   "parte_de_b_em_a": 0.05382313187874107,
+   "cosseno_ponte": 0.014136859035770982,
+   "n_ab_ponte": 1115,
+   "jaccard_ponte": 0.0034855840619714964,
+   "parte_de_a_em_b_ponte": 0.0037131020886615514
+  },
+  {
+   "a": "ml",
+   "b": "st",
+   "n_a": 300288,
+   "n_b": 155088,
+   "n_ab": 73636,
+   "cosseno": 0.34121813321406924,
+   "jaccard": 0.19289568816471944,
+   "parte_de_a_em_b": 0.24521792412617222,
+   "parte_de_b_em_a": 0.47480140307438357,
+   "cosseno_ponte": 0.34121813321406924,
+   "n_ab_ponte": 73636,
+   "jaccard_ponte": 0.19289568816471944,
+   "parte_de_a_em_b_ponte": 0.24521792412617222
+  },
+  {
+   "a": "ml",
+   "b": "ec",
+   "n_a": 300288,
+   "n_b": 18304,
+   "n_ab": 1221,
+   "cosseno": 0.01646924429545607,
+   "jaccard": 0.0038472324188410408,
+   "parte_de_a_em_b": 0.004066096547314578,
+   "parte_de_b_em_a": 0.06670673076923077,
+   "cosseno_ponte": 0.01646924429545607,
+   "n_ab_ponte": 1221,
+   "jaccard_ponte": 0.0038472324188410408,
+   "parte_de_a_em_b_ponte": 0.004066096547314578
+  },
+  {
+   "a": "ml",
+   "b": "fi",
+   "n_a": 300288,
+   "n_b": 26720,
+   "n_ab": 2415,
+   "cosseno": 0.026960622746335084,
+   "jaccard": 0.007440086508335053,
+   "parte_de_a_em_b": 0.008042279411764705,
+   "parte_de_b_em_a": 0.0903817365269461,
+   "cosseno_ponte": 0.026960622746335084,
+   "n_ab_ponte": 2415,
+   "jaccard_ponte": 0.007440086508335053,
+   "parte_de_a_em_b_ponte": 0.008042279411764705
+  },
+  {
+   "a": "ml",
+   "b": "bi",
+   "n_a": 300288,
+   "n_b": 56455,
+   "n_ab": 8007,
+   "cosseno": 0.06149639164677034,
+   "jaccard": 0.02296006147917049,
+   "parte_de_a_em_b": 0.026664402173913044,
+   "parte_de_b_em_a": 0.14182977592773005,
+   "cosseno_ponte": 0.06149639164677034,
+   "n_ab_ponte": 8007,
+   "jaccard_ponte": 0.02296006147917049,
+   "parte_de_a_em_b_ponte": 0.026664402173913044
+  },
+  {
+   "a": "ml",
+   "b": "ee",
+   "n_a": 300288,
+   "n_b": 144093,
+   "n_ab": 30903,
+   "cosseno": 0.14856284631913783,
+   "jaccard": 0.07473916387328951,
+   "parte_de_a_em_b": 0.10291120524296675,
+   "parte_de_b_em_a": 0.21446565759613584,
+   "cosseno_ponte": 0.14856284631913783,
+   "n_ab_ponte": 30903,
+   "jaccard_ponte": 0.07473916387328951,
+   "parte_de_a_em_b_ponte": 0.10291120524296675
+  },
+  {
+   "a": "ml",
+   "b": "cy",
+   "n_a": 300288,
+   "n_b": 31442,
+   "n_ab": 5680,
+   "cosseno": 0.058455350017680825,
+   "jaccard": 0.01742064100598068,
+   "parte_de_a_em_b": 0.018915174765558398,
+   "parte_de_b_em_a": 0.18065008587239997,
+   "cosseno_ponte": 0.058455350017680825,
+   "n_ab_ponte": 5680,
+   "jaccard_ponte": 0.01742064100598068,
+   "parte_de_a_em_b_ponte": 0.018915174765558398
+  },
+  {
+   "a": "lo",
+   "b": "st",
+   "n_a": 20716,
+   "n_b": 155088,
+   "n_ab": 128,
+   "cosseno": 0.002258228690611865,
+   "jaccard": 0.0007286140394817733,
+   "parte_de_a_em_b": 0.006178798995945163,
+   "parte_de_b_em_a": 0.0008253378726916331,
+   "cosseno_ponte": 0.002258228690611865,
+   "n_ab_ponte": 128,
+   "jaccard_ponte": 0.0007286140394817733,
+   "parte_de_a_em_b_ponte": 0.006178798995945163
+  },
+  {
+   "a": "lo",
+   "b": "ec",
+   "n_a": 20716,
+   "n_b": 18304,
+   "n_ab": 25,
+   "cosseno": 0.0012838493156761557,
+   "jaccard": 0.0006411078343377356,
+   "parte_de_a_em_b": 0.0012067966788955396,
+   "parte_de_b_em_a": 0.0013658216783216783,
+   "cosseno_ponte": 0.0012838493156761557,
+   "n_ab_ponte": 25,
+   "jaccard_ponte": 0.0006411078343377356,
+   "parte_de_a_em_b_ponte": 0.0012067966788955396
+  },
+  {
+   "a": "lo",
+   "b": "fi",
+   "n_a": 20716,
+   "n_b": 26720,
+   "n_ab": 13,
+   "cosseno": 0.0005525507519071465,
+   "jaccard": 0.00027412858739430236,
+   "parte_de_a_em_b": 0.0006275342730256806,
+   "parte_de_b_em_a": 0.00048652694610778444,
+   "cosseno_ponte": 0.0005525507519071465,
+   "n_ab_ponte": 13,
+   "jaccard_ponte": 0.00027412858739430236,
+   "parte_de_a_em_b_ponte": 0.0006275342730256806
+  },
+  {
+   "a": "lo",
+   "b": "bi",
+   "n_a": 20716,
+   "n_b": 56455,
+   "n_ab": 84,
+   "cosseno": 0.0024562644860492786,
+   "jaccard": 0.0010896778964027657,
+   "parte_de_a_em_b": 0.004054836841089014,
+   "parte_de_b_em_a": 0.0014879107253564787,
+   "cosseno_ponte": 0.0024562644860492786,
+   "n_ab_ponte": 84,
+   "jaccard_ponte": 0.0010896778964027657,
+   "parte_de_a_em_b_ponte": 0.004054836841089014
+  },
+  {
+   "a": "lo",
+   "b": "ee",
+   "n_a": 20716,
+   "n_b": 144093,
+   "n_ab": 405,
+   "cosseno": 0.007412771793764808,
+   "jaccard": 0.0024634437118318288,
+   "parte_de_a_em_b": 0.019550106198107743,
+   "parte_de_b_em_a": 0.002810684766088568,
+   "cosseno_ponte": 0.007412771793764808,
+   "n_ab_ponte": 405,
+   "jaccard_ponte": 0.0024634437118318288,
+   "parte_de_a_em_b_ponte": 0.019550106198107743
+  },
+  {
+   "a": "lo",
+   "b": "cy",
+   "n_a": 20716,
+   "n_b": 31442,
+   "n_ab": 99,
+   "cosseno": 0.003879065935846128,
+   "jaccard": 0.001901688468852648,
+   "parte_de_a_em_b": 0.004778914848426337,
+   "parte_de_b_em_a": 0.003148654665733732,
+   "cosseno_ponte": 0.003879065935846128,
+   "n_ab_ponte": 99,
+   "jaccard_ponte": 0.001901688468852648,
+   "parte_de_a_em_b_ponte": 0.004778914848426337
+  },
+  {
+   "a": "st",
+   "b": "ec",
+   "n_a": 155088,
+   "n_b": 18304,
+   "n_ab": 3597,
+   "cosseno": 0.06751159002558757,
+   "jaccard": 0.021184369386613267,
+   "parte_de_a_em_b": 0.02319328381306097,
+   "parte_de_b_em_a": 0.19651442307692307,
+   "cosseno_ponte": 0.06751159002558757,
+   "n_ab_ponte": 3597,
+   "jaccard_ponte": 0.021184369386613267,
+   "parte_de_a_em_b_ponte": 0.02319328381306097
+  },
+  {
+   "a": "st",
+   "b": "fi",
+   "n_a": 155088,
+   "n_b": 26720,
+   "n_ab": 2557,
+   "cosseno": 0.03972129540570465,
+   "jaccard": 0.014264913445392215,
+   "parte_de_a_em_b": 0.016487413597441453,
+   "parte_de_b_em_a": 0.09569610778443113,
+   "cosseno_ponte": 0.03972129540570465,
+   "n_ab_ponte": 2557,
+   "jaccard_ponte": 0.014264913445392215,
+   "parte_de_a_em_b_ponte": 0.016487413597441453
+  },
+  {
+   "a": "st",
+   "b": "bi",
+   "n_a": 155088,
+   "n_b": 56455,
+   "n_ab": 4642,
+   "cosseno": 0.04960949801532379,
+   "jaccard": 0.02243585096253764,
+   "parte_de_a_em_b": 0.02993139378933251,
+   "parte_de_b_em_a": 0.08222478079886636,
+   "cosseno_ponte": 0.04960949801532379,
+   "n_ab_ponte": 4642,
+   "jaccard_ponte": 0.02243585096253764,
+   "parte_de_a_em_b_ponte": 0.02993139378933251
+  },
+  {
+   "a": "st",
+   "b": "ee",
+   "n_a": 155088,
+   "n_b": 144093,
+   "n_ab": 6280,
+   "cosseno": 0.0420096539726782,
+   "jaccard": 0.02144069156472665,
+   "parte_de_a_em_b": 0.04049313937893325,
+   "parte_de_b_em_a": 0.04358296378033631,
+   "cosseno_ponte": 0.0420096539726782,
+   "n_ab_ponte": 6280,
+   "jaccard_ponte": 0.02144069156472665,
+   "parte_de_a_em_b_ponte": 0.04049313937893325
+  },
+  {
+   "a": "st",
+   "b": "cy",
+   "n_a": 155088,
+   "n_b": 31442,
+   "n_ab": 1571,
+   "cosseno": 0.022497383194855065,
+   "jaccard": 0.008493774295925042,
+   "parte_de_a_em_b": 0.010129732796863716,
+   "parte_de_b_em_a": 0.04996501494815851,
+   "cosseno_ponte": 0.022497383194855065,
+   "n_ab_ponte": 1571,
+   "jaccard_ponte": 0.008493774295925042,
+   "parte_de_a_em_b_ponte": 0.010129732796863716
+  },
+  {
+   "a": "ec",
+   "b": "fi",
+   "n_a": 18304,
+   "n_b": 26720,
+   "n_ab": 8365,
+   "cosseno": 0.37824632298136457,
+   "jaccard": 0.2281840748520145,
+   "parte_de_a_em_b": 0.45700393356643354,
+   "parte_de_b_em_a": 0.313061377245509,
+   "cosseno_ponte": 0.06368389507362547,
+   "n_ab_ponte": 1205,
+   "jaccard_ponte": 0.03287050928830574,
+   "parte_de_a_em_b_ponte": 0.0658326048951049,
+   "categoria_compartilhada": "econ.GN = q-fin.EC",
+   "n_ab_sem_compartilhada": 1205
+  },
+  {
+   "a": "ec",
+   "b": "bi",
+   "n_a": 18304,
+   "n_b": 56455,
+   "n_ab": 139,
+   "cosseno": 0.004324048841753187,
+   "jaccard": 0.001862771374966497,
+   "parte_de_a_em_b": 0.007593968531468531,
+   "parte_de_b_em_a": 0.002462137986006554,
+   "cosseno_ponte": 0.004324048841753187,
+   "n_ab_ponte": 139,
+   "jaccard_ponte": 0.001862771374966497,
+   "parte_de_a_em_b_ponte": 0.007593968531468531
+  },
+  {
+   "a": "ec",
+   "b": "ee",
+   "n_a": 18304,
+   "n_b": 144093,
+   "n_ab": 261,
+   "cosseno": 0.005082133417472903,
+   "jaccard": 0.0016097597078995412,
+   "parte_de_a_em_b": 0.014259178321678322,
+   "parte_de_b_em_a": 0.0018113301825904103,
+   "cosseno_ponte": 0.005082133417472903,
+   "n_ab_ponte": 261,
+   "jaccard_ponte": 0.0016097597078995412,
+   "parte_de_a_em_b_ponte": 0.014259178321678322
+  },
+  {
+   "a": "ec",
+   "b": "cy",
+   "n_a": 18304,
+   "n_b": 31442,
+   "n_ab": 565,
+   "cosseno": 0.023551597066801423,
+   "jaccard": 0.011488176328256846,
+   "parte_de_a_em_b": 0.030867569930069932,
+   "parte_de_b_em_a": 0.01796959480949049,
+   "cosseno_ponte": 0.023551597066801423,
+   "n_ab_ponte": 565,
+   "jaccard_ponte": 0.011488176328256846,
+   "parte_de_a_em_b_ponte": 0.030867569930069932
+  },
+  {
+   "a": "fi",
+   "b": "bi",
+   "n_a": 26720,
+   "n_b": 56455,
+   "n_ab": 117,
+   "cosseno": 0.0030124262890349925,
+   "jaccard": 0.001408654193455176,
+   "parte_de_a_em_b": 0.00437874251497006,
+   "parte_de_b_em_a": 0.002072447081746524,
+   "cosseno_ponte": 0.0030124262890349925,
+   "n_ab_ponte": 117,
+   "jaccard_ponte": 0.001408654193455176,
+   "parte_de_a_em_b_ponte": 0.00437874251497006
+  },
+  {
+   "a": "fi",
+   "b": "ee",
+   "n_a": 26720,
+   "n_b": 144093,
+   "n_ab": 285,
+   "cosseno": 0.004593092496448253,
+   "jaccard": 0.0016712797898292362,
+   "parte_de_a_em_b": 0.01066616766467066,
+   "parte_de_b_em_a": 0.0019778892798401034,
+   "cosseno_ponte": 0.004593092496448253,
+   "n_ab_ponte": 285,
+   "jaccard_ponte": 0.0016712797898292362,
+   "parte_de_a_em_b_ponte": 0.01066616766467066
+  },
+  {
+   "a": "fi",
+   "b": "cy",
+   "n_a": 26720,
+   "n_b": 31442,
+   "n_ab": 571,
+   "cosseno": 0.01969984457141887,
+   "jaccard": 0.009914743623135559,
+   "parte_de_a_em_b": 0.021369760479041915,
+   "parte_de_b_em_a": 0.018160422364989503,
+   "cosseno_ponte": 0.01969984457141887,
+   "n_ab_ponte": 571,
+   "jaccard_ponte": 0.009914743623135559,
+   "parte_de_a_em_b_ponte": 0.021369760479041915
+  },
+  {
+   "a": "bi",
+   "b": "ee",
+   "n_a": 56455,
+   "n_b": 144093,
+   "n_ab": 2746,
+   "cosseno": 0.030445834713688967,
+   "jaccard": 0.013882569438124994,
+   "parte_de_a_em_b": 0.048640510140820124,
+   "parte_de_b_em_a": 0.01905713671031903,
+   "cosseno_ponte": 0.030445834713688967,
+   "n_ab_ponte": 2746,
+   "jaccard_ponte": 0.013882569438124994,
+   "parte_de_a_em_b_ponte": 0.048640510140820124
+  },
+  {
+   "a": "bi",
+   "b": "cy",
+   "n_a": 56455,
+   "n_b": 31442,
+   "n_ab": 215,
+   "cosseno": 0.005103077598568144,
+   "jaccard": 0.0024520426085171414,
+   "parte_de_a_em_b": 0.003808342927995749,
+   "parte_de_b_em_a": 0.006837987405381337,
+   "cosseno_ponte": 0.005103077598568144,
+   "n_ab_ponte": 215,
+   "jaccard_ponte": 0.0024520426085171414,
+   "parte_de_a_em_b_ponte": 0.003808342927995749
+  },
+  {
+   "a": "ee",
+   "b": "cy",
+   "n_a": 144093,
+   "n_b": 31442,
+   "n_ab": 605,
+   "cosseno": 0.008988326738602165,
+   "jaccard": 0.003458526267649917,
+   "parte_de_a_em_b": 0.004198677243169342,
+   "parte_de_b_em_a": 0.01924177851281725,
+   "cosseno_ponte": 0.008988326738602165,
+   "n_ab_ponte": 605,
+   "jaccard_ponte": 0.003458526267649917,
+   "parte_de_a_em_b_ponte": 0.004198677243169342
+  }
+ ],
+ "registros": [
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29",
+   "total": 807139,
+   "sha256": "88bb1c01edb5e8c678eeae4768ac68210d082349f01df6b806e39b527c17afd8"
+  },
+  {
+   "consulta": "cat:physics.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:physics.*",
+   "total": 320959,
+   "sha256": "ff5414726a271e1fa90db87acfc571fb4573b689f1ac9bfa3dded5005cdec406"
+  },
+  {
+   "consulta": "cat:cond-mat*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cond-mat*",
+   "total": 434319,
+   "sha256": "2dacdad1fcbe41bb7db6c1bc789e4c4eae5aa7aaed5172fd8643781b2b2fc759"
+  },
+  {
+   "consulta": "cat:quant-ph",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:quant-ph",
+   "total": 191558,
+   "sha256": "9d5e23e221b6ae6b4b8356d5a0ad6eae079596bc611096587b8b9ea2f36a1a54"
+  },
+  {
+   "consulta": "cat:cs.CR",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.CR",
+   "total": 54694,
+   "sha256": "75f22f5a508a6979bb5992185f63ded922e52a16557e25284edf38f46a49b337"
+  },
+  {
+   "consulta": "cat:cs.AI",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.AI",
+   "total": 214063,
+   "sha256": "8b36f2ebf3018d62b6f37a53d6fbfb84f53200c80161f64a56c92709be2d8d8c"
+  },
+  {
+   "consulta": "cat:cs.LG",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LG",
+   "total": 300288,
+   "sha256": "1e6f3b96243a9d9ff18d15aeac4b692c846dbb609b7540ad5945b40491fd6dd1"
+  },
+  {
+   "consulta": "cat:cs.LO",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LO",
+   "total": 20716,
+   "sha256": "178c3bdeae5bc2d83bfbaaa064bf40a2cd22529829b552f8e6a76515d077bb9e"
+  },
+  {
+   "consulta": "%28cat:stat.*+OR+cat:math.ST%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:stat.*+OR+cat:math.ST%29",
+   "total": 155088,
+   "sha256": "88bbce858bc89f295080dddb00ea84ba4f16a25e1c44c9626ce3619d5db77c0a"
+  },
+  {
+   "consulta": "cat:econ.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:econ.*",
+   "total": 18304,
+   "sha256": "0232d278875e8d3f7eb8893097a20cd5f0543e60c2b8e61ab1e6998dcd124853"
+  },
+  {
+   "consulta": "%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "total": 26720,
+   "sha256": "2766cd1b6bb41a8b4bb539eab9b09c470e092c19d4e9f15e692f0d466c68ffc0"
+  },
+  {
+   "consulta": "cat:q-bio.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:q-bio.*",
+   "total": 56455,
+   "sha256": "e59a93683220fc82c3aa653167f4d9895ba543d0d23fdbeeaab1cc8c25222334"
+  },
+  {
+   "consulta": "cat:eess.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:eess.*",
+   "total": 144093,
+   "sha256": "43d6a9fd161254de320efd97a783501052ef4893322cd81e8e57814fe2441da3"
+  },
+  {
+   "consulta": "cat:cs.CY",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.CY",
+   "total": 31442,
+   "sha256": "a82c690b6bc1e5f1c9863a4880ed36e04ed5ee1f96dcbc6bf5648758e5f35312"
+  },
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:physics.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:physics.*",
+   "total": 17070,
+   "sha256": "258c6bfa11e53c0a0000988152d2fe3ee31c5bcecad3f6b82718d0a16366f205"
+  },
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:cond-mat*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:cond-mat*",
+   "total": 17758,
+   "sha256": "68e1d9d3d2dbd891e736f0ea51b9d46047a25e67811f0d63db765b68106bd41a"
+  },
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:quant-ph",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:quant-ph",
+   "total": 20627,
+   "sha256": "f9c35bea9d6295925f58190e30a6c5a3248134a31c91bc5f75395222fa8c80d9"
+  },
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:cs.CR",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:cs.CR",
+   "total": 3295,
+   "sha256": "8537011f0472178c26b37895d4dc408aa9381e0500069d0b371765fb4b407a82"
+  },
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:cs.AI",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:cs.AI",
+   "total": 5947,
+   "sha256": "3ffaf089923fd5e3d8683bde554f98b188031046900f585060d1ff8f167777d2"
+  },
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:cs.LG",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:cs.LG",
+   "total": 27495,
+   "sha256": "19edef7c36fa233f9123461e1f6660bbe3f03d29e084d51d65a51ccbe4993aac"
+  },
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:cs.LO",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:cs.LO",
+   "total": 3824,
+   "sha256": "bae2cfbdbd076845fb099ffa619476d11509cd110efa22681c442c780fdf24e3"
+  },
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "total": 43589,
+   "sha256": "eab3b981d21e1ea56ef3dc16ac2c03f49da8af0049f8d0a47dd2c79aacc04a1a"
+  },
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:econ.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:econ.*",
+   "total": 1825,
+   "sha256": "daa9e7d5ae94ff0d63a41815bb72fc49928a5bda77b1df24cc62a40d1b56dfb0"
+  },
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "total": 4696,
+   "sha256": "3f87055bed14204cfd4a4991ac632406bd007e68a8616ff4c68f77e84a18242f"
+  },
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:q-bio.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:q-bio.*",
+   "total": 6022,
+   "sha256": "ccb8f066514214f660f3ecae2ee081f16b8553ca4c4fb6ace806632247cb53b5"
+  },
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:eess.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:eess.*",
+   "total": 22487,
+   "sha256": "c6def58d2b7b475ee6dc8ade4fe0a4fa03ee9654212f23729f9306179db2adad"
+  },
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:cs.CY",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:cs.CY",
+   "total": 354,
+   "sha256": "e60d57bdc7fe06b1fd199e289b41c17134a546bb7772508614a424006c6c49d1"
+  },
+  {
+   "consulta": "cat:physics.*+AND+cat:cond-mat*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:physics.*+AND+cat:cond-mat*",
+   "total": 65986,
+   "sha256": "40cc6eb58ac9b6d2e53c277510359f4cfbda0a6dd6b899c37a26c75edd03bef8"
+  },
+  {
+   "consulta": "cat:physics.*+AND+cat:quant-ph",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:physics.*+AND+cat:quant-ph",
+   "total": 29300,
+   "sha256": "50a3c8c4e4a1cccbac5fb4c1d7551e9898c56696e7330ee817acf5efbdd45636"
+  },
+  {
+   "consulta": "cat:physics.*+AND+cat:cs.CR",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:physics.*+AND+cat:cs.CR",
+   "total": 183,
+   "sha256": "e3cc5c11ce06836052fbdb493c4c8adf42f8642fe3852aff941d619a62929ce8"
+  },
+  {
+   "consulta": "cat:physics.*+AND+cat:cs.AI",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:physics.*+AND+cat:cs.AI",
+   "total": 2653,
+   "sha256": "eccc5bef422ffaba62fc89c3bf70d403457052431fd9959de78a97a163f32c2f"
+  },
+  {
+   "consulta": "cat:physics.*+AND+cat:cs.LG",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:physics.*+AND+cat:cs.LG",
+   "total": 9381,
+   "sha256": "e77a4a7e930e47062fff08ad6a1480eb9ad45d22217b74a5eb3ad73e7bd46615"
+  },
+  {
+   "consulta": "cat:physics.*+AND+cat:cs.LO",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:physics.*+AND+cat:cs.LO",
+   "total": 26,
+   "sha256": "8eacd70a3ae58561b7249d953f949b4565176cd657f3e5bcbf98f10d6744954a"
+  },
+  {
+   "consulta": "cat:physics.*+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:physics.*+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "total": 5170,
+   "sha256": "35fa2e642ca7fc5161d7ac85be4af70ddfc3dce80ddbb01972005a443b131718"
+  },
+  {
+   "consulta": "cat:physics.*+AND+cat:econ.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:physics.*+AND+cat:econ.*",
+   "total": 843,
+   "sha256": "438e3e5b503fed2e00004d9ded3a3b9244f23ba71fe57e8f70e283dfdc1bbd7b"
+  },
+  {
+   "consulta": "cat:physics.*+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:physics.*+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "total": 2485,
+   "sha256": "677031dd8b5d30694b7ef400f37972f5867951306f1df022488af50ae2a13a5a"
+  },
+  {
+   "consulta": "cat:physics.*+AND+cat:q-bio.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:physics.*+AND+cat:q-bio.*",
+   "total": 12001,
+   "sha256": "b8e5d9daf1c250ca4c6577613bab247531fd94e588486c2a9679f0f72ee4bb81"
+  },
+  {
+   "consulta": "cat:physics.*+AND+cat:eess.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:physics.*+AND+cat:eess.*",
+   "total": 5863,
+   "sha256": "c0020c13fec50e4b4334336914760883281a8f6681dfddea79a159d16988ddb8"
+  },
+  {
+   "consulta": "cat:physics.*+AND+cat:cs.CY",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:physics.*+AND+cat:cs.CY",
+   "total": 1530,
+   "sha256": "e7c05bdbb909c0914c8e53b909a88ddef7ccc422aec56dbe2a9aa6f632d0d378"
+  },
+  {
+   "consulta": "cat:cond-mat*+AND+cat:quant-ph",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cond-mat*+AND+cat:quant-ph",
+   "total": 46850,
+   "sha256": "7bdcaecfe025b29231575316c02fa8a765b3b4cc050f68ef07157485ce5af237"
+  },
+  {
+   "consulta": "cat:cond-mat*+AND+cat:cs.CR",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cond-mat*+AND+cat:cs.CR",
+   "total": 54,
+   "sha256": "bbd82ef482ffb7f2bc5cfa7f3bcc647c14caaef832d00ec01fd2159e44645571"
+  },
+  {
+   "consulta": "cat:cond-mat*+AND+cat:cs.AI",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cond-mat*+AND+cat:cs.AI",
+   "total": 928,
+   "sha256": "4b0d7b606bae562b04f8f8f2cec7003b531cdbfbdc2326f288c4c8672d2f1678"
+  },
+  {
+   "consulta": "cat:cond-mat*+AND+cat:cs.LG",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cond-mat*+AND+cat:cs.LG",
+   "total": 3714,
+   "sha256": "55d1d7fdf78341181ef31c04d9fe0ee481047525349614c09ea6d7fe16e46430"
+  },
+  {
+   "consulta": "cat:cond-mat*+AND+cat:cs.LO",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cond-mat*+AND+cat:cs.LO",
+   "total": 7,
+   "sha256": "82df05ac01484da228a90ea1f3ae46cbc21cbbbe3c58863b81c0e7df6e3a5213"
+  },
+  {
+   "consulta": "cat:cond-mat*+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cond-mat*+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "total": 1644,
+   "sha256": "218a7da3c5ee3f170f6d53be53474bc812022c42f47cc10cadef26dd80d3f3c0"
+  },
+  {
+   "consulta": "cat:cond-mat*+AND+cat:econ.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cond-mat*+AND+cat:econ.*",
+   "total": 108,
+   "sha256": "1c1cd07db09647e8ebd9003b63c71bdb4e8642590079b3273783662175be24c2"
+  },
+  {
+   "consulta": "cat:cond-mat*+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cond-mat*+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "total": 1137,
+   "sha256": "0a9b56ea1dccfc35ac3d65652e15db3697f6124388091a8a75b189a93d1c3dfe"
+  },
+  {
+   "consulta": "cat:cond-mat*+AND+cat:q-bio.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cond-mat*+AND+cat:q-bio.*",
+   "total": 7243,
+   "sha256": "d3e0ec72ec3a36f739b3aed736c6d0eff23e5195aaaa094aa4dc79e554a4b936"
+  },
+  {
+   "consulta": "cat:cond-mat*+AND+cat:eess.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cond-mat*+AND+cat:eess.*",
+   "total": 453,
+   "sha256": "ee451461dd6b4b0808db7efab61150e496008d576b27e9df4ce3274fc5687ff0"
+  },
+  {
+   "consulta": "cat:cond-mat*+AND+cat:cs.CY",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cond-mat*+AND+cat:cs.CY",
+   "total": 42,
+   "sha256": "baea49831fe6a44e216a8009cb0d14a243eb2610445b5d26cb938f18d754cb13"
+  },
+  {
+   "consulta": "cat:quant-ph+AND+cat:cs.CR",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:quant-ph+AND+cat:cs.CR",
+   "total": 1699,
+   "sha256": "b5ea7d0c1c0d859e7dc3fca53343e8cd544d0b9af412817501cc445b4b1dc55d"
+  },
+  {
+   "consulta": "cat:quant-ph+AND+cat:cs.AI",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:quant-ph+AND+cat:cs.AI",
+   "total": 1176,
+   "sha256": "89089016fe8b9da787965f27c6af0c0b679f2979a0a2afe7e98b70d3199378b0"
+  },
+  {
+   "consulta": "cat:quant-ph+AND+cat:cs.LG",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:quant-ph+AND+cat:cs.LG",
+   "total": 3177,
+   "sha256": "4e5808cc4a5ca7e7c47677d8366b9f210edfd01c484eb66fab6b82a6c7d66179"
+  },
+  {
+   "consulta": "cat:quant-ph+AND+cat:cs.LO",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:quant-ph+AND+cat:cs.LO",
+   "total": 466,
+   "sha256": "9334613e066d32d8dd245baa322b608a0508eebad79e19bdad1f11a15b0c87ce"
+  },
+  {
+   "consulta": "cat:quant-ph+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:quant-ph+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "total": 789,
+   "sha256": "d0f9affa30984cc6de5c901f548fa2b9d38b100ba5ae14b729866327e323c61e"
+  },
+  {
+   "consulta": "cat:quant-ph+AND+cat:econ.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:quant-ph+AND+cat:econ.*",
+   "total": 23,
+   "sha256": "d1d3430afcb9a963aa2d5191d440550777dcf51f2a4281e6819d2e46f0c97aae"
+  },
+  {
+   "consulta": "cat:quant-ph+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:quant-ph+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "total": 205,
+   "sha256": "f424496367977f06366475bb3ed64f479e84bb08fceccd401e399eff26a82cad"
+  },
+  {
+   "consulta": "cat:quant-ph+AND+cat:q-bio.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:quant-ph+AND+cat:q-bio.*",
+   "total": 451,
+   "sha256": "272f1c4fe9c178d9c425fc71b598806d09cef6443dbde3275657b4c8b3c5e4dc"
+  },
+  {
+   "consulta": "cat:quant-ph+AND+cat:eess.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:quant-ph+AND+cat:eess.*",
+   "total": 834,
+   "sha256": "2537224c2cdf998257dcb84b31c881f9f987abc89635d39315f6a7387b73a9aa"
+  },
+  {
+   "consulta": "cat:quant-ph+AND+cat:cs.CY",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:quant-ph+AND+cat:cs.CY",
+   "total": 45,
+   "sha256": "616a8407e8ce33cefb42c0972bf5adef9d6809dc916a04518c2f8899f6363ef7"
+  },
+  {
+   "consulta": "cat:cs.CR+AND+cat:cs.AI",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.CR+AND+cat:cs.AI",
+   "total": 9076,
+   "sha256": "40028ba2bb13cf3ccf71e315ead05578d6843776e19702e4119677e6953bc51f"
+  },
+  {
+   "consulta": "cat:cs.CR+AND+cat:cs.LG",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.CR+AND+cat:cs.LG",
+   "total": 13170,
+   "sha256": "e2a16676ea3deb9ff20371b6856dccec25e183ddb0aad316808c4c45cc379349"
+  },
+  {
+   "consulta": "cat:cs.CR+AND+cat:cs.LO",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.CR+AND+cat:cs.LO",
+   "total": 435,
+   "sha256": "00b5f2d28bad1674178730d40f8f9482e0cfe297991c4329c5f9d993b68b7464"
+  },
+  {
+   "consulta": "cat:cs.CR+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.CR+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "total": 2470,
+   "sha256": "2ddccb96f8295f13d21b7c2816fcdbf47c560a444ecb1bb2879db908179e3499"
+  },
+  {
+   "consulta": "cat:cs.CR+AND+cat:econ.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.CR+AND+cat:econ.*",
+   "total": 159,
+   "sha256": "45625f0808deb16ba017e446689f6725ae7c9aa442451c363874bf24dd229720"
+  },
+  {
+   "consulta": "cat:cs.CR+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.CR+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "total": 244,
+   "sha256": "cb31be02b4dc0592820978b6242e4fe0bc2c97bc43c66b8f263e36bcb2d44dfb"
+  },
+  {
+   "consulta": "cat:cs.CR+AND+cat:q-bio.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.CR+AND+cat:q-bio.*",
+   "total": 81,
+   "sha256": "b3fcabf312c2e196fd21823ce01e5e91fb4836513341ecc75e80c36bff341c13"
+  },
+  {
+   "consulta": "cat:cs.CR+AND+cat:eess.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.CR+AND+cat:eess.*",
+   "total": 2146,
+   "sha256": "00ba1e15117280db75d06c4bd258748f2484e96905413f0f9e0ee86fae2acc16"
+  },
+  {
+   "consulta": "cat:cs.CR+AND+cat:cs.CY",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.CR+AND+cat:cs.CY",
+   "total": 2298,
+   "sha256": "3418300e0ce8fbd9996202de3b15d08bee973c3f1daf3b903d099eeeb65b67a1"
+  },
+  {
+   "consulta": "cat:cs.AI+AND+cat:cs.LG",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.AI+AND+cat:cs.LG",
+   "total": 86317,
+   "sha256": "5ed38d1531b5646bee64843cf385911902891512904edbb2848c6615f6e47cae"
+  },
+  {
+   "consulta": "cat:cs.AI+AND+cat:cs.LO",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.AI+AND+cat:cs.LO",
+   "total": 3331,
+   "sha256": "407cdfeac33da436dd9e491c9bab7a3ab7558c92d5f67a7ba205eef09626fb60"
+  },
+  {
+   "consulta": "cat:cs.AI+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.AI+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "total": 12120,
+   "sha256": "b1c6fff2a6566bbd765353fd2ce31d84755ea909be535f7546e44471b229bfc9"
+  },
+  {
+   "consulta": "cat:cs.AI+AND+cat:econ.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.AI+AND+cat:econ.*",
+   "total": 872,
+   "sha256": "396a5f7f0e131fec7c0c6837b9f92ebd352877da2e9f8e4b843be158725c310f"
+  },
+  {
+   "consulta": "cat:cs.AI+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.AI+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "total": 1242,
+   "sha256": "9391b68dfd9924072315c4c2ec523799105788f0cf1db1ab0b312b17f3cae7f3"
+  },
+  {
+   "consulta": "cat:cs.AI+AND+cat:q-bio.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.AI+AND+cat:q-bio.*",
+   "total": 3831,
+   "sha256": "8933dcd529eb6c8033df3b7643226aee02aca54d10441d8cc815d5b20101b5e7"
+  },
+  {
+   "consulta": "cat:cs.AI+AND+cat:eess.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.AI+AND+cat:eess.*",
+   "total": 12309,
+   "sha256": "8167b7e7c924546c5218d5ac36d32959b8a755f2eb1cc6496d37556cef615247"
+  },
+  {
+   "consulta": "cat:cs.AI+AND+cat:cs.CY",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.AI+AND+cat:cs.CY",
+   "total": 8626,
+   "sha256": "9fd4658b9a66967a84581ad6883f205250cc61325fc01cd856530265c94ef9ba"
+  },
+  {
+   "consulta": "cat:cs.LG+AND+cat:cs.LO",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LG+AND+cat:cs.LO",
+   "total": 1115,
+   "sha256": "ce6c1b9f22133502b48a9bfec6b88387267b6bb66b145a48338f3a9134a7fc77"
+  },
+  {
+   "consulta": "cat:cs.LG+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LG+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "total": 73636,
+   "sha256": "4d3a803180d03a233aae268327a787bfeee669e65ad52c945ec93a897d7c2bcc"
+  },
+  {
+   "consulta": "cat:cs.LG+AND+cat:econ.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LG+AND+cat:econ.*",
+   "total": 1221,
+   "sha256": "7e4c3c034798c08a2bc1adf15ee881b075c131e4101c612ac31c1353add8119d"
+  },
+  {
+   "consulta": "cat:cs.LG+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LG+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "total": 2415,
+   "sha256": "3eb963d2a10ccaa8431fc0bb1a619f72276beb2efebe5eaf19c3e495394d9c3b"
+  },
+  {
+   "consulta": "cat:cs.LG+AND+cat:q-bio.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LG+AND+cat:q-bio.*",
+   "total": 8007,
+   "sha256": "2a7443869d73bbbfa18cd1c8974fd2d10cb7bdac47ec3479f1b56cc457df788e"
+  },
+  {
+   "consulta": "cat:cs.LG+AND+cat:eess.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LG+AND+cat:eess.*",
+   "total": 30903,
+   "sha256": "d3b958ab84289ab26994eaebadb1346f7606eeb2f4313ee1c9e611de48d19c64"
+  },
+  {
+   "consulta": "cat:cs.LG+AND+cat:cs.CY",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LG+AND+cat:cs.CY",
+   "total": 5680,
+   "sha256": "3a36d88d1921169e6c92471aed0a4d492c2e90c86f3a6e5c0cf1199ff8bf3367"
+  },
+  {
+   "consulta": "cat:cs.LO+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LO+AND+%28cat:stat.*+OR+cat:math.ST%29",
+   "total": 128,
+   "sha256": "28decc04f3e6f2017cb85e65f567451465e60008c207873569965c4ecb956ba8"
+  },
+  {
+   "consulta": "cat:cs.LO+AND+cat:econ.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LO+AND+cat:econ.*",
+   "total": 25,
+   "sha256": "63f0d58236ac2efe864979ed6acbfb6217a689c898cd11d3de0299f19f2b2f96"
+  },
+  {
+   "consulta": "cat:cs.LO+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LO+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "total": 13,
+   "sha256": "d8e04177cf9df4cf468e1322928cb28844260770e9ad0fa3a80db52b316ad26b"
+  },
+  {
+   "consulta": "cat:cs.LO+AND+cat:q-bio.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LO+AND+cat:q-bio.*",
+   "total": 84,
+   "sha256": "5018006bf56c2088c9ec46b2211e11cde0b071de921dce192bb626a455e54362"
+  },
+  {
+   "consulta": "cat:cs.LO+AND+cat:eess.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LO+AND+cat:eess.*",
+   "total": 405,
+   "sha256": "2145a9c36703ab1c15273c658789db9d3474aee7908dd11622b5f235a7d66225"
+  },
+  {
+   "consulta": "cat:cs.LO+AND+cat:cs.CY",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:cs.LO+AND+cat:cs.CY",
+   "total": 99,
+   "sha256": "4b749042750e9bca8cdc1978fc626421a66284bfdff1f30e502e5ed04a4a5158"
+  },
+  {
+   "consulta": "%28cat:stat.*+OR+cat:math.ST%29+AND+cat:econ.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:stat.*+OR+cat:math.ST%29+AND+cat:econ.*",
+   "total": 3597,
+   "sha256": "070652ebae7fad89aedc8cec75e50f0cc42233353a3128c2ebb1f9aa916c470e"
+  },
+  {
+   "consulta": "%28cat:stat.*+OR+cat:math.ST%29+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:stat.*+OR+cat:math.ST%29+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "total": 2557,
+   "sha256": "943f49b38e68d7247a5493689639a5fd5406042b1ff7ab26a36610459bb7ae10"
+  },
+  {
+   "consulta": "%28cat:stat.*+OR+cat:math.ST%29+AND+cat:q-bio.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:stat.*+OR+cat:math.ST%29+AND+cat:q-bio.*",
+   "total": 4642,
+   "sha256": "27010534222ecfa40f8c752afeb1300bf176404823c47d71872c95e4c4f1bcae"
+  },
+  {
+   "consulta": "%28cat:stat.*+OR+cat:math.ST%29+AND+cat:eess.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:stat.*+OR+cat:math.ST%29+AND+cat:eess.*",
+   "total": 6280,
+   "sha256": "6d0217479cde2284a04221cc68fce8a7c6034007cb391d8eb10acb16e6fe16e1"
+  },
+  {
+   "consulta": "%28cat:stat.*+OR+cat:math.ST%29+AND+cat:cs.CY",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:stat.*+OR+cat:math.ST%29+AND+cat:cs.CY",
+   "total": 1571,
+   "sha256": "27ccb7269f528e857b54225fe2b65171598db8e6ec0df2f18fc0fe1711beb015"
+  },
+  {
+   "consulta": "cat:econ.*+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:econ.*+AND+%28cat:q-fin.*+OR+cat:econ.GN%29",
+   "total": 8365,
+   "sha256": "c5d1f112e633079350dec84ee47ac9949a529cf519e01c359e66af31f4d3cd07"
+  },
+  {
+   "consulta": "cat:econ.*+AND+cat:q-bio.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:econ.*+AND+cat:q-bio.*",
+   "total": 139,
+   "sha256": "346c0d19a587591527cb9aaf3ea2e75ef64ec1f7b0ecaa55518650f9f59f27f5"
+  },
+  {
+   "consulta": "cat:econ.*+AND+cat:eess.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:econ.*+AND+cat:eess.*",
+   "total": 261,
+   "sha256": "daffc2559be61cbdf8f2143eadb35893a3390502709c1154e3568d545a8d816d"
+  },
+  {
+   "consulta": "cat:econ.*+AND+cat:cs.CY",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:econ.*+AND+cat:cs.CY",
+   "total": 565,
+   "sha256": "f811f59a0ee0e2ff41fd56568f31da9892dbabee2afb46d64edada81452a40f1"
+  },
+  {
+   "consulta": "%28cat:q-fin.*+OR+cat:econ.GN%29+AND+cat:q-bio.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:q-fin.*+OR+cat:econ.GN%29+AND+cat:q-bio.*",
+   "total": 117,
+   "sha256": "95851b5e9d33d2f82ac7f6e9f6afd5533ab672b2cff3830bddc5a5b56c0c6f06"
+  },
+  {
+   "consulta": "%28cat:q-fin.*+OR+cat:econ.GN%29+AND+cat:eess.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:q-fin.*+OR+cat:econ.GN%29+AND+cat:eess.*",
+   "total": 285,
+   "sha256": "e07102e693f3ce8594ea9b075195735d454812e39c491354c003096eac33d353"
+  },
+  {
+   "consulta": "%28cat:q-fin.*+OR+cat:econ.GN%29+AND+cat:cs.CY",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:q-fin.*+OR+cat:econ.GN%29+AND+cat:cs.CY",
+   "total": 571,
+   "sha256": "3ae2a742190b4b33a59a7fe60402d39cdb1cb8e731a492faa54fc773d5f93386"
+  },
+  {
+   "consulta": "cat:q-bio.*+AND+cat:eess.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:q-bio.*+AND+cat:eess.*",
+   "total": 2746,
+   "sha256": "1e1b752bacdce640ab00c17fc57fa8f964994a0a9b46650895576957dd52fe8e"
+  },
+  {
+   "consulta": "cat:q-bio.*+AND+cat:cs.CY",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:q-bio.*+AND+cat:cs.CY",
+   "total": 215,
+   "sha256": "f499518b020cd015e27dca76a5e5a27a568cec29b910dfe5994d9b4dab1d0248"
+  },
+  {
+   "consulta": "cat:eess.*+AND+cat:cs.CY",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:eess.*+AND+cat:cs.CY",
+   "total": 605,
+   "sha256": "759257e414d3ae66ff633163380c7942263b4c385f97bd582855c4768f5ce363"
+  },
+  {
+   "consulta": "%28cat:quant-ph+OR+cat:cs.CR%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:quant-ph+OR+cat:cs.CR%29",
+   "total": 244553,
+   "sha256": "2f8b0212a9eebd56acd181041b5bd3fda6b138fb9052915bd187740720568f41"
+  },
+  {
+   "consulta": "%28%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+OR+cat:quant-ph%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+OR+cat:quant-ph%29",
+   "total": 978070,
+   "sha256": "cf9c516d415797f4d451e58cb9a5213b397654b871982039da0a751e459101d8"
+  },
+  {
+   "consulta": "%28cat:cs.LG+OR+%28cat:stat.*+OR+cat:math.ST%29%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:cs.LG+OR+%28cat:stat.*+OR+cat:math.ST%29%29",
+   "total": 381740,
+   "sha256": "57c65510186a53531ef95cee7ab364804f5bfaf0471f5d6189fd8aaa24b6fe8e"
+  },
+  {
+   "consulta": "%28cat:econ.*+OR+%28cat:q-fin.*+OR+cat:econ.GN%29%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:econ.*+OR+%28cat:q-fin.*+OR+cat:econ.GN%29%29",
+   "total": 36659,
+   "sha256": "49149bf976a7d82c5d7579ef8852d32c06fa27f65e38b6b6d9a20cae0f607afc"
+  },
+  {
+   "consulta": "%28cat:cs.LG+OR+cat:q-bio.*%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:cs.LG+OR+cat:q-bio.*%29",
+   "total": 348736,
+   "sha256": "dd5bbfa83cfd7a4f70eefc073b4449fcd246b98dfa025ed639718eb686d8f053"
+  },
+  {
+   "consulta": "%28cat:cs.AI+OR+cat:cs.LO%29",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:cs.AI+OR+cat:cs.LO%29",
+   "total": 231448,
+   "sha256": "22be166acb369f5ac0d3aaf7b45e67dd501273ba4133916642d004c73f7b489c"
+  },
+  {
+   "consulta": "cat:stat.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:stat.*",
+   "total": 136889,
+   "sha256": "11c35e409bb3e5f5aee9cc767033ba53b936dcce9a24fd231639429094b9622f"
+  },
+  {
+   "consulta": "%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:stat.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=%28cat:math.*+OR+cat:math-ph+OR+cat:cs.IT%29+AND+cat:stat.*",
+   "total": 25390,
+   "sha256": "77a69c09468009283dff5691f2506e86ecd58c37a110ac9d82e7399b9c91e9c0"
+  },
+  {
+   "consulta": "cat:q-fin.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:q-fin.*",
+   "total": 19560,
+   "sha256": "bbbcf5c0087e45a1505a29f4e65b6923ee6750dd4160c6c1e34e040f3f9b6918"
+  },
+  {
+   "consulta": "cat:econ.*+AND+cat:q-fin.*",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:econ.*+AND+cat:q-fin.*",
+   "total": 1205,
+   "sha256": "d2d54c9dd424010a8e1bef706712b22a98d8a7ef3f96a928cd6ad1478a44f463"
+  },
+  {
+   "consulta": "cat:stat.ML",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:stat.ML",
+   "total": 81998,
+   "sha256": "ea615407adc7214b7827025df32006f267ccfabf0fbad20c244a7fd35ea53aaa"
+  },
+  {
+   "consulta": "cat:stat.ML+AND+cat:cs.LG",
+   "url": "https://export.arxiv.org/api/query?max_results=1&search_query=cat:stat.ML+AND+cat:cs.LG",
+   "total": 68961,
+   "sha256": "f03aed8a4655f699791398a75c76d2b47c4b45a99d0f243e475b8355afe28803"
+  }
+ ],
+ "conferencia": {
+  "inclusao_exclusao": [
+   {
+    "par": [
+     "qu",
+     "cr"
+    ],
+    "n_a": 191558,
+    "n_b": 54694,
+    "n_ab": 1699,
+    "n_a_ou_b": 244553,
+    "n_a+n_b-n_ab": 244553,
+    "bate": true
+   },
+   {
+    "par": [
+     "mat",
+     "qu"
+    ],
+    "n_a": 807139,
+    "n_b": 191558,
+    "n_ab": 20627,
+    "n_a_ou_b": 978070,
+    "n_a+n_b-n_ab": 978070,
+    "bate": true
+   },
+   {
+    "par": [
+     "ml",
+     "st"
+    ],
+    "n_a": 300288,
+    "n_b": 155088,
+    "n_ab": 73636,
+    "n_a_ou_b": 381740,
+    "n_a+n_b-n_ab": 381740,
+    "bate": true
+   },
+   {
+    "par": [
+     "ec",
+     "fi"
+    ],
+    "n_a": 18304,
+    "n_b": 26720,
+    "n_ab": 8365,
+    "n_a_ou_b": 36659,
+    "n_a+n_b-n_ab": 36659,
+    "bate": true
+   },
+   {
+    "par": [
+     "ml",
+     "bi"
+    ],
+    "n_a": 300288,
+    "n_b": 56455,
+    "n_ab": 8007,
+    "n_a_ou_b": 348736,
+    "n_a+n_b-n_ab": 348736,
+    "bate": true
+   },
+   {
+    "par": [
+     "ia",
+     "lo"
+    ],
+    "n_a": 214063,
+    "n_b": 20716,
+    "n_ab": 3331,
+    "n_a_ou_b": 231448,
+    "n_a+n_b-n_ab": 231448,
+    "bate": true
+   }
+  ],
+  "aprovado": true
+ }
+}

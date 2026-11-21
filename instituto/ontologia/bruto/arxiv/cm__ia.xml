@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/2wD2Uh2xiaXE+oP1Q+SrvpwyuJU</id>
+  <title>arXiv Query: search_query=cat:cond-mat* AND cat:cs.AI&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:49:12Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cond-mat*+AND+cat:cs.AI&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>928</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2312.08658v1</id>
+    <title>Real-time Autonomous Control of a Continuous Macroscopic Process as Demonstrated by Plastic Forming</title>
+    <updated>2023-12-14T05:06:49Z</updated>
+    <link href="https://arxiv.org/abs/2312.08658v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2312.08658v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>To meet the demands for more adaptable and expedient approaches to augment both research and manufacturing, we report an autonomous system using real-time in-situ characterization and an autonomous, decision-making processer based on an active learning algorithm. This system was applied to a plastic film forming system to highlight its efficiency and accuracy in determining the process conditions for specified target film dimensions, importantly, without any human intervention. Application of this system towards nine distinct film dimensions demonstrated the system ability to quickly determine the appropriate and stable process conditions (average 11 characterization-adjustment iterations, 19 minutes) and the ability to avoid traps, such as repetitive over-correction. Furthermore, comparison of the achieved film dimensions to the target values showed a high accuracy (R2 = 0.87, 0.90) for film width and thickness, respectively. In addition, the use of an active learning algorithm afforded our system to proceed optimization with zero initial training data, which was unavailable due to the complex relationships between the control factors (material supply rate, applied force, material viscosity) within the plastic forming process. As our system is intrinsically general and can be applied to any most material processes, these results have significant implications in accelerating both research and industrial processes.</summary>
+    <category term="cond-mat.soft" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.mtrl-sci" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.data-an" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-12-14T05:06:49Z</published>
+    <arxiv:comment>18pages, 7figures</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.soft"/>
+    <author>
+      <name>Shun Muroga</name>
+    </author>
+    <author>
+      <name>Takashi Honda</name>
+    </author>
+    <author>
+      <name>Yasuaki Miki</name>
+    </author>
+    <author>
+      <name>Hideaki Nakajima</name>
+    </author>
+    <author>
+      <name>Don N. Futaba</name>
+    </author>
+    <author>
+      <name>Kenji Hata</name>
+    </author>
+  </entry>
+</feed>

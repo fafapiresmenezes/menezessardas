@@ -1,0 +1,104 @@
+{
+ "familia": 1,
+ "nome": "Conferência entre bases: IBGE 2015 contra FIGARO 2023, Brasil",
+ "formula": "multiplicador = Σ_i L[i, j] (soma da coluna j de L, só fornecedores do Brasil); dif. relativa = (FIGARO − IBGE) / IBGE",
+ "criterio": {
+  "spearman_minimo": 0.6,
+  "mediana_dif_relativa_maxima": 0.25
+ },
+ "pares": [
+  {
+   "figaro": "A01",
+   "nome_figaro": "Agricultura e pecuária",
+   "ibge": "0191",
+   "mult_ibge_2015": 1.723733,
+   "mult_figaro_2023_dentro_do_brasil": 1.82077,
+   "dif_relativa": 0.056295
+  },
+  {
+   "figaro": "C19",
+   "nome_figaro": "Refino de petróleo e coque",
+   "ibge": "1991",
+   "mult_ibge_2015": 2.483612,
+   "mult_figaro_2023_dentro_do_brasil": 2.484575,
+   "dif_relativa": 0.000388
+  },
+  {
+   "figaro": "D35",
+   "nome_figaro": "Eletricidade e gás",
+   "ibge": "3500",
+   "mult_ibge_2015": 2.08574,
+   "mult_figaro_2023_dentro_do_brasil": 2.084539,
+   "dif_relativa": -0.000576
+  },
+  {
+   "figaro": "F",
+   "nome_figaro": "Construção",
+   "ibge": "4180",
+   "mult_ibge_2015": 1.799153,
+   "mult_figaro_2023_dentro_do_brasil": 2.036023,
+   "dif_relativa": 0.131656
+  },
+  {
+   "figaro": "H49",
+   "nome_figaro": "Transporte terrestre",
+   "ibge": "4900",
+   "mult_ibge_2015": 1.989952,
+   "mult_figaro_2023_dentro_do_brasil": 2.231712,
+   "dif_relativa": 0.12149
+  },
+  {
+   "figaro": "J61",
+   "nome_figaro": "Telecomunicações",
+   "ibge": "6100",
+   "mult_ibge_2015": 1.814549,
+   "mult_figaro_2023_dentro_do_brasil": 1.823307,
+   "dif_relativa": 0.004827
+  },
+  {
+   "figaro": "J62_63",
+   "nome_figaro": "Informática",
+   "ibge": "6280",
+   "mult_ibge_2015": 1.375869,
+   "mult_figaro_2023_dentro_do_brasil": 1.488093,
+   "dif_relativa": 0.081566
+  },
+  {
+   "figaro": "K64",
+   "nome_figaro": "Serviços financeiros",
+   "ibge": "6480",
+   "mult_ibge_2015": 1.48591,
+   "mult_figaro_2023_dentro_do_brasil": 1.631886,
+   "dif_relativa": 0.09824
+  },
+  {
+   "figaro": "M69_70",
+   "nome_figaro": "Jurídico, contábil e consultoria",
+   "ibge": "6980",
+   "mult_ibge_2015": 1.424039,
+   "mult_figaro_2023_dentro_do_brasil": 1.420087,
+   "dif_relativa": -0.002776
+  },
+  {
+   "figaro": "O84",
+   "nome_figaro": "Administração pública",
+   "ibge": "8400",
+   "mult_ibge_2015": 1.407779,
+   "mult_figaro_2023_dentro_do_brasil": 1.40037,
+   "dif_relativa": -0.005263
+  }
+ ],
+ "spearman": 0.9393939393939393,
+ "mediana_dif_relativa_absoluta": 0.030778790649235874,
+ "aprovado": true,
+ "fora": [
+  "B",
+  "E36",
+  "E37-39",
+  "G46",
+  "G47",
+  "M72",
+  "P85",
+  "Q86"
+ ]
+}

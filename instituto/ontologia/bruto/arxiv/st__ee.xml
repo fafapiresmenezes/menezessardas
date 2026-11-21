@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/MFvvBKB/IFAJzUYIu5gcxmdeKnQ</id>
+  <title>arXiv Query: search_query=cat:stat.* AND cat:eess.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:52:30Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:stat.*+AND+cat:eess.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>5994</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2005.13992v1</id>
+    <title>A Novel Ramp Metering Approach Based on Machine Learning and Historical Data</title>
+    <updated>2020-05-26T21:05:01Z</updated>
+    <link href="https://arxiv.org/abs/2005.13992v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2005.13992v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The random nature of traffic conditions on freeways can cause excessive congestions and irregularities in the traffic flow. Ramp metering is a proven effective method to maintain freeway efficiency under various traffic conditions. Creating a reliable and practical ramp metering algorithm that considers both critical traffic measures and historical data is still a challenging problem. In this study we use machine learning approaches to develop a novel real-time prediction model for ramp metering. We evaluate the potentials of our approach in providing promising results by comparing it with a baseline traffic-responsive ramp metering algorithm.</summary>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-05-26T21:05:01Z</published>
+    <arxiv:comment>5 pages, 11 figures, 2 tables</arxiv:comment>
+    <arxiv:primary_category term="eess.SY"/>
+    <author>
+      <name>Anahita Sanandaji</name>
+    </author>
+    <author>
+      <name>Saeed Ghanbartehrani</name>
+    </author>
+    <author>
+      <name>Zahra Mokhtari</name>
+    </author>
+    <author>
+      <name>Kimia Tajik</name>
+    </author>
+    <arxiv:doi>10.3390/make2040021</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.3390/make2040021" title="doi"/>
+  </entry>
+</feed>

@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/PVcfwfpHOuOBT2cQNI1c/kIhaM0</id>
+  <title>arXiv Query: search_query=cat:cond-mat* AND cat:cs.LG&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:49:16Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cond-mat*+AND+cat:cs.LG&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>3714</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1906.01103v2</id>
+    <title>Attractive versus truncated repulsive supercooled liquids: The dynamics is encoded in the pair correlation function</title>
+    <updated>2020-01-14T11:37:06Z</updated>
+    <link href="https://arxiv.org/abs/1906.01103v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1906.01103v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We compare glassy dynamics in two liquids that differ in the form of their interaction potentials. Both systems have the same repulsive interactions but one has also an attractive part in the potential. These two systems exhibit very different dynamics despite having nearly identical pair correlation functions. We demonstrate that a properly weighted integral of the pair correlation function, which amplifies the subtle differences between the two systems, correctly captures their dynamical differences. The weights are obtained from a standard machine learning algorithm.</summary>
+    <category term="cond-mat.stat-mech" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.dis-nn" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.soft" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-06-03T22:23:16Z</published>
+    <arxiv:comment>6 pages, 5 figures</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.stat-mech"/>
+    <arxiv:journal_ref>Phys. Rev. E 101, 010602 (2020)</arxiv:journal_ref>
+    <author>
+      <name>François P. Landes</name>
+    </author>
+    <author>
+      <name>Giulio Biroli</name>
+    </author>
+    <author>
+      <name>Olivier Dauchot</name>
+    </author>
+    <author>
+      <name>Andrea J. Liu</name>
+    </author>
+    <author>
+      <name>David R. Reichman</name>
+    </author>
+    <arxiv:doi>10.1103/PhysRevE.101.010602</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1103/PhysRevE.101.010602" title="doi"/>
+  </entry>
+</feed>

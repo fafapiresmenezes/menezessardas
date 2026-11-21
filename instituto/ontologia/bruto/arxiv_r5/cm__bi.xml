@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/RSH0xxXRs1dE5rTOEEmOzqvzrbE</id>
+  <title>arXiv Query: search_query=cat:cond-mat* AND cat:q-bio.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:49:35Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cond-mat*+AND+cat:q-bio.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>7243</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2006.05943v1</id>
+    <title>Soft macromolecular confinement</title>
+    <updated>2020-06-10T16:49:48Z</updated>
+    <link href="https://arxiv.org/abs/2006.05943v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2006.05943v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We study equilibrium shapes and shape transformations of a confined semiflexible chain inside a soft lipid tubule using simulations and continuum theories. The deformed tubular shapes and chain conformations depend on the relative magnitude of their bending moduli. We characterise the collapsed macromolecular shapes by computing statistical quantities that probe the polymer properties at small length scales and report a prolate to toroidal coil transition for stiff chains. Deformed tubular shapes, calculated using elastic theories, agree with simulations. In conjunction with scattering studies, our work may provide a mechanistic understanding of gene encapsulation in soft structures.</summary>
+    <category term="cond-mat.soft" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.mtrl-sci" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.stat-mech" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.BM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-06-10T16:49:48Z</published>
+    <arxiv:comment>20 pages, 18 figures</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.soft"/>
+    <author>
+      <name>Subhadip Biswas</name>
+    </author>
+    <author>
+      <name>Buddhapriya Chakrabarti</name>
+    </author>
+  </entry>
+</feed>

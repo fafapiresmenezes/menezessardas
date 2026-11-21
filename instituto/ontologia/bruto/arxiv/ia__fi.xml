@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/nfa7BPCGxPrizTh6dse3cCrJUpE</id>
+  <title>arXiv Query: search_query=cat:cs.AI AND cat:q-fin.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:51:13Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.AI+AND+cat:q-fin.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>781</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2207.01151v3</id>
+    <title>Modeling Randomly Walking Volatility with Chained Gamma Distributions</title>
+    <updated>2022-10-20T02:59:27Z</updated>
+    <link href="https://arxiv.org/abs/2207.01151v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2207.01151v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Volatility clustering is a common phenomenon in financial time series. Typically, linear models can be used to describe the temporal autocorrelation of the (logarithmic) variance of returns. Considering the difficulty in estimating this model, we construct a Dynamic Bayesian Network, which utilizes the conjugate prior relation of normal-gamma and gamma-gamma, so that its posterior form locally remains unchanged at each node. This makes it possible to find approximate solutions using variational methods quickly. Furthermore, we ensure that the volatility expressed by the model is an independent incremental process after inserting dummy gamma nodes between adjacent time steps. We have found that this model has two advantages: 1) It can be proved that it can express heavier tails than Gaussians, i.e., have positive excess kurtosis, compared to popular linear models. 2) If the variational inference(VI) is used for state estimation, it runs much faster than Monte Carlo(MC) methods since the calculation of the posterior uses only basic arithmetic operations. And its convergence process is deterministic.
+  We tested the model, named Gam-Chain, using recent Crypto, Nasdaq, and Forex records of varying resolutions. The results show that: 1) In the same case of using MC, this model can achieve comparable state estimation results with the regular lognormal chain. 2) In the case of only using VI, this model can obtain accuracy that are slightly worse than MC, but still acceptable in practice; 3) Only using VI, the running time of Gam-Chain, in general case, can be reduced to below 5% of that based on the lognormal chain via MC.</summary>
+    <category term="q-fin.CP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-07-04T00:44:30Z</published>
+    <arxiv:primary_category term="q-fin.CP"/>
+    <author>
+      <name>Di Zhang</name>
+    </author>
+    <author>
+      <name>Qiang Niu</name>
+    </author>
+    <author>
+      <name>Youzhou Zhou</name>
+    </author>
+  </entry>
+</feed>

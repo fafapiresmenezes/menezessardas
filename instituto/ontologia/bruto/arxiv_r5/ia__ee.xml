@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/+XW6ZAKPsJU9OHxttGM1f8TZQXk</id>
+  <title>arXiv Query: search_query=cat:cs.AI AND cat:eess.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:51:21Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.AI+AND+cat:eess.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>12309</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2006.15469v1</id>
+    <title>End-to-End AI-Based Point-of-Care Diagnosis System for Classifying Respiratory Illnesses and Early Detection of COVID-19</title>
+    <updated>2020-06-28T00:06:48Z</updated>
+    <link href="https://arxiv.org/abs/2006.15469v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2006.15469v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Respiratory symptoms can be a caused by different underlying conditions, and are often caused by viral infections, such as Influenza-like illnesses or other emerging viruses like the Coronavirus. These respiratory viruses, often, have common symptoms, including coughing, high temperature, congested nose, and difficulty breathing. However, early diagnosis of the type of the virus, can be crucial, especially in cases such as the recent COVID-19 pandemic. One of the factors that contributed to the spread of the pandemic, was the late diagnosis or confusing it with regular flu-like symptoms. Science has proved that one of the possible differentiators of the underlying causes of these different respiratory diseases is coughing, which comes in different types and forms. Therefore, a reliable lab-free tool for early and more accurate diagnosis that can differentiate between different respiratory diseases is very much needed. This paper proposes an end-to-end portable system that can record data from patients with symptom, including coughs (voluntary or involuntary) and translate them into health data for diagnosis, and with the aid of machine learning, classify them into different respiratory illnesses, including COVID-19. With the ongoing efforts to stop the spread of the COVID-19 disease everywhere today, and against similar diseases in the future, our proposed low cost and user-friendly solution can play an important part in the early diagnosis.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SD" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.AS" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-06-28T00:06:48Z</published>
+    <arxiv:primary_category term="eess.SP"/>
+    <author>
+      <name>Abdelkader Nasreddine Belkacem</name>
+    </author>
+    <author>
+      <name>Sofia Ouhbi</name>
+    </author>
+    <author>
+      <name>Abderrahmane Lakas</name>
+    </author>
+    <author>
+      <name>Elhadj Benkhelifa</name>
+    </author>
+    <author>
+      <name>Chao Chen</name>
+    </author>
+  </entry>
+</feed>

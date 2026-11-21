@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/+ZrNzm7CBC4uuri6JZX6D/8zzjE</id>
+  <title>arXiv Query: search_query=cat:q-fin.* AND cat:q-bio.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:52:53Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:q-fin.*+AND+cat:q-bio.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>56</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1703.00703v4</id>
+    <title>*K-means and Cluster Models for Cancer Signatures</title>
+    <updated>2017-07-18T15:20:49Z</updated>
+    <link href="https://arxiv.org/abs/1703.00703v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1703.00703v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present *K-means clustering algorithm and source code by expanding statistical clustering methods applied in https://ssrn.com/abstract=2802753 to quantitative finance. *K-means is statistically deterministic without specifying initial centers, etc. We apply *K-means to extracting cancer signatures from genome data without using nonnegative matrix factorization (NMF). *K-means' computational cost is a fraction of NMF's. Using 1,389 published samples for 14 cancer types, we find that 3 cancers (liver cancer, lung cancer and renal cell carcinoma) stand out and do not have cluster-like structures. Two clusters have especially high within-cluster correlations with 11 other cancers indicating common underlying structures. Our approach opens a novel avenue for studying such structures. *K-means is universal and can be applied in other fields. We discuss some potential applications in quantitative finance.</summary>
+    <category term="q-bio.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.QM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-03-02T10:39:59Z</published>
+    <arxiv:comment>124 pages, 69 figures; a trivial typo corrected; to appear in Biomolecular Detection and Quantification</arxiv:comment>
+    <arxiv:primary_category term="q-bio.GN"/>
+    <arxiv:journal_ref>Biomolecular Detection and Quantification 13 (2017) 7-31</arxiv:journal_ref>
+    <author>
+      <name>Zura Kakushadze</name>
+    </author>
+    <author>
+      <name>Willie Yu</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/SPfX3OZEpU4EiAT1iib1aI1Al4M</id>
+  <title>arXiv Query: search_query=cat:cs.LG&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:46:59Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.LG&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>300288</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2012.11510v1</id>
+    <title>Design Rule Checking with a CNN Based Feature Extractor</title>
+    <updated>2020-12-21T17:26:31Z</updated>
+    <link href="https://arxiv.org/abs/2012.11510v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.11510v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Design rule checking (DRC) is getting increasingly complex in advanced nodes technologies. It would be highly desirable to have a fast interactive DRC engine that could be used during layout. In this work, we establish the proof of feasibility for such an engine. The proposed model consists of a convolutional neural network (CNN) trained to detect DRC violations. The model was trained with artificial data that was derived from a set of $50$ SRAM designs. The focus in this demonstration was metal 1 rules. Using this solution, we can detect multiple DRC violations 32x faster than Boolean checkers with an accuracy of up to 92. The proposed solution can be easily expanded to a complete rule set.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-21T17:26:31Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Luis Francisco</name>
+    </author>
+    <author>
+      <name>Tanmay Lagare</name>
+    </author>
+    <author>
+      <name>Arpit Jain</name>
+    </author>
+    <author>
+      <name>Somal Chaudhary</name>
+    </author>
+    <author>
+      <name>Madhura Kulkarni</name>
+    </author>
+    <author>
+      <name>Divya Sardana</name>
+    </author>
+    <author>
+      <name>W. Rhett Davis</name>
+    </author>
+    <author>
+      <name>Paul Franzon</name>
+    </author>
+  </entry>
+</feed>

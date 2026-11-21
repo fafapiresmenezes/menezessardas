@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/RVLywRAAvm9JOkzBRo17xtkN5Ho</id>
+  <title>arXiv Query: search_query=cat:cs.CR AND cat:eess.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:50:51Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.CR+AND+cat:eess.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>2146</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2206.12527v1</id>
+    <title>Infinite Impulse Response Graph Neural Networks for Cyberattack Localization in Smart Grids</title>
+    <updated>2022-06-25T01:37:38Z</updated>
+    <link href="https://arxiv.org/abs/2206.12527v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2206.12527v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This study employs Infinite Impulse Response (IIR) Graph Neural Networks (GNN) to efficiently model the inherent graph network structure of the smart grid data to address the cyberattack localization problem. First, we numerically analyze the empirical frequency response of the Finite Impulse Response (FIR) and IIR graph filters (GFs) to approximate an ideal spectral response. We show that, for the same filter order, IIR GFs provide a better approximation to the desired spectral response and they also present the same level of approximation to a lower order GF due to their rational type filter response. Second, we propose an IIR GNN model to efficiently predict the presence of cyberattacks at the bus level. Finally, we evaluate the model under various cyberattacks at both sample-wise (SW) and bus-wise (BW) level, and compare the results with the existing architectures. It is experimentally verified that the proposed model outperforms the state-of-the-art FIR GNN model by 9.2% and 14% in terms of SW and BW localization, respectively.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-06-25T01:37:38Z</published>
+    <arxiv:comment>5 pages, 5 figures</arxiv:comment>
+    <arxiv:primary_category term="eess.SP"/>
+    <author>
+      <name>Osman Boyaci</name>
+    </author>
+    <author>
+      <name>M. Rasoul Narimani</name>
+    </author>
+    <author>
+      <name>Katherine Davis</name>
+    </author>
+    <author>
+      <name>Erchin Serpedin</name>
+    </author>
+  </entry>
+</feed>

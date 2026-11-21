@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/MPsQqwiUVIUcdAFX32zj0G+pxNE</id>
+  <title>arXiv Query: search_query=(cat:math.* OR cat:math-ph OR cat:cs.IT) AND cat:q-bio.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:39:48Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(cat:math.*+OR+(cat:math-ph+OR+cat:cs.IT))+AND+cat:q-bio.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>6022</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1212.4239v3</id>
+    <title>Local paths to global coherence: cutting networks down to size</title>
+    <updated>2013-12-11T23:05:11Z</updated>
+    <link href="https://arxiv.org/abs/1212.4239v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1212.4239v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>How does connectivity impact network dynamics? We address this question by linking network characteristics on two scales. On the global scale we consider the coherence of overall network dynamics. We show that such \emph{global coherence} in activity can often be predicted from the \emph{local structure} of the network. To characterize local network structure we use "motif cumulants," a measure of the deviation of pathway counts from those expected in a minimal probabilistic network model.
+  We extend previous results in three ways. First, we give a new combinatorial formulation of motif cumulants that relates to the allied concept in probability theory. Second, we show that the link between global network dynamics and local network architecture is strongly affected by heterogeneity in network connectivity. However, we introduce a network-partitioning method that recovers a tight relationship between architecture and dynamics. Third, for a particular set of models we generalize the underlying theory to treat dynamical coherence at arbitrary orders (i.e. triplet correlations, and beyond). We show that at any order only a highly restricted set of motifs impact dynamical correlations.</summary>
+    <category term="q-bio.NC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.DS" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.QM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2012-12-18T06:36:34Z</published>
+    <arxiv:comment>34 pages, 11 figures</arxiv:comment>
+    <arxiv:primary_category term="q-bio.NC"/>
+    <author>
+      <name>Yu Hu</name>
+    </author>
+    <author>
+      <name>James Trousdale</name>
+    </author>
+    <author>
+      <name>Krešimir Josić</name>
+    </author>
+    <author>
+      <name>Eric Shea-Brown</name>
+    </author>
+  </entry>
+</feed>

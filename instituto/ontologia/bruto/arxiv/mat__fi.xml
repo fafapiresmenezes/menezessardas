@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/+voKeUQpJ0GFbvQxyIUTRTIiHFs</id>
+  <title>arXiv Query: search_query=cat:math.* AND cat:q-fin.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:48:03Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:math.*+AND+cat:q-fin.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>4311</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2012.10632v1</id>
+    <title>Optimal ratcheting of dividends in a Brownian risk model</title>
+    <updated>2020-12-19T08:53:47Z</updated>
+    <link href="https://arxiv.org/abs/2012.10632v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.10632v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We study the problem of optimal dividend payout from a surplus process governed by Brownian motion with drift under the additional constraint of ratcheting, i.e. the dividend rate can never decrease. We solve the resulting two-dimensional optimal control problem, identifying the value function to be the unique viscosity solution of the corresponding Hamilton-Jacobi-Bellman equation. For finitely many admissible dividend rates we prove that threshold strategies are optimal, and for any finite continuum of admissible dividend rates we establish the $\varepsilon$-optimality of curve strategies. This work is a counterpart of Albrecher et al. (2020), where the ratcheting problem was studied for a compound Poisson surplus process with drift. In the present Brownian setup, calculus of variation techniques allow to obtain a much more explicit analysis and description of the optimal dividend strategies. We also give some numerical illustrations of the optimality results.</summary>
+    <category term="math.PR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.PM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-19T08:53:47Z</published>
+    <arxiv:primary_category term="math.PR"/>
+    <author>
+      <name>Hansjoerg Albrecher</name>
+    </author>
+    <author>
+      <name>Pablo Azcue</name>
+    </author>
+    <author>
+      <name>Nora Muler</name>
+    </author>
+  </entry>
+</feed>

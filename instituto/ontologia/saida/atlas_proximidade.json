@@ -1,0 +1,1402 @@
+{
+ "selo": "calculado por nós, conferência parcial",
+ "familia": 2,
+ "nome": "Proximidade produtiva (espaço de produtos de Harvard, refeito por nós)",
+ "aviso": "Proximidade de capacidades: dois produtos são próximos quando os mesmos países os exportam com vantagem. Não é compra e venda (família 1) nem dependência.",
+ "fonte": {
+  "orgao": "Harvard Growth Lab, Atlas of Economic Complexity",
+  "api": "https://atlas.hks.harvard.edu/api/graphql",
+  "ano": 2024,
+  "classificacao": "HS92, 4 dígitos, mais serviços",
+  "anos": [
+   2015,
+   2024
+  ],
+  "observacoes_pais_ano": 1480,
+  "paises": 148,
+  "paises_no_cadastro": 233,
+  "filtro_de_paises": "população ≥ 1 milhão e (exportação + importação)/2 ≥ 1 bilhão de dólares em 2024 (regra publicada no FAQ do Atlas para os rankings)",
+  "diferenca_do_atlas": "o Atlas mede a proximidade com 128 países e 50 anos (glossário, verbete Distance); aqui são 10 anos (2015–2024), então a conferência é por posição, não por igualdade",
+  "tentativas": [
+   "1: todos os 233 países, só 2024: mediana 96,1, 54,2% no top 5% (reprovada)",
+   "2: regra de países do Atlas, só 2024: mediana 95,7, 52,8% no top 5% (reprovada)",
+   "3: regra de países do Atlas, 2015–2024 juntos: mediana 97,83, 66,1% no top 5% (reprovada)",
+   "3b (rodada 5, mesma regra, só sem o falso produto XXXX): resultado abaixo"
+  ],
+  "limites": [
+   "filtro de países feito só com 2024 e aplicado a 2015–2024",
+   "não se testou se o critério de 80% no top 5% é alcançável nem com a φ do próprio Atlas, porque o mapa publicado é árvore mais corte, não as ligações mais fortes de cada linha"
+  ],
+  "produtos": 1246,
+  "conferencia_publicada": "Dataverse doi:10.7910/DVN/FCDZBN, top_edges_hs92.csv, md5 8646568807730ef1117d8a48f055da45"
+ },
+ "metodo": {
+  "M": "M[c,p] = 1 se RCA ≥ 1",
+  "phi": "φ[i,j] = Σc M[c,i]·M[c,j] ÷ max(Σc M[c,i], Σc M[c,j])",
+  "nicho": "média de φ ponderada pelo valor exportado no mundo: Σ w_i·w_j·φ[i,j] ÷ (Σ w_i · Σ w_j)",
+  "referencia": "Hidalgo, Klinger, Barabási e Hausmann (2007), The Product Space Conditions the Development of Nations, Science 317:482-487"
+ },
+ "nichos": {
+  "Agro": {
+   "prefixos_hs": [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24"
+   ],
+   "n_produtos": 201,
+   "phi_media_dentro": 0.20802977309563808,
+   "sem_base": null
+  },
+  "Petróleo e Mineração": {
+   "prefixos_hs": [
+    "25",
+    "26",
+    "27"
+   ],
+   "n_produtos": 67,
+   "phi_media_dentro": 0.1607379781895481,
+   "sem_base": null
+  },
+  "Saúde (fármacos e equipamentos)": {
+   "prefixos_hs": [
+    "30",
+    "9018",
+    "9019",
+    "9020",
+    "9021",
+    "9022"
+   ],
+   "n_produtos": 11,
+   "phi_media_dentro": 0.362305215735115,
+   "sem_base": null
+  },
+  "Química": {
+   "prefixos_hs": [
+    "28",
+    "29",
+    "31",
+    "32",
+    "33",
+    "34",
+    "35",
+    "36",
+    "37",
+    "38"
+   ],
+   "n_produtos": 170,
+   "phi_media_dentro": 0.18554043074567994,
+   "sem_base": null
+  },
+  "Engenharia (máquinas e equipamentos)": {
+   "prefixos_hs": [
+    "84"
+   ],
+   "n_produtos": 85,
+   "phi_media_dentro": 0.28893274595558155,
+   "sem_base": null
+  },
+  "Energia e eletrônica": {
+   "prefixos_hs": [
+    "85"
+   ],
+   "n_produtos": 48,
+   "phi_media_dentro": 0.29239112986914734,
+   "sem_base": null
+  },
+  "Construção (materiais)": {
+   "prefixos_hs": [
+    "68",
+    "69",
+    "70",
+    "72",
+    "73"
+   ],
+   "n_produtos": 104,
+   "phi_media_dentro": 0.22143574333672536,
+   "sem_base": null
+  },
+  "IA, Telecom e serviços às empresas": {
+   "prefixos_hs": [
+    "ict"
+   ],
+   "n_produtos": 1,
+   "phi_media_dentro": null,
+   "sem_base": "o Atlas não publica a vantagem comparativa (RCA) dos serviços; vem vazia na API"
+  },
+  "Finanças": {
+   "prefixos_hs": [
+    "financial"
+   ],
+   "n_produtos": 1,
+   "phi_media_dentro": null,
+   "sem_base": "o Atlas não publica a vantagem comparativa (RCA) dos serviços; vem vazia na API"
+  },
+  "Cadeia distributiva (transporte)": {
+   "prefixos_hs": [
+    "transport"
+   ],
+   "n_produtos": 1,
+   "phi_media_dentro": null,
+   "sem_base": "o Atlas não publica a vantagem comparativa (RCA) dos serviços; vem vazia na API"
+  },
+  "Turismo": {
+   "prefixos_hs": [
+    "travel"
+   ],
+   "n_produtos": 1,
+   "phi_media_dentro": null,
+   "sem_base": "o Atlas não publica a vantagem comparativa (RCA) dos serviços; vem vazia na API"
+  }
+ },
+ "pares": [
+  {
+   "a": "Agro",
+   "b": "Petróleo e Mineração",
+   "n_produtos_a": 201,
+   "n_produtos_b": 67,
+   "phi_ponderada": 0.1533158640592812,
+   "phi_media_simples": 0.15241528456839484,
+   "par_mais_proximo": [
+    "2202 Waters, flavored or sweetened",
+    "2716 Electrical energy",
+    0.5311284046692607
+   ]
+  },
+  {
+   "a": "Agro",
+   "b": "Saúde (fármacos e equipamentos)",
+   "n_produtos_a": 201,
+   "n_produtos_b": 11,
+   "phi_ponderada": 0.18191057284063963,
+   "phi_media_simples": 0.1548766345169221,
+   "par_mais_proximo": [
+    "0203 Pork",
+    "9021 Orthopedic appliances",
+    0.5030674846625767
+   ]
+  },
+  {
+   "a": "Agro",
+   "b": "Química",
+   "n_produtos_a": 201,
+   "n_produtos_b": 170,
+   "phi_ponderada": 0.15698040726041,
+   "phi_media_simples": 0.1382132689875305,
+   "par_mais_proximo": [
+    "1904 Cereal foods",
+    "3402 Cleaning products",
+    0.6507537688442211
+   ]
+  },
+  {
+   "a": "Agro",
+   "b": "Engenharia (máquinas e equipamentos)",
+   "n_produtos_a": 201,
+   "n_produtos_b": 85,
+   "phi_ponderada": 0.12552492389331402,
+   "phi_media_simples": 0.13029847740700015,
+   "par_mais_proximo": [
+    "0404 Whey",
+    "8433 Harvesting or agricultural machinery",
+    0.5778688524590164
+   ]
+  },
+  {
+   "a": "Agro",
+   "b": "Energia e eletrônica",
+   "n_produtos_a": 201,
+   "n_produtos_b": 48,
+   "phi_ponderada": 0.09995764114936888,
+   "phi_media_simples": 0.11849758535899296,
+   "par_mais_proximo": [
+    "0811 Fruits and nuts, frozen",
+    "8544 Insulated electrical wire",
+    0.5431754874651811
+   ]
+  },
+  {
+   "a": "Agro",
+   "b": "Construção (materiais)",
+   "n_produtos_a": 201,
+   "n_produtos_b": 104,
+   "phi_ponderada": 0.1862956114601413,
+   "phi_media_simples": 0.16005126167177544,
+   "par_mais_proximo": [
+    "1601 Sausages",
+    "7310 Tanks etc. < 300 liters, iron or steel",
+    0.6229946524064172
+   ]
+  },
+  {
+   "a": "Agro",
+   "b": "IA, Telecom e serviços às empresas",
+   "n_produtos_a": 201,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Agro",
+   "b": "Finanças",
+   "n_produtos_a": 201,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Agro",
+   "b": "Cadeia distributiva (transporte)",
+   "n_produtos_a": 201,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Agro",
+   "b": "Turismo",
+   "n_produtos_a": 201,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Petróleo e Mineração",
+   "b": "Saúde (fármacos e equipamentos)",
+   "n_produtos_a": 67,
+   "n_produtos_b": 11,
+   "phi_ponderada": 0.07621040326121574,
+   "phi_media_simples": 0.11636026070172391,
+   "par_mais_proximo": [
+    "2509 Chalk",
+    "3004 Medicaments, packaged",
+    0.40148698884758366
+   ]
+  },
+  {
+   "a": "Petróleo e Mineração",
+   "b": "Química",
+   "n_produtos_a": 67,
+   "n_produtos_b": 170,
+   "phi_ponderada": 0.12090746833266311,
+   "phi_media_simples": 0.12614607239212872,
+   "par_mais_proximo": [
+    "2528 Natural borates",
+    "2810 Oxides of boron; boric acids",
+    0.5647058823529412
+   ]
+  },
+  {
+   "a": "Petróleo e Mineração",
+   "b": "Engenharia (máquinas e equipamentos)",
+   "n_produtos_a": 67,
+   "n_produtos_b": 85,
+   "phi_ponderada": 0.07119854785270237,
+   "phi_media_simples": 0.11572254598992288,
+   "par_mais_proximo": [
+    "2703 Peat",
+    "8427 Fork-lift trucks",
+    0.4276729559748428
+   ]
+  },
+  {
+   "a": "Petróleo e Mineração",
+   "b": "Energia e eletrônica",
+   "n_produtos_a": 67,
+   "n_produtos_b": 48,
+   "phi_ponderada": 0.05555198731857122,
+   "phi_media_simples": 0.10425945671619931,
+   "par_mais_proximo": [
+    "2707 Oils etc. from high temperature coal tar",
+    "8530 Electric signal and traffic controls",
+    0.417910447761194
+   ]
+  },
+  {
+   "a": "Petróleo e Mineração",
+   "b": "Construção (materiais)",
+   "n_produtos_a": 67,
+   "n_produtos_b": 104,
+   "phi_ponderada": 0.13006502140884715,
+   "phi_media_simples": 0.14467119490651606,
+   "par_mais_proximo": [
+    "2515 Marble",
+    "6802 Worked building stone",
+    0.572
+   ]
+  },
+  {
+   "a": "Petróleo e Mineração",
+   "b": "IA, Telecom e serviços às empresas",
+   "n_produtos_a": 67,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Petróleo e Mineração",
+   "b": "Finanças",
+   "n_produtos_a": 67,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Petróleo e Mineração",
+   "b": "Cadeia distributiva (transporte)",
+   "n_produtos_a": 67,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Petróleo e Mineração",
+   "b": "Turismo",
+   "n_produtos_a": 67,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Saúde (fármacos e equipamentos)",
+   "b": "Química",
+   "n_produtos_a": 11,
+   "n_produtos_b": 170,
+   "phi_ponderada": 0.2621010041250139,
+   "phi_media_simples": 0.21977249401549656,
+   "par_mais_proximo": [
+    "9022 X-ray machines",
+    "2910 Epoxides",
+    0.6224489795918368
+   ]
+  },
+  {
+   "a": "Saúde (fármacos e equipamentos)",
+   "b": "Engenharia (máquinas e equipamentos)",
+   "n_produtos_a": 11,
+   "n_produtos_b": 85,
+   "phi_ponderada": 0.24940790587617323,
+   "phi_media_simples": 0.24541109910148162,
+   "par_mais_proximo": [
+    "3004 Medicaments, packaged",
+    "8434 Dairy machinery",
+    0.55859375
+   ]
+  },
+  {
+   "a": "Saúde (fármacos e equipamentos)",
+   "b": "Energia e eletrônica",
+   "n_produtos_a": 11,
+   "n_produtos_b": 48,
+   "phi_ponderada": 0.15337033546736795,
+   "phi_media_simples": 0.20807177194485774,
+   "par_mais_proximo": [
+    "9020 Other breathing appliances and gas masks",
+    "8526 Radar",
+    0.46116504854368934
+   ]
+  },
+  {
+   "a": "Saúde (fármacos e equipamentos)",
+   "b": "Construção (materiais)",
+   "n_produtos_a": 11,
+   "n_produtos_b": 104,
+   "phi_ponderada": 0.21445695703318088,
+   "phi_media_simples": 0.1875517430383874,
+   "par_mais_proximo": [
+    "9019 Therapy applicances",
+    "7017 Laboratory, hygienic or pharmaceutical glassware",
+    0.4864864864864865
+   ]
+  },
+  {
+   "a": "Saúde (fármacos e equipamentos)",
+   "b": "IA, Telecom e serviços às empresas",
+   "n_produtos_a": 11,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Saúde (fármacos e equipamentos)",
+   "b": "Finanças",
+   "n_produtos_a": 11,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Saúde (fármacos e equipamentos)",
+   "b": "Cadeia distributiva (transporte)",
+   "n_produtos_a": 11,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Saúde (fármacos e equipamentos)",
+   "b": "Turismo",
+   "n_produtos_a": 11,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Química",
+   "b": "Engenharia (máquinas e equipamentos)",
+   "n_produtos_a": 170,
+   "n_produtos_b": 85,
+   "phi_ponderada": 0.19515493983372348,
+   "phi_media_simples": 0.1913432141912756,
+   "par_mais_proximo": [
+    "3820 Antifreezing preparation",
+    "8433 Harvesting or agricultural machinery",
+    0.6
+   ]
+  },
+  {
+   "a": "Química",
+   "b": "Energia e eletrônica",
+   "n_produtos_a": 170,
+   "n_produtos_b": 48,
+   "phi_ponderada": 0.15420539143250417,
+   "phi_media_simples": 0.1673036852730309,
+   "par_mais_proximo": [
+    "3818 Chemical elements for electronics",
+    "8548 Waste and scrap of batteries",
+    0.5980392156862745
+   ]
+  },
+  {
+   "a": "Química",
+   "b": "Construção (materiais)",
+   "n_produtos_a": 170,
+   "n_produtos_b": 104,
+   "phi_ponderada": 0.18433158568031793,
+   "phi_media_simples": 0.17440935346763128,
+   "par_mais_proximo": [
+    "3818 Chemical elements for electronics",
+    "7006 Worked glass",
+    0.6842105263157895
+   ]
+  },
+  {
+   "a": "Química",
+   "b": "IA, Telecom e serviços às empresas",
+   "n_produtos_a": 170,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Química",
+   "b": "Finanças",
+   "n_produtos_a": 170,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Química",
+   "b": "Cadeia distributiva (transporte)",
+   "n_produtos_a": 170,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Química",
+   "b": "Turismo",
+   "n_produtos_a": 170,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Engenharia (máquinas e equipamentos)",
+   "b": "Energia e eletrônica",
+   "n_produtos_a": 85,
+   "n_produtos_b": 48,
+   "phi_ponderada": 0.29112175538187396,
+   "phi_media_simples": 0.24044137533959084,
+   "par_mais_proximo": [
+    "8473 Parts and accessories for office machines",
+    "8542 Electronic integrated circuits",
+    0.7903225806451613
+   ]
+  },
+  {
+   "a": "Engenharia (máquinas e equipamentos)",
+   "b": "Construção (materiais)",
+   "n_produtos_a": 85,
+   "n_produtos_b": 104,
+   "phi_ponderada": 0.21804409914129325,
+   "phi_media_simples": 0.2238776155350717,
+   "par_mais_proximo": [
+    "8466 Parts and accessories for metal working machines",
+    "7318 Screws and similar articles of iron or steel",
+    0.6368715083798883
+   ]
+  },
+  {
+   "a": "Engenharia (máquinas e equipamentos)",
+   "b": "IA, Telecom e serviços às empresas",
+   "n_produtos_a": 85,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Engenharia (máquinas e equipamentos)",
+   "b": "Finanças",
+   "n_produtos_a": 85,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Engenharia (máquinas e equipamentos)",
+   "b": "Cadeia distributiva (transporte)",
+   "n_produtos_a": 85,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Engenharia (máquinas e equipamentos)",
+   "b": "Turismo",
+   "n_produtos_a": 85,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Energia e eletrônica",
+   "b": "Construção (materiais)",
+   "n_produtos_a": 48,
+   "n_produtos_b": 104,
+   "phi_ponderada": 0.18208218945567128,
+   "phi_media_simples": 0.20320888581537594,
+   "par_mais_proximo": [
+    "8503 Parts for use with electric generators",
+    "7326 Other articles of iron or steel",
+    0.6148648648648649
+   ]
+  },
+  {
+   "a": "Energia e eletrônica",
+   "b": "IA, Telecom e serviços às empresas",
+   "n_produtos_a": 48,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Energia e eletrônica",
+   "b": "Finanças",
+   "n_produtos_a": 48,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Energia e eletrônica",
+   "b": "Cadeia distributiva (transporte)",
+   "n_produtos_a": 48,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Energia e eletrônica",
+   "b": "Turismo",
+   "n_produtos_a": 48,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Construção (materiais)",
+   "b": "IA, Telecom e serviços às empresas",
+   "n_produtos_a": 104,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Construção (materiais)",
+   "b": "Finanças",
+   "n_produtos_a": 104,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Construção (materiais)",
+   "b": "Cadeia distributiva (transporte)",
+   "n_produtos_a": 104,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Construção (materiais)",
+   "b": "Turismo",
+   "n_produtos_a": 104,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "IA, Telecom e serviços às empresas",
+   "b": "Finanças",
+   "n_produtos_a": 1,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "IA, Telecom e serviços às empresas",
+   "b": "Cadeia distributiva (transporte)",
+   "n_produtos_a": 1,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "IA, Telecom e serviços às empresas",
+   "b": "Turismo",
+   "n_produtos_a": 1,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Finanças",
+   "b": "Cadeia distributiva (transporte)",
+   "n_produtos_a": 1,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Finanças",
+   "b": "Turismo",
+   "n_produtos_a": 1,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  },
+  {
+   "a": "Cadeia distributiva (transporte)",
+   "b": "Turismo",
+   "n_produtos_a": 1,
+   "n_produtos_b": 1,
+   "phi_ponderada": null,
+   "phi_media_simples": null,
+   "par_mais_proximo": null,
+   "sem_base": true
+  }
+ ],
+ "conferencia": {
+  "max_dif_phi_matriz_vs_laco_simples": 0.0,
+  "ligacoes_publicadas_pelo_atlas": 3876,
+  "mediana_percentil_da_nossa_phi": 97.83132530120481,
+  "parte_no_top_5_por_cento": 0.6615067079463365,
+  "criterio": "mediana ≥ 95 e ≥ 80% no top 5%",
+  "aprovado": false
+ },
+ "arquivos_brutos": 151,
+ "registros_sha256": [
+  {
+   "arquivo": "produtos.json",
+   "sha256": "4cb5f1face932cc73242594684f8b0a0a73d5779a40dbbd87cc7cfa06d9aecdd"
+  },
+  {
+   "arquivo": "paises_v2.json",
+   "sha256": "fb61c4cf01bb0772cd2a07158b0fc65d834f93fb07b5203b37d8b70bbbdf6daf"
+  },
+  {
+   "arquivo": "pais_ano_2024.json",
+   "sha256": "f213b20a0620310ffca9f4bb7ee691df1432b2c9c4cc2764c8a501dc1db51532"
+  },
+  {
+   "arquivo": "pais_4_2015_2024.json",
+   "sha256": "6678a58096f75da3e68b564b3c27f531326aff7b83047473d18c10de32853a95"
+  },
+  {
+   "arquivo": "pais_24_2015_2024.json",
+   "sha256": "e637dddd72bd88b08975ff4d65fdcb311960ff8d1e5d413b061b28bfe636681c"
+  },
+  {
+   "arquivo": "pais_8_2015_2024.json",
+   "sha256": "dd6ad4766725357973fabf3a7da9b78b60125de244c27337276afb2224b081a5"
+  },
+  {
+   "arquivo": "pais_784_2015_2024.json",
+   "sha256": "1b098f71b8e098e033c7d6d714e491413d07f78860e3d2cf2ca676c5780b420c"
+  },
+  {
+   "arquivo": "pais_32_2015_2024.json",
+   "sha256": "76a3765439c4726cd693960ab4b843bc71c8086447afd2a5cb49601706f55451"
+  },
+  {
+   "arquivo": "pais_51_2015_2024.json",
+   "sha256": "c0be6a9050039e6284e643b4cc6c5f17f51da62f2b30b951b80f9b53fb6a5ff1"
+  },
+  {
+   "arquivo": "pais_36_2015_2024.json",
+   "sha256": "4fec3a19edeb53cac97e69f2fcc8a013dc84dfd6f8de20cc6be87e3826e5c09d"
+  },
+  {
+   "arquivo": "pais_40_2015_2024.json",
+   "sha256": "020f1cb58d227e986b85128ac49e5469a357d83cd1196b45b17595544baa3b7c"
+  },
+  {
+   "arquivo": "pais_31_2015_2024.json",
+   "sha256": "92827c6a81b7b2d654379269b51e582a1577361a1ff1d6efeb1ec818b7db5e4d"
+  },
+  {
+   "arquivo": "pais_56_2015_2024.json",
+   "sha256": "dc4960510ea605fd68c2c4e530d594b58607a93c4e9bc9d8acfbe2548fd51184"
+  },
+  {
+   "arquivo": "pais_204_2015_2024.json",
+   "sha256": "0decafabf701a360a9746beb50aed45a8d8b841501f57822626110e4244c53ca"
+  },
+  {
+   "arquivo": "pais_854_2015_2024.json",
+   "sha256": "c11497f67c8ec76806c05a7d412c599e5e71cf183cb90673e933627cea7aac0f"
+  },
+  {
+   "arquivo": "pais_50_2015_2024.json",
+   "sha256": "d264b400fe9f9a4ad11cee53d8d48354240000f30cc41b056df5d07502f26fa4"
+  },
+  {
+   "arquivo": "pais_100_2015_2024.json",
+   "sha256": "3999888049b4384aa8e13525966db4b2aeb4b52ff2730f0b218c5daf71858def"
+  },
+  {
+   "arquivo": "pais_48_2015_2024.json",
+   "sha256": "399253af72418ba45bcc342cbe80e0a4a13d7c4f8a5fd9d021f33b13a11edfd9"
+  },
+  {
+   "arquivo": "pais_70_2015_2024.json",
+   "sha256": "90ea00f1b3773b2c30bfc03e9df1ff55afacca6c7f731b3341d03e7ba53e08cf"
+  },
+  {
+   "arquivo": "pais_112_2015_2024.json",
+   "sha256": "7bed2cbc1f667e7b1913036260e6d6337c01ea07a33bffb894ccd8a1ea25e127"
+  },
+  {
+   "arquivo": "pais_68_2015_2024.json",
+   "sha256": "fe2b1df133e9a88c744359c3715173250683b9866726613f22043a52779cb3e2"
+  },
+  {
+   "arquivo": "pais_76_2015_2024.json",
+   "sha256": "1cd59440b3a18fac0f1e3f27227ebb81bdc9b42df6f44dceef0d1489326e0f6a"
+  },
+  {
+   "arquivo": "pais_72_2015_2024.json",
+   "sha256": "0a45bdb57731b68611abc448cab3a22cd2598aaecb759cb03b950081d6729408"
+  },
+  {
+   "arquivo": "pais_124_2015_2024.json",
+   "sha256": "65cdd8cf0dd83fe85f3098eac3c78219b6fe20938f62df4dbdbccf591e06d966"
+  },
+  {
+   "arquivo": "pais_756_2015_2024.json",
+   "sha256": "5a8d15d14f94b438b5e1a97ec26b8a75fe3d6bbde417ba248e578ab627da8919"
+  },
+  {
+   "arquivo": "pais_152_2015_2024.json",
+   "sha256": "38fe17a67d230507409cd1397bd86268cdea31665892363aa3c40cc179858eda"
+  },
+  {
+   "arquivo": "pais_156_2015_2024.json",
+   "sha256": "c37188ffb53838607eb93cf74f0095b6fdc6dc1ab69ce672bc6c05f39e3344db"
+  },
+  {
+   "arquivo": "pais_384_2015_2024.json",
+   "sha256": "9294749a13aa89dcb72ae7d7dbec5b6ea3e1296a57c6240049ba5ee839a37f38"
+  },
+  {
+   "arquivo": "pais_120_2015_2024.json",
+   "sha256": "00768d35edc9b81a8bef05cbba823d313ff582d9f8fb08cd08a0587f2bc925c0"
+  },
+  {
+   "arquivo": "pais_180_2015_2024.json",
+   "sha256": "c941b481a8af9ebbf06ea9f3266d2bc353ee3a3f908ed7fc7f7472630df442a2"
+  },
+  {
+   "arquivo": "pais_178_2015_2024.json",
+   "sha256": "f9ef0c6592dea9d95c03c70f6e16e1b8d2caa0d4cb3e0eee4f9b28989ec2b45e"
+  },
+  {
+   "arquivo": "pais_170_2015_2024.json",
+   "sha256": "b160746159c6a81b20840efa6e114c1ad73827c85aa7bc34d4a25375012ea7a0"
+  },
+  {
+   "arquivo": "pais_188_2015_2024.json",
+   "sha256": "01b2c8c97fe2f2bbdab60178d9e724bf4246e155d46dbf436dea7d2c7b4c51e9"
+  },
+  {
+   "arquivo": "pais_203_2015_2024.json",
+   "sha256": "8d163c2e27df70e4cb7e2ef0f2e67cded7ec80ba377d07e8827f449eed48d9df"
+  },
+  {
+   "arquivo": "pais_276_2015_2024.json",
+   "sha256": "a7a9e87d4084a75b5d4c58518fc7489eb0357e2ba01e75ec1931ce2e9ed7f78b"
+  },
+  {
+   "arquivo": "pais_262_2015_2024.json",
+   "sha256": "cf061f525edce4bb9f5cef078060a0cde39006a953eb9d1feca9cf48d7577d45"
+  },
+  {
+   "arquivo": "pais_208_2015_2024.json",
+   "sha256": "fa05f9116bc979b590ddcd374113fe7f64442615f9170bd20a15d271824ee403"
+  },
+  {
+   "arquivo": "pais_214_2015_2024.json",
+   "sha256": "0704199ebc23e7e5cb5f63dd72f9d1b3600a5f1d3cfbd614a5f587a8dd7d8a3f"
+  },
+  {
+   "arquivo": "pais_12_2015_2024.json",
+   "sha256": "41468c7da397fd76e0016b090468c1906efbec12d6abaf1d89f9672c5f991631"
+  },
+  {
+   "arquivo": "pais_218_2015_2024.json",
+   "sha256": "1dcf21d1cf7f24e1ce76418d7df8eb53e6cc3b396474394aeeff813b8be065b6"
+  },
+  {
+   "arquivo": "pais_818_2015_2024.json",
+   "sha256": "d80db49a5ee34454286c8848ab6673a899a4a45df724c6c73f268dbbadbc486d"
+  },
+  {
+   "arquivo": "pais_724_2015_2024.json",
+   "sha256": "3550c343a64b683b7b3db807cb5f1f8ed3de5707cf85293b446657c906fbc78a"
+  },
+  {
+   "arquivo": "pais_233_2015_2024.json",
+   "sha256": "bc25fdab44a54e5f9723682748f42cb55c3cd7eb5704455177e1ae521e090782"
+  },
+  {
+   "arquivo": "pais_231_2015_2024.json",
+   "sha256": "d46105fc0a019bed678d51a04c7b5abcf2b8a13c90f922c21857082831f2f9c8"
+  },
+  {
+   "arquivo": "pais_246_2015_2024.json",
+   "sha256": "b05a380075f34cc8f59ad11fa0f5606cf3047dc60be887cea3d26ff44968338a"
+  },
+  {
+   "arquivo": "pais_250_2015_2024.json",
+   "sha256": "96694e2addad4b1e325c79b7aba195c3bc61501a22c70b3f0aadd6185d093ff7"
+  },
+  {
+   "arquivo": "pais_266_2015_2024.json",
+   "sha256": "1fff4169fc0e344109db45a01681668116789f6174befc22e41c82179c3f6f0e"
+  },
+  {
+   "arquivo": "pais_826_2015_2024.json",
+   "sha256": "6c74ec62f58780a31b0c8ae3a05bae38950bb8bc4dd1d6d79556a6cfba0865a7"
+  },
+  {
+   "arquivo": "pais_268_2015_2024.json",
+   "sha256": "4bffe2d9dc05be0455e033830bf2d91357022703bb17700d5e378dac6f7db3db"
+  },
+  {
+   "arquivo": "pais_288_2015_2024.json",
+   "sha256": "c5e5247c71edca15add2ca6bebdc4a3d055ec07efc22bb9145c19ce91386de39"
+  },
+  {
+   "arquivo": "pais_324_2015_2024.json",
+   "sha256": "71ea172190e0bccb8b330f4e19cf3a06068630d13f99427799f74459f5d46326"
+  },
+  {
+   "arquivo": "pais_270_2015_2024.json",
+   "sha256": "14a860951a36844b1f2b891b366ca09fc3b85e4ffb36da6d03ee269e7c1d7977"
+  },
+  {
+   "arquivo": "pais_226_2015_2024.json",
+   "sha256": "ff0e3cbe017fd318515b3af9d2a041c9cd5e7a57136440d8f9ae454fe9dbbb6f"
+  },
+  {
+   "arquivo": "pais_300_2015_2024.json",
+   "sha256": "c2c9801658000eb3ba10fb9681fd581399b96216c7332c881a9c1b86a470be79"
+  },
+  {
+   "arquivo": "pais_320_2015_2024.json",
+   "sha256": "8e86095fd95c5932648752526bf59d78a7126d75ce2ddd424e79891f510c6952"
+  },
+  {
+   "arquivo": "pais_344_2015_2024.json",
+   "sha256": "a8e113206e9aee719f99bdc071a2d94739c6f204659aeec742f73fbcb38d230a"
+  },
+  {
+   "arquivo": "pais_340_2015_2024.json",
+   "sha256": "b4d1becc8bb2a23aa5ce4cdd67e76dea6fc7cad0444db717a1afc5c4ceda4e5a"
+  },
+  {
+   "arquivo": "pais_191_2015_2024.json",
+   "sha256": "199e50cee4d77007f3631d7ceb06d454d4aa22c0a7ed2a97cace60b53589982f"
+  },
+  {
+   "arquivo": "pais_332_2015_2024.json",
+   "sha256": "59a47f54b7468bbb3204763ccd5665f6267840c6ee26323c0fa8a1dabef70298"
+  },
+  {
+   "arquivo": "pais_348_2015_2024.json",
+   "sha256": "9a4f3d828e85243d5cbf4802482926aab27b82705fead12dd4b7c3dabc7d88c2"
+  },
+  {
+   "arquivo": "pais_360_2015_2024.json",
+   "sha256": "68fe60c537a69b5b711513940bc01e71a611579643f03e0b31c4e9a34d26c01a"
+  },
+  {
+   "arquivo": "pais_356_2015_2024.json",
+   "sha256": "c727e3f1581807a6af0543e565b166ec36da100f669358976c6409a565330e5d"
+  },
+  {
+   "arquivo": "pais_372_2015_2024.json",
+   "sha256": "a516a87ea00ba2c75a83bc06d49ee2b7063ef60da6f3a471782491201140fc35"
+  },
+  {
+   "arquivo": "pais_364_2015_2024.json",
+   "sha256": "cd0d4af965c2f20fb19e9d481415c0451bb54239133a19d9c53f9e571018b25d"
+  },
+  {
+   "arquivo": "pais_368_2015_2024.json",
+   "sha256": "614b2bdbf585197298890a8af06750999235085d9af0231add8f70b03cdd5134"
+  },
+  {
+   "arquivo": "pais_376_2015_2024.json",
+   "sha256": "4dbc44df1e107ca198cf7afd826f22a38c665a0b738127a68f21447ff9ac88f8"
+  },
+  {
+   "arquivo": "pais_380_2015_2024.json",
+   "sha256": "ab8b3b503623f5c7eb9fa27346b89dd1428318edd9956a0c70e49a25589e5cd4"
+  },
+  {
+   "arquivo": "pais_388_2015_2024.json",
+   "sha256": "d8f55c04666f2c1828ecef80e2fff9645517ae52729940af074d94334e318c74"
+  },
+  {
+   "arquivo": "pais_400_2015_2024.json",
+   "sha256": "6089f32d06b4be807561ae79cc1e23ff89b7e0c76167d19d761e81764bbe931f"
+  },
+  {
+   "arquivo": "pais_392_2015_2024.json",
+   "sha256": "bf9240254801d1a51dad735e3225b5b57bbe5a016a5ee010f4ef39776fbfd659"
+  },
+  {
+   "arquivo": "pais_398_2015_2024.json",
+   "sha256": "ae01540718fb9ca97eb74dce7977daf963905f3779ede1e6f41ff380de3db254"
+  },
+  {
+   "arquivo": "pais_404_2015_2024.json",
+   "sha256": "0330413f5e9a4c900a21c2acfb9f7800f4c1b4897e1a05bcd442c8347f6e2c00"
+  },
+  {
+   "arquivo": "pais_417_2015_2024.json",
+   "sha256": "44de5375fb67d4e2ab4aa3bc48074da778e0cf164b228c766db1c0ce05d09099"
+  },
+  {
+   "arquivo": "pais_116_2015_2024.json",
+   "sha256": "cb5a82a25f726dd7473934ed0d01dd28544d8a27a1382a8ce8193c13f3f64a38"
+  },
+  {
+   "arquivo": "pais_410_2015_2024.json",
+   "sha256": "f4e3282602ae3c8a8169ae81966ed0a7e296c67915627333e950569443049906"
+  },
+  {
+   "arquivo": "pais_414_2015_2024.json",
+   "sha256": "3dbe4e33556968075b3a3c06d4a88402397461a318096543e584c818aae415cf"
+  },
+  {
+   "arquivo": "pais_418_2015_2024.json",
+   "sha256": "172a296311053b770b84e8b8f7731309d910a07df1367c6db46b4c01d15bcf47"
+  },
+  {
+   "arquivo": "pais_422_2015_2024.json",
+   "sha256": "8c408c90423be262e189f43f759ceef8d3a1f7f52f6eaa09886fb417be193310"
+  },
+  {
+   "arquivo": "pais_430_2015_2024.json",
+   "sha256": "7a6a4ff7d2b4eeeac5fedd2ffd5ec0bcb2466d19e1a5676e827bd1ca938ba4c8"
+  },
+  {
+   "arquivo": "pais_434_2015_2024.json",
+   "sha256": "060a5dd2454dddc7bf1808bd64e2d3fa54da1bfeea56c54ec013be701d05a6d4"
+  },
+  {
+   "arquivo": "pais_144_2015_2024.json",
+   "sha256": "2c4be78871f797269e86a9752b9cb5d8c60a53b4daf9a4909671746e86ecfd08"
+  },
+  {
+   "arquivo": "pais_426_2015_2024.json",
+   "sha256": "86b2045b70ed53164539070eb84870e165e9a04371c87127686dc427c576026c"
+  },
+  {
+   "arquivo": "pais_440_2015_2024.json",
+   "sha256": "8f6c723c1ca73c091c1634dc033451bbcbb3bbfe847121654bf94f0cb3915cf6"
+  },
+  {
+   "arquivo": "pais_428_2015_2024.json",
+   "sha256": "68bd48d7aa6733c9a174ab546fca9fae5ed7497b3f9d0bea88c207a3c260451b"
+  },
+  {
+   "arquivo": "pais_504_2015_2024.json",
+   "sha256": "4e90fa29aca5b2a7cf1542b243ccc601182b51b1dbcede0f12eb48436dd4cd29"
+  },
+  {
+   "arquivo": "pais_498_2015_2024.json",
+   "sha256": "67874032192cef61eb89c3e7813cdd5fa9975ed3a2fa014f527b843237bef2ea"
+  },
+  {
+   "arquivo": "pais_450_2015_2024.json",
+   "sha256": "7525323f209cb6eff881f7c86115b3a81db185d03c771baf80a35c09a12176fd"
+  },
+  {
+   "arquivo": "pais_484_2015_2024.json",
+   "sha256": "ea04e0d75650f92574d73d1124eff34d47dc516ab0bca6d6eacd1b26a8785443"
+  },
+  {
+   "arquivo": "pais_807_2015_2024.json",
+   "sha256": "d45971595252e0b90d0cfbcd4eb22a53a8bff2bbcdb2b338e1c7c6a2f95e6d81"
+  },
+  {
+   "arquivo": "pais_466_2015_2024.json",
+   "sha256": "d7efb6f66fa538fc4f1c3d374e2f0eae1b34d5beea62f015ab33c29f5c850f92"
+  },
+  {
+   "arquivo": "pais_104_2015_2024.json",
+   "sha256": "f35b592911661948d7faf627d9dcf8ad0475bae0cdda2ca2c7d028c7b0a14e84"
+  },
+  {
+   "arquivo": "pais_496_2015_2024.json",
+   "sha256": "bb84c17e257444aa5ea0a477d162273b594e3be35954d63557dcb868835f3a37"
+  },
+  {
+   "arquivo": "pais_508_2015_2024.json",
+   "sha256": "a4482fd3aa368e518ce81383f507912673bee8444ad79fbbd21ced77fbdd3351"
+  },
+  {
+   "arquivo": "pais_478_2015_2024.json",
+   "sha256": "ab7c37fcd0f77261825332c11b5d6b442356fa98e369bf33ba71b6c4d0a874cd"
+  },
+  {
+   "arquivo": "pais_480_2015_2024.json",
+   "sha256": "645f1e684671eab30510e1b0f2f550bb4e88d92f2cfb174dab13c5ce4deeba34"
+  },
+  {
+   "arquivo": "pais_454_2015_2024.json",
+   "sha256": "f7f05b3c7b08552b381e292df237450c52349a59eb0a68eb59ec02558302dd73"
+  },
+  {
+   "arquivo": "pais_458_2015_2024.json",
+   "sha256": "5be5a697a3ffde11ee9ccc54b25124c7187a1e00b40f4cf09fa344eeaa90e025"
+  },
+  {
+   "arquivo": "pais_516_2015_2024.json",
+   "sha256": "3678610a56511618550bd0c13ed97008fbe34045f58c6b83dcf8a995f61ca78e"
+  },
+  {
+   "arquivo": "pais_562_2015_2024.json",
+   "sha256": "a89e5aa7c5cff9534bb10be348efc901b1635d58e2ecedbdd8e7d848dc77f9e0"
+  },
+  {
+   "arquivo": "pais_566_2015_2024.json",
+   "sha256": "b8b85b066c40e2b4a45007dc80cdd5b6ed7ba3d7763c33d600459975049dd940"
+  },
+  {
+   "arquivo": "pais_558_2015_2024.json",
+   "sha256": "8669d52473254721bf808abe89413324867b1e3526498dfc53264375d723e52d"
+  },
+  {
+   "arquivo": "pais_528_2015_2024.json",
+   "sha256": "9489a2026d82685ff9be4eb643006e3b89f9a62d08adfe57fa33b40441931840"
+  },
+  {
+   "arquivo": "pais_578_2015_2024.json",
+   "sha256": "b8433818e8c88601dde75d16f5bed1c80cb637bd3b7c3a86ed48a55451065b0e"
+  },
+  {
+   "arquivo": "pais_524_2015_2024.json",
+   "sha256": "dc9823da8df6a502661773db9cadd628549bc83f37e3d86670f244b46551e116"
+  },
+  {
+   "arquivo": "pais_554_2015_2024.json",
+   "sha256": "68c710a7b56cfcf7f684ff1d15088010db81ca80d059823aabc8b6c94bb0358c"
+  },
+  {
+   "arquivo": "pais_512_2015_2024.json",
+   "sha256": "45ad4ef817b435b1f1854ade672e2c9b85537fa025c3073b5390984301a926c7"
+  },
+  {
+   "arquivo": "pais_586_2015_2024.json",
+   "sha256": "c5ac85a82c95ad4f9be1e8711da887ddaff34e376a3c5945fc1a00a83f9ea762"
+  },
+  {
+   "arquivo": "pais_591_2015_2024.json",
+   "sha256": "f7d45d82de2a57da1acf94fcf052a63e3ba9ee34990badfd821b82ba94169078"
+  },
+  {
+   "arquivo": "pais_604_2015_2024.json",
+   "sha256": "debec2eb477c3c55047ba63d7ce88d3f3aae90791821ae9404a0f26caf5eff0c"
+  },
+  {
+   "arquivo": "pais_608_2015_2024.json",
+   "sha256": "f7c7163713d0b2c3dbe1e61b95d0ed0c6e0c6c93e3c246a05c6832c4342d05a2"
+  },
+  {
+   "arquivo": "pais_598_2015_2024.json",
+   "sha256": "9dad467bf3d3e62f64c416b848f3dc40c7618adaac7c1c14d09a64ed1d01bcc5"
+  },
+  {
+   "arquivo": "pais_616_2015_2024.json",
+   "sha256": "fc331e4018969006fa8f6fc93846589ae9261b9011a894419946d85c38992880"
+  },
+  {
+   "arquivo": "pais_620_2015_2024.json",
+   "sha256": "6f523044f6c4c4b2c22ada2de0fe4993ee0dd4b649ee000708e40bc2f0409d0a"
+  },
+  {
+   "arquivo": "pais_600_2015_2024.json",
+   "sha256": "34e3e98ac2717a509d5627f2750d75736d845a166f19c6520c7aeb7a7b0da26c"
+  },
+  {
+   "arquivo": "pais_634_2015_2024.json",
+   "sha256": "1bfadcefea1bfb5f15e64f43ce57b31d3a21201ee6de3232e8641c50db7d4b98"
+  },
+  {
+   "arquivo": "pais_642_2015_2024.json",
+   "sha256": "4c59a9329cd63d11abcfd4716fef93284f322cd980737645d55aeb96a89b018f"
+  },
+  {
+   "arquivo": "pais_643_2015_2024.json",
+   "sha256": "bc17855bef9ee9d13b934d3ba05f63a129b4209869c92425ea438c3089d2a3f2"
+  },
+  {
+   "arquivo": "pais_646_2015_2024.json",
+   "sha256": "ce6f2d1c7d08720065ce93175a263f46ecc00ca0e24d1e5e4e00ac1e8a6f863b"
+  },
+  {
+   "arquivo": "pais_682_2015_2024.json",
+   "sha256": "747d6ddebb07ecf208ab23d387c77b6b59bffec840b0d06cf5f36bf73ed22cd2"
+  },
+  {
+   "arquivo": "pais_729_2015_2024.json",
+   "sha256": "51cbbe1d9b0f7c2196063c2906382cb664f40f88d10f5be122c3cafc7ba594cb"
+  },
+  {
+   "arquivo": "pais_686_2015_2024.json",
+   "sha256": "ec61759b313f10d616d510924a672e43389c4fc0db4cfd34928f3c746222475b"
+  },
+  {
+   "arquivo": "pais_702_2015_2024.json",
+   "sha256": "cefee427e1317334f0572f680d33d67a81b5a4396b6318793f019c8b7d5549ac"
+  },
+  {
+   "arquivo": "pais_694_2015_2024.json",
+   "sha256": "606103beea68d8ec3ce67831ae4f541216f020cfda117313216eee8a3987ec78"
+  },
+  {
+   "arquivo": "pais_222_2015_2024.json",
+   "sha256": "1c1d2da03329f9978d0712e39b934e3d33ff5d4633c4fe5621ad334b0b7c646a"
+  },
+  {
+   "arquivo": "pais_706_2015_2024.json",
+   "sha256": "fbc24d694de2e3739ee9daca357c8beaa1a62ba3a1b15759c34013323e34ce08"
+  },
+  {
+   "arquivo": "pais_688_2015_2024.json",
+   "sha256": "90d05895208d1dbd713b4fe0a5c1c4c185c525494423d8255e623f2fb171bf9e"
+  },
+  {
+   "arquivo": "pais_703_2015_2024.json",
+   "sha256": "a18181ad1a3d8c49a1f8fa8d924b7e2d1532eb771995927026a05f4b1d362ce6"
+  },
+  {
+   "arquivo": "pais_705_2015_2024.json",
+   "sha256": "83ee4dac6a60e33e98207a4b72c10e0485a4b326bc714b13afd89c1c63c5200f"
+  },
+  {
+   "arquivo": "pais_752_2015_2024.json",
+   "sha256": "23b01f3b30d899b06ca8b9acebc880f331060d926b53f5c0aebec5fef7c5ce3d"
+  },
+  {
+   "arquivo": "pais_748_2015_2024.json",
+   "sha256": "b2cb5a59455f30aa04c7779d59761324dd20a08fe480f5d6eda93d83643d6fcb"
+  },
+  {
+   "arquivo": "pais_148_2015_2024.json",
+   "sha256": "2d98b2cec29d23f544ed7f1bc2c4048221e6f422bbe812af7fd6719bf4d93d56"
+  },
+  {
+   "arquivo": "pais_768_2015_2024.json",
+   "sha256": "fd29f3c605a7f3d7b024813839630ce5380bf21f0fe729e8b92ecb53b30ba74c"
+  },
+  {
+   "arquivo": "pais_764_2015_2024.json",
+   "sha256": "c2670a32a837d15b3fdf584a1518af738a816cb1e61dc84705580f8a475cecdb"
+  },
+  {
+   "arquivo": "pais_762_2015_2024.json",
+   "sha256": "be5f101439ea7d173c59f717dab0954e4e7095069a237a1daeacccc953278af0"
+  },
+  {
+   "arquivo": "pais_795_2015_2024.json",
+   "sha256": "b867227f37c298c6e0bbd296fc617db10f22b29543073892ffb8b6040640dbe1"
+  },
+  {
+   "arquivo": "pais_780_2015_2024.json",
+   "sha256": "47743a3171a24726793e777f3791751e1a7c3836f5134e0626bcdea6aa685efd"
+  },
+  {
+   "arquivo": "pais_788_2015_2024.json",
+   "sha256": "3930c3b75d0b6695c1882d204456ea1a840cad066afd8c8e9a2ab643021952c1"
+  },
+  {
+   "arquivo": "pais_792_2015_2024.json",
+   "sha256": "621aecc8524201510852143bdae4e23221e82ab37943e8c5322cace1f5884f27"
+  },
+  {
+   "arquivo": "pais_834_2015_2024.json",
+   "sha256": "e277f46c0b025034d9cb6eb83764eb7e6b5d96a2b081e88b4da4949c44b55392"
+  },
+  {
+   "arquivo": "pais_800_2015_2024.json",
+   "sha256": "aefc1461fb8c624615fb45af46b6ccb2a3cc7d45435a3b62965d393c03b226ce"
+  },
+  {
+   "arquivo": "pais_804_2015_2024.json",
+   "sha256": "6207d61d91f95240243ca13451858fb45a61fde5b7eb7826817aebffd7652305"
+  },
+  {
+   "arquivo": "pais_858_2015_2024.json",
+   "sha256": "4bc207471e96eac8a59d620d53e88f7c5979a048470e501cd6a1251fc8e86c24"
+  },
+  {
+   "arquivo": "pais_840_2015_2024.json",
+   "sha256": "c3ac3761db59635514488ff4a7e0e410ef89a7eb4cde43e86f88e8dd67dd908e"
+  },
+  {
+   "arquivo": "pais_860_2015_2024.json",
+   "sha256": "a4b459cd143ab84ab480d4db00f6ccf6500979c06a26b29342ee2b05eb78845e"
+  },
+  {
+   "arquivo": "pais_862_2015_2024.json",
+   "sha256": "1f7463c7883becd1bc10eacd26fc1a56aeb51ccf370d99a294df7015510453ac"
+  },
+  {
+   "arquivo": "pais_704_2015_2024.json",
+   "sha256": "bfcb777ff479c41f526039b7bc62b2085d2c14a5c4f885d0dc71020d6aa8a38e"
+  },
+  {
+   "arquivo": "pais_887_2015_2024.json",
+   "sha256": "d7eea8b20eaab807354cf351c216c869c3a97f7ce4760070a2a2b7809b34749d"
+  },
+  {
+   "arquivo": "pais_710_2015_2024.json",
+   "sha256": "450fd7fbc7cc1825037597e401abb90701a596c4bcd2980a045225891275e24d"
+  },
+  {
+   "arquivo": "pais_894_2015_2024.json",
+   "sha256": "6488caeb8907602fe7c0e24fd8e7d9ec3e7ebb4a9fd642d9e3c22351ebadead9"
+  },
+  {
+   "arquivo": "pais_716_2015_2024.json",
+   "sha256": "196169f23a63ff85d2d0e62f2bf8b1ea59420d9747307e1b75c2dc8453de40ff"
+  },
+  {
+   "arquivo": "pais_158_2015_2024.json",
+   "sha256": "b5f6a0e6b3c115950b984b65950333aa52d0840e9fa3aa31783086a311c0378b"
+  }
+ ]
+}

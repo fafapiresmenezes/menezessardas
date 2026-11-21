@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/Sua14U+TcSr7U/c5mg2DA6q7doI</id>
+  <title>arXiv Query: search_query=cat:quant-ph AND (cat:q-fin.* OR cat:econ.GN)&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:41:46Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:quant-ph+AND+(cat:q-fin.*+OR+cat:econ.GN)&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>205</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2403.19502v2</id>
+    <title>On the potential of quantum walks for modeling financial return distributions</title>
+    <updated>2024-12-04T09:13:25Z</updated>
+    <link href="https://arxiv.org/abs/2403.19502v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2403.19502v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Accurate modeling of the temporal evolution of asset prices is crucial for understanding financial markets. We explore the potential of discrete-time quantum walks to model the evolution of asset prices. Return distributions obtained from a model based on the quantum walk algorithm are compared with those obtained from classical methodologies. We focus on specific limitations of the classical models, and illustrate that the quantum walk model possesses great flexibility in overcoming these. This includes the potential to generate asymmetric return distributions with complex market tendencies and higher probabilities for extreme events than in some of the classical models. Furthermore, the temporal evolution in the quantum walk possesses the potential to provide asset price dynamics.</summary>
+    <category term="q-fin.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-03-28T15:33:17Z</published>
+    <arxiv:comment>24 pages, 8 figures, 2 tables</arxiv:comment>
+    <arxiv:primary_category term="q-fin.ST"/>
+    <author>
+      <name>Stijn De Backer</name>
+    </author>
+    <author>
+      <name>Luis E. C. Rocha</name>
+    </author>
+    <author>
+      <name>Jan Ryckebusch</name>
+    </author>
+    <author>
+      <name>Koen Schoors</name>
+    </author>
+    <arxiv:doi>10.1016/j.physa.2024.130215</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.physa.2024.130215" title="doi"/>
+  </entry>
+</feed>

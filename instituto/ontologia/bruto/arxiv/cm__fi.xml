@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/0ukMnbnwexxyW35Un8TUfYMLQY8</id>
+  <title>arXiv Query: search_query=cat:cond-mat* AND cat:q-fin.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:49:31Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cond-mat*+AND+cat:q-fin.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>1085</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1011.4336v2</id>
+    <title>Impact of the topology of global macroeconomic network on the spreading of economic crises</title>
+    <updated>2011-04-13T00:13:15Z</updated>
+    <link href="https://arxiv.org/abs/1011.4336v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1011.4336v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Throughout economic history, the global economy has experienced recurring crises. The persistent recurrence of such economic crises calls for an understanding of their generic features rather than treating them as singular events. The global economic system is a highly complex system and can best be viewed in terms of a network of interacting macroeconomic agents. In this regard, from the perspective of collective network dynamics, here we explore how the topology of global macroeconomic network affects the patterns of spreading of economic crises. Using a simple toy model of crisis spreading, we demonstrate that an individual country's role in crisis spreading is not only dependent on its gross macroeconomic capacities, but also on its local and global connectivity profile in the context of the world economic network. We find that on one hand clustering of weak links at the regional scale can significantly aggravate the spread of crises, but on the other hand the current network structure at the global scale harbors a higher tolerance of extreme crises compared to more "globalized" random networks. These results suggest that there can be a potential hidden cost in the ongoing globalization movement towards establishing less-constrained, trans-regional economic links between countries, by increasing the vulnerability of global economic system to extreme crises.</summary>
+    <category term="q-fin.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.stat-mech" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.data-an" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.RM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2010-11-19T03:00:15Z</published>
+    <arxiv:comment>25 pages, 11 figures, Supplementary Information available upon request</arxiv:comment>
+    <arxiv:primary_category term="q-fin.ST"/>
+    <arxiv:journal_ref>PLoS ONE 6(3): e18443 (2011)</arxiv:journal_ref>
+    <author>
+      <name>Kyu-Min Lee</name>
+    </author>
+    <author>
+      <name>Jae-Suk Yang</name>
+    </author>
+    <author>
+      <name>Gunn Kim</name>
+    </author>
+    <author>
+      <name>Jaesung Lee</name>
+    </author>
+    <author>
+      <name>Kwang-Il Goh</name>
+    </author>
+    <author>
+      <name>In-mook Kim</name>
+    </author>
+    <arxiv:doi>10.1371/journal.pone.0018443</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1371/journal.pone.0018443" title="doi"/>
+  </entry>
+</feed>

@@ -1,0 +1,3 @@
+*.npz
+__pycache__/
+bruto/mercados/kalshi_pagina_*.json

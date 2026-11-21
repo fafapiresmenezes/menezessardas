@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/3t+kCDsg4UaBiBxhiqW8qUBC9ko</id>
+  <title>arXiv Query: search_query=cat:math.* AND cat:cond-mat*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:47:33Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:math.*+AND+cat:cond-mat*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>7147</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1809.01108v1</id>
+    <title>Localization of Neumann Eigenfunctions near Irregular Boundaries</title>
+    <updated>2018-09-04T17:28:16Z</updated>
+    <link href="https://arxiv.org/abs/1809.01108v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1809.01108v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>It has been empirically observed that eigenfunctions of Laplace's equation $-Δφ= λφ$ with Neumann boundary conditions sometimes localize near the boundary of the domain if that boundary is rough (say, fractal). This has some nontrivial implications in acoustics that has been put to real-life use (sound attenuation by noise-protective walls); this short paper describes the mathematical mechanism responsible for this and describes the quantitative strength of the phenomenon for some examples.</summary>
+    <category term="math.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.dis-nn" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-09-04T17:28:16Z</published>
+    <arxiv:primary_category term="math.AP"/>
+    <author>
+      <name>Peter W. Jones</name>
+    </author>
+    <author>
+      <name>Stefan Steinerberger</name>
+    </author>
+    <arxiv:doi>10.1088/1361-6544/aafa89</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1088/1361-6544/aafa89" title="doi"/>
+  </entry>
+</feed>

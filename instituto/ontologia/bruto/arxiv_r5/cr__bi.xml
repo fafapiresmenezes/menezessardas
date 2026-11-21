@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/Cqpqaqr+ZZS9XaFUYPDGC0DrYQY</id>
+  <title>arXiv Query: search_query=cat:cs.CR AND cat:q-bio.*&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:50:47Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.CR+AND+cat:q-bio.*&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>81</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1803.09565v1</id>
+    <title>SIG-DB: leveraging homomorphic encryption to Securely Interrogate privately held Genomic DataBases</title>
+    <updated>2018-03-26T13:09:12Z</updated>
+    <link href="https://arxiv.org/abs/1803.09565v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1803.09565v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Genomic data are becoming increasingly valuable as we develop methods to utilize the information at scale and gain a greater understanding of how genetic information relates to biological function. Advances in synthetic biology and the decreased cost of sequencing are increasing the amount of privately held genomic data. As the quantity and value of private genomic data grows, so does the incentive to acquire and protect such data, which creates a need to store and process these data securely. We present an algorithm for the Secure Interrogation of Genomic DataBases (SIG-DB). The SIG-DB algorithm enables databases of genomic sequences to be searched with an encrypted query sequence without revealing the query sequence to the Database Owner or any of the database sequences to the Querier. SIG-DB is the first application of its kind to take advantage of locality-sensitive hashing and homomorphic encryption to allow generalized sequence-to-sequence comparisons of genomic data.</summary>
+    <category term="q-bio.QM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DB" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-03-26T13:09:12Z</published>
+    <arxiv:comment>38 pages, 3 figures, 4 tables, 1 supplemental table, 7 supplemental figures</arxiv:comment>
+    <arxiv:primary_category term="q-bio.QM"/>
+    <arxiv:journal_ref>PLoS Computational Biology; 2018 Sep 4; 14(9):e1006454</arxiv:journal_ref>
+    <author>
+      <name>Alexander J. Titus</name>
+    </author>
+    <author>
+      <name>Audrey Flower</name>
+    </author>
+    <author>
+      <name>Patrick Hagerty</name>
+    </author>
+    <author>
+      <name>Paul Gamble</name>
+    </author>
+    <author>
+      <name>Charlie Lewis</name>
+    </author>
+    <author>
+      <name>Todd Stavish</name>
+    </author>
+    <author>
+      <name>Kevin P. OConnell</name>
+    </author>
+    <author>
+      <name>Greg Shipley</name>
+    </author>
+    <author>
+      <name>Stephanie M. Rogers</name>
+    </author>
+    <arxiv:doi>10.1371/journal.pcbi.1006454</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1371/journal.pcbi.1006454" title="doi"/>
+  </entry>
+</feed>

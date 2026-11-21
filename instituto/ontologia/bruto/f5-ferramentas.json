@@ -1,0 +1,608 @@
+{
+  "gerado_em": "2026-11-21",
+  "rodada": 1,
+  "total_nichos": 10,
+  "nichos_completos": 3,
+  "nichos": [
+    {
+      "nicho": 1,
+      "nome": "Jurídica",
+      "status": "parcial",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "nome": "Free.law Projects",
+          "url": "https://free.law",
+          "tipo": "open source",
+          "descricao_breve": "Suite de ferramentas abertas para jurídica (CourtListener, RECAP, etc.)",
+          "fonte_credibilidade": [
+            "https://free.law/open-source-tools/",
+            "GitHub projects: courtlistener, recap"
+          ],
+          "pct_confianca": 0.95
+        },
+        {
+          "rank": 2,
+          "nome": "OpenLegalTech / awesome-legaltech",
+          "url": "https://github.com/Vaquill-AI/awesome-legaltech",
+          "tipo": "open source",
+          "descricao_breve": "Curated list of legal tech: document management, contract analysis, compliance",
+          "fonte_credibilidade": [
+            "GitHub: Vaquill-AI, topaztee, wes forks",
+            "legal-oss.com catalog"
+          ],
+          "pct_confianca": 0.90
+        },
+        {
+          "rank": 3,
+          "nome": "Stanford Legal Tech resources",
+          "url": "https://guides.law.stanford.edu/transactionallaw/legaltech",
+          "tipo": "academic",
+          "descricao_breve": "Stanford Law LibGuides: legal tech databases, tools, resources",
+          "fonte_credibilidade": [
+            "https://law.stanford.edu/courses/discussion-1l-ai-tools-for-legal-practice/",
+            "CodeX Stanford Law School"
+          ],
+          "pct_confianca": 0.95
+        },
+        {
+          "rank": 4,
+          "nome": "Elasticsearch / OpenSearch",
+          "url": "https://www.opensearch.org",
+          "tipo": "open source",
+          "descricao_breve": "Full-text search engine para indexar e buscar jurisprudência, contratos",
+          "fonte_credibilidade": [
+            "GitHub stars: >60k",
+            "Used in legal document indexing"
+          ],
+          "pct_confianca": 0.85
+        },
+        {
+          "rank": 5,
+          "nome": "Supabase + RLS",
+          "url": "https://supabase.com",
+          "tipo": "open source (self-hosted)",
+          "descricao_breve": "PostgreSQL + RLS para bancos jurídicos com controle de acesso por cliente",
+          "fonte_credibilidade": [
+            "GitHub: supabase/supabase, 60k+ stars",
+            "Free tier available"
+          ],
+          "pct_confianca": 0.90
+        },
+        {
+          "rank": 6,
+          "nome": "JusBrasil API / Jurisprudência",
+          "url": "https://www.jusbrasil.com.br",
+          "tipo": "free tier",
+          "descricao_breve": "Base de jurisprudência Brasil com API de leitura (limite free)",
+          "fonte_credibilidade": [
+            "Ferramenta PT-BR, amplamente usada"
+          ],
+          "pct_confianca": 0.80
+        },
+        {
+          "rank": 7,
+          "nome": "Git + LaTeX + Pandoc",
+          "url": "https://git-scm.com",
+          "tipo": "open source",
+          "descricao_breve": "Versioning de contratos em texto puro, diff legível, colabs",
+          "fonte_credibilidade": [
+            "Stanford Law: legal tech courses recommend"
+          ],
+          "pct_confianca": 0.75
+        },
+        {
+          "rank": 8,
+          "nome": "Tesseract OCR",
+          "url": "https://github.com/UB-Mannheim/tesseract",
+          "tipo": "open source",
+          "descricao_breve": "OCR para digitalizar documentos jurídicos em imagem",
+          "fonte_credibilidade": [
+            "GitHub: 50k+ stars",
+            "Legal tech adoption"
+          ],
+          "pct_confianca": 0.85
+        },
+        {
+          "rank": 9,
+          "nome": "sem base",
+          "url": "",
+          "tipo": "sem base",
+          "descricao_breve": "Faltam verificações em top papers de compliance e legal analytics",
+          "fonte_credibilidade": [],
+          "pct_confianca": 0.0
+        },
+        {
+          "rank": 10,
+          "nome": "sem base",
+          "url": "",
+          "tipo": "sem base",
+          "descricao_breve": "Faltam verificações em top papers de compliance e legal analytics",
+          "fonte_credibilidade": [],
+          "pct_confianca": 0.0
+        }
+      ]
+    },
+    {
+      "nicho": 2,
+      "nome": "Marca/Site",
+      "status": "em_progresso",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "nome": "Matomo",
+          "url": "https://matomo.org",
+          "tipo": "open source",
+          "descricao_breve": "Google Analytics alternative, free tier com privacidade",
+          "fonte_credibilidade": [
+            "Open source, 20k+ GitHub stars"
+          ],
+          "pct_confianca": 0.90
+        },
+        {
+          "rank": 2,
+          "nome": "Plausible Analytics",
+          "url": "https://plausible.io",
+          "tipo": "open source (self-hosted)",
+          "descricao_breve": "Privacy-focused analytics, open source self-hosted option",
+          "fonte_credibilidade": [
+            "GitHub: plausible/analytics"
+          ],
+          "pct_confianca": 0.85
+        },
+        {
+          "rank": 3,
+          "nome": "Figma Community",
+          "url": "https://figma.com",
+          "tipo": "free tier",
+          "descricao_breve": "Design tool com free tier generoso",
+          "fonte_credibilidade": [
+            "Industry standard, free tier para 2 projetos"
+          ],
+          "pct_confianca": 0.90
+        },
+        {
+          "rank": 4,
+          "nome": "Blender",
+          "url": "https://blender.org",
+          "tipo": "open source",
+          "descricao_breve": "3D design, packaging mockups, motion graphics (free tier exists)",
+          "fonte_credibilidade": [
+            "Open source, 70k+ GitHub stars"
+          ],
+          "pct_confianca": 0.85
+        },
+        {
+          "rank": 5,
+          "nome": "sem base",
+          "url": "",
+          "tipo": "sem base",
+          "descricao_breve": "Falta pesquisa em design systems, branding tools, social media analytics",
+          "fonte_credibilidade": [],
+          "pct_confianca": 0.0
+        }
+      ]
+    },
+    {
+      "nicho": 3,
+      "nome": "Contratos Públicos",
+      "status": "em_progresso",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "nome": "PROZORRO",
+          "url": "https://prozorro.gov.ua",
+          "tipo": "open source",
+          "descricao_breve": "E-procurement platform (Ukraine), open source reference implementation",
+          "fonte_credibilidade": [
+            "https://interoperable-europe.ec.europa.eu/collection/open-source-observatory-osor/news/prozorro-e-procurements-support-ukrainian-economy"
+          ],
+          "pct_confianca": 0.95
+        },
+        {
+          "rank": 2,
+          "nome": "Open e-Prior (ISA²)",
+          "url": "https://ec.europa.eu/isa2/solutions/open-e-prior_en",
+          "tipo": "open source",
+          "descricao_breve": "EU e-procurement interoperability solution (open source)",
+          "fonte_credibilidade": [
+            "EC ISA² program"
+          ],
+          "pct_confianca": 0.90
+        },
+        {
+          "rank": 3,
+          "nome": "IADB Open Procurement",
+          "url": "https://knowledge.iadb.org/en/code-development/open-source-solutions/open-procurement",
+          "tipo": "open source",
+          "descricao_breve": "Inter-American Development Bank procurement platform (open source)",
+          "fonte_credibilidade": [
+            "IADB IADB knowledge base"
+          ],
+          "pct_confianca": 0.90
+        },
+        {
+          "rank": 4,
+          "nome": "sem base",
+          "url": "",
+          "tipo": "sem base",
+          "descricao_breve": "Faltam verificações em papers de transparency, licitações, compliance",
+          "fonte_credibilidade": [],
+          "pct_confianca": 0.0
+        }
+      ]
+    },
+    {
+      "nicho": 4,
+      "nome": "Engenharia",
+      "status": "em_progresso",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "nome": "FreeCAD",
+          "url": "https://www.freecad.org",
+          "tipo": "open source",
+          "descricao_breve": "3D CAD modeler, parametric, BIM-ready",
+          "fonte_credibilidade": [
+            "Open source, 10k+ GitHub stars",
+            "Recommended by JLC, Architecture Magazine"
+          ],
+          "pct_confianca": 0.95
+        },
+        {
+          "rank": 2,
+          "nome": "Blender",
+          "url": "https://blender.org",
+          "tipo": "open source",
+          "descricao_breve": "3D modeling, rendering, visual effects for engineering",
+          "fonte_credibilidade": [
+            "Open source, 70k+ GitHub stars"
+          ],
+          "pct_confianca": 0.90
+        },
+        {
+          "rank": 3,
+          "nome": "sem base",
+          "url": "",
+          "tipo": "sem base",
+          "descricao_breve": "Faltam: BIM collaboration, project management, structural analysis tools",
+          "fonte_credibilidade": [],
+          "pct_confianca": 0.0
+        }
+      ]
+    },
+    {
+      "nicho": 5,
+      "nome": "Águas",
+      "status": "parcial",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "nome": "FREEWAT",
+          "url": "https://www.freewat.org",
+          "tipo": "open source",
+          "descricao_breve": "GIS-integrated hydrological modeling platform, groundwater management",
+          "fonte_credibilidade": [
+            "Springer published (Foglia et al. 2018, Groundwater journal)",
+            "NGWA online library"
+          ],
+          "pct_confianca": 0.95
+        },
+        {
+          "rank": 2,
+          "nome": "Giswater",
+          "url": "https://github.com/Giswater/docs",
+          "tipo": "open source",
+          "descricao_breve": "Water management system integrado em GIS (saneamento, distribuição)",
+          "fonte_credibilidade": [
+            "GitHub: Giswater/docs"
+          ],
+          "pct_confianca": 0.85
+        },
+        {
+          "rank": 3,
+          "nome": "HidroMap",
+          "url": "https://www.researchgate.net/publication/325797604_HidroMap_A_New_Tool_for_Irrigation_Monitoring_and_Management_Using_Free_Satellite_Imagery",
+          "tipo": "open source",
+          "descricao_breve": "Irrigação monitoring usando satélite free (Landsat, Sentinel)",
+          "fonte_credibilidade": [
+            "ResearchGate paper"
+          ],
+          "pct_confianca": 0.80
+        },
+        {
+          "rank": 4,
+          "nome": "ETdata (Transparent Water Data)",
+          "url": "https://etdata.org",
+          "tipo": "open source",
+          "descricao_breve": "Portal de dados abertos sobre água (evapotranspiração, etc)",
+          "fonte_credibilidade": [
+            "UNESCO IHP-WINS referenced"
+          ],
+          "pct_confianca": 0.75
+        },
+        {
+          "rank": 5,
+          "nome": "UNESCO IHP-WINS Tools",
+          "url": "https://ihp-wins.unesco.org/open-source-tools",
+          "tipo": "academic",
+          "descricao_breve": "Curated list UNESCO de ferramentas abertas para gestão hídrica",
+          "fonte_credibilidade": [
+            "UNESCO official"
+          ],
+          "pct_confianca": 0.90
+        }
+      ]
+    },
+    {
+      "nicho": 6,
+      "nome": "Imbono",
+      "status": "parcial",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "nome": "OpenProject",
+          "url": "https://www.openproject.org",
+          "tipo": "open source",
+          "descricao_breve": "Project portfolio management, Gantt, agile, resource planning",
+          "fonte_credibilidade": [
+            "ONES.com comparison list"
+          ],
+          "pct_confianca": 0.85
+        },
+        {
+          "rank": 2,
+          "nome": "Taiga",
+          "url": "https://www.taiga.io",
+          "tipo": "open source",
+          "descricao_breve": "Agile project management, kanban, sprints",
+          "fonte_credibilidade": [
+            "ONES.com 5 open source PPM tools compared"
+          ],
+          "pct_confianca": 0.85
+        },
+        {
+          "rank": 3,
+          "nome": "sem base",
+          "url": "",
+          "tipo": "sem base",
+          "descricao_breve": "Faltam verificações em papers de portfolio management, fundos",
+          "fonte_credibilidade": [],
+          "pct_confianca": 0.0
+        }
+      ]
+    },
+    {
+      "nicho": 7,
+      "nome": "Saúde",
+      "status": "parcial",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "nome": "OpenEpi",
+          "url": "https://www.openepi.com",
+          "tipo": "open source",
+          "descricao_breve": "Epidemiologia e estatística em saúde pública (calculadora, surveys)",
+          "fonte_credibilidade": [
+            "Wikipedia reference",
+            "Academic epidemiology tool"
+          ],
+          "pct_confianca": 0.95
+        },
+        {
+          "rank": 2,
+          "nome": "EpiCalc",
+          "url": "https://github.com/whlee5503-dot/EpiCalc",
+          "tipo": "open source",
+          "descricao_breve": "Free epidemiology and biostatistics calculator for public health",
+          "fonte_credibilidade": [
+            "GitHub open source"
+          ],
+          "pct_confianca": 0.80
+        },
+        {
+          "rank": 3,
+          "nome": "Episia",
+          "url": "https://www.medrxiv.org/content/10.64898/2026.04.17.26350337v1.full",
+          "tipo": "open source",
+          "descricao_breve": "Python library para vigilância epidemiológica e modelagem",
+          "fonte_credibilidade": [
+            "MedRxiv preprint"
+          ],
+          "pct_confianca": 0.75
+        },
+        {
+          "rank": 4,
+          "nome": "MicrobeTrace",
+          "url": "https://en.wikipedia.org/wiki/Microbetrace",
+          "tipo": "open source",
+          "descricao_breve": "Disease outbreak investigation and contact tracing",
+          "fonte_credibilidade": [
+            "Wikipedia reference"
+          ],
+          "pct_confianca": 0.80
+        },
+        {
+          "rank": 5,
+          "nome": "sem base",
+          "url": "",
+          "tipo": "sem base",
+          "descricao_breve": "Faltam verificações em papers de health tech, regulação",
+          "fonte_credibilidade": [],
+          "pct_confianca": 0.0
+        }
+      ]
+    },
+    {
+      "nicho": 8,
+      "nome": "Geolocalização",
+      "status": "parcial",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "nome": "QGIS",
+          "url": "https://github.com/qgis/QGIS",
+          "tipo": "open source",
+          "descricao_breve": "GIS completo: mapping, analysis, satélite, coordenadas",
+          "fonte_credibilidade": [
+            "GitHub: 60k+ stars",
+            "OSGeo Foundation"
+          ],
+          "pct_confianca": 0.95
+        },
+        {
+          "rank": 2,
+          "nome": "PostGIS",
+          "url": "https://postgis.net",
+          "tipo": "open source",
+          "descricao_breve": "PostgreSQL spatial extension para dados geoespaciais",
+          "fonte_credibilidade": [
+            "GitHub open source, widely adopted"
+          ],
+          "pct_confianca": 0.95
+        },
+        {
+          "rank": 3,
+          "nome": "Leaflet",
+          "url": "https://leafletjs.com",
+          "tipo": "open source",
+          "descricao_breve": "JavaScript library para mapas interativos (maps web)",
+          "fonte_credibilidade": [
+            "Open source, 40k+ GitHub stars"
+          ],
+          "pct_confianca": 0.90
+        },
+        {
+          "rank": 4,
+          "nome": "Awesome-Geospatial",
+          "url": "https://github.com/sacridini/Awesome-Geospatial",
+          "tipo": "academic",
+          "descricao_breve": "Curated list de ferramentas geoespaciais",
+          "fonte_credibilidade": [
+            "GitHub curated list by sacridini, gaopengbin"
+          ],
+          "pct_confianca": 0.85
+        },
+        {
+          "rank": 5,
+          "nome": "sem base",
+          "url": "",
+          "tipo": "sem base",
+          "descricao_breve": "Faltam verificações em papers de geo-tools, satélite",
+          "fonte_credibilidade": [],
+          "pct_confianca": 0.0
+        }
+      ]
+    },
+    {
+      "nicho": 9,
+      "nome": "Ontologia/IA",
+      "status": "parcial",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "nome": "SemTK",
+          "url": "https://arxiv.org/abs/1710.11531",
+          "tipo": "open source",
+          "descricao_breve": "Ontology-first semantic toolkit for knowledge graphs",
+          "fonte_credibilidade": [
+            "arXiv paper 1710.11531",
+            "ResearchGate publication"
+          ],
+          "pct_confianca": 0.90
+        },
+        {
+          "rank": 2,
+          "nome": "Semantica (Graph-Native Semantic Layer)",
+          "url": "https://github.com/semantica-agi/semantica",
+          "tipo": "open source",
+          "descricao_breve": "Graph-native semantic layer for enterprise AI",
+          "fonte_credibilidade": [
+            "GitHub open source"
+          ],
+          "pct_confianca": 0.80
+        },
+        {
+          "rank": 3,
+          "nome": "KBpedia",
+          "url": "https://www.kbpedia.org",
+          "tipo": "open source",
+          "descricao_breve": "Open-source integrated knowledge structure (ontologia)",
+          "fonte_credibilidade": [
+            "Official KBpedia site"
+          ],
+          "pct_confianca": 0.85
+        },
+        {
+          "rank": 4,
+          "nome": "awesome-semantic-web",
+          "url": "https://github.com/semantalytics/awesome-semantic-web",
+          "tipo": "academic",
+          "descricao_breve": "Curated list of semantic web and linked data resources",
+          "fonte_credibilidade": [
+            "GitHub curated list"
+          ],
+          "pct_confianca": 0.85
+        },
+        {
+          "rank": 5,
+          "nome": "sem base",
+          "url": "",
+          "tipo": "sem base",
+          "descricao_breve": "Faltam verificações em papers de NLP, embeddings, knowledge graphs",
+          "fonte_credibilidade": [],
+          "pct_confianca": 0.0
+        }
+      ]
+    },
+    {
+      "nicho": 10,
+      "nome": "Expansão (Agro/Blockchain/Energia/Cyber)",
+      "status": "em_progresso",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "nome": "sem base",
+          "url": "",
+          "tipo": "sem base",
+          "descricao_breve": "Agro: Agricultural tech (precision farming, IoT sensors) — faltam ferramentas abertas confirmadas",
+          "fonte_credibilidade": [],
+          "pct_confianca": 0.0
+        },
+        {
+          "rank": 2,
+          "nome": "sem base",
+          "url": "",
+          "tipo": "sem base",
+          "descricao_breve": "Blockchain: Hyperledger, Celo, Cardano — encontrados em papers, faltam open source farming + energy",
+          "fonte_credibilidade": [
+            "ArXiv: AgriSecure blockchain framework",
+            "ArXiv: Blockchain for cybersecurity"
+          ],
+          "pct_confianca": 0.5
+        },
+        {
+          "rank": 3,
+          "nome": "sem base",
+          "url": "",
+          "tipo": "sem base",
+          "descricao_breve": "Energia: OpenEI (OpenEnergy Initiative) — faltam verificações completas",
+          "fonte_credibilidade": [],
+          "pct_confianca": 0.0
+        },
+        {
+          "rank": 4,
+          "nome": "sem base",
+          "url": "",
+          "tipo": "sem base",
+          "descricao_breve": "Cyber: OWASP projects, Metasploit (open source) — faltam papers de cybersecurity tools",
+          "fonte_credibilidade": [],
+          "pct_confianca": 0.0
+        }
+      ]
+    }
+  ],
+  "rodada_completa": 2,
+  "nichos_completos": 9,
+  "notas": "Rodada 2 completa. Jurídica 8/10, Marca/Site 4/10, Contratos Públicos 3/10, Engenharia 2/10 + 8 já no ar; Águas 5/10 (FREEWAT, Giswater, HidroMap); Imbono 2/10 (OpenProject, Taiga); Saúde 4/10 (OpenEpi, EpiCalc, Episia, MicrobeTrace); Geo 4/10 (QGIS, PostGIS, Leaflet, awesome-geospatial); Ontologia/IA 4/10 (SemTK, Semantica, KBpedia, awesome-semantic-web); Expansão 10 (Agro/Blockchain/Energia/Cyber: papers encontrados, tools open source confirmadas em papers, faltam verificações completas nos bancos de universidades). Próxima: completar gaps com papers top-500 universidades e GitHub stars."
+}

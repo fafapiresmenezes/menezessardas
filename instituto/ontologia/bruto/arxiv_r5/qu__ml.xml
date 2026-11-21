@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/xfP6zJq4pWqF5HdH+NPWVuPN5y0</id>
+  <title>arXiv Query: search_query=cat:quant-ph AND cat:cs.LG&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:49:54Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:quant-ph+AND+cat:cs.LG&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>3177</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2006.04682v1</id>
+    <title>An Ensemble Approach for Compressive Sensing with Quantum</title>
+    <updated>2020-06-08T15:32:22Z</updated>
+    <link href="https://arxiv.org/abs/2006.04682v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2006.04682v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We leverage the idea of a statistical ensemble to improve the quality of quantum annealing based binary compressive sensing. Since executing quantum machine instructions on a quantum annealer can result in an excited state, rather than the ground state of the given Hamiltonian, we use different penalty parameters to generate multiple distinct quadratic unconstrained binary optimization (QUBO) functions whose ground state(s) represent a potential solution of the original problem. We then employ the attained samples from minimizing all corresponding (different) QUBOs to estimate the solution of the problem of binary compressive sensing. Our experiments, on a D-Wave 2000Q quantum processor, demonstrated that the proposed ensemble scheme is notably less sensitive to the calibration of the penalty parameter that controls the trade-off between the feasibility and sparsity of recoveries.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-06-08T15:32:22Z</published>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Ramin Ayanzadeh</name>
+    </author>
+    <author>
+      <name>Milton Halem</name>
+    </author>
+    <author>
+      <name>Tim Finin</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/1n2tQYr0Zx9DV0hNzmW4HOscxA4</id>
+  <title>arXiv Query: search_query=cat:cs.LO&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T08:47:02Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.LO&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>20716</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1905.02828v1</id>
+    <title>A SAT-based System for Consistent Query Answering</title>
+    <updated>2019-05-07T22:31:49Z</updated>
+    <link href="https://arxiv.org/abs/1905.02828v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1905.02828v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>An inconsistent database is a database that violates one or more integrity constraints, such as functional dependencies. Consistent Query Answering is a rigorous and principled approach to the semantics of queries posed against inconsistent databases. The consistent answers to a query on an inconsistent database is the intersection of the answers to the query on every repair, i.e., on every consistent database that differs from the given inconsistent one in a minimal way. Computing the consistent answers of a fixed conjunctive query on a given inconsistent database can be a coNP-hard problem, even though every fixed conjunctive query is efficiently computable on a given consistent database.
+  We designed, implemented, and evaluated CAvSAT, a SAT-based system for consistent query answering. CAvSAT leverages a set of natural reductions from the complement of consistent query answering to SAT and to Weighted MaxSAT. The system is capable of handling unions of conjunctive queries and arbitrary denial constraints, which include functional dependencies as a special case. We report results from experiments evaluating CAvSAT on both synthetic and real-world databases. These results provide evidence that a SAT-based approach can give rise to a comprehensive and scalable system for consistent query answering.</summary>
+    <category term="cs.DB" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-05-07T22:31:49Z</published>
+    <arxiv:comment>25 pages including appendix, to appear in the 22nd International Conference on Theory and Applications of Satisfiability Testing</arxiv:comment>
+    <arxiv:primary_category term="cs.DB"/>
+    <author>
+      <name>Akhil A. Dixit</name>
+    </author>
+    <author>
+      <name>Phokion G. Kolaitis</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/Wh5O+Tofa3W8e8M/MZPzMgLSyAI</id>
+  <title>arXiv Query: search_query=cat:physics.* AND (cat:stat.* OR cat:math.ST)&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-21T09:40:21Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:physics.*+AND+(cat:stat.*+OR+cat:math.ST)&amp;start=0&amp;max_results=1&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>5170</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2012.10249v5</id>
+    <title>Reduced-Rank Tensor-on-Tensor Regression and Tensor-variate Analysis of Variance</title>
+    <updated>2022-04-11T03:23:39Z</updated>
+    <link href="https://arxiv.org/abs/2012.10249v5" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.10249v5" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Fitting regression models with many multivariate responses and covariates can be challenging, but such responses and covariates sometimes have tensor-variate structure. We extend the classical multivariate regression model to exploit such structure in two ways: first, we impose four types of low-rank tensor formats on the regression coefficients. Second, we model the errors using the tensor-variate normal distribution that imposes a Kronecker separable format on the covariance matrix. We obtain maximum likelihood estimators via block-relaxation algorithms and derive their computational complexity and asymptotic distributions. Our regression framework enables us to formulate tensor-variate analysis of variance (TANOVA) methodology. This methodology, when applied in a one-way TANOVA layout, enables us to identify cerebral regions significantly associated with the interaction of suicide attempters or non-attemptor ideators and positive-, negative- or death-connoting words in a functional Magnetic Resonance Imaging study. Another application uses three-way TANOVA on the Labeled Faces in the Wild image dataset to distinguish facial characteristics related to ethnic origin, age group and gender.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.data-an" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-18T14:04:41Z</published>
+    <arxiv:comment>35 pages, 12 figures, 2 tables, 2 algorithms.IEEE Transactions on Pattern Analysis and Machine Intelligence, 2022; in press</arxiv:comment>
+    <arxiv:primary_category term="stat.ME"/>
+    <arxiv:journal_ref>IEEE Transactions on Pattern Analysis and Machine Intelligence, 45(2):2282-2296, 2023</arxiv:journal_ref>
+    <author>
+      <name>Carlos Llosa-Vite</name>
+    </author>
+    <author>
+      <name>Ranjan Maitra</name>
+    </author>
+    <arxiv:doi>10.1109/TPAMI.2022.3164836</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/TPAMI.2022.3164836" title="doi"/>
+  </entry>
+</feed>
