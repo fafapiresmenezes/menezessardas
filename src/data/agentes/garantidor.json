@@ -15,7 +15,8 @@
     "medicao": "/mnt/project-files/planejamento-21-11/medicao/gerar_medicao.py",
     "pdf": "/mnt/project-files/planejamento-21-11/medicao/pdf.js",
     "conferencia_da_corrente": "/mnt/project-files/planejamento-21-11/medicao/conferir_corrente.py",
-    "impressao_digital": "/mnt/project-files/planejamento-21-11/medicao/impressao-digital.json"
+    "impressao_digital": "/mnt/project-files/planejamento-21-11/medicao/impressao-digital.json",
+    "alertas_para_M": "/mnt/project-files/planejamento-21-11/medicao/alerta_m.py"
   },
   "o_que_faz_em_cada_rodada": [
     "Lê a corrente e confere que ela continua íntegra (conferir_corrente.py).",
@@ -37,7 +38,9 @@
     "quando_fala": "Quando tem resultado, quando está travado, ou quando precisa de uma decisão que só ele pode tomar.",
     "quando_cala": "Quando está só trabalhando. Andamento vai na lista de progresso, não em recado.",
     "formato": "Cartão de decisão com opções, nunca pergunta de texto aberto. Linguagem do dia a dia, sem termo técnico.",
-    "bloqueio": "Todo bloqueio chega com link clicável e o passo a passo pronto, para resolver em menos de um minuto."
+    "bloqueio": "Todo bloqueio chega com link clicável e o passo a passo pronto, para resolver em menos de um minuto.",
+    "teto_de_alerta": "No máximo um alerta por dia por tema, para nunca virar enxurrada. O controle é o alerta_m.py: \"pode <tema>\" antes de mandar, \"marcou <tema>\" depois de mandar, \"resolvido <tema>\" quando M faz. Tema já resolvido nunca é cobrado de novo.",
+    "alerta_M_precisa_agir": "Quando um passo só anda com a mão de M, o alerta diz, em uma linha, o que é, o link ou o caminho do arquivo, e quanto tempo leva. Nunca cobra dois temas no mesmo recado: um tema, um alerta, para ele poder resolver um e ignorar o resto sem perder nada."
   },
   "quando_para": [
     "Quando a corrente chega a 100% e o topo final está carimbado.",
