@@ -7,7 +7,7 @@ nicho_de = {}
 for f in me['fichas']:
     for a in f['atividades']: nicho_de.setdefault(a['cod'], []).append(f['nicho'])
 dados = {
-  'rodada': 1, 'data': '2026-11-21',
+  'rodada': 2, 'data': '2026-11-21',
   'familias': [
     {'n': 1, 'nome': 'Dependência econômica', 'estado': 'feito', 'selo': 'calculado por nós', 'fonte': le['fonte'], 'pares': 67 * 66},
     {'n': 2, 'nome': 'Proximidade produtiva', 'estado': 'próxima rodada', 'fonte': 'Atlas de Complexidade Econômica (Harvard Growth Lab)'},
@@ -29,5 +29,19 @@ dados = {
   'fichas': me['fichas'], 'sem_correspondencia': me['sem_correspondencia'],
   'interno': {k: si[k] for k in ('fonte', 'formula', 'aviso', 'ferramentas_por_nicho', 'itens_sem_endereco', 'pares', 'conferencia', 'sha256_arquivo')},
 }
+ex = json.load(open('saida/exiobase_2019.json')); lit = json.load(open('literatura/registro.json'))
+PT = {4: 'Soja e oleaginosas', 8: 'Pecuária bovina', 20: 'Extração de petróleo', 56: 'Refino de petróleo', 108: 'Distribuição de eletricidade',
+      111: 'Água (captação e distribuição)', 112: 'Construção', 116: 'Atacado', 117: 'Varejo', 120: 'Transporte terrestre', 125: 'Apoio ao transporte',
+      126: 'Correio e telecom', 127: 'Intermediação financeira', 132: 'Informática', 133: 'Pesquisa e desenvolvimento', 134: 'Serviços às empresas (jurídico, consultoria)',
+      135: 'Administração pública', 136: 'Educação', 137: 'Saúde e assistência social', 151: 'Tratamento de esgoto'}
+idx = ex['indices_nichos']; sub = lambda m: [[m[i][j] for j in idx] for i in idx]
+nicho_ex = {j: n for n, js in ex['nichos'].items() for j in js}
+dados['mundo'] = {k: ex[k] for k in ('fonte', 'url', 'sha256_zip_conferido_com_o_publicado', 'baixado_em', 'unidade', 'formula', 'aviso_angola', 'conferencia')}
+dados['mundo'].update({'setores': [{'i': j, 'en': ex['setores'][j], 'pt': PT[j], 'nicho': nicho_ex[j]} for j in idx],
+  'A': sub(ex['mundo']['A']), 'L': sub(ex['mundo']['L']), 'Z': ex['mundo']['Z_nichos_milhoes_eur'], 'x': [ex['mundo']['producao_milhoes_eur'][j] for j in idx],
+  'regioes': {'BR': 'Brasil', 'WF': 'Resto da África (inclui Angola)', 'ZA': 'África do Sul', 'CN': 'China', 'US': 'Estados Unidos'}, 'por_regiao': ex['por_regiao']})
+dados['literatura'] = lit
+dados['familias'][0]['fonte'] += ' + ' + ex['fonte'].split(' (')[0]
+dados['familias'][5]['estado'] = 'em andamento'; dados['familias'][5]['fonte'] = f"{sum(1 for r in lit['registro'] if r['selo'] == 'da literatura')} estudos lidos e conferidos"
 s = json.dumps(dados, ensure_ascii=False, separators=(',', ':'))
 open('saida/arvore-dados.json', 'w').write(s); print(len(s) // 1024, 'KB')

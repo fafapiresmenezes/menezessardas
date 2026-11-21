@@ -3,15 +3,17 @@ import json, html, sys
 r = int(sys.argv[1]) if len(sys.argv) > 1 else 1
 le = json.load(open('saida/leontief_ibge_2015.json')); me = json.load(open('saida/memoria_ibge_2015.json')); si = json.load(open('saida/sobreposicao_interna.json'))
 E = html.escape
+ex = json.load(open('saida/exiobase_2019.json')); lit = json.load(open('literatura/registro.json'))['registro']
+n_lit = sum(1 for x in lit if x['selo'] == 'da literatura')
 ETAPAS = [  # (etapa, % feito, como foi medido)
  ('1. Retirar números inventados', 100, '5 de 5 índices antigos retirados'),
- ('2. Setores, fichas e tipos de variável', 60, '15 fichas nicho→IBGE e 6 nichos sem correspondência escritos; catálogo de variáveis com tipo ainda não montado em dado'),
+ ('2. Setores, fichas e tipos de variável', 60, '15 fichas nicho→IBGE, 13 nichos ligados ao EXIOBASE e 6 sem correspondência escritos; catálogo de variáveis com tipo ainda não montado em dado'),
  ('3. Família 7, sobreposição interna', 100, f"{len(si['pares'])} pares de 10 nichos calculados e recontados"),
- ('4. Família 1, dependência econômica', 33, '1 de 3 bases feita (IBGE 2015); EXIOBASE baixando; OCDE bloqueia acesso automático'),
+ ('4. Família 1, dependência econômica', 67 if r >= 2 else 33, '2 de 3 bases feitas (IBGE 2015 e EXIOBASE 2019 mundial); OCDE bloqueia acesso automático' if r >= 2 else '1 de 3 bases feita (IBGE 2015)'),
  ('5. Famílias 3 e 4, mercados', 0, 'fontes testadas e abertas; conta não começou'),
  ('6. Famílias 2 e 5, Harvard e OpenAlex', 0, 'fontes testadas; conta não começou'),
- ('7. Família 6, literatura', 0, 'busca começou; nenhum número de tese lido e conferido ainda'),
- ('8. Desenho, segunda conta e carimbo', 30, 'desenho v1 publicado; revisão de adversário e carimbo pendentes'),
+ ('7. Família 6, literatura', min(100, n_lit * 10), f'{n_lit} estudos lidos e conferidos de uma meta de 10 (um por nicho principal), mais 1 estudo usado só para conferir'),
+ ('8. Desenho, segunda conta e carimbo', 40 if r >= 2 else 30, 'desenho com 7 vistas publicado; revisão de adversário e carimbo pendentes'),
 ]
 total = sum(p for _, p, _ in ETAPAS) / len(ETAPAS)
 c = le['conferencia']
@@ -46,6 +48,17 @@ SHA-256: {le['sha256_arquivo']}</pre>
 <h2>Setores-chave da economia brasileira (ligação acima de 1 para trás e para frente)</h2>
 <p class=m>{E(me['formula_ligacoes'])} ◆ = setor ligado a um nicho do Instituto.</p>
 <table><tr><th>Código</th><th>Atividade</th><th class=n>Para trás</th><th class=n>Para frente</th></tr>{linhas_chave}</table>
+<h2>Família 1, base mundial (EXIOBASE 2019): conferência</h2>
+<pre>{E(ex['formula'])}
+Nossa A contra a A publicada no pacote ............ {ex['conferencia']['max_dif_A_nossa_vs_A_publicada']:.1e}
+Resíduo da inversão completa (7.987 linhas) ....... {ex['conferencia']['max_residuo_(I-A)L-I_completo']:.1e}
+Mundo: inversão contra soma de {ex['conferencia']['termos_serie_mundo']} rodadas ........... {ex['conferencia']['max_dif_Lw_inversao_vs_serie']:.1e}
+Impressão digital do pacote igual à publicada: {ex['sha256_zip_conferido_com_o_publicado']}</pre>
+<p>{E(ex['aviso_angola'])}</p>
+<h2>Quanto da cadeia de cada setor vem de fora do país (Brasil e Resto da África)</h2>
+<table><tr><th>Setor (EXIOBASE)</th><th class=n>Brasil</th><th class=n>Resto da África</th></tr>{''.join(f"<tr><td>{E(ex['setores'][j])}</td><td class=n>{100*ex['por_regiao']['BR']['parte_da_cadeia_fora_da_regiao'][c]:.1f}%</td><td class=n>{100*ex['por_regiao']['WF']['parte_da_cadeia_fora_da_regiao'][c]:.1f}%</td></tr>" for c, j in enumerate(ex['indices_nichos']))}</table>
+<h2>Família 6: literatura lida e conferida</h2>
+<table><tr><th>Estudo</th><th>Liga</th><th>Número como está no texto</th></tr>{''.join(f"<tr><td>{E(x['autores'])} ({x['ano']}), {E(x['instituicao'])}. {E(x['titulo'])}. {E(x['onde'])}.</td><td>{E(x.get('direcao') or 'conferência')}</td><td>{'; '.join(E(n['o_que']) + ': ' + str(n['valor']).replace('.', ',') for n in x.get('numeros', [])) or E(x.get('resultado', ''))}</td></tr>" for x in lit)}</table>
 <h2>Família 7: sobreposição interna</h2><p>{len(si['pares'])} pares calculados. Só 1 par tem ferramenta em comum (Marca/Site e Engenharia, Jaccard 0,2000, Blender). {E(si['aviso'])}</p>
 <h2>Sem base nesta rodada</h2><ul>{sem}</ul>
 <h2>Onde ver</h2><p>Desenho interativo: https://claude.ai/artifact/GSqTU6xSXsxjRPpY96Zotg (privado). Scripts e dados: instituto/ontologia/ no repositório.</p>

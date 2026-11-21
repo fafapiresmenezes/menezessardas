@@ -1,0 +1,146 @@
+{
+ "regra": "Número copiado exatamente como está no texto, com página. Nunca vira \"calculado por nós\". Arquivos não são guardados aqui (direito autoral): só endereço e impressão digital.",
+ "registro": [
+  {
+   "id": "L1",
+   "selo": "da literatura",
+   "par": [
+    "Águas e Saneamento",
+    "Saúde"
+   ],
+   "direcao": "Águas → Saúde (depende de)",
+   "autores": "Wolf J, Johnston RB, Ambelu A, et al.",
+   "instituicao": "OMS e London School of Hygiene & Tropical Medicine",
+   "ano": 2023,
+   "titulo": "Burden of disease attributable to unsafe drinking water, sanitation, and hygiene in domestic settings: a global analysis for selected adverse health outcomes",
+   "veiculo": "The Lancet 401:2060–71",
+   "doi": "10.1016/S0140-6736(23)00458-0",
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10290941/",
+   "sha256_pagina": "253709b5950e17c6117ec4afd2178da92144a821612921b3f45a243f36291b35",
+   "onde": "Resumo, seção Findings",
+   "tipo_de_numero": "fração atribuível (epidemiologia), não é correlação",
+   "numeros": [
+    {
+     "o_que": "parte da diarreia atribuível a água, saneamento e higiene inseguros, mundo, 2019",
+     "valor": 0.69,
+     "ic95": [
+      0.65,
+      0.72
+     ]
+    },
+    {
+     "o_que": "parte das infecções respiratórias agudas atribuível, 2019",
+     "valor": 0.14,
+     "ic95": [
+      0.13,
+      0.17
+     ]
+    },
+    {
+     "o_que": "parte da desnutrição atribuível, 2019",
+     "valor": 0.1,
+     "ic95": [
+      0.09,
+      0.1
+     ]
+    },
+    {
+     "o_que": "mortes que poderiam ter sido evitadas, 2019 (milhões)",
+     "valor": 1.4,
+     "ic95": [
+      1.3,
+      1.5
+     ]
+    },
+    {
+     "o_que": "parte de todas as mortes do mundo, 2019",
+     "valor": 0.025
+    }
+   ]
+  },
+  {
+   "id": "L2",
+   "selo": "da literatura",
+   "par": [
+    "Águas e Saneamento",
+    "Saúde"
+   ],
+   "direcao": "Águas → Saúde (depende de)",
+   "autores": "Cutler D, Miller G",
+   "instituicao": "Harvard University e NBER",
+   "ano": 2004,
+   "titulo": "The Role of Public Health Improvements in Health Advances: The 20th Century United States",
+   "veiculo": "NBER Working Paper 10511 (publicado em Demography, 2005)",
+   "url": "https://www.nber.org/system/files/working_papers/w10511/w10511.pdf",
+   "sha256_pdf": "81570a5e8186df6ac260acb4094c54b6f8a5711c657c102d8462454756bc0aff",
+   "onde": "Abstract, p. 1",
+   "tipo_de_numero": "parte causal da queda de mortalidade (variação no tempo de adoção da filtragem e cloração), cidades dos EUA, início do século 20",
+   "numeros": [
+    {
+     "o_que": "parte da queda da mortalidade total explicada por água limpa",
+     "valor": "quase metade",
+     "texto": "nearly half"
+    },
+    {
+     "o_que": "parte da queda da mortalidade infantil",
+     "valor": "três quartos",
+     "texto": "three-quarters"
+    },
+    {
+     "o_que": "parte da queda da mortalidade na infância",
+     "valor": "quase dois terços",
+     "texto": "nearly two-thirds"
+    },
+    {
+     "o_que": "retorno social da tecnologia",
+     "valor": "maior que 23 para 1"
+    }
+   ]
+  },
+  {
+   "id": "L3",
+   "selo": "da literatura",
+   "par": [
+    "Computação quântica",
+    "Ontologia/IA e Cibersegurança"
+   ],
+   "direcao": "Quântica → Cibersegurança (ameaça)",
+   "autores": "Mosca M, Piani M",
+   "instituicao": "Global Risk Institute e evolutionQ (Mosca: Universidade de Waterloo)",
+   "ano": 2024,
+   "titulo": "Quantum Threat Timeline Report 2024, Executive Summary",
+   "url": "https://globalriskinstitute.org/mp-files/quantum-threat-timeline-report-2024-executive-summary.pdf",
+   "sha256_pdf": "298c0a420d55c712652dc09a3a0d2aaec3de22a84947ce6aec3fa169e8ce2ed5",
+   "onde": "p. 1, Summary",
+   "tipo_de_numero": "probabilidade média dada por especialistas, não é correlação",
+   "numeros": [
+    {
+     "o_que": "chance de um computador quântico quebrar RSA-2048 em 24 h dentro de 10 anos, leitura otimista",
+     "valor": 0.34
+    },
+    {
+     "o_que": "mesma chance, leitura pessimista",
+     "valor": 0.19
+    },
+    {
+     "o_que": "chance dentro de 5 anos, leitura otimista",
+     "valor": 0.14
+    }
+   ]
+  },
+  {
+   "id": "C1",
+   "selo": "conferência",
+   "par": null,
+   "autores": "Santos ACD (orientadora Milene)",
+   "instituicao": "Universidade de Brasília, trabalho de conclusão de curso",
+   "ano": 2023,
+   "titulo": "Índices de ligações e setores-chave na economia brasileira",
+   "url": "https://bdm.unb.br/bitstream/10483/37643/1/2023_AnaCarolinaDamasDosSantos_tcc.pdf",
+   "sha256_pdf": "31d247516ca5270464c44bef23c18c63cd53199932abf70e1901d61a4454c2c2",
+   "onde": "p. 19, Resultados",
+   "uso": "Conferir nossa lista de setores-chave do IBGE 2015. Ela usa 42 setores de 2000 a 2020; nós usamos 67 setores de 2015.",
+   "resultado": "Dos 10 setores-chave que ela cita, 8 também saem chave na nossa conta (refino, químicos orgânicos, defensivos e químicos diversos, borracha e plástico, aço, eletricidade, celulose e papel, transporte). Não batem: alimentos e bebidas (na nossa matriz está dividido em 4 atividades) e extração de petróleo (ela mesma diz que é chave com pouca regularidade)."
+  }
+ ]
+}
