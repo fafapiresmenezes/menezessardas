@@ -168,23 +168,33 @@ async function tratar(req: Request, origemBoa: boolean): Promise<Response> {
     return json({ ok: true })
   }
 
-  if (acao === 'avisar-decisao') {
-    // F0-11: depois que o administrador libera ou recusa um pedido em /equipe, avisa a pessoa
-    // por e-mail. Só quem é admin do escritório pode disparar (confere o perfil pelo próprio token).
+  if (acao === 'avisar-decidido') {
+    // Pedido de M (21/11/2026): a pessoa recebe um e-mail quando o administrador decide o pedido
+    // dela. Quem chama é a administração logada; a decisão e o e-mail saem do BANCO, nunca do
+    // corpo do pedido — ninguém usa isto para mandar e-mail falso de "liberado".
     const jwt = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '')
     const { data: u } = await db().auth.getUser(jwt)
-    const admin = u?.user
-    if (!admin) return json({ erro: 'Entre na sua conta primeiro.' }, 401)
-    const { data: perfilAdmin } = await db().from('usuarios_perfis').select('funcao').eq('id', admin.id).maybeSingle()
-    if (perfilAdmin?.funcao !== 'admin') return json({ erro: 'Só administradores avisam decisões.' }, 403)
-    const liberado = !!b.liberado
-    if (liberado) {
-      await enviarAviso(email, 'Seu acesso foi liberado na plataforma THEYE',
-        corpoDoAviso('Seu acesso foi liberado', 'Você já pode entrar na plataforma do Instituto THEYE com o seu e-mail e a senha que você criou.',
-          { url: SITE, rotulo: 'Entrar na plataforma' }))
+    const chamador = u?.user
+    if (!chamador) return json({ erro: 'Entre na sua conta primeiro.' }, 401)
+    const { data: perfilAdm } = await db().from('usuarios_perfis').select('funcao').eq('id', chamador.id).maybeSingle()
+    if (perfilAdm?.funcao !== 'admin') return json({ erro: 'Só a administração avisa decisões.' }, 403)
+    const alvo = String(b.usuario ?? '')
+    if (!/^[0-9a-f-]{36}$/.test(alvo)) return json({ erro: 'Pedido não encontrado.' }, 400)
+    const { data: pedido } = await db().from('pedidos_entrada').select('email, nome, aceito, decidido_em').eq('usuario_id', alvo).not('decidido_em', 'is', null).order('decidido_em', { ascending: false }).limit(1).maybeSingle()
+    if (!pedido?.email) return json({ ok: true }) // sem decisão no banco: nenhum e-mail
+    const marca = (await sha('decidido:' + alvo + ':' + String(pedido.decidido_em))).slice(0, 32)
+    const { count } = await db().from('consumo_api').select('id', { count: 'exact', head: true }).eq('funcao', 'Aviso: decidido').eq('modelo', marca)
+    if ((count ?? 0) > 0) return json({ ok: true })
+    await db().from('consumo_api').insert({ funcao: 'Aviso: decidido', modelo: marca, quantidade: 1 })
+    if (pedido.aceito) {
+      await enviarAviso(pedido.email, 'Sua conta foi liberada na plataforma THEYE',
+        corpoDoAviso('Sua conta foi liberada',
+          'O administrador liberou a sua entrada. Toque no botão e entre com o seu e-mail e a sua senha.',
+          { url: `${SITE}/`, rotulo: 'Entrar na plataforma' }))
     } else {
-      await enviarAviso(email, 'Sobre o seu pedido de entrada na plataforma THEYE',
-        corpoDoAviso('Seu pedido não foi liberado', 'O administrador do escritório não liberou o seu pedido de entrada. Se quiser, fale diretamente com quem te convidou.'))
+      await enviarAviso(pedido.email, 'Sobre o seu pedido de entrada na plataforma THEYE',
+        corpoDoAviso('O pedido não foi aceito',
+          'O administrador não aceitou o pedido de entrada desta conta. Se você acha que houve engano, fale com o responsável do seu escritório ou com o Instituto.'))
     }
     return json({ ok: true })
   }

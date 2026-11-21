@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useBaixado } from '@/hooks/useBaixado'
 import { mensagemAmigavel } from '@/lib/erros'
-import { acessoEmail } from '@/lib/acessoEmail'
 import Layout from '@/components/Layout'
 import TesteGeral from '@/components/TesteGeral'
 import TesteTelas from '@/components/TesteTelas'
@@ -100,8 +99,10 @@ export default function EquipePage() {
     try {
       const pessoa = pessoas.find(p => p.id === pedido.id) ?? { id: pedido.id, email: pedido.email, nome: pedido.nome, funcao: null, criadoEm: pedido.criadoEm, confirmado: true, ultimoAcesso: null }
       await definirFuncao(pessoa, funcao)
-      acessoEmail({ acao: 'avisar-decisao', email: pedido.email, liberado: !!funcao }).catch(() => null)
-      setMsg({ tipo: 'ok', texto: funcao ? `${pedido.nome} entrou no escritório com a função ${rotuloFuncao[funcao]}. Agora defina o cargo da pessoa na tela Hierarquia.` : `Pedido de ${pedido.nome} recusado.` })
+      // Pedido de M (21/11/2026): a pessoa fica sabendo por e-mail que foi liberada (ou não).
+      // O aviso é cortesia: se falhar, a decisão já valeu e a tela segue certa.
+      try { supabase.functions.invoke('acesso-email', { body: { acao: 'avisar-decidido', email: pedido.email, usuario: pedido.id } }).catch(() => null) } catch { /* sem o serviço de e-mail, a decisão vale do mesmo jeito */ }
+      setMsg({ tipo: 'ok', texto: funcao ? `${pedido.nome} entrou no escritório com a função ${rotuloFuncao[funcao]}. A pessoa recebe um e-mail avisando. Agora defina o cargo dela na tela Hierarquia.` : `Pedido de ${pedido.nome} recusado. A pessoa recebe um e-mail avisando.` })
       setPedidos(await pedidosPendentes()); setPessoas(await listarPessoas())
     } catch (e) {
       setMsg({ tipo: 'erro', texto: mensagemAmigavel(e) })

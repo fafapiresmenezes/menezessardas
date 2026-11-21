@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Três controles do MASVS escritos aqui de propósito, conferidos por
+         src/lib/geo/nativo.test.ts (a prova lê este arquivo):
+           allowBackup="false"      — o Android não copia os dados deste app para a nuvem do
+                                      Google nem para o adb backup. Era "true", que é o padrão
+                                      do Capacitor, e deixava o bloco cifrado do cofre sair do
+                                      aparelho: contradizia a promessa do app.
+           dataExtractionRules      — o mesmo, no Android 12 e acima, inclusive na troca de
+                                      celular (o allowBackup sozinho não cobre isso).
+           networkSecurityConfig    — nenhuma conexão em texto claro, de endereço nenhum. -->
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/regras_sem_copia"
+        android:networkSecurityConfig="@xml/rede_segura"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
