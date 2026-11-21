@@ -1,0 +1,11 @@
+[
+ {
+  "id": "BET-R1",
+  "pergunta": "Qual a flecha a longo prazo desta viga de betão armado?",
+  "dados": {
+   "vao_m": 7.0,
+   "classe_betao": "C30/37",
+   "carga_servico_kN_m": 18.0
+  }
+ }
+]

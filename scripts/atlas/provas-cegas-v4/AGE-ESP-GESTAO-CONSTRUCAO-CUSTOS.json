@@ -1,0 +1,10 @@
+[
+ {
+  "id": "GES-R1",
+  "pergunta": "Em quanto tempo construímos este edifício?",
+  "dados": {
+   "area_m2": 3000.0,
+   "pisos": 4
+  }
+ }
+]

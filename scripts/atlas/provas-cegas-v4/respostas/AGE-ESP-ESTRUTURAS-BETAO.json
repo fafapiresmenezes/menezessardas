@@ -1,0 +1,7 @@
+[
+ {
+  "id": "BET-R1",
+  "resposta": "Sem a secção transversal e a armadura não há valor fechado para a flecha a longo prazo. Hipótese ilustrativa (não confirmada): viga simplesmente apoiada, vão L = 7,00 m, b = 300 mm, h = 600 mm, d = 540 mm, As = 1257 mm² (4 Ø20), C30/37 (Ecm = 33 GPa, fctm = 2,9 MPa), carga de serviço de 18 kN/m tratada como quase-permanente e fluência φ∞ = 2,0. Nesse caso: flecha imediata fendilhada ≈ 10 mm; flecha a longo prazo ≈ 30 mm (≈ L/220), acima do limite de referência L/250. Faixa conforme a fracção quase-permanente real e a fluência (φ entre 1,5 e 2,5, ambiente húmido tropical): ≈ 15 a 30 mm (L/470 a L/230). Preciso de: (1) b × h e d, em mm (ex.: 300 × 600 mm, d = 540 mm); (2) área da armadura inferior As, em mm² (ex.: 1257 mm²); (3) a parcela permanente e a variável dos 18 kN/m, em kN/m (ex.: 10 kN/m permanente e 8 kN/m variável). Também confirmar a norma contratual e a idade do betão no carregamento.",
+  "justificacao": "A flecha a longo prazo depende da fendilhação (na hipótese, Mcr ≈ 52 kNm contra Ma ≈ 110 kNm), do método de curvatura com interpolação ζ (EN 1992-1-1 §7.4.3) e da fluência (§3.1.4 e Anexo B, com λ = 2,0 para ρ' = 0). Limite de referência L/250 segundo §7.4.1, a confirmar no Anexo Nacional e na especificação do dono de obra. Rascunho para conferência e assinatura do engenheiro responsável."
+ }
+]

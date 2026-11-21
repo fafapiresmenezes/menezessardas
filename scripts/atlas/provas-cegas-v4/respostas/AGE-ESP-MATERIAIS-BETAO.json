@@ -1,0 +1,7 @@
+[
+  {
+    "id": "MAT-R1",
+    "resposta": "Não há um valor único de cimento que se possa especificar sem conhecer a classe de exposição e a classe de resistência. Em vez de fixar a quantidade, especifica-se um teor mínimo de cimento e uma relação a/c máxima pela classe de exposição (EN 206, Anexo F, valores prescritivos), e a dosagem final é fixada no estudo de composição com ensaios. Faixa indicativa, com hipótese de C25/30 a C30/37, exposição XC1 a XS1 e Dmáx 20 mm: 260–300–340 kg/m³ de cimento (mínimo–provável–máximo), não confirmado. Para fechar, preciso de: (1) classe de exposição por elemento, ou distância ao mar e localização de cada elemento (interior, exterior, garagem, fundações), por exemplo 'laje de cobertura exterior, a 300 m do mar'; (2) classe de resistência fck, por exemplo C30/37 em MPa. Rascunho para conferência e assinatura do engenheiro responsável.",
+    "justificacao": "A quantidade depende da classe de exposição e de fck, e a norma fixa mínimos de cimento e a/c máximo por classe (EN 206, Anexo F; número e valores a conferir no texto oficial). Luanda é costeira, o que pode exigir classe XS, e o cimento local tem variabilidade (Cimangola): a dosagem tem de ser confirmada com ensaios. Faixa e hipótese não confirmadas, sem dados de ensaios locais."
+  }
+]

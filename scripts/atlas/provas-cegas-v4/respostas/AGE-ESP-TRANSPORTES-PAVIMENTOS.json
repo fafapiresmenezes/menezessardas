@@ -1,0 +1,7 @@
+[
+ {
+  "id": "TRA-R1",
+  "resposta": "Ainda não é possível indicar a espessura da base. Preciso primeiro do tráfego de projecto: número acumulado de eixos-padrão de 80 kN (ESAL) no período de projecto, por exemplo 3,0 × 10^6 eixos-padrão em 20 anos.",
+  "justificacao": "Com 12,0 km e 7,0 m de largura (cerca de 84 000 m² de faixa) a espessura depende sobretudo do tráfego pesado e da capacidade de suporte do subleito, que ainda não temos. Depois do tráfego, pediremos o CBR do subleito (%) e o período de projecto. Rascunho para conferência e assinatura do engenheiro responsável."
+ }
+]

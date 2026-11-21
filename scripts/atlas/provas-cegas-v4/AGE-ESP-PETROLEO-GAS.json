@@ -1,0 +1,10 @@
+[
+ {
+  "id": "PET-R1",
+  "pergunta": "Qual a espessura de parede desta conduta?",
+  "dados": {
+   "diametro_nominal_mm": 300.0,
+   "fluido": "petróleo bruto"
+  }
+ }
+]
