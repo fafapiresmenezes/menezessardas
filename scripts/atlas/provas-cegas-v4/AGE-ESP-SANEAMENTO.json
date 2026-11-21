@@ -1,0 +1,9 @@
+[
+ {
+  "id": "SAN-R1",
+  "pergunta": "Qual o volume do tanque de lamas activadas para esta povoação?",
+  "dados": {
+   "habitantes": 20000
+  }
+ }
+]

@@ -1,0 +1,7 @@
+[
+  {
+    "id": "GES-R1",
+    "resposta": "Ainda não é possível indicar um prazo fundamentado. Com os dados disponíveis (área de 3 000 m2 e 4 pisos) só temos a quantidade de trabalho, e não a duração. A duração resulta da quantidade de trabalho (homens-hora) dividida pela produtividade da equipa e pelas horas úteis por dia, por esta ordem: duração (dias úteis) = quantidade de trabalho (h) / (trabalhadores por turno × horas úteis por dia × turnos). Só com o número de trabalhadores por turno é possível fazer o cálculo; assumo, como hipótese a confirmar, estrutura em betão armado. Dado pedido: número de trabalhadores por turno previsto (unidade: trabalhadores; exemplo: 40 trabalhadores, 1 turno de 9 h). Com esse dado apresento um cenário com faixa (mínimo–provável–máximo) e a hipótese que o gerou. Rascunho para conferência e assinatura do engenheiro responsável.",
+    "justificacao": "Só temos área e número de pisos; sem equipa, produtividade e sistema construtivo não há duração fundamentada, e o agente não prevê prazos sem calibração. Peço um único dado (trabalhadores por turno) e explico o método de cálculo. Fontes: não confirmado."
+  }
+]

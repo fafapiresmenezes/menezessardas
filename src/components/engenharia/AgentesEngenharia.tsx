@@ -4,12 +4,20 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ONDE_BIBLIOTECA, contarBiblioteca, filtrarBiblioteca, lerBiblioteca, type PecaAtlas } from '@/lib/atlasBiblioteca'
-import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, EMITIDO_AGENTES, RESULTADO_PROVAS, FONTES_ATLAS, MATRIZES, REGRAS_AGENTES, type FichaAgente, type MatrizAgente, RESULTADO_PROVAS_DURAS } from '@/data/agentesEngenharia'
+import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, EMITIDO_AGENTES, RESULTADO_PROVAS, FONTES_ATLAS, MATRIZES, REGRAS_AGENTES, type FichaAgente, type MatrizAgente, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES, RESULTADO_PROVAS_ERRO_FINO, RESULTADO_PROVAS_REVISAO, RESULTADO_PROVAS_FALSO_POSITIVO, RESULTADO_PROVAS_FALSO_POSITIVO_LIMPO } from '@/data/agentesEngenharia'
 
 // Quanto é que cada agente já tem para estudar, pela classificação do corpus.
 const ESTANTE = new Map(CLASSIFICACAO_ATLAS.estantes.map(e => [e.agente, e]))
 const NOTA = new Map(RESULTADO_PROVAS.notas.map(n => [n.agente, n]))
 const NOTA_DURA = new Map(RESULTADO_PROVAS_DURAS.notas.map(n => [n.agente, n]))
+const NOTA_JULG = new Map(RESULTADO_PROVAS_JULGAMENTO.notas.map(n => [n.agente, n]))
+const POSTURA = new Map(RESULTADO_PROVAS_DESCONFIANCA.estados.map(e => [e.agente, e]))
+const INVARIANTE = new Map(RESULTADO_PROVAS_INVARIANTES.estados.map(e => [e.agente, e]))
+const INTERFACE = new Map(RESULTADO_PROVAS_INTERFACES.estados.map(e => [e.agente, e]))
+const ERRO_FINO = new Map(RESULTADO_PROVAS_ERRO_FINO.estados.map(e => [e.agente, e]))
+const REVISAO = new Map(RESULTADO_PROVAS_REVISAO.estados.map(e => [e.agente, e]))
+const FALSO_POS = new Map(RESULTADO_PROVAS_FALSO_POSITIVO.estados.map(e => [e.agente, e]))
+const FALSO_POS_LIMPO = new Map(RESULTADO_PROVAS_FALSO_POSITIVO_LIMPO.estados.map(e => [e.agente, e]))
 
 type SubAba = MatrizAgente | 'atlas' | 'biblioteca' | 'provas'
 
@@ -235,18 +243,66 @@ export default function AgentesEngenharia() {
             <p><strong>2.ª volta aplicada em {RESULTADO_PROVAS_DURAS.aplicadoEm}:</strong> prova de {RESULTADO_PROVAS_DURAS.tipo}, {RESULTADO_PROVAS_DURAS.questoesTotais} questões, {RESULTADO_PROVAS_DURAS.notas.length} agentes, duas por especialidade.</p>
             <p className="text-xs text-grafite-claro mt-1">{RESULTADO_PROVAS_DURAS.limite}</p>
           </div>
+          <div className="border border-navy/15 p-3 mb-4 text-sm" data-testid="provas-volta3">
+            <p><strong>3.ª volta aplicada em {RESULTADO_PROVAS_JULGAMENTO.aplicadoEm}:</strong> prova de {RESULTADO_PROVAS_JULGAMENTO.tipo}, {RESULTADO_PROVAS_JULGAMENTO.questoesTotais} questões, {RESULTADO_PROVAS_JULGAMENTO.notas.length} agentes. {RESULTADO_PROVAS_JULGAMENTO.regra}</p>
+            <p className="text-xs text-grafite-claro mt-1">{RESULTADO_PROVAS_JULGAMENTO.limite}</p>
+          </div>
+          <div className="border border-navy/15 p-3 mb-4 text-sm" data-testid="provas-volta4">
+            <p><strong>4.ª volta aplicada em {RESULTADO_PROVAS_DESCONFIANCA.aplicadoEm}:</strong> {RESULTADO_PROVAS_DESCONFIANCA.tipo}, {RESULTADO_PROVAS_DESCONFIANCA.questoes} pedidos, um por especialidade. {RESULTADO_PROVAS_DESCONFIANCA.regra}</p>
+            <p className="text-xs text-grafite-claro mt-1">{RESULTADO_PROVAS_DESCONFIANCA.limite}</p>
+          </div>
+          <div className="border border-navy/15 p-3 mb-4 text-sm" data-testid="provas-volta5">
+            <p><strong>5.ª volta aplicada em {RESULTADO_PROVAS_INVARIANTES.aplicadoEm}:</strong> {RESULTADO_PROVAS_INVARIANTES.tipo}, {RESULTADO_PROVAS_INVARIANTES.questoes} pedidos, três por especialidade. {RESULTADO_PROVAS_INVARIANTES.regra}</p>
+            <p className="text-xs text-grafite-claro mt-1">{RESULTADO_PROVAS_INVARIANTES.limite}</p>
+          </div>
+          <div className="border border-navy/15 p-3 mb-4 text-sm" data-testid="provas-volta6">
+            <p><strong>6.ª volta aplicada em {RESULTADO_PROVAS_INTERFACES.aplicadoEm}:</strong> {RESULTADO_PROVAS_INTERFACES.tipo}, {RESULTADO_PROVAS_INTERFACES.questoes} pedidos, um por especialidade. {RESULTADO_PROVAS_INTERFACES.regra}</p>
+            <p className="text-xs text-grafite-claro mt-1">{RESULTADO_PROVAS_INTERFACES.limite}</p>
+          </div>
+          <div className="border border-navy/15 p-3 mb-4 text-sm" data-testid="provas-volta7">
+            <p><strong>7.ª volta aplicada em {RESULTADO_PROVAS_ERRO_FINO.aplicadoEm}:</strong> {RESULTADO_PROVAS_ERRO_FINO.tipo}, {RESULTADO_PROVAS_ERRO_FINO.questoes} pedidos, um por especialidade. {RESULTADO_PROVAS_ERRO_FINO.regra}</p>
+            <p className="text-xs text-grafite-claro mt-1">{RESULTADO_PROVAS_ERRO_FINO.limite}</p>
+          </div>
+          <div className="border border-navy/15 p-3 mb-4 text-sm" data-testid="provas-volta8">
+            <p><strong>8.ª volta aplicada em {RESULTADO_PROVAS_REVISAO.aplicadoEm}:</strong> {RESULTADO_PROVAS_REVISAO.tipo}, {RESULTADO_PROVAS_REVISAO.defeitosPorEntregavel} defeitos por entregável, {RESULTADO_PROVAS_REVISAO.questoes} ao todo. {RESULTADO_PROVAS_REVISAO.regra}</p>
+            <p className="text-xs text-grafite-claro mt-1">{RESULTADO_PROVAS_REVISAO.limite}</p>
+          </div>
+          <div className="border border-navy/15 p-3 mb-4 text-sm" data-testid="provas-volta9">
+            <p><strong>9.ª volta aplicada em {RESULTADO_PROVAS_FALSO_POSITIVO.aplicadoEm}:</strong> {RESULTADO_PROVAS_FALSO_POSITIVO.tipo}, {RESULTADO_PROVAS_FALSO_POSITIVO.questoes} pedidos, um por especialidade. {RESULTADO_PROVAS_FALSO_POSITIVO.regra}</p>
+            <p className="text-xs text-grafite-claro mt-1">{RESULTADO_PROVAS_FALSO_POSITIVO.limite}</p>
+          </div>
+          <div className="border border-navy/15 p-3 mb-4 text-sm" data-testid="provas-volta10">
+            <p><strong>10.ª volta aplicada em {RESULTADO_PROVAS_FALSO_POSITIVO_LIMPO.aplicadoEm}:</strong> {RESULTADO_PROVAS_FALSO_POSITIVO_LIMPO.tipo}, {RESULTADO_PROVAS_FALSO_POSITIVO_LIMPO.questoes} pedidos, um por especialidade. {RESULTADO_PROVAS_FALSO_POSITIVO_LIMPO.regra}</p>
+            <p className="text-xs text-grafite-claro mt-1">{RESULTADO_PROVAS_FALSO_POSITIVO_LIMPO.limite}</p>
+          </div>
           <table className="w-full text-sm" data-testid="tabela-provas">
-            <thead><tr className="text-left text-xs uppercase text-grafite-claro"><th className="py-2 pr-3">Agente</th><th className="pr-3">Matriz</th><th className="pr-3">1.ª volta</th><th className="pr-3">2.ª volta (duras)</th><th>Última prova</th></tr></thead>
+            <thead><tr className="text-left text-xs uppercase text-grafite-claro"><th className="py-2 pr-3">Agente</th><th className="pr-3">Matriz</th><th className="pr-3">1.ª volta</th><th className="pr-3">2.ª volta (duras)</th><th className="pr-3">3.ª volta (julgamento)</th><th className="pr-3">4.ª volta (postura)</th><th className="pr-3">5.ª volta (regras)</th><th className="pr-3">6.ª volta (interfaces)</th><th className="pr-3">7.ª volta (erro fino)</th><th className="pr-3">8.ª volta (revisão)</th><th className="pr-3">9.ª volta (falso positivo)</th><th className="pr-3">10.ª volta (repetição limpa)</th><th>Última prova</th></tr></thead>
             <tbody>{AGENTES_ENGENHARIA.map(a => {
               const n = NOTA.get(a.id)
               const nd = NOTA_DURA.get(a.id)
+              const nj = NOTA_JULG.get(a.id)
+              const po = POSTURA.get(a.id)
+              const iv = INVARIANTE.get(a.id)
+              const it = INTERFACE.get(a.id)
+              const ef = ERRO_FINO.get(a.id)
+              const rv = REVISAO.get(a.id)
+              const fp = FALSO_POS.get(a.id)
+              const fl = FALSO_POS_LIMPO.get(a.id)
               return (
                 <tr key={a.id} className="border-t border-navy/10">
                   <td className="py-1.5 pr-3">{a.nome}</td>
                   <td className="pr-3">{MATRIZES.find(m => m.id === a.matriz)?.nome}</td>
                   <td className="pr-3">{n ? `${n.nota.toFixed(1)} · ${n.certos}/${n.questoes}` : 'por provar'}</td>
                   <td className="pr-3">{nd ? `${nd.nota.toFixed(1)} · ${nd.certos}/${nd.questoes}` : 'por provar'}</td>
-                  <td>{nd ? RESULTADO_PROVAS_DURAS.aplicadoEm : (n ? RESULTADO_PROVAS.aplicadoEm : '—')}</td>
+                  <td className="pr-3">{nj ? `${nj.nota.toFixed(1)} · ${nj.certos}/${nj.questoes}` : 'por provar'}</td>
+                  <td className="pr-3" title={po?.nota}>{po ? po.rotulo : 'por provar'}</td>
+                  <td className="pr-3" title={iv?.nota}>{iv ? iv.rotulo : 'por provar'}</td>
+                  <td className="pr-3" title={it?.nota}>{it ? it.rotulo : 'por provar'}</td>
+                  <td className="pr-3" title={ef?.nota}>{ef ? ef.rotulo : 'por provar'}</td>
+                  <td className="pr-3" title={rv?.nota}>{rv ? `${rv.encontrados}/${RESULTADO_PROVAS_REVISAO.defeitosPorEntregavel}` : 'por provar'}</td>
+                  <td className="pr-3" title={fp?.nota}>{fp ? fp.rotulo : 'por provar'}</td>
+                  <td className="pr-3" title={fl?.nota}>{fl ? fl.rotulo : 'por provar'}</td>
+                  <td>{fl ? RESULTADO_PROVAS_FALSO_POSITIVO_LIMPO.aplicadoEm : fp ? RESULTADO_PROVAS_FALSO_POSITIVO.aplicadoEm : rv ? RESULTADO_PROVAS_REVISAO.aplicadoEm : ef ? RESULTADO_PROVAS_ERRO_FINO.aplicadoEm : it ? RESULTADO_PROVAS_INTERFACES.aplicadoEm : iv ? RESULTADO_PROVAS_INVARIANTES.aplicadoEm : po ? RESULTADO_PROVAS_DESCONFIANCA.aplicadoEm : nj ? RESULTADO_PROVAS_JULGAMENTO.aplicadoEm : (nd ? RESULTADO_PROVAS_DURAS.aplicadoEm : (n ? RESULTADO_PROVAS.aplicadoEm : '—'))}</td>
                 </tr>
               )
             })}</tbody>

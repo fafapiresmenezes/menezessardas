@@ -1,0 +1,7 @@
+[
+  {
+    "id": "HID-R1",
+    "resposta": "Rascunho: DN400 (diâmetro interior aprox. 0,388 m; v aprox. 1,0 m/s) como opção de partida; DN350 (diâmetro interior aprox. 0,33 m; v aprox. 1,4 m/s) apenas se a perda de carga disponível o permitir. Faixa de diâmetro interior: 0,32 a 0,39 m.",
+    "justificacao": "Q = 0,120 m³/s; com v = 1,0 a 1,5 m/s (hipótese, não confirmada para a obra), D = √(4Q/(π·v)) dá 0,32 a 0,39 m. Perda de carga por Hazen-Williams com C = 130 (faixa 120 a 140, não confirmada): cerca de 2,6 m/km em DN400 e 5,7 m/km em DN350. Falta confirmar o comprimento, a carga disponível, a classe de pressão e os diâmetros interiores do fabricante (ISO 2531 / EN 545, cláusula não confirmada); rascunho para conferência e assinatura do engenheiro responsável."
+  }
+]

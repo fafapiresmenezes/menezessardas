@@ -1,0 +1,6 @@
+[
+  {
+    "id": "I1",
+    "resposta": "Ainda não dimensiono a estaca do P05, porque a unidade da carga não está confirmada: 1.200 t (tf) equivalem a cerca de 11.770 kN (1 tf = 9,81 kN), enquanto 1.200 kN equivalem a cerca de 122 tf, ou seja, uma diferença de cerca de 10 vezes que muda o número de estacas e o diâmetro.\nPeço às estruturas a confirmação da unidade e da carga característica de serviço do P05 (compressão, tracção, horizontal e momento), com a combinação de cargas de origem.\nPara verificar a capacidade (EN 1997-1, secção 7) preciso também de sondagens com SPT (NBR 6484 ou equivalente local), nível freático e um diâmetro e comprimento de estaca estimados; sem isto a resposta fica como não confirmado.\nImpacto para o gerente de contrato: até confirmação, sugiro congelar a encomenda de estacas do P05, porque a diferença de carga pode alterar prazo e custo numa ordem de grandeza de 10 vezes; a faixa de custo e prazo só se pode dar depois de confirmada a carga.\nRascunho para conferência e assinatura do engenheiro responsável. Não confirmado: unidade da carga do P05, carga de projecto, sondagens, nível freático e tipo de estaca."
+  }
+]

@@ -1,0 +1,7 @@
+[
+  {
+    "id": "PET-R1",
+    "resposta": "Não consigo indicar a espessura de parede só com o diâmetro. Preciso da pressão interna de projecto, em MPa ou bar (exemplo: 10 MPa ou 100 bar). Se existirem, também preciso do grau do aço (exemplo: API 5L X65) e da margem de corrosão em mm (exemplo: 3 mm). Com estes dados faço o cálculo pela norma de projecto indicada no contrato e envio a faixa mínimo–provável–máximo, com as hipóteses.",
+    "justificacao": "A espessura depende da pressão de projecto, da tensão admissível do aço, do factor de projecto e da margem de corrosão; o diâmetro sozinho não permite calcular. Qualquer número agora seria uma estimativa sem fonte, por isso fica não confirmado. Rascunho para conferência e assinatura do engenheiro responsável; norma a confirmar no contrato (ASME B31.4 ou ISO 13623)."
+  }
+]

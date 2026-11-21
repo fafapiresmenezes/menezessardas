@@ -1,0 +1,7 @@
+[
+  {
+    "id": "SAN-R1",
+    "resposta": "Não é possível fixar o volume só com 20 000 habitantes. Ordem de grandeza provisória: 1 000 a 3 000 m³ (provável cerca de 1 500 m³). Para o valor de projecto, preciso da carga afluente de CBO5 (kg/d) ou do caudal médio (m³/d) com a concentração de CBO5 (mg/L), e do critério de dimensionamento (idade de lamas ou carga mássica, com ou sem nitrificação).",
+    "justificacao": "Hipóteses: 54 g CBO5/(hab·d) (faixa 50 a 60), SST no tanque 3,5 kg/m³ (faixa 3 a 4), remoção 90 %. Idade de lamas de 10 d (Y 0,6; kd 0,06/d) dá cerca de 1 040 m³; carga mássica F/M 0,15 kg CBO5/(kg SST·d) dá cerca de 2 060 m³. Valores não confirmados; rascunho para conferência e assinatura do engenheiro responsável."
+  }
+]

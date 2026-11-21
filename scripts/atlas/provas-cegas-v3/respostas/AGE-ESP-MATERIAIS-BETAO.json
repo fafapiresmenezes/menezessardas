@@ -1,0 +1,13 @@
+[
+  {
+    "id": "MAT-T1",
+    "resposta": -1,
+    "passos": "Resistência média de dosagem fcm = fck + k·σ, com fck = 30 MPa e k dependente do fractil adotado (ex.: 1,64 para 5 %, conforme prática da central e EN 206, não confirmado); σ não está nos dados, logo fcm não é calculável.",
+    "dado_que_falta": "Desvio-padrão σ (MPa) da central para a classe C30/37, obtido do histórico de resultados de ensaios (EN 12390-3) com número de resultados n, ou o σ que a central declara para a produção."
+  },
+  {
+    "id": "MAT-T2",
+    "resposta": 0.50,
+    "passos": "Governa a restrição mais exigente: a/c de durabilidade para XS1 = 0,50 (EN 206, tabela de valores limite de composição, não confirmada por leitura direta da norma) é menor que a/c de resistência = 0,55; o betão tem de cumprir ambas, logo a/c = 0,50."
+  }
+]

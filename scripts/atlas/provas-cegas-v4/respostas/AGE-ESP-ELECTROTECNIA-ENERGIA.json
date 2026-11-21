@@ -1,0 +1,7 @@
+[
+  {
+    "id": "ELE-R1",
+    "resposta": "Provisório: cerca de 500 kVA (faixa 300-700 kVA), não confirmado. Depende da lista de cargas essenciais em kW, que ainda não temos.",
+    "justificacao": "Hipótese: cargas essenciais de 40 W/m² (faixa 25-60) x 9.000 m² = 360 kW (faixa 225-540 kW); fp 0,8 gives ~450 kVA (faixa 280-675 kVA), sem margem de arranque de motores nem AVAC. Falta: lista de cargas essenciais, temperatura e altitude do local (derating), existência de UPS. Ref.: IEC 60364-7-710 (locais médicos, alimentação de segurança; cláusula a confirmar); rascunho para conferência e assinatura do engenheiro responsável."
+  }
+]

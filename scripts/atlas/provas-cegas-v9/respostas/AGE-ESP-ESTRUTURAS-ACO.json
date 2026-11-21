@@ -1,0 +1,6 @@
+[
+ {
+  "id": "C1",
+  "resposta": "1) Unidades: se o consumo se refere a aço, \"metros cúbicos\" não é unidade de massa. Expressa em toneladas (t), convertendo com cerca de 7.850 kg/m³; se o número for de betão, a unidade está certa mas o item não pertence a esta frente de aço.\n2) O 0,87 coincide com 1/1,15, coeficiente de normas anteriores; a EN 1993-1-1 usa gamma M0 = 1,00. Confirma se 0,87 é a razão E_d/R_d (tem de ser menor ou igual a 1,0) ou um factor de cálculo, e qual gamma foi aplicado.\n3) O extracto diz que os coeficientes estão citados por número e cláusula, mas não aparece nenhuma citação; até haver referência, fica não confirmado.\n4) C5-M com 320 µm de espessura total é plausível para durabilidade alta (ISO 12944-5), mas confirma o esquema de pintura e a espessura mínima por demão exigida pelo contrato.\n5) Os cenários e a faixa (1.300-1.700) estão bem apresentados; o rodapé mantém-se, mas corrige a unidade e o factor antes de entregar ao engenheiro responsável. Rascunho para conferência e assinatura do engenheiro responsável."
+ }
+]

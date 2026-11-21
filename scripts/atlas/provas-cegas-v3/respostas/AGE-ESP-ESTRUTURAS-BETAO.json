@@ -1,0 +1,13 @@
+[
+  {
+    "id": "BET-T1",
+    "resposta": -1,
+    "passos": "fyd = 500/1,15 = 434,8 MPa; T = As·fyd = 1570·434,8 = 682,6 kN; a profundidade x = T/(0,8·b·fcd) e o braço z = d − 0,4x dependem de fcd = fck/1,5, que não é conhecido, logo o momento não se determina.",
+    "dado_que_falta": "fck, a classe de resistência característica do betão à compressão (ex.: C25/30, fck = 25 MPa), necessária para fcd e para x."
+  },
+  {
+    "id": "BET-T2",
+    "resposta": 60.75,
+    "passos": "Combinação EC0 6.10 com cada variável de base: (a) utilização base = 1,35·20 + 1,5·15 + 1,5·0,6·12 = 60,30 kN/m; (b) vento base = 1,35·20 + 1,5·12 + 1,5·0,7·15 = 60,75 kN/m; governa (b), 60,75 kN/m (kN/m)."
+  }
+]

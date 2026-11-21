@@ -1,0 +1,24 @@
+[
+ {
+  "id": "MEC-T1",
+  "enunciado": "Ventilador a mover 5,0 m³/s de ar com rendimento de 0,70. Qual a potência no eixo?",
+  "dados": {
+   "caudal_m3_s": 5.0,
+   "rendimento": 0.7
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "MEC-T2",
+  "enunciado": "Sala com 200 pessoas, com 10 L/s de ar novo por pessoa, e carga térmica sensível de 60,0 kW a remover com 10,0 °C de diferença de temperatura (ar com 1,2 kg/m³ e 1,005 kJ/kg·K). Qual o caudal de ar que governa?",
+  "dados": {
+   "pessoas": 200.0,
+   "ar_novo_L_s_pessoa": 10.0,
+   "carga_sensivel_kW": 60.0,
+   "delta_T_C": 10.0,
+   "rho_kg_m3": 1.2,
+   "cp_kJ_kgK": 1.005
+  },
+  "unidade_esperada": "m³/s"
+ }
+]

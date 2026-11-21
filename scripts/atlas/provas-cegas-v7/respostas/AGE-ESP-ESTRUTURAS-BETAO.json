@@ -1,0 +1,6 @@
+[
+  {
+    "id": "E1",
+    "resposta": "Não fecharia ainda. A aritmética confere (30/1,4 = 21,4 MPa; 21,4 MPa x 0,09 m2 = 1.926 kN, arredondado a 1.930 kN), mas o γc = 1,4 é o valor da NBR 6118, não da EN 1992-1-1 (§2.4.2.4, γc = 1,5), que dá fcd = 20,0 MPa e NRd(betão) = 1.800 kN.\nFaixa de betão: 1.800 a 1.930 kN, conforme a norma do contrato (hipótese: αcc = 1,0). Este valor só cobre o betão: falta a parcela As·fyd, o NEd das combinações, a esbelteza e os efeitos de 2.ª ordem.\nRascunho para conferência e assinatura do engenheiro responsável.\nNão confirmado: norma contratual, armadura longitudinal, dimensões do pilar (área bruta ou líquida)."
+  }
+]

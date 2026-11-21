@@ -1,0 +1,6 @@
+[
+  {
+    "id": "L1",
+    "resposta": "Sim, o extracto tem falhas. (1) A carga superficial de 1,2 m3/m2.h está a caudal médio, mas a hipótese 2 declara factor de ponta 2,0: o decantador primário tem de ser verificado ao caudal de ponta horário, e essa verificação não existe no extracto; o E_d/R_d de 0,78 não cobre esse caso. (2) A perda de 5 % é baixa para sistemas com intermitência e perdas típicas da região; o intervalo 1.300-1.480-1.700 m3/d não tem fonte de capitação nem de perdas, e os quantitativos do desenho não são base de consumo. Falta capitação e perda com faixa e fonte, ainda não confirmadas. (3) O rácio 0,78 não indica combinação de acções, coeficientes parciais nem estado limite; não é verificação demonstrável até o anexo o mostrar. (4) O rodapé diz fontes citadas por número e cláusula, mas o extracto não cita nenhuma norma (OMS, NBR, EN 752, Decreto Presidencial 83/14) e não tem a lista do que não foi confirmado. Não entregar ao fiscal antes de corrigir estes pontos. Rascunho para conferência e assinatura do engenheiro responsável."
+  }
+]

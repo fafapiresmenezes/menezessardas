@@ -1,0 +1,20 @@
+[
+ {
+  "id": "MAT-T1",
+  "enunciado": "Betão para uma obra em que se pretende classe C30/37. Qual a resistência média a pedir à central?",
+  "dados": {
+   "fck_MPa": 30.0
+  },
+  "unidade_esperada": "—"
+ },
+ {
+  "id": "MAT-T2",
+  "enunciado": "Betão de uma obra na faixa costeira, classe de exposição XS1. O cálculo de resistência admite razão água/cimento de 0,55; a tabela de durabilidade para XS1 limita a 0,50. Qual a razão água/cimento que governa?",
+  "dados": {
+   "ac_por_resistencia": 0.55,
+   "ac_por_durabilidade": 0.5,
+   "classe_exposicao": "XS1"
+  },
+  "unidade_esperada": "—"
+ }
+]
