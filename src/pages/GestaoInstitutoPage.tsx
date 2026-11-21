@@ -14,8 +14,9 @@ import { PORTAIS_INSTITUTO, ROTULO_ESTADO, type EstadoPortal } from '@/data/port
 import { TELAS_DO_INSTITUTO } from '@/components/menuTelas'
 import { ROTA_ADMIN } from '@/lib/destino'
 import AgentesAdministracao from '@/components/AgentesAdministracao'
+import RepositorioInstituto from '@/components/RepositorioInstituto'
 
-type Aba = 'visao' | 'agentes'
+type Aba = 'visao' | 'agentes' | 'repositorio'
 
 const ORDEM: EstadoPortal[] = ['piloto', 'prototipo', 'estudo']
 const COR: Record<EstadoPortal, string> = {
@@ -36,7 +37,8 @@ const PENDENCIAS_DE_M: { texto: string; onde?: string }[] = [
 export default function GestaoInstitutoPage() {
   // A aba vive no endereço (?aba=agentes), para se poder ligar directamente a ela de fora.
   const [params, setParams] = useSearchParams()
-  const aba: Aba = params.get('aba') === 'agentes' ? 'agentes' : 'visao'
+  const abaParam = params.get('aba')
+  const aba: Aba = abaParam === 'agentes' ? 'agentes' : abaParam === 'repositorio' ? 'repositorio' : 'visao'
   const irPara = (a: Aba) => setParams(a === 'visao' ? {} : { aba: a }, { replace: true })
   const contagem = ORDEM.map(e => ({ estado: e, n: PORTAIS_INSTITUTO.filter(p => p.estado === e).length }))
   const ferramentas = TELAS_DO_INSTITUTO().filter(t => t.href !== ROTA_ADMIN)
@@ -55,12 +57,12 @@ export default function GestaoInstitutoPage() {
         </section>
 
         <nav aria-label="Seções da administração" className="flex gap-2 border-b border-navy/10">
-          {([['visao', 'Visão geral'], ['agentes', 'Agentes']] as [Aba, string][]).map(([id, rotulo]) => (
+          {([['visao', 'Visão geral'], ['agentes', 'Agentes'], ['repositorio', 'Repositório']] as [Aba, string][]).map(([id, rotulo]) => (
             <button
               key={id}
               type="button"
               onClick={() => irPara(id)}
-              title={id === 'agentes' ? 'Mostra os agentes da administração em cartão' : 'Volta para a visão geral do Instituto'}
+              title={id === 'agentes' ? 'Mostra os agentes da administração em cartão' : id === 'repositorio' ? 'Mostra o repositório de conhecimento da administração' : 'Volta para a visão geral do Instituto'}
               aria-current={aba === id ? 'page' : undefined}
               className={`-mb-px border-b-2 px-3 py-2 text-sm ${
                 aba === id ? 'border-dourado font-medium text-navy' : 'border-transparent text-grafite-claro hover:text-navy'
@@ -72,6 +74,7 @@ export default function GestaoInstitutoPage() {
         </nav>
 
         {aba === 'agentes' && <AgentesAdministracao />}
+        {aba === 'repositorio' && <RepositorioInstituto />}
 
         {aba === 'visao' && (<>
         <section aria-labelledby="numeros" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
