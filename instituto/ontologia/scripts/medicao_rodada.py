@@ -9,11 +9,11 @@ ETAPAS = [  # (etapa, % feito, como foi medido)
  ('1. Retirar números inventados', 100, '5 de 5 índices antigos retirados'),
  ('2. Setores, fichas e tipos de variável', 100 if r >= 5 else 60, ('3 de 3 partes: 15 fichas nicho→IBGE, 13 nichos ligados ao EXIOBASE (6 sem correspondência escritos) e catálogo de ' + str(json.load(open('saida/catalogo_variaveis.json'))['linhas']) + ' variáveis com tipo, gerado das saídas') if r >= 5 else '15 fichas nicho→IBGE, 13 nichos ligados ao EXIOBASE e 6 sem correspondência escritos; catálogo de variáveis com tipo ainda não montado em dado'),
  ('3. Família 7, sobreposição interna', 100, f"{len(si['pares'])} pares de 10 nichos calculados e recontados"),
- ('4. Família 1, dependência econômica', 67 if r >= 2 else 33, '2 de 3 bases feitas (IBGE 2015 e EXIOBASE 2019 mundial); OCDE bloqueia acesso automático' if r >= 2 else '1 de 3 bases feita (IBGE 2015)'),
+ ('4. Família 1, dependência econômica', 100 if r >= 6 else 67 if r >= 2 else 33, '3 de 3 bases feitas (IBGE 2015, EXIOBASE 2019 e FIGARO 2023, que substituiu a OCDE, bloqueada para acesso automático); conferência entre IBGE e FIGARO aprovada' if r >= 6 else '2 de 3 bases feitas (IBGE 2015 e EXIOBASE 2019 mundial); OCDE bloqueia acesso automático' if r >= 2 else '1 de 3 bases feita (IBGE 2015)'),
  ('5. Famílias 3 e 4, mercados', 100 if r >= 4 else 75 if r >= 3 else 0, 'família 3: 2 de 2 bases (PIB trimestral do IBGE e bolsa dos EUA) = 100%; família 4 = 100%' if r >= 4 else 'família 3: 1 de 2 bases (PIB trimestral do IBGE feito; bolsa B3/FRED pendente) = 50%; família 4: coleta Polymarket e Kalshi feita = 100%; média 75%' if r >= 3 else 'fontes testadas e abertas; conta não começou'),
  ('6. Famílias 2 e 5, Harvard e OpenAlex', 50 if r >= 4 else 25 if r >= 3 else 0, 'família 2: conta feita, conferência contra o Atlas reprovada (66,1% contra meta de 80%), vale 50%; família 5: 1 de 2 bases (arXiv) = 50%; média 50%' if r >= 4 else 'família 5: 1 de 2 bases (arXiv feito; OpenAlex esgotou a cota grátis do dia) = 50%; família 2 (Harvard) = 0%; média 25%' if r >= 3 else 'fontes testadas; conta não começou'),
  ('7. Família 6, literatura', min(100, n_lit * 10), f'{n_lit} estudos lidos e conferidos de uma meta de 10 (um por nicho principal), mais 1 estudo usado só para conferir'),
- ('8. Desenho, segunda conta e carimbo', 90 if r >= 5 else 50 if r >= 4 else 45 if r >= 3 else 40 if r >= 2 else 30, ('desenho com 12 vistas; revisão de adversário feita, com 9 achados, todos tratados; pacote de dados carimbado no Bitcoin, confirmação do bloco leva algumas horas (falta 10%)' if r >= 5 else 'desenho com 11 vistas publicado' if r >= 4 else 'desenho com 10 vistas publicado' if r >= 3 else 'desenho com 7 vistas publicado') + ('' if r >= 5 else '; revisão de adversário e carimbo pendentes')),
+ ('8. Desenho, segunda conta e carimbo', 90 if r >= 5 else 50 if r >= 4 else 45 if r >= 3 else 40 if r >= 2 else 30, ('desenho com 12 vistas e seletor de 2 bases mundiais; revisão de adversário feita na rodada 5 (9 achados tratados); carimbos enviados ao Bitcoin, confirmação do bloco ainda pendente (falta 10%)' if r >= 6 else 'desenho com 12 vistas; revisão de adversário feita, com 9 achados, todos tratados; pacote de dados carimbado no Bitcoin, confirmação do bloco leva algumas horas (falta 10%)' if r >= 5 else 'desenho com 11 vistas publicado' if r >= 4 else 'desenho com 10 vistas publicado' if r >= 3 else 'desenho com 7 vistas publicado') + ('' if r >= 5 else '; revisão de adversário e carimbo pendentes')),
 ]
 total = sum(p for _, p, _ in ETAPAS) / len(ETAPAS)
 c = le['conferencia']
@@ -27,10 +27,22 @@ etapas = ''.join(f"<tr><td>{E(n)}</td><td class=n>{p}%</td><td><div class=b><i s
 sem = ''.join(f"<li><b>{E(k)}</b>: {E(v)}</li>" for k, v in me['sem_correspondencia'].items())
 extra = ''
 extra4 = ''
+figaro = ''
+if r >= 6:
+    fg = json.load(open('saida/figaro_2023.json')); cbz = json.load(open('saida/comparacao_bases.json')); cf = fg['conferencia']; brf = fg['por_regiao']['BR']
+    figaro = (f"<h2>Família 1, terceira base: FIGARO {fg['ano']} (Eurostat), selo: calculado por nós</h2><p>{E(fg['fonte'])}. {len(fg['regioes'])} regiões × {len(fg['industrias'])} indústrias. Arquivo SHA-256 {fg['sha256_arquivo']}. {E(fg['aviso'])}</p>"
+              f"<pre>{E(fg['formula'])}\nProdução pela linha contra pela coluna ........ {cf['max_dif_relativa_producao_linha_vs_coluna']:.1e}\nResíduo da inversão completa ........ {cf['max_residuo_(I-A)L-I_completo']:.1e}\n"
+              f"Mundo: inversão contra soma de {cf['termos_serie_mundo']} rodadas ........ {cf['max_dif_Lw_inversao_vs_serie']:.1e}\nEstabilidade, correlação de A entre 2023 e 2024 ........ {cf['estabilidade']['correlacao_A_2023_2024']:.4f}\nResultado: {'APROVADO' if cf['aprovado'] else 'REPROVADO'}</pre>"
+              f"<h2>Conferência entre bases: Brasil pelo IBGE 2015 contra Brasil pelo FIGARO {fg['ano']}</h2><p>{E(cbz['formula'])}. Critério escrito antes: Spearman ≥ {cbz['criterio']['spearman_minimo']} e mediana da diferença ≤ {100*cbz['criterio']['mediana_dif_relativa_maxima']:.0f}%. "
+              f"Resultado: Spearman {cbz['spearman']:.3f}, mediana {100*cbz['mediana_dif_relativa_absoluta']:.1f}%: {'APROVADO' if cbz['aprovado'] else 'REPROVADO'}. Vários pares quase iguais sugerem que o FIGARO parte das tabelas do IBGE para o Brasil (não conferido em documento): é coerência entre bases, não independência.</p>"
+              "<table><tr><th>Setor</th><th>IBGE</th><th class=n>Multiplicador IBGE 2015</th><th class=n>Multiplicador FIGARO</th><th class=n>Diferença</th></tr>"
+              + ''.join(f"<tr><td>{E(l['nome_figaro'])}</td><td>{l['ibge']}</td><td class=n>{l['mult_ibge_2015']:.3f}</td><td class=n>{l['mult_figaro_2023_dentro_do_brasil']:.3f}</td><td class=n>{100*l['dif_relativa']:+.1f}%</td></tr>".replace('.', ',') for l in cbz['pares']) + "</table>"
+              "<h2>Brasil, FIGARO: quanto dos insumos de cada setor vem de fora do país</h2><table><tr><th>Setor</th><th>Nicho</th><th class=n>Só os insumos</th><th class=n>Com o R$ 1 inicial</th></tr>"
+              + ''.join(f"<tr><td>{E(fg['nichos'][c]['nome'])}</td><td>{E(fg['nichos'][c]['nicho'])}</td><td class=n>{100*brf['parte_dos_insumos_fora_da_regiao'][k]:.1f}%</td><td class=n>{100*brf['parte_da_cadeia_fora_da_regiao'][k]:.1f}%</td></tr>".replace('.', ',') for k, c in enumerate(fg['codigos_nichos'])) + "</table>")
 revisao = ''
 if r >= 5:
     rv = json.load(open('saida/revisao_rodada5.json'))
-    revisao = '<h2>Revisão de adversário: achados e o que foi feito</h2><p class=m>' + E(rv['quem']) + '</p><table><tr><th>#</th><th>Achado</th><th>O que foi feito</th></tr>' + ''.join(f"<tr><td>{a['n']}</td><td>{E(a['achado'])}</td><td>{E(a['feito'])}</td></tr>" for a in rv['achados']) + '</table><p>Conferido certo pela revisão: ' + E(rv['conferido_certo']) + '</p>'
+    revisao = '<h2>Revisão de adversário (rodada 5): achados e o que foi feito</h2><p class=m>' + E(rv['quem']) + '</p><table><tr><th>#</th><th>Achado</th><th>O que foi feito</th></tr>' + ''.join(f"<tr><td>{a['n']}</td><td>{E(a['achado'])}</td><td>{E(a['feito'])}</td></tr>" for a in rv['achados']) + '</table><p>Conferido certo pela revisão: ' + E(rv['conferido_certo']) + '</p>'
 if r >= 4:
     px = json.load(open('saida/atlas_proximidade.json')); cb = json.load(open('saida/comovimento_bolsa.json'))
     cfx = px['conferencia']
@@ -115,6 +127,7 @@ Impressão digital do pacote igual à publicada: {ex['sha256_zip_conferido_com_o
 <p>{E(ex['aviso_angola'])}</p>
 <h2>Quanto da cadeia de cada setor vem de fora do país (Brasil e Resto da África)</h2>
 <p class=m>Só os insumos = 1 − (L_dentro − 1)/(L_total − 1). Com o R$ 1 inicial = 1 − L_dentro/L_total (o R$ 1,00 da própria demanda é sempre da região e dilui a parte de fora).</p><table><tr><th>Setor (EXIOBASE)</th><th class=n>Brasil, só insumos</th><th class=n>Brasil, com R$ 1</th><th class=n>Resto da África, só insumos</th><th class=n>Resto da África, com R$ 1</th></tr>{''.join(f"<tr><td>{E(ex['setores'][j])}</td><td class=n>{100*ex['por_regiao']['BR']['parte_dos_insumos_fora_da_regiao'][c]:.1f}%</td><td class=n>{100*ex['por_regiao']['BR']['parte_da_cadeia_fora_da_regiao'][c]:.1f}%</td><td class=n>{100*ex['por_regiao']['WF']['parte_dos_insumos_fora_da_regiao'][c]:.1f}%</td><td class=n>{100*ex['por_regiao']['WF']['parte_da_cadeia_fora_da_regiao'][c]:.1f}%</td></tr>" for c, j in enumerate(ex['indices_nichos']))}</table>
+{figaro}
 {revisao}
 {extra4}
 {extra}

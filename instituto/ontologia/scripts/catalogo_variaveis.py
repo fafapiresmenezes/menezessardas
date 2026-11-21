@@ -70,6 +70,18 @@ v(F1w, "Parte da cadeia vinda de fora da região", "1 − L_dentro/L_total", "pr
 v(F1w, "Parte dos insumos vinda de fora da região", "1 − (L_dentro − 1)/(L_total − 1)", "proporção", "sem unidade", "0 a 1", "conta nossa", "2019", "região × setor dos nichos", len(ex["por_regiao"]) * len(ex["indices_nichos"]),
   obs="sem o R$ 1,00 inicial: só o que vem pela cadeia de insumos")
 
+F1f = "1 · Dependência (FIGARO)"
+fg, cbz = j("figaro_2023.json"), j("comparacao_bases.json")
+n_fg = len(fg["regioes"]) * len(fg["industrias"]); nn = len(fg["codigos_nichos"]); nr = len(fg["por_regiao"])
+v(F1f, "Fluxo entre indústrias e países", "Z", "razão contínua", "milhões de euros", "≥ 0", "FIGARO (Eurostat)", str(fg["ano"]), "país-indústria × país-indústria", n_fg * n_fg,
+  guardados=nn * nn, obs="gravado só entre as indústrias dos nichos")
+v(F1f, "Coeficiente técnico", "A", "proporção", "euro por euro", "0 a 1", "conta nossa", str(fg["ano"]), "país-indústria × país-indústria", n_fg * n_fg,
+  guardados=len(fg["industrias"]) ** 2 + nr * nn * nn)
+v(F1f, "Efeito em cadeia", "L", "razão contínua", "euro por euro de demanda final", "≥ 0", "conta nossa (inversão completa)", str(fg["ano"]), "país-indústria × país-indústria", n_fg * n_fg,
+  guardados=len(fg["industrias"]) ** 2 + 2 * nr * nn * nn)
+v(F1f, "Parte dos insumos vinda de fora do país", "1 − (L_dentro − 1)/(L_total − 1)", "proporção", "sem unidade", "0 a 1", "conta nossa", str(fg["ano"]), "região × indústria dos nichos", nr * nn)
+v(F1f, "Multiplicador de produção, IBGE contra FIGARO", "Σ_i L[i,j]", "razão contínua", "R$ ou euro por 1 de demanda final", "≥ 1", "conta nossa (conferência entre bases)", "2015 e 2023", "atividade comparável", 2 * len(cbz["pares"]))
+
 F2 = "2 · Proximidade (Harvard)"
 v(F2, "Vantagem comparativa revelada", "RCA[c,p]", "índice relativo", "média do mundo = 1", "≥ 0", "Harvard Atlas", "2015–2024", "país-ano × produto", px["fonte"]["observacoes_pais_ano"] * px["fonte"]["produtos"], selo="da fonte",
   guardados=0, obs="respostas brutas do Atlas guardadas fora do repositório (grandes), com impressão digital de cada arquivo")

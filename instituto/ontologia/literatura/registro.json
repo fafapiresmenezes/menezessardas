@@ -319,6 +319,51 @@
     }
    ],
    "obs": "Resumo: formalismo maior está ligado a processos mais longos, mais corrupção e menos acesso à Justiça. Dados antigos (por volta de 2000)."
+  },
+  {
+   "id": "L10",
+   "selo": "da literatura",
+   "par": [
+    "Cadeia distributiva B2B",
+    "toda a economia"
+   ],
+   "direcao": "Choque num fornecedor ou cliente → empresas ligadas pela cadeia (propagação)",
+   "autores": "Vasco M. Carvalho, Makoto Nirei, Yukiko U. Saito e Alireza Tahbaz-Salehi",
+   "instituicao": "Universidade de Cambridge, Universidade de Tóquio, Universidade Waseda e Northwestern (Kellogg)",
+   "ano": 2021,
+   "titulo": "Supply Chain Disruptions: Evidence from the Great East Japan Earthquake",
+   "veiculo": "Quarterly Journal of Economics 136(2), 1255–1321 (cópia do autor no site da Kellogg)",
+   "url": "https://www.kellogg.northwestern.edu/faculty/alirezat/JapanEQ.pdf",
+   "sha256_pdf": "9674395d5096bca42f4e388f49479445e1a421b7859857e736d1cde34690dd10",
+   "onde": "resumo (p. 1 do PDF), introdução (p. 4 e p. 5 do PDF)",
+   "tipo_de_numero": "estimativa com dados de cerca de 1 milhão de empresas japonesas e modelo de equilíbrio geral de redes de produção",
+   "numeros": [
+    {
+     "o_que": "queda no crescimento do PIB real do Japão no ano seguinte ao terremoto de 2011, em pontos percentuais (p. 1)",
+     "valor": 0.47
+    },
+    {
+     "o_que": "a mesma queda num mundo sem ligações de cadeia entre empresas de dentro e de fora da área atingida (p. 5)",
+     "valor": 0.21
+    },
+    {
+     "o_que": "queda no crescimento das empresas com FORNECEDOR atingido, em pontos percentuais (p. 4)",
+     "valor": 3.8
+    },
+    {
+     "o_que": "queda no crescimento das empresas com CLIENTE atingido, em pontos percentuais (p. 4)",
+     "valor": 3.1
+    },
+    {
+     "o_que": "queda nas vendas dos clientes dos clientes das empresas atingidas, em pontos percentuais (p. 4)",
+     "valor": 2.8
+    },
+    {
+     "o_que": "queda nas vendas dos fornecedores dos fornecedores, em pontos percentuais (p. 4)",
+     "valor": 2.1
+    }
+   ],
+   "obs": "É a medida direta do que a família 1 calcula pela matriz: o choque anda para os dois lados da cadeia e passa de um elo para o seguinte. Pela conta dos autores, as ligações de cadeia mais que dobram o efeito no PIB (0,47 contra 0,21). Japão, 2011: serve de ordem de grandeza, não de número para o Brasil."
   }
  ]
 }

@@ -7,7 +7,7 @@ nicho_de = {}
 for f in me['fichas']:
     for a in f['atividades']: nicho_de.setdefault(a['cod'], []).append(f['nicho'])
 dados = {
-  'rodada': 5, 'data': '2026-11-21',
+  'rodada': 6, 'data': '2026-11-21',
   'familias': [
     {'n': 1, 'nome': 'Dependência econômica', 'estado': 'feito', 'selo': 'calculado por nós', 'fonte': le['fonte'], 'pares': 67 * 66},
     {'n': 2, 'nome': 'Proximidade produtiva', 'estado': 'próxima rodada', 'fonte': 'Atlas de Complexidade Econômica (Harvard Growth Lab)'},
@@ -40,9 +40,28 @@ dados['mundo'] = {k: ex[k] for k in ('fonte', 'url', 'sha256_zip_conferido_com_o
 dados['mundo'].update({'setores': [{'i': j, 'en': ex['setores'][j], 'pt': PT[j], 'nicho': nicho_ex[j]} for j in idx],
   'A': sub(ex['mundo']['A']), 'L': sub(ex['mundo']['L']), 'Z': ex['mundo']['Z_nichos_milhoes_eur'], 'x': [ex['mundo']['producao_milhoes_eur'][j] for j in idx],
   'regioes': {'BR': 'Brasil', 'WF': 'Resto da África (inclui Angola)', 'ZA': 'África do Sul', 'CN': 'China', 'US': 'Estados Unidos'}, 'por_regiao': ex['por_regiao']})
+PTN = str.maketrans({',': '.', '.': ','})  # 1,234.5 → 1.234,5 (só nos números; os textos abaixo não têm vírgula nem ponto fora deles)
+dados['mundo'].update({'base': 'EXIOBASE 3.9.6', 'ano': 2019, 'n_regioes': len(ex['regioes']), 'linhas': len(ex['regioes']) * len(ex['setores']),
+  'conf_texto': (f"nossa A contra a A publicada pelo EXIOBASE: diferença {ex['conferencia']['max_dif_A_nossa_vs_A_publicada']:.1e}; "
+                 f"resíduo da inversão completa ({len(ex['regioes']) * len(ex['setores']):,} linhas) {ex['conferencia']['max_residuo_(I-A)L-I_completo']:.1e}").translate(PTN)})
+fg = json.load(open('saida/figaro_2023.json')); cbz = json.load(open('saida/comparacao_bases.json'))
+fi = [fg['industrias'].index(c) for c in fg['codigos_nichos']]
+cf = fg['conferencia']
+dados['mundo_figaro'] = {'base': 'FIGARO', 'ano': fg['ano'], 'fonte': fg['fonte'], 'url': fg['url'], 'sha256': fg['sha256_arquivo'], 'baixado_em': fg['baixado_em'],
+  'unidade': fg['unidade'], 'formula': fg['formula'], 'aviso_angola': fg['aviso'], 'conferencia': cf, 'n_regioes': len(fg['regioes']),
+  'linhas': len(fg['regioes']) * len(fg['industrias']),
+  'conf_texto': (f"produção pela linha contra produção pela coluna: diferença relativa {cf['max_dif_relativa_producao_linha_vs_coluna']:.1e}; "
+                 f"resíduo da inversão completa ({len(fg['regioes']) * len(fg['industrias']):,} linhas) {cf['max_residuo_(I-A)L-I_completo']:.1e}; "
+                 f"A de 2023 contra A de 2024: correlação {cf['estabilidade']['correlacao_A_2023_2024']:.4f}").translate(PTN),
+  'setores': [{'i': j, 'en': c, 'pt': fg['nichos'][c]['nome'], 'nicho': fg['nichos'][c]['nicho']} for c, j in zip(fg['codigos_nichos'], fi)],
+  'A': [[fg['mundo']['A'][a][b] for b in fi] for a in fi], 'L': [[fg['mundo']['L'][a][b] for b in fi] for a in fi],
+  'Z': fg['mundo']['Z_nichos_milhoes_eur'], 'x': [fg['mundo']['producao_milhoes_eur'][j] for j in fi],
+  'regioes': {'BR': 'Brasil', 'WRL_REST': 'Resto do mundo (inclui toda a África menos a África do Sul)', 'ZA': 'África do Sul', 'CN': 'China', 'US': 'Estados Unidos'},
+  'por_regiao': fg['por_regiao'], 'comparacao_ibge': cbz}
 dados['literatura'] = lit
-dados['familias'][0]['fonte'] += ' + ' + ex['fonte'].split(' (')[0]
-dados['familias'][5]['estado'] = 'em andamento'; dados['familias'][5]['fonte'] = f"{sum(1 for r in lit['registro'] if r['selo'] == 'da literatura')} estudos lidos e conferidos"
+dados['familias'][0]['fonte'] += ' + ' + ex['fonte'].split(' (')[0] + ' + FIGARO 2023 (Eurostat)'
+n_lit = sum(1 for r in lit['registro'] if r['selo'] == 'da literatura')
+dados['familias'][5]['estado'] = 'feito' if n_lit >= 10 else 'em andamento'; dados['familias'][5]['fonte'] = f"{n_lit} estudos lidos e conferidos (meta: 10)"
 co = json.load(open('saida/comovimento_pib.json')); ci = json.load(open('saida/ciencias_arxiv.json')); mp = json.load(open('saida/mercados_previsao.json'))
 def normaliza(c, ref, pux, per):
     out = {k: c[k] for k in ('nome', 'aviso', 'fonte', 'metodo', 'setores', 'conferencia')}

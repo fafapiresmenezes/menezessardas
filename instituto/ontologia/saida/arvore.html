@@ -83,7 +83,7 @@ a { color: var(--accent) }
 
 <div class="wrap">
   <header>
-    <h3>Instituto THEYE · Ontologia · rodada 4 · 21/11/2026</h3>
+    <h3 id="topoRodada">Instituto THEYE · Ontologia · 21/11/2026</h3>
     <h1>Árvore de intercorrelações</h1>
     <p class="lead">Como os setores se ligam, medido de cinco jeitos que nunca se misturam na mesma régua: quem compra de quem, quem sobe e desce junto, quais ciências publicam juntas, o que os estudos já mediram e o que os mercados de previsão mostram. Cada número leva um selo e abre a sua memória de cálculo. Onde ainda não há conta, aparece "sem base".</p>
     <div class="selos" aria-label="Legenda dos selos">
@@ -130,13 +130,16 @@ a { color: var(--accent) }
         <h2>A mesma conta com a base mundial</h2>
         <p class="note" id="mundoFonte"></p>
         <div class="controls">
+          <label for="baseW">Base
+            <select id="baseW"><option value="mundo">EXIOBASE 2019 (163 setores)</option><option value="mundo_figaro">FIGARO 2023 (64 setores, Eurostat)</option></select></label>
           <label for="regiao">Onde
-            <select id="regiao"><option value="mundo">Mundo inteiro (49 regiões somadas)</option><option value="BR">Brasil</option><option value="WF">Resto da África (inclui Angola)</option><option value="ZA">África do Sul</option><option value="CN">China</option><option value="US">Estados Unidos</option></select></label>
+            <select id="regiao"></select></label>
           <label for="medidaW">Índice
             <select id="medidaW"><option value="A">Compra direta</option><option value="L">Efeito em cadeia</option></select></label>
         </div>
         <div class="scroll"><div class="heat" id="heatW"></div></div>
         <p class="note" id="mundoNota"></p>
+        <div id="compBox" hidden></div>
         <div id="foraBox"><h3>Quanto da cadeia vem de fora da região</h3><div class="scroll"><table id="tabFora"></table></div></div>
       </section>
 
@@ -393,6 +396,15 @@ ${esc(IB.leitura_L)}</div>
       <table><tr><td>Nossa A contra a A publicada no pacote</td><td class="num">${D0.mundo.conferencia.max_dif_A_nossa_vs_A_publicada.toExponential(1)}</td></tr>
         <tr><td>Resíduo de (I − A)·L − I, inversão completa</td><td class="num">${D0.mundo.conferencia['max_residuo_(I-A)L-I_completo'].toExponential(1)}</td></tr>
         <tr><td>Mundo: L por inversão contra soma de ${D0.mundo.conferencia.termos_serie_mundo} rodadas</td><td class="num">${D0.mundo.conferencia.max_dif_Lw_inversao_vs_serie.toExponential(1)}</td></tr></table></div>
+    ${D0.mundo_figaro ? `<div><h3>Família 1 · terceira base (FIGARO) · calculado por nós</h3>
+      <p>${esc(D0.mundo_figaro.fonte)}, ano ${D0.mundo_figaro.ano}. Arquivo baixado em ${esc(D0.mundo_figaro.baixado_em)}, impressão digital <span class="mono">${esc(D0.mundo_figaro.sha256.slice(0, 16))}…</span>. ${esc(D0.mundo_figaro.aviso_angola)}</p>
+      <div class="formula">${esc(D0.mundo_figaro.formula)}</div>
+      <table><tr><td>Produção pela linha contra pela coluna (diferença relativa)</td><td class="num">${D0.mundo_figaro.conferencia.max_dif_relativa_producao_linha_vs_coluna.toExponential(1)}</td></tr>
+        <tr><td>Resíduo de (I − A)·L − I, inversão completa</td><td class="num">${D0.mundo_figaro.conferencia['max_residuo_(I-A)L-I_completo'].toExponential(1)}</td></tr>
+        <tr><td>Mundo: L por inversão contra soma de ${D0.mundo_figaro.conferencia.termos_serie_mundo} rodadas</td><td class="num">${D0.mundo_figaro.conferencia.max_dif_Lw_inversao_vs_serie.toExponential(1)}</td></tr>
+        <tr><td>Estabilidade: correlação de A entre 2023 e 2024 (${D0.mundo_figaro.conferencia.estabilidade.celulas_comparadas.toLocaleString('pt-BR')} células)</td><td class="num">${fmt(D0.mundo_figaro.conferencia.estabilidade.correlacao_A_2023_2024, 4)}</td></tr>
+        <tr><td>Brasil, IBGE 2015 contra FIGARO 2023 (Spearman dos multiplicadores; critério ≥ 0,6)</td><td class="num">${fmt(D0.mundo_figaro.comparacao_ibge.spearman, 3)}</td></tr>
+        <tr><td>Mesma conferência, mediana da diferença (critério ≤ 25%)</td><td class="num">${fmt(100 * D0.mundo_figaro.comparacao_ibge.mediana_dif_relativa_absoluta, 1)}%</td></tr></table></div>` : ''}
     ${D0.proximidade ? `<div><h3>Família 2 · Proximidade produtiva · ${esc(D0.proximidade.selo)}</h3>
       <p>${esc(D0.proximidade.fonte.orgao)}. ${esc(D0.proximidade.metodo.referencia)}.</p>
       <div class="formula">${esc(D0.proximidade.metodo.phi)}\n${esc(D0.proximidade.metodo.nicho)}\nPaíses: ${esc(D0.proximidade.fonte.filtro_de_paises)}</div>
@@ -433,10 +445,14 @@ function desenharLiteratura() {
   document.getElementById('litLista').innerHTML = D0.literatura.registro.map(cartaoLit).join('');
 }
 function desenharMundo() {
-  const W = D0.mundo, regSel = document.getElementById('regiao').value, reg = regSel === 'mundo' ? 'mundo' : (Object.keys(W.regioes).find(k => k === regSel) || 'mundo'), med = document.getElementById('medidaW').value, n = W.setores.length;
+  const W = baseW(), selR = document.getElementById('regiao');
+  if (selR.dataset.base !== W.base) { const v = selR.value; selR.dataset.base = W.base;
+    selR.innerHTML = `<option value="mundo">Mundo inteiro (${W.n_regioes} regiões somadas)</option>` + Object.entries(W.regioes).map(([k, t]) => `<option value="${esc(k)}">${esc(t)}</option>`).join('');
+    if ([...selR.options].some(o => o.value === v)) selR.value = v; }
+  const regSel = selR.value, reg = regSel === 'mundo' ? 'mundo' : (Object.keys(W.regioes).find(k => k === regSel) || 'mundo'), med = document.getElementById('medidaW').value, n = W.setores.length;
   document.getElementById('mundoFonte').textContent = `${W.fonte}. Valores em ${W.unidade}. ${W.aviso_angola}`;
   let M, nota;
-  if (reg === 'mundo') { M = W[med]; nota = 'Mundo: todas as 49 regiões somadas numa tabela só, antes da conta.'; }
+  if (reg === 'mundo') { M = W[med]; nota = `Mundo: todas as ${W.n_regioes} regiões somadas numa tabela só, antes da conta.`; }
   else { const b = W.por_regiao[reg]; M = med === 'A' ? b.A_dentro_da_regiao : b.L_total; nota = med === 'A' ? `Compra direta só de fornecedores dentro de: ${W.regioes[reg]}.` : `Efeito em cadeia somando fornecedores do mundo todo, para 1 euro de demanda final em: ${W.regioes[reg]}.`; }
   document.getElementById('mundoNota').textContent = nota + ' Linha = quem vende, coluna = quem compra.';
   let vmax = 0; M.forEach((r, i) => r.forEach((v, j) => { if (i !== j) vmax = Math.max(vmax, v); }));
@@ -447,19 +463,22 @@ function desenharMundo() {
       h += `<button style="background:${tt ? `color-mix(in srgb, var(--accent) ${Math.round(8 + 92 * tt)}%, var(--heat-0))` : 'var(--heat-0)'}" data-i="${i}" data-j="${j}" title="${esc(sj.pt)} compra de ${esc(si.pt)}: ${fmt(v, 4)}" aria-label="${esc(sj.pt)} compra de ${esc(si.pt)}: ${fmt(v, 4)}"></button>`; }); });
   el.innerHTML = h;
   el.querySelectorAll('button').forEach(b => b.onclick = () => mostrarParMundo(+b.dataset.i, +b.dataset.j, reg));
+  const cb = document.getElementById('compBox'), C = W.comparacao_ibge; cb.hidden = !C;
+  if (C) cb.innerHTML = `<h3>Conferência entre bases: Brasil pelo IBGE 2015 contra Brasil pelo FIGARO ${W.ano}</h3><p class="note">${esc(C.formula)}. Critério escrito antes da conta: Spearman ≥ ${fmt(C.criterio.spearman_minimo, 1)} e mediana da diferença ≤ ${fmt(100 * C.criterio.mediana_dif_relativa_maxima, 0)}%. Resultado: Spearman ${fmt(C.spearman, 3)}, mediana ${fmt(100 * C.mediana_dif_relativa_absoluta, 1)}%: <b>${C.aprovado ? 'aprovado' : 'reprovado'}</b>. Vários pares quase iguais sugerem que o FIGARO parte das tabelas do IBGE para o Brasil; isso não foi conferido em documento, então a conferência mostra coerência entre as bases, não independência. Ficam de fora, sem par um para um: ${C.fora.map(esc).join(', ')}.</p><div class="scroll"><table><tr><th>Setor</th><th>IBGE</th><th class="num">Multiplicador IBGE 2015</th><th class="num">Multiplicador FIGARO ${W.ano}</th><th class="num">Diferença</th></tr>${C.pares.map(l => `<tr><td>${esc(l.nome_figaro)}</td><td class="mono">${esc(l.ibge)}</td><td class="num">${fmt(l.mult_ibge_2015, 3)}</td><td class="num">${fmt(l.mult_figaro_2023_dentro_do_brasil, 3)}</td><td class="num">${l.dif_relativa >= 0 ? '+' : ''}${fmt(100 * l.dif_relativa, 1)}%</td></tr>`).join('')}</table></div>`;
   const box = document.getElementById('foraBox'); box.hidden = reg === 'mundo';
   if (reg !== 'mundo') { const b = W.por_regiao[reg];
     document.getElementById('tabFora').innerHTML = '<tr><th>Setor</th><th>Nicho</th><th class="num">Só os insumos</th><th></th><th class="num">Com o R$ 1 inicial</th></tr>' + W.setores.map((s, c) => ({ s, f: b.parte_dos_insumos_fora_da_regiao[c], t: b.parte_da_cadeia_fora_da_regiao[c] })).sort((a, z) => z.f - a.f)
       .map(r => `<tr><td>${esc(r.s.pt)}</td><td>${esc(r.s.nicho)}</td><td class="num">${fmt(100 * r.f, 1)}%</td><td style="width:26%"><div class="bar" style="width:${Math.min(100, 100 * r.f)}%"></div></td><td class="num">${fmt(100 * r.t, 1)}%</td></tr>`).join('') +
       '<tr><td colspan="5" class="note">Só os insumos = 1 − (L_dentro − 1) / (L_total − 1): parte do que a cadeia compra que vem de fora da região. Com o R$ 1 inicial = 1 − L_dentro / L_total: a mesma conta somando o R$ 1,00 da própria demanda, que é sempre da região e por isso dilui a parte de fora.</td></tr>'; }
 }
+const baseW = () => D0[document.getElementById('baseW').value === 'mundo_figaro' ? 'mundo_figaro' : 'mundo'];
 function mostrarParMundo(i, j, regIn) {
-  const W = D0.mundo, si = W.setores[i], sj = W.setores[j];
+  const W = baseW(), si = W.setores[i], sj = W.setores[j];
   const reg = regIn === 'mundo' ? 'mundo' : Object.keys(W.regioes).find(k => k === regIn); if (!reg) return;
   let corpo;
   if (reg === 'mundo') corpo = `<div class="big">${fmt(W.A[i][j], 6)}</div><p class="note">compra direta, mundo inteiro</p>
     <div class="formula">A[${esc(si.pt)} → ${esc(sj.pt)}] = Zw ÷ xw
-Zw = ${fmt(W.Z[i][j], 2)} milhões de euros (tudo o que ${esc(sj.pt)} comprou de ${esc(si.pt)} no mundo, 2019)
+Zw = ${fmt(W.Z[i][j], 2)} milhões de euros (tudo o que ${esc(sj.pt)} comprou de ${esc(si.pt)} no mundo, ${W.ano})
 xw = ${fmt(W.x[j], 1)} milhões de euros (produção mundial de ${esc(sj.pt)})
 A  = ${fmt(W.Z[i][j], 2)} ÷ ${fmt(W.x[j], 1)} = ${fmt(W.Z[i][j] / W.x[j], 6)}</div>
     <div class="big" style="font-size:1.4rem">${fmt(W.L[i][j], 6)}</div><p class="note">efeito em cadeia mundial: Lw = (I − Aw)⁻¹, conferido pela soma de ${W.conferencia.termos_serie_mundo} rodadas.</p>`;
@@ -472,7 +491,7 @@ total               ${fmt(tot, 6)}
 compra direta dentro de ${esc(reg)} (A)  ${fmt(b.A_dentro_da_regiao[i][j], 6)}</div>`; }
   document.getElementById('painel').innerHTML = `<h3>Memória de cálculo · Família 1 · base mundial · calculado por nós</h3>
     <p class="frase"><b>${esc(sj.pt)}</b> compra de <b>${esc(si.pt)}</b></p>${corpo}
-    <p class="note">Conferência: nossa A contra a A publicada pelo EXIOBASE, diferença ${W.conferencia.max_dif_A_nossa_vs_A_publicada.toExponential(1)}; resíduo da inversão completa (7.987 linhas) ${W.conferencia['max_residuo_(I-A)L-I_completo'].toExponential(1)}. Nomes originais: ${esc(si.en)} / ${esc(sj.en)}.</p>`;
+    <p class="note">Base: ${esc(W.base)}, ${W.ano}. Conferência: ${esc(W.conf_texto)}. Nomes originais: ${esc(si.en)} / ${esc(sj.en)}.</p>`;
 }
 
 function desenharFamilias() {
@@ -671,6 +690,7 @@ function rota() {
 
 fetch('arvore-dados.json').then(r => r.json()).then(d => {
   D0 = d; IB = d.ibge; IB.cod.forEach((c, k) => ix[c] = k);
+  document.getElementById('topoRodada').textContent = `Instituto THEYE · Ontologia · rodada ${d.rodada} · ${d.data.split('-').reverse().join('/')}`;
   desenharFamilias(); desenharVar(); desenharPx(); desenharMov(); desenharCi(); desenharMp(); desenharSetorMp(); desenharMundo(); desenharLiteratura(); desenharGrafo(); desenharMatriz(); desenharSetores(); desenharInterno(); desenharMetodo(); rota();
   ['medida', 'corte'].forEach(id => document.getElementById(id).addEventListener('input', desenharGrafo));
   document.getElementById('medidaC').addEventListener('input', desenharMov);
@@ -678,7 +698,7 @@ fetch('arvore-dados.json').then(r => r.json()).then(d => {
   document.getElementById('baseC').addEventListener('input', () => { desenharMov(); const C = baseC(), p = C.pares[0]; mostrarMov(p.a, p.b); });
   document.getElementById('corteCi').addEventListener('input', desenharCi);
   document.getElementById('mpNicho').addEventListener('input', desenharMp);
-  ['regiao', 'medidaW'].forEach(id => document.getElementById(id).addEventListener('input', desenharMundo));
+  ['baseW', 'regiao', 'medidaW'].forEach(id => document.getElementById(id).addEventListener('input', desenharMundo));
   ['medidaM', 'escopo'].forEach(id => document.getElementById(id).addEventListener('input', desenharMatriz));
   addEventListener('hashchange', rota);
   mostrarPar(ix['0680'], ix['1991']);

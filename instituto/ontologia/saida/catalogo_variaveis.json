@@ -2,9 +2,9 @@
  "regra": "Catálogo gerado das saídas conferidas; nenhuma contagem digitada.",
  "escala_de_tipos": "Stevens (1946), On the Theory of Scales of Measurement, Science 103:677-680, mais os tipos de dado do projeto",
  "tipos_de_variavel": 9,
- "linhas": 73,
- "instancias_total": 195945500,
- "guardados_total": 101947,
+ "linhas": 84,
+ "instancias_total": 226665616,
+ "guardados_total": 115439,
  "leitura": "instâncias = valores que as contas produzem; guardados = valores gravados em saida/ (o resto se refaz rodando os scripts)",
  "por_tipo": {
   "binária": {
@@ -24,20 +24,20 @@
    "instancias": 1595
   },
   "da literatura": {
-   "linhas": 29,
-   "instancias": 48
+   "linhas": 35,
+   "instancias": 54
   },
   "probabilidade de mercado": {
    "linhas": 1,
    "instancias": 487
   },
   "proporção": {
-   "linhas": 11,
-   "instancias": 64581432
+   "linhas": 13,
+   "instancias": 74821522
   },
   "razão contínua": {
-   "linhas": 12,
-   "instancias": 127672501
+   "linhas": 15,
+   "instancias": 148152521
   },
   "índice relativo": {
    "linhas": 3,
@@ -269,6 +269,81 @@
    "guardados": 100,
    "selo": "calculado por nós",
    "obs": "sem o R$ 1,00 inicial: só o que vem pela cadeia de insumos"
+  },
+  {
+   "familia": "1 · Dependência (FIGARO)",
+   "nome": "Fluxo entre indústrias e países",
+   "simbolo": "Z",
+   "tipo": "razão contínua",
+   "unidade": "milhões de euros",
+   "faixa": "≥ 0",
+   "fonte": "FIGARO (Eurostat)",
+   "periodo": "2023",
+   "granularidade": "país-indústria × país-indústria",
+   "instancias": 10240000,
+   "guardados": 324,
+   "selo": "calculado por nós",
+   "obs": "gravado só entre as indústrias dos nichos"
+  },
+  {
+   "familia": "1 · Dependência (FIGARO)",
+   "nome": "Coeficiente técnico",
+   "simbolo": "A",
+   "tipo": "proporção",
+   "unidade": "euro por euro",
+   "faixa": "0 a 1",
+   "fonte": "conta nossa",
+   "periodo": "2023",
+   "granularidade": "país-indústria × país-indústria",
+   "instancias": 10240000,
+   "guardados": 5716,
+   "selo": "calculado por nós",
+   "obs": ""
+  },
+  {
+   "familia": "1 · Dependência (FIGARO)",
+   "nome": "Efeito em cadeia",
+   "simbolo": "L",
+   "tipo": "razão contínua",
+   "unidade": "euro por euro de demanda final",
+   "faixa": "≥ 0",
+   "fonte": "conta nossa (inversão completa)",
+   "periodo": "2023",
+   "granularidade": "país-indústria × país-indústria",
+   "instancias": 10240000,
+   "guardados": 7336,
+   "selo": "calculado por nós",
+   "obs": ""
+  },
+  {
+   "familia": "1 · Dependência (FIGARO)",
+   "nome": "Parte dos insumos vinda de fora do país",
+   "simbolo": "1 − (L_dentro − 1)/(L_total − 1)",
+   "tipo": "proporção",
+   "unidade": "sem unidade",
+   "faixa": "0 a 1",
+   "fonte": "conta nossa",
+   "periodo": "2023",
+   "granularidade": "região × indústria dos nichos",
+   "instancias": 90,
+   "guardados": 90,
+   "selo": "calculado por nós",
+   "obs": ""
+  },
+  {
+   "familia": "1 · Dependência (FIGARO)",
+   "nome": "Multiplicador de produção, IBGE contra FIGARO",
+   "simbolo": "Σ_i L[i,j]",
+   "tipo": "razão contínua",
+   "unidade": "R$ ou euro por 1 de demanda final",
+   "faixa": "≥ 1",
+   "fonte": "conta nossa (conferência entre bases)",
+   "periodo": "2015 e 2023",
+   "granularidade": "atividade comparável",
+   "instancias": 20,
+   "guardados": 20,
+   "selo": "calculado por nós",
+   "obs": ""
   },
   {
    "familia": "2 · Proximidade (Harvard)",
@@ -1105,6 +1180,96 @@
    "fonte": "Simeon Djankov, Rafael La Porta, Florencio Lopez-de-Silanes e Andrei Shleifer (2002)",
    "periodo": "2002",
    "granularidade": "Formalismo da Justiça → tempo para cobrar e despejar",
+   "instancias": 1,
+   "guardados": 1,
+   "selo": "da literatura",
+   "obs": ""
+  },
+  {
+   "familia": "6 · Literatura",
+   "nome": "queda no crescimento do PIB real do Japão no ano seguinte ao terremoto de 2011, em pontos percentuais (p. 1)",
+   "simbolo": "L10",
+   "tipo": "da literatura",
+   "unidade": "como na fonte",
+   "faixa": "—",
+   "fonte": "Vasco M. Carvalho, Makoto Nirei, Yukiko U. Saito e Alireza Tahbaz-Salehi (2021)",
+   "periodo": "2021",
+   "granularidade": "Choque num fornecedor ou cliente → empresas ligadas pela cadeia (propagação)",
+   "instancias": 1,
+   "guardados": 1,
+   "selo": "da literatura",
+   "obs": ""
+  },
+  {
+   "familia": "6 · Literatura",
+   "nome": "a mesma queda num mundo sem ligações de cadeia entre empresas de dentro e de fora da área atingida (p. 5)",
+   "simbolo": "L10",
+   "tipo": "da literatura",
+   "unidade": "como na fonte",
+   "faixa": "—",
+   "fonte": "Vasco M. Carvalho, Makoto Nirei, Yukiko U. Saito e Alireza Tahbaz-Salehi (2021)",
+   "periodo": "2021",
+   "granularidade": "Choque num fornecedor ou cliente → empresas ligadas pela cadeia (propagação)",
+   "instancias": 1,
+   "guardados": 1,
+   "selo": "da literatura",
+   "obs": ""
+  },
+  {
+   "familia": "6 · Literatura",
+   "nome": "queda no crescimento das empresas com FORNECEDOR atingido, em pontos percentuais (p. 4)",
+   "simbolo": "L10",
+   "tipo": "da literatura",
+   "unidade": "como na fonte",
+   "faixa": "—",
+   "fonte": "Vasco M. Carvalho, Makoto Nirei, Yukiko U. Saito e Alireza Tahbaz-Salehi (2021)",
+   "periodo": "2021",
+   "granularidade": "Choque num fornecedor ou cliente → empresas ligadas pela cadeia (propagação)",
+   "instancias": 1,
+   "guardados": 1,
+   "selo": "da literatura",
+   "obs": ""
+  },
+  {
+   "familia": "6 · Literatura",
+   "nome": "queda no crescimento das empresas com CLIENTE atingido, em pontos percentuais (p. 4)",
+   "simbolo": "L10",
+   "tipo": "da literatura",
+   "unidade": "como na fonte",
+   "faixa": "—",
+   "fonte": "Vasco M. Carvalho, Makoto Nirei, Yukiko U. Saito e Alireza Tahbaz-Salehi (2021)",
+   "periodo": "2021",
+   "granularidade": "Choque num fornecedor ou cliente → empresas ligadas pela cadeia (propagação)",
+   "instancias": 1,
+   "guardados": 1,
+   "selo": "da literatura",
+   "obs": ""
+  },
+  {
+   "familia": "6 · Literatura",
+   "nome": "queda nas vendas dos clientes dos clientes das empresas atingidas, em pontos percentuais (p. 4)",
+   "simbolo": "L10",
+   "tipo": "da literatura",
+   "unidade": "como na fonte",
+   "faixa": "—",
+   "fonte": "Vasco M. Carvalho, Makoto Nirei, Yukiko U. Saito e Alireza Tahbaz-Salehi (2021)",
+   "periodo": "2021",
+   "granularidade": "Choque num fornecedor ou cliente → empresas ligadas pela cadeia (propagação)",
+   "instancias": 1,
+   "guardados": 1,
+   "selo": "da literatura",
+   "obs": ""
+  },
+  {
+   "familia": "6 · Literatura",
+   "nome": "queda nas vendas dos fornecedores dos fornecedores, em pontos percentuais (p. 4)",
+   "simbolo": "L10",
+   "tipo": "da literatura",
+   "unidade": "como na fonte",
+   "faixa": "—",
+   "fonte": "Vasco M. Carvalho, Makoto Nirei, Yukiko U. Saito e Alireza Tahbaz-Salehi (2021)",
+   "periodo": "2021",
+   "granularidade": "Choque num fornecedor ou cliente → empresas ligadas pela cadeia (propagação)",
    "instancias": 1,
    "guardados": 1,
    "selo": "da literatura",
