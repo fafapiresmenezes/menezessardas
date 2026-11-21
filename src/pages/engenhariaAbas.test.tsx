@@ -4,7 +4,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES, RESULTADO_PROVAS_ERRO_FINO, RESULTADO_PROVAS_REVISAO, RESULTADO_PROVAS_FALSO_POSITIVO } from '@/data/agentesEngenharia'
+import { AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES, RESULTADO_PROVAS_ERRO_FINO, RESULTADO_PROVAS_REVISAO, RESULTADO_PROVAS_FALSO_POSITIVO, RESULTADO_PROVAS_FALSO_POSITIVO_LIMPO } from '@/data/agentesEngenharia'
 
 vi.mock('@/lib/supabase', () => ({ supabase: { functions: { invoke: vi.fn().mockResolvedValue({ data: null, error: null }) } }, supabaseConfigurado: true }))
 vi.mock('@/components/Layout', () => ({ default: ({ title, children }: { title: string; children: React.ReactNode }) => <div><h1>{title}</h1>{children}</div> }))
@@ -31,7 +31,7 @@ describe('fichas dos agentes de engenharia', () => {
   })
 
   it('nunca escreve o nome do cliente nem palavras da plataforma de direito', () => {
-    const blob = JSON.stringify({ AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES, RESULTADO_PROVAS_ERRO_FINO, RESULTADO_PROVAS_REVISAO, RESULTADO_PROVAS_FALSO_POSITIVO })
+    const blob = JSON.stringify({ AGENTES_ENGENHARIA, ATLAS_RESUMO, CLASSIFICACAO_ATLAS, FONTES_ATLAS, REGRAS_AGENTES, RESULTADO_PROVAS, RESULTADO_PROVAS_DURAS, RESULTADO_PROVAS_JULGAMENTO, RESULTADO_PROVAS_DESCONFIANCA, RESULTADO_PROVAS_INVARIANTES, RESULTADO_PROVAS_INTERFACES, RESULTADO_PROVAS_ERRO_FINO, RESULTADO_PROVAS_REVISAO, RESULTADO_PROVAS_FALSO_POSITIVO, RESULTADO_PROVAS_FALSO_POSITIVO_LIMPO })
     for (const re of PROIBIDAS) expect(blob).not.toMatch(re)
   })
 
@@ -246,6 +246,25 @@ describe('fichas dos agentes de engenharia', () => {
     expect(RESULTADO_PROVAS_FALSO_POSITIVO.limite).toMatch(/não é um teste limpo/)
   })
 
+  it('a 10.ª volta fecha a bateria e diz que nem nós escrevemos um documento sem defeito', () => {
+    const r = RESULTADO_PROVAS_FALSO_POSITIVO_LIMPO
+    expect(r.volta).toBe(10)
+    expect(r.estados).toHaveLength(12)
+    expect(r.questoes).toBe(r.estados.length)
+    const ids = new Set(AGENTES_ENGENHARIA.map(a => a.id))
+    const falsos = r.estados.filter(e => e.estado === 'falso_positivo').length
+    const anteriores = RESULTADO_PROVAS_FALSO_POSITIVO.estados.filter(e => e.estado === 'falso_positivo').length
+    for (const e of r.estados) {
+      expect(ids.has(e.agente)).toBe(true)
+      expect(['so_defeitos_reais', 'falso_positivo', 'disse_que_esta_bem']).toContain(e.estado)
+      expect(e.nota.length).toBeGreaterThan(20)
+    }
+    expect(falsos).toBeLessThan(anteriores)
+    expect(r.limite).toMatch(/à mão/)
+    expect(r.limite).toMatch(/cinco defeitos novos/)
+    expect(r.limite).toMatch(/engenheiro habilitado/)
+  })
+
   it('toda posição tem nível N1 a N6', () => {
     for (const a of AGENTES_ENGENHARIA.filter(x => x.matriz === 'posicao')) expect(a.nivel).toMatch(/^N[1-6]$/)
   })
@@ -290,6 +309,7 @@ describe('abas novas do quadradinho Engenharia', () => {
     expect(screen.getByTestId('provas-volta7').textContent).toContain('7.ª volta')
     expect(screen.getByTestId('provas-volta8').textContent).toContain('8.ª volta')
     expect(screen.getByTestId('provas-volta9').textContent).toContain('9.ª volta')
+    expect(screen.getByTestId('provas-volta10').textContent).toContain('10.ª volta')
     expect(screen.getByTestId('tabela-provas').querySelectorAll('tbody tr')).toHaveLength(46)
     expect(screen.getByTestId('provas-agentes').textContent).toMatch(/engenheiro habilitado/)
   })

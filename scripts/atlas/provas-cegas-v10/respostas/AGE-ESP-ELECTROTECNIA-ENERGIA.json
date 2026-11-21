@@ -1,0 +1,6 @@
+[
+ {
+  "id": "L1",
+  "resposta": "1) A hipótese de terra de protecção e terra de serviço com eléctrodos separados não se sustenta só com a IEEE 80, que é para malhas de subestação e não tem cláusula citada; para BT convém verificar a IEC 60364-5-54 e a especificação do dono de obra (RSIUEE). 2) O critério Ib ≤ In ≤ Iz (IEC 60364-4-43, cl. 433) está incompleto: falta I2 ≤ 1,45 Iz. 3) E_d/R_d = 0,78 é um critério de estados limite estrutural (EN 1990), não de protecção eléctrica; sem entradas e faixa, o número não é verificável. 4) Os 1.480 m (1.300–1.700) não citam o número do desenho de origem; confirmar se a perda de 5 % está dentro da faixa. 5) Rascunho para conferência e assinatura do engenheiro responsável; não confirmado: anexo de cálculo, desenho de origem e valores de resistência de terra."
+ }
+]
