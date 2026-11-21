@@ -1,0 +1,6 @@
+[
+  {
+    "id": "R1",
+    "resposta": "1. Errado: ligar a terra de protecção e a terra de serviço ao mesmo eléctrodo sem estudo de potenciais não pode seguir; ver IEC 60364-5-54 (disposições de terra), cláusula a confirmar.\n2. Não verificável: a norma do contrato e os coeficientes parciais não estão identificados nem os valores aplicados; «dentro dos limites» não tem números nem fonte. Prevalece a norma do contrato (FIDIC e especificação técnica do dono de obra); indicar cláusula e valores.\n3. 1.480 unidades: sem unidade, hipótese, faixa (mínimo–provável–máximo) nem fonte; marcar «não confirmado» até haver quantitativos extraídos do desenho.\n4. Remover a probabilidade de 85 por cento: não há calibração que a sustente; o agente descreve cenários, não prevê.\n5. Não está pronto a entregar: falta a menção «Rascunho para conferência e assinatura do engenheiro responsável», e o engenheiro habilitado tem de conferir e assinar; o fiscal precisa de evidência rastreável (desenho, cláusula, ensaio).\n6. Antes de entregar: confirmar a norma do contrato, os valores de cálculo e os quantitativos, e citar todas as fontes por número."
+  }
+]

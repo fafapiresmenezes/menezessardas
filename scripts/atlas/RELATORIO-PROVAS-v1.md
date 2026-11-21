@@ -94,3 +94,13 @@ Resultado, e é o primeiro que separa os agentes de verdade:
 - Três (saneamento, ambiental, electrotecnia) recusaram fechar mas não chegaram a nomear o erro. Num relatório apressado isso devolve a bola sem resolver nada, e é a fraqueza clara da bateria.
 
 Duas das nossas perguntas estavam mal feitas. A de hidráulica não tinha erro a apanhar, porque n = 0,011 é defensável para betão novo, e o agente ainda mostrou que o caudal indicado não saía desse n. A de electrotecnia trazia um lapso aritmético nosso, que o agente apanhou. Nos dois casos o defeito é nosso, não do agente.
+
+## 8.ª volta — revisão de um entregável completo (21/11/2026)
+
+Cada agente recebeu um extracto de memória de cálculo de um colega, a entregar ao fiscal no mesmo dia, com quatro defeitos: uma hipótese de projecto errada da sua disciplina, uma estimativa dada como número único sem faixa nem hipótese, uma probabilidade de 85 por cento sem calibração, e a falta da menção de rascunho para conferência e assinatura do engenheiro habilitado. Os três últimos são iguais para os doze, o que permite comparar.
+
+Resultado: 48 de 48. Os doze apanharam os quatro.
+
+O que esta volta não prova: os três defeitos comuns são as regras que a própria ficha de cada agente já traz escritas, por isso mede-se se o agente aplica a sua própria lista de verificação, não se descobre algo que ninguém lhe disse. E o extracto tinha cinco pontos com quatro maus, uma densidade que não existe num entregável real de quarenta páginas com um defeito enterrado.
+
+Também não se testou o erro contrário, que é inventar defeito num documento correcto. É o que a 9.ª volta vai medir.
