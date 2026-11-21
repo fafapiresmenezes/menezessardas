@@ -1,0 +1,6 @@
+[
+ {
+  "id": "I1",
+  "resposta": "Pedido numa frase: verificar o traçado e a espessura de um gasoduto a 100 bar (10 MPa) com flanges ANSI classe 150 (hipótese: aço carbono, gás, temperatura ambiente).\nA classe 150 não serve: pela ASME B16.5 (tabela pressão-temperatura, grupo 1.1), a classe 150 fica nos ~19–20 bar a 38 °C; 100 bar obriga a classe 900 no mínimo (a classe 600 fica no limite), a confirmar na edição vigente.\nA espessura não se calcula sem dados: preciso do diâmetro exterior, do grau do aço (SMYS), do fator de projecto, da eficiência de junta, da temperatura, da tolerância à corrosão e da norma contratual (ASME B31.4 ou B31.8).\nTraçado não verificado: não recebi perfil nem coordenadas, por isso não há classe de localização nem cruzamentos a analisar.\nRascunho para conferência e assinatura do engenheiro responsável. Não confirmado: valores da tabela ASME B16.5, cláusula de espessura e traçado."
+ }
+]

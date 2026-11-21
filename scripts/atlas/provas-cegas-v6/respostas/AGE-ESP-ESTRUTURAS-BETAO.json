@@ -1,0 +1,6 @@
+[
+ {
+  "id": "I1",
+  "resposta": "Não lhe dou a armadura da sapata de 2,0 x 2,0 m: com 2.500 kN de serviço a pressão de contacto é de cerca de 625 kPa, 2,5 vezes a tensão admissível de 250 kPa, pelo que a sapata não verifica.\nÁrea mínima: 2.500 kN / 250 kPa = 10,0 m² (≈10,3 m² com peso próprio de sapata h≈0,8 m), ou seja lado ≈3,2 m. Faixa 3,2–3,5 m; hipótese: 250 kPa é a tensão de serviço, não confirmado.\nAntes de desenhar armaduras, a geotecnia tem de confirmar se os 250 kPa são líquidos ou brutos e a cota de referência, e a equipa de estruturas tem de confirmar se o 2,0 m é erro de cotagem ou se a carga do P12 está certa.\nCom a geometria corrigida, a armadura de flexão (EN 1992-1-1, §9.8) e a verificação de punçoamento (§6.4) são recalculadas em ELU; a faixa de cargas e os coeficientes de EN 1997-1 (EC7) ficam para o engenheiro habilitado.\nRascunho para conferência e assinatura do engenheiro responsável. Não confirmado: carga de serviço ou característica, peso próprio e tensão admissível."
+ }
+]

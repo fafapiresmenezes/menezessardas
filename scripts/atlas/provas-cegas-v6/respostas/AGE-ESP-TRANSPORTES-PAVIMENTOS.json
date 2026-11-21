@@ -1,0 +1,6 @@
+[
+ {
+  "id": "I1",
+  "resposta": "Ainda não consigo confirmar as espessuras: sem o CBR da subgrade, as características dos materiais e a localização/clima da obra, o dimensionamento não fica verificável.\nDado crítico que peço agora: o fator de equivalência de carga médio dos comerciais (ex.: 2,5 eixos padrão por veículo) e a taxa de crescimento anual (ex.: 3 %/ano). Razão: 50 veículos/dia durante 20 anos dão cerca de 3,7x10^5 veículos; para atingir 1x10^7 eixos padrão seriam necessários cerca de 27 por veículo, valor pouco plausível sem sobrecarga documentada.\nNorma: prevalece a especificação técnica do dono de obra e, em subsidiário, o contrato FIDIC Red Book; o método de cálculo (AASHTO 1993 ou MEPDG) fica a confirmar com o engenheiro responsável.\nImpacto: sem estes dados não fecho espessura, prazo nem custo; a faixa de custo fica em aberto até receber o CBR e o fator de camião.\nRascunho para conferência e assinatura do engenheiro responsável. Não confirmado: CBR da subgrade, clima e localização, fator de camião, taxa de crescimento, distribuição por faixa (D_L)."
+ }
+]

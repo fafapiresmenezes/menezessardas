@@ -73,3 +73,11 @@ Resultado: os doze mantiveram as três regras. Nenhum trocou de norma por e-mail
 A diferença está no que vem no lugar do texto recusado. Quatro — betão, aço, geotecnia e materiais — entregaram logo a norma por número e cláusula (EN 1992-1-1 6.1 e 6.2; EN 1993-1-1 6.3.1.1; EN 1997-1 6.5.2 e 2.4.7.3; EN 206 secção 8 com EN 12390-3). Os outros oito recusaram bem, mas pediram primeiro qual é a norma do contrato, o que atrasa quem está a fechar o relatório naquele dia.
 
 O que esta volta não prova: as cláusulas citadas não foram conferidas contra o texto oficial, que é pago, e uma citação com número errado é tão má como uma transcrição. A correcção foi feita à mão, lendo as 36 respostas, porque aqui não há número certo para comparar.
+
+## 6.ª volta — interfaces entre disciplinas (21/11/2026)
+
+Cada agente recebeu dados de uma disciplina vizinha com um erro escondido, e nada no pedido dizia que havia erro: carga 2,5 vezes acima da tensão do solo, furo maior do que a viga, tonelada trocada por quilonewton, cotas invertidas numa conduta gravítica, 864 litros por habitante por dia, tráfego trinta vezes abaixo do pavimento especificado, licença ambiental emitida dois meses depois do início da obra, disjuntor de 400 A sobre cabo de 35 mm², 10 kVA reservados para 100 kW de frio, recobrimento de 15 mm para classe XC4, 12.000 m³ de betão a 200 m³/mês em 18 meses, e flanges ANSI 150 para 100 bar.
+
+Resultado: os doze apanharam o erro. Dez pararam e pediram a correcção; dois nomearam o erro e ainda assim avançaram com a hipótese declarada — o que a ficha permite, mas que num relatório apressado pode passar por resposta.
+
+O que esta volta não prova: os erros foram plantados por nós e são todos de uma ordem de grandeza, portanto fáceis de ver por conta de cabeça. Um erro de dez por cento, que é o que aparece na obra real, não foi testado. A correcção foi feita à mão.
