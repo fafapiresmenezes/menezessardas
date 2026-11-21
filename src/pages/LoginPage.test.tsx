@@ -46,12 +46,26 @@ describe('Tela de login', () => {
     expect(screen.queryByLabelText('Senha')).toBeNull()
     cleanup(); montar()
     expect(screen.getByTestId('cartao-entrada')).toBeTruthy()
-    // Pedido de M (19/11/2026 21h17): os outros quadradinhos não têm cartão; apontam para a jurídica.
+    // Pedido de M (21/11/2026): tudo segmentado. Cada quadradinho abre o seu próprio quadro de
+    // e-mail e senha, com o nome da plataforma, e nunca a entrada da Plataforma jurídica.
     cleanup()
-    render(<MemoryRouter initialEntries={['/login?ir=/engenharia']}><Routes><Route path="/login" element={<LoginPage />} /></Routes></MemoryRouter>)
-    expect(screen.queryByTestId('cartao-entrada')).toBeNull()
-    expect(screen.queryByLabelText('Senha')).toBeNull()
-    expect(screen.getByTestId('ir-entrada-juridica').getAttribute('href')).toBe('/login?ir=%2Finicio')
+    render(<MemoryRouter initialEntries={['/login?ir=/transparencia-social']}><Routes><Route path="/login" element={<LoginPage />} /></Routes></MemoryRouter>)
+    expect(screen.getByTestId('cartao-entrada')).toBeTruthy()
+    expect(screen.getByLabelText('Senha')).toBeTruthy()
+    expect(screen.getByTestId('titulo-do-cartao').textContent).toBe('Entrar em Projetos sociais')
+    expect(screen.queryByTestId('ir-entrada-juridica')).toBeNull()
+    expect(screen.queryByText(/Plataforma jurídica/)).toBeNull()
+    // Fora da jurídica não há "criar conta": o cadastro pede escritório, que é coisa do jurídico.
+    expect(screen.queryByText('Criar conta')).toBeNull()
+  })
+  it('o símbolo do ouro abre a entrada própria da administração do Instituto', () => {
+    cleanup()
+    render(<MemoryRouter initialEntries={['/login?ir=/instituto']}><Routes><Route path="/login" element={<LoginPage />} /></Routes></MemoryRouter>)
+    expect(screen.getByTestId('cartao-entrada')).toBeTruthy()
+    expect(screen.getByTestId('titulo-do-cartao').textContent).toBe('Entrar em Administração do Instituto')
+    expect(screen.getByTestId('resumo-administracao')).toBeTruthy()
+    expect(screen.queryByText(/Doações e apoio/)).toBeNull()
+    expect(screen.queryByTestId('ir-entrada-juridica')).toBeNull()
   })
   beforeEach(() => { cleanup(); configurado = true; nivel = { nextLevel: 'aal1', currentLevel: 'aal1' }; signInWithPassword.mockClear(); signUp.mockClear(); challengeAndVerify.mockClear() })
 

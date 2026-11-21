@@ -118,7 +118,7 @@ export default function LoginPage() {
   // embaixo, e parecia que o botão não funcionava.
   const vertenteDestino = pedidoValido ? VERTENTES.find(v => v.rota === destino) : undefined
   const nomeDestino = vertenteDestino ? t(`vertente.${vertenteDestino.id}.nome` as Chave)
-    : !pedidoValido ? '' : destino === '/caderno-de-produtos' ? t('produtos.titulo') : destino === '/instituto' ? t('login.entradaApoio') : ''
+    : !pedidoValido ? '' : destino === '/caderno-de-produtos' ? t('produtos.titulo') : destino === '/instituto' ? t('login.entradaAdministracao') : ''
   const doSegmento = !!nomeDestino
   useEffect(() => {
     if (!doSegmento) return
@@ -127,10 +127,13 @@ export default function LoginPage() {
   }, [doSegmento, destino])
   // Pedido de M (19/11/2026): a entrada com e-mail e senha não fica na primeira tela. Ela só aparece
   // depois que a pessoa clica no quadradinho da frente dela (ou em domínio próprio de escritório).
-  // Pedido de M (19/11/2026 21h17): o quadrado de e-mail e senha só existe na Plataforma jurídica.
-  // Os outros quadradinhos apresentam a frente e apontam a entrada para lá.
-  const entradaComCartao = destino === '/inicio'
-  const mostrarCartao = (doSegmento && entradaComCartao) || !!marca || pedirCodigo
+  // Pedido de M (21/11/2026): tudo segmentado. Cada quadradinho (Projetos sociais, Engenharia…) e o
+  // símbolo do ouro (administração do Instituto) abrem o SEU quadro de e-mail e senha, com o nome
+  // daquela plataforma. Nenhum deles manda mais para a entrada da Plataforma jurídica.
+  const mostrarCartao = doSegmento || !!marca || pedirCodigo
+  // O cadastro pede o escritório: é coisa da Plataforma jurídica (ou do domínio de um escritório
+  // parceiro). Nas outras plataformas e na administração, só entra quem já recebeu acesso.
+  const permiteCadastro = destino === '/inicio' || !!marca
   // Entrada geral: quem escolheu a língua e chegou sem segmento nem marca de escritório parceiro.
   const entradaGeral = !marca && !doSegmento && !mostrarCartao
   const seguir = () => { lembrarUltimaFrente(destino); navigate(destino) }
@@ -252,6 +255,9 @@ export default function LoginPage() {
                     ))}
                   </ul>
                 </>
+              )}
+              {destino === '/instituto' && (
+                <p data-testid="resumo-administracao" className="mt-6 text-lg leading-relaxed text-neutral-100">{t('login.entradaAdministracaoResumo')}</p>
               )}
               <Link
                 to="/login"
@@ -453,7 +459,7 @@ export default function LoginPage() {
             >
               {t('login.esqueciSenha')}
             </button>
-            {supabaseConfigurado && (
+            {supabaseConfigurado && permiteCadastro && (
               <button
                 type="button"
                 onClick={() => {
@@ -470,20 +476,6 @@ export default function LoginPage() {
           </div>
         </div>
 
-        )}
-
-        {doSegmento && !mostrarCartao && (
-          <div className="rounded-sm border border-white/20 p-8 text-center" data-testid="entrada-pela-juridica">
-            <p className="text-base leading-relaxed text-neutral-100">{t('login.entradaNaJuridica')}</p>
-            <Link
-              to="/login?ir=%2Finicio"
-              title={t('login.entradaNaJuridicaDica')}
-              data-testid="ir-entrada-juridica"
-              className="mt-5 inline-block bg-[#fff] px-6 py-3 text-sm font-semibold uppercase tracking-wider text-[#000] no-underline transition hover:bg-neutral-200"
-            >
-              {t('login.entradaNaJuridicaBotao')}
-            </Link>
-          </div>
         )}
 
         {!doSegmento && !marca && (
