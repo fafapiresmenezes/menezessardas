@@ -168,5 +168,26 @@ async function tratar(req: Request, origemBoa: boolean): Promise<Response> {
     return json({ ok: true })
   }
 
+  if (acao === 'avisar-decisao') {
+    // F0-11: depois que o administrador libera ou recusa um pedido em /equipe, avisa a pessoa
+    // por e-mail. Só quem é admin do escritório pode disparar (confere o perfil pelo próprio token).
+    const jwt = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '')
+    const { data: u } = await db().auth.getUser(jwt)
+    const admin = u?.user
+    if (!admin) return json({ erro: 'Entre na sua conta primeiro.' }, 401)
+    const { data: perfilAdmin } = await db().from('usuarios_perfis').select('funcao').eq('id', admin.id).maybeSingle()
+    if (perfilAdmin?.funcao !== 'admin') return json({ erro: 'Só administradores avisam decisões.' }, 403)
+    const liberado = !!b.liberado
+    if (liberado) {
+      await enviarAviso(email, 'Seu acesso foi liberado na plataforma THEYE',
+        corpoDoAviso('Seu acesso foi liberado', 'Você já pode entrar na plataforma do Instituto THEYE com o seu e-mail e a senha que você criou.',
+          { url: SITE, rotulo: 'Entrar na plataforma' }))
+    } else {
+      await enviarAviso(email, 'Sobre o seu pedido de entrada na plataforma THEYE',
+        corpoDoAviso('Seu pedido não foi liberado', 'O administrador do escritório não liberou o seu pedido de entrada. Se quiser, fale diretamente com quem te convidou.'))
+    }
+    return json({ ok: true })
+  }
+
   return json({ erro: 'Ação desconhecida.' }, 400)
 }

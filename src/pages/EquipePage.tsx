@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useBaixado } from '@/hooks/useBaixado'
 import { mensagemAmigavel } from '@/lib/erros'
+import { acessoEmail } from '@/lib/acessoEmail'
 import Layout from '@/components/Layout'
 import TesteGeral from '@/components/TesteGeral'
 import TesteTelas from '@/components/TesteTelas'
@@ -99,6 +100,7 @@ export default function EquipePage() {
     try {
       const pessoa = pessoas.find(p => p.id === pedido.id) ?? { id: pedido.id, email: pedido.email, nome: pedido.nome, funcao: null, criadoEm: pedido.criadoEm, confirmado: true, ultimoAcesso: null }
       await definirFuncao(pessoa, funcao)
+      acessoEmail({ acao: 'avisar-decisao', email: pedido.email, liberado: !!funcao }).catch(() => null)
       setMsg({ tipo: 'ok', texto: funcao ? `${pedido.nome} entrou no escritório com a função ${rotuloFuncao[funcao]}. Agora defina o cargo da pessoa na tela Hierarquia.` : `Pedido de ${pedido.nome} recusado.` })
       setPedidos(await pedidosPendentes()); setPessoas(await listarPessoas())
     } catch (e) {
