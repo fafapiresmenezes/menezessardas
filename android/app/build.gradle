@@ -16,10 +16,35 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    // Assinatura de publicacao, lida do AMBIENTE e nunca do repositorio. Sem o arquivo-chave o
+    // bloco nem existe, e `assembleDebug` continua funcionando igual: e por isso que a chave e a
+    // senha podem morar so nos segredos do GitHub, e nenhuma credencial entra no codigo.
+    // E o que falta para a dimensao 4 da regua chegar a 10 — o arquivo que se instala hoje e de
+    // depuracao, e isso sozinho reprova um item do nivel 1 do MASVS.
+    def arquivoChave = System.getenv("ANDROID_KEYSTORE_FILE")
+    def temChave = arquivoChave != null && !arquivoChave.isEmpty() && file(arquivoChave).exists()
+
+    if (temChave) {
+        signingConfigs {
+            publicacao {
+                storeFile file(arquivoChave)
+                storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // Depuravel explicitamente desligado: e o item do MASVS L1 que a versao de
+            // depuracao reprova, e escrito aqui nao depende de padrao de ferramenta nenhum.
+            debuggable false
+            if (temChave) {
+                signingConfig signingConfigs.publicacao
+            }
         }
     }
 }
