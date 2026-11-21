@@ -5,7 +5,7 @@ import CasaGeo from '@/components/geo/CasaGeo'
 import { Cofre, TERMO, VERSAO_TERMO, cofreExiste, conferirCorrente, type Cena as CenaCamera, type DadosGeo } from '@/lib/geo/cofre'
 import { agruparLugares, detectarParadas, distancia, fmtMin, linhaDoTempo, preverProximo, resumoPeriodo, type Lugar, type Ponto } from '@/lib/geo/calculo'
 import { CAMADAS_PENDENTES, SATELITES, buscarCenas, camadasSatelite, municipioDe, ndviMedio, leituraNdvi, noticiasGdelt, tileNdvi, trilhaNoMunicipio, tilesDaCena, type Cena, type Municipio, type Noticia } from '@/lib/geo/fontes'
-import { baixar, csvPontos, geojson, montarGrafo } from '@/lib/geo/grafo'
+import { baixar, csvPontos, geojson, kml, montarGrafo } from '@/lib/geo/grafo'
 import GrafoVivo from '@/components/geo/GrafoVivo'
 import { lerQuadro } from '@/lib/geo/camera'
 import { FONTES, TETO_PREVISIBILIDADE, metricasDeMobilidade } from '@/lib/geo/mobilidade'
@@ -263,10 +263,11 @@ export default function GeolocalizacaoPage() {
     })
   }, [dados, calc, municipio, noticias, pos])
 
-  const exportar = async (tipo: 'geojson' | 'csv' | 'grafo') => {
+  const exportar = async (tipo: 'geojson' | 'kml' | 'csv' | 'grafo') => {
     if (!dados || !calc || !cofre) return
     const carimbo = hojeISO()
     if (tipo === 'geojson') baixar(`theye-geo-${carimbo}.geojson`, JSON.stringify(geojson(dados.pontos, calc.lugares, calc.paradas), null, 1), 'application/geo+json')
+    if (tipo === 'kml') baixar(`theye-geo-${carimbo}.kml`, kml(dados.pontos, calc.lugares, calc.paradas), 'application/vnd.google-earth.kml+xml')
     if (tipo === 'csv') baixar(`theye-geo-pontos-${carimbo}.csv`, '﻿' + csvPontos(dados.pontos), 'text/csv')
     if (tipo === 'grafo') baixar(`theye-geo-grafo-${carimbo}.json`, JSON.stringify({ consentimento: dados.consentimento, ...grafo }, null, 1), 'application/json')
     await cofre.anotarAcesso('exportacao', tipo); atualizar(cofre)
@@ -612,6 +613,7 @@ export default function GeolocalizacaoPage() {
               <h2 className="font-semibold text-navy"><Download className="inline w-4 h-4 mr-1" />Exportar (arquivo aberto)</h2>
               <div className="flex flex-wrap gap-2">
                 <button className={botao} onClick={() => exportar('geojson')} title="Mapa inteiro: trajeto, pontos, paradas e lugares">GeoJSON</button>
+                <button className={botao} onClick={() => exportar('kml')} title="Abre direto no Google Earth e na maioria dos programas de mapa">KML (Google Earth)</button>
                 <button className={botao} onClick={() => exportar('csv')} title="Todos os pontos em planilha">CSV</button>
                 <button className={botao} onClick={() => exportar('grafo')} title="Nós e ligações do grafo, com a fonte de cada ligação">Ligações do mapa (arquivo JSON)</button>
               </div>
