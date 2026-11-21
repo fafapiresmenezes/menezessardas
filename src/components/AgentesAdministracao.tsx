@@ -39,6 +39,7 @@ function Ficha({ a, fechar }: { a: AgenteAdministracao; fechar: () => void }) {
         <button
           type="button"
           onClick={fechar}
+          title="Fecha a ficha e volta para a lista de agentes"
           className="shrink-0 border border-navy/20 px-3 py-1 text-sm text-navy hover:border-dourado"
         >
           Fechar

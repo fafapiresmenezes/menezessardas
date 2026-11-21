@@ -60,6 +60,7 @@ export default function GestaoInstitutoPage() {
               key={id}
               type="button"
               onClick={() => irPara(id)}
+              title={id === 'agentes' ? 'Mostra os agentes da administração em cartão' : 'Volta para a visão geral do Instituto'}
               aria-current={aba === id ? 'page' : undefined}
               className={`-mb-px border-b-2 px-3 py-2 text-sm ${
                 aba === id ? 'border-dourado font-medium text-navy' : 'border-transparent text-grafite-claro hover:text-navy'
