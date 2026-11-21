@@ -53,3 +53,16 @@ describe('Agentes da administração (F3)', () => {
     expect(within(ficha).getAllByText(/COLE-ISTO/).length).toBeGreaterThanOrEqual(1)
   })
 })
+
+describe('Repositório da administração (F4)', () => {
+  it('a aba ?aba=repositorio mostra os 7 blocos', () => {
+    render(<MemoryRouter initialEntries={['/gestao-instituto?aba=repositorio']}><GestaoInstitutoPage /></MemoryRouter>)
+    expect(screen.getByTestId('repositorio-instituto')).toBeTruthy()
+    for (const chave of ['agentes', 'atlas', 'biblioteca', 'white-papers', 'bench', 'universidades', 'bancos']) {
+      expect(screen.getByTestId(`bloco-${chave}`)).toBeTruthy()
+    }
+    // o bloco de agentes está pronto e os que dependem de import estão honestamente "a trazer"
+    const atlas = screen.getByTestId('bloco-atlas')
+    expect(within(atlas).getByText('A trazer')).toBeTruthy()
+  })
+})
