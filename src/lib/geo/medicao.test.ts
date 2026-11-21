@@ -99,7 +99,7 @@ describe('a conferência contra a régua', () => {
   it('as três regras medidas continuam valendo para os números de hoje', () => {
     expect(RUBRICA.find(d => d.n === 2)!.nota).toBe(notaDesempenho(100, 800, 60, 0))
     expect(RUBRICA.find(d => d.n === 3)!.nota).toBe(notaAcessibilidade(0, 100))
-    expect(RUBRICA.find(d => d.n === 9)!.nota).toBe(notaManutencao(14, 14))
+    expect(RUBRICA.find(d => d.n === 9)!.nota).toBe(notaManutencao(15, 15))
   })
 
   it('só as dimensões marcadas como medidas pela máquina aparecem na medição', () => {

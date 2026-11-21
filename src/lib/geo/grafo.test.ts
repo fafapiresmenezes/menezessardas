@@ -108,13 +108,18 @@ describe('GeoJSON exportado', () => {
   })
 
   it('traz ponto, parada e lugar, cada um dito pelo que é', () => {
-    const g = geojson([ponto(0)], lugares, paradas)
-    expect(new Set(g.features.map(f => f.properties.tipo))).toEqual(new Set(['trajeto', 'ponto', 'parada', 'lugar']))
+    // com um ponto só não há trajeto: a RFC 7946 §3.1.4 não aceita linha de um ponto, e antes
+    // disto a exportação saía inválida sem avisar. Com dois pontos o trajeto volta.
+    const um = geojson([ponto(0)], lugares, paradas)
+    expect(new Set(um.features.map(f => f.properties.tipo))).toEqual(new Set(['ponto', 'parada', 'lugar']))
+    const dois = geojson([ponto(0), ponto(60_000)], lugares, paradas)
+    expect(new Set(dois.features.map(f => f.properties.tipo))).toEqual(new Set(['trajeto', 'ponto', 'parada', 'lugar']))
   })
 
-  it('sem ponto nenhum ainda é GeoJSON válido, com trajeto vazio', () => {
+  it('sem ponto nenhum sai uma coleção vazia, e não um trajeto vazio inválido', () => {
     const g = geojson([], [], [])
-    expect(g.features[0].geometry.coordinates).toEqual([])
+    expect(g.type).toBe('FeatureCollection')
+    expect(g.features).toEqual([])
   })
 })
 
