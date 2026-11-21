@@ -137,12 +137,12 @@ console.log(`\n${ok.length} promessas conferidas no APK montado (${tipo}), ${que
 if (quebrou.length > 0) {
   // Sem isto, um erro de leitura desta conferência e um defeito de verdade no APK dão
   // exatamente a mesma linha vermelha. Com o manifesto compilado no log, dá para dizer qual é.
-  console.error('\n--- manifesto compilado dentro do APK (elemento application e permissões) ---')
-  for (const linha of arvore.split('\n')) {
-    if (/E: (application|activity|service|provider|receiver|uses-permission)|A: (android:(allowBackup|dataExtractionRules|networkSecurityConfig|usesCleartextTraffic|exported|name)|name)/.test(linha)) {
-      console.error(linha.replace(/\s+$/, ''))
-    }
-  }
+  // Despejo INTEIRO, sem filtro. Um filtro escrito por quem não conhece o formato esconde
+  // justamente a linha que faria falta — foi o que aconteceu na rodada anterior.
+  console.error('\n--- manifesto compilado dentro do APK, como o aapt2 o imprime ---')
+  const linhas = arvore.split('\n')
+  for (const linha of linhas.slice(0, 400)) console.error(linha.replace(/\s+$/, ''))
+  if (linhas.length > 400) console.error(`... (${linhas.length - 400} linhas a mais)`)
   console.error('\nO APK montado não cumpre o que o manifesto promete. A obra para aqui de propósito.')
   process.exit(1)
 }
