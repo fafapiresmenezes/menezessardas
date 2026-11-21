@@ -80,7 +80,7 @@ export default function MedicoesContratosPage() {
               Régua de atraso: primeiro aviso em {REGUA[nat.id as Natureza].avisar} dia, segundo
               aviso em {REGUA[nat.id as Natureza].avisarDeNovo} dias, e{' '}
               {nat.id === 'publico'
-                ? `em ${REGUA.publico.parar} dias a minuta de notificação fica pronta para um advogado decidir — o sistema não para serviço público sozinho.`
+                ? `em ${REGUA.publico.parar} dias a minuta de notificação fica pronta para a pessoa responsável decidir — o sistema não para serviço público sozinho.`
                 : `em ${REGUA.privado.parar} dias o serviço para, se o contrato tiver a cláusula.`}
             </p>
 

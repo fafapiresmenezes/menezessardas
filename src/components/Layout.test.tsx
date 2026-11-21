@@ -4,13 +4,14 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom'
 
 let sede = true
+let noInstituto = false
 let perfil: string | null = 'operador'
 const signOut = vi.fn(async () => ({ error: null }))
 vi.mock('@/lib/supabase', () => ({ supabaseConfigurado: true, supabase: { auth: { signOut } } }))
 vi.mock('@/lib/equipe', () => ({
   ehSede: async () => sede,
   perfilAtual: async () => perfil,
-  meuEscritorio: async () => ({ nome: 'SARDAS E MENEZES', sede: true, pessoa: 'Ana', email: 'ana@exemplo.com' }),
+  meuEscritorio: async () => (noInstituto ? { nome: 'INSTITUTO THEYE', sede: true, instituto: true, pessoa: 'M', email: 'm@exemplo.com' } : { nome: 'SARDAS E MENEZES', sede: true, pessoa: 'Ana', email: 'ana@exemplo.com' }),
   esquecerEscritorio: () => undefined,
   listarPessoas: async () => [{ id: '1', funcao: 'admin' }, { id: '2', funcao: null }, { id: '3', funcao: null }],
 }))
@@ -29,7 +30,7 @@ function Onde() { const l = useLocation(); return <p data-testid="onde">{l.pathn
 const montar = (rota = '/dashboard') => render(<MemoryRouter initialEntries={[rota]}><Layout title="Painel"><p>conteúdo</p></Layout><Routes><Route path="*" element={<Onde />} /></Routes></MemoryRouter>)
 
 describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
-  beforeEach(() => { cleanup(); localStorage.clear(); document.documentElement.removeAttribute('data-letra'); sede = true; perfil = 'operador'; alcance = { id: 'u1', cargo: null, admin: false, veTudo: false }; signOut.mockClear(); aplicarTema.mockClear(); Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true }) })
+  beforeEach(() => { cleanup(); localStorage.clear(); document.documentElement.removeAttribute('data-letra'); sede = true; noInstituto = false; perfil = 'operador'; alcance = { id: 'u1', cargo: null, admin: false, veTudo: false }; signOut.mockClear(); aplicarTema.mockClear(); Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true }) })
 
   it('o topo de toda tela diz em qual escritório a pessoa está', async () => {
     montar('/meu-dia')
@@ -181,5 +182,36 @@ describe('Moldura das telas (menu, cabeçalho, busca, tema, sair)', () => {
     await waitFor(() => expect(screen.getByTestId('aguardando-liberacao')).toBeTruthy())
     expect(screen.queryByText('conteúdo')).toBeNull()
     expect(screen.queryByRole('navigation', { name: 'Menu principal' })).toBeNull()
+  })
+})
+
+// Print de M (21/11/2026): o Funil de vendas do Instituto mostrava "Suporte Jurídico" e o menu do
+// direito. No escritório do Instituto, as telas de gestão abrem na área administrativa.
+describe('Área administrativa do Instituto: nada do jurídico', () => {
+  beforeEach(() => { cleanup(); localStorage.clear(); noInstituto = false; alcance = { id: 'u1', cargo: null, admin: true, veTudo: true, financeiro: true }; perfil = 'admin' })
+
+  it('no Instituto, o Funil abre na área administrativa, sem Intimações nem Processos', async () => {
+    noInstituto = true
+    montar('/funil')
+    const menu = await screen.findByTestId('menu-frente')
+    expect(menu.getAttribute('data-frente')).toBe('instituto-adm')
+    expect(menu.textContent).toContain('Área administrativa')
+    expect(menu.textContent).toContain('Funil de vendas')
+    expect(menu.textContent).not.toMatch(/Intimações|Carteira de processos|Assistente jurídico|Honorários/)
+    expect(screen.queryByTestId('escritorio-atual')).toBeNull()
+    expect(screen.queryByTestId('abrir-navegador')).toBeNull()
+  })
+
+  it('no escritório jurídico, o Funil continua com o menu do direito', async () => {
+    montar('/funil')
+    expect(await screen.findByTestId('escritorio-atual')).toBeTruthy()
+    expect(screen.queryByTestId('menu-frente')).toBeNull()
+  })
+
+  it('no Instituto, uma tela do direito continua sendo do direito', async () => {
+    noInstituto = true
+    montar('/intimacoes')
+    await screen.findByTestId('escritorio-atual')
+    expect(screen.queryByTestId('menu-frente')).toBeNull()
   })
 })

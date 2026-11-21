@@ -42,7 +42,7 @@ const normalizar = (s: string) =>
  * Busca global (Ctrl/⌘ + K): páginas, imóveis, contratos e fornecedores num só lugar.
  * Os dados vêm do repositório atual (demo ou Supabase), carregados ao abrir.
  */
-export default function Busca({ aberta, fechar }: { aberta: boolean; fechar: () => void }) {
+export default function Busca({ aberta, fechar, dica }: { aberta: boolean; fechar: () => void; dica?: string }) {
   const [termo, setTermo] = useState('')
   const [ativo, setAtivo] = useState(0)
   const [imoveis, setImoveis] = useState<Imovel[]>([])
@@ -152,7 +152,7 @@ export default function Busca({ aberta, fechar }: { aberta: boolean; fechar: () 
             type="search"
             value={termo}
             onChange={e => setTermo(e.target.value)}
-            placeholder="Buscar imóvel, contrato, caso, fornecedor, documento ou tela…"
+            placeholder={dica ?? 'Buscar imóvel, contrato, caso, fornecedor, documento ou tela…'}
             aria-label="Buscar na plataforma"
             aria-controls="resultados-busca"
             className="flex-1 py-4 bg-transparent outline-none text-grafite"

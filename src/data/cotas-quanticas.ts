@@ -93,6 +93,8 @@ export interface Recarga {
   comoEMedido: string
   /** Número conferido, quando existe; null quando o custo só se sabe na fatura do mês. */
   custoConhecido: string | null
+  /** Recarga que só existe num nicho (ex.: consulta a tribunal, só no jurídico). */
+  nicho?: 'juridico'
 }
 
 /**
@@ -109,13 +111,14 @@ export const RECARGAS: Recarga[] = [
   },
   {
     id: 'escrita', nome: 'Escrita e leitura por inteligência artificial', fornecedor: 'Anthropic',
-    paraQueServe: 'É o que escreve o rascunho da peça, resume o processo, compara depoimento, lê contrato e responde o assistente. É a recarga que o escritório mais consome.',
-    seAcabar: 'A plataforma continua inteira — prazos, agenda, processos, arquivos — mas para de gerar texto novo até recarregar.',
-    comoEMedido: 'Por tamanho de texto lido e escrito, somado por escritório e mostrado na tela Consumo.',
+    paraQueServe: 'É o que escreve rascunhos, resume documentos, compara textos, lê contratos e responde o assistente. É a recarga que as organizações mais consomem.',
+    seAcabar: 'A plataforma continua inteira — prazos, agenda, arquivos — mas para de gerar texto novo até recarregar.',
+    comoEMedido: 'Por tamanho de texto lido e escrito, somado por organização e mostrado na tela Consumo.',
     custoConhecido: null,
   },
   {
-    id: 'tribunais', nome: 'Consulta a tribunal', fornecedor: 'CNJ e tribunais',
+    // Só do nicho jurídico: não aparece na página das cotas quânticas (M, 21/11/2026).
+    id: 'tribunais', nicho: 'juridico', nome: 'Consulta a tribunal', fornecedor: 'CNJ e tribunais',
     paraQueServe: 'É o robô que busca movimentação e intimação nos tribunais e transforma isso em prazo na agenda, de quatro em quatro horas.',
     seAcabar: 'Os prazos já na agenda continuam, mas param de chegar prazos novos — é a recarga mais perigosa de deixar acabar.',
     comoEMedido: 'Por consulta feita, por processo acompanhado.',
@@ -123,21 +126,21 @@ export const RECARGAS: Recarga[] = [
   },
   {
     id: 'email', nome: 'Envio de e-mail', fornecedor: 'Brevo',
-    paraQueServe: 'Manda o aviso de prazo, a peça pronta para revisão, o resumo da semana e o convite de quem entra no escritório.',
+    paraQueServe: 'Manda o aviso de prazo, o documento pronto para revisão, o resumo da semana e o convite de quem entra na organização.',
     seAcabar: 'Os avisos deixam de sair. O que estava para ser mandado fica guardado e sai quando recarregar.',
     comoEMedido: 'Por e-mail enviado.',
     custoConhecido: null,
   },
   {
     id: 'kyc', nome: 'Checagem de empresa e de pessoa', fornecedor: 'Bases públicas e de cadastro',
-    paraQueServe: 'Confere CNPJ, sócios, situação e risco antes de o escritório assinar com um cliente novo ou um fornecedor.',
+    paraQueServe: 'Confere CNPJ, sócios, situação e risco antes de a organização assinar com um cliente novo ou um fornecedor.',
     seAcabar: 'A checagem fica pendente e o cadastro segue sem o parecer de risco.',
     comoEMedido: 'Por empresa ou pessoa consultada.',
     custoConhecido: null,
   },
   {
     id: 'arquivos', nome: 'Guarda de arquivo', fornecedor: 'Supabase',
-    paraQueServe: 'Guarda contrato, peça, documento do processo e fatura, separados por escritório.',
+    paraQueServe: 'Guarda contratos, documentos e faturas, separados por organização.',
     seAcabar: 'O que está guardado continua lá e continua sendo lido; para de aceitar arquivo novo.',
     comoEMedido: 'Por espaço ocupado no mês.',
     custoConhecido: null,

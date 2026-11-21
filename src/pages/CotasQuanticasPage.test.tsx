@@ -51,7 +51,10 @@ describe('cotas de computação quântica', () => {
 
   it('a tela lista todas as recargas e diz que o acréscimo vale para todas', () => {
     render(<MemoryRouter><CotasQuanticasPage /></MemoryRouter>)
-    for (const r of RECARGAS) expect(screen.getByText(r.nome)).toBeTruthy()
+    // A consulta a tribunal é só do nicho jurídico e não aparece aqui (M, 21/11/2026).
+    for (const r of RECARGAS.filter(x => !x.nicho)) expect(screen.getByText(r.nome)).toBeTruthy()
+    expect(screen.queryByText('Consulta a tribunal')).toBeNull()
+    expect(document.body.textContent).not.toMatch(/jur[ií]dic|advoga|escrit[óo]rio|intima/i)
     expect(document.body.textContent).toMatch(/mesmo acréscimo de\s*40% sobre o custo do fornecedor/i)
   })
 

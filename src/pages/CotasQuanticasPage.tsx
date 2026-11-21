@@ -35,7 +35,7 @@ export default function CotasQuanticasPage() {
 
         <h2 className="text-xl font-serif text-white mt-10 mb-3">Todas as recargas, uma a uma</h2>
         <div className="space-y-4">
-          {RECARGAS.map(r => (
+          {RECARGAS.filter(r => !r.nicho).map(r => (
             <div key={r.id} className="border border-white/15 p-4">
               <div className="flex justify-between gap-4 items-baseline flex-wrap">
                 <h3 className="font-medium">{r.nome}</h3>
