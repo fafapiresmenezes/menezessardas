@@ -15,6 +15,9 @@ on:
     paths:
       - 'android/**'
       - 'capacitor.config.ts'
+      - 'src/pages/GeolocalizacaoPage.tsx'
+      - 'src/lib/geo/**'
+      - 'src/components/geo/**'
       - 'scripts/geo/conferir-apk.mjs'
       - '.github/workflows/geo-apk.yml'
   push:
