@@ -28,7 +28,7 @@ jobs:
   conferir:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # o histórico da régua é lido do git: sem os commits, não há como conferir
           fetch-depth: 0

@@ -43,7 +43,7 @@ jobs:
       # publicacao nunca rodariam, sem erro nenhum aparecer.
       TEM_CHAVE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v4
         with:
