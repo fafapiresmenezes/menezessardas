@@ -9,11 +9,13 @@ import { vigaConcreto, memoriaDeCalculo, AVISO_ENGENHARIA, pilarCompressaoCentra
 import MedicaoDeObra from '@/components/MedicaoDeObra'
 import AgentesEngenharia from '@/components/engenharia/AgentesEngenharia'
 import EngenhariaInternacional from '@/components/engenharia/EngenhariaInternacional'
+import FerramentasEngenharia from '@/components/engenharia/FerramentasEngenharia'
 import CasaAguas from '@/components/aguas/CasaAguas'
 
-type Aba = 'mundo' | 'calculo' | 'medicao' | 'catalogo' | 'equivalencias' | 'estudos' | 'agentes' | 'aguas'
+type Aba = 'ferramentas' | 'mundo' | 'calculo' | 'medicao' | 'catalogo' | 'equivalencias' | 'estudos' | 'agentes' | 'aguas'
 const ABAS: { id: Aba; nome: string; dica: string }[] = [
   { id: 'calculo', nome: 'Cálculo estrutural', dica: 'Dimensiona uma viga de concreto armado e mostra toda a conta, item por item da norma' },
+  { id: 'ferramentas', nome: 'Ferramentas', dica: 'As 8 ferramentas do plano: análise de pórticos e treliças, arquivo IFC, conflitos entre disciplinas, custo e memória de cálculo' },
   { id: 'mundo', nome: 'Mundo: normas, custos e 500 agentes', dica: 'A mesma viga em três normas (Brasil, Europa, EUA) com material e custo; as normas de cada país onde há obra; e os 500 agentes de produção' },
   { id: 'medicao', nome: 'Medição de obra', dica: 'Mede quanto da obra está pronto e quanto se paga no período, com a lista de serviços que o cliente monta do jeito dele' },
   { id: 'catalogo', nome: 'Matérias e consultores', dica: 'Todas as matérias de engenharia e do Instituto, com ementa, normas e escolas de origem' },
@@ -294,6 +296,7 @@ export default function EngenhariaPage() {
         </div>
       </section>
       {aba === 'calculo' && <Calculo />}
+      {aba === 'ferramentas' && <FerramentasEngenharia />}
       {aba === 'mundo' && <EngenhariaInternacional />}
       {aba === 'medicao' && <MedicaoDeObra />}
       {aba === 'catalogo' && <Catalogo />}
