@@ -141,7 +141,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Jurídica', 'Contratos Públicos'],
     descricao: 'Jurisprudência, decisões, processos',
     fonte: 'Superior Tribunal de Justiça, Tribunal de Contas',
-    pct_cobertura: 85,
   },
   {
     id: 'dados-publicos-aguas',
@@ -150,7 +149,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Águas', 'Saúde'],
     descricao: 'Qualidade de água, estações, vazão',
     fonte: 'ANA, CEDAE, órgãos estaduais',
-    pct_cobertura: 70,
   },
   {
     id: 'dados-publicos-licitacoes',
@@ -159,7 +157,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Contratos Públicos', 'Engenharia'],
     descricao: 'Editais, órgãos, procuradores',
     fonte: 'Portal da Transparência, Licititações.com',
-    pct_cobertura: 90,
   },
   {
     id: 'dados-publicos-saude',
@@ -168,7 +165,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Saúde', 'Jogo'],
     descricao: 'Epidemiologia, registros SRAG, SINAN',
     fonte: 'Ministério da Saúde, Fiocruz',
-    pct_cobertura: 75,
   },
   // Preditivo
   {
@@ -178,7 +174,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Águas', 'Saúde'],
     descricao: 'Modelos que predizem qualidade da água, saúde',
     fonte: 'Machine learning, séries históricas',
-    pct_cobertura: 50,
   },
   {
     id: 'preditivo-prazo',
@@ -187,7 +182,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Contratos Públicos', 'Engenharia'],
     descricao: 'Tempo entre edital e assinatura, execução',
     fonte: 'Histórico de processos, ML',
-    pct_cobertura: 60,
   },
   {
     id: 'preditivo-epidemiologia',
@@ -196,7 +190,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Saúde', 'Jogo'],
     descricao: 'Modelos SEIR, surtos, disseminação',
     fonte: 'Modelos científicos, séries SRAG',
-    pct_cobertura: 65,
   },
   // Satélite
   {
@@ -206,7 +199,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Águas', 'Geolocalização'],
     descricao: 'Imagens de satélite das captações (Guandu, etc)',
     fonte: 'Sentinel-2, USGS, visão computacional',
-    pct_cobertura: 40,
   },
   {
     id: 'satelite-completo',
@@ -215,7 +207,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Geolocalização', 'Águas', 'Saúde'],
     descricao: 'Mapeamento territorial, ocupação, verde',
     fonte: 'Sentinel-2, Landsat, OpenStreetMap',
-    pct_cobertura: 85,
   },
   // Cliente Pagante
   {
@@ -225,7 +216,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Jurídica', 'Engenharia', 'Marca'],
     descricao: 'Receita confirmada, contrato ativo',
     fonte: 'RH, Contas a Receber, M',
-    pct_cobertura: 100,
   },
   // Plataforma no Ar
   {
@@ -235,7 +225,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Marca', 'Ontologia/IA'],
     descricao: 'theye.club rodando, acesso público',
     fonte: 'GitHub, Vercel, Supabase',
-    pct_cobertura: 50,
   },
   // Calibração / Incerteza
   {
@@ -245,7 +234,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Ontologia/IA', 'Jogo'],
     descricao: 'Scores de confiança, intervalos credíveis',
     fonte: 'Modelos bayesianos, validade cruzada',
-    pct_cobertura: 30,
   },
   // Lastro Blockchain
   {
@@ -255,7 +243,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Jogo', 'Imbono', 'Ontologia/IA'],
     descricao: 'OpenTimestamps, corrente de hash',
     fonte: 'Bitcoin, Ethereum, OpenTimestamps',
-    pct_cobertura: 25,
   },
   // Ontologia
   {
@@ -265,7 +252,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Marca', 'Ontologia/IA', 'Jogo'],
     descricao: 'Esquema de conceitos, propriedades, relações',
     fonte: 'Atlas de M, design do projeto',
-    pct_cobertura: 70,
   },
   // Base Legal
   {
@@ -275,7 +261,6 @@ export const VARIAVEIS: Variavel[] = [
     dominio: ['Jurídica', 'Contratos Públicos'],
     descricao: 'Parecer jurídico, conformidade',
     fonte: 'Conselho jurídico, legislação',
-    pct_cobertura: 80,
   },
 ]
 
@@ -287,14 +272,13 @@ export const INTERCORRELACOES: CorrelacaoIntercetorial[] = [
   {
     setorA: 'juridica',
     setorB: 'contratos-publicos',
-    jaccard: 0.75, // 3 de 4 variáveis principais compartilhadas
+    jaccard: 'sem base', // número anterior não batia com as listas deste arquivo; retirado em 21/11
     variaveisCompartilhadas: ['base-legal', 'dados-publicos-judiciarios', 'validacao-conselhos'],
     dependenciaAB: true,
     dependenciaBA: false,
-    forca_link: 'forte',
     fonte: 'matriz-master-v7.json + legislação compartilhada',
-    casos: 157, // total_legislacao do resumo executivo
-    metodologia: 'Jaccard coefficient: |A ∩ B| / |A ∪ B| = 3 / 4',
+    casos: 'sem base',
+    metodologia: 'a calcular (plano de 21/11)',
     dataCalculo: '2026-11-21',
     observacoes: 'Ambos setores usam base legal; contratos públicos é subconjunto do direito'
   },
@@ -302,14 +286,13 @@ export const INTERCORRELACOES: CorrelacaoIntercetorial[] = [
   {
     setorA: 'aguas',
     setorB: 'geo',
-    jaccard: 0.70, // 3.5 de 5 variáveis compartilhadas
+    jaccard: 'sem base', // número anterior não batia com as listas deste arquivo; retirado em 21/11
     variaveisCompartilhadas: ['satelite-completo', 'dados-topografia', 'preditivo-rotas'],
     dependenciaAB: false,
     dependenciaBA: false,
-    forca_link: 'forte',
     fonte: 'matriz-master-v7.json (águas: 87.5%, geo: 75% cobertura)',
-    casos: 92, // 40 legislação águas + 52 ferramentas águas
-    metodologia: 'Jaccard coefficient com base em ferramentas e fontes compartilhadas',
+    casos: 'sem base',
+    metodologia: 'a calcular (plano de 21/11)',
     dataCalculo: '2026-11-21',
     observacoes: 'Satélite é essencial para ambos; ambos precisam de precisão topográfica'
   },
@@ -317,14 +300,13 @@ export const INTERCORRELACOES: CorrelacaoIntercetorial[] = [
   {
     setorA: 'aguas',
     setorB: 'saude',
-    jaccard: 0.60, // 2 de ~3.3 variáveis principais
+    jaccard: 'sem base', // número anterior não batia com as listas deste arquivo; retirado em 21/11
     variaveisCompartilhadas: ['dados-publicos-aguas', 'preditivo-epidemiologia', 'validacao-agencias'],
     dependenciaAB: true,
     dependenciaBA: false,
-    forca_link: 'media',
     fonte: 'matriz-master-v7.json + literatura em epidemiologia ambiental',
-    casos: 51, // 10 legislação saúde + 41 ferramentas saúde
-    metodologia: 'Jaccard; qualidade de água afeta saúde pública',
+    casos: 'sem base',
+    metodologia: 'a calcular (plano de 21/11)',
     dataCalculo: '2026-11-21',
     observacoes: 'Dependência unidirecional: águas → saúde (Cólera, SRAG relacionados com saneamento)'
   },
@@ -336,10 +318,9 @@ export const INTERCORRELACOES: CorrelacaoIntercetorial[] = [
     variaveisCompartilhadas: ['ontologia-conceitual', 'calibracao-incerteza', 'validacao-usuario', 'plataforma-no-ar'],
     dependenciaAB: true,
     dependenciaBA: false,
-    forca_link: 'media', // Estimativa qualitativa apenas
     fonte: 'Atlas de M + design do projeto',
     casos: 'sem base',
-    metodologia: 'Análise estrutural qualitativa (não quantificada)',
+    metodologia: 'a calcular (plano de 21/11)',
     dataCalculo: '2026-11-21',
     observacoes: 'Marca/site é implementação visual da ontologia; relação estrutural mas sem calibração numérica'
   },
@@ -351,10 +332,9 @@ export const INTERCORRELACOES: CorrelacaoIntercetorial[] = [
     variaveisCompartilhadas: ['ontologia-conceitual', 'calibracao-incerteza', 'lastro-blockchain', 'preditivo-comportamento'],
     dependenciaAB: true,
     dependenciaBA: false,
-    forca_link: 'media', // Estimativa qualitativa apenas
     fonte: 'regras do jogo + white papers de game theory',
     casos: 'sem base',
-    metodologia: 'Análise de dependências funcionais (não quantificada)',
+    metodologia: 'a calcular (plano de 21/11)',
     dataCalculo: '2026-11-21',
     observacoes: 'Jogo implementa ontologia em mecânicas; blockchain fornece lastro — relação estrutural sem calibração empírica'
   },

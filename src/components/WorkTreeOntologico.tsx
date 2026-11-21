@@ -55,8 +55,8 @@ export default function WorkTreeOntologico() {
       <div>
         <h2 className="font-serif text-2xl text-navy">WorkTree Ontológico</h2>
         <p className="mt-2 max-w-4xl text-sm text-grafite-claro">
-          Intercorrelação entre setores. Os nós são os 10 nichos; as arestas mostram variáveis compartilhadas
-          e correlação de Jaccard. Espessura e cor indicam força do link. Setas mostram dependências (A precisa de B).
+          Intercorrelação entre setores. Os nós são os 10 nichos; as arestas mostram ligações já identificadas.
+          Nenhum índice está calculado ainda: toda aresta aparece como "sem base" até a conta ser feita e conferida.
         </p>
       </div>
 
@@ -211,7 +211,7 @@ export default function WorkTreeOntologico() {
               <tr key={v.id} className="border-b border-navy/5 text-navy">
                 <td className="py-2">{v.nome}</td>
                 <td className="py-2 text-[10px] text-grafite-claro">{v.tipo}</td>
-                <td className="py-2 text-center text-grafite-claro">{v.pct_cobertura}%</td>
+                <td className="py-2 text-center text-grafite-claro">{v.pct_cobertura === undefined ? 'sem base' : `${v.pct_cobertura}%`}</td>
               </tr>
             ))}
           </tbody>
