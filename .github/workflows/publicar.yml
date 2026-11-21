@@ -79,7 +79,7 @@ jobs:
 
       - name: Instalar as funções do CNJ
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.funcoes }}
-        uses: supabase/setup-cli@v1
+        uses: supabase/setup-cli@v3
         with:
           version: latest
       - if: ${{ github.event_name == 'workflow_dispatch' && inputs.funcoes }}
