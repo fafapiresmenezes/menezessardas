@@ -72,12 +72,12 @@ export default function EscritoriosDoProjetoPage() {
       let r = editando
         ? await supabase.rpc('escritorio_cadastro_gravar', { p_id: editando, p_nome_cadastro: nome, p_dominios: doms, p_nichos: nichosSel })
         : await supabase.rpc('escritorio_cadastro_criar', { p_nome: nome, p_dominios: doms, p_nichos: nichosSel })
-      // Banco ainda sem os segmentos (COLE-ISTO-156): grava do jeito antigo e avisa.
+      // Banco ainda sem os segmentos (COLE-ISTO-158): grava do jeito antigo e avisa.
       if (r.error && /function|schema cache|not find/i.test(r.error.message ?? '')) {
         r = editando
           ? await supabase.rpc('escritorio_cadastro_gravar', { p_id: editando, p_nome_cadastro: nome, p_dominios: doms })
           : await supabase.rpc('escritorio_cadastro_criar', { p_nome: nome, p_dominios: doms })
-        if (!r.error) setAviso(`${nome} gravado, mas as frentes ainda não: falta colar o arquivo COLE-ISTO-156 no banco.`)
+        if (!r.error) setAviso(`${nome} gravado, mas as frentes ainda não: falta colar o arquivo COLE-ISTO-158 no banco.`)
       } else if (!r.error) {
         setAviso(`Pronto: ${nome} está na lista do Criar conta${nichosSel.length > 0 ? ` (${nichosSel.length} frente${nichosSel.length > 1 ? 's' : ''})` : ''}, com os finais ${doms.join(', ')}.`)
       }
