@@ -118,7 +118,7 @@ export default function LoginPage() {
   // embaixo, e parecia que o botão não funcionava.
   const vertenteDestino = pedidoValido ? VERTENTES.find(v => v.rota === destino) : undefined
   const nomeDestino = vertenteDestino ? t(`vertente.${vertenteDestino.id}.nome` as Chave)
-    : !pedidoValido ? '' : destino === '/caderno-de-produtos' ? t('produtos.titulo') : destino === '/instituto' ? t('login.entradaApoio') : ''
+    : !pedidoValido ? '' : destino === '/caderno-de-produtos' ? t('produtos.titulo') : destino === '/instituto' ? t('login.entradaInstituto') : ''
   const doSegmento = !!nomeDestino
   useEffect(() => {
     if (!doSegmento) return
@@ -127,9 +127,9 @@ export default function LoginPage() {
   }, [doSegmento, destino])
   // Pedido de M (19/11/2026): a entrada com e-mail e senha não fica na primeira tela. Ela só aparece
   // depois que a pessoa clica no quadradinho da frente dela (ou em domínio próprio de escritório).
-  // Pedido de M (19/11/2026 21h17): o quadrado de e-mail e senha só existe na Plataforma jurídica.
-  // Os outros quadradinhos apresentam a frente e apontam a entrada para lá.
-  const entradaComCartao = destino === '/inicio'
+  // Pedido de M (20/11/2026): cada setor tem o seu próprio login e senha — nenhum quadradinho manda
+  // mais "entrar pela Plataforma jurídica". Então todo segmento abre o cartão de entrada.
+  const entradaComCartao = doSegmento
   const mostrarCartao = (doSegmento && entradaComCartao) || !!marca || pedirCodigo
   // Entrada geral: quem escolheu a língua e chegou sem segmento nem marca de escritório parceiro.
   const entradaGeral = !marca && !doSegmento && !mostrarCartao
@@ -352,6 +352,22 @@ export default function LoginPage() {
           ) : (
           <form onSubmit={entrar} className="space-y-5">
             <input type="text" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" value={armadilha} onChange={e => setArmadilha(e.target.value)} className="absolute opacity-0 h-0 w-0 pointer-events-none" />
+            {/* Entrada da administração do Instituto (M, 20/11/2026): antes do e-mail, de qual setor é. */}
+            {destino === '/instituto' && !primeiroAcesso && (
+              <div>
+                <label htmlFor="setor-instituto" className="block text-xs uppercase tracking-wider text-grafite mb-2">{t('login.setor')}</label>
+                <select
+                  id="setor-instituto"
+                  data-testid="setor-instituto"
+                  value={escolha}
+                  onChange={e => setEscolha(e.target.value)}
+                  className="w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm bg-white text-grafite"
+                >
+                  <option value="">{t('login.setorEscolha')}</option>
+                  {VERTENTES.map(v => <option key={v.id} value={v.id}>{t(`vertente.${v.id}.nome` as Chave)}</option>)}
+                </select>
+              </div>
+            )}
             <div>
               <label htmlFor="email" className="block text-xs uppercase tracking-wider text-grafite mb-2">
                 {t('login.email')}
@@ -470,20 +486,6 @@ export default function LoginPage() {
           </div>
         </div>
 
-        )}
-
-        {doSegmento && !mostrarCartao && (
-          <div className="rounded-sm border border-white/20 p-8 text-center" data-testid="entrada-pela-juridica">
-            <p className="text-base leading-relaxed text-neutral-100">{t('login.entradaNaJuridica')}</p>
-            <Link
-              to="/login?ir=%2Finicio"
-              title={t('login.entradaNaJuridicaDica')}
-              data-testid="ir-entrada-juridica"
-              className="mt-5 inline-block bg-[#fff] px-6 py-3 text-sm font-semibold uppercase tracking-wider text-[#000] no-underline transition hover:bg-neutral-200"
-            >
-              {t('login.entradaNaJuridicaBotao')}
-            </Link>
-          </div>
         )}
 
         {!doSegmento && !marca && (

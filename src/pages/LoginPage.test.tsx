@@ -46,12 +46,12 @@ describe('Tela de login', () => {
     expect(screen.queryByLabelText('Senha')).toBeNull()
     cleanup(); montar()
     expect(screen.getByTestId('cartao-entrada')).toBeTruthy()
-    // Pedido de M (19/11/2026 21h17): os outros quadradinhos não têm cartão; apontam para a jurídica.
+    // Pedido de M (20/11/2026): cada setor tem o seu próprio login e senha; nenhum quadradinho
+    // manda mais "entrar pela Plataforma jurídica". Então todo segmento abre o cartão de entrada.
     cleanup()
     render(<MemoryRouter initialEntries={['/login?ir=/engenharia']}><Routes><Route path="/login" element={<LoginPage />} /></Routes></MemoryRouter>)
-    expect(screen.queryByTestId('cartao-entrada')).toBeNull()
-    expect(screen.queryByLabelText('Senha')).toBeNull()
-    expect(screen.getByTestId('ir-entrada-juridica').getAttribute('href')).toBe('/login?ir=%2Finicio')
+    expect(screen.getByTestId('cartao-entrada')).toBeTruthy()
+    expect(screen.queryByTestId('ir-entrada-juridica')).toBeNull()
   })
   beforeEach(() => { cleanup(); configurado = true; nivel = { nextLevel: 'aal1', currentLevel: 'aal1' }; signInWithPassword.mockClear(); signUp.mockClear(); challengeAndVerify.mockClear() })
 
