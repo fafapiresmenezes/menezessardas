@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MASVS-STORAGE: nada deste aplicativo é copiado para fora do aparelho.
+     O Android, por padrão, manda os dados do app para a nuvem do Google (cópia automática) e
+     os entrega numa transferência de aparelho para aparelho. O cofre do THEYE Geo é cifrado,
+     então o conteúdo em claro não vazaria — mas o bloco cifrado SAIR do aparelho contradiz a
+     única promessa que este app faz: os dados ficam no aparelho do titular.
+     "cloud-backup" é a cópia para a conta Google; "device-transfer" é a troca de celular.
+     Vale do Android 12 (API 31) para cima; abaixo disso, quem barra é allowBackup="false". -->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="root" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="root" />
+    </device-transfer>
+</data-extraction-rules>
