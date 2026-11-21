@@ -9,6 +9,7 @@ import PortalMensagens from '@/components/PortalMensagens'
 import { TextoComTermos } from '@/components/Termo'
 import { GLOSSARIO } from '@/data/glossario'
 import { CheckCircle2, Circle, Clock, Scale } from 'lucide-react'
+import { SUBTITULO_PLATAFORMA } from '@/lib/plataforma'
 
 // Portal do cliente: página pública, sem login, aberta por um link com código secreto gerado pelo escritório.
 // Mostra só o andamento do caso (etapas, prazos e honorários); nada de notas internas.
@@ -44,7 +45,7 @@ export default function PortalClientePage() {
           {marca.logo_url && /^https:\/\//.test(marca.logo_url) && <img src={marca.logo_url} alt="" className="mx-auto max-h-12 mb-2" />}
           <p className="font-serif text-xl">{marca.nome}</p>
         </header>
-      ) : <header className="bg-navy py-6"><Marca /></header>}
+      ) : <header className="bg-navy py-6"><Marca subtitulo={SUBTITULO_PLATAFORMA} /></header>}
       <div className="max-w-2xl mx-auto px-4 py-8">
         {caso === undefined && <p className="text-grafite">Carregando…</p>}
         {caso === null && <h1 className="font-serif text-2xl text-navy mb-2">Link do Portal indisponível</h1>}

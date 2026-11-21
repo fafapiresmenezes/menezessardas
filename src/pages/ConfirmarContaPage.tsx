@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { codigoDoLink } from '@/lib/acessoEmail'
+import { casaDaPessoa, entradaDaPessoa } from '@/lib/destino'
+
+// O quadradinho onde a pessoa se cadastrou vem no link (?ir=/engenharia). A entrada jurídica fica SÓ
+// no nicho jurídico (M, 21/11/2026): ninguém de outro nicho cai nela pelo link do e-mail.
+const irDoLink = () => new URLSearchParams(window.location.search).get('ir')
 
 /**
  * Tela aberta pelo link "Confirmar e entrar" do e-mail de conta nova (?confirmar=1&th=código).
@@ -17,12 +22,12 @@ export default function ConfirmarContaPage() {
         let { error } = await supabase.auth.verifyOtp({ token_hash: th, type: 'signup' })
         if (error) ({ error } = await supabase.auth.verifyOtp({ token_hash: th, type: 'email' }))
         if (error) { if (vivo) setFalhou(true); return }
-        window.location.replace(`${window.location.origin}/#/inicio`)
+        window.location.replace(`${window.location.origin}/#${casaDaPessoa(irDoLink())}`)
       } catch { if (vivo) setFalhou(true) }
     })()
     return () => { vivo = false }
   }, [])
-  const irParaEntrada = () => { window.location.replace(`${window.location.origin}/#/login?ir=/inicio`) }
+  const irParaEntrada = () => { window.location.replace(`${window.location.origin}/#${entradaDaPessoa(irDoLink())}`) }
   return (
     <main className="min-h-screen bg-navy px-4 py-16 text-white" data-testid="confirmar-conta">
       <div className="mx-auto max-w-md text-center">

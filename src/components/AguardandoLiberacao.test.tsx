@@ -47,7 +47,7 @@ describe('Tela de quem ainda não foi liberado pelo escritório', () => {
     situacao = { estado: 'nenhum' }
     render(<AguardandoLiberacao aoEntrar={() => undefined} />)
     await screen.findByTestId('form-escritorio')
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('De qual escritório você é?')
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('De qual organização você é?')
     fireEvent.change(screen.getByTestId('campo-nome-escritorio'), { target: { value: 'ab' } })
     fireEvent.submit(screen.getByTestId('form-escritorio'))
     expect((await screen.findByRole('alert')).textContent).toContain('pelo menos 3 letras')

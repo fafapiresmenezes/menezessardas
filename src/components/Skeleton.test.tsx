@@ -52,7 +52,7 @@ describe('Skeleton, Vazio e Marca', () => {
   })
 
   it('Marca: monograma THEYE oculto para leitores de tela, nome do escritório, subtítulo opcional e tamanho grande', () => {
-    const { container } = render(<Marca />)
+    const { container } = render(<Marca subtitulo="Suporte Jurídico" />)
     const gm = screen.getByText('THEYE')
     expect(gm.getAttribute('aria-hidden')).toBe('true')
     expect(gm.className).toContain('text-xl')

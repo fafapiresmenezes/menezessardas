@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
 import { HashRouter, Routes, Route, Navigate, useLocation, useSearchParams } from 'react-router-dom'
-import { destinoSeguro } from '@/lib/destino'
+import { destinoSeguro, casaDaPessoa } from '@/lib/destino'
 import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { useIdiomaEscolhido } from '@/lib/i18n'
 import LoginPage from '@/pages/LoginPage'
@@ -304,7 +304,7 @@ function App() {
         />
         <Route
           path="/boas-vindas"
-          element={isAuthenticated ? <Navigate to="/inicio" /> : <BoasVindasPage />}
+          element={isAuthenticated ? <Navigate to={casaDaPessoa()} /> : <BoasVindasPage />}
         />
         {/* Passo 3: Fechar atalho /stokasticos da porta (escola de magia do caos) conforme planejamento */}
         {/* <Route path="/stokasticos" element={<StokasticosPage />} />

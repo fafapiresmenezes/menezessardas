@@ -62,6 +62,6 @@ describe('moldura dentro de uma frente do Instituto', () => {
     const { container } = render(<Marca subtitulo={f!.nome} />)
     expect(container.textContent).toContain('Plataforma, Governança, Fundos Internacionais')
     expect(container.textContent).not.toMatch(/jur[ií]dic/i)
-    expect(readFileSync('src/components/Layout.tsx', 'utf8')).toContain('subtitulo={frente ? frente.nome : undefined}')
+    expect(readFileSync('src/components/Layout.tsx', 'utf8')).toContain('subtitulo={frente ? frente.nome : SUBTITULO_PLATAFORMA}')
   })
 })

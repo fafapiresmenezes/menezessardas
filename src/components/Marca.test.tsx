@@ -7,7 +7,12 @@ import Marca from './Marca'
 describe('Marca (white-label)', () => {
   it('sem marca: lockup THEYE Institute; com marca sem logo: nome; com logo: imagem com alt', () => {
     render(<Marca />)
-    expect(screen.getByTestId('marca-theye').textContent).toContain('Theye.club'); expect(screen.getByTestId('marca-theye').textContent).toContain('Suporte Jurídico'); expect(screen.queryByTestId('marca-parceiro')).toBeNull()
+    expect(screen.getByTestId('marca-theye').textContent).toContain('Theye.club'); expect(screen.getByTestId('marca-theye').textContent).toContain('Ontologia'); expect(screen.queryByTestId('marca-parceiro')).toBeNull()
+    // M (21/11/2026): "Suporte Jurídico" só aparece onde a tela é do nicho jurídico e o pede.
+    expect(screen.getByTestId('marca-theye').textContent).not.toContain('Jurídico')
+    cleanup()
+    render(<Marca subtitulo="Suporte Jurídico" />)
+    expect(screen.getByTestId('marca-theye').textContent).toContain('Suporte Jurídico')
     cleanup()
     render(<Marca marca={{ nome: 'Alfa Advocacia', cor: '#AA0000', logo_url: null, sede: false }} />)
     expect(screen.getByTestId('marca-parceiro').textContent).toContain('Alfa Advocacia')

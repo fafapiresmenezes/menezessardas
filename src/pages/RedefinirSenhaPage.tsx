@@ -3,6 +3,7 @@ import { supabase, supabaseConfigurado } from '@/lib/supabase'
 import { mensagemAmigavel } from '@/lib/erros'
 import { codigoDoLink } from '@/lib/acessoEmail'
 import { problemaDaSenha, REGRA_DA_SENHA, SENHA_MINIMO } from '@/lib/senha'
+import { casaDaPessoa, entradaDaPessoa } from '@/lib/destino'
 
 /**
  * Tela de criar ou redefinir a senha, aberta pelo link que o Supabase envia por e-mail.
@@ -52,9 +53,9 @@ export default function RedefinirSenhaPage() {
   }
 
   // Sai do modo de redefinição (sem ?redefinir=1) e abre a entrada normal.
-  const irParaEntrada = () => { window.location.replace(`${window.location.origin}/#/login`) }
+  const irParaEntrada = () => { window.location.replace(`${window.location.origin}/#${entradaDaPessoa()}`) }
   // Com a sessão aberta pelo link do e-mail, vai direto para dentro da plataforma.
-  const irParaDentro = () => { window.location.replace(`${window.location.origin}/#/inicio`) }
+  const irParaDentro = () => { window.location.replace(`${window.location.origin}/#${casaDaPessoa()}`) }
 
   const campo = 'w-full px-3 py-2.5 border border-grafite-claro/40 rounded-sm focus:border-dourado bg-white'
 

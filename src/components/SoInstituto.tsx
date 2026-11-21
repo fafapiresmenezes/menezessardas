@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Navigate } from 'react-router-dom'
 import { ehInstituto } from '@/lib/equipe'
+import { casaDaPessoa } from '@/lib/destino'
 
 /**
  * Tranca de tela do Instituto THEYE (pedido de M, 18/11/2026: "o que é do Instituto não é para o
@@ -23,7 +24,8 @@ export default function SoInstituto({ children }: { children: ReactNode }) {
     return (
       <>
         <p className="p-6 text-sm text-grafite-claro">Esta parte é só dos membros do Instituto. A voltar ao início…</p>
-        <Navigate to="/inicio" replace />
+        {/* Volta para o quadradinho da pessoa, não para o jurídico (M, 21/11/2026). */}
+        <Navigate to={casaDaPessoa()} replace />
       </>
     )
   }
