@@ -1,0 +1,10 @@
+[
+ {
+  "id": "AMB-R1",
+  "pergunta": "Que altura de chaminé preciso para esta central?",
+  "dados": {
+   "potencia_MW": 20.0,
+   "combustivel": "gás natural"
+  }
+ }
+]

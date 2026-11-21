@@ -1,0 +1,10 @@
+[
+ {
+  "id": "MEC-R1",
+  "pergunta": "Qual o caudal de desenfumagem deste parque de estacionamento?",
+  "dados": {
+   "pisos": 2,
+   "lugares": 180
+  }
+ }
+]

@@ -1,0 +1,10 @@
+[
+ {
+  "id": "ELE-R1",
+  "pergunta": "Que potência de grupo gerador de emergência devo instalar neste hospital?",
+  "dados": {
+   "camas": 150,
+   "area_m2": 9000.0
+  }
+ }
+]

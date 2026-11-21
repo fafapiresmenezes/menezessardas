@@ -1,0 +1,10 @@
+[
+ {
+  "id": "HID-R1",
+  "pergunta": "Que diâmetro de conduta devo usar para este caudal?",
+  "dados": {
+   "caudal_L_s": 120.0,
+   "material": "ferro fundido dúctil"
+  }
+ }
+]

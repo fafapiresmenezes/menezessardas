@@ -1,0 +1,10 @@
+[
+ {
+  "id": "MAT-R1",
+  "pergunta": "Quanto cimento por metro cúbico devo especificar para esta obra?",
+  "dados": {
+   "obra": "edifício de escritórios",
+   "local": "Luanda"
+  }
+ }
+]

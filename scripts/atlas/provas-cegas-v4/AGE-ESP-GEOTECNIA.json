@@ -1,0 +1,11 @@
+[
+ {
+  "id": "GEO-R1",
+  "pergunta": "Qual a capacidade de carga desta sapata?",
+  "dados": {
+   "sapata_m": "2,0 × 2,0",
+   "profundidade_m": 1.5,
+   "terreno": "areia"
+  }
+ }
+]
