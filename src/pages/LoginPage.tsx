@@ -90,17 +90,6 @@ export default function LoginPage() {
   // só cria um pedido de entrada: ninguém vê nada antes de o responsável liberar.
   const [listaEscritorios, setListaEscritorios] = useState<string[]>(ESCRITORIOS_DA_CASA)
   const [escolha, setEscolha] = useState('')
-  useEffect(() => {
-    let vivo = true
-    ;(async () => {
-      try {
-        const { data, error } = await supabase.rpc('escritorios_para_cadastro')
-        const nomes = error ? [] : ((data ?? []) as unknown[]).map(r => String(typeof r === 'string' ? r : (r as { nome?: string })?.nome ?? '').trim().toUpperCase()).filter(Boolean)
-        if (vivo && nomes.length > 0) setListaEscritorios([...new Set(nomes)].sort((a, b) => a.localeCompare(b, 'pt')))
-      } catch { /* fica a lista de casa */ }
-    })()
-    return () => { vivo = false }
-  }, [])
   const [avisoCadastro, setAvisoCadastro] = useState('')
   const [pedirCodigo, setPedirCodigo] = useState(false)
   const [codigo, setCodigo] = useState('')
@@ -132,9 +121,28 @@ export default function LoginPage() {
   // símbolo do ouro (administração do Instituto) abrem o SEU quadro de e-mail e senha, com o nome
   // daquela plataforma. Nenhum deles manda mais para a entrada da Plataforma jurídica.
   const mostrarCartao = doSegmento || !!marca || pedirCodigo
-  // O cadastro pede o escritório: é coisa da Plataforma jurídica (ou do domínio de um escritório
-  // parceiro). Nas outras plataformas e na administração, só entra quem já recebeu acesso.
-  const permiteCadastro = destino === '/inicio' || !!marca
+  // Pedido de M (21/11/2026 04h34): cada nicho tem a sua área de login e os SEUS clientes.
+  // O quadradinho diz o segmento; a lista suspensa do Criar conta mostra só os clientes dele.
+  const nichoDestino = destino === '/inicio' ? 'juridico' : (vertenteDestino?.id ?? '')
+  useEffect(() => {
+    let vivo = true
+    ;(async () => {
+      try {
+        // A lista vem do banco, filtrada pelo segmento. Enquanto o banco não conhece o filtro
+        // (COLE-ISTO-156), o jurídico cai na lista antiga e os outros segmentos ficam vazios.
+        let r = await supabase.rpc('escritorios_para_cadastro', { p_nicho: nichoDestino || null })
+        if (r.error && nichoDestino === 'juridico') r = await supabase.rpc('escritorios_para_cadastro')
+        const nomes = r.error ? [] : ((r.data ?? []) as unknown[]).map(x => String(typeof x === 'string' ? x : (x as { nome?: string })?.nome ?? '').trim().toUpperCase()).filter(Boolean)
+        if (!vivo) return
+        if (nomes.length > 0) setListaEscritorios([...new Set(nomes)].sort((a, b) => a.localeCompare(b, 'pt')))
+        else setListaEscritorios(nichoDestino === 'juridico' ? ESCRITORIOS_DA_CASA : [])
+      } catch { if (vivo) setListaEscritorios(nichoDestino === 'juridico' ? ESCRITORIOS_DA_CASA : []) }
+    })()
+    return () => { vivo = false }
+  }, [nichoDestino])
+  // O cadastro pede o escritório da lista do segmento. A administração não tem Criar conta:
+  // lá só entra quem já é administração do Instituto.
+  const permiteCadastro = destino === '/inicio' || !!marca || (doSegmento && !!vertenteDestino)
   // Entrada geral: quem escolheu a língua e chegou sem segmento nem marca de escritório parceiro.
   const entradaGeral = !marca && !doSegmento && !mostrarCartao
   // Entrada administrativa (M, 21/11/2026): login e senha só da administração do Instituto. Quem
@@ -436,6 +444,9 @@ export default function LoginPage() {
                   <option value={OUTRO}>{t('login.escritorioForaDaLista')}</option>
                 </select>
                 <p className="text-xs text-grafite-claro mt-1">{t('login.qualEscritorioAjuda')}</p>
+                {listaEscritorios.length === 0 && (
+                  <p className="text-xs text-atencao mt-1" data-testid="sem-escritorios-do-segmento">{t('login.semEscritoriosDoSegmento')}</p>
+                )}
                 {escolha === OUTRO && (
                   <div className="mt-3">
                     <label htmlFor="escritorio" className="block text-xs uppercase tracking-wider text-grafite mb-2" title={t('login.escritorioRotuloTitulo')}>
