@@ -300,6 +300,7 @@ export const DICAS: Record<string, string> = {
   '/relatorios': 'Relatórios prontos para imprimir ou exportar',
   '/trilha': 'Registro do que foi feito, com carimbo que prova a data',
   '/instituto': 'Pesquisa e estudos do Instituto THEYE',
+  '/gestao-instituto': 'Painel de gestão do Instituto inteiro: frentes, ferramentas e pendências',
   '/frentes-do-instituto': 'Lista das frentes do Instituto: cada uma abre direto no seu segmento',
   '/escritorios-do-projeto': 'Cadastro dos escritórios que aparecem na lista do Criar conta',
   '/agentes-instituto': 'Os agentes especialistas do acervo da casa e o catálogo dos consultores com ementa e fontes',
@@ -358,6 +359,7 @@ export const DICAS: Record<string, string> = {
 export interface Frente { id: string; nome: string; itens: Tela[] }
 export const FRENTES: Frente[] = [
   { id: 'instituto', nome: 'Plataforma do Instituto', itens: [
+    { icon: Gauge, label: 'Gestão do Instituto', href: '/gestao-instituto' },
     { icon: LayoutGrid, label: 'Frentes do Instituto', href: '/frentes-do-instituto' },
     { icon: FlaskConical, label: 'Administração do Instituto', href: '/instituto' },
     { icon: Building2, label: 'Escritórios do projeto', href: '/escritorios-do-projeto' },

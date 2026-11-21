@@ -220,6 +220,8 @@ const pt = {
   'login.voltarTodasDica': 'Volta para a entrada geral, com todas as frentes',
   'login.entradaApoio': 'Doações e apoio',
   'login.entradaAdministracao': 'Administração do Instituto',
+  'login.areaAdministrativa': 'Área administrativa',
+  'login.soAdministracao': 'Esta entrada é só da administração do Instituto. Este e-mail não tem acesso administrativo.',
   'login.entradaAdministracaoResumo': 'Entrada só da equipe que administra o Instituto THEYE: governança, membros, agentes e contas.',
   'vertente.ia.resumo': 'Onde a inteligência artificial entra no trabalho sério, e onde ela não deve entrar.',
   // Página inicial refeita (M, 20/11/2026) e as 12 frentes novas
@@ -482,6 +484,8 @@ const en: Dicionario = {
   'login.voltarTodasDica': 'Goes back to the general entrance, with every segment',
   'login.entradaApoio': 'Donations and support',
   'login.entradaAdministracao': 'Institute administration',
+  'login.areaAdministrativa': 'Administrative area',
+  'login.soAdministracao': 'This entrance is for the Institute administration only. This e-mail has no administrative access.',
   'login.entradaAdministracaoResumo': 'Entrance only for the team that runs Instituto THEYE: governance, members, agents and accounts.',
   'vertente.ia.resumo': 'Where artificial intelligence belongs in serious work, and where it does not.',
   // Página inicial refeita (M, 20/11/2026) e as 12 frentes novas
@@ -732,6 +736,8 @@ const de: Dicionario = {
   'login.voltarTodasDica': 'Zurück zum allgemeinen Eingang, mit allen Arbeitsfeldern',
   'login.entradaApoio': 'Spenden und Unterstützung',
   'login.entradaAdministracao': 'Verwaltung des Instituts',
+  'login.areaAdministrativa': 'Verwaltungsbereich',
+  'login.soAdministracao': 'Dieser Eingang ist nur für die Verwaltung des Instituts. Diese E-Mail hat keinen Verwaltungszugang.',
   'login.entradaAdministracaoResumo': 'Eingang nur für das Team, das das Instituto THEYE verwaltet: Governance, Mitglieder, Agenten und Konten.',
   'vertente.ia.resumo': 'Wo künstliche Intelligenz in ernsthafte Arbeit gehört und wo nicht.',
   'idioma.de': 'Deutsch',
@@ -989,6 +995,8 @@ const es: Dicionario = {
   'login.voltarTodasDica': 'Vuelve a la entrada general, con todos los segmentos',
   'login.entradaApoio': 'Donaciones y apoyo',
   'login.entradaAdministracao': 'Administración del Instituto',
+  'login.areaAdministrativa': 'Área administrativa',
+  'login.soAdministracao': 'Esta entrada es solo de la administración del Instituto. Este correo no tiene acceso administrativo.',
   'login.entradaAdministracaoResumo': 'Entrada solo del equipo que administra el Instituto THEYE: gobernanza, miembros, agentes y cuentas.',
   'vertente.ia.resumo': 'Dónde entra la inteligencia artificial en el trabajo serio y dónde no debe entrar.',
   // Página inicial refeita (M, 20/11/2026) e as 12 frentes novas
