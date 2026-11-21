@@ -24,10 +24,12 @@ beforeEach(() => {
     return jsonResp({ items: lista[pg - 1] ?? [] })
   })
   zerar({ configuracoes: [{ chave: 'cron_segredo', valor: 'cron-1' }, { chave: 'oabs_monitoradas', valor: '12345/RJ, 999/SP' }], intimacoes: [] })
+  estado.usuario = { id: 'u1' }
 })
 
 describe('intimacoes', () => {
   it('aceita usuário logado ou o segredo do cron; recusa o resto', async () => {
+    estado.usuario = null
     expect((await chamar({}, {})).status).toBe(401)
     expect((await chamar({}, { 'x-cron-secret': 'errado' })).status).toBe(401)
     paginas = { '12345/RJ': [[]], '999/SP': [[]] }

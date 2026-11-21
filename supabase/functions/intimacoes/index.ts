@@ -24,11 +24,18 @@ async function buscarComRetentativa(url: string): Promise<Response | null> {
 }
 const limpa = (s: string) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
 
+// Antes isto só decodificava o JWT (atob) e confiava no campo "role" sem checar a assinatura —
+// qualquer um podia forjar um token com role=authenticated. Agora valida de verdade contra o
+// Supabase Auth (mesma assinatura criptográfica que o login usa), igual à função kyc.
 async function autorizado(req: Request): Promise<boolean> {
-  try {
-    const p = JSON.parse(atob((req.headers.get('authorization') ?? '').split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))
-    if (p?.role === 'authenticated') return true
-  } catch { /* segue */ }
+  const token = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '')
+  if (token) {
+    try {
+      const cliente = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!)
+      const { data } = await cliente.auth.getUser(token)
+      if (data?.user) return true
+    } catch { /* segue */ }
+  }
   const enviado = req.headers.get('x-cron-secret')
   if (!enviado) return false
   const { data } = await sb().from('configuracoes').select('valor').eq('chave', 'cron_segredo').maybeSingle()
