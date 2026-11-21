@@ -11,6 +11,9 @@ import { readFileSync, writeFileSync } from 'node:fs'
 const ELOS = [
   ['R1', '1a832a2b'], ['R2', '68262008'], ['R3', '98f03d84'], ['R4', 'd49fe57c'], ['R5', 'cfa386a1'],
   ['R6', 'd1f95ed4'], ['R7', '0dcbb29f'], ['R8', '13a52f35'], ['R9', '538df38d'], ['R10', 'd0f0443a'],
+  // R11 e R12 não mexeram em nota nenhuma (ligaram o CI e prepararam as lojas). R13 voltou a
+  // medir a casa do geo, e não a porta do site: dim. 2 de 6 para 10, dim. 3 de 9 para 10.
+  ['R13', '62de1401'],
 ]
 const ALVO = 'src/data/geo/nota-historico.json'
 

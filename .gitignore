@@ -67,3 +67,8 @@ ios/App/Podfile.lock
 ios/App/build/
 ios/DerivedData/
 dist-demo/
+
+# a bancada de medição do geo é montada na hora, nunca publicada
+dist-auditoria/
+relatorio-lighthouse-geo.json
+boletim-nota-geo.json
