@@ -1,0 +1,6 @@
+[
+ {
+  "id": "C1",
+  "resposta": "1. A folga de 10% \"no caminho crítico\" é uma contradição: o caminho crítico tem folga total nula. Se a intenção é uma contingência de duração, deve aplicar-se às atividades e declarar-se como tal.\n2. O 0,87 está ambíguo: como razão Ed/Rd dá utilização de 87% (passa, desde que seja ≤1,0); mas 0,87 também é o fator de f_yd = f_yk/1,15 (aço para betão armado). Confirmar qual é, e citar por número e cláusula os coeficientes parciais que o extrato diz citados e não cita.\n3. Na estimativa 1.300 / 1.480 / 1.700 m³ faltam o quantitativo base do desenho e a conta da perda de 5% (1,05 × base); sem eles o provável não se reconcilia e a faixa não tem hipótese verificável.\n4. Não há nenhuma fonte identificada por nome ou número (a fonte climática, o desenho, a norma), pelo que o rodapé \"fontes citadas por número\" não se cumpre no extrato.\n5. O cenário de conferência (ponto 4) e o rodapé de rascunho estão conformes; os erros a corrigir são a folga no caminho crítico, a ambiguidade do 0,87 e a falta de citações."
+ }
+]

@@ -1,0 +1,6 @@
+[
+  {
+    "id": "C1",
+    "resposta": "Sim, há erro. O ponto 2 mistura verificação estrutural com instalação eléctrica: o 0,87 é 1/1,15, o coeficiente de cálculo do aço de armadura (EN 1992-1-1), e não se aplica a curto-circuito, quedas de tensão nem coordenação de protecções.\nO ponto 1 cita a IEC 60364-5-54 para justificar eléctrodos separados após um estudo de potenciais de passo e de contacto; esse estudo pertence a IEC 61936-1 ou IEEE 80, não à 60364-5-54 (cláusula não confirmada).\nO ponto 3 está coerente (faixa mínimo-provável-máximo com a hipótese de perda de 5 %), mas confirmar se a perda está já no valor provável e não só no máximo (não confirmado).\nO ponto 4 está correcto: cenários em vez de probabilidade, sem calibração.\nCorrigir o ponto 2 com as verificações da norma eléctrica do contrato antes de entregar. Rascunho para conferência e assinatura do engenheiro responsável."
+  }
+]

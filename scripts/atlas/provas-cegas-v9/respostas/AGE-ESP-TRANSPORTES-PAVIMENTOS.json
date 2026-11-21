@@ -1,0 +1,6 @@
+[
+  {
+    "id": "C1",
+    "resposta": "1. Sim, há pontos a rever. O mais suspeito é o 0,87: é igual a 1/1,15, o coeficiente parcial do aço do EN 1992-1-1 (betão armado), o que é atípico numa verificação de pavimento; confirmar a origem do valor e a cláusula.\n2. O ponto 2 diz que os coeficientes parciais vêm citados por número e cláusula, mas o extracto não cita nenhum; sem cláusula a verificação não é rastreável.\n3. O CBR de projecto no percentil 10 é uma escolha conservadora aceitável, desde que justificada (número de ensaios, dispersão, norma de referência) e declarada com faixa; até lá, não confirmado.\n4. Os 1.300 / 1.480 / 1.700 m³ não dizem se os 5 % de perda estão incluídos nos valores nem de onde vem a faixa; confirmar antes de entregar.\n5. Rascunho para conferência e assinatura do engenheiro responsável."
+  }
+]
